@@ -32,4 +32,5 @@ def chuan(ident, filename, variables=None, levels=None, **kwargs):
         if len(variables) > 0:
             data = data[variables]  # subset
 
+    data.attrs.update({'dataset': 'CHUAN, ds352.0'})
     return data
