@@ -104,6 +104,8 @@ def to_std_levels(ident, filename, levels=None, **kwargs):
         data, station = ascii_to_dataframe(filename, **kwargs)  # DataFrame
 
     message(ident, levels, **kwargs)
+    # todo if there is only gph data, then everything will be nan
+    # convert gph to press
     data = dataframe(data, 'pres', levels=levels, **kwargs)
     # Convert pressure to gph
     # ?
