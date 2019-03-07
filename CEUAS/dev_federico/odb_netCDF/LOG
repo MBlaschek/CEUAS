@@ -1,0 +1,9 @@
+*** 07/03/2019
+Added the script plotAll_u_v_wind.py 
+It plots all the u,v components of the converted netCDF file
+Plot are stored in /raid8/srvx1/federico/odb_netCD/PLOTS
+
+Must check the data since all the components are positevely defined
+
+ToDo: add a module to check file 
+i.e. print list of files with empty data, small datasets, comapre u and v vectors etc. 
