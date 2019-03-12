@@ -21,29 +21,32 @@ def check_level_units(data, dim='level', want='Pa'):
         raise ValueError("Requires a xarray Dataset or DataArray")
 
     print("[vars]", list(data.data_vars))
+    converted = False
     if dim in data.coords:
         if 'units' in data[dim].attrs:
             i = data[dim].attrs['units']
             if i.lower() != want.lower():
                 print("[converting]", dim, " ", i, " => ", want)
+                data.load()  # copy to Memory
                 data = data.assign_coords(**{dim: fix(i, data[dim].values)})
                 data[dim].attrs.update({'units': want})
                 if 'history' in data.attrs:
                     data.attrs[
-                        'history'] = datetime.datetime.now().isoformat() + " level(" + i + " to "+want+")\n" + \
+                        'history'] = datetime.datetime.now().isoformat() + " level(" + i + " to " + want + ")\n" + \
                                      data.attrs['history']
+                converted = True
             else:
                 print("[doing nothing] " + want)
         else:
             print("[doing nothing] no units")
     else:
         print("[doing nothing] no level coord")
-    return data
+    return data, converted
 
 
 def usage(name):
     print("""
-%s -h [files]
+%s [files]
 Fix level dimension values to Pa
 """ % name)
 
@@ -61,6 +64,8 @@ if __name__ == "__main__":
         for ifile in sys.argv[1:]:
             print("[file]", ifile)
             data = xarray.open_dataset(ifile, decode_times=False)
-            data = check_level_units(data, lev, 'Pa')
+            data, status = check_level_units(data, lev, 'Pa')
+            if status:
+                data.to_netcdf(ifile)
             data.close()
         print("[Done]")
