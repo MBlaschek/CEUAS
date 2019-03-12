@@ -8,6 +8,10 @@ for ECMWF (ODBs) use dewpoint_ECMWF and FOEEWMO for e_sat
 
 for IGRA and other sources use:
 dewpoint_Bolton and either Boegel or Bolton for e_sat
+
+for specific humidity there are again special routines for ODB
+
+and a general one for the rest
 """
 
 
@@ -106,3 +110,63 @@ def FOEEWMO(t, **kwargs):
         es : saturation water vapor in Pa
     """
     return 611.21 * np.exp(17.502 * (t - 273.16) / (t - 32.19))
+
+
+def sh2rh_ecmwf(q, t, p):
+    """ ECMWF IFS CYC31R1 Data Assimilation Documentation (Page 86-88)
+
+    Conversion of q, t and p to r
+
+    Parameters
+    ----------
+    q       spec. humidity  [kg/kg]
+    t       temperature     [K]
+    p       pressure        [Pa]
+
+    Returns
+    -------
+    r       rel. humidity   [1]
+    """
+    import numpy as np
+    e = FOEEWMO(t) / p
+    a = np.where(e < 0.5, e, 0.5)
+    a = np.where(np.isfinite(t), a, np.nan)  # TODO maybe remove this line?
+    return q / (a * (1 + (461.5250 / 287.0597 - 1) * q))
+
+
+def rh2sh_ecmwf(r, t, p):
+    """ ECMWF IFS CYC31R1 Data Assimilation Documentation (Page 86-88)
+
+    Conversion of r, t and p to q
+
+    Parameters
+    ----------
+    r       rel. humidity  [1]
+    t       temperature    [K]
+    p       pressure       [Pa]
+
+    Returns
+    -------
+    q       spec. humidty [kg/kg]
+    """
+    import numpy as np
+    e = FOEEWMO(t) / p
+    a = np.where(e < 0.5, e, 0.5)
+    a = np.where(np.isfinite(t), a, np.nan)
+    return r * (a / (1 - r * (461.5250 / 287.0597 - 1) * a))
+
+
+def vp2sh(e, p):
+    """ Convert water vapor pressure to specific humidity
+    Parameters
+    ----------
+    e      Water vapor [Pa]
+    p      air pressure [Pa]
+
+    Returns
+    -------
+    specific humidity (1 = kg/kg)
+    """
+    c = 2.8705e+2 / 4.6150e+2  # rd / rv J/kg/K
+    pa = p - e  # dry air pressure
+    return (e * c) / (e * c + pa)
