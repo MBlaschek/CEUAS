@@ -26,6 +26,10 @@ import gzip
 from retrieve_fb_jra55 import add_feedback                                              
 import copy                                                                               
 
+# /opt/anaconda3/bin/python project custom python executable
+# PYTHONPATH=/usr/local:/fio/srvx7/leo/python/namelist_python-master:.:/fio/srvx7/leo/python/Rasotools
+
+
 sys.path.append("/opt/anaconda3/lib/python3.7")
 from rasotools.utils import *
 
@@ -795,22 +799,35 @@ def mktemp(u,firsts,ps,mask,hours,source,uwind=0.,uwindbc=0.,ufg_dep=0.,uan_dep=
 
 
 def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v']):
-
+    """ statdata coontains the information from the odb file """
+    print('The nc path is FF', ncpath )
+    print('The prefix is FF', prefix )
+    print('The statdata[0]is FF', statdata[0] )
+    
     t1=time.time()
-    statid=statdata[0]
+    statid=statdata[0].replace('_','')
 
+    # print('Statdata is FF:', statdata)
+    # ('_98426', {'data': None, 'source': ['BUFRDATA'], 'odbstatid': ['98426'], 'odbfile': '/raid60/s...',
+    
+    
     hlist=header.split()[2:]
+    
+    # FF Not used??? 
     fields=['date','time','lat','lon','alt','vertco_type','vertco_reference_1','varno','obsvalue','biascor','fg_depar','an_depar']
 
     if 'ai_bfr' in prefix:
         while len(statid)<6:
             statid='0'+statid
 
-    metadata=dict(t=dict(varname='temperatures',bias='tbiascorr',fg_dep='tfg_depar',an_dep='tan_depar',datum='tdatum',hours='thours',units='K',long_name='Temperature',sonde_type='tsonde_type'),
-                  u=dict(varname='uwind',bias='ubiascorr',fg_dep='ufg_depar',an_dep='uan_depar',datum='udatum',hours='uhours',units='m/s',long_name='Westerly wind component',sonde_type='usonde_type'),
-                  v=dict(varname='vwind',bias='vbiascorr',fg_dep='vfg_depar',an_dep='van_depar',datum='vdatum',hours='vhours',units='m/s',long_name='Southerly wind component',sonde_type='usonde_type'))
-    ftn='/home/srvx7/leo/fastscratch/ei6/001001/001001_t'+'.nc'
+    metadata=dict(t=dict(varname='temperatures',bias='tbiascorr',fg_dep='tfg_depar',an_dep='tan_depar',datum='tdatum',hours='thours',units='K',long_name='Temperature',sonde_type='tsonde_type' , valid_range=[0,300]),
+                  u=dict(varname='uwind',bias='ubiascorr',fg_dep='ufg_depar',an_dep='uan_depar',datum='udatum',hours='uhours',units='m/s',long_name='Westerly wind component',sonde_type='usonde_type', valid_range=[-100.,100]),
+                  v=dict(varname='vwind',bias='vbiascorr',fg_dep='vfg_depar',an_dep='van_depar',datum='vdatum',hours='vhours',units='m/s',long_name='Southerly wind component',sonde_type='usonde_type', valid_range=[-100.,100]))
+  
+    ftn='/home/srvx7/leo/fastscratch/ei6/001001/001001_t'+'.nc'# template file
     f = netCDF4.Dataset(ftn,"r")
+    print ('Testing the template file FF', f , f.ncattrs())
+    print ('Variables of the template FF', f.variables.keys()) #['lat', 'lon', 'alt', 'press', 'datum', 'hours', 'temperatures', 'fg_dep', 'bias', 'flags', 'an_dep', 's_type']
     f.set_auto_maskandscale(False)
     for t in varlist:
         try:
@@ -822,9 +839,11 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v']):
         if not os.path.exists(ncpath+'/'+statid):
             os.makedirs(ncpath+'/'+statid)
         fno=ncpath+'/'+statid+'/'+prefix+statid+'_'+t+'.nc'
+        print('fno FF', fno)
         fo = netCDF4.Dataset(fno,"w")
 
-        for i in f.ncattrs():
+        '''read and write global attributes'''
+        for i in f.ncattrs(): # FF ['Conventions', 'title', 'institution', 'history', 'source', 'references']
             if i=='history':
                 setattr(fo,i,datetime.date.today().strftime("%Y/%m/%d"))
             elif i=='source':
@@ -833,8 +852,11 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v']):
                 setattr(fo,i,'Station daily '+metadata[t]['varname']+' series' )
             else:
                 setattr(fo,i,getattr(f,i))
+                
+        '''read and write dimensions of variables'''       
         tdim=statdata[1][metadata[t]['datum']].shape[0]
-        for i in list(f.dimensions.keys()):
+        print('dimension keys of the template file FF:', f.dimensions.keys())
+        for i in list(f.dimensions.keys()): # ['station', 'numdat', 'time', 'pressure', 'hour']
             if i=='time':
                 fo.createDimension(i,tdim)
                 if tdim !=statdata[1][metadata[t]['varname']].shape[2]:
@@ -848,8 +870,9 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v']):
                     flag=True
                     continue
 
+        '''read and write data of variables'''     
         for i in list(f.variables.keys()):
-            var=f.variables[i]
+            var=f.variables[i]            
             if i=='datum':
                 fo.createVariable(i,var.dtype,var.dimensions)
                 fo.variables[i][:]=statdata[1][metadata[t]['datum']][:]
@@ -899,14 +922,20 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v']):
                 if i not in ('flags','lat','lon','alt'):
                     fo.createVariable(i,var.dtype,var.dimensions)
 
+            '''read and write data of variables''' 
             iph= i in ['temperatures','fg_dep','an_dep','bias']
-            for j in var.ncattrs():
+            for j in var.ncattrs(): # loop over the attributes of the data (read from template) and replace them 
                 if j!='_FillValue' and j!='scale_factor' and j!='add_offset':
                     if i!='flags':
                         io=i
                         if i=='temperatures':
-                            io=metadata[t]['varname']
+                            io=metadata[t]['varname'] # remember, t is e.g. uwind, but it will fill the field 'temperature' from the template
                         setattr(fo.variables[io],j,getattr(var,j))
+                        if i=='temperatures' and j=='valid_range':
+                            io=metadata[t]['varname']
+                        print('Set valid range to', metadata[t]['valid_range'])    
+                        setattr(fo.variables[io],j,metadata[t]['valid_range'])
+                        
                         if i=='temperatures' and j=='long_name':
                             setattr(fo.variables[io],j,metadata[t]['long_name'])				
                         if iph and j=='units':
@@ -1002,7 +1031,9 @@ def topressure(gribpath,ps,tidx,stats):
                              vn[0],1901,2010+1,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011
             else:
                 add_feedback(gribpath+'/../CERA20C_ens/','CERA20C{0}{1:02}.'+vn[1]+'.0.grb',
-                             vn[0],1935,1979+1,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011
+                             vn[0],1935,1936,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011 # FF
+                #add_feedback(gribpath+'/../CERA20C_ens/','CERA20C{0}{1:02}.'+vn[1]+'.0.grb',
+                #             vn[0],1935,1979+1,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011                
 
     for statid in list(stats.keys()):
         if statid not in ['header','odbfile']:
@@ -1113,6 +1144,7 @@ def select_standardpressuredata(zref,ps,mdatum,data,good,tidx,didx,varno,hl,
                 iday=1
 
         idx=tidx[(year-1900)*12+(day%10000)//100-1]+day%100-1+iday#-tidx[(year-1900)*12] -1 # days since... not Fortran convention
+        
         if idxold<idx:
             m+=1
             idxold=idx
@@ -1261,7 +1293,7 @@ def do_hours(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
         year=md//10000
         if year<1900:
             continue
-
+        
         month=md%10000//100
         day=md%100
         hour=int(data[i,1])//10000
@@ -1297,7 +1329,7 @@ def do_hours(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
     return 
 
 def odb2netcdf(gribpath,sodblist,varno,odbreader,idx,k):
-    tidx=calcdays(19000101,(2023-1900)*12)-1
+    tidx=calcdays(19000101,(2023-1900)*12)-1    
     plevs=numpy.asarray([10,20,30,50,70,100,150,200,250,300,400,500,700,850,925,1000])
 
 #    varno=2
@@ -1327,12 +1359,172 @@ def odb2netcdf(gribpath,sodblist,varno,odbreader,idx,k):
     varlist=['u','v']
     if varno==2:
         varlist=['t']
-    func = partial(readstationfiles_t,'header',os.path.expandvars('$FSCRATCH/ei6/'),'ERA5_'+exp+'_',varlist=varlist)
-    list(map(func,iter(referencevalues.items())))
-
+        
+    #global exp
+    if exp == '1':
+        print('FF the exp is', exp )
+    #func = partial(readstationfiles_t,'header',os.path.expandvars('$FSCRATCH/ei6/'),'ERA5_'+exp+'_',varlist=varlist)
+        func = partial(readstationfiles_t,'header',os.path.expandvars('netCDF_1_1759_1761/'+exp),'ERA5_'+exp+'_',varlist=varlist)
+    else:
+        func = partial(readstationfiles_t,'header',os.path.expandvars('netCDF_1_1759_1761/'+exp),exp+'_',varlist=varlist)
+        
+    list(map(func,list(referencevalues.items())))
+    
     return
 
 
+
+"""Dictionary mapping the name of the dataset to the storage directory
+e.g. the dataset can be found at /raid60/scratch/leo/scratch/era5/odbs/1/ """
+
+res_database = { '1'   : '/raid60/scratch/leo/scratch/era5/odbs/',
+                 '1761': '/raid60/scratch/leo/scratch/era5/odbs/',
+                 '1759': '/raid60/scratch/leo/scratch/era5/odbs/',
+                 '3188': '/raid60/scratch/leo/scratch/era5/odbs/' 
+                }
+
+def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
+    """ Function converting the odb files to netCDF
+    
+        Args:
+             dataset: number of the dataset, as defined in the res_database dictionary
+             
+             single_station: single station to be processed.
+                             The absolute path to the 
+                             If the varibale is defined, it will replace the dataset variable
+                             and only the single station will be converted.
+                             
+             pull   : number of cores used in multithreading. 
+                      If set to False, only one single process is executed
+                      
+             varno  : variable id number 
+                      2:Temp, 111:wind dir,)
+                      
+             debug : if True, will print some additional information for debugging
+             
+        Example: 
+             run_converter(dataset=['1','1759'], pull=False, varno=2)
+             Will convert the datasets '1' and '1759', using a single core, for the Temperature variable
+ 
+             run_converte(single_stat=/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.__01455, pool=False, varno=2 )
+             Will convert the file specified
+    """
+    
+    
+    def process_list(sodblist, pool):
+        """Looping over the files in the list
+           Args:
+                sodblist is the list of odb files to be processed
+                exp is the number of the dataset, e.g. '1', '1761' etc.
+        """
+        
+        sodblist.sort(key=os.path.getsize) 
+        s=numpy.cumsum(list(os.path.getsize(f) for f in sodblist))
+        if debug: print('The sodblist is:', sodblist)
+        stride=30
+        idx=[0]
+        k=1e9
+        x=numpy.where(s>k)[0]
+        while len(x)>0:
+            k+=1e9
+            idx.append(x[0])
+            x=numpy.where(s>k)[0]
+        idx2=list(range(len(idx)))  
+        idx.append(len(s))
+        if pool:
+            p = Pool(pool)            
+            if debug: print('Running using ', pool, ' cores.')
+            if debug: print('The exp is:', exp)
+            
+            func = partial(odb2netcdf,gribpath,sodblist,varno,par_read_odbsql_stn_nofeedback,idx)
+            p.map(func,  idx2)
+            if debug: print('Done with multithreading.')            
+        else:   
+            if debug: print('Running on single core.')            
+            func = partial(odb2netcdf,gribpath,sodblist,varno,par_read_odbsql_stn_nofeedback,idx)
+            list(map(func,  idx2))
+            
+    gribpath=os.path.expandvars('/raid60/scratch/leo/scratch/ERApreSAT/')
+
+    sodblist = ''
+    
+    if dataset and not single_stat: # select all the stations in a database directory
+        global exp
+        exp = dataset
+        path = res_database[dataset]
+        ipath=os.path.expandvars(path + exp + '/')
+        if debug: print('The selected database is:', ipath, ' the exp is', exp , ' d is ', dataset)
+        
+        # selecting different file names according to their naming conventions
+        if dataset == '1761' or dataset == '1759': 
+            sodblist=glob.glob(ipath+'/era5.????.conv.?:*[!.nc]') #ipath+'/era5.'+exp+'.conv.?:*[!.nc]'
+        if dataset == '3188':
+            sodblist=glob.glob(ipath+'/era5.3188.conv.C:*[!.nc]') #ipath+'/era5.conv.C:4490*) 
+        if dataset == '1': 
+            sodblist=glob.glob(ipath+'/*.conv._*')    
+        
+        sodblist = [ el for el in sodblist if sodblist.index(el) in range(1001,1100)  ] # SLIMMER
+     
+        if debug:
+            print('The selected odb list is: ',sodblist, 'made of ', len((sodblist)), ' data files. ***')
+            print('The ipath variable is: ', ipath+'era5.conv.?:*[!.nc]')
+        print('sodblist is: FF', sodblist)
+        process_list(sodblist,pool)
+
+    elif single_stat: # select a single station
+        exp = single_stat.split('/')[len(single_stat.split('/'))-2] 
+        print('The exp is', exp)
+        sodblist=[single_stat] 
+        process_list(sodblist,pool)
+
+        
+        
+        
+        
+global exp    
+
+if __name__ == "__main__":
+    """ Call to the run_converter function 
+    
+        Example:
+                 stat = '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._98426' # selection of a single station
+                 run_converter(dataset= False, single_stat= stat, pool=False, varno=2, debug = True )
+                 
+                 exp = '1'
+                 run_converter(dataset= '1', single_stat= False, pool=20, varno=110, debug = True )  
+                 
+                 varno: 2(temp.), 110(u,v wind)
+                 
+                 
+        Note that the single station option needs somes fixes (I did not fix where the output is saved)
+    """
+    
+    stat = '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._98426' # random station small size for single test
+    #run_converter(dataset= ['1'], single_stat= False, pool=False, varno=2, debug = True )  
+    
+    datasets = ['1','1761','1759']
+    
+    #exp = ['3188'] # 3188 gives: builtins.IndexError: index 30533 is out of bounds for axis 0 with size 1476 when using pool
+    variables = [2, 110]
+    for e in datasets:
+        exp = e
+        for v in variables:
+            run_converter(dataset= e, single_stat= False, pool=20, varno= v, debug = True )   
+            print('Finished with the database', e , ' **** for the variable: ', str(v))
+            
+    exit()
+
+
+
+print('Done! *** ')    
+print('done done')
+
+
+
+
+
+
+'''
 if __name__ == "__main__":
 
     gribpath=os.path.expandvars('/raid60/scratch/leo/scratch/ERApreSAT/')
@@ -1485,4 +1677,4 @@ if __name__ == "__main__":
 
     exit()
 
-
+'''
