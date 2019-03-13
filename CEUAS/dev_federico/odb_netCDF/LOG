@@ -5,5 +5,19 @@ Plot are stored in /raid8/srvx1/federico/odb_netCD/PLOTS
 
 Must check the data since all the components are positevely defined
 
+
+*** 13/03/2019
+- added new readodbstation file to convert from odbs to netCDFs.
+It processes correctly the datasets 1 , 1759, 1761 and produced the netCDF files with temperature, u and v wind components
+
+Still to do: add humidity, dew point
+(see Michael scripts to convert humidity)
+
+- updated plotAll_u_v_wind
+
+
 ToDo: add a module to check file 
-i.e. print list of files with empty data, small datasets, comapre u and v vectors etc. 
+i.e. print list of files with empty data, 
+     small datasets, 
+     compare u and v vectors etc. 
+
