@@ -76,7 +76,7 @@ def uadb(ident, filename, variables=None, levels=None, **kwargs):
     return data
 
 
-def to_std_levels(ident, filename, levels=None, **kwargs):
+def to_std_levels(ident, filename, levels=None, levdim='pres', levattrs=None, **kwargs):
     """ Convert IGRA table data to xarray on std pressure levels
 
     Args:
@@ -97,6 +97,14 @@ def to_std_levels(ident, filename, levels=None, **kwargs):
     if levels is None:
         levels = std_plevels
 
+    if levdim == 'pres':
+        levattrs = {'units': 'Pa', 'standard_name': 'air_pressure', 'axis': 'Z'}
+    else:
+        if levattrs is None:
+            raise ValueError("Requires Attributes, units for levdim")
+        if 'units' not in levattrs.keys():
+            raise ValueError("Requires units for levdim")
+
     # READ ASCII
     if kwargs.get('uadb', False):
         data, station = uadb_ascii_to_dataframe(filename, **kwargs)  # Dataframe
@@ -106,7 +114,7 @@ def to_std_levels(ident, filename, levels=None, **kwargs):
     message(ident, levels, **kwargs)
     # todo if there is only gph data, then everything will be nan
     # convert gph to press
-    data = dataframe(data, 'pres', levels=levels, **kwargs)
+    data = dataframe(data, levdim, levels=levels, **kwargs)
     # Convert pressure to gph
     # ?
     # Convert gph to pressure
@@ -114,11 +122,11 @@ def to_std_levels(ident, filename, levels=None, **kwargs):
     # Add Metadata
     new = {}
     for ivar in data.columns.tolist():
-        if ivar == 'pres':
+        if ivar == levdim:
             continue
-        tmp = data.loc[:, ['pres', ivar]].reset_index().set_index(['date', 'pres']).to_xarray()  # 1D -> 2D
+        tmp = data.loc[:, [levdim, ivar]].reset_index().set_index(['date', levdim]).to_xarray()  # 1D -> 2D
         new[ivar] = tmp[ivar]
-        new[ivar]['pres'].attrs.update({'units': 'Pa', 'standard_name': 'air_pressure', 'axis': 'Z'})
+        new[ivar][levdim].attrs.update(levattrs)
         new[ivar]['date'].attrs.update({'axis': 'T'})
 
         if ivar in _metadata.keys():
@@ -156,6 +164,10 @@ def to_std_levels(ident, filename, levels=None, **kwargs):
         data[ivar] = idata
 
     return data
+
+
+def convert_gph_to_pres(data):
+    pass
 
 
 def ascii_to_dataframe(filename, **kwargs):
@@ -716,7 +728,7 @@ def uadb_ascii_to_dataframe(filename, **kwargs):
             try:
                 # Header
                 usi = int(line[2:14])  # unique station identifier
-                ident = line[15:21]  # WMO
+                ident = line[15:21].strip()  # WMO
                 idflag = int(line[22:24])  # id flag
                 d_src = int(line[25:28])  # source dataset
                 version = float(line[29:34])  # version
@@ -747,7 +759,7 @@ def uadb_ascii_to_dataframe(filename, **kwargs):
                     minutes = 0
                 minutes = "%02d" % minutes
                 idate = datetime.datetime.strptime(year + month + day + hour + minutes, '%Y%m%d%H%M')
-                headers.append((idate, usi, numlev, lat, lon, ele, stype))
+                headers.append((idate, ident, usi, numlev, lat, lon, ele, stype))
                 pday = int(day)
                 search_h = False
 
@@ -782,6 +794,6 @@ def uadb_ascii_to_dataframe(filename, **kwargs):
     # fix units
     out['pres'] *= 100.  # need Pa
     out.index.name = 'date'
-    headers = pd.DataFrame(data=headers, columns=['date', 'uid', 'numlev', 'lat', 'lon', 'alt', 'stype']).set_index(
+    headers = pd.DataFrame(data=headers, columns=['date', 'ident', 'uid', 'numlev', 'lat', 'lon', 'alt', 'stype']).set_index(
         'date')
     return out, headers
