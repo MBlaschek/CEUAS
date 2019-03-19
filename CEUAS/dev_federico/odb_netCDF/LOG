@@ -21,3 +21,11 @@ i.e. print list of files with empty data,
      small datasets, 
      compare u and v vectors etc. 
 
+
+*** readodb Humidity
+The file is a copy of the readodbstationfiles, with the addition of the changes to implement the specific Humidity.
+
+The major change was the extension of the metadata dictionary,
+and the interpolation function to extract the standard pressure level values.
+
+So far it has been tested on a subset of station in the '1' dataset
