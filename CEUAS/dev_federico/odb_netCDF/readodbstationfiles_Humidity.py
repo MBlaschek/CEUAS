@@ -1079,20 +1079,23 @@ def topressure(gribpath,ps,tidx,stats):
                 add_feedback(gribpath+'/../CERA20C_ens/','CERA20C{0}{1:02}.'+vn[1]+'.0.grb',
                              vn[0],1901,2010+1,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011
             else:
-                #add_feedback(gribpath+'/../CERA20C_ens/','CERA20C{0}{1:02}.'+vn[1]+'.0.grb',
-                #             vn[0],1935,1935+1,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011 # FF
                 add_feedback(gribpath+'/../CERA20C_ens/','CERA20C{0}{1:02}.'+vn[1]+'.0.grb',
-                             vn[0],1935,1979+1,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011                
+                             vn[0],1935,1935+1,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011 # FF
+                #add_feedback(gribpath+'/../CERA20C_ens/','CERA20C{0}{1:02}.'+vn[1]+'.0.grb',
+                #             vn[0],1935,1979+1,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011                
                 #add_feedback(gribpath+'/../CERA20C_ens/','CERA20C{0}{1:02}.'+vn[1]+'.0.grb',
                 #             vn[0],1980,1985,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011 # FF
-
+                
+    """ select the variables to loop on; values are the variable number"""
+    var = {'t':2,'u':'','v':'','h':7,'dp':'' }
+    
     for statid in list(stats.keys()):
         if statid not in ['header','odbfile']:
             s=stats[statid]
             if s['nmax']<2:
                 continue
             for i in ['obsvalue','biascorr','fg_depar','an_depar']:
-                for p in ['t','u','v','h','dp']: # FF added new variables h, dp
+                for p in var.keys(): # FF added new variables h, dp
                     try:
                         s[p+i]=numpy.empty(s['mtemperatures'].shape)
                         s[p+i][:]=numpy.nan
@@ -1101,6 +1104,39 @@ def topressure(gribpath,ps,tidx,stats):
                     pass
             #print statid
             
+            """ filling the data. Note that the wind component is treated separately """                
+            for k in var.keys():
+                if k=='v' or k=='u': continue # treated separately
+                if k =='dp': continue # to be implemented
+                var_idx = k +'idx' # idx of each variable (t,h,dp)
+                var_no = var[k]
+                print('var_idx, var_no', var_idx, var_no)
+                if len(s[var_idx])>0:
+                    tgood=numpy.zeros(s['mdatum'].shape,dtype=numpy.bool)
+                    tgood=select_standardpressuredata(s['zref'],ps*100.,
+                                                      s['mdatum'],s['data'],tgood,tidx,s[var_idx],var_no,hl,
+                                                      s[k+'obsvalue'],
+                                                      biascorr=s[k+'biascorr'],
+                                                      fg_depar=s[k+'fg_depar'],
+                                                      an_depar=s[k+'an_depar'])
+                    
+                    if sum(tgood)<s['mdatum'].shape[0]:
+                        for p in [k+'obsvalue',k+'biascorr',k+'fg_depar',k+'an_depar']:
+                            try:
+                                s[p]=s[p][:,:,tgood]
+                            except:
+                                pass
+                            
+                    if k == 't': 
+                        s['temperatures']=s[k+'obsvalue']
+                    else:
+                        s[k]=s[k+'obsvalue']
+                        
+                    s[k+'datum']=s['mdatum'][tgood]
+                    s[k+'sonde_type']=s['sonde_type'][tgood]
+                    s[k+'hours']=s['mhours'][:,tgood]             
+             
+            '''
             if len(s['tidx'])>0:
                 tgood=numpy.zeros(s['mdatum'].shape,dtype=numpy.bool)
                 tgood=select_standardpressuredata(s['zref'],ps*100.,
@@ -1140,7 +1176,7 @@ def topressure(gribpath,ps,tidx,stats):
                 s['hdatum']=s['mdatum'][tgood]
                 s['hsonde_type']=s['sonde_type'][tgood]
                 s['hhours']=s['mhours'][:,tgood]
-                    
+            '''        
                     
                 
                 
@@ -1444,13 +1480,12 @@ def odb2netcdf(gribpath,sodblist,varno,odbreader,idx,k):
         varlist = ['h']
         print('Processing the Specific Humidity FF ***')
         
-        
     #global exp
     if exp == '1':
         print('FF the exp is', exp )
     #func = partial(readstationfiles_t,'header',os.path.expandvars('$FSCRATCH/ei6/'),'ERA5_'+exp+'_',varlist=varlist)
         #func = partial(readstationfiles_t,'header',os.path.expandvars('netCDF_'+exp+'/'+exp),'ERA5_'+exp+'_',varlist=varlist)
-        func = partial(readstationfiles_t,'header',os.path.expandvars('ALLRES_t_uv_h/'+exp),'ERA5_'+exp+'_',varlist=varlist)
+        func = partial(readstationfiles_t,'header',os.path.expandvars('redo_10393/'+exp),'ERA5_'+exp+'_',varlist=varlist)
         print('Done with FF', exp , varlist)
     else:
         func = partial(readstationfiles_t,'header',os.path.expandvars('ALLRES_t_uv_h/'+exp), exp+'_',varlist=varlist)
@@ -1582,7 +1617,7 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
         sodblist = ['/raid60/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.' + n for n in missing ]
         
         '''
-        
+        sodblist = ['/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._10393']
         #sodblist = sodblist[1000:1050]
         print('FF sodblist', sodblist)
         if debug:
@@ -1630,13 +1665,14 @@ if __name__ == "__main__":
     #datasets = ['1','1761','1759','3188'] # 3188 gives: builtins.IndexError: i ndex 30533 is out of bounds for axis 0 with size 1476 when using pool
     
     datasets = ['1','1761','1759','3188']
+    datasets = ['1']
     
     variables = [2,7,110]
     
     for e in datasets:
         exp = e
         for v in variables:
-            run_converter(dataset=e, single_stat= False, pool=20, varno= v, debug = True )   
+            run_converter(dataset=e, single_stat= False, pool=False, varno= v, debug = True )   
             print('Finished with the database', e , ' **** for the variable: ', str(v))
             
     exit()
