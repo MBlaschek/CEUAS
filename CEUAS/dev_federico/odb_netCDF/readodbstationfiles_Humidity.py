@@ -852,7 +852,7 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v','dp','
                   v=dict(varname='vwind',bias='vbiascorr',fg_dep='vfg_depar',an_dep='van_depar',
                          datum='vdatum',hours='vhours',units='m/s',long_name='Southerly wind component',sonde_type='vsonde_type', valid_range=[-100.,100]) ,
                   dp=dict(varname='dp',bias='dpbiascorr',fg_dep='dpfg_depar',an_dep='dpan_depar',
-                         datum='dpdatum',hours='dphours',units='???',long_name='Dew Point',sonde_type='dpsonde_type', valid_range=[-100.,100]) ,
+                         datum='dpdatum',hours='dphours',units='K',long_name='Upper Air Dew Point',sonde_type='dpsonde_type', valid_range=[0.,300]) ,
                   h=dict(varname='h',bias='hbiascorr',fg_dep='hfg_depar',an_dep='han_depar',
                          datum='hdatum',hours='hhours',units='???',long_name='Specific Humidity',sonde_type='hsonde_type', valid_range=[-100.,100])                   
                   
@@ -1006,6 +1006,8 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v','dp','
 
 def topressure(gribpath,ps,tidx,stats):
     
+    var = {'t':2,'u':'','v':'','h':7,'dp':59 } # Mapping between the name of the variable and the coventional varno as in the odbfiles
+    
     if not stats:
         return stats
     t=time.time()
@@ -1048,15 +1050,15 @@ def topressure(gribpath,ps,tidx,stats):
             s['mdatum']=numpy.arange(nmax,dtype=numpy.int)
             s['mhours']=numpy.zeros((2,nmax),dtype=numpy.int)
             s['mhours'][:]=-999
-            s['tidx']=numpy.where(s['data'][:,h.index('varno')]==2)[0]
             
             
             s['sonde_type']=numpy.zeros(nmax,dtype=numpy.int32)
             s['sonde_type'][:]=-999
-            s['wdidx']=numpy.where(s['data'][:,h.index('varno')]==windno)[0]
             
-            s['hidx']=numpy.where(s['data'][:,h.index('varno')]==7)[0] # FF humidity
-            
+            s['tidx' ] = numpy.where(s['data'][:,h.index('varno')]== var['t']  )[0]       # Temperature
+            s['wdidx'] = numpy.where(s['data'][:,h.index('varno')]== windno    )[0]  # Wind
+            s['hidx' ] = numpy.where(s['data'][:,h.index('varno')]== var['h']  )[0]       # Specific Humidity
+            s['dpidx'] = numpy.where(s['data'][:,h.index('varno')]== var['dp'] )[0]      # Dew Point 
             
             do_hours(tidx, s['mdatum'], s['mhours'],s['mtemperatures'], s['data'],s['sonde_type'], hl,varnos=(2,7,windno)) # ????
             
@@ -1087,7 +1089,7 @@ def topressure(gribpath,ps,tidx,stats):
                 #             vn[0],1980,1985,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011 # FF
                 
     """ select the variables to loop on; values are the variable number"""
-    var = {'t':2,'u':'','v':'','h':7,'dp':'' }
+    #var = {'t':2,'u':'','v':'','h':7,'dp':57 }
     
     for statid in list(stats.keys()):
         if statid not in ['header','odbfile']:
@@ -1107,7 +1109,7 @@ def topressure(gribpath,ps,tidx,stats):
             """ filling the data. Note that the wind component is treated separately """                
             for k in var.keys():
                 if k=='v' or k=='u': continue # treated separately
-                if k =='dp': continue # to be implemented
+                #if k =='dp': continue # to be implemented
                 var_idx = k +'idx' # idx of each variable (t,h,dp)
                 var_no = var[k]
                 print('var_idx, var_no', var_idx, var_no)
@@ -1478,7 +1480,8 @@ def odb2netcdf(gribpath,sodblist,varno,odbreader,idx,k):
         varlist=['t']
     elif varno ==7:
         varlist = ['h']
-        print('Processing the Specific Humidity FF ***')
+    elif varno == 59:
+        varlist = ['dp']
         
     #global exp
     if exp == '1':
@@ -1668,6 +1671,8 @@ if __name__ == "__main__":
     datasets = ['1']
     
     variables = [2,7,110]
+    
+    variables = [59]
     
     for e in datasets:
         exp = e

@@ -28,4 +28,10 @@ The file is a copy of the readodbstationfiles, with the addition of the changes 
 The major change was the extension of the metadata dictionary,
 and the interpolation function to extract the standard pressure level values.
 
-So far it has been tested on a subset of station in the '1' dataset
+
+*** 21/03/2019
+
+readodb Humidity has been extended with the dew point.
+Tested with the station 10393
+See attached pdf output
+
