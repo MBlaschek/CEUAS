@@ -75,7 +75,6 @@ def read_odb(fn):
     c.execute(qs)
 
     rdata=list(c.fetchall())
-    print(rdata)
 
     return rdata
 
@@ -355,7 +354,6 @@ def par_read_odbsql_stn_nofeedback(varno,odbfile):
                 return alldict
     else:
         return alldict
-    print('alldict FF:', alldict)
     #print 'sql',time.time()-t
     tx=time.time()
 
@@ -867,9 +865,7 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v','dp','
     #print ('Variables of the template FF', f.variables.keys()) #['lat', 'lon', 'alt', 'press', 'datum', 'hours', 'temperatures', 'fg_dep', 'bias', 'flags', 'an_dep', 's_type']
     f.set_auto_maskandscale(False)
     
-    print('ncpath: FF', ncpath+'/'+statid)
     for t in varlist: 
-        print ('trying with the variable FF', t)
         #print ('the statdata is FF:', statdata)
         #print ('the metadata is FF:', metadata)
         
@@ -880,10 +876,8 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v','dp','
         """
         try:
             if statdata[1][metadata[t]['datum']].shape[0]==0: # e.g. t = 't' , look for statdata[1]['tdatum'] where 'tdatum'=metadata['t']['datum'] 
-                print(statid,metadata[t]['datum'], 'no data')
                 continue
         except: # FF uncomment
-            print('running in the exception FF ***')
             continue
         #except: 
         #    print('except')
@@ -892,15 +886,12 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v','dp','
         if not os.path.exists(ncpath+'/'+statid):
             os.makedirs(ncpath+'/'+statid)
         fno=ncpath+'/'+statid+'/'+prefix+statid+'_'+t+'.nc'
-        print('the path to the output file is FF:', fno )
         fo = netCDF4.Dataset(fno,"w")
-        print('written the new file FF', fno , fo.variables.keys())
         '''read and write global attributes'''
         for i in f.ncattrs(): # FF f.ncattrs=['Conventions', 'title', 'institution', 'history', 'source', 'references']
             if i=='history':
                 setattr(fo,i,datetime.date.today().strftime("%Y/%m/%d"))
             elif i=='source':
-                print('*** statdata[1][odbfile] FF', statdata[1]['odbfile'])
                 setattr(fo,i,'Observation feedback, expID: '+statdata[1]['odbfile'].split('/')[-1] )
             elif i=='title':
                 setattr(fo,i,'Station daily '+metadata[t]['varname']+' series' )
@@ -952,8 +943,6 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v','dp','
                 vhilf=numpy.asarray(statdata[1]['odbstatid'])
                 fo.variables['odbstatid'][:]=vhilf
             elif i=='temperatures':
-                #print('writing the variable into temp, FF')
-                #print('metadata[t][varname]:', metadata[t]['varname'])
                 fo.createVariable(metadata[t]['varname'],var.dtype,var.dimensions,fill_value=numpy.nan)
                 fo.variables[metadata[t]['varname']][:]=statdata[1][metadata[t]['varname']][:]
             elif i=='fg_dep':
@@ -1092,10 +1081,10 @@ def topressure(gribpath,ps,tidx,stats):
             else:
                 #add_feedback(gribpath+'/../CERA20C_ens/','CERA20C{0}{1:02}.'+vn[1]+'.0.grb',
                 #             vn[0],1935,1935+1,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011 # FF
-                #add_feedback(gribpath+'/../CERA20C_ens/','CERA20C{0}{1:02}.'+vn[1]+'.0.grb',
-                #             vn[0],1935,1979+1,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011                
                 add_feedback(gribpath+'/../CERA20C_ens/','CERA20C{0}{1:02}.'+vn[1]+'.0.grb',
-                             vn[0],1980,1985,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011 # FF
+                             vn[0],1935,1979+1,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011                
+                #add_feedback(gribpath+'/../CERA20C_ens/','CERA20C{0}{1:02}.'+vn[1]+'.0.grb',
+                #             vn[0],1980,1985,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011 # FF
 
     for statid in list(stats.keys()):
         if statid not in ['header','odbfile']:
@@ -1461,12 +1450,11 @@ def odb2netcdf(gribpath,sodblist,varno,odbreader,idx,k):
         print('FF the exp is', exp )
     #func = partial(readstationfiles_t,'header',os.path.expandvars('$FSCRATCH/ei6/'),'ERA5_'+exp+'_',varlist=varlist)
         #func = partial(readstationfiles_t,'header',os.path.expandvars('netCDF_'+exp+'/'+exp),'ERA5_'+exp+'_',varlist=varlist)
-        func = partial(readstationfiles_t,'header',os.path.expandvars('1_humidity/'+exp),'ERA5_'+exp+'_',varlist=varlist)
+        func = partial(readstationfiles_t,'header',os.path.expandvars('ALLRES_t_uv_h/'+exp),'ERA5_'+exp+'_',varlist=varlist)
         print('Done with FF', exp , varlist)
     else:
-        func = partial(readstationfiles_t,'header',os.path.expandvars('DEBUG_netCDF_AllRes/'+exp), exp+'_',varlist=varlist)
+        func = partial(readstationfiles_t,'header',os.path.expandvars('ALLRES_t_uv_h/'+exp), exp+'_',varlist=varlist)
 
-    print('FF referencevalues.items()', referencevalues.items())
     list(map(func,list(referencevalues.items())))
     
     return
@@ -1510,7 +1498,7 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
     """
     
     
-    def process_list(sodblist, pool):
+    def process_list(sodblist, pool,exp):
         """Looping over the files in the list
            Args:
                 sodblist: the list of odb files to be processed
@@ -1529,18 +1517,36 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
             x=numpy.where(s>k)[0]
         idx2=list(range(len(idx)))  
         idx.append(len(s))
+        '''
         if pool:
             p = Pool(pool)            
             if debug: print('Running using ', pool, ' cores.')
             if debug: print('The exp is:', exp)
             # TO DO: replace nofeedback with withfeedback for exp == 1
-            func = partial(odb2netcdf,gribpath,sodblist,varno,par_read_odbsql_stn_nofeedback,idx)
+            if exp ==1: 
+                func = partial(odb2netcdf,gribpath,sodblist,varno,par_read_odbsql_stn_withfeedback,idx)
+            else:
+                func = partial(odb2netcdf,gribpath,sodblist,varno,par_read_odbsql_stn_nofeedback,idx)
             p.map(func,  idx2)
             if debug: print('Done with multithreading.')            
         else:   
             if debug: print('Running on single core.')            
             func = partial(odb2netcdf,gribpath,sodblist,varno,par_read_odbsql_stn_nofeedback,idx)
             list(map(func,  idx2))
+        '''
+        if debug: print('The exp is:', exp)
+        
+        if exp ==1: 
+            func = partial(odb2netcdf,gribpath,sodblist,varno,par_read_odbsql_stn_withfeedback,idx)
+        else:
+            func = partial(odb2netcdf,gribpath,sodblist,varno,par_read_odbsql_stn_nofeedback,idx)
+            
+        if pool:
+            p = Pool(pool)            
+            p.map(func,  idx2)
+        else:   
+            list(map(func,  idx2))        
+        
             
     gribpath=os.path.expandvars('/raid60/scratch/leo/scratch/ERApreSAT/')
 
@@ -1560,8 +1566,8 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
         elif dataset == '3188':
             sodblist=glob.glob(ipath+'/era5.3188.conv.C:*[!.nc]') #ipath+'/era5.conv.C:4490*) 
         elif dataset == '1': 
-            sodblist=glob.glob(ipath+'/*.conv._*')    
-        
+            sodblist=glob.glob(ipath+'/*.conv._*')  
+
         '''
         # to process a subset of files
         #sodblist = [ el for el in sodblist if sodblist.index(el) in range(0,500)  ] # FF SLIMMER, processing only 5 files
@@ -1577,19 +1583,18 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
         
         '''
         
-        sodblist = sodblist[1000:1050]
+        #sodblist = sodblist[1000:1050]
         print('FF sodblist', sodblist)
         if debug:
             print('The selected odb list is: ',sodblist, 'made of ', len((sodblist)), ' data files. ***')
             print('The ipath variable is: ', ipath+'era5.conv.?:*[!.nc]')
-        print('sodblist is: FF', sodblist)
-        process_list(sodblist,pool)
+        process_list(sodblist,pool,exp)
 
     elif single_stat: # select a single station
         exp = single_stat.split('/')[len(single_stat.split('/'))-2] 
         print('The exp is', exp)
         sodblist=[single_stat] 
-        process_list(sodblist,pool)
+        process_list(sodblist,pool,exp)
 
         
         
@@ -1624,13 +1629,14 @@ if __name__ == "__main__":
     stat = False
     #datasets = ['1','1761','1759','3188'] # 3188 gives: builtins.IndexError: i ndex 30533 is out of bounds for axis 0 with size 1476 when using pool
     
-    datasets = ['1']
-    variables = [7]
+    datasets = ['1','1761','1759','3188']
+    
+    variables = [2,7,110]
     
     for e in datasets:
         exp = e
         for v in variables:
-            run_converter(dataset= e, single_stat= False, pool=False, varno= v, debug = True )   
+            run_converter(dataset=e, single_stat= False, pool=20, varno= v, debug = True )   
             print('Finished with the database', e , ' **** for the variable: ', str(v))
             
     exit()
