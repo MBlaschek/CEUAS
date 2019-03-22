@@ -960,6 +960,8 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v','dp','
             elif i=='press':
                 fo.createVariable(i,var.dtype,var.dimensions)
                 fo.variables[i][:]=var[:]
+
+                
             elif i=='s_type':
                 fo.createVariable(i,var.dtype,var.dimensions)
                 fo.variables[i][:]=statdata[1][metadata[t]['sonde_type']][:]
@@ -996,8 +998,9 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v','dp','
                         if i=='datum' and j=='units':
                             setattr(fo.variables[i],j,'days since 1900-01-01 00:00:00')
 #	    setattr(fo.variables['source'],'missing_value','unknown')
-        setattr(fo.variables['source'],'long_name','ODB2 source data set code')
-
+        setattr(fo.variables['source'] , 'long_name'  , 'ODB2 source data set code')
+        setattr(fo.variables['press']  , 'valid_range', [10,1000])
+        print('This is the pressure, trying to fix it')
 
         fo.close()
     f.close()
@@ -1112,11 +1115,10 @@ def topressure(gribpath,ps,tidx,stats):
                 #if k =='dp': continue # to be implemented
                 var_idx = k +'idx' # idx of each variable (t,h,dp)
                 var_no = var[k]
-                print('var_idx, var_no', var_idx, var_no)
                 if len(s[var_idx])>0:
                     tgood=numpy.zeros(s['mdatum'].shape,dtype=numpy.bool)
                     tgood=select_standardpressuredata(s['zref'],ps*100.,
-                                                      s['mdatum'],s['data'],tgood,tidx,s[var_idx],var_no,hl,
+                                                      s['mdatum'],s['mhours'],s['data'],tgood,tidx,s[var_idx],var_no,hl,
                                                       s[k+'obsvalue'],
                                                       biascorr=s[k+'biascorr'],
                                                       fg_depar=s[k+'fg_depar'],
@@ -1216,7 +1218,7 @@ def topressure(gribpath,ps,tidx,stats):
     print('nach select',time.time()-t)
     return stats
 #@njit
-def select_standardpressuredata(zref,ps,mdatum,data,good,tidx,didx,varno,hl,
+def select_standardpressuredata(zref,ps,mdatum,mhour,data,good,tidx,didx,varno,hl,
                                 obs,biascorr=numpy.empty((1,1,1)),
                                 fg_depar=numpy.empty((1,1,1)),an_depar=numpy.empty((1,1,1)),
                                 vobs=numpy.empty((1,1,1)),vbiascorr=numpy.empty((1,1,1)),
@@ -1260,10 +1262,17 @@ def select_standardpressuredata(zref,ps,mdatum,data,good,tidx,didx,varno,hl,
                 iday=1
 
         idx=tidx[(year-1900)*12+(day%10000)//100-1]+day%100-1+iday#-tidx[(year-1900)*12] -1 # days since... not Fortran convention
+        #found=False
+        #for ip in range(ps.shape[0]):
+            #if obs[ihour,ip,m]==obs[ihour,ip,m]:
+                #found=True
         
         if idxold<idx:
             m+=1
             idxold=idx
+            
+        if mhour[ihour,m]!=data[i,vhour]//10000:
+            continue
             #if m>=mdatum.shape[0]: # can happen if launches are late and twice daily
                 #ms=obs.shape
                 #obs=numpy.concatenate((obs,numpy.zeros((ms[0],ms[1],1))),axis=2)
@@ -1398,7 +1407,7 @@ def do_shape(tidx,data,hl,varnos):
             ixold=ix
     return m
 
-@njit
+#@njit
 def do_hours(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
 
     m=-1
@@ -1438,7 +1447,29 @@ def do_hours(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
 
         mtemperatures[ih,:,m]=0.
         mdatum[m]=ix
-        mhours[ih,m]=hour
+        
+        if mhours[ih,m]==-999:
+            mhours[ih,m]=hour
+        else:
+            if ih==1:
+                if abs(mhours[ih,m]-12)>abs(hour-12):
+                    mhours[ih,m]=hour
+                #else:
+                    #print('not closest')
+            else:
+                xhour=hour
+                xmhour=mhours[ih,m]
+                if xhour>=18:
+                    xhour=xhour-24
+                if xmhour>=18:
+                    xmhour=xmhour-24
+                if abs(xmhour)>abs(xhour):
+                    mhours[ih,m]=hour
+                #else:
+                    #print('not closest')
+                    
+                
+                    
         if hl[7]!=-1:
             if data[i,hl[7]]==data[i,hl[7]]:
                 sonde_type[m]=int(data[i,hl[7]])
@@ -1488,7 +1519,7 @@ def odb2netcdf(gribpath,sodblist,varno,odbreader,idx,k):
         print('FF the exp is', exp )
     #func = partial(readstationfiles_t,'header',os.path.expandvars('$FSCRATCH/ei6/'),'ERA5_'+exp+'_',varlist=varlist)
         #func = partial(readstationfiles_t,'header',os.path.expandvars('netCDF_'+exp+'/'+exp),'ERA5_'+exp+'_',varlist=varlist)
-        func = partial(readstationfiles_t,'header',os.path.expandvars('redo_10393/'+exp),'ERA5_'+exp+'_',varlist=varlist)
+        func = partial(readstationfiles_t,'header',os.path.expandvars('Verifica_10393/'+exp),'ERA5_'+exp+'_',varlist=varlist)
         print('Done with FF', exp , varlist)
     else:
         func = partial(readstationfiles_t,'header',os.path.expandvars('ALLRES_t_uv_h/'+exp), exp+'_',varlist=varlist)
@@ -1620,7 +1651,7 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
         sodblist = ['/raid60/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.' + n for n in missing ]
         
         '''
-        sodblist = ['/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._10393']
+        #sodblist = ['/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._10393']
         #sodblist = sodblist[1000:1050]
         print('FF sodblist', sodblist)
         if debug:
@@ -1659,25 +1690,20 @@ if __name__ == "__main__":
         
     """
     
-    stat = '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._98426' # random station small size for single test
-    #run_converter(dataset= ['1'], single_stat= False, pool=False, varno=2, debug = True )  
+    stat = '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._10393' # random station small size for single test
     
-    #datasets = ['1','1761','1759']
-    #stat = '/raid60/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.C:4751'
-    stat = False
-    #datasets = ['1','1761','1759','3188'] # 3188 gives: builtins.IndexError: i ndex 30533 is out of bounds for axis 0 with size 1476 when using pool
+    # stat = '/raid60/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.C:4751'
+    # stat = '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._10393' (Michael test station)
     
     datasets = ['1','1761','1759','3188']
+    
     datasets = ['1']
-    
-    variables = [2,7,110]
-    
-    variables = [59]
-    
+        
+    variables = [2]
     for e in datasets:
         exp = e
         for v in variables:
-            run_converter(dataset=e, single_stat= False, pool=False, varno= v, debug = True )   
+            run_converter(dataset=e, single_stat= stat, pool=False, varno= v, debug = True )   
             print('Finished with the database', e , ' **** for the variable: ', str(v))
             
     exit()
