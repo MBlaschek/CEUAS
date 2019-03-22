@@ -120,93 +120,6 @@ def std_date_time(idate):
 
 
 @njit(cache=True)
-def standard_sounding_times(data, dim='date', times=(0, 12), span=6, freq='12h', return_indices=False, only_time=False,
-                            **kwargs):
-    """ Standardize datetime to times per date, try to fill gaps
-
-    Args:
-        data (xarray.DataArray): Input DataArray
-        dim (str): datetime dimension
-        times (tuple): sounding times
-        span (int): plus minus sounding time for filling gaps
-        freq (str): frequency of sounding times
-        return_indices (bool): return indices for alignment
-        only_time (bool): when multiple times can be set std times, use only time difference for selection
-
-    Returns:
-        xarray.DataArray : datetime standardized DataArray
-    """
-
-    kwargs['mname'] = kwargs.get('mname', 'std_hours')
-
-    if not isinstance(data, xarray.DataArray):
-        raise ValueError('Requires a DataArray', type(data))
-
-    if dim not in data.dims:
-        raise ValueError('Requires a datetime dimension', dim)
-
-    dates = data[dim].values.copy()
-
-    #  all possible dates
-    alldates = pandas.date_range(pandas.Timestamp(dates.min()).replace(hour=np.min(times), minute=0, second=0),
-                                 pandas.Timestamp(dates.max()).replace(hour=np.max(times), minute=0, second=0),
-                                 freq=freq)
-
-    new = data.reindex(**{dim: alldates})  # complete reindex to new dates (implicit copy)
-    new['delay'] = (dim, np.zeros(alldates.size))  # new coordinate for delays
-    # matching dates
-    new_logic = np.isin(new[dim].values, dates)
-    # not found directly
-    jtx = np.where(~new_logic)[0]  # newdates not fitting dates (indices)
-    new['delay'].values[jtx] = np.nan  # not fitting dates
-    newindex = [slice(None)] * data.ndim
-    oldindex = [slice(None)] * data.ndim
-    axis = data.dims.index(dim)
-    nn = 0
-    indices = []
-    # All times not yet filled
-    # Is there some data that fits within the given time window
-    for itime in new[dim].values[jtx]:
-        diff = (itime - dates) / np.timedelta64(1, 'h')  # closest sounding
-        n = np.sum(np.abs(diff) <= span)  # number of soundings within time window
-        if n > 0:
-            i = np.where(alldates == itime)[0]  # index for new array
-            if n > 1 and not only_time:
-                # many choices, count data
-                k = np.where(np.abs(diff) <= span)[0]
-                oldindex[axis] = k
-                # count data of candidates
-                # weight by time difference (assuming, that a sounding at the edge of the window is less accurate)
-                distance = np.abs(diff[k])
-                counts = np.sum(np.isfinite(data.values[tuple(oldindex)]), axis=1) / np.where(distance != 0, distance,
-                                                                                              1)
-                if np.any(counts > 0):
-                    j = k[np.argmax(counts)]  # use the one with max data / min time diff
-                else:
-                    continue
-
-            else:
-                j = np.argmin(np.abs(diff))  # only one choice
-
-            newindex[axis] = i
-            oldindex[axis] = j
-            counts = np.sum(np.isfinite(data.values[tuple(oldindex)]), axis=0)
-            if counts > 0:
-                new.values[tuple(newindex)] = data.values[tuple(oldindex)]  # update data array
-                # new['delay'].values[i] = -1 * diff[j]  # pd.Timestamp(dates[j]).hour  # datetime of minimum
-                # indices += [(i[0], j)]
-                # nn += 1
-
-    new.attrs['std_times'] = str(times)
-    # new['delay'].attrs['updated'] = nn
-    # new['delay'].attrs['missing'] = new['delay'].isnull().sum().values
-    # new['delay'].attrs['times'] = str(times)
-    # if return_indices:
-    #     return new, np.array(indices)
-    return new
-
-
-@njit(cache=True)
 def myintp(pnew, pobs, xobs):
     res = numpy.interp(numpy.log(pnew), numpy.log(pobs), xobs)
     pmin = numpy.nanmin(pobs)
@@ -301,59 +214,75 @@ def filldaily_int(idatetime, vco, varnos, obs, fg, bias, ps, varno, miss_val):
 
 
 @njit(cache=True)
-def filldaily(ldate, ltime, vco, varnos, obs, fg, bias, ps, at, ati, varno, miss_val):
+def filldaily_012(ldate, ltime, vco, varnos, obs, fg, bias, ps, at, ati, varno, miss_val):
     n = numpy.sum(ltime[ati] >= 180000)
     atn = [at[0]]
     dailyobs = numpy.empty((2, ps.shape[0], ati.shape[0] + n), dtype=numpy.float32)
-    dailyobs.fill(numpy.nan)
+    dailyobs.fill(miss_val)
     dailyfg = numpy.empty((2, ps.shape[0], ati.shape[0] + n), dtype=numpy.float32)
-    dailyfg.fill(numpy.nan)
+    dailyfg.fill(miss_val)
     dailybias = numpy.empty((2, ps.shape[0], ati.shape[0] + n), dtype=numpy.float32)
-    dailybias.fill(numpy.nan)
+    dailybias.fill(miss_val)
     dailyhours = numpy.empty((2, ati.shape[0] + n), dtype=numpy.int32)
-    dailyhours.fill(numpy.nan)
+    dailyhours.fill(-1)
     ocount = 0
-    iold = 0
     l = 0  #
     m = 0  # missing
+    #
+    # Loop over all indices
+    #
     for i in range(ati.shape[0] - 2):
         # if l<i-1:
         # print(i,l)
         lfound = False
+        #
+        # Loop over all indices per day (including one extra day (because not really sorted))
+        #
         for j in range(ati[i + 2] - ati[i]):
-            atij = ati[i] + j
+            atij = ati[i] + j  # index of section
+            #
+            # not out of bounds, only same day (ldate)
+            #
             if atij < ltime.shape[0] and ldate[atij] == ldate[ati[i]]:
+                #
+                # select only that variable
+                #
                 if varnos[atij] == varno:
                     #
                     # Loop over pressure levels (find)
                     #
                     for ip in range(ps.shape[0] - 1, -1, -1):
+                        #
+                        # correct pressure level
+                        #
                         if vco[atij] == ps[ip]:
+                            #
+                            # not missing
+                            #
                             if obs[atij] != miss_val:
                                 lfound = True
+                                #
+                                # add new date (??? < 18 Z)
                                 #
                                 if atn[-1] < at[i] and ltime[ati[i]] < 180000:
                                     atn.append(at[i])
                                     l += 1
-
+                                #
+                                # TODO: potential mixing of profiles (missing at one time, present at other)
+                                # no soultion to this problem, due to iteration -> more sounding times
+                                #
                                 if ltime[atij] < 60000:
-                                    # if dailyspl[0,ip,i]!=dailyspl[0,ip,i]:
-                                    # dailyspl[0,ip,i]=obs[atij]
-                                    # else:
-                                    dailyobs[0, ip, l] = obs[atij]
-                                    dailyfg[0, ip, l] = fg[atij]
-                                    dailybias[0, ip, l] = bias[atij]
-                                    dailyhours[0, l] = ltime[atij] // 10000
-                                # ocount+=1
+                                    if numpy.isnan(dailyobs[0, ip, l]):
+                                        dailyobs[0, ip, l] = obs[atij]
+                                        dailyfg[0, ip, l] = fg[atij]
+                                        dailybias[0, ip, l] = bias[atij]
+                                        dailyhours[0, l] = ltime[atij] // 10000
                                 elif ltime[atij] < 180000:
-                                    # if dailyspl[1,ip,i]!=dailyspl[1,ip,i]:
-                                    # dailyspl[1,ip,i]=obs[atij]
-                                    # else:
-                                    dailyobs[1, ip, l] = obs[atij]
-                                    dailyfg[1, ip, l] = fg[atij]
-                                    dailybias[1, ip, l] = bias[atij]
-                                    dailyhours[1, l] = ltime[atij] // 10000
-                                # ocount+=1
+                                    if numpy.isnan(dailyobs[1, ip, l]):
+                                        dailyobs[1, ip, l] = obs[atij]
+                                        dailyfg[1, ip, l] = fg[atij]
+                                        dailybias[1, ip, l] = bias[atij]
+                                        dailyhours[1, l] = ltime[atij] // 10000
                                 else:
                                     if atn[-1] < at[i] + 1 and ltime[atij] >= 180000:
                                         lt = at[i] + 1
@@ -381,17 +310,139 @@ def filldaily(ldate, ltime, vco, varnos, obs, fg, bias, ps, at, ati, varno, miss
                                             lt = year * 10000 + month * 100 + day
 
                                         atn.append(lt)
-                                        # print(atn[-1])
                                         l += 1
-                                    # !!
-                                    # if dailyspl[0,ip,i+1]!=dailyspl[0,ip,i+1]:
-                                    # dailyspl[0,ip,i+1]=obs[atij]
-                                    # else:
+                                    if numpy.isnan(dailyobs[0, ip, l]):
+                                        dailyobs[0, ip, l] = obs[atij]
+                                        dailyfg[0, ip, l] = fg[atij]
+                                        dailybias[0, ip, l] = bias[atij]
+                                        dailyhours[0, l] = ltime[atij] // 10000
+                            # break pressure level loop
+                            break
+
+            if not lfound:
+                m += 1
+    print('l', l, 'm', m, ati.shape[0])
+    return dailyobs[:, :, :l + 1], dailyfg[:, :, :l + 1], dailybias[:, :, :l + 1], numpy.array(atn), dailyhours[:,:l + 1]
+
+
+@njit(cache=True)
+def filldaily(ldate, ltime, vco, varnos, obs, fg, bias, ps, at, ati, varno, miss_val):
+    n = numpy.sum(ltime[ati] >= 180000)
+    atn = [at[0]]
+    dailyobs = numpy.empty((4, ps.shape[0], ati.shape[0] + n), dtype=numpy.float32)
+    dailyobs.fill(miss_val)
+    dailyfg = numpy.empty((4, ps.shape[0], ati.shape[0] + n), dtype=numpy.float32)
+    dailyfg.fill(miss_val)
+    dailybias = numpy.empty((4, ps.shape[0], ati.shape[0] + n), dtype=numpy.float32)
+    dailybias.fill(miss_val)
+    dailyhours = numpy.empty((4, ati.shape[0] + n), dtype=numpy.float32)
+    dailyhours.fill(miss_val)
+    ocount = 0
+    l = 0  #
+    m = 0  # missing
+    #
+    # Loop over all indices
+    #
+    for i in range(ati.shape[0] - 2):
+        # if l<i-1:
+        # print(i,l)
+        lfound = False
+        #
+        # Loop over all indices per day (including one extra day (because not really sorted))
+        #
+        for j in range(ati[i + 2] - ati[i]):
+            atij = ati[i] + j   # index of section
+            #
+            # not out of bounds, only same day (ldate)
+            #
+            if atij < ltime.shape[0] and ldate[atij] == ldate[ati[i]]:
+                #
+                # select only that variable
+                #
+                if varnos[atij] == varno:
+                    #
+                    # Loop over pressure levels (find)
+                    #
+                    for ip in range(ps.shape[0] - 1, -1, -1):
+                        #
+                        # correct pressure level
+                        #
+                        if vco[atij] == ps[ip]:
+                            #
+                            # not missing
+                            #
+                            if obs[atij] != miss_val:
+                                lfound = True
+                                #
+                                # add new date (??? < 18 Z)
+                                #
+                                if atn[-1] < at[i] and ltime[ati[i]] <= 210000:
+                                    atn.append(at[i])
+                                    l += 1
+                                #
+                                # 21 -> 03 == 0
+                                # 03 -> 09 == 6
+                                # 09 -> 15 == 12
+                                # 15 -> 21 == 18
+                                #
+                                if ltime[atij] <= 30000:
+                                    # 00 Z
                                     dailyobs[0, ip, l] = obs[atij]
                                     dailyfg[0, ip, l] = fg[atij]
                                     dailybias[0, ip, l] = bias[atij]
                                     dailyhours[0, l] = ltime[atij] // 10000
-                                    # ocount+=1
+                                elif ltime[atij] <= 90000:
+                                    # 06 Z
+                                    dailyobs[1, ip, l] = obs[atij]
+                                    dailyfg[1, ip, l] = fg[atij]
+                                    dailybias[1, ip, l] = bias[atij]
+                                    dailyhours[1, l] = ltime[atij] // 10000
+                                elif ltime[atij] <= 150000:
+                                    # 12 Z
+                                    dailyobs[2, ip, l] = obs[atij]
+                                    dailyfg[2, ip, l] = fg[atij]
+                                    dailybias[2, ip, l] = bias[atij]
+                                    dailyhours[2, l] = ltime[atij] // 10000
+                                elif ltime[atij] <= 210000:
+                                    # 18 Z
+                                    dailyobs[1, ip, l] = obs[atij]
+                                    dailyfg[1, ip, l] = fg[atij]
+                                    dailybias[1, ip, l] = bias[atij]
+                                    dailyhours[1, l] = ltime[atij] // 10000
+                                else:
+                                    # > 21 + one day
+                                    if atn[-1] < at[i] + 1 and ltime[atij] > 210000:
+                                        lt = at[i] + 1
+                                        day = lt % 100
+                                        if day >= 29:
+                                            year = lt // 10000
+                                            month = (lt % 10000) // 100
+                                            if month == 2:
+                                                if year % 4 != 0 or day == 30:
+                                                    month = 3
+                                                    day = 1
+                                            elif month == 4 or month == 6 or month == 9 or month == 11:
+                                                if day > 30:
+                                                    month = month + 1
+                                                    day = 1
+                                            elif month == 12:
+                                                if day > 31:
+                                                    year = year + 1
+                                                    month = 1
+                                                    day = 1
+                                            else:
+                                                if day > 31:
+                                                    month = month + 1
+                                                    day = 1
+                                            lt = year * 10000 + month * 100 + day
+
+                                        atn.append(lt)
+                                        l += 1
+                                    dailyobs[0, ip, l] = obs[atij]
+                                    dailyfg[0, ip, l] = fg[atij]
+                                    dailybias[0, ip, l] = bias[atij]
+                                    dailyhours[0, l] = ltime[atij] // 10000
+                            # break pressure level loop
                             break
 
             if not lfound:
@@ -412,25 +463,31 @@ def myunique(dates):
     at[0] = dates[0]
     for i in range(1, dates.shape[0]):
         dat = dates[i]
-        # if times[i]>=180000:
-        # dat+=1
-        # if dat==19870329.:
-        # print(at[l],dates[i])
+        #
+        # new date (later?)
+        #
         if dat > at[l]:
             l += 1
             at[l] = dat
             ati[l] = i
+        #
+        # new date (older?)
+        #
         elif dat < at[l]:
+            #
+            # is it new?
+            #
             if dat > at[l - 1]:
+                #
+                # Switch places
+                #
                 at[l + 1] = at[l]
                 ati[l + 1] = ati[l]
                 at[l] = dat
                 ati[l] = i
                 l += 1
-                # print(at[l],dates[i])
-
-        # if l==1897:
-        # break
+        else:
+            pass
 
     return at[:l + 1], ati[:l + 1]
 
@@ -463,180 +520,166 @@ def process_obj(fpv, fn):
     ps = numpy.array(
         [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000])
 
-    # ps = numpy.array([1000., 2000., 3000., 5000., 7000., 10000., 12500., 15000., 17500., 20000., 22500., 25000., 30000.,
-    #                   35000., 40000., 45000., 50000., 55000., 60000., 65000., 70000., 75000., 77500., 80000., 82500.,
-    #                   85000., 87500., 90000., 92500., 95000., 97500., 100000.])
-
     ident = '0' + fn.split('.')[-2][1:]
 
     global_attrs = {'Conventions': 'CF-1.1',
                     'title': 'station daily temperature series',
                     'institution': 'University of Vienna',
-                    'history': '19/01/05',
+                    'history': '19/03/20',
                     'source': 'radiosonde, ERA-5, ERA-Interim, ERA-40, RAOBCORE',
                     'references': 'www.univie.ac.at/theoret-met/research/raobcore',
-                    'ident': ident,
                     'levels': 'plevs [%d -%d] #%d' % (min(ps), max(ps), len(ps)),
                     'libs': "NP(%s) XR(%s) NB(%s)" % (numpy.__version__, xarray.__version__, numba.__version__)}
-    if False:
-        # ,fpv['antime'].values)
-        hdrdate = (fpv['date@hdr'].values * 100 + fpv['time@hdr'] / 1e4).astype(int)
-        ati = numpy.flatnonzero(numpy.diff(hdrdate))  # end index of date groups
-        ati = numpy.append(ati, hdrdate.size - 1)  # last
-        at = hdrdate[ati]  # Dates
-        alldates = []
-        for i in range(at.shape[0]):
-            a = int(at[i] // 100)
-            b = at[i] % 1e2
-            # Year, month, day, hour
-            alldates.append(datetime(a // 10000, (a % 10000) // 100, a % 100, int(b)))
-            # a,b = std_date_time(at[i])
-            # stddates.append(datetime(int(a // 10000), int((a % 10000) // 100), int(a % 100), int(b)))
 
-        alldates = numpy.array(alldates)
-    else:
-        at, ati = myunique(fpv['date@hdr'].values)   # just dates
-        alldates = []
-        for a in at:
-            alldates.append(datetime(a // 10000, (a % 10000) // 100, a % 100))
-        alldates = numpy.array(alldates)
+    at, ati = myunique(fpv['date@hdr'].values)   # just dates
+    alldates = []
+    for a in at:
+        alldates.append(datetime(a // 10000, (a % 10000) // 100, a % 100))
+    alldates = numpy.array(alldates)
 
     td0 = time.time()
+    #
+    # too few data
+    #
     if len(at) < 100:
         raise RuntimeError("Too few dates (<100)")
 
-    # names = ('temperatures', 'uwind', 'vwind', 'dewpoint')
-    variables = {2: 't', 3: 'u', 4: 'v', 59: 'td', 7: 'q', 29: 'rh'}  # , 1: 'z',
-    # {39: 't2m', 40: 'td2m', 41: 'u10m', 42: 'v10m', 58: 'rh2m', 111: 'dd', 112: 'ff'}
-    # units = ('K', 'm/s', 'm/s', 'K')
-    # paras = (2, 3, 4, 59)
+    variables = {2: 't',
+                 3: 'u',
+                 4: 'v',
+                 59: 'td',
+                 7: 'q',
+                 29: 'rh',
+                 # 1: 'z',
+                 # 39: 't2m',
+                 # 40: 'td2m',
+                 # 41: 'u10m',
+                 # 42: 'v10m',
+                 # 58: 'rh2m',
+                 # 111: 'dd',
+                 # 112: 'ff'
+                 }
+
     paras = list(variables.keys())
     names = list(variables.values())
-
     variables = list(fpv.data_vars)
+    #
+    # some specific variables present in ODB
+    #
     default_drop = ["type", "expver", "class", "stream", "andate", "antime", "reportype", "numtsl@desc",
                     "timeslot@timeslot_index", "seqno@hdr", "source@hdr", "bufrtype@hdr", "subtype@hdr", "groupid@hdr",
                     "statid@hdr", "report_status@hdr", "report_event1@hdr", "report_rdbflag@hdr", "entryno@body",
                     "vertco_type@body", "ppcode@conv_body", "datum_anflag@body", "datum_status@body",
                     "datum_event1@body", "datum_rdbflag@body"]
+    #
     # typical information that is only relevant for one sounding (repeated)
+    #
     sel = [ivar for ivar in variables if '@hdr' in ivar or '@modsurf' in ivar or '@surfbody' in ivar or '@conv' in ivar]
     sel = [ivar for ivar in sel if ivar not in default_drop]
+    #
+    #
+    #
     sel.remove('date@hdr')
     sel.remove('time@hdr')
-    if False:
-        station = fpv[sel].isel(hdrlen=ati)
-        station = station.rename({'hdrlen': 'date'})
-        station = station.assign_coords(date=alldates)
-        station = station.rename({i: i.replace('@hdr', '') for i in list(station.data_vars)})
-        station = station.rename({i: i.replace('@modsurf', '_msurf') for i in list(station.data_vars)})
-        station = station.rename({i: i.replace('@surfbody_feedback', '_surf_fb') for i in list(station.data_vars)})
-        station = station.rename({i: i.split('@conv')[0] for i in list(station.data_vars)})
-
-        station.attrs.update(global_attrs)
-        # sort by index
-        station = station.sortby('date')
-
+    launches = None
+    #
+    # Make the directory for output
+    #
     try:
         os.mkdir(ident)
     except:
         pass
-
-    if False:
-        station.to_netcdf('./' + ident + '/ERA5_1_' + ident + '_station.nc')
-
+    #
+    # Iterate variables
+    #
     for l, var in enumerate(paras):
         tdx = time.time()
-        dailyobs = numpy.zeros((1))
-        if True:
-            # refdate=date(1900,1,1)
-            dailyobs = numpy.zeros(1)
-            dailyfgd = numpy.zeros(1)
-            # todo antime or time ? -> dailyhours is useless like this
-            # todo this is not really useful?
-            dailyobs, dailyfgd, dailybias, atn, dailyhours = filldaily(fpv['date@hdr'].values, fpv['antime'].values,
-                                                                       fpv[u'vertco_reference_1@body'].values,
-                                                                       fpv[u'varno@body'].values,
-                                                                       fpv[u'obsvalue@body'].values,
-                                                                       fpv[u'fg_depar@body'].values,
-                                                                       fpv[u'biascorr@body'].values, ps, at, ati, var,
-                                                                       numpy.nan)
-            index = []
-            for a in atn:
-                # Year, month, day
-                index.append(datetime(a // 10000, (a % 10000) // 100, a % 100))
-                # index.append((date(a//10000,(a%10000)//100,a%100)-refdate).days)
+        dailyobs, dailyfgd, dailybias, atn, dailyhours = filldaily(fpv['date@hdr'].values, fpv['time@hdr'].values,
+                                                                   fpv[u'vertco_reference_1@body'].values,
+                                                                   fpv[u'varno@body'].values,
+                                                                   fpv[u'obsvalue@body'].values,
+                                                                   fpv[u'fg_depar@body'].values,
+                                                                   fpv[u'biascorr@body'].values, ps, at, ati, var,
+                                                                   numpy.nan)
+        index = []
+        for a in atn:
+            # Datetime as from variable -> will be aligned later
+            index.append(datetime(a // 10000, (a % 10000) // 100, a % 100))
 
-            spl = xarray.Dataset()
-            spl[names[l]] = (('hour', 'pres', 'date'), dailyobs)
-            spl[names[l] + '_fg_dep'] = (('hour', 'pres', 'date'), dailyfgd)
-            spl[names[l] + '_bias'] = (('hour', 'pres', 'date'), dailybias)
-            spl['date'] = index
-            spl['pres'] = ps
-            spl['hour'] = numpy.array([0, 12])
-            spl['pres'].attrs.update({'units': 'Pa', 'standard_name': 'air_pressure', 'axis': 'Z'})
-            spl['date'].attrs.update({'axis': 'T'})
-            spl['hour'].attrs.update({'units': 'h', 'standard_name': 'standard_launch_time'})
-            if l == 0:
-                spl['launch'] = (('hour', 'date'), dailyhours)
-            spl = spl.reindex(date=alldates)
-            if l == 0:
-                launches = spl['launch'].copy()
-                spl = spl.drop('launch')
-        else:
-            #
-            # Interpolation to other levels
-            # Problem with Speed, Time selection and indices
-            # todo get it working
-            dailyobs, dailyfgd, dailybias = filldaily_int(ati,
-                                                          fpv[u'vertco_reference_1@body'].values,
-                                                          fpv[u'varno@body'].values,
-                                                          fpv[u'obsvalue@body'].values,
-                                                          fpv[u'fg_depar@body'].values,
-                                                          fpv[u'biascorr@body'].values,
-                                                          ps,
-                                                          var,
-                                                          numpy.nan)
+        #
+        # Xarray
+        #
+        spl = xarray.Dataset()
+        spl[names[l]] = (('hour', 'plev', 'time'), dailyobs)
+        spl[names[l] + '_fg_dep'] = (('hour', 'plev', 'time'), dailyfgd)
+        spl[names[l] + '_bias'] = (('hour', 'plev', 'time'), dailybias)
 
-            spl = xarray.Dataset()
-            spl[names[l]] = (('date', 'pres'), dailyobs)
-            spl[names[l] + '_fg_dep'] = (('date', 'pres'), dailyfgd)
-            spl[names[l] + '_bias'] = (('date', 'pres'), dailybias)
-            if True:
-                spl['date'] = alldates
-                spl['pres'] = ps
-                spl['pres'].attrs.update({'units': 'Pa', 'standard_name': 'air_pressure', 'axis': 'Z'})
-                spl['date'].attrs.update({'axis': 'T'})
+        spl['time'] = index
+        spl['plev'] = ps
+        spl['hour'] = numpy.array([0, 6, 12, 18])
+        spl['plev'].attrs.update({'units': 'Pa', 'standard_name': 'air_pressure', 'axis': 'Z'})
+        spl['time'].attrs.update({'axis': 'T'})
+        spl['hour'].attrs.update({'units': 'h', 'standard_name': 'standard_launch_time'})
+        #
+        # Launch times
+        #
+        if l == 0 or launches is None:
+            # once it's ok
+            spl['launch'] = (('hour', 'time'), dailyhours)
 
+        spl = spl.reindex(time=alldates)
+        if l == 0 or launches is None:
+            launches = spl['launch'].copy()
+            spl = spl.drop('launch')
+        #
+        # Metadata
+        #
         for v in [names[l], names[l] + '_fg_dep', names[l] + '_bias']:
             spl[v].attrs.update(_metadata[v])
-
-        spl['station_lat'] = fpv['lat@hdr'][-1]
-        spl['station_lon'] = fpv['lon@hdr'][-1]
-        spl['station_alt'] = fpv['stalt@hdr'][-1]
-        spl['station_id'] = ident
+        #
+        # Attributes
+        #
         spl.attrs.update(global_attrs)
+        spl.attrs.update({'station_id': ident,
+                          'station_lat': "%.2f N" % fpv['lat@hdr'].values[-1],
+                          'station_lon': "%.2f E" % fpv['lon@hdr'].values[-1],
+                          'station_alt': "%.1f m" % fpv['stalt@hdr'].values[-1]
+                          })
+        if 'hdrlen' in spl.coords:
+            spl = spl.drop('hdrlen')
         #
         # IO
         #
-        fno = os.path.expandvars('./' + ident + '/ERAI_' + ident + '_' + names[l] + '.nc')
+        if '2402' in fn:
+            fno = os.path.expandvars('./' + ident + '/ERAI_' + ident + '_' + names[l] + '.nc')
+        else:
+            fno = os.path.expandvars('./' + ident + '/ERA5_' + ident + '_' + names[l] + '.nc')
+
         spl.to_netcdf(fno)
+        #
+        #
+        #
         td1 = time.time() - tdx
         print(ident, var, names[l], dailyobs.shape, td1)
 
-    if True:
-        station = fpv[sel].isel(hdrlen=ati)
-        station = station.rename({'hdrlen': 'date'})
-        station = station.assign_coords(date=alldates)
-        station = station.rename({i: i.replace('@hdr', '') for i in list(station.data_vars)})
-        station = station.rename({i: i.replace('@modsurf', '_msurf') for i in list(station.data_vars)})
-        station = station.rename({i: i.replace('@surfbody_feedback', '_surf_fb') for i in list(station.data_vars)})
-        station = station.rename({i: i.split('@conv')[0] for i in list(station.data_vars)})
-        station['launch'] = launches  # (('hour','date'), dailyhours)
-        station.attrs.update(global_attrs)
-        # sort by index
-        station = station.sortby('date')
+    station = fpv[sel].isel(hdrlen=ati)
+    station = station.rename({'hdrlen': 'time'})
+    station = station.assign_coords(time=alldates)
+    station = station.rename({i: i.replace('@hdr', '') for i in list(station.data_vars)})
+    station = station.rename({i: i.replace('@modsurf', '_msurf') for i in list(station.data_vars)})
+    station = station.rename({i: i.replace('@surfbody_feedback', '_surf_fb') for i in list(station.data_vars)})
+    station = station.rename({i: i.split('@conv')[0] for i in list(station.data_vars)})
+
+    if launches is not None:
+        station['launch'] = launches
+
+    station.attrs.update(global_attrs)
+    # sort by index
+    station = station.sortby('time')
+    if '2402' in fn:
         station.to_netcdf('./' + ident + '/ERAI_' + ident + '_station.nc')
+    else:
+        station.to_netcdf('./' + ident + '/ERA5_' + ident + '_station.nc')
 
     td2 = time.time() - td0
     td3 = time.time() - t
@@ -648,17 +691,34 @@ def doquery(fno):
     #
     #
     #
-    fn = fno[:-3]  # remove .gz
+    if '.gz' in fno:
+        fn = fno[:-3]  # remove .gz
+    else:
+        fn = fno
     ident = '0' + fn.split('.')[-2][1:]
     try:
-        gz = gzip.open(fno)
+        #
+        # ASCII ODB Dump
+        #
+        if 'ascii' in fno:
+            data = pandas.read_csv(sys.argv[1], sep='\t', error_bad_lines=False, engine='c',
+                                quotechar="'", low_memory=False, skipinitialspace=True)
+            data.index.name = 'hdrlen'  # compatibility
+            data.columns = data.columns.str.strip()  # can happen
+            g = data.to_xarray()
+
+        elif '.gz' in fno:
+            gz = gzip.open(fno)
         #
         # XArray (requires a netcdf3 - 64 bit version)
         #
-        g = xarray.open_dataset(gz)
+            g = xarray.open_dataset(gz)
+        else:
+            g = xarray.open_dataset(fno, chunks={'hdrlen': 50000})
         #
         # Rearange
         #
+        print(ident, time.time() - t, "Start processing")
         process_obj(g, fn)
         #
         #
@@ -675,19 +735,21 @@ def doquery(fno):
 
 if __name__ == '__main__':
     import sys
-    import glob
     import os
 
-    if len(sys.argv) == 1:
-
-        fns = '/raid8/srvx1/mblaschek/tmp/gzipped/era5.2402.conv.*.nc.gz'
+    if len(sys.argv) == 2:
+        print(sys.argv)
+        doquery(sys.argv[1])
+    elif len(sys.argv) > 2:
+        # fns = '/raid8/srvx1/mblaschek/tmp/gzipped/era5.2402.conv.*.nc.gz'
         # fns = '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.*.nc.gz'
-        files = glob.glob(fns)
+        # files = glob.glob(fns)
+        files = sys.argv[1:]
 
         for ifile in files[:]:
             if not os.path.isfile(ifile):
                 files.remove(ifile)
-                print(ifile)
+                # print(ifile)
 
         print("ERA-5 Stations:", len(files))
         print("Starting a Pool ...")
@@ -695,5 +757,4 @@ if __name__ == '__main__':
         res = p.map(doquery, files)
         print("Done")
     else:
-        print(sys.argv)
-        doquery(sys.argv[1])
+        print("Usage: numpyquery.py [files]")

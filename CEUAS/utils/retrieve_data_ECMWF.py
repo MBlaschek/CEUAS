@@ -31,6 +31,24 @@ dataset=interim,
 target=special/era_interim_total_precip_mdfa_1979-2017.grb
 
 """
+# exp='{0}'.format(2367+(year-1908)/8)
+CERA20C = {
+    'class': "ep",
+    'expver': '2367',
+    'number': '0',
+    'stream': "enda",
+    'type': "an",
+    'step': "00",
+    'levtype': "pl",
+    'levelist': '10/20/30/50/70/100/150/200/250/300/400/500/700/850/925/1000',
+    'time': "00/06/12/18",
+    'date': '19010101/to/19011231',
+    'origin': "all",
+    'param': "u/v/T/q",
+    'area': "G",
+    'grid': "1/1",
+    'target': 'CERA20C190101.grb'
+}
 
 
 def now():

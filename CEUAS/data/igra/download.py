@@ -1,4 +1,4 @@
-__all__ = ['station', 'update', 'list', 'metadata']
+__all__ = ['station', 'update', 'stationlist', 'metadata']
 
 
 def station(ident, directory):
@@ -40,7 +40,7 @@ def update(ident, directory):
         message("File not found: ", directory + '/%s-data-beg2018.txt.zip' % ident, verbose=1)
 
 
-def list(directory):
+def stationlist(directory):
     import urllib
     import os
     from .support import message

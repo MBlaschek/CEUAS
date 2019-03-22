@@ -21,6 +21,8 @@ era_plevels = [1000., 2000., 3000., 5000., 7000., 10000., 12500., 15000., 17500.
 # what columns are required
 # information on coordinates (pres, hour, time, date) ...
 
+# t_fg_dep_era5  -> Obs - FG
+
 metadata = {
     'temp': {
         'units': 'K',
@@ -59,3 +61,28 @@ metadata = {
         'standard_name': 'geopotential_height'
     }
 }
+
+
+def get_cf_convention(varname, directory='./data'):
+    import xmltodict
+    import urllib
+    import os
+
+    if not os.path.isfile(directory + '/cf-standard-name-table.xml'):
+        os.makedirs(directory, exist_ok=True)
+        url = "http://cfconventions.org/Data/cf-standard-names/64/src/cf-standard-name-table.xml"
+        try:
+            urllib.request.urlretrieve(url, directory + '/cf-standard-name-table.xml')
+            print("Downloaded: ", directory + '/cf-standard-name-table.xml')
+        except:
+            print("Error downloading")
+
+    if os.path.isfile(directory + '/cf-standard-name-table.xml'):
+        with open('cf-standard-name-table.xml') as fd:
+            doc = xmltodict.parse(fd.read())
+        # Use
+        doc = doc['standard_name_table']['entry']
+
+        # Search for variables ?? names and units
+
+        return {'name': doc[0]['@id'], 'units': doc[0]['canonical_units'], 'grib': doc[0]['grib']}
