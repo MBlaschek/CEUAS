@@ -23,6 +23,81 @@ era_plevels = [1000., 2000., 3000., 5000., 7000., 10000., 12500., 15000., 17500.
 
 # t_fg_dep_era5  -> Obs - FG
 
+
+def to_cdm_coords(data):
+    from xarray import DataArray, Dataset
+    try:
+        import cf2cdm
+    except ImportError as e:
+        print("Please install cfgrib")
+        raise e
+
+    if not isinstance(data, (DataArray, Dataset)):
+        raise ValueError("Requires an xarray DataArray or Dataset")
+
+    #
+    # make sure there is no standard name on datetime coordinates -> error
+    #
+    for i, j in data.coords.items():
+        if str(j.dtype) == 'datetime64[ns]':
+            if 'standard_name' in j.attrs:
+                del j.attrs['standard_name']
+    return cf2cdm.translate_coords(data, cf2cdm.CDS)
+
+
+def rename_to_cdm(data, variable, departure=None, cfunits=True, description=None, **kwargs):
+    from xarray import DataArray
+
+    if not isinstance(data, DataArray):
+        raise ValueError("Requires an xarray DataArray")
+
+    #
+    # Convert units to CDM ?
+    #
+    if cfunits:
+        data = to_cdm_coords(data)
+    #
+    # Search CF Convention for standard_name and units
+    #
+    attrs = get_cf_convention(variable)
+
+    #
+    # departure ?
+    #
+    if departure:
+        #
+        # name : ta_fg_dep_era5
+        # standard_name : air_temperature_first_guess_departure_era5
+        # description : first guess departure OBS - ERA5
+        #
+        attrs['name'] = attrs['name'] + departure
+
+    #
+    # Add description
+    #
+    if description is not None:
+        attrs['description'] = description   # somehow related to departure
+
+    #
+    # Add all other keywords as attributes
+    #
+    attrs.update(kwargs)
+    #
+    # Check units
+    #
+    if 'units' in data.attrs:
+        if attrs['units'] != data.attrs['units']:
+            raise ValueError("Different units found!!!", data.attrs['units'], " to ", attrs['units'])
+    #
+    # Rename
+    #
+    data.name = attrs.pop('name', default=data.name)
+    data.attrs.update(attrs)
+    return data
+
+#
+# Standard naming dictionary based on CF Convention (might be faster)
+#
 metadata = {
     'temp': {
         'units': 'K',
@@ -62,7 +137,9 @@ metadata = {
     }
 }
 
-
+#
+# Download CF Convention and try to find he variable
+#
 def get_cf_convention(varname, directory='./data'):
     import xmltodict
     import urllib
@@ -82,7 +159,8 @@ def get_cf_convention(varname, directory='./data'):
             doc = xmltodict.parse(fd.read())
         # Use
         doc = doc['standard_name_table']['entry']
-
         # Search for variables ?? names and units
-
-        return {'name': doc[0]['@id'], 'units': doc[0]['canonical_units'], 'grib': doc[0]['grib']}
+        for ivar in doc:
+            if varname in ivar['@id']:
+                return {'name': ivar['@id'], 'units': ivar['canonical_units'], 'grib': ivar['grib']}
+        return {'name': varname, 'units': None, 'grib': None}
