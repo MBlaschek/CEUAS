@@ -1,0 +1,40 @@
+*** 07/03/2019
+Added the script plotAll_u_v_wind.py 
+It plots all the u,v components of the converted netCDF file
+Plot are stored in /raid8/srvx1/federico/odb_netCD/PLOTS
+
+Must check the data since all the components are positevely defined
+
+
+*** 13/03/2019
+- added new readodbstation file to convert from odbs to netCDFs.
+It processes correctly the datasets 1 , 1759, 1761 and produced the netCDF files with temperature, u and v wind components
+
+Still to do: add humidity, dew point
+(see Michael scripts to convert humidity)
+
+- updated plotAll_u_v_wind
+
+
+ToDo: add a module to check file 
+i.e. print list of files with empty data, 
+     small datasets, 
+     compare u and v vectors etc. 
+
+
+*** readodb Humidity
+The file is a copy of the readodbstationfiles, with the addition of the changes to implement the specific Humidity.
+
+The major change was the extension of the metadata dictionary,
+and the interpolation function to extract the standard pressure level values.
+
+
+*** 21/03/2019
+
+readodb Humidity has been extended with the dew point.
+Tested with the station 10393
+See attached pdf output
+
+*** 22/03/2019
+Updated the read_Humidity file sicne it was not storing correctly the pressure level for large values.
+I added the range in the settattr function in the readstationfiles_t 

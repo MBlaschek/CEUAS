@@ -35,3 +35,14 @@ readodb Humidity has been extended with the dew point.
 Tested with the station 10393
 See attached pdf output
 
+*** 22/03/2019
+Updated the read_Humidity file sinne it was not storing correctly the pressure level for large values --> dded the range in the settattr function in the readstationfiles_t 
+
+*** 25/03/2019
+Added a preliminary python converter tool for the variables name 
+as in the CDM.
+Added a latex file with a table containing the information
+of the variables we use in the readodbstations script
+(and in the netCDF files)
+Need to merge with Michael's dictionary
+
