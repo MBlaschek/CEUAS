@@ -1,0 +1,78 @@
+\documentclass[a4paper,11pt]{article}
+%\pdfoutput=1 % if your are submitting a pdflatex (i.e. if you have
+             % images in pdf, png or jpg format)
+\usepackage{jheppub} % for details on the use of the package, please
+                     % see the JHEP-author-manual
+\usepackage[T1]{fontenc} % if needed
+
+\usepackage{slashed}
+%\usepackage{subfigure}
+\usepackage{xspace}
+\usepackage{booktabs}
+\author[a]{Federico Ambrogi}
+
+% e-mail addresses: one for each author, in the same order as the authors\emailAdd{federico.ambrogi@oeaw.ac.at}
+\emailAdd{federico.ambrogi88@gmail.com}
+
+
+%% %simple case: 2 authors, same institution
+%% \author{A. Uthor}
+%% \author{and A. Nother Author}
+%% \affiliation{Institution,\\Address, Country}
+
+
+\title{\boldmath Summary of Conventions}
+
+\begin{document} 
+	\sffamily
+	\maketitle
+	
+	
+	
+	
+\section{Convention Tables}
+Tabble \ref{CDM} summarises the naming convention for the variables used in netCDF files (converted from the odb files with the \textit{readodbfile\_station.py} script).
+The variable definition, their naming convention, and the physics units follow the preliminary CDM-common data model agreement, that can be found at:
+\newline
+\url{https://github.com/glamod/common_data_model/}
+\newline
+\url{https://github.com/glamod/common_data_model/blob/master/tables/observed_variable.dat}
+
+
+
+%\input(a.tex) does not work on windows?
+
+File Edit Options Buffers Tools Help
+\begin{table}[!htbp]
+	\footnotesize
+	\begin{center}
+		\renewcommand{\arraystretch}{1.3}
+		\begin{tabular}{ l l l p{3.5in}}
+			\toprule
+			\textbf{Variable} & \textbf{CDM Name} & \textbf{Units} & \textbf{Description}  \\ \toprule \toprule
+			pressure & pressure & [Pa] & pressure of air column at specified height\\
+			dewpoint & dew point temperature & [K] & Dew point temperature is the temperature at which a parcel of air reaches saturation upon being cooled at constant pressure and specific humidity.\\
+			wind & wind & [m s-1] & Speed is the magnitude of velocity. Wind is defined as a two-dimensional (horizontal) air velocity vector,  with no vertical component. (Vertical motion in the atmosphere has the standard name upward air velocity.) The wind speed is the magnitude of the wind velocity. Lot 1 uses ff  - WMO abbrev.\\
+			humidity & specific humidity & [g kg-1] & specific means per unit mass. Specific humidity is the mass fraction of water vapor in (moist) air.\\
+			\bottomrule \bottomrule
+		\end{tabular}
+	\end{center}
+	\caption{Definition of naming convention, description and units for the variables contained in the netCDF files.}
+	\label{CDM}
+\end{table}
+
+% The following file contains the tables
+% produced automatically by the CDM_Format.py file 
+
+
+
+%\input(Tables.txt)
+
+%\bibliographystyle{JHEP}
+%\bibliography{references}
+
+
+\end{document}
+
+
+
