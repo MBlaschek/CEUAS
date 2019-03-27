@@ -52,3 +52,8 @@ readodbstationfiles_Humidity_fixDate
 
 with the fixes for the incorrect date handling, whenever there are more than 2 observation per days.
 It also considers the closest observation for 00:00 time considering the previous day .
+
+*** 27/03/2019
+Added CDM_Reader
+reads the cvs files from the CDM github repository,
+dowloaded in /raid60/scratch/copernincus/...
