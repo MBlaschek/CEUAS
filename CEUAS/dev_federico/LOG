@@ -46,3 +46,9 @@ of the variables we use in the readodbstations script
 (and in the netCDF files)
 Need to merge with Michael's dictionary
 
+*** 26/03/2019
+Added a preliminary version of the script:
+readodbstationfiles_Humidity_fixDate
+
+with the fixes for the incorrect date handling, whenever there are more than 2 observation per days.
+It also considers the closest observation for 00:00 time considering the previous day .

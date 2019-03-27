@@ -1,4 +1,4 @@
-\documentclass[a4paper,11pt]{article}
+BBBB\documentclass[a4paper,11pt]{article}
 %\pdfoutput=1 % if your are submitting a pdflatex (i.e. if you have
              % images in pdf, png or jpg format)
 \usepackage{jheppub} % for details on the use of the package, please
@@ -40,9 +40,10 @@ The variable definition, their naming convention, and the physics units follow t
 
 
 
-%\input(a.tex) does not work on windows?
+\input{ObsTab.tex}
+\input{VarTab.tex}
 
-File Edit Options Buffers Tools Help
+\iffalse
 \begin{table}[!htbp]
 	\footnotesize
 	\begin{center}
@@ -61,6 +62,7 @@ File Edit Options Buffers Tools Help
 	\label{CDM}
 \end{table}
 
+\fi
 % The following file contains the tables
 % produced automatically by the CDM_Format.py file 
 
