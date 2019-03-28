@@ -1438,7 +1438,6 @@ def do_hours(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
             print(data[i,hl[2]])
             continue
         md=int(data[i,0]) # e.g. 19911031 (31st Oct 1991)
-        day.append(md)
         
         year=md//10000
         if year<1900:
@@ -1463,7 +1462,10 @@ def do_hours(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
             idelta_12 = hour-12
                 
         #e.g. tidx array([    0,    31,    59, ..., 44833, 44864, 44894])  
-        ix=tidx[(year-1900)*12+month-1]+day-1+iday#-tidx[(year-1900)*12]	
+        ix=tidx[(year-1900)*12+month-1]+day-1+iday#-tidx[(year-1900)*12]
+        # ix = 33541 , 
+        print('ix is', ix)
+        
         if ixold<ix:
             m+=1
             ixold=ix
@@ -1474,10 +1476,11 @@ def do_hours(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
             #mhours=numpy.concatenate((mhours,numpy.zeros((ms[0],1),dtype=numpy.int32)),axis=1)
             #sonde_type=numpy.concatenate((sonde_type,numpy.zeros((1),dtype=numpy.int32)),axis=0)
 
-        mtemperatures[ih,:,m]=0.
+        mtemperatures[ih,:,m]=0. # FF what is this for?
+        print('mtemperatures[ih,:,m] , ih, m ' , mtemperatures[ih,:,m] , ih , m)
         mdatum[m]=ix
         
-        print('mhours[ih,m], hours, ih, m ',mhours[ih,m], hour, ih, m )
+        print('mhours[ih,m], hours, ih, m ', mhours[ih,m], hour, ih, m )
         if mhours[ih,m]==-999: # mhours shape is (2,9916)
             mhours[ih,m]=hour
         else:
@@ -1528,8 +1531,10 @@ should be used.
 """
 
 def do_hours_new(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
-
-    res = {}
+    from datetime import datetime as dt
+    from datetime import timedelta 
+    
+    res = {} # dictionary containing the hour information for 00:00 and 12:00
     
     def best_measurement_hour_singleday(day,hour,res):
         """ select the best measurement for each md, i.e.
@@ -1537,85 +1542,92 @@ def do_hours_new(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
             the measurement closest to 12 (6-18),
             the measurement closest to 0 of the next day (18-24),
             """
-        
         if day not in res.keys(): # the entry does not exist in the dictionary
-            print('day not there, initialising')
+            #print('day not there, initialising')
             res[day] = {}
-            res[day]['12_h']   = -1
-            res[day]['00_h_m'] = -1
-            res[day]['00_h_n'] = -1
+            res[day]['12_h']  , res[day]['00_h_m'] , res[day]['00_h_n'] = -999 , -999 , -999
             
             if hour>=6 and hour <= 18:
-                res[day]['12_h'] = hour 
-                
+                res[day]['12_h'] = hour                 
             elif hour>0 and hour < 6:
-                res[day]['00_h_m'] = hour
-     
+                res[day]['00_h_m'] = hour   
             elif hour>18 and hour < 24:
                 res[day]['00_h_n'] = hour 
-            #print('res is:', res)
 
         elif day in res.keys(): # the entry already exist. Must select the closest values
-            #print( 'day is there!' , res[day] )
-            
             if hour >= 6 and hour <= 18:
-                #print('hours matches 6-18!', hour)
                 try:
                     if abs(12-hour) < abs(12 - res[day]['12_h']) :
-                        print('replacing old larger values')
-                        res[day]['12_h'] = hour  # replacing the existing value
-            
+                        res[day]['12_h'] = hour  # replacing the existing value if closest to 12:00            
                 except:
-                    #print('I am passing')
-                    pass
-                
+                    pass                
             elif hour>0 and hour < 6:
                 try:
-                    if 6-hour < res[day]['00_h_m'] :
-                        res[day]['00_h_m'] = hour
+                    if 6-hour < (6-res[day]['00_h_m']) :
+                        res[day]['00_h_m'] = hour # replacing the existing value if closest to 00:00 m
                 except:
-                    pass
-                
+                    pass                
             elif hour>18 and hour < 24:
                 try:
-                    if 6-hour < res[day]['00_h_n'] :                
-                        res[day]['00_h_n'] = hour            
+                    if 24-hour < (24-res[day]['00_h_n']) :                
+                        res[day]['00_h_n'] = hour # replacing the existing value if closest to 00:00 n          
                 except:
                     pass
-          
-        #print('for the day ', day, 'the bes results are: ', res) 
+                
+        # each res contain, for each day, the hour closest to 00:00 (also of the following day) and to 12:00  
+        # print('for the day ', day, 'the bes results are: ', res) 
+    def is_previous_day(day,res=res):
+        """ Given a day, returns the previous day if present in the results dictionary, otherwise False"""
+        date = dt.strptime( str(day), '%Y%m%d' )
+        previous = (date - timedelta(1)).strftime('%Y%m%d')
+        print('day, previous', day, previous)
+        if eval(previous) not in res.keys():
+            return False
+        else:
+            return eval(previous)
         
     def extract_best(res):
+        ''' Selects in the res dictionary the correct values for the measurements '''
         
         days = list(res.keys())
-        print('list of days:', days )
-        res_cleaned = {'hour_12':[] , 'hour_00':[] , 'day':[] }
+        #print('list of days:', days )
+        res_selected = {'hour_12':[] , 'hour_00':[] , 'hour_00_day':[] , 'day':[] }
         
-        res_cleaned['hour_00'].append( res[days[0]]['00_h_m' ] )        
-        res_cleaned['hour_12'].append( res[days[0]]['12_h'   ] )
+        #res_selected['hour_00'].append( res[days[0]]['00_h_m' ] )        
+        #res_selected['hour_12'].append( res[days[0]]['12_h'   ] )
         
-        ''' To select the ours at 00:00, need to know the 00_h_m of the next day  '''
-        for day in days[1:]: # running up from the first to the last but one
-            res_cleaned['day'].append(day)            
-            res_cleaned['hour_12'].append(res[day]['12_h'])
+        #for day in days[1:]: # running up from the first to the last but one
+        #    res_selected['day'].append(day)            
+        #    res_selected['hour_12'].append(res[day]['12_h'])
+        for day in days: # running up from the first to the last but one
+            res_selected['day'].append(day)
+            res_selected['hour_12'].append(res[day]['12_h'])
+            #if day =='19911031': continue
             
-            if (day-1) not in days : # check if d-1 has observation 
-                res_cleaned['hour_00'].append(res[day]['00_h_m']) # d-1 does not exist, so nothing to do
+            previous = is_previous_day(day,res=res) # True if previous day present, False otherwise
+                            
+            if previous:    
+                print('current, previous', day, previous )    
+                if (24 - res[previous]['00_h_n']) < res[day]['00_h_m']:
+                    res_selected['hour_00'].append(res[previous]['00_h_n']) 
+                    res_selected['hour_00_day'].append(previous) # pick days-1 osb. if hour is closest to 00  
+                else:
+                    res_selected['hour_00'].append(res[day]['00_h_m']) # keep current obs if hour is closest 
+                    res_selected['hour_00_day'].append(day) #                    
+            else:
+                res_selected['hour_00'].append(res[day]['00_h_m']) # keep current obs if previous not present 
+                res_selected['hour_00_day'].append(day) #               
                 
-            elif (day-1) in days:
-                try:
-                    if res[day-1]['00_h_m'] < res[day]['00_h_m']:
-                        res_cleaned['hour_00'].append(res[day-1]['00_h_m']) # pick days-1 osb. if hour is closest to 00
-                    else:
-                        res_cleaned['hour_00'].append(res[day]['00_h_m']) # keep current obs if hour is closest                      
-                except:
-                    pass
-            #print('res_cleaned', res_cleaned)   
-            #print('next', res_cleaned)   
+            #print('res_cleaned', res_selected)   
+            #print('next', res_selected)   
             
-        return res_cleaned   
+        return res_selected   
         
-
+    # with the res cleaned, I have for each the closes measurement to 00:00 and 12:00.
+    # In the case of 00:00, I know if the data should be considered from the same day of the day before,
+    # i.e. the day in the field res_cleaned['hour_00_day'] can be the same day or the day before.
+    # This is actually redundant since it is enought o note that for 00:00 the hour is around 23:00
+    # so necessarily from the previous day.
         
     m=-1
     ixold=-1
@@ -1630,14 +1642,18 @@ def do_hours_new(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
     #delta_0_m, delta_0_n, delta_h12, day_0 , day_12 , days =  [-999], [-999], [-999], [-999], [-999], [-999]
 
     # list variable storing the delta hours between the measurements-standard times
+    days = []
     for i in range(data.shape[0]):   # here data is a np array with shape (:, 11)
+    
 
         if data[i,hl[2]] not in varnos:
             print(data[i,hl[2]])
             continue
         
         md=int(data[i,0]) # e.g. 19911031 (31st Oct 1991)
-    
+        
+        #if md not in days:
+        #    days.append(md)
         year=md//10000
         if year<1900:
             continue
@@ -1649,12 +1665,18 @@ def do_hours_new(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
         
         if year==1980: # iday=0 current day, iday=1 following day, ih=0 is 12:00, ih=1 is 0:00
             a=0
-        
+
         a = best_measurement_hour_singleday(md,hour,res) # filling the res dictionary
         #print('day,hours', day, hour)
         #print('res is', res)
         
     clean = extract_best(res)    
+    
+ #   for h0, h12 , d0, d in zip( clean['hour_00'] , clean['hour_12'], clean['hour_00_day'], clean['day'] ):
+ #       print ('h0, h12 , d0, d' , h0, h12 , d0, d)
+ #       if h0 > 18 and d0 != d+1:
+ #           print ('h0, d0, d' , h0, d0, d )
+ #           input('wrong!')
     
     print('the clean results is: ', clean)            
     

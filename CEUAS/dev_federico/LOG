@@ -57,3 +57,9 @@ It also considers the closest observation for 00:00 time considering the previou
 Added CDM_Reader
 reads the cvs files from the CDM github repository,
 dowloaded in /raid60/scratch/copernincus/...
+
+*** 28/03/2019
+Implemented and checked for 10393 that the hours of the 00:00 data 
+are selected correctly between different days.
+Still need to write them in the correct file.
+
