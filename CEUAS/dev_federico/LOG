@@ -63,3 +63,12 @@ Implemented and checked for 10393 that the hours of the 00:00 data
 are selected correctly between different days.
 Still need to write them in the correct file.
 
+*** 01/04/2019
+Now the script readodb_checkmhours seems to work fine and picks upt the correct observation hours
+at least for the 10393 station
+(it was a bug, so the readstation with feedback was not picked up properly, was using the one withouth the feedback
+so for some reason it was still going through but the data reas was incorrect )
+
+Added a first version fo the script to handle the humidity/dew point from 
+netCDF files 
+
