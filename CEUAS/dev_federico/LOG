@@ -69,6 +69,10 @@ at least for the 10393 station
 (it was a bug, so the readstation with feedback was not picked up properly, was using the one withouth the feedback
 so for some reason it was still going through but the data reas was incorrect )
 
-Added a first version fo the script to handle the humidity/dew point from 
+Added a first version of the script to handle the humidity/dew point from 
 netCDF files 
 
+*** 02/04/2019
+- updated humidity/dp 
+- extended the readtation to relative humidity, tested for station 10393
+- updated plot script for relative humidity, see plot ERA5_1_10393__ALL.pdf in odbstat

@@ -327,13 +327,12 @@ def par_read_odbsql_stn_nofeedback(varno,odbfile):
 
     qs="select statid, source, date, time, obstype, codetype, lat, lon, stalt, "
     qs+="vertco_type,vertco_reference_1, varno, obsvalue"
-    if varno==2:
+    if varno in [2, 7, 29, 57]:
         qs+=" where varno={} ".format(varno)
     elif varno==110:
         qs+=" where varno=111 or varno=112 ".format(varno)
-    elif varno==7:
-        #qs+=" where varno=7 ".format(varno)
-        qs+=" where varno={} ".format(varno)
+    #elif varno==7  :
+    #    qs+=" where varno={} ".format(varno)
         
         
     t=time.time()
@@ -814,30 +813,25 @@ def mktemp(u,firsts,ps,mask,hours,source,uwind=0.,uwindbc=0.,ufg_dep=0.,uan_dep=
 
 
 
-def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v','dp','h']):
+def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v','dp','rh', 'sh']):
     """ Reading the netCDF template file and filling with the data from the odb
-    
         Args:   
              statdata: data from the odb file
              varlist : list of variables
                                         t   : temperature,
                                         u,v : u and v wind components
                                         dp  : dew point
-                                        h   : specific humidity """
-    #print('The nc path is FF', ncpath )
-    #print('The prefix is FF', prefix )
-    #print('The statdata[0]is FF', statdata[0] )
-    
+                                        sh   : specific humidity 
+                                        rh   : relative humidity 
+    """
+
     t1=time.time()
     statid=statdata[0].replace('_','')
 
     # print('Statdata is FF:', statdata)
     # ('_98426', {'data': None, 'source': ['BUFRDATA'], 'odbstatid': ['98426'], 'odbfile': '/raid60/s...',
     
-    
-    #hlist=header.split()[2:]
-    
-    # FF Not used??? 
+        
     #fields=['date','time','lat','lon','alt','vertco_type','vertco_reference_1','varno','obsvalue','biascor','fg_depar','an_depar']
 
     if 'ai_bfr' in prefix:
@@ -852,9 +846,10 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v','dp','
                          datum='vdatum',hours='vhours',units='m/s',long_name='Southerly wind component',sonde_type='vsonde_type', valid_range=[-100.,100]) ,
                   dp=dict(varname='dp',bias='dpbiascorr',fg_dep='dpfg_depar',an_dep='dpan_depar',
                          datum='dpdatum',hours='dphours',units='K',long_name='Upper Air Dew Point',sonde_type='dpsonde_type', valid_range=[0.,300]) ,
-                  h=dict(varname='h',bias='hbiascorr',fg_dep='hfg_depar',an_dep='han_depar',
-                         datum='hdatum',hours='hhours',units='???',long_name='Specific Humidity',sonde_type='hsonde_type', valid_range=[-100.,100])                   
-                  
+                  sh=dict(varname='sh',bias='shbiascorr',fg_dep='shfg_depar',an_dep='shan_depar',
+                         datum='shdatum',hours='shhours',units='???',long_name='Specific Humidity',sonde_type='shsonde_type', valid_range=[-100.,100]) ,                   
+                  rh=dict(varname='rh',bias='rhbiascorr',fg_dep='rhfg_depar',an_dep='rhan_depar',
+                         datum='rhdatum',hours='rhhours',units='???',long_name='Relative Humidity',sonde_type='rhsonde_type', valid_range=[-100.,100])                     
                   
                   )
   
@@ -881,7 +876,6 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v','dp','
         #except: 
         #    print('except')
         #    print('statdata[1] FF:', statdata[1])
-        print('FF going through the try-except FF', )
         if not os.path.exists(ncpath+'/'+statid):
             os.makedirs(ncpath+'/'+statid)
         fno=ncpath+'/'+statid+'/'+prefix+statid+'_'+t+'.nc'
@@ -1008,7 +1002,7 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v','dp','
 
 def topressure(gribpath,ps,tidx,stats):
     
-    var = {'t':2,'u':'','v':'','h':7,'dp':59 } # Mapping between the name of the variable and the coventional varno as in the odbfiles
+    var = {'t':2,'u':'','v':'','sh':7, 'rh':29, 'dp':59 } # Mapping between the name of the variable and the coventional varno as in the odbfiles
     
     if not stats:
         return stats
@@ -1046,24 +1040,23 @@ def topressure(gribpath,ps,tidx,stats):
             s['alt']=[s['data'][0,h.index('lon')+1]]
             if s['lat']!=s['lat']:
                 continue
-            s['source']=[str(s['source'][0])]
-            s['obstype']=s['data'][:,2]
-            s['weights']=numpy.zeros(4)
-            s['mdatum']=numpy.arange(nmax,dtype=numpy.int)
-            s['mhours']=numpy.zeros((2,nmax),dtype=numpy.int)
-            s['mhours'][:]=-999
-            
+            s['source' ]    = [str(s['source'][0])]
+            s['obstype']    = s['data'][:,2]
+            s['weights']    = numpy.zeros(4)
+            s['mdatum' ]    = numpy.arange(nmax,dtype=numpy.int)
+            s['mhours' ]    = numpy.zeros((2,nmax),dtype=numpy.int)
+            s['mhours' ][:] = -999
             
             s['sonde_type']=numpy.zeros(nmax,dtype=numpy.int32)
             s['sonde_type'][:]=-999
             
-            s['tidx' ] = numpy.where(s['data'][:,h.index('varno')]== var['t']  )[0]  # Temperature
-            s['wdidx'] = numpy.where(s['data'][:,h.index('varno')]== windno    )[0]  # Wind
-            s['hidx' ] = numpy.where(s['data'][:,h.index('varno')]== var['h']  )[0]  # Specific Humidity
-            s['dpidx'] = numpy.where(s['data'][:,h.index('varno')]== var['dp'] )[0]  # Dew Point 
+            s['tidx' ] = numpy.where(s['data'][:,h.index('varno')] == var['t']  )[0]  # Temperature
+            s['wdidx'] = numpy.where(s['data'][:,h.index('varno')] == windno    )[0]  # Wind
+            s['shidx'] = numpy.where(s['data'][:,h.index('varno')] == var['sh'] )[0]  # Specific Humidity
+            s['rhidx'] = numpy.where(s['data'][:,h.index('varno')] == var['rh'] )[0]  # Specific Humidity            
+            s['dpidx'] = numpy.where(s['data'][:,h.index('varno')] == var['dp'] )[0]  # Dew Point 
             
-            #do_hours_new(tidx, s['mdatum'], s['mhours'],s['mtemperatures'], s['data'],s['sonde_type'], hl,varnos=(2,7,59, windno)) # ????
-            do_hours(tidx, s['mdatum'], s['mhours'],s['mtemperatures'], s['data'],s['sonde_type'], hl,varnos=(2,7,59, windno)) # ????
+            do_hours(tidx, s['mdatum'], s['mhours'],s['mtemperatures'], s['data'],s['sonde_type'], hl,varnos=(2, 7, 29, 59, windno)) # ????
             
             if not fgdepar:
                 for vn in ['zref']: #,'tref','uref','vref']:
@@ -1092,8 +1085,8 @@ def topressure(gribpath,ps,tidx,stats):
                 #             vn[0],1980,1985,tidx,stats,fieldsperday=4,fcstep=0,tgrid=tgrid)#1930,2011 # FF
                 
     """ select the variables to loop on; values are the variable number"""
-    #var = {'t':2,'u':'','v':'','h':7,'dp':57 }
     
+    #var = {'t':2,'u':'','v':'','sh':7, 'rh':29, 'dp':59 }    
     for statid in list(stats.keys()):
         if statid not in ['header','odbfile']:
             s=stats[statid]
@@ -1525,6 +1518,8 @@ def do_hours(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
         #print('next')
     return 
 
+
+
 """ The idea of the following code is: 
 loop over the input data to extract, for each single day available,m
 the best observation hours i.e. the two observation hours that fall the closest to 00:00 and 12:00 
@@ -1736,12 +1731,14 @@ def odb2netcdf(gribpath,sodblist,varno,odbreader,idx,k):
                 alldicts[statid]=a[statid]
     referencevalues=topressure(gribpath,plevs,tidx,alldicts)
 
-    if   varno==110:
+    if   varno == 110:
         varlist=['u','v']   
-    elif varno==2:
+    elif varno == 2:
         varlist=['t']
-    elif varno ==7:
-        varlist = ['h']
+    elif varno == 7:
+        varlist = ['sh']
+    elif varno == 29:
+        varlist = ['rh']        
     elif varno == 59:
         varlist = ['dp']
         
@@ -1941,7 +1938,7 @@ if __name__ == "__main__":
     #stat = '/raid60/scratch/leo/scratch/era5/odbs/1761/era5.1761.conv.9:673'
     
     
-    variables = [59]
+    variables = [110]
     for e in datasets:
         exp = e
         for v in variables:
