@@ -29,6 +29,16 @@ class netCDF_Files:
         self.old_file = file_t
         self.new_file = file_t.replace('_t.nc','_calc_sh_rh_dp.nc')
         
+    def define_plevels(self):
+        """ Create a dict with the pressure level and correpsondind index in the data arrays """
+        plevs=np.asarray([10,20,30,50,70,100,150,200,250,300,400,500,700,850,925,1000])
+        numbs=np.asarray(range(16))
+        dict_plevels = {}
+        for p,n in zip(plevs,numbs):
+            dict_plevels[n]=p        
+        self.plevels = dict_plevels
+        return dict_plevels
+        
     def load_datum(self):
         """ Loading the observed values as ([2,:] arrays)"""                
         self.datum_t  = [ 1900 + d for d in self.file_t. variables['datum'][0,:]] 
@@ -38,10 +48,10 @@ class netCDF_Files:
         
     def load_data(self):
         """ Loading the observed values as ([2,:] arrays)"""        
-        self.data_t  =  self.file_t.variables['temperatures'][:,12,:]
-        self.data_rh = self.file_rh.variables ['rh'][:,12,:]
-        self.data_sh = self.file_sh.variables ['sh'][:,12,:]        
-        self.data_dp = self.file_dp.variables['dp'][:,12,:]
+        self.data_t  = self.file_t.variables  ['temperatures']#[:,:,:] (2,16,number)=(2hours,16pressures,observationDays)
+        self.data_rh = self.file_rh.variables ['rh'][:,:,:]
+        self.data_sh = self.file_sh.variables ['sh'][:,:,:]        
+        self.data_dp = self.file_dp.variables ['dp'][:,:,:]
        
     def create_new(self):
         """ Copy the temperature file into the new one containing spec.hum, rel.hum and dew point 
@@ -80,7 +90,7 @@ class netCDF_Files:
             
     def find_datums(self):
         ''' Loops over the datums of the temperature, humidities and dew points available 
-            and creates a dictionary for each separte entry 
+            and creates a dictionary for each separate entry 
             (in principle different variables might have different datums)
             Returns:
                     dictionary with days as keys, empty values
@@ -105,7 +115,7 @@ class netCDF_Files:
             print('*** The datum lists of all the variables are different: proceeding with one by one checks')            
             return False
     
-    def check_singlevalue(self, t='', rh='', sh='', dp=''):
+    def check_value(self, t='', rh='', sh='', dp=''):
         ''' Check if the values are correct, and not numpys "nan" 
             Returns four boolean values '''
         check_t  = np.isnan(t) 
@@ -114,14 +124,14 @@ class netCDF_Files:
         check_dp = np.isnan(dp)        
         return check_t , check_rh , check_sh , check_dp
         
-    def check_values(self, fast= True):
+    def check_values(self, fast= True, p=''):
         ''' Checks if the values of some variables are missing 
             If fast=True  , the datum lists have passed the check, and they are identical
-            if fast=False , the datum are different and require more checks 
+            if fast=False , the datum are different and require further analysis 
             '''
         if fast:
             for i in [0,1]: # 2 hours measurements (00:00 . 12:00)
-                for t,dp,sh,rh in zip( self.data_t[i,:] , self.data_dp[i,:] , self.data_sh[i,:] , self.data_rh[i,:] ):
+                for t,dp,sh,rh in zip( self.data_t[i,p,:] , self.data_dp[i,p,:] , self.data_sh[i,p,:] , self.data_rh[i,p,:] ):
                     print(self.check_singlevalue (t=t, dp=dp, rh=rh, sh=sh ) )
         
         
@@ -136,18 +146,23 @@ class netCDF_Files:
 class humidity_dewPoint:
     """ Module to extract humitiy and dew point from the temperature """
     
-    def __init__(self, t = '', h = '', dp = '' , pressure = 1000 ):
-        self.t = t
-        self.h = h
-        self.dp = dp
+    def __init__(self):
                 
-        self.pressure = pressure
-        
         self.vap_FOEEWMO = ''
         self.vap_Bolton  = ''
         
         self.specific_h = ''        
         self.relative_h = ''
+        
+        
+    def specific_to_relative(self, t='', sh='', pressure=''):
+        try:
+            v = sh2rh_ecmwf(sh, t, pressure)
+            self.sh2rh_ecmwf = v
+            return v
+        except:
+            print('Cannot convert specific humidity to relative! skipping')
+            pass            
         
     def vapor_FOEEWMO(self, t):
         try:
@@ -185,14 +200,7 @@ class humidity_dewPoint:
             print('Cannot calculate the specific humidity from vapor and pressure! skipping')
             pass            
     
-    def specific_to_relative(self, t = '', press = '', sh = '' ):
-        if not sh:
-            sh = self.specific_h
-        if not t:
-            t = self.t      
-        if not press:
-            p = self.pressure
-          
+    def relative_to_specific(self, t = '', pressure = '', sh = '' ):       
         try:     
             rel_h =sh2rh_ecmwf(sh, t, press)
             self.relative_h = rel_h
@@ -211,18 +219,26 @@ class fill_new:
 
 
 
-
+'''
 input_netCDF_t  = 'ERA5_1_10393_t.nc' #input file with temperature 
 input_netCDF_sh = 'ERA5_1_10393_sh.nc'
 input_netCDF_rh = 'ERA5_1_10393_rh.nc'
 input_netCDF_dp = 'ERA5_1_10393_dp.nc'
+'''
+
+# ##################################################################################################################
 
 
+    
+    
 
+'''
 netCDFs = netCDF_Files(file_t=input_netCDF_t  , file_rh = input_netCDF_rh , file_sh = input_netCDF_sh , file_dp = input_netCDF_dp)
 
 dates = netCDFs.load_datum()
 data  = netCDFs.load_data()
+plevels = netCDFs.define_plevels()
+
 
 
 """ Loading the data, datum (as lists) """
@@ -231,6 +247,8 @@ datum_t , datum_rh , datum_sh, datum_dp = netCDFs.datum_t , netCDFs.datum_rh , n
 
 
 
+
+#data_t shape (2, 16, 9916)
 datas = netCDFs.find_datums()
 
 check_datum = netCDFs.check_datum() # true if datums are identical, false otherwise
@@ -244,9 +262,11 @@ netCDFs.check_values(fast = check_datum)
 a = netCDFs.check_datum()
 
 sh  = np.empty([2,1] , dtype = float) 
+'''
 
-print(sh )
 
+'''
+#for pressure in 
 for temp in data_t[:,:]:
     print('For the temperature ', temp ) 
     
@@ -261,7 +281,7 @@ for temp in data_t[:,:]:
     print(' the saturation water vapor in Pa is: ', foe, ' the specific humidity is:' , sh , ' the relative humidity is:' , rh)
     
     #input('continue')
-    
+'''
     
 
 
