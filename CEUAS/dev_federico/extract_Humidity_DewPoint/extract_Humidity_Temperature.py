@@ -30,7 +30,7 @@ class netCDF_Files:
         self.new_file = file_t.replace('_t.nc','_calc_sh_rh_dp.nc')
         
     def define_plevels(self):
-        """ Create a dict with the pressure level and correpsondind index in the data arrays """
+        """ Create a dict with the pressure level and corresponding index in the data arrays """
         plevs=np.asarray([10,20,30,50,70,100,150,200,250,300,400,500,700,850,925,1000])
         numbs=np.asarray(range(16))
         dict_plevels = {}
@@ -58,25 +58,24 @@ class netCDF_Files:
             the new_var dic is contains the names of the new variables as keys and the variable range as values 
         """        
         copyfile(self.old_file , self.new_file)
-        out_file = netCDF4.Dataset(self.new_file , "w")
+        out_file = netCDF4.Dataset(self.new_file , "a")
         self.file_sh_rh_dp = out_file 
         
         # using the tmep field as a reference variable
-        var = self.file_t.variables['temperatures']
+        #var = self.file_t.variables['temperatures']
         
         
         new_var = { 'specific_humidity'    : [-100 , 100] , 
                     'relative_humidity'    : [-100 , 100] , 
-                    'dew_point_temperature': [0    , 300] ,
-                    'specific_humidity'    : [0    , 300]    } # CDM compliant
+                    'dew_point_temperature': [0    , 300] , }
         
         self.new_vars = new_var
         
         for k,v in new_var.items():
-            out_file.createDimension(i,len(self.file_t.dimensions[var]))
-            out_file.createVariable(k,  var.dtype , var.dimensions, fill_value=numpy.nan)
+            #out_file.createDimension(k,  len(self.file_t.dimensions['temperatures']) )
+            out_file.createVariable (k,  self.file_t.variables['temperatures'].dtype , self.file_t.variables['temperatures'].dimensions, fill_value=np.nan)
             #fo.variables[metadata[t]['varname']][:]=statdata[1][metadata[t]['varname']][:]  # to do later?          
-            setattr(out_file.variables[k], j , v) # setting the variable range
+            setattr(out_file.variables[k], 'valid_range' , v) # setting the variable range
         
         self.file_sh_rh_dp = out_file 
        
@@ -112,12 +111,12 @@ class netCDF_Files:
             print('*** The datum lists of all the variables are identical')
             return True
         else:
-            print('*** The datum lists of all the variables are different: proceeding with one by one checks')            
+            print('*** The datum lists of all the variables are different: using the temperature datum')            
             return False
     
     def check_value(self, t='', rh='', sh='', dp=''):
         ''' Check if the values are correct, and not numpys "nan" 
-            Returns four boolean values '''
+            Returns four boolean values (boll=true if the value is nan) '''
         check_t  = np.isnan(t) 
         check_rh = np.isnan(rh)        
         check_sh = np.isnan(sh)        
@@ -127,12 +126,15 @@ class netCDF_Files:
     def check_values(self, fast= True, p=''):
         ''' Checks if the values of some variables are missing 
             If fast=True  , the datum lists have passed the check, and they are identical
-            if fast=False , the datum are different and require further analysis 
+            if fast=False , the datum are different and the temperature datum will be used
             '''
         if fast:
-            for i in [0,1]: # 2 hours measurements (00:00 . 12:00)
+            for i in [0,1]: # 2 hours measurements (00:00 , 12:00)
                 for t,dp,sh,rh in zip( self.data_t[i,p,:] , self.data_dp[i,p,:] , self.data_sh[i,p,:] , self.data_rh[i,p,:] ):
-                    print(self.check_singlevalue (t=t, dp=dp, rh=rh, sh=sh ) )
+                    print(self.check_value (t=t, dp=dp, rh=rh, sh=sh ) )
+                    
+        
+        
         
         
     def clean_close(self):
@@ -219,70 +221,44 @@ class fill_new:
 
 
 
-'''
-input_netCDF_t  = 'ERA5_1_10393_t.nc' #input file with temperature 
-input_netCDF_sh = 'ERA5_1_10393_sh.nc'
-input_netCDF_rh = 'ERA5_1_10393_rh.nc'
-input_netCDF_dp = 'ERA5_1_10393_dp.nc'
-'''
+
+
+
+
+
+input_netCDF_t  = 'station10393_test/ERA5_1_10393_t.nc' #input file with temperature 
+input_netCDF_sh = 'station10393_test/ERA5_1_10393_sh.nc'
+input_netCDF_rh = 'station10393_test/ERA5_1_10393_rh.nc'
+input_netCDF_dp = 'station10393_test/ERA5_1_10393_dp.nc'
 
 # ##################################################################################################################
 
-
-    
-    
-
-'''
 netCDFs = netCDF_Files(file_t=input_netCDF_t  , file_rh = input_netCDF_rh , file_sh = input_netCDF_sh , file_dp = input_netCDF_dp)
 
 dates = netCDFs.load_datum()
 data  = netCDFs.load_data()
 plevels = netCDFs.define_plevels()
 
-
-
 """ Loading the data, datum (as lists) """
 data_t  , data_rh  , data_sh  , data_dp = netCDFs.data_t ,netCDFs.data_rh, netCDFs.data_sh, netCDFs.data_dp
 datum_t , datum_rh , datum_sh, datum_dp = netCDFs.datum_t , netCDFs.datum_rh , netCDFs.datum_sh , netCDFs.datum_dp
-
-
-
 
 #data_t shape (2, 16, 9916)
 datas = netCDFs.find_datums()
 
 check_datum = netCDFs.check_datum() # true if datums are identical, false otherwise
 
-netCDFs.check_values(fast = check_datum)
-
-
-#for t,s,r,d in zip(datum_t , datum_rh , datum_sh, datum_dp):
-    #print('checking the datums ', t,s,r,d )
+# must loop over the pressure level! 
+#netCDFs.check_values(fast = check_datum , p = 15)
 
 a = netCDFs.check_datum()
-
-sh  = np.empty([2,1] , dtype = float) 
-'''
+a = netCDFs.create_new()
 
 
-'''
-#for pressure in 
-for temp in data_t[:,:]:
-    print('For the temperature ', temp ) 
-    
-    h_dp = humidity_dewPoint(t = temp, h = '',  dp = '')
-    foe = h_dp.vapor_FOEEWMO(temp)
-    bolt = h_dp.vapor_Bolton(temp)
-    
-    sh = h_dp.vapor_to_specificHumidity (t = temp, vap = foe , press = 1000 )
-    rh = h_dp.specific_to_relative      (t = temp, sh  = sh,   press = 1000 )
-    
-    
-    print(' the saturation water vapor in Pa is: ', foe, ' the specific humidity is:' , sh , ' the relative humidity is:' , rh)
-    
-    #input('continue')
-'''
-    
+
+
+
+print('check check new file')
 
 
 '''
@@ -308,3 +284,4 @@ class humidity_dewPoint:
        '''
     
 
+#plevels = netCDFs.define_plevels()

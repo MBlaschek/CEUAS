@@ -76,3 +76,6 @@ netCDF files
 - updated humidity/dp 
 - extended the readtation to relative humidity, tested for station 10393
 - updated plot script for relative humidity, see plot ERA5_1_10393__ALL.pdf in odbstat
+
+09/04/2019
+Updated teste script for the relative humidity, updated plots

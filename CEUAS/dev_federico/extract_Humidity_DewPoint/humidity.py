@@ -131,6 +131,7 @@ def sh2rh_ecmwf(q, t, p):
     e = FOEEWMO(t) / p
     a = np.where(e < 0.5, e, 0.5)
     a = np.where(np.isfinite(t), a, np.nan)  # TODO maybe remove this line?
+    
     return q / (a * (1 + (461.5250 / 287.0597 - 1) * q))
 
 
