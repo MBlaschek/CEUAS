@@ -74,8 +74,11 @@ for p in plevels.keys():
     spec = netCDFs.data_sh[h,p,:]
     rel  = netCDFs.data_rh[h,p,:]
    
+
     for  t,dp,sh,rh in zip(temp,dew,spec,rel):
           check_t , check_rh , check_sh , check_dp = netCDFs.check_value( t=t , rh=rh , sh=sh , dp=dp )
+          print('check', check_t , check_rh , check_sh , check_dp )
+          input('')
           flag = bool(check_t and check_rh and check_sh and check_dp) # check == False if the 4 values are defined
           flag_tobechecked = bool (not check_t and not check_rh and not check_sh and not check_dp) # if nan, the value is False
           
