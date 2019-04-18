@@ -77,5 +77,13 @@ netCDF files
 - extended the readtation to relative humidity, tested for station 10393
 - updated plot script for relative humidity, see plot ERA5_1_10393__ALL.pdf in odbstat
 
-09/04/2019
+*** 09/04/2019
 Updated teste script for the relative humidity, updated plots
+
+*** 18/04/2019
+Updated script for relative humidity
+The function now fills vectors with combined (observed or calculated) relative humidity
+This vector must be written in the new file containing the combined data
+A 'flag' vector contains 0,1,2 for each entry for nan,observed,calculated
+Note: dont know how to calculate dp from rh and T: must invert the function
+or is it already available the correct one in the humidity.py script ?

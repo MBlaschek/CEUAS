@@ -68,10 +68,10 @@ class netCDF_Files:
         #var = self.file_t.variables['temperatures']
         
         
-        new_var = { 'specific_humidity'    : [-100 , 100] , 
-                    'relative_humidity'    : [-100 , 100] , 
-                    'dew_point_temperature': [0    , 300] , 
-                    'flag'                 : [1, 2 ]      }
+        new_var = { 'comb_relative_humidity'    : [-100 , 100] , 
+                    'comb_dew_point_temperature': [0    , 300] , 
+                    'flag_dp'                   : [0, 2      ] ,
+                    'flag_rh'                   : [0, 2      ] }
         
         self.new_vars = new_var
         
@@ -124,18 +124,18 @@ class netCDF_Files:
     def check_value(self, t='', rh='', sh='', dp=''):
         ''' Check if the values are correct, and not numpys "nan" 
             Returns four boolean values (boll=true if the value is nan) '''
-        check_t  = isinstance(float(t),  Number) 
-        check_rh = isinstance(float(rh), Number)        
-        check_sh = isinstance(float(sh), Number)        
-        check_dp = isinstance(float(dp), Number)
+        #check_t  = isinstance(float(t),  Number) 
+        #check_rh = isinstance(float(rh), Number)        
+        #check_sh = isinstance(float(sh), Number)        
+        #check_dp = isinstance(float(dp), Number)
 
         check_t  = np.isnan(float(t)  )
         check_rh = np.isnan(float(rh) )
         check_sh = np.isnan(float(sh) )
         check_dp = np.isnan(float(dp) )
 
-        print ('the bools are',  check_t , check_rh , check_sh , check_dp , t , rh, sh, dp)
-        input('check the bools')         
+        #print ('the bools are',  check_t , check_rh , check_sh , check_dp , t , rh, sh, dp)
+        #input('check the bools')         
         return check_t , check_rh , check_sh , check_dp
         
     def check_values(self, fast= True, p=''):
@@ -147,81 +147,61 @@ class netCDF_Files:
             for i in [0,1]: # 2 hours measurements (00:00 , 12:00)
                 for t,dp,sh,rh in zip( self.data_t[i,p,:] , self.data_dp[i,p,:] , self.data_sh[i,p,:] , self.data_rh[i,p,:] ):
                     print(self.check_value (t=t, dp=dp, rh=rh, sh=sh ) )
-                    
         
-    def calc_missing(self):
+    def calc_missing(self, h = '' , p = ''):
         """ Calculates relative hum if T and dew point T are provided ,
-            calculates dp T if relative hum and T are provided """
-        plevels = self.plevels
-        
-        ''' Empty array that will be filled with the observed or calculated data. 
-            The extra entry of length one will contain "1" or "2" for "observed" and "calculated" data source '''
-        
-        # ### to do: use single 1-d array then copy them in the complete one 
-        
+            calculates dp T if relative hum and T are provided 
+            Args:
+                 h = obs. hour (0,1)
+                 p = pressure level (0,15) """
+           
         length = len(self.data_t[0,1,:]) # total number of temperature entries
         
         #new_rh = np.zeros( shape =(1,2,16, length ) , dtype = float)
         #new_dp = np.zeros( shape =(1,2,16, length ) , dtype = float)
-        
-    
-        for h in [0,1]:
-            for p in plevels: 
                 
-                flag    = [] # to be filled with nan, 1(=measured) or 2(=calculated)
-                rh_comb = [] # arrays containing the combined (measured pr calc) variables
-                dp_comb = []
+        rh_flag = [] # to be filled with nan, 1(=measured) or 2(=calculated)
+        dp_flag = [] # "" 
+        rh_comb = [] # arrays containing the combined (measured pr calc) variables
+        dp_comb = []
 
-                press = plevels[p]          # reading the variables form the arrays
-                #temp = self.data_t [h,p,:]
-                #dew  = self.data_dp[h,p,:]
-                #spec = self.data_sh[h,p,:]
-                #rel  = self.data_rh[h,p,:]
                 
-                for l in range(length):
-                    print (self.data_t [h,p,:] , self.data_sh[h,p,:] )
-                    t  = self.data_t [h,p,l]
-                    dp = self.data_dp[h,p,l]
-                    sh = self.data_sh[h,p,l]
-                    rh = self.data_rh[h,p,l]
+        for l in range(length):
+                   #print (self.data_t [h,p,:] , self.data_sh[h,p,:] )
+            t  = self.data_t [h,p,l]
+            dp = self.data_dp[h,p,l]
+            sh = self.data_sh[h,p,l]
+            rh = self.data_rh[h,p,l]
                     
-                    check_t , check_rh , check_sh , check_dp = netCDFs.check_value( t=t , rh=rh , sh=sh , dp=dp )
+            check_t , check_rh , check_sh , check_dp = netCDFs.check_value( t=t , rh=rh , sh=sh , dp=dp )
                         
-                    print( 'controlla', check_t , check_rh , check_sh , check_dp , t, dp, sh, rh)
-                    if ( not check_t ) : # i.e. T not available. You should always have T
-                        print ('T is not available')
-                        rh_comb.append(np.nan)
-                        flag.append(np.nan)
-                        
-                    elif ( check_t ):  
-                        if ( check_rh ):
-                            print('appending measured rh', rh)
-                            rh_comb.append(rh)
-                            flag.append(1)
-                        elif check_rh and (not check_dp):
-                            print(' I am calculating the value')
-                            calc_hr = self.humidity_dewPoint.vapor_FOEEWMO(dp)/self.humidity_dewPoint.vapor_FOEEWMO(t) 
-                            rh_comb.apend(calc_rh)
-                            flag.append(2)
+            #print( 'controlla', check_t , check_rh , check_sh , check_dp , t, dp, sh, rh)
+            #input('controlla')
+            if ( check_t ) : # i.e. T not available
+                rh_comb.append(np.nan)
+                dp_comb.append(np.nan)
+                rh_flag.append(np.nan)
+                dp_flag.append(np.nan)
+            elif ( not check_t ):  
+                if ( not check_rh ):
+                    #print('appending measured rh', t, rh, sh , dp, check_t , check_rh , check_sh , check_dp )
+                    #input('continue')
+                    rh_comb.append(rh)
+                    rh_flag.append(1)                       
+                elif check_rh and (not check_dp):
+                    #print(' I am calculating the rh value' , t, rh, sh , dp, check_t , check_rh , check_sh , check_dp )
+                    calc_rh = self.humidity_dewPoint.vapor_FOEEWMO(dp)/self.humidity_dewPoint.vapor_FOEEWMO(t) 
+                    rh_comb.append(calc_rh)
+                    rh_flag.append(2)
+                elif (not check_dp):
+                    dp_comb.append(dp)
+                    flag_dp.append(1)
+                elif (check_dp and not check_rh):
+                    calc_dp = 999 # TODO: fix formula 
+                    dp_comb.append(calc_dp)
+                    dp_flag.append(2)
 
-                    #elif (check_rh and not check_dp)
-    
-                    """
-                    flag = bool (not check_t and not check_rh and not check_sh and not check_dp) # flag == False if the 4 values are defined
-                    
-                    if  flag:
-                        print(' I am doing ')
-                        p_pa = press * 100
-                
-                        ''' using the sat. vapor formula at T=T(dew point) '''   
-                        # ##################################### dsljkmfnsdfjmn to do! should be 1 not zero!!!!
-                        calc_hr = self.humidity_dewPoint.vapor_FOEEWMO(dp)/self.humidity_dewPoint.vapor_FOEEWMO(t)  # using the sat. vapor at dew point   
-                        #if calc_hr:
-                        #    print(calc_hr)
-                        #    new_rh[h,p,:].fill(calc_rh)          
-                    """
-                print('check the arrays', rh_comb, flag)
-                input('check')
+        return rh_comb, rh_flag, dp_comb, dp_flag
 
 
     def clean_close(self):
@@ -345,12 +325,26 @@ check_datum = netCDFs.check_datum() # true if datums are identical, false otherw
 
 
 # ########### a = netCDFs.calc_missing()
-a = netCDFs.calc_missing() 
 
 
 
-print('check check new file')
+input('ciao')
+for p in plevels.keys():
+    for h in [0,1]:
 
+        rh, dp, flagrh, flagdp = netCDFs.calc_missing(h=h, p=p) 
+        print(' rh, dp, flagrh, flagdp ',  rh, dp, flagrh, flagdp)
+        input('verifica gli arrays')
+
+
+
+'''
+        new_var = { 'comb_relative_humidity'    : [-100 , 100] ,
+                    'comb_dew_point_temperature': [0    , 300] ,
+                    'flag_dp'                   : [0, 2      ] ,
+                    'flag_rh'                   : [0, 2      ] }
+
+'''
 
 '''
 todo: 
@@ -363,7 +357,6 @@ todo:
     
     
 #print(len(data_t), len(data_h), len(data_dp) )
-print(' i am printing')
 
 #print('temp is', data_t)
 #print('datum is', datum_t)
