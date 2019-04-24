@@ -77,8 +77,8 @@ for p in plevels.keys():
 
     for  t,dp,sh,rh in zip(temp,dew,spec,rel):
           check_t , check_rh , check_sh , check_dp = netCDFs.check_value( t=t , rh=rh , sh=sh , dp=dp )
-          print('check', check_t , check_rh , check_sh , check_dp )
-          input('')
+          #print('check', check_t , check_rh , check_sh , check_dp )
+          #input('')
           flag = bool(check_t and check_rh and check_sh and check_dp) # check == False if the 4 values are defined
           flag_tobechecked = bool (not check_t and not check_rh and not check_sh and not check_dp) # if nan, the value is False
           
@@ -92,15 +92,22 @@ for p in plevels.keys():
             ratiof = calc_f / rh        
             ratios_f[p][h].append(ratiof)
                         
-            ''' using the specific to relative humidity conv. formula '''
-            calc_h = hum_dp.specific_to_relative( t=t, sh=sh, pressure= p_pa )
-            ratioh = calc_h / rh
-            ratios_h[p][h].append(ratioh) # using the convertion formula      
+            #''' using the specific to relative humidity conv. formula '''
+            #calc_h = hum_dp.specific_to_relative( t=t, sh=sh, pressure= p_pa )
+            #ratioh = calc_h / rh
+            #ratios_h[p][h].append(ratioh) # using the convertion formula      
 
-            r2 = calc_h / calc_f
+            #r2 = calc_h / calc_f
             
-            #print ('checking the values: ', calc_h , calc_f , r2 , ' for t and dp and sh ', t , dp, sh )
-            #print ('checking the ratios: ', ratiof , ratioh , rh , ' for t and dp and sh ', t , dp, sh )
+            ''' using the relative to dew point conv. formula '''            
+            calc_dp = hum_dp.rh2dp(t = t, rh = rh) 
+            r_dp = dp / calc_dp
+            
+            
+            print ('checking the dp values: ', calc_dp , dp , r_dp , t )
+            
+            #print ('checking the rh values: ', calc_h , calc_f , r2 , ' for t and dp and sh ', t , dp, sh )
+            #print ('checking the rh ratios: ', ratiof , ratioh , rh , ' for t and dp and sh ', t , dp, sh )
 
 
 """ Making polots to compare the values of the calculated relative humidity 

@@ -155,7 +155,8 @@ class netCDF_Files:
                  h = obs. hour (0,1)
                  p = pressure level (0,15) """
            
-        length = len(self.data_t[0,1,:]) # total number of temperature entries
+        length   = len(self.data_t[0,1,:]) # total number of temperature entries
+        length_2 = len(self.data_t[h,p,:]) # total number of temperature entries
         
         #new_rh = np.zeros( shape =(1,2,16, length ) , dtype = float)
         #new_dp = np.zeros( shape =(1,2,16, length ) , dtype = float)
@@ -164,8 +165,10 @@ class netCDF_Files:
         dp_flag = [] # "" 
         rh_comb = [] # arrays containing the combined (measured pr calc) variables
         dp_comb = []
+        t_comb  = []
 
-                
+        #print ('total number of data', length , length_2)
+
         for l in range(length):
                    #print (self.data_t [h,p,:] , self.data_sh[h,p,:] )
             t  = self.data_t [h,p,l]
@@ -174,33 +177,42 @@ class netCDF_Files:
             rh = self.data_rh[h,p,l]
                     
             check_t , check_rh , check_sh , check_dp = netCDFs.check_value( t=t , rh=rh , sh=sh , dp=dp )
-                        
             #print( 'controlla', check_t , check_rh , check_sh , check_dp , t, dp, sh, rh)
             #input('controlla')
             if ( check_t ) : # i.e. T not available
+                t_comb.append (np.nan)
                 rh_comb.append(np.nan)
                 dp_comb.append(np.nan)
                 rh_flag.append(np.nan)
                 dp_flag.append(np.nan)
+                
             elif ( not check_t ):  
-                if ( not check_rh ):
-                    #print('appending measured rh', t, rh, sh , dp, check_t , check_rh , check_sh , check_dp )
-                    #input('continue')
+                t_comb.append(t)
+                if (not check_rh ):
                     rh_comb.append(rh)
                     rh_flag.append(1)                       
-                elif check_rh and (not check_dp):
-                    #print(' I am calculating the rh value' , t, rh, sh , dp, check_t , check_rh , check_sh , check_dp )
-                    calc_rh = self.humidity_dewPoint.vapor_FOEEWMO(dp)/self.humidity_dewPoint.vapor_FOEEWMO(t) 
-                    rh_comb.append(calc_rh)
-                    rh_flag.append(2)
-                elif (not check_dp):
+                elif check_rh:
+                    if (not check_dp):
+                        #print(' I am calculating the rh value' , t, rh, sh , dp, check_t , check_rh , check_sh , check_dp )
+                        calc_rh = self.humidity_dewPoint.vapor_FOEEWMO(dp)/self.humidity_dewPoint.vapor_FOEEWMO(t) 
+                        rh_comb.append(calc_rh)
+                        rh_flag.append(2)
+                    elif check_dp:
+                        rh_comb.append(np.nan)
+                        rh_flag.append(0)                   
+                if (not check_dp):
                     dp_comb.append(dp)
-                    flag_dp.append(1)
-                elif (check_dp and not check_rh):
-                    calc_dp = 999 # TODO: fix formula 
-                    dp_comb.append(calc_dp)
-                    dp_flag.append(2)
-
+                    dp_flag.append(1)
+                elif check_dp:  
+                    if (not check_rh):
+                        calc_dp = self.humidity_dewPoint.rh2dp(t = t, rh = rh) # TODO: fix formula 
+                        dp_comb.append(calc_dp)
+                        dp_flag.append(2)
+                    elif (check_rh):
+                        dp_comb.append(np.nan)
+                        dp_flag.append(0)                        
+                else: print('dont know what to do')
+            
         return rh_comb, rh_flag, dp_comb, dp_flag
 
 
@@ -235,6 +247,7 @@ class humidity_dewPoint:
         
     def vapor_FOEEWMO(self, t):
         try:
+            
             v = FOEEWMO(t)
             self.vap_FOEEWMO = v
             return v
@@ -277,7 +290,11 @@ class humidity_dewPoint:
         except:
             print('Cannot calculate the relative humidity! skipping')
             pass 
-    
+    def rh2dp(self, t='', rh = ''):
+        """ inverts the FOEEWMO function to extract dp from rh and t 
+            See document for derivation """
+        f = (self.vapor_FOEEWMO(t) * rh)/611.21 
+        return (- 1.839 * np.log(f) + 273.16 )/(1-np.log(f)/17.502 ) 
     
     
 class fill_new:
@@ -327,15 +344,21 @@ check_datum = netCDFs.check_datum() # true if datums are identical, false otherw
 # ########### a = netCDFs.calc_missing()
 
 
-
-input('ciao')
+'''
+#input('ciao')
 for p in plevels.keys():
     for h in [0,1]:
-
+        print('p , h' , p, h)
         rh, dp, flagrh, flagdp = netCDFs.calc_missing(h=h, p=p) 
-        print(' rh, dp, flagrh, flagdp ',  rh, dp, flagrh, flagdp)
-        input('verifica gli arrays')
-
+        print(len(rh), len(dp), len(flagdp), len(flagrh) )
+        for r,d,fh,fd in zip(rh, dp, flagrh, flagdp):
+            if fh == 2 or fh == '2':
+                print(r,d,fh,fd )
+                print('go')
+        #print(' rh, dp, flagrh, flagdp ',  rh, dp, flagrh, flagdp)
+        
+        #input('verifica gli arrays')
+'''
 
 
 '''

@@ -1,4 +1,4 @@
-BBBB\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,11pt]{article}
 %\pdfoutput=1 % if your are submitting a pdflatex (i.e. if you have
              % images in pdf, png or jpg format)
 \usepackage{jheppub} % for details on the use of the package, please
@@ -14,7 +14,8 @@ BBBB\documentclass[a4paper,11pt]{article}
 % e-mail addresses: one for each author, in the same order as the authors\emailAdd{federico.ambrogi@oeaw.ac.at}
 \emailAdd{federico.ambrogi88@gmail.com}
 
-
+\newcommand{\dp}{\textit{dp~}}
+\newcommand{\rh}{\textit{rh~}}
 %% %simple case: 2 authors, same institution
 %% \author{A. Uthor}
 %% \author{and A. Nother Author}
@@ -40,10 +41,9 @@ The variable definition, their naming convention, and the physics units follow t
 
 
 
-\input{ObsTab.tex}
-\input{VarTab.tex}
+%\input(a.tex) does not work on windows?
 
-\iffalse
+
 \begin{table}[!htbp]
 	\footnotesize
 	\begin{center}
@@ -62,7 +62,63 @@ The variable definition, their naming convention, and the physics units follow t
 	\label{CDM}
 \end{table}
 
-\fi
+\section{Relative Humidity and Dew Point Temperature}
+In this section the procedure to extract the relative humidity (\rh) and dew point temperature (\dp) is described.
+The measured data for the rh and dp might be contained in the original odb file. In this case, as for the other variables such as air temperature and wind speed, the data is extracted directly from the odb files and converted to the netCDF format.
+However the \rh or the \dp can be calculated from the other variable if the temperature is also known, using the saturation water vapor pressure. The formula known as \textit{FOEEWMO} (see the humidity.py script) gives the saturation water vapor pressure in Pascal:
+\begin{equation}
+FOEEWMO = 611.21 \times e^{17.502 \times \frac{t - 273.16}{t -32.19} } .
+\end{equation}
+The \rh temperature can be calculated as:
+\begin{equation}
+rh = \frac{FOEEWMO(dp)}{FOEEWMO(t)}
+\end{equation}
+i.e. evaluating the ratio of the saturation water vapor pressure at dew point temperature and at the measured air temperature. For the station 10939, which often reports directly both the \rh and \dp values, it was tested that the \rh measure values matched the values calculated using the formula above \footnote{Note that in the humidity.py script, the formula sh2rh allows to calculate the \rh from the specific humidity; however a discrepancy of constant factor $\sim$0.62 was found between the calculated and observed values.}.
+\\
+It is also possible to calculate the \dp knowing the \rh value by inverting the FOEEWMO formula as:
+\begin{equation}
+FOEEWMO(dp) = FOEEWMO(t) \times rh 
+\end{equation}
+
+\begin{equation*}
+611.21 \times e^{17.502 \frac{dp - 273.16}{dp-32.19}} = FOEEWMO(t) \times rh
+\end{equation*}
+
+\begin{equation*}
+ e^{17.502 \frac{dp - 273.16}{dp-32.19}} =  \frac{FOEEWMO(t) \times rh}{611.21}
+\end{equation*}
+
+
+\begin{equation*}
+def \ F(t) \equiv \frac{FOEEWMO(t) \times rh}{611.21}
+\end{equation*}
+
+
+\begin{equation*}
+ \frac{dp - 273.16}{dp-32.19} = \frac{ln \left( F(t) \right)}{17.502}   
+\end{equation*}
+
+\begin{equation*}
+dp - 273.16 = \left(\frac{ln \left(  F(t) \right)}{17.502}   \right) \times dp - \frac{32.19}{17.502} \times ln \left(  F(t) \right)
+\end{equation*} 
+
+\begin{equation*}
+dp - \left(\frac{ln \left(  F(t) \right)}{17.502}   \right) \times dp  = - \frac{32.19}{17.502} \times ln \left(  F(t) \right) + 273.16
+\end{equation*} 
+
+
+\begin{equation*}
+\left (  1 - \frac{ ln \left(  F(t)  \right)}{17.502} \right) \times dp = - 1.839 \times ln \left(   F(t)    \right) + 273.16 
+\end{equation*} 
+
+
+
+
+\begin{equation}
+dp =  \frac{ - 1.839 \times ln \left(   F(t)    \right) + 273.16 }{\left (  1 - \frac{ ln \left(  F(t)  \right)}{17.502} \right)}
+\end{equation}
+
+
 % The following file contains the tables
 % produced automatically by the CDM_Format.py file 
 
