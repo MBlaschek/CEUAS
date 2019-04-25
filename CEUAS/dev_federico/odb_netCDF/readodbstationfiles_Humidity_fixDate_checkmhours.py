@@ -17,6 +17,8 @@ import subprocess
 import json
 import gzip
 sys.path.append(".")
+sys.path.append(".")
+
 from retrieve_fb_jra55 import add_feedback
 import copy
                                                                
@@ -30,6 +32,8 @@ from rasotools.utils import *
 
 
 plt.rcParams['lines.linewidth'] = 3
+
+#outdir = 'out_netCDFs'
 
 def stretrieve(countlist,mindays):
 
@@ -161,11 +165,7 @@ def par_read_odbsql_stn_withfeedback(varno,odbfile):
     qs+="vertco_type, vertco_reference_1, varno, obsvalue@body, biascorr@body, fg_depar@body, an_depar@body "
     qs+="WHERE "
 #    qs+="varno=2  and "
-    qs+=" (vertco_reference_1=100000 or vertco_reference_1=92500 or vertco_reference_1=85000 or vertco_reference_1=70000 or vertco_reference_1=50000 or vertco_reference_1=40000 or vertco_reference_1=30000 or vertco_reference_1=25000 or vertco_reference_1=20000 or vertco_reference_1=15000 or vertco_reference_1=10000 or vertco_reference_1=7000 or vertco_reference_1=5000 or vertco_reference_1=3000 or vertco_reference_1=2000 or vertco_reference_1=1000) "
-    # FFF uncomment here!!! change here!!!
-    
-    
-    print ('the qs is **** FF:', qs )
+    qs+=" (vertco_reference_1=100000 or vertco_reference_1=92500 or vertco_reference_1=85000 or vertco_reference_1=70000 or vertco_reference_1=50000 or vertco_reference_1=40000 or vertco_reference_1=30000 or vertco_reference_1=25000 or vertco_reference_1=20000 or vertco_reference_1=15000 or vertco_reference_1=10000 or vertco_reference_1=7000 or vertco_reference_1=5000 or vertco_reference_1=3000 or vertco_reference_1=2000 or vertco_reference_1=1000) "    
     
     t=time.time()
     sonde_type=True
@@ -193,7 +193,7 @@ def par_read_odbsql_stn_withfeedback(varno,odbfile):
     else:
         return alldict
     
-    print ('FF CALL:', "odb","sql","-q",qs,"-i",odbfile,'--no_alignment') 
+    #print ('FF CALL:', "odb","sql","-q",qs,"-i",odbfile,'--no_alignment') 
     #print 'sql',time.time()-t
     tx=time.time()
     #if len(rdata.split('\n'))<3:
@@ -847,9 +847,9 @@ def readstationfiles_t(header,ncpath,prefix,statdata,varlist=['t','u','v','dp','
                   dp=dict(varname='dp',bias='dpbiascorr',fg_dep='dpfg_depar',an_dep='dpan_depar',
                          datum='dpdatum',hours='dphours',units='K',long_name='Upper Air Dew Point',sonde_type='dpsonde_type', valid_range=[0.,300]) ,
                   sh=dict(varname='sh',bias='shbiascorr',fg_dep='shfg_depar',an_dep='shan_depar',
-                         datum='shdatum',hours='shhours',units='???',long_name='Specific Humidity',sonde_type='shsonde_type', valid_range=[-100.,100]) ,                   
+                         datum='shdatum',hours='shhours',units='?',long_name='Specific Humidity',sonde_type='shsonde_type', valid_range=[-100.,100]) ,                   
                   rh=dict(varname='rh',bias='rhbiascorr',fg_dep='rhfg_depar',an_dep='rhan_depar',
-                         datum='rhdatum',hours='rhhours',units='???',long_name='Relative Humidity',sonde_type='rhsonde_type', valid_range=[-100.,100])                     
+                         datum='rhdatum',hours='rhhours',units='',long_name='Relative Humidity',sonde_type='rhsonde_type', valid_range=[-100.,100])                     
                   
                   )
   
@@ -1440,7 +1440,6 @@ def do_hours(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
     m=-1
     ixold=-1
     
-    print('madatum is: FF ' , mdatum)
     # list variable storing the delta hours between the measurements-standard times
     for i in range(data.shape[0]):   # here data is a np array with shape (:, 11)
          
@@ -1520,6 +1519,7 @@ def do_hours(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
 
 
 
+'''
 """ The idea of the following code is: 
 loop over the input data to extract, for each single day available,m
 the best observation hours i.e. the two observation hours that fall the closest to 00:00 and 12:00 
@@ -1594,7 +1594,7 @@ def do_hours_new(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
         # each res contain, for each day, the hour closest to 00:00 (also of the following day) and to 12:00  
         # print('for the day ', day, 'the bes results are: ', res) 
     def is_previous_day(day,res=res):
-        """ Given a day, returns the previous day if present in the results dictionary, otherwise False"""
+        """ Given a day, returns the previous day if present in the results dictionary, otherwise False """
         date = dt.strptime( str(day), '%Y%m%d' )
         previous = (date - timedelta(1)).strftime('%Y%m%d')
         #print('day, previous', day, previous)
@@ -1604,7 +1604,7 @@ def do_hours_new(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
             return eval(previous)
         
     def extract_best(res):
-        ''' Selects in the res dictionary the correct values for the measurements '''
+        """ Selects in the res dictionary the correct values for the measurements """
         days = list(res.keys())
 
         res_selected = {'hour_12':[] , 'hour_00':[] , 'hour_00_day':[] , 'day':[] }        
@@ -1699,7 +1699,7 @@ def do_hours_new(tidx,mdatum,mhours,mtemperatures,data,sonde_type,hl,varnos):
         #input('check hours')
     #print('the clean results is: ', clean)            
     
-            
+'''            
 
 
 def odb2netcdf(gribpath,sodblist,varno,odbreader,idx,k):
@@ -1747,10 +1747,10 @@ def odb2netcdf(gribpath,sodblist,varno,odbreader,idx,k):
         print('FF the exp is', exp )
     #func = partial(readstationfiles_t,'header',os.path.expandvars('$FSCRATCH/ei6/'),'ERA5_'+exp+'_',varlist=varlist)
         #func = partial(readstationfiles_t,'header',os.path.expandvars('netCDF_'+exp+'/'+exp),'ERA5_'+exp+'_',varlist=varlist)
-        func = partial(readstationfiles_t,'header',os.path.expandvars('Ready_ForHumidity/'+exp),'ERA5_'+exp+'_',varlist=varlist)
+        func = partial(readstationfiles_t,'header',os.path.expandvars(outdir+'/'+exp),'ERA5_'+exp+'_',varlist=varlist)
         print('Done with FF', exp , varlist)
     else:
-        func = partial(readstationfiles_t,'header',os.path.expandvars('ALLRES_t_uv_h/'+exp), exp+'_',varlist=varlist)
+        func = partial(readstationfiles_t,'header',os.path.expandvars(outdir+'/'+exp), exp+'_',varlist=varlist)
 
     list(map(func,list(referencevalues.items())))
     
@@ -1868,8 +1868,8 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
             sodblist=glob.glob(ipath+'/*.conv._*')  
 
         '''
-        # to process a subset of files
-        #sodblist = [ el for el in sodblist if sodblist.index(el) in range(0,500)  ] # FF SLIMMER, processing only 5 files
+        # EDIT to process a smaller subset of files in the database directory
+        #sodblist = [ el for el in sodblist if sodblist.index(el) in range(0,500)  ] # FF SLIMMER
         new = [ l.replace('/raid60/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.','') for l in sodblist ]
         processed = ['C:6146', 'C:6143', 'C:6155', 'C:6149', 'C:6158', 'C:6145', 'C:6157', 'C:6144', 'C:6154', 'C:6161', 'C:6164', 'C:6148', 'C:6168', 'C:6015A', 'C:6152', 'C:6160', 'C:6010A', 'C:6141', 'C:6014A', 'C:6137', 'C:6011A', 'C:6140', 'C:6159', 'C:6142', 'C:6136', 'C:6150', 'C:6162', 'C:6147', 'C:6132', 'C:6133', 'C:6167', 'C:6138', 'C:6165', 'C:6151', 'C:6130', 'C:6134', 'C:6156', 'C:6153', 'C:6131', 'C:6135', 'C:6139', 'C:6170', 'C:6012A', 'C:6169', 'C:6019A', 'C:6163', 'C:6067', 'C:6013A', 'C:6009A', 'C:5012A', 'C:6166', 'C:4529', 'C:4790', 'C:4528', 'C:4526', 'C:4527', 'C:4791', 'C:5853A', 'C:6017A', 'C:4525', 'C:5006A', 'C:4523', 'C:5856A', 'C:4524', 'C:4788', 'C:4793', 'C:5999', 'C:4530', 'C:4538', 'C:5012B', 'C:6003', 'C:6001', 'C:6018A', 'C:5003B', 'C:4963', 'C:4808', 'C:4806', 'C:6016A', 'C:4537', 'C:5991', 'C:6000', 'C:4536', 'C:4207A', 'C:5998', 'C:5782', 'C:5993', 'C:4535', 'C:5016B', 'C:6002', 'C:4704', 'C:5819', 'C:5995', 'C:4706', 'C:4534', 'C:4683', 'C:4663', 'C:4668', 'C:4672', 'C:4697', 'C:4731', 'C:5858A', 'C:5824', 'C:4532', 'C:6008', 'C:4703', 'C:4780', 'C:4740', 'C:4533', 'C:4976', 'C:5994', 'C:4531', 'C:4743', 'C:4755', 'C:5997', 'C:4750', 'C:4687', 'C:4775', 'C:4782', 'C:4779', 'C:4692', 'C:4778', 'C:5479', 'C:5992', 'C:4751', 'C:4721', 'C:4758', 'C:4702', 'C:4752', 'C:4774', 'C:4762', 'C:4616', 'C:5527', 'C:4207B', 'C:4701', 'C:4700', 'C:4681', 'C:4688', 'C:4667', 'C:4748', 'C:4655', 'C:4760', 'C:4629', 'C:4557', 'C:4696', 'C:5808', 'C:4781', 'C:5821', 'C:4665', 'C:4749', 'C:4759', 'C:4756', 'C:4565', 'C:4691', 'C:4605', 'C:5250A', 'C:4773', 'C:4567', 'C:4614', 'C:4678', 'C:4636', 'C:4662', 'C:4651', 'C:4563', 'C:4671', 'C:4627', 'C:4574', 'C:4611', 'C:4543', 'C:4604', 'C:4568', 'C:4552', 'C:4549', 'C:4595', 'C:4764', 'C:4637', 'C:4626', 'C:4577', 'C:4619', 'C:4625', 'C:4583', 'C:4682', 'C:4623', 'C:4640', 'C:4588', 'C:5004B', 'C:4674', 'C:4585', 'C:4630', 'C:4972', 'C:4561', 'C:4584', 'C:4542', 'C:4650', 'C:4569', 'C:4757', 'C:4649', 'C:4556', 'C:4564', 'C:4679', 'C:4657', 'C:4646', 'C:4771', 'C:4580', 'C:4612', 'C:4645', 'C:4560', 'C:4589', 'C:4591', 'C:4618', 'C:4550', 'C:4658', 'C:5531', 'C:4597', 'C:4754', 'C:4598', 'C:4777', 'C:4643', 'C:4648', 'C:4684', 'C:4669', 'C:4553', 'C:4644', 'C:4705', 'C:5812', 'C:4586', 'C:4628', 'C:4545', 'C:4622', 'C:4620', 'C:4766', 'C:4615', 'C:5828', 'C:4675', 'C:4582', 'C:4540', 'C:4555', 'C:4769', 'C:4590', 'C:4548', 'C:4559', 'C:4680', 'C:4763', 'C:4607', 'C:4566', 'C:5809', 'C:4558', 'C:4541', 'C:4783', 'C:5367A', 'C:4699', 'C:5006B', 'C:4547', 'C:4786', 'C:4728', 'C:4613', 'C:4994B', 'C:4621', 'C:4631', 'C:4652', 'C:4632', 'C:4581', 'C:4606', 'C:4647', 'C:4686', 'C:4659', 'C:4608', 'C:4578', 'C:4638', 'C:4570', 'C:4551', 'C:4546', 'C:4554', 'C:4713', 'C:4573', 'C:4593', 'C:4602', 'C:4571', 'C:4610', 'C:5007B', 'C:4641', 'C:4653', 'C:4587', 'C:4747', 'C:4617', 'C:4770', 'C:4735', 'C:4656', 'C:4767', 'C:4609', 'C:5853B', 'C:5510', 'C:4744', 'C:4670', 'C:4730', 'C:5492', 'C:4739', 'C:4596', 'C:4642', 'C:4603', 'C:4599', 'C:4654', 'C:4695', 'C:5996', 'C:4635', 'C:4693', 'C:4677', 'C:4601', 'C:4776', 'C:5391', 'C:4539', 'C:4738', 'C:4634', 'C:4736', 'C:4698', 'C:4772', 'C:5079', 'C:4690', 'C:5015', 'C:4855', 'C:5149', 'C:5856B', 'C:4742', 'C:6122', 'C:4666', 'C:5018B', 'C:4737', 'C:4746', 'C:4720', 'C:4592', 'C:4729', 'C:4572', 'C:4689', 'C:4544', 'C:6007', 'C:5519', 'C:4633', 'C:5516', 'C:4955', 'C:4732', 'C:4624', 'C:4792', 'C:4753', 'C:4594', 'C:4562', 'C:4639', 'C:4708', 'C:4660', 'C:4685', 'C:5508', 'C:4727', 'C:4745', 'C:5324', 'C:4765', 'C:4579', 'C:5118', 'C:5521', 'C:4741', 'C:5205', 'C:5307A', 'C:4676', 'C:4673', 'C:5272', 'C:4600', 'C:4768', 'C:4710', 'C:4796', 'C:5025', 'C:5125', 'C:4709', 'C:4761', 'C:5222A', 'C:5572', 'C:5984', 'C:5122A', 'C:4719', 'C:5000', 'C:5076', 'C:5349', 'C:4968', 'C:5386A', 'C:5120', 'C:4733', 'C:4717', 'C:4726', 'C:4714', 'C:6005', 'C:5225A', 'C:5341A', 'C:5031', 'C:5179', 'C:4723', 'C:5131A', 'C:4712', 'C:4716', 'C:5175A', 'C:5858B', 'C:4711', 'C:5063A', 'C:5528', 'C:6129A', 'C:5274A', 'C:5055A', 'C:5969B', 'C:6074', 'C:4794', 'C:5081', 'C:5509', 'C:5300A', 'C:5212A', 'C:5339A', 'C:4734', 'C:5351', 'C:5512', 'C:4724', 'C:5039', 'C:5126', 'C:5312A', 'C:5833', 'C:6004', 'C:4725', 'C:5522', 'C:4715', 'C:5353', 'C:5308', 'C:5314', 'C:5077', 'C:5504B', 'C:4722', 'C:5968B', 'C:5155', 'C:5185A', 'C:5243', 'C:5530', 'C:6129B', 'C:5113', 'C:5261', 'C:5505', 'C:5524', 'C:6126', 'C:5805', 'C:5218', 'C:5030A', 'C:5038', 'C:4707', 'C:5245', 'C:6125', 'C:5278A', 'C:4718', 'C:5533', 'C:5123', 'C:5294A', 'C:5132', 'C:5356A', 'C:5228A']       
         missing = [ n for n in new if n not in processed]
@@ -1897,8 +1897,7 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
 
         
         
-        
-        
+    
 global exp    
 
 if __name__ == "__main__":
@@ -1911,34 +1910,22 @@ if __name__ == "__main__":
                  exp = '1'
                  run_converter(dataset= '1', single_stat= False, pool=20, varno=110, debug = True )  
                  
-                 varno: 2(temp.), 110(u,v wind), 9(spec. humidity), 59(dew point)
+                 variables= list of variables to process, where: 2(temp.), 110(u,v wind), 57(relative humidity), 59(dew point)
                  
-                 
-        Note that the single station option needs somes fixes (I did not fix where the output is saved)
-        Remember to deactiovate the SLIMMER reduction
+        Remember to deactivate the SLIMMER reduction
         Remember to select the correct range of years
         
         Tests: 
-              stat 'era5.1761.conv.9:673' , dataset 1761
-              stat ''
+              stat = '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._10393' # single station
+              variables = [2,29,59,110] # [temp,relative hum, dew point, wind]
+              datasets = ['1','1761','1759','3188'] # all working datasets
+              
     """
-    
-    stat = '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._10393' # random station small size for single test
-    
-    # stat = '/raid60/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.C:4751'
-    # stat = '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._10393' (Michael test station)
-    
-    datasets = ['1','1761','1759','3188']
-    
+    outdir = 'out_netCDFs'
     datasets = ['1']
-    stat = '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._10393'  
+    stat = '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._10393'    
+    variables = [2,29,59,110]
     
-        
-    #datasets = ['1761']
-    #stat = '/raid60/scratch/leo/scratch/era5/odbs/1761/era5.1761.conv.9:673'
-    
-    
-    variables = [110]
     for e in datasets:
         exp = e
         for v in variables:
