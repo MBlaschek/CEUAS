@@ -87,3 +87,28 @@ This vector must be written in the new file containing the combined data
 A 'flag' vector contains 0,1,2 for each entry for nan,observed,calculated
 Note: dont know how to calculate dp from rh and T: must invert the function
 or is it already available the correct one in the humidity.py script ?
+
+*** 24/04/2019
+Finished the script to extract calculated dp and rh
+Implemented the inverted formula that calculates the dp 
+from the vapor pressure by inverting the FOEEWMO formula.
+The inverted formula is derived in the latex document
+in the convention file
+
+*** 25/05/2019
+Wrote the script to plot for each hour and pressure
+the combines temperature, dp and rh
+It also shows the points which have been measured or calculated
+(works for station 10393)
+
+-----> Created the test directory that will contain an example 
+to test everything
+
+Note:
+- still to do, implementation of comments, ranges, units etc.
+in the netCDF file concertion form the ODB
+- readCSV instead of my splitting
+- then replace specific humidity with relative humitidiy in the latex document
+(automatically read entries and write latex table)
+
+

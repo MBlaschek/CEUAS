@@ -62,16 +62,16 @@ class netCDF_Files:
         """        
         copyfile(self.old_file , self.new_file)
         out_file = netCDF4.Dataset(self.new_file , "a")
-        self.file_sh_rh_dp = out_file 
         
         # using the tmep field as a reference variable
         #var = self.file_t.variables['temperatures']
         
         
-        new_var = { 'comb_relative_humidity'    : [-100 , 100] , 
-                    'comb_dew_point_temperature': [0    , 300] , 
-                    'flag_dp'                   : [0, 2      ] ,
-                    'flag_rh'                   : [0, 2      ] }
+        new_var = { 'relative_humidity_comb'    : [-100 , 100 ], 
+                    'dew_point_temperature_comb': [0    , 300 ], 
+                    'dp_flag'                   : [0    , 2   ],
+                    'rh_flag'                   : [0    , 2   ], 
+                    't_comb'                    : [0    , 300 ] }
         
         self.new_vars = new_var
         
@@ -82,8 +82,7 @@ class netCDF_Files:
             #fo.variables[metadata[t]['varname']][:]=statdata[1][metadata[t]['varname']][:]  # to do later?          
             setattr(out_file.variables[k], 'valid_range' , v) # setting the variable range
         
-        self.file_sh_rh_dp = out_file 
-       
+        out_file.close()        
        
        
     def fill_missing(self, var = '' , values = [] ):
@@ -211,11 +210,32 @@ class netCDF_Files:
                     elif (check_rh):
                         dp_comb.append(np.nan)
                         dp_flag.append(0)                        
-                else: print('dont know what to do')
-            
+         
+        self.rh_comb = rh_comb   
+        self.rh_flag = rh_flag
+        self.dp_comb = dp_comb
+        self.dp_flag = dp_flag
+        self.t_comb  = t_comb
+        
         return rh_comb, rh_flag, dp_comb, dp_flag
 
-
+    def write_comb(self,p = '', h = ''):
+        out_file = netCDF4.Dataset(self.new_file, 'a')
+        out_file.variables['dew_point_temperature_comb'][h,p,:]= self.dp_comb
+        out_file.variables['relative_humidity_comb'][h,p,:]    = self.rh_comb
+        out_file.variables['dp_flag'][h,p,:]                   = self.dp_flag
+        out_file.variables['rh_flag'][h,p,:]                   = self.rh_flag        
+        out_file.variables['t_comb'][h,p,:]                    = self.t_comb
+        
+        out_file.close()
+        
+        '''
+         new_var = { 'comb_relative_humidity'    : [-100 , 100 ], 
+                    'comb_dew_point_temperature': [0    , 300 ], 
+                    'flag_dp'                   : [0    , 2   ],
+                    'flag_rh'                   : [0    , 2   ], 
+                    'comb_t'                    : [0    , 300 ] }'''
+        
     def clean_close(self):
         self.file_sh_rh_dp.close()
         print('Finished with processing the file', self.new_file )
@@ -332,11 +352,11 @@ datas = netCDFs.find_datums()
 
 check_datum = netCDFs.check_datum() # true if datums are identical, false otherwise
 
+comb_file = netCDFs.create_new() # file to be filled with the combined data
 # must loop over the pressure level! 
 #netCDFs.check_values(fast = check_datum , p = 15)
 
 #a = netCDFs.check_datum()
-#a = netCDFs.create_new()
 
 
 
@@ -344,21 +364,17 @@ check_datum = netCDFs.check_datum() # true if datums are identical, false otherw
 # ########### a = netCDFs.calc_missing()
 
 
-'''
-#input('ciao')
 for p in plevels.keys():
     for h in [0,1]:
-        print('p , h' , p, h)
+        print('processing the hour, pressure' , h , p )
         rh, dp, flagrh, flagdp = netCDFs.calc_missing(h=h, p=p) 
-        print(len(rh), len(dp), len(flagdp), len(flagrh) )
-        for r,d,fh,fd in zip(rh, dp, flagrh, flagdp):
-            if fh == 2 or fh == '2':
-                print(r,d,fh,fd )
-                print('go')
+        netCDFs.write_comb(p = p, h = h)
+ 
+ 
         #print(' rh, dp, flagrh, flagdp ',  rh, dp, flagrh, flagdp)
         
         #input('verifica gli arrays')
-'''
+
 
 
 '''
