@@ -108,7 +108,14 @@ Note:
 - still to do, implementation of comments, ranges, units etc.
 in the netCDF file concertion form the ODB
 - readCSV instead of my splitting
-- then replace specific humidity with relative humitidiy in the latex document
+- then replace specific humidity with relative humidity in the latex document
 (automatically read entries and write latex table)
+
+*** 26/04/2019
+- make structure of the GitHub repo as in Leo's picture
+- branch: master and dev
+- keep humidity file separate
+- all projects must be run independently
+- setup tool
 
 
