@@ -20,11 +20,11 @@ class netCDF_Files:
     """ Class containing the basic information of the netCDF file
         to be processed """
     
-    def __init__(self, file_t='' , file_rh='' , file_sh='', file_dp=''):
+    def __init__(self, file_t='' , file_rh='' , file_dp=''):
         
         self.file_t  = netCDF4.Dataset(file_t ) 
         self.file_rh = netCDF4.Dataset(file_rh)
-        self.file_sh = netCDF4.Dataset(file_sh )         
+        #self.file_sh = netCDF4.Dataset(file_sh )         
         self.file_dp = netCDF4.Dataset(file_dp) 
         
         self.old_file = file_t
@@ -46,14 +46,14 @@ class netCDF_Files:
         """ Loading the observed values as ([2,:] arrays)"""                
         self.datum_t  = [ 1900 + d for d in self.file_t. variables['datum'][0,:]] 
         self.datum_rh = [ 1900 + d for d in self.file_rh.variables['datum'][0,:]] 
-        self.datum_sh = [ 1900 + d for d in self.file_sh.variables['datum'][0,:]]         
+        #self.datum_sh = [ 1900 + d for d in self.file_sh.variables['datum'][0,:]]         
         self.datum_dp = [ 1900 + d for d in self.file_dp.variables['datum'][0,:]] 
         
     def load_data(self):
         """ Loading the observed values as ([2,:] arrays)"""        
         self.data_t  = self.file_t.variables  ['temperatures']#[:,:,:] (2,16,number)=(2hours,16pressures,observationDays)
         self.data_rh = self.file_rh.variables ['rh'][:,:,:]
-        self.data_sh = self.file_sh.variables ['sh'][:,:,:]        
+        #self.data_sh = self.file_sh.variables ['sh'][:,:,:]        
         self.data_dp = self.file_dp.variables ['dp'][:,:,:]
        
     def create_new(self):
@@ -101,7 +101,7 @@ class netCDF_Files:
                     dictionary with days as keys and empty values
             '''
         dic = {}
-        for datum in [self.datum_dp , self.datum_rh , self.datum_sh , self.datum_t]:
+        for datum in [self.datum_dp , self.datum_rh  , self.datum_t]:
             for day in datum:
                 if day not in dic.keys():
                     dic[day] = '' # initialize an empty dictionary
@@ -130,23 +130,24 @@ class netCDF_Files:
 
         check_t  = np.isnan(float(t)  )
         check_rh = np.isnan(float(rh) )
-        check_sh = np.isnan(float(sh) )
+        #check_sh = np.isnan(float(sh) )
         check_dp = np.isnan(float(dp) )
 
         #print ('the bools are',  check_t , check_rh , check_sh , check_dp , t , rh, sh, dp)
         #input('check the bools')         
-        return check_t , check_rh , check_sh , check_dp
-        
-    def check_values(self, fast= True, p=''):
-        ''' Checks if the values of some variables are missing 
+        return check_t , check_rh  , check_dp
+    
+    '''   
+    def check_values(self, fast= True, p=''): # FFF !!! still to implement
+        """ Checks if the values of some variables are missing 
             If fast=True  , the datum lists have passed the check, and they are identical
             if fast=False , the datum are different and the temperature datum will be used
-            '''
+            """
         if fast:
             for i in [0,1]: # 2 hours measurements (00:00 , 12:00)
                 for t,dp,sh,rh in zip( self.data_t[i,p,:] , self.data_dp[i,p,:] , self.data_sh[i,p,:] , self.data_rh[i,p,:] ):
-                    print(self.check_value (t=t, dp=dp, rh=rh, sh=sh ) )
-        
+                    print(self.check_value (t=t, dp=dp, rh=rh ) )
+    '''    
     def calc_missing(self, h = '' , p = ''):
         """ Calculates relative hum if T and dew point T are provided ,
             calculates dp T if relative hum and T are provided 
@@ -172,10 +173,10 @@ class netCDF_Files:
                    #print (self.data_t [h,p,:] , self.data_sh[h,p,:] )
             t  = self.data_t [h,p,l]
             dp = self.data_dp[h,p,l]
-            sh = self.data_sh[h,p,l]
+            #sh = self.data_sh[h,p,l]
             rh = self.data_rh[h,p,l]
                     
-            check_t , check_rh , check_sh , check_dp = netCDFs.check_value( t=t , rh=rh , sh=sh , dp=dp )
+            check_t , check_rh ,  check_dp = netCDFs.check_value( t=t , rh=rh , dp=dp )
             #print( 'controlla', check_t , check_rh , check_sh , check_dp , t, dp, sh, rh)
             #input('controlla')
             if ( check_t ) : # i.e. T not available
@@ -245,7 +246,7 @@ class netCDF_Files:
        
        
 class humidity_dewPoint:
-    """ Module to extract humitiy and dew point from the temperature """
+    """ Module to extract humidity and dew point from the temperature """
     
     def __init__(self):
                 
@@ -328,24 +329,24 @@ class fill_new:
 
 
 
+netCDFs_dir = '/raid8/srvx1/federico/GitHub/CEUAS/CEUAS/dev_federico/test_dir/out_netCDFs/1/10393/'
 
-
-input_netCDF_t  = 'station10393_test/ERA5_1_10393_t.nc' #input file with temperature 
-input_netCDF_sh = 'station10393_test/ERA5_1_10393_sh.nc'
-input_netCDF_rh = 'station10393_test/ERA5_1_10393_rh.nc'
-input_netCDF_dp = 'station10393_test/ERA5_1_10393_dp.nc'
+input_netCDF_t  = netCDFs_dir + 'ERA5_1_10393_t.nc' #input file with temperature 
+input_netCDF_sh = netCDFs_dir + 'ERA5_1_10393_sh.nc'
+input_netCDF_rh = netCDFs_dir + 'ERA5_1_10393_rh.nc'
+input_netCDF_dp = netCDFs_dir + 'ERA5_1_10393_dp.nc'
 
 # ##################################################################################################################
 
-netCDFs = netCDF_Files(file_t=input_netCDF_t  , file_rh = input_netCDF_rh , file_sh = input_netCDF_sh , file_dp = input_netCDF_dp)
+netCDFs = netCDF_Files(file_t=input_netCDF_t  , file_rh = input_netCDF_rh  , file_dp = input_netCDF_dp)
 
 dates = netCDFs.load_datum()
 data  = netCDFs.load_data()
 plevels = netCDFs.define_plevels()
 
 """ Loading the data, datum (as lists) """
-data_t  , data_rh  , data_sh  , data_dp = netCDFs.data_t ,  netCDFs.data_rh  , netCDFs.data_sh  , netCDFs.data_dp
-datum_t , datum_rh , datum_sh, datum_dp = netCDFs.datum_t , netCDFs.datum_rh , netCDFs.datum_sh , netCDFs.datum_dp
+data_t  , data_rh  ,  data_dp = netCDFs.data_t ,  netCDFs.data_rh   , netCDFs.data_dp
+datum_t , datum_rh ,  datum_dp = netCDFs.datum_t , netCDFs.datum_rh , netCDFs.datum_dp
 
 #data_t shape (2, 16, 9916)
 datas = netCDFs.find_datums()
@@ -354,7 +355,6 @@ check_datum = netCDFs.check_datum() # true if datums are identical, false otherw
 
 comb_file = netCDFs.create_new() # file to be filled with the combined data
 # must loop over the pressure level! 
-#netCDFs.check_values(fast = check_datum , p = 15)
 
 #a = netCDFs.check_datum()
 
@@ -364,6 +364,7 @@ comb_file = netCDFs.create_new() # file to be filled with the combined data
 # ########### a = netCDFs.calc_missing()
 
 
+print('*** Analizing the temperature, dew point temperatures and relative humidity contained in the netCDF files ***')
 for p in plevels.keys():
     for h in [0,1]:
         print('processing the hour, pressure' , h , p )
@@ -375,7 +376,7 @@ for p in plevels.keys():
         
         #input('verifica gli arrays')
 
-
+print('Finished writing the combined file')
 
 '''
         new_var = { 'comb_relative_humidity'    : [-100 , 100] ,
