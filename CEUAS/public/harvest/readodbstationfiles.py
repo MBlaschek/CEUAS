@@ -35,11 +35,12 @@ from rasotools.utils import *
 
 
 """ Reading the data to extract from the parameter file """
-datasets  = config['DATA']['datasets']
-station   = config['DATA']['station']
-variables = config['DATA']['variables']
-outdir    = config['OUTPUT']['outdir']
-
+datasets     = config['DATA']  ['datasets']
+station      = config['DATA']  ['station']
+variables    = config['DATA']  ['variables']
+outdir       = config['OUTPUT']['outdir']
+databasepath = config['PATHS'] ['databasepath'] 
+gribdir      = config['PATHS'] ['gribdir']
 
 plt.rcParams['lines.linewidth'] = 3
 
@@ -328,12 +329,10 @@ def par_read_odbascii_stn_withfeedback(varno,odbfile):
 
     return alldict
 
-
 def par_read_odbsql_stn_nofeedback(varno,odbfile):
 
     alldata=''
     alldict=dict()
-
 
     qs="select statid, source, date, time, obstype, codetype, lat, lon, stalt, "
     qs+="vertco_type,vertco_reference_1, varno, obsvalue"
@@ -343,8 +342,7 @@ def par_read_odbsql_stn_nofeedback(varno,odbfile):
         qs+=" where varno=111 or varno=112 ".format(varno)
     #elif varno==7  :
     #    qs+=" where varno={} ".format(varno)
-        
-        
+                
     t=time.time()
     sonde_type=True
     if os.path.getsize(odbfile)>0:
@@ -1777,6 +1775,8 @@ res_database = { '1'   : '/raid60/scratch/leo/scratch/era5/odbs/',
                  '3188': '/raid60/scratch/leo/scratch/era5/odbs/' 
                 }
 
+
+
 def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
     """ Function converting the odb files to netCDF
     
@@ -1856,7 +1856,8 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
         else:   
             list(map(func,  idx2))        
         
-    gribpath=os.path.expandvars('/raid60/scratch/leo/scratch/ERApreSAT/')
+    #gribpath=os.path.expandvars('/raid60/scratch/leo/scratch/ERApreSAT/')
+    gribpath=os.path.expandvars(gribdir)
 
     sodblist = ''
     
@@ -1934,7 +1935,7 @@ if __name__ == "__main__":
     #station   = config['DATA']['githome']
     #variables = config['DATA']['githome']
     #outdir    = config['OUTPUT']['githome']   
-    for e in datasets:
+    for e in datasets.split(','):
         exp = e
         for v in variables.split(','):
             print('v is', v )
