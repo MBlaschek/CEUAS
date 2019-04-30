@@ -1,0 +1,121 @@
+*** 07/03/2019
+Added the script plotAll_u_v_wind.py 
+It plots all the u,v components of the converted netCDF file
+Plot are stored in /raid8/srvx1/federico/odb_netCD/PLOTS
+
+Must check the data since all the components are positevely defined
+
+
+*** 13/03/2019
+- added new readodbstation file to convert from odbs to netCDFs.
+It processes correctly the datasets 1 , 1759, 1761 and produced the netCDF files with temperature, u and v wind components
+
+Still to do: add humidity, dew point
+(see Michael scripts to convert humidity)
+
+- updated plotAll_u_v_wind
+
+
+ToDo: add a module to check file 
+i.e. print list of files with empty data, 
+     small datasets, 
+     compare u and v vectors etc. 
+
+
+*** readodb Humidity
+The file is a copy of the readodbstationfiles, with the addition of the changes to implement the specific Humidity.
+
+The major change was the extension of the metadata dictionary,
+and the interpolation function to extract the standard pressure level values.
+
+
+*** 21/03/2019
+
+readodb Humidity has been extended with the dew point.
+Tested with the station 10393
+See attached pdf output
+
+*** 22/03/2019
+Updated the read_Humidity file sinne it was not storing correctly the pressure level for large values --> dded the range in the settattr function in the readstationfiles_t 
+
+*** 25/03/2019
+Added a preliminary python converter tool for the variables name 
+as in the CDM.
+Added a latex file with a table containing the information
+of the variables we use in the readodbstations script
+(and in the netCDF files)
+Need to merge with Michael's dictionary
+
+*** 26/03/2019
+Added a preliminary version of the script:
+readodbstationfiles_Humidity_fixDate
+
+with the fixes for the incorrect date handling, whenever there are more than 2 observation per days.
+It also considers the closest observation for 00:00 time considering the previous day .
+
+*** 27/03/2019
+Added CDM_Reader
+reads the cvs files from the CDM github repository,
+dowloaded in /raid60/scratch/copernincus/...
+
+*** 28/03/2019
+Implemented and checked for 10393 that the hours of the 00:00 data 
+are selected correctly between different days.
+Still need to write them in the correct file.
+
+*** 01/04/2019
+Now the script readodb_checkmhours seems to work fine and picks upt the correct observation hours
+at least for the 10393 station
+(it was a bug, so the readstation with feedback was not picked up properly, was using the one withouth the feedback
+so for some reason it was still going through but the data reas was incorrect )
+
+Added a first version of the script to handle the humidity/dew point from 
+netCDF files 
+
+*** 02/04/2019
+- updated humidity/dp 
+- extended the readtation to relative humidity, tested for station 10393
+- updated plot script for relative humidity, see plot ERA5_1_10393__ALL.pdf in odbstat
+
+*** 09/04/2019
+Updated teste script for the relative humidity, updated plots
+
+*** 18/04/2019
+Updated script for relative humidity
+The function now fills vectors with combined (observed or calculated) relative humidity
+This vector must be written in the new file containing the combined data
+A 'flag' vector contains 0,1,2 for each entry for nan,observed,calculated
+Note: dont know how to calculate dp from rh and T: must invert the function
+or is it already available the correct one in the humidity.py script ?
+
+*** 24/04/2019
+Finished the script to extract calculated dp and rh
+Implemented the inverted formula that calculates the dp 
+from the vapor pressure by inverting the FOEEWMO formula.
+The inverted formula is derived in the latex document
+in the convention file
+
+*** 25/05/2019
+Wrote the script to plot for each hour and pressure
+the combines temperature, dp and rh
+It also shows the points which have been measured or calculated
+(works for station 10393)
+
+-----> Created the test directory that will contain an example 
+to test everything
+
+Note:
+- still to do, implementation of comments, ranges, units etc.
+in the netCDF file concertion form the ODB
+- readCSV instead of my splitting
+- then replace specific humidity with relative humidity in the latex document
+(automatically read entries and write latex table)
+
+*** 26/04/2019
+- make structure of the GitHub repo as in Leo's picture
+- branch: master and dev
+- keep humidity file separate
+- all projects must be run independently
+- setup tool
+
+
