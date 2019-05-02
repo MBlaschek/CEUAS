@@ -131,4 +131,5 @@ need to fix the database source, which is still hardoced inside the readodb file
  __ CDM must be inside common  
  __ all paths independent
  -- plotting utilities: use the "thin" function and the "running means" from utils to plot every 10 valöues the timeseries
-
+***
+Added external paths fot the databases and grib data  

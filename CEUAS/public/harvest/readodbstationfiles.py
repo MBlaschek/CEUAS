@@ -21,7 +21,7 @@ import copy
 # /opt/anaconda3/bin/python project custom python executable
 
 config = configparser.ConfigParser()
-config.read('readodbstationfiles_input.ini')
+config.read('input/readodbstationfiles_input.ini')
 githome = config['PATHS']['githome'] # path of the base git dir                                                              
 
 sys.path.append(githome+'/public/common')
