@@ -54,19 +54,12 @@ class netCDF:
      def load(self, var=['temp','uwind','vwind','rh','dp']):
           """ Loading the u,v wind comp. files.
               The 'datum' and 'variables' should be identical """
-          #print ('DATABASE is', self.database)
           file_dir = self.database + '/' + self.res + '/' + self.file_name
-          print ('base dir:' , file_dir )
-          print ('res dir:'  , self.res )
-          print ('file name:', self.file_name )
           
           # example: /raid8/srvx1/federico/odb_netCDF/$New_Results/1759/1:87418
           paths = { 'dir': file_dir , 
                     'uwind': 'u.nc' , 'vwind':'v.nc' , 'temp':'t.nc', 'sh':'sh.nc' , 'dp':'dp.nc' , 'rh':'rh.nc' ,
-                    
                     } 
-          
-          #uwind_path = file_dir + 'u.nc'
 
           data_loaded = {}
                 
@@ -99,17 +92,12 @@ class netCDF:
           self.dp    = data_loaded['dp'   ]['data']          
           
                
-
      def printInfo(self):
           print('Basic info for *** ', self.file_name, '\n')
           print('The available variables are: ')
           for v in self.variables:
                print(v)
 
-     def analyser(self):
-          """Module that analyses the netCDF file"""
-          print('Will do something')
-          
           
 
 class Plotter():
@@ -138,7 +126,6 @@ class Plotter():
      def load_xy(self):
           ''' Loading the x and y data to plot and analyze, according the chosen variable'''
           var = self.var
-          print('The var is: ', var )
           if var == 'temp':
                self.x_data = self.file.datum_temp
                self.y_data = self.file.temp
@@ -163,8 +150,8 @@ class Plotter():
                raise ValueError('Unknown variable:', var, ' !!!')
                
      
-     def create_outDir(self,out_path):
-          if not os.path.isdir(out_path):
+     def create_outDir(self, out_path=''):
+          if os.path.isdir(out_path):
                print('Creating the PLOT output directory: ', out_path)
                os.mkdir(out_path)
                
@@ -192,43 +179,52 @@ class Plotter():
           if var =='temp': 
                plt.text(minimum+2, 290, 'Dataset: ' + res_dir, fontsize = 12 , color = 'gray')
                #plt.text(minimum+2, 280, 'Station: ' + res_name.split("_")[2] , fontsize = 12 , color = 'red')            
-          print(limits)
           plt.axis(limits)
           if xlabel: plt.xlabel(dic_prop[var]['xlab'], fontsize = fnt_size)
           plt.ylabel(dic_prop[var]['ylab'], fontsize = fnt_size)
           plt.legend(loc = 'lower left', fontsize = 10)
           
-     def plotter(self, out_dir='', save = False, xlabel = True):
+     def plotter(self, out_dir='', save = True, xlabel = True):
           self.load_xy()                     
           x = self.x_data 
           y = self.y_data
           
-          print('x: ', x , 'y: ', y)
           dic_prop = self.style_dic()
           plt.plot( x , y , label = dic_prop[self.var]['leg'], linestyle = '-', color = dic_prop[self.var]['c'] )
           self.plotter_prop(xlabel = xlabel)
           plt.grid(linestyle = ':')                    
-          if save: 
-               save_path = out_dir + '/' + self.name + '_' + self.var +'.pdf'
-               self.create_outDir(out_path=out_dir)
-               plt.close()
  
+
+def create_outdir(out_path = ''):
+      if not os.path.isdir(out_path):
+               print('Creating the PLOT output directory: ', out_path)
+               os.mkdir(out_path)
  
+                     
+
 from pylab import rcParams
 rcParams['figure.figsize']= 10, 13 
 
-out_dir = os.getcwd() + '/plots_dp_rh' 
 
+out_dir = os.getcwd() + '/plots_dp_rh' 
+#out_netCDFs/1/10393/ERA5_1_10393_
 """ Using the station 10393 as an example """
 netCDFs_dir = '../out_netCDFs/1/'
+
+
+
 dataset = ['10393']
 
 
+
 for d in dataset:
-     print('Station: d')
+     a= create_outdir(out_path = out_dir)
+     out_dir =  out_dir+'/'+d
+     a= create_outdir(out_path = out_dir)
+     print("*** Plotting the station: ", d)
      for h in [0,1]:
           for p in range(0,16):
-               print('Plotting the pressure level ', str(p), ' for the hour ', str(h) )
+               print("** Hour: ", str(h) , " -  pressure level: ", str(p) )
                gs = gridspec.GridSpec(5,1)
      
                res_dir = netCDFs_dir+'/'+d # e.g. /raid8/srvx1/federico/odb_netCDF/$New_Results/1759/
@@ -242,7 +238,8 @@ for d in dataset:
                Plot = Plotter(netCDF_file, var='temp' )
                Plot.plotter(out_dir= out_dir, save = False , xlabel = False)
                plt.tight_layout()
-               ax0.xaxis.set_major_formatter(plt.NullFormatter())            
+               ax0.xaxis.set_major_formatter(plt.NullFormatter())
+            
             
                ax1 = plt.subplot(gs[1])
                netCDF_file.load()     
@@ -257,7 +254,7 @@ for d in dataset:
                Plot.plotter(out_dir= out_dir, save = False , xlabel = False) 
                plt.tight_layout()
                ax2.xaxis.set_major_formatter(plt.NullFormatter())  
-                        
+            
                ax3 = plt.subplot(gs[3])
                netCDF_file.load()     
                Plot = Plotter(netCDF_file, var='rh' )
@@ -270,9 +267,42 @@ for d in dataset:
                Plot = Plotter(netCDF_file, var='dp' )
                Plot.plotter(out_dir= out_dir, save = True , xlabel = True) 
                plt.tight_layout()          
-               
-               plt.savefig(out_dir + '/' + netCDF_file.file_name + '_' + str(h) + '_' + str(p) +'_' +'_variables.pdf' , bbox_inches='tight' )    
+
+               plt.close()               
+               plt.savefig(out_dir + '/' + netCDF_file.file_name + str(h) + '_' + str(p) + '_variables.pdf' , bbox_inches='tight' )    
                 
 
-print('done')
+print('Plots created in the directory: ', out_dir)
 
+
+'''
+test = database_dir +'/16087/ERA5_1_16087_u.nc'
+test_false = 'dsgh'
+
+test_netcdf(file=test, print_info=True)
+
+for var,val in vars.items():
+
+    with netCDF4.Dataset( sample1 + var + '.nc') as f:
+        plt.plot(f.variables['datum'][:]/365.25,f.variables[val][0,12,:] , 
+                 label='ERA_1', color = 'blue')
+    
+    with netCDF4.Dataset(sample2 + var +  '.nc') as f:
+        plt.plot(f.variables['datum'][0,:]/365.25,f.variables[val][0,12,:],
+                label ='ERA5_erapresat', color = 'green')
+    
+    with netCDF4.Dataset(sample3 + var + '.nc') as f:
+        plt.plot(f.variables['datum'][0,:]/365.25,f.variables[val][0,12,:],
+                 label = 'feedbackmerged' , color = 'orange' )
+
+    print(f.variables.keys())
+    plt.ylabel(var)
+    plt.xlim(20,120)
+    plt.xlabel('Year')
+    plt.legend(loc = 'lower left')
+    plt.savefig(var + '.png',  bbox_inches='tight')
+    plt.close()
+
+
+print('*** Finished')
+'''

@@ -3,7 +3,7 @@
 author: Ambrogi Federico
 
 This files gives retrives basic information and creates the plots
-for the u,v wind compontents from the nectCDF files.
+for the climate variables data in the nectCDF files.
 
 The netCDF files were converted from the odb format to net CDF using the 
 version of script 'readodbstationfiles.py'.
@@ -26,7 +26,7 @@ class netCDF:
                var : variable type. i.e. 'temp','uwind','vwind' , 'hum'       
      """
      #global database_dir 
-     def __init__(self, database_dir, res, file_name, hour , plevel):
+     def __init__(self, database_dir, res, file_name):
           """ Information identifying the file 
               Args:
                    database_dir: root directory where the results for each dataset are stored e.g /raid8/srvx1/federico/odb_netCDF/$New_Results
@@ -40,15 +40,7 @@ class netCDF:
           self.vwind = ''
           self.temp  = ''
           self.sh    = ''
-          self.hour = hour
-          self.plevel = plevel
-          
-          
-          self.datum_uwind = ''
-          self.datum_vwind = ''
-          self.datum_temp = ''         
-          self.datum_sh = ''
-          
+                    
           self.variables = ''
           
      def load(self, var=['temp','uwind','vwind','rh','dp']):
@@ -56,10 +48,6 @@ class netCDF:
               The 'datum' and 'variables' should be identical """
           #print ('DATABASE is', self.database)
           file_dir = self.database + '/' + self.res + '/' + self.file_name
-          print ('base dir:' , file_dir )
-          print ('res dir:'  , self.res )
-          print ('file name:', self.file_name )
-          
           # example: /raid8/srvx1/federico/odb_netCDF/$New_Results/1759/1:87418
           paths = { 'dir': file_dir , 
                     'uwind': 'u.nc' , 'vwind':'v.nc' , 'temp':'t.nc', 'sh':'sh.nc' , 'dp':'dp.nc' , 'rh':'rh.nc' ,
@@ -79,7 +67,7 @@ class netCDF:
                if os.path.isfile(path):
                     f = netCDF4.Dataset(path) 
                     data_loaded[v]['datum'] = [ 1900 + d for d in f.variables['datum'][0,:]/365.25 ] # converting the datum in years  
-                    data_loaded[v]['data']  = f.variables[v.replace('temp','temperatures')][self.hour,self.plevel,:]
+                    data_loaded[v]['data']  = f.variables[v.replace('temp','temperatures')][0,12,:]
                else: raise ValueError('netCDF files:', path, ' not found!!!')
    
           self.datum_uwind = data_loaded['uwind']['datum']
@@ -122,18 +110,7 @@ class Plotter():
 
           self.x_data = ''
           self.y_data = ''
-          
-          '''
-          """ wind components """          
-          self.datum_u = netCDF.datum_u
-          self.datum_v = netCDF.datum_u
-          self.uwind = netCDF.uwind
-          self.vwind = netCDF.vwind
-          """ temperature  """          
-          self.datum_temp = netCDF.datum_u
-          self.temp       = netCDF.uwind
-          '''
-          
+                    
      
      def load_xy(self):
           ''' Loading the x and y data to plot and analyze, according the chosen variable'''
@@ -148,9 +125,10 @@ class Plotter():
           elif var == 'vwind':
                self.x_data = self.file.datum_vwind
                self.y_data = self.file.vwind        
-          elif var == 'sh':
-               self.x_data = self.file.datum_sh
-               self.y_data = self.file.sh       
+          # elif var == 'sh':
+               # self.x_data = self.file.datum_sh
+               # self.y_data = self.file.sh       
+               # self.y_data = self.file.vwind        
           elif var == 'rh':
                self.x_data = self.file.datum_rh
                self.y_data = self.file.rh                      
@@ -170,10 +148,10 @@ class Plotter():
                
      
      def style_dic(self):          
-          dic_prop = { 'uwind':{'xlab':'Year', 'ylab':'Speed [m/s]'             ,'leg':'uwind'      ,         'ax':[1920,2019, -60  ,60 ] ,'c':'blue'         } ,
-                       'vwind':{'xlab':'Year', 'ylab':'Speed [m/s]'             ,'leg':'vwind'      ,         'ax':[1920,2019, -60  ,60 ] ,'c':'cyan'         } ,
+          dic_prop = { 'uwind':{'xlab':'Year', 'ylab':'Speed [m/s]'             ,'leg':'uwind'      ,         'ax':[1920,2019, -50  ,50 ] ,'c':'blue'         } ,
+                       'vwind':{'xlab':'Year', 'ylab':'Speed [m/s]'             ,'leg':'vwind'      ,         'ax':[1920,2019, -50  ,50 ] ,'c':'cyan'         } ,
                         'temp':{'xlab':'Year', 'ylab':'Temperature [K]'         ,'leg':'Temperature',         'ax':[1920,2019,  200 ,300] ,'c':'orange'       } ,
-                          'sh':{'xlab':'Year', 'ylab':'Specific Humidity [???]' ,'leg':'Specific Humidity',   'ax':[1920,2019,  0   , 50] ,'c':'lime'         } ,
+                          #'sh':{'xlab':'Year', 'ylab':'Specific Humidity [???]' ,'leg':'Specific Humidity',   'ax':[1920,2019,  0   , 50] ,'c':'lime'         } ,
                           'rh':{'xlab':'Year', 'ylab':'Relative Humidity [???]' ,'leg':'Relative Humidity',   'ax':[1920,2019,  0   , 1 ] ,'c':'lightgray'    } ,                       
                            'dp':{'xlab':'Year', 'ylab':'Dew Point [K]'           ,'leg':'Upper Air Dew Point','ax':[1920,2019,  200 ,300] ,'c':'mediumpurple'} ,
                        
@@ -184,27 +162,25 @@ class Plotter():
           var = self.var
           dic_prop = self.style_dic()
           fnt_size = 12
-          plt.title('Station: ' + res_name.split("_")[2] + ' - Hour: ' + str(self.file.hour) + ' Press. Lev: ' + str(self.file.plevel) )
           #ax_lim = min(self.)
           minimum = min(self.x_data)-5 
           axes_lim = dic_prop[var]['ax']
           limits = [minimum, axes_lim[1] , axes_lim[2] , axes_lim[3]  ]
           if var =='temp': 
-               plt.text(minimum+2, 290, 'Dataset: ' + res_dir, fontsize = 12 , color = 'gray')
-               #plt.text(minimum+2, 280, 'Station: ' + res_name.split("_")[2] , fontsize = 12 , color = 'red')            
-          print(limits)
+               plt.text(minimum+2, 290, 'Dataset: ' + res_dir, fontsize = 12 , color = 'red')
+               plt.text(minimum+2, 280, 'Station: ' + res_name.split("_")[2] , fontsize = 12 , color = 'red')            
           plt.axis(limits)
           if xlabel: plt.xlabel(dic_prop[var]['xlab'], fontsize = fnt_size)
           plt.ylabel(dic_prop[var]['ylab'], fontsize = fnt_size)
           plt.legend(loc = 'lower left', fontsize = 10)
           
-     def plotter(self, out_dir='', save = False, xlabel = True):
+     def plotter(self, out_dir='', save = True, xlabel = True):
           self.load_xy()                     
           x = self.x_data 
           y = self.y_data
           
-          print('x: ', x , 'y: ', y)
           dic_prop = self.style_dic()
+          print('Plotting the variable: ', self.var )
           plt.plot( x , y , label = dic_prop[self.var]['leg'], linestyle = '-', color = dic_prop[self.var]['c'] )
           self.plotter_prop(xlabel = xlabel)
           plt.grid(linestyle = ':')                    
@@ -213,66 +189,69 @@ class Plotter():
                self.create_outDir(out_path=out_dir)
                plt.close()
  
- 
+
+
+
+
+
 from pylab import rcParams
-rcParams['figure.figsize']= 10, 13 
+rcParams['figure.figsize']= 10, 13# first is the height, second is the width
 
 out_dir = os.getcwd() + '/plots_dp_rh' 
-
+#out_netCDFs/1/10393/ERA5_1_10393_
 """ Using the station 10393 as an example """
-netCDFs_dir = '../out_netCDFs/1/'
+database_dir = '../out_netCDFs/1/'
 dataset = ['10393']
 
-
 for d in dataset:
-     print('Station: d')
-     for h in [0,1]:
-          for p in range(0,16):
-               print('Plotting the pressure level ', str(p), ' for the hour ', str(h) )
-               gs = gridspec.GridSpec(5,1)
      
-               res_dir = netCDFs_dir+'/'+d # e.g. /raid8/srvx1/federico/odb_netCDF/$New_Results/1759/
-               res_name = os.listdir(res_dir)[0].replace('u.nc','').replace('v.nc','').replace('t.nc','')     
-            
-               ax0 = plt.subplot(gs[0])
-            
-               netCDF_file = netCDF(netCDFs_dir, d, res_name, hour = h , plevel = p)
-               netCDF_file.load()     
-               
-               Plot = Plotter(netCDF_file, var='temp' )
-               Plot.plotter(out_dir= out_dir, save = False , xlabel = False)
-               plt.tight_layout()
-               ax0.xaxis.set_major_formatter(plt.NullFormatter())            
-            
-               ax1 = plt.subplot(gs[1])
-               netCDF_file.load()     
-               Plot = Plotter(netCDF_file, var='uwind' )
-               Plot.plotter(out_dir= out_dir, save = False , xlabel = False)  
-               plt.tight_layout()
-               ax1.xaxis.set_major_formatter(plt.NullFormatter())
-                    
-               ax2 = plt.subplot(gs[2])
-               netCDF_file.load()     
-               Plot = Plotter(netCDF_file, var='vwind' )
-               Plot.plotter(out_dir= out_dir, save = False , xlabel = False) 
-               plt.tight_layout()
-               ax2.xaxis.set_major_formatter(plt.NullFormatter())  
-                        
-               ax3 = plt.subplot(gs[3])
-               netCDF_file.load()     
-               Plot = Plotter(netCDF_file, var='rh' )
-               Plot.plotter(out_dir= out_dir, save = False , xlabel = False) 
-               plt.tight_layout()
-               ax3.xaxis.set_major_formatter(plt.NullFormatter())  
-               
-               ax4 = plt.subplot(gs[4])
-               netCDF_file.load()     
-               Plot = Plotter(netCDF_file, var='dp' )
-               Plot.plotter(out_dir= out_dir, save = True , xlabel = True) 
-               plt.tight_layout()          
-               
-               plt.savefig(out_dir + '/' + netCDF_file.file_name + '_' + str(h) + '_' + str(p) +'_' +'_variables.pdf' , bbox_inches='tight' )    
-                
+     gs = gridspec.GridSpec(6,1)
+     
+     res_dir = database_dir+'/'+d # e.g. /raid8/srvx1/federico/odb_netCDF/$New_Results/1759/
+     res_name = os.listdir(res_dir)[0].replace('u.nc','').replace('v.nc','').replace('t.nc','')     
+  
+     ax0 = plt.subplot(gs[0])
+  
+     netCDF_file = netCDF(database_dir,d,res_name)
+     netCDF_file.load()     
+     
+     Plot = Plotter(netCDF_file, var='temp' )
+     Plot.plotter(out_dir= out_dir, save = False , xlabel = False)
+     plt.tight_layout()
+     ax0.xaxis.set_major_formatter(plt.NullFormatter())
+  
+  
+     ax1 = plt.subplot(gs[1])
+     netCDF_file.load()     
+     Plot = Plotter(netCDF_file, var='uwind' )
+     Plot.plotter(out_dir= out_dir, save = False , xlabel = False)  
+     plt.tight_layout()
+     ax1.xaxis.set_major_formatter(plt.NullFormatter())
+          
+     ax2 = plt.subplot(gs[2])
+     netCDF_file.load()     
+     Plot = Plotter(netCDF_file, var='vwind' )
+     Plot.plotter(out_dir= out_dir, save = False , xlabel = False) 
+     plt.tight_layout()
+     ax2.xaxis.set_major_formatter(plt.NullFormatter())  
+  
+  
+     ax3 = plt.subplot(gs[4])
+     netCDF_file.load()     
+     Plot = Plotter(netCDF_file, var='rh' )
+     Plot.plotter(out_dir= out_dir, save = False , xlabel = False) 
+     plt.tight_layout()
+     ax3.xaxis.set_major_formatter(plt.NullFormatter())  
+     
+     ax5 = plt.subplot(gs[5])
+     netCDF_file.load()     
+     Plot = Plotter(netCDF_file, var='dp' )
+     Plot.plotter(out_dir= out_dir, save = True , xlabel = True) 
+     plt.tight_layout()          
+     
+     plt.savefig(out_dir + '/' + netCDF_file.file_name + '_plots.pdf' , bbox_inches='tight' )    
+      
 
 print('done')
+
 
