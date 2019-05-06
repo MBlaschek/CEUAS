@@ -2,7 +2,7 @@ import numpy
 import time
 import datetime
 import netCDF4
-import matplotlib.pylab as plt
+#import matplotlib.pylab as plt
 import os,sys,glob
 import configparser 
 from multiprocessing import Pool
@@ -21,7 +21,7 @@ import copy
 # /opt/anaconda3/bin/python project custom python executable
 
 config = configparser.ConfigParser()
-config.read('input/readodbstationfiles_input.ini')
+config.read('input/readodbstationfiles_input_test.ini')
 githome = config['PATHS']['githome'] # path of the base git dir                                                              
 
 sys.path.append(githome+'/public/common')
@@ -34,7 +34,7 @@ sys.path.append("/opt/anaconda3/lib/python3.7")
 from rasotools.utils import *
 
 
-""" Reading the data to extract from the parameter file """
+""" Read the data to extract from the parameter file """
 datasets     = config['DATA']  ['datasets']
 station      = config['DATA']  ['station']
 variables    = config['DATA']  ['variables']
@@ -42,7 +42,6 @@ outdir       = config['OUTPUT']['outdir']
 databasepath = config['PATHS'] ['databasepath'] 
 gribdir      = config['PATHS'] ['gribdir']
 
-plt.rcParams['lines.linewidth'] = 3
 
 #outdir = 'out_netCDFs'
 
@@ -661,6 +660,8 @@ def read_odbsql_count(opath,ifile):
 
     return 
 
+'''
+plt.rcParams['lines.linewidth'] = 3
 def profplot(statid,plevs,ts,tfgs,tbcs):
 #    return
     plt.figure(figsize=(9,4))
@@ -687,6 +688,7 @@ def profplot(statid,plevs,ts,tfgs,tbcs):
     plt.title('{}, {}h'.format(statid,0))
     plt.savefig('profs_{}_{}.ps'.format(statid,0))
     plt.close()
+'''
 
 @jit(nopython=True)
 def doqc(pmin,pmax,ip,uwind=0.,vwind=0.,ufg_dep=0.,vfg_dep=0.,uan_dep=0.,van_dep=0.):
