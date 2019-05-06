@@ -133,3 +133,9 @@ need to fix the database source, which is still hardoced inside the readodb file
  -- plotting utilities: use the "thin" function and the "running means" from utils to plot every 10 valöues the timeseries
 ***
 Added external paths fot the databases and grib data  
+
+06/05/2019
+-Fixed the script to extract dp and relative humidity
+-I fixed the paths to common/humidity
+-removed the referecnes to specific humidities
+-the script 'run_extract...' now runs with the data that the readodbfiles produces when runninf the test (relative to station10393)
