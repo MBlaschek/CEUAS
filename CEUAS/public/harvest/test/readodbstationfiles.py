@@ -2,36 +2,46 @@ import numpy
 import time
 import datetime
 import netCDF4
-import matplotlib.pylab as plt
+#import matplotlib.pylab as plt
 import os,sys,glob
-sys.path.append("/fio/srvx7/leo/python/Rasotools/") # containing the functions/utilities
-
-from rasotools.utils import *
+import configparser 
 from multiprocessing import Pool
-#import odb
-
 from eccodes import *
 from functools import partial
 from collections import OrderedDict
 import subprocess
 import json
 import gzip
-sys.path.append(".")
-sys.path.append(".")
-
-from retrieve_fb_jra55 import add_feedback
 import copy
-                                                               
 
-# /opt/anaconda3/bin/python project custom python executable
+#sys.path.append("/fio/srvx7/leo/python/Rasotools/") # containing the functions/utilities
+#sys.path.append(".")
+#import odb
 # PYTHONPATH=/usr/local:/fio/srvx7/leo/python/namelist_python-master:.:/fio/srvx7/leo/python/Rasotools
+# /opt/anaconda3/bin/python project custom python executable
+
+config = configparser.ConfigParser()
+config.read('input/readodbstationfiles_input_test.ini')
+githome = config['PATHS']['githome'] # path of the base git dir                                                              
+
+sys.path.append(githome+'/public/common')
+sys.path.append(".")
+from rasotools.utils import *
+from retrieve_fb_jra55 import add_feedback
 
 
 sys.path.append("/opt/anaconda3/lib/python3.7")
 from rasotools.utils import *
 
 
-plt.rcParams['lines.linewidth'] = 3
+""" Read the data to extract from the parameter file """
+datasets         = config['DATA']  ['datasets']
+station           = config['DATA']  ['station']
+variables        = config['DATA']  ['variables']
+outdir             = config['OUTPUT']['outdir']
+databasepath = config['PATHS'] ['databasepath'] 
+gribdir            = config['PATHS'] ['gribdir']
+
 
 #outdir = 'out_netCDFs'
 
@@ -318,12 +328,10 @@ def par_read_odbascii_stn_withfeedback(varno,odbfile):
 
     return alldict
 
-
 def par_read_odbsql_stn_nofeedback(varno,odbfile):
 
     alldata=''
     alldict=dict()
-
 
     qs="select statid, source, date, time, obstype, codetype, lat, lon, stalt, "
     qs+="vertco_type,vertco_reference_1, varno, obsvalue"
@@ -333,8 +341,7 @@ def par_read_odbsql_stn_nofeedback(varno,odbfile):
         qs+=" where varno=111 or varno=112 ".format(varno)
     #elif varno==7  :
     #    qs+=" where varno={} ".format(varno)
-        
-        
+                
     t=time.time()
     sonde_type=True
     if os.path.getsize(odbfile)>0:
@@ -653,6 +660,8 @@ def read_odbsql_count(opath,ifile):
 
     return 
 
+'''
+plt.rcParams['lines.linewidth'] = 3
 def profplot(statid,plevs,ts,tfgs,tbcs):
 #    return
     plt.figure(figsize=(9,4))
@@ -679,6 +688,7 @@ def profplot(statid,plevs,ts,tfgs,tbcs):
     plt.title('{}, {}h'.format(statid,0))
     plt.savefig('profs_{}_{}.ps'.format(statid,0))
     plt.close()
+'''
 
 @jit(nopython=True)
 def doqc(pmin,pmax,ip,uwind=0.,vwind=0.,ufg_dep=0.,vfg_dep=0.,uan_dep=0.,van_dep=0.):
@@ -1767,6 +1777,8 @@ res_database = { '1'   : '/raid60/scratch/leo/scratch/era5/odbs/',
                  '3188': '/raid60/scratch/leo/scratch/era5/odbs/' 
                 }
 
+
+
 def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
     """ Function converting the odb files to netCDF
     
@@ -1834,10 +1846,10 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
         if debug: print('The exp is:', exp)
         
         if exp == '1' or exp == 1:
-            print('calling par_read_odbsql_stn_withfeedback, FF ***')
+            #print('calling par_read_odbsql_stn_withfeedback, FF ***')
             func = partial(odb2netcdf,gribpath,sodblist,varno,par_read_odbsql_stn_withfeedback,idx)
         else:
-            print('calling par_read_odbsql_stn_nofeedback, FF xxxx ')            
+            #print('calling par_read_odbsql_stn_nofeedback, FF xxxx ')            
             func = partial(odb2netcdf,gribpath,sodblist,varno,par_read_odbsql_stn_nofeedback,idx)
             
         if pool:
@@ -1846,8 +1858,8 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
         else:   
             list(map(func,  idx2))        
         
-            
-    gribpath=os.path.expandvars('/raid60/scratch/leo/scratch/ERApreSAT/')
+    #gribpath=os.path.expandvars('/raid60/scratch/leo/scratch/ERApreSAT/')
+    gribpath=os.path.expandvars(gribdir)
 
     sodblist = ''
     
@@ -1920,16 +1932,16 @@ if __name__ == "__main__":
               variables = [2,29,59,110] # [temp,relative hum, dew point, wind]
               datasets = ['1','1761','1759','3188'] # all working datasets
               
-    """
-    outdir = 'out_netCDFs'
-    datasets = ['1']
-    stat = '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._10393'    
-    variables = [2,29,59,110]
-    
-    for e in datasets:
+    """   
+    #datasets  = config['DATA']['githome']
+    #station   = config['DATA']['githome']
+    #variables = config['DATA']['githome']
+    #outdir    = config['OUTPUT']['githome']   
+    for e in datasets.split(','):
         exp = e
-        for v in variables:
-            run_converter(dataset=e, single_stat= stat, pool=False, varno= v, debug = True )   
+        for v in variables.split(','):
+            print('v is', v )
+            run_converter(dataset=e, single_stat= station, pool=False, varno= int(v), debug = True )   
             print('Finished with the database', e , ' **** for the variable: ', str(v))
             
     exit()

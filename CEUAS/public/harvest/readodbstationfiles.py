@@ -35,12 +35,12 @@ from rasotools.utils import *
 
 
 """ Read the data to extract from the parameter file """
-datasets     = config['DATA']  ['datasets']
-station      = config['DATA']  ['station']
-variables    = config['DATA']  ['variables']
-outdir       = config['OUTPUT']['outdir']
+datasets         = config['DATA']  ['datasets']
+station           = config['DATA']  ['station']
+variables        = config['DATA']  ['variables']
+outdir             = config['OUTPUT']['outdir']
 databasepath = config['PATHS'] ['databasepath'] 
-gribdir      = config['PATHS'] ['gribdir']
+gribdir            = config['PATHS'] ['gribdir']
 
 
 #outdir = 'out_netCDFs'
