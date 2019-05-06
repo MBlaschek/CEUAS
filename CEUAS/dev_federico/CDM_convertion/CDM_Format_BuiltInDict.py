@@ -57,7 +57,8 @@ Data = { 'observation_table' : { 'lat'   : { 'name' :'latitude'   ,
                                 } , 
                           
          'observed_variable' : { 'wind'     : { 'name': 'wind'     ,
-                                                'def': 'Speed is the magnitude of velocity. Wind is defined as a two-dimensional (horizontal) air velocity vector,  with no vertical component. (Vertical motion in the atmosphere has the standard name upward air velocity.) The wind speed is the magnitude of the wind velocity. Lot 1 uses ff  - WMO abbrev.',
+                                                'def': 'Speed is the magnitude of velocity. Wind is defined as a two-dimensional (horizontal) air velocity vector,  with no vertical component. '
+                                                       '(Vertical motion in the atmosphere has the standard name upward air velocity.) The wind speed is the magnitude of the wind velocity. Lot 1 uses ff  - WMO abbrev.',
                                                 'units': 'm s-1'}      ,
                                  'pressure' : { 'name': 'pressure' ,
                                                 'def': 'pressure of air column at specified height',
