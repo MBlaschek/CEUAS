@@ -13,22 +13,29 @@ import subprocess
 import json
 import gzip
 import copy
-
+import argparse
 #sys.path.append("/fio/srvx7/leo/python/Rasotools/") # containing the functions/utilities
 #sys.path.append(".")
 #import odb
 # PYTHONPATH=/usr/local:/fio/srvx7/leo/python/namelist_python-master:.:/fio/srvx7/leo/python/Rasotools
 # /opt/anaconda3/bin/python project custom python executable
 
+""" Loading the input readodbstationfiles_input.ini file """
+parser = argparse.ArgumentParser(description="Path to the readodbstationfiles_input.ini")
+parser.add_argument('--param' , '-p', help="Path to the readodbstationfiles_input.ini")
+args = parser.parse_args()
+param_file = args.param
+
+""" Parsing the configurations from the prameter file """
 config = configparser.ConfigParser()
-config.read('input/readodbstationfiles_input_test.ini')
+config.read(param_file)
 githome = config['PATHS']['githome'] # path of the base git dir                                                              
 
+""" Updating paths, initialize modules """
 sys.path.append(githome+'/public/common')
 sys.path.append(".")
 from rasotools.utils import *
 from retrieve_fb_jra55 import add_feedback
-
 
 sys.path.append("/opt/anaconda3/lib/python3.7")
 from rasotools.utils import *
@@ -1754,11 +1761,9 @@ def odb2netcdf(gribpath,sodblist,varno,odbreader,idx,k):
         
     #global exp
     if exp == '1' or exp == 1:
-        print('FF the exp is', exp )
     #func = partial(readstationfiles_t,'header',os.path.expandvars('$FSCRATCH/ei6/'),'ERA5_'+exp+'_',varlist=varlist)
         #func = partial(readstationfiles_t,'header',os.path.expandvars('netCDF_'+exp+'/'+exp),'ERA5_'+exp+'_',varlist=varlist)
         func = partial(readstationfiles_t,'header',os.path.expandvars(outdir+'/'+exp),'ERA5_'+exp+'_',varlist=varlist)
-        print('Done with FF', exp , varlist)
     else:
         func = partial(readstationfiles_t,'header',os.path.expandvars(outdir+'/'+exp), exp+'_',varlist=varlist)
 
@@ -1815,7 +1820,6 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
         
         sodblist.sort(key=os.path.getsize) 
         s=numpy.cumsum(list(os.path.getsize(f) for f in sodblist))
-        if debug: print('The sodblist is:', sodblist)
         stride=30
         idx=[0]
         k=1e9
@@ -1843,7 +1847,6 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
             func = partial(odb2netcdf,gribpath,sodblist,varno,par_read_odbsql_stn_nofeedback,idx)
             list(map(func,  idx2))
         '''
-        if debug: print('The exp is:', exp)
         
         if exp == '1' or exp == 1:
             #print('calling par_read_odbsql_stn_withfeedback, FF ***')
@@ -1894,8 +1897,6 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
         
         '''
         #sodblist = ['/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._10393']
-        #sodblist = sodblist[1000:1050]
-        print('FF sodblist', sodblist)
         if debug:
             print('The selected odb list is: ',sodblist, 'made of ', len((sodblist)), ' data files. ***')
             print('The ipath variable is: ', ipath+'era5.conv.?:*[!.nc]')
@@ -1903,7 +1904,6 @@ def run_converter(dataset='', single_stat= '', pool=1, varno=0, debug=False):
 
     elif single_stat: # select a single station
         exp = single_stat.split('/')[len(single_stat.split('/'))-2] 
-        print('The exp is', exp)
         sodblist=[single_stat] 
         process_list(sodblist,pool,exp)
 
@@ -1937,10 +1937,12 @@ if __name__ == "__main__":
     #station   = config['DATA']['githome']
     #variables = config['DATA']['githome']
     #outdir    = config['OUTPUT']['githome']   
+
+    print('*** Running the netCDF converter')
     for e in datasets.split(','):
         exp = e
         for v in variables.split(','):
-            print('v is', v )
+            print('   Processing the dataset: ' , e ,' for the variable: ', v )
             run_converter(dataset=e, single_stat= station, pool=False, varno= int(v), debug = True )   
             print('Finished with the database', e , ' **** for the variable: ', str(v))
             

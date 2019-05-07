@@ -139,3 +139,6 @@ Added external paths fot the databases and grib data
 -I fixed the paths to common/humidity
 -removed the referecnes to specific humidities
 -the script 'run_extract...' now runs with the data that the readodbfiles produces when runninf the test (relative to station10393)
+
+07/05/2019
+- updated documentation (all is there, but messy)
