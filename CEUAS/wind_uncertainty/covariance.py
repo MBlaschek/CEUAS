@@ -70,6 +70,7 @@ print('*** Check the data shape for fg_dep and an_dep: ', andep.shape, fgdep.sha
 def cov_plot(matrix, station="", hour = "", date=""):
     """ Basic plot for the correlation matrix """
 
+    fig,ax = plt.subplots()
     FONT = 15
 
     plt.title("Station: " + station + ', Hour: ' + hour + ', Date: ' + date , y=1.03)
@@ -89,7 +90,15 @@ def cov_plot(matrix, station="", hour = "", date=""):
     bar = plt.colorbar()
     bar.ax.set_ylabel("Covariance", fontsize = FONT)
 
-    name = 'Cov_' + station + '_hour_' + hour + '_date_' + date 
+    #  Creating text values
+    for i in Num:
+        for j in Num:
+            value = '{0:.2f}'.format(matrix[i,j])
+            #print(value)
+            #input('next')
+            text = ax.text( j,i, value , ha = 'center' , va = 'center', color = 'black', fontsize = 5)
+
+    name = 'Cov_' + station + '_hour_' + hour.replace(':','') + '_date_' + date 
     plt.savefig('plots/' + name + '.pdf', bbox_inches='tight')
     plt.close()
 
@@ -106,6 +115,7 @@ station = 'Lindenberg'
 for hour in [0,1]:
     hour_name = str(hour).replace('0','00:00').replace('1','12:00')
     for date in [0,100,1000,5000,7000]:
+
         date_name = str(datums[date])
 
         print("*** I am extracting the covariances for the date ", date_name , " and hour ", hour_name )
