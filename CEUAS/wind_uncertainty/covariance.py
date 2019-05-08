@@ -34,6 +34,7 @@ class netCDF:
 
 uwind_file = 'data/ERA5_1_10393_u.nc'
 
+t_file = 'data/ERA5_1_10393_t.nc'
 
 
 def running_mean(x, N):
@@ -69,8 +70,8 @@ res_3 = running_mean(x, 100)
 print('res3', res_3,  len(res_3))
 '''
 
-print('*** Loading the file> ', uwind_file )
-data = netCDF().read_data(file = uwind_file)
+print('*** Loading the file> ', t_file )
+data = netCDF().read_data(file = t_file)
 
 andep = data['an_dep']['data'] 
 fgdep = data['fg_dep']['data'] 
@@ -151,7 +152,7 @@ for hour in [0]:
     matrices[h] = lista
 #print ('*** The list of matrices are:', matrices )
 
-entry_1_1 = [ x for x in extract_entry(matrices = matrices['0'], pressure_i = 0 , pressure_j = 0) if not np.isnan(x) ]
+entry_1_1 = [ x for x in extract_entry(matrices = matrices['0'], pressure_i = 14 , pressure_j = 14) if not np.isnan(x) ]
 
 
 #a = [ x for x in entry_1_1 if not np.isnan(x)  ]
@@ -179,7 +180,7 @@ L = ['Desroziers(1m)', 'Desroziers(2m)', 'Desroziers(3m)', 'Desroziers(6m)', 'De
 
 
 print(X)
-plt.title('Estimated observation errors for u wind component')
+plt.title('Estimated observation errors for the temperature')
 Bins = 50
 FONTSIZE = 15
 n, bins, patches = plt.hist(X, Bins, histtype='stepfilled' ,  stacked = False, color = C , label = L , alpha = 0.7 , normed = True)
@@ -189,7 +190,7 @@ plt.legend(loc = 'upper right', fontsize = FONTSIZE - 3)
 plt.ylabel('Numbers / '+str(Bins), fontsize = FONTSIZE)
 plt.ylim(0, 0.30)
 plt.xlabel(r'Errors [m/s]', fontsize=15)
-plt.savefig('plots/histo.pdf',  bbox_inches='tight')
+plt.savefig('plots/Temperature.pdf',  bbox_inches='tight')
 plt.close()
 
 
