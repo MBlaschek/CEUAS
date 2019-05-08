@@ -53,6 +53,22 @@ def calc_cov(array_x, array_y):
     return cov
 
 
+def running_mean(x,N):
+    cumsum = np.cumsum(np.insert(x, 0, 0))
+    return (cumsum[N:] - cumsum[:-N]) / float(N)
+
+
+'''
+x = np.random.random(100000)
+
+res_1 = running_mean(x, 1000)
+print('res1', res_1, len(res_1))
+res_2 = running_mean(x, 2000)
+print('res2', res_2,  len(res_2))
+res_3 = running_mean(x, 100)
+print('res3', res_3,  len(res_3))
+'''
+
 print('*** Loading the file> ', uwind_file )
 data = netCDF().read_data(file = uwind_file)
 
@@ -65,6 +81,14 @@ print('*** Check the data shape for fg_dep and an_dep: ', andep.shape, fgdep.sha
 
 #test_x , test_y = [1,2,3] , [-1,9,0]
 #matrix = calc_cov(test_x , test_y)
+
+def extract_entry(matrices = '', pressure_i = '' , pressure_j = ''):
+    """ Extract a list of entries of the covariance matrices , e.g. all the "ith,jth" entries of all the matrices """
+    lista = [ m[pressure_i, pressure_j] for m in matrices ] 
+    return lista
+        
+
+
 
 
 def cov_plot(matrix, station="", hour = "", date=""):
@@ -111,6 +135,69 @@ datums = data['fg_dep']['datum']
 
 station = 'Lindenberg'
 
+
+
+matrices = {'0': '' , '12':'' }
+
+""" Extract the list of matrices, for all the days of observation """
+for hour in [0]:
+    lista = []
+    h = str(hour)                                                                                                                                                                                                                                                                   
+    for date in range(len(datums)):
+        an = andep[hour,:,date]
+        fg = fgdep[hour,:,date]
+        corrMatrix = calc_cov(an,fg) 
+        lista.append(corrMatrix)
+    matrices[h] = lista
+#print ('*** The list of matrices are:', matrices )
+
+entry_1_1 = [ x for x in extract_entry(matrices = matrices['0'], pressure_i = 0 , pressure_j = 0) if not np.isnan(x) ]
+
+
+#a = [ x for x in entry_1_1 if not np.isnan(x)  ]
+#print('The entries are: ', entry_1_1 )
+#a =  running_mean(a , 30 )
+#print(a)
+#input('')
+
+""" Extracting the running means for various time intervals """
+rm_1m = [x for x in running_mean(entry_1_1 , 30 ) if not np.isnan(x) ] 
+rm_2m = [x for x in running_mean(entry_1_1 , 60 ) if not np.isnan(x) ] 
+rm_3m = [x for x in running_mean(entry_1_1 , 90 ) if not np.isnan(x) ]
+rm_6m = [x for x in running_mean(entry_1_1 , 180) if not np.isnan(x) ]
+rm_1y = [x for x in running_mean(entry_1_1 , 365) if not np.isnan(x) ]
+
+
+
+
+
+""" Plotting the histograms """
+
+X = [ rm_1m, rm_2m, rm_3m, rm_6m, rm_1y ]
+C = ['slateblue', 'cyan', 'lime', 'orange', 'gold'] 
+L = ['Desroziers(1m)', 'Desroziers(2m)', 'Desroziers(3m)', 'Desroziers(6m)', 'Desroziers(1y)']
+
+
+print(X)
+plt.title('Estimated observation errors for u wind component')
+Bins = 50
+FONTSIZE = 15
+n, bins, patches = plt.hist(X, Bins, histtype='stepfilled' ,  stacked = False, color = C , label = L , alpha = 0.7 , normed = True)
+plt.text(1, 0.28,"pressure(an,fg)=(0,0)", fontsize= FONTSIZE)
+plt.grid(linestyle= ':', color = 'lightgray', lw = 1.2 )
+plt.legend(loc = 'upper right', fontsize = FONTSIZE - 3)
+plt.ylabel('Numbers / '+str(Bins), fontsize = FONTSIZE)
+plt.ylim(0, 0.30)
+plt.xlabel(r'Errors [m/s]', fontsize=15)
+plt.savefig('plots/histo.pdf',  bbox_inches='tight')
+plt.close()
+
+
+
+
+
+
+'''
 """ Plotting some covariances """
 for hour in [0,1]:
     hour_name = str(hour).replace('0','00:00').replace('1','12:00')
@@ -126,7 +213,8 @@ for hour in [0,1]:
         corr_matrix = calc_cov(an,fg)  # Extracting the matrix
 
         cov_plot(corr_matrix , station = station, hour = hour_name , date = date_name)  # Plotting
- 
+'''
+
 '''
 # Example
 date = str (data['fg_dep']['datum'][0]) 
