@@ -185,7 +185,7 @@ class Plotter:
  
           plt.title('Time series for ' + self.var + ' for (an_dep,fg_dep)=(' + str(self.an_p)+ ',' + str(self.fg_p) + ')' )
           for (m,l,c) in zip(means,labels,colors):
-               print(m)
+               print(len(m))
                plt.plot( datums[:(len(m))], m, color =c, label =l)
                plt.legend(fontsize = self.font , loc = 'upper right')
 
@@ -240,8 +240,8 @@ for s in stations:
           #matrices_dict= Cov.extract_matrix_list(an_dep=andep[:1000], fg_dep=fgdep[:1000], datums=datums[:1000], hours=[0])
 
           """ Looping over the pressure levels """
-          plevels_i = [15]
-          plevels_j = [15]
+          plevels_i = [11]
+          plevels_j = [11]
 
           for i in plevels_i:
                for j in plevels_j:
@@ -277,7 +277,7 @@ for s in stations:
                     """ Plotting the histograms """
 
                     X = [ rm_1m, rm_2m, rm_3m, rm_6m, rm_1y ]
-                    bins = 50
+                    bins = 150
                     Plot.histo(X= X, colors = C, labels = L, bins = bins)
 
 
