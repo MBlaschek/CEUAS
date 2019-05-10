@@ -43,9 +43,11 @@ class Covariance:
          return
 
      def running_mean(self,x, N):
-          """ Retunrs the running mean of x, averaged over N """
-          cumsum = np.cumsum(np.insert(x, 0, 0)) 
+          """ Returns the running mean of x, averaged over N """
+          cumsum = np.cumsum(np.insert(x, 0, 0))
           return (cumsum[N:] - cumsum[:-N]) / float(N)
+          
+
 
      def calc_cov(self, array_x, array_y):
           """ Calculate the (cross) covariance matrix for the two arrays x and y """
@@ -66,7 +68,7 @@ class Covariance:
      def extract_matrix_list(self, an_dep='', fg_dep='', datums = '', hours=[0,1]):
          """ Extracts a dictionary containing the covariance matrices for a specific hour, one for each date in datums """
 
-         matrices = {'0':'', '12':''}
+         matrices = {}
 
          for h in hours:
              lista = [] 
@@ -78,17 +80,21 @@ class Covariance:
              matrices[str(h)] = lista
          return matrices
 
-     def average_matrix(self,matrices_list='', N='', matrix_index=100):
+     def average_matrix(self,matrices_list='', N='', matrix_index=""):
          """ Given the list of caov. matrices, returns an averaged matrix (for the index matrix_index in the list)
-         where each entry is the mean calculated with the N following matrices. """
+         where each entry is the mean calculated with the N following matrices. 
+         The average is computed considering only the actual 'n' entries with real values """
 
-         averaged = np.empty(16, 16, dtype = float) # initialize an empty 16*16 matrix (16 pressure levels)                                                                                                                            
-         new_mlist = matrices_list[matrix_index:N]  # selecting the subset of matrices
+         averaged = np.empty([16, 16], dtype = float) # initialize an empty 16*16 matrix (16 pressure levels)                                                                                                                            
+         new_mlist = matrices_list[matrix_index:matrix_index+N]  # selecting the subset of matrices from index=matrix_index to matrix_index+N
          for x in range(16):
               for y in range(16):
                    indices_list = self.select_ijentry(matrices=new_mlist , i=x , j=y)
-                   averaged[x,y] = sum(indices_list)/N  
-                    
+                   not_nan = [ x for x in indices_list if not np.isnan(x) ]
+                   #print(not_nan)
+                   N = len(not_nan)
+                   if N>0:
+                        averaged[x,y] = sum(not_nan)/N  
          return averaged
  
 
@@ -123,29 +129,29 @@ class Plotter:
 
           fig,ax = plt.subplots()
 
-          if date and not averaged:
+          if not averaged:
              title = "Stat: " + station + ', H: ' + hour + ', Date: ' + date + ', ' + var
-             filename = 'Cov_' + station + '_hour_' + hour.replace(':','') + '_date_' + date + ', ' +var
+             filename = 'Cov_' + station + '_hour_' + hour.replace(':','') + '_date_' + date + '_' +var
  
-          elif averaged and not date:
-               title = "Station: " + station + ', Hour: ' + hour + ', Averaged: ' + averaged + ', ' +var
-               filename ='Cov_' + station + '_hour_' + hour.replace(':','') + '_averaged_' + averaged + ', ' +var
+          elif averaged :
+               title = var.replace('temp','Temp.') + " , Stat: " + station + ', H: ' + str(hour) + ', Date: ' + str(date)
+               filename ='Cov_' + station + '_hour_' + str(hour).replace(':','') + '_averaged_' + str(date) + '_' + var 
 
-          plt.title(title, y=1.03, fontsize = self.font)
+          plt.title(title, y=1.03, fontsize = self.font-2)
 
           num = len(matrix[0,:])
           Num = range(num)
 
-          vmin, vmax = -10, 10
+          vmin, vmax = -5, 5
           color_map= plt.imshow(matrix, interpolation= 'nearest', cmap = 'RdYlBu', vmin = vmin, vmax = vmax ) # nearest serves for discreete grid  # cmaps blue, seismic            
           plt.ylim(-0.5, 15.5)
           plt.xlim(-0.5, 15.5)
           plt.xticks(Num, Num)
-          plt.xlabel('Pressure level', fontsize = FONT)
+          plt.xlabel('Pressure level', fontsize = self.font)
           plt.yticks(Num, Num)
-          plt.xlabel('Pressure level', fontsize = FONT)
+          plt.xlabel('Pressure level', fontsize = self.font)
           bar = plt.colorbar()
-          bar.ax.set_ylabel("Covariance", fontsize = FONT)
+          bar.ax.set_ylabel("Covariance", fontsize = self.font)
 
           #  Creating text values                                                                                                                              
           for i in Num:
@@ -153,7 +159,8 @@ class Plotter:
                     value = '{0:.2f}'.format(matrix[i,j])
                     text = ax.text( j,i, value , ha = 'center' , va = 'center', color = 'black', fontsize = 5)
 
-          plt.savefig('plots/' + name + '.pdf', bbox_inches='tight')
+          if not os.path.isdir('plots/covariances/'+station): os.mkdir('plots/covariances/'+station)
+          plt.savefig('plots/covariances/' + station + '/' + filename + '.pdf', bbox_inches='tight')
           plt.close()
 
      def histo(self, X="", colors="", labels="" , bins = ''):
@@ -166,7 +173,7 @@ class Plotter:
                    w.append(1./len(x)*100)
               weights.append(w)
 
-          print('weights', weights)
+          print('*** The histogram weight is:', weights[100])
           plt.hist(X, bins, histtype='stepfilled',  stacked = False, color = C , label = L , alpha = 0.7 , density = True, weights = weights)
 
           plt.text(1, 0.95, "pressure(an,fg)="+ str(self.an_p) + ',' + str(self.fg_p) , fontsize= self.font)
@@ -185,7 +192,6 @@ class Plotter:
  
           plt.title('Time series for ' + self.var + ' for (an_dep,fg_dep)=(' + str(self.an_p)+ ',' + str(self.fg_p) + ')' )
           for (m,l,c) in zip(means,labels,colors):
-               print(len(m))
                plt.plot( datums[:(len(m))], m, color =c, label =l)
                plt.legend(fontsize = self.font , loc = 'upper right')
 
@@ -196,7 +202,9 @@ class Plotter:
           plt.savefig('plots/series/timeseries_' + self.var + '_anp_' + str(self.an_p) + '_fgp_' + str(self.fg_p) + '.pdf'  , bbox_inches = 'tight')
           plt.close()
 
-
+     def extract_datum_means(self,datums='', means=''):
+          """ loops over the datums and means and removes nan entires """
+          return 0
 
 
 
@@ -215,76 +223,125 @@ Cov = Covariance(netCDF)
 Plot = Plotter()
 Plot.initialize_dirs()
 
-matrices_dict = ''
-""" Extracting the full (cross)covariance matrices """
-for s in stations:
 
-     for v in variables:
+# *********************************************
+# Extracting the cross-covarinace matrices
+# ********************************************* 
 
-          input_file = base_dir + file_dic[v]
+""" Initialize and empty dictionary of all the matrices """
+matrices = {}
 
-          data = netCDF.read_data(file = input_file) #  Loading the necCDF file
-        
-          andep = data['an_dep']['data'] #  Extracting first guess and analysis departures
-          fgdep = data['fg_dep']['data'] 
+""" Extracting the full (cross)covariance matrices, and store in dictionary """
 
-          print('*** Check the data shape for fg_dep and an_dep: ', andep.shape, fgdep.shape )
+if not os.path.isfile('covariance_matrices.npy'):
+     print('*** Extracting the covariance matrices and storing in a numpy dictionary')
+     for s in stations:
+          matrices[s]= {}
+          for v in variables:
+               matrices[s][v]={}
 
-          datums = data['fg_dep']['datum']
+               input_file = base_dir + file_dic[v]
+
+               data = netCDF.read_data(file = input_file) #  Loading the necCDF file
+               
+               andep = data['an_dep']['data'] #  Extracting first guess and analysis departures
+               fgdep = data['fg_dep']['data'] 
+
+               print('*** Check the data shape for fg_dep and an_dep: ', andep.shape, fgdep.shape )
+
+               datums = data['fg_dep']['datum']
 
           # Extract the list of matrices, for all the days of observation """
-          print("*** Extracting the matrices """)
-          matrices_dict= Cov.extract_matrix_list(an_dep=andep, fg_dep=fgdep, datums=datums, hours=[0])
-          
+               print("*** Extracting ::: """)
+          #matrices_dict[station][v] = Cov.extract_matrix_list(an_dep=andep, fg_dep=fgdep, datums=datums, hours=[0])
           # slimmed down
-          #matrices_dict= Cov.extract_matrix_list(an_dep=andep[:1000], fg_dep=fgdep[:1000], datums=datums[:1000], hours=[0])
+               #all_matrices = Cov.extract_matrix_list(an_dep=andep[:100], fg_dep=fgdep[:100], datums=datums[:100], hours=[0,1])
+               all_matrices = Cov.extract_matrix_list(an_dep=andep, fg_dep=fgdep, datums=datums, hours=[0,1])
+               matrices[s][v]['0']  = all_matrices['0']
+               matrices[s][v]['1'] = all_matrices['1']
+               matrices[s]['datums'] = datums
+     np.save('covariance_matrices', matrices)
 
-          """ Looping over the pressure levels """
-          plevels_i = [11]
-          plevels_j = [11]
+else:
+     print('*** Loading the covariance_matrices.npy dictionary') 
+     matrices = np.load('covariance_matrices.npy').item()
 
-          for i in plevels_i:
-               for j in plevels_j:
-                    print("*** Processing the i,j entries: ", i , j )
-                    means = Cov.select_ijentry(matrices = matrices_dict['0'], i = i , j = j) 
-                    means = [ m for m in means if not np.isnan(m) ] 
 
-                    runningmean_30  = Cov.running_mean(means , 30 )
-                    #print(runningmean_30)
-                    runningmean_60  = Cov.running_mean(means , 60 )
-                    runningmean_90  = Cov.running_mean(means , 90 )
-                    runningmean_180 = Cov.running_mean(means , 180 )
-                    runningmean_365 = Cov.running_mean(means , 365 )
-
-                    X = [runningmean_30,runningmean_60,runningmean_90,runningmean_180,runningmean_365]
-
-                    #C = ['slateblue', 'cyan', 'lime', 'orange', 'gold']                                                                                                                                                                                                            
-                    C = ['yellow', 'orange', 'lime', 'cyan', 'slateblue']
-                    L = ['Desroziers(1m)', 'Desroziers(2m)', 'Desroziers(3m)', 'Desroziers(6m)', 'Desroziers(1y)']
-
-                    C = ['blue', 'orange', 'green', 'red', 'slateblue'] # color similar to Michi
-                    Plot.plot_prop(var = v, fg_p = i, an_p = j)                     
-                    Plot.time_series(means=X, datums = datums, labels = L, colors = C)
-                    #cov_values = [ x for x in means  if not np.isnan(x) ]  #  Excluding 'nan' values since they give problems with hostograms
-                   
-                    """ Cleaning the running means from the nan values """
-                    rm_1m = [x for x in runningmean_30 if not np.isnan(x) ] 
-                    rm_2m = [x for x in runningmean_60 if not np.isnan(x) ] 
-                    rm_3m = [x for x in runningmean_90 if not np.isnan(x) ]
-                    rm_6m = [x for x in runningmean_180 if not np.isnan(x) ]
-                    rm_1y = [x for x in runningmean_365 if not np.isnan(x) ]
-
-                    """ Plotting the histograms """
-
-                    X = [ rm_1m, rm_2m, rm_3m, rm_6m, rm_1y ]
-                    bins = 150
-                    Plot.histo(X= X, colors = C, labels = L, bins = bins)
+print('The matrices are', matrices.keys())
 
 
 
+
+for s in stations:
+     datums = matrices[s]['datums'] 
+
+     for v in variables:
+          Plot.plot_prop(var=v)                                                                                                                                                                                                                                        
+          for h in [0,1]: 
+              lista = matrices[s][v][str(h)]
+              #print(lista)
+              for m_index in [100,500,1000,1500,2500,5000,7500,8500]:
+                   print('Producing hte plots for', m_index)
+                   averaged = Cov.average_matrix(matrices_list= lista, N=365, matrix_index= m_index) # considering the 100th matrix, and the 200 matrices that follows
+                   plotting = Plot.cov_plot(averaged, station=s , hour = h, date= datums[m_index] , averaged = True )
 
 
 '''
+for s in stations:
+     for v in variables:
+          for h in [0,1]:
+               """ Looping over the pressure levels """
+               plevels_i = range(16)
+               plevels_j = range(16)
+
+               for i in plevels_i:
+                    for j in plevels_j:
+                         print("*** Processing the i,j entries: ", i , j )
+                         means = Cov.select_ijentry(matrices = matrices_dict['0'], i = i , j = j) 
+            
+                         print ('The length of the means is;' len(means))
+                            
+             
+                         means = [ m for m in means if not np.isnan(m) ] 
+
+                         runningmean_30  = Cov.running_mean(means , 30 )
+                    #print(runningmean_30)
+                         runningmean_60  = Cov.running_mean(means , 60 )
+                         runningmean_90  = Cov.running_mean(means , 90 )
+                         runningmean_180 = Cov.running_mean(means , 180 )
+                         runningmean_365 = Cov.running_mean(means , 365 )
+
+                         X = [runningmean_30,runningmean_60,runningmean_90,runningmean_180,runningmean_365]
+
+                    #C = ['slateblue', 'cyan', 'lime', 'orange', 'gold']                                                                                                                                                                                                            
+                         C = ['yellow', 'orange', 'lime', 'cyan', 'slateblue']
+                         L = ['Desroziers(1m)', 'Desroziers(2m)', 'Desroziers(3m)', 'Desroziers(6m)', 'Desroziers(1y)']
+
+                         C = ['blue', 'orange', 'green', 'red', 'slateblue'] # color similar to Michi
+                         Plot.plot_prop(var = v, fg_p = i, an_p = j)                     
+                         Plot.time_series(means=X, datums = datums, labels = L, colors = C)
+                    #cov_values = [ x for x in means  if not np.isnan(x) ]  #  Excluding 'nan' values since they give problems with hostograms
+                   
+                         """ Cleaning the running means from the nan values """
+                         rm_1m = [x for x in runningmean_30 if not np.isnan(x) ] 
+                         rm_2m = [x for x in runningmean_60 if not np.isnan(x) ] 
+                         rm_3m = [x for x in runningmean_90 if not np.isnan(x) ]
+                         rm_6m = [x for x in runningmean_180 if not np.isnan(x) ]
+                         rm_1y = [x for x in runningmean_365 if not np.isnan(x) ]
+
+                         """ Plotting the histograms """
+
+                         X = [ rm_1m, rm_2m, rm_3m, rm_6m, rm_1y ]
+                         bins = 150
+                         Plot.histo(X= X, colors = C, labels = L, bins = bins)
+
+
+
+
+
+
+
+
 print(X)
 plt.title('Estimated observation errors for the temperature')
 Bins = 50
