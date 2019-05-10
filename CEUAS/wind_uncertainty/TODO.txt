@@ -1,0 +1,7 @@
+### todo:
+- analize interquotal range to exclude "outlier" points 
+(invece del metodo di michi che tinee sempre conto della media)
+- extend to other variables
+- fix datums problem in the time series
+- ask michi binning of the histograms
+--- maps of the stations of year 1979 ?
