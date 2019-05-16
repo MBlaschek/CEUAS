@@ -42,13 +42,13 @@ from rasotools.utils import *
 
 
 """ Read the data to extract from the parameter file """
-datasets         = config['DATA']  ['datasets']
-station           = config['DATA']  ['station']
-variables        = config['DATA']  ['variables']
-outdir             = config['OUTPUT']['outdir']
+datasets     = config['DATA']  ['datasets']
+station      = config['DATA']  ['station']
+variables    = config['DATA']  ['variables']
+outdir       = config['OUTPUT']['outdir']
 databasepath = config['PATHS'] ['databasepath'] 
-gribdir            = config['PATHS'] ['gribdir']
-
+gribdir      = config['PATHS'] ['gribdir']
+pool         = config['DATA']  ['pool']
 
 #outdir = 'out_netCDFs'
 
@@ -1943,7 +1943,7 @@ if __name__ == "__main__":
         exp = e
         for v in variables.split(','):
             print('   Processing the dataset: ' , e ,' for the variable: ', v )
-            run_converter(dataset=e, single_stat= station, pool=False, varno= int(v), debug = True )   
+            run_converter(dataset=e, single_stat= station, pool= pool, varno= int(v), debug = True )   
             print('Finished with the database', e , ' **** for the variable: ', str(v))
             
     exit()
