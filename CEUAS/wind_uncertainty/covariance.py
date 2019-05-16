@@ -1,4 +1,8 @@
-""" Module for extracting the covariance matrix """
+""" Module for extracting the covariance matrix 
+
+    Author: Ambrogi Federico, federico.ambrogi@univie.ac.at
+   
+"""
 
 
 import os,sys
@@ -7,12 +11,22 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pylab as plt
+import argparse
 #import matplotlib.gridspec as gridspec
 
+""" Running mode: forcing the creation of the numpy files """
+parser = argparse.ArgumentParser(description="Force the creation/update of the numpy files storing the covariances")
+parser.add_argument('--force' , '-f', 
+                    help="Optional: select True to force the creation of the numpy files storing the covariances" ,
+                    default = 'False',
+                    type = bool)
+args = parser.parse_args()
+force = args.force
 
 
 # see definition in plotter script 
 class netCDF:
+     """ Class containig the basic information of the netCDF files """
      def __init__(self, file=""):
           self.file = file
 
@@ -32,12 +46,12 @@ class netCDF:
          return data_loaded 
 
 
-uwind_file = 'data/ERA5_1_10393_u.nc'
 
-t_file = 'data/ERA5_1_10393_t.nc'
+
 
 
 class Covariance:
+     """ Class with the main methods for computing and analising covariances """
      def __init__(self,netCDF):
          self.data = netCDF
          return
@@ -47,7 +61,6 @@ class Covariance:
           cumsum = np.cumsum(np.insert(x, 0, 0))
           return (cumsum[N:] - cumsum[:-N]) / float(N)
           
-
 
      def calc_cov(self, array_x, array_y):
           """ Calculate the (cross) covariance matrix for the two arrays x and y """
@@ -210,12 +223,15 @@ class Plotter:
 
 
 
+#uwind_file = 'data/ERA5_1_10393_u.nc'
+#t_file = 'data/ERA5_1_10393_t.nc'
+
 
 """ Dirs, definitions, select datasets """
 base_dir = 'data/'
-file_dic = {'temp':'ERA5_1_10393_t.nc' , 'uwind': 'ERA5_1_10393_u.nc'  }
+file_dic = {'temp':'ERA5_1_10393_t.nc' , 'uwind': 'ERA5_1_10393_u.nc'  , 'vwind' : 'ERA5_1_10393_v.nc' , 'dp':'ERA5_1_10393_dp.nc' , 'rh':'ERA5_1_10393_rh.nc'}
 #variables = ['temp','uwind','vwind']
-variables = ['temp']
+variables = ['temp', 'uwind','vwind','rh','dp']
 stations = ['Lindenberg']
 
 netCDF = netCDF()
@@ -233,11 +249,14 @@ matrices = {}
 
 """ Extracting the full (cross)covariance matrices, and store in dictionary """
 
-if not os.path.isfile('covariance_matrices.npy'):
-     print('*** Extracting the covariance matrices and storing in a numpy dictionary')
+if not os.path.isfile('covariance_matrices.npy') or force == True :
+     print(' *** Extracting the covariance matrices and storing in a numpy dictionary \n')
      for s in stations:
+          print('  *** Processing the Station: ', s , '\n')
+
           matrices[s]= {}
           for v in variables:
+               print('   *** Analysing the variable: ', v , '\n')
                matrices[s][v]={}
 
                input_file = base_dir + file_dic[v]
