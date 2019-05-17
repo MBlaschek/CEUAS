@@ -12,6 +12,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pylab as plt
 import argparse
+import pandas as pd
 #import matplotlib.gridspec as gridspec
 
 """ Running mode: forcing the creation of the numpy files """
@@ -56,11 +57,46 @@ class Covariance:
          self.data = netCDF
          return
 
-     def running_mean(self,x, N):
-          """ Returns the running mean of x, averaged over N """
-          cumsum = np.cumsum(np.insert(x, 0, 0))
-          return (cumsum[N:] - cumsum[:-N]) / float(N)
-          
+     def remove_outliers(self, data, min= '', max= '', cut= ''):
+          """ Replacing the outlier values with nan (to keep vector of same length)"""
+          q25, q75 = np.nanpercentile(data,25), np.nanpercentile(data,75)
+          iqr = q75 - q25
+          cut_off = iqr * cut
+          lower, upper = q25-cut_off, q75+cut_off
+          #print(q25, q75 , 'percentiles') 
+          #input('check')
+          cleaned = []
+ 
+          for d in data:
+              if d > lower and d < upper:
+                   cleaned.append(d)
+              else:
+                   cleaned.append(np.nan)         
+          #print('cleaned is', cleaned)
+          return cleaned
+
+     def running_mean_old(self, data = '', n='', datums=''):
+          """ Returns the running mean of x, averaged over N  
+              Data is reduced by removing outliers """
+          #print(len(data), len(datums))
+          #input('ciao')
+          not_nans         = [ x for x in data if not np.isnan(x) ]
+          not_nans_indexes = [ data.index(x) for x in data if not np.isnan(x) ]
+     
+          datums_nans      = [ datums[i] for i in not_nans_indexes ] # extracting not nans values and corresponding index in datums (for plotting) 
+
+          #print (not_nans[:100], datums_nans[:100])
+          #input('check values')
+          cumsum = np.cumsum(np.insert(not_nans, 0, 0))
+          means = (cumsum[n:] - cumsum[:-n]) / float(n)
+          return means , datums_nans
+    
+     def running_mean(self,data='',n=''): 
+          df = pd.DataFrame( {'mean': data } ) 
+          mean = df.rolling(n, center = True, min_periods=1).mean()
+          #print('mean in rolling is', mean['mean'] )
+          conv = np.array(mean['mean'])
+          return conv 
 
      def calc_cov(self, array_x, array_y):
           """ Calculate the (cross) covariance matrix for the two arrays x and y """
@@ -102,19 +138,22 @@ class Covariance:
          new_mlist = matrices_list[matrix_index:matrix_index+N]  # selecting the subset of matrices from index=matrix_index to matrix_index+N
          for x in range(16):
               for y in range(16):
-                   indices_list = self.select_ijentry(matrices=new_mlist , i=x , j=y)
-                   not_nan = [ x for x in indices_list if not np.isnan(x) ]
+                   valueslist = self.select_ijentry(matrices=new_mlist , i=x , j=y)
+                   valueslist_nooutliers = self.remove_outliers(valueslist, min= 0.25, max= 0.75, cut= 1.5) 
+                   not_nan = [ x for x in valueslist_nooutliers if not np.isnan(x) ]
                    #print(not_nan)
                    N = len(not_nan)
-                   if N>0:
+                   try:
                         averaged[x,y] = sum(not_nan)/N  
+                   except ZeroDivisionError:
+                        averaged[x,y] = np.nan
          return averaged
  
 
 
 class Plotter:
 
-     def plot_prop(self, var='', fg_p = '' , an_p = ''):
+     def plot_prop(self, var='', fg_p = '' , an_p = '' , hour = ''):
          self.font = 15
 
          self.fg_p = fg_p #  pressure level of the first guess dep.
@@ -122,7 +161,14 @@ class Plotter:
 
          self.pretty_pressure = [10,20,30,50,70,100,150,200,250,300,400,500,700,850,925,1000]
          self.var = var
-         self.var_dics = { 'temp': { 'units': 'K' , 'name':'Air Temperature' , 'x_range': [] , 'y_range': []  } }  
+         self.hour = hour
+         self.var_dics = { 'temp' : { 'units': 'K'     , 'name':'Air Temperature'  , 'x_range': [] , 'y_range': []  } ,
+                           'uwind': { 'units': '[m/s]' , 'name':'u wind Component' , 'x_range': [] , 'y_range': [] } ,  
+                           'vwind': { 'units': '[m/s]' , 'name':'v wind Component' , 'x_range': [] , 'y_range': [] } ,
+                           'dp'   : { 'units': '[K]'   , 'name':'Dew Point Temp.'  , 'x_range': [] , 'y_range': [] } ,
+                           'rh'   : { 'units': ''      , 'name':'Relative Hum.   ' , 'x_range': [] , 'y_range': [] } ,
+                           }
+
 
 
      def initialize_dirs(self):
@@ -177,7 +223,7 @@ class Plotter:
           plt.close()
 
      def histo(self, X="", colors="", labels="" , bins = ''):
-          plt.title('Estimated observation errors for the temperature')
+          plt.title('Estimated errors for ' + self.var + ' for (an_dep,fg_dep)=(' + str(self.an_p)+ ',' + str(self.fg_p) + ')' , y=1.03)
 
           weights = []
           for x in X:
@@ -186,45 +232,32 @@ class Plotter:
                    w.append(1./len(x)*100)
               weights.append(w)
 
-          print('*** The histogram weight is:', weights[100])
-          plt.hist(X, bins, histtype='stepfilled',  stacked = False, color = C , label = L , alpha = 0.7 , density = True, weights = weights)
+          plt.hist(X, bins, histtype='stepfilled',  stacked = False, color = C , label = L , alpha = 0.7 , density = True)
 
-          plt.text(1, 0.95, "pressure(an,fg)="+ str(self.an_p) + ',' + str(self.fg_p) , fontsize= self.font)
           plt.grid(linestyle= ':', color = 'lightgray', lw = 1.2 )
           plt.legend(loc = 'upper right', fontsize = self.font - 3)
           plt.ylabel('Numbers / '+str(bins), fontsize = self.font)
-          plt.ylim(0, 10)
-          plt.xlim(0, 2,2)
+          plt.ylim(0, 15)
+          plt.xlim(0, 2.1 )
           plt.xlabel(r'Errors [' + self.var_dics[self.var]['units'] + ']', fontsize= self.font)
-          plt.savefig('plots/histo/' + self.var + '_anp_' + str(self.an_p) + '_fgp_' + str(self.fg_p) + '.pdf',  bbox_inches='tight')
+          plt.savefig('plots/histo/histo_' + self.var + '_hour_' + self.hour + '_anp_' + str(self.an_p) + '_fgp_' + str(self.fg_p) + '.pdf',  bbox_inches='tight')
           plt.close()
           
-     
-
-     def time_series(self, means='', datums = '', labels = '', colors = ''):
+     def time_series(self, means='', datums = '', labels = '', colors = '', interval=50):
  
-          plt.title('Time series for ' + self.var + ' for (an_dep,fg_dep)=(' + str(self.an_p)+ ',' + str(self.fg_p) + ')' )
-          for (m,l,c) in zip(means,labels,colors):
-               plt.plot( datums[:(len(m))], m, color =c, label =l)
-               plt.legend(fontsize = self.font , loc = 'upper right')
+          plt.title('Time series for ' + self.var + ' for (an_dep,fg_dep)=(' + str(self.an_p)+ ',' + str(self.fg_p) + ')' , y=1.03)
+          for (m,d,l,c) in zip(means,datums,labels,colors):
+               #print('plots: datums , m ', len(d), len(m) )
+               #input('prova')
+               plt.plot( d[:(len(m))][::interval], m[::interval], color =c, label =l)
+          plt.legend(fontsize = self.font-3 , loc = 'upper left')
 
-          plt.ylim(0,1.2)
+          plt.ylim(0, 1.2)
           plt.grid(linestyle= ':', color = 'lightgray', lw = 1.2 )
           plt.ylabel('Error [' + self.var_dics[self.var]['units'] + ']', fontsize= self.font) 
           plt.xlabel('Dates', fontsize = self.font)
-          plt.savefig('plots/series/timeseries_' + self.var + '_anp_' + str(self.an_p) + '_fgp_' + str(self.fg_p) + '.pdf'  , bbox_inches = 'tight')
+          plt.savefig('plots/series/timeseries_hour_' + self.hour + '_' + self.var + '_anp_' + str(self.an_p) + '_fgp_' + str(self.fg_p) + '.pdf'  , bbox_inches = 'tight')
           plt.close()
-
-     def extract_datum_means(self,datums='', means=''):
-          """ loops over the datums and means and removes nan entires """
-          return 0
-
-
-
-
-
-#uwind_file = 'data/ERA5_1_10393_u.nc'
-#t_file = 'data/ERA5_1_10393_t.nc'
 
 
 """ Dirs, definitions, select datasets """
@@ -249,20 +282,16 @@ matrices = {}
 
 """ Extracting the full (cross)covariance matrices, and store in dictionary """
 
-if not os.path.isfile('covariance_matrices.npy') or force == True :
+if not os.path.isfile('covariance_matrices.npy') and force != True :
      print(' *** Extracting the covariance matrices and storing in a numpy dictionary \n')
      for s in stations:
           print('  *** Processing the Station: ', s , '\n')
-
           matrices[s]= {}
           for v in variables:
                print('   *** Analysing the variable: ', v , '\n')
                matrices[s][v]={}
-
                input_file = base_dir + file_dic[v]
-
                data = netCDF.read_data(file = input_file) #  Loading the necCDF file
-               
                andep = data['an_dep']['data'] #  Extracting first guess and analysis departures
                fgdep = data['fg_dep']['data'] 
 
@@ -271,26 +300,27 @@ if not os.path.isfile('covariance_matrices.npy') or force == True :
                datums = data['fg_dep']['datum']
 
           # Extract the list of matrices, for all the days of observation """
-               print("*** Extracting ::: """)
+               print("*** Extracting the values::: """)
           #matrices_dict[station][v] = Cov.extract_matrix_list(an_dep=andep, fg_dep=fgdep, datums=datums, hours=[0])
           # slimmed down
                #all_matrices = Cov.extract_matrix_list(an_dep=andep[:100], fg_dep=fgdep[:100], datums=datums[:100], hours=[0,1])
                all_matrices = Cov.extract_matrix_list(an_dep=andep, fg_dep=fgdep, datums=datums, hours=[0,1])
-               matrices[s][v]['0']  = all_matrices['0']
-               matrices[s][v]['1'] = all_matrices['1']
+               matrices[s][v]['0']   = all_matrices['0']
+               matrices[s][v]['1']   = all_matrices['1']
                matrices[s]['datums'] = datums
      np.save('covariance_matrices', matrices)
 
 else:
      print('*** Loading the covariance_matrices.npy dictionary') 
-     matrices = np.load('covariance_matrices.npy').item()
+     matrices = np.load('covariance_matrices.npy', allow_pickle = True).item()
 
 
 print('The matrices are', matrices.keys())
 
+print('The matrices are', matrices['Lindenberg'].keys())
 
 
-
+""" Plotting the covariance matrices """
 for s in stations:
      datums = matrices[s]['datums'] 
 
@@ -301,58 +331,54 @@ for s in stations:
               #print(lista)
               for m_index in [100,500,1000,1500,2500,5000,7500,8500]:
                    print('Producing hte plots for', m_index)
-                   averaged = Cov.average_matrix(matrices_list= lista, N=365, matrix_index= m_index) # considering the 100th matrix, and the 200 matrices that follows
+                   averaged = Cov.average_matrix(matrices_list= lista, N=365, matrix_index= m_index) # considering the m_indexth matrix, and the 365 matrices that follows
                    plotting = Plot.cov_plot(averaged, station=s , hour = h, date= datums[m_index] , averaged = True )
 
 
-'''
+
+variables = ['temp','uwind','vwind']
+variables = ['temp']
+variables = ['uwind','vwind']
+
+""" Plotting the time series of the running mean """
 for s in stations:
+     datums = matrices[s]['datums']
      for v in variables:
+          matrices_dic = matrices[s][v]
           for h in [0,1]:
                """ Looping over the pressure levels """
                plevels_i = range(16)
                plevels_j = range(16)
 
-               for i in plevels_i:
-                    for j in plevels_j:
+               plevels_i = [3,8,11]
+               plevels_j = [3,8,11]  # 11 is 500 hPa
+
+               #for i in plevels_i:
+               #     for j in plevels_j:
+               for i,j in zip(plevels_i,plevels_j): # no off-diagonal elements
+
                          print("*** Processing the i,j entries: ", i , j )
-                         means = Cov.select_ijentry(matrices = matrices_dict['0'], i = i , j = j) 
+                         values = Cov.select_ijentry(matrices = matrices_dic[str(h)], i = i , j = j) 
+
+                         values_cleaned = Cov.remove_outliers(values, min= 0.25, max= 0.75, cut= 1.5 )
             
-                         print ('The length of the means is;' len(means))
-                            
-             
-                         means = [ m for m in means if not np.isnan(m) ] 
+                         means, dates = [],[]
+                         for n in [30,60,90,180,365]:
+                              runningmean, date  = Cov.running_mean_old(data= values_cleaned, n= n, datums= datums)
+                              means.append(runningmean)
+                              dates.append(date)
 
-                         runningmean_30  = Cov.running_mean(means , 30 )
-                    #print(runningmean_30)
-                         runningmean_60  = Cov.running_mean(means , 60 )
-                         runningmean_90  = Cov.running_mean(means , 90 )
-                         runningmean_180 = Cov.running_mean(means , 180 )
-                         runningmean_365 = Cov.running_mean(means , 365 )
-
-                         X = [runningmean_30,runningmean_60,runningmean_90,runningmean_180,runningmean_365]
-
-                    #C = ['slateblue', 'cyan', 'lime', 'orange', 'gold']                                                                                                                                                                                                            
                          C = ['yellow', 'orange', 'lime', 'cyan', 'slateblue']
-                         L = ['Desroziers(1m)', 'Desroziers(2m)', 'Desroziers(3m)', 'Desroziers(6m)', 'Desroziers(1y)']
-
-                         C = ['blue', 'orange', 'green', 'red', 'slateblue'] # color similar to Michi
-                         Plot.plot_prop(var = v, fg_p = i, an_p = j)                     
-                         Plot.time_series(means=X, datums = datums, labels = L, colors = C)
-                    #cov_values = [ x for x in means  if not np.isnan(x) ]  #  Excluding 'nan' values since they give problems with hostograms
-                   
-                         """ Cleaning the running means from the nan values """
-                         rm_1m = [x for x in runningmean_30 if not np.isnan(x) ] 
-                         rm_2m = [x for x in runningmean_60 if not np.isnan(x) ] 
-                         rm_3m = [x for x in runningmean_90 if not np.isnan(x) ]
-                         rm_6m = [x for x in runningmean_180 if not np.isnan(x) ]
-                         rm_1y = [x for x in runningmean_365 if not np.isnan(x) ]
+                         L = ['Desroziers (1m)', 'Desroziers (2m)', 'Desroziers (3m)', 'Desroziers (6m)', 'Desroziers (1y)']
+                         C = ['steelblue', 'orange', 'forestgreen', 'red', 'slateblue'] # color similar to Michi
+                         
+                         """ Plotting the time series """
+                         Plot.plot_prop(var = v, fg_p = i, an_p = j , hour = str(h))                     
+                         Plot.time_series(means= means, datums= dates, labels= L, colors= C ,interval= 25)
 
                          """ Plotting the histograms """
-
-                         X = [ rm_1m, rm_2m, rm_3m, rm_6m, rm_1y ]
-                         bins = 150
-                         Plot.histo(X= X, colors = C, labels = L, bins = bins)
+                         bins = 30
+                         Plot.histo(X= means, colors = C, labels = L, bins = bins)
 
 
 
@@ -361,6 +387,8 @@ for s in stations:
 
 
 
+
+'''
 print(X)
 plt.title('Estimated observation errors for the temperature')
 Bins = 50
