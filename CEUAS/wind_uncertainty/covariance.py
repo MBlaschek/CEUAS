@@ -89,6 +89,7 @@ class Covariance:
           #input('check values')
           cumsum = np.cumsum(np.insert(not_nans, 0, 0))
           means = (cumsum[n:] - cumsum[:-n]) / float(n)
+          means = np.sqrt(means)
           return means , datums_nans
     
      def running_mean(self,data='',n=''): 
@@ -319,7 +320,7 @@ print('The matrices are', matrices.keys())
 
 print('The matrices are', matrices['Lindenberg'].keys())
 
-
+'''
 """ Plotting the covariance matrices """
 for s in stations:
      datums = matrices[s]['datums'] 
@@ -334,11 +335,11 @@ for s in stations:
                    averaged = Cov.average_matrix(matrices_list= lista, N=365, matrix_index= m_index) # considering the m_indexth matrix, and the 365 matrices that follows
                    plotting = Plot.cov_plot(averaged, station=s , hour = h, date= datums[m_index] , averaged = True )
 
-
+'''
 
 variables = ['temp','uwind','vwind']
 variables = ['temp']
-variables = ['uwind','vwind']
+#variables = ['uwind','vwind']
 
 """ Plotting the time series of the running mean """
 for s in stations:
@@ -353,6 +354,8 @@ for s in stations:
                plevels_i = [3,8,11]
                plevels_j = [3,8,11]  # 11 is 500 hPa
 
+               plevels_i = [11]
+               plevels_j = [11]  # 11 is 500 hPa
                #for i in plevels_i:
                #     for j in plevels_j:
                for i,j in zip(plevels_i,plevels_j): # no off-diagonal elements
@@ -371,6 +374,7 @@ for s in stations:
                          C = ['yellow', 'orange', 'lime', 'cyan', 'slateblue']
                          L = ['Desroziers (1m)', 'Desroziers (2m)', 'Desroziers (3m)', 'Desroziers (6m)', 'Desroziers (1y)']
                          C = ['steelblue', 'orange', 'forestgreen', 'red', 'slateblue'] # color similar to Michi
+
                          
                          """ Plotting the time series """
                          Plot.plot_prop(var = v, fg_p = i, an_p = j , hour = str(h))                     
