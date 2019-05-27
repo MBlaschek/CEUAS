@@ -1,6 +1,10 @@
 """ Module for extracting the covariance matrix 
 
     Author: Ambrogi Federico, federico.ambrogi@univie.ac.at
+
+When calculating the error,
+to check: first calculate the average then take the sqrt of the covariances or 
+first calculate the sqrt then calculate the average ?
    
 """
 
@@ -47,10 +51,6 @@ class netCDF:
          return data_loaded 
 
 
-
-
-
-
 class Covariance:
      """ Class with the main methods for computing and analising covariances """
      def __init__(self,netCDF):
@@ -58,38 +58,35 @@ class Covariance:
          return
 
      def remove_outliers(self, data, min= '', max= '', cut= ''):
-          """ Replacing the outlier values with nan (to keep vector of same length)"""
+          """ Replacing the outlier values with np.nan (to keep vector of same length)"""
           q25, q75 = np.nanpercentile(data,25), np.nanpercentile(data,75)
-          iqr = q75 - q25
-          cut_off = iqr * cut
+          cut_off = (q75 - q25) * cut
           lower, upper = q25-cut_off, q75+cut_off
-          #print(q25, q75 , 'percentiles') 
-          #input('check')
-          cleaned = []
- 
+    
+          median = np.nanmedian(data)
+          cleaned, outliers = [],[]
+          print('lower, upper', lower, upper, median)
           for d in data:
-              if d > lower and d < upper:
-                   cleaned.append(d)
+              if d >= lower and d <= upper or np.isnan(d):
+                   cleaned.append(d)                   
               else:
-                   cleaned.append(np.nan)         
+                   #cleaned.append(np.nan)
+                   cleaned.append(np.nan)
+                   outliers.append(d) 
+                   #print (' d is NOT ok', d)
+
           #print('cleaned is', cleaned)
-          return cleaned
+          return cleaned, outliers, lower, upper, median
 
      def running_mean_old(self, data = '', n='', datums=''):
           """ Returns the running mean of x, averaged over N  
               Data is reduced by removing outliers """
-          #print(len(data), len(datums))
-          #input('ciao')
-          not_nans         = [ x for x in data if not np.isnan(x) ]
+          not_nans         = [ x for x in data if not np.isnan(x) and x > -1000 ] #-1000 are outlier values
           not_nans_indexes = [ data.index(x) for x in data if not np.isnan(x) ]
-     
           datums_nans      = [ datums[i] for i in not_nans_indexes ] # extracting not nans values and corresponding index in datums (for plotting) 
-
-          #print (not_nans[:100], datums_nans[:100])
-          #input('check values')
           cumsum = np.cumsum(np.insert(not_nans, 0, 0))
           means = (cumsum[n:] - cumsum[:-n]) / float(n)
-          means = np.sqrt(means)
+          means = np.sqrt(np.absolute(means)) #  !!! check fi correct !!!
           return means , datums_nans
     
      def running_mean(self,data='',n=''): 
@@ -243,13 +240,43 @@ class Plotter:
           plt.xlabel(r'Errors [' + self.var_dics[self.var]['units'] + ']', fontsize= self.font)
           plt.savefig('plots/histo/histo_' + self.var + '_hour_' + self.hour + '_anp_' + str(self.an_p) + '_fgp_' + str(self.fg_p) + '.pdf',  bbox_inches='tight')
           plt.close()
-          
+
+     def outliers (self, outliers='', cleaned = '', datums = '', bins = 25, median = '', lower = '', upper = ''):
+          plt.title('Outlier for ' + self.var + ' for (an_dep,fg_dep)=(' + str(self.an_p)+ ',' + str(self.fg_p) + ')' , y=1.03)
+ 
+          #median = '{:2.f}'.format(median,4)
+          #lower = '{:2.f}'.format(lower,4)
+          #upper = '{:2.f}'.format(upper,4)
+
+          plt.text(0.1 , 1790 , 'Median [{:.2f}]'.format(median) , fontsize = self.font -3 )
+          plt.text(0.1 , 1700 , 'Lower quart. [{:.2f}]'.format(lower) , fontsize = self.font -3 )
+          plt.text(0.1 , 1610 , 'Upper quart. [{:.2f}]'.format(upper) , fontsize = self.font -3)
+
+          cleaned = [ c for c in cleaned if not np.isnan(c)]
+          colors = ['slateblue','limegreen']
+          labels = ['Outliers ['+ str(len(outliers)) + ']', 'Data [' + str(len(cleaned)) + ']' ]
+          plt.hist([outliers,cleaned], bins, histtype='stepfilled',  stacked = False, color = colors , label = labels , alpha = 0.7 , density = False)
+
+          #plt.axvline(x= median, color = 'blue', ls = '-' , label = 'Median')
+          #plt.axvline(x= lower , color = 'cyan', ls = '--' , label = 'Lower quart.')
+          #plt.axvline(x= upper , color = 'cyan', ls = '--' , label = 'Upper quart.')
+ 
+          plt.legend(fontsize = self.font-3 , loc = 'upper right')
+
+          plt.xlim(0, 3)
+          plt.ylim(0, 1900)
+          plt.grid(linestyle= ':', color = 'lightgray', lw = 1.2 )
+          plt.ylabel('Number ', fontsize= self.font)
+          plt.xlabel('Covariance', fontsize = self.font)
+          plt.savefig('plots/histo/outliers_hour_' + self.hour + '_' + self.var + '_anp_' + str(self.an_p) + '_fgp_' + str(self.fg_p) + '.pdf'  , bbox_inches = 'tight')
+          plt.close()
+
+
+     
      def time_series(self, means='', datums = '', labels = '', colors = '', interval=50):
  
           plt.title('Time series for ' + self.var + ' for (an_dep,fg_dep)=(' + str(self.an_p)+ ',' + str(self.fg_p) + ')' , y=1.03)
           for (m,d,l,c) in zip(means,datums,labels,colors):
-               #print('plots: datums , m ', len(d), len(m) )
-               #input('prova')
                plt.plot( d[:(len(m))][::interval], m[::interval], color =c, label =l)
           plt.legend(fontsize = self.font-3 , loc = 'upper left')
 
@@ -283,7 +310,8 @@ matrices = {}
 
 """ Extracting the full (cross)covariance matrices, and store in dictionary """
 
-if not os.path.isfile('covariance_matrices.npy') and force != True :
+cov_file = '/raid8/srvx1/federico/covariance_matrices.npy'
+if not os.path.isfile(cov_file) and force != True :
      print(' *** Extracting the covariance matrices and storing in a numpy dictionary \n')
      for s in stations:
           print('  *** Processing the Station: ', s , '\n')
@@ -313,7 +341,7 @@ if not os.path.isfile('covariance_matrices.npy') and force != True :
 
 else:
      print('*** Loading the covariance_matrices.npy dictionary') 
-     matrices = np.load('covariance_matrices.npy', allow_pickle = True).item()
+     matrices = np.load(cov_file,  allow_pickle = True).item()
 
 
 print('The matrices are', matrices.keys())
@@ -331,7 +359,7 @@ for s in stations:
               lista = matrices[s][v][str(h)]
               #print(lista)
               for m_index in [100,500,1000,1500,2500,5000,7500,8500]:
-                   print('Producing hte plots for', m_index)
+                   print('Producing the plots for', m_index)
                    averaged = Cov.average_matrix(matrices_list= lista, N=365, matrix_index= m_index) # considering the m_indexth matrix, and the 365 matrices that follows
                    plotting = Plot.cov_plot(averaged, station=s , hour = h, date= datums[m_index] , averaged = True )
 
@@ -354,35 +382,47 @@ for s in stations:
                plevels_i = [3,8,11]
                plevels_j = [3,8,11]  # 11 is 500 hPa
 
-               plevels_i = [11]
-               plevels_j = [11]  # 11 is 500 hPa
+               #plevels_i = [11]
+               #plevels_j = [11]  # 11 is 500 hPa
                #for i in plevels_i:
                #     for j in plevels_j:
                for i,j in zip(plevels_i,plevels_j): # no off-diagonal elements
+ 
+                    Plot.plot_prop(var = v, fg_p = i, an_p = j , hour = str(h))
 
-                         print("*** Processing the i,j entries: ", i , j )
-                         values = Cov.select_ijentry(matrices = matrices_dic[str(h)], i = i , j = j) 
+                    print("*** Processing the i,j entries: ", i , j )
+                    values = Cov.select_ijentry(matrices = matrices_dic[str(h)], i = i , j = j)
+                    #values = np.absolute(values) 
+                    #print('values', values)
+                    #plt.hist( [ v for v in values if not np.isnan(v)], color = 'blue')
+                    #plt.savefig('plots/try_histo_'+str(i)+str(j)+'.png')
 
-                         values_cleaned = Cov.remove_outliers(values, min= 0.25, max= 0.75, cut= 1.5 )
-            
-                         means, dates = [],[]
-                         for n in [30,60,90,180,365]:
-                              runningmean, date  = Cov.running_mean_old(data= values_cleaned, n= n, datums= datums)
-                              means.append(runningmean)
-                              dates.append(date)
-
-                         C = ['yellow', 'orange', 'lime', 'cyan', 'slateblue']
-                         L = ['Desroziers (1m)', 'Desroziers (2m)', 'Desroziers (3m)', 'Desroziers (6m)', 'Desroziers (1y)']
-                         C = ['steelblue', 'orange', 'forestgreen', 'red', 'slateblue'] # color similar to Michi
+                    values_cleaned, outliers, lower, upper, median = Cov.remove_outliers(values, min= 0.25, max= 0.75, cut= 1.5 )
+ 
+                    """ Plotting outliers distribution """
+                    
+                    Plot.outliers(outliers = np.sqrt(outliers), cleaned = np.sqrt(values_cleaned), lower = lower, upper = upper, median = median, bins = 200 ) 
+                    
+                    ''' 
+                    means, dates = [], []
+                    for n in [30,60,90,180,365]:
+                         runningmean, date  = Cov.running_mean_old(data= values_cleaned, n= n, datums= datums)
+                         means.append(runningmean)
+                         dates.append(date)
+                         
+                    C = ['yellow', 'orange', 'lime', 'cyan', 'slateblue']
+                    L = ['Desroziers (1m)', 'Desroziers (2m)', 'Desroziers (3m)', 'Desroziers (6m)', 'Desroziers (1y)']
+                    C = ['steelblue', 'orange', 'forestgreen', 'red', 'slateblue'] # color similar to Michi
 
                          
-                         """ Plotting the time series """
-                         Plot.plot_prop(var = v, fg_p = i, an_p = j , hour = str(h))                     
-                         Plot.time_series(means= means, datums= dates, labels= L, colors= C ,interval= 25)
+                    """ Plotting the time series """
+                    #Plot.plot_prop(var = v, fg_p = i, an_p = j , hour = str(h))                     
+                    Plot.time_series(means= means, datums= dates, labels= L, colors= C ,interval= 25)
 
-                         """ Plotting the histograms """
-                         bins = 30
-                         Plot.histo(X= means, colors = C, labels = L, bins = bins)
+                    """ Plotting the histograms """
+                    bins = 30
+                    Plot.histo(X= means, colors = C, labels = L, bins = bins)
+                    '''
 
 
 
