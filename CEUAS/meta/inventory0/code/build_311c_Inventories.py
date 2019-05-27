@@ -15,7 +15,7 @@ import gzip
 import pandas as pd
 from functools import partial
 from utils import *
-from eccodes import *
+#from eccodes import *
 import matplotlib.pylab as plt
 import cartopy.crs as ccrs
 
@@ -1018,7 +1018,9 @@ def read_igra_meta(line):
 if __name__ == '__main__':
 
     if len(sys.argv)==1:
+        print("ff", '/'.join(sys.argv[0].split('/')[:-1]) )
         os.chdir('/'.join(sys.argv[0].split('/')[:-1]))
+     
         dpath='../data/'
         tpath='../data/tables/'
         cdmpath='https://raw.githubusercontent.com/glamod/common_data_model/master/tables/'
@@ -1143,6 +1145,7 @@ if __name__ == '__main__':
         transunified.to_csv(os.path.expanduser('~/tables/uao_trans_data.csv'),sep=';')
 
     if True:
+        # TODO: replace with tpath tpath+'Inventory_ERACLIM_upperair_2.1.txt' 
         with open(os.path.expanduser('~/tables/Inventory_ERACLIM_upperair_2.1.txt'),'rb') as f:
             rdata=f.read().decode('ISO-8859-1').split('\n')
             z=[[] for _ in rdata[0].split('\t')]
