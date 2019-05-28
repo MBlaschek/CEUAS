@@ -15,7 +15,7 @@ import gzip
 import pandas as pd
 from functools import partial
 from utils import *
-#from eccodes import *
+from eccodes import *
 import matplotlib.pylab as plt
 import cartopy.crs as ccrs
 
@@ -1146,7 +1146,7 @@ if __name__ == '__main__':
 
     if True:
         # TODO: replace with tpath tpath+'Inventory_ERACLIM_upperair_2.1.txt' 
-        with open(os.path.expanduser('~/tables/Inventory_ERACLIM_upperair_2.1.txt'),'rb') as f:
+        with open(os.path.expanduser(tpath+'Inventory_ERACLIM_upperair_2.1.txt'),'rb') as f:
             rdata=f.read().decode('ISO-8859-1').split('\n')
             z=[[] for _ in rdata[0].split('\t')]
             for r in rdata[1:-1]:
@@ -1196,7 +1196,7 @@ if __name__ == '__main__':
                 pass
             if 'ai' in odir:
                 flist=glob.glob(odir+'/'+'era5.*.bfr')
-                transunified=list(p.map(bfunc,flist))
+                transunified=list(map(bfunc,flist))
             elif 'rda' in odir:
                 flist=glob.glob(odir+'/'+'UADB_[tw]*.nc')
                 flist.sort()
