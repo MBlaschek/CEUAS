@@ -1,10 +1,8 @@
 # commands
 export RSCRATCH=$PATH:${PWD}:../data
-/opt/anaconda3/bin/python3 build_new.py --help 
+/opt/anaconda3/bin/python3 build_311c_Inventories.py --help 
 
 (default)
-/opt/anaconda3/bin/python3 build_new.py
+/opt/anaconda3/bin/python3 build_311c_Inventories.py
 
-(optional)
-/opt/anaconda3/bin/python3 build_new.py -d /raid60/scratch/leo/scratch/era5 
 
