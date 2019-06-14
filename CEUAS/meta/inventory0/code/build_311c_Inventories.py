@@ -15,9 +15,10 @@ import gzip
 import pandas as pd
 from functools import partial
 from utils import *
-from eccodes import *
+#from eccodes import *
 import matplotlib.pylab as plt
 import cartopy.crs as ccrs
+import argparse
 
 def plot_active(archives,period,path=''):
 
@@ -1017,8 +1018,26 @@ def read_igra_meta(line):
 
 if __name__ == '__main__':
 
+
+    parser = argparse.ArgumentParser(description="Analyze the odb inventory")
+    parser.add_argument('--database_dir' , '-d', 
+                    help="Optional: path to the database directory. If not given, will use the files in the data directory" ,
+                    default = False,
+                    type = bool)
+    args = parser.parse_args()
+    dpath = args.database_dir
+
+    print ('THE DPATH IS', dpath)
+    if not dpath:
+        dpath = '../data/'
+   
+    print ('Analysing the databases stored in ', dpath)
+    cdmpath='https://raw.githubusercontent.com/glamod/common_data_model/master/tables/'                                                                                                                                                                                               
+    tpath = '../data/tables/'
+
+
+    '''
     if len(sys.argv)==1:
-        print("ff", '/'.join(sys.argv[0].split('/')[:-1]) )
         os.chdir('/'.join(sys.argv[0].split('/')[:-1]))
      
         dpath='../data/'
@@ -1028,7 +1047,8 @@ if __name__ == '__main__':
         dpath=os.path.expandvars('$RSCRATCH/era5/odbs/')
         tpath=os.path.expanduser('~/tables/')
         #cdmpath=os.path.expandvars('$RSCRATCH/common_data_model/tables/')
-        cdmpath='https://raw.githubusercontent.com/glamod/common_data_model/master/tables/'
+    '''
+
     cities=pd.read_csv(tpath+'worldcitiespop.csv')
     #cities10000=cities.iloc[numpy.where(cities.Population>10000)[0]]
     #cities10000.to_csv('~/tables/worldcitiespop.csv')
