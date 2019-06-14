@@ -15,7 +15,7 @@ import gzip
 import pandas as pd
 from functools import partial
 from utils import *
-#from eccodes import *
+from eccodes import *
 import matplotlib.pylab as plt
 import cartopy.crs as ccrs
 import argparse
@@ -1022,18 +1022,25 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Analyze the odb inventory")
     parser.add_argument('--database_dir' , '-d', 
                     help="Optional: path to the database directory. If not given, will use the files in the data directory" ,
-                    default = False,
-                    type = bool)
+                    default = '../data/',
+                    type = str)
+    parser.add_argument('--auxtables_dir' , '-a', 
+                    help="Optional: path to the auxiliary tables directory. If not given, will use the files in the data/tables directory" ,
+                    default = '../data/tables/',
+                    type = str)
     args = parser.parse_args()
     dpath = args.database_dir
+    tpath = args.auxtables_dir
 
     print ('THE DPATH IS', dpath)
     if not dpath:
         dpath = '../data/'
    
+    if not tpath:
+        tpath = '../data/tables/'
+   
     print ('Analysing the databases stored in ', dpath)
     cdmpath='https://raw.githubusercontent.com/glamod/common_data_model/master/tables/'                                                                                                                                                                                               
-    tpath = '../data/tables/'
 
 
     '''
@@ -1156,13 +1163,6 @@ if __name__ == '__main__':
     unified=pd.DataFrame(columns=lot2['all_column_inventory']['Column_header'])
     col_names=pd.read_csv(os.path.expanduser(tpath+'uao_data.csv'),sep=';',nrows=0)
     trans=uai_trans(list(col_names),list(unified))
-    if False:
-        #uai=pd.read_excel(os.path.expanduser('~/tables/Table_1_C3S_311c_Lot2_table_inventory_station_2019.xlsx'):'',None)
-        types_dict={col: str for col in col_names}
-        uai=pd.read_csv(os.path.expanduser('~/tables/uao_data.csv'),sep=';',dtype=types_dict,na_filter=False)
-        fips=pd.read_csv(os.path.expanduser('~/tables/fips-10-4-to-iso-country-codes.csv'))
-        transunified=uai_unified(trans, unified, uai,fips=fips)
-        transunified.to_csv(os.path.expanduser('~/tables/uao_trans_data.csv'),sep=';')
 
     if True:
         # TODO: replace with tpath tpath+'Inventory_ERACLIM_upperair_2.1.txt' 
