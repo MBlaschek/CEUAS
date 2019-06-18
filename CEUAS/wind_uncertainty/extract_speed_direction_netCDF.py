@@ -5,22 +5,13 @@
     Output :: netCDF files with wind speed and wind direction and analysis/background departures """
 
 
-import matplotlib.gridspec as gridspec                                                                                                                                                                                                                                          
+
+import matplotlib.gridspec as gridspec                                                                                          
 import netCDF4 
 import numpy as np
 import datetime
 import os,sys
 from shutil import copyfile
-
-
-
-#""" Dirs, definitions, select datasets """
-#base_dir = 'data/'
-#file_dic = {'temp':'ERA5_1_10393_t.nc' , 'uwind': 'ERA5_1_10393_u.nc'  , 'vwind' : 'ERA5_1_10393_v.nc' , 'dp':'ERA5_1_10393_dp.nc' , 'rh':'ERA5_1_10393_rh.nc'}
-#variables = ['temp','uwind','vwind']                                                                                                                                                                                                                                                  
-#variables = ['temp', 'uwind','vwind','rh','dp']
-#stations = ['Lindenberg']
-
 
 
 class windAnalysis:
@@ -74,8 +65,49 @@ class windAnalysis:
         #    print("u_comp, v_comp, angle_rot, angle", u, v, a_r, r)
 
         return directions
+
+
+    def dep_angle(self,x,y):
+        """ Extract the smalles angular difference between two angles.
+            Gives minus sign if dep > obs.
+            The case of exactl 180 degree diff. is ambiguous 
+            Example: obs=20  , an=10 -> dep=10                                                                         
+                     obs=10  , an=20 -> dep=-10                                                                                                                                     
+                     obs=10  , an=350 -> dep=-20                                                                                                                                                                
+                     obs=350 , an=10 -> dep=+20 """
+                 
+        dep = min( 360 - abs(x-y) , abs(x-y))
+        if x<y:
+            dep = -dep 
+        return dep
+
+
+    def calc_direction_dep(self):
+        """ Extract departures from the observed and analysis/backgrund values """
+
+        self.obs_dir     = self.extract_direction(u_comp= self.obs_u, v_comp= self.obs_v )
+        self.dir_an      = self.extract_direction(u_comp= self.an_u , v_comp= self.an_v)
+        self.dir_fg      = self.extract_direction(u_comp= self.fg_u , v_comp= self.fg_v)
+
+        dir_andep = np.zeros([2,16,len(self.obs_dir[1,1,:])])
+        dir_fgdep = np.zeros([2,16,len(self.obs_dir[1,1,:])])
+
+        for x in [0,1]:
+            for y in range(16):
+                for z in range(len(self.obs_dir[1,1,:])):
+                    obs = self.obs_dir[x,y,z]
+                    an  = self.dir_an[x,y,z]
+                    fg  = self.dir_fg[x,y,z]
+                    obs_an = self.dep_angle(obs,an)
+                    obs_fg = self.dep_angle(obs,fg)
+
+                    dir_andep[x,y,z]=obs_an
+                    dir_fgdep[x,y,z]=obs_fg
+
+        self.dir_andep   = dir_andep                                                                                                                                                                                                                                    
+        self.dir_fgdep   = dir_fgdep
         
-    def calc_speed_dir_dep(self):
+    def calc_speed_dep(self):
         """ Extract first guess and analysis departures for the wind speed and direction """
         self.obs_speed   = self.calc_square( u_comp= self.obs_u, v_comp= self.obs_v )
         self.speed_an    = self.calc_square( u_comp= self.an_u, v_comp= self.an_v )
@@ -83,12 +115,6 @@ class windAnalysis:
         self.speed_fg    = self.calc_square( u_comp= self.fg_u, v_comp= self.fg_v )
         self.speed_fgdep = self.obs_speed - self.speed_fg
 
-        # debug here
-        self.obs_dir     = self.extract_direction(u_comp= self.obs_u, v_comp= self.obs_v ) 
-        self.dir_an      = self.extract_direction(u_comp= self.an_u , v_comp= self.an_v)
-        self.dir_andep   = self.obs_dir - self.dir_an
-        self.dir_fg      = self.extract_direction(u_comp= self.fg_u , v_comp= self.fg_v)
-        self.dir_fgdep   = self.obs_dir - self.dir_fg
 
     def create_netCDF(self, template = "", out_dir = "", file_name= ''):
         """ Create netCDF files for the wind speed and direction, as well as the first guess and analysis departures """
@@ -98,11 +124,12 @@ class windAnalysis:
 
         temp = netCDF4.Dataset(template) #  Using a template
 
+        file_out_s = out_dir+ '/' +file_name+ '_speed.nc'
+        file_out_d = out_dir+ '/' +file_name+ '_direction.nc'
+
         copyfile(template, file_out_d)
         copyfile(template, file_out_s)
 
-        file_out_s = out_dir+ '/' +file_name+ '_speed.nc'
-        file_out_d = out_dir+ '/' +file_name+ '_direction.nc'
         out_s = netCDF4.Dataset(file_out_s, 'w') # output speed netCDF file
         out_d = netCDF4.Dataset(file_out_d, 'w') # output direction file
 
@@ -123,12 +150,6 @@ class windAnalysis:
 
         for i in list(temp.variables.keys()):
             var = temp.variables[i]
-
-            """
-            if i=='datum':
-                fo.createVariable(i,var.dtype,var.dimensions)
-                fo.variables[i][:]=statdata[1][metadata[t]['datum']][:]
-            """
 
             if i=='datum':
                 print(var)
@@ -159,19 +180,17 @@ class windAnalysis:
 
 
 
-
-
-
 # Running 
 base_dir = 'data/'
-file_dic = {'temp':'ERA5_1_10393_t.nc' , 'uwind': 'ERA5_1_10393_u.nc'  , 'vwind' : 'ERA5_1_10393_v.nc' , 'dp':'ERA5_1_10393_dp.nc' , 'rh':'ERA5_1_10393_rh.nc'}                                                                                                                          
+file_dic = {'temp':'ERA5_1_10393_t.nc' , 'uwind': 'ERA5_1_10393_u.nc'  , 'vwind' : 'ERA5_1_10393_v.nc' }                                                                                                                          
 
 file_u = base_dir + file_dic['uwind']
 file_v = base_dir + file_dic['vwind']
 
 wind = windAnalysis(file_u = file_u, file_v = file_v)
 wind.read_data()
-wind.calc_speed_dir_dep()
+wind.calc_speed_dep()
+wind.calc_direction_dep()
 
 x,y,z = 1 , 12, 500
 

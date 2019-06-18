@@ -18,7 +18,10 @@ import matplotlib.pylab as plt
 import argparse
 import cftime 
 from scipy.stats import norm  
- 
+
+
+
+""" Some colors for pretty printout """ 
 red    = '\033[91m' 
 cend   = '\033[0m'
 blue   = '\033[34m'
@@ -32,7 +35,7 @@ class DataHandler:
      def __init__(self, file=""):
           self.file = file
 
-     def remove_outliers(self, data, min_p= 25, max_p= 75, cut= ''):
+     def remove_outliers(self, data, min_p= 25, max_p= 75, cut= '', skewed= False):
           """ Finds outliers, and replace them with np.nan (to keep vector of same length)                                                                                                                                                                                              
               Returns: cleaned             = list of values without outliers (filled with nans replacing outliers)                                                                                                                                                                   
                        outliers            = list of outlier values                                                                                                                                                                                                               
@@ -42,22 +45,28 @@ class DataHandler:
           cut_off = (q75 - q25) * cut
           lower, upper = q25-cut_off, q75+cut_off
 
-          median = np.nanmedian(data)
+          if skewed==True:
+               q50 = np.nanpercentile(data_c, 50)
+               lower , upper = q25-(q50-q25)*cut ,  q75+(q75-q50)*cut
+
+          median = np.nanmedian(data_c)
           cleaned, outliers = [],[]
 
-          for d in data:
-              if d >= lower and d <= upper or np.isnan(d):
+          for d in np.asarray(data):
+              if d >= lower and d <= upper:
                    cleaned.append(d)
+                   outliers.append(np.nan)
+              elif np.isnan(d):
+                   cleaned.append(np.nan)
                    outliers.append(np.nan)
               else:
                    cleaned.append(np.nan)
                    outliers.append(d)
           return cleaned, outliers, lower, upper, median
 
-
      def read_data(self, file = '', var = ['fg_dep', 'an_dep']):
          
-         data_loaded = {}  # Dictioary containing the extracted information                                                                                                                                                                                                              
+         data_loaded = {}  # Dictionary containing the extracted information                                                                                                                                                                                                              
          for v in var:
                   data_loaded[v] = {}
                   data_loaded[v]['datum'] = []
@@ -124,9 +133,6 @@ class Covariance:
           mean, std = norm.fit(data)
           return mean, std
 
-
-
-
      def average_matrix(self,matrices_list='', N='', matrix_index=""):
          """ Given the list of cov. matrices and the index of the chosen matrix, returns an averaged matrix.
          The average is calculated using the N following matrices. 
@@ -150,6 +156,11 @@ class Covariance:
 
 class Plotter:
 
+     def __init__(self):
+          self.pretty_pressure_dic = { '0':'10' , '1':'20' , '2':'30' , '3':'50' , '4' :'70' , '5':'100',
+                                       '6':'150', '7':'200', '8':'250', '9':'300', '10':'400',
+                                       '11':'500', '12':'700' , '13':'850', '14':'925', '15':'1000' }
+
      def plot_prop(self, var='', fg_p = '' , an_p = '' , hour = ''):
          self.font = 15
 
@@ -170,9 +181,7 @@ class Plotter:
                            'dp'   : { 'units': '[K]'         , 'name':'Dew_Point_Temp.'  , 'x_range': [] , 'y_range': [] } ,
                            'rh'   : { 'units': ''            , 'name':'Relative_Hum.'    , 'x_range': [] , 'y_range': [] } ,
                            'speed': { 'units': '[m/s]'       , 'name':'Wind_Speed'       , 'x_range': [] , 'y_range': [] } ,
-                           'direction': { 'units': 'Degree'  , 'name':'Wind_Direction'   , 'x_range': [] , 'y_range': [] } ,
-
-                           }
+                           'direction': { 'units': 'Degree'  , 'name':'Wind_Direction'   , 'x_range': [] , 'y_range': [] } ,  }
 
      def initialize_dirs(self):
          if not os.path.isdir('plots'):
@@ -185,8 +194,6 @@ class Plotter:
               os.mkdir('plots/histo')
          if not os.path.isdir('plots/outliers'):
               os.mkdir('plots/outliers')
-         if not os.path.isdir('plots/outliers/zoom'):
-              os.mkdir('plots/outliers/zoom')
 
      def date_prettyfier(self, date):
          """ Give the date in text format day/motnh/year from the datum format """
@@ -216,6 +223,8 @@ class Plotter:
           Num = range(num)
 
           vmin, vmax = -3, 3
+          if self.var == 'direction': 
+               vmin, vmax = -10, 10
           color_map= plt.imshow(matrix, interpolation= 'nearest', cmap = 'RdYlBu', vmin = vmin, vmax = vmax ) # nearest serves for discreete grid  # cmaps blue, seismic            
           plt.ylim(-0.5, 15.5)
           plt.xlim(-0.5, 15.5)
@@ -268,7 +277,7 @@ class Plotter:
           plt.xlabel(r'Errors ' + self.var_dics[self.var]['units'] , fontsize= self.font)
           plt.savefig('plots/histo/histo_' + self.var + '_hour_' + self.hour + '_anp_' + str(self.an_p) + '_fgp_' + str(self.fg_p) + '.png',  bbox_inches='tight')
           plt.close()
-
+     '''
      def outliers (self, outliers='', cleaned = '', datums = '', bins = 25, median = '', lower = '', upper = ''):
           """ Plot the cumulative distributions of the number of outliers and true data """
           plt.title('Outlier for ' + self.var + ' for (an_dep,fg_dep)=(' + str(self.an_p)+ ',' + str(self.fg_p) + ')' , y=1.03)
@@ -288,24 +297,29 @@ class Plotter:
           plt.ylim(0, 1900)
           plt.grid(linestyle= ':', color = 'lightgray', lw = 1.2 )
           plt.ylabel('Number ', fontsize= self.font)
-          plt.xlabel('Covariance', fontsize = self.font)
+          plt.xlabel('Cross-Covariance', fontsize = self.font)
           plt.savefig('plots/histo/outliers_hour_' + self.hour + '_' + self.var + '_anp_' + str(self.an_p) + '_fgp_' + str(self.fg_p) + '.png'  , bbox_inches = 'tight')
           plt.close()
 
-     def outliers_series(self, corr='', out='', datums='', N= '', interval= ''):
-          """ Plot the numbe rof outliers and true data vs date """
+     def outliers_series(self, corr='', out='', datums='', N= '', interval= '', flag=''):
+          """ Plot the number of outliers and true data vs date """
+
+          #pressure = self.pretty_pressure_dic[str(self.an_p)]
+          #var = self.var_dics[self.var]['name']
+          #hour = str(self.hour).replace('0','00:00').replace('1','12:00')
+          #plt.title(var + ' time series, Stat: ' + station + ', H: '  + hour + ', P: ' + pressure + ' [hPa]' , y=1.03)
 
           fig = plt.figure(figsize = (11,8))
 
           ax1 = fig.add_subplot(211)
           plt.title('Outliers series over '+ str(N) +  ' days for ' + self.var + ', (an_dep,fg_dep)=(' + str(self.an_p)+ ',' + str(self.fg_p) + ')' , y=1.03)
+         
           ax1.plot(datums, corr, label= 'True data' , color = 'cyan' )
           ax1.plot(datums, out , label= 'Outliers' , color = 'lime' )
           ax1.set_ylim(0, int(max(corr)+max(corr)/10) )
           ax1.grid(linestyle= ':', color = 'lightgray', lw = 1.2 )
           ax1.set_ylabel('Data size', fontsize= self.font)
           ax1.legend(loc = 'upper right', fontsize= self.font -3)
-      
 
           ratios = 100* (np.array(out) / ( np.array(corr) + np.array(out) ))
           ax2 =fig.add_subplot(212, sharex= ax1)
@@ -315,37 +329,56 @@ class Plotter:
           ax2.grid(linestyle= ':', color = 'lightgray', lw = 1.2 )
           ax2.set_ylabel('% Outliers', fontsize = self.font -3 )
           ax2.set_xlabel('Dates', fontsize = self.font)
-          plt.savefig('plots/outliers/outliers_timeseries_days_' + str(N) + '_hour_' + self.hour + '_' + self.var + '_anp_' + str(self.an_p) + '_fgp_' + str(self.fg_p) + '.png'  , bbox_inches = 'tight')
+          plt.savefig('plots/outliers/' + flag + '_outliers_timeseries_days_' + str(N) + '_hour_' + self.hour + '_' + self.var + '_anp_' + str(self.an_p) + '_fgp_' + str(self.fg_p) + '.png'  , bbox_inches = 'tight')
           plt.close()
+     '''
+     def outliers_example(self, corr= '', out= '', date= '', N= '', lower= '', upper= '', median= '', flag='', upper_s = '', lower_s= '' , station = '', what = ''):
 
-     def outliers_example(self, corr='', out='', date='', N= '', lower= '', upper= '', median = ''):
-          plt.title( self.var + ' for (an_dep,fg_dep)=(' + str(self.an_p)+ ',' + str(self.fg_p) + ') averaged on N='+str(N) + ' days' , y=1.03)
-          #plt.plot(date, corr, label = 'True Values', color = 'cyan' )
-          #plt.plot(date, out, label = 'Outliers', color ='lime' )
+          pressure = self.pretty_pressure_dic[str(self.an_p)]
+          var = self.var_dics[self.var]['name']
+          hour = str(self.hour).replace('0','00:00').replace('1','12:00')
+          plt.title(var + ' ' + what + ' Outliers - Stat: ' + station + ', H: '  + hour + ', P: ' + pressure + ' [hPa]' , y=1.03)
 
-          plt.scatter(date, corr, label = 'True Values', color = 'cyan' , s = 3)
-          plt.scatter(date, out, label = 'Outliers', color ='lime'      , s = 3)
+          corr_ = [ n for n in corr if not np.isnan(n) ]
+          out_ = [ n for n in out if not np.isnan(n) ]
+
+          num_a = '{:.1f}'.format(len(corr_)/len(out_ + corr_) * 100)
+          num_o = '{:.1f}'.format(len(out_)/len(out_ + corr_) * 100)
+
+          plt.scatter(date, corr, label = 'Accepted [' + num_a + '%]', color = 'cyan' , s = 3)
+          plt.scatter(date, out, label = 'Outliers [' + num_o + '%]', color ='black'      , s = 3)
           X= [min(date), max(date)]
+
           plt.plot(X, [lower,lower]  , label = 'Lower' , color ='blue'  , ls = '--' )
           plt.plot(X, [upper,upper]  , label = 'Upper' , color ='red'   , ls = '--' )
-          plt.plot(X, [median,median], label = 'Median', color ='black' , ls = '--' )
 
+          # adding the upper and lower values for skewed distributions
+          plt.plot(X, [lower_s, lower_s]  , label = 'Lower Skewed' , color ='blue'  , ls = '-' )
+          plt.plot(X, [upper_s, upper_s]  , label = 'Upper Skewed' , color ='red'   , ls = '-' )
+
+          plt.plot(X, [median,median], label = 'Median [' + '{:.1f}'.format(median) + ']', color ='black' , ls = '--' )
 
           plt.legend(fontsize = self.font-6 , loc = 'upper right', ncol = 2)
           plt.grid(linestyle= ':', color = 'lightgray', lw = 1.2 )
 
-          plt.ylabel('Error ' + self.var_dics[self.var]['units'] , fontsize= self.font)
+          plt.ylabel('Departure ' + self.var_dics[self.var]['units'] , fontsize= self.font)
 
           plt.xlabel('Date', fontsize = self.font)
           plt.xticks(rotation=45)
-          Y_max = max ( max(out) +1 , max(corr)+1  )
-          Y_min = min ( min(out) -1 , min(corr)-1  )
-         
+
+          out_c =  [ n for n in out  if not np.isnan(n)] 
+          corr_c = [ n for n in corr if not np.isnan(n)] 
+
           plt.xlim(min(date)-1/365 , max(date)+1/365 )
-      
-          if not (np.isnan(Y_max) and np.isnan(Y_min) ): plt.ylim(Y_min, Y_max )
-          plt.savefig('plots/outliers/zoom/outliers_' + str(N) + '_date_' + str(min(date)) + '_hour_' + self.hour + '_' + self.var + '_anp_' + str(self.an_p) + '_fgp_' + str(self.fg_p) + '.png'  , bbox_inches = 'tight')
+     
+          plt.ylim(-10, 10)
+     
+          plt.savefig('plots/outliers/outliers_' + flag + '_' + str(N) + '_date_' + str(min(date)) + '_hour_' + self.hour + '_' + self.var + '_anp_' + str(self.an_p) + '_fgp_' + str(self.fg_p) + '.png'  , bbox_inches = 'tight')
           plt.close()
+
+
+
+
 
      def time_series(self, means='', datums = '', labels = '', colors = '', interval=30, station=''):
           pressure = self.pretty_pressure_dic[str(self.an_p)]
