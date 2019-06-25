@@ -100,7 +100,8 @@ for s in stations:
 
                          values = Cov.select_ijentry(matrices = matrices_dic[str(h)], i = i , j = j)
                          values_cleaned, outliers, lower, upper, median = netCDF.remove_outliers(values, cut= 1.5 )
-
+                         #values_cleaned = list(np.sqrt(values_cleaned) )
+                         values_cleaned = values
                          gauss_fit[v][h][j]={}
 
                          for n in time_averages : # time intervals defined in the list above
@@ -108,6 +109,7 @@ for s in stations:
                               print('Averaging over time period: ', n )
                               gauss_fit[v][h][j][n]={}
 
+                              
                               runningmean, date  = Cov.running_mean_old(data= values_cleaned, n= n, datums= datums)
                               means.append(runningmean)
                               dates.append(date)
@@ -117,6 +119,7 @@ for s in stations:
                               gauss_fit[v][h][j][n]['std'] = std
                               
                               """ Plotting the error time series """
+
                          Plot.time_series(means= means, datums= dates, labels= labels, colors= colors ,interval= 25, station=s)
                               
                          Plot.err_histo(X= means, colors= colors, labels= labels, bins= 30, station=s)
@@ -125,7 +128,7 @@ for s in stations:
 
 """ Extract mean and standard deviation of the distributions of errors """
 if not os.path.isfile('data/means_std.npy'):
-     np.save('means_std', gauss_fit) 
+     np.save('data/means_std', gauss_fit) 
 
 
 

@@ -76,7 +76,7 @@ class DataHandler:
                       f = netCDF4.Dataset(file)
                       data_loaded[v]['datum'] = [ 1900 + d for d in f.variables['datum'][0,:]/365.25 ] # converting the datum in years                                                                                           
                       data_loaded[v]['data']  = f.variables[v][:,:,:]
-                  else: raise ValueError('netCDF files:', path, ' not found!!!')
+                  else: raise ValueError('netCDF files:', file, ' not found!!!')
          return data_loaded 
 
 
@@ -94,7 +94,7 @@ class Covariance:
           datums_nans      = [ datums[i] for i in not_nans_indexes ] # extracting not nans values and corresponding index in datums (for plotting) 
           cumsum = np.cumsum(np.insert(not_nans, 0, 0))
           means = (cumsum[n:] - cumsum[:-n]) / float(n)
-          #means = np.sqrt(np.absolute(means)) # CHECK !!!
+          means = np.sqrt(np.absolute(means)) # CHECK !!!
           return means , datums_nans
     
      def calc_cov(self, array_x, array_y):
