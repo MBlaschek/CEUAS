@@ -2,8 +2,8 @@
 
     Author: Ambrogi Federico, federico.ambrogi@univie.ac.at
 
-    Scipt to plot additional results, such as the distribution for each pressure level of the mean and standard deviation 
-    of the Desroziers errors.
+    For each pressure level it plots the mean and standard deviation 
+    of the distributions of the Desroziers errors, averaged over 1 month and 1 year
 
 """
 
