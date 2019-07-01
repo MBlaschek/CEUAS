@@ -55,7 +55,7 @@ file_dic = {'temp'     : 'ERA5_1_10393_t.nc'  ,
             'direction': 'ERA5_1_10393_direction.nc'  }
 
 """ Variables and observation station """
-variables = ['temp', 'uwind','vwind', 'speed','direction']
+variables = ['temp', 'uwind','vwind', 'speed','direction','rh']
 stations = ['Lindenberg']
 
 

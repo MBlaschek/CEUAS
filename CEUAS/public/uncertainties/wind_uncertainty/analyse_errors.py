@@ -31,7 +31,7 @@ if (not plot_cov and not plot_errors ):
 
 """ Dirs, definitions, select datasets """
 cov_file = 'data/covariance_matrices.npy'
-variables = ['temp', 'uwind','vwind','speed','direction']
+variables = ['temp', 'uwind','vwind','speed','direction','rh']
 stations = ['Lindenberg']
 
 netCDF = DataHandler()

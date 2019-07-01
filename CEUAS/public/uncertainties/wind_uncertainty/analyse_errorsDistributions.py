@@ -36,7 +36,7 @@ stations = ['Lindenberg']
 
 
 
-variables = ['temp','uwind','vwind','speed','direction']
+variables = ['temp','uwind','vwind','speed','direction','rh']
 
 LEVELS = [0,3,5,8,11,13,15]
 
@@ -53,7 +53,7 @@ labels = [10,      50,   100,        250,        500, 700,         1000]
 bins = 50
 FONT = 13
 #range = [0.4,2]
-dic = {'uwind':'[m/s]' , 'vwind':'[m/s]' , 'speed':'[m/s]', 'temp':'[K]' , 'direction':'[Degree]'}
+dic = {'uwind':'[m/s]' , 'vwind':'[m/s]' , 'speed':'[m/s]', 'temp':'[K]' , 'direction':'[Degree]' , 'rh':''}
 
 
 """ Preparing the plots directory """
@@ -128,6 +128,7 @@ for v in variables:
 #### new version, new plots
 
 for v in variables:
+    print('Plotting the errors vs peressure level for the variable: ',  v )
     h0 = gauss[v][0]
     h1 = gauss[v][1]
     for a in [0]:
