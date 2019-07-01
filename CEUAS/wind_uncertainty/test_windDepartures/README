@@ -1,0 +1,10 @@
+This scripts plots time series and sitributions
+of the an_dep and fg_dep.
+
+This allows to check that there is a discontinuity in the values
+in the year 2005:
+before that year, departures are smaller for small pressure levels.
+
+This is the source of the double-peaked distribution when
+consiserind the time averages over long periods using the Desroziers statistics. 
+
