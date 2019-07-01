@@ -1,4 +1,4 @@
-""" Module containing utilities for the wind uncertainty analysis
+""" Module containing utilities for the uncertainty analysis
 
     Author: Ambrogi Federico, federico.ambrogi@univie.ac.at
 
