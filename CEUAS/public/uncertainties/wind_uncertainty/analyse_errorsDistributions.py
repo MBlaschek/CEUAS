@@ -1,4 +1,4 @@
-""" Module for extracting the covariance matrix 
+""" Module for plotting the erorrs for each pressure level 
 
     Author: Ambrogi Federico, federico.ambrogi@univie.ac.at
 
