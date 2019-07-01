@@ -11,13 +11,16 @@ The required input files are stored in the *data* directory:
 - ERA5_1_10393_t.nc
 - ERA5_1_10393_u.nc
 - ERA5_1_10393_v.nc
-These are netCDF files, converted from the ECMWF odb files, containing the observation data for temperature, u- and v-compononents of the wind,
+- ERA5_1_10393_rh.nc
+
+These are netCDF files, converted from the ECMWF odb files, containing the observation data for temperature, relative humidity u- and v-compononents of the wind,
 for the Lindenberg station (taken as example in the document).
 
 All the other intermediate files processed during the various steps of the analysis will be also 
 stored in the *data* directory.
 
 ## Workflow
+
 The workflow is the following:
 1. extract_speed_direction_netCDF.py 
 2. extract_covariance_analyseOutliers.py
@@ -26,15 +29,17 @@ The workflow is the following:
 The module wind_utils.py contains classes and variables that are used vy the other scripts.
 
 ### Extracting the wind speed and direction from the u- and v-components
+
 Calling the script
 
 ` python extract_speed_direction_netCDF.py` 
 
 will generate netCDF files containg the wind speed and direction, to be found in the *data* directory.
-These files are needed for the following analysis.
+These files are needed for the following analysis of the uncertainties.
 
 ### Extracting the covariance matrices, and analyse outliers.
-Since the Desroziers diagnostics is based on the analysis of time avergaes of (cross)covariances of the vectors analysis departure
+
+Since the Desroziers diagnostics is based on the analysis of time averages of (cross)covariances of the vectors analysis departure
  and background departures, it is is convenient to extract such matrices and store them in a numpy file.
 
 This is done with
