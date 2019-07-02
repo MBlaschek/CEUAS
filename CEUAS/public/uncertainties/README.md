@@ -1,4 +1,4 @@
-# Estimation of the wind uncertainties
+# Estimation of the upper air  observation errors using Desroziers' method
 
   Author: Federico Ambrogi, federico.ambrogi@univie.ac.at
 
@@ -6,7 +6,7 @@
 
 ## Introduction
 We describe here the scripts and the necessary steps to extract the covariance matrices
-and reproduce the results presented in the deliverable xxx
+and reproduce the results presented in the deliverable Lot2.2.2.1
 The required input files are stored in the *data* directory:
 - ERA5_1_10393_t.nc
 - ERA5_1_10393_u.nc
