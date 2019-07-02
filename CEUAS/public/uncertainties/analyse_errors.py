@@ -32,6 +32,7 @@ if (not plot_cov and not plot_errors ):
 """ Dirs, definitions, select datasets """
 cov_file = 'data/covariance_matrices.npy'
 variables = ['temp', 'uwind','vwind','speed','direction','rh']
+
 stations = ['Lindenberg']
 
 netCDF = DataHandler()
@@ -55,10 +56,11 @@ colors = ['steelblue', 'orange', 'forestgreen', 'red', 'slateblue'] # color simi
 
 
 
+plevels = [0,3,5,8,11,13,15]
 
 
 
-
+res = {}
 """ Plotting the time series of the running mean """
 for s in stations:
      print ('***** Processing the station: ', s , '\n')
@@ -68,8 +70,10 @@ for s in stations:
           Plot.plot_prop(var=v)                                                                                                                                                                                                                                                          
           matrices_dic = matrices[s][v]
           gauss_fit[v] = {}
+          res[v] = {}
 
           for h in [0,1]:
+               res[v][h] = {}
                gauss_fit[v][h]= {}
                print ('*** Hour: ', h )
 
@@ -98,14 +102,16 @@ for s in stations:
 
                          Plot.plot_prop(var = v, fg_p = i, an_p = j , hour = str(h)) # initialize global plot properties
 
-                         values = Cov.select_ijentry(matrices = matrices_dic[str(h)], i = i , j = j)
-                         values_cleaned, outliers, lower, upper, median = netCDF.remove_outliers(values, cut= 1.5 )
+                         values_cleaned = Cov.select_ijentry(matrices = matrices_dic[str(h)], i = i , j = j)
+                         #values_cleaned, outliers, lower, upper, median = netCDF.remove_outliers(values, cut= 1.5 )
                          #values_cleaned = list(np.sqrt(values_cleaned) )
-                         values_cleaned = values
+                         #values_cleaned = values
                          gauss_fit[v][h][j]={}
+                         res[v][h][j] ={}
 
                          for n in time_averages : # time intervals defined in the list above
-                     
+                              res[v][h][j][n]= {}
+                              #res[v][h][j][n]['means'] = ''
                               print('Averaging over time period: ', n )
                               gauss_fit[v][h][j][n]={}
 
@@ -118,8 +124,11 @@ for s in stations:
                               gauss_fit[v][h][j][n]['mean'] = mean
                               gauss_fit[v][h][j][n]['std'] = std
                               
-                              """ Plotting the error time series """
+                              res[v][h][j][n]['means'] = runningmean
 
+                                 
+
+                         """ Plotting the error time series """
                          Plot.time_series(means= means, datums= dates, labels= labels, colors= colors ,interval= 25, station=s)
                               
                          Plot.err_histo(X= means, colors= colors, labels= labels, bins= 30, station=s)
@@ -127,9 +136,8 @@ for s in stations:
 
 
 """ Extract mean and standard deviation of the distributions of errors """
-if not os.path.isfile('data/means_std.npy'):
-     np.save('data/means_std', gauss_fit) 
-
+np.save('data/means_std', gauss_fit) 
+np.save('data/plevels_distributions', res )
 
 
 

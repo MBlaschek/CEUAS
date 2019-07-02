@@ -87,18 +87,18 @@ class Covariance:
          return
 
      def running_mean_old(self, data = '', n='', datums=''):
-          """ Returns the running mean of x, averaged over N  
-              Data is reduced by removing outliers """
-          not_nans         = [ x for x in data if not np.isnan(x) and x > -1000 ] # FF maybe not needed anymopre the > -1000 (from old version?)
+          """ Return the Desroziers error,  i.e. sqrt of the running mean of the input data, averaged over n  
+              Return also the datums for time series plots """
+          not_nans         = [ x for x in data if not np.isnan(x) ] 
           not_nans_indexes = [ data.index(x) for x in data if not np.isnan(x) ]
           datums_nans      = [ datums[i] for i in not_nans_indexes ] # extracting not nans values and corresponding index in datums (for plotting) 
           cumsum = np.cumsum(np.insert(not_nans, 0, 0))
           means = (cumsum[n:] - cumsum[:-n]) / float(n)
-          means = np.sqrt(np.absolute(means)) # CHECK !!!
+          means = np.sqrt(np.absolute(means)) 
           return means , datums_nans
     
      def calc_cov(self, array_x, array_y):
-          """ Calculate the (cross) covariance matrix for the two arrays x and y """
+          """ Extract the (cross) covariance matrix for the two arrays x and y """
           cov = np.empty([len(array_x),len(array_x)], dtype = float) # initialize an empty 16*16 matrix (16 pressure levels)
           for x in range(len(array_x)):
                for y in range(len(array_y)):
@@ -194,6 +194,8 @@ class Plotter:
               os.mkdir('plots/histo')
          if not os.path.isdir('plots/outliers'):
               os.mkdir('plots/outliers')
+         if not os.path.isdir('plots/plevels_histo'):
+              os.mkdir('plots/plevels_histo')
 
      def date_prettyfier(self, date):
          """ Give the date in text format day/motnh/year from the datum format """

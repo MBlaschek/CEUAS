@@ -71,60 +71,6 @@ except:
      sys.exit()
 
 
-""" Plotting """
-'''
-for v in variables:
-    h0 = gauss[v][0]
-    h1 = gauss[v][1]
-    for m,c in zip([30, 60, 365], ['blue','cyan','lime']):
-
-         fig,ax = plt.subplots(figsize=(5,7))
-         FONT = 13
-       
-         means0, means1, stds0, stds1 = [],[],[], []
-      
-         levels = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-
-
-         for p in levels:
-             means0.append( h0[p][m]['mean'] )
-             stds0.append ( h0[p][m]['std' ] )
-             means1.append( h1[p][m]['mean'] )
-             stds1.append ( h1[p][m]['std' ] )
-      
-         means0 = list(reversed(means0) )
-         means1 = list(reversed(means1) )
-         stds0  = list(reversed(stds0)  )
-         stds1  = list(reversed(stds1)  )
-
-         lab_f = list(reversed(labels_f))
-
-         plt.yticks(labels_f, labels_f, fontsize = 7)
-         plt.ylim(1030,0)
-         #ax.set_yticklabels(labels = labels_f, fontsize = FONT)
-
-         M = str(m).replace('30','1 month').replace('60', '2 months').replace('365', '1 year')
-         
-         plt.title(v + ' error mean values for a Gaussian distribution, Desroziers ' + M, y=1.03)
-         plt.plot(means0, lab_f, color  = c , label = 'Z00', ls = ":")
-         plt.plot(means1, lab_f, color  = c , label = 'Z12', ls = '--')
-
-         for m1,s1,p in zip(means1,stds1,lab_f):
-             x , y  = [m1-s1/2 , m1+s1/2] , [p , p]
-             plt.plot(x,y, color = c, ls = '--')
-
-         for m0,s0,p in zip(means0,stds0,lab_f):
-              x , y  = [m0-s0/2 , m0+s0/2] , [p , p]
-              plt.plot(x,y, color = c, ls = ':')
-
-         plt.xlabel('Error ' + dic[v] , fontsize = FONT )
-         plt.ylabel('Pressure [hPa]'  , fontsize = FONT)
-
-         plt.grid(linestyle= ':', color = 'lightgray', lw = 1.2 )
-         plt.legend(loc = 'best')        
-         plt.savefig(path + '/' + v + '_averages_gaussian_'+str(m)+'.png', bbox_inches = 'tight' , dpi = 180 ) 
-         plt.close()
-'''
 
 
 #### new version, new plots
