@@ -21,6 +21,8 @@ from eccodes import *
 import matplotlib.pylab as plt
 import cartopy.crs as ccrs
 import argparse
+import copy
+from io import StringIO
 
 okinds={'varchar (pk)':numpy.dtype('|S80'),'varchar':numpy.dtype('|S80'),'numeric':numpy.float32,'int':numpy.int32,
        'timestamp with timezone':numpy.datetime64,
@@ -45,6 +47,101 @@ cdmfb={'observation_value':'obsvalue@body',
        'longitude':'lon@hdr',
        'latitude':'lat@hdr'}
     
+def read_all_odbsql_stn_withfeedback(odbfile):
+
+    #countlist=glob.glob(opath+'/*.count')
+    alldata=''
+
+    alldict=xr.Dataset()
+    t=time.time()
+    sonde_type=True
+    obstype=True
+    if os.path.getsize(odbfile)>0:
+        try:
+            rdata=subprocess.check_output(["odb","header",odbfile])
+            rdata=rdata.decode('latin-1').split('\n')
+            columns=[]
+            kinds=[]
+            tdict={}
+            for r in rdata[2:-2]:
+                try:
+                    print(r[:6])
+                    if r[:6]=='Header':
+                        break
+                    else:    
+                        columns.append(r.split('name: ')[1].split(',')[0])
+                        kinds.append(r.split('type: ')[1].split(',')[0])
+                        if kinds[-1]=='REAL':
+                            tdict[columns[-1]]=numpy.float32
+                        elif kinds[-1] in ('INTEGER','BITFIELD'):
+                            if columns[-1]=='date@hdr':
+                                tdict[columns[-1]]=numpy.int32
+                            else: 
+                                tdict[columns[-1]]=numpy.float32
+                        else:
+                            tdict[columns[-1]]=numpy.dtype('S8')
+                            
+                            
+                except IndexError:
+                    pass
+        except:
+            print('could not read odbfile '+odbfile)
+            return alldict
+        try:
+            rdata=subprocess.check_output(["odb","sql","-q","select *","-i",odbfile,'--no_alignment'])
+            print('after odb:',time.time()-t)
+            rdata=''.join(rdata.decode('latin-1').split("'"))
+            f=StringIO(rdata)
+            alldict=pd.read_csv(f,delimiter='\t',quoting=3,comment='#',dtype=tdict)
+            del f,rdata
+            
+            if False:
+                
+                rdata='nan'.join(rdata.decode('latin-1').split('NULL'))
+                rdata=''.join(rdata.split("'"))
+                rdata='\t'.join(rdata.split('\n')[1:-1])
+                rdata=tuple(rdata.split('\t'))
+                
+                print('after odb:',time.time()-t)
+                #xdata=numpy.fromstring(rdata,sep='\t')
+                cl=len(columns)
+                rl=len(rdata)//cl
+                #for k in range(cl):
+                    #if kinds[k]=='REAL':
+                        #alldict[columns[k]]=({'obslen':rl},numpy.empty(rl,dtype=numpy.float32))
+                    #elif kinds[k] in ('INTEGER','BITFIELD'):
+                        #alldict[columns[k]]=({'obslen':rl},numpy.empty(rl,dtype=numpy.int32))
+                    #else:
+                        #alldict[columns[k]]=({'obslen':rl},numpy.empty(rl,dtype='|S8'))
+                #print(odbfile,time.time()-t)
+                for k in range(cl):
+                    if kinds[k]=='REAL':
+                        alldict[columns[k]]=({'obslen':rl},numpy.float32(rdata[k::cl]))
+                    elif kinds[k] in ('INTEGER','BITFIELD'):
+                        rds=rdata[k::cl]
+                        if 'nan' in rds: 
+                            alldict[columns[k]]=({'obslen':rl},numpy.asarray(rds,dtype=float).astype(numpy.int32))
+                        else:
+                            alldict[columns[k]]=({'obslen':rl},numpy.asarray(rds,dtype=numpy.int32))
+                    else:
+                        alldict[columns[k]]=({'obslen':rl},numpy.asarray(rdata[k::cl],dtype='|S8'))
+                    
+        except subprocess.CalledProcessError as e:
+            print('odb failed!:'+' '+odbfile)
+            return alldict
+
+    print(odbfile,time.time()-t)
+    #idy=numpy.lexsort((alldict['varno@body'],
+                       #-alldict['vertco_reference_1@body'],
+                       #alldict['time@hdr'],
+                       #alldict['date@hdr']))
+    #for k in alldict.columns:
+        #alldict[k]=alldict[k][idy]
+
+    print(odbfile,time.time()-t)
+
+    return alldict.to_xarray()
+
 def fromfb(fbv,cdmfb,cdmkind):
     x=0
     if type(cdmfb) is list:
@@ -129,16 +226,19 @@ def odb_to_cdm(cdm,cdmd,fn):
     recl=0
     
     t=time.time()
-    f=gzip.open(fn)
-    fn=fn[:-3]
+    #f=gzip.open(fn)
+    #fn=fn[:-3]
     fnl=fn.split('/')
     fnl[-1]='ch'+fnl[-1]
-    fno='/'.join(fnl)
+    fno='/'.join(fnl)+'.nc'
     if not False:
         
-        fbds=xr.open_dataset(f)
-        #ds=xr.open_dataset(fn,engine='h5netcdf')
+        # era5 analysis feedback is read from compressed netcdf files era5.conv._?????.nc.gz in $RSCRATCH/era5/odbs/1
+        fbds=read_all_odbsql_stn_withfeedback(fn)
+        #fbds=xr.open_dataset(f)
         print(time.time()-t)
+        # the fbencodings dictionary specifies how fbds will be written to disk in the CDM compliant netCDF file.
+        # float64 is often not necessary. Also int64 is often not necessary. 
         fbencodings={}
         for d in fbds._variables.keys():
             if fbds.variables[d].dtype==numpy.dtype('float64'):
@@ -153,15 +253,6 @@ def odb_to_cdm(cdm,cdmd,fn):
         z=find_dateindex(y)
         di=xr.Dataset()
         di['dateindex']=({'days':z.shape[1],'drange':z.shape[0]},z)
-        #obds=xr.Dataset()
-        #obencodings={}
-        #for i in range(len(cdmd['observations_table'])):
-            #d=cdmd['observations_table'].iloc[i]
-            #obds[d.element_name]=({'hdrlen':fbds.variables['date@hdr'].shape[0]},
-                                #numpy.zeros_like(fbds.variables['date@hdr'].values,dtype=numpy.dtype(ttrans(d.kind))))
-            #obds[d.element_name].attrs['external_table']=d.external_table
-            #obds[d.element_name].attrs['description']=d.description
-            #obencodings[d.element_name]={'compression': 'gzip'}
     
         groups={}
         groupencodings={}
@@ -190,15 +281,18 @@ def odb_to_cdm(cdm,cdmd,fn):
                         
                 elif k in ('station_configuration'):
                     try:   
-                        groups[k][d.element_name]=({k+'_len':len(cdm[k])},
-                                    cdm[k][d.element_name].values)#,dtype=numpy.dtype(ttrans(d.kind)))
+                        if 'sci' not in locals():
+                            sci=numpy.where(cdm[k]['primary_id']=='0-20000-0-'+fbds['statid@hdr'].values[0].decode('latin1'))[0]
+                        if len(sci)>0:
+                            groups[k][d.element_name]=({k+'_len':1},
+                                    cdm[k][d.element_name].values[sci])
                     except KeyError:
                         pass
                         
                 else:
                     try:   
                         groups[k][d.element_name]=({k+'_len':len(cdm[k])},
-                                    cdm[k][d.element_name].values)#,dtype=numpy.dtype(ttrans(d.kind)))
+                                    cdm[k][d.element_name].values)
                     except KeyError:
                         pass
                 try:
@@ -209,24 +303,28 @@ def odb_to_cdm(cdm,cdmd,fn):
                 except KeyError:
                     print('bad:',k,d.element_name)
                     pass
-    
+
+        #this writes the dateindex to the netcdf file. For faster access it is written into the root group
         di.to_netcdf(fno,format='netCDF4',engine='h5netcdf',mode='w')
+        # add era5 feedback to the netcdf file. 
         fbds.to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=fbencodings,group='era5fb',mode='a')
         
         for k in groups.keys():
+            #this code deletes some variables to check how well they are compressed. Variable strings are badly compressed
             #gk=list(groups[k].keys())
             #for l in gk:
                 #if groups[k][l].dtype==numpy.dtype('<U1'):
                     #del groups[k][l]
                     #del groupencodings[k][l]
             
+            #this appends group by group to the netcdf file
             groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') #
-        print('sizes: in: {:6.2f} out: {:6.2f}'.format(os.path.getsize(fn+'.gz')/1024/1024,
+        print('sizes: in: {:6.2f} out: {:6.2f}'.format(os.path.getsize(fn)/1024/1024,
                                               os.path.getsize(fno)/1024/1024))
         del fbds
     
-    #del obds
-    
+
+    # speed test for accessing dateindex
     #for k in range(10):
         
         #t=time.time()
@@ -244,7 +342,7 @@ def odb_to_cdm(cdm,cdmd,fn):
         #print('cg',time.time()-t)
         
         
-    
+    # first implementation of inner join  - resolving numeric variable code 
     #with h5py.File(fno,'r') as f:
         #ext=f['observations_table']['observed_variable'].attrs['external_table']
         #lext=ext.split(':')
@@ -276,22 +374,27 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Make CDM compliant netCDFs")
     parser.add_argument('--database_dir' , '-d', 
                     help="Optional: path to the database directory. If not given, will use the files in the data directory" ,
-                    default = '../data/',
+                    default = '../../../cdm/data/',
                     type = str)
     parser.add_argument('--auxtables_dir' , '-a', 
                     help="Optional: path to the auxiliary tables directory. If not given, will use the files in the data/tables directory" ,
+                    default = '../../../cdm/data/tables/',
+                    type = str)
+    parser.add_argument('--odbtables_dir' , '-o', 
+                    help="Optional: path to the odb tables directory. If not given, will use the files in the data/tables directory" ,
                     default = '../data/tables/',
                     type = str)
     args = parser.parse_args()
     dpath = args.database_dir
     tpath = args.auxtables_dir
+    odbpath = args.odbtables_dir
 
     print ('THE DPATH IS', dpath)
     if not dpath:
-        dpath = '../data/'
+        dpath = '../../cdm/code/data/'
    
     if not tpath:
-        tpath = '../data/tables/'
+        tpath = dpath+'/tables/'
    
     print ('Analysing the databases stored in ', dpath)
     cdmpath='https://raw.githubusercontent.com/glamod/common_data_model/master/tables/'                                                                                                                                                                                               
@@ -316,20 +419,20 @@ if __name__ == '__main__':
         f=urllib.request.urlopen(url)
         tdict={col: str for col in col_names}
         cdmd[key]=pd.read_csv(f,delimiter='\t',quoting=3,dtype=tdict,na_filter=False,comment='#')
-    cdmd['header_table']=pd.read_csv(tpath+'header_table.csv',delimiter='\t',quoting=3,comment='#')
-    cdmd['observations_table']=pd.read_csv(tpath+'observations_table.csv',delimiter='\t',quoting=3,comment='#')
+    cdmd['header_table']=pd.read_csv(tpath+'../table_definitions/header_table.csv',delimiter='\t',quoting=3,comment='#')
+    cdmd['observations_table']=pd.read_csv(tpath+'../table_definitions/observations_table.csv',delimiter='\t',quoting=3,comment='#')
     id_scheme={cdmd['id_scheme'].element_name.values[0]:[0,1,2,3,4,5,6],
                cdmd['id_scheme'].element_name.values[1]:['WMO Identifier','Volunteer Observing Ships network code',
                                                              'WBAN Identifier','ICAO call sign','CHUAN Identifier',
                                                              'WIGOS Identifier','Specially constructed Identifier']}
 
     cdm['id_scheme']=pd.DataFrame(id_scheme)
-    cdm['id_scheme'].to_csv(tpath+'/id_scheme_ua.dat')
+    #cdm['id_scheme'].to_csv(tpath+'/id_scheme_ua.dat')
     cdm['crs']=pd.DataFrame({'crs':[0],'description':['wgs84']})
-    cdm['crs'].to_csv(tpath+'/crs_ua.dat')
+    #cdm['crs'].to_csv(tpath+'/crs_ua.dat')
     cdm['station_type']=pd.DataFrame({'type':[0,1],'description':['Radiosonde','Pilot']})
-    cdm['station_type'].to_csv(tpath+'/station_type_ua.dat')
-    cdm['observed_variable']=pd.read_csv(tpath+'/observed_variable.dat',delimiter='\t',quoting=3,dtype=tdict,na_filter=False,comment='#')
+    #cdm['station_type'].to_csv(tpath+'/station_type_ua.dat')
+    #cdm['observed_variable']=pd.read_csv(tpath+'/observed_variable.dat',delimiter='\t',quoting=3,dtype=tdict,na_filter=False,comment='#')
 
 
     func=partial(odb_to_cdm,cdm,cdmd)
@@ -337,9 +440,9 @@ if __name__ == '__main__':
     #rfunc=partial(read_rda_meta) 
     tu=dict()
     p=Pool(25)
-    dbs=['1','igra2','ai_bfr','rda','3188','1759','1761']
+    dbs=['1'] #,'igra2','ai_bfr','rda','3188','1759','1761']
     for odir in dbs: 
-        cdm['station_configuration']=pd.read_csv(dpath+'/'+odir+'/station_configuration.dat',delimiter='\t',quoting=3,dtype=tdict,na_filter=False,comment='#')
+        cdm['station_configuration']=pd.read_csv(odbpath+'/'+odir+'/station_configuration.dat',delimiter='\t',quoting=3,dtype=tdict,na_filter=False,comment='#')
         if 'ai' in odir:
             pass
         elif 'rda' in odir:
@@ -348,6 +451,7 @@ if __name__ == '__main__':
             pass
 
         else:
-            flist=glob.glob(dpath+odir+'/'+'era5.conv.*01009.nc.gz')
+            #flist=glob.glob(odbpath+odir+'/'+'era5.conv.*01009.nc.gz')
+            flist=glob.glob(odbpath+odir+'/'+'era5.conv._01009')
             transunified=list(map(func,flist))
 
