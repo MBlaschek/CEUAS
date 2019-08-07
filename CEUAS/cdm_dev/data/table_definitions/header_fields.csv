@@ -1,0 +1,7 @@
+# Description:			
+# Source:
+element_name	kind	external_table	description
+field_id	varchar	 primary key
+field_name	varchar	 Name of field described by this entry
+typeint	kind:kind	The variable type used to store information on the indicated field
+description	varchar	 Description of the indicated field

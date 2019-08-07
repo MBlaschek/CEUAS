@@ -1,0 +1,5 @@
+operator	symbol	description
+1	+	add
+2	-	minus
+3	*	multiply
+4	/	divide
