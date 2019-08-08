@@ -1,0 +1,54 @@
+# Descripion: table defining elements in main header table
+# Source:	
+element_name	kind	external_table	description
+report_id	varchar (pk)		Unique ID for report (unique ID given by combination of report_id and observation_id)
+region	int	region:region	Region (WMO region / Ocean basin)
+sub_region	int	sub_region:sub_region	Country / regional sea
+application_area	int[]	application_area:application_area	WMO application area(s)
+observing_programme	int[]	observing_programme:observing_programme	Observing programme, e.g. VOS
+report_type	int	report_type:type	e.g. SYNOP, TEMP, CLIMAT, etc
+station_name	varchar		e.g. GRUAN station name, ship name, site name etc
+station_type	int	station_type:type	Type of station, e.g. land station, sea station etc
+platform_type	int	platform_type:type	Structure upon which sensor is mounted, e.g. ship, drifting buoy, tower etc
+platform_sub_type	int	platform_sub_type:sub_type	Sub-type for platform, e.g. 3m discuss buoy
+primary_station_id	varchar	station_configuration:primary_id	Primary station identifier, e.g. WIGOS ID
+station_record_number	int	station_configuration:record_number	Together with primary_station_id this forms a link to the station configuration table.
+primary_station_id_scheme	int	id_scheme:scheme	Scheme used for station ID
+longitude	numeric		Longitude of station, -180.0 to 180.0 (or other as defined by station_crs)
+latitude	numeric		Latitude of station, -90 to 90 (or other as defined by station_crs)
+location_accuracy	numeric		Accuracy to which station location recorded (radius in km)
+location_method	int	location_method:method	Method by which location determined
+location_quality	int	location_quality:quality	Quality flag for station location
+crs	int	crs:crs	Coordinate reference scheme for station location
+station_speed	numeric		Station speed over ground if mobile (m/s)
+station_course	numeric		Station course over ground if mobile (degree true)
+station_heading	numeric		Station heading if mobile
+height_of_station_above_local_ground	numeric		Height of station above local ground (m)
+height_of_station_above_sea_level	numeric		Height of station above mean sea level (m), negative values for below sea level.
+height_of_station_above_sea_level_accuracy	numeric		Accuracy to which height of station known (m)
+sea_level_datum	int	sea_level_datum:datum	Datum used for sea level
+report_meaning_of_timestamp	int	meaning_of_time_stamp:meaning	Report time - beginning, middle or end of reporting period
+report_timestamp	timestamp with timezone		e.g. 1991-01-01 12:00:0.0+0
+report_duration	int	duration:duration	Report duration
+report_time_accuracy	numeric		Precision to which time was recorded (s)
+report_time_quality	int	time_quality:quality	Quality flag for report_timestamp 
+report_time_reference	int	time_reference:reference	Reference Time (e.g. referenced to time server, atomic clock, radio clock etc)
+profile_id	varchar	profile_configuration:profile_id	Information on profile (atmospheric / oceanographic) configuration. Set to Record ID for profile data or missing (NULL) otherwise.
+events_at_station	int[]*	events_at_station:event	e.g. ship hove to, crop burning etc.
+report_quality	int 	quality_flag:flag	Overall quality of report
+duplicate_status	int	duplicate_status:status	E.g. no duplicates, best duplicate, duplicate, not checked.
+duplicates	varchar[]*	header_table:report_id	Array of report_id's for duplicates
+record_timestamp	timestamp with timezone		Timestamp of revision for this record
+history	varchar 	 	Sequence of processing steps. Free text with timestamp 1 : history 1; timestamp 2 : history 2 etc. 
+processing_level	int	report_processing_level:level	Level of processing applied to this report
+processing_codes	int[]*	report_processing_codes:code	Processing applied to this report
+source_id	varchar	source_configuration:source_id	Original source of data, link to external table
+source_record_id	varchar		Record ID in source data, e.g. ID of event from GRUAN meta database
+number_of_pressure_levels	int	is the number of levels in the sounding
+report_synoptic_time	timestamp with timezone	is the synoptic start hour of the report
+product_version	int	is the version of dataset
+comments	varchar	Description of data product
+owner	varchar	Institution, where the measurement was performed
+references	varchar	References to publications or documentations,describing the data product
+instrument	varchar	Source of measurement data – the instrument
+product_name	varchar	Name of the data product

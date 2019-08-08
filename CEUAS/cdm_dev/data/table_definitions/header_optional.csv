@@ -1,8 +1,0 @@
-# Description:
-# Source:
-element_name	kind	external_table	description
-header_id	varchar	header:report_id	Link to station for which this entry corresponds
-kind	int	kind:kind	Enumerated data type (numeric, int, etc)
-field	varchar	header_fields:field_id	Field that this entry corresponds to
-value	varchar	Kind inherited from field 
-comments	varchar	 	Any additional comments.

@@ -1,0 +1,11 @@
+method	description	reference
+1	Post-processing radiation correction	Dirksen et al 2014                            
+2	Post-processing adjustment due to intercomparison with GRUAN	Dirksen et al 2014
+3	Post-processing adjustment due to intercomparison with WMO/CIMO 2010 dataset	Nash et al. 2010
+4	Radiosonde HARMonization (RHARM) approach by Madonna et al. 2019
+11	RASE v1.72 approach by Haimberger et al. 2019 (ERA5 -1978)
+12	RISE v1.51 approach by Haimberger et al. 2019 (ERA5 1979-)
+13	RASE v1.8  approach by Haimberger et al. 202? (MC3S311c_Lot2.2.1.2)
+14	RISE v1.8  approach by Haimberger et al. 202? (MC3S311c_Lot2.2.1.2)
+15	RASE v2.0  approach by Haimberger et al. 202? (DC3S311c_Lot2.2.2.2, DC3S311c_Lot2.2.1.4)
+16	RISE v2.0  approach by Haimberger et al. 202? (DC3S311c_Lot2.2.2.2, DC3S311c_Lot2.2.1.4)

@@ -1,0 +1,3 @@
+uncertainty_type	name	description
+1	random	Random uncertainties are the uncertainty contributions due to random effects causing random errors that cannot be corrected for in a single measured value, even in principle, because the effect is stochastic
+2	systematic	Systematic uncertainties are the uncertainty contributions due to systematic effects which, although they can be corrected in principle, cannot be corrected in practice. In other words, systematic uncertainties are statistical characterizations, by means of distributions of possible values of the measurand, of those systematic errors which, although removable in principle, cannot be corrected in practice

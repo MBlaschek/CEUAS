@@ -1,0 +1,50 @@
+# Descripion: table defining elements in main observations table				
+# Source:
+element_name	kind	external_table	description
+observation_id	varchar (pk)		unique ID for observation
+report_id	varchar	header_table:report_id	Link to header information
+data_policy_licence	int	data_policy_licence:policy	WMOessential, WMOadditional, WMOother
+date_time	timestamp with timezone		timestamp for observation
+date_time_meaning	int	meaning_of_time_stamp:meaning	beginning, middle, end
+observation_duration	int	duration:duration	Duration/period over which observation was made
+longitude	numeric		Longitude of the observed value, -180 to 180 (or other as defined by CRS). This may or may not be the same as the report location.
+latitude	numeric		Latitude of the observed value, -90 to 90 (or other as defined by CRS)
+crs	int	crs:crs	Coordinate reference scheme use to encode location
+z_coordinate	numeric		z coordinate of observation
+z_coordinate_type	int	z_coordinate_type:type	Type of z coordinate
+observation_height_above_station_surface	numeric		Height of sensor above local ground or sea surface. Positive values for above surface (e.g. sondes), negative for below (e.g. xbt). For visual observations, height of the visual observing platform.
+observed_variable	int	observed_variable:variable	The variable being observed / measured
+secondary_variable	int	secondary_variable:variable	Secondary variable required to understand observation, e.g. chemical constituent. Set to NA / missing if not applicable.
+observation_value	numeric		The observed value
+value_significance	int	observation_value_significance:significance	e.g. min, max, mean, sum
+secondary_value	int	secondary_variable:value	value for the secondary variable. Set to NA or missing if not applicable.
+units	int	units:units	Units for the observed variable
+code_table	int	observation_code_table:code_table	Encode / decode table for variable (if encoded)
+conversion_flag	int	conversion_flag:flag	Flag indicating whether original, converted or both values are available.
+location_method	int	location_method:method	Method of determining location, 
+location_precision	numeric		Precision to which location is reported (radius km)
+z_coordinate_method	int	z_coordinate_method:method	Method of determining z coordinate
+bbox_min_longitude	numeric		Bounding box for observation, valid range given by CRS
+bbox_max_longitude	numeric		Bounding box for observation, valid range given by CRS
+bbox_min_latitude	numeric		Bounding box for observation, valid range given by CRS
+bbox_max_latitude	numeric		Bounding box for observation, valid range given by CRS
+spatial_representativeness	int	spatial_representativeness:representativeness	Spatial representativeness of observation
+quality_flag	int	quality_flag:flag	Quality flag for observation
+numerical_precision	numeric		Reporting precision of observation in units given by 'units' variable. E.g. 0.1 = reported to nearest tenth, 0.5 to nearest half etc.
+sensor_id	varchar	sensor_configuration:sensor_id	 Link to sensor_configuration table.
+sensor_automation_status	int	automation_status:automation	Automated, manual, mixed or visual observation
+exposure_of_sensor	int	instrument_exposure_quality:exposure	Whether the exposure of the instrument will impact on the quality of the measurement
+original_precision	numeric 		Original reporting precision in units given by 'original_units'
+original_units	int	units:units	Original units 
+original_code_table	int	observation_code_table:code_table	Encode / decode table for variable (if encoded)
+original_value	numeric 		Original value as reported or recorded in log book.
+conversion_method	int	conversion_method:method	Link to table describing conversion process
+processing_code	int[]*	processing_code:code	e.g. TRC (temperature radiation corrections) etc. Encoded in table.
+processing_level	int	processing_level:level	Level of processing applied to observation.
+adjustment_id	varchar	adjustment:adjustment_id	Total adjustment applied to observation reported in observation value (observation_value = original + adjustment)
+traceability	int	traceability:traceability	Whether observation can be traced to international standards.
+advanced_qc	int	data_present:flag	Flag indicating whether advanced qc data are available
+advanced_uncertainty	int	data_present:flag	Flag indicating whether uncertainty estimates are available
+advanced_homogenisation	int	data_present:flag	Flag indicating whether advanced homogenisation information is available
+advanced_assimilation_feedback	int	data_present:flag	Flag indicating whether assimilation feedback information is available
+source_id	 varchar	source_configuration:source_id	Original source of data, link to external table

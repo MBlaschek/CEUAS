@@ -1,3 +1,0 @@
-index	processing_code	abbreviation	description
-1	non_pressure_levels	is the data source code for non-pressure levels in the sounding. These include levels whose vertical coordinate is only identified by height as well as surface levels without either pressure or height. 
-2	pressure_levels	is the data source code for pressure levels in the sounding
