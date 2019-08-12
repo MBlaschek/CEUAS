@@ -48,6 +48,8 @@ def make_datetime(dvar,tvar):
     df=pd.DataFrame({'year':dvar//10000,'month':(dvar%10000)//100,'day':dvar%100,
                         'hour':tvar//10000,'minute':(tvar%10000)//100,'second':tvar%100})
     dt=pd.to_datetime(df).values
+    #print('dt id', dt)
+    #input('FF check datetime')
     return dt
 
 
@@ -110,7 +112,7 @@ def read_all_odbsql_stn_withfeedback(odbfile):
             # nb  if you have null values, reading of integer fails and are read as floats
             # to improve, you can convert the columns with nabs in the alldicts (pandas data frame) into int(np.nans)
             # date values are large so float 32 precision is not sufficient 
-            alldict=pd.read_csv(f,delimiter='\t',quoting=3,comment='#',dtype=tdict)
+            alldict=pd.read_csv(f, delimiter='\t', quoting=3, comment='#',dtype=tdict) # example test: (21150x63 columns)
             del f,rdata
 
  
@@ -171,16 +173,27 @@ def read_all_odbsql_stn_withfeedback(odbfile):
 
     return alldict.to_xarray()
 
+
 def fromfb(fbv,cdmfb,cdmkind):
-    """ input: 
-               fbv    : feedback variable (cdm compliant)
-               cdmfb  :  
+    """ 
+         Args: 
+               fbv    : xarray converted form the odb file, still with odb variable names
+               cdmfb  : dictionary converting the odb variable names to CDM names 
                cdmkind: data type of the cdmfb
+         Returns:
+               values of the variables 
+
     """
     x=0
     # checks if the type of the variable is a list, so that it uses the function to extract the date time 
+
+    #print('fbv, cdmfb, cdmkind are', fbv,cdmfb,cdmkind)
+
+    ## 'date_time':[make_datetime,'date@hdr','time@hdr'],
     if type(cdmfb) is list:
-        x=cdmfb[0](fbv[cdmfb[1]],fbv[cdmfb[2]])
+        x=cdmfb[0](fbv[cdmfb[1]],fbv[cdmfb[2]]) # equals to make_datetime('date@hdr','time@hdr') where 'date@hdr','time@hdr' are read from the fbv xarray
+        #print('x is', x )
+        #input('FF check x time')
     else:
         if cdmfb=='varno@body':
             tr=numpy.zeros(113,dtype=int) 
@@ -194,7 +207,7 @@ def fromfb(fbv,cdmfb,cdmkind):
             tr[59]=36 # dew point
             tr[111]=106 #dd
             tr[112]=107  #ff
-            #
+            
             tr[39]= 85 # 2m T
             tr[40]= 36 # 2m Td
             tr[41]= 104 #10m U
@@ -204,8 +217,11 @@ def fromfb(fbv,cdmfb,cdmkind):
             x=tr[fbv[cdmfb].values.astype(int)] # reads the varno from the odb feedback and writes it into the variable id of the cdm 
         else:    
             x=fbv[cdmfb].values
-        
+    print('check x', x )
+    input('check new X')    
     return x
+
+
 
 def ttrans(cdmtype,kinds=kinds):
     """ convert the cdm types to numpy types """    
@@ -214,8 +230,7 @@ def ttrans(cdmtype,kinds=kinds):
         nptype=kinds[cdmtype.strip()]
     except:
         print(cdmtype,'not found, using numpy.float32')
-        
-    
+            
     return nptype
 
 @njit

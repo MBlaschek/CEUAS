@@ -25,11 +25,15 @@ import argparse
 import copy
 from io import StringIO
 import h5netcdf
+import numpy as np
+#import eccodes
+#from eccodes import 
+
 
 """  using fixed lenght strings (80 chars) 
 Compression does not work well with normal strings 
-
 """
+
 okinds={'varchar (pk)':numpy.dtype('|S80'),'varchar':numpy.dtype('|S80'),'numeric':numpy.float32,'int':numpy.int32,
        'timestamp with timezone':numpy.datetime64,
        'int[]*':list,'int[]':list,'varchar[]*':list,'varchar[]':list}
@@ -38,8 +42,6 @@ okinds={'varchar (pk)':numpy.dtype('|S80'),'varchar':numpy.dtype('|S80'),'numeri
 kinds={'varchar (pk)':str,'varchar':str,'numeric':numpy.float32,'int':numpy.int32,
        'timestamp with timezone':numpy.datetime64,
        'int[]*':list,'int[]':list,'varchar[]*':list,'varchar[]':list}
-
-
 
 def make_datetime(dvar,tvar):
     """ Converts into date-time """
@@ -50,7 +52,6 @@ def make_datetime(dvar,tvar):
     dt=pd.to_datetime(df).values
     return dt
 
-
 """ Translates the odb variables name  into cdm var """
 cdmfb={'observation_value':'obsvalue@body',
        'observed_variable':'varno@body',
@@ -59,6 +60,316 @@ cdmfb={'observation_value':'obsvalue@body',
        'date_time':[make_datetime,'date@hdr','time@hdr'],
        'longitude':'lon@hdr',
        'latitude':'lat@hdr'}
+
+def check_prepare_file(file=''):
+    """ Simple utility to check if file exists and uncompress it, then read the lines and store them as entry of a list. Return the list.
+        
+        Args:
+             file (str): path to the file
+
+        Returns:
+             lines (list) read from the file """
+
+    if not os.path.isfile(file):
+        raise IOError("File not Found! %s" % file)
+
+    if '.zip' in file:
+        archive = zipfile.ZipFile(file, 'r')
+        inside = archive.namelist()
+        tmp = archive.open(inside[0])
+        tmp = io.TextIOWrapper(tmp, encoding='utf-8')
+        tmp = tmp.read()
+        archive.close()
+        data = tmp.splitlines()  # Memory (faster) 
+
+    elif '.gz' in file:
+        with gzip.open(file, 'rt',  encoding='utf-8') as infile:
+            tmp = infile.read()  # alternative readlines (slower)                                                                                                                                                                                                                        
+            data = tmp.splitlines()  # Memory (faster)                                                                                                                                                                                                                                   
+    else:
+        with open(file, 'rt') as infile:
+            tmp = infile.read()  # alternative readlines (slower)                                                                                                                                                                                                                      
+            data = tmp.splitlines()  # Memory (faster)  
+
+    return data
+
+
+
+def uadb_ascii_to_dataframe(file=''):
+    """ Read an uadb stationfile in ASCII format and convert to a Pandas DataFrame.                                                                                                                                                                                          
+        Adapted from https://github.com/MBlaschek/CEUAS/tree/master/CEUAS/data/igra/read.py                                                                                                                                                                                         
+        Variables used inside the DataFrame are already CDM compliant   
+        
+        Args:
+             file (str): path to the uadb station file
+
+        Returns:
+             Pandas DataFrame with cdm compliant column names
+    """     
+    data = check_prepare_file(file=file)
+
+    raw = []
+    headers = []
+    dates = []
+    nmiss = 0
+    iprev = 0
+    search_h = False
+    i = 0
+    
+    cdm_header_dic = {'usi'     : 'station_name', 
+                      'year'    : '' , 'month': '', 'day':'', 'hour': '',  # to be inglobated into the timestamp by idate
+                      'idate'   : 'report_timestamp',
+                      'lat'     : 'latitude',
+                      'lon'     : 'longitude', 
+                      }   
+
+
+    cdm_var_dic = { 'temp ' : {'units':'C_to_tenths'       , 'cdm_name': 'temperature'         },
+                    'wspd'  : {'units':'ms_to_tenths'      , 'cdm_name': 'wind_speed'          },
+                    'wdir'  : {'units':'degree'            , 'cdm_name': 'wind_direction'      },
+                    'rh'    : {'units':'percent_to_tenths' , 'cdm_name': 'relative_humidity'   },
+                    'gph'   : {'units': ' '                , 'cdm_name': 'geopotential_height' },
+                    'press' : {'units': ' '                , 'cdm_name': 'pressure' } }    
+     
+    read_data, dates = [], [] 
+
+    #columns = ['pres', 'gph', 'temp', 'rhumi', 'windd', 'winds' , 'date', 'uid', 'numlev', 'lat', 'lon', 'alt', 'stype' ]
+    
+    #columns = ['idate', 'uid', 'lat', 'lon', 'alt', 'stype', 'pres', 'gph', 'temp', 'rh', 'wspd', 'wdir']
+
+    idate, usi, lat, lon, lat, stype, press, gph, temp, rh, wdir, wspd = 0,0,0,0,0,0,0,0,0,0,0,0
+
+    for i, line in enumerate(data):
+        if line[0] == 'H':
+            try:
+                # Header
+                usi      = int(line[2:14])  # unique station identifier
+                ident    = line[15:21]  # WMO
+                idflag   = int(line[22:24])  # id flag
+                d_src    = int(line[25:28])  # source dataset
+                version  = float(line[29:34])  # version
+                dateflag = int(line[35:37])  # date flag
+                year     = line[38:42]  # year
+                month    = "%02d" % int(line[43:45])
+                day      = "%2d"  % int(line[46:48])
+                hour     = line[49:53]
+                locflag  = int(line[54:56])  # Location Flag
+                lat      = float(line[57:67])
+                lon      = float(line[68:78])
+                ele      = float(line[79:85])
+                stype    = int(line[86:88])
+                numlev   = int(line[89:93])
+                pvers    = line[94:102]
+
+                if '99' in hour:
+                    hour = hour.replace('99', '00')
+        
+                if '99' in day:
+                    search_h = True
+                    continue
+
+                hour = "%02d" % (int(hour) // 100)
+                minutes = int(hour) % 100
+                if minutes > 60 or minutes < 0:
+                    minutes = 0
+                minutes = "%02d" % minutes
+                idate = datetime.strptime(year + month + day + hour + minutes, '%Y%m%d%H%M')
+                #headers.append((idate, usi, numlev, lat, lon, ele, stype))
+                pday = int(day)
+                search_h = False
+
+            except Exception as e:
+                print("Error: ", i, line, repr(e), "Skipping Block:")
+                #if kwargs.get('debug', False):
+                #    raise e
+
+                search_h = True
+                iprev = i
+
+        elif search_h:
+            nmiss += 1
+            continue  # Skipping block
+
+        else:
+            # Data
+            ltyp   = int(line[0:4])
+            press  = float(line[5:13])   # hPa
+            gph    = float(line[14:22])
+            temp   = float(line[23:29])  # degree
+            rh     = float(line[30:36])  # %
+            wdir   = float(line[37:43])
+            wspd   = float(line[44:50])  # m/s
+
+        #print( (idate, usi, lat, lon, lat, stype, press, gph, temp, rh, wdir, wspd, ) )
+
+        read_data.append( (idate, usi, lat, lon, lat, stype, press, gph, temp, rh, wdir, wspd, ) )
+        dates.append(idate)
+    #print("READ:", i, "Skipped:", nmiss)
+    
+    columns = ['idate', 'usi', 'lat', 'lon', 'lat', 'stype', 'press', 'gph', 'temp', 'rh', 'wdir', 'wspd']
+    #read_data.append( (idate, usi, lat, lon, lat, stype, press, gph, temp, rh, wdir, wspd, ) )
+
+    cdm_column_names = []
+    for n in columns:
+        if n in cdm_var_dic.keys():
+            cdm_column_names.append(cdm_var_dic[n]['cdm_name'])
+        elif n in cdm_header_dic.keys():
+            cdm_column_names.append(cdm_header_dic[n])
+        else:
+            cdm_column_names.append(n)
+
+    pdf = pd.DataFrame(data= read_data, index=dates, columns= cdm_column_names)
+    #pdf = pdf.replace([-999.9, -9999, -999, -999.0, -99999.0, -99999.9], np.nan)
+    
+    pdf['pressure'] *= 100.  # need Pa
+
+    #out.index.name = 'date'
+
+    return pdf
+
+
+def igra2_ascii_to_dataframe(file=''):
+    """ Read an igra2 stationfile in ASCII format and convert to a Pandas DataFrame. 
+        Adapted from https://github.com/MBlaschek/CEUAS/tree/master/CEUAS/data/igra/read.py 
+        Variables used inside the DataFrame are already CDM compliant
+        
+        Args:
+             file (str): path to the igra2 station file
+
+        Returns:
+             Pandas DataFrame with cdm compliant column names
+    """
+
+    data = check_prepare_file(file=file)
+
+  #  if not os.path.isfile(file):
+  #      raise IOError("File not Found! %s" % file)
+
+  #  if '.zip' in file:
+  #      archive = zipfile.ZipFile(file, 'r')
+  #      inside = archive.namelist()
+  #      tmp = archive.open(inside[0])
+  #      tmp = io.TextIOWrapper(tmp, encoding='utf-8')
+  #      tmp = tmp.read()
+  #      archive.close()
+  #      data = tmp.splitlines()  # Memory (faster)                                                                                                                                                                                                                                        
+  #  elif '.gz' in file:
+  #      with gzip.open(file, 'rt',  encoding='utf-8') as infile:
+  #          tmp = infile.read()  # alternative readlines (slower)                                                                                                                                                                                                                        
+  #          data = tmp.splitlines()  # Memory (faster)                                                                                                                                                                                                                                   
+  #  else:
+  #      with open(file, 'rt') as infile:
+  #          tmp = infile.read()  # alternative readlines (slower)                                                                                                                                                                                                                       #              data = tmp.splitlines()  # Memory (faster)                                                                                                                                                                                                                                       
+    read_data, dates = [], [] #  Lists containing the raw data from the ascii file, and the observation dates
+
+    """ Data to be extracted and stored from the igra2 station files 
+        Some info is contained in the header of each ascent, some in the following data """
+    columns=['ident','year','month','day','hour','reltime','p_src','np_src','lat','lon',
+             'lvltyp1', 'lvltyp2', 'etime', 'press', 'pflag', 'gph', 'zflag', 'temp', 'tflag', 'rh' ,'dpdep', 'wdir','wspd']
+ 
+
+    columns = ['ident','idate','reltime','p_src','np_src','lat','lon',
+             'lvltyp1', 'lvltyp2', 'etime', 'press', 'pflag', 'gph', 'zflag', 'temp', 'tflag', 'rh' ,'dpdep', 'wdir','wspd']
+
+    """ Dictionary mapping the variables from the igra2 tables as used in the code to CDM naming 
+        definitions from https://github.com/glamod/common_data_model/blob/master/table_definitions/header_table.csv 
+                         https://github.com/glamod/common_data_model/blob/master/table_definitions/observations_table.csv
+ 
+        
+    """
+    cdm_header_dic = {'ident': 'station_name', 
+                      'year' : '', 'month': '', 'day':'', 'hour': '',  # to be inglobated into the timestamp
+                      'idate': 'report_timestamp',
+                      'lat'  : 'latitude',
+                      'lon'  : 'longitude', 
+                      'reltime': 'XXX_reltime' ,  'p_src': 'XXX_p_src' , 'np_src': 'XXX_np_src', # FF I cannot map these
+                      }     
+
+    """ dictionary containing info regarding the variable observed.
+        cdm_name report the naming convention in the CDM 
+        FF check where the definitions are, cannot find them in the CDM """
+
+    cdm_var_dic = { 'temp': {'units':'C_to_tenths'       , 'cdm_name': 'temperature' },
+                    'wspd': {'units':'ms_to_tenths'      , 'cdm_name': 'wind_speed' },
+                    'wdir': {'units':'degree'            , 'cdm_name': 'wind_direction' },
+                    'dpdp': {'units':'C_to_tenths'       , 'cdm_name': 'dew_point' },
+                    'rh'  : {'units':'percent_to_tenths' , 'cdm_name': 'relative_humidity'  },
+                    'press':{'units':''                  , 'cdm_name': 'pressure' }
+                   }
+
+    ident,year,month,day,hour,reltime,p_src,np_src,lat, lon = 0,0,0,0,0,0,0,0,0,0
+    lvltyp1,lvltyp2,etime,press,pflag,gph,zflag,temp,tflag,rh,dpdep,wdir,wspd = 0,0,0,0,0,0,0,0,0,0,0,0,0 # initialize to zeros
+
+    idate = 0
+    for i, line in enumerate(data):
+        if line[0] == '#':
+            # Info from the Header line of each ascent                                                                                                                                                                                                                   
+            ident   = line[1:12]               # station identifier
+            year    = line[13:17]               # year, months, day, hour of the observation
+            month   = line[18:20]
+            day     = line[21:23]
+            hour    = line[24:26]               
+            reltime = line[27:31]            # release time of the sounding.
+            numlev  = int(line[32:36])        # number of levels in the sounding == number of data recorded in the ascent
+            p_src   = line[37:45]              # data source code for the pressure levels 
+            np_src  = line[46:54]             # data source code for non-pressure levels
+            lat     = int(line[55:62]) / 10000.  # latitude and longitude
+            lon     = int(line[63:71]) / 10000.
+
+            """ FF TODO: check if this format is cdm compliant """
+            if int(hour) == 99:
+                time = reltime + '00'
+            else:
+                time = hour + '0000'
+       
+            if '99' in time:
+                time = time.replace('99', '00')
+
+            idate = datetime.strptime(year + month + day + time, '%Y%m%d%H%M%S') # constructed according to CDM
+             
+        else:
+           # Data of each ascent
+            lvltyp1 = int(line[0])            # 1-  1   integer major level type indicator
+            lvltyp2 = int(line[1])            # 2-  2   integer minor level type indicator
+            etime   = int(line[3:8])          # 4-  8   integer elapsed time since launch
+            press   = int(line[9:15])         # 10- 15  integer reported pressure
+            pflag   = line[15]                # 16- 16  character pressure processing flag
+            gph     = int(line[16:21])        # 17- 21  integer geopotential height
+            zflag   = line[21]                # 22- 22  character gph processing flag
+            temp    = int(line[22:27]) / 10.  # 23- 27  nteger temperature
+            tflag   = line[27]                # 28- 28  character temperature processing flag
+            rh      = int(line[28:33]) / 10.  # 30- 34  integer relative humidity
+            dpdp    = int(line[34:39]) / 10.  # 36- 40  integer dew point depression (degrees to tenth e.g. 11=1.1 C)
+            wdir    = int(line[40:45])        # 41- 45  integer wind direction (degrees from north, 90 = east)
+            wspd    = int(line[46:51]) / 10.  # 47- 51  integer wind speed (meters per second to tenths, e.g. 11 = 1.1 m/s 
+
+        
+        read_data.append( (ident, idate, reltime, p_src, np_src, lat, lon,
+                           lvltyp1, lvltyp2, etime, press, pflag, gph, zflag, temp, tflag, rh, dpdep, wdir, wspd) )
+
+        dates.append(idate)
+        
+    #print(read_data, dates)
+    #input('check the line')
+    """ converting the igra names into CDM names, to be used in the Panda DataFrame """
+    cdm_column_names = []
+    for n in columns: 
+        if n in cdm_var_dic.keys():
+            cdm_column_names.append(cdm_var_dic[n]['cdm_name'])
+        elif n in cdm_header_dic.keys():
+            cdm_column_names.append(cdm_header_dic[n])
+        else:
+            cdm_column_names.append(n)
+
+    #df = pd.DataFrame(data= read_data, index=dates, columns= columns)
+    df = pd.DataFrame(data= read_data, columns= cdm_column_names)
+    print(df.head)
+    input('check pd')
+    return df
+
+ 
+
+
     
 def read_all_odbsql_stn_withfeedback(odbfile):
 
@@ -302,7 +613,7 @@ len(alldict['header'])
 
     return alldict
     
-"""
+
 
 def par_read_igra_stn_nofeedback(varno,odbfile):
 
@@ -363,7 +674,7 @@ def par_read_igra_stn_nofeedback(varno,odbfile):
     print(odbfile,time.time()-tx)
 
     return alldict
-
+"""
 
 
             
@@ -380,7 +691,7 @@ def fromfb(fbv,cdmfb,cdmkind):
         x=cdmfb[0](fbv[cdmfb[1]],fbv[cdmfb[2]])
     else:
         if cdmfb=='varno@body':
-            tr=numpy.zeros(113,dtype=int) 
+            tr=numpy.zeros(113,dtype=int) # fixed length of 113 since the highest var number is 112 
             """ translate odb variables number to Lot3 numbering convention """
             tr[1]=117  # should change
             tr[2]=85
@@ -459,8 +770,10 @@ def find_dateindex(y):
     z[0,:]=x
     return z
 
+
 def odb_to_cdm(cdm, cdmd, fn):
-    """ Convert the odb file into cdm compliant netCDF files
+    """ Convert the  file into cdm compliant netCDF files
+        According to each file type, it will use the appropriate reading function to extract a Pandas DataFrame
         input:
               fn   :: odb file name (e.g. era5.conv._10393)
               cdm  :: cdm tables (read with pandas)
@@ -476,7 +789,13 @@ def odb_to_cdm(cdm, cdmd, fn):
     if not False:
         
         # era5 analysis feedback is read from compressed netcdf files era5.conv._?????.nc.gz in $RSCRATCH/era5/odbs/1
-        fbds=read_all_odbsql_stn_withfeedback(fn) # this is the xarray converted from the pandas dataframe 
+        if source == 'odb': 
+            fbds=read_all_odbsql_stn_withfeedback(fn) # this is the xarray converted from the pandas dataframe 
+        elif source == 'igra2':
+            fbds= igra2_ascii_to_dataframe(fn)
+        else:
+            raise ValueError('File type %s not recognized! Allowed types: odb, igra2, bufr, ncar' %source)
+
         #fbds=xr.open_dataset(f)
         print(time.time()-t) # to check the reading of the odb
         # the fbencodings dictionary specifies how fbds will be written to disk in the CDM compliant netCDF file.
@@ -490,9 +809,12 @@ def odb_to_cdm(cdm, cdmd, fn):
                     fbencodings[d]={'dtype':numpy.dtype('int32'),'compression': 'gzip'}               
             else:
                 fbencodings[d]={'compression': 'gzip'}
+
                 
         y=fbds['date@hdr'].values
-        z=find_dateindex(y)
+        z=find_dateindex(y) # extracting the uniqe date indices
+
+
         di=xr.Dataset() 
         di['dateindex']=({'days':z.shape[1],'drange':z.shape[0]},z) # date, index of the first occurrance, index of the last 
     
@@ -503,7 +825,7 @@ def odb_to_cdm(cdm, cdmd, fn):
         groups={}
         groupencodings={}
         for k in cdmd.keys(): # loop over all the table definitions 
-            groups[k]=xr.Dataset() # create an  xarray
+            groups[k]=xr.Dataset() # create an xarray
             groupencodings[k]={} # create a dict of group econding
 
             for i in range(len(cdmd[k])): # in the cdm table definitions you always have the element(column) name, the type, the external table and the description 
@@ -632,6 +954,8 @@ def csvListFromUrls(url=''):
     csv_files_list = [m.replace('"','') for m in [n.split('title="')[1] for n in split if '.csv' in n and "title" in n] ] 
     return csv_files_list
 
+
+
 if __name__ == '__main__':
 
 
@@ -753,11 +1077,26 @@ if __name__ == '__main__':
     #cdm['observed_variable']=pd.read_csv(tpath+'/observed_variable.dat',delimiter='\t',quoting=3,dtype=tdict,na_filter=False,comment='#')
 
 
+
+    igra = 'igra2_example/BRM00082571-data.txt'
+    a = igra2_ascii_to_dataframe(file= igra)
+    print(' a head is', a.head() ) 
+
+    uadb = 'ncar_uadb_example/uadb_trhc_81405.txt'
+    b = uadb_ascii_to_dataframe(file = uadb)
+    print( ' b head is', b.head() ) 
+    print(b)
+
     """ Up to here, we have two different dictionaries.
     cdm_tab: contains the dictionary for the cdm tables
     cdm_tabdef: contains the dictionary for the cdm tables definitions
     """
 
+
+
+
+
+    ''' 
 
     #func=partial(odb_to_cdm, cdm=cdm_tab, cdmd=cdm_tabdef)
     func=partial(odb_to_cdm, cdm_tab, cdm_tabdef)
@@ -802,3 +1141,4 @@ if __name__ == '__main__':
             
         transunified=list(map(func,flist))
         
+    '''
