@@ -113,7 +113,7 @@ def read_all_odbsql_stn_withfeedback(odbfile):
             # to improve, you can convert the columns with nabs in the alldicts (pandas data frame) into int(np.nans)
             # date values are large so float 32 precision is not sufficient 
             alldict=pd.read_csv(f, delimiter='\t', quoting=3, comment='#',dtype=tdict) # example test: (21150x63 columns)
-            del f,rdata
+            del f, rdata
 
  
             """ alternative method to read the odb           
@@ -212,13 +212,13 @@ def fromfb(fbv,cdmfb,cdmkind):
             tr[40]= 36 # 2m Td
             tr[41]= 104 #10m U
             tr[42]= 105  #10m V
-            tr[58]=38 # 2m rel hum
+            tr[58]= 38 # 2m rel hum
             
             x=tr[fbv[cdmfb].values.astype(int)] # reads the varno from the odb feedback and writes it into the variable id of the cdm 
         else:    
             x=fbv[cdmfb].values
-    print('check x', x )
-    input('check new X')    
+    #print('check x', x )
+    #input('check new X')    
     return x
 
 
@@ -296,11 +296,13 @@ def odb_to_cdm(cdm, cdmd, fn):
         # era5 analysis feedback is read from compressed netcdf files era5.conv._?????.nc.gz in $RSCRATCH/era5/odbs/1
         fbds=read_all_odbsql_stn_withfeedback(fn) # this is the xarray converted from the pandas dataframe 
         #fbds=xr.open_dataset(f)
+        
         print(time.time()-t) # to check the reading of the odb
+        
         # the fbencodings dictionary specifies how fbds will be written to disk in the CDM compliant netCDF file.
         # float64 is often not necessary. Also int64 is often not necessary. 
         fbencodings={}
-        for d in fbds._variables.keys():
+        for d in fbds._variables.keys(): # variables stored in the xarray 
             if fbds.variables[d].dtype==numpy.dtype('float64'):
                 if d!='date@hdr':             
                     fbencodings[d]={'dtype':numpy.dtype('float32'),'compression': 'gzip'} # probably dtype not neccessary, but compression must be there
@@ -318,10 +320,14 @@ def odb_to_cdm(cdm, cdmd, fn):
         # odb is read into xarray. now we must encode the cdm into several xarray datasets
         # each cdm table is written into an hdf group, groups is the dict of all the groups
         # to write the group to the disk, you need the group encoding dict
+        
+        """ Empty dictionaries for hdf groups (one for each table) and their  hdf encoding description """
         groups={}
         groupencodings={}
-        for k in cdmd.keys(): # loop over all the table definitions 
-            groups[k]=xr.Dataset() # create an  xarray
+        
+        """ Loop over every table_definition in the cdmd dictionary of pandas DF """
+        for k in cdmd.keys(): # loop over all the table definitions e.g. ['id_scheme', 'crs', 'station_type', 'observed_variable', 'station_configuration', 'station_configuration_codes', 'observations_table', 'header_table'] 
+            groups[k]=xr.Dataset() # create an  empy xarray
             groupencodings[k]={} # create a dict of group econding
 
             for i in range(len(cdmd[k])): # in the cdm table definitions you always have the element(column) name, the type, the external table and the description 
@@ -330,11 +336,13 @@ def odb_to_cdm(cdm, cdmd, fn):
                 #                    2. the corr table needs to be created from the local data sources (e.g. the feedback or IGRA or smt else). 
                 # These are the observation_tables, the header_tables and the station_configuration.
                 # These tables are contained in the CEUAS GitHub but not in the cdm GitHub
-                if k in ('observations_table'):
+                if k in ('observations_table'): # equals to k == 'observations_tables' 
                     try:
                         # fbds is an xarray dataset , fbds._variables is a dict of the variables 
-                        groups[k][d.element_name]=({'hdrlen':fbds.variables['date@hdr'].shape[0]},
-                                    fromfb(fbds._variables,cdmfb[d.element_name],ttrans(d.kind,kinds=okinds)))
+                        """ Here: d is taken from the definition table, e.g. I want the """
+
+                        groups[k][d.element_name]=({'hdrlen':fbds.variables['date@hdr'].shape[0]},  fromfb(fbds._variables, cdmfb[d.element_name], ttrans(d.kind, kinds=okinds)))
+                        
                     except KeyError:
                         x=numpy.zeros(fbds.variables['date@hdr'].values.shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=okinds)))
                         x.fill(numpy.nan)
@@ -345,6 +353,7 @@ def odb_to_cdm(cdm, cdmd, fn):
                     try:
                         groups[k][d.element_name]=({'hdrlen':fbds.variables['date@hdr'].shape[0]},
                                     fromfb(fbds._variables,cdmfb[d.element_name],ttrans(d.kind,kinds=okinds)))
+                        
                     except KeyError:
                         # if not found, it fills the columns with nans of the specified kind. Same for the observation_tables 
                         x=numpy.zeros(fbds.variables['date@hdr'].values.shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=okinds)))
@@ -352,12 +361,14 @@ def odb_to_cdm(cdm, cdmd, fn):
                         groups[k][d.element_name]=({'hdrlen':fbds.variables['date@hdr'].shape[0]},x)
                         
                 elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
+                    
                     try:   
                         if 'sci' not in locals(): 
                             sci=numpy.where(cdm[k]['primary_id']=='0-20000-0-'+fbds['statid@hdr'].values[0].decode('latin1'))[0]
                         if len(sci)>0:
                             groups[k][d.element_name]=({k+'_len':1},
                                     cdm[k][d.element_name].values[sci])
+                            
                     except KeyError:
                         pass
                         
@@ -377,10 +388,10 @@ def odb_to_cdm(cdm, cdmd, fn):
                     pass
 
         #this writes the dateindex to the netcdf file. For faster access it is written into the root group
-        di.to_netcdf(fno,format='netCDF4',engine='h5netcdf',mode='w')
+        di.to_netcdf(fno, format='netCDF4',engine='h5netcdf',mode='w')
         # add era5 feedback to the netcdf file. 
         # fbds is the 60 col. xarray
-        fbds.to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=fbencodings,group='era5fb',mode='a')
+        fbds.to_netcdf(fno, format='netCDF4',engine='h5netcdf',encoding=fbencodings,group='era5fb',mode='a')
         
         for k in groups.keys():
             #this code deletes some variables to check how well they are compressed. Variable strings are badly compressed
@@ -494,30 +505,30 @@ if __name__ == '__main__':
     print ('tpath is ' , tpath )
 
 
+
+    """ # Uncomment to get the list of all the .csv files present at the url specified
+    url = 'https://github.com/glamod/common_data_model/tree/master/table_definitions'
+    cdmtabledeflist = csvListFromUrls(url)
+    """
+    
+    
     cdmpath='https://raw.githubusercontent.com/glamod/common_data_model/master/tables/' # cdm tables            
     
-
-    # TODO: get the list of files in the tables
+    """ Selecting the list of table definitions. Some of the entires do not have the corresponding implemented tables """
+    cdmtabledeflist=['id_scheme','crs','station_type','observed_variable','station_configuration','station_configuration_codes','observations_table','header_table']  
+    cdm_tabdef = dict()
+    for key in cdmtabledeflist:
+        url='table_definitions'.join(cdmpath.split('tables'))+key+'.csv' # https://github.com/glamod/common_data_model/tree/master/table_definitions/ + ..._.dat 
+        f=urllib.request.urlopen(url)
+        col_names=pd.read_csv(f,delimiter='\t',quoting=3,nrows=0,comment='#')
+        f=urllib.request.urlopen(url)
+        tdict={col: str for col in col_names}
+        cdm_tabdef[key]=pd.read_csv(f,delimiter='\t',quoting=3,dtype=tdict,na_filter=False,comment='#')
+        
+    
+    """ Selecting the list of tables. 'station_configuration_codes','observations_table','header_table' are not implemented in the CDM GitHub"""        
     cdmtablelist=['id_scheme','crs','station_type','observed_variable','station_configuration_codes']        
-    cdm_tab=dict() # dictionary where each key is the name of the cdm table, and the value is read from the .dat file
-
-    """ e.g. 
-    'id_scheme':    scheme                            description
-    0       0                               WIGOS ID
-    1       1                               GRUAN ID
-    2       2                             IMO Number
-    3       3                            National ID
-    4       4              WMO buoy / station number
-    5       5               Ship / platform callsign
-    6       6       Generic ID (e.g. SHIP, PLAT etc)
-    7       7                           Station name
-    8       8                           ICOADS other
-    9       9                         ICOADS unknown
-    10     10                       ICOADS composite
-    11     11  Oceangraphic platform / cruise number
-    12     12          Other buoy number (e.g. Argo)
-    13     13                C3S 311a Lot 2 Internal,
-    """ 
+    cdm_tab=dict() # dictionary where each key is the name of the cdm table, and the value is read from the .dat file    
     for key in cdmtablelist:
         f=urllib.request.urlopen(cdmpath+key+'.dat')
         col_names=pd.read_csv(f,delimiter='\t',quoting=3,nrows=0)
@@ -526,36 +537,9 @@ if __name__ == '__main__':
         cdm_tab[key]=pd.read_csv(f,delimiter='\t',quoting=3,dtype=tdict,na_filter=False)
 
 
-    #print('the cdm dictionary is:', cdm )
-    #input('FF vedi')
-    cdm_tabdef=dict()
-
-
-    """ # Uncomment to get the list of all the .csv files present at the url specified
-    url = 'https://github.com/glamod/common_data_model/tree/master/table_definitions'
-    cdmtabledeflist = csvListFromUrls(url)
-    """
-
-    # see that there are more entries than in the rpevious list, since e.g. station_configuration does not exist int he cdm GitHub but was created in the CEUAS GitHub 
-    cdmtabledeflist=['id_scheme','crs','station_type','observed_variable','station_configuration','station_configuration_codes','observations_table','header_table']        
-    for key in cdmtabledeflist:
-        url='table_definitions'.join(cdmpath.split('tables'))+key+'.csv' # https://github.com/glamod/common_data_model/tree/master/table_definitions/ + ..._.dat 
-        f=urllib.request.urlopen(url)
-        col_names=pd.read_csv(f,delimiter='\t',quoting=3,nrows=0,comment='#')
-        f=urllib.request.urlopen(url)
-        tdict={col: str for col in col_names}
-        cdm_tabdef[key]=pd.read_csv(f,delimiter='\t',quoting=3,dtype=tdict,na_filter=False,comment='#')
-
-
-    # up to here: only information read from the public cdm github
-    # header table is instead read from CEUAS github, cdm directory 
-    #cdmd['header_table']=pd.read_csv(tpath+'../table_definitions/header_table.csv',delimiter='\t',quoting=3,comment='#')
-
-
-    #print('FF cdmd dictionary', cdm_tabdef)
-   # input('check')
-    cdm_tabdef['header_table']=pd.read_csv(tpath+'/table_definitions/header_table.csv',delimiter='\t',quoting=3,comment='#')
-    cdm_tabdef['observations_table']=pd.read_csv(tpath+'/table_definitions/observations_table.csv',delimiter='\t',quoting=3,comment='#')
+    """ Adding the  tables that currently only have the definitions but not the implementation in the CDM, or need extensions """  
+    cdm_tab['header_table']=pd.read_csv(tpath+'/table_definitions/header_table.csv',delimiter='\t',quoting=3,comment='#')
+    cdm_tab['observations_table']=pd.read_csv(tpath+'/table_definitions/observations_table.csv',delimiter='\t',quoting=3,comment='#')
 
     id_scheme={cdm_tabdef['id_scheme'].element_name.values[0]:[0,1,2,3,4,5,6],
                cdm_tabdef['id_scheme'].element_name.values[1]:['WMO Identifier','Volunteer Observing Ships network code',
@@ -570,11 +554,6 @@ if __name__ == '__main__':
     #cdm['station_type'].to_csv(tpath+'/station_type_ua.dat')
     #cdm['observed_variable']=pd.read_csv(tpath+'/observed_variable.dat',delimiter='\t',quoting=3,dtype=tdict,na_filter=False,comment='#')
 
-
-    """ Up to here, we have two different dictionaries.
-    cdm_tab: contains the dictionary for the cdm tables
-    cdm_tabdef: contains the dictionary for the cdm tables definitions
-    """
 
 
     #func=partial(odb_to_cdm, cdm=cdm_tab, cdmd=cdm_tabdef)
