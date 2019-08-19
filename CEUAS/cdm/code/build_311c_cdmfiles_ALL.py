@@ -161,7 +161,7 @@ def bufr_to_dataframe(file=''):
         hour, minutes = timePeriod[0:2] , timePeriod[2:4]
                        
         idate =  datetime.strptime(year + month + day + hour + minutes, '%Y%m%d%H%M')
-        iday = datetime.strptime(year + month + day, '%Y%m%d')
+        iday = int(year + month + day )
         
         pressure            = codes_get_array(bufr, "pressure") 
         temperature      = codes_get_array(bufr, "airTemperature")           
@@ -247,7 +247,7 @@ def uadb_ascii_to_dataframe(file=''):
                 dateflag = int(line[35:37])  # date flag
                 year     = line[38:42]  # year
                 month    = "%02d" % int(line[43:45])
-                day      = "%2d"  % int(line[46:48])
+                day      = "%02d"  % int(line[46:48])
                 hour     = line[49:53]
                 locflag  = int(line[54:56])  # Location Flag
                 lat      = float(line[57:67])
@@ -270,7 +270,7 @@ def uadb_ascii_to_dataframe(file=''):
                     minutes = 0
                 minutes = "%02d" % minutes
                 idate = datetime.strptime(year + month + day + hour + minutes, '%Y%m%d%H%M')
-                iday = datetime.strptime(year + month + day,  '%Y%m%d')
+                iday = int(year + month + day)
                 #headers.append((idate, usi, numlev, lat, lon, ele, stype))
                 pday = int(day)
                 search_h = False
@@ -363,7 +363,7 @@ def igra2_ascii_to_dataframe(file=''):
                 time = time.replace('99', '00')
 
             idate = datetime.strptime(year + month + day + time, '%Y%m%d%H%M%S') # constructed according to CDM
-            iday =  datetime.strptime(year + month + day , '%Y%m%d')
+            iday =  int(year + month + day)
         else:
            # Data of each ascent
             lvltyp1 = int(line[0])            # 1-  1   integer major level type indicator
@@ -719,7 +719,9 @@ def df_to_cdm(cdm, cdmd, fn):
                     elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
                         try:   
                             if 'sci' not in locals(): 
-                                sci=numpy.where(cdm[k]['primary_id']=='0-20000-0-'+fbds['station_id'].values[0].decode('latin1'))[0]
+                                #sci=numpy.where(cdm[k]['primary_id']=='0-20000-0-'+fbds['station_id'].values[0].decode('latin1'))[0]
+                                sci=numpy.where(cdm[k]['primary_id']=='0-20000-0-'+str(fbds['station_id'].values[0]))[0]
+                                
                             if len(sci)>0:
                                 groups[k][d.element_name]=({k+'_len':1},
                                         cdm[k][d.element_name].values[sci])
@@ -991,8 +993,7 @@ if __name__ == '__main__':
         tpath = dpath+'/tables/'
    
     """
-    print ('dpath is ' , dpath)
-    print ('tpath is ' , tpath )
+  
 
 
 
@@ -1002,21 +1003,20 @@ if __name__ == '__main__':
     
  
 
-    """ to run one single file, no multicores """
+    """ to run one example file """
     
     igra           = 'examples/BRM00082571-data.txt'
     uadb         = 'examples/uadb_trhc_81405.txt'
     bfr             = 'examples/era5.94998.bfr'
-    #era5_1       = 'examples/era5.conv._01009.nc.gz'
     era5_1       = 'examples/era5.conv._01009'    
     era5_1759 = 'examples/era5.1759.conv.6:99041'
     era5_1761 = 'examples/era5.1761.conv.9:967'
     era5_3188 = 'examples/era5.3188.conv.C:6072'
     
-    files_to_convert = [era5_1759, era5_1, era5_1761, era5_3188 ]
     
+        
     
-    files_to_convert = [ igra, uadb, bfr]
+    files_to_convert = [era5_1759, era5_1,  era5_1761, era5_3188, igra, uadb, bfr]
     
     files_to_convert = [ os.getcwd() + '/' + f for f in files_to_convert ]
     
@@ -1026,7 +1026,7 @@ if __name__ == '__main__':
         print('Analyzing the file: *** ', f)
         fl = files_to_convert
         if 'era5' in f and 'bfr' not in f:         
-            
+            print(' *** Running era5 data ')
             if '01009' in f:
                 cdm_tab['station_configuration']=pd.read_csv('examples/station_configuration.dat', delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')    
                 
@@ -1040,7 +1040,6 @@ if __name__ == '__main__':
                 odb_to_cdm(cdm_tab, cdm_tabdef, f)    
                 
         else:
-            print('running the else for era5')
             if multi:
                 print('Running in multicore')                
                 func= partial(df_to_cdm, cdm_tab, cdm_tabdef)
