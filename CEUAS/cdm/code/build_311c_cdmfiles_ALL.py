@@ -24,6 +24,8 @@ import h5netcdf
 import numpy as np
 from eccodes import *
 
+debug = True
+
 
 """ Some colors for pretty printout """ 
 red    = '\033[91m' 
@@ -110,6 +112,7 @@ cdmvar_dic = {'temperature'         : 85,
 
 
 def bufr_to_dataframe(file=''):
+    
     """ Read a bufr file and convert to a Pandas DataFrame 
         Variables used inside the DataFrame are already CDM compliant                                                                                                                                                                                                               
 
@@ -120,7 +123,9 @@ def bufr_to_dataframe(file=''):
              Pandas DataFrame with cdm compliant column names    
     
     """
-       
+    if debug:
+         print("Running bufr_to_dataframe for: ", file)
+         
     check_read_file (file = file, read= False)
 
     f = open(file)
@@ -225,6 +230,9 @@ def uadb_ascii_to_dataframe(file=''):
         Returns:
              Pandas DataFrame with cdm compliant column names
     """     
+    if debug:
+         print("Running uadb_ascii_to_dataframe for: ", file)    
+         
     data = check_read_file(file=file, read=True)
 
     raw = []
@@ -326,7 +334,9 @@ def igra2_ascii_to_dataframe(file=''):
         Returns:
              Pandas DataFrame with cdm compliant column names
     """
-
+    if debug:
+         print("Running igra2_ascii_to_dataframe for: ", file)    
+         
     data = check_read_file(file=file, read=True)
                  
     read_data = [] #  Lists containing the raw data from the ascii file, and the observation dates
@@ -399,7 +409,10 @@ def igra2_ascii_to_dataframe(file=''):
 
     
 def read_all_odbsql_stn_withfeedback(odbfile):
-
+    
+    if debug: 
+        print("Runnign read_all_odbsql_stn_withfeedback for: ", odbfile)
+        
     alldata=''
 
     alldict=xr.Dataset()
@@ -416,7 +429,7 @@ def read_all_odbsql_stn_withfeedback(odbfile):
             tdict={}
             for r in rdata[2:-2]:
                 try:
-                    print(r[:6])
+                    #print(r[:6])
                     if r[:6]=='Header':
                         break
                     else:    
@@ -441,7 +454,7 @@ def read_all_odbsql_stn_withfeedback(odbfile):
         try:
             rdata=subprocess.check_output(["odb","sql","-q","select *","-i",odbfile,'--no_alignment']) # after reading the header it does the query
             # returns a byte string
-            print('after odb:',time.time()-t)
+            #print('after odb:',time.time()-t)
             rdata=''.join(rdata.decode('latin-1').split("'")) # decoding the string into a unicode
             f=StringIO(rdata) # access the string like a file, return a file pointer to read the string with pandas
             # nb  if you have null values, reading of integer fails and are read as floats
@@ -491,7 +504,7 @@ def read_all_odbsql_stn_withfeedback(odbfile):
             print('odb failed!:'+' '+odbfile)
             return alldict
 
-    print(odbfile,time.time()-t)
+    #print(odbfile,time.time()-t)
     #idy=numpy.lexsort((alldict['varno@body'],
                        #-alldict['vertco_reference_1@body'],
                        #alldict['time@hdr'],
@@ -499,7 +512,7 @@ def read_all_odbsql_stn_withfeedback(odbfile):
     #for k in alldict.columns:
         #alldict[k]=alldict[k][idy]
 
-    print(odbfile,time.time()-t)
+    #print(odbfile,time.time()-t)
 
     """ may not be necessary to convert into x_array sicne you can write a pandas df into an HDF file """
 
@@ -554,12 +567,15 @@ def ttrans(cdmtype, kinds=kinds):
         print(cdmtype,'not found, using numpy.float32')   
     return nptype
 
-@njit
+#@njit
 def find_dateindex(y):
     """ creates the indices list from the dates, for quick access 
         nb the benchmark script will not work with these files since the definition of the array size is swapped i.e. (x.shape[0], 3)"""        
 
-
+    
+    if debug: 
+        print("Running find_dateindex for: ", y)
+        
     x=numpy.unique(y)
     z=numpy.zeros((3, x.shape[0]), dtype=numpy.int32 )
     z-=1
@@ -599,7 +615,14 @@ def find_dateindex(y):
     return z
 
 def find_date_indices(iday):
-    """ Extracts the list of observation dates, and store the indices of the first and last observations """
+    """ Extracts the list of observation dates, and store the indices of the first and last observations 
+          Args: 
+                  list of observation dates
+          Return: numpy array (3,:) where the first list is the list of unique obs dates, the second are the indices of first obs  dates, the second the list of last obs dates. 
+          """
+    if debug: 
+        print("Running find_dateindex")
+        
     days, counts = numpy.unique(iday, return_counts = True)
     z=numpy.zeros((3, days.shape[0]), dtype=numpy.int32 )    
 
@@ -659,9 +682,12 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
               cdm   :: cdm tables (read with pandas)
               cdmd :: cdm tables definitions ("")  """    
     
+    if debug:
+        print("Running df_to_cdm for: ", fn)
+        
     t=time.time()
     fno = initialize_convertion(fn, out_dir ) 
-    
+    log_file = open(out_dir +  '/' + 'logger.log', 'a') 
     if not False:
         
             # era5 analysis feedback is read from compressed netcdf files era5.conv._?????.nc.gz in $RSCRATCH/era5/odbs/1
@@ -671,7 +697,7 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
             elif  'uadb' in fn:
                 fbds = uadb_ascii_to_dataframe(fn)
             elif  'data' in fn:
-                print(" analysing an igra dataset")
+                #print(" analysing an igra dataset")
                 fbds = igra2_ascii_to_dataframe(fn)
             else:
                 print('Unidentified file is: ', fn)
@@ -744,20 +770,19 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                                 groups[k][d.element_name]=({k+'_len':1},  cdm[k][d.element_name].values[sci] )
                                 
                             else:  
-                                log_file = open(output_dir + '/summary.dat' , 'a')
-                                log_file.write('station_configuration_error_' + fn + '\n')
-                                log_file.close
+                                log_file.write('station_id_else_' + fn + '\n')
                                 #print(' The station id ', station_id, ' for the file: ', fn, 'could not be found in the station_configuration! Please check! ' )
-                                
                                 #input('check station id')
      
                         except KeyError:
+                            log_file.write('station_id_keyerror_' + fn + '\n' )
                             pass
                             
                     else : # this is the case where the cdm tables DO exist in th CDM GitHub 
                         try:   
                             groups[k][d.element_name]=({k+'_len':len(cdm[k] ) }, cdm[k][d.element_name].values)  # element_name is the netcdf variable name, which is the column name of the cdm table k 
                         except KeyError:
+                            log_file.write('table_error_notexisting_' + fn + '\n')
                             pass
                     try:
                         groups[k][d.element_name].attrs['external_table'] = d.external_table # defining variable attributes that point to other tables (3rd and 4th columns)
@@ -765,6 +790,7 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                         #print('good element in cdm table: ' , k, d.element_name ) 
                         groupencodings[k][d.element_name] = {'compression': 'gzip'}
                     except KeyError:
+                        log_file.write('k_d.element_name_error_'  + fn + '\n') 
                         #print('bad:', k, d.element_name)
                         pass
     
@@ -780,6 +806,7 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                 groups[k].to_netcdf(fno, format='netCDF4', engine='h5netcdf', encoding=groupencodings[k], group=k, mode='a') 
                 
             print('sizes: in: {:6.2f} out: {:6.2f}'.format( os.path.getsize( fn) /1024/1024, os.path.getsize( fno )/1024/1024) )
+            log_file.close()
             del fbds
         
     #print(fno,time.time()-t)
@@ -796,6 +823,9 @@ def odb_to_cdm(cdm, cdmd, output_dir, fn):
               cdm  :: cdm tables (read with pandas)
               cdmd :: cdm tables definitions ("")  """
 
+    if debug:
+        print("Running odb_to_cdm for: ", fn)
+        
     t=time.time()
     fno = initialize_convertion(fn, output_dir) 
     
@@ -885,7 +915,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, fn):
                         #print('good element in cdm table: ',k,d.element_name)
                         groupencodings[k][d.element_name]={'compression': 'gzip'}
                     except KeyError:
-                        print('bad:', k, d.element_name)
+                        #print('bad:', k, d.element_name)
                         pass
     
             #this writes the dateindex to the netcdf file. For faster access it is written into the root group
@@ -980,6 +1010,21 @@ def csvListFromUrls(url=''):
 
 
 
+def filelist_cleaner(lista, dataset=''):
+       """ Removes unwanted files that might be present in the database directories """
+       print('Cleaning the list of files to be converted')
+       if dataset == 'ncar':
+          cleaned = [ l for l in lista if '.nc' not in l ]
+       if dataset == 'bufr':
+          cleaned = [ l for l in lista if '.bfr' in l ]
+       if 'era5' in dataset:
+           cleaned = [ l for l in lista if '.nc' not in l and '.conv.' in l ]
+       else:
+           cleaned = lista
+       print('Cleaned::: ', cleaned )
+       
+       return cleaned
+   
 if __name__ == '__main__':
 
     
@@ -1023,8 +1068,8 @@ if __name__ == '__main__':
     dataset = args.dataset 
     out_dir = args.output
 
-    if dataset not in ['era5_1', 'era5_1759', 'era5_1761', 'bufr', 'igra2', 'ncar', 'test', 'all' ]:
-        raise ValueError(" The selected dataset is not valid. Please choose from ['era5_1', 'era5_1759', 'era5_1761', 'bufr', 'igra2', 'ncar', 'test', 'all' ]  ")
+    if dataset not in ['era5_1', 'era5_3188', 'era5_1759', 'era5_1761', 'bufr', 'igra2', 'ncar', 'test', 'all' ]:
+        raise ValueError(" The selected dataset is not valid. Please choose from ['era5_1', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'igra2', 'ncar', 'test', 'all' ]  ")
     
    
 
@@ -1036,26 +1081,18 @@ if __name__ == '__main__':
     """ Paths to the databases """
     
     examples_dir = os.getcwd() + '/examples'
-    stat_conf_dir = os.getcwd() + '/stations_configurations/'    
-    """ original sources 
+    stat_conf_dir = os.getcwd() + '/stations_configurations/'   
     
-    era5_1_db        = { 'era5_1_db'       : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1'            , 'stat_conf' : 'station_configuration_era5_1.dat'       , 'example': 'era5.conv._01009'             } ,
-                                   'era5_3188_db' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/3188'      , 'stat_conf' : 'station_configuration_era5_3188.dat'  , 'example': 'era5.3188.conv.C:6072'   } ,
-                                   'era5_1759_db' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1759'      , 'stat_conf' : 'station_configuration_era5_1759.dat'  , 'example': 'era5.1759.conv.6:99041' } ,
-                                   'era5_1761_db' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1761'      , 'stat_conf' : 'station_configuration_era5_1761.dat'  , 'example': 'era5.1761.conv.9:967'     } ,
-                                   'ncar_db'           : { 'dbpath' : '/raid8/srvx1/mblaschek/workspace/data/UADB' , 'stat_conf' : 'station_configuration_ncar.dat'            , 'example': 'uadb_trhc_81405.txt'       } ,
-                                   'igra2'               : { 'dbpath' : '/raid60/scratch/leo/scratch/igra'                         , 'stat_conf' : 'station_configuration_igra2.dat'           , 'example': 'BRM00082571-data.txt'   } ,
-                                   'bufr'                 : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/ai_bufr'   , 'stat_conf' : 'station_configuration_bufr.dat'             , 'example': 'era5.94998.bfr'  }    }
     
-    """
  
+    """ Sources of the files """
     db                    = { 'era5_1'       : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1'            , 'stat_conf' : 'station_configuration_era5_1.dat'       , 'example': 'era5.conv._01009'             } ,
                                    'era5_3188' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/3188'      , 'stat_conf' : 'station_configuration_era5_3188.dat'  , 'example': 'era5.3188.conv.C:6072'   } ,
                                    'era5_1759' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1759'      , 'stat_conf' : 'station_configuration_era5_1759.dat'  , 'example': 'era5.1759.conv.6:99041' } ,
                                    'era5_1761' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1761'      , 'stat_conf' : 'station_configuration_era5_1761.dat'  , 'example': 'era5.1761.conv.9:967'     } ,
                                    'ncar'           : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'         , 'stat_conf' : 'station_configuration_ncar.dat'            , 'example': 'uadb_trhc_81405.txt'       } ,
-                                   'igra2'          : { 'dbpath' : '/raid60/scratch/leo/scratch/igra'                         , 'stat_conf' : 'station_configuration_igra2.dat'           , 'example': 'BRM00082571-data.txt'   } ,
-                                   'bufr'            : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/ai_bufr'   , 'stat_conf' : 'station_configuration_bufr.dat'             , 'example': 'era5.94998.bfr'                }    }
+                                   'igra2'          : { 'dbpath' : '/raid60/scratch/federico/databases/IGRAv2'      , 'stat_conf' : 'station_configuration_igra2.dat'           , 'example': 'BRM00082571-data.txt'   } ,
+                                   'bufr'            : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/ai_bfr'    , 'stat_conf' : 'station_configuration_bufr.dat'             , 'example': 'era5.94998.bfr'                }    }
     
     
     
@@ -1092,15 +1129,18 @@ if __name__ == '__main__':
     else:
         if dataset == 'all':
             datasets = db.keys()
-        elif dataset in ['era5_1', 'era5_1759', 'era5_1761', 'bufr', 'igra2', 'ncar'] :
+        elif dataset in ['era5_1', 'era5_1759', 'era5_3188', 'era5_1761', 'bufr', 'igra2', 'ncar'] :
             datasets = [dataset]
       
+        os.environ["OMP_NUM_THREADS"] = "1" # to avoid multithreading complainings
+
         npool = 30          
         p=Pool(npool)   
         
         print(red + '*** Running on ' + str(npool) + ' cores \n' + cend )
         for d in datasets:
             output_dir = out_dir + '/' + d
+            
             if not os.path.isdir(output_dir):
                 os.makedirs(output_dir)
                 
@@ -1109,17 +1149,25 @@ if __name__ == '__main__':
             stat_conf_file = stat_conf_dir +  db[d]['stat_conf']            
             cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
             
-            files_list = [ db[d]['dbpath'] + '/' + f for f in os.listdir(db[d]['dbpath']) ] # extracting the files list stores in the database path 
+            files_list = [ db[d]['dbpath'] + '/' + f for f in os.listdir(db[d]['dbpath']) if os.path.isfile(db[d]['dbpath'] + '/' + f)] # extracting the files list stores in the database path 
             
-            files_list = files_list[:500] # CHANGE HERE TO RUN ALL THE SET!!!
+            files_list = [ f for f in files_list if os.path.getsize(f) > 10000000 ] # cleaning the list of files in the original database directories
             
-            print('Check files list: ', files_list)
+            
+            files_list = [ f for f in files_list if os.path.getsize(f) < 30000000 ] # to process only 10 small files !!! 
+            print('before files', files_list) 
+            
+            files_list = filelist_cleaner(files_list, d)[:10] 
+            
+            
+            print('*** Check files list: ', files_list)
             if 'era5' in d and 'bufr' not in d:   
                 
                 func= partial(odb_to_cdm, cdm_tab, cdm_tabdef, output_dir)
-                transunified=list(map(func, files_list ) )
+                transunified= p.map(func, files_list ) 
                 
             else:    
                 func= partial(df_to_cdm, cdm_tab, cdm_tabdef, output_dir)
-                transunified=p.map(func, files_list )     
+                transunified= p.map(func, files_list )     
       
+    print('Convertion completed !')
