@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "run_converter.py", line 3, in <module>
+    from build_311c_cdmfiles_ALL_split import db
+  File "/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/build_311c_cdmfiles_ALL_split.py", line 4, in <module>
+    import urllib.request
+ImportError: No module named request
+/opt/anaconda3/lib/python3.7/site-packages/xarray/core/merge.py:10: FutureWarning: The Panel class is removed from pandas. Accessing it from the top-level namespace will also be removed in the next version
+  PANDAS_TYPES = (pd.Series, pd.DataFrame, pd.Panel)
+Cleaning the list of files to be converted
+Traceback (most recent call last):
+  File "run_converter.py", line 58, in <module>
+    files_list = filelist_cleaner(files_list, d)[:process]
+NameError: name 'process' is not defined

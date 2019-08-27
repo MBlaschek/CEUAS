@@ -24,7 +24,7 @@ import h5netcdf
 import numpy as np
 from eccodes import *
 
-debug = True
+debug = False
 
 
 """ Some colors for pretty printout """ 
@@ -411,7 +411,7 @@ def igra2_ascii_to_dataframe(file=''):
 def read_all_odbsql_stn_withfeedback(odbfile):
     
     if debug: 
-        print("Runnign read_all_odbsql_stn_withfeedback for: ", odbfile)
+        print("Running read_all_odbsql_stn_withfeedback for: ", odbfile)
         
     alldata=''
 
@@ -685,6 +685,8 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
     if debug:
         print("Running df_to_cdm for: ", fn)
         
+    station_id_fails = open('station_id_fail.log' , 'a') 
+    
     t=time.time()
     fno = initialize_convertion(fn, out_dir ) 
     log_file = open(out_dir +  '/' + 'logger.log', 'a') 
@@ -770,8 +772,8 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                                 groups[k][d.element_name]=({k+'_len':1},  cdm[k][d.element_name].values[sci] )
                                 
                             else:  
-                                log_file.write('station_id_else_' + fn + '\n')
-                                #print(' The station id ', station_id, ' for the file: ', fn, 'could not be found in the station_configuration! Please check! ' )
+                                log_file.write('stationid_' + str(station_id_) + fn + '\n')
+                                print( red + ' The station id ', station_id, ' for the file: ', fn, 'could not be found in the station_configuration! Please check! ' + cedn )
                                 #input('check station id')
      
                         except KeyError:
@@ -915,7 +917,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, fn):
                         #print('good element in cdm table: ',k,d.element_name)
                         groupencodings[k][d.element_name]={'compression': 'gzip'}
                     except KeyError:
-                        #print('bad:', k, d.element_name)
+                        print('bad:', k, d.element_name)
                         pass
     
             #this writes the dateindex to the netcdf file. For faster access it is written into the root group
@@ -1021,7 +1023,6 @@ def filelist_cleaner(lista, dataset=''):
            cleaned = [ l for l in lista if '.nc' not in l and '.conv.' in l ]
        else:
            cleaned = lista
-       print('Cleaned::: ', cleaned )
        
        return cleaned
    
@@ -1151,16 +1152,13 @@ if __name__ == '__main__':
             
             files_list = [ db[d]['dbpath'] + '/' + f for f in os.listdir(db[d]['dbpath']) if os.path.isfile(db[d]['dbpath'] + '/' + f)] # extracting the files list stores in the database path 
             
-            files_list = [ f for f in files_list if os.path.getsize(f) > 10000000 ] # cleaning the list of files in the original database directories
+            files_list = [ f for f in files_list if os.path.getsize(f) > 10 ] # cleaning the list of files in the original database directories
+                        
+            files_list = filelist_cleaner(files_list, d) 
             
-            
-            files_list = [ f for f in files_list if os.path.getsize(f) < 30000000 ] # to process only 10 small files !!! 
-            print('before files', files_list) 
-            
-            files_list = filelist_cleaner(files_list, d)[:10] 
-            
-            
+            print(green + '*** The total number of file in the dataset ' + d +  'to be processed is: ' + str(len(files_list)) + ' ***' + cend)
             print('*** Check files list: ', files_list)
+             
             if 'era5' in d and 'bufr' not in d:   
                 
                 func= partial(odb_to_cdm, cdm_tab, cdm_tabdef, output_dir)

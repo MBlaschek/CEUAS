@@ -1,0 +1,73 @@
+import os,sys
+import argparse
+from build_311c_cdmfiles_ALL_split import db
+import numpy as np
+
+
+""" Here I select the databases, split the files into the number of wanted processes and run in parallel """
+
+
+
+def filelist_cleaner(lista, dataset=''):
+       """ Removes unwanted files that might be present in the database directories """
+       print('Cleaning the list of files to be converted')
+       if dataset == 'ncar':
+          cleaned = [ l for l in lista if '.nc' not in l ]
+       if dataset == 'bufr':
+          cleaned = [ l for l in lista if '.bfr' in l ]
+       if 'era5' in dataset:
+           cleaned = [ l for l in lista if '.nc' not in l and '.conv.' in l ]
+       else:
+           cleaned = lista
+
+       return cleaned
+
+def chunk_it(seq, num):
+    avg = len(seq) / float(num)
+    out = []
+    last = 0.0
+
+    while last < len(seq):
+        out.append(seq[int(last):int(last + avg)])
+        last += avg
+
+    return out
+
+
+out_dir = 'PROVAAAA'
+processes = 2
+datasets = db.keys() # select the dataset
+
+datasets = 'test'
+
+datasets = ['ncar']
+
+
+if datasets == 'all':
+    datasets = db.keys()
+
+
+if datasets == 'test':
+    os.system('/opt/anaconda3/bin/python3 build_311c_cdmfiles_ALL_split.py -d test -o TEST_CHECK ')
+ 
+else:
+   for d in datasets:
+
+    files_list = [ db[d]['dbpath'] + '/' + f for f in os.listdir(db[d]['dbpath']) if os.path.isfile(db[d]['dbpath'] + '/' + f)] # extracting the files list stores in the database path                                                      \
+    files_list = [ f for f in files_list if os.path.getsize(f) > 10 ] # cleaning the list of files in the original database directories                                                                                                     
+    files_list = filelist_cleaner(files_list, d)
+
+    #chunks = [files_list[x:x+100] for x in range(0, len(files_list), processes)] # creates "processes                            
+    
+    #chunks = [files_list[i * n:(i + 1) * n] for i in range((len(files_list) + n - 1) // n )]
+    #chunks = np.array(chunks)
+
+    #split = np.array_split(chunks, 40)
+    chunks = chunk_it(files_list, processes)
+
+    for c in chunks:
+            
+            c = str(','.join(c))
+            #print(c)
+            #input('hello')
+            os.system('/opt/anaconda3/bin/python3 build_311c_cdmfiles_ALL_split.py -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')                      
