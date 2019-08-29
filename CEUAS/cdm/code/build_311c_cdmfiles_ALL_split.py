@@ -358,6 +358,7 @@ def igra2_ascii_to_dataframe(file=''):
         if line[0] == '#':
             # Info from the Header line of each ascent                                                                                                                                                                                                                   
             ident     = line[1:12]               # station identifier
+            ident = ident[6:12]
             year      = line[13:17]               # year, months, day, hour of the observation
             month   = line[18:20]
             day       = line[21:23]
@@ -686,10 +687,12 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
         print("Running df_to_cdm for: ", fn)
         
     station_id_fails = open('station_id_fail.log' , 'a') 
+    station_id_ok = open('station_id_correct.log' , 'a')
     
     t=time.time()
-    fno = initialize_convertion(fn, out_dir ) 
-    log_file = open(out_dir +  '/' + 'logger.log', 'a') 
+    fno = initialize_convertion(fn, out_dir )
+
+    station_id = '' 
     if not False:
         
             # era5 analysis feedback is read from compressed netcdf files era5.conv._?????.nc.gz in $RSCRATCH/era5/odbs/1
@@ -704,7 +707,9 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
             else:
                 print('Unidentified file is: ', fn)
                 raise ValueError('Cannot identify the type of file to be analized!!! ')
-                            
+                   
+            station_id = str( fbds['station_id'].values[0].replace(' ','') )
+         
             """ Extract the unique indices of each date observation. Create an xarray to be saved as a separate variable in the netCDF """                      
             y=fbds['iday'].values # variables iday contains only dates and no time information
             #zz=find_dateindex(y)
@@ -730,7 +735,7 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                                               2. the corr table needs to be created from the local data sources (e.g. the feedback or IGRA or smt else). 
                                                   e.g. the observation_tables, the header_tables and the station_configuration.
                                                   These tables are contained in the CEUAS GitHub but not in the cdm GitHub """
-            
+            sci_found = False
             for k in cdmd.keys(): # loop over all the table definitions e.g. ['id_scheme', 'crs', 'station_type', 'observed_variable', 'station_configuration', 'station_configuration_codes', 'observations_table', 'header_table']
                 groups[k]=xr.Dataset() # create an xarray for each table
                 groupencodings[k]={} # create a dict of group econding for each table
@@ -763,29 +768,26 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                             
                     elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
                         try:   
-                            station_id = str( fbds['station_id'].values[0].replace(' ','') )
                             if 'sci' not in locals(): 
-                                #sci=numpy.where(cdm[k]['primary_id']=='0-20000-0-'+fbds['station_id'].values[0].decode('latin1'))[0]
-                                #station_id = str( fbds['station_id'].values[0].replace(' ','') )
                                 sci=numpy.where(cdm[k]['primary_id']=='0-20000-0-'+ station_id) [0]
                                 
                             if len(sci)>0:
                                 groups[k][d.element_name]=({k+'_len':1},  cdm[k][d.element_name].values[sci] )
-                                
-                            else:  
-                                log_file.write('stationid_' + str(station_id) + fn + '\n')
-                                print( red + ' The station id ', station_id, ' for the file: ', fn, 'could not be found in the station_configuration! Please check! ' + cend)
+                                sci_found = True
+                            else:
+                                pass
+                                #station_id_fails.write('stationid_' + str(station_id) + fn + '\n')
+                                #print( red + ' The station id ', station_id, ' for the file: ', fn, 'could not be found in the station_configuration! Please check! ' + cend)
                                 #input('check station id')
      
                         except KeyError:
-                            log_file.write('station_id_keyerror_' + fn + '\n' )
                             pass
                             
                     else : # this is the case where the cdm tables DO exist in th CDM GitHub 
                         try:   
                             groups[k][d.element_name]=({k+'_len':len(cdm[k] ) }, cdm[k][d.element_name].values)  # element_name is the netcdf variable name, which is the column name of the cdm table k 
                         except KeyError:
-                            log_file.write('table_error_notexisting_' + fn + '\n')
+                            #log_file.write('table_error_notexisting_' + fn + '\n')
                             pass
                     try:
                         groups[k][d.element_name].attrs['external_table'] = d.external_table # defining variable attributes that point to other tables (3rd and 4th columns)
@@ -793,7 +795,7 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                         #print('good element in cdm table: ' , k, d.element_name ) 
                         groupencodings[k][d.element_name] = {'compression': 'gzip'}
                     except KeyError:
-                        log_file.write('k_d.element_name_error_'  + fn + '\n') 
+                        #log_file.write('k_d.element_name_error_'  + fn + '\n') 
                         #print('bad:', k, d.element_name)
                         pass
     
@@ -809,9 +811,14 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                 groups[k].to_netcdf(fno, format='netCDF4', engine='h5netcdf', encoding=groupencodings[k], group=k, mode='a') 
                 
             print('sizes: in: {:6.2f} out: {:6.2f}'.format( os.path.getsize( fn) /1024/1024, os.path.getsize( fno )/1024/1024) )
-            log_file.close()
             del fbds
-        
+    if sci_found == True: 
+        station_id_ok.write(station_id + '\n' )
+    else:
+        station_id_fails.write(station_id + '\n')
+
+    station_id_fails.close()
+    station_id_ok.close()
     #print(fno,time.time()-t)
     
     return 0
@@ -1028,13 +1035,13 @@ def filelist_cleaner(lista, dataset=''):
        return cleaned
    
 """ Sources of the files """
-db                    = { 'era5_1'       : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1'            , 'stat_conf' : 'station_configuration_era5_1.dat'       , 'example': 'era5.conv._01009'             } ,
-                                   'era5_3188' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/3188'      , 'stat_conf' : 'station_configuration_era5_3188.dat'  , 'example': 'era5.3188.conv.C:6072'   } ,
-                                   'era5_1759' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1759'      , 'stat_conf' : 'station_configuration_era5_1759.dat'  , 'example': 'era5.1759.conv.6:99041' } ,
-                                   'era5_1761' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1761'      , 'stat_conf' : 'station_configuration_era5_1761.dat'  , 'example': 'era5.1761.conv.9:967'     } ,
-                                   'ncar'           : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'         , 'stat_conf' : 'station_configuration_ncar.dat'            , 'example': 'uadb_trhc_81405.txt'       } ,
-                                   'igra2'          : { 'dbpath' : '/raid60/scratch/federico/databases/IGRAv2'      , 'stat_conf' : 'station_configuration_igra2.dat'           , 'example': 'BRM00082571-data.txt'   } ,
-                                   'bufr'            : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/ai_bfr'    , 'stat_conf' : 'station_configuration_bufr.dat'             , 'example': 'era5.94998.bfr'                }    }
+db   = { 'era5_1'    : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1'            , 'stat_conf' : 'station_configuration_era5_1.dat'       , 'example': 'era5.conv._01009'    } ,
+         'era5_3188' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/3188'      , 'stat_conf' : 'station_configuration_era5_3188.dat'  , 'example': 'era5.3188.conv.C:6072'    } ,
+         'era5_1759' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1759'      , 'stat_conf' : 'station_configuration_era5_1759.dat'  , 'example': 'era5.1759.conv.6:99041'   } ,
+         'era5_1761' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1761'      , 'stat_conf' : 'station_configuration_era5_1761.dat'  , 'example': 'era5.1761.conv.9:967'     } ,
+         'ncar'      : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'         , 'stat_conf' : 'station_configuration_ncar.dat'            , 'example': 'uadb_trhc_81405.txt' } ,
+         'igra2'     : { 'dbpath' : '/raid60/scratch/federico/databases/IGRAv2'      , 'stat_conf' : 'station_configuration_igra2.dat'           , 'example': 'BRM00082571-data.txt' } ,
+         'bufr'      : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/ai_bfr'    , 'stat_conf' : 'station_configuration_bufr.dat'             , 'example': 'era5.94998.bfr'     }    }
 
 
 
