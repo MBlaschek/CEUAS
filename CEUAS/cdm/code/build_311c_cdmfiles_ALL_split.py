@@ -774,6 +774,8 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                             if len(sci)>0:
                                 groups[k][d.element_name]=({k+'_len':1},  cdm[k][d.element_name].values[sci] )
                                 sci_found = True
+                                
+                            
                             else:
                                 pass
                                 #station_id_fails.write('stationid_' + str(station_id) + fn + '\n')
@@ -906,10 +908,13 @@ def odb_to_cdm(cdm, cdmd, output_dir, fn):
                     elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
                         try:   
                             if 'sci' not in locals(): 
-                                sci=numpy.where(cdm[k]['primary_id']=='0-20000-0-'+fbds['statid@hdr'].values[0].decode('latin1'))[0]
-                            if len(sci)>0:
-                                groups[k][d.element_name]=({k+'_len':1},
-                                        cdm[k][d.element_name].values[sci])
+                                sci  = numpy.where(cdm[k]['primary_id']     == '0-20000-0-'+fbds['statid@hdr'].values[0].decode('latin1'))[0]
+                                sec = numpy.where(cdm[k]['secondary_id'] == fbds['statid@hdr'].values[0].decode('latin1').split(':')[1])[0]
+                            if len(sci)>0 and len(sec) <1:
+                                groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sci])
+                            elif len(sci) < 1 and len(sec) > 0:
+                                groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sec]) # added the secondary id if primary not available 
+                                
                         except KeyError:
                             pass
                             
@@ -1114,7 +1119,10 @@ if __name__ == '__main__':
         
         print( blue + '*** Running the example files stored in ' + examples_dir + ' ***  \n \n ' + cend)
 
-        for s in db.keys() :
+        #for s in db.keys() :
+            
+        for s in ['era5_3188']:
+            
             stat_conf_file = stat_conf_dir +  db[s]['stat_conf']            
             f = examples_dir + '/' + db[s]['example']    
             
