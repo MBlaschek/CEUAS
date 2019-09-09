@@ -23,6 +23,9 @@ from io import StringIO
 import h5netcdf
 import numpy as np
 from eccodes import *
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning) # deactivates Pandas warnings 
+
 
 debug = False
 
@@ -252,7 +255,9 @@ def uadb_ascii_to_dataframe(file=''):
             try:
                 # Header
                 usi      = int(line[2:14])  # unique station identifier
-                ident    = line[15:21]  # WMO
+                ident    = line[15:21].replace(' ','')# WMO
+                if len(ident) == 4:
+                    ident = '0' + ident 
                 idflag   = int(line[22:24])  # id flag
                 d_src    = int(line[25:28])  # source dataset
                 version  = float(line[29:34])  # version
@@ -709,7 +714,7 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                 raise ValueError('Cannot identify the type of file to be analized!!! ')
                    
             station_id = str( fbds['station_id'].values[0].replace(' ','') )
-         
+            
             """ Extract the unique indices of each date observation. Create an xarray to be saved as a separate variable in the netCDF """                      
             y=fbds['iday'].values # variables iday contains only dates and no time information
             #zz=find_dateindex(y)
@@ -769,19 +774,26 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                     elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
                         try:   
                             if 'sci' not in locals(): 
-                                sci=numpy.where(cdm[k]['primary_id']=='0-20000-0-'+ station_id) [0]
+                                sci = numpy.where(cdm[k]['primary_id']=='0-20000-0-'+ station_id) [0]
                                 
                             if len(sci)>0:
+                                #print('Found a primary_if matching the station_id: ', station_id)
                                 groups[k][d.element_name]=({k+'_len':1},  cdm[k][d.element_name].values[sci] )
                                 sci_found = True
                                 
-                            
-                            else:
-                                pass
-                                #station_id_fails.write('stationid_' + str(station_id) + fn + '\n')
-                                #print( red + ' The station id ', station_id, ' for the file: ', fn, 'could not be found in the station_configuration! Please check! ' + cend)
-                                #input('check station id')
-     
+                            elif len(sci) == 0:
+                                    secondary = list (cdm[k]['secondary_id'].values ) # list of secondary ids in the station_configuration file. I find the element with that particular secondary id
+                                    for s in secondary:
+                                        try:                                
+                                            if station_id in str(s):
+                                                sec = numpy.where(cdm[k]['secondary_id']== s )
+                                                groups[k][d.element_name]=({k+'_len':1},  cdm[k][d.element_name].values[sec] )         
+                                                sci_found = True
+                                        except:
+                                            print  ('Still not found even in secondary ids')
+                                            sci_found = False
+                                            pass
+                                    
                         except KeyError:
                             pass
                             
@@ -789,7 +801,6 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                         try:   
                             groups[k][d.element_name]=({k+'_len':len(cdm[k] ) }, cdm[k][d.element_name].values)  # element_name is the netcdf variable name, which is the column name of the cdm table k 
                         except KeyError:
-                            #log_file.write('table_error_notexisting_' + fn + '\n')
                             pass
                     try:
                         groups[k][d.element_name].attrs['external_table'] = d.external_table # defining variable attributes that point to other tables (3rd and 4th columns)
@@ -802,7 +813,7 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                         pass
     
             #this writes the dateindex to the netcdf file. For faster access it is written into the root group
-            """ Wiriting the di (date index) as a separate xarray. """
+            """ Writing the di (date index) as a separate xarray. """
             di.to_netcdf(fno, format='netCDF4', engine='h5netcdf', mode='w')
    
             """ Writing the content of the original odb file to the netCDF. For each variable, use the proper type encoding."""
@@ -815,9 +826,9 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
             print('sizes: in: {:6.2f} out: {:6.2f}'.format( os.path.getsize( fn) /1024/1024, os.path.getsize( fno )/1024/1024) )
             del fbds
     if sci_found == True: 
-        station_id_ok.write(station_id + '\n' )
+        station_id_ok.write(fn + '_' + station_id + '\n' )
     else:
-        station_id_fails.write(station_id + '\n')
+        station_id_fails.write(fn + '_' + station_id + '\n')
 
     station_id_fails.close()
     station_id_ok.close()
@@ -837,17 +848,25 @@ def odb_to_cdm(cdm, cdmd, output_dir, fn):
 
     if debug:
         print("Running odb_to_cdm for: ", fn)
+
+    station_id_fails = open('station_id_fail.log' , 'a')
+    station_id_ok    = open('station_id_correct.log' , 'a')
         
     t=time.time()
     fno = initialize_convertion(fn, output_dir) 
-    
+    station_id = ''    
     if not False:
         
             # era5 analysis feedback is read from compressed netcdf files era5.conv._?????.nc.gz in $RSCRATCH/era5/odbs/1
             """ Reading the odb and convert to xarray """                      
             fbds=read_all_odbsql_stn_withfeedback(fn) # fdbs: the xarray converted from the pandas dataframe 
         
-        
+            station_id = fbds['statid@hdr'].values[0].decode('latin1').replace(' ','')
+            if ':' in station_id:
+                station_id = station_id.split(':')[1] 
+            if len(station_id)==4:
+                 station_id = '0' + station_id
+                 
             """ Extract the unique indices of each date observation. Create an xarray to be saved as a separate variable in the netCDF """                      
             y=fbds['date@hdr'].values
             z=find_dateindex(y)
@@ -874,6 +893,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, fn):
                                               2. the corr table needs to be created from the local data sources (e.g. the feedback or IGRA or smt else). 
                                                   e.g. the observation_tables, the header_tables and the station_configuration.
                                                   These tables are contained in the CEUAS GitHub but not in the cdm GitHub """
+            sci_found = False
             
             for k in cdmd.keys(): # loop over all the table definitions e.g. ['id_scheme', 'crs', 'station_type', 'observed_variable', 'station_configuration', 'station_configuration_codes', 'observations_table', 'header_table']
                 groups[k]=xr.Dataset() # create an xarray for each table
@@ -908,12 +928,15 @@ def odb_to_cdm(cdm, cdmd, output_dir, fn):
                     elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
                         try:   
                             if 'sci' not in locals(): 
-                                sci  = numpy.where(cdm[k]['primary_id']     == '0-20000-0-'+fbds['statid@hdr'].values[0].decode('latin1'))[0]
-                                sec = numpy.where(cdm[k]['secondary_id'] == fbds['statid@hdr'].values[0].decode('latin1').split(':')[1])[0]
+                                sci  = numpy.where(cdm[k]['primary_id']     == '0-20000-0-'+ station_id)[0]
+                                sec = numpy.where(cdm[k]['secondary_id'] == station_id)[0]
                             if len(sci)>0 and len(sec) <1:
                                 groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sci])
+                                sci_found = True
+
                             elif len(sci) < 1 and len(sec) > 0:
                                 groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sec]) # added the secondary id if primary not available 
+                                sci_found = True
                                 
                         except KeyError:
                             pass
@@ -947,6 +970,15 @@ def odb_to_cdm(cdm, cdmd, output_dir, fn):
             print('sizes: in: {:6.2f} out: {:6.2f}'.format( os.path.getsize( fn) /1024/1024, os.path.getsize( fno )/1024/1024) )
             del fbds
         
+    if sci_found == True:
+        station_id_ok.write(fn + '_' + station_id + '\n' )
+    else:
+        station_id_fails.write(fn + '_' + station_id + '\n')
+
+    station_id_fails.close()
+
+    station_id_ok.close()
+
     print(fno,time.time()-t)
     
     return 0
@@ -1044,15 +1076,18 @@ db   = { 'era5_1'    : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1'   
          'era5_3188' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/3188'      , 'stat_conf' : 'station_configuration_era5_3188.dat'  , 'example': 'era5.3188.conv.C:6072'    } ,
          'era5_1759' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1759'      , 'stat_conf' : 'station_configuration_era5_1759.dat'  , 'example': 'era5.1759.conv.6:99041'   } ,
          'era5_1761' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1761'      , 'stat_conf' : 'station_configuration_era5_1761.dat'  , 'example': 'era5.1761.conv.9:967'     } ,
-         'ncar'      : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'         , 'stat_conf' : 'station_configuration_ncar.dat'            , 'example': 'uadb_trhc_81405.txt' } ,
+         #'ncar'      : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'         , 'stat_conf' : 'station_configuration_ncar.dat'            , 'example': 'uadb_trhc_81405.txt' } ,
+         'ncar'      : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'         , 'stat_conf' : 'station_configuration_ncar.dat'            , 'example': 'uadb_windc_97086.txt' } ,
+
          'igra2'     : { 'dbpath' : '/raid60/scratch/federico/databases/IGRAv2'      , 'stat_conf' : 'station_configuration_igra2.dat'           , 'example': 'BRM00082571-data.txt' } ,
+         
+         
          'bufr'      : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/ai_bfr'    , 'stat_conf' : 'station_configuration_bufr.dat'             , 'example': 'era5.94998.bfr'     }    }
 
 
 
 if __name__ == '__main__':
 
-    
     parser = argparse.ArgumentParser(description="Make CDM compliant netCDFs")
     parser.add_argument('--dataset' , '-d', 
                     help="Select the dataset to convert. Available options: all, era5_1, era5_1759, era5_1761, bufr, igra2, ncar, test. If not selected or equal to 'test', the script will run the example files in the /examples directory."  ,
@@ -1110,19 +1145,24 @@ if __name__ == '__main__':
     examples_dir = os.getcwd() + '/examples'
     stat_conf_dir = os.getcwd() + '/stations_configurations/'   
     
-    
+
     if dataset == 'test':
+        
+        if not os.path.isdir(out_dir):
+                 os.system('mkdir ' + out_dir )
+                 
         output_dir = out_dir + '/tests'
+            
         if not os.path.isdir(output_dir):
-            os.makedirs(output_dir)            
+                os.system('mkdir ' + output_dir )
+        
         """  To run one example file included in the examples/ directory """
         
         print( blue + '*** Running the example files stored in ' + examples_dir + ' ***  \n \n ' + cend)
 
         #for s in db.keys() :
-            
-        for s in ['era5_3188']:
-            
+        for s in ['igra2']:
+                        
             stat_conf_file = stat_conf_dir +  db[s]['stat_conf']            
             f = examples_dir + '/' + db[s]['example']    
             
@@ -1139,12 +1179,14 @@ if __name__ == '__main__':
         
     else:
      Files = Files.split(',')
-     print(Files)
+     print (Files, 'Files are +++')
      for File in Files:
-        output_dir = out_dir + '/' + dataset
-            
+         
+        if not os.path.isdir(out_dir):
+                 os.system('mkdir ' + out_dir )            
+        output_dir = out_dir + '/' + dataset      
         if not os.path.isdir(output_dir):
-                os.makedirs(output_dir)
+                os.system('mkdir ' + output_dir )
                 
         print( blue + '*** Processing the database ' + dataset + ' ***  \n \n *** file: ' + File + '\n'  + cend)
             
