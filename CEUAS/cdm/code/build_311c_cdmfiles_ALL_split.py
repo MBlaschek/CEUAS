@@ -106,7 +106,7 @@ def check_read_file(file='', read= False):
 
 """ Dictionary mapping generic names of the variables to the numbering scheme in the CDM """
 cdmvar_dic = {'temperature'         : 85, 
-                         'wind_direction'     : 106,  
+                         'wind_direction'      : 106,  
                          'wind_speed'          : 107, 
                          'dew_point'            : 36, 
                          'relative_humidity' : 38 ,
@@ -801,6 +801,7 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                         try:   
                             groups[k][d.element_name]=({k+'_len':len(cdm[k] ) }, cdm[k][d.element_name].values)  # element_name is the netcdf variable name, which is the column name of the cdm table k 
                         except KeyError:
+                            print('Still not found!!!')
                             pass
                     try:
                         groups[k][d.element_name].attrs['external_table'] = d.external_table # defining variable attributes that point to other tables (3rd and 4th columns)
@@ -809,7 +810,7 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                         groupencodings[k][d.element_name] = {'compression': 'gzip'}
                     except KeyError:
                         #log_file.write('k_d.element_name_error_'  + fn + '\n') 
-                        #print('bad:', k, d.element_name)
+                        print('bad:', k, d.element_name)
                         pass
     
             #this writes the dateindex to the netcdf file. For faster access it is written into the root group
