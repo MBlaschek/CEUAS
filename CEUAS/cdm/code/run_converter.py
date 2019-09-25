@@ -2,25 +2,30 @@ import os,sys
 import argparse
 from build_311c_cdmfiles_ALL_split import db
 import numpy as np
+import subprocess
+
+from check_correct import *
 
 
 """ Here I select the databases, split the files into the number of wanted processes and run in parallel """
 
-
-
-def filelist_cleaner(lista, dataset=''):
+def filelist_cleaner(lista, d=''):
        """ Removes unwanted files that might be present in the database directories """
        print('Cleaning the list of files to be converted')
-       if dataset == 'ncar':
+       if d == 'ncar':
           cleaned = [ l for l in lista if '.nc' not in l ]
-       if dataset == 'bufr':
-          cleaned = [ l for l in lista if '.bfr' in l ]
-       if 'era5' in dataset:
-           cleaned = [ l for l in lista if '.nc' not in l and '.conv.' in l ]
-       else:
-           cleaned = lista
+       if d == 'bufr':
+          cleaned = [ l for l in lista if '.bfr' in l and 'era5.' in l and '+100-' not in l and 'undef' not in l]
+       if 'era5' in d:
+          cleaned = [ l for l in lista if '.nc' not in l and '.conv.' in l ]
+       if d =='igra2':
+          cleaned = [ l for l in lista if '-data' in l ]
+       if d == 'era5_3188':
+          cleaned = [ l for l in lista if '.conv.C' in l and '.nc' not in l ]
+       if d == 'era5_1761':
+          cleaned = [ l for l in lista if '.conv.' in l and '.nc' not in l ]
 
-       cleaned = [c for c in cleaned if '.py' not in c ]
+       cleaned = [c for c in cleaned if '.py' not in c and '.nc' not in c ]
        return cleaned
 
 def chunk_it(seq, num):
@@ -35,29 +40,13 @@ def chunk_it(seq, num):
     return out
 
 
-
-def find_missing(processed_dir, original_dir, db = 'ncar'):
-    """ Given input and  output directories, finds the files that have not been processed and return a list """
-    miss = []
-    proc = [ f for f in os.listdir(processed_dir) if '.py' not in f ]
-    ori  = [ f for f in os.listdir(original_dir) if '.py' not in f ]
-
-    for f in ori:
-        if db == 'ncar': name = 'ch' + f + '.nc'
-        if name not in proc:
-            #print('file not processed! ', name )                                                                                                                                                                                                                                         
-           miss.append(original_dir + '/' + f )
-    print(' Total number of files missing::: ', str(len(miss)) )
-    return miss
-
-
-out_dir = '/raid60/scratch/federico/All_odb'
-processes = 15
+out_dir = '/raid60/scratch/federico/1_23Sept'
+processes = 25
 
 """ Select the dataset to be processed """ 
 #datasets = db.keys() # select the dataset
-#datasets = 'test'
-datasets = ['era5_1']
+#datasets = 'test' (string) or ['ncar'] (list)
+datasets = ['era5_1'] 
 
 check_missing = False
 
@@ -68,35 +57,29 @@ if datasets == 'test':
     os.system('/opt/anaconda3/bin/python3 build_311c_cdmfiles_ALL_split.py -d test -o TEST_CHECK ')
  
 else:
- if not check_missing:
-   for d in datasets:
-
-    files_list = [ db[d]['dbpath'] + '/' + f for f in os.listdir(db[d]['dbpath']) if os.path.isfile(db[d]['dbpath'] + '/' + f)] # extracting the files list stores in the database path                                                      \
-    files_list = [ f for f in files_list if os.path.getsize(f) > 10 ] # cleaning the list of files in the original database directories                                                               
-    print (files_list)                        
-    files_list = filelist_cleaner(files_list, d)
-
-    #chunks = [files_list[x:x+100] for x in range(0, len(files_list), processes)] # creates "processes                            
-    
-    chunks = chunk_it(files_list, processes)
-
-    for c in chunks:
-            
-            c = str(','.join(c))
-            #print(c)
-            #input('hello')
-            os.system('/opt/anaconda3/bin/python3 build_311c_cdmfiles_ALL_split.py -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')                      
-
- elif check_missing:
   for d in datasets:
-         files_list = find_missing( out_dir + '/' + d , db[d]['dbpath'] , db = d )
-         #print ('Processing the files: ', files_list )
-         files_list = filelist_cleaner(files_list, d)
-         chunks = chunk_it(files_list, processes)
-         for c in chunks:
-              c = str(','.join(c))
-              out = out_dir + '_missing'
-              os.system('/opt/anaconda3/bin/python3 build_311c_cdmfiles_ALL_split.py -d ' + d + ' -o ' + out + ' -f ' + c + ' & ')
+    print ('DATASET IS', d )
+    files_list = [ db[d]['dbpath'] + '/' + f for f in os.listdir(db[d]['dbpath']) if os.path.isfile( db[d]['dbpath']+'/'+f ) ] # extracting the files list stores in the database path                   
+    f_list = [ f for f in files_list if os.path.getsize(f) > 1 ] # cleaning the list of files in the original database directories                                                               
+    #files_list = open('/raid60/scratch/federico/ncar_MISS.txt', 'r').readlines()
+    f_list = filelist_cleaner(f_list, d = d)
+    f_list = [ f.replace('\n','')  for f in f_list ]
+    if check_missing == True:
+           f_list = finder(converted,source)
+
+    #print('TOTAL NUMBER MISSING::: ', len(f_list) )     
+    chunks = chunk_it(f_list, processes)
+    print('+++++++++ NUMBER OF files', len(f_list) )
+    #input('check')
+    #print(f_list)
+    for c in chunks:
+           print ('*** I am running CHUNK: ', chunks.index(c) , ' ***' )
+           print('I have ', len(c), ' files ' , )
+           c = str(','.join(c)).replace('#','')
+           
+           #os.system('/opt/anaconda3/bin/python3  build_311c_cdmfiles_ALL_split.py -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')     
+           comm = '/opt/anaconda3/bin/python3  build_311c_cdmfiles_ALL_split.py -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & '
+           subprocess.call( comm, shell = True )
 
 
 print('\n\n\n *** Finished with the parallel running ***')

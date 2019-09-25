@@ -60,12 +60,12 @@ def make_datetime(dvar,tvar):
 
 """ Translates some of the odb variables name  into cdm var """
 cdmfb={'observation_value':'obsvalue@body',
-       'observed_variable':'varno@body',
-       'z_coordinate_type':'vertco_type@body',
-       'z_coordinate':'vertco_reference_1@body',
-       'date_time':[make_datetime,'date@hdr','time@hdr'],
-       'longitude':'lon@hdr',
-       'latitude':'lat@hdr'}
+               'observed_variable':'varno@body',
+               'z_coordinate_type':'vertco_type@body',
+               'z_coordinate':'vertco_reference_1@body',
+               'date_time':[make_datetime,'date@hdr','time@hdr'],
+               'longitude':'lon@hdr',
+               'latitude':'lat@hdr'}
 
 def check_read_file(file='', read= False):
     """ Simple utility to check if file exists and uncompress it, then optionally read the lines (in case of text files e.g. igra2 and UADB)
@@ -104,13 +104,14 @@ def check_read_file(file='', read= False):
         return data
 
 
-""" Dictionary mapping generic names of the variables to the numbering scheme in the CDM """
-cdmvar_dic = {'temperature'         : 85, 
-                         'wind_direction'      : 106,  
-                         'wind_speed'          : 107, 
-                         'dew_point'            : 36, 
-                         'relative_humidity' : 38 ,
-                         'pressure'               : 117 }
+""" Dictionary mapping generic names of the variables to odbs numbering scheme. 
+The numbers will be then converted to the CDM convention by the funcion 'fromfb' """
+cdmvar_dic = {'temperature'         : 39, 
+                         'wind_direction'      : 111,  
+                         'wind_speed'          : 112, 
+                         'dew_point'            : 59, 
+                         'relative_humidity' : 29 ,
+                         'pressure'               : 1 }
 
 
 
@@ -134,7 +135,6 @@ def bufr_to_dataframe(file=''):
     f = open(file)
     cnt = 0
     
-    
     """ Dicts mapping the names of the variables in the bufr files (keys) to the cdm names (values) """
     cdm_header_dic =  {'stationNumber'  : 'station_name' ,
                        'blockNumber'    : ''             ,
@@ -150,12 +150,12 @@ def bufr_to_dataframe(file=''):
     #                'dewpointTemperature' : {'units': ' '           , 'cdm_name': 'dew_point'           },
     #                'pressure'       : {'units': ' '                , 'cdm_name': 'pressure'            } }
     
-    
-    
     bufr_values = []
     
     """ Name of the columns as they will appear in the pandas dataframe (not necessarily CDM compliant) """
-    column_names = ['report_timestamp' , 'iday',  'station_id', 'latitude', 'longitude', 'pressure', 'varno@body', 'obsvalue@body']
+    #column_names = ['report_timestamp' , 'iday',  'station_id', 'latitude', 'longitude', 'pressure', 'value','varno@body']
+    
+    column_names = ['report_timestamp' , 'iday','station_id', 'lat@hdr', 'lon@hdr', 'obsvalue@body', 'varno@body']
     
     while 1:
         lista = [] # temporary list
@@ -208,9 +208,10 @@ def bufr_to_dataframe(file=''):
             if windd == 2147483647:
                 windd = np.nan 
                 
-            # column_names = ['report_timestamp' , 'iday',  'station_id', 'latitude', 'longitude', 'varno@body', 'obsvalue@body']    
-            for value,var in zip([airT, winds, windd],  ['temperature', 'wind_speed', 'wind_direction'] ):
-                   bufr_values.append( (idate, iday, statid, lat, lon, press, cdmvar_dic[var] , value) )
+            #     column_names = ['report_timestamp' , 'iday','station_id', 'latitude', 'longitude', 'pressure', 'obsvalue@body', 'varno@body']
+
+            for value,var in zip([press, airT, winds, windd],  ['pressure', 'temperature', 'wind_speed', 'wind_direction'] ):
+                   bufr_values.append( (idate, iday, statid, lat, lon, value, cdmvar_dic[var]  ) )
         
             cnt += 1
                
@@ -307,22 +308,21 @@ def uadb_ascii_to_dataframe(file=''):
         else:
             # Data
             ltyp   = int(line[0:4])
-            press  = float(line[5:13])   # hPa
+            press  = float(line[5:13])*100  # converting to hPa
             gph    = float(line[14:22])
             temp   = float(line[23:29])  # degree
             rh     = float(line[30:36])  # %
             wdir   = float(line[37:43])
             wspd   = float(line[44:50])  # m/s
 
-        for value,var in zip([temp, wspd, wdir, rh],  ['temperature', 'wind_speed', 'wind_direction', 'relative_humidity'] ):
-               read_data.append( (idate, iday, ident, lat, lon, press, cdmvar_dic[var] , value) )
+        for value,var in zip([press, temp, wspd, wdir, rh],  ['pressure', 'temperature', 'wind_speed', 'wind_direction', 'relative_humidity'] ):
+               read_data.append( (idate, iday, ident, lat, lon, value, cdmvar_dic[var]  ) )
                             
-    column_names = ['report_timestamp' , 'iday',  'station_id', 'latitude', 'longitude', 'pressure', 'varno@body', 'obsvalue@body']
-
+    column_names = ['report_timestamp' , 'iday','station_id', 'lat@hdr', 'lon@hdr', 'obsvalue@body', 'varno@body']
+            
     df = pd.DataFrame(data= read_data, columns= column_names)
     #pdf = pdf.replace([-999.9, -9999, -999, -999.0, -99999.0, -99999.9], np.nan)
     
-    df['pressure'] *= 100.  # need Pa
     df.sort_values(by = ['iday' , 'report_timestamp'] )    
     
     return df.to_xarray()
@@ -350,9 +350,7 @@ def igra2_ascii_to_dataframe(file=''):
         Some info is contained in the header of each ascent, some in the following data """
     #columns=['ident','year','month','day','hour','reltime','p_src','np_src','lat','lon',
      #        'lvltyp1', 'lvltyp2', 'etime', 'press', 'pflag', 'gph', 'zflag', 'temp', 'tflag', 'rh' ,'dpdep', 'wdir','wspd']
- 
-    column_names = ['report_timestamp' , 'iday',  'station_id', 'latitude', 'longitude', 'pressure', 'varno@body', 'obsvalue@body']
-    
+
  
     """ Initialize the variables that can be read from the igra2 files """
     ident,year,month,day,hour,reltime,p_src,np_src,lat, lon = 0,0,0,0,0,0,0,0,0,0
@@ -402,9 +400,10 @@ def igra2_ascii_to_dataframe(file=''):
             wspd    = int(line[46:51]) / 10.  # 47- 51  integer wind speed (meters per second to tenths, e.g. 11 = 1.1 m/s 
 
         
-            for value,var in zip([temp, wspd, wdir, rh, dpdp],  ['temperature', 'wind_speed', 'wind_direction', 'relative_humidity', 'dew_point'] ):
-                   read_data.append( (idate, iday, ident, lat, lon, press, cdmvar_dic[var] , value) )
-
+            for value,var in zip([press, temp, wspd, wdir, rh, dpdp],  ['pressure', 'temperature', 'wind_speed', 'wind_direction', 'relative_humidity' , 'dew_point' ] ):
+                   read_data.append( (idate, iday, ident, lat, lon, value, cdmvar_dic[var]  ) )
+                                
+    column_names = ['report_timestamp' , 'iday','station_id', 'lat@hdr',  'lon@hdr',  'obsvalue@body',  'varno@body']
 
     df = pd.DataFrame(data= read_data, columns= column_names)
 
@@ -558,7 +557,7 @@ def fromfb(fbv, cdmfb):
             tr[42]= 105  #10m V
             tr[58]=38 # 2m rel hum
             
-            x=tr[fbv[cdmfb].values.astype(int)] # reads the varno from the odb feedback and writes it into the variable id of the cdm 
+            x=tr[fbv[cdmfb].values.astype(int)] 
         else:    
             x=fbv[cdmfb].values
         
@@ -782,17 +781,16 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                                 sci_found = True
                                 
                             elif len(sci) == 0:
-                                    secondary = list (cdm[k]['secondary_id'].values ) # list of secondary ids in the station_configuration file. I find the element with that particular secondary id
+                                    secondary = list (cdm[k]['secondary_id'].values ) # list of secondary ids in the station_configuration file. I find the element with that specific secondary id
+                                    #secondary = [ eval(s)[0] for s in secondary ]
                                     for s in secondary:
-                                        try:                                
-                                            if station_id in str(s):
+                                        lista = [eval(s)[0] ] 
+
+                                        if int(station_id) in lista:
                                                 sec = numpy.where(cdm[k]['secondary_id']== s )
                                                 groups[k][d.element_name]=({k+'_len':1},  cdm[k][d.element_name].values[sec] )         
                                                 sci_found = True
-                                        except:
-                                            print  ('Still not found even in secondary ids')
-                                            sci_found = False
-                                            pass
+                                                continue
                                     
                         except KeyError:
                             pass
@@ -801,7 +799,6 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
                         try:   
                             groups[k][d.element_name]=({k+'_len':len(cdm[k] ) }, cdm[k][d.element_name].values)  # element_name is the netcdf variable name, which is the column name of the cdm table k 
                         except KeyError:
-                            print('Still not found!!!')
                             pass
                     try:
                         groups[k][d.element_name].attrs['external_table'] = d.external_table # defining variable attributes that point to other tables (3rd and 4th columns)
@@ -828,7 +825,7 @@ def df_to_cdm(cdm, cdmd, out_dir, fn):
             del fbds
     if sci_found == True: 
         station_id_ok.write(fn + '_' + station_id + '\n' )
-    else:
+    if sci_found == False:
         station_id_fails.write(fn + '_' + station_id + '\n')
 
     station_id_fails.close()
@@ -927,7 +924,8 @@ def odb_to_cdm(cdm, cdmd, output_dir, fn):
                             groups[k][d.element_name]= ({'hdrlen':fbds.variables['date@hdr'].shape[0]}, x)
                             
                     elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
-                        try:   
+                        try: 
+                            """  
                             if 'sci' not in locals(): 
                                 sci  = numpy.where(cdm[k]['primary_id']     == '0-20000-0-'+ station_id)[0]
                                 sec = numpy.where(cdm[k]['secondary_id'] == station_id)[0]
@@ -938,7 +936,31 @@ def odb_to_cdm(cdm, cdmd, output_dir, fn):
                             elif len(sci) < 1 and len(sec) > 0:
                                 groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sec]) # added the secondary id if primary not available 
                                 sci_found = True
-                                
+                            """
+                        
+                            if 'sci' not in locals():
+                                sci = numpy.where(cdm[k]['primary_id']=='0-20000-0-'+ station_id) [0]
+
+                            if len(sci)>0:
+                                #print('Found a primary_if matching the station_id: ', station_id)                                                                                                                                                                                        
+                                groups[k][d.element_name]=({k+'_len':1},  cdm[k][d.element_name].values[sci] )
+                                sci_found = True
+
+                            elif len(sci) == 0:
+                                    secondary = list (cdm[k]['secondary_id'].values ) # list of secondary ids in the station_configuration file. I find the element with that specific secondary id                                                                                       
+                                    #secondary = [ eval(s)[0] for s in secondary ]                                                                                                                                                                                                        
+                                    for s in secondary:
+                                        try:                                        
+                                            lista = [eval(s)[0] ]
+                                        except IndexError:
+                                            lista = []
+                                            sci_found = False 
+                                        if int(station_id) in lista:
+                                                sec = numpy.where(cdm[k]['secondary_id']== s )
+                                                groups[k][d.element_name]=({k+'_len':1},  cdm[k][d.element_name].values[sec] )
+                                                sci_found = True
+                                                continue
+    
                         except KeyError:
                             pass
                             
@@ -1180,7 +1202,6 @@ if __name__ == '__main__':
         
     else:
      Files = Files.split(',')
-     print (Files, 'Files are +++')
      for File in Files:
          
         if not os.path.isdir(out_dir):
