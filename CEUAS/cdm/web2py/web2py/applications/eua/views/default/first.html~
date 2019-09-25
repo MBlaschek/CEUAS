@@ -1,0 +1,22 @@
+{{extend 'layout.html'}}
+{{=response.toolbar()}}
+<h1>What is your name?</h1>
+{{print '{0}'.format(24.5)}}
+<form method='POST'>
+  <input name="name" onkeyup="ajax('{{=URL('default', 'second')}}', ['name'], 'target')"/>
+    <input type="button" name="n2" value='berta' onclick="ajax('{{=URL('default', 'third')}}', ['name'], 'tg2')"/>
+    <input type="button" name="n3" value='emma' onclick="jQuery('#testfig').slideToggle()" />
+</form>
+<div id="target">
+    Wo bistdu
+</div>
+<div class=two id="tg2">
+    wurscht
+</div>
+<div id="tg3">
+    {{=IMG(_src=URL('static','images/facebook.png'))}}
+</div>
+<h2>Submitted variables</h2>
+<!--{{=BEAUTIFY(request.vars)}}-->
+<div class="one" id="a" onclick="jQuery('.two').slideToggle()">Hello</div>
+<div class="two hidden" id="b">World</div>

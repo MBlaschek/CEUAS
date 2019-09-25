@@ -1,0 +1,133 @@
+@import "global_style.css";
+
+
+#breadcrumb_white {
+	color: #fff;
+}
+
+#breadcrumb_white a {
+	color: #fff;
+}
+
+
+
+#horizontale_navigation {
+	background-image: url(""/raobvis/static/images/hn_bg_wis.gif");
+}
+
+#horizontale_navigation UL {
+ 	display:inline;
+	color:#ffffff;
+	font-family: "Trebuchet MS", "Trebuchet", "Arial";
+	font-size:12px;
+	font-size:0.8em;
+	font-weight:bold;
+	text-transform: uppercase;
+}
+
+#horizontale_navigation LI  {
+	color: #e1e1e1;
+    border-left: 1px solid #333333;
+	border-right: 1px solid #333333;
+}
+
+#horizontale_navigation LI A  {
+	color: #e1e1e1;
+	text-decoration:none;
+}
+
+
+#horizontale_navigation LI A:hover {
+	color:#ffffff;
+}  
+
+#horizontale_navigation_content {
+	font-family: Verdana;
+	font-size:10px;
+	color: #eeeeee;
+}
+
+.horizontal_act {
+	background-color:#007799;
+}
+
+
+/* 
+ * #####################
+ * Spalten-Layout 
+ * #####################
+*/
+
+/*
+#content {
+	background-image: url("/raobvis/static/images/bg_institut.jpg");
+}
+
+#content_breit {
+	background-image: url("/raobvis/static/images/bg_institut_breit.jpg");
+}
+*/
+
+/* 
+ * #####################
+ * Navigation
+ * #####################
+*/
+
+
+#navigation UL{
+	background-color:#b6dcf2;
+	color:#111111;
+}
+
+#navigation A{
+	color: #111111;
+}
+
+#navigation LI A:hover {
+	background-color: #7ebfe6 !important; 
+	color: #227094 ! important;
+}
+
+
+#level1  LI {
+	color:#eeeeee;
+}
+
+#level1 LI  A {
+	border-bottom: solid 1px #80bae2;
+}
+
+#level1 LI.act {
+	background-color: #7ebfe6;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #80bae2;
+}
+
+
+#level2 LI  A {
+	background-image: url("/raobvis/static/images/pfeil_rechts_inst.gif");
+	border-top: dotted 1px #003655;
+	border-bottom: none;
+}
+
+#level2 li.act {
+	background-color: #b6dcf2;
+}
+
+#level2 li.act a {
+    background-image: url("/raobvis/static/images/pfeil_unten_inst.gif");
+	background-color: #7ebfe6;
+}
+
+
+#level3 li.act  a {
+	background-color: #7ebfe6 !important;
+}
+
+#level3 LI A {
+	background-color: #b6dcf2 !important;
+}
+
+

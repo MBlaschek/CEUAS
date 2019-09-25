@@ -1,0 +1,21 @@
+(dp1
+S'output'
+p2
+S"<type 'exceptions.SyntaxError'> unexpected EOF while parsing (<string>, line 1)"
+p3
+sS'layer'
+p4
+S'/fio/srvx7/leo/python/web2py/applications/testajax/controllers/default.py'
+p5
+sS'code'
+p6
+S'# -*- coding: utf-8 -*-\n# this file is released under public domain and you can use without limitations\n\n#########################################################################\n## This is a sample controller\n## - index is the default action of any application\n## - user is required for authentication and authorization\n## - download is for downloading files uploaded in the db (does streaming)\n## - api is an example of Hypermedia API support and access control\n#########################################################################\nimport matplotlib.pylab as plt\nimport numpy\nfrom numba import *\nfrom gluon.debug import dbg\n\ndef index():\n    """\n    example action using the internationalization operator T and flash\n    rendered by views/default/index.html or views/generic.html\n\n    if you need a simple wiki simply replace the two lines below with:\n    return auth.wiki()\n    """\n    response.flash = T("Welcome to web2py!")\n    return dict(message=T(\'Hello World\'))\n\n#@jit\ndef ntest(x):\n    s=0.\n    for i in range(x.shape[0]):\n        s=s+x[i]\n    return s\n\ndef first():\n    return dict()\n\ndef second():\n    return BEAUTIFY(request.vars)\n\ndef third():\n    n=eval("jQuery(\'#target\').html(%s);" % repr(request.vars.name))\n    x=numpy.arange(n)\n    y=x*x\n    plt.plot(x,y)\n#    dbg.set_trace()\n    \n    s=ntest(x)\n    plt.title(\'{0}\'.format(s))\n    plt.savefig(\'applications/testajax/static/images/test.png\')\n    plt.clf()\n    return IMG(_src=URL(\'static\',\'images/test.png\'),id=\'testfig\', _onclick="jQuery(this).slideToggle()")\n    \ndef user():\n    """\n    exposes:\n    http://..../[app]/default/user/login\n    http://..../[app]/default/user/logout\n    http://..../[app]/default/user/register\n    http://..../[app]/default/user/profile\n    http://..../[app]/default/user/retrieve_password\n    http://..../[app]/default/user/change_password\n    http://..../[app]/default/user/manage_users (requires membership in\n    use @auth.requires_login()\n        @auth.requires_membership(\'group name\')\n        @auth.requires_permission(\'read\',\'table name\',record_id)\n    to decorate functions that need access control\n    """\n    return dict(form=auth())\n\n\n@cache.action()\ndef download():\n    """\n    allows downloading of uploaded files\n    http://..../[app]/default/download/[filename]\n    """\n    return response.download(request, db)\n\n\ndef call():\n    """\n    exposes services. for example:\n    http://..../[app]/default/call/jsonrpc\n    decorate with @services.jsonrpc the functions to expose\n    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv\n    """\n    return service()\n\n\n@auth.requires_login() \ndef api():\n    """\n    this is example of API with access control\n    WEB2PY provides Hypermedia API (Collection+JSON) Experimental\n    """\n    from gluon.contrib.hypermedia import Collection\n    rules = {\n        \'<tablename>\': {\'GET\':{},\'POST\':{},\'PUT\':{},\'DELETE\':{}},\n        }\n    return Collection(db).process(request,response,rules)\n\nresponse._vars=response._caller(third)\n'
+p7
+sS'snapshot'
+p8
+(dp9
+sS'traceback'
+p10
+S'Traceback (most recent call last):\n  File "/fio/srvx7/leo/python/web2py/gluon/restricted.py", line 224, in restricted\n    exec ccode in environment\n  File "/fio/srvx7/leo/python/web2py/applications/testajax/controllers/default.py", line 102, in <module>\n  File "/fio/srvx7/leo/python/web2py/gluon/globals.py", line 392, in <lambda>\n    self._caller = lambda f: f()\n  File "/fio/srvx7/leo/python/web2py/applications/testajax/controllers/default.py", line 41, in third\n    n=eval("jQuery(\'#target\').html(%s);" % repr(request.vars.name))\n  File "<string>", line 1\n    jQuery(\'#target\').html(\'12\');\n                                ^\nSyntaxError: unexpected EOF while parsing\n'
+p11
+s.

@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>RAOBCORE/RICH Visualization</title>
+    <!--link href="layout.css" rel="stylesheet" type="text/css"></link>
+    <link href="navbar.css" rel="stylesheet" type="text/css"></link-->
+    <!--[if IE]><script language="javascript" type="text/javascript" src="../excanvas.min.js"></script><![endif]-->
+ <!--      <script language="javascript" type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+  <script language="javascript" type="text/javascript" src="http://people.iola.dk/olau/flot/jquery.flot.js"></script>
+    <script language="javascript" type="text/javascript" src="http://people.iola.dk/olau/flot/jquery.flot.selection.js"></script>-->
+    <!--script language="javascript" type="text/javascript" src="../../jquery.form.js"></script--> 
+    <!--<script language="javascript" type="text/javascript" src="richvis.retrievemenu.js"></script>
+    <script language="javascript" type="text/javascript" src="richvis.js"></script>  -->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+
+    <!--  <script>
+  $( function() {
+    $( "#slider-range" ).slider({
+      range: true,
+      min: 1919,
+      max: 2019,
+      values: [ 1979, 2015 ],
+      slide: function( event, ui ) {
+        $( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+      }
+    });
+    $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
+      " - $" + $( "#slider-range" ).slider( "values", 1 ) );
+  } );
+  </script> -->
+    <script language="javascript" type="text/javascript" src="{{=URL('static','js/richvis.retrievemenu.js')}}"></script> 
+    <script language="javascript" type="text/javascript" src="{{=URL('static','js/richvis.js')}}"></script> 
+
+<link REL="STYLESHEET" TYPE="text/css" HREF="/raobvis/static/css/institut.css">
+<style type="text/css">
+.clipper {
+/*   overflow:hidden;*/
+   float:left;
+}
+
+.clipper select {
+/*   border:2px solid;
+   overflow:hidden;*/
+   margin-top:5px;
+   font-size:0.8em;
+   width:200px;
+	background-color:#e8e8e8;
+}
+.rclipper {
+/*   overflow:hidden;*/
+   float:left;
+}
+
+.rclipper select {
+/*   border:2px solid;
+   overflow:hidden;*/
+   margin-top:5px;
+   font-size:0.8em;
+   width:200px;
+	background-color:#e8e8e8;
+}
+.ltable {
+   font-size:0.8em;
+
+}
+#verMenu select {
+size:2;
+float:left;
+
+}
+#slider-range {
+height:10px;
+width:800px;
+left:200px;
+/*float:left;*/
+}
+#slider-status {
+height:400px;
+;margin-bottom:0px
+/*float:left;*/
+}
+</style>
+
+</head>
+
+<body>
+
+	<div id="kopfzeile_unilogo_print">
+		<img alt="Logo der Universität Wien" src="/raobvis/static/images/uni_logo.gif" /></img>
+	</div>
+	
+	
+	<div id="container">
+
+		<div id="kopfzeile_blau">
+			<div id="kopfzeile_zusatzlogo"><div id="kopfzeile_text"><a href="https://backend.univie.ac.at/index.php?id=79629">RAOBCORE/RICH Visualization</a></div></div>
+			
+			<div id="uni_logo_container"><div id="uni_logo_container"><a href="http://www.univie.ac.at" target="_blank"><div id="kopfzeile_unilogo"></div></a></div></div>
+			
+		</div>
+		
+		<!--div id="horizontale_navigation">		<div id="breadcrumb_white">
+	<span id="breadcrumb_white_titel">Sie sind hier:</span> &gt;<a href="http://www.univie.ac.at" target="_blank">Universität Wien </a> &gt;>
+
+		<a href="http://senat.univie.ac.at/" target="_self" onfocus="blurLink(this);">
+	RAOBCORE/RICH Visualization</a>
+		</div>
+</div-->
+
+
+<div id="spalte_links" style="position:static;background-color:'#ffffff'" width=200px >
+
+<div id="kopfzeile_weiss" width=200px style="float:left">
+			<span class="rclipper" id="rootMenu" width=200px></span>
+</div>
+<div id="navigation">
+
+<!--ul id="level1">
+	<li><a href="">Biology</a></li>
+
+</ul-->
+
+<div>
+      <span class="clipper" class="vMenu" id="verMenu" >
+      </span>
+</div>
+
+<table  class="ltable" id="cbtable" style="float:left" column-count:2>
+<tr>
+<td id="tAutorefresh">Autorefresh</td><td><input id="Autorefresh" type="checkbox" checked> </td>
+<td id="tToolTips">ToolTips</td><td><input id="ToolTips" type="checkbox"> </td><tr>
+<td id="tStatID">StatID</td><td><input id="StatID" type="checkbox"> </td>
+<td id="tLogarithmic">Logarithmic</td><td><input id="Logarithmic" type="checkbox" checked> </td><tr>
+<td id="tDouble">Double</td><td><input id="Double" type="checkbox"> </td>
+<td id="tHalf">Half</td><td><input id="Half" type="checkbox"> </td><tr>
+<td id="tGridded">Gridded</td><td><input id="Gridded" type="checkbox"> </td>
+<td id="tStations">Stations</td><td><input id="Stations" type="checkbox"  checked> </td><tr>
+</table>
+<form>
+<table  class="ltable" id="ftable" style="float:left" column-count:2>
+<td> <label>SVG</label> <input name="oformat" type="radio" value="SVG" checked >  </td>
+<td> <label>PNG</label> <input name="oformat" type="radio" value="PNG" > </td>
+</table>
+</form>
+<tr>
+
+</div>
+    <div id='RAOBCOREDISCLAIMER' style="margin-left:0px;margin-right:0px;background-color:#eeeeee;border-style:inset;border-width:1px;border-color:grey;font-size: 80%;padding: 4px; "> Note:<br> Plots can be copied but should be presented only with proper reference to this webpage as well as to the <a href="https://backend.univie.ac.at/index.php?id=79629">pertinent scientific articles</a></div>
+</div>
+
+
+<div class="clipper" id="basicMenu" >
+</div>
+
+
+
+<div id="content">
+
+<div id="myslider">
+<div id="slider_status">
+  <form><nobr>
+  <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+  </form>
+</div>
+<div id="slider-range" ></div>
+</div>
+
+<div id="spalte_mitte">
+    <div id='Messenger' style="margin-left:20px"> </div>
+
+    <div style="float:right">
+      <div id="placeholder0" style="margin-left:10px;width:784px"></div>
+    </div>
+    <div style="float:right">
+      <div id="placeholder1" style="margin-left:10px;width:784px"></div>
+    </div>
+    <div style="float:right">
+      <div id="placeholder2" style="margin-left:10px;width:784px"></div>
+    </div>
+    <div style="float:right">
+      <div id="placeholder3" style="margin-left:10px;width:784px"></div>
+    </div>
+    <div style="float:right">
+      <div id="placeholder4" style="margin-left:10px;width:784px"></div>
+    </div>
+    <div style="float:right">
+      <div id="placeholder5" style="margin-left:10px;width:784px"></div>
+    </div>
+    <div style="float:right">
+      <div id="placeholder6" style="margin-left:10px;width:784px"></div>
+    </div>
+    <div style="float:right">
+      <div id="placeholder7" style="margin-left:10px;width:784px"></div>
+    </div>
+    
+
+<div id="spalte_mitte_content">
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

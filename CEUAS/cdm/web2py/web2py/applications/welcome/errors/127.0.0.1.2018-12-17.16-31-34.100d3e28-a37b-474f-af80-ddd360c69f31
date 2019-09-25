@@ -1,0 +1,810 @@
+(dp1
+S'output'
+p2
+S"<type 'exceptions.ValueError'> unsupported pickle protocol: 3"
+p3
+sS'layer'
+p4
+S'/fio/srvx7/leo/python/web2py/applications/welcome/models/db.py'
+p5
+sS'code'
+p6
+S'<code object <module> at 0x2b142867a6b0, file "/fio/srvx7/leo/python/web2py/applications/welcome/models/db.py", line 7>'
+p7
+sS'snapshot'
+p8
+(dp9
+S'exception'
+p10
+(dp11
+S'__getslice__'
+p12
+S"<method-wrapper '__getslice__' of exceptions.ValueError object>"
+p13
+sS'__str__'
+p14
+S"<method-wrapper '__str__' of exceptions.ValueError object>"
+p15
+sS'__reduce__'
+p16
+S'<built-in method __reduce__ of exceptions.ValueError object>'
+p17
+sS'__dict__'
+p18
+S'{}'
+p19
+sS'message'
+p20
+S"'unsupported pickle protocol: 3'"
+p21
+sS'__sizeof__'
+p22
+S'<built-in method __sizeof__ of exceptions.ValueError object>'
+p23
+sS'__init__'
+p24
+S"<method-wrapper '__init__' of exceptions.ValueError object>"
+p25
+sS'__setattr__'
+p26
+S"<method-wrapper '__setattr__' of exceptions.ValueError object>"
+p27
+sS'__reduce_ex__'
+p28
+S'<built-in method __reduce_ex__ of exceptions.ValueError object>'
+p29
+sS'__new__'
+p30
+S'<built-in method __new__ of type object>'
+p31
+sS'__format__'
+p32
+S'<built-in method __format__ of exceptions.ValueError object>'
+p33
+sS'__class__'
+p34
+S"<type 'exceptions.ValueError'>"
+p35
+sS'__doc__'
+p36
+S"'Inappropriate argument value (of correct type).'"
+p37
+sS'__getitem__'
+p38
+S"<method-wrapper '__getitem__' of exceptions.ValueError object>"
+p39
+sS'__setstate__'
+p40
+S'<built-in method __setstate__ of exceptions.ValueError object>'
+p41
+sS'__getattribute__'
+p42
+S"<method-wrapper '__getattribute__' of exceptions.ValueError object>"
+p43
+sS'args'
+p44
+S"('unsupported pickle protocol: 3',)"
+p45
+sS'__subclasshook__'
+p46
+S'<built-in method __subclasshook__ of type object>'
+p47
+sS'__unicode__'
+p48
+S'<built-in method __unicode__ of exceptions.ValueError object>'
+p49
+sS'__delattr__'
+p50
+S"<method-wrapper '__delattr__' of exceptions.ValueError object>"
+p51
+sS'__repr__'
+p52
+S"<method-wrapper '__repr__' of exceptions.ValueError object>"
+p53
+sS'__hash__'
+p54
+S"<method-wrapper '__hash__' of exceptions.ValueError object>"
+p55
+ssS'evalue'
+p56
+S'unsupported pickle protocol: 3'
+p57
+sS'request'
+p58
+cgluon.html
+XML_unpickle
+p59
+(S's\xb9I\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">ajax</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">application</td><td style="vertical-align:top;">:</td><td><div>welcome</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cid</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">client</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">controller</td><td style="vertical-align:top;">:</td><td><div>default</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cookies</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">env</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT</td><td style="vertical-align:top;">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT_ENCODING</td><td style="vertical-align:top;">:</td><td><div>gzip, deflate</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_ACCEPT_LANGUAGE</td><td style="vertical-align:top;">:</td><td><div>en-US,en;q=0.5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_CONNECTION</td><td style="vertical-align:top;">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_HOST</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1:8001</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_UPGRADE_INSECURE_REQUESTS</td><td style="vertical-align:top;">:</td><td><div>1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">HTTP_USER_AGENT</td><td style="vertical-align:top;">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">PATH_INFO</td><td style="vertical-align:top;">:</td><td><div>/welcome/default/index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">QUERY_STRING</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REMOTE_ADDR</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REMOTE_PORT</td><td style="vertical-align:top;">:</td><td><div>53282</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">REQUEST_METHOD</td><td style="vertical-align:top;">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SCRIPT_NAME</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_NAME</td><td style="vertical-align:top;">:</td><td><div>srvx2.img.univie.ac.at</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_PORT</td><td style="vertical-align:top;">:</td><td><div>8001</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_PROTOCOL</td><td style="vertical-align:top;">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">SERVER_SOFTWARE</td><td style="vertical-align:top;">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">app_folders</td><td style="vertical-align:top;">:</td><td><div>set([&#x27;/fio/srvx7/leo/python/web2py/applications/welcome/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">applications_parent</td><td style="vertical-align:top;">:</td><td><div>/fio/srvx7/leo/python/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_options</td><td style="vertical-align:top;">:</td><td><div>&lt;Values at 0x2b1421d290e0: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;with_scheduler&#x27;: False, &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;srvx2.img.univie.ac.at&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: False, &#x27;port&#x27;: 8000, &#x27;print_errors&#x27;: False, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/fio/srvx7/leo/python/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;profiler_dir&#x27;: None, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;interfaces&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;gae&#x27;: None, &#x27;password&#x27;: &#x27;******&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">db_sessions</td><td style="vertical-align:top;">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">debugging</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gluon_parent</td><td style="vertical-align:top;">:</td><td><div>/fio/srvx7/leo/python/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept</td><td style="vertical-align:top;">:</td><td><div>text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept_encoding</td><td style="vertical-align:top;">:</td><td><div>gzip, deflate</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_accept_language</td><td style="vertical-align:top;">:</td><td><div>en-US,en;q=0.5</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_connection</td><td style="vertical-align:top;">:</td><td><div>keep-alive</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_host</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1:8001</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_upgrade_insecure_requests</td><td style="vertical-align:top;">:</td><td><div>1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">http_user_agent</td><td style="vertical-align:top;">:</td><td><div>Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_jython</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_py2</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_pypy</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_source</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">local_hosts</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>131.130.157.11</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>srvx2.img.univie.ac.at</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path_info</td><td style="vertical-align:top;">:</td><td><div>/welcome/default/index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">query_string</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remote_addr</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">remote_port</td><td style="vertical-align:top;">:</td><td><div>53282</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">request_method</td><td style="vertical-align:top;">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">request_uri</td><td style="vertical-align:top;">:</td><td><div>/welcome/default/index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">script_name</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_name</td><td style="vertical-align:top;">:</td><td><div>srvx2.img.univie.ac.at</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_port</td><td style="vertical-align:top;">:</td><td><div>8001</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_protocol</td><td style="vertical-align:top;">:</td><td><div>HTTP/1.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">server_software</td><td style="vertical-align:top;">:</td><td><div>Rocket 1.2.6</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_path</td><td style="vertical-align:top;">:</td><td><div>/fio/srvx7/leo/python/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_version</td><td style="vertical-align:top;">:</td><td><div>2.17.1-stable+timestamp.2018.08.06.01.02.56</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.errors</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x2b14187a61e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.file_wrapper</td><td style="vertical-align:top;">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x2b1421cee188&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.input</td><td style="vertical-align:top;">:</td><td><div>&lt;socket._fileobject object at 0x2b1421d13350&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.multiprocess</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.multithread</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.run_once</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.url_scheme</td><td style="vertical-align:top;">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi.version</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_errors</td><td style="vertical-align:top;">:</td><td><div>&lt;open file &#x27;&lt;stderr&gt;&#x27;, mode &#x27;w&#x27; at 0x2b14187a61e0&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_file_wrapper</td><td style="vertical-align:top;">:</td><td><div>&lt;class wsgiref.util.FileWrapper at 0x2b1421cee188&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_input</td><td style="vertical-align:top;">:</td><td><div>&lt;socket._fileobject object at 0x2b1421d13350&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_multiprocess</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_multithread</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_run_once</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_url_scheme</td><td style="vertical-align:top;">:</td><td><div>http</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi_version</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>1</div></td></tr><tr><td><div>0</div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">extension</td><td style="vertical-align:top;">:</td><td><div>html</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">folder</td><td style="vertical-align:top;">:</td><td><div>/fio/srvx7/leo/python/web2py/applications/welcome/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">function</td><td style="vertical-align:top;">:</td><td><div>index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">global_settings</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">app_folders</td><td style="vertical-align:top;">:</td><td><div>set([&#x27;/fio/srvx7/leo/python/web2py/applications/welcome/&#x27;])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">applications_parent</td><td style="vertical-align:top;">:</td><td><div>/fio/srvx7/leo/python/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_args</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cmd_options</td><td style="vertical-align:top;">:</td><td><div>&lt;Values at 0x2b1421d290e0: {&#x27;verbose&#x27;: False, &#x27;ip&#x27;: &#x27;127.0.0.1&#x27;, &#x27;debuglevel&#x27;: 30, &#x27;with_scheduler&#x27;: False, &#x27;shutdown_timeout&#x27;: 5, &#x27;taskbar&#x27;: False, &#x27;with_coverage&#x27;: False, &#x27;pid_filename&#x27;: &#x27;httpserver.pid&#x27;, &#x27;maxthreads&#x27;: None, &#x27;softcron&#x27;: False, &#x27;server_name&#x27;: &#x27;srvx2.img.univie.ac.at&#x27;, &#x27;bpython&#x27;: False, &#x27;nogui&#x27;: False, &#x27;port&#x27;: 8000, &#x27;print_errors&#x27;: False, &#x27;extcron&#x27;: False, &#x27;runcron&#x27;: False, &#x27;run_system_tests&#x27;: False, &#x27;test&#x27;: None, &#x27;folder&#x27;: &#x27;/fio/srvx7/leo/python/web2py&#x27;, &#x27;config&#x27;: &#x27;&#x27;, &#x27;minthreads&#x27;: None, &#x27;shell&#x27;: None, &#x27;run&#x27;: &#x27;&#x27;, &#x27;log_filename&#x27;: &#x27;httpserver.log&#x27;, &#x27;profiler_dir&#x27;: None, &#x27;args&#x27;: [&#x27;&#x27;], &#x27;socket_timeout&#x27;: 5, &#x27;ssl_ca_certificate&#x27;: None, &#x27;scheduler&#x27;: None, &#x27;interfaces&#x27;: None, &#x27;ssl_private_key&#x27;: &#x27;&#x27;, &#x27;gae&#x27;: None, &#x27;password&#x27;: &#x27;******&#x27;, &#x27;request_queue_size&#x27;: 5, &#x27;ssl_certificate&#x27;: &#x27;&#x27;, &#x27;cronjob&#x27;: False, &#x27;numthreads&#x27;: None, &#x27;quiet&#x27;: False, &#x27;import_models&#x27;: False, &#x27;timeout&#x27;: 10, &#x27;plain&#x27;: False, &#x27;nobanner&#x27;: False}&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">db_sessions</td><td style="vertical-align:top;">:</td><td><div>set([])</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">debugging</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">gluon_parent</td><td style="vertical-align:top;">:</td><td><div>/fio/srvx7/leo/python/web2py</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_jython</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_py2</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_pypy</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_source</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">local_hosts</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>131.130.157.11</div></td></tr><tr><td><div>::1</div></td></tr><tr><td><div>srvx2.img.univie.ac.at</div></td></tr><tr><td><div>::ffff:127.0.0.1</div></td></tr><tr><td><div>127.0.0.1</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">web2py_version</td><td style="vertical-align:top;">:</td><td><div>2.17.1-stable+timestamp.2018.08.06.01.02.56</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_https</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_local</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_restful</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_scheduler</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">is_shell</td><td style="vertical-align:top;">:</td><td><div>False</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">method</td><td style="vertical-align:top;">:</td><td><div>GET</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">now</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2018, 12, 17, 16, 31, 34, 313173)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">raw_args</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">raw_extension</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">url</td><td style="vertical-align:top;">:</td><td><div>/welcome/default/index</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">utcnow</td><td style="vertical-align:top;">:</td><td><div>datetime.datetime(2018, 12, 17, 15, 31, 34, 313199)</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">wsgi</td><td style="vertical-align:top;">:</td><td><div>&lt;gluon.main.LazyWSGI object at 0x2b1421d4d2d0&gt;</div></td></tr></table></div>'
+tRp60
+sS'frames'
+p61
+(lp62
+(dp63
+S'file'
+p64
+S'/fio/srvx7/leo/python/web2py/gluon/restricted.py'
+p65
+sS'dump'
+p66
+(dp67
+S'environment'
+p68
+S"{'A': <class 'gluon.html.A'>, 'ANY_OF': <class 'gluon.validators.ANY_OF'>, 'ASSIGNJS': <function ASSIGNJS>, 'AppConfig': <function AppConfig>, 'Auth': <class 'gluon.tools.Auth'>, 'B': <class 'gluon.html.B'>, 'BEAUTIFY': <class 'gluon.html.BEAUTIFY'>, 'BODY': <class 'gluon.html.BODY'>, 'BR': <class 'gluon.html.BR'>, 'BUTTON': <class 'gluon.html.BUTTON'>, ...}"
+p69
+sS'ccode'
+p70
+S'<code object <module> at 0x2b142867a6b0, file "/...eb2py/applications/welcome/models/db.py", line 7>'
+p71
+ssS'lnum'
+p72
+I219
+sS'lines'
+p73
+(dp74
+I214
+S'    if environment is None:'
+p75
+sI215
+S'        environment = {}'
+p76
+sI216
+S"    environment['__file__'] = layer"
+p77
+sI217
+S"    environment['__name__'] = '__restricted__'"
+p78
+sI218
+S'    try:'
+p79
+sI219
+S'        exec(ccode, environment)'
+p80
+sI220
+S'    except HTTP:'
+p81
+sI221
+S'        raise'
+p82
+sI222
+S'    except RestrictedError:'
+p83
+sI223
+S'        # do not encapsulate (obfuscate) the original RestrictedError'
+p84
+ssS'call'
+p85
+S'(ccode=<code object <module> at 0x2b142867a6b0, file "/...eb2py/applications/welcome/models/db.py", line 7>, environment={\'A\': <class \'gluon.html.A\'>, \'ANY_OF\': <class \'gluon.validators.ANY_OF\'>, \'ASSIGNJS\': <function ASSIGNJS>, \'AppConfig\': <function AppConfig>, \'Auth\': <class \'gluon.tools.Auth\'>, \'B\': <class \'gluon.html.B\'>, \'BEAUTIFY\': <class \'gluon.html.BEAUTIFY\'>, \'BODY\': <class \'gluon.html.BODY\'>, \'BR\': <class \'gluon.html.BR\'>, \'BUTTON\': <class \'gluon.html.BUTTON\'>, ...}, layer=\'/fio/srvx7/leo/python/web2py/applications/welcome/models/db.py\', scode=<code object <module> at 0x2b142867a6b0, file "/...eb2py/applications/welcome/models/db.py", line 7>)'
+p86
+sS'func'
+p87
+S'restricted'
+p88
+sa(dp89
+g64
+S'/fio/srvx7/leo/python/web2py/applications/welcome/models/db.py'
+p90
+sg66
+(dp91
+S'username'
+p92
+S'undefined'
+p93
+sS'auth.define_tables'
+p94
+S'<bound method Auth.define_tables of <gluon.tools.Auth object>>'
+p95
+sS'builtinFalse'
+p96
+S'False'
+p97
+sS'auth'
+p98
+S'<gluon.tools.Auth object>'
+p99
+sS'signature'
+p100
+g93
+ssg72
+I95
+sg73
+(dp101
+I96
+S''
+sI97
+S'# -------------------------------------------------------------------------'
+p102
+sI98
+S'# configure email'
+p103
+sI99
+S'# -------------------------------------------------------------------------'
+p104
+sI90
+S''
+sI91
+S'# -------------------------------------------------------------------------'
+p105
+sI92
+S'# create all tables needed by auth, maybe add a list of extra fields'
+p106
+sI93
+S'# -------------------------------------------------------------------------'
+p107
+sI94
+S"auth.settings.extra_fields['auth_user'] = []"
+p108
+sI95
+S'auth.define_tables(username=False, signature=False)'
+p109
+ssg85
+S'()'
+p110
+sg87
+S'<module>'
+p111
+sa(dp112
+g64
+S'/fio/srvx7/leo/python/web2py/gluon/tools.py'
+p113
+sg66
+(dp114
+S'username'
+p115
+g97
+sS'migrate'
+p116
+S'True'
+p117
+sS'self'
+p118
+S'<gluon.tools.Auth object>'
+p119
+sS'fake_migrate'
+p120
+g97
+sS'global Auth'
+p121
+S"<class 'gluon.tools.Auth'>"
+p122
+sS')._table_signature_list'
+p123
+g93
+sS'signature'
+p124
+g97
+sS'builtinsuper'
+p125
+S"<type 'super'>"
+p126
+sS').define_tables'
+p127
+S'<bound method Auth.define_tables of <gluon.tools.Auth object>>'
+p128
+ssg72
+I2090
+sg73
+(dp129
+I2085
+S'        if fake_migrate is None:'
+p130
+sI2086
+S'            fake_migrate = db._fake_migrate'
+p131
+sI2087
+S'        settings = self.settings'
+p132
+sI2088
+S'        settings.enable_tokens = enable_tokens'
+p133
+sI2089
+S'        signature_list = \\'
+p134
+sI2090
+S'            super(Auth, self).define_tables(username, signature, migrate, fake_migrate)._table_signature_list'
+p135
+sI2091
+S''
+sI2092
+S'        now = current.request.now'
+p136
+sI2093
+S"        reference_table_user = 'reference %s' % settings.table_user_name"
+p137
+sI2094
+S'        if settings.cas_domains:'
+p138
+ssg85
+S'(self=<gluon.tools.Auth object>, username=False, signature=False, enable_tokens=False, migrate=True, fake_migrate=False)'
+p139
+sg87
+S'define_tables'
+p140
+sa(dp141
+g64
+S'/fio/srvx7/leo/python/web2py/gluon/authapi.py'
+p142
+sg66
+(dp143
+S'builtinformat'
+p144
+S'<built-in function format>'
+p145
+ssg72
+I350
+sg73
+(dp146
+I352
+S'        if settings.table_group_name not in db.tables:'
+p147
+sI353
+S'            extra_fields = settings.extra_fields.get('
+p148
+sI354
+S'                settings.table_group_name, []) + signature_list'
+p149
+sI345
+S'                    *extra_fields,'
+p150
+sI346
+S'                    **dict('
+p151
+sI347
+S'                        migrate=self._get_migrate(settings.table_user_name,'
+p152
+sI348
+S'                                                  migrate),'
+p153
+sI349
+S'                        fake_migrate=fake_migrate,'
+p154
+sI350
+S"                        format='%(first_name)s %(last_name)s (%(id)s)'))"
+p155
+sI351
+S"        reference_table_user = 'reference %s' % settings.table_user_name"
+p156
+ssg85
+S'(self=<gluon.tools.Auth object>, username=False, signature=False, migrate=True, fake_migrate=False)'
+p157
+sg87
+g140
+sa(dp158
+g64
+S'/fio/srvx7/leo/python/web2py/gluon/packages/dal/pydal/base.py'
+p159
+sg66
+(dp160
+S'fields'
+p161
+S'(<pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>)'
+p162
+sS'self'
+p163
+S'<DAL uri="sqlite://storage.sqlite">'
+p164
+sS'tablename'
+p165
+S"'auth_user'"
+p166
+sS'kwargs'
+p167
+S"{'fake_migrate': False, 'format': '%(first_name)s %(last_name)s (%(id)s)', 'migrate': True}"
+p168
+sS'table'
+p169
+g93
+sS'self.lazy_define_table'
+p170
+S'<bound method DAL.lazy_define_table of <DAL uri="sqlite://storage.sqlite">>'
+p171
+ssg72
+I590
+sg73
+(dp172
+I585
+S'        if self._lazy_tables:'
+p173
+sI586
+S'            if tablename not in self._LAZY_TABLES or redefine:'
+p174
+sI587
+S'                self._LAZY_TABLES[tablename] = (tablename, fields, kwargs)'
+p175
+sI588
+S'            table = None'
+p176
+sI589
+S'        else:'
+p177
+sI590
+S'            table = self.lazy_define_table(tablename, *fields, **kwargs)'
+p178
+sI591
+S'        if tablename not in self.tables:'
+p179
+sI592
+S'            self.tables.append(tablename)'
+p180
+sI593
+S'        return table'
+p181
+sI594
+S''
+ssg85
+S'(self=<DAL uri="sqlite://storage.sqlite">, tablename=\'auth_user\', *fields=(<pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>), **kwargs={\'fake_migrate\': False, \'format\': \'%(first_name)s %(last_name)s (%(id)s)\', \'migrate\': True})'
+p182
+sg87
+S'define_table'
+p183
+sa(dp184
+g64
+S'/fio/srvx7/leo/python/web2py/gluon/packages/dal/pydal/base.py'
+p185
+sg66
+(dp186
+S'polymodel'
+p187
+S'None'
+p188
+ssg72
+I624
+sg73
+(dp189
+I619
+S'            try:'
+p190
+sI620
+S'                GLOBAL_LOCKER.acquire()'
+p191
+sI621
+S'                self._adapter.create_table('
+p192
+sI622
+S'                    table, migrate=migrate,'
+p193
+sI623
+S'                    fake_migrate=fake_migrate,'
+p194
+sI624
+S'                    polymodel=polymodel)'
+p195
+sI625
+S'            finally:'
+p196
+sI626
+S'                GLOBAL_LOCKER.release()'
+p197
+sI627
+S'        else:'
+p198
+sI628
+S'            table._dbt = None'
+p199
+ssg85
+S'(self=<DAL uri="sqlite://storage.sqlite">, tablename=\'auth_user\', *fields=(<pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>, <pydal.objects.Field object>), **kwargs={\'fake_migrate\': False, \'format\': \'%(first_name)s %(last_name)s (%(id)s)\', \'migrate\': True})'
+p200
+sg87
+S'lazy_define_table'
+p201
+sa(dp202
+g64
+S'/fio/srvx7/leo/python/web2py/gluon/packages/dal/pydal/adapters/base.py'
+p203
+sg66
+(dp204
+S'self'
+p205
+S'<pydal.adapters.sqlite.SQLite object>'
+p206
+sS'args'
+p207
+S'(<Table auth_user (id, first_name, last_name, ema...ration_key, reset_password_key, registration_id)>,)'
+p208
+sS'self.migrator'
+p209
+S'<pydal.migrator.Migrator object>'
+p210
+sS'self.migrator.create_table'
+p211
+S'<bound method Migrator.create_table of <pydal.migrator.Migrator object>>'
+p212
+sS'kwargs'
+p213
+S"{'fake_migrate': False, 'migrate': True, 'polymodel': None}"
+p214
+ssg72
+I798
+sg73
+(dp215
+I800
+S'    def _drop_table_cleanup(self, table):'
+p216
+sI801
+S'        super(SQLAdapter, self)._drop_table_cleanup(table)'
+p217
+sI802
+S'        if table._dbt:'
+p218
+sI793
+S''
+sI794
+S'    def bulk_insert(self, table, items):'
+p219
+sI795
+S'        return [self.insert(table, item) for item in items]'
+p220
+sI796
+S''
+sI797
+S'    def create_table(self, *args, **kwargs):'
+p221
+sI798
+S'        return self.migrator.create_table(*args, **kwargs)'
+p222
+sI799
+S''
+ssg85
+S"(self=<pydal.adapters.sqlite.SQLite object>, *args=(<Table auth_user (id, first_name, last_name, ema...ration_key, reset_password_key, registration_id)>,), **kwargs={'fake_migrate': False, 'migrate': True, 'polymodel': None})"
+p223
+sg87
+S'create_table'
+p224
+sa(dp225
+g64
+S'/fio/srvx7/leo/python/web2py/gluon/packages/dal/pydal/migrator.py'
+p226
+sg66
+(dp227
+S'global pickle'
+p228
+S"<module 'pickle' from '/opt/anaconda/lib/python2.7/pickle.pyc'>"
+p229
+sS'tfile'
+p230
+S'<pydal.contrib.portalocker.LockedFile object>'
+p231
+sS'sql_fields_old'
+p232
+g93
+sS'pickle.load'
+p233
+S'<function load>'
+p234
+ssg72
+I296
+sg73
+(dp235
+I291
+S'                else:'
+p236
+sI292
+S"                    self.log('success!\\n', table)"
+p237
+sI293
+S'        else:'
+p238
+sI294
+S"            tfile = self.file_open(table._dbt, 'rb')"
+p239
+sI295
+S'            try:'
+p240
+sI296
+S'                sql_fields_old = pickle.load(tfile)'
+p241
+sI297
+S'            except EOFError:'
+p242
+sI298
+S'                self.file_close(tfile)'
+p243
+sI299
+S"                raise RuntimeError('File %s appears corrupted' % table._dbt)"
+p244
+sI300
+S'            self.file_close(tfile)'
+p245
+ssg85
+S'(self=<pydal.migrator.Migrator object>, table=<Table auth_user (id, first_name, last_name, ema...ration_key, reset_password_key, registration_id)>, migrate=True, fake_migrate=False, polymodel=None)'
+p246
+sg87
+g224
+sa(dp247
+g64
+S'/opt/anaconda/lib/python2.7/pickle.py'
+p248
+sg66
+(dp249
+S'global Unpickler'
+p250
+S'<class pickle.Unpickler>'
+p251
+sS').load'
+p252
+g93
+sS'file'
+p253
+S'<pydal.contrib.portalocker.LockedFile object>'
+p254
+ssg72
+I1384
+sg73
+(dp255
+I1379
+S'    file = StringIO()'
+p256
+sI1380
+S'    Pickler(file, protocol).dump(obj)'
+p257
+sI1381
+S'    return file.getvalue()'
+p258
+sI1382
+S''
+sI1383
+S'def load(file):'
+p259
+sI1384
+S'    return Unpickler(file).load()'
+p260
+sI1385
+S''
+sI1386
+S'def loads(str):'
+p261
+sI1387
+S'    file = StringIO(str)'
+p262
+sI1388
+S'    return Unpickler(file).load()'
+p263
+ssg85
+S'(file=<pydal.contrib.portalocker.LockedFile object>)'
+p264
+sg87
+S'load'
+p265
+sa(dp266
+g64
+S'/opt/anaconda/lib/python2.7/pickle.py'
+p267
+sg66
+(dp268
+S'self'
+p269
+S'<pickle.Unpickler instance>'
+p270
+sS'key'
+p271
+S"'\\x80'"
+p272
+sS'dispatch'
+p273
+S"{'': <function load_eof>, '(': <function load_mark>, ')': <function load_empty_tuple>, '.': <function load_stop>, '0': <function load_pop>, '1': <function load_pop_mark>, '2': <function load_dup>, 'F': <function load_float>, 'G': <function load_binfloat>, 'I': <function load_int>, ...}"
+p274
+ssg72
+I864
+sg73
+(dp275
+I864
+S'                dispatch[key](self)'
+p276
+sI865
+S'        except _Stop, stopinst:'
+p277
+sI866
+S'            return stopinst.value'
+p278
+sI867
+S''
+sI868
+S'    # Return largest index k such that self.stack[k] is self.mark.'
+p279
+sI859
+S'        read = self.read'
+p280
+sI860
+S'        dispatch = self.dispatch'
+p281
+sI861
+S'        try:'
+p282
+sI862
+S'            while 1:'
+p283
+sI863
+S'                key = read(1)'
+p284
+ssg85
+S'(self=<pickle.Unpickler instance>)'
+p285
+sg87
+g265
+sa(dp286
+g64
+S'/opt/anaconda/lib/python2.7/pickle.py'
+p287
+sg66
+(dp288
+S'proto'
+p289
+S'3'
+sS'builtinValueError'
+p290
+S"<type 'exceptions.ValueError'>"
+p291
+ssg72
+I892
+sg73
+(dp292
+I896
+S'        pid = self.readline()[:-1]'
+p293
+sI887
+S"    dispatch[''] = load_eof"
+p294
+sI888
+S''
+sI889
+S'    def load_proto(self):'
+p295
+sI890
+S'        proto = ord(self.read(1))'
+p296
+sI891
+S'        if not 0 <= proto <= 2:'
+p297
+sI892
+S'            raise ValueError, "unsupported pickle protocol: %d" % proto'
+p298
+sI893
+S'    dispatch[PROTO] = load_proto'
+p299
+sI894
+S''
+sI895
+S'    def load_persid(self):'
+p300
+ssg85
+S'(self=<pickle.Unpickler instance>)'
+p301
+sg87
+S'load_proto'
+p302
+sasS'pyver'
+p303
+S'Python 2.7.15: /opt/anaconda/bin/python (prefix: /opt/anaconda)'
+p304
+sS'session'
+p305
+g59
+(S's\x1a\x00\x00\x00<div><table></table></div>'
+tRp306
+sS'etype'
+p307
+S"<type 'exceptions.ValueError'>"
+p308
+sS'date'
+p309
+S'Mon Dec 17 16:31:34 2018'
+p310
+sS'response'
+p311
+g59
+(S's7\x16\x00\x00<div><table><tr><td style="font-weight:bold;vertical-align:top;">body</td><td style="vertical-align:top;">:</td><td><div>&lt;cStringIO.StringO object at 0x2b1421d35458&gt;</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">cookies</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">session_id_welcome</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-71c534f0-011d-4b81-98ad-436679e13670<table><tr><td style="font-weight:bold;vertical-align:top;">comment</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">domain</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">expires</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">httponly</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">max-age</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">path</td><td style="vertical-align:top;">:</td><td><div>/</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">secure</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">version</td><td style="vertical-align:top;">:</td><td><div></div></td></tr></table></div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">delimiters</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>{{</div></td></tr><tr><td><div>}}</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">files</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">flash</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">form_label_separator</td><td style="vertical-align:top;">:</td><td><div></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">formstyle</td><td style="vertical-align:top;">:</td><td><div>bootstrap4_inline</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">generic_patterns</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>*</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">headers</td><td style="vertical-align:top;">:</td><td><div><table><tr><td style="font-weight:bold;vertical-align:top;">X-Powered-By</td><td style="vertical-align:top;">:</td><td><div>web2py</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">menu</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">meta</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">models_to_run</td><td style="vertical-align:top;">:</td><td><div><table><tr><td><div>^\\w+\\.py$</div></td></tr><tr><td><div>^default/\\w+\\.py$</div></td></tr><tr><td><div>^default/index/\\w+\\.py$</div></td></tr></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">postprocessing</td><td style="vertical-align:top;">:</td><td><div><table></table></div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_client</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_compression_level</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_cookie_expires</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_data_name</td><td style="vertical-align:top;">:</td><td><div>session_data_welcome</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_file</td><td style="vertical-align:top;">:</td><td><div>None</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_filename</td><td style="vertical-align:top;">:</td><td><div>/fio/srvx7/leo/python/web2py/applications/welcome/sessions/127.0.0.1-71c534f0-011d-4b81-98ad-436679e13670</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_hash</td><td style="vertical-align:top;">:</td><td><div>c0762cbf4baf7f9af97c051e7fcb8083</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id</td><td style="vertical-align:top;">:</td><td><div>127.0.0.1-71c534f0-011d-4b81-98ad-436679e13670</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_id_name</td><td style="vertical-align:top;">:</td><td><div>session_id_welcome</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_masterapp</td><td style="vertical-align:top;">:</td><td><div>welcome</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_new</td><td style="vertical-align:top;">:</td><td><div>True</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">session_storage_type</td><td style="vertical-align:top;">:</td><td><div>file</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">status</td><td style="vertical-align:top;">:</td><td><div>200</div></td></tr><tr><td style="font-weight:bold;vertical-align:top;">view</td><td style="vertical-align:top;">:</td><td><div>default/index.html</div></td></tr></table></div>'
+tRp312
+sS'locals'
+p313
+(dp314
+S'self'
+p315
+S'<pickle.Unpickler instance>'
+p316
+sS'proto'
+p317
+S'3'
+sssS'traceback'
+p318
+S'Traceback (most recent call last):\n  File "/fio/srvx7/leo/python/web2py/gluon/restricted.py", line 219, in restricted\n    exec(ccode, environment)\n  File "/fio/srvx7/leo/python/web2py/applications/welcome/models/db.py", line 95, in <module>\n    auth.define_tables(username=False, signature=False)\n  File "/fio/srvx7/leo/python/web2py/gluon/tools.py", line 2090, in define_tables\n    super(Auth, self).define_tables(username, signature, migrate, fake_migrate)._table_signature_list\n  File "/fio/srvx7/leo/python/web2py/gluon/authapi.py", line 350, in define_tables\n    format=\'%(first_name)s %(last_name)s (%(id)s)\'))\n  File "/fio/srvx7/leo/python/web2py/gluon/packages/dal/pydal/base.py", line 590, in define_table\n    table = self.lazy_define_table(tablename, *fields, **kwargs)\n  File "/fio/srvx7/leo/python/web2py/gluon/packages/dal/pydal/base.py", line 624, in lazy_define_table\n    polymodel=polymodel)\n  File "/fio/srvx7/leo/python/web2py/gluon/packages/dal/pydal/adapters/base.py", line 798, in create_table\n    return self.migrator.create_table(*args, **kwargs)\n  File "/fio/srvx7/leo/python/web2py/gluon/packages/dal/pydal/migrator.py", line 296, in create_table\n    sql_fields_old = pickle.load(tfile)\n  File "/opt/anaconda/lib/python2.7/pickle.py", line 1384, in load\n    return Unpickler(file).load()\n  File "/opt/anaconda/lib/python2.7/pickle.py", line 864, in load\n    dispatch[key](self)\n  File "/opt/anaconda/lib/python2.7/pickle.py", line 892, in load_proto\n    raise ValueError, "unsupported pickle protocol: %d" % proto\nValueError: unsupported pickle protocol: 3\n'
+p319
+s.

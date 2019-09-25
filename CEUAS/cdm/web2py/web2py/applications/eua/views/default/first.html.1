@@ -1,0 +1,6 @@
+{<h1>What is your name?</h1>
+<form>
+  <input name="visitor_name" />
+  <input type="submit" onclick="ajax('{{=URL('default', 'second')}}', ['name'], 'target')"/>
+</form>
+<div id="target"></div>

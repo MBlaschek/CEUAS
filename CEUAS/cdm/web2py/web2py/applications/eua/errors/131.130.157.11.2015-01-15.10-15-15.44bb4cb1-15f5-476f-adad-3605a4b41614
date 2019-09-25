@@ -1,0 +1,21 @@
+(dp1
+S'output'
+p2
+S'<type \'exceptions.KeyError\'> \'Failed at object mode frontend\\n"Failed at object mode backend\\\\n\\\'__restricted__\\\'"\''
+p3
+sS'layer'
+p4
+S'/fio/srvx7/leo/python/web2py/applications/testajax/compiled/controllers.default.third.pyc'
+p5
+sS'code'
+p6
+S'<code object <module> at 0x2b6e0946b230, file "/fio/srvx7/leo/python/web2py/applications/testajax/compiled/controllers.default.third.py", line 11>'
+p7
+sS'snapshot'
+p8
+(dp9
+sS'traceback'
+p10
+S'Traceback (most recent call last):\n  File "/fio/srvx7/leo/python/web2py/gluon/restricted.py", line 224, in restricted\n    exec ccode in environment\n  File "/fio/srvx7/leo/python/web2py/applications/testajax/compiled/controllers.default.third.py", line 101, in <module>\n  File "/fio/srvx7/leo/python/web2py/gluon/globals.py", line 392, in <lambda>\n    self._caller = lambda f: f()\n  File "/fio/srvx7/leo/python/web2py/applications/testajax/compiled/controllers.default.third.py", line 46, in third\n  File "/opt/anaconda/lib/python2.7/site-packages/numba-0.16.0-py2.7-linux-x86_64.egg/numba/dispatcher.py", line 153, in _compile_for_args\n    return self.jit(sig)\n  File "/opt/anaconda/lib/python2.7/site-packages/numba-0.16.0-py2.7-linux-x86_64.egg/numba/dispatcher.py", line 144, in jit\n    return self.compile(sig, **kws)\n  File "/opt/anaconda/lib/python2.7/site-packages/numba-0.16.0-py2.7-linux-x86_64.egg/numba/dispatcher.py", line 279, in compile\n    flags=flags, locals=locs)\n  File "/opt/anaconda/lib/python2.7/site-packages/numba-0.16.0-py2.7-linux-x86_64.egg/numba/compiler.py", line 552, in compile_extra\n    return pipeline.compile_extra(func)\n  File "/opt/anaconda/lib/python2.7/site-packages/numba-0.16.0-py2.7-linux-x86_64.egg/numba/compiler.py", line 263, in compile_extra\n    return self.compile_bytecode(res.result, func_attr=self.func_attr)\n  File "/opt/anaconda/lib/python2.7/site-packages/numba-0.16.0-py2.7-linux-x86_64.egg/numba/compiler.py", line 275, in compile_bytecode\n    return self._compile_bytecode()\n  File "/opt/anaconda/lib/python2.7/site-packages/numba-0.16.0-py2.7-linux-x86_64.egg/numba/compiler.py", line 501, in _compile_bytecode\n    return self._run_pipeline(pipelines)\n  File "/opt/anaconda/lib/python2.7/site-packages/numba-0.16.0-py2.7-linux-x86_64.egg/numba/compiler.py", line 526, in _run_pipeline\n    raise _raise_error(msg, res.exception)\nKeyError: \'Failed at object mode frontend\\n"Failed at object mode backend\\\\n\\\'__restricted__\\\'"\'\n'
+p11
+s.
