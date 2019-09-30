@@ -67,7 +67,7 @@ def index():
                     rvars['columns']=eval(rvars['columns'])
                     print (rvars['columns'])
                     
-                vars=vars+rvars['columns']
+                    vars=vars+rvars['columns']
                 with xarray.open_dataset(rfile,group='observations_table') as f:
                     print(f.keys())
                     x=xarray.Dataset()
@@ -75,14 +75,17 @@ def index():
                         print(v)
                         if v in ['date_time']:
                             x[v]=f[v]
-                            x[v].values=pd.to_datetime(f[v].values,origin='1979-01-01',unit='h').values
-                            print(v,x[v])
+                            #print(x[v].values)
+                            #x[v].values=pd.to_datetime(f[v].values,origin='1979-01-01',unit='h').values
+                            #print(v,x[v])
                         else:
                             x[v]=f[v]
                             print(v,'type',type(f[v].values[0]))
                             if type(f[v].values[0]) in [ bytes,numpy.bytes_ ]:
                                 x[v].values=x[v].values.astype(str)
+                print('vor to_dataframe')
                 cdmd=x.to_dataframe()
+                print('nach to_dataframe')
                 cdmd['observed_variable'] = cdmd['observed_variable'].apply(lambda y: '<a href="?group=observed_variable&variable={0}">{0}</a>'.format(y))
                 if 'units' in cdmd.columns:
                     cdmd['units'] = cdmd['units'].apply(lambda y: '<a href="?group=units&units={0}">{0}</a>'.format(y))
@@ -91,6 +94,7 @@ def index():
                 if 'observation_id' in cdmd.columns:
                     cdmd['observation_id'] = cdmd['observation_id'].apply(lambda y: '<a href="?group=era5fb&index={0}">{0}</a>'.format(y))
                     
+                print('vor return')
                 return dict(message=XML(cdmd.to_html(table_id='First',escape=False,index=False)))#
         else:
             return response.stream(rfile,65536,attachment=False)
