@@ -52,7 +52,7 @@ class stationConfigurationTable():
                   
                   self.columns          = df.columns
             except IOError:
-                print(' The station configuration file ', self.file , ' cannot be found!' ) 
+                print(' The station configuration file ', self.f , ' cannot be found!' ) 
                 self.df = 0
               
       def extract_column(self, column):
@@ -67,12 +67,19 @@ class stationConfigurationTable():
 class StationConfigurationAnalizer():
             """ Build a dictionary from the station_configuration"""
             
-            def __init__(self, bufr = '', igra2 = '', ncar = '' ):
+            def __init__(self, bufr = '', igra2 = '', ncar = '', era5_1 = '' , era5_1759 = '' , era5_1761 = '' , era5_3188 = ''):
                   """ Initilaize the station_configuration files, e.g. sc = stationConfiguration(file= stat_conf_file)  
-                        and the files containing the primary.secondary and original file names """
+                        and the files containing the primary.
+                  , secondary and original file names """
+                  
                   self.bufr = bufr
                   self.igra2 = igra2
                   self.ncar  = ncar
+                  self.era5_1 = era5_1
+                  self.era5_3188 = era5_3188
+                  self.era5_1759 = era5_1759
+                  self.era5_1761 = era5_1761 
+                  
                   self.dic = '' 
                   self.all_primary_id = ''
                   #self.bufr_file_finder = ''
@@ -81,23 +88,15 @@ class StationConfigurationAnalizer():
                   self.bufr_file_finder = pd.read_csv( 'bufr_stationIds_filename.dat', sep='\t',  names = ['primary_id', 'secondary_id', 'file']) 
                   #self.igra2_file_finder = pd.read_csv('igra2_stationIds_filename.dat', 'r')
                   self.ncar_file_finder = pd.read_csv('ncar_stationIds_filename.dat' , sep='\t', names = ['primary_id', 'secondary_id', 'file'])   
-                  
-            
+                           
             def doDic(self):
                   """ Create a compact dictionary with the main data """
                   data = {}
                   datasets = { 'datasets' : [] , 'df': [] }
-                  if self.bufr:
-                        datasets['datasets'].append('bufr')
-                        datasets['df'].append(self.bufr)
-    
-                  if self.ncar:
-                        datasets['datasets'].append('ncar')
-                        datasets['df'].append(self.ncar)
-                              
-                  if self.igra2:
-                        datasets['datasets'].append('igra2')
-                        datasets['df'].append(self.igra2)                        
+                  
+                  for k,v in {'bufr':self.bufr, 'igra2':self.igra2, 'ncar': self.ncar, 'era5_1':self.era5_1, 'era5_1759':self.era5_1759, 'era5_1761': self.era5_1761, 'era5_3188':self.era5_3188   }.items():
+                        datasets['datasets'].append(k)
+                        datasets['df'].append(v)
                   
                   for dataset,df in zip( datasets['datasets'], datasets['df'] ):
                         data[dataset] = {}
@@ -115,6 +114,13 @@ class StationConfigurationAnalizer():
                   all_primary = list(self.igra2.df['primary_id']) 
                   all_primary = all_primary + list(self.bufr.df['primary_id']) 
                   all_primary = all_primary + list(self.ncar.df['primary_id']) 
+                  
+                  all_primary = all_primary + list(self.era5_1.df['primary_id']) 
+                  all_primary = all_primary + list(self.era5_1759.df['primary_id']) 
+                  all_primary = all_primary + list(self.era5_1761.df['primary_id']) 
+                  all_primary = all_primary + list(self.era5_3188.df['primary_id']) 
+                  
+                  
                              
                   all_primary =  list( set(all_primary) )
                   
@@ -125,7 +131,7 @@ class StationConfigurationAnalizer():
             
             def extractDataFromDataset(self, primary_station= '', dataset='' ):
                   """ Extract the data by index in the corresponding list in the doDic() dictionary """
-                  flag, station_name, lat, lon, start, end, file = '-1','-','-','-','-','-','-'
+                  flag, station_name, lat, lon, start, end, original_file = '-1','-','-','-','-','-','-'
                   dic = self.dic[dataset]['primary_id']
                   if primary_station in dic:
                         flag = '1'
@@ -135,9 +141,9 @@ class StationConfigurationAnalizer():
                         lat, lon               = str(self.dic[dataset]['latitude'][index]), str(self.dic[dataset]['longitude'][index])
                         start, end           = str(self.dic[dataset]['start_date'][index]), str(self.dic[dataset]['end_date'][index] )          
                       
-                        file = self.findOriginalFile(primary_station = primary_station, secondary_station = '', dataset = dataset)                              
+                        original_file = self.findOriginalFile(primary_station = primary_station, secondary_station = '', dataset = dataset)                              
                          
-                  return flag, station_name, lat, lon, start, end , file
+                  return flag, station_name, lat, lon, start, end , original_file
                       
             def f(self,stringa ):
                   """ Utility for nice printout in the summary file """
@@ -149,7 +155,9 @@ class StationConfigurationAnalizer():
                         except for the igra2 datasets, for which the names are built directly
                         from the stations ids.
                   """ 
-                                  
+                  if dataset in ['era5_1', 'era5_1759', 'era5_1761' , 'era5_3188']:  ######## TODO !!!! 
+                         return '-'      
+                  
                   found_file = ''
                   if dataset == 'bufr':
                         df =  self.bufr_file_finder
@@ -180,18 +188,31 @@ class StationConfigurationAnalizer():
                   header = '#primary_id\tncar_flag\tigra2_flag\tbufr_flag\n'
                   summary.write(header)
                   
+                  summary_forplot = open('summary_forplot.dat','w')
                   for i in self.all_primary_id:  # initialize some empty variable 
                         bufr_flag, ncar_flag, igra2_flag = '-1', '-1', '-1' 
                         ncar_stat, igra2_stat, bufr_stat = '','',''                        
-                        ncar_lat, igra2_lat, bufr_lat = '-','-','-'
-                        ncar_lon, igra2_lon, bufr_lon = '-', '-', '-'
-                        ncar_start, ncar_end, bufr_start, bufr_end, igra2_start, igra2_end = '-','-','-','-','-','-' 
-                        file_ncar , file_bufr , file_igra2 = '-1', '-1' , '-1' 
+                        ncar_lat, igra2_lat, bufr_lat, era5_1_lat , era5_1759_lat , era5_1761_lat , era5_3188_lat       = '-','-','-' , '-', '-', '-', '-'
+                        ncar_lon, igra2_lon, bufr_lon, era5_1_lon , era5_1759_lon , era5_1761_lon , era5_3188_lon  = '-', '-', '-', '-', '-', '-', '-'
+                        
+                        
+                        ncar_start, igra2_start, bufr_start, era5_1_start, era5_1759_start, era5_1761_start, era5_3188_start =  '-','-','-','-','-','-' ,'-'
+                        bufr_end, ncar_end, igra2_end, era5_1_end, era5_1759_end, era5_1761_end, era5_3188_end = '-','-','-','-','-','-' ,'-'
+                        
+                        file_ncar , file_bufr , file_igra2, file_era5_1, file_era5_1759, file_era5_1761, file_era5_3188 = '-1', '-1' , '-1' , '-1',  '-1', '-1' , '-1' ,
                         
                         
                         bufr_flag , bufr_stat,  bufr_lat, bufr_lon , bufr_start, bufr_end, bufr_file             = self.extractDataFromDataset(dataset = 'bufr', primary_station = i)
                         ncar_flag , ncar_stat,  ncar_lat, ncar_lon , ncar_start, ncar_end, ncar_file         = self.extractDataFromDataset(dataset = 'ncar', primary_station = i)
                         igra2_flag , igra2_stat,  igra2_lat, igra2_lon , igra2_start, igra2_end, igra2_file = self.extractDataFromDataset(dataset = 'igra2', primary_station = i)
+                        
+
+                        era5_1_flag , era5_1_stat,  era5_1_lat, era5_1_lon , era5_1_start, era5_1_end, era5_1_file = self.extractDataFromDataset(dataset = 'era5_1', primary_station = i)
+                        era5_1759_flag , era5_1759_stat,  era5_1759_lat, era5_1759_lon , era5_1759_start, era5_1759_end, era5_1759_file = self.extractDataFromDataset(dataset = 'era5_1759', primary_station = i)
+                        era5_1761_flag , era5_1761_stat,  era5_1761_lat, era5_1761_lon , era5_1761_start, era5_1761_end, era5_1761_file = self.extractDataFromDataset(dataset = 'era5_1761', primary_station = i)
+                        era5_3188_flag , era5_3188_stat,  era5_3188_lat, era5_3188_lon , era5_3188_start, era5_3188_end, era5_3188_file = self.extractDataFromDataset(dataset = 'era5_3188', primary_station = i)
+                        
+                        
 
                         #print (  bufr_flag , bufr_stat,  bufr_lat, bufr_lon , bufr_start, bufr_end, bufr_file )
                         #print ( ncar_flag , ncar_stat,  ncar_lat, ncar_lon , ncar_start, ncar_end, ncar_file)
@@ -204,22 +225,31 @@ class StationConfigurationAnalizer():
                         if igra2_flag == '1':                              
                               file_igra2 = self.findOriginalFile(primary_station=i, dataset='igra2') 
  
-                        l = self.f(i) + '\t' +  self.f(ncar_flag) + '\t' + self.f(igra2_flag) + '\t' + self.f(bufr_flag) + '\t' +  file_ncar + '\t' + file_igra2 + '\t' + file_bufr + '\n'  
+                        l_flags = self.f(i) + '\t' +  self.f(ncar_flag) + '\t' + self.f(igra2_flag) + '\t' + self.f(bufr_flag) + '\t' +  self.f(bufr_flag) 
+                        l_files = file_ncar + '\t' + file_igra2 + '\t' + file_bufr + '\n'  
                               
-                        summary.write(l)    
+                        summary.write(l_flags)    
+                        summary.write(l_files)
                         
-                        ncar_l  = '# ncar\t\t'  + self.f(ncar_stat) + '\t\t' + self.f(ncar_lat) + '\t\t' + self.f(ncar_lon) + '\t\t' + self.f(ncar_start) + '\t\t' + self.f(ncar_end) + '\n' 
-                        bufr_l  = '# bufr\t\t'  + self.f(bufr_stat) + '\t\t' + self.f(bufr_lat) + '\t\t' + self.f(bufr_lon) + '\t\t' + self.f(bufr_start) + '\t\t' + self.f(bufr_end) + '\n' 
-                        igra2_l = '# igra2\t\t' + self.f(igra2_stat) + '\t\t' + self.f(igra2_lat) + '\t\t' + self.f(igra2_lon) + '\t\t' + self.f(igra2_start) + '\t\t' + self.f(igra2_end) + '\n' 
+                        ncar_l  = '# ncar\t\t'  + ncar_stat  + '\t\t' + ncar_lat   + '\t\t' + ncar_lon + '\t\t' + ncar_start   + '\t\t' + ncar_end  + '\n' 
+                        bufr_l  = '# bufr\t\t'   + bufr_stat   + '\t\t' + bufr_lat   + '\t\t' + bufr_lon  + '\t\t' + bufr_start   + '\t\t' + bufr_end   + '\n' 
+                        igra2_l = '# igra2\t\t' + igra2_stat + '\t\t' + igra2_lat + '\t\t' + igra2_lon + '\t\t' + igra2_start + '\t\t' + igra2_end + '\n' 
                               
                         summary.write(ncar_l)                                     
                         summary.write(bufr_l)       
-                        summary.write(igra2_l)       
-                                                         
+                        summary.write(igra2_l)                                                          
                               
-                                    
+                        l_forplot =                   ncar_lat + ',' + ncar_lon  + ',' + ncar_start   + ','  + ncar_end  + ','
+                        l_forplot = l_forplot + igra2_lat + ',' + igra2_lon + ',' + igra2_start + ','  + igra2_end + ','
+                        l_forplot = l_forplot + bufr_lat   + ',' + bufr_lon   + ',' + bufr_start   + ',' + bufr_end   + ','
+
+                        l_forplot = l_forplot + era5_1_lat       + ',' + era5_1_lon       + ',' + era5_1_start       + ',' + era5_1_end + ','
+                        l_forplot = l_forplot + era5_1759_lat + ',' + era5_1759_lon + ',' + era5_1759_start + ',' + era5_1759_end + ','
+                        l_forplot = l_forplot + era5_1761_lat + ',' + era5_1761_lon + ',' + era5_1761_start + ',' + era5_1761_end + ','
+                        l_forplot = l_forplot + era5_3188_lat + ',' + era5_3188_lon + ',' + era5_3188_start + ',' + era5_3188_end + '\n'
                              
-                              
+                        summary_forplot.write(l_forplot)
+                  summary.close()
                               
                         #print(i , bufr_flag, ncar_flag, igra2_flag )
 
@@ -271,7 +301,7 @@ class Merger():
 """
 
 
-make_summary = False
+make_summary = True
 
 if make_summary:
       
@@ -283,10 +313,27 @@ if make_summary:
       igra2_sc.readDF()
       ncar_sc  = stationConfigurationTable( file= 'station_configuration_xxx.dat'.replace('xxx', 'ncar' )  )
       ncar_sc.readDF()
-
+      
+      era5_1_sc  = stationConfigurationTable( file= 'station_configuration_xxx.dat'.replace('xxx', 'era5_1' )  )
+      era5_1_sc.readDF()
+      era5_1759_sc  = stationConfigurationTable( file= 'station_configuration_xxx.dat'.replace('xxx', 'era5_1759' )  )
+      era5_1759_sc.readDF()
+      era5_1761_sc  = stationConfigurationTable( file= 'station_configuration_xxx.dat'.replace('xxx', 'era5_1761' )  )
+      era5_1761_sc.readDF()
+      era5_3188_sc  = stationConfigurationTable( file= 'station_configuration_xxx.dat'.replace('xxx', 'era5_3188' )  )
+      era5_3188_sc.readDF()
+      
+      
 
       """ Initialize the Analizer """
-      analizer = StationConfigurationAnalizer (bufr = bufr_sc, ncar = ncar_sc, igra2 = igra2_sc)
+      analizer = StationConfigurationAnalizer (bufr = bufr_sc, 
+                                                                       ncar = ncar_sc, 
+                                                                       igra2 = igra2_sc, 
+                                                                       era5_1 = era5_1_sc, 
+                                                                       era5_1759 = era5_1759_sc ,  
+                                                                       era5_1761 = era5_1761_sc, 
+                                                                       era5_3188 = era5_3188_sc )
+      
 
       analizer.extractUniqueStations()
       analizer.doDic()                                      # creates a compact dictionary from the station_configuration files 
