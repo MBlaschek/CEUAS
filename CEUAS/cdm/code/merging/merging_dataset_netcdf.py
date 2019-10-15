@@ -82,12 +82,15 @@ class StationConfigurationAnalizer():
                   
                   self.dic = '' 
                   self.all_primary_id = ''
-                  #self.bufr_file_finder = ''
                   self.igra2_file_finder = ''
-                  #self.ncar_file_finder = ''
-                  self.bufr_file_finder = pd.read_csv( 'bufr_stationIds_filename.dat', sep='\t',  names = ['primary_id', 'secondary_id', 'file']) 
+                  self.bufr_file_finder           = pd.read_csv( 'stations_configurations/bufr_stationIds_filename.dat', sep='\t',  names = ['primary_id', 'secondary_id', 'file'] ) 
                   #self.igra2_file_finder = pd.read_csv('igra2_stationIds_filename.dat', 'r')
-                  self.ncar_file_finder = pd.read_csv('ncar_stationIds_filename.dat' , sep='\t', names = ['primary_id', 'secondary_id', 'file'])   
+                  self.ncar_file_finder           = pd.read_csv('stations_configurations/ncar_stationIds_filename.dat' , sep='\t', names = ['primary_id', 'secondary_id', 'file'] )   
+                  self.era5_3188_file_finder = pd.read_csv('stations_configurations/3188_stationIds_filename.dat' , sep='\t', names = ['primary_id', 'secondary_id', 'file'] )   
+                  self.era5_1759_file_finder = pd.read_csv('stations_configurations/1759_stationIds_filename.dat' , sep='\t', names = ['primary_id', 'secondary_id', 'file'] )   
+                  self.era5_1761_file_finder = pd.read_csv('stations_configurations/1761_stationIds_filename.dat' , sep='\t', names = ['primary_id', 'secondary_id', 'file'] )   
+                  #self.era5_1_file_finder       = pd.read_csv('1_stationIds_filename.dat'       , sep='\t', names = ['primary_id', 'secondary_id', 'file'])   
+
                            
             def doDic(self):
                   """ Create a compact dictionary with the main data """
@@ -155,7 +158,7 @@ class StationConfigurationAnalizer():
                         except for the igra2 datasets, for which the names are built directly
                         from the stations ids.
                   """ 
-                  if dataset in ['era5_1', 'era5_1759', 'era5_1761' , 'era5_3188']:  ######## TODO !!!! 
+                  if dataset in ['era5_1']:  ######## TODO !!!! 
                          return '-'      
                   
                   found_file = ''
@@ -164,6 +167,13 @@ class StationConfigurationAnalizer():
                   elif dataset == 'ncar':
                         df =  self.ncar_file_finder
                                              
+                  elif dataset == 'era5_1759':
+                        df = self.era5_1759_file_finder
+                  elif dataset == 'era5_1761':
+                        df = self.era5_1761_file_finder
+                  elif dataset == 'era5_3188':
+                        df = self.era5_3188_file_finder
+                                          
                   if dataset == 'igra2':
                         igra2_path = '/raid60/scratch/federico/databases/IGRAv2/'
                         files = os.listdir(igra2_path)
@@ -190,14 +200,14 @@ class StationConfigurationAnalizer():
                   
                   summary_forplot = open('summary_forplot.dat','w')
                   for i in self.all_primary_id:  # initialize some empty variable 
-                        #bufr_flag, ncar_flag, igra2_flag = '-1', '-1', '-1' 
-                        #ncar_stat, igra2_stat, bufr_stat = '','',''                        
-                        #ncar_lat, igra2_lat, bufr_lat, era5_1_lat , era5_1759_lat , era5_1761_lat , era5_3188_lat       = '-','-','-' , '-', '-', '-', '-'
-                        #ncar_lon, igra2_lon, bufr_lon, era5_1_lon , era5_1759_lon , era5_1761_lon , era5_3188_lon  = '-', '-', '-', '-', '-', '-', '-'
+                        bufr_flag, ncar_flag, igra2_flag = '-1', '-1', '-1' 
+                        ncar_stat, igra2_stat, bufr_stat = '','',''                        
+                        ncar_lat, igra2_lat, bufr_lat, era5_1_lat , era5_1759_lat , era5_1761_lat , era5_3188_lat       = '-','-','-' , '-', '-', '-', '-'
+                        ncar_lon, igra2_lon, bufr_lon, era5_1_lon , era5_1759_lon , era5_1761_lon , era5_3188_lon  = '-', '-', '-', '-', '-', '-', '-'
                         
                         
-                        #ncar_start, igra2_start, bufr_start, era5_1_start, era5_1759_start, era5_1761_start, era5_3188_start =  '-','-','-','-','-','-' ,'-'
-                        #bufr_end, ncar_end, igra2_end, era5_1_end, era5_1759_end, era5_1761_end, era5_3188_end = '-','-','-','-','-','-' ,'-'
+                        ncar_start, igra2_start, bufr_start, era5_1_start, era5_1759_start, era5_1761_start, era5_3188_start =  '-','-','-','-','-','-' ,'-'
+                        bufr_end, ncar_end, igra2_end, era5_1_end, era5_1759_end, era5_1761_end, era5_3188_end = '-','-','-','-','-','-' ,'-'
                         
                         file_ncar , file_bufr , file_igra2, file_era5_1, file_era5_1759, file_era5_1761, file_era5_3188 = '-1', '-1' , '-1' , '-1',  '-1', '-1' , '-1' ,
                         
@@ -212,11 +222,6 @@ class StationConfigurationAnalizer():
                         era5_1761_flag , era5_1761_stat,  era5_1761_lat, era5_1761_lon , era5_1761_start, era5_1761_end, era5_1761_file = self.extractDataFromDataset(dataset = 'era5_1761', primary_station = i)
                         era5_3188_flag , era5_3188_stat,  era5_3188_lat, era5_3188_lon , era5_3188_start, era5_3188_end, era5_3188_file = self.extractDataFromDataset(dataset = 'era5_3188', primary_station = i)
                         
-                        
-
-                        #print (  bufr_flag , bufr_stat,  bufr_lat, bufr_lon , bufr_start, bufr_end, bufr_file )
-                        #print ( ncar_flag , ncar_stat,  ncar_lat, ncar_lon , ncar_start, ncar_end, ncar_file)
-                          
 
                         if ncar_flag == '1':
                               file_ncar = self.findOriginalFile(primary_station=i, dataset='ncar')
@@ -224,9 +229,21 @@ class StationConfigurationAnalizer():
                               file_bufr = self.findOriginalFile(primary_station=i, dataset='bufr')                                 
                         if igra2_flag == '1':                              
                               file_igra2 = self.findOriginalFile(primary_station=i, dataset='igra2') 
-
-
-
+                              
+                        if era5_1759_flag == '1':                              
+                              file_era5_1759 = self.findOriginalFile(primary_station=i, dataset='era5_1759') 
+                        if era5_1761_flag == '1':                              
+                              file_era5_1761 = self.findOriginalFile(primary_station=i, dataset='era5_1761')
+                        if era5_3188_flag == '1':                              
+                              file_era5_3188 = self.findOriginalFile(primary_station=i, dataset='era5_3188') 
+                              
+                        interesting = open('interesting_files.dat','a+')
+                        
+                        if ncar_flag == '1' and bufr_flag == '1' and igra2_flag == '1'  and era5_1759_flag == '1' and era5_1761_flag == '1' and era5_3188_flag == '1':
+                              print ('fund' , str (self.all_primary_id.index(i)) )
+                              interesting.write(i + ',' + file_ncar + ',' +  file_bufr + ',' + file_igra2 + ',' + file_era5_1759 + ',' + file_era5_1761 + ',' + file_era5_3188 + '\n')
+                        
+                        
                         l_flags = self.f(i) + '\t' +  self.f(ncar_flag) + '\t' + self.f(igra2_flag) + '\t' + self.f(bufr_flag) + '\t' +  self.f(bufr_flag) 
                         l_files = file_ncar + '\t' + file_igra2 + '\t' + file_bufr + '\n'  
                               
@@ -262,7 +279,7 @@ class Merger():
             self.df = {}            # storing the dafarames 
             self.DataDic = {}   # storing the info from the dataframe 
             
-      def InitializeData(self, datasets = {'ncar' : '' , 'bufr' : '', 'igra2' : '' } ):
+      def InitializeData(self, datasets = {'ncar' : '' , 'bufr' : '', 'igra2' : '' , 'era5_3188': '' , 'era5_1759': '', 'era5_1761': '' } ):
             """ Initialize dataset. 
                        Args:: datasets (dictionary where key+ dataset name e.g. bufr, igra2 etc. , and value is the path to the netCDF file """
             
@@ -276,12 +293,24 @@ class Merger():
    
       def PlotTimeSeries(self):
             ncar = self.DataDic['ncar']['dateindex']
-            bufr = self.DataDic['bufr']['dateindex']
+            bufr  = self.DataDic['bufr']['dateindex']
             igra2 = self.DataDic['igra2']['dateindex']
+            
+            era5_3188 = self.DataDic['era5_3188']['dateindex']
+            era5_1759 = self.DataDic['era5_1759']['dateindex']
+            era5_1761 = self.DataDic['era5_1761']['dateindex']
             fig, ax = plt.subplots()            
+            
             plt.scatter(ncar, np.full( (len(ncar)) , 1 ), label = 'ncar', color = 'blue')
-            plt.scatter(bufr, np.full( (len(bufr)) , 2 ), label = 'bufr', color = 'lime')
+            plt.scatter(bufr, np.full( (len(bufr)) , 2 ), label = 'bufr', color = 'slateblue')
             plt.scatter(igra2, np.full( (len(igra2)) , 3 ), label = 'igra2', color = 'cyan')
+            
+            plt.scatter(era5_3188, np.full( (len(era5_3188)) , 1 ), label = 'era5_3188', color = 'lime')
+            
+            plt.scatter(era5_1759, np.full( (len(era5_1759)) , 1 ), label = 'era5_1759', color = 'yellow')
+            plt.scatter(era5_1761, np.full( (len(era5_1761)) , 1 ), label = 'era5_1761', color = 'gold')
+            
+            
             plt.legend()
             #plt.grid()
             plt.xlabel('Observation Dates', fontsize =12)
@@ -309,20 +338,19 @@ if make_summary:
       
       """ Read the station_configuration files """
       stat_conf_file = 'station_configuration_xxx.dat'
-      bufr_sc   = stationConfigurationTable( file= 'station_configuration_xxx.dat'.replace('xxx', 'bufr' )  )
+      bufr_sc   = stationConfigurationTable( file= 'stations_configurations/station_configuration_xxx.dat'.replace('xxx', 'bufr' )  )
       bufr_sc.readDF()
-      igra2_sc = stationConfigurationTable( file= 'station_configuration_xxx.dat'.replace('xxx', 'igra2' ) ) 
+      igra2_sc = stationConfigurationTable( file= 'stations_configurations/station_configuration_xxx.dat'.replace('xxx', 'igra2' ) ) 
       igra2_sc.readDF()
-      ncar_sc  = stationConfigurationTable( file= 'station_configuration_xxx.dat'.replace('xxx', 'ncar' )  )
+      ncar_sc  = stationConfigurationTable( file= 'stations_configurations/station_configuration_xxx.dat'.replace('xxx', 'ncar' )  )
       ncar_sc.readDF()
-      
-      era5_1_sc  = stationConfigurationTable( file= 'station_configuration_xxx.dat'.replace('xxx', 'era5_1' )  )
+      era5_1_sc  = stationConfigurationTable( file= 'stations_configurations/station_configuration_xxx.dat'.replace('xxx', 'era5_1' )  )
       era5_1_sc.readDF()
-      era5_1759_sc  = stationConfigurationTable( file= 'station_configuration_xxx.dat'.replace('xxx', 'era5_1759' )  )
+      era5_1759_sc  = stationConfigurationTable( file= 'stations_configurations/station_configuration_xxx.dat'.replace('xxx', 'era5_1759' )  )
       era5_1759_sc.readDF()
-      era5_1761_sc  = stationConfigurationTable( file= 'station_configuration_xxx.dat'.replace('xxx', 'era5_1761' )  )
+      era5_1761_sc  = stationConfigurationTable( file= 'stations_configurations/station_configuration_xxx.dat'.replace('xxx', 'era5_1761' )  )
       era5_1761_sc.readDF()
-      era5_3188_sc  = stationConfigurationTable( file= 'station_configuration_xxx.dat'.replace('xxx', 'era5_3188' )  )
+      era5_3188_sc  = stationConfigurationTable( file= 'stations_configurations/station_configuration_xxx.dat'.replace('xxx', 'era5_3188' )  )
       era5_3188_sc.readDF()
       
       
@@ -353,6 +381,9 @@ data = { 'ncar'    : '/raid60/scratch/federico/ConvertedDB/ncar/chuadb_windc_219
                'igra2'   : '/raid60/scratch/federico/ConvertedDB/igra2/chRSM00021946-data.txt.nc' ,
                'bufr'     : 'chera5.21946.bfr.nc' ,
                'era5_1' : 'chera5.conv._21946.nc' }
+
+
+
 
 
 #ncar  = nc.Dataset(ncar_test)

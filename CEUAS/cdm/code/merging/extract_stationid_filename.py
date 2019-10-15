@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+""" Modified version of the script to build the stations_configuration table,
+    that saves the name of the original file from which the data are extracted 
+    in an output file """
+
 import sys
 import os.path
 import glob
