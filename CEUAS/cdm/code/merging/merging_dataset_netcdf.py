@@ -190,14 +190,14 @@ class StationConfigurationAnalizer():
                   
                   summary_forplot = open('summary_forplot.dat','w')
                   for i in self.all_primary_id:  # initialize some empty variable 
-                        bufr_flag, ncar_flag, igra2_flag = '-1', '-1', '-1' 
-                        ncar_stat, igra2_stat, bufr_stat = '','',''                        
-                        ncar_lat, igra2_lat, bufr_lat, era5_1_lat , era5_1759_lat , era5_1761_lat , era5_3188_lat       = '-','-','-' , '-', '-', '-', '-'
-                        ncar_lon, igra2_lon, bufr_lon, era5_1_lon , era5_1759_lon , era5_1761_lon , era5_3188_lon  = '-', '-', '-', '-', '-', '-', '-'
+                        #bufr_flag, ncar_flag, igra2_flag = '-1', '-1', '-1' 
+                        #ncar_stat, igra2_stat, bufr_stat = '','',''                        
+                        #ncar_lat, igra2_lat, bufr_lat, era5_1_lat , era5_1759_lat , era5_1761_lat , era5_3188_lat       = '-','-','-' , '-', '-', '-', '-'
+                        #ncar_lon, igra2_lon, bufr_lon, era5_1_lon , era5_1759_lon , era5_1761_lon , era5_3188_lon  = '-', '-', '-', '-', '-', '-', '-'
                         
                         
-                        ncar_start, igra2_start, bufr_start, era5_1_start, era5_1759_start, era5_1761_start, era5_3188_start =  '-','-','-','-','-','-' ,'-'
-                        bufr_end, ncar_end, igra2_end, era5_1_end, era5_1759_end, era5_1761_end, era5_3188_end = '-','-','-','-','-','-' ,'-'
+                        #ncar_start, igra2_start, bufr_start, era5_1_start, era5_1759_start, era5_1761_start, era5_3188_start =  '-','-','-','-','-','-' ,'-'
+                        #bufr_end, ncar_end, igra2_end, era5_1_end, era5_1759_end, era5_1761_end, era5_3188_end = '-','-','-','-','-','-' ,'-'
                         
                         file_ncar , file_bufr , file_igra2, file_era5_1, file_era5_1759, file_era5_1761, file_era5_3188 = '-1', '-1' , '-1' , '-1',  '-1', '-1' , '-1' ,
                         
@@ -224,7 +224,9 @@ class StationConfigurationAnalizer():
                               file_bufr = self.findOriginalFile(primary_station=i, dataset='bufr')                                 
                         if igra2_flag == '1':                              
                               file_igra2 = self.findOriginalFile(primary_station=i, dataset='igra2') 
- 
+
+
+
                         l_flags = self.f(i) + '\t' +  self.f(ncar_flag) + '\t' + self.f(igra2_flag) + '\t' + self.f(bufr_flag) + '\t' +  self.f(bufr_flag) 
                         l_files = file_ncar + '\t' + file_igra2 + '\t' + file_bufr + '\n'  
                               

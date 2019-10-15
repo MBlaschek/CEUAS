@@ -13,7 +13,7 @@ import cartopy.crs as ccrs
 # d = '1965-03-04'
 # datetime_obj = datetime.strptime(d, '%Y-%m-%d')
 
-
+os.system('mkdir out_plots')
 
 def plot_properties(flag = ''):
     
@@ -27,8 +27,9 @@ def plot_properties(flag = ''):
         gl.xlabels_top = False
         gl.ylabels_right = False        
     
-    ax = plt.axes(projection=ccrs.Mollweide())
-    ax.stock_img()
+    else: 
+        ax = plt.axes(projection=ccrs.Mollweide())
+        ax.stock_img()
     
     
     #plt.xlim([-180.,180.])
@@ -100,7 +101,7 @@ def makePlot(start_date= '', end_date = '', file = '', flag = ''):
        
     plt.title('Data Availability from ' + start_date + ' to ' + end_date )   
     plt.legend(loc = 'lower right', ncol = 3)   
-    plt.savefig('plots/map_' + start_date + '_' + end_date + '_' + flag + '.png')
+    plt.savefig('out_plots/map_' + start_date + '_' + end_date + '_' + flag + '.png')
     plt.close()
      
        
