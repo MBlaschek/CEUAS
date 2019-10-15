@@ -18,23 +18,27 @@ os.system('mkdir out_plots')
 def plot_properties(flag = ''):
     
     f=plt.figure(figsize=(10,5))
+
     
-    if flag == 'pretty':
+    if flag != 'pretty':
         
         ax=plt.subplot(1,1,1,projection=ccrs.PlateCarree())  
-        gl=ax.gridlines(draw_labels=True , ls = '--', color = 'lightgray')
-        gl=ax.gridlines(ls = '--', color = 'lightgray')
+        gl=ax.gridlines(draw_labels=True , ls = ':', color = 'lightgray')
+        #gl=ax.gridlines(ls = '', color = 'lightgray') 
+        plt.grid(ls = '--', color = 'lightgray')  
+        #ax = plt.axes(projection = ccrs.PlateCarree())
+        ax.coastlines(color = 'blue')
         gl.xlabels_top = False
-        gl.ylabels_right = False        
-    
-    else: 
+        gl.ylabels_right = False
+
+    elif flag == 'pretty': 
         ax = plt.axes(projection=ccrs.Mollweide())
         ax.stock_img()
-    
-    
+        ax.coastlines()
+
+    #ax.coastline()
     #plt.xlim([-180.,180.])
     #plt.ylim([-90.,90.])
-    ax.coastlines()
 
        
     d = {'ncar':'blue', 'bufr':'lime', 'igra2':'cyan', 'era5_1':'magenta', 'era5_1759':'yellow', 'era5_1761':'black', 'era5_3188':'orange' } 
@@ -90,17 +94,17 @@ def makePlot(start_date= '', end_date = '', file = '', flag = ''):
     dic = plot_properties(flag = flag)
     
     for d, color  in dic.items():
-                 
+        lab = d.replace('era5_1','ERA5 1').replace('era5_3188','ERA5 3188').replace('era5_1759','ERA5 1759').replace('era5_1761','ERA5 1761').replace('igra2','IGRA2').replace('ncar','NCAR').replace('bufr','BUFR')         
         lat, lon =  clean_data( tab[ d + '_lat'], tab[d + '_lon'],  tab[d + '_start'] , tab[d + '_end'] , date_min = start_date, date_max= end_date )  # cleaning the station to be plotted 
         
         #lat, lon = lat[:10], lon[:10]
         #lat = [-5, 100]
         #lon = [100, -50]
         #plt.scatter (lon, lat,   color = color , transform=ccrs.PlateCarree(central_longitude = 0.0), s = 7, label = d)
-        plt.scatter (lon, lat,   color = color, s = 4, label = d + '[' + str(len(lon)) + ']' )
+        plt.scatter (lon, lat,   color = color, transform=ccrs.PlateCarree(central_longitude = 0.0), s = 4, label = lab + ' [' + str(len(lon)) + ']' )
        
-    plt.title('Data Availability from ' + start_date + ' to ' + end_date )   
-    plt.legend(loc = 'lower right', ncol = 3)   
+    plt.title('Data Availability from ' + start_date + ' to ' + end_date , y = 1.04 )   
+    plt.legend(loc = 'lower left', ncol = 1, fontsize = 9)   
     plt.savefig('out_plots/map_' + start_date + '_' + end_date + '_' + flag + '.png', dpi = 300)
     plt.close()
      
@@ -121,6 +125,6 @@ for f in ['', 'pretty']:
     a = makePlot(start_date = '1990-01-01', end_date = '2000-01-01',   file = 'summary_forplot.dat', flag = f )
     a = makePlot(start_date = '2000-01-01', end_date = '2010-01-01',   file = 'summary_forplot.dat', flag = f )
     a = makePlot(start_date = '2010-01-01', end_date = '2020-01-01',   file = 'summary_forplot.dat', flag = f )
-
+    
 
 
