@@ -97,7 +97,7 @@ def makePlot(start_date= '', end_date = '', file = '', flag = ''):
         #lat = [-5, 100]
         #lon = [100, -50]
         #plt.scatter (lon, lat,   color = color , transform=ccrs.PlateCarree(central_longitude = 0.0), s = 7, label = d)
-        plt.scatter (lon, lat,   color = color, transform=ccrs.PlateCarree(), s = 4, label = d + '[' + str(len(lon)) + ']' )
+        plt.scatter (lon, lat,   color = color, s = 4, label = d + '[' + str(len(lon)) + ']' )
        
     plt.title('Data Availability from ' + start_date + ' to ' + end_date )   
     plt.legend(loc = 'lower right', ncol = 3)   
