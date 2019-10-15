@@ -87,7 +87,7 @@ def makePlot(start_date= '', end_date = '', file = '', flag = ''):
     tab =pd.read_csv(file, delimiter=',',  na_filter=False, comment='#' , names = col_names )
        
        
-    dic = plot_properties()
+    dic = plot_properties(flag = flag)
     
     for d, color  in dic.items():
                  
@@ -101,7 +101,7 @@ def makePlot(start_date= '', end_date = '', file = '', flag = ''):
        
     plt.title('Data Availability from ' + start_date + ' to ' + end_date )   
     plt.legend(loc = 'lower right', ncol = 3)   
-    plt.savefig('out_plots/map_' + start_date + '_' + end_date + '_' + flag + '.png')
+    plt.savefig('out_plots/map_' + start_date + '_' + end_date + '_' + flag + '.png', dpi = 300)
     plt.close()
      
        
