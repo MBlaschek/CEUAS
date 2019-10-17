@@ -8,8 +8,11 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pylab as plt
 import argparse
+from datetime import datetime, timedelta
 
 
+def to_integer(dt_time):
+      return 10000*dt_time.year + 100*dt_time.month + dt_time.day
 
 class netCDF():
       """ Class to handle the converted netCDF files """
@@ -278,6 +281,7 @@ class Merger():
       def __init__(self ):
             self.df = {}            # storing the dafarames 
             self.DataDic = {}   # storing the info from the dataframe 
+            self.databases = ['ncar','igra2','bufr','era5_1','era5_1759','era5_1761','era5_3188']
             
       def InitializeData(self, datasets = {'ncar' : '' , 'bufr' : '', 'igra2' : '' , 'era5_3188': '' , 'era5_1759': '', 'era5_1761': '' } ):
             """ Initialize dataset. 
@@ -290,34 +294,157 @@ class Merger():
                   self.DataDic[k]['observations_table'] = {}
                   self.DataDic[k]['observations_table']['date_time'] = self.df[k].groups['observations_table']['date_time']   # storing the date_time 
            
-   
-      def PlotTimeSeries(self):
-            ncar = self.DataDic['ncar']['dateindex']
-            bufr  = self.DataDic['bufr']['dateindex']
-            igra2 = self.DataDic['igra2']['dateindex']
+     
+      def plot_styler(self):
+            """ Building a style dictionary to make all the plots uniform """
             
-            era5_3188 = self.DataDic['era5_3188']['dateindex']
-            era5_1759 = self.DataDic['era5_1759']['dateindex']
-            era5_1761 = self.DataDic['era5_1761']['dateindex']
+            style_dic = {'bufr'           : {'color':'cyan'           , 'size':8    , 'label':'BUFR'           , } ,
+                                  'igra2'          : {'color':'orange'       , 'size' :6    , 'label':'IGRA2'          , } ,
+                                  'ncar'           : {'color': 'magenta'  , 'size' :10  , 'label':'NCAR'           , } ,                      
+                                  'era5_1'       : {'color': 'yellow'      , 'size' : 4  , 'label':'ERA5 1'         , } ,
+                                  'era5_1759' : {'color': 'slateblue'  , 'size' : 3  , 'label':'ERA5 1759'  , } ,
+                                  'era5_1761' : {'color': 'lime'          , 'size' : 2   , 'label':'ERA5 1761'  , } ,
+                                  'era5_3188' : {'color': 'blue'          , 'size' : 1   , 'label':'ERA5 3188'  , } ,    }
+            
+            
+            station , name        = self.df['ncar'].groups['station_configuration']['primary_id'][0]      ,   self.df['ncar'].groups['station_configuration']['station_name'][0]
+            latitude, longitude = str (self.df['ncar'].groups['station_configuration']['latitude'][0] ) ,    str (self.df['ncar'].groups['station_configuration']['longitude'][0] )            
+            
+            style_dic['station']     = station
+            style_dic['name']       = name
+            style_dic['latitude']   = latitude
+            style_dic['longitude'] = longitude
+            
+            self.style_dic = style_dic
+            
+      def PlotTimeDistribution(self):
+            """ Script to plot the time distribution of the available data, by reading the date"""           
+            # station info (statio ind, name, lat, lon)
+
+
             fig, ax = plt.subplots()            
+            fig.set_size_inches(10, 4)
+            plt.tick_params(
+                axis='y',          # changes apply to the x-axis
+                which='both',      # both major and minor ticks are affected
+                bottom=False,      # ticks along the bottom edge are off
+                top=False,         # ticks along the top edge are off
+                labelbottom=False)
             
-            plt.scatter(ncar, np.full( (len(ncar)) , 1 ), label = 'ncar', color = 'blue')
-            plt.scatter(bufr, np.full( (len(bufr)) , 2 ), label = 'bufr', color = 'slateblue')
-            plt.scatter(igra2, np.full( (len(igra2)) , 3 ), label = 'igra2', color = 'cyan')
+            for d, position in zip ( self.databases, [1, 1.5,  2, 2.5, 3, 3.5, 4] ):
+                  dates = self.DataDic[d]['dateindex']
+                  plt.scatter (dates,   np.full( (len(dates)) , position      ) , label = self.style_dic[d]['label'] , color =    self.style_dic[d]['color'] )
+
+            plt.ylim(0,5)
+            size = 13
+            plt.text(19200000,4.5, 'Station Identifier: ' + self.style_dic['station'], fontsize = size)
+            plt.text(19200000,4.1, 'Station Name: ' + self.style_dic['name'], fontsize = size)
+            plt.text(19200000,3.7, 'Lat, Lon:  [' + self.style_dic['latitude'] + ','  + self.style_dic['longitude'] + ']', fontsize = size)
             
-            plt.scatter(era5_3188, np.full( (len(era5_3188)) , 1 ), label = 'era5_3188', color = 'lime')
+
+            #plt.yticks( (1, 1.5, 2 , 2.5 , 3, 3.5 , 4 ) ,('Tom', 'Dick', 'Harry', 'Sally', 'Sue', 'a', 'b') )
             
-            plt.scatter(era5_1759, np.full( (len(era5_1759)) , 1 ), label = 'era5_1759', color = 'yellow')
-            plt.scatter(era5_1761, np.full( (len(era5_1761)) , 1 ), label = 'era5_1761', color = 'gold')
-            
-            
-            plt.legend()
+            plt.grid(linestyle = '--', color  ='lightgray', axis = 'x')
+            plt.legend(fontsize = 10, loc = 'lower left', ncol = 2)
             #plt.grid()
             plt.xlabel('Observation Dates', fontsize =12)
-            ax.ticklabel_format(useOffset=False, style='plain' )            
+            ax.ticklabel_format(useOffset=False, style='plain' )    
+            ax.set_yticklabels(('', '', '','','','')) 
             plt.xticks(rotation = 45, fontsize = 8)
-            plt.savefig('plots/test_timeseries.png', bbox_inches='tight', dpi = 200)
+            plt.savefig('plot_directory/plots/time_series/' + self.style_dic['station'] + '_timeintervals.png', bbox_inches='tight', dpi = 200)
 
+
+      def extract_variable_pressure_time(self, var='', pressure = '' ):
+            """ Given a dataset, extract the values of a variable for a certain pressure from the observation tables """
+            data = {}
+            for d in self.databases:
+            #for d in ['era5_3188']:
+                  obs_variable = self.df[d].groups['observations_table']['observed_variable'][:]
+                  obs_values    = self.df[d].groups['observations_table']['observation_value'][:]
+                  p_levels         = self.df[d].groups['observations_table']['z_coordinate'][:]    
+                  date_times    = self.df[d].groups['observations_table']['date_time']
+                  
+                  # date_times are stored as a time interval from a certain starting point, which is given as an attribute of the date_time variable in the observation_table.
+                  # This can be in minutes, hours, days etc. depending on the input data.
+                  # We need to extract the time offset and add it to the entries store in the date_time obs table, to calculate the correct real date_time value 
+                  time_offset_units = date_times.units  
+                  time_offset           = time_offset_units.split('since ')[1].split(' ')[0]                             
+                  time_offset           = datetime.strptime(time_offset, '%Y-%m-%d')
+                  
+                  print ('For the database' , d , ' the units of time are: ',  self.DataDic[d]['observations_table']['date_time'].units ) 
+              
+                  data[d] = {}
+                  for v in var:
+                        data[d][v]={}
+                        for p in pressure:
+                              data[d][v][p] = {'observed_values': [] , 'indices': [], 'date_time': []}
+                              
+                              pressure_indices  = np.where( p_levels == p)[0]   # extracting pressure levels matching with input pressure  
+                              variables_indices = np.where( obs_variable == v)[0]  # extracting observed variable matching with input var                               
+                              indices = list(set(pressure_indices).intersection(set(variables_indices))) # intersection
+                                                           
+                              data[d][v][p]['observed_values'] = np.take(obs_values, indices)
+                              data[d][v][p]['indices']                = indices
+                                                                                     
+                              #pressure_indices    = np.where( p_levels == p)[0]  # extracting indices of the pressure levels where p == pressure 
+                              #variables = np.take(obs_variable, pressure_indices)
+                  
+                              date_times = np.take( date_times[:] , indices ) # extracting matchign date_time 
+                              if 'minutes' in time_offset_units:
+                                    delta = [ timedelta(minutes = float(i)) for i in date_times ]
+                              elif 'hour' in time_offset_units:
+                                    delta = [ timedelta(hours = float(i)) for i in date_times ]
+                                    
+                              #date_time = [to_integer(i) for i in  [  time_offset + i  for i in delta  ] ]
+                              date_times = [i for i in  [  time_offset + i  for i in delta  ] ]                              
+                              data[d][v][p]['date_time']           = date_times
+
+                              print('done with d: ', d)
+            return data
+      
+      def PlotTimeSeries(self , var = [85] , pressure = [100000.0]):
+            """ Make a time series plot for the variable, pressure levels specfified """
+            station = self.df['ncar'].groups['station_configuration']['primary_id'][0] 
+            self.plot_styler()
+            fig, ax = plt.subplots()            
+            fig.set_size_inches(15, 4)            
+            a =  self.extract_variable_pressure_time(var= var, pressure = pressure ) 
+            #for d in self.databases:
+            for d in ['ncar','bufr','igra2', 'era5_1', 'era5_1759', 'era5_1761', 'era5_3188']:
+
+                  
+                  obs = a[d][85][100000]['observed_values'] 
+                  if d in ['era5_1', 'era5_3188','era5_1759','era5_1761', 'bufr']:
+                       obs = [ i - 273.15 for i in obs ]  # convert to Celsius 
+                  print('database: ***** ', d , '   ', obs)
+                  #time = np.datetime64(a[d][85][100000]['date_time'])
+                  time = a[d][85][100000]['date_time']
+                  
+                  plt.scatter(time, obs , s = self.style_dic[d]['size'] , color = self.style_dic[d]['color'] , label = self.style_dic[d]['label'] )
+            
+            #fig.canvas.draw()
+            #labels = [item.get_text() for item in ax.get_xticklabels()]                  
+            #labels = [ i[:5] for i in labels ]                  
+            #ax.set_xticklabels(labels)                  
+
+            plt.title('Station  ' + self.style_dic['name'] + ' [ ' + self.style_dic['station'] + ' ]  for P = 100000 Pa', fontsize = 12 , y = 1.03)
+            plt.grid(linestyle = '--', color = 'lightgray')
+            plt.ylabel('Temperature [C]' )
+            plt.ylim(-40, 40)
+            plt.legend(fontsize = 12, loc = 'lower left')
+         
+            plt.xlim( datetime(1945, 1, 1) , datetime(1975, 1, 1)       )
+                  
+            plt.savefig('plot_directory/plots/time_series/' + station + '_timeseries_low.png', dpi = 250)
+ 
+            plt.xlim( datetime(1975, 1, 1) , datetime(2020, 1, 1)       )
+            
+            plt.savefig('plot_directory/plots/time_series/' + station + '_timeseries_high.png', dpi = 250)
+            
+            fig.set_size_inches(20, 4)            
+            plt.xlim( datetime(1945, 1, 1) , datetime(2020, 1, 1)       )
+            plt.savefig('plot_directory/plots/time_series/' + station + '_timeseries_all.png', dpi = 250)
+            
 
 """ 
 ['primary_id', 'primary_id_scheme', 'record_number', 'secondary_id', 'secondary_id_scheme', 'station_name', 'station_abbreviation', 'alternative_name', 'station_crs', 'longitude', 'latitude',
@@ -332,7 +459,7 @@ class Merger():
 """
 
 
-make_summary = True
+make_summary = False
 
 if make_summary:
       
@@ -357,13 +484,13 @@ if make_summary:
 
       """ Initialize the Analizer """
       analizer = StationConfigurationAnalizer (bufr = bufr_sc, 
-                                                                       ncar = ncar_sc, 
-                                                                       igra2 = igra2_sc, 
-                                                                       era5_1 = era5_1_sc, 
-                                                                       era5_1759 = era5_1759_sc ,  
-                                                                       era5_1761 = era5_1761_sc, 
-                                                                       era5_3188 = era5_3188_sc )
-      
+                                                                         ncar = ncar_sc, 
+                                                                         igra2 = igra2_sc, 
+                                                                         era5_1 = era5_1_sc, 
+                                                                         era5_1759 = era5_1759_sc ,  
+                                                                         era5_1761 = era5_1761_sc, 
+                                                                         era5_3188 = era5_3188_sc )
+       
 
       analizer.extractUniqueStations()
       analizer.doDic()                                      # creates a compact dictionary from the station_configuration files 
@@ -377,12 +504,30 @@ if make_summary:
 
 """ Starting with the merging. Information stored in the summay file required (i.e. primary station id and filenames). """
 
-data = { 'ncar'    : '/raid60/scratch/federico/ConvertedDB/ncar/chuadb_windc_21946.txt.nc'   ,
-               'igra2'   : '/raid60/scratch/federico/ConvertedDB/igra2/chRSM00021946-data.txt.nc' ,
-               'bufr'     : 'chera5.21946.bfr.nc' ,
-               'era5_1' : 'chera5.conv._21946.nc' }
+data = { 'ncar'    : 'example_stations/ncar/chuadb_windc_22802.txt.nc'   ,
+               'igra2'   : 'example_stations/igra2/chRSM00022802-data.txt.nc'  ,
+               'bufr'     : 'example_stations/bufr/chera5.22802.bfr.nc'  ,
+               
+               'era5_1' : 'example_stations/era5_1/chera5.conv._22802.nc' , 
+               
+               'era5_1759' : 'example_stations/era5_1759/chera5.1759.conv.1:22802.nc' , 
+               'era5_1761' : 'example_stations/era5_1761/chera5.1761.conv.1:22802.nc' , 
+               'era5_3188' : 'example_stations/era5_3188/chera5.3188.conv.C:4648.nc' , 
+
+               }
 
 
+
+data = { 'ncar'    : 'example_stations/ncar/chuadb_windc_47646.txt.nc'   ,
+               'igra2'   : 'example_stations/igra2/chJAM00047646-data.txt.nc'  ,
+               'bufr'     : 'example_stations/bufr/chera5.47646.bfr.nc'  ,
+               
+               'era5_1' : 'example_stations/era5_1/chera5.conv._47646.nc' , 
+               'era5_1759' : 'example_stations/era5_1759/chera5.1759.conv.1:47646.nc' , 
+               'era5_1761' : 'example_stations/era5_1761/chera5.1761.conv.1:47646.nc' , 
+               'era5_3188' : 'example_stations/era5_3188/chera5.3188.conv.C:5357.nc' , 
+
+               }
 
 
 
@@ -400,8 +545,9 @@ data = { 'ncar'    : '/raid60/scratch/federico/ConvertedDB/ncar/chuadb_windc_219
 Merging = Merger()
 Merging.InitializeData( datasets = data ) 
 
-Merging.PlotTimeSeries()
-
+Merging.plot_styler()
+Merging.PlotTimeDistribution()
+Merging.PlotTimeSeries( )
 
 
 
