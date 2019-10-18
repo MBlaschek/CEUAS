@@ -137,7 +137,7 @@ for f in ['', 'pretty']:
     
     a = makePlot(start_date = '1940-01-01', end_date = '1950-01-01',   file = 'summary_forplot.dat', flag = f )
    
-    '''
+    
     a = makePlot(start_date = '1900-01-01', end_date = '1920-01-01',   file = 'summary_forplot.dat', flag = f )
     a = makePlot(start_date = '1920-01-01', end_date = '1940-01-01',   file = 'summary_forplot.dat', flag = f ) 
     a = makePlot(start_date = '1940-01-01', end_date = '1950-01-01',   file = 'summary_forplot.dat', flag = f ) 
@@ -148,4 +148,4 @@ for f in ['', 'pretty']:
     a = makePlot(start_date = '1990-01-01', end_date = '2000-01-01',   file = 'summary_forplot.dat', flag = f )
     a = makePlot(start_date = '2000-01-01', end_date = '2010-01-01',   file = 'summary_forplot.dat', flag = f )
     a = makePlot(start_date = '2010-01-01', end_date = '2020-01-01',   file = 'summary_forplot.dat', flag = f )
-    '''
+    
