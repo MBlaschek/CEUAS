@@ -509,7 +509,7 @@ class Merger():
             for d in self.databases: 
                 
                   obs = data_dic[d][variable][pressure]['observed_values'] 
-                  if d in ['era5_1', 'era5_3188','era5_1759','era5_1761', 'bufr'] and variable == '85':
+                  if d in ['era5_1', 'era5_3188','era5_1759','era5_1761', 'bufr'] and variable == 85:
                        obs = [ i - 273.15 for i in obs ]  # convert to Celsius 
                   print('database: ***** ', d , '   ', obs)
                   #time = np.datetime64(a[d][85][100000]['date_time'])
@@ -551,7 +551,7 @@ class Merger():
             fig.set_size_inches(20, 4)         
             plt.xlim( date_min, date_max  )
             plt.savefig('plot_directory/plots/time_series/' + str(variable) + '_' + station + '_' + str(pressure) + '_timeseries_all.png', dpi = 200)
-            
+            plt.close()
 
 """ 
 ['primary_id', 'primary_id_scheme', 'record_number', 'secondary_id', 'secondary_id_scheme', 'station_name', 'station_abbreviation', 'alternative_name', 'station_crs', 'longitude', 'latitude',
@@ -656,7 +656,7 @@ Merging.InitializeData( datasets = available_data )
 Merging.plot_styler()
 Merging.PlotTimeDistribution()
 
-variables = [85, 106, 107, 38, 117 ]
+variables = [85 ]
 pressures = [100000, 500, 50000]
 
 
