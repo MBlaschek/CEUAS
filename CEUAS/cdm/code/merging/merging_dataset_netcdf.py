@@ -9,7 +9,7 @@ matplotlib.use('Agg')
 import matplotlib.pylab as plt
 import argparse
 from datetime import datetime, timedelta
-
+import numpy.ma as ma
 
 def to_integer(dt_time):
       return 10000*dt_time.year + 100*dt_time.month + dt_time.day
@@ -279,43 +279,64 @@ class StationConfigurationAnalizer():
 class Merger():
       """ Class for the merging of the data from different netCDF files """
       def __init__(self ):
-            self.df = {}            # storing the dafarames 
-            self.DataDic = {}   # storing the info from the dataframe 
-            self.databases = ['ncar','igra2','bufr','era5_1','era5_1759','era5_1761','era5_3188']
+            self.data = {}
+            self.databases = []
+            #self.df = {}            # storing the dafarames 
+            #self.DataDic = {}   # storing the info from the dataframe 
+            #self.databases = ['ncar','igra2','bufr','era5_1','era5_1759','era5_1761','era5_3188']
             
-      def InitializeData(self, datasets = {'ncar' : '' , 'bufr' : '', 'igra2' : '' , 'era5_3188': '' , 'era5_1759': '', 'era5_1761': '' } ):
+      def InitializeData(self, datasets = {} ):
             """ Initialize dataset. 
                        Args:: datasets (dictionary where key+ dataset name e.g. bufr, igra2 etc. , and value is the path to the netCDF file """
-            
+            data = {}
             for k,v in datasets.items() :
-                  self.df[k] = nc.Dataset(v)
-                  self.DataDic[k] = {}
-                  self.DataDic[k]['dateindex'] = self.df[k].variables['dateindex'][0,:]  # storing the dateindex 
-                  self.DataDic[k]['observations_table'] = {}
-                  self.DataDic[k]['observations_table']['date_time'] = self.df[k].groups['observations_table']['date_time']   # storing the date_time 
-           
-     
+                  data[k] = {}
+                  ds =  nc.Dataset(v) 
+                  data[k]['df'] = ds                
+                  data[k]['dateindex'] = ds.variables['dateindex'][0,:]  # storing the dateindex 
+                  data[k]['observations_table'] = {}
+                  data[k]['observations_table']['date_time'] = ds.groups['observations_table']['date_time']   # storing the date_time 
+                  
+                  data[k]['source_file']      = ds.groups['source_configuration']['source_file'][0]
+                  data[k]['product_code']  = ds.groups['source_configuration']['product_code'][0]
+                  
+                  
+            self.databases = datasets.keys()
+            self.data = data 
+            
       def plot_styler(self):
             """ Building a style dictionary to make all the plots uniform """
             
-            style_dic = {'bufr'           : {'color':'cyan'           , 'size':8    , 'label':'BUFR'           , } ,
-                                  'igra2'          : {'color':'orange'       , 'size' :6    , 'label':'IGRA2'          , } ,
+            style_dic = {  'bufr'           : {'color':'cyan'           , 'size':8    , 'label':'BUFR'           , } ,
+                                  'igra2'          : {'color':'orange'       , 'size' :6    , 'label':'IGRA2'         , } ,
                                   'ncar'           : {'color': 'magenta'  , 'size' :10  , 'label':'NCAR'           , } ,                      
-                                  'era5_1'       : {'color': 'yellow'      , 'size' : 4  , 'label':'ERA5 1'         , } ,
-                                  'era5_1759' : {'color': 'slateblue'  , 'size' : 3  , 'label':'ERA5 1759'  , } ,
-                                  'era5_1761' : {'color': 'lime'          , 'size' : 2   , 'label':'ERA5 1761'  , } ,
-                                  'era5_3188' : {'color': 'blue'          , 'size' : 1   , 'label':'ERA5 3188'  , } ,    }
+                                  'era5_1'       : {'color': 'yellow'      , 'size' : 4  , 'label':'ERA5 1'          , } ,
+                                  'era5_1759' : {'color': 'slateblue'  , 'size' : 3  , 'label':'ERA5 1759'    , } ,
+                                  'era5_1761' : {'color': 'lime'          , 'size' : 2   , 'label':'ERA5 1761'   , } ,
+                                  'era5_3188' : {'color': 'blue'          , 'size' : 1   , 'label':'ERA5 3188'   , } ,    }
             
             
-            station , name        = self.df['ncar'].groups['station_configuration']['primary_id'][0]      ,   self.df['ncar'].groups['station_configuration']['station_name'][0]
-            latitude, longitude = str (self.df['ncar'].groups['station_configuration']['latitude'][0] ) ,    str (self.df['ncar'].groups['station_configuration']['longitude'][0] )            
+            station , name        = self.data['ncar']['df'].groups['station_configuration']['primary_id'][0]      ,   self.data['ncar']['df'].groups['station_configuration']['station_name'][0]
+            latitude, longitude = str (self.data['ncar']['df'].groups['station_configuration']['latitude'][0] ) ,    str (self.data['ncar']['df'].groups['station_configuration']['longitude'][0] )            
+            
+            style_dic_variable = {85   : {'label':'Temperature [C]'              , 'ylim' : [-40 , 40    ]  } ,
+                                               107 : {'label': 'Wind Speed [m/s]'           , 'ylim' : [0     ,80    ]  }  ,
+                                               106 : {'label': 'Wind Direction [degree]' , 'ylim' : [0     , 360 ]  }   ,
+                                               38   : {'label': 'Relative Humidty'           , 'ylim'  : [0     , 1     ]  }   ,
+                                               117 : {'label': 'Geopotential'                  , 'ylim'  : [0    , 100  ]  }   ,
+                                               
+                                               
+                                               
+                                               }  
             
             style_dic['station']     = station
             style_dic['name']       = name
-            style_dic['latitude']   = latitude
+            style_dic['latitude']    = latitude
             style_dic['longitude'] = longitude
             
             self.style_dic = style_dic
+            self.style_dic_variable = style_dic_variable
+            
             
       def PlotTimeDistribution(self):
             """ Script to plot the time distribution of the available data, by reading the date"""           
@@ -332,8 +353,8 @@ class Merger():
                 labelbottom=False)
             
             for d, position in zip ( self.databases, [1, 1.5,  2, 2.5, 3, 3.5, 4] ):
-                  dates = self.DataDic[d]['dateindex']
-                  plt.scatter (dates,   np.full( (len(dates)) , position      ) , label = self.style_dic[d]['label'] , color =    self.style_dic[d]['color'] )
+                  dates = self.data[d]['dateindex']
+                  plt.scatter (dates, np.full( (len(dates)) , position ) , label = self.style_dic[d]['label'] , color =    self.style_dic[d]['color'] )
 
             plt.ylim(0,5)
             size = 13
@@ -353,17 +374,51 @@ class Merger():
             plt.xticks(rotation = 45, fontsize = 8)
             plt.savefig('plot_directory/plots/time_series/' + self.style_dic['station'] + '_timeintervals.png', bbox_inches='tight', dpi = 200)
 
-
-      def extract_variable_pressure_time(self, var='', pressure = '' ):
-            """ Given a dataset, extract the values of a variable for a certain pressure from the observation tables """
-            data = {}
-            for d in self.databases:
-            #for d in ['era5_3188']:
-                  obs_variable = self.df[d].groups['observations_table']['observed_variable'][:]
-                  obs_values    = self.df[d].groups['observations_table']['observation_value'][:]
-                  p_levels         = self.df[d].groups['observations_table']['z_coordinate'][:]    
-                  date_times    = self.df[d].groups['observations_table']['date_time']
+      def MakeDateTime(self, dataset='', shortener = 10000):   # only consider a small number of entries           
+            """ Extracting the actual date_time from the time offset and the time deltas stored in ['observations_table']['date_time'] """
+            date_times = self.data[dataset]['observations_table']['date_time']
+            time_offset_units = date_times.units  
+            time_offset           = time_offset_units.split('since ')[1].split(' ')[0]                             
+            time_offset           = datetime.strptime(time_offset, '%Y-%m-%d')
+            if shortener: 
+                  date_time = set(date_times[:shortener])
+            else:
+                  date_time = set(date_times[:])
+            
                   
+            if 'minutes' in time_offset_units:
+                  delta = [ timedelta(minutes = float(i) ) for i in date_time ]
+            elif 'hours' in time_offset_units:
+                  delta = [ timedelta(hours = float(i) )    for i in date_time ]
+                  
+            #date_time = [to_integer(i) for i in  [  time_offset + i  for i in delta  ] ]
+            dt = [i for i in  [  time_offset + i  for i in delta  ] ]                              
+
+            return dt      
+            
+            
+            
+            
+      def Extract_variable_pressure_time(self, variables='', pressures = '' ):
+            """ Given a dataset, extract the values of a variable for a certain pressure from the observation tables. 
+                  Stores the data in a dictionary, separated """
+            data = {}
+            #for d in ['era5_3188']:
+            
+            for d in self.databases:
+              
+                  data[d] = {}
+                  
+                  obs_variable = self.data[d]['df'].groups['observations_table']['observed_variable'][:]
+                  obs_values    = self.data[d]['df'].groups['observations_table']['observation_value'][:]
+                  obs_id           = self.data[d]['df'].groups['observations_table']['observation_id'][:]
+                  
+                  p_levels         = self.data[d]['df'].groups['observations_table']['z_coordinate'][:]    
+                  date_times    = self.data[d]['df'].groups['observations_table']['date_time']                                   
+                  
+
+                  data[d]['date_time']      = date_times[:] 
+                   
                   # date_times are stored as a time interval from a certain starting point, which is given as an attribute of the date_time variable in the observation_table.
                   # This can be in minutes, hours, days etc. depending on the input data.
                   # We need to extract the time offset and add it to the entries store in the date_time obs table, to calculate the correct real date_time value 
@@ -371,55 +426,106 @@ class Merger():
                   time_offset           = time_offset_units.split('since ')[1].split(' ')[0]                             
                   time_offset           = datetime.strptime(time_offset, '%Y-%m-%d')
                   
-                  print ('For the database' , d , ' the units of time are: ',  self.DataDic[d]['observations_table']['date_time'].units ) 
+                  print ('For the database' , d , ' the units of time are: ',  self.data[d]['df']['observations_table']['date_time'].units ) 
               
-                  data[d] = {}
-                  for v in var:
+                  for v in variables:
                         data[d][v]={}
-                        for p in pressure:
-                              data[d][v][p] = {'observed_values': [] , 'indices': [], 'date_time': []}
+                        for p in pressures:
+                              print('Processing: ' , d , ' ' , v , ' ' , p )
+                              data[d][v][p] = {'observed_values': [] , 'indices': [] , 'date_time': [] , 'observation_id':[]  }
                               
                               pressure_indices  = np.where( p_levels == p)[0]   # extracting pressure levels matching with input pressure  
                               variables_indices = np.where( obs_variable == v)[0]  # extracting observed variable matching with input var                               
                               indices = list(set(pressure_indices).intersection(set(variables_indices))) # intersection
                                                            
                               data[d][v][p]['observed_values'] = np.take(obs_values, indices)
+                              data[d][v][p]['observation_id']    = np.take(obs_id, indices)
+                          
                               data[d][v][p]['indices']                = indices
                                                                                      
                               #pressure_indices    = np.where( p_levels == p)[0]  # extracting indices of the pressure levels where p == pressure 
                               #variables = np.take(obs_variable, pressure_indices)
                   
-                              date_times = np.take( date_times[:] , indices ) # extracting matchign date_time 
+                              dt = np.take( date_times[:] , indices ) # extracting matchign date_time 
+                              
                               if 'minutes' in time_offset_units:
-                                    delta = [ timedelta(minutes = float(i)) for i in date_times ]
+                                    delta = [ timedelta(minutes = float(i) ) for i in dt ]
                               elif 'hour' in time_offset_units:
-                                    delta = [ timedelta(hours = float(i)) for i in date_times ]
+                                    delta = [ timedelta(hours = float(i) )    for i in dt ]
                                     
                               #date_time = [to_integer(i) for i in  [  time_offset + i  for i in delta  ] ]
-                              date_times = [i for i in  [  time_offset + i  for i in delta  ] ]                              
-                              data[d][v][p]['date_time']           = date_times
+                              dt = [i for i in  [  time_offset + i  for i in delta  ] ]                              
+                              data[d][v][p]['date_time']  = dt
 
-                              print('done with d: ', d)
+                  print('done with d: ', d)
+                  
             return data
       
-      def PlotTimeSeries(self , var = [85] , pressure = [100000.0]):
-            """ Make a time series plot for the variable, pressure levels specfified """
-            station = self.df['ncar'].groups['station_configuration']['primary_id'][0] 
+      
+      def Merge(self, data = ''):
+            """ Module to create a merged netCDF file from the input data. 
+                  First step: creation of a list of available dates. 
+                  If dates and time differ for less than the specified time delta, they are considered to represent the same observation """
+            
+            # Extract the dates and time. I  loop over all possible datetime of the various datasets,
+            # which become a key of a dictionary. The value of the dic is a list that will contain the name of the datasets which have data for that specific date_time observation 
+                       
+            all_date_time = {} # list of all the dates and times 
+            new_times = {}
+            
+            #for d in self.databases :            
+            for d in ['era5_1761','igra2'] :
+                  new_times[d] = []
+                  
+                  time_date_dataset = self.MakeDateTime(dataset = d , shortener = 1000)  # extracting the real date_time values 
+                  #if d == 'igra2':
+                  #      time_date_dataset = [datetime(1979, 1, 1, 0, 0) , datetime(1979, 1, 1, 0, 0) , datetime(1979, 1, 1, 0, 0) , datetime(1979, 1, 1, 0, 0) , datetime(1979, 1, 1, 0, 0) , datetime(1979, 1, 1, 0, 0)  ]
+                  for td in time_date_dataset:
+                        if td not in all_date_time.keys():
+                              print('not found' , td )
+                              try: 
+                                    if d not in all_date_time[td]:
+                                          all_date_time[td].append(d)
+                              except KeyError:
+                                    all_date_time[td] = []
+                                    all_date_time[td].append(d)
+                        else:
+                              print(' found ' , td )
+                              if d not in all_date_time[td]:                           
+                                    all_date_time[td].append(d)                              
+            print('hello')
+            
+      
+      def PlotTimeSeries(self , data_dic = '', variable= '', pressure = ''):
+            """ Make a time series plot for the variable, pressure levels specfified. Only identical dates are considered. """
+            station = self.data['ncar']['df'].groups['station_configuration']['primary_id'][0] 
             self.plot_styler()
             fig, ax = plt.subplots()            
             fig.set_size_inches(15, 4)            
-            a =  self.extract_variable_pressure_time(var= var, pressure = pressure ) 
             #for d in self.databases:
-            for d in ['ncar','bufr','igra2', 'era5_1', 'era5_1759', 'era5_1761', 'era5_3188']:
-
-                  
-                  obs = a[d][85][100000]['observed_values'] 
-                  if d in ['era5_1', 'era5_3188','era5_1759','era5_1761', 'bufr']:
+            
+            date_min, date_max = datetime.strptime('2100-01-01', '%Y-%m-%d') , datetime.strptime('1900-01-01', '%Y-%m-%d')
+            min_obs, max_obs = 999999, 0.00001
+            for d in self.databases: 
+                
+                  obs = data_dic[d][variable][pressure]['observed_values'] 
+                  if d in ['era5_1', 'era5_3188','era5_1759','era5_1761', 'bufr'] and variable == '85':
                        obs = [ i - 273.15 for i in obs ]  # convert to Celsius 
                   print('database: ***** ', d , '   ', obs)
                   #time = np.datetime64(a[d][85][100000]['date_time'])
-                  time = a[d][85][100000]['date_time']
-                  
+                  time = data_dic[d][variable][pressure]['date_time']
+                  try:               
+                        if min(time) < date_min :
+                              date_min = min(time) 
+                        if max(time) > date_max:
+                              date_max = max(time)
+                        if min(obs) < min_obs:
+                              min_obs = min(obs)
+                        if max(obs) > max_obs:
+                              max_obs = max(obs)                              
+                  except:
+                        pass
+                        
                   plt.scatter(time, obs , s = self.style_dic[d]['size'] , color = self.style_dic[d]['color'] , label = self.style_dic[d]['label'] )
             
             #fig.canvas.draw()
@@ -427,23 +533,24 @@ class Merger():
             #labels = [ i[:5] for i in labels ]                  
             #ax.set_xticklabels(labels)                  
 
-            plt.title('Station  ' + self.style_dic['name'] + ' [ ' + self.style_dic['station'] + ' ]  for P = 100000 Pa', fontsize = 12 , y = 1.03)
+            plt.title('Station  ' + self.style_dic['name'] + ' [ ' + self.style_dic['station'] + ' ]  for P = ' + str(pressure) + ' Pa', fontsize = 12 , y = 1.03)
             plt.grid(linestyle = '--', color = 'lightgray')
-            plt.ylabel('Temperature [C]' )
-            plt.ylim(-40, 40)
+
+            #plt.ylim(self.style_dic_variable[variable]['ylim'][0],    self.style_dic_variable[variable]['ylim'][1],  )
+            
+            plt.ylim( min_obs - min_obs/10.  ,    max_obs - max_obs/10.   )
+            
+            plt.ylabel(self.style_dic_variable[variable]['label'])
+            
             plt.legend(fontsize = 12, loc = 'lower left')
          
-            plt.xlim( datetime(1945, 1, 1) , datetime(1975, 1, 1)       )
-                  
-            plt.savefig('plot_directory/plots/time_series/' + station + '_timeseries_low.png', dpi = 250)
- 
-            plt.xlim( datetime(1975, 1, 1) , datetime(2020, 1, 1)       )
-            
-            plt.savefig('plot_directory/plots/time_series/' + station + '_timeseries_high.png', dpi = 250)
-            
-            fig.set_size_inches(20, 4)            
-            plt.xlim( datetime(1945, 1, 1) , datetime(2020, 1, 1)       )
-            plt.savefig('plot_directory/plots/time_series/' + station + '_timeseries_all.png', dpi = 250)
+            plt.xlim( date_min , datetime(1975, 1, 1)       )                  
+            plt.savefig('plot_directory/plots/time_series/' + str(variable) + '_'  + station + '_' + str(pressure) + '_timeseries_low.png', dpi = 200)
+            plt.xlim( datetime(1975, 1, 1)   , date_max   )            
+            plt.savefig('plot_directory/plots/time_series/' + str(variable) + '_' + station + '_' + str(pressure) + '_timeseries_high.png', dpi = 200)            
+            fig.set_size_inches(20, 4)         
+            plt.xlim( date_min, date_max  )
+            plt.savefig('plot_directory/plots/time_series/' + str(variable) + '_' + station + '_' + str(pressure) + '_timeseries_all.png', dpi = 200)
             
 
 """ 
@@ -518,7 +625,7 @@ data = { 'ncar'    : 'example_stations/ncar/chuadb_windc_22802.txt.nc'   ,
 
 
 
-data = { 'ncar'    : 'example_stations/ncar/chuadb_windc_47646.txt.nc'   ,
+available_data = { 'ncar'    : 'example_stations/ncar/chuadb_windc_47646.txt.nc'   ,
                'igra2'   : 'example_stations/igra2/chJAM00047646-data.txt.nc'  ,
                'bufr'     : 'example_stations/bufr/chera5.47646.bfr.nc'  ,
                
@@ -543,11 +650,33 @@ data = { 'ncar'    : 'example_stations/ncar/chuadb_windc_47646.txt.nc'   ,
  
 
 Merging = Merger()
-Merging.InitializeData( datasets = data ) 
+""" Will create automatically the dictionary of the available data to consider """
+Merging.InitializeData( datasets = available_data ) 
 
 Merging.plot_styler()
 Merging.PlotTimeDistribution()
-Merging.PlotTimeSeries( )
+
+variables = [85, 106, 107, 38, 117 ]
+pressures = [100000, 500, 50000]
+
+
+extracted_data = Merging.Extract_variable_pressure_time(variables= variables, pressures = pressures )            
+
+
+for v in variables:
+      for p in pressures:
+            Merging.PlotTimeSeries( data_dic= extracted_data , variable = v , pressure = p )
+      
+
+merged = Merging.Merge(data = Merging.data )
+
+
+
+
+
+
+
+
 
 
 
@@ -574,6 +703,9 @@ print('stop')
 """
 
 
+"""
 
+
+"""
 
 

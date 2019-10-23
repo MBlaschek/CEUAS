@@ -109,8 +109,8 @@ def makePlot(start_date= '', end_date = '', file = '', flag = ''):
         plt.scatter (lon, lat,   color = color, transform=ccrs.PlateCarree(central_longitude = 0.0), s = 4, label = lab + ' [' + str(len(lon)) + ']' )
        
     plt.title('Data Availability from ' + start_date + ' to ' + end_date , y = 1.04 )   
-    plt.legend(loc = 'lower left', ncol = 1, fontsize = 9)   
-    plt.savefig('out_plots/map_' + start_date + '_' + end_date + '_' + flag + '.png', dpi = 300)
+    plt.legend(loc = 'lower left', ncol = 1, fontsize = 13)   
+    plt.savefig('out_plots/map_' + start_date + '_' + end_date + '_' + flag + '.png', dpi = 300 ,  transparent=True ) 
     plt.close()
      
        
@@ -119,17 +119,18 @@ def makePlot(start_date= '', end_date = '', file = '', flag = ''):
 ############################# Plotting part       
        
 for f in ['', 'pretty']:
-        
-    a = makePlot(start_date = '1900-01-01', end_date = '1920-01-01',   file = 'summary_forplot.dat', flag = f )
-    a = makePlot(start_date = '1920-01-01', end_date = '1940-01-01',   file = 'summary_forplot.dat', flag = f ) 
     a = makePlot(start_date = '1940-01-01', end_date = '1950-01-01',   file = 'summary_forplot.dat', flag = f ) 
-    a = makePlot(start_date = '1955-01-01', end_date = '1960-01-01',   file = 'summary_forplot.dat', flag = f )
-    a = makePlot(start_date = '1965-01-01', end_date = '1970-01-01',   file = 'summary_forplot.dat', flag = f )
-    a = makePlot(start_date = '1975-01-01', end_date = '1980-01-01',   file = 'summary_forplot.dat', flag = f )
-    a = makePlot(start_date = '1980-01-01', end_date = '1990-01-01',   file = 'summary_forplot.dat', flag = f )
-    a = makePlot(start_date = '1990-01-01', end_date = '2000-01-01',   file = 'summary_forplot.dat', flag = f )
-    a = makePlot(start_date = '2000-01-01', end_date = '2010-01-01',   file = 'summary_forplot.dat', flag = f )
-    a = makePlot(start_date = '2010-01-01', end_date = '2020-01-01',   file = 'summary_forplot.dat', flag = f )
     
+    """   
+   a = makePlot(start_date = '1900-01-01', end_date = '1920-01-01',   file = 'summary_forplot.dat', flag = f )
+   a = makePlot(start_date = '1920-01-01', end_date = '1940-01-01',   file = 'summary_forplot.dat', flag = f ) 
+   a = makePlot(start_date = '1955-01-01', end_date = '1960-01-01',   file = 'summary_forplot.dat', flag = f )
+   a = makePlot(start_date = '1965-01-01', end_date = '1970-01-01',   file = 'summary_forplot.dat', flag = f )
+   a = makePlot(start_date = '1975-01-01', end_date = '1980-01-01',   file = 'summary_forplot.dat', flag = f )
+   a = makePlot(start_date = '1980-01-01', end_date = '1990-01-01',   file = 'summary_forplot.dat', flag = f )
+   a = makePlot(start_date = '1990-01-01', end_date = '2000-01-01',   file = 'summary_forplot.dat', flag = f )
+   a = makePlot(start_date = '2000-01-01', end_date = '2010-01-01',   file = 'summary_forplot.dat', flag = f )
+   a = makePlot(start_date = '2010-01-01', end_date = '2020-01-01',   file = 'summary_forplot.dat', flag = f )
+   """
 
 
