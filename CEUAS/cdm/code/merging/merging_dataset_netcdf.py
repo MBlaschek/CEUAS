@@ -536,10 +536,10 @@ class Merger():
             plt.title('Station  ' + self.style_dic['name'] + ' [ ' + self.style_dic['station'] + ' ]  for P = ' + str(pressure) + ' Pa', fontsize = 12 , y = 1.03)
             plt.grid(linestyle = '--', color = 'lightgray')
 
-            plt.ylim(self.style_dic_variable[variable]['ylim'][0],    self.style_dic_variable[variable]['ylim'][1],  )
-            plt.ylim(-50 , 50 )
+            #plt.ylim(self.style_dic_variable[variable]['ylim'][0],    self.style_dic_variable[variable]['ylim'][1],  )
             
-            plt.ylim( min_obs - min_obs/10.  ,    max_obs - max_obs/10.   )
+            #plt.ylim( min_obs - min_obs/10.  ,    max_obs - max_obs/10.   )
+            plt.ylim(-50 , 50 )
             
             plt.ylabel(self.style_dic_variable[variable]['label'])
             
