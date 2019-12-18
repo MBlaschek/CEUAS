@@ -66,6 +66,7 @@ class Merger():
             self.datasets_keys = datasets.keys()
             
             """ Looping over the avilable datasets """
+            print('*** Reading and Initializing the data from the netCDF files ')
             for k,v in datasets.items() :
                   print('Initialising the dataset: *** ' , k )
                   data[k] = {} 
@@ -80,7 +81,7 @@ class Merger():
                   #data[k]['product_code'] = ds['source_configuration']['product_code'][0]                                       
                   
                   ###for h5py but cant extract date time units !!!
-                  print('Reading the file with h5py ' , now (time.time() ) )
+                  #print('Reading the file with h5py ' , now (time.time() ) )
                   ds =  h5py.File(v , driver="core" )   
                   data[k]['df'] = ds # storing the entire file                
                   #data[k]['dateindex']       = ds['dateindex'][0,:]  # storing the dateindex 
@@ -102,23 +103,23 @@ class Merger():
                   
                   d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'station_configuration')                 
                   data[k]['station_configuration'] = d.to_dataframe()   
-                  print('Done with ', k , ' station_configuration')
+                  #print('Done with ', k , ' station_configuration')
                   
                   d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'header_table')                 
                   data[k]['header_table'] = d.to_dataframe()   
-                  print('Done with ', k , ' header_table')
+                  #print('Done with ', k , ' header_table')
                   
                   d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'source_configuration')
                   d = d.isel(hdrlen=[0])
                   data[k]['source_configuration'] = d.to_dataframe()   
-                  print('Done with ', k , ' source_configuration')
+                  #print('Done with ', k , ' source_configuration')
                   
                   
                   
                   if k == 'era5_1': # reading the whole era5_1 feedback (including reanalysis)
                         d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'era5fb')                 
                         data[k]['era5fb'] = d.to_dataframe()   
-                        print('Done with ', k , ' era5 feedback')
+                        #print('Done with ', k , ' era5 feedback')
                         
                   d.close() # close ?
                   ds.close()
@@ -186,7 +187,7 @@ class Merger():
             """ Building the global set of date_times and indices from the various datasets. 
                   The datetimeindex is read from the original netCDF file """
             
-            print('make_all_datetime ' , now (time.time()) )
+            print('\n *** Running make_all_datetime ' , now (time.time()) )
             
             all_uniques = []  # storing a list with all the unique date_tmes
             
@@ -227,7 +228,7 @@ class Merger():
                         time_offset_value = time_offset_value.replace(' 19', '19')
                         time_offset_value  = datetime.strptime(time_offset_value, '%Y-%m-%d %H:%M:%S')
                   
-                  print(' Calculating the time_delta for : ', k )
+                  #print(' Calculating the time_delta for : ', k )
                   
                   unique_dt = add_time_delta (time_offset_value, unique) 
                   
@@ -261,7 +262,7 @@ class Merger():
                   
             self.dataset_per_dt = which_k_in_dt             
             self.merged_unique_dates = np.unique(np.array(all_uniques) )  # storing the set of all distinct dt values            
-            print('make_all_datetime finished ' , now (time.time()) )         
+            #print('make_all_datetime finished ' , now (time.time()) )         
       
       
       
@@ -325,7 +326,7 @@ class Merger():
                   df = df_in[np.isfinite(df_in['obsvalue@body'])]
                   df = df.loc[ df['vertco_type@body'] != 2 ]   
                   df = df[np.isfinite(df_in['vertco_reference_1@body'])]
-                  print('check lengths: ' , len(df_in) , len(df) )
+                  #print('check lengths: ' , len(df_in) , len(df) )
                   
             else:
                   
@@ -350,28 +351,29 @@ class Merger():
             
       def make_dataframe(self):
             """ Convert netCDF files into panda dataframes. No manipulation of data here; only the CDM columns with real data are included """
+            print('*** Creating the dataframes ' )
+            
             for k in self.datasets_keys:
             #for k in ['igra2' , 'ncar']:
             
-                  print('*** Creating the dataframe for the dataset:  ' , k )
-                  
+                  #print('*** Creating the dataframe for the dataset:  ' , k )                  
                   p_levels               = self.data[k]['df']['observations_table']['z_coordinate'][:]
-                  print('     Loading the  z_coordinate')
+                  #print('     Loading the  z_coordinate')
                   z_type                 = self.data[k]['df']['observations_table']['z_coordinate_type'][:]
-                  print('     Loading the  z_coordinate_type')
+                  #print('     Loading the  z_coordinate_type')
                   obs_variable        = self.data[k]['df']['observations_table']['observed_variable'][:]
-                  print('     Loading the  observed_variable')
+                  #print('     Loading the  observed_variable')
                   obs_values          = self.data[k]['df']['observations_table']['observation_value'][:]
-                  print('     Loading the  observation_value')
+                  #print('     Loading the  observation_value')
                   observation_id    = self.data[k]['df']['observations_table']['observation_id'][:]
-                  print('     Loading the  observation_id')
+                  #print('     Loading the  observation_id')
                   units    = self.data[k]['df']['observations_table']['units'][:].astype(int)
-                  print('     Loading the  units')                  
+                  #print('     Loading the  units')                  
                   #report_id             = self.data[k]['df']['header_table']['report_id'][:]
                   report_id             = self.data[k]['df']['observations_table']['report_id'][:]                  
-                  print('     Loading the  report_id')
+                  #print('     Loading the  report_id')
                   date_time           = self.data[k]['df']['observations_table']['date_time'][:]
-                  print('     Loading the  date_time (deltas)')
+                  #print('     Loading the  date_time (deltas)')
                   lat , lon = self.data[k]['df']['observations_table']['latitude'][:] , self.data[k]['df']['observations_table']['longitude'][:]
                   
                   
@@ -391,7 +393,7 @@ class Merger():
                   dt_correct = [dic_dt[i] for i in date_time  ]     
                   
                   '''
-                  print('Creating the DF ' , now (time.time() ) )
+                  #print('Creating the DF ' , now (time.time() ) )
 
                   columns = ['date_time', 'z_coordinate' , 'z_coordinate_type', 'observed_variable' , 'observation_value' , 'report_id' , 'observation_id' , 'latitude' , 'longitude', 'units']
                   df = pd.DataFrame( list(zip( date_time, p_levels, z_type, obs_variable , obs_values, report_id,  observation_id , lat , lon, units ) ) , columns = columns )       
@@ -423,10 +425,10 @@ class Merger():
                   #      df[p].astype(v) 
                         
                   """ Storing the dataframe """      ### try using xarrays ??? 
-                  print('Storing the DF ' , now (time.time() ) )                  
+                  #print('Storing the DF ' , now (time.time() ) )                  
                   self.data[k]['dataframe'] = df
                   
-                  print('  PD dataframe created !!! ')
+                  #print('  PD dataframe created !!! ')
    
       '''           
       def MakeAllData(self , pickle = False):            
@@ -514,7 +516,7 @@ class Merger():
 
 
 
-      def get_reanalysis_feedback(self, dt, merged_observations_table, reanalysis = 'era5fb' , best_ds = 'era5_1'):
+      def get_reanalysis_feedback(self, dt, merged_observations_table, reanalysis = '' , best_ds = ''):
             """ Extracts the renanalysis feedback from the dataset used in the merged file.
                   For now the only available is from era5_1. 
                   Return an empty df otherwise. """
@@ -526,7 +528,7 @@ class Merger():
                   
                   
                   fb = self.data[best_ds][reanalysis][index_low:index_up]
-                  #fb = self.clean_dataframe(fb, what= reanalysis ) # I have to clean the fb exactly the same way I clean the obs_table otherwise they will not match anymore with the indices 
+                  fb = self.clean_dataframe(fb, what= reanalysis ) # I have to clean the fb exactly the same way I clean the obs_table otherwise they will not match anymore with the indices 
                   
                   merged_observations_table['advanced_assimilation_feedback'] = 1  # filling the flag for the presence of advanced assimilation feedback                   
                   return fb , merged_observations_table 
@@ -697,8 +699,9 @@ class Merger():
                   header = self.get_header_table(dt, best_ds= best_ds,  all_ds = duplicates , length= len_obs)
                   all_merged_head.append(header)
                                     
-                  if  len(merged_observations_table) !=   len(header):                       
-                        print('lengths check best ds: ', best_ds , '         obs_merged: ' , len(merged_observations_table), '       feedback:' , len(feedback)  , '   header: ' , len(header) )
+                  #if  len(merged_observations_table) !=   len(header):                       
+                  #print('lengths check best ds: ', best_ds , '         obs_merged: ' , len(merged_observations_table), '       feedback:' , len(feedback)  , '   header: ' , len(header) )
+                  #print( len(merged_observations_table), '       ' , len(feedback)  )
 
                   
                   '''                 
@@ -736,6 +739,10 @@ class Merger():
             self.MergedHead = merged_hd                   
             print('*** Finished concatenating the header_table dataframes  ' , now(time.time()) )  
             
+            print('*** Concatenating the feedback dataframes  ' ,  now(time.time()) )      
+            merged_fb = pd.concat (all_merged_fb)
+            self.MergedFeedback = merged_fb                   
+            print('*** Finished concatenating the feedback dataframes  ' , now(time.time()) )              
 
             return 0      
       
@@ -894,7 +901,13 @@ class Merger():
             print('Writing the merged record indices to the netCDF output ')      
             di = self.MergedRecordIndex
             di.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a')
-                  
+             
+            print('Writing the merged feedback to the netCDF output ')      
+            group_name = 'era5fb'        
+            di = self.MergedFeedback
+            di = di.to_xarray()
+            di.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a'  , group = group_name )
+            
             print('***** Done writing the output netCDF file !')       
             
             

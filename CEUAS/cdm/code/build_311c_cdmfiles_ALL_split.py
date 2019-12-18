@@ -168,15 +168,15 @@ The numbers will be then converted to the CDM convention by the funcion 'fromfb'
 """ Dictionary mapping variables names (arbitrary) to cdm variable and unit numbering scheme. 
      See the observed_variable and units  tables """ 
 
-cdmvar_dic = {'temperature'          : { 'cdm_var': 2      , 'cdm_unit': 5 }              ,  # K
-                         'wind_direction'      : { 'cdm_var': 111  , 'cdm_unit': 110 }          ,  # degree (angle)
-                         'wind_speed'           : { 'cdm_var': 112  , 'cdm_unit': 731 }          ,  # m/s 
-                         'dew_point'             : { 'cdm_var': 59    , 'cdm_unit': 5 }              ,  # K
-                         'relative_humidity'  : { 'cdm_var': 29    , 'cdm_unit': 999 }    ,  # need to verify from original data source
-                         'gph'                       : { 'cdm_var': 1      , 'cdm_unit': 999  }   ,  # need to verify from original data source
-                         'uwind'                    : { 'cdm_var': 999  , 'cdm_unit': 731 }          ,  # m/s
-                         'vwind'                    : { 'cdm_var': 999  , 'cdm_unit': 731 }          ,  # m/s
-                         'pressure'               : { 'cdm_var': 999  , 'cdm_unit': 32 }             , # Pa  (it goes into z_coordinate type)
+cdmvar_dic = {'temperature'          : { 'odb_var': 2      , 'cdm_unit': 5 }              ,  # K
+                         'wind_direction'      : { 'odb_var': 111  , 'cdm_unit': 110 }          ,  # degree (angle)
+                         'wind_speed'           : { 'odb_var': 112  , 'cdm_unit': 731 }          ,  # m/s 
+                         'dew_point'             : { 'odb_var': 59    , 'cdm_unit': 5 }              ,  # K
+                         'relative_humidity'  : { 'odb_var': 29    , 'cdm_unit': 999 }    ,  # need to verify from original data source
+                         'gph'                       : { 'odb_var': 1      , 'cdm_unit': 999  }   ,  # need to verify from original data source
+                         'uwind'                    : { 'odb_var': 999  , 'cdm_unit': 731 }          ,  # m/s
+                         'vwind'                    : { 'odb_var': 999  , 'cdm_unit': 731 }          ,  # m/s
+                         'pressure'               : { 'odb_var': 999  , 'cdm_unit': 32 }             , # Pa  (it goes into z_coordinate type)
                           }
 
 '''
@@ -192,15 +192,15 @@ cdm_odb_var_dic = {'temperature'  : { 'odb_var': 85      , 'cdm_unit': 5 }      
                           }
 '''
 
-cdm_odb_var_dic = { 2 : 5               ,              # temperature K
-                               111 : 110           ,            # degree (angle)
-                               112 : 731           ,  # m/s 
-                               59   : 5               ,  # K
-                               29   : 999     ,  # need to verify from original data source , relative humidity
-                               117 : 999     ,  # need to verify from original data source
-                               104 : 731           ,  # m/s uwind?
-                               105  : 731           ,  # m/s vwind?
-                               999  : 32              , # Pa  (it goes into z_coordinate type)
+cdm_odb_var_dic = { 1    : 999    , # geopotential
+                                   2    : 5        , # temperature K
+                                   3    : 731    , # uwind m/s
+                                   4    : 731    ,  # vwind m/s
+                                  111 : 110    , # degree (angle)
+                                  112 : 731    , # m/s 
+                                  59   : 5        , # K
+                                  29   : 999     , # need to verify from original data source , relative humidity
+                                 999  : 32       , # Pa  (it goes into z_coordinate type)
                           }
 
 
@@ -319,7 +319,7 @@ def bufr_to_dataframe(file=''):
                 
             for value,var in zip([gph, airT, winds, windd],  ['gph', 'temperature', 'wind_speed', 'wind_direction'] ):
                 obs_id = obs_id + 1 
-                bufr_values.append( (source_file, 'BUFR', report_id, obs_id,  idate, iday, statid, lat, lon, press, value, cdmvar_dic[var]['cdm_var'] , cdmvar_dic[var]['cdm_unit'], num_lev  ) ) 
+                bufr_values.append( (source_file, 'BUFR', report_id, obs_id,  idate, iday, statid, lat, lon, press, value, cdmvar_dic[var]['odb_var'] , cdmvar_dic[var]['cdm_unit'], num_lev  ) ) 
         
         report_id += 1
             
@@ -431,7 +431,7 @@ def uadb_ascii_to_dataframe(file=''):
 
             for value,var in zip([gph, temp, wspd, wdir, rh],  ['gph', 'temperature', 'wind_speed', 'wind_direction', 'relative_humidity'] ):
                 obs_id = obs_id +1
-                read_data.append( (source_file, 'NCAR', usi, obs_id, idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'] , cdmvar_dic[var]['cdm_unit'], numlev) )
+                read_data.append( (source_file, 'NCAR', usi, obs_id, idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['odb_var'] , cdmvar_dic[var]['cdm_unit'], numlev) )
               
               
     
@@ -524,7 +524,7 @@ def igra2_ascii_to_dataframe(file=''):
         
             for value,var in zip([gph, temp, wspd, wdir, rh, dpdp],  ['gph', 'temperature', 'wind_speed', 'wind_direction', 'relative_humidity' , 'dew_point' ] ):
                 obs_id = obs_id +1  
-                read_data.append ( (source_file, 'IGRA', head_count,  obs_id, idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'], cdmvar_dic[var]['cdm_unit'], numlev ) )
+                read_data.append ( (source_file, 'IGRA', head_count,  obs_id, idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['odb_var'], cdmvar_dic[var]['cdm_unit'], numlev ) )
                 #print('check', value, cdmvar_dic[var] , var )
                    
             #column_names = ['source_file', 'product_code', 'report_id', 'observation_id', 'report_timestamp' , 'iday', 'station_id', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body', 'obsvalue@body', 'varno@body', 'number_of_pressure_levels' , 'units']
@@ -657,12 +657,14 @@ def read_all_odbsql_stn_withfeedback(odbfile):
     units = []
     var = np.array(alldict['varno@body']).astype(int)
     for f in var:
-        try:
+        try:             
             units.append(cdm_odb_var_dic[f])
+            #print(f , ' ',  cdm_odb_var_dic[f] )
         except:
-            units.append(np.nan)  
-            
-    alldict['units'] = np.array(units)
+            print('var is ', f )
+            units.append(5555)
+                
+    alldict['units'] = np.array(units).astype(int)
     
 
     return alldict.to_xarray()
@@ -670,9 +672,9 @@ def read_all_odbsql_stn_withfeedback(odbfile):
 
             
 def fromfb(fbv, cdmfb):
-    """ input: 
-               fbv    : xarray converted from the original input file 
-               cdmfb  :  
+    """ 
+    Convert variables from the odb convention to the cdm , e.g.
+     tr[1]=117  1 = geopotential in the odb , 117 = geopotential in the cdm 
     """
     x=0
     # checks if the type of the variable is a list, so that it uses the function to extract the date time 
@@ -693,7 +695,7 @@ def fromfb(fbv, cdmfb):
             tr[111]=106 #dd wind from direction
             tr[112]=107  #ff wind speed 
             #
-            tr[39]= 85 # 2m T ### FIX THESE NUMBERS !!!! 
+            #tr[39]= 85 # 2m T ### FIX THESE NUMBERS !!!! 
             tr[40]= 36 # 2m Td
             tr[41]= 104 #10m U
             tr[42]= 105  #10m V
