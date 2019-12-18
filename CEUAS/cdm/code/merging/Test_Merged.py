@@ -22,6 +22,14 @@ pd.set_option('display.max_columns', 20)
 pd.set_option('display.width', 300)
 
 
+""" Some colors for pretty printout """ 
+red    = '\033[91m' 
+cend   = '\033[0m'
+blue   = '\033[34m'
+green  = '\033[92m'
+yellow = '\033[33m'
+
+
 """ Code mapping """
 observation_ids_merged = {  'igra2':1 , 'ncar':2 , 'bufr':3,  'era5_1':4 , 'era5_1759' :5 , 'era5_1761':6 ,  'era5_3188' :7}  # values used to convert original record_id to the merged record_id, see merge_all_data 
 
@@ -76,51 +84,79 @@ rts_values=  list( File.variables['recordtimestamps'][:] )
 
 
 
-print(' I convert to proper date_time')
+print('\n\n ***** I convert to proper date_time')
 rts_datetime = make_datetime(rts , ri_values)
 
 File.close()
 
-""" Picking one random  time_stamp """
-random = random.choice( list(rts_datetime.keys() ) )
+
+def random_picker(y , rts_datetime, rts_values):
+    """ -  Load the merged files, calculate the date_time, create panda dataframes out of the tables.
+          - It will randomly pick one of the avilable date_time, and grab the entries of the tables corresponding to the prope indices. 
+          - It will print the entries from the table for that specific date_time plus one record before and one record after the selected date_time,
+           so that it is easy to check that the indices are read correctly.
+          - It will also print the era5fb. In case of era5_1 it is really the original content of the odb file with no manipulation. It is empty in the case of the other db.          
+          """
+    
+    if y == 'y':
+        
+        """ Picking one random  time_stamp """
+        rand = random.choice( list(rts_datetime.keys() ) )
+
+        
+        """ Reading the tables """
+        # observations_table
+        obs_t =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'observations_table' )
+        obs_df = obs_t.to_dataframe()   
+        
+        # header_table        
+        head_t =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'header_table' )
+        head_t = head_t.to_dataframe()   
+        head_df = head_t[ ['report_id', 'duplicates'] ] 
+        
+        # era5_1_source_configuration                
+        source_conf =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5_1_source_configuration' )
+        print(' The source_configuration for era5_1 is : ' , source_conf )   
+        station_conf =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5_1_station_configuration' ) 
+        print(' The station_configuration for era5_1 is : ' , station_conf )   
+        
+        # era5_fb        
+        era5fb=  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5fb' )
+        era5fb = era5fb.to_dataframe()   
+        era5fb = era5fb[ ['date@hdr' , 'time@hdr' , 'varno@body',  'vertco_reference_1@body' , 'an_depar@body' , 'fg_depar@body' , 'obsvalue@body' ] ] 
+        
+        """ Loading a subset of variables to be put into a pd dataframe """
+        obs_df = obs_df [ ['date_time', 'z_coordinate' , 'z_coordinate_type', 'observed_variable' , 'observation_value' , 'report_id' , 'observation_id' , 'latitude' , 'longitude' , 'source_id', 'advanced_assimilation_feedback' , 'units']]
+        index_low , index_up = rts_datetime[rand] ,   ri_values [    ri_values.index(rts_datetime[rand]) + 1  ] 
+        
+        print('\n\n\n I will analyze one random time_Stamp from the merged file:  ' ,   rand , '  with time_record index: ' ,   rts_datetime[rand])
+        print('\n\n\n The indices corresponding to the DF are: ' ,  index_low , index_up   )
+        print('\n\n\n I print one record below and one above the selected [index_low , index_up] range to check the correct time_stamp'   )
+        
+
+        obs_df   = obs_df.iloc [index_low - 1 : index_up + 1 ]
+        head_df = head_df.iloc [index_low - 1 : index_up + 1 ]
+        era5fb   = era5fb.iloc[index_low - 1 : index_up + 1 ]
+        
+        
+        
+        print( red + '\n\n ***** Observations_table: ' + cend )
+        print ('IMPORTANT: 999 means that I still have to check the proper unit (e.g. for geopotential and relative humidity) ; 5555 is not available (specific humidity) ')
+        print (obs_df)
+        print( blue + '\n\n ***** Header_table: ' + cend  ,  head_df )
+        print(green + '\n\n ***** era5 feedback: ' + cend  ,  era5fb )
 
 
-""" Reading the tables """
-obs_t =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'observations_table' )
-obs_df = obs_t.to_dataframe()   
-
-head_t =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'header_table' )
-head_t = head_t.to_dataframe()   
-head_df = head_t[ ['report_id', 'duplicates'] ] 
-
-source_conf =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5_1_source_configuration' )
-print(' The source_configuration for era5_1 is : ' , source_conf )   
-station_conf =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5_1_station_configuration' ) 
-print(' The station_configuration for era5_1 is : ' , station_conf )   
 
 
-
-
-""" Loading a subset of variables to be put into a pd dataframe """
-obs_df = obs_df [ ['date_time', 'z_coordinate' , 'z_coordinate_type', 'observed_variable' , 'observation_value' , 'report_id' , 'observation_id' , 'latitude' , 'longitude' , 'source_id', 'advanced_assimilation_feedback' , 'units']]
-index_low , index_up = rts_datetime[random] ,   ri_values [    ri_values.index(rts_datetime[random]) + 1  ] 
-
-print('\n\n\n I will analyze one random time_Stamp from the merged file:  ' ,   random , '  with time_record index: ' ,   rts_datetime[random])
-print('\n\n\n The indices corresponding to the DF are: ' ,  index_low , index_up   )
-print('\n\n\n I print one record below and one above the selected [index_low , index_up] range to check the correct time_stamp'   )
-
-
-
-
-df = obs_df.iloc [index_low - 1 : index_up + 1 ]
-head_df = head_df.iloc [index_low - 1 : index_up + 1 ]
-
-
-
-print( '\n\n ***** Observations_table: ' ,  df )
-print( '\n\n ***** Header_table: ' ,  head_df )
-
-
-
-
-a = 0 
+""" Running the tester """
+while 1: 
+    choice = input(' Type ' + yellow + ' "y" ' + cend + ' to keep on running the checker, anything else to break:     \n\n ')
+    if choice == 'y':
+        random_picker(choice, rts_datetime, rts_values)
+    else:
+        print('*** GOODBYE ***')
+        sys.exit()
+        
+        
+        
