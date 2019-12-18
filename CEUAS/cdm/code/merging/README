@@ -1,15 +1,14 @@
-The files called e.g. 'ncar_stationIds_filename.dat' contains the name of the file names analized by the build_311c_Inventories 
-script, and the associated primary_id.
-In fact, in the station_configuration files, one can only retireve the primary and secondary station ids, but not the original file
-to which the ids are associated. 
-This is information is however required, since when we merge the station data,
-we need to access the proper original file to compare the data from the various sources, for a given identified station.
+# Merging utilities
+## These files merge the netCDF files (CDM compliant) from various datasets and created one single merged file
 
-When merging the station, the source of each record must be specified; the CDM has this possiblity already implemented inside the 
-header_table: 
-- source_id
-- source_record_id
-- duplicates 
+### merging_cdm_netCDF.py 
+
+Main script for the merging (will use the files specified at the bottom of the script
+Example files are contained in the example_stations directory
+
+### Test_Merged.py
+Script that reads the specified merged file and prints some information for checking
 
 
-Also the index variable should store the index of the record in the ORIGINAL file, so that it can be accessed 
+
+
