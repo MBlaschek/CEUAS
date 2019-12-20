@@ -15,6 +15,10 @@ print('Running the merged file checker **** ')
 """ Loading """
 a = '/raid8/srvx1/federico/GitHub/DEVELOP_LATEST_NOVEMBER/CEUAS/CEUAS/cdm/code/merging/FAST_INDEX_merged_chuadb_windc_82930.txt.nc' 
 
+a = 'FAST_INDEX_merged_chuadb_trhc_47646.txt.nc'
+
+a = 'FAST_INDEX_merged_chuadb_windc_82930.txt.nc'
+
 
 ''' Print all '''
 pd.set_option('display.max_rows', 50)
@@ -109,17 +113,23 @@ def random_picker(y , rts_datetime, rts_values):
         obs_t =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'observations_table' )
         obs_df = obs_t.to_dataframe()   
         
+        
         # header_table        
         head_t =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'header_table' )
         head_t = head_t.to_dataframe()   
         head_df = head_t[ ['report_id', 'duplicates'] ] 
+        
+        
+        # units
+        units =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'units' )
+        units = units.to_dataframe()   
         
         # era5_1_source_configuration                
         source_conf =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5_1_source_configuration' )
         print(' The source_configuration for era5_1 is : ' , source_conf )   
         station_conf =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5_1_station_configuration' ) 
         print(' The station_configuration for era5_1 is : ' , station_conf )   
-        
+              
         # era5_fb        
         era5fb=  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5fb' )
         era5fb = era5fb.to_dataframe()   
@@ -140,18 +150,22 @@ def random_picker(y , rts_datetime, rts_values):
         
         
         
-        print( red + '\n\n ***** Observations_table: ' + cend )
-        print ('IMPORTANT: 999 means that I still have to check the proper unit (e.g. for geopotential and relative humidity) ; 5555 is not available (specific humidity) ')
-        print (obs_df)
-        print( blue + '\n\n ***** Header_table: ' + cend  ,  head_df )
-        print(green + '\n\n ***** era5 feedback: ' + cend  ,  era5fb )
+        print( red + '\n\n ***** Observations_table: ' + cend  ,  obs_df )
 
+        
+        print ('IMPORTANT: 999 means that I still have to check the proper unit (e.g. for geopotential and relative humidity) ; 5555 is not available (specific humidity) ')
+        print( blue + '\n\n ***** Header_table: ' + cend  ,  head_df )
+
+
+        if obs_df['advanced_assimilation_feedback'].values[0] == 1:
+                        
+            print(green + '\n\n ***** era5 feedback: ' + cend  ,  era5fb )
 
 
 
 """ Running the tester """
 while 1: 
-    choice = input(' Type ' + yellow + ' "y" ' + cend + ' to keep on running the checker, anything else to break:     \n\n ')
+    choice = input(' Type y to keep on running the checker, anything else to break:     \n\n ')
     if choice == 'y':
         random_picker(choice, rts_datetime, rts_values)
     else:

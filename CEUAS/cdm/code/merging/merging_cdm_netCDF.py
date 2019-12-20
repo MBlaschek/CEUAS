@@ -10,15 +10,14 @@ import numpy as np
 #import argparse
 from datetime import datetime, timedelta
 import numpy.ma as ma
-import math
+#import math
 import h5py as h5py
 import xarray as xr 
 import time 
-from numba import njit
+#from numba import njit
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning) # deactivates Pandas warnings 
-
 
 pd.set_option('display.max_rows', 50)
 pd.set_option('display.max_columns', 20)
@@ -26,8 +25,10 @@ pd.set_option('display.width', 300)
 
 
 def now(time):
-      a = datetime.fromtimestamp( time  ).strftime('%Y-%m-%d %H:%M:%S')
+      """ For easily print a readable current time stamp """
+      a = datetime.fromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S')
       return  a
+
 
 """
 For v.0 of the merged dataset
@@ -45,19 +46,28 @@ class Merger():
       """ Main class for the merging of the data from different netCDF files """
       
       def __init__(self ):
-            self.data = {}
+            
+            """ Define the attributes (some will be defined in other parts of the code)  
+            Attr :: 
+                    self.data                                 : read the dictionary mapping the dataset and the netCDF cdm file for each observation station  
+                    self.datasets                           : store the
+                    self.datasets_keys                  : ''
+                    self.datasets_all                     : hard coded list of all the potentially available datasets. Nothe that the ncar is split according to wind (_w) and temperature (_t) variables as in the original dataset source
+                    self.observation_ids_merged  : dictionary used to calculate the new merdeg record_id and report_id 
+                    self.unique_dates                   : dictionary containing the lists of observation date_times and indices for each dataset and of the merged dataset             
+            """
+            self.data = {}                              # will contain the data for each different dataset 
             self.datasets = ''
             self.datasets_keys = ''
-            self.datasets_all                     = ['igra2' , 'era5_1' , 'ncar' , 'bufr' , 'era5_1759' , 'era5_1761' , 'era5_3188']                          
-            self.observation_ids_merged = {  'igra2':1 , 'ncar':2 , 'bufr':3,  'era5_1':4 , 'era5_1759' :5 , 'era5_1761':6 ,  'era5_3188' :7}  # values used to convert original record_id to the merged record_id, see merge_all_data 
-            self.unique_dates = {}
-            
+            self.datasets_all                     = [ 'igra2' , 'era5_1' , 'ncar_w' ,  'ncar_t', 'bufr' , 'era5_1759' , 'era5_1761' , 'era5_3188' ]                           
+            self.observation_ids_merged  = {  'igra2':1 , 'ncar_t':2 , 'ncar_w':2, 'bufr':3,  'era5_1':4 , 'era5_1759' :5 , 'era5_1761':6 ,  'era5_3188' :7}  # values used to convert original record_id to the merged record_id, see merge_all_data 
+            self.unique_dates = {}            
              
       def initialize_data(self, datasets = {} , fast = False ):
             """ Initialize dataset; store relevant data as attributes.
                        Args ::     dic{}  datasets (dictionary where keys are the dataset names e.g. bufr, igra2 etc. , and the value is the path to the corresponding netCDF file 
                                        e.g. tateno = { 'ncar'    : 'example_stations/ncar/chuadb_trhc_47646.txt.nc'   ,
-                                                            'igra2'   : 'example_stations/igra2/chJAM00047646-data.txt.nc'  } """
+                                                               'igra2'   : 'example_stations/igra2/chJAM00047646-data.txt.nc'  } """
         
             data = {}
             source_configuration = {}
@@ -67,9 +77,13 @@ class Merger():
             
             """ Looping over the avilable datasets """
             print('*** Reading and Initializing the data from the netCDF files ')
+                           
+            #for k,v in datasets.items() :
             for k,v in datasets.items() :
-                  print('Initialising the dataset: *** ' , k )
+                  
+                  print('Initialising the dataset: *** ' , k ,  '    ',   now (time.time() )  )
                   data[k] = {} 
+                  data['cdm_tables'] = {} 
                   
                   ### xarray                  
                   #ds =  xr.load_dataset(v)   
@@ -82,7 +96,7 @@ class Merger():
                   
                   ###for h5py but cant extract date time units !!!
                   #print('Reading the file with h5py ' , now (time.time() ) )
-                  ds =  h5py.File(v , driver="core" )   
+                  ds =  h5py.File(v , driver="core" , )   
                   data[k]['df'] = ds # storing the entire file                
                   #data[k]['dateindex']       = ds['dateindex'][0,:]  # storing the dateindex 
                   data[k]['source_file']           = ds['source_configuration']['source_file'][0]
@@ -91,16 +105,23 @@ class Merger():
                   data[k]['recordindex']         = ds['recordindex'].value                                    
                   #ds.close()                 
                   print('Reading the file with xarray ' , now (time.time() ) )
+                  
+                  
+                  
+                  # reading the cdm tables that are fixed and do not depend on the specific observations 
 
+                              
+                              
+                              
             self.data = data
             self.make_dataframe()
             ds.close()                 
 
             """ Reading the header_table, station_configuration, source_configuration """
-            for k,v in datasets.items() :
-                  
-                  #d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'station_configuration')
-                  
+            for k,v in datasets.items() :   
+ 
+ 
+                  #d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'station_configuration')                
                   d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'station_configuration')                 
                   data[k]['station_configuration'] = d.to_dataframe()   
                   #print('Done with ', k , ' station_configuration')
@@ -113,14 +134,19 @@ class Merger():
                   d = d.isel(hdrlen=[0])
                   data[k]['source_configuration'] = d.to_dataframe()   
                   #print('Done with ', k , ' source_configuration')
-                  
-                  
+                                   
                   
                   if k == 'era5_1': # reading the whole era5_1 feedback (including reanalysis)
                         d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'era5fb')                 
                         data[k]['era5fb'] = d.to_dataframe()   
                         #print('Done with ', k , ' era5 feedback')
-                        
+            
+                  if list( datasets.keys()).index(k) == 0  :
+                        for t in ['units' , 'z_coordinate_type' , 'crs' , 'observed_variable']:                              
+                              d = xr.open_dataset(v , engine = 'h5netcdf' , group = t)                 
+                              data['cdm_tables'][t] = d.to_dataframe()   
+                                    
+                                    
                   d.close() # close ?
                   ds.close()
 
@@ -139,6 +165,8 @@ class Merger():
                   #data[k]['dateindex'] = ds.variables['dateindex'][0,:]  # storing the dateindex                
                   #data[k]['source_file']      = ds.groups['source_configuration']['source_file'][0]
                   #data[k]['product_code']  = ds.groups['source_configuration']['product_code'][0]
+                  
+                  
                
             """ Storing the station configurations  """   
             self.source_configuration =  source_configuration      
@@ -195,14 +223,18 @@ class Merger():
             which_k_in_dt = {} 
 
             def add_time_delta(time_offset_value, date_time):
-                  """ Converting to proper date_time adding the time_delta.  """ ### check There should be only hours in the input files !!!
+                  """ Converting to proper date_time adding the time_delta.  
+                        Removes minutes rounding to closest integer hour. """ ### check There should be only hours in the input files !!!
                   if 'minutes' in  time_offset:
                         date_time_delta = [ timedelta(minutes = float(i) ) + time_offset_value for i in date_time ]
                   elif 'hours' in time_offset:
                         date_time_delta = [ timedelta(hours = float(i) )  + time_offset_value  for i in date_time ]    
+                  else:
+                        print('CHECKWHATISGOINGON')
                         
                   #unique_dt = [i for i in  [  time_offset_value +  j for j in delta  ] ]    
                   #unique_dt = [ i +0 ]
+                  date_time_delta = [ i.replace(minute=0, second=0) for i in date_time_delta ]                 
                   return date_time_delta                 
 
 
@@ -221,13 +253,15 @@ class Merger():
                   """ Convert to proper date_time usig the time_delta """
                   time_offset            = nc.Dataset(self.datasets[k])   
                   time_offset            = time_offset.groups['observations_table']['date_time'].units
-                  time_offset_value  = time_offset.split('since') [1]                            
+                  time_offset_value  = time_offset.split('since ') [1]      
+                  time_offset_value  = datetime.strptime(time_offset_value, '%Y-%m-%d %H:%M:%S')
+                  """
                   try:
                         time_offset_value  = datetime.strptime(time_offset_value, '%Y-%m-%d %H:%M:%S')
                   except:
                         time_offset_value = time_offset_value.replace(' 19', '19')
                         time_offset_value  = datetime.strptime(time_offset_value, '%Y-%m-%d %H:%M:%S')
-                  
+                  """
                   #print(' Calculating the time_delta for : ', k )
                   
                   unique_dt = add_time_delta (time_offset_value, unique) 
@@ -691,12 +725,15 @@ class Merger():
                   """ Extracting the merged feedback, flagging the advanced_observations_feedback flag = 1"""
                   feedback, merged_obs = self.get_reanalysis_feedback( dt, merged_observations_table , reanalysis='era5fb', best_ds= best_ds)
                   all_merged_fb.append(feedback)
+                  
                   all_merged_obs.append(merged_obs)
                   
                   
                   """ Extracting the merged header_table """
                   len_obs = len(merged_observations_table)                  
                   header = self.get_header_table(dt, best_ds= best_ds,  all_ds = duplicates , length= len_obs)
+                  merged_report_id = merged_obs['report_id'].values[0]  # same report_id as calculated in the observation_table 
+                  header['report_id'] = merged_report_id 
                   all_merged_head.append(header)
                                     
                   #if  len(merged_observations_table) !=   len(header):                       
@@ -884,6 +921,8 @@ class Merger():
             
             print('Writing the station_configuration and source_configurations tables to the netCDF output via xarray ')         
             for k in self.data.keys():
+                  if k == 'cdm_tables':
+                        continue                  
                   group_name = k + '_station_configuration'
                   sc = self.data[k]['station_configuration'].to_xarray()
                   sc.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a' , group = group_name )
@@ -891,7 +930,6 @@ class Merger():
                   group_name = k + '_source_configuration'
                   sc = self.data[k]['source_configuration'].to_xarray()
                   sc.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a' , group = group_name )
-
                   
                   """ To be fixed ! """
                   #group_name = k + '_source_configuration'
@@ -907,6 +945,13 @@ class Merger():
             di = self.MergedFeedback
             di = di.to_xarray()
             di.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a'  , group = group_name )
+                        
+            print('Writing the standard cdm tables to the netCDF output ')                  
+            for t in self.data['cdm_tables'].keys():                
+                  d = self.data['cdm_tables'][t]
+                  d = d.to_xarray()
+                  d.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a'  , group = t )
+                  
             
             print('***** Done writing the output netCDF file !')       
             
@@ -948,13 +993,13 @@ class Merger():
 
 
 
-tateno = { 'ncar'    : 'example_stations/ncar/chuadb_trhc_47646.txt.nc'   ,
-               'igra2'   : 'example_stations/igra2/chJAM00047646-data.txt.nc'  ,
-               'bufr'     : 'example_stations/bufr/chera5.47646.bfr.nc'  ,
-               # 'era5_1' : 'example_stations/era5_1/chera5.conv._47646.nc' , 
-               'era5_1759' : 'example_stations/era5_1759/chera5.1759.conv.1:47646.nc' , 
-               'era5_1761' : 'example_stations/era5_1761/chera5.1761.conv.1:47646.nc' , 
-               'era5_3188' : 'example_stations/era5_3188/chera5.3188.conv.C:5357.nc' , 
+tateno = {     'ncar'    : 'example_stations_big/ncar/chuadb_trhc_47646.txt.nc'   ,
+               'igra2'   : 'example_stations_big/igra2/chJAM00047646-data.txt.nc'  ,
+               'bufr'     : 'example_stations_big/bufr/chera5.47646.bfr.nc'  ,
+               'era5_1' : 'example_stations_big/era5_1/chera5.conv._47646.nc' , 
+               'era5_1759' : 'example_stations_big/era5_1759/chera5.1759.conv.1:47646.nc' , 
+               'era5_1761' : 'example_stations_big/era5_1761/chera5.1761.conv.1:47646.nc' , 
+               'era5_3188' : 'example_stations_big/era5_3188/chera5.3188.conv.C:5357.nc' , 
                }
 
 
@@ -963,12 +1008,7 @@ very_small = { 'era5_1759'    : 'example_stations/era5_1759/chera5.1759.conv.1:8
                          'bufr'    : 'example_stations/bufr/chera5.82930.bfr.nc'  , }
 
 
-small = {  'ncar'           : 'example_stations/ncar/chuadb_windc_82930.txt.nc'       ,
-                  'igra2'          : 'example_stations/igra2/chBRM00082930-data.txt.nc'  ,
-                           'era5_1'       :  'example_stations/era5_1/chera5.conv._82930.nc',
-                           'era5_1759' : 'example_stations/era5_1759/chera5.1759.conv.1:82930.nc',
-                           'bufr'           : 'example_stations/bufr/chera5.82930.bfr.nc',                          
-}
+
 
 
 '''
@@ -997,6 +1037,26 @@ if __name__ == '__main__':
             Merging.InitializeData( datasets = full_data , fast = True )       
             Merging.Merge_new(limit ='', pickled = True) # Merging procedure 
 '''
+
+
+
+tateno = {'ncar'    : 'example_stations_big/ncar/chuadb_trhc_47646.txt.nc'   ,
+               'igra2'   : 'example_stations_big/igra2/chJAM00047646-data.txt.nc'  ,  
+               'bufr'     : 'example_stations_big/bufr/chera5.47646.bfr.nc'  ,
+               'era5_1' : 'example_stations_big/era5_1/chera5.conv._47646.nc' , 
+               'era5_1759' : 'example_stations_big/era5_1759/chera5.1759.conv.1:47646.nc' , 
+               'era5_1761' : 'example_stations_big/era5_1761/chera5.1761.conv.1:47646.nc' , 
+               'era5_3188' : 'example_stations_big/era5_3188/chera5.3188.conv.C:5357.nc' , 
+               }
+
+
+small = {   'ncar_w'           : 'example_stations/ncar/chuadb_windc_82930.txt.nc'       ,
+                  'ncar_t'           : 'example_stations/ncar/chuadb_windc_82930.txt.nc'       ,
+                  'igra2'          : 'example_stations/igra2/chBRM00082930-data.txt.nc'  ,
+                  'era5_1'       :  'example_stations/era5_1/chera5.conv._82930.nc',
+                  'era5_1759' : 'example_stations/era5_1759/chera5.1759.conv.1:82930.nc',
+                  'bufr'           : 'example_stations/bufr/chera5.82930.bfr.nc',                          
+}
 
 
 
