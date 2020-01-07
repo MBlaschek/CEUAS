@@ -119,7 +119,9 @@ class Merger():
                         logging.debug('Done with ', k , ' era5 feedback')
             
                   if list( datasets.keys()).index(k) == 0  :
-                        for t in ['units' , 'z_coordinate_type' , 'crs' , 'observed_variable']:                              
+                        #for t in ['units' , 'z_coordinate_type' , 'crs' , 'observed_variable']:  
+                        for t in [ 'crs' , 'observed_variable']:                              
+                              
                               d = xr.open_dataset(v , engine = 'h5netcdf' , group = t)                 
                               data['cdm_tables'][t] = d.to_dataframe()   
                                     
@@ -194,6 +196,7 @@ class Merger():
                   time_offset            = nc.Dataset(self.datasets[k])   
                   time_offset            = time_offset.groups['observations_table']['date_time'].units
                   time_offset_value  = time_offset.split('since ') [1]      
+                  time_offset_value  = datetime.strptime(time_offset_value, '%Y-%m-%d %H:%M:%S')
                  
                   unique_dt = add_time_delta (time_offset_value, unique) 
                   
@@ -372,9 +375,10 @@ class Merger():
 
             
             #for dt in date_times[3008:3100]: # loop over all the possible date_times 
-            for dt in date_times: # loop over all the possible date_times 
+            tot = len(date_times)
+            for dt, c in zip(date_times , range(tot)): # loop over all the possible date_times 
                  
-                  print('Analize the date_time number ', str(np.where(date_times == dt)) , ' ' , dt ,  ' ', now(time.time()) )
+                  print('Analize : ', str(c) , '/',  str(tot)  , ' ', dt , ' ', now(time.time()) )
             
                   cleaned_df_container = {}                  
                   chunk = ''
@@ -642,7 +646,7 @@ small = {   'ncar_w'           : 'example_stations/ncar/chuadb_windc_82930.txt.n
 if __name__ == '__main__':
       """ Initialize the Merger class """
       Merging = Merger()
-      print('*** Initialising the data ***' , now(time.time()) )      
+      logging.info('*** Initialising the data ***' )      
       #Merging.initialize_data( datasets = small_other ) #  Read each dataset netCDF file, initialize the dataframes, calculated proper date_time arrays       
       Merging.initialize_data( datasets = small ) #  Read each dataset netCDF file, initialize the dataframes, calculated proper date_time arrays  
       
