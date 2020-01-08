@@ -1,0 +1,100 @@
+Merging code overview and workflow
+
+Here we describe briefly the structure of the merging_cdm_netCDF.py script and the main workflow for merging the different files; 
+extended details as well as usage examples can be found in the code, either as in-line comments or doc-strings.
+
+The script relies on the following external modules:
+- netCDF4 for reading netCDF files
+- numpy
+- pandas
+- h5py
+- xarray ,
+in addition to other standard python modules such as datetime, warnings and logging.
+By default the logging level is set to INFO, but it can be easily changed to print additional debugging statements by replacing 
+the line
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')  # up to INFO level, DEBUG statements will not be printed 
+with 
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')  # up to INFO level, DEBUG statements will not be printed 
+at the top of the code.
+
+The core of the code consists of a class called Merging, that retains relevant variables stored as attributes, and contains the methods used to process the files. 
+The class is initialized in the main section of the scrip. Then, two methods are called: 
+- initialize_data, which essentially reads the input netCDF files (in CDM compliant form, produced by the data harvester code described in deliverable XXX)
+and adapts the input data to be easily processed
+- merge, which analyses the input data and produce a merged file.
+
+The only necessary input is a dictionary where each key is the name of the dataset, and the key is the complete path to the source netCDF file:
+example_input = {   'ncar_w' : 'example_stations/ncar/chuadb_windc_82930.txt.nc',
+                    'ncar_t' : 'example_stations/ncar/chuadb_windc_82930.txt.nc',
+                    'igra2'  : 'example_stations/igra2/chBRM00082930-data.txt.nc',
+                    'era5_1' : 'example_stations/era5_1/chera5.conv._82930.nc',
+		    ...                      
+}
+
+Note that there might be two distinct ncar files, since from the original dataset, files containing temperature-related variables (i.e. upper air temperature,
+dew point, humidity) and wind-related variables (wind speed, direction) are kept separated, and likewise treated from the harvester script.
+Nevertheless the merging procedure will combine the data from the two distinct files and lable it as 'ncar'.
+
+1. Data initialisation
+The  initialize_data method reads the relevant ifnormation from the source netCDF files such as the the source_configuration (which contain the name of the original source file), the station_configuration and observations_table tables, plus the recordtimestamp and recordindex variables.
+The recordtimestamp variable is the set of unique date-time values for each observation, which characterise each sonde ascent and/or data acquisition; the recordindex variable stores the index of the first occurence of such observations inside the netCDF file. This is very practical to extract data relative to specific observation times. In fact, from the desired time interval, it is possible to extract the lower and upper recordindex mapping to the interval, and then it is sufficient to read the data (as e.g. xarray or python lists) between [recordindex_lower:recordindex_upper] to select the desired data, avoiding loading or reading the entire dataset.
+
+Note that in the following we will sometimes refer to each recordtimestamp with the term date_time. 
+
+After the loading process, the first step for the merging procedure regards the extractions of all the distinct date_time from the different dataset.
+This is done by the make_all_datetime method, which extracts the unique list of date_times values from all the datasets; the recordindex of each distinct date_time in the original dataset is stored. This way, it is known if and at which index in the original file each date_time is available. 
+
+
+2. Merging procedure 
+On the one hand, merging different datasets means to combine together different data, for example creating an extended time series of observations of non-overlapping data-taking periods. On the other hand, the same record, i.e. data relative to a specific date_time, might appear in several datasets, so a series of clear rules that enable to select one preferred data source must be defined.
+For this aim, the merging procedure is essentially based on the loop over all the possible merged date_time entries, created in the initial step.
+For each distinc time step, the available data must then be checked.
+
+If only one dataset is available, there is no real operation to be performed, but rather the original data must be copied into the output file.
+If more than one dataset is available, then:
+1. The dataset with the largest number of observations is selected (sum of variables observed and ;
+2. The dataset with the order of preference igra2, ncar, era5_1 is selected;
+3. any of the era5_3188, era5_1759, era5_1761 dataset is selected.
+
+The selection is performed by the merge_record method. This can be easily refined or extended if a more accurate selection is required.
+ 
+
+=== Reanalyses feedback ===
+The era_1 dataset is the only dataset for which reanalysis information is available. The extension of the CDM tables to retain such useful data, following the proposal described in XXX, has been recently approved by XXX . For the current version v0 of the database, we make use of a simpler way to store the information. As described in the XXX report, the harvester tool stores the content of the original source files in a group called 'era5fb'. We remind that in the case of the era5 datasets (era5_1, era5_3188, era5_1759, era5_1761), the era5fb group matches exactly the whole content of the original odb file, where each column takes the name from one of the variables in the odb file, e.g. 'date@hdr','time@hdr', etc. 
+For each record in the merged file, it is possible to obtain the reanalysis information whenever available: if the era5_1 record is selected, then the corresponding block from the era5fb is copied into the merged file. Otherwise, the information is empty. For completeness, we describe how this is technically implemented. To keep the merged era5fb group uniform in structure, we do the following. If, for a given station, the era5_1 data is available, the code reads the era5fb from the source file, and creates a dataframe with a column for each variable. If the era5_1 dataset is chosen as the best merging candidate, then the table will be filled with the proper era5fb feedback value. Otherwise, if other datasets are choosen, the same dataframe structure is kept, but filled with empty values.
+This causes a problem if the era5_1 dataset is totally missing for the station, since the era5fb cannot be read and the dataframe cannot be created. However, since there are no reanalyses data, we create an empty, single column dataframe, so that the era5fb group will be present in the merged output file, but contains no useful information.
+
+
+The era5fb group is structured so that is exactly mapped to the observations_tables entries, i.e. it shares the same recordtimestamps and recordindex.  
+
+
+
+=== Observation_id renumbering ===
+The “observation_is” variable must be unique for each observation value in the “observations_table”. To be consistent with this requirement, but at the same time to allow to retain the original observation_id value from the original dataset, we implemented a convertion from the original value to the merged one in the following way. We define a dataset-numbering mapping as:
+IGRA2: 1 , NCAR: 2 , BUFR: 3,  ERA5_1: 4 , ERA5_1759: 5, ERA5_1761: 6,  ERA5_3188 :7
+We then multiply this number times  1 billion, and we add it to the original ‘observation_id’ . This way, the first digit on the merged id allows to identify the original dataset, while the digits following the zeros allow to obtain the original id.
+For example, the observation_id 789 from the era5_1 dataset of a certain station, would become 4000000789 in the merged file. The first digit 4 identifies the era5_1 origin, and the digits following the series of zeros match the original observation_id .
+
+
+
+
+
+
+
+
+
+
+
+
+=== double files for NCAR === Description on how to solve the issue of doublicated files in the NCAR database.
+In the NCAR dataset, data relative to the same observing station are split into two different files; for example, the files
+uadb_thrc_82930.txt.nc'and uadb_windc_82930.txt.nc pontentially contain duplicated data. 
+To avoid including duplicated information, we do the following.
+We deal separately both files unitl the merging phase; this is done to preserve the original information from each of the two files, and use
+for example the fast reading thorugh the recordtimestamp and recordindex.
+During the merging phase, we check if only one file contains data for a certain date_time entry; if only one is available, nothing is to be done.
+If both are available, we concatenate the dataframe and remove duplicated rows.
+Note that this fails if the data is not exactly identical, and the duplicated rows will be kept in the merged file.
+Probably this will not create big troubles but it might be seen only during data analysis.
+However, since we cunt the number of entries for each dataset, this might give preference to the choice of the ncar dataset,
+since the number of entries could end up being twice as the real number of distinc entries.
