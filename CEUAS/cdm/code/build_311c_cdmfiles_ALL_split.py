@@ -103,7 +103,7 @@ cdmfb_noodb={'observation_value':'obsvalue@body',
                           'number_of_pressure_levels' : 'number_of_pressure_levels',
                           'units' : 'units',
                           'source_id': 'source_id', 
-                           }  # https://github.com/glamod/common_data_model/blob/master/table_definitions/header_table.csv
+                           }  
 
 
 
@@ -173,7 +173,7 @@ cdmvar_dic = {'temperature'          : { 'odb_var': 2      , 'cdm_unit': 5 }    
                          'wind_speed'           : { 'odb_var': 112  , 'cdm_unit': 731 }          ,  # m/s 
                          'dew_point'             : { 'odb_var': 59    , 'cdm_unit': 5 }              ,  # K
                          'relative_humidity'  : { 'odb_var': 29    , 'cdm_unit': 999 }    ,  # need to verify from original data source
-                         'gph'                       : { 'odb_var': 1      , 'cdm_unit': 999  }   ,  # need to verify from original data source
+                         'gph'                       : { 'odb_var': 1      , 'cdm_unit': 1  }   ,  # need to verify from original data source
                          'uwind'                    : { 'odb_var': 999  , 'cdm_unit': 731 }          ,  # m/s
                          'vwind'                    : { 'odb_var': 999  , 'cdm_unit': 731 }          ,  # m/s
                          'pressure'               : { 'odb_var': 999  , 'cdm_unit': 32 }             , # Pa  (it goes into z_coordinate type)
@@ -192,7 +192,7 @@ cdm_odb_var_dic = {'temperature'  : { 'odb_var': 85      , 'cdm_unit': 5 }      
                           }
 '''
 
-cdm_odb_var_dic = { 1    : 999    , # geopotential
+cdm_odb_var_dic = { 1    : 1    , # geopotential
                                    2    : 5        , # temperature K
                                    3    : 731    , # uwind m/s
                                    4    : 731    ,  # vwind m/s
@@ -335,12 +335,14 @@ def uadb_ascii_to_dataframe(file=''):
     """ Read an uadb stationfile in ASCII format and convert to a Pandas DataFrame.                                                                                                                                                                                          
         Adapted from https://github.com/MBlaschek/CEUAS/tree/master/CEUAS/data/igra/read.py                                                                                                                                                                                         
         Variables used inside the DataFrame are already CDM compliant   
+        Documentation available at: https://rda.ucar.edu/datasets/ds370.1/docs/uadb-format-ascii.pdf
         
         Args:
              file (str): path to the uadb station file
 
         Returns:
              Pandas DataFrame with cdm compliant column names
+             
     """     
     #def replace_missing(value):
         
@@ -511,16 +513,21 @@ def igra2_ascii_to_dataframe(file=''):
             gph     = int(line[16:21])        # 17- 21  integer geopotential height  [m]
             zflag   = line[21]                # 22- 22  character gph processing flag, 
             temp    = int(line[22:27])  
-            if temp != -9999:
+            if temp != -9999 and temp != -8888:   # reading the values andh check if they are missing or removed as -9999 or -8888 before dividing by 10 as the instructions say 
                 temp = temp / 10.   + 273.15 # 23- 27  nteger temperature, [Celsius to Kelvin ]               
-            tflag   = line[27]                # 28- 28  character temperature processing flag
-            rh      = int(line[28:33]) / 10.  # 30- 34  integer relative humidity [%]
+            tflag   = line[27]    # 28- 28  character temperature processing flag
+            
+            rh      = int(line[28:33])  # 30- 34  integer relative humidity [%]
+            if rh != -8888:
+                rh = rh / 10.
             dpdp    = int(line[34:39]) 
-            if dpdp != -9999:                
+            if dpdp != -9999 and dpdp !=-8888:                
                 dpdp    = dpdp / 10.  + 273.15 # 36- 40  integer dew point depression (degrees to tenth e.g. 11=1.1 C)  [Celsius to Kelvin ]                 
             wdir    = int(line[40:45])        # 41- 45  integer wind direction (degrees from north, 90 = east)
-            wspd    = int(line[46:51]) / 10.  # 47- 51  integer wind speed (meters per second to tenths, e.g. 11 = 1.1 m/s  [m/s]
-
+            
+            wspd    = int(line[46:51])   # 47- 51  integer wind speed (meters per second to tenths, e.g. 11 = 1.1 m/s  [m/s]
+            if wdsp != -8888:
+                wspd = wspd / 10.  
         
             for value,var in zip([gph, temp, wspd, wdir, rh, dpdp],  ['gph', 'temperature', 'wind_speed', 'wind_direction', 'relative_humidity' , 'dew_point' ] ):
                 obs_id = obs_id +1  
@@ -661,7 +668,7 @@ def read_all_odbsql_stn_withfeedback(odbfile):
             units.append(cdm_odb_var_dic[f])
             #print(f , ' ',  cdm_odb_var_dic[f] )
         except:
-            print('var is ', f )
+            #print('var is ', f )
             units.append(5555)
                 
     alldict['units'] = np.array(units).astype(int)
@@ -772,7 +779,6 @@ def find_date_indices(datetime):
           Args:: 
                   list of *sorted* observation date_times
           Return:: numpy array (3,:) where the first list is the list of unique obs date_times, the second are the indices of first obs  date_time, the second the list of last obs date_time. 
-          
           """            
     #if debug: 
     #   print("Running find_dateindex")
@@ -811,12 +817,11 @@ def find_date_indices(datetime):
           
           
 def readvariables_encodings(fbds):
-    """ Extracts the list of variables from the xarray, read from different sources, and assign a variable type for the encodings 
-        
+    """ Extracts the list of variables from the xarray, read from different sources, and assign a variable type for the encodings         
         Args:
                pandas dataframe 
         Return:
-               dictionary where each key is a cdm variable, and the values are the variable type and compression methods to be used in the hdf files """
+               dictionary where each key is a cdm variable, and the values are the variable type and compression methods to be used in the hdf files """  
     
     fbencodings={}
     for d in fbds._variables.keys():
@@ -1005,7 +1010,6 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
         station_id_ok.write(fn + '_' + station_id + '\n' )
     if sci_found == False:
         station_id_fails.write(fn + '_' + station_id + '\n')
-
     station_id_fails.close()
     station_id_ok.close()
     #print(fno,time.time()-t)
@@ -1246,7 +1250,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
             """ Writing each separate CDM table to the netCDF file """
             for k in groups.keys():
                 print('Writing the output netCDF file group ' , k , ' **** ' )
-                if k == 'observations_table':
+                if k == 'units':
                     print('check')
                     
                 groups[k].to_netcdf(fno, format='netCDF4', engine='h5netcdf', encoding=groupencodings[k], group=k, mode='a') 
@@ -1285,7 +1289,7 @@ def load_cdm_tables():
     cdmpath='https://raw.githubusercontent.com/glamod/common_data_model/master/tables/' # cdm tables            
     
     """ Selecting the list of table definitions. Some of the entires do not have the corresponding implemented tables """
-    cdmtabledeflist=['id_scheme', 'crs', 'station_type', 'observed_variable', 'station_configuration', 'station_configuration_codes', 'observations_table', 'header_table', 'source_configuration']  
+    cdmtabledeflist=['id_scheme', 'crs', 'station_type', 'observed_variable', 'station_configuration', 'station_configuration_codes', 'observations_table', 'header_table', 'source_configuration', 'units' , 'z_coordinate_type']  
     cdm_tabdef = dict()
     for key in cdmtabledeflist:
         url='table_definitions'.join(cdmpath.split('tables'))+key+'.csv' # https://github.com/glamod/common_data_model/tree/master/table_definitions/ + ..._.dat 
@@ -1297,7 +1301,7 @@ def load_cdm_tables():
         
     
     """ Selecting the list of tables. 'station_configuration_codes','observations_table','header_table' are not implemented in the CDM GitHub"""        
-    cdmtablelist=['id_scheme', 'crs', 'station_type', 'observed_variable', 'station_configuration_codes']        
+    cdmtablelist=['id_scheme', 'crs', 'station_type', 'observed_variable', 'station_configuration_codes','units']        
     cdm_tab=dict() # dictionary where each key is the name of the cdm table, and the value is read from the .dat file    
     for key in cdmtablelist:
         f=urllib.request.urlopen(cdmpath+key+'.dat')
@@ -1311,8 +1315,8 @@ def load_cdm_tables():
     cdm_tabdef['header_table']          = pd.read_csv(tpath+'/table_definitions/header_table.csv',delimiter='\t',quoting=3,comment='#')
     cdm_tabdef['observations_table'] = pd.read_csv(tpath+'/table_definitions/observations_table.csv',delimiter='\t',quoting=3,comment='#')
 
-    id_scheme={cdm_tabdef['id_scheme'].element_name.values[0]:[0,1,2,3,4,5,6],
-               cdm_tabdef['id_scheme'].element_name.values[1]:['WMO Identifier','Volunteer Observing Ships network code',
+    id_scheme={ cdm_tabdef['id_scheme'].element_name.values[0]:[0,1,2,3,4,5,6],
+                         cdm_tabdef['id_scheme'].element_name.values[1]:['WMO Identifier','Volunteer Observing Ships network code',
                                                              'WBAN Identifier','ICAO call sign','CHUAN Identifier',
                                                              'WIGOS Identifier','Specially constructed Identifier']}
 
@@ -1320,7 +1324,10 @@ def load_cdm_tables():
     #cdm['id_scheme'].to_csv(tpath+'/id_scheme_ua.dat')
     cdm_tab['crs']=pd.DataFrame({'crs':[0],'description':['wgs84']})
     #cdm['crs'].to_csv(tpath+'/crs_ua.dat')
-    cdm_tab['station_type']=pd.DataFrame({'type':[0,1],'description':['Radiosonde','Pilot']})
+    cdm_tab['station_type']=pd.DataFrame({'type':[0,1],'description':['Radiosonde','Pilot']}) 
+    
+    cdm_tab['z_coordinate_type']=pd.DataFrame({'type':[0,1],'description':['height (m) above sea level','pressure (Pa)']})  # only the m above sea level is available currently in the GitHub cdm table, added pressure 
+    
     #cdm['station_type'].to_csv(tpath+'/station_type_ua.dat')
     #cdm['observed_variable']=pd.read_csv(tpath+'/observed_variable.dat',delimiter='\t',quoting=3,dtype=tdict,na_filter=False,comment='#')   
     
@@ -1456,14 +1463,14 @@ if __name__ == '__main__':
         print('****** \n \n \n Finished processing the file : ', f)
         
     else:
-     Files = Files.split(',')
-     for File in Files:
+        Files = Files.split(',')
+        for File in Files:
          
-        if not os.path.isdir(out_dir):
-            os.system('mkdir ' + out_dir )            
-        output_dir = out_dir + '/' + dataset      
-        if not os.path.isdir(output_dir):
-            os.system('mkdir ' + output_dir )
+            if not os.path.isdir(out_dir):
+                os.system('mkdir ' + out_dir )            
+            output_dir = out_dir + '/' + dataset      
+            if not os.path.isdir(output_dir):
+                os.system('mkdir ' + output_dir )
                 
         print( blue + '*** Processing the database ' + dataset + ' ***  \n \n *** file: ' + File + '\n'  + cend)
             
