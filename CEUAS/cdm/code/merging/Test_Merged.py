@@ -121,8 +121,8 @@ def random_picker(y , rts_datetime, rts_values):
         
         
         # units
-        units =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'units' )
-        units = units.to_dataframe()   
+        #units =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'units' )
+        #units = units.to_dataframe()   
         
         # era5_1_source_configuration                
         source_conf =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5_1_source_configuration' )
