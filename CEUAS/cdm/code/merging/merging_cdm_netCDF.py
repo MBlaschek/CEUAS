@@ -239,7 +239,7 @@ class Merger():
       
  
       def clean_dataframe(self, df_in , what = ''):
-            """ Remove empty or wrong values from the data """         
+            """ Remove empty (nan) or wrong values from the original data """         
             
             if what == 'era5fb':  # cleaning the era5 feedback only 
                   df = df_in[np.isfinite(df_in['obsvalue@body'])]
@@ -247,19 +247,30 @@ class Merger():
                   df = df[np.isfinite(df_in['vertco_reference_1@body'])]
                   #print('check lengths: ' , len(df_in) , len(df) )
                   
-            else:                
-                  df =  df_in.loc[ df_in['z_coordinate_type'] != 2 ]  
+            else:             
+                  ### check if can be optimized ???
+                  df =  df_in.loc[ df_in['z_coordinate_type'] != 2 ]  # case where the levels are given in terms of geopotential only (pressure not available)
+                  
                   df = df.loc[ (df['observation_value'] != -99999.0) 
                                        & (df['observation_value'] != -999.0) 
                                        & (df['observation_value'] != -9999)                                        
                                        & (df['observation_value'] != -9999.0) 
                                        & (df['observation_value'] != -999.9) 
+                                       & (df['observation_value'] != -8888 )
+                                       & (df['observation_value'] != -8888.0 )
+                                       
                                        #& (df['z_coordinate_type'] != 2)  
                                        & (df['z_coordinate'] != -99999.0) 
-                                       & (df['z_coordinate'] != -9999.0) ] #cleaning the values                        
+                                       & (df['z_coordinate'] != -9999.0 )
+                                       & (df['z_coordinate'] != 999 )
+                                       & (df['z_coordinate'] != 999.0 )
+                                          
+                                          
+                                       ] #cleaning the values                        
                   #clean = clean.loc[ (clean['z_coordinate_type'] != 2)] #cleaning the values
                   #clean = clean.loc[ (clean['z_coordinate'] != -99999.0 )] #cleaning the values
-                  df = df[np.isfinite(df['observation_value'])]
+                  
+                  df = df[np.isfinite(df['observation_value'])]  # excluding nan values 
                   df = df[np.isfinite(df['z_coordinate'])]
                   
             return df 
@@ -267,7 +278,7 @@ class Merger():
             
       def make_dataframe(self):
             """ Convert netCDF files into panda dataframes. No manipulation of data here; only the CDM columns with real data are included """
-            print('*** Creating the dataframes ' )
+            logging.info('*** Creating the dataframes from the source files ' )
             
             for k in self.datasets_keys:
             #for k in ['igra2' , 'ncar']:
@@ -382,7 +393,8 @@ class Merger():
             
             #for dt in date_times[3008:3100]: # loop over all the possible date_times 
             tot = len(date_times)
-            for dt, c in zip(date_times[2803:] , range(tot)): # loop over all the possible date_times 
+            for dt, c in zip(date_times[2000:3780] , range(tot)): # loop over all the possible date_times 
+            #for dt, c in zip(date_times, range(tot)): # loop over all the possible date_times 
                  
                   print('Analize : ', str(c) , '/',  str(tot)  , ' ', dt , ' ', now(time.time()) )
             
@@ -413,13 +425,14 @@ class Merger():
                   if all(value == 0 for value in cleaned_df_container.values()):
                         #print('No data were found! ')
                         continue
-                  
+                  #print(cleaned_df_container.keys() )
                   merged_observations_table, best_ds, duplicates, header = self.merge_record(dt, container = cleaned_df_container)
                   
                   #if best_ds == 'igra2':
                   #      print('check')
 
-                  merged_observations_table['source_id']        = best_ds   # adding extra columns i.e. chosen dataset, other dataset with data, number of pressure levels 
+                  merged_observations_table['source_id'] = best_ds   # adding extra columns i.e. chosen dataset, other dataset with data, number of pressure levels 
+                  merged_observations_table['z_coordinate_type']  = 1   # only pressure inn [Pa] available at the moment. Check z_coordinate_type table for the correpsonding code 
                                    
                                     
                   """ Extracting the merged feedback, flagging the advanced_observations_feedback flag = 1"""
@@ -498,20 +511,12 @@ class Merger():
             
             
             """ Combining the ncar_t and ncar_w files.
-                  If both are present, we comvine them into a single dataset, and call it as 'ncar' . 
-                  If only one is present, we rename it as 'ncar'. 
+                  If both are present, select the ncar_t data and rename it as 'ncar'. 
+                  If only one is present, simply rename it as 'ncar'. 
             """           
-            if ('ncar_t' in list(container.keys()) and 'ncar_w' in list(container.keys()) ):
-                  container['ncar'] = {}
-                  logging.info('Combining the ncar wind and temperature files')
-                  ncars = pd.concat( [ container['ncar_w']['df'], container['ncar_t']['df'] ] )
-                  #source_configuration['ncar']['source_file'] =  source_configuration['ncar_t']['source_file'] + '_' +  source_configuration['ncar_w']['source_file'] 
-                  ncars = ncars.drop_duplicates(subset = ['date_time', 'z_coordinate', 'z_coordinate_type', 'observed_variable', 'observation_value', 'report_id', 'latitude', 'longitude', 'units']) # have to exclude observation_id since it changes form file to file 
-                  container['ncar']['df']  = ncars 
-                  
-            elif ( 'ncar_t' in list(container.keys()) and 'ncar_w' not in list(container.keys())  ) :
-                  container['ncar'] = {}                  
-                  container['ncar']['df'] =  container['ncar_t']['df']
+            if ('ncar_t' in list(container.keys())  ):
+                  container['ncar'] = {}                                    
+                  container['ncar']['df']  = container['ncar_t']['df'] 
                   
             elif ( 'ncar_w' in list(container.keys()) and 'ncar_t' not in list(container.keys())  ) :
                   container['ncar'] = {}                  
@@ -539,6 +544,7 @@ class Merger():
                         all_ds_reports.append( self.observation_ids_merged[k] * 1000000000  + container[k]['df']['report_id'].values[0]  )  # converting the original report id using the same convention as for observation_id
                         
             if len(best_datasets) ==0:
+                  print('wrong?check')
                   return 0,0,0,0        
    
             if 'igra2' in best_datasets:
@@ -563,11 +569,10 @@ class Merger():
             selected_df['report_id'] = merged_report
 
             """ Returning a string with the alternative available datasets data """
-            try:     
-                  duplicates = duplicates.replace( str(merged_report)+',' , '').replace(str(merged_report), '') 
+            if len(all_ds_reports) > 1: 
                   duplicates =   ",".join( [ str(i) for i in all_ds_reports] )
-            except:
-                  duplicates = ''
+            else:
+                  duplicates = str(all_ds_reports[0])
                   
             
                   
@@ -577,16 +582,15 @@ class Merger():
             if best_ds != 'ncar':
                   header = self.get_header_table(dt, ds= best_ds,  all_ds = duplicates , length= len(selected_df) )
                   
-            elif ( best_ds == 'ncar' and  'ncar_t' in list(container.keys()) and 'ncar_w' not in list(container.keys())  ) :
+            elif ( best_ds == 'ncar' and  'ncar_t' in list(container.keys()) ) :
                   header = self.get_header_table(dt, ds = 'ncar_t', all_ds = duplicates, length= len(selected_df))
                   
-            elif ( best_ds == 'ncar' and 'ncar_w' in list(container.keys()) and 'ncar_t' not in list(container.keys())  ) :
-                  header = self.get_header_table(dt, ds = 'ncar_w', all_ds = duplicates, length= len(selected_df) )
+            elif ( best_ds == 'ncar' and 'ncar_t' not in list(container.keys())  ) :
+                  header = self.get_header_table(dt, ds = 'ncar_w', all_ds = duplicates, length= len(selected_df) )            
                   
-            elif ( best_ds == 'ncar' and 'ncar_w' in list(container.keys()) and 'ncar_t' in list(container.keys())  ) :
-                  header = self.get_header_table(dt, ds = 'ncar_w', all_ds = duplicates, length= len(selected_df) )                  
-                  
-            #print ('I use ' , best_ds , '   record since it has more entries: ', most_records , ' but other available datasets are : ' , all_ds ) 
+            logging.debug('I use ' , best_ds , '   record since it has more entries: ', most_records , ' but other available datasets are : ' , all_ds ) 
+            
+            print ('duplicates are: ', duplicates)
             return  selected_df, best_ds , duplicates, header
       
 
@@ -639,19 +643,15 @@ class Merger():
                   d = d.to_xarray()
                   d.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a'  , group = t )
                               
-            logging.info('***** Done writing the output netCDF file !')       
+            logging.info('*** Done writing the output netCDF file ')       
             
             
       def merge(self, limit = False , dataframeIsPickled = False):                                           
-            #a = self.MakeAllDateTime_NEW()     # creates a dictionary with the unique observation date_time for each dataset , plus a list with all the dates from any datase
-            #dictionary_data = self.MakeAllData(pickle = dataframeIsPickled)    
-            
-            # if dataframeIsPickled: 
-            #       dataframe_data = self.Read_Pickle()                             
+            """ Call to the merge_all_data() and write_merged_file() methods """                         
             dummy = self.merge_all_data()            
-            print('Finished merging !!! \n *** NOW: witing the output file' )         
+            logging.info('*** Finished merging, now writing the output netCDF file' )         
             a = self.write_merged_file()
-            print('Done writing output !!! ')
+            logging.info('*** Done writing output !!! ')
 
 
 
@@ -683,11 +683,11 @@ tateno = {'ncar'    : 'example_stations_big/ncar/chuadb_trhc_47646.txt.nc'   ,
 
 
 small = {   'ncar_w'           : 'example_stations/ncar/chuadb_windc_82930.txt.nc'       ,
-                  'ncar_t'           : 'example_stations/ncar/chuadb_trhc_82930.txt.nc'       ,
-                  'igra2'          : 'example_stations/igra2/chBRM00082930-data.txt.nc'  ,
-                  'era5_1'       :  'example_stations/era5_1/chera5.conv._82930.nc',
-                  'era5_1759' : 'example_stations/era5_1759/chera5.1759.conv.1:82930.nc',
-                  'bufr'           : 'example_stations/bufr/chera5.82930.bfr.nc',                          
+                  'ncar_t'            : 'example_stations/ncar/chuadb_trhc_82930.txt.nc'       ,
+                  'igra2'              : 'example_stations/igra2/chBRM00082930-data.txt.nc'  ,
+                  'era5_1'            :  'example_stations/era5_1/chera5.conv._82930.nc',
+                  'era5_1759'      : 'example_stations/era5_1759/chera5.1759.conv.1:82930.nc',
+                  'bufr'                : 'example_stations/bufr/chera5.82930.bfr.nc',                          
 }
 
 
