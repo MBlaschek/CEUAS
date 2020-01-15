@@ -1,11 +1,13 @@
 # Homogenisation Software
 
-`Milestone MC3S311c_Lot2.2.1.2`
+Related Milestones and Deliverables:
 
-> author: UNIVIE
-> title: Homogenization software on Github
-> Description: Demonstrate run on Linux platform, using CDM compliant input
-> Date: December 2019
+Type | Nr | Responsible | Nature | Title| Due | Status | File
+---|---|---|---|---|---|---|---
+Milestone | MC3S311c_Lot2.2.1.2 | UNIVIE | Homogenization software on Github | Demonstrate run on Linux platform, using CDM compliant input | December 2019 | delayed | raso_homogen_cdm_v0.py
+Deliverable | DC3S311c_Lot2.2.4.2| UNIVIE | Software, Report | Homogeneity adjustment software + Adjustments plus user guide and documentation | February 2021 | ontime | 
+Milestone | MC3S311c_Lot2.2.1.3 | UNIVIE | Final version of homogenization software on Github | Demonstration session, technical report | March 2021 | ontime | 
+Deliverable | DC3S311c_Lot2.3.2.2 | UNIVIE | Report, Software | Reproduction of bias adjustment calculation in CDS | March 2021 | ontime |
 
 ## Description
 Steps:

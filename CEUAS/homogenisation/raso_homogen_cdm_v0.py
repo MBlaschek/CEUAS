@@ -4,13 +4,14 @@
 __version__ = '0.1'
 __author__ = 'MB'
 __status__ = 'dev'
-__date__ = 'Mit Jän 15 15:30:59 CET 2020'
+__date__ = 'Mit Jan 15 15:30:59 CET 2020'
 __institute__ = 'Univie, IMGW'
 __github__ = 'git@github.com:MBlaschek/CEUAS.git'
 __doc__ = """
 Radiosonde Homogenisation Software v%s
 Maintained by %s at %s
 Github: %s [%s]
+License: C3S
 Updated: %s
 """ % (__version__, __author__, __institute__, __github__, __status__, __date__)
 
@@ -62,6 +63,19 @@ def _print_string(*args, adddate=False, **kwargs):
 
 
 def message(*args, mname=None, verbose=0, level=0, logfile=None, **kwargs):
+    """ Message function
+
+    Args:
+        *args:
+        mname:
+        verbose:
+        level:
+        logfile:
+        **kwargs:
+
+    Returns:
+
+    """
     if logfile is not None:
         # with open(kwargs['filename'], 'a' if not kwargs.get('force', False) else 'w') as f:
         with open(logfile, 'a') as f:
@@ -137,6 +151,21 @@ def nanfunc(data, n=130, axis=0, nmax=1460, borders=0, ffunc=None, flip=False, f
 
 
 def sample(values, nmin, nmax, func, borders=0, flip=False, fargs=(), **kwargs):
+    """ Apply a function (func) to a sample of defined size
+
+    Args:
+        values:
+        nmin:
+        nmax:
+        func:
+        borders:
+        flip:
+        fargs:
+        **kwargs:
+
+    Returns:
+
+    """
     itx = np.isfinite(values)
     n = itx.sum()
     j = 0
@@ -220,6 +249,16 @@ def detector(data, axis=0, dist=365, thres=50, min_levels=3, use_slopes=False, u
 
 
 def idx2shp(idx, axis, shape):
+    """ Generate indices
+
+    Args:
+        idx:
+        axis:
+        shape:
+
+    Returns:
+
+    """
     index = [slice(None)] * len(shape)
     index[axis] = idx
     return tuple(index)
@@ -227,6 +266,15 @@ def idx2shp(idx, axis, shape):
 
 @njit
 def local_maxima(x, dist=365):
+    """ Find local maxima, using Numba
+
+    Args:
+        x:
+        dist:
+
+    Returns:
+
+    """
     maxima = []  # Leere Liste
     # Iteriere von 2 bis vorletzten Element
     # ist iterator integer
