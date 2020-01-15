@@ -1,0 +1,11 @@
+This directory contains:
+
+- script extract_stationId_with_filename.py.
+This loops over all the files in the seven datasets orignal directoris (note: using thfiles in LEO scratch directories)
+And makes a CSV table where the first entry is the station id, then auxilliary data,
+and the name of the file from which the data was taken.
+
+With this, you can fidn out which station data (e.g. Moscow) is split between several files:
+different files, i.e. with the same identified station_id, must be merged together since they refer to the same station.
+
+- directory: tables created by running the above script over all the datasets

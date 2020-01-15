@@ -15,9 +15,9 @@ print('Running the merged file checker **** ')
 """ Loading """
 a = '/raid8/srvx1/federico/GitHub/DEVELOP_LATEST_NOVEMBER/CEUAS/CEUAS/cdm/code/merging/FAST_INDEX_merged_chuadb_windc_82930.txt.nc' 
 
-a = 'FAST_INDEX_merged_chuadb_trhc_47646.txt.nc'
+#a = '/raid60/scratch/federico/MERGED_FILES/FAST_INDEX_merged_chuadb_trhc_47646.txt.nc'
 
-a = 'FAST_INDEX_merged_chuadb_windc_82930.txt.nc'
+a = '/raid60/scratch/federico/MERGED_FILES/FAST_INDEX_merged_chuadb_windc_82930.txt.nc'
 
 
 ''' Print all '''
@@ -107,67 +107,71 @@ def random_picker(y , rts_datetime, rts_values):
         """ Picking one random  time_stamp """
         rand = random.choice( list(rts_datetime.keys() ) )
 
-        
-        """ Reading the tables """
-        # observations_table
-        obs_t =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'observations_table' )
-        obs_df = obs_t.to_dataframe()   
-        
-        
-        # header_table        
-        head_t =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'header_table' )
-        head_t = head_t.to_dataframe()   
-        head_df = head_t[ ['report_id', 'duplicates'] ] 
-        
-        
-        # units
-        #units =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'units' )
-        #units = units.to_dataframe()   
-        
-        # era5_1_source_configuration                
-        source_conf =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5_1_source_configuration' )
-        print(' The source_configuration for era5_1 is : ' , source_conf )   
-        station_conf =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5_1_station_configuration' ) 
-        print(' The station_configuration for era5_1 is : ' , station_conf )   
-              
-        # era5_fb        
-        era5fb=  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5fb' )
-        era5fb = era5fb.to_dataframe()   
-        era5fb = era5fb[ ['date@hdr' , 'time@hdr' , 'varno@body',  'vertco_reference_1@body' , 'an_depar@body' , 'fg_depar@body' , 'obsvalue@body' ] ] 
-        
-        """ Loading a subset of variables to be put into a pd dataframe """
-        obs_df = obs_df [ ['date_time', 'z_coordinate' , 'z_coordinate_type', 'observed_variable' , 'observation_value' , 'report_id' , 'observation_id' , 'latitude' , 'longitude' , 'source_id', 'advanced_assimilation_feedback' , 'units']]
-        index_low , index_up = rts_datetime[rand] ,   ri_values [    ri_values.index(rts_datetime[rand]) + 1  ] 
-        
-        print('\n\n\n I will analyze one random time_Stamp from the merged file:  ' ,   rand , '  with time_record index: ' ,   rts_datetime[rand])
-        print('\n\n\n The indices corresponding to the DF are: ' ,  index_low , index_up   )
-        print('\n\n\n I print one record below and one above the selected [index_low , index_up] range to check the correct time_stamp'   )
-        
+    elif y == 'd':
+        rand = datetime.strptime('1981-01-03 12:00:00', '%Y-%m-%d %H:%M:%S')
 
-        obs_df   = obs_df.iloc [index_low - 1 : index_up + 1 ]
-        head_df = head_df.iloc [index_low - 1 : index_up + 1 ]
-        era5fb   = era5fb.iloc[index_low - 1 : index_up + 1 ]
-        
-        
-        
-        print( red + '\n\n ***** Observations_table: ' + cend  ,  obs_df )
+    """ Reading the tables """
+    # observations_table
+    obs_t =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'observations_table' )
+    obs_df = obs_t.to_dataframe()   
+    
+    
+    # header_table        
+    head_t =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'header_table' )
+    head_t = head_t.to_dataframe()   
+    head_df = head_t[ ['report_id', 'duplicates'] ] 
+    
+    
+    # units
+    units =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'units' )
+    units = units.to_dataframe()   
+    print(' *** LOADED the units table for era5_1' )           
+    
+    # units
+    z_coo =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'z_coordinate_type' )
+    z_coo = z_coo.to_dataframe()   
+    print(' *** LOADED the z_coordinate_type table for era5_1'  , ' check it ', z_coo)   
 
-        
-        print ('IMPORTANT: 999 means that I still have to check the proper unit (e.g. for geopotential and relative humidity) ; 5555 is not available (specific humidity) ')
-        print( blue + '\n\n ***** Header_table: ' + cend  ,  head_df )
+    
+    # era5_1_source_configuration                
+    source_conf =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5_1_source_configuration' )
+    print(' *** LOADED the source_configuration table for era5_1' )   
+    station_conf =  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5_1_station_configuration' ) 
+    print(' *** LOADED the station_configuration table for era5_1' )   
+          
+    # era5_fb        
+    era5fb=  xr.open_dataset( a , engine = 'h5netcdf' , group = 'era5fb' )
+    era5fb = era5fb.to_dataframe()   
+    era5fb = era5fb[ ['date@hdr' , 'time@hdr' , 'varno@body',  'vertco_reference_1@body' , 'an_depar@body' , 'fg_depar@body' , 'obsvalue@body' ] ] 
+    
+    """ Loading a subset of variables to be put into a pd dataframe """
+    obs_df = obs_df [ ['date_time', 'z_coordinate' , 'z_coordinate_type', 'observed_variable' , 'observation_value' , 'report_id' , 'observation_id' , 'latitude' , 'longitude' , 'source_id', 'advanced_assimilation_feedback' , 'units']]
+    index_low , index_up = rts_datetime[rand] ,   ri_values [    ri_values.index(rts_datetime[rand]) + 1  ] 
+    
+    print('\n\n\n I will analyze one random time_Stamp from the merged file:  ' ,   rand , '  with time_record index: ' ,   rts_datetime[rand])
+    print('\n\n\n The indices corresponding to the DF are: ' ,  index_low , index_up   )
+    print('\n\n\n I print one record below and one above the selected [index_low , index_up] range to check the correct time_stamp'   )
+    
+    obs_df   = obs_df.iloc [index_low - 1 : index_up + 1 ]
+    head_df = head_df.iloc [index_low - 1 : index_up + 1 ]
+    era5fb   = era5fb.iloc[index_low - 1 : index_up + 1 ]
+                    
+    print( red + '\n\n ***** Observations_table: ' + cend  ,  obs_df )
+    
+            
+    print ('IMPORTANT: 999 means that I still have to check the proper unit (e.g. for relative humidity) ; 5555 is not available (specific humidity) ')
+    print( blue + '\n\n ***** Header_table: ' + cend  ,  head_df )
 
-
-        if obs_df['advanced_assimilation_feedback'].values[0] == 1:
-                        
-            print(green + '\n\n ***** era5 feedback: ' + cend  ,  era5fb )
+    if obs_df['advanced_assimilation_feedback'].values[0] == 1:                        
+        print(green + '\n\n ***** era5 feedback: ' + cend  ,  era5fb )
 
 
 
 """ Running the tester """
 while 1: 
     choice = input(' Type y to keep on running the checker, anything else to break:     \n\n ')
-    if choice == 'y':
-        random_picker(choice, rts_datetime, rts_values)
+    if choice == 'y' or choice == 'r':
+        random_picker(choice, rts_datetime, rts_values)  # rts = recordtimestamps values 
     else:
         print('*** GOODBYE ***')
         sys.exit()

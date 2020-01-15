@@ -128,7 +128,7 @@ class Merger():
                   """ Reading the CDM tables that do not depend on specific stations or observations (fixed values), for the first file only """           
                   if list(datasets.keys()).index(k) == 0  :
                         #for t in ['units' , 'z_coordinate_type' , 'crs' , 'observed_variable']:  
-                        for t in [ 'crs' , 'observed_variable']:                              
+                        for t in [ 'crs' , 'observed_variable', 'units' , 'z_coordinate_type' , 'station_type']:                              
                               
                               d = xr.open_dataset(v , engine = 'h5netcdf' , group = t)                 
                               data['cdm_tables'][t] = d.to_dataframe()   
@@ -382,15 +382,14 @@ class Merger():
                                         
             """ List storing the indices of the date_index of the merged dataset """
             all_merged_obs ,  all_merged_head, all_merged_fb , merged_indices , merged_date_time, mi= [] , [] , [] , [] , [], []
-           
-            
+                     
             """ Dictionary that will contain the merged file. """            
             #Merged = {}             
             #for dt in date_times[0:4]: # loop over all the possible date_times 
             
             #chunk = self.data['ncar']['dataframe'] [100:150]
 
-            
+            # rand = datetime.strptime('1981-01-03 12:00:00', '%Y-%m-%d %H:%M:%S')  
             #for dt in date_times[3008:3100]: # loop over all the possible date_times 
             tot = len(date_times)
             for dt, c in zip(date_times[2000:3780] , range(tot)): # loop over all the possible date_times 
@@ -573,8 +572,7 @@ class Merger():
                   duplicates =   ",".join( [ str(i) for i in all_ds_reports] )
             else:
                   duplicates = str(all_ds_reports[0])
-                  
-            
+ 
                   
             """ Extracting the merged header_table.
                   Again, must consider the special case where best_ds == ncar. 
