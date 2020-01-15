@@ -8,5 +8,5 @@ setup(name='CEUAS',
       author_email='michael.blaschek@univie.ac.at',
       license='UNIVIE GNU GPL',
       packages=['CEUAS', 'doc'],
-      install_requires=['numpy', 'pandas', 'xarray', 'numba', 'requests'],
+      install_requires=['numpy', 'pandas', 'xarray', 'numba', 'requests', 'tqdm'],
       zip_safe=False)
