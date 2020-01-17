@@ -47,5 +47,10 @@ while($#filelist > 0)
  shift filelist
 end
 
+set DATADIR=/tmp/data/ncar
+mkdir -vp $DATADIR
+if (-f uadb_trh.tar.gz )then
+ tar xzf uadb_trh.tar.gz -C $DATADIR
+fi
 rm -f auth.rda_ucar_edu Authentication.log
 exit 0
