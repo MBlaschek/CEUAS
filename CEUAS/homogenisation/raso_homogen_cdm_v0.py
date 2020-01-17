@@ -15,8 +15,6 @@ License: C3S
 Updated: %s
 """ % (__version__, __author__, __institute__, __github__, __status__, __date__)
 
-import sys
-
 import numpy as np
 from numba import njit
 
@@ -32,12 +30,22 @@ std_plevels = np.array(
 
 
 def usage(name):
-    return """
+    print("""
 Run standardized radiosonde homogenisation software on CDM compliant file
 
-{} -f [CDM file]
+{} -h -f [file] -o [name] 
 
-    """.format(name)
+Options:
+    -h              Help
+    --help      
+    -f []           Input CDM compliant file
+    --file []       
+    -o []           Output name
+    --output []
+    
+Optional Keyword Options:
+    --thres []      Threshold value for SNHT, default: 50
+    """.format(name))
 
 
 ###############################################################################
@@ -412,7 +420,6 @@ def adj_mean(data, breaks, axis=0, sample_size=130, borders=30, max_sample=1460,
     breaks = np.append(np.insert(breaks, 0, 0), imax)  # 0 ... ibreaks ... Max
     breaks = breaks.astype(int)
     nb = breaks.size
-    # print(breaks)
 
     for i in range(nb - 2, 0, -1):
         # Indices
@@ -542,19 +549,6 @@ def percentile(sample1, sample2, percentiles, axis=0, sample_size=130, borders=0
     # Add 0 and 100, and remove them
     percentiles = np.unique(np.concatenate([[0], percentiles, [100]]))
     percentiles = percentiles[1:-1]  # remove 0 and 100
-
-    # Sample sizes are enough?
-    # nsample1 = np.isfinite(dataset[sample1]).sum(axis=axis) > sample_size
-    # nsample2 = np.isfinite(dataset[sample2]).sum(axis=axis) > sample_size
-
-    # Percentiles of the samples
-    # if special:
-    # s1 = np.rollaxis(np.nanpercentile(sample1, percentiles, axis=axis),0, axis)
-    # s2 = np.rollaxis(np.nanpercentile(sample2, percentiles, axis=axis),0, axis)
-    # print(s1.shape)
-    # print(s1[:, 0, 5])
-    # print(s2[:, 0, 5])
-    # else:
     #
     # Percentiles can be duplicated (because DPD might be integers)
     # limit calculations by sample_size, max_sample, borders
@@ -581,11 +575,6 @@ def percentile(sample1, sample2, percentiles, axis=0, sample_size=130, borders=0
                  borders=borders,
                  fargs=(percentiles,),
                  flip=True)
-
-    # print(s1.shape)
-    # print(s1[0, :, 5])
-    # print(s2[0, :, 5])
-
     if ratio:
         dep = np.divide(s1, s2, where=(s2 != 0), out=np.full(s2.shape, 1.))
         dep = np.where(np.isfinite(dep), dep, 1.)  # replace NaN
@@ -654,30 +643,88 @@ def apply_percentile_adjustments(data, percentiles, adjustment, axis=0, noise=Fa
     return np.transpose(adjusts, in_dims[:axis] + in_dims[axis + 1:] + [axis])
 
 
-"""
-Steps:
-1. read Netcdf
-2. Select only std p levels
-3. Make Xarray
-4. Run SNHT
-5. Detect Breaks
-6. Adjust breaks
-7. Return results
-8. Interpolate to other levels
-"""
+def cmd_arguments(args, longs):
+    add = longs[:]  # copy
+    names = []
+    for i, iarg in enumerate(args):
+        if iarg[0] == '-':
+            if iarg[1] == '-':
+                if iarg[2:] not in longs:
+                    if len(args) > i + 1:
+                        jarg = args[i + 1]
+                        if jarg[0] != '-':
+                            add.append(iarg[2:] + '=')
+                        else:
+                            add.append(iarg[2:])
+                    else:
+                        add.append(iarg[2:])
+                    names.append(iarg[2:])
+
+    return add, names
 
 
-def main(argv):
-    if len(argv) == 0:
-        usage(argv[0])
-        exit(1)
+def main():
+    import sys
+    import getopt
 
+    known = ["help", "file", "output"]
+    ifile = None
+    ofile = None
+    kwargs = {'verbose': 1}
+    try:
+        known, knames = cmd_arguments(sys.argv[1:], known)
+        opts, args = getopt.getopt(sys.argv[1:], "f:ho:", known)
+
+    except getopt.GetoptError as err:
+        usage(sys.argv[0])
+        message(str(err), mname='ERROR', verbose=1)
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt in ("-f", "--file"):
+            ifile = arg
+        elif opt in ("-o", "--output"):
+            ofile = arg
+        elif opt in ("-h", "--help"):
+            usage(sys.argv[0])
+            sys.exit(0)
+
+        elif any([opt[2:] in i for i in knames]):
+            if arg != '':
+                kwargs[opt[2:]] = eval(arg)
+            else:
+                kwargs[opt[2:]] = True
+
+        else:
+            assert False, "unhandled option"
+
+    if ifile is None:
+        usage(sys.argv[0])
+        message("Missing input file", mname='ERROR', verbose=1)
+        sys.exit(1)
+
+    if ofile is None:
+        ofile = ifile.replace('.nc', '_out.nc')
+        message(ofile, mname='OUTPUT', **kwargs)
     # Steps
     #
     # READ NETCDF -> select values + meta information
     # -> LEO routine to read cdm files quickly
     #
-
+    """
+    Steps:
+    1. read Netcdf
+    2. Select only std p levels
+    3. Make Xarray (hour x time x plev) ?
+    4. Run SNHT 
+    4.1. Add Metadata from CDM or where ?
+    5. Detect Breaks
+    6. Adjust breaks
+    7. Interpolate to other levels?
+    8. Return results (How to name things)
+    8.1. only adjustments
+    8.2. everything ?
+    """
     # Use only std pressure levels
     # run test
     # run detector(data, axis=0, dist=365, thres=50, min_levels=3, use_slopes=False, use_first=False, **kwargs):
@@ -687,4 +734,4 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main()
