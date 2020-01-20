@@ -16,18 +16,17 @@ BUFR:
 
 
 *** WORKFLOW OVERVIEW
-The main workflow of the tool can be divided into two complementary parts. At first, the oriignal source files are downloaded, without any manipulation. In the second part, the files are processed and converted to netCDF files. In particular, the structure of the files stricly follows the CDM requirements defined in the public GitHub project:
+The main workflow of the tool can be divided into two complementary parts. At first, the origInal source files are downloaded, without any manipulation. In the second part, the files are processed and converted to netCDF files. In particular, the structure of the files stricly follows the CDM requirements defined in the public GitHub project:
  https://github.com/glamod/common_data_model/ .
 
 We remind that the CDM is designed to store all the relevant information, being data or metadata, to unambigously identify and characterize the observed data. The in formation is split into several tables, where each entry is defined in proper auxiliary tables that provide the definition of each entry.
 
 The CDM defines a set of guidelines which implemented in the output files of the harvester tool, i.e. the content of the netCDF files is structures so that the data is stored according to the tables defined in the various documents obtainable in the above GitHub repository.   
-
 The workflow, common for any of the source file, is here summarized:
-1. the source dataset is downloaded and stored on the user's disk
-2. the input data is read in memory
-3. the CDM tabled are downloaded from the GitHub repository and read in memory
-4. the input data is compared and matched with the definitions of variables in the CDM tables
+1. the source dataset is downloaded and stored on the user's disk;
+2. the input data is read in memory;
+3. the CDM tabled are downloaded from the GitHub repository and read in memory;
+4. the input data is compared and matched with the definitions of variables in the CDM tables;
 5. the retrieved data, now formatted according to the CDM definitios, are stored in netCDF files.
 
 
@@ -36,19 +35,39 @@ Regarding the point 1) above, we note that it is not possible to fully automatiz
 Regarding 2), each datasource has differnet input files, so that the script contains different methods for reading the input source.
 
 Regarding 3), the automatic download of the CDM tables is a guarantee that the version of the tables considered always corresponds to the latest available 
+Regarding 4), the exhisting CDM tables require specific extension to accomodate radiosonde data. This will be described in a dedicated paragraph.
+
 
 Regarding point 5), the choice of the format netCDF was already discussed extensively during in-person meeting at the ECMWF centre, during 2019 Copernicus General Assembley, and in several o-line meetings with the staff responsible for the implementation od the database on the CDS (Copernicus Data Service). The format seems suitable for fast and reliable data retrieval from the users. The delivery and upload of the dataset on the CDS is object of the deliverable XXX and will be thereby extensiveky discussed. Here we simply note that the netCDF format is writtend according the CF xx requirements, and it is easily accessible via the xarray python module, which enables to esaily convert the data to other format such as a plain CSV table.
 
 
 *** Special cases for the CDM tables
 In order to implement all the necessary data and metadata for radiosondes measurements, the following extensions to the CDM tables have been implemented.
-Reanalyses feedback
-Reanalyses feedback and departures are not currently handled in the CDM tables. We proposed an extension to the CDM governance xxx which was eventually approved, which is described in the document xxx . This requires a modification in the observations_table, with the addition of the variable advanced_feedback. It represents a flag value, where 0 is the absence of reanalyses information, and 1 is the availability for such data, which is found in a dedicated netCDF group called 'era5fb' (the content of the netCDF files will be explained in details later on). Note that currently only the ERA_1 dataset provides reanalysis data, but with our proposed extension of the CDM it will be straightforward to store an arbitrary number of reanalyses data.
-Pressure levels
-In the case of radiosondes, the z coordinate is usually expressed as the pressure at a certain elevation of the sonde. The z_coordinate_type was extended with the value '1' standing for pressure in Pascal.
 
-Station type
-The statio_ty
+-Reanalyses feedback
+It is not currently possible to implement reanalyses feedback and departures the CDM tables. Necessary extensions were proposed to the CDM governance xxx and eventually approved. The extension implies a modification in the observations_table, with the addition of the variable advanced_feedback, representing a flag value, where 0 is the absence of reanalyses information, and 1 is the availability for such data. The proper data are found in a dedicated netCDF group called 'era5fb' (the content of the netCDF files will be explained in details later on). Note that currently only the ERA_1 dataset provides reanalysis data, however, with the proposed extension of the CDM tables, it will be straightforward to implement an arbitrary number of reanalyses data.
+
+-Z coordinates
+In the case of radiosondes, the z coordinate is usually expressed as the pressure at a certain elevation of the sonde, being at significant or standard lvels. The z_coordinate_type table was extended with the value '1', standing for pressure in Pascal.
+
+-Station type
+The station_type is able to represents radiosondes (value 0) or pilot balloons (value 1).
+
+- crs
+The crs table maps to value 0 to the 'wgs84' type. ### check what this is, ???
+
+
+
+
+### Structure of the output file
+
+The output netCDF file contains two variables called 'recordindex' and 'recordtimestamp', and a series of distinct netCDF groups, one for each CDM table, such as the the 'observations_table', the 'units' tables etc. .
+The first two variables contains auxiliary information that can be convenitently used to rapidly acces the data along the time coordinate.
+In fact, the 'recordtimestamp' is a list of all the unique date-times of the observations, while the 'recordindex' is an array containing the position, or index, of a particular date-time inside the array of the data: the n-th entry of the 'recordtimestamp' array maps to the n-th entry of the 'recordindex' array, and the data relative to the particular date-time can be found in the data array (read for example with xarray or pandas dataframe) at the 'recordindex' position. These two variables can be efficiently used to check if the data for a particular date-time of interest is available in the file, and in case, to extract it quickly by slicing the data at the proper position, without the need of any loop over the available date_time variable in the observations_table. 
+
+
+  
+ 
 
   
 
