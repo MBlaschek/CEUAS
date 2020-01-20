@@ -57,7 +57,8 @@ class Merger():
             self.observation_ids_merged  = {  'igra2':1 , 'ncar':2, 'bufr':3,  'era5_1':4 , 'era5_1759' :5 , 'era5_1761':6 ,  'era5_3188' :7}  # values used to convert original record_id to the merged record_id, see method merge_all_data 
             
             self.unique_dates = {}            
-              
+            self.attributes = {} # will keep the original attributes from the CDM tables, read from the netCDF files 
+            
       def initialize_data(self, datasets = {} ):
             """ Initialize dataset; store relevant data as attributes.
                        Args ::     dic{}  datasets (dictionary where keys are the dataset names e.g. bufr, igra2 etc. , and the value is the path to the corresponding netCDF file 
@@ -75,7 +76,7 @@ class Merger():
             logging.info('*** Reading and Initializing the data from the netCDF files ')
                            
             for k,v in datasets.items() :
-                  logging.info('Initialising the dataset: *** ' , k  )
+                  logging.info('Initialising the dataset: *** %s' , k  )
                   data[k] = {} 
                   data['cdm_tables'] = {} 
                   
@@ -108,31 +109,48 @@ class Merger():
             """ Reading the header_table, station_configuration, source_configuration """
             for k,v in datasets.items() :   
                   d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'station_configuration')                 
-                  data[k]['station_configuration'] = d.to_dataframe()   
-                  logging.debug('Done with ', k , ' station_configuration')
+                  data[k]['station_configuration'] = d.to_dataframe()  
+                  #data[k]['station_configuration'] = d  ### USELESS ?                  
+                  logging.debug('Done with %s', k , ' station_configuration')
                   
-                  d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'header_table')                 
+                  d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'header_table')                                     
+                  if 'header_table' not in list( self.attributes.keys() ):  # saving the attirbutes to be re-applied at the end
+                        self.attributes['header_table'] = {}
+                        for var in d.variables:
+                              self.attributes['header_table'][var] = {}
+                              self.attributes['header_table'][var]['description'] = d[var].description
+                              self.attributes['header_table'][var]['external_table'] = d[var].external_table                
                   data[k]['header_table'] = d.to_dataframe()   
-                  logging.debug('Done with ', k , ' header_table')
+                  logging.debug('Done with %s', k , ' header_table')
                   
+                  d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'observations_table')               
+                  
+                  
+                  if 'observations_table' not in list( self.attributes.keys() ):  # saving the attirbutes to be re-applied at the end
+                        self.attributes['observations_table'] = {}
+                        for var in d.variables:
+                              self.attributes['observations_table'][var] = {}
+                              self.attributes['observations_table'][var]['description'] = d[var].description
+                              self.attributes['observations_table'][var]['external_table'] = d[var].external_table
+                             
+                              
                   d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'source_configuration')
                   d = d.isel(hdrlen=[0])
-                  data[k]['source_configuration'] = d.to_dataframe()   
-                  logging.debug('Done with ', k , ' source_configuration')
+                  data[k]['source_configuration'] = d.to_dataframe()    ### USELESS ? 
+                  logging.debug('Done with %s', k , ' source_configuration')
                                                      
                   if k == 'era5_1': # reading the whole era5_1 feedback (including reanalysis)
                         d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'era5fb')                 
                         data[k]['era5fb'] = d.to_dataframe()   
-                        logging.debug('Done with ', k , ' era5 feedback')
+                        logging.debug('Done with %s', k , ' era5 feedback')
             
                   """ Reading the CDM tables that do not depend on specific stations or observations (fixed values), for the first file only """           
                   if list(datasets.keys()).index(k) == 0  :
-                        #for t in ['units' , 'z_coordinate_type' , 'crs' , 'observed_variable']:  
                         for t in [ 'crs' , 'observed_variable', 'units' , 'z_coordinate_type' , 'station_type']:                              
                               
                               d = xr.open_dataset(v , engine = 'h5netcdf' , group = t)                 
-                              data['cdm_tables'][t] = d.to_dataframe()   
-                                    
+                              data['cdm_tables'][t] = d.to_dataframe()   ### USELESS ?
+                              data['cdm_tables'][t]  =    d   
                                    
                   d.close() 
                   ds.close()
@@ -152,6 +170,7 @@ class Merger():
             
             """ Making all date_times  """   
             self.make_all_datetime()
+            
             
             """ feedback columns """
             if 'era5_1' in list (self.data.keys() ):
@@ -198,7 +217,7 @@ class Merger():
                   unique = self.data[k]['recordtimestamp']
                   
                   """ Convert to proper date_time using the add_time_delta funtion """
-                  logging.debug(' Calculating the time_delta for : ', k )
+                  logging.debug(' Calculating the time_delta for : %s', k )
                   
                   time_offset            = nc.Dataset(self.datasets[k])   
                   time_offset            = time_offset.groups['observations_table']['date_time'].units
@@ -392,7 +411,7 @@ class Merger():
             # rand = datetime.strptime('1981-01-03 12:00:00', '%Y-%m-%d %H:%M:%S')  
             #for dt in date_times[3008:3100]: # loop over all the possible date_times 
             tot = len(date_times)
-            for dt, c in zip(date_times[2000:3780] , range(tot)): # loop over all the possible date_times 
+            for dt, c in zip(date_times[2000:2100] , range(tot)): # loop over all the possible date_times 
             #for dt, c in zip(date_times, range(tot)): # loop over all the possible date_times 
                  
                   print('Analize : ', str(c) , '/',  str(tot)  , ' ', dt , ' ', now(time.time()) )
@@ -588,25 +607,43 @@ class Merger():
                   
             logging.debug('I use ' , best_ds , '   record since it has more entries: ', most_records , ' but other available datasets are : ' , all_ds ) 
             
-            print ('duplicates are: ', duplicates)
+            #print ('duplicates are: ', duplicates)
             return  selected_df, best_ds , duplicates, header
       
 
       def write_merged_file(self):
             """ Module to write the output file as netCDF """
             
-            out_name = os.getcwd() + '/FAST_INDEX_merged_' + [ x for x in self.datasets[ list(self.datasets_keys)[0]].split('/') if '.nc' in x   ] [0] 
+            #out_name = os.getcwd() + '/FAST_INDEX_merged_' + [ x for x in self.datasets[ list(self.datasets_keys)[0]].split('/') if '.nc' in x   ] [0] 
+            out_name = os.getcwd() + '/Merged_' + [ x for x in self.datasets[ list(self.datasets_keys)[0]].split('/') if '.nc' in x   ] [0] 
+
             
             logging.info('Writing the observations_tables to the netCDF output via xarray ')
             #obs_tab = self.MergedObs[ ['date_time' , 'latitude', 'longitude' ,  'observation_value' , 'observed_variable' , 'source_id' , 'observation_id',  'z_coordinate' ]     ] # including only some columns 
             obs_tab = self.MergedObs   # including only some columns             
             obs_tab = self.add_cdm_missing_columns(obs_tab)            
             obs_tab = obs_tab.to_xarray() 
+            
+            """ Restoring the attributes observations_table"""
+            for v in obs_tab.variables:
+                  if v == "index" or v == "hdrlen" or v == "string80":
+                        continue
+                  obs_tab[v].attrs['external_table'] = self.attributes['observations_table'][v]['external_table']
+                  obs_tab[v].attrs['description'] =  self.attributes['observations_table'][v]['description']
+                        
             obs_tab.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='w' , group = 'observations_table')  # writing the merged observations_table 
     
             logging.info('Writing the header_table to the netCDF output via xarray ')
             head_tab = self.MergedHead.to_xarray()
+            for v in head_tab.variables:   
+                  if v == "index" or v == "hdrlen" or v == "string80":
+                        continue
+            head_tab[v].attrs['external_table'] = self.attributes['header_table'][v]['external_table']
+            head_tab[v].attrs['description'] =  self.attributes['header_table'][v]['description']
+            
             head_tab.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a' , group = 'header_table')  # writing the merged observations_table 
+            
+            
             
             logging.info('Writing the station_configuration and source_configurations tables to the netCDF output via xarray ')         
             for k in self.data.keys():
@@ -638,7 +675,6 @@ class Merger():
             logging.info('Writing the standard cdm tables to the netCDF output ')                  
             for t in self.data['cdm_tables'].keys():                
                   d = self.data['cdm_tables'][t]
-                  d = d.to_xarray()
                   d.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a'  , group = t )
                               
             logging.info('*** Done writing the output netCDF file ')       
