@@ -9,4 +9,4 @@ uadb:
   csh download_UADB.csh
 
 era5:
-  echo "ERA5"
+  echo "Downloading MARS ODB from ERA5"
