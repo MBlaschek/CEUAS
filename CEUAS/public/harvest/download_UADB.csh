@@ -39,9 +39,10 @@ $opt $opt1="$opt2" https://rda.ucar.edu/cgi-bin/login
 set opt1 = "-N --load-cookies auth.rda_ucar_edu"
 
 set opt2 = "$opt $opt1 http://rda.ucar.edu/data/ds370.1/"
-set filelist = ( \
-  uadb_trh.tar.gz \
-)
+#
+# read filelist from file
+#
+set filelist = `cat UADB.files.list`
 #
 # DOWNLOAD
 #
