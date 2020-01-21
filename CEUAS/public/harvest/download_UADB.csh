@@ -1,7 +1,9 @@
 #!/bin/csh
 #################################################################
-# Csh Script to retrieve 1 online Data file of 'ds370.1',
-# total 11.08G. This script uses 'wget' to download data and
+# Csh Script to retrieve all online Data file of 'ds370.1',
+# uadb-trhc: 82.42 GB, uadb-windc: 92.52 GB
+# total 174.94G. The Script needs a filelist (UADB.files.list)
+# This script uses 'wget' to download data and
 # tar to extract the archive.
 #
 # Credential are needed, register at rda.ucar.edu (free)
