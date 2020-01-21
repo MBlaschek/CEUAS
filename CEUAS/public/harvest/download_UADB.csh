@@ -44,6 +44,12 @@ set opt2 = "$opt $opt1 http://rda.ucar.edu/data/ds370.1/"
 #
 set filelist = `cat UADB.files.list`
 #
+# Datadir
+#
+set DATADIR=/tmp/data/ncar
+mkdir -vp $DATADIR
+cd $DATADIR
+#
 # DOWNLOAD
 #
 while($#filelist > 0)
@@ -53,13 +59,9 @@ while($#filelist > 0)
  shift filelist
 end
 #
-# Datadir / extracting
+# change back
 #
-set DATADIR=/tmp/data/ncar
-mkdir -vp $DATADIR
-if (-f uadb_trh.tar.gz )then
- tar xzf uadb_trh.tar.gz -C $DATADIR
-fi
+cd ..
 #
 #
 #
