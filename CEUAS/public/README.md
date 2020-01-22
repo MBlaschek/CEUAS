@@ -12,15 +12,16 @@ Collaborators:
 
 Service Contract
 
-Status: Development
+Status: Ongoing
+Last Update: 01-2020
 
-### Info
-#### Harvest
-Directory containing the scripts to harvest data, e.g. 
-- to extract netCDFs files from the odb files database
-- to calculate climate variables
-#### Common
-Directory containing common utilities and script for data handling
-#### Homogenize
-#### Comparison
-#### Export
+# Info
+
+## Harvest
+This contains information on how to read the data from different data sources and produce a version that can be merged together.
+- read NCAR, IGRA, MARS ODB
+- convert to NetCDF4
+## Uncertainties
+This contains information on how to calculate uncertainty estimates following the de Desrozier method employing first guess and analysis departures.
+## Adjust
+This contains information on how to run the homogenisation software on CDM compliant files and is intended for experimental use. Users can change test and detection parameters to their needs. The expert guided test and detection parameters are given allready in the CDM files retrieved via the C3S Store.
