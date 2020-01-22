@@ -16,6 +16,7 @@ Updated: %s
 """ % (__version__, __author__, __institute__, __github__, __status__, __date__)
 
 import numpy as np
+import xarray as xr
 from numba import njit
 
 #
@@ -194,6 +195,59 @@ def sample(values, nmin, nmax, func, borders=0, flip=False, fargs=(), **kwargs):
         if flip:
             return func(np.flip(values[j:]), *fargs)
         return func(values[j:], *fargs)
+
+
+def table_to_dataset(data, dim='time', plev='plev', levels=None, **kwargs):
+    """ Convert pandas Dataframe to xarray Dataset
+
+    Args:
+        data (dataframe): input dataframe (columns are variables)
+        dim (str): datetime dimension
+        plev (str): pressure dimension
+        levels (list): pressure levels to consider
+        **kwargs:
+
+    Returns:
+        Dataset : 2d (datetime x pressure levels) x variables
+    """
+    from xarray import Dataset
+    if levels is None:
+        levels = [1000., 2000., 3000., 5000., 7000., 10000., 15000., 20000., 25000., 30000., 40000., 50000., 70000.,
+                  85000., 92500., 100000.]
+    # dimensions for output
+    varis = [dim, plev]
+    attrs = None
+    if isinstance(data, Dataset):
+        # copy attributes
+        attrs = data.attrs.copy()
+        tatts = data[dim].attrs
+        vatt = {i: data[i].attrs.copy() for i in data.data_vars}
+        #
+        # to pandas dataframe
+        #
+        data = data.to_dataframe()
+        data.index.name = dim
+
+    #
+    # select only valid levels
+    #
+    data = data[data[plev].isin(levels)]
+    #
+    # convert to xarray
+    #
+    data = data.reset_index().set_index(varis)
+    if not data.index.is_unique:
+        data = data.loc[~data.index.duplicated()]  # remove duplicated
+
+    data = data.to_xarray()  # 1D -> 2D
+    if attrs is not None:
+        # add attributes again
+        for i, j in vatt.items():
+            data[i].attrs.update(j)
+        data.attrs.update(attrs)
+        data[dim].attrs.update(tatts)
+
+    return data
 
 
 ###############################################################################
@@ -703,34 +757,75 @@ def main():
         message("Missing input file", mname='ERROR', verbose=1)
         sys.exit(1)
 
+    variables = []
+    #
+    # 1. Step (Read data from NetCDF)
+    #
+    if "*" in ifile:
+        import glob
+        ifiles = glob.glob(ifile)
+        message("Multiple input files: ", ifile, len(ifiles), mname='INFO', **kwargs)
+        data = []
+        for jfile in ifiles:
+            idata = xr.load_dataset(jfile).drop('trajectory_label')  # has a different dimension
+            #
+            # What is the main variable ? / Check if feedback information is present
+            #
+            ivar = [k for k in list(idata.data_vars) if '_' not in k][0]
+            message(jfile, ivar, mname='INPUT', **kwargs)
+            #
+            # Rename
+            #
+            idata = idata.rename({i: '{}_{}'.format(ivar, i) for i in list(idata.data_vars) if i != ivar})
+            data.append(idata)
+            variables.append(ivar)
+        #
+        # to larger Dataset
+        #
+        data = xr.merge(data)
+        ifile = jfile  # for naming
+    else:
+        data = xr.load_dataset(ifile).drop('trajectory_label')  # has a different dimension
+        ivar = [k for k in list(data.data_vars) if '_' not in k][0]
+        message(ifile, ivar, mname='INPUT', **kwargs)
+        data = data.rename({i: '{}_{}'.format(ivar, i) for i in list(data.data_vars) if i != ivar})
+        variables.append(ivar)
+
     if ofile is None:
         ofile = ifile.replace('.nc', '_out.nc')
         message(ofile, mname='OUTPUT', **kwargs)
-    # Steps
     #
-    # READ NETCDF -> select values + meta information
-    # -> LEO routine to read cdm files quickly
+    # 2. Step (Convert to DataCube, rename dimension to time)
     #
-    """
-    Steps:
-    1. read Netcdf
-    2. Select only std p levels
-    3. Make Xarray (hour x time x plev) ?
-    4. Run SNHT 
-    4.1. Add Metadata from CDM or where ?
-    5. Detect Breaks
-    6. Adjust breaks
-    7. Interpolate to other levels?
-    8. Return results (How to name things)
-    8.1. only adjustments
-    8.2. everything ?
-    """
-    # Use only std pressure levels
-    # run test
-    # run detector(data, axis=0, dist=365, thres=50, min_levels=3, use_slopes=False, use_first=False, **kwargs):
-    # run adj_mean()
-    # interpolate
-    # write results / metadata (thresholds and so on)
+    message("Converting to DataCube ...", mname='CONVERT', **kwargs)
+    data = data.swap_dims({'obs': 'time'})
+    data = table_to_dataset(data, **kwargs)
+    message("Done", mname='CONVERT', **kwargs)
+    #
+    # Optional convert to day-night
+    #
+    if False:
+        pass
+
+    #
+    # 3. SNHT
+    #
+
+    #
+    # Check for Metadata in CDM
+    #
+
+    #
+    # detect Breakpoints
+    #
+
+    #
+    # Adjust Breakpoints
+    #
+
+    #
+    # Return Adjustments
+    #
 
 
 if __name__ == "__main__":
