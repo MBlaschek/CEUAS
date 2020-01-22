@@ -30,11 +30,11 @@ std_plevels = np.array(
      85000., 92500., 100000.])
 
 
-def usage(name):
+def usage():
     print("""
 Run standardized radiosonde homogenisation software on CDM compliant file
 
-{} -h -f [file] -o [name] 
+raso_adj_cdm_v0.py -h -f [file] -o [name] 
 
 Options:
     -h              Help
@@ -46,7 +46,7 @@ Options:
     
 Optional Keyword Options:
     --thres []      Threshold value for SNHT, default: 50
-    """.format(name))
+    """)
 
 
 ###############################################################################
