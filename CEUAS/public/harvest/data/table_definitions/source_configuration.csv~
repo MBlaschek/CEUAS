@@ -1,0 +1,34 @@
+# Description: Table defining additional information on data sources				
+# Source:
+element_name	type	external_table	description
+source_id	varchar (pk) 		Unique record ID for dataset
+product_id	varchar		ID for product
+product_name	varchar		Name of source, e.g. International Comprehensive Ocean Atmosphere Data Set, RS92 GRUAN Data Product
+product_code	varchar		Abbreviations / product code, e.g. ICOADS, RS92-GDP
+product_version	varchar		Version number for dataset, e.g. Release 3.0.0
+product_level	int	product_level:level	Level of product
+product_uri	varchar		URI for product, either to original source or to CDS
+description	varchar		Description of dataset / comments
+product_references	varchar[]		References describing the dataset
+product_citation	varchar[]		Citation to use when using this product
+product_status	int	product_status:status	Status of product, draft, pre-release, release
+source_format	int	source_format:format	Original format for data
+source_format_version	varchar		Version of original data format
+source_file	varchar		Filename for data from source
+source_file_checksum	varchar		Checksum of source datafile
+data_centre	varchar	organisation:organisation_id	Data centre or organisation from which data sourced
+data_centre_url	varchar		URL for data centre
+data_policy_licence	int	data_policy_licence:policy	Data policy / licence
+contact	varchar[]	contact:contact_id	contact for data source with role specified by role element
+contact_role	int[]	role:role	role of contact
+history	varchar		History of source
+comments	varchar		Additional comments / footnotes
+timestamp	timestamp with timezone		Date record created / created
+maintenance_and_update_frequency	int	update_frequency:frequency	Frequency with which modifications and deletions are made to the data after it is first produced
+optional_data	int	data_present:flag	Flag indicating availability of additional data
+bbox_min_longitude	numeric		Bounding box for observations contained in this source, valid range given by CRS
+bbox_max_longitude	numeric		Bounding box for observations contained in this source, valid range given by CRS
+bbox_min_latitude	numeric		Bounding box for observations contained in this source, valid range given by CRS
+bbox_max_latitude	numeric		Bounding box for observations contained in this source, valid range given by CRS
+metadata_contact	varchar[]	contact:contact_id	contact for responsible for maintaing this record
+metadata_contact_role	int[]	role:role	role of metadata_contact
