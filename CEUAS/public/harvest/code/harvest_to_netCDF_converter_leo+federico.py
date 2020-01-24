@@ -10,7 +10,7 @@ import xarray as xr
 import h5py
 from datetime import date, datetime,timedelta
 import time
-#rom multiprocessing import Pool
+from multiprocessing import Pool
 from netCDF4 import Dataset
 import gzip
 import pandas as pd    
@@ -1517,8 +1517,13 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
         z=find_recordindex_l(y,x)
         di=xr.Dataset() 
         di['recordindex']=({'record':z.shape[1]},z[1])
-        di['recordtimestamp']=({'record':z.shape[1]},x)
-
+        #x=make_datetime(x//1000000,x%1000000)
+        df=pd.DataFrame({'year':x//10000000000,'month':(x%10000000000)//100000000,'day':x%100000000//1000000,
+                            'hour':x%1000000//10000,'minute':(x%10000)//100,'second':x%100})
+        dt=pd.to_datetime(df).values
+        di['recordtimestamp']=({'record':z.shape[1]},numpy.array(dt-numpy.datetime64('1900-01-01'),dtype=int)//1000000000)
+        di['recordtimestamp'].attrs['units']='seconds since 1900-01-01 00:00:00'
+        del dt,df
         y=fbds['date@hdr'].values
         x=numpy.unique(y)
         z=find_dateindex_l(y,x)
@@ -1797,7 +1802,8 @@ if __name__ == '__main__':
      
     """ Paths to the databases """    
 
-    Files = Files.split(',')
+    #Files = Files.split(',')
+    Files=glob.glob(Files)
         
     if not os.path.isdir(out_dir):
             os.system('mkdir ' + out_dir )       
@@ -1806,22 +1812,25 @@ if __name__ == '__main__':
     if not os.path.isdir(output_dir):
             os.system('mkdir ' + output_dir )
             
-    for File in Files:
+ #   for File in Files:
                  
-            print( blue + '*** Processing the database ' + dataset + ' ***  \n \n *** file: ' + File + '\n'  + cend)
-             
-            stat_conf_path = '../data/station_configurations/'     
-            stat_conf_file = stat_conf_path +   '/station_configuration_' + dataset + '.dat'
-                
-            # adding the station configuration to the cdm tables      
-            cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
-            clean_station_configuration(cdm_tab)         
-            
-            if 'era5' in dataset and 'bufr' not in dataset:   
-                odb_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset, File)
-            else:
-                df_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset, File)
-            print('*** CONVERTED: ' , File )
+    print( blue + '*** Processing the database ' + dataset + ' ***  \n \n *** file: ' + Files[0] + '\n'  + cend)
+     
+    stat_conf_path = '../data/station_configurations/'     
+    stat_conf_file = stat_conf_path +   '/station_configuration_' + dataset + '.dat'
+        
+    # adding the station configuration to the cdm tables      
+    cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
+    clean_station_configuration(cdm_tab)         
+    
+    p=Pool(25)
+    if 'era5' in dataset and 'bufr' not in dataset:   
+        func=partial(odb_to_cdm,cdm_tab, cdm_tabdef, output_dir, dataset)
+        out=list(p.map(func,Files))
+    else:
+        func=partial(df_to_cdm,cdm_tab, cdm_tabdef, output_dir, dataset)
+        out=list(map(func, Files))
+    print('*** CONVERTED: ' , Files[-1] )
       
     print(' ***** Convertion of  ' , Files,  '  completed ! ***** ')
 
