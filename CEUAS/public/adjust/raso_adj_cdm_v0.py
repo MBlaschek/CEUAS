@@ -15,7 +15,11 @@ License: C3S
 Updated: %s
 """ % (__version__, __author__, __institute__, __github__, __status__, __date__)
 
+import os
+import sys
+
 import numpy as np
+import pandas as pd
 import xarray as xr
 from numba import njit
 
@@ -34,7 +38,7 @@ def usage():
     print("""
 Run standardized radiosonde homogenisation software on CDM compliant file
 
-raso_adj_cdm_v0.py -h -f [file] -o [name] 
+{} -h -f [file] -o [name] 
 
 Options:
     -h              Help
@@ -46,7 +50,7 @@ Options:
     
 Optional Keyword Options:
     --thres []      Threshold value for SNHT, default: 50
-    """)
+    """.format(__file__))
 
 
 ###############################################################################
@@ -438,17 +442,79 @@ def numba_snhtmov(t, tsa, snhtparas, count, tmean, tsquare):
     return
 
 
+def get_breakpoints(data, value=2, dim='time', return_startstop=False, startstop_min=0, **kwargs):
+    """ Return breakpoints
+
+    Args:
+
+        data (DataArray): input dataset
+        value (int): breakpoint indicator value
+        dim (str): datetime dim
+        startstop_min (int):
+        return_startstop (bool):
+        **kwargs:
+
+    Returns:
+        list : breakpoints
+    """
+    if not isinstance(data, xr.DataArray):
+        raise ValueError("Require a DataArray / Dataset object", type(data))
+
+    if dim not in data.dims:
+        raise ValueError("Requires a datetime dimension", data.dims)
+
+    if len(data.dims) > 2:
+        RuntimeWarning("More than two dimensions found: ", str(data.dims))
+
+    #
+    # Dimension of time
+    #
+    axis = data.dims.index(dim)
+    #
+    # Search Threshold
+    #
+    tmp = np.where(data.values >= value)
+    i = list(map(int, np.unique(tmp[axis])))
+    dates = np.datetime_as_string(data[dim].values, unit='D')
+    e = []
+    s = []
+    #
+    # multi-dimension / combine to only time axis
+    #
+    if data.ndim > 1:
+        summe = data.values.sum(axis=1 if axis == 0 else 0)
+    else:
+        summe = data.values
+
+    for k in i:
+        l = np.where(summe[:k][::-1] <= startstop_min)[0][0]
+        m = np.where(summe[k:] <= startstop_min)[0][0]
+        e += [k - l]
+        s += [k + m]
+
+    if len(i) > 0:
+        message("Breakpoints for ", data.name, **kwargs)
+        message("[%8s] [%8s] [%8s] [%8s] [ #]" % ('idx', 'end', 'peak', 'start'), **kwargs)
+        message("\n".join(
+            ["[%8s] %s %s %s %4d" % (j, dates[l], dates[j], dates[k], k - l) for j, k, l in zip(i, s, e)]),
+            **kwargs)
+
+    if return_startstop:
+        return i, e, s
+    return i
+
+
 ###############################################################################
 #
 # Adjustments
 #
 ###############################################################################
-def adj_mean(data, breaks, axis=0, sample_size=130, borders=30, max_sample=1460, recent=False, ratio=False,
-             meanvar=False, **kwargs):
+def adjustments(data, breaks, use_mean=True, axis=0, sample_size=130, borders=30, max_sample=1460, recent=False,
+                ratio=False, **kwargs):
     """ Mean Adjustment of breakpoints
 
     Args:
-        data (array): radiosonde data
+        data (np.array): radiosonde data
         breaks (list): breakpoint indices
         axis (int): axis of datetime
         sample_size (int): minimum sample size
@@ -460,7 +526,7 @@ def adj_mean(data, breaks, axis=0, sample_size=130, borders=30, max_sample=1460,
         **kwargs:
 
     Returns:
-        array : adjusted data
+        np.array : adjusted data
     """
     if not isinstance(data, np.ndarray):
         raise ValueError("requires a numpy array")
@@ -468,6 +534,17 @@ def adj_mean(data, breaks, axis=0, sample_size=130, borders=30, max_sample=1460,
         raise ValueError('requires a numpy array')
 
     data = data.copy()
+    if not use_mean:
+        percentilen = kwargs.get('percentiles', [0, 5, 10, 20, 30, 40, 50, 60, 70, 80, 90, 95, 100])
+        nq = len(percentilen)
+        #
+        # Sample size per Percentile
+        #
+        sample_size = sample_size // nq
+        if sample_size < 3:
+            sample_size = 3
+        message('Sample size:', sample_size, 'N-Q:', nq, **kwargs)
+
     dshape = data.shape  # Shape of data (date x levs)
     imax = dshape[axis]  # maximum index
     breaks = np.sort(np.asarray(breaks))  # sort
@@ -492,14 +569,26 @@ def adj_mean(data, breaks, axis=0, sample_size=130, borders=30, max_sample=1460,
         # Before Adjustments
         before = np.nanmean(data[isample], axis=axis)
         # Apply Adjustments
-        data[isample] = mean(data[iref], data[isample], axis=axis, sample_size=sample_size,
-                             max_sample=max_sample,
-                             borders=borders, ratio=ratio, **kwargs)
+        if use_mean:
+            data[isample] = mean(data[iref], data[isample],
+                                 axis=axis,
+                                 sample_size=sample_size,
+                                 max_sample=max_sample,
+                                 borders=borders,
+                                 ratio=ratio, **kwargs)
+        else:
+            data[isample] = percentile(data[iref], data[isample], percentilen,
+                                       axis=axis,
+                                       sample_size=sample_size,
+                                       max_sample=max_sample,
+                                       borders=borders,
+                                       ratio=ratio, **kwargs)
+
         #
         # Border zone (Break, Break + borders)
         # Linear interpolation
         #
-        if borders > 0:
+        if use_mean and borders > 0:
             zone = slice(ib, ib + borders)
             zone = idx2shp(zone, axis, dshape)
             linzone = conform(np.linspace(0, 1, data[zone].shape[axis]), data[zone].shape)
@@ -717,31 +806,36 @@ def cmd_arguments(args, longs):
     return add, names
 
 
-def main():
-    import sys
+def main(*args):
     import getopt
 
     known = ["help", "file", "output"]
     ifile = None
     ofile = None
     kwargs = {'verbose': 1}
+    daynight = False
+    metadata = False
+
     try:
-        known, knames = cmd_arguments(sys.argv[1:], known)
-        opts, args = getopt.getopt(sys.argv[1:], "f:ho:", known)
+        known, knames = cmd_arguments(args, known)
+        opts, args = getopt.getopt(args, "f:ho:", known)
 
     except getopt.GetoptError as err:
-        usage(sys.argv[0])
+        usage()
         message(str(err), mname='ERROR', verbose=1)
-        sys.exit(2)
+        return 2
 
     for opt, arg in opts:
+
         if opt in ("-f", "--file"):
             ifile = arg
+
         elif opt in ("-o", "--output"):
             ofile = arg
+
         elif opt in ("-h", "--help"):
-            usage(sys.argv[0])
-            sys.exit(0)
+            usage()
+            return 0
 
         elif any([opt[2:] in i for i in knames]):
             if arg != '':
@@ -753,9 +847,9 @@ def main():
             assert False, "unhandled option"
 
     if ifile is None:
-        usage(sys.argv[0])
-        message("Missing input file", mname='ERROR', verbose=1)
-        sys.exit(1)
+        usage()
+        message("Missing input file", ifile, mname='ERROR', verbose=1)
+        return 1
 
     variables = []
     #
@@ -764,19 +858,26 @@ def main():
     if "*" in ifile:
         import glob
         ifiles = glob.glob(ifile)
-        message("Multiple input files: ", ifile, len(ifiles), mname='INFO', **kwargs)
+        message("Multiple input files: ", ifile, ' | #', len(ifiles), mname='INFO', **kwargs)
         data = []
+        traj_data = []
         for jfile in ifiles:
-            idata = xr.load_dataset(jfile).drop('trajectory_label')  # has a different dimension
-            #
-            # What is the main variable ? / Check if feedback information is present
-            #
+            idata = xr.load_dataset(jfile)
             ivar = [k for k in list(idata.data_vars) if '_' not in k][0]
             message(jfile, ivar, mname='INPUT', **kwargs)
-            #
-            # Rename
-            #
             idata = idata.rename({i: '{}_{}'.format(ivar, i) for i in list(idata.data_vars) if i != ivar})
+            #
+            # Trajectory data
+            #
+            to_be_dropped = []
+            for jvar in idata.data_vars:
+                if 'trajectory' in jvar:
+                    to_be_dropped.append(jvar)
+
+            if len(to_be_dropped) > 0:
+                traj_data.append(idata[to_be_dropped])
+                idata = idata.drop(to_be_dropped)
+
             data.append(idata)
             variables.append(ivar)
         #
@@ -785,10 +886,27 @@ def main():
         data = xr.merge(data)
         ifile = jfile  # for naming
     else:
-        data = xr.load_dataset(ifile).drop('trajectory_label')  # has a different dimension
+        if not os.path.isfile(ifile):
+            usage()
+            message("Missing input file", ifile, mname='ERROR', verbose=1)
+            return 1
+
+        traj_data = xr.Dataset()
+        data = xr.load_dataset(ifile)
         ivar = [k for k in list(data.data_vars) if '_' not in k][0]
         message(ifile, ivar, mname='INPUT', **kwargs)
         data = data.rename({i: '{}_{}'.format(ivar, i) for i in list(data.data_vars) if i != ivar})
+        #
+        # Trajectory data
+        #
+        to_be_dropped = []
+        for jvar in data.data_vars:
+            if 'trajectory' in jvar:
+                to_be_dropped.append(jvar)
+
+        if len(to_be_dropped) > 0:
+            traj_data = data[to_be_dropped].copy()
+            data = data.drop(to_be_dropped)
         variables.append(ivar)
 
     if ofile is None:
@@ -798,35 +916,173 @@ def main():
     # 2. Step (Convert to DataCube, rename dimension to time)
     #
     message("Converting to DataCube ...", mname='CONVERT', **kwargs)
+    dim = 'time'
     data = data.swap_dims({'obs': 'time'})
     data = table_to_dataset(data, **kwargs)
     message("Done", mname='CONVERT', **kwargs)
     #
+    # Add Standard time variable (needed for detection parameters)
+    #
+
+    #
     # Optional convert to day-night
     #
-    if False:
-        pass
+    if daynight:
+        times = (0, 12)
+        data.sel(**{dim: data[dim].dt.hour.isin(times)})
+        data = dict(data.groupby(dim + '.hour'))
+        for ikey in data.keys():
+            data[ikey] = data[ikey].assign_coords(
+                {dim: data[ikey][dim].to_index().to_period('D').to_timestamp().values})
+
+        data = xr.concat(data.values(), dim=pd.Index(data.keys(), name='hour'))
+        # make sure the shape is as promissed:
+        data = data.reindex({'hour': list(times)})
+        message("Converting to day-night Array [hour x time x pressure]", mname='CONVERT', **kwargs)
+    #
+    # What variables are present?
+    # Feedback information is present ?
+    #
+    analysis = {}
+    firstg = {}
+    bias = {}
+    for ivar in variables:
+        if "{}_obs_minus_an".format(ivar) in data.data_vars:
+            message("Departures found", ivar, "obs_minus_an", mname='CHECK', **kwargs)
+            analysis[ivar] = "{}_obs_minus_an".format(ivar)
+
+        if "{}_obs_minus_fg".format(ivar) in data.data_vars:
+            message("Departures found", ivar, "obs_minus_fg", mname='CHECK', **kwargs)
+            firstg[ivar] = "{}_obs_minus_fg".format(ivar)
+
+        if "{}_bias_estimate".format(ivar) in data.data_vars:
+            message("Departures found", ivar, "bias_estimate", mname='CHECK', **kwargs)
+            bias[ivar] = "{}_bias_estimate".format(ivar)
+    #
+    # Apply Bias_estimates to Departures ?
+    #
 
     #
-    # 3. SNHT
+    # Analysis Departures are required
     #
+    for ivar in variables:
+        if ivar not in analysis.keys():
+            message("Missing Analysis departures for", ivar, "\n Homogenization requires Analysis departures.",
+                    mname='ERROR', verbose=1)
+            return 1
+    #
+    # Some Variables for Breakpoint detection
+    #
+    window = kwargs.get('window', 1460)  # means 4 years on daily basis
+    missing = kwargs.get('missing', 600)
+    thres = kwargs.get('thres', 50)
+    min_levels = kwargs.get('min_levels', 3)
+    dist = kwargs.get('dist', 730)  # two years on daily basis
+    #
+    #
+    #
+    for ivar in variables:
+        dim = 'time'
+        jvar = analysis[ivar]
+        dims = list(data[jvar].dims)
+        axis = dims.index(dim)
+        #
+        # 3. SNHT
+        #
+        stest = np.apply_along_axis(test, axis, data[jvar].values, window, missing)
+        #
+        # Attributes
+        #
+        svar = '{}_snht'.format(jvar)
+        attrs = {'units': '1', 'window': window, 'missing': missing, 'standard_name': svar}
+        data[svar] = (dims, stest)
+        data[svar].attrs.update(attrs)
+        message("Test statistics calculted", svar, mname='SNHT', **kwargs)
+        #
+        # Day-Night Departures
+        #
+        if daynight:
+            stest = np.apply_along_axis(test, axis,
+                                        data[ivar].sel(hour=12).values - data[ivar].sel(hour=0),
+                                        window, missing)
+            # Add Day-Night Departures
+            data[svar] = data[svar] + stest
+            data[svar].attrs['day-night'] = 'added'
+        #
+        # Check for Metadata in CDM
+        #
+        if metadata:
+            pass
 
-    #
-    # Check for Metadata in CDM
-    #
+        #
+        # 4. Detect Breakpoints
+        #
+        breaks = detector(data[svar].values, axis=axis, dist=dist, thres=thres, min_levels=min_levels, **kwargs)
+        bvar = '{}_breaks'.format(svar)
+        attrs = {'units': '1', 'dist': dist, 'thres': thres, 'min_levels': min_levels, 'standard_name': bvar}
+        data[bvar] = (dims, breaks)
+        data[bvar].attrs.update(attrs)
+        message("Test statistics calculated", bvar, mname='DETECT', **kwargs)
+        avar = '{}_m'.format(ivar)
+        params = data[ivar].attrs.copy()
+        params.update({'sample_size': kwargs.get('sample_size', 130),
+                       'borders': kwargs.get('borders', 90),
+                       'ratio': kwargs.get('ratio', 0)})
+        #
+        # 5. Adjust Breakpoints
+        #
+        if ivar in ['ta']:
+            #
+            # Temperature -> MEAN
+            #
+            if daynight:
+                for i, idata in data.groupby('hour'):
+                    breaks = get_breakpoints(idata[bvar], **kwargs)
+                    adjv = adjustments(idata[jvar].values, breaks,
+                                       axis=axis,
+                                       mname='ADJUST', **kwargs)
+                    # new = obs-an-adj + obs - (obs-an)
+                    data[avar] = (list(idata.dims), (adjv + idata[ivar].values - idata[jvar].values))
+                    data[avar].attrs.update(params)
+                    data[avar].attrs['biascor'] = 'mean'
+            else:
+                breaks = get_breakpoints(data[bvar], **kwargs)
+                adjv = adjustments(data[jvar].values, breaks,
+                                   axis=axis,
+                                   mname='ADJUST', **kwargs)
+                # new = obs-an-adj + obs - (obs-an)
+                data[avar] = (dims, adjv + data[ivar].values - data[jvar].values)
+                data[avar].attrs.update(params)
+                data[avar].attrs['biascor'] = 'mean'
 
-    #
-    # detect Breakpoints
-    #
+        if ivar in ['hur']:
+            #
+            # Relative Humidity -> QUANTILE
+            #
+            if daynight:
+                for i, idata in data.groupby('hour'):
+                    breaks = get_breakpoints(idata[bvar], **kwargs)
+                    adjv = adjustments(idata[jvar].values, breaks,
+                                       use_mean=False,
+                                       axis=axis,
+                                       mname='ADJUST', **kwargs)
+                    # new = obs-an-adj + obs - (obs-an)
+                    data[avar] = (idata.dims, adjv + idata[ivar].values - idata[jvar].values)
+                    data[avar].attrs.update(params)
+                    data[avar].attrs['biascor'] = 'quantile'
+            else:
+                breaks = get_breakpoints(data[bvar], **kwargs)
+                adjv = adjustments(data[jvar].values, breaks,
+                                   use_mean=False,
+                                   axis=axis,
+                                   mname='ADJUST', **kwargs)
+                # new = obs-an-adj + obs - (obs-an)
+                data[avar] = (dims, adjv + data[ivar].values - data[jvar].values)
+                data[avar].attrs.update(params)
+                data[avar].attrs['biascor'] = 'quantile'
 
-    #
-    # Adjust Breakpoints
-    #
-
-    #
-    # Return Adjustments
-    #
+    return data
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main(*sys.argv[1:]))
