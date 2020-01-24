@@ -1,9 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# -----------------------------------------------------------------------------
+# This script has been developed in the service contract for C3S
+# Calculates radiosonde humidity adjustments based on CDM files
+#
+# (c) University of Vienna, M. Blaschek, Vienna, Austria
+# Released under GNU Public License (GPL)
+# email michael.blaschek (at) univie.ac.at
+# -----------------------------------------------------------------------------
 
 __version__ = '0.1'
 __author__ = 'MB'
-__status__ = 'dev'
+__status__ = 'delivered'
 __date__ = 'Mit Jan 15 15:30:59 CET 2020'
 __institute__ = 'Univie, IMGW'
 __github__ = 'git@github.com:MBlaschek/CEUAS.git'
@@ -23,9 +31,6 @@ import pandas as pd
 import xarray as xr
 from numba import njit
 
-#
-# Suppress warnings
-#
 np.seterr(invalid='ignore')
 
 # in Pa
@@ -64,11 +69,12 @@ Experimental Keyword Options:
     """.format(__file__))
 
 
-###############################################################################
+# -----------------------------------------------------------------------------
 #
 # Helper functions
 #
-###############################################################################
+# -----------------------------------------------------------------------------
+
 def now(timespec='auto'):
     """ Datetime string
     Returns:
@@ -302,11 +308,11 @@ def fix_datetime(itime, span=6, debug=False):
                 return rx.to_datetime64()
 
 
-###############################################################################
+# -----------------------------------------------------------------------------
 #
 # Detection of Breakpoints
 #
-###############################################################################
+# -----------------------------------------------------------------------------
 def detector(data, axis=0, dist=365, thres=50, min_levels=3, use_slopes=False, use_first=False, **kwargs):
     """ Detect breakpoints given some parameters
 
@@ -550,11 +556,12 @@ def get_breakpoints(data, value=2, dim='time', return_startstop=False, startstop
     return i
 
 
-###############################################################################
+# -----------------------------------------------------------------------------
 #
 # Adjustments
 #
-###############################################################################
+# -----------------------------------------------------------------------------
+
 def adjustments(data, breaks, use_mean=True, axis=0, sample_size=130, borders=30, max_sample=1460, recent=False,
                 ratio=False, **kwargs):
     """ Mean Adjustment of breakpoints
@@ -854,6 +861,12 @@ def _cmd_arguments(args, longs):
     return add, names
 
 
+# -----------------------------------------------------------------------------
+#
+# Main function that does all the steps in adjusting
+#
+# -----------------------------------------------------------------------------
+
 def main(ifile=None, ofile=None, **kwargs):
     kwargs = kwargs.update({'verbose': 1})
     ta_feature_enabled = False
@@ -865,7 +878,6 @@ def main(ifile=None, ofile=None, **kwargs):
         known = ["help", "file", "output"]
         ifile = None
         ofile = None
-
 
         try:
             known, knames = _cmd_arguments(sys.argv[1:], known)
@@ -889,7 +901,7 @@ def main(ifile=None, ofile=None, **kwargs):
                 return 0
 
             elif opt in ("--enable-ta-feature"):
-                ta_feature_enabled =True
+                ta_feature_enabled = True
 
             elif any([opt[2:] in i for i in knames]):
                 if arg != '':
@@ -1208,5 +1220,13 @@ def main(ifile=None, ofile=None, **kwargs):
     message("Writing to", ofile, mname='OUT', **kwargs)
 
 
+# -----------------------------------------------------------------------------
+#
+# Script entry point
+#
+# -----------------------------------------------------------------------------
+
+
 if __name__ == "__main__":
-    sys.exit(main(*sys.argv[1:]))
+    message("Executing ...", mname='MAIN', verbose=1)
+    sys.exit(main())
