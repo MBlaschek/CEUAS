@@ -1,16 +1,17 @@
 """ This tool creates a list of stations_id mapping to the source files. 
-      For each dataset, it reads the txt files created by the script  extract_stationid_filename.py , 
-      https://github.com/MBlaschek/CEUAS/blob/develop/CEUAS/cdm/code/merging/extract_stationid_filename.py
-      which is a modified version of the script used by Leopold to extract the stations_configuration
-      (that additionally deals with descondary_ids ).
       
-      The script above is run for each dataset, and a csv file is created.
+    For each dataset, it reads the txt files created by the script  extract_stationid_filename.py , 
+    https://github.com/MBlaschek/CEUAS/blob/develop/CEUAS/cdm/code/merging/extract_stationid_filename.py
+
+    which is a modified version of the script used by Leopold to extract the stations_configuration
+    (that additionally deals with descondary_ids ).
       
-      This csv file is read by this tool, and each source file is retrieved for all the different stations_id. 
+    The script above is run for each dataset, and a csv file is created.
       
-      Again, for each dataset, a 'merged' csv file is created.
-      
-      """
+    This csv file is read by this tool, and for each stations_id, all the source files are retrieved. 
+    One additional csv file is produced, that will be read by the pre-merging tool.
+    
+"""
 
 import os,sys
 import pandas as pd
@@ -20,10 +21,10 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 
 
-
+""" Select the databases """
 ds = ['era5_3188' , 'era5_1759' , 'era5_1761' , 'era5_1' , 'bufr', 'ncar' , 'igra2']
 
-ds = ['era5_3188' , 'era5_1759' , 'bufr']
+#ds = ['era5_3188' , 'era5_1759' , 'bufr']
 
 
 
@@ -33,7 +34,7 @@ for d in ds:
     print('processing: ' , d)
     dic = {}
     
-    F = d + '_stationsId_filename.txt'
+    F = d + '_stationsId_filename.txt'   # reading the total list of station_ids <-> file names as a dataframe
     df = pd.read_csv( F, delimiter = '\t' ) 
     df = df.sort_values(by = ['primary_id'])    
     
@@ -54,13 +55,13 @@ for d in ds:
         
     print(dic)
     
-    all_dic[d] = dic   # storiung int he global dictionary 
+    all_dic[d] = dic   # storing in the dictionary 
 
     
 print('a')
 
 
-''' Writing in output files ''' 
+''' Writing the output csv files ''' 
 for dataset in all_dic.keys():
     os.system('mkdir stations_filenames_list')
     out = open('stations_filenames_list/' + dataset + '_summary_duplicated_stations.txt' , 'w')
