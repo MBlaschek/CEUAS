@@ -1794,7 +1794,7 @@ if __name__ == '__main__':
     out_dir = args.output
     Files = args.files
 
-    if dataset not in ['era5_1', 'era5_3188', 'era5_1759', 'era5_1761', 'bufr', 'igra2', 'ncar']:
+    if dataset not in ['era5_1', 'era5_2', 'era5_3188', 'era5_1759', 'era5_1761', 'bufr', 'igra2', 'ncar']:
         raise ValueError(" The selected dataset is not valid. Please choose from ['era5_1', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'igra2', 'ncar' ]  ")    
                         
     """ Loading the CDM tables into pandas dataframes """
