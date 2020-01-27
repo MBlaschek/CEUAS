@@ -845,7 +845,7 @@ def read_all_odbsql_stn_withfeedback(odbfile):
                     
             columns=d.copy()
             
-            print('done this')
+            #print('done this')
             alldict=pd.read_csv(f,delimiter='\t',usecols=columns,quoting=3,comment='#', skipinitialspace=True,dtype=tdict)#,nrows=1000000)
             
 
@@ -1475,6 +1475,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
     source_file = [ f for f in fn.split('/') if '.conv' in f][0]
     process = psutil.Process(os.getpid())
     
+    
     if debug:
         print("Running odb_to_cdm for: ", fn)
 
@@ -1486,6 +1487,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
         
         # era5 analysis feedback is read from compressed netcdf files era5.conv._?????.nc.gz in $RSCRATCH/era5/odbs/1
         fbds=read_all_odbsql_stn_withfeedback(fn) # i.e. the xarray 
+        #fbds['source_file'] = source_file
         if fbds is None:
             return
         #fbds=xr.open_dataset(f)
@@ -1610,13 +1612,26 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                     except KeyError:
                         #print('x')
                         pass
-                        
+                
+                elif k in ('source_configuration'): # storing the source configuration info, e.g. original file name, 
+                    if d.element_name=='source_file':
+                        #  groups[k][d.element_name] = ( {'hdrlen':fbds.variables['date@hdr'].shape[0] } ,  np.full( fbds.variables['date@hdr'].shape[0] , source_file  ) ) 
+                        groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]},   np.full( fbds['date@hdr'].shape[0] , source_file) )
+                    else:
+                        try:   
+                            groups[k][d.element_name]=({k+'_len':len(cdm[k])}, cdm[k][d.element_name].values) # element_name is the netcdf variable name, which is the column name of the cdm table k 
+                        except KeyError:
+                            pass
+                       
+                       
+                       
+                       
+                       
+                       
+                       
                 else : # this is the case where the cdm tables DO exist
-                    #if 'expver' in d.element_name:
-                    #    print('x')
                     try:   
-                        groups[k][d.element_name]=({k+'_len':len(cdm[k])},
-                                    cdm[k][d.element_name].values) # element_name is the netcdf variable name, which is the column name of the cdm table k 
+                        groups[k][d.element_name]=({k+'_len':len(cdm[k])}, cdm[k][d.element_name].values) # element_name is the netcdf variable name, which is the column name of the cdm table k 
                     except KeyError:
                         pass
                 try:
