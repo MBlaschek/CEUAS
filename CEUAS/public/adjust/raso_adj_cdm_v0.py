@@ -1,9 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# -----------------------------------------------------------------------------
+# This script has been developed in the service contract for C3S
+# Calculates radiosonde humidity adjustments based on CDM files
+#
+# (c) University of Vienna, M. Blaschek, Vienna, Austria
+# Released under GNU Public License (GPL)
+# email michael.blaschek (at) univie.ac.at
+# -----------------------------------------------------------------------------
 
 __version__ = '0.1'
 __author__ = 'MB'
-__status__ = 'dev'
+__status__ = 'delivered'
 __date__ = 'Mit Jan 15 15:30:59 CET 2020'
 __institute__ = 'Univie, IMGW'
 __github__ = 'git@github.com:MBlaschek/CEUAS.git'
@@ -23,9 +31,6 @@ import pandas as pd
 import xarray as xr
 from numba import njit
 
-#
-# Suppress warnings
-#
 np.seterr(invalid='ignore')
 
 # in Pa
@@ -49,18 +54,29 @@ Options:
     --output []
     
 Optional Keyword Options:
-    --thres []      Threshold value for SNHT, default: 50
+    --thres []          Threshold value for SNHT, default: 50
+    --window []         Moving Window for SNHT, default: 1470 (in days, 4 years)
+    --missing []        Maximum allowed missing values in window, default: 600 (in days)
+    --min_levels []     Minimum required levels for significant breakpoint, default: 3
+    --dist []           Minimum distance between breakpoints, default: 730 (in days, 2 years)
+    --sample_size []    Minimum sample size for statistics, default: 130 (in days)
+    --borders []        Breakpoint zone, default: 90 (in days)
+    --ratio []          Use ratio instead of differences, default: 0 (not)
+
+Experimental Keyword Options:
+    --do-not-write          Returns xarray Dataset
+    --enable-ta-feature     Apply Temperature adjustments
     """.format(__file__))
 
 
-###############################################################################
+# -----------------------------------------------------------------------------
 #
 # Helper functions
 #
-###############################################################################
+# -----------------------------------------------------------------------------
+
 def now(timespec='auto'):
     """ Datetime string
-
     Returns:
         str : datetime now
     """
@@ -77,7 +93,6 @@ def _print_string(*args, adddate=False, **kwargs):
 
 def message(*args, mname=None, verbose=0, level=0, logfile=None, **kwargs):
     """ Message function
-
     Args:
         *args:
         mname:
@@ -85,9 +100,8 @@ def message(*args, mname=None, verbose=0, level=0, logfile=None, **kwargs):
         level:
         logfile:
         **kwargs:
-
     Returns:
-
+        str : message
     """
     if logfile is not None:
         # with open(kwargs['filename'], 'a' if not kwargs.get('force', False) else 'w') as f:
@@ -106,13 +120,12 @@ def message(*args, mname=None, verbose=0, level=0, logfile=None, **kwargs):
 
 def conform(data, shape):
     """ Make numpy array conform to a certain shape
-
     Args:
-        data:
-        shape:
+        data (np.ndarray): input data
+        shape (tuple, list): desired shape
 
     Returns:
-
+        np.ndarray : reshaped
     """
     if not isinstance(data, np.ndarray):
         raise ValueError('Requires a numpy array')
@@ -132,19 +145,19 @@ def conform(data, shape):
 
 
 def nancount(x, axis=0, keepdims=False):
-    """
-
+    """ Count values excluding NaN
     Args:
-        x (ndarray): input dataset
+        x (np.ndarray): input dataset
         axis (int): axis
         keepdims (bool): keep dimensions
+    Returns:
+        np.ndarray : sum of values
     """
     return np.sum(np.isfinite(x), axis=axis, keepdims=keepdims)
 
 
 def nanfunc(data, n=130, axis=0, nmax=1460, borders=0, ffunc=None, flip=False, fargs=(), **kwargs):
     """ Nan omitting function (numpy)
-
     Args:
         data (np.ndarray): dataset including NaN
         n (int): minimum sample size
@@ -153,7 +166,7 @@ def nanfunc(data, n=130, axis=0, nmax=1460, borders=0, ffunc=None, flip=False, f
         borders (int): border sample to ignore
         ffunc (callable): function to call
         flip (bool): reverse dataset before applying the function
-        args (tuple): function arguments
+        fargs (tuple): function arguments
 
     Returns:
         np.ndarray : func of values at axis, with sample size, borders and maximum
@@ -167,17 +180,17 @@ def sample(values, nmin, nmax, func, borders=0, flip=False, fargs=(), **kwargs):
     """ Apply a function (func) to a sample of defined size
 
     Args:
-        values:
-        nmin:
-        nmax:
-        func:
-        borders:
-        flip:
-        fargs:
+        values (np.ndarray): input values
+        nmin (int): minimum required values
+        nmax (int): maximum number of values
+        func (callable): function to execute
+        borders (int): number of values to skip (start-borders , end-borders)
+        flip (bool): reverse order of array
+        fargs (tuple): arguments to function func
         **kwargs:
 
     Returns:
-
+        np.ndarray : according to func
     """
     itx = np.isfinite(values)
     n = itx.sum()
@@ -205,14 +218,14 @@ def table_to_dataset(data, dim='time', plev='plev', levels=None, **kwargs):
     """ Convert pandas Dataframe to xarray Dataset
 
     Args:
-        data (dataframe): input dataframe (columns are variables)
+        data (pd.DataFrame): input dataframe (columns are variables)
         dim (str): datetime dimension
         plev (str): pressure dimension
         levels (list): pressure levels to consider
         **kwargs:
 
     Returns:
-        Dataset : 2d (datetime x pressure levels) x variables
+        xr.Dataset : 2d (datetime x pressure levels) x variables
     """
     from xarray import Dataset
     if levels is None:
@@ -254,11 +267,52 @@ def table_to_dataset(data, dim='time', plev='plev', levels=None, **kwargs):
     return data
 
 
-###############################################################################
+@np.vectorize
+def fix_datetime(itime, span=6, debug=False):
+    """ Fix datetime to standard datetime with hour precision
+
+    Args:
+        itime (datetime): Datetime
+        span (int): allowed difference to standard datetime (0,6,12,18)
+
+    Returns:
+        datetime : standard datetime
+    """
+    import pandas as pd
+    itime = pd.Timestamp(itime)  # (time: 34%)
+    # span=6 -> 0, 12
+    # [18, 6[ , [6, 18[
+    # span=3 -> 0, 6, 12, 18
+    # [21, 3[, [3,9[, [9,15[, [15,21[
+    for ihour in range(0, 24, span * 2):
+        # 0 - 6 + 24 = 18
+        lower = (ihour - span + 24) % 24
+        # 0 + 6 + 24 = 6
+        upper = (ihour + span + 24) % 24
+        # 18 >= 18 or 18 < 6  > 00
+        # 0 >= 18 or 0 < 6    > 00
+        if debug:
+            print("%d [%d] %d >= %d < %d" % (ihour, span, lower, itime.hour, upper))
+
+        if (ihour - span) < 0:
+            if itime.hour >= lower or itime.hour < upper:
+                rx = itime.replace(hour=ihour, minute=0, second=0, microsecond=0)
+                if itime.hour >= (24 - span):
+                    rx = rx + pd.DateOffset(days=1)
+                return rx.to_datetime64()
+        else:
+            if lower <= itime.hour < upper:
+                rx = itime.replace(hour=ihour, minute=0, second=0, microsecond=0)
+                if itime.hour >= (24 - span):
+                    rx = rx + pd.DateOffset(days=1)
+                return rx.to_datetime64()
+
+
+# -----------------------------------------------------------------------------
 #
 # Detection of Breakpoints
 #
-###############################################################################
+# -----------------------------------------------------------------------------
 def detector(data, axis=0, dist=365, thres=50, min_levels=3, use_slopes=False, use_first=False, **kwargs):
     """ Detect breakpoints given some parameters
 
@@ -318,12 +372,12 @@ def idx2shp(idx, axis, shape):
     """ Generate indices
 
     Args:
-        idx:
-        axis:
-        shape:
+        idx (int): index
+        axis (int): axis
+        shape (tuple): shape
 
     Returns:
-
+        tuple : selection slice
     """
     index = [slice(None)] * len(shape)
     index[axis] = idx
@@ -335,11 +389,11 @@ def local_maxima(x, dist=365):
     """ Find local maxima, using Numba
 
     Args:
-        x:
-        dist:
+        x (np.ndarray): input
+        dist (int): minimum distance between peaks
 
     Returns:
-
+        list : list of maxima
     """
     maxima = []  # Leere Liste
     # Iteriere von 2 bis vorletzten Element
@@ -352,15 +406,15 @@ def local_maxima(x, dist=365):
 
 
 def test(x, window, missing):
-    """Standard Normal Homogeneity Test (SNHT)
-    over a running window
-
+    """Standard Normal Homogeneity Test (SNHT) with a running window
     Wrapper function for numba_snhtmov
-    @Leo Haimberger
 
-    window = 2 years
-    missing = 1/2 year
-
+    Args:
+        x (np.ndarray) : input data
+        window (int) : window size (in days)
+        missing (int) : allowed missing values (in days)
+    Returns:
+        np.ndarray : SNHT
     """
 
     snhtparas = np.asarray([window, missing, 10])
@@ -389,8 +443,6 @@ def numba_snhtmov(t, tsa, snhtparas, count, tmean, tsquare):
     tmean     = np.zeros(1000)
     tsquare   = np.zeros(1000)
     count     = np.zeros(1000,dtype=np.int32)
-
-    snhtmov2(t,tsa,snhtparasmcount,tmean,tsquare)
 
     Output: tsa
     """
@@ -443,11 +495,11 @@ def numba_snhtmov(t, tsa, snhtparas, count, tmean, tsquare):
 
 
 def get_breakpoints(data, value=2, dim='time', return_startstop=False, startstop_min=0, **kwargs):
-    """ Return breakpoints
+    """ Return breakpoints from breakpoint data
 
     Args:
 
-        data (DataArray): input dataset
+        data (xr.DataArray): input DataArray
         value (int): breakpoint indicator value
         dim (str): datetime dim
         startstop_min (int):
@@ -504,17 +556,18 @@ def get_breakpoints(data, value=2, dim='time', return_startstop=False, startstop
     return i
 
 
-###############################################################################
+# -----------------------------------------------------------------------------
 #
 # Adjustments
 #
-###############################################################################
+# -----------------------------------------------------------------------------
+
 def adjustments(data, breaks, use_mean=True, axis=0, sample_size=130, borders=30, max_sample=1460, recent=False,
                 ratio=False, **kwargs):
     """ Mean Adjustment of breakpoints
 
     Args:
-        data (np.array): radiosonde data
+        data (np.ndarray): radiosonde data
         breaks (list): breakpoint indices
         axis (int): axis of datetime
         sample_size (int): minimum sample size
@@ -522,11 +575,10 @@ def adjustments(data, breaks, use_mean=True, axis=0, sample_size=130, borders=30
         max_sample (int): maximum sample size
         recent (bool): use full reference period
         ratio (bool): calculate ratio, instead of difference
-        meanvar (bool): mean and var
         **kwargs:
 
     Returns:
-        np.array : adjusted data
+        np.ndarray : adjusted data
     """
     if not isinstance(data, np.ndarray):
         raise ValueError("requires a numpy array")
@@ -685,6 +737,8 @@ def percentile(sample1, sample2, percentiles, axis=0, sample_size=130, borders=0
         ratio (bool): use ratio or difference?
         borders (int): around breakpoint
         max_sample (int): maximum sample size
+        apply (np.ndarray): apply adjustments to this array
+        noise (bool): add random noise to adjustments
 
     Returns:
         np.ndarray : percentile adjusted dataset
@@ -751,6 +805,7 @@ def apply_percentile_adjustments(data, percentiles, adjustment, axis=0, noise=Fa
         percentiles (np.ndarray): percentiles, points of adjustments
         adjustment (np.ndarray): adjustments to be interpolated
         axis (int): axis of datetime
+        noise (bool): add random noise to adjustments
 
     Returns:
         np.ndarray : interpolated adjustment, same shape as dataset
@@ -786,7 +841,7 @@ def apply_percentile_adjustments(data, percentiles, adjustment, axis=0, noise=Fa
     return np.transpose(adjusts, in_dims[:axis] + in_dims[axis + 1:] + [axis])
 
 
-def cmd_arguments(args, longs):
+def _cmd_arguments(args, longs):
     add = longs[:]  # copy
     names = []
     for i, iarg in enumerate(args):
@@ -806,45 +861,56 @@ def cmd_arguments(args, longs):
     return add, names
 
 
-def main(*args):
-    import getopt
+# -----------------------------------------------------------------------------
+#
+# Main function that does all the steps in adjusting
+#
+# -----------------------------------------------------------------------------
 
-    known = ["help", "file", "output"]
-    ifile = None
-    ofile = None
-    kwargs = {'verbose': 1}
-    daynight = False
+def main(ifile=None, ofile=None, **kwargs):
+    kwargs = kwargs.update({'verbose': 1})
+    ta_feature_enabled = False
     metadata = False
 
-    try:
-        known, knames = cmd_arguments(args, known)
-        opts, args = getopt.getopt(args, "f:ho:", known)
+    if ifile is None:
+        import getopt
 
-    except getopt.GetoptError as err:
-        usage()
-        message(str(err), mname='ERROR', verbose=1)
-        return 2
+        known = ["help", "file", "output"]
+        ifile = None
+        ofile = None
 
-    for opt, arg in opts:
+        try:
+            known, knames = _cmd_arguments(sys.argv[1:], known)
+            opts, args = getopt.getopt(sys.argv[1:], "f:ho:", known)
 
-        if opt in ("-f", "--file"):
-            ifile = arg
-
-        elif opt in ("-o", "--output"):
-            ofile = arg
-
-        elif opt in ("-h", "--help"):
+        except getopt.GetoptError as err:
             usage()
-            return 0
+            message(str(err), mname='ERROR', verbose=1)
+            return 2
 
-        elif any([opt[2:] in i for i in knames]):
-            if arg != '':
-                kwargs[opt[2:]] = eval(arg)
+        for opt, arg in opts:
+
+            if opt in ("-f", "--file"):
+                ifile = arg
+
+            elif opt in ("-o", "--output"):
+                ofile = arg
+
+            elif opt in ("-h", "--help"):
+                usage()
+                return 0
+
+            elif opt in ("--enable-ta-feature"):
+                ta_feature_enabled = True
+
+            elif any([opt[2:] in i for i in knames]):
+                if arg != '':
+                    kwargs[opt[2:]] = eval(arg)
+                else:
+                    kwargs[opt[2:]] = True
+
             else:
-                kwargs[opt[2:]] = True
-
-        else:
-            assert False, "unhandled option"
+                assert False, "unhandled option"
 
     if ifile is None:
         usage()
@@ -922,23 +988,53 @@ def main(*args):
     message("Done", mname='CONVERT', **kwargs)
     #
     # Add Standard time variable (needed for detection parameters)
+    # todo add functionality to use hourly sondes, adjust detection parameters
+    #   based on data availability (resample to hour freq, lots of missing values?)
     #
+    # e.g. 00Z (21Z -1 day to 3Z same day)
+    #
+    dates = data.time.to_index()
+    newdates = fix_datetime(dates, span=3)  # use plus minus 3 hours
+    #
+    # find duplicates
+    #
+    u, c = np.unique(newdates, return_counts=True)
+    conflicts = u[c > 1]
+    for iconf in conflicts:
+        # get duplicates
+        indices = np.where(newdates == iconf)[0]
+        #
+        # check which is closer to standard time
+        #
+        offset = np.abs((dates[indices] - iconf) / np.timedelta64(1, 'h'))
+        j = np.argsort(offset)  # sort time offsets (first we want)
+        for m, k in enumerate(offset[j]):
+            if m == 0:
+                continue  # this is the minimum
 
+            # change back the others or add a delay to remove duplicates
+            newdates[indices[j][m]] = dates[indices[j][m]]  # revert back
     #
-    # Optional convert to day-night
+    # Add Standard time as variable
     #
-    if daynight:
-        times = (0, 12)
-        data.sel(**{dim: data[dim].dt.hour.isin(times)})
-        data = dict(data.groupby(dim + '.hour'))
-        for ikey in data.keys():
-            data[ikey] = data[ikey].assign_coords(
-                {dim: data[ikey][dim].to_index().to_period('D').to_timestamp().values})
+    raw_data = data.copy()  # Backup for later
+    data['time_orig'] = ('time', dates)
+    message("Standard time calculated, Duplicates resolved:", conflicts.size, mname='CONVERT', **kwargs)
+    data = data.assign_coords({dim: newdates})  # overwrite dim with new dates
+    #
+    # Day-Night Split / selection
+    #
+    times = (0, 12)
+    data = data.sel(**{dim: data[dim].dt.hour.isin(times)})
+    data = dict(data.groupby(dim + '.hour'))
+    for ikey in data.keys():
+        data[ikey] = data[ikey].assign_coords(
+            {dim: data[ikey][dim].to_index().to_period('D').to_timestamp().values})
 
-        data = xr.concat(data.values(), dim=pd.Index(data.keys(), name='hour'))
-        # make sure the shape is as promissed:
-        data = data.reindex({'hour': list(times)})
-        message("Converting to day-night Array [hour x time x pressure]", mname='CONVERT', **kwargs)
+    data = xr.concat(data.values(), dim=pd.Index(data.keys(), name='hour'))
+    # make sure the shape is as promissed:
+    data = data.reindex({'hour': list(times)})
+    message("Converting to day-night Array [hour x time x pressure]", mname='CONVERT', **kwargs)
     #
     # What variables are present?
     # Feedback information is present ?
@@ -1001,13 +1097,12 @@ def main(*args):
         #
         # Day-Night Departures
         #
-        if daynight:
-            stest = np.apply_along_axis(test, axis,
-                                        data[ivar].sel(hour=12).values - data[ivar].sel(hour=0),
-                                        window, missing)
-            # Add Day-Night Departures
-            data[svar] = data[svar] + stest
-            data[svar].attrs['day-night'] = 'added'
+        stest = np.apply_along_axis(test, axis,
+                                    data[ivar].sel(hour=12).values - data[ivar].sel(hour=0),
+                                    window, missing)
+        # Add Day-Night Departures
+        data[svar] = data[svar] + stest
+        data[svar].attrs['day-night'] = 'added'
         #
         # Check for Metadata in CDM
         #
@@ -1023,7 +1118,6 @@ def main(*args):
         data[bvar] = (dims, breaks)
         data[bvar].attrs.update(attrs)
         message("Test statistics calculated", bvar, mname='DETECT', **kwargs)
-        avar = '{}_m'.format(ivar)
         params = data[ivar].attrs.copy()
         params.update({'sample_size': kwargs.get('sample_size', 130),
                        'borders': kwargs.get('borders', 90),
@@ -1031,58 +1125,108 @@ def main(*args):
         #
         # 5. Adjust Breakpoints
         #
-        if ivar in ['ta']:
+        if ivar in ['ta'] and ta_feature_enabled:
             #
             # Temperature -> MEAN
             #
-            if daynight:
-                for i, idata in data.groupby('hour'):
-                    breaks = get_breakpoints(idata[bvar], **kwargs)
-                    adjv = adjustments(idata[jvar].values, breaks,
-                                       axis=axis,
-                                       mname='ADJUST', **kwargs)
-                    # new = obs-an-adj + obs - (obs-an)
-                    data[avar] = (list(idata.dims), (adjv + idata[ivar].values - idata[jvar].values))
-                    data[avar].attrs.update(params)
-                    data[avar].attrs['biascor'] = 'mean'
-            else:
-                breaks = get_breakpoints(data[bvar], **kwargs)
-                adjv = adjustments(data[jvar].values, breaks,
+            avar = '{}_m'.format(ivar)
+            data[avar] = xr.full_like(data[ivar], 0)
+            for i, idata in data.groupby('hour'):
+                breaks = get_breakpoints(idata[bvar], **kwargs)
+                message("Breakpoints: ", len(breaks), mname='ADJUST', **kwargs)
+                adjv = adjustments(idata[jvar].values, breaks,
                                    axis=axis,
                                    mname='ADJUST', **kwargs)
                 # new = obs-an-adj + obs - (obs-an)
-                data[avar] = (dims, adjv + data[ivar].values - data[jvar].values)
-                data[avar].attrs.update(params)
-                data[avar].attrs['biascor'] = 'mean'
+                data[avar].loc[{'hour': i}] = (adjv - idata[jvar].values)
+            data[avar].attrs.update(params)
+            data[avar].attrs['standard_name'] += '_adjust'
+            data[avar].attrs['biascor'] = 'mean'
 
         if ivar in ['hur']:
             #
             # Relative Humidity -> QUANTILE
             #
-            if daynight:
-                for i, idata in data.groupby('hour'):
-                    breaks = get_breakpoints(idata[bvar], **kwargs)
-                    adjv = adjustments(idata[jvar].values, breaks,
-                                       use_mean=False,
-                                       axis=axis,
-                                       mname='ADJUST', **kwargs)
-                    # new = obs-an-adj + obs - (obs-an)
-                    data[avar] = (idata.dims, adjv + idata[ivar].values - idata[jvar].values)
-                    data[avar].attrs.update(params)
-                    data[avar].attrs['biascor'] = 'quantile'
-            else:
-                breaks = get_breakpoints(data[bvar], **kwargs)
-                adjv = adjustments(data[jvar].values, breaks,
+            avar = '{}_q'.format(ivar)
+            data[avar] = xr.full_like(data[ivar], 0)
+            for i, idata in data.groupby('hour'):
+                breaks = get_breakpoints(idata[bvar], **kwargs)
+                message("Breakpoints: ", len(breaks), mname='ADJUST', **kwargs)
+                adjv = adjustments(idata[jvar].values, breaks,
                                    use_mean=False,
                                    axis=axis,
                                    mname='ADJUST', **kwargs)
                 # new = obs-an-adj + obs - (obs-an)
-                data[avar] = (dims, adjv + data[ivar].values - data[jvar].values)
-                data[avar].attrs.update(params)
-                data[avar].attrs['biascor'] = 'quantile'
+                data[avar].loc[{'hour': i}] = (adjv - idata[jvar].values)
+            data[avar].attrs.update(params)
+            data[avar].attrs['standard_name'] += '_adjust'
+            data[avar].attrs['biascor'] = 'quantile'
+    #
+    # Restore original time
+    #
+    data = dict(data.groupby('hour'))
+    for ikey in data.keys():
+        data[ikey] = data[ikey].assign_coords({dim: data[ikey]['time_orig'].to_index()})
 
-    return data
+    data = xr.concat(data.values(), dim=dim).sortby(dim)
+    data = data.reset_coords('hour').rename({'hour': 'standard_hour'})
+    data = data.sel(time=np.isfinite(data.time))
+    #
+    # Merge Variables back into raw_data
+    #
+    outvars = []
+    for ivar in variables:
+        if ivar + '_m' in data.data_vars:
+            outvars.append(ivar + '_m')
+            outvars.append(ivar + '_obs_minus_an_snht')
+            outvars.append(ivar + '_obs_minus_an_snht_breaks')
+        if ivar + '_q' in data.data_vars:
+            outvars.append(ivar + '_q')
+            outvars.append(ivar + '_obs_minus_an_snht')
+            outvars.append(ivar + '_obs_minus_an_snht_breaks')
+    raw_data = raw_data.merge(data[outvars], join='left')
+    #
+    # Fill SNHT, breakpoints with zeros
+    #
+    for ivar in list(raw_data.data_vars):
+        if 'snht' in ivar or 'breaks' in ivar:
+            raw_data[ivar] = raw_data[ivar].fillna(0)
+    #
+    # Interpolate adjustments back to original shape and intermediate times
+    #
+    for ivar in variables:
+        if ivar + '_m' in raw_data.data_vars:
+            raw_data[ivar + '_m'] = raw_data[ivar + '_m'].interpolate_na(dim=dim)
+        if ivar + '_q' in raw_data.data_vars:
+            raw_data[ivar + '_q'] = raw_data[ivar + '_q'].interpolate_na(dim=dim)
+    #
+    # Add Trajectory data again
+    #
+    raw_data = raw_data.merge(traj_data, join='left')
+    #
+    # Store information in file
+    #
+    if kwargs.get('do-not-write', False):
+        return raw_data
+    #
+    # Use Xarray to netcdf library
+    #
+    raw_data.to_netcdf(ofile,
+                       mode='w',
+                       format='netCDF4',
+                       engine=kwargs.get('engine', 'netcdf4'),
+                       encoding={i: {'compression': 'gzip', 'compression_opts': 9} for i in list(raw_data.data_vars)})
+
+    message("Writing to", ofile, mname='OUT', **kwargs)
+
+
+# -----------------------------------------------------------------------------
+#
+# Script entry point
+#
+# -----------------------------------------------------------------------------
 
 
 if __name__ == "__main__":
-    sys.exit(main(*sys.argv[1:]))
+    message("Executing ...", mname='MAIN', verbose=1)
+    sys.exit(main())
