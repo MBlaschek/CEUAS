@@ -1827,29 +1827,28 @@ if __name__ == '__main__':
     """ Loading the CDM tables into pandas dataframes """
     cdm_tabdef  , cdm_tab , tdict = load_cdm_tables()
      
-    """ Paths to the databases """    
-
-    #Files = Files.split(',')
-    Files=glob.glob(Files)
-        
+    """ Paths to the output directory """    
     if not os.path.isdir(out_dir):
             os.system('mkdir ' + out_dir )       
             
     output_dir = out_dir + '/' + dataset           
     if not os.path.isdir(output_dir):
             os.system('mkdir ' + output_dir )
+    
+    stat_conf_path = '../data/station_configurations/'     
+    stat_conf_file = stat_conf_path +   '/station_configuration_' + dataset + '.dat'    
+    cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
+    clean_station_configuration(cdm_tab)              
             
- #   for File in Files:
-                 
+            
+    """ Leo run         
+    Files=glob.glob(Files)
     print( blue + '*** Processing the database ' + dataset + ' ***  \n \n *** file: ' + Files[0] + '\n'  + cend)
-     
     stat_conf_path = '../data/station_configurations/'     
     stat_conf_file = stat_conf_path +   '/station_configuration_' + dataset + '.dat'
-        
     # adding the station configuration to the cdm tables      
     cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
-    clean_station_configuration(cdm_tab)         
-    
+    clean_station_configuration(cdm_tab)             
     p=Pool(12)
     if 'era5' in dataset and 'bufr' not in dataset:   
         func=partial(odb_to_cdm,cdm_tab, cdm_tabdef, output_dir, dataset)
@@ -1857,9 +1856,35 @@ if __name__ == '__main__':
     else:
         func=partial(df_to_cdm,cdm_tab, cdm_tabdef, output_dir, dataset)
         out=list(map(func, Files))
-    print('*** CONVERTED: ' , Files[-1] )
-      
+    print('*** CONVERTED: ' , Files[-1] )      
     print(' ***** Convertion of  ' , Files,  '  completed ! ***** ')
+    """
+    
+    
+    # federico's run 
+    Files = Files.split(',')
+    for File in Files:
+             
+        if not os.path.isdir(out_dir):
+            os.system('mkdir ' + out_dir ) 
+            
+        output_dir = out_dir + '/' + dataset      
+        if not os.path.isdir(output_dir):
+            os.system('mkdir ' + output_dir )
+                    
+        print( blue + '*** Processing the database ' + dataset + ' ***  \n \n *** file: ' + File + '\n'  + cend)
+                                    
+        if 'era5' in dataset and 'bufr' not in dataset:   
+            odb_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset, File)
+        else:
+            df_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset, File)
+
+          
+        print(' ***** Convertion of  ' , Files,  '  completed ! ***** ')    
+
+
+
+
 
 
 
@@ -1869,4 +1894,8 @@ if __name__ == '__main__':
 -f /raid60/scratch/federico/databases/IGRAv2/BRM00082930-data.txt -d igra2 -o OUTPUT
 -f /raid60/scratch/federico/databases/UADB//uadb_windc_82930.txt -d ncar -o OUTPUT
 -f /raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.82930.bfr -d bufr -o OUTPUT
+
+-f /raid60/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.C:8022  -d era5_3188 -o OUTPUT
+
+
 """

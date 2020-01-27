@@ -7,6 +7,7 @@ import pandas as pd
 pd.set_option('display.max_rows', 50)
 pd.set_option('display.max_columns', 20)
 pd.set_option('display.width', 300)
+from pathlib import Path
 
 import numpy as np
 #import argparse
@@ -27,17 +28,17 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 
 
-
+'''
 def now(time):
       """ For easily print a readable current time stamp """
       a = datetime.fromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S')
       return  a
-
+'''
 
 class Merger():
       """ Main class for the merging of the data from different netCDF files. """
       
-      def __init__(self ):
+      def __init__(self, out_dir):
             """ Define the attributes (some will be defined in other parts of the code) . 
             Attr :: 
                     self.data : read the dictionary mapping the dataset and the netCDF cdm file for each observation station  
@@ -58,8 +59,9 @@ class Merger():
             
             self.unique_dates = {}            
             self.attributes = {} # will keep the original attributes from the CDM tables, read from the netCDF files 
+            self.out_dir = ''
             
-      def initialize_data(self, datasets = {} ):
+      def initialize_data(self, datasets = {} , out_dir = 'output' ):
             """ Initialize dataset; store relevant data as attributes.
                        Args ::     dic{}  datasets (dictionary where keys are the dataset names e.g. bufr, igra2 etc. , and the value is the path to the corresponding netCDF file 
                                        e.g. tateno = { 'ncar'    : 'example_stations/ncar/chuadb_trhc_47646.txt.nc'   ,
@@ -71,6 +73,7 @@ class Merger():
             
             self.datasets = datasets
             self.datasets_keys = datasets.keys()
+            self.out_dir = out_dir 
             
             """ Looping over the datasets """
             logging.info('*** Reading and Initializing the data from the netCDF files ')
@@ -190,19 +193,42 @@ class Merger():
             all_uniques = []  # storing a list with all the unique date_tmes            
             which_k_in_dt = {}  # list of avilable dataset for each unique date_time, so that when looping over the distinct date_times, only the proper dataset will be read and compared 
 
-            def add_time_delta(time_offset_value, date_time):
+            def add_time_delta(time_offset_value, date_time, dataset):
                   """ Converting to proper date_time adding the time_delta.  
                         Removes minutes rounding to closest integer hour. """ 
+                  
                   if 'minutes' in  time_offset:
-                        date_time_delta = [ timedelta(minutes = float(i) ) + time_offset_value for i in date_time ]
+                        date_time_delta = [ timedelta(minutes = float(i) )  + time_offset_value for i in date_time ]
                   elif 'hours' in time_offset:
-                        date_time_delta = [ timedelta(hours = float(i) )  + time_offset_value  for i in date_time ]    
+                        date_time_delta = [ timedelta(hours = float(i) )      + time_offset_value  for i in date_time ]    
+                  elif 'seconds' in time_offset:                        
+                        date_time_delta = [ timedelta(seconds = float(i) )  + time_offset_value  for i in date_time ]    
+                  
+
+                        
+                  '''
+                  if 'era' not in dataset:
+                        
+                        if 'minutes' in  time_offset:
+                              date_time_delta = [ timedelta(minutes = float(i) )  + time_offset_value for i in date_time ]
+                        elif 'hours' in time_offset:
+                              date_time_delta = [ timedelta(hours = float(i) )      + time_offset_value  for i in date_time ]    
+                        elif 'seconds' in time_offset:                        
+                              date_time_delta = [ timedelta(seconds = float(i) )  + time_offset_value  for i in date_time ]    
                   else:
-                        print('check if time is wrong !!!! (should never happen)')
-                        sys.exit()                                               
+                        date_time = np.array( [ datetime.strptime(str(int(i)), '%Y%m%d%H') for i in date_time  ] )# convert to datetime object 
+                 '''      
+                        
+                  #else:
+                  #      print('check if time is wrong !!!! (should never happen)')
+                  #      sys.exit()                                               
                   #unique_dt = [i for i in  [  time_offset_value +  j for j in delta  ] ]    
                   #unique_dt = [ i +0 ]
-                  date_time_delta = [ i.replace(minute=0, second=0) for i in date_time_delta ]                 
+                  date_time_delta = [ i.replace(minute=0, second=0) for i in date_time_delta ]           
+                  
+                  if k == 'era5_1':
+                        print('check')
+                        
                   return date_time_delta                 
 
 
@@ -224,7 +250,8 @@ class Merger():
                   time_offset_value  = time_offset.split('since ') [1]      
                   time_offset_value  = datetime.strptime(time_offset_value, '%Y-%m-%d %H:%M:%S')
                  
-                  unique_dt = add_time_delta (time_offset_value, unique) 
+                 
+                  unique_dt = add_time_delta (time_offset_value, unique, k ) 
                   
                   all_uniques += unique_dt   # adding to the total unique date_times 
             
@@ -412,9 +439,10 @@ class Merger():
             #for dt in date_times[3008:3100]: # loop over all the possible date_times 
             tot = len(date_times)
             for dt, c in zip(date_times[2000:2100] , range(tot)): # loop over all the possible date_times 
+                  print(dt , ' ' , c ) 
             #for dt, c in zip(date_times, range(tot)): # loop over all the possible date_times 
                  
-                  print('Analize : ', str(c) , '/',  str(tot)  , ' ', dt , ' ', now(time.time()) )
+                  logging.debug('Analize : %s %s /', str(c) ,  str(tot)  )
             
                   cleaned_df_container = {}                  
                   chunk = ''
@@ -479,7 +507,7 @@ class Merger():
             """ Storing the merged date_time values and indices """
             di=xr.Dataset()
             merged_date_time = np.array(merged_date_time)
-            di['recordtimestamps'] = ( {'recordtimestamps' : merged_date_time.shape } , merged_date_time )
+            di['recordtimestamp'] = ( {'recordtimestamp' : merged_date_time.shape } , merged_date_time )
                      
                      
             """ Creating the merged indices """
@@ -517,7 +545,7 @@ class Merger():
             nan_array[:] = np.nan
             for k in self.obs_table_columns:
                   if k not in list(all_merged_obs.columns ):
-                        print('Adding missing cdm colum with empty values: ' , k )
+                        logging.debug('Adding missing cdm colum with empty values: ' , k )
                         all_merged_obs[k] = ( nan_array )
                         
             return all_merged_obs
@@ -615,7 +643,12 @@ class Merger():
             """ Module to write the output file as netCDF """
             
             #out_name = os.getcwd() + '/FAST_INDEX_merged_' + [ x for x in self.datasets[ list(self.datasets_keys)[0]].split('/') if '.nc' in x   ] [0] 
-            out_name = os.getcwd() + '/Merged_' + [ x for x in self.datasets[ list(self.datasets_keys)[0]].split('/') if '.nc' in x   ] [0] 
+            
+            if not os.path.isdir(self.out_dir):
+                  Path(self.out_dir).mkdir(parents=True, exist_ok=True)
+                  
+            # TO DO: standardize the output name       
+            out_name = self.out_dir + '/' + self.data[list(self.datasets_keys)[0]]['station_configuration']['primary_id'].values[0]   + '_merged_'  +  [ x for x in self.datasets[ list(self.datasets_keys)[0]].split('/') if '.nc' in x   ] [0]  
 
             
             logging.info('Writing the observations_tables to the netCDF output via xarray ')
@@ -690,22 +723,11 @@ class Merger():
 
 
 
-""" 
-# keys of the station_configuration table
-['primary_id', 'primary_id_scheme', 'record_number', 'secondary_id', 'secondary_id_scheme', 'station_name', 'station_abbreviation', 'alternative_name', 'station_crs', 'longitude', 'latitude',
-'local_gravity', 'start_date', 'end_date', 'station_type', 'platform_type', 'platform_sub_type', 'operating_institute', 'operating_territory', 'city', 'contact', 'role', 'observing_frequency',
-'reporting_time', 'telecommunication_method', 'station_automation', 'measuring_system_model', 'measuring_system_id', 'observed_variables', 'comment', 'optional_data', 'bbox_min_longitude',
-'bbox_max_longitude', 'bbox_min_latitude', 'bbox_max_latitude', 'metadata_contact', 'metadata_contact_role']
-
-
-['primary_id',  'secondary_id', 'station_name', 'alternative_name', 'station_crs', 'longitude', 'latitude',
-'start_date', 'end_date',  'city', 
-'observed_variables', ]
-"""
-
 
 
 """ Example input dictionary """
+
+""" dont use this 
 tateno = {'ncar'    : 'example_stations_big/ncar/chuadb_trhc_47646.txt.nc'   ,
                'igra2'   : 'example_stations_big/igra2/chJAM00047646-data.txt.nc'  ,  
                'bufr'     : 'example_stations_big/bufr/chera5.47646.bfr.nc'  ,
@@ -714,31 +736,42 @@ tateno = {'ncar'    : 'example_stations_big/ncar/chuadb_trhc_47646.txt.nc'   ,
                'era5_1761' : 'example_stations_big/era5_1761/chera5.1761.conv.1:47646.nc' , 
                'era5_3188' : 'example_stations_big/era5_3188/chera5.3188.conv.C:5357.nc' , 
                }
+"""
+
+small = {   'ncar_w'           : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/ncar/chuadb_windc_82930.txt.nc'       ,
+                  'ncar_t'            : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/ncar/chuadb_trhc_82930.txt.nc'       ,
+                  'igra2'              : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/igra2/chBRM00082930-data.txt.nc'  ,
+                  'era5_1'            :  '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/era5_1/chera5.conv._82930.nc',
+                  'era5_1759'      : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/era5_1759/chera5.1759.conv.1:82930.nc',
+                  'bufr'                : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/bufr/chera5.82930.bfr.nc',                          }
 
 
-small = {   'ncar_w'           : 'example_stations/ncar/chuadb_windc_82930.txt.nc'       ,
-                  'ncar_t'            : 'example_stations/ncar/chuadb_trhc_82930.txt.nc'       ,
-                  'igra2'              : 'example_stations/igra2/chBRM00082930-data.txt.nc'  ,
-                  'era5_1'            :  'example_stations/era5_1/chera5.conv._82930.nc',
-                  'era5_1759'      : 'example_stations/era5_1759/chera5.1759.conv.1:82930.nc',
-                  'bufr'                : 'example_stations/bufr/chera5.82930.bfr.nc',                          
-}
+small_newera5 = {   'ncar_w'           : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/ncar/chuadb_windc_82930.txt.nc'       ,
+                  'ncar_t'            : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/ncar/chuadb_trhc_82930.txt.nc'       ,
+                  'igra2'              : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/igra2/chBRM00082930-data.txt.nc'  ,
+                  'era5_1'            :  '/raid8/srvx1/federico/GitHub/CEUAS_master_JAN2020/CEUAS/CEUAS/public/harvest/code/OUTPUT/era5_1/chera5.conv._82930.nc',
+                  'era5_1759'      : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/era5_1759/chera5.1759.conv.1:82930.nc',
+                  'bufr'                : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/bufr/chera5.82930.bfr.nc',                          }
 
 
+
+
+
+
+
+out_dir = 'output_merged'
 
 """ main block """
 if __name__ == '__main__':
       """ Initialize the Merger class """
-      Merging = Merger()
+      Merging = Merger(out_dir)
       logging.info('*** Initialising the data ***' )      
       #Merging.initialize_data( datasets = small_other ) #  Read each dataset netCDF file, initialize the dataframes, calculated proper date_time arrays       
-      Merging.initialize_data( datasets = small ) #  Read each dataset netCDF file, initialize the dataframes, calculated proper date_time arrays  
-      
+      Merging.initialize_data( datasets = small_newera5 , out_dir = out_dir) #  Read each dataset netCDF file, initialize the dataframes, calculated proper date_time arrays  
       """ Merging the data, writing the merged output file """
       Merging.merge(limit = '', dataframeIsPickled = False)
            
       logging.info( '     *** Done  ***     ' ) 
-
 
 
 

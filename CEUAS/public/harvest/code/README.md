@@ -20,13 +20,15 @@ as a test.
 The output directory name and the grousp of file can be edited in the script.
 
 Example usage:
+
 	* `python3 test_harvest_to_netCDF_converter_leo+federico.py`
 
-## run_xxx
+## run_harvester.py
 Runs the harvest_to_netCDF_converter_leo+federico.py on the entire datasets available,
 that can be specified inside the script.
 The user can select the output directory and the number of files to be processed in parallel for each
 dataset.
 
 Example usage:
+
 	* `python3 run_harvest_to_netCDF_converter_leo+federico.py`

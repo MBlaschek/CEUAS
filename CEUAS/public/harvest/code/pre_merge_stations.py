@@ -25,22 +25,7 @@ pd.set_option('display.max_rows', None)
 pd.set_option('display.width', None)
 
 
-dic_dataset_stationsfiles = { 'bufr'            :  {'stations_file': '/raid8/srvx1/federico/GitHub/DEVELOP_JANUARY2020/CEUAS/CEUAS/cdm/code/merging/make_stationsId_tables/stations_filenames_list/stations_filenames_list/bufr_summary_duplicated_stations.txt' , 
-                                                                        'source_dir' : '/raid60/scratch/federico/netCDF_converted_Jan2020/bufr/' },
-                                                          
-                                              'era5_3188' :  { 'stations_file': '/raid8/srvx1/federico/GitHub/DEVELOP_JANUARY2020/CEUAS/CEUAS/cdm/code/merging/make_stationsId_tables/stations_filenames_list/stations_filenames_list/era5_3188_summary_duplicated_stations.txt' ,
-                                                                        'source_dir' : '/raid60/scratch/federico/netCDF_converted_Jan2020/era5_3188/' },
-                                    
-                                              'era5_1759' :  {'stations_file': '/raid8/srvx1/federico/GitHub/DEVELOP_JANUARY2020/CEUAS/CEUAS/cdm/code/merging/make_stationsId_tables/stations_filenames_list/stations_filenames_list/era5_1759_summary_duplicated_stations.txt' ,
-                                                                       'source_dir' : '/raid60/scratch/federico/netCDF_converted_Jan2020/era5_1759/' },   
-             
-                                              'igra2'          :  {'stations_file' : '/raid8/srvx1/federico/GitHub/DEVELOP_JANUARY2020/CEUAS/CEUAS/cdm/code/merging/make_stationsId_tables/stations_filenames_list/stations_filenames_list/igra2_summary_duplicated_stations.txt' ,
-                                                                       'source_dir' : '/raid60/scratch/federico/netCDF_converted_Jan2020/igra2/' },
-   
-                                              'ncar'          :   {'stations_file' : '/raid8/srvx1/federico/GitHub/DEVELOP_JANUARY2020/CEUAS/CEUAS/cdm/code/merging/make_stationsId_tables/stations_filenames_list/stations_filenames_list/ncar_summary_duplicated_stations.txt' ,
-                                                                        'source_dir' : '/raid60/scratch/federico/netCDF_converted_Jan2020/ncar/' }
-                                              
-                                              }
+
 
 def read_input_file(F , source_dir):
     """ Read the lists of stations to be pre-merged. """
@@ -200,6 +185,25 @@ def read_input_file(F , source_dir):
                     dic[primary] = files 
                     
             return dic
+        
+        
+
+dic_dataset_stationsfiles = { 'bufr'            :  {'stations_file': '/raid8/srvx1/federico/GitHub/DEVELOP_JANUARY2020/CEUAS/CEUAS/cdm/code/merging/make_stationsId_tables/stations_filenames_list/stations_filenames_list/bufr_summary_duplicated_stations.txt' , 
+                                                                                'source_dir' : '/raid60/scratch/federico/netCDF_converted_Jan2020/bufr/' },
+                                                                  
+                                                      'era5_3188' :  { 'stations_file': '/raid8/srvx1/federico/GitHub/DEVELOP_JANUARY2020/CEUAS/CEUAS/cdm/code/merging/make_stationsId_tables/stations_filenames_list/stations_filenames_list/era5_3188_summary_duplicated_stations.txt' ,
+                                                                                'source_dir' : '/raid60/scratch/federico/netCDF_converted_Jan2020/era5_3188/' },
+                                            
+                                                      'era5_1759' :  {'stations_file': '/raid8/srvx1/federico/GitHub/DEVELOP_JANUARY2020/CEUAS/CEUAS/cdm/code/merging/make_stationsId_tables/stations_filenames_list/stations_filenames_list/era5_1759_summary_duplicated_stations.txt' ,
+                                                                               'source_dir' : '/raid60/scratch/federico/netCDF_converted_Jan2020/era5_1759/' },   
+                     
+                                                      'igra2'          :  {'stations_file' : '/raid8/srvx1/federico/GitHub/DEVELOP_JANUARY2020/CEUAS/CEUAS/cdm/code/merging/make_stationsId_tables/stations_filenames_list/stations_filenames_list/igra2_summary_duplicated_stations.txt' ,
+                                                                               'source_dir' : '/raid60/scratch/federico/netCDF_converted_Jan2020/igra2/' },
+           
+                                                      'ncar'          :   {'stations_file' : '/raid8/srvx1/federico/GitHub/DEVELOP_JANUARY2020/CEUAS/CEUAS/cdm/code/merging/make_stationsId_tables/stations_filenames_list/stations_filenames_list/ncar_summary_duplicated_stations.txt' ,
+                                                                                'source_dir' : '/raid60/scratch/federico/netCDF_converted_Jan2020/ncar/' }
+                                                      
+                                                      }
         
         
         
