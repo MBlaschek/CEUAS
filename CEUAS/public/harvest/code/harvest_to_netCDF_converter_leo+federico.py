@@ -776,6 +776,9 @@ def read_all_odbsql_stn_withfeedback(odbfile):
     t=time.time()
     sonde_type=True
     obstype=True
+    ol=odbfile.split('.')
+    if ol[-1][0]!='_':
+        odbfile='.'.join(ol[:-1])+'._'+ol[-1]
     if os.path.getsize(odbfile+'.gz')>0:
         """ Read first the odbb header to extract the column names and type """
         try:
@@ -784,7 +787,8 @@ def read_all_odbsql_stn_withfeedback(odbfile):
                     rdata=f.read()
                     print('read the odb file' , odbfile)
             except:
-                rdata=subprocess.check_output(["odb","header",'/3645/'.join(odbfile.split('/1/'))])
+#                rdata=subprocess.check_output(["odb","header",'/3645/'.join(odbfile.split('/1/'))])
+                rdata=subprocess.check_output(["odb","header",'.'.join(odbfile.split('._'))])
                 with open('odbheader','wb') as f:
                     f.write(rdata)
             rdata=rdata.decode('latin-1').split('\n')
@@ -835,8 +839,10 @@ def read_all_odbsql_stn_withfeedback(odbfile):
             #                 'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','collection_identifier@conv','source@hdr']
             
             # had to remove 'collection_identifier@conv'
-            d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','lon@hdr','lat@hdr','seqno@hdr','reportype','andate','antime',
-                             'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','source@hdr']
+            d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','lon@hdr','lat@hdr','seqno@hdr',
+                             'obsvalue@body','source@hdr']
+            if 'fg_depar@body' in columns:
+                d=d+['fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','reportype','andate','antime']
             
             
             for c in columns:
@@ -848,6 +854,12 @@ def read_all_odbsql_stn_withfeedback(odbfile):
             print('done this')
             alldict=pd.read_csv(f,delimiter='\t',usecols=columns,quoting=3,comment='#', skipinitialspace=True,dtype=tdict)#,nrows=1000000)
             
+            if 'fg_depar@body' not in columns:
+                alldict['fg_depar@body']=numpy.float32(numpy.NaN)
+                alldict['an_depar@body']=numpy.float32(numpy.NaN)
+                alldict['biascorr@body']=numpy.float32(numpy.NaN)
+                alldict['sondetype@conv']=numpy.int32(-2147483648)
+                alldict['reportype']=numpy.int32(-2147483648)
 
             #print(time.time()-t,sys.getsizeof(alldict)//1024//1024)
             idx=numpy.where(numpy.logical_or(alldict.reportype.values==16045,alldict.reportype.values==16068))[0]
@@ -1826,7 +1838,7 @@ if __name__ == '__main__':
     p=Pool(12)
     if 'era5' in dataset and 'bufr' not in dataset:   
         func=partial(odb_to_cdm,cdm_tab, cdm_tabdef, output_dir, dataset)
-        out=list(p.map(func,Files))
+        out=list(map(func,Files))
     else:
         func=partial(df_to_cdm,cdm_tab, cdm_tabdef, output_dir, dataset)
         out=list(map(func, Files))
