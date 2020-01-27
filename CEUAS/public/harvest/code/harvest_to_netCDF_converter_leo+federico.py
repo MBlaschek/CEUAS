@@ -835,7 +835,7 @@ def read_all_odbsql_stn_withfeedback(odbfile):
             #                 'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','collection_identifier@conv','source@hdr']
             
             # had to remove 'collection_identifier@conv'
-            d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','reportype','andate','antime',
+            d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','lon@hdr','lat@hdr','seqno@hdr','reportype','andate','antime',
                              'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','source@hdr']
             
             
@@ -1536,7 +1536,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
         write_dict_h5(fno, fbds, 'era5fb', fbencodings, var_selection=[],mode='a')
         dcols=[]
         for d in fbds.columns:
-            if d not in ['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body',
+            if d not in ['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body', 'lon@hdr','lat@hdr','seqno@hdr',
                          'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv']:
                 dcols.append(d)
         fbds.drop(columns=dcols,inplace=True)
@@ -1823,7 +1823,7 @@ if __name__ == '__main__':
     cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
     clean_station_configuration(cdm_tab)         
     
-    p=Pool(25)
+    p=Pool(12)
     if 'era5' in dataset and 'bufr' not in dataset:   
         func=partial(odb_to_cdm,cdm_tab, cdm_tabdef, output_dir, dataset)
         out=list(p.map(func,Files))
