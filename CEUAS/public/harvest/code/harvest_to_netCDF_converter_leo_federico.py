@@ -776,9 +776,6 @@ def read_all_odbsql_stn_withfeedback(odbfile):
     t=time.time()
     sonde_type=True
     obstype=True
-    ol=odbfile.split('.')
-    if ol[-1][0]!='_':
-        odbfile='.'.join(ol[:-1])+'._'+ol[-1]
     if os.path.getsize(odbfile+'.gz')>0:
         """ Read first the odbb header to extract the column names and type """
         try:
@@ -787,8 +784,7 @@ def read_all_odbsql_stn_withfeedback(odbfile):
                     rdata=f.read()
                     print('read the odb file' , odbfile)
             except:
-#                rdata=subprocess.check_output(["odb","header",'/3645/'.join(odbfile.split('/1/'))])
-                rdata=subprocess.check_output(["odb","header",'.'.join(odbfile.split('._'))])
+                rdata=subprocess.check_output(["odb","header",'/3645/'.join(odbfile.split('/1/'))])
                 with open('odbheader','wb') as f:
                     f.write(rdata)
             rdata=rdata.decode('latin-1').split('\n')
@@ -839,10 +835,8 @@ def read_all_odbsql_stn_withfeedback(odbfile):
             #                 'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','collection_identifier@conv','source@hdr']
             
             # had to remove 'collection_identifier@conv'
-            d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','lon@hdr','lat@hdr','seqno@hdr',
-                             'obsvalue@body','source@hdr']
-            if 'fg_depar@body' in columns:
-                d=d+['fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','reportype','andate','antime']
+            d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','reportype','andate','antime',
+                             'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','source@hdr']
             
             
             for c in columns:
@@ -854,12 +848,6 @@ def read_all_odbsql_stn_withfeedback(odbfile):
             #print('done this')
             alldict=pd.read_csv(f,delimiter='\t',usecols=columns,quoting=3,comment='#', skipinitialspace=True,dtype=tdict)#,nrows=1000000)
             
-            if 'fg_depar@body' not in columns:
-                alldict['fg_depar@body']=numpy.float32(numpy.NaN)
-                alldict['an_depar@body']=numpy.float32(numpy.NaN)
-                alldict['biascorr@body']=numpy.float32(numpy.NaN)
-                alldict['sondetype@conv']=numpy.int32(-2147483648)
-                alldict['reportype']=numpy.int32(-2147483648)
 
             #print(time.time()-t,sys.getsizeof(alldict)//1024//1024)
             idx=numpy.where(numpy.logical_or(alldict.reportype.values==16045,alldict.reportype.values==16068))[0]
@@ -1419,12 +1407,27 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
                                     for s in secondary:
                                         lista = [eval(s)[0] ] 
 
+                                        ''' old working but not with strings stations    
                                         if int(station_id) in lista:
                                                 sec = numpy.where(cdm[k]['secondary_id']== s )
                                                 groups[k][d.element_name]=({k+'_len':1},  cdm[k][d.element_name].values[sec] )         
                                                 sci_found = True
                                                 continue
-                                    
+                                        '''   
+
+                                        try:              
+                                            station_id = int(station_id)
+                                        except:
+                                            station_id = station_id 
+                                        if station_id in lista:
+                                            sec = numpy.where(cdm[k]['secondary_id']== s )
+                                            groups[k][d.element_name]=({k+'_len':1},  cdm[k][d.element_name].values[sec] )         
+                                            sci_found = True
+                                            continue
+                                        
+                                                
+                                                
+                                                
                         except KeyError:
                             pass
                     elif k in ('source_configuration'): # storing the source configuration info, e.g. original file name, 
@@ -1437,7 +1440,7 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
                             
                     else : # this is the case where the cdm tables DO exist in th CDM GitHub 
                         try:   
-                            groups[k][d.element_name]=({k+'_len':len(cdm[k] ) }, cdm[k][d.element_name].values)  # element_name is the netcdf variable name, which is the column name of the cdm table k 
+                            groups[k][d.element_name]=({k+'_len':len(cdm[k] ) }, cdm[k][d.element_name].values )  # element_name is the netcdf variable name, which is the column name of the cdm table k 
                         except KeyError:
                             pass
                     try:
@@ -1550,7 +1553,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
         write_dict_h5(fno, fbds, 'era5fb', fbencodings, var_selection=[],mode='a')
         dcols=[]
         for d in fbds.columns:
-            if d not in ['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body', 'lon@hdr','lat@hdr','seqno@hdr',
+            if d not in ['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body',
                          'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv']:
                 dcols.append(d)
         fbds.drop(columns=dcols,inplace=True)
@@ -1623,8 +1626,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                         if 'sci' not in locals(): 
                             sci=numpy.where(cdm[k]['primary_id']==numpy.string_('0-20000-0-'+fbds['statid@hdr'][0][1:-1].decode('latin1')))[0]
                         if len(sci)>0:
-                            groups[k][d.element_name]=({k+'_len':1},
-                                    cdm[k][d.element_name].values[sci])
+                            groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sci])
                             #print('statconf:',k,groups[k][d.element_name])
                     except KeyError:
                         #print('x')
@@ -1639,18 +1641,14 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                             groups[k][d.element_name]=({k+'_len':len(cdm[k])}, cdm[k][d.element_name].values) # element_name is the netcdf variable name, which is the column name of the cdm table k 
                         except KeyError:
                             pass
-                       
-                       
-                       
-                       
-                       
-                       
-                       
+
+  
                 else : # this is the case where the cdm tables DO exist
                     try:   
                         groups[k][d.element_name]=({k+'_len':len(cdm[k])}, cdm[k][d.element_name].values) # element_name is the netcdf variable name, which is the column name of the cdm table k 
                     except KeyError:
                         pass
+                    
                 try:
 
                     if type(groups[k][d.element_name].values[0])==str:
@@ -1764,8 +1762,6 @@ def filelist_cleaner(lista, dataset=''):
     return cleaned
    
 
-
-
 def clean_station_configuration(cdm_tab ):
     """ Replace wrong characters from the station cofniguration tables """
     subs={'o':[240,242,243,244,245,246,248],'O':[210,211,212,213,214,216],
@@ -1796,6 +1792,14 @@ def clean_station_configuration(cdm_tab ):
     print('Cleaned station_configuration')
 
 
+db   = { 'era5_1'       : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1'            , 'stat_conf' : 'station_configuration_era5_1.dat'       , 'example': 'era5.conv._01009'    } ,
+              'era5_3188' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/3188'      , 'stat_conf' : 'station_configuration_era5_3188.dat'  , 'example': 'era5.3188.conv.C:6072'    } ,
+              'era5_1759' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1759'      , 'stat_conf' : 'station_configuration_era5_1759.dat'  , 'example': 'era5.1759.conv.6:99041'   } ,
+              'era5_1761' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1761'      , 'stat_conf' : 'station_configuration_era5_1761.dat'  , 'example': 'era5.1761.conv.9:967'     } ,
+              'ncar'           : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'         , 'stat_conf' : 'station_configuration_ncar.dat'            , 'example': 'uadb_trhc_81405.txt' } ,
+              'ncar'           : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'         , 'stat_conf' : 'station_configuration_ncar.dat'            , 'example': 'uadb_windc_97086.txt' } ,
+              'igra2'          : { 'dbpath' : '/raid60/scratch/federico/databases/IGRAv2'      , 'stat_conf' : 'station_configuration_igra2.dat'           , 'example': 'BRM00082571-data.txt' } ,
+              'bufr'            : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/ai_bfr'    , 'stat_conf' : 'station_configuration_bufr.dat'             , 'example': 'era5.94998.bfr'     }    }
     
 
 if __name__ == '__main__':
@@ -1830,7 +1834,7 @@ if __name__ == '__main__':
     """ Paths to the databases """    
 
     #Files = Files.split(',')
-    Files=glob.glob(Files)
+    #Files=glob.glob(Files)
         
     if not os.path.isdir(out_dir):
             os.system('mkdir ' + out_dir )       
@@ -1850,16 +1854,48 @@ if __name__ == '__main__':
     cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
     clean_station_configuration(cdm_tab)         
     
-    p=Pool(12)
+    
+    Files = Files.split(',')
+    for File in Files:
+             
+        if not os.path.isdir(out_dir):
+            os.system('mkdir ' + out_dir ) 
+            
+        output_dir = out_dir + '/' + dataset      
+        if not os.path.isdir(output_dir):
+            os.system('mkdir ' + output_dir )
+                    
+        print( blue + '*** Processing the database ' + dataset + ' ***  \n \n *** file: ' + File + '\n'  + cend)
+                                    
+        if 'era5' in dataset and 'bufr' not in dataset:   
+            odb_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset, File)
+        else:
+            df_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset, File)
+
+          
+        print(' ***** Convertion of  ' , Files,  '  completed ! ***** ')
+
+
+
+    
+    
+    
+    
+    '''
+    p=Pool(25)
     if 'era5' in dataset and 'bufr' not in dataset:   
         func=partial(odb_to_cdm,cdm_tab, cdm_tabdef, output_dir, dataset)
-        out=list(map(func,Files))
+        out=list(p.map(func,Files))
     else:
         func=partial(df_to_cdm,cdm_tab, cdm_tabdef, output_dir, dataset)
         out=list(map(func, Files))
     print('*** CONVERTED: ' , Files[-1] )
       
     print(' ***** Convertion of  ' , Files,  '  completed ! ***** ')
+    '''
+    
+
+
 
 
 
@@ -1867,6 +1903,6 @@ if __name__ == '__main__':
 -f /raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._82930.gz -d era5_1 -o OUTPUT
 -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.1:82930.gz -d era5_1759 -o OUTPUT
 -f /raid60/scratch/federico/databases/IGRAv2/BRM00082930-data.txt -d igra2 -o OUTPUT
--f /raid60/scratch/federico/databases/UADB//uadb_windc_82930.txt -d ncar -o OUTPUT
 -f /raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.82930.bfr -d bufr -o OUTPUT
+-f /raid60/scratch/federico/databases/IGRAv2/BNXUAAW5331-data.txt  -d igra2 -o OUTPUT
 """
