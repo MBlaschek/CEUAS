@@ -1627,6 +1627,12 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                         if len(sci)>0:
                             groups[k][d.element_name]=({k+'_len':1},
                                     cdm[k][d.element_name].values[sci])
+                        else:
+                            sci=numpy.where(cdm[k]['secondary_id']==numpy.string_(fbds['statid@hdr'][0][1:-1].decode('latin1')))[0]
+                            if len(sci)>0:
+                                groups[k][d.element_name]=({k+'_len':1},
+                                        cdm[k][d.element_name].values[sci])
+                            
                             #print('statconf:',k,groups[k][d.element_name])
                     except KeyError:
                         #print('x')
@@ -1833,7 +1839,8 @@ if __name__ == '__main__':
     args = parser.parse_args()
     dataset = args.dataset 
     out_dir = args.output
-    Files = args.files
+    #Files = args.files
+    Files=glob.glob(args.files)
 
     if dataset not in ['era5_1', 'era5_2', 'era5_3188', 'era5_1759', 'era5_1761', 'bufr', 'igra2', 'ncar']:
         raise ValueError(" The selected dataset is not valid. Please choose from ['era5_1', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'igra2', 'ncar' ]  ")    
@@ -1876,25 +1883,29 @@ if __name__ == '__main__':
     
     
     # federico's run 
-    Files = Files.split(',')
-    for File in Files:
+    #Files = Files.split(',')
+    #for File in Files:
              
-        if not os.path.isdir(out_dir):
-            os.system('mkdir ' + out_dir ) 
-            
-        output_dir = out_dir + '/' + dataset      
-        if not os.path.isdir(output_dir):
-            os.system('mkdir ' + output_dir )
-                    
-        print( blue + '*** Processing the database ' + dataset + ' ***  \n \n *** file: ' + File + '\n'  + cend)
-                                    
-        if 'era5' in dataset and 'bufr' not in dataset:   
-            odb_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset, File)
-        else:
-            df_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset, File)
+    if not os.path.isdir(out_dir):
+        os.system('mkdir ' + out_dir ) 
+        
+    output_dir = out_dir + '/' + dataset      
+    if not os.path.isdir(output_dir):
+        os.system('mkdir ' + output_dir )
+                
+    print( blue + '*** Processing the database ' + dataset + ' ***  \n \n *** file: ' + Files[0] + '\n'  + cend)
+                                
+    p=Pool(25)
+    if 'era5' in dataset and 'bufr' not in dataset:   
+        func=partial(odb_to_cdm,cdm_tab, cdm_tabdef, output_dir, dataset)
+        out=list(p.map(func,Files))
+    else:
+        #df_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset, File)
+        func=partial(df_to_cdm,cdm_tab, cdm_tabdef, output_dir, dataset)
+        out=list(p.map(func,Files))
 
-          
-        print(' ***** Convertion of  ' , Files,  '  completed ! ***** ')    
+      
+    print(' ***** Convertion of  ' , Files,  '  completed ! ***** ')    
 
 
 
