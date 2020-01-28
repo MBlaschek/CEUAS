@@ -23,11 +23,9 @@ pd.set_option('display.max_rows', None)
 
 """ Select the databases """
 ds = ['era5_3188' , 'era5_1759' , 'era5_1761' , 'era5_1' , 'bufr', 'ncar' , 'igra2']
-
 #ds = ['era5_3188' , 'era5_1759' , 'bufr']
 
-
-
+#ds = ['igra2']
 
 all_dic = {}
 for d in ds:

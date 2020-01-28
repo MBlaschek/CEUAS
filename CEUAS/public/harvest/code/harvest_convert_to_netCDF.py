@@ -788,7 +788,9 @@ def read_all_odbsql_stn_withfeedback(odbfile):
                     print('read the odb file' , odbfile)
             except:
 #                rdata=subprocess.check_output(["odb","header",'/3645/'.join(odbfile.split('/1/'))])
+                #rdata=subprocess.check_output(["odb","header",'.'.join(odbfile.split('._'))])
                 rdata=subprocess.check_output(["odb","header",'.'.join(odbfile.split('._'))])
+                
                 with open('odbheader','wb') as f:
                     f.write(rdata)
             rdata=rdata.decode('latin-1').split('\n')
@@ -1795,6 +1797,18 @@ def clean_station_configuration(cdm_tab ):
 
     print('Cleaned station_configuration')
 
+
+    
+
+db   = { 'era5_1'       : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1'               } ,
+                  'era5_3188' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/3188'     } ,
+                  'era5_1759' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1759'     } ,
+                  'era5_1761' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1761'     } ,
+                  'ncar'           : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'        } ,
+                  'ncar'           : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'        } ,
+                  'igra2'          : { 'dbpath' : '/raid60/scratch/federico/databases/IGRAv2'      } ,
+                  'bufr'            : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/ai_bfr'    }   }
+        
 
     
 
