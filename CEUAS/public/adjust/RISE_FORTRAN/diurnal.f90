@@ -1,0 +1,76 @@
+SUBROUTINE DIURNAL(MM,DD,HH,DLAT,DLON,ANGLE)
+
+!!**** *DIURNAL*
+
+!!       PURPOSE.
+!!      ----------
+
+!!           COMPUTE SOLAR ELEVATION ANGLE
+
+!!       INTERFACE.
+!!      ------------
+
+!!         CALL DIURNAL(MM,DD,HH,DLAT,DLON,ANGLE)
+
+!!        INPUT
+!!         MM     -  MONTH
+!!         DD     -  DAY OF MONTH
+!!         HH     -  HOUR
+!!         DLAT   -  LATITUDE
+!!         DLON   -  LONGITUDE
+
+!!        OUTPUT
+!!         ANGLE  -  SOLAR ELEVATION
+
+
+!!       EXTERNALS.
+!!      -----------
+
+!!         NONE
+
+!!       REFERENCE.
+!!      ------------
+
+!!         NONE
+
+!!       AUTHOR.
+!!      ---------
+
+!!         ANTTI LANGE,  ECMWF,  25 JULY 1984
+
+!!       MODIFICATIONS.
+!!      ----------------
+
+!!         NONE
+
+
+
+
+IMPLICIT NONE
+
+integer, parameter :: JPRM=4
+REAL(KIND=JPRM) :: DLAT, DLON, ANGLE, PI, TWOPI, RADCON, DAY, SEASON,COSSSN,&
+          &DECL, RLAT, SINLAT, COSLAT, RLON, RLHH, COSLHH, SINE
+INTEGER :: MM,DD,HH
+PI=2.*ASIN(1.)
+TWOPI=2.*PI
+RADCON=TWOPI/360.0
+
+!!*** SINUS OF SOLAR ELEVATION ANGLE WILL BE APPROXIMATED ************
+
+DAY=REAL(MM)*30.44+REAL(DD)-31.44
+SEASON=TWOPI*(DAY+9.5)/365.25
+COSSSN=COS(SEASON)
+DECL=-RADCON*23.5*COSSSN
+RLAT=RADCON*DLAT
+SINLAT=SIN(RLAT)
+COSLAT=COS(RLAT)
+RLON=RADCON*DLON
+RLHH=TWOPI*HH/24.00+RLON-PI
+COSLHH=COS(RLHH)
+SINE=SIN(DECL)*SINLAT+COS(DECL)*COSLAT*COSLHH
+
+ANGLE = ASIN(SINE) * 180. / PI
+
+RETURN
+END SUBROUTINE DIURNAL
