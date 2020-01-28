@@ -27,7 +27,6 @@ ds = ['era5_3188' , 'era5_1759' , 'era5_1761' , 'era5_1' , 'bufr', 'ncar' , 'igr
 
 
 
-
 all_dic = {}
 for d in ds:
     print('processing: ' , d)

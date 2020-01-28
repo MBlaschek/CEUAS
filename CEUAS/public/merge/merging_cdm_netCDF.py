@@ -204,7 +204,6 @@ class Merger():
                   elif 'seconds' in time_offset:                        
                         date_time_delta = [ timedelta(seconds = float(i) )  + time_offset_value  for i in date_time ]    
                   
-
                         
                   '''
                   if 'era' not in dataset:
