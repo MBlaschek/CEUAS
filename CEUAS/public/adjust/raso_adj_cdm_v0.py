@@ -63,9 +63,13 @@ Optional Keyword Options:
     --borders []        Breakpoint zone, default: 90 (in days)
     --ratio []          Use ratio instead of differences, default: 0 (not)
 
+    --logfile []        Write messages to a log file
+
 Experimental Keyword Options:
-    --do-not-write          Returns xarray Dataset
-    --enable-ta-feature     Apply Temperature adjustments
+    --donotwrite          Returns xarray Dataset
+    --enable_ta_feature   Apply Temperature adjustments
+    --interpolate_missing Interpolate Adjustments to non-standard times and pressure levels
+    
     """.format(__file__))
 
 
@@ -84,18 +88,19 @@ def now(timespec='auto'):
     return datetime.datetime.now().isoformat(timespec=timespec)
 
 
-def _print_string(*args, adddate=False, **kwargs):
+def _print_string(*args, mname=None, adddate=False, **kwargs):
+    text = " ".join([str(i) for i in args])
+    if mname is not None:
+        text = "[{}] {}".format(mname, text)
     if adddate:
-        return "[" + now() + "] " + " ".join([str(i) for i in args])
-    else:
-        return " ".join([str(i) for i in args])
+        text = "[" + now() + "] " + text
+    return text
 
 
-def message(*args, mname=None, verbose=0, level=0, logfile=None, **kwargs):
+def message(*args, verbose=0, level=0, logfile=None, **kwargs):
     """ Message function
     Args:
         *args:
-        mname:
         verbose:
         level:
         logfile:
@@ -110,12 +115,14 @@ def message(*args, mname=None, verbose=0, level=0, logfile=None, **kwargs):
 
     elif verbose > level:
         text = _print_string(*args, **kwargs)
-        if mname is not None:
-            text = "[%s] " % mname + text
-
         print(text)
     else:
         pass
+
+
+def update_kw(name, value, **kwargs):
+    kwargs.update({name: value})
+    return kwargs
 
 
 def conform(data, shape):
@@ -248,6 +255,7 @@ def table_to_dataset(data, dim='time', plev='plev', levels=None, **kwargs):
     #
     # select only valid levels
     #
+    message("Selecting only standard pressure levels", **kwargs)
     data = data[data[plev].isin(levels)]
     #
     # convert to xarray
@@ -841,6 +849,87 @@ def apply_percentile_adjustments(data, percentiles, adjustment, axis=0, noise=Fa
     return np.transpose(adjusts, in_dims[:axis] + in_dims[axis + 1:] + [axis])
 
 
+# -----------------------------------------------------------------------------
+#
+# Interpolation
+#
+# -----------------------------------------------------------------------------
+def level_interpolation(idata, dim='time', method='linear', fill_value=None, extrapolate=True, **kwargs):
+    """ Interpolate CDM variable per dimension (time, plev)
+
+    Args:
+        idata (xr.DataArray): Inputdata
+        dim (str): coordinate of input, e.g. time, plev
+        method (str): interpolation method, e.g. linear, log-linear for plev
+        fill_value (any): Interpolation fill_value: 'extrapolate', None, np.nan
+        extrapolate (bool): fill missing values [True]
+        **kwargs:
+
+    Returns:
+        xr.DataArray : Interpolate data, same as input
+
+    Examples:
+        Interpolate adjustments per level backwards and forward in time
+        >>> data['hur_q'].groupby('plev').apply(level_interpolation)
+
+        Interpolate adjustments per profile up and down in pressure using a log-linear interpolation
+        >>> data['hur_q'].groupby('time').apply(level_interpolation, dim='plev', method='log-linear')
+
+        Interpolate relative humidity per profile up and down in pressure using a log-linear interpolation, but no
+        extrapolation
+        >>> data['hur'].groupby('time').apply(level_interpolation, dim='plev', method='log-linear', extrapolate=False)
+
+    """
+    if not isinstance(idata, xr.DataArray):
+        raise ValueError("Requires a DataArray, not ", type(idata))
+    #
+    # maybe check if dimensions are present
+    #
+    idim = idata.dims[0]
+    obs = idata[idim].values.copy()
+    #
+    # swap to interpolation dimension
+    #
+    idata = idata.swap_dims({idim: dim})
+    #
+    # Find duplicated values /not allowed in interpolation
+    #
+    itx = idata[dim].to_index()
+    ittx = itx.duplicated(keep=False) & ~np.isfinite(idata.values)  # duplicates in dim & not a value -> skip
+    #
+    # some duplicates might remain
+    #
+    if itx[~ittx].duplicated().any():
+        ittx[~ittx] = itx[~ittx].duplicated()  # duplicates with same values / should not happen
+
+    message(itx.size, ittx.sum(), mname='DUPLICATES', **update_kw('level', 1, **kwargs))
+    if method == 'log-linear':
+        #
+        # Pressure levels to log
+        #
+        idata.values[~ittx] = idata[~ittx] \
+            .assign_coords({'plev': np.log(idata['plev'].values[~ittx])}) \
+            .interpolate_na(dim, method='linear', fill_value=fill_value) \
+            .values
+    else:
+        idata[~ittx] = idata[~ittx].interpolate_na(dim, method=method, fill_value=fill_value)
+    #
+    # Extrapolate in dimension (backward and forward) or (up and down)
+    #
+    if extrapolate:
+        idata = idata.bfill(dim).ffill(dim)
+    #
+    # revert to initial dimension
+    #
+    idata[idim] = (dim, obs)  # add coordinate / dimension
+    return idata.swap_dims({dim: idim}).drop('obs')  # swap dimension back, remove obs coordinate
+
+
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+
 def _cmd_arguments(args, longs):
     add = longs[:]  # copy
     names = []
@@ -867,10 +956,9 @@ def _cmd_arguments(args, longs):
 #
 # -----------------------------------------------------------------------------
 
-def main(ifile=None, ofile=None, **kwargs):
-    kwargs = kwargs.update({'verbose': 1})
-    ta_feature_enabled = False
-    metadata = False
+def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=False, return_cube=False, metadata=False,
+         **kwargs):
+    kwargs.update({'verbose': 1})
 
     if ifile is None:
         import getopt
@@ -900,8 +988,11 @@ def main(ifile=None, ofile=None, **kwargs):
                 usage()
                 return 0
 
-            elif opt in ("--enable-ta-feature"):
+            elif opt == "--enable_ta_feature":
                 ta_feature_enabled = True
+
+            elif opt == "--interpolate_missing":
+                interpolate_missing = True
 
             elif any([opt[2:] in i for i in knames]):
                 if arg != '':
@@ -927,6 +1018,7 @@ def main(ifile=None, ofile=None, **kwargs):
         message("Multiple input files: ", ifile, ' | #', len(ifiles), mname='INFO', **kwargs)
         data = []
         traj_data = []
+        ifile = {}
         for jfile in ifiles:
             idata = xr.load_dataset(jfile)
             ivar = [k for k in list(idata.data_vars) if '_' not in k][0]
@@ -946,11 +1038,12 @@ def main(ifile=None, ofile=None, **kwargs):
 
             data.append(idata)
             variables.append(ivar)
+            ifile[ivar] = jfile
         #
         # to larger Dataset
         #
         data = xr.merge(data)
-        ifile = jfile  # for naming
+        traj_data = xr.merge(traj_data)
     else:
         if not os.path.isfile(ifile):
             usage()
@@ -974,17 +1067,30 @@ def main(ifile=None, ofile=None, **kwargs):
             traj_data = data[to_be_dropped].copy()
             data = data.drop(to_be_dropped)
         variables.append(ivar)
-
-    if ofile is None:
-        ofile = ifile.replace('.nc', '_out.nc')
-        message(ofile, mname='OUTPUT', **kwargs)
+        ifile = {ivar: ifile}
     #
     # 2. Step (Convert to DataCube, rename dimension to time)
     #
     message("Converting to DataCube ...", mname='CONVERT', **kwargs)
+    #
+    # Make sure we have the original dataset
+    #
+    raw_data = data.copy()  # Backup for later
     dim = 'time'
     data = data.swap_dims({'obs': 'time'})
-    data = table_to_dataset(data, **kwargs)
+    #
+    # Add reverse index to convert back to obs
+    #
+    data['obs'] = ('time', np.arange(0, data.time.size))
+    message("Observations", ",".join(["{}:{}".format(i, j) for i, j in raw_data.dims.items()]), mname='BKP', **kwargs)
+    message("Trajectories", ",".join(["{}:{}".format(i, j) for i, j in traj_data.dims.items()]), mname='BKP', **kwargs)
+    message("Dates:", data[dim].min(), ' - ', data[dim].max(), "Duplicates:", data[dim].to_index().duplicated().sum(),
+            mname=dim.upper(),
+            **kwargs)
+    #
+    # Select only standard pressure data
+    #
+    data = table_to_dataset(data, mname='CONVERT', **kwargs)
     message("Done", mname='CONVERT', **kwargs)
     #
     # Add Standard time variable (needed for detection parameters)
@@ -993,7 +1099,7 @@ def main(ifile=None, ofile=None, **kwargs):
     #
     # e.g. 00Z (21Z -1 day to 3Z same day)
     #
-    dates = data.time.to_index()
+    dates = data[dim].to_index()
     newdates = fix_datetime(dates, span=3)  # use plus minus 3 hours
     #
     # find duplicates
@@ -1017,7 +1123,6 @@ def main(ifile=None, ofile=None, **kwargs):
     #
     # Add Standard time as variable
     #
-    raw_data = data.copy()  # Backup for later
     data['time_orig'] = ('time', dates)
     message("Standard time calculated, Duplicates resolved:", conflicts.size, mname='CONVERT', **kwargs)
     data = data.assign_coords({dim: newdates})  # overwrite dim with new dates
@@ -1025,7 +1130,7 @@ def main(ifile=None, ofile=None, **kwargs):
     # Day-Night Split / selection
     #
     times = (0, 12)
-    data = data.sel(**{dim: data[dim].dt.hour.isin(times)})
+    data = data.sel(**{dim: data[dim].dt.hour.isin(times) & (data[dim].dt.minute == 0)})
     data = dict(data.groupby(dim + '.hour'))
     for ikey in data.keys():
         data[ikey] = data[ikey].assign_coords(
@@ -1056,6 +1161,8 @@ def main(ifile=None, ofile=None, **kwargs):
             bias[ivar] = "{}_bias_estimate".format(ivar)
     #
     # Apply Bias_estimates to Departures ?
+    #
+    # Default behaviour is to apply the bias to get absolute values
     #
 
     #
@@ -1113,6 +1220,7 @@ def main(ifile=None, ofile=None, **kwargs):
         # 4. Detect Breakpoints
         #
         breaks = detector(data[svar].values, axis=axis, dist=dist, thres=thres, min_levels=min_levels, **kwargs)
+        #
         bvar = '{}_breaks'.format(svar)
         attrs = {'units': '1', 'dist': dist, 'thres': thres, 'min_levels': min_levels, 'standard_name': bvar}
         data[bvar] = (dims, breaks)
@@ -1134,6 +1242,7 @@ def main(ifile=None, ofile=None, **kwargs):
             for i, idata in data.groupby('hour'):
                 breaks = get_breakpoints(idata[bvar], **kwargs)
                 message("Breakpoints: ", len(breaks), mname='ADJUST', **kwargs)
+                #
                 adjv = adjustments(idata[jvar].values, breaks,
                                    axis=axis,
                                    mname='ADJUST', **kwargs)
@@ -1152,6 +1261,7 @@ def main(ifile=None, ofile=None, **kwargs):
             for i, idata in data.groupby('hour'):
                 breaks = get_breakpoints(idata[bvar], **kwargs)
                 message("Breakpoints: ", len(breaks), mname='ADJUST', **kwargs)
+                #
                 adjv = adjustments(idata[jvar].values, breaks,
                                    use_mean=False,
                                    axis=axis,
@@ -1161,11 +1271,17 @@ def main(ifile=None, ofile=None, **kwargs):
             data[avar].attrs.update(params)
             data[avar].attrs['standard_name'] += '_adjust'
             data[avar].attrs['biascor'] = 'quantile'
+
+    if return_cube:
+        return data
+
     #
-    # Restore original time
+    # Restore original time [hour x date] => datetime
     #
+    message("hour x time -> datetime ", mname='ALIGN', **kwargs)
     data = dict(data.groupby('hour'))
     for ikey in data.keys():
+        # use the backup of datetimes 'time_orig'
         data[ikey] = data[ikey].assign_coords({dim: data[ikey]['time_orig'].to_index()})
 
     data = xr.concat(data.values(), dim=dim).sortby(dim)
@@ -1174,7 +1290,8 @@ def main(ifile=None, ofile=None, **kwargs):
     #
     # Merge Variables back into raw_data
     #
-    outvars = []
+    message("Selecting variables", mname='REVERSE', **kwargs)
+    outvars = ['obs']
     for ivar in variables:
         if ivar + '_m' in data.data_vars:
             outvars.append(ivar + '_m')
@@ -1184,7 +1301,24 @@ def main(ifile=None, ofile=None, **kwargs):
             outvars.append(ivar + '_q')
             outvars.append(ivar + '_obs_minus_an_snht')
             outvars.append(ivar + '_obs_minus_an_snht_breaks')
-    raw_data = raw_data.merge(data[outvars], join='left')
+    #
+    # Convert back to obs
+    #
+    message("time to obs", mname='REVERSE', **kwargs)
+    # Processing to DataFrame and back to xarray
+    data = data[outvars] \
+        .to_dataframe() \
+        .reset_index() \
+        .dropna(subset=['obs']) \
+        .set_index('obs') \
+        .to_xarray()
+    # convert to integer
+    data['obs'] = data.obs.astype(int)
+    data = data.set_coords(['time', 'plev'])
+    raw_data['obs'] = ('obs', raw_data.obs.values)
+    # return raw_data, data, traj_data
+    raw_data = raw_data.merge(data, join='left')
+    raw_data = raw_data.drop('obs')
     #
     # Fill SNHT, breakpoints with zeros
     #
@@ -1192,32 +1326,71 @@ def main(ifile=None, ofile=None, **kwargs):
         if 'snht' in ivar or 'breaks' in ivar:
             raw_data[ivar] = raw_data[ivar].fillna(0)
     #
-    # Interpolate adjustments back to original shape and intermediate times
+    # Interpolate adjustments back to intermediate times & significant levels
     #
-    for ivar in variables:
-        if ivar + '_m' in raw_data.data_vars:
-            raw_data[ivar + '_m'] = raw_data[ivar + '_m'].interpolate_na(dim=dim)
-        if ivar + '_q' in raw_data.data_vars:
-            raw_data[ivar + '_q'] = raw_data[ivar + '_q'].interpolate_na(dim=dim)
+    if interpolate_missing:
+        for ivar in variables:
+            if ivar + '_m' in raw_data.data_vars:
+                message("Interpolating ... ", ivar + '_m', mname='INTERP', **kwargs)
+                #
+                # Interpolate back/forward in time
+                # extrapolate=True
+                #
+                raw_data[ivar + '_m'] = raw_data[ivar + '_m'] \
+                    .groupby('plev').apply(level_interpolation, dim=dim, **kwargs)
+                #
+                # Interpolate up/down levels
+                #
+                raw_data[ivar + '_m'] = raw_data[ivar + '_m'] \
+                    .groupby('time').apply(level_interpolation, dim='plev',
+                                           **update_kw('method', 'log-linear', **kwargs))
+
+            if ivar + '_q' in raw_data.data_vars:
+                message("Interpolating ... ", ivar + '_q', mname='INTERP', **kwargs)
+                #
+                # Interpolate back/forward in time
+                # extrapolate=True
+                #
+                raw_data[ivar + '_q'] = raw_data[ivar + '_q'] \
+                    .groupby('plev').apply(level_interpolation, dim=dim, **kwargs)
+                #
+                # Interpolate up/down levels
+                #
+                raw_data[ivar + '_q'] = raw_data[ivar + '_q'] \
+                    .groupby('time').apply(level_interpolation, dim='plev',
+                                           **update_kw('method', 'log-linear', **kwargs))
+
+        message("Interpolation complete", mname='INTERP', **kwargs)
     #
     # Add Trajectory data again
     #
+    message('Add trajectory information', mname='TRAJ', **kwargs)
     raw_data = raw_data.merge(traj_data, join='left')
     #
     # Store information in file
     #
-    if kwargs.get('do-not-write', False):
+    if kwargs.get('donotwrite', False):
+        message("Returning data", mname='OUT', **kwargs)
         return raw_data
     #
     # Use Xarray to netcdf library
     #
-    raw_data.to_netcdf(ofile,
-                       mode='w',
-                       format='netCDF4',
-                       engine=kwargs.get('engine', 'netcdf4'),
-                       encoding={i: {'compression': 'gzip', 'compression_opts': 9} for i in list(raw_data.data_vars)})
+    message("Writing ...", mname='OUT', **kwargs)
+    for ivar in variables:
+        if ofile is None:
+            ofile = ifile[ivar].replace('.nc', '_out.nc')
+            message(ofile, mname='OUTPUT', **kwargs)
+        if ivar == 'ta' and not ta_feature_enabled:
+            continue
 
-    message("Writing to", ofile, mname='OUT', **kwargs)
+        raw_data.to_netcdf(ofile,
+                           mode='w',
+                           format='netCDF4',
+                           engine=kwargs.get('engine', 'netcdf4'),
+                           encoding={i: {'compression': 'gzip', 'compression_opts': 9} for i in
+                                     list(raw_data.data_vars)})
+
+    message("Written", ofile, mname='OUT', **kwargs)
 
 
 # -----------------------------------------------------------------------------
