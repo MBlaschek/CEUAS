@@ -4,40 +4,36 @@ It is explained here how to download Radiosonde data from different sources.
 
 Type | Nr | Responsible | Nature | Title| Due | Status | File
 ---|---|---|---|---|---|---|---
-Deliverable | DC3S311c_Lot2.1.2.1 | UNIVIE | Software, Report | C3S Upper air data harvest and upload toolbox v0|  Nov 2019 | delayed | download*.py
+Deliverable | DC3S311c_Lot2.1.2.1 | UNIVIE | Software, Report | C3S Upper air data harvest and upload toolbox v0|  Nov 2019 | delayed | code/ 
 
 Table of Content:
-- [Tasks](#tasks)
 - [Download radiosonde data from different sources](#download-radiosonde-data-from-different-sources)
   * [Requirements](#requirements)
   * [IGRAv2](#igrav2)
   * [UADB](#uadb)
-  * [MARS ODB ERA5](#mars-odb-era5)
-    + [Download](#download)
-    + [Convert to station time series](#convert-to-station-time-series)
-- [Convert to Netcdf](#convert-to-netcdf)
+  * [MARS ODB](#MARS-ODB)
+- [Convert to Netcdf](#Convert-to-CDM-complaint-NetCDF)
+- [License](#License)
 
 # Tasks
 
 In order to build the radiosonde archive follow these steps:
 * Download radiosonde data from different sources
   * IGRAv2 (not credentials needed)
-    * `download_IGRAv2.sh`
+    * `code/download/download_IGRAv2.sh`
   * UADB (credentials needed [NCAR](https://rda.ncar.edu)
-    * `download_UADB.csh`
+    * `code/download/download_UADB.csh`
   * MARS - ERA5, ECMWF (credentials needed)
-    * Process ODB files
 * Read / convert data to NetCDF4
 * Produce Archive Overview
 
 # Download radiosonde data from different sources
-In order to download the data from all sources (Attention: credentials are needed for some) execute the following. In the Chapters below on can find the individual download procedures per data source. In order to work, it is highly recommended to use a Linux environment, a stable and fast internet connection and have enough disk space available. 
+In order to download the data from all sources (**Attention: credentials are needed for some**) follow the specific information here or in the Deliverable Document. In the Chapters below on can find the individual download procedures per data source. In order to work, it is highly recommended to use a Linux environment, a stable and fast internet connection and have enough disk space available. 
 
 ## Requirements
 Please check the following before you execute:
-* Each script has the correct `DATADIR` path
-* Each script has the need credentials (modify script)
-* Tools (wget, csh, bash, odb)
+* Each script has the needed credentials (modify script)
+* Tools (wget, csh, bash, odb, mars)
 
 ## IGRAv2
 The Integrated Global Radiosonde Archive ([IGRA](https://doi.org/10.7289/V5X63K0Q)) version 2 was released in 2016 and updated since then. There are about 2700 stations in that archive covering the time 1905 to present. Please find the description at the data site or in the `pre_merge_stations.py` routine.
@@ -78,7 +74,7 @@ In »»AEXUAE05467-data.txt.zip«« speichern.
 ...
 ```
 
-The script creates the follwing structure and source files:
+The script creates the following structure and source files:
 ```bash
 ll /tmp/data/igra | head
 total 22G
@@ -89,7 +85,7 @@ total 22G
 ## UADB
 The NCAR Upper Air Database ([UADB](https://rda.ucar.edu/datasets/ds370.1/)) was released in 2014 and updated since then. There are about 1100 stations in that archive covering the time 1920 to present. Please find the description at the data site or in the `pre_merge_stations.py` routine.
 
-In order to download the whole UADB Archive execute the following script. The script requires credentials (username (email) and password) from the user. The needed information can be found on [rda.ucar.edu](https://rda.ucar.edu/index.html?hash=data_user&action=register). Note if you want to change the default download location, please change the `DATADIR` variable inside the script:
+In order to download the whole UADB Archive execute the following script. The script requires credentials (username (email) and password) from the user and the file `UADB.files.list`. The needed information can be found on [rda.ucar.edu](https://rda.ucar.edu/index.html?hash=data_user&action=register). Note if you want to change the default download location, please change the `DATADIR` variable inside the script:
 ```bash
 csh download_UADB.csh [USERNAME] [PASSWORD]
 ```
@@ -128,7 +124,7 @@ In »»uadb_trhc_1020.txt«« speichern.
 2020-01-21 15:32:31 (442 KB/s) - »»uadb_trhc_1020.txt«« gespeichert [260767/260767]
 ...
 ```
-The script creates the follwing structure and source files:
+The script creates the following structure and source files:
 ```bash
 ll /tmp/data/ncar | head
 insgesamt 175G
@@ -136,11 +132,66 @@ insgesamt 175G
 -rw-r--r--. 1 user users  249K  1. Mär 2019  uadb_trhc_10034.txt
 -rw-r--r--. 1 user users  168M 15. Mai 2019  uadb_windc_10035.txt
 -rw-r--r--. 1 user users   22M 15. Mai 2019  uadb_windc_10046.txt
-``` 
-## MARS ODB ERA5
+```
+## MARS ODB 
 
-### Download
+The MARS archive is a huge data collection including satellite and in-situ observations from around the world and resides at the ECMWF. The Observation Data Base (ODB) can be retrieved from the ECMWF assuming valid credentials. The Copernicus Early Upper Air archive consists of three sources available from ECMWF; these are
 
-### Convert to station time series
+1. The ERA-CLIM(2) digitized data in ODB format (experiment identifier 3188)
 
-# Convert to Netcdf
+2. The NCAR upper air data sets in ODB format (experiment identifiers 1759 and 1761)
+
+3. The ERA5 analysis feedback archive
+
+The ODB files can be retrieved with the following MARS (https://www.ecmwf.int/en/forecasts/datasets/archive-datasets) jobs:
+
+ ```bash
+retrieve, 
+	type=an, 
+	class=ea, 
+	expver=${EXP}, 
+	stream=oper, 
+	date=${YYY}${MMM}01/to/${YYY}${MMM}${DDD}, 
+	time=00/12, 
+	decade=${DEC}, 
+	reportype=16013/16022/16045/16068, 
+	type=ofb,
+	target='era5.conv.${YYY}${MMM}'
+ ```
+
+`EXP` can be `3188 (CHUAN)`, `1759 (NCAR)` or `1761 (NCAR)`. If one wants to retrieve the ERA5 feedback data, one can use experiment numbers `3645` (1958-), `3647` (1968-), `3649` (1972-) and `3651` (1950-) as well as `1` (1979-). The monthly ODB files must be rearranged into station series, using ODB and cat commands. A scripts for this can be found  in `code/download/splite5_1.ksh`. This is a relatively time consuming process.
+
+The script creates the following structure and source files:
+```bash
+ll /tmp/data/era5 | head
+insgesamt 175G
+-rw-r--r--. 1 user users   21M  1. Mär 2019  uadb_trhc_1001.txt
+-rw-r--r--. 1 user users  249K  1. Mär 2019  uadb_trhc_10034.txt
+-rw-r--r--. 1 user users  168M 15. Mai 2019  uadb_windc_10035.txt
+-rw-r--r--. 1 user users   22M 15. Mai 2019  uadb_windc_10046.txt
+```
+
+The ODB files need to be converted to ASCII:
+
+```bash
+odb sql -q 'select *' -i ${file} | tr -d " "  | gzip  > ${file}.gz
+```
+
+The gzipped ASCII files can be read by `pandas.read_csv`.
+
+# Convert to CDM compliant NetCDF
+
+The script `harvest_convert_to_netCDF.py` reads the data from the different data sources and converts them into a CDM complaint netCDF.
+
+???
+
+
+
+The final output looks like this:
+
+???
+
+
+
+# License
+

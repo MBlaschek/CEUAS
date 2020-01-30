@@ -70,7 +70,7 @@ Experimental Keyword Options:
     --enable_ta_feature   Apply Temperature adjustments
     --interpolate_missing Interpolate Adjustments to non-standard times and pressure levels
     
-    """.format(__file__))
+    """.format(__file__.split('/')[-1]))
 
 
 # -----------------------------------------------------------------------------
@@ -1292,6 +1292,10 @@ def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=F
                 adjv = adjustments(idata[jvar].values, breaks,
                                    axis=axis - 1,
                                    mname='ADJUST', **kwargs)
+                # check limits [0 - 1]
+                # obs + obs-an-adj - obs-an
+                vadj = (idata[ivar].values + adjv - idata[jvar].values)
+                adjv = np.where((vadj < 0) | (vadj > 1), idata[jvar].values, adjv)
                 # new = obs-an-adj + obs - (obs-an)
                 data[avar].loc[{'hour': i}] = (adjv - idata[jvar].values)
             data[avar].attrs.update(attrs)
@@ -1312,7 +1316,11 @@ def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=F
                                    use_mean=False,
                                    axis=axis - 1,
                                    mname='ADJUST', **kwargs)
-                # new = obs-an-adj + obs - (obs-an)
+                # check limits [0 - 1]
+                # obs + obs-an-adj - obs-an
+                vadj = (idata[ivar].values + adjv - idata[jvar].values)
+                adjv = np.where((vadj < 0) | (vadj > 1), idata[jvar].values, adjv)
+                # new = obs-an-adj - (obs-an)
                 data[avar].loc[{'hour': i}] = (adjv - idata[jvar].values)
             data[avar].attrs.update(attrs)
             data[avar].attrs['standard_name'] += '_adjustments'
