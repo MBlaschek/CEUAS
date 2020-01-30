@@ -100,10 +100,10 @@ def _print_string(*args, mname=None, adddate=False, **kwargs):
 def message(*args, verbose=0, level=0, logfile=None, **kwargs):
     """ Message function
     Args:
-        *args:
-        verbose:
-        level:
-        logfile:
+        *args:  text to be printed
+        verbose (int): level of verbosness
+        level (int): level of visibility (verbose > level: printed)
+        logfile (str): logfile
         **kwargs:
     Returns:
         str : message
@@ -121,6 +121,8 @@ def message(*args, verbose=0, level=0, logfile=None, **kwargs):
 
 
 def update_kw(name, value, **kwargs):
+    """ Update keyword dictionary on the fly
+    """
     kwargs.update({name: value})
     return kwargs
 
@@ -555,9 +557,8 @@ def get_breakpoints(data, value=2, dim='time', return_startstop=False, startstop
     if len(i) > 0:
         message("Breakpoints for ", data.name, **kwargs)
         message("[%8s] [%8s] [%8s] [%8s] [ #]" % ('idx', 'end', 'peak', 'start'), **kwargs)
-        message("\n".join(
-            ["[%8s] %s %s %s %4d" % (j, dates[l], dates[j], dates[k], k - l) for j, k, l in zip(i, s, e)]),
-            **kwargs)
+        for j, k, l in zip(i, s, e):
+            message("[%8s] %s %s %s %4d" % (j, dates[l], dates[j], dates[k], k - l), **kwargs)
 
     if return_startstop:
         return i, e, s
@@ -572,11 +573,12 @@ def get_breakpoints(data, value=2, dim='time', return_startstop=False, startstop
 
 def adjustments(data, breaks, use_mean=True, axis=0, sample_size=130, borders=30, max_sample=1460, recent=False,
                 ratio=False, **kwargs):
-    """ Mean Adjustment of breakpoints
+    """ Adjustment of breakpoints
 
     Args:
         data (np.ndarray): radiosonde data
         breaks (list): breakpoint indices
+        use_mean (bool): mean or quantile adjustments
         axis (int): axis of datetime
         sample_size (int): minimum sample size
         borders (int): adjust breaks with borders
@@ -885,6 +887,9 @@ def level_interpolation(idata, dim='time', method='linear', fill_value=None, ext
     #
     # maybe check if dimensions are present
     #
+    if idata.isnull().all().item():
+        return idata
+
     idim = idata.dims[0]
     obs = idata[idim].values.copy()
     #
@@ -895,7 +900,8 @@ def level_interpolation(idata, dim='time', method='linear', fill_value=None, ext
     # Find duplicated values /not allowed in interpolation
     #
     itx = idata[dim].to_index()
-    ittx = itx.duplicated(keep=False) & ~np.isfinite(idata.values)  # duplicates in dim & not a value -> skip
+    ittx = itx.duplicated(keep=False) & ~np.isfinite(idata.values)  # BUG duplicates in dim & not a value -> skip
+    ittx = np.where(~np.isfinite(itx), True, ittx)  # BUG missing values can be in the coordinate (e.g. plev)
     #
     # some duplicates might remain
     #
@@ -958,6 +964,39 @@ def _cmd_arguments(args, longs):
 
 def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=False, return_cube=False, metadata=False,
          **kwargs):
+    """ Main function for RASO_ADJ_CDM_v0
+    This function executes the homogenization routines and deals with input and output
+
+    Args:
+        ifile (str): Filename or string pattern, e.g.: example_data/*[!_out].nc
+        ofile (str): Output filename or None to use default output naming: [ifile]_out.nc
+        ta_feature_enabled (bool): experimental flag for temperature adjustments
+        interpolate_missing (bool): interpolate adjustments to non standard times and pressure levels from the input file?
+        return_cube (bool): return data cube [hour x time x plev], that is used during the adjustment process
+        metadata (bool): experimental flag, should point to the metadata for breakpoint identification
+        thres (int): Threshold value for SNHT, default: 50
+        window (int): Moving Window for SNHT, default: 1470 (in days, 4 years)
+        missing (int): Maximum allowed missing values in window, default: 600 (in days)
+        min_levels (int): Minimum required levels for significant breakpoint, default: 3
+        dist (int): Minimum distance between breakpoints, default: 730 (in days, 2 years)
+        sample_size (int): Minimum sample size for statistics, default: 130 (in days)
+        borders (int): Breakpoint zone, default: 90 (in days)
+        ratio (int): Use ratio instead of differences, default: 0 (not)
+        logfile (str): Write messages to a log file
+        donotwrite(bool): Returns xarray Dataset
+
+    Returns:
+        None : written to output file [ofile]
+        Dataset :
+
+    Examples:
+        Use all input files in example_data directory:
+        >>> main(ifile="example_data/*[!_out].nc")
+
+        Return the output Dataset to the current session:
+        >>> data = main(ifile="example_data/*[!_out].nc", donotwrite=True)
+    """
+
     kwargs.update({'verbose': 1})
 
     if ifile is None:
@@ -1082,9 +1121,11 @@ def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=F
     # Add reverse index to convert back to obs
     #
     data['obs'] = ('time', np.arange(0, data.time.size))
-    message("Observations", ",".join(["{}:{}".format(i, j) for i, j in raw_data.dims.items()]), mname='BKP', **kwargs)
-    message("Trajectories", ",".join(["{}:{}".format(i, j) for i, j in traj_data.dims.items()]), mname='BKP', **kwargs)
-    message("Dates:", data[dim].min(), ' - ', data[dim].max(), "Duplicates:", data[dim].to_index().duplicated().sum(),
+    message("Observations", ",".join(["{}: {}".format(i, j) for i, j in raw_data.dims.items()]), mname='BKP', **kwargs)
+    message("Trajectories", ",".join(["{}: {}".format(i, j) for i, j in traj_data.dims.items()]), mname='BKP', **kwargs)
+    message("Dates:", data[dim].min().dt.strftime("%Y-%m-%d %H:%M:%S").item(), ' - ',
+            data[dim].max().dt.strftime("%Y-%m-%d %H:%M:%S").item(), "Duplicates:",
+            data[dim].to_index().duplicated().sum(),
             mname=dim.upper(),
             **kwargs)
     #
@@ -1197,9 +1238,7 @@ def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=F
         # Attributes
         #
         svar = '{}_snht'.format(jvar)
-        attrs = {'units': '1', 'window': window, 'missing': missing, 'standard_name': svar}
         data[svar] = (dims, stest)
-        data[svar].attrs.update(attrs)
         message("Test statistics calculted", svar, mname='SNHT', **kwargs)
         #
         # Day-Night Departures
@@ -1209,27 +1248,34 @@ def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=F
                                     window, missing)
         # Add Day-Night Departures
         data[svar] = data[svar] + stest
-        data[svar].attrs['day-night'] = 'added'
+        attrs = {'units': '1', 'window': window, 'missing': missing, 'standard_name': svar, 'day-night': 'added'}
+        data[svar].attrs.update(attrs)
         #
         # Check for Metadata in CDM
         #
         if metadata:
+            #
+            # In a future version Metadata can be read and used here.
+            #
             pass
 
         #
         # 4. Detect Breakpoints
         #
-        breaks = detector(data[svar].values, axis=axis, dist=dist, thres=thres, min_levels=min_levels, **kwargs)
+        breaks = np.full_like(data[svar].values, 0)
+        for i, ihour in enumerate(data.hour.values):
+            breaks[i, ::] = detector(data[svar].values[i, ::], axis - 1, dist=dist, thres=thres, min_levels=min_levels,
+                                     **kwargs)
         #
         bvar = '{}_breaks'.format(svar)
         attrs = {'units': '1', 'dist': dist, 'thres': thres, 'min_levels': min_levels, 'standard_name': bvar}
         data[bvar] = (dims, breaks)
         data[bvar].attrs.update(attrs)
         message("Test statistics calculated", bvar, mname='DETECT', **kwargs)
-        params = data[ivar].attrs.copy()
-        params.update({'sample_size': kwargs.get('sample_size', 130),
-                       'borders': kwargs.get('borders', 90),
-                       'ratio': kwargs.get('ratio', 0)})
+        attrs = data[ivar].attrs.copy()
+        attrs.update({'sample_size': kwargs.get('sample_size', 130),
+                      'borders': kwargs.get('borders', 90),
+                      'ratio': kwargs.get('ratio', 0)})
         #
         # 5. Adjust Breakpoints
         #
@@ -1244,12 +1290,12 @@ def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=F
                 message("Breakpoints: ", len(breaks), mname='ADJUST', **kwargs)
                 #
                 adjv = adjustments(idata[jvar].values, breaks,
-                                   axis=axis,
+                                   axis=axis - 1,
                                    mname='ADJUST', **kwargs)
                 # new = obs-an-adj + obs - (obs-an)
                 data[avar].loc[{'hour': i}] = (adjv - idata[jvar].values)
-            data[avar].attrs.update(params)
-            data[avar].attrs['standard_name'] += '_adjust'
+            data[avar].attrs.update(attrs)
+            data[avar].attrs['standard_name'] += '_adjustments'
             data[avar].attrs['biascor'] = 'mean'
 
         if ivar in ['hur']:
@@ -1264,12 +1310,12 @@ def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=F
                 #
                 adjv = adjustments(idata[jvar].values, breaks,
                                    use_mean=False,
-                                   axis=axis,
+                                   axis=axis - 1,
                                    mname='ADJUST', **kwargs)
                 # new = obs-an-adj + obs - (obs-an)
                 data[avar].loc[{'hour': i}] = (adjv - idata[jvar].values)
-            data[avar].attrs.update(params)
-            data[avar].attrs['standard_name'] += '_adjust'
+            data[avar].attrs.update(attrs)
+            data[avar].attrs['standard_name'] += '_adjustments'
             data[avar].attrs['biascor'] = 'quantile'
 
     if return_cube:
@@ -1305,18 +1351,23 @@ def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=F
     # Convert back to obs
     #
     message("time to obs", mname='REVERSE', **kwargs)
+    #
     # Processing to DataFrame and back to xarray
+    #
+    attrs = {i: data[i].attrs.copy() for i in outvars}
     data = data[outvars] \
         .to_dataframe() \
         .reset_index() \
         .dropna(subset=['obs']) \
         .set_index('obs') \
         .to_xarray()
+    # put metadata back
+    for i in outvars:
+        data[i].attrs.update(attrs[i])
     # convert to integer
     data['obs'] = data.obs.astype(int)
     data = data.set_coords(['time', 'plev'])
     raw_data['obs'] = ('obs', raw_data.obs.values)
-    # return raw_data, data, traj_data
     raw_data = raw_data.merge(data, join='left')
     raw_data = raw_data.drop('obs')
     #
@@ -1331,13 +1382,16 @@ def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=F
     if interpolate_missing:
         for ivar in variables:
             if ivar + '_m' in raw_data.data_vars:
-                message("Interpolating ... ", ivar + '_m', mname='INTERP', **kwargs)
+                message("Interpolating non-standard times ", ivar + '_m', mname='INTERP', **kwargs)
                 #
                 # Interpolate back/forward in time
                 # extrapolate=True
                 #
-                raw_data[ivar + '_m'] = raw_data[ivar + '_m'] \
+                subset = raw_data['plev'].isin(std_plevels)  # only standard pressure levels
+                raw_data[ivar + '_m'][subset] = raw_data[ivar + '_m'][subset] \
                     .groupby('plev').apply(level_interpolation, dim=dim, **kwargs)
+
+                message("Interpolating non-standard pressure ", ivar + '_m', mname='INTERP', **kwargs)
                 #
                 # Interpolate up/down levels
                 #
@@ -1346,13 +1400,15 @@ def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=F
                                            **update_kw('method', 'log-linear', **kwargs))
 
             if ivar + '_q' in raw_data.data_vars:
-                message("Interpolating ... ", ivar + '_q', mname='INTERP', **kwargs)
+                message("Interpolating non-standard times ", ivar + '_q', mname='INTERP', **kwargs)
                 #
                 # Interpolate back/forward in time
                 # extrapolate=True
                 #
-                raw_data[ivar + '_q'] = raw_data[ivar + '_q'] \
+                subset = raw_data['plev'].isin(std_plevels)  # only standard pressure levels
+                raw_data[ivar + '_q'][subset] = raw_data[ivar + '_q'][subset] \
                     .groupby('plev').apply(level_interpolation, dim=dim, **kwargs)
+                message("Interpolating non-standard pressure ", ivar + '_q', mname='INTERP', **kwargs)
                 #
                 # Interpolate up/down levels
                 #
@@ -1376,21 +1432,39 @@ def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=F
     # Use Xarray to netcdf library
     #
     message("Writing ...", mname='OUT', **kwargs)
+    if ofile is None:
+        ofile = {ivar: ifile[ivar].replace('.nc', '_out.nc') for ivar in variables}
+
     for ivar in variables:
-        if ofile is None:
-            ofile = ifile[ivar].replace('.nc', '_out.nc')
-            message(ofile, mname='OUTPUT', **kwargs)
         if ivar == 'ta' and not ta_feature_enabled:
             continue
 
-        raw_data.to_netcdf(ofile,
-                           mode='w',
-                           format='netCDF4',
-                           engine=kwargs.get('engine', 'netcdf4'),
-                           encoding={i: {'compression': 'gzip', 'compression_opts': 9} for i in
-                                     list(raw_data.data_vars)})
+        selection = [jvar for jvar in list(raw_data.data_vars) if ivar + '_' in jvar] + [ivar]
+        if len(selection) == 0:
+            continue
 
-    message("Written", ofile, mname='OUT', **kwargs)
+        tmp = raw_data[selection]
+        tmp = tmp.rename({jvar: jvar.replace(ivar + '_', '') for jvar in list(tmp.data_vars) if
+                          jvar not in [ivar, ivar + '_q', ivar + '_m']})
+        if False:
+            # Alternative Package with improved performance and data compression
+            # h5netcdf
+            tmp.to_netcdf(ofile[ivar],
+                          mode='w',
+                          format='netCDF4',
+                          engine=kwargs.get('engine', 'h5netcdf'),
+                          encoding={i: {'compression': 'gzip', 'compression_opts': 9} for i in
+                                    list(tmp.data_vars)})
+
+        message(ofile[ivar], ", ".join(tmp.data_vars), mname='OUTPUT', **kwargs)
+        tmp.to_netcdf(ofile[ivar],
+                      mode='w',
+                      format='netCDF4',
+                      engine=kwargs.get('engine', 'netcdf4'),
+                      encoding={i: {'zlib': True, 'complevel': 9} for i in
+                                list(tmp.data_vars)})
+
+    message("Finished", mname='MAIN', **kwargs)
 
 
 # -----------------------------------------------------------------------------
