@@ -1,4 +1,3 @@
-""" Merging the station configuration files """
 
 import os
 import sys
@@ -25,20 +24,20 @@ warnings.simplefilter(action='ignore', category=FutureWarning) # deactivates Pan
 import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')  # up to INFO level, DEBUG statements will not be printed 
 
+import argparse
 
 
 
-'''
 def now(time):
       """ For easily print a readable current time stamp """
       a = datetime.fromtimestamp(time).strftime('%Y-%m-%d %H:%M:%S')
       return  a
-'''
+
 
 class Merger():
       """ Main class for the merging of the data from different netCDF files. """
       
-      def __init__(self, out_dir):
+      def __init__(self, out_dir = 'output'  ):
             """ Define the attributes (some will be defined in other parts of the code) . 
             Attr :: 
                     self.data : read the dictionary mapping the dataset and the netCDF cdm file for each observation station  
@@ -59,27 +58,30 @@ class Merger():
             
             self.unique_dates = {}            
             self.attributes = {} # will keep the original attributes from the CDM tables, read from the netCDF files 
-            self.out_dir = ''
+            self.out_dir = out_dir 
             
-      def initialize_data(self, datasets = {} , out_dir = 'output' ):
+      def initialize_data(self , station = '', datasets = {} ):
             """ Initialize dataset; store relevant data as attributes.
                        Args ::     dic{}  datasets (dictionary where keys are the dataset names e.g. bufr, igra2 etc. , and the value is the path to the corresponding netCDF file 
                                        e.g. tateno = { 'ncar'    : 'example_stations/ncar/chuadb_trhc_47646.txt.nc'   ,
                                                                'igra2'   : 'example_stations/igra2/chJAM00047646-data.txt.nc'  } 
             """
+            
+            self.datasets = datasets
+            self.datasets_keys = datasets.keys()
+            self.station = station
         
             data = {}   # container for the data of each dataset
             source_configuration = {}  # container for the source_configuration of each dataset
             
-            self.datasets = datasets
-            self.datasets_keys = datasets.keys()
-            self.out_dir = out_dir 
+
             
             """ Looping over the datasets """
             logging.info('*** Reading and Initializing the data from the netCDF files ')
-                           
+           
+                            
             for k,v in datasets.items() :
-                  logging.info('Initialising the dataset: *** %s' , k  )
+                  logging.info(' Initialising the dataset: *** %s ' , k  )
                   data[k] = {} 
                   data['cdm_tables'] = {} 
                   
@@ -92,14 +94,18 @@ class Merger():
                   #data[k]['dateindex'] = ds.variables['dateindex'][0,:]  # storing the dateindex 
                   
                   ###for h5py but cant extract date time units !!!
-                  ds =  h5py.File(v , driver="core" , )   
+                  ds =  h5py.File(v , driver="core"  )   
                   data[k]['df'] = ds # storing the entire file                
-                  data[k]['source_file']           = ds['source_configuration']['source_file'][0]
+                  try:                   
+                        data[k]['source_file']           = ds['source_configuration']['source_file'][0]
+                  except:
+                        data[k]['source_file'] = str(v) # temp fix 
+                        
                   #data[k]['product_code']       = ds['source_configuration']['product_code'][0]  
-                  data[k]['recordtimestamp'] = ds['recordtimestamp'].value
-                  data[k]['recordindex']         = ds['recordindex'].value                                    
+                  #data[k]['recordtimestamp'] = ds['recordtimestamp'].value
+                  #data[k]['recordindex']         = ds['recordindex'].value                                    
                   #ds.close()                 
-                  logging.debug('Reading the file with xarray ')
+                  logging.debug('Reading the file with h5py ')
              
                   
             # add here appending datasets for the case of   ncar_w   and   ncar_t   
@@ -107,45 +113,57 @@ class Merger():
             
             self.data = data
             self.make_dataframe()
-            ds.close()                 
-
+            ds.close()
+            
             """ Reading the header_table, station_configuration, source_configuration """
-            for k,v in datasets.items() :   
+            for k,v in datasets.items() :  
+                  
+                  #d = xr.open_dataset(v , engine = 'h5netcdf' )                 
+                  #data[k]['recordtimestamp'] = d['recordtimestamp'].values
+                  #data[k]['recordindex']         = d['recordindex'].values   
+                  
+            
                   d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'station_configuration')                 
                   data[k]['station_configuration'] = d.to_dataframe()  
                   #data[k]['station_configuration'] = d  ### USELESS ?                  
-                  logging.debug('Done with %s', k , ' station_configuration')
+                  logging.debug('Done with %s station_configuration' , str(k) )
+                                              
                   
-                  d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'header_table')                                     
-                  if 'header_table' not in list( self.attributes.keys() ):  # saving the attirbutes to be re-applied at the end
+                  d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'header_table')  
+                  logging.debug('Loading the header_table')                  
+                  if 'header_table' not in list( self.attributes.keys() ):  # saving the attributes to be re-applied at the end
                         self.attributes['header_table'] = {}
                         for var in d.variables:
                               self.attributes['header_table'][var] = {}
                               self.attributes['header_table'][var]['description'] = d[var].description
                               self.attributes['header_table'][var]['external_table'] = d[var].external_table                
                   data[k]['header_table'] = d.to_dataframe()   
-                  logging.debug('Done with %s', k , ' header_table')
+                  logging.debug('Done with %s ' , k )
                   
+                  logging.info("*** Loading the observations_table (might take time) %s" , k )                  
                   d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'observations_table')               
                   
-                  
-                  if 'observations_table' not in list( self.attributes.keys() ):  # saving the attirbutes to be re-applied at the end
+                  if 'observations_table' not in list( self.attributes.keys() ):  # saving the attributes to be re-applied at the end
                         self.attributes['observations_table'] = {}
                         for var in d.variables:
                               self.attributes['observations_table'][var] = {}
                               self.attributes['observations_table'][var]['description'] = d[var].description
                               self.attributes['observations_table'][var]['external_table'] = d[var].external_table
                              
-                              
-                  d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'source_configuration')
-                  d = d.isel(hdrlen=[0])
-                  data[k]['source_configuration'] = d.to_dataframe()    ### USELESS ? 
-                  logging.debug('Done with %s', k , ' source_configuration')
-                                                     
+                             
+                  logging.info("*** Loading the source configuration %s" , k )    
+                  try:       
+                        d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'source_configuration')
+                        d = d.isel(hdrlen=[0])
+                        data[k]['source_configuration'] = d.to_dataframe()    ### USELESS ? 
+                        logging.debug('Done with %s  source_configuration' , k )
+                  except:                        
+                        data[k]['source_configuration']=  pd.DataFrame(np.array( [ [ self.data[k]['source_file'] ] ] ) , columns=['source_file'] )      
+                        
                   if k == 'era5_1': # reading the whole era5_1 feedback (including reanalysis)
                         d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'era5fb')                 
                         data[k]['era5fb'] = d.to_dataframe()   
-                        logging.debug('Done with %s', k , ' era5 feedback')
+                        logging.debug('Done with %s era5 feedback ', k )
             
                   """ Reading the CDM tables that do not depend on specific stations or observations (fixed values), for the first file only """           
                   if list(datasets.keys()).index(k) == 0  :
@@ -161,11 +179,6 @@ class Merger():
                   """ Reading the name of the original source file """
                   source_configuration[k] = {} 
                   source_configuration[k]['source_file'] = [ c for c in v.split('/') if '.nc' in c][0]
-
-                  """ cant fix this right now... Dont know how to extract only the first entries """
-                  #d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'source_configuration')                  
-                  #data[k]['source_configuration'] = d.to_dataframe()   
-                  #print('Done with source conf.')                                    
 
                                     
             """ Storing the station configurations  """   
@@ -224,9 +237,6 @@ class Merger():
                   #unique_dt = [i for i in  [  time_offset_value +  j for j in delta  ] ]    
                   #unique_dt = [ i +0 ]
                   date_time_delta = [ i.replace(minute=0, second=0) for i in date_time_delta ]           
-                  
-                  if k == 'era5_1':
-                        print('check')
                         
                   return date_time_delta                 
 
@@ -239,16 +249,21 @@ class Merger():
                   #self.unique_dates[k]['index_up'] = {}                               
                   
                   """ recordtimestamp from the input file """
-                  unique = self.data[k]['recordtimestamp']
                   
                   """ Convert to proper date_time using the add_time_delta funtion """
                   logging.debug(' Calculating the time_delta for : %s', k )
                   
-                  time_offset            = nc.Dataset(self.datasets[k])   
-                  time_offset            = time_offset.groups['observations_table']['date_time'].units
+                  File            = nc.Dataset(self.datasets[k])   
+                  unique = File.variables['recordtimestamp']
+                  
+                  self.data[k]['recordtimestamp'] = File.variables['recordtimestamp'][:].data
+                  self.data[k]['recordindex'] = File.variables['recordindex'][:].data
+                  
+                  time_offset            = File.groups['observations_table']['date_time'].units
                   time_offset_value  = time_offset.split('since ') [1]      
                   time_offset_value  = datetime.strptime(time_offset_value, '%Y-%m-%d %H:%M:%S')
                  
+                  #unique = self.data[k]['recordtimestamp']
                  
                   unique_dt = add_time_delta (time_offset_value, unique, k ) 
                   
@@ -271,7 +286,8 @@ class Merger():
                         try:
                               index_up =  indices[ count + 1 ]  # works until the last available recordindex
                         except:                             
-                              index_up = len(indices-1)    
+                              #index_up = len(indices-1)    
+                              index_up = len(indices)-1    
                               
                         self.unique_dates[k]['indices'][dt]['up'] = index_up
                              
@@ -288,9 +304,16 @@ class Merger():
             
             if what == 'era5fb':  # cleaning the era5 feedback only 
                   df = df_in[np.isfinite(df_in['obsvalue@body'])]
-                  df = df.loc[ df['vertco_type@body'] != 2 ]   
-                  df = df[np.isfinite(df_in['vertco_reference_1@body'])]
+                  try:                        
+                        df = df.loc[ df['vertco_type@body'] != 2 ]   
+                  except:
+                        pass
+                  df = df.reindex()
+                  df = df[np.isfinite(df['vertco_reference_1@body'])]
                   #print('check lengths: ' , len(df_in) , len(df) )
+                  new_ind = np.array ( range(len(df))) 
+                  df['index'] =new_ind
+                  df = df.set_index('index')
                   
             else:             
                   ### check if can be optimized ???
@@ -328,7 +351,7 @@ class Merger():
             for k in self.datasets_keys:
             #for k in ['igra2' , 'ncar']:
             
-                  logging.debug('*** Creating the dataframe for the dataset:  ' , k )        
+                  logging.info('*** Creating the dataframe for the dataset: %s ' , k )        
                                     
                   p_levels               = self.data[k]['df']['observations_table']['z_coordinate'][:]
                   logging.debug('     Loaded the  z_coordinate')
@@ -364,6 +387,8 @@ class Merger():
  
                   """ Creating a dataframe """
                   columns = ['date_time', 'z_coordinate' , 'z_coordinate_type', 'observed_variable' , 'observation_value' , 'report_id' , 'observation_id' , 'latitude' , 'longitude', 'units']
+                  logging.info('     Loaded the data, creating dataframe ')
+                  
                   df = pd.DataFrame( list(zip( date_time, p_levels, z_type, obs_variable , obs_values, report_id,  observation_id , lat , lon, units ) ) , columns = columns )       
                   
                         
@@ -429,19 +454,14 @@ class Merger():
             all_merged_obs ,  all_merged_head, all_merged_fb , merged_indices , merged_date_time, mi= [] , [] , [] , [] , [], []
                      
             """ Dictionary that will contain the merged file. """            
-            #Merged = {}             
-            #for dt in date_times[0:4]: # loop over all the possible date_times 
-            
-            #chunk = self.data['ncar']['dataframe'] [100:150]
-
             # rand = datetime.strptime('1981-01-03 12:00:00', '%Y-%m-%d %H:%M:%S')  
             #for dt in date_times[3008:3100]: # loop over all the possible date_times 
+            
             tot = len(date_times)
-            for dt, c in zip(date_times[2000:2100] , range(tot)): # loop over all the possible date_times 
-                  print(dt , ' ' , c ) 
-            #for dt, c in zip(date_times, range(tot)): # loop over all the possible date_times 
-                 
-                  logging.debug('Analize : %s %s /', str(c) ,  str(tot)  )
+            for dt, c in zip(date_times, range(tot) ): # loop over all the possible date_times 
+                  #print('Analize : ', str(c) , '/',  str(tot)  , ' ', dt , ' ', now(time.time()) )
+                  
+                  logging.info('Analize : %s %s /', str(c) ,  str(tot)  )
             
                   cleaned_df_container = {}                  
                   chunk = ''
@@ -452,30 +472,22 @@ class Merger():
                         
                         chunk = self.data[k]['dataframe'].iloc[index:index_up]
                         
-                        #chunk['date_time'].replace( {self.unique_dates[k]['dt_mapping'][dt] : dt} )
                         chunk['date_time'] = dt
-                        
-                        #self.unique_dates[k]['dt_mapping']  # converting to proper date_time using the self.unique_dates[k]['dt_mapping'] dictionary 
-
-                        chunk = self.clean_dataframe(chunk) # cleaning from wrong values 
+                        chunk = self.clean_dataframe(chunk) # cleaning from wrong or nan values 
  
                         if len(chunk)==0:
                               continue
                         
                         cleaned_df_container[k] = {}                                                
                         cleaned_df_container[k]['df']                   = chunk         # cleaned dataframe 
-                        #cleaned_df_container[k]['tot_len']           = len(chunk)   # number of records 
 
                   
                   if all(value == 0 for value in cleaned_df_container.values()):
-                        #print('No data were found! ')
+                        logging.debug('No data were found! ')
                         continue
-                  #print(cleaned_df_container.keys() )
+                  
                   merged_observations_table, best_ds, duplicates, header = self.merge_record(dt, container = cleaned_df_container)
                   
-                  #if best_ds == 'igra2':
-                  #      print('check')
-
                   merged_observations_table['source_id'] = best_ds   # adding extra columns i.e. chosen dataset, other dataset with data, number of pressure levels 
                   merged_observations_table['z_coordinate_type']  = 1   # only pressure inn [Pa] available at the moment. Check z_coordinate_type table for the correpsonding code 
                                    
@@ -484,10 +496,6 @@ class Merger():
                   feedback, merged_obs = self.get_reanalysis_feedback( dt, merged_observations_table , reanalysis='era5fb', best_ds= best_ds)
                   all_merged_fb.append(feedback)                  
                   all_merged_obs.append(merged_obs)
-                  
-                  #""" Extracting the merged header_table """
-                  #len_obs = len(merged_observations_table)                  
-                  #header = self.get_header_table(dt, best_ds= best_ds,  all_ds = duplicates , length= len_obs)
                   
                   """ Setting the correct report_id in the header table """
                   merged_report_id = merged_obs['report_id'].values[0]  # same report_id as calculated in the observation_table 
@@ -539,12 +547,12 @@ class Merger():
       
       def add_cdm_missing_columns(self, all_merged_obs):
             """ Add the CDM observations_table columns for which no data are available at the end of the merging """
-            cdm_keys = self.obs_table_columns 
+            #cdm_keys = self.obs_table_columns 
             nan_array = np.empty( all_merged_obs['observed_variable'].shape )
             nan_array[:] = np.nan
             for k in self.obs_table_columns:
                   if k not in list(all_merged_obs.columns ):
-                        logging.debug('Adding missing cdm colum with empty values: ' , k )
+                        logging.debug('Adding missing cdm colum with empty values: %s' , k )
                         all_merged_obs[k] = ( nan_array )
                         
             return all_merged_obs
@@ -585,11 +593,19 @@ class Merger():
                   if v == most_records:
                         best_datasets.append(k)                                  
                   if v > 0:
-                        all_ds.append(k) # all other datasets with smaller number of records than the maximum found 
-                        all_ds_reports.append( self.observation_ids_merged[k] * 1000000000  + container[k]['df']['report_id'].values[0]  )  # converting the original report id using the same convention as for observation_id
-                        
+                        all_ds.append(k) # all other datasets with smaller number of records than the maximum found
+                        try: 
+                              all_ds_reports.append( self.observation_ids_merged[k] * 1000000000  + container[k]['df']['report_id'].values[0]  )  # converting the original report id using the same convention as for observation_id
+                        except:
+                              all_ds_reports.append( self.observation_ids_merged[k] * 1000000000  + int( (container[k]['df']['report_id'].values[0]).tostring()  ) )  # converting the original report id using the same convention as for observation_id
+                              
+                              
+                              #all_ds_reports.append(np.nan)
+                              #print ( type(container[k]['df']['report_id'].values) )
+                              #all_ds_reports.append( self.observation_ids_merged[k] * 1000000000  + float(container[k]['df']['report_id'].values[0].decode('latin1') ))
+                              
             if len(best_datasets) ==0:
-                  print('wrong?check')
+                  print('wrong??? please check')
                   return 0,0,0,0        
    
             if 'igra2' in best_datasets:
@@ -603,11 +619,19 @@ class Merger():
             
             """ Extract container """            
             selected_df = container[best_ds]['df'].copy(deep = True)  # might take extra time, dont know how to get rid of this 
-            
-            merged_report = self.observation_ids_merged[best_ds] * 1000000000 + selected_df['report_id'].values[0] 
-            
-            """ Calculate new unique observation id """            
-            obs_ids_merged =  [ self.observation_ids_merged[best_ds] * 1000000000 + i for i in selected_df['observation_id'] ]
+
+            try:
+                  merged_report = self.observation_ids_merged[best_ds] * 1000000000 + int( selected_df['report_id'].values[0].tostring() ) 
+            except:
+                  merged_report = np.nan 
+
+            """ Calculate new unique observation id """
+            try: 
+                  obs_ids_merged =  [ self.observation_ids_merged[best_ds] * 1000000000 + int( i.tostring()  ) for i in selected_df['observation_id'] ]
+            except:
+                  obs_ids_merged =  [ np.nan for i in selected_df['observation_id'] ]
+                  
+                  
             selected_df['observation_id'] = obs_ids_merged
             
             """ Calculate new unique report id """            
@@ -632,7 +656,7 @@ class Merger():
             elif ( best_ds == 'ncar' and 'ncar_t' not in list(container.keys())  ) :
                   header = self.get_header_table(dt, ds = 'ncar_w', all_ds = duplicates, length= len(selected_df) )            
                   
-            logging.debug('I use ' , best_ds , '   record since it has more entries: ', most_records , ' but other available datasets are : ' , all_ds ) 
+            logging.debug('I use %s  record since it has more entries: %s but other available datasets are : %s' , best_ds , str(most_records) ,  all_ds ) 
             
             #print ('duplicates are: ', duplicates)
             return  selected_df, best_ds , duplicates, header
@@ -646,22 +670,20 @@ class Merger():
             if not os.path.isdir(self.out_dir):
                   Path(self.out_dir).mkdir(parents=True, exist_ok=True)
                   
-            # TO DO: standardize the output name       
-            out_name = self.out_dir + '/' + self.data[list(self.datasets_keys)[0]]['station_configuration']['primary_id'].values[0]   + '_merged_'  +  [ x for x in self.datasets[ list(self.datasets_keys)[0]].split('/') if '.nc' in x   ] [0]  
-
+            out_name = self.out_dir + '/' + self.station + '_CEUAS_merged_v0.nc'  
             
-            logging.info('Writing the observations_tables to the netCDF output via xarray ')
+            logging.info('Writing the observations_tables to the netCDF output via xarray to_netcdf() ')
             #obs_tab = self.MergedObs[ ['date_time' , 'latitude', 'longitude' ,  'observation_value' , 'observed_variable' , 'source_id' , 'observation_id',  'z_coordinate' ]     ] # including only some columns 
             obs_tab = self.MergedObs   # including only some columns             
             obs_tab = self.add_cdm_missing_columns(obs_tab)            
             obs_tab = obs_tab.to_xarray() 
             
-            """ Restoring the attributes observations_table"""
+            """ Restoring the attributes for the observations_table"""
             for v in obs_tab.variables:
-                  if v == "index" or v == "hdrlen" or v == "string80":
+                  if v == "index" or v == "hdrlen" or 'string' in v:
                         continue
                   obs_tab[v].attrs['external_table'] = self.attributes['observations_table'][v]['external_table']
-                  obs_tab[v].attrs['description'] =  self.attributes['observations_table'][v]['description']
+                  obs_tab[v].attrs['description']    =  self.attributes['observations_table'][v]['description']
                         
             obs_tab.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='w' , group = 'observations_table')  # writing the merged observations_table 
     
@@ -712,14 +734,32 @@ class Merger():
             logging.info('*** Done writing the output netCDF file ')       
             
             
-      def merge(self, limit = False , dataframeIsPickled = False):                                           
-            """ Call to the merge_all_data() and write_merged_file() methods """                         
+      def merge(self ,  station = '' , datasets = ''):        
+            
+            """ Call to the merge_all_data() and write_merged_file() methods """
+            
+            
+            
+            a = self.initialize_data( station = station, datasets = datasets ) # reading the input files 
             dummy = self.merge_all_data()            
-            logging.info('*** Finished merging, now writing the output netCDF file' )         
+            logging.info('*** Finished merging, now writing the output netCDF file ***' )         
             a = self.write_merged_file()
-            logging.info('*** Done writing output !!! ')
-
-
+            logging.info('*** Done writing the output ! ***')
+            return True
+            
+            
+            """
+            try:
+                  a = self.initialize_data( station = station, datasets = datasets ) # reading the input files 
+                  dummy = self.merge_all_data()            
+                  logging.info('*** Finished merging, now writing the output netCDF file ***' )         
+                  a = self.write_merged_file()
+                  logging.info('*** Done writing the output ! ***')
+                  return True
+            except:
+                  print('Failed: ' , station )
+                  return False 
+            """
 
 
 
@@ -745,12 +785,6 @@ small = {   'ncar_w'           : '/raid8/srvx1/federico/GitHub/August_develop/CE
                   'bufr'                : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/bufr/chera5.82930.bfr.nc',                          }
 
 
-small_newera5 = {   'ncar_w'           : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/ncar/chuadb_windc_82930.txt.nc'       ,
-                  'ncar_t'            : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/ncar/chuadb_trhc_82930.txt.nc'       ,
-                  'igra2'              : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/igra2/chBRM00082930-data.txt.nc'  ,
-                  'era5_1'            :  '/raid8/srvx1/federico/GitHub/CEUAS_master_JAN2020/CEUAS/CEUAS/public/harvest/code/OUTPUT/era5_1/chera5.conv._82930.nc',
-                  'era5_1759'      : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/era5_1759/chera5.1759.conv.1:82930.nc',
-                  'bufr'                : '/raid8/srvx1/federico/GitHub/August_develop/CEUAS/CEUAS/cdm/code/23JAN2020_TEST/bufr/chera5.82930.bfr.nc',                          }
 
 
 
@@ -758,20 +792,117 @@ small_newera5 = {   'ncar_w'           : '/raid8/srvx1/federico/GitHub/August_de
 
 
 
-out_dir = 'output_merged'
+#out_dir = '/raid60/scratch/federico/MERGED'
 
+""" Select the output directory """
+out_dir = 'output_test'
+if not os.path.isdir(out_dir):
+      os.mkdir(out_dir)
+""" Dictionary containing the data directories of each dataset """
+
+
+
+data_directories = { 'bufr'  : 'example_stations/bufr/' ,
+                     'era5_1': 'example_stations/era5_1/', } 
+
+
+''' #Example
+data_directories = {  'ncar'      : '/raid60/scratch/federico/netCDF_converted_Jan2020/ready_for_merging/ncar'    ,
+                      'igra2'     : '/raid60/scratch/federico/netCDF_converted_Jan2020/ready_for_merging/igra2'               ,
+                      'era5_1'    :  '/raid60/scratch/federico/netCDF_converted_Jan2020/ready_for_merging/era5_1'          ,
+                      'era5_1759' : '/raid60/scratch/federico/netCDF_converted_Jan2020/ready_for_merging/era5_1759'  ,
+                      'era5_1761' : '/raid60/scratch/federico/netCDF_converted_Jan2020/ready_for_merging/era5_1761'  ,
+                      'era5_3188' : '/raid60/scratch/federico/netCDF_converted_Jan2020/ready_for_merging/era5_3188'  ,                                 
+                      'bufr'      : '/raid60/scratch/federico/netCDF_converted_Jan2020/ready_for_merging/bufr'                     }
+'''
+
+def create_station_dics(data_directories):
+      """ Create a list of dictionaries, one for each station to be merged. """
+      
+      files_all = {} 
+      for k,v in data_directories.items() :
+            files = os.listdir(v)
+            
+            for f in files:
+                  station = f.split('_')[0] 
+                  if station not in files_all.keys():
+                        files_all[station] = {}
+                  
+                  if k == 'ncar':  # separating ncar temperature and wind files 
+                        if 'trhc' in f:
+                              k = 'ncar_t'
+                        elif 'windc' in f:
+                              k = 'ncar_w'
+                  files_all[station][k] = ''
+                  files_all[station][k] = v + '/' + f   # compelte path to the netCDF file 
+
+                  #print('check')     
+            
+      
+      return files_all
+
+def get_processed_stations(out_dir):
+      """ Retrieve a list of already processed stations in the chosen output directory """
+      lista = [ f.split('_')[0] for f in os.listdir(out_dir) if '.nc' in f  ]
+      #print('Skipping these stations: ' , lista )
+      return lista 
+      
+      
+      
+      
+      
 """ main block """
 if __name__ == '__main__':
+
+      """ Parsing the string containing the list of stations to be merged """ 
+      parser = argparse.ArgumentParser(description="Make CDM compliant netCDFs")
+      parser.add_argument('--stations' , '-s', 
+                    help="List of stations id separated by commas, e.g. -f 0-20000-0-48649,0-20000-0-98642"  ,
+                    type = str)
+
+      args = parser.parse_args()
+      stations = args.stations
+      
+      stations = stations.split(',')
+
+
+
       """ Initialize the Merger class """
       Merging = Merger(out_dir)
       logging.info('*** Initialising the data ***' )      
-      #Merging.initialize_data( datasets = small_other ) #  Read each dataset netCDF file, initialize the dataframes, calculated proper date_time arrays       
-      Merging.initialize_data( datasets = small_newera5 , out_dir = out_dir) #  Read each dataset netCDF file, initialize the dataframes, calculated proper date_time arrays  
-      """ Merging the data, writing the merged output file """
-      Merging.merge(limit = '', dataframeIsPickled = False)
            
-      logging.info( '     *** Done  ***     ' ) 
+      """ Here starts the loop over the stations 
+           Merging the data, writing the merged output file """              
+      all_stations_dics = create_station_dics(data_directories)
+      
+      failed = open(out_dir + '/Failed_stations_summary.txt' , 'a+')
+      failed.write('# Failed stations \n')
+                  
+      """ Running looping over the stations in the list provided  """      
+      for stat in stations:
+            if len(stat) < 2:
+                  print('error' , stat )
+                  continue
+            processed_stations = get_processed_stations(out_dir)
+            if stat in processed_stations:
+                  logging.info('Skipping already processed station: %s. Please select a different output directory. ' , stat )
+                  continue
+            
+            stat_dic  = all_stations_dics[stat]
+            datasets = list(stat_dic.keys())
 
+            
+            if len (stat_dic.keys()) <2: # in case there is only one station, and nothing to be merged 
+                  continue             
 
+            a = Merging.merge(stat,  datasets = stat_dic) # single station dictionary 
 
+            if not a:
+                  failed.write(stat + '\n')
+                 
+                
+      
 
+""" To test a single example station: 
+# -s 0-20000-0-82930
+""" 
