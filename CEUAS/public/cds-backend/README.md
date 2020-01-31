@@ -5,7 +5,7 @@ Related Milestones and Deliverables:
 
 Type | Nr | Responsible | Nature | Title| Due | Status | File
 ---|---|---|---|---|---|---|---
-Deliverable | DC3S311c_Lot2.3.1.1 | UNIVIE | Software, Report | First access to early upper air data base via CDS | September 2019 | January 2020 | code/
+Deliverable | DC3S311c_Lot2.3.1.1 | UNIVIE | Software, Report | First access to early upper air data base via CDS | September 2019 | January 2020 | code/* 
 
 # Short Description
 
@@ -33,14 +33,14 @@ The backend returns files, which are either
 | `time`           | `[HHMMSS,HHMMSS]`                                            | List of times permitted.                                     |
 | `variable`       | `[„temperature“, “u_component_of_wind“, “v_component_of_wind“, “wind_speed”, ”wind_direction”, ”relative_humidity”, ”specific_humidity”]`, String | Meteorological variables                                     |
 
-
+Here we provide a brief description on the [installation](#Installation), [how to use the script](#How-to-use?) and the [license](#License).
 
 # Installation
 
 There are a few steps to setup the whole server:
 
 1. install hug
-2. checkout from git
+2. download the hug server scripts
 3. upload data `code/upload_to_vm.ksh`
 
 
@@ -49,21 +49,16 @@ Ad 1) install the required packages on the server
 
 ```bash
 pip install hug
+pip install falcon pandas xarray numba numpy h5py
 ```
 
-Ad 2) get the latest version of the code from GitHub using a sparse checkout:
+Ad 2) get the latest version of the code from GitHub:
 
-```bash
-mkdir CEAUS
-cd CEAUS
-git init
-git remote add -f origin https://github.com/MBlaschek/CEUAS.git
-git config core.sparseCheckout true
-echo "CEAUS/CEAUS/public/cds-backend/" >> .git/info/sparse-checkout
-git pull origin master
-```
+* [CDS Module for hug](https://raw.githubusercontent.com/MBlaschek/CEUAS/master/CEUAS/public/cds-backend/code/cds_eua.py)
 
-Ad 3) Execute the upload script for the local merged data base (change ???)
+* [hug default launch script](https://raw.githubusercontent.com/MBlaschek/CEUAS/master/CEUAS/public/cds-backend/code/default.py)
+
+Ad 3) Execute the upload [script](https://raw.githubusercontent.com/MBlaschek/CEUAS/master/CEUAS/public/cds-backend/code/upload_to_vm.ksh) for the local merged data base to the Virtual Machine (VM):
 
 ```bash
 ./upload_to_vm.ksh
@@ -73,9 +68,33 @@ Ad 3) Execute the upload script for the local merged data base (change ???)
 
 ## Start the backend
 
-This explains the files in the code directory?
+Launch the [hug](https://www.hug.rest/) server using default parameters:
 
+```bash
+hug -f default.py
+/#######################################################################\
+          `.----``..-------..``.----.
+         :/:::::--:---------:--::::://.
+        .+::::----##/-/oo+:-##----:::://
+        `//::-------/oosoo-------::://.       ##    ##  ##    ##    #####
+          .-:------./++o/o-.------::-`   ```  ##    ##  ##    ##  ##
+             `----.-./+o+:..----.     `.:///. ########  ##    ## ##
+   ```        `----.-::::::------  `.-:::://. ##    ##  ##    ## ##   ####
+  ://::--.``` -:``...-----...` `:--::::::-.`  ##    ##  ##   ##   ##    ##
+  :/:::::::::-:-     `````      .:::::-.`     ##    ##    ####     ######
+   ``.--:::::::.                .:::.`
+         ``..::.                .::         EMBRACE THE APIs OF THE FUTURE
+             ::-                .:-
+             -::`               ::-                   VERSION 2.6.0
+             `::-              -::`
+              -::-`           -::-
+\########################################################################/
 
+ Copyright (C) 2016 Timothy Edmund Crosley
+ Under the MIT License
+
+Serving on :8000...
+```
 
 # How to use?
 
@@ -83,7 +102,7 @@ One way to access the data from the backend can be a Linux tool called `curl` to
 The request (`--data ...`) is identical in the python request and also the retrieved file is identical. The retrieved file needs to be unzipped.
 
 ```bash
-curl -H "Content-Type: application/json" -X POST --digest --data '{"statid":"11035","date":[20000101,20000101],"pressure_level":[1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000],"variable":"temperature","fbstats":["obs_minus_bg","obs_minus_an","bias_estimate"]}' -o download.zip http://early-upper-air.copernicus-climate.eu
+curl -H "Content-Type: application/json" -X POST --digest --data '{"statid":"11035","date":[20000101,20000101],"pressure_level":[1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000],"variable":["temperature","relative_humidity"],"fbstats":["obs_minus_bg","obs_minus_an","bias_estimate"]}' -o example_data/download.zip http://srvx8.img.univie.ac.at:8004
 ```
 
 ```bash
@@ -136,4 +155,7 @@ print("Time elapsed: ", time.time()-t0, "s")
 ```
 
 # License
+
+Generated using Copernicus Climate Change Service Information, 2020
+[Copernicus Climate Change Service (C3S), 2020](https://apps.ecmwf.int/datasets/licences/copernicus/)
 

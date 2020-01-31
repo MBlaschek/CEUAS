@@ -1,5 +1,5 @@
 #!/bin/csh
-#################################################################
+# -----------------------------------------------------------------------------
 # Csh Script to retrieve all online Data file of 'ds370.1',
 # uadb-trhc: 82.42 GB, uadb-windc: 92.52 GB
 # total 174.94G. The Script needs a filelist (UADB.files.list)
@@ -7,10 +7,17 @@
 # tar to extract the archive.
 #
 # Credential are needed, register at rda.ucar.edu (free)
-# 
+#
 # Call with Email Adress and Password to start download
 # Specify DATADIR according to your system
-#################################################################
+#
+# (c) University of Vienna, M. Blaschek, Vienna, Austria
+# Copernicus Climate Change Service, 2020
+# https://apps.ecmwf.int/datasets/licences/copernicus/
+# email michael.blaschek (at) univie.ac.at
+# Created: Vienna, 15 August, 2017
+# Last Accessed: 15 January, 2020
+# -----------------------------------------------------------------------------
 
 set userid = $1
 set pswd = $2

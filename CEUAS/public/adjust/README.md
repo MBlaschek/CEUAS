@@ -4,9 +4,9 @@ Related Milestones and Deliverables:
 
 Type | Nr | Responsible | Nature | Title| Due | Status | File
 ---|---|---|---|---|---|---|---
-Milestone | MC3S311c_Lot2.2.1.2 | UNIVIE | Homogenization software on Github | Demonstrate run on Linux platform, using CDM compliant input | December 2019 | January 2020 | raso_adj_cdm_v0.py
+Milestone | MC3S311c_Lot2.2.1.2 | UNIVIE | Homogenization software on GitHub | Demonstrate run on Linux platform, using CDM compliant input | December 2019 | January 2020 | raso_adj_cdm_v0.py
 Deliverable | DC3S311c_Lot2.2.4.2| UNIVIE | Software, Report | Homogeneity adjustment software + Adjustments plus user guide and documentation | February 2021 | ontime | 
-Milestone | MC3S311c_Lot2.2.1.3 | UNIVIE | Final version of homogenization software on Github | Demonstration session, technical report | March 2021 | ontime | 
+Milestone | MC3S311c_Lot2.2.1.3 | UNIVIE | Final version of homogenization software on GitHub | Demonstration session, technical report | March 2021 | ontime | 
 Deliverable | DC3S311c_Lot2.3.2.2 | UNIVIE | Report, Software | Reproduction of bias adjustment calculation in CDS | March 2021 | ontime |
 
 
@@ -39,14 +39,8 @@ The script `raso_adj_cdm_v0.py` is in pure python code with imports of standard 
 pip install sys os numpy pandas xarray numba datetime getopt glob matplotlib
 ```
 
-## Compilation of FORTRAN routine
-
-In order to compile this code a FORTRAN compiler is required (e.g. intel ifort) and  NetCDF library, GRIB library, RTTOV10 library are required to compile the executable.
-
-```bash
-cd RISE_FORTRAN
-make 
-```
+## Homogenization software RISE
+The code is provided in order to document the current state, but it is not advisable to use this code at the moment as it is very specific to a certain system and not yet ported for public use. However, a python version that consolidates with the humidity adjustment software is planed and will be delivered at the latest by the end of the contract.
 
 # How to use?
 
@@ -82,13 +76,12 @@ Optional Keyword Options:
 
 Experimental Keyword Options:
     --donotwrite          Returns xarray Dataset
-    --enable_ta_feature   Apply Temperature adjustments
     --interpolate_missing Interpolate Adjustments to non-standard times and pressure levels
     
 ```
 
 A common way to employ this script would be to download some radiosonde station data from the CDS (or at the moment only from the backend).
-This example of a retrieval can be viewed in the Notebook (`Example_Homogenization.ipynb`) or in the example Notebook (`Example.ipynb`) from Deliverable [DC3S311c_Lot2.3.1.1](https://github.com/MBlaschek/CEUAS/tree/master/CEUAS/public/cds-backend). This retrieves station data for 72357 (Norman USA) for all significant levels with reanalysis feedback information:
+This example of a retrieval can be viewed in the Notebook (`Example_Homogenization.ipynb`) or in the example Notebook (`Example.ipynb`) from Deliverable [DC3S311c_Lot2.3.1.1](https://github.com/MBlaschek/CEUAS/tree/master/CEUAS/public/cds-backend). The following retrieves station data for 72357 (Norman USA) for all significant levels with reanalysis feedback information:
 
 ```python
 import requests, zipfile, io, os, time
@@ -140,7 +133,7 @@ except:
 print("Time elapsed: ", time.time()-t0, "s")
 ```
 
-Following this data retrieval, a default command would be to employ the standard homogeneity adjustment procedure on the files in `example_data` and interpolate to non-standard dates and times as well as non-standard pressure levels.
+Following this data retrieval, a default command would be to employ the standard homogeneity adjustment procedure on the files in `example_data` and interpolate to non-standard dates and times as well as non-standard pressure levels. At the moment only the variable `hur` (relative humidity) will be adjusted.
 
 ```bash
 python raso_adj_cdm_v0.py -f "example_data/*[!_out].nc" --adddate --interpolate_missing
@@ -272,14 +265,10 @@ Data variables:
     hur_trajectory_label          (trajectory) |S5 b'00551' ... b'23680'
 ```
 
-## Execute RISE
-
-This explains how to execute the homogenization software
-
-```bash
-???
-```
-
-
+For further examples we refer to the Notebook `Example_Homogenization.ipynb`
 
 # License
+
+Generated using Copernicus Climate Change Service Information, 2020
+[Copernicus Climate Change Service (C3S), 2020](https://apps.ecmwf.int/datasets/licences/copernicus/)
+

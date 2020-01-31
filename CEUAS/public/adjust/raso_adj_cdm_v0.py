@@ -5,23 +5,12 @@
 # Calculates radiosonde humidity adjustments based on CDM files
 #
 # (c) University of Vienna, M. Blaschek, Vienna, Austria
-# Released under GNU Public License (GPL)
+# Copernicus Climate Change Service, 2020
+# https://apps.ecmwf.int/datasets/licences/copernicus/
 # email michael.blaschek (at) univie.ac.at
+# Created: Vienna, 26 August, 2019
+# Last Modifed: 31 January, 2020
 # -----------------------------------------------------------------------------
-
-__version__ = '0.1'
-__author__ = 'MB'
-__status__ = 'delivered'
-__date__ = 'Mit Jan 15 15:30:59 CET 2020'
-__institute__ = 'Univie, IMGW'
-__github__ = 'git@github.com:MBlaschek/CEUAS.git'
-__doc__ = """
-Radiosonde Homogenisation Software v%s
-Maintained by %s at %s
-Github: %s [%s]
-License: C3S
-Updated: %s
-""" % (__version__, __author__, __institute__, __github__, __status__, __date__)
 
 import os
 import sys

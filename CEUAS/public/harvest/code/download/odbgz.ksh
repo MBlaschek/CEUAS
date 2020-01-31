@@ -1,12 +1,18 @@
 #!/bin/ksh
+# -----------------------------------------------------------------------------
+# This code has been developed in the service contract for C3S
 #
 # script for converting odb station files into gzipped ASCII format
 #
 # Limits for n should be adjusted depending on the server capacity
 #
-#
-# Leopold Haimberger, 23 January 2020
-#
+# (c) University of Vienna, L. Haimberger, Vienna, Austria
+# Copernicus Climate Change Service, 2020
+# https://apps.ecmwf.int/datasets/licences/copernicus/
+# email leopold.haimberger (at) univie.ac.at
+# Last Modifed: 23 January, 2020
+# -----------------------------------------------------------------------------
+
 
 for file in $(ls era5.*conv.* | grep -v '.nc'); do
   echo $file

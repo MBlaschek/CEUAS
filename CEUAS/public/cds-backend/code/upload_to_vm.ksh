@@ -1,4 +1,15 @@
 #!/bin/ksh
+# -----------------------------------------------------------------------------
+# This code has been developed in the service contract for C3S
+#
+# (c) University of Vienna, L. Haimberger, Vienna, Austria
+# Copernicus Climate Change Service, 2020
+# https://apps.ecmwf.int/datasets/licences/copernicus/
+# email leopold.haimberger (at) univie.ac.at
+# Created: Vienna, 26 August, 2019
+# Last Modifed: 31 January, 2020
+# -----------------------------------------------------------------------------
+
 
 cd ~/python/web2py/applications
 tar -cvf eua.tar eua
