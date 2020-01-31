@@ -13,7 +13,6 @@
 # Last Modifed: 23 January, 2020
 # -----------------------------------------------------------------------------
 
-
 for file in $(ls era5.*conv.* | grep -v '.nc'); do
   echo $file
   fil=$(echo $file | cut -c 1-14)
