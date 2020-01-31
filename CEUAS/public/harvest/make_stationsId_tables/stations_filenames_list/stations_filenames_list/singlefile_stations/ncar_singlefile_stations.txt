@@ -1,3 +1,4 @@
+primary_id	file
 0-124-0-73033	UADB_windc_071203.nc
 0-20000-0-01002	UADB_trhc_001020.nc
 0-20000-0-01007	UADB_trhc_001004.nc
