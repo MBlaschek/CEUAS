@@ -1,4 +1,6 @@
 #!/bin/ksh
+# -----------------------------------------------------------------------------
+# This code has been developed in the service contract for C3S
 #
 # This script takes all monthly odb files in a directory, splits them
 # according to statid@hdr and then concatenates the split files into
@@ -8,8 +10,12 @@
 #
 # maximum open file limit should be set generously by OS (>=5000)
 #
-# Leopold Haimberger, 23 January 2020
-#
+# (c) University of Vienna, L. Haimberger, Vienna, Austria
+# Copernicus Climate Change Service, 2020
+# https://apps.ecmwf.int/datasets/licences/copernicus/
+# email leopold.haimberger (at) univie.ac.at
+# Last Modifed: 23 January, 2020
+# -----------------------------------------------------------------------------
 
 ulimit -a
 
