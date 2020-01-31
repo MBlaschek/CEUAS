@@ -1,0 +1,5 @@
+numpy==1.17.2
+numba==0.45.1
+pandas==0.25.1
+xarray==0.13.0
+matplotlib==3.1.1
