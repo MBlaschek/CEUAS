@@ -25,8 +25,8 @@ if 'srvx' in host:
     sys.path.append(os.path.expanduser('~/python/'))
 else:
     sys.path.append('/data/private/soft/python/')
-    os.environ["RSCRATCH"] = "/data/private/"
-import cds_eua as eua
+    os.environ["RSCRATCH"] = "/data/public/"
+import cds_eua2 as eua
 import pandas as pd
 import xarray
 import numpy
@@ -45,26 +45,27 @@ from datetime import datetime, timedelta
 #@hug.exception(Exception)
 #def handler(exception):
     #return str(exception)
-    
+
 def main():
     
     
-    os.chdir(os.path.expandvars('$RSCRATCH/era5/odbs/1'))
+    os.chdir(os.path.expandvars('$RSCRATCH/era5/odbs/merged'))
     z=numpy.zeros(1,dtype=numpy.int32)
     zidx=numpy.zeros(1,dtype=numpy.int)
     idx=numpy.zeros(1,dtype=numpy.int)
     trajectory_index=numpy.zeros(1,dtype=numpy.int)
     zz=eua.calc_trajindexfast(z,zidx,idx,trajectory_index)
-    
+    try:
+        os.mkdir(os.path.expanduser('~/.tmp'))
+    except:
+        pass
     
     try:  
-        with open('activex.json') as f:
+        with open(os.path.expanduser('~/.tmp/xactive.json')) as f:
             active=json.load(f)
-            slnum=active.keys()
-            slist=[os.path.expandvars('$RSCRATCH/era5/odbs/1/')+'chera5.conv._'+s+'.nc' for s in slnum]
     except:
-        slist=glob.glob('/raid60/scratch/leo/scratch/era5/odbs/1/chera5.conv._?????.nc')
-        slnum=[i[-8:-3] for i in slist]
+        slist=glob.glob(os.path.expandvars('$RSCRATCH/era5/odbs/merged/'+'0-20000-0-?????_CEUAS_merged_v0.nc'))
+        slnum=[i[-24:-19] for i in slist]
         
         volapath='https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
         f=urllib.request.urlopen(volapath)
@@ -76,23 +77,29 @@ def main():
         active={}
         
         for s,skey in zip(slist,slnum):
-            with h5py.File(s,'r') as f:
-                print(skey)
-                try:
-                    
-                    active[skey]=[int(f['recordtimestamp'][0]),int(f['recordtimestamp'][-1]),
-                                  float(f['observations_table']['latitude'][-1]),float(f['observations_table']['longitude'][-1])]
-                    idx=numpy.where(vola.IndexNbr.values==skey)[0]
-                    if len(idx)>0:
+            try:
+                
+                with h5py.File(s,'r') as f:
+                    print(skey)
+                    try:
                         
-                        active[skey].append(vola.CountryCode[idx[0]])
-                    else:
-                        active[skey].append('')
-                        print('no key found for '+skey)
-                except KeyError:
-                    print(skey+': a table is missing')
-        with open('active.json','w') as f:
+                        funits=f['recordtimestamp'].attrs['units']
+                        active[skey]=[int(eua.secsince(f['recordtimestamp'][0],funits)),int(eua.secsince(f['recordtimestamp'][-1],funits)),
+                                      float(f['observations_table']['latitude'][-1]),float(f['observations_table']['longitude'][-1])]
+                        idx=numpy.where(vola.IndexNbr.values==skey)[0]
+                        if len(idx)>0:
+                            
+                            active[skey].append(vola.CountryCode[idx[0]])
+                        else:
+                            active[skey].append('')
+                            print('no key found for '+skey)
+                    except KeyError:
+                        print(skey+': a table is missing')
+            except:
+                print('file open error:'+s)
+        with open(os.path.expanduser('~/.tmp/active.json'),'w') as f:
             json.dump(active,f)
+            
         
     
     cf=eua.read_standardnames()
@@ -111,6 +118,9 @@ def main():
     return active,cdm,cf
 
 active,cdm,cf=main()
+
+slnum=list(active.keys())
+slist=[os.path.expandvars('$RSCRATCH/era5/odbs/merged/')+'0-20000-0-'+s+'_CEUAS_merged_v0.nc' for s in slnum]
 #filelist=glob.glob('chera5.conv._?????.nc')
 
 def check_body(body,cdm):
@@ -213,8 +223,9 @@ def check_body(body,cdm):
                             return ['argument value(s) '+str(body[v])+' not valid.',
                                     'Valid values:'+str(valid_ranges[v])]
                     print('bodyx:',v,body[v][0],len(body[v]))
-                    if body[v][0]==body[v][1]:
-                        body[v].pop()
+                    if len(body[v])>1:
+                        if body[v][0]==body[v][1]:
+                            body[v].pop()
                        
                 else:
                     if type(body[v]) is not list:
@@ -274,8 +285,13 @@ def defproc(body,randdir,cdm):
             dsec=[]
             for d in bodies[k]['date']:
                 dsec.append(((datetime(year=d//10000,month=d%10000//100,day=d%100)-datetime(year=1900,month=1,day=1))).days*86400)
-            if dsec[0]>active[bodies[k]['statid']][1] or dsec[-1]+86399<active[bodies[k]['statid']][0]:
-                del bodies[k]
+            try:
+                
+                if dsec[0]>active[bodies[k]['statid']][1] or dsec[-1]+86399<active[bodies[k]['statid']][0]:
+                    del bodies[k]
+            except KeyError:
+                raise HTTPError(HTTP_422,description=[body,'statid does not exist'])
+                
                                                                                                  
         
     
@@ -302,8 +318,8 @@ def defproc(body,randdir,cdm):
     p=Pool(10)
     func=partial(eua.process_flat,randdir,cf)
 
-    results=list(map(func,bodies))
-    del p
+    results=list(p.map(func,bodies))
+    p.close()
     wpath=''
     for r in results:
         if r[0]!='':
@@ -370,7 +386,7 @@ def index(request=None,response=None):
 
     print(body)
 
-    rfile,error=defproc(body,randdir)   
+    rfile,error=defproc(body,randdir,cdm)   
 
     if rfile=='':
 
@@ -414,7 +430,7 @@ if __name__ == '__main__':
     #active,cdm,cf=main()
     body=eval(sys.argv[1])
 
-    randdir='{:012d}'.format(100000000000)
+    randdir=os.path.expandvars('$RSCRATCH/tmp/{:012d}'.format(100000000000))
     ret=defproc(body,randdir,cdm)
     print(ret)
     print('ready')
