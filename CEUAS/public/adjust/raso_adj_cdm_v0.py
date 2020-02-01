@@ -5,23 +5,12 @@
 # Calculates radiosonde humidity adjustments based on CDM files
 #
 # (c) University of Vienna, M. Blaschek, Vienna, Austria
-# Released under GNU Public License (GPL)
+# Copernicus Climate Change Service, 2020
+# https://apps.ecmwf.int/datasets/licences/copernicus/
 # email michael.blaschek (at) univie.ac.at
+# Created: Vienna, 26 August, 2019
+# Last Modifed: 31 January, 2020
 # -----------------------------------------------------------------------------
-
-__version__ = '0.1'
-__author__ = 'MB'
-__status__ = 'delivered'
-__date__ = 'Mit Jan 15 15:30:59 CET 2020'
-__institute__ = 'Univie, IMGW'
-__github__ = 'git@github.com:MBlaschek/CEUAS.git'
-__doc__ = """
-Radiosonde Homogenisation Software v%s
-Maintained by %s at %s
-Github: %s [%s]
-License: C3S
-Updated: %s
-""" % (__version__, __author__, __institute__, __github__, __status__, __date__)
 
 import os
 import sys
@@ -70,7 +59,7 @@ Experimental Keyword Options:
     --enable_ta_feature   Apply Temperature adjustments
     --interpolate_missing Interpolate Adjustments to non-standard times and pressure levels
     
-    """.format(__file__))
+    """.format(__file__.split('/')[-1]))
 
 
 # -----------------------------------------------------------------------------
@@ -1292,6 +1281,10 @@ def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=F
                 adjv = adjustments(idata[jvar].values, breaks,
                                    axis=axis - 1,
                                    mname='ADJUST', **kwargs)
+                # check limits [0 - 1]
+                # obs + obs-an-adj - obs-an
+                vadj = (idata[ivar].values + adjv - idata[jvar].values)
+                adjv = np.where((vadj < 0) | (vadj > 1), idata[jvar].values, adjv)
                 # new = obs-an-adj + obs - (obs-an)
                 data[avar].loc[{'hour': i}] = (adjv - idata[jvar].values)
             data[avar].attrs.update(attrs)
@@ -1312,7 +1305,11 @@ def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=F
                                    use_mean=False,
                                    axis=axis - 1,
                                    mname='ADJUST', **kwargs)
-                # new = obs-an-adj + obs - (obs-an)
+                # check limits [0 - 1]
+                # obs + obs-an-adj - obs-an
+                vadj = (idata[ivar].values + adjv - idata[jvar].values)
+                adjv = np.where((vadj < 0) | (vadj > 1), idata[jvar].values, adjv)
+                # new = obs-an-adj - (obs-an)
                 data[avar].loc[{'hour': i}] = (adjv - idata[jvar].values)
             data[avar].attrs.update(attrs)
             data[avar].attrs['standard_name'] += '_adjustments'

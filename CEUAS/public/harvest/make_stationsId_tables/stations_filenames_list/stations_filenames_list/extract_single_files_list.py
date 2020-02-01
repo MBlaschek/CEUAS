@@ -5,13 +5,13 @@
 
 import os,sys
 import pandas as pd 
-
 ds = ['era5_3188' , 'era5_1759' , 'era5_1761' , 'era5_1' , 'bufr', 'ncar' , 'igra2']
 
 
 for d in ds:
     os.system('mkdir singlefile_stations')
     out = open( 'singlefile_stations/' + d + '_singlefile_stations.txt' , 'w')
+    out.write('primary_id' +  '\t' + 'file' + '\n')
     summary_file = d + '_summary_duplicated_stations.txt'
     df = pd.read_csv( summary_file, delimiter = '\t' ) 
     for index, row in df.iterrows():
