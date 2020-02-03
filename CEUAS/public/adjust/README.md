@@ -9,7 +9,6 @@ Deliverable | DC3S311c_Lot2.2.4.2| UNIVIE | Software, Report | Homogeneity adjus
 Milestone | MC3S311c_Lot2.2.1.3 | UNIVIE | Final version of homogenization software on GitHub | Demonstration session, technical report | March 2021 | ontime | 
 Deliverable | DC3S311c_Lot2.3.2.2 | UNIVIE | Report, Software | Reproduction of bias adjustment calculation in CDS | March 2021 | ontime |
 
-[Use Interactive Notebook on COLAB (Google)](https://colab.research.google.com/github/MBlaschek/CEUAS/blob/master/CEUAS/public/cds-backend/Example_Homogenization.ipynb)
 
 # Short description
 
@@ -20,6 +19,7 @@ Here the homogenization software employed in the Copernicus Climate Change Servi
 * Investigating results
 
 Here we provide a brief description on the [installation](#Installation), [how to use the script](#How-to-use?) and the [license](#License).
+[Use Interactive Notebook on COLAB (requires a Google Account to execute, but not to view)](https://colab.research.google.com/github/MBlaschek/CEUAS/blob/master/CEUAS/public/cds-backend/Example_Homogenization.ipynb)
 
 # Installation
 The script `raso_adj_cdm_v0.py` is in pure python code with imports of standard packages as follows:
