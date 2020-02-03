@@ -19,7 +19,7 @@ Here the homogenization software employed in the Copernicus Climate Change Servi
 * Investigating results
 
 Here we provide a brief description on the [installation](#Installation), [how to use the script](#How-to-use?) and the [license](#License).
-[Use Interactive Notebook on COLAB (requires a Google Account to execute, but not to view)](https://colab.research.google.com/github/MBlaschek/CEUAS/blob/master/CEUAS/public/cds-backend/Example_Homogenization.ipynb)
+[Use Interactive Notebook on COLAB (requires a Google Account to execute, but not to view)](https://colab.research.google.com/github/MBlaschek/CEUAS/blob/master/CEUAS/public/adjust/Example_Homogenization.ipynb)
 
 # Installation
 The script `raso_adj_cdm_v0.py` is in pure python code with imports of standard packages as follows:
