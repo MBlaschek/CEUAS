@@ -3,12 +3,7 @@
     Will run a separate process for each file listed in the dictionaries below.
     Please select an output directory name to store the output files.
 """
-
 import os,sys
-
-
-
-
 
 """ Example files, containing a small amount of data, for the same observation station. 
      Each key of the dictionary is the proper name of the dataset, while each value is the complete
@@ -19,26 +14,22 @@ import os,sys
      ncar_t (temperature): containing the full temperature data
 """
 
-small =  {       'era5_1'    :'../data/example_stations/era5_1/era5.conv._82930' ,
-                 
-                       #'era5_1759' :'../data/example_stations/era5_1759/era5.1759.conv.1:82930',  # missing ?
-                       
-                       'igra2'     :'../data/example_stations/igra2/BRM00082930-data.txt',
-                       
-                       'ncar'      :'../data/example_stations/ncar/uadb_windc_82930.txt' ,
-                       'ncar_t'    : '../data/example_stations/ncar/uadb_trhc_82930.txt' ,    
-                       
-                       'bufr'      :'/raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.82930.bfr' , }
-                       
-
 """ To test stations divided into multiple files, i.e. these files contain data for the same station from the 3188 dataset. """ 
-multiple = { 'era5_3188_a' : '../data/example_stations/era5_3188/era5.3188.conv.C:4567' ,
+multiple = {         'era5_3188_a' : '../data/example_stations/era5_3188/era5.3188.conv.C:4567' ,
                      'era5_3188_b' : './data/example_stations/era5_3188/era5.3188.conv.C:5246' ,
                      'era5_3188_c' : './data/example_stations/era5_3188/era5.3188.conv.C:4629' , }
 
 
+small = { 'era5_1'    : '../data/example_stations/era5_1/era5.conv._82930'           , 
+          'era5_1759' : '../data/example_stations/era5_1759/era5.1759.conv.1:63260'  ,
+          'era5_1761' : '../data/example_stations/era5_1761/era5.1761.conv.2:32904'  ,
 
+          'igra2'     :'../data/example_stations/igra2/BRM00082930-data.txt'         ,
+          
+          'ncar'      :'../data/example_stations/ncar/uadb_windc_82930.txt'          ,
+          'ncar_t'    : '../data/example_stations/ncar/uadb_trhc_82930.txt'          ,
 
+          'bufr'      :'/raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.82930.bfr' , }
 
 
 
