@@ -778,7 +778,7 @@ def read_all_odbsql_stn_withfeedback(odbfile):
 
     print(odbfile,time.time()-t)
     print(odbfile,time.time()-t,sys.getsizeof(alldict))
-    """ may not be necessary to convert into x_array sicne you can write a pandas df into an HDF file """
+
     return alldict
 
 
@@ -932,7 +932,7 @@ def find_recordindex_l(y,x):
 
 
 def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}): # cuts vars and copies attributes of observation, feedback and header tables
-    print('writing write_dict_h5' , k  )
+    #print('writing write_dict_h5' , k  )
     with h5py.File(dfile,mode) as fd:
         try:
             fd.create_group(k)
@@ -1246,7 +1246,38 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
           
           
 
-
+def get_primary_id(station_id, station_configuration):
+    """ Gets the primary station_id from the station_configuration table. 
+          station_id is the id taken from the input file.
+          First it checks if a primary_id in th estation_conf file matches the station_id, 
+          otherwise it looks for an element in the list of secondary ids.         
+          """
+    if ':' in station_id:
+        station_id_primary = numpy.string_( '0-20000-0-' + station_id.split(':')[1] )   # remove the prefix to the station id 
+    else:
+        station_id_primary = numpy.string_('0-20000-0-' + station_id )
+        
+            
+    #station_id = numpy.string_( '1:68351' )
+    
+    """ First, check for matching primary_id. 
+          If not found, check for secondary id. Note that secondary is a list, so must loop over the entry to find a matching one """
+    
+    matching_primary = station_configuration.loc[station_configuration['primary_id'] == station_id ]
+    
+    if len(matching_primary) > 0:
+        sc = station_configuration.iloc(matching_primary['index'])
+        return sc 
+       
+    else:
+        secondary = station_configuration['secondary_id'] 
+        for s in secondary:
+            if s == station_id:
+                print('yesss')
+                sc = station_configuration.loc[station_configuration['secondary_id'] == s ]
+                return sc 
+                
+    
 
 def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
     """ Convert the  file into cdm compliant netCDF files. 
@@ -1275,9 +1306,17 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
         
         # era5 analysis feedback is read from compressed netcdf files era5.conv._?????.nc.gz in $RSCRATCH/era5/odbs/1
         fbds=read_all_odbsql_stn_withfeedback(fn) # i.e. the xarray 
-        station_id = fbds['statid@hdr']
+        
+        """ Read the station_id """
+        if dataset == 'era5_3188':
+            station_id = numpy.string_(fbds['statid@hdr'][0][3:-1].decode('latin1') )   
+        else:
+            station_id = str( fbds['statid@hdr'].values[0].decode('latin1') ).replace ("'", "")   
+            
+        
         fno,  source_file = initialize_output(fn, output_dir, station_id, dataset)
         
+        primary_id = get_primary_id(station_id, cdm['station_configuration'])
         #fbds['source_file'] = source_file
         if fbds is None:
             return
@@ -1286,6 +1325,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
         # the fbencodings dictionary specifies how fbds will be written to disk in the CDM compliant netCDF file.
         # float64 is often not necessary. Also int64 is often not necessary. 
         fbencodings={}
+        
         for d,v in fbds.items():
             if v.dtype==numpy.dtype('float64'):
                 if d!='date@hdr':             
@@ -1298,8 +1338,8 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                 else:
                     fbencodings[d]={'compression': 'gzip'}
         fbencodings['index']={'compression': 'gzip'}
+        
         y=numpy.int64(fbds['date@hdr'].values)*1000000+fbds['time@hdr'].values
-
         tt=time.time()
         idx=numpy.lexsort((fbds['vertco_reference_1@body'].values,y))
         y=y[idx]
@@ -1371,19 +1411,15 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                         groups[k][d.element_name]=x
                         
                 elif k in ('header_table'):
-                    # if the element_name is found in the cdmfb dict, then it copies the data from the odb into the header_table
+                    print(d.element_name)
                     try:
                         if d.element_name=='report_id':
-                            groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]},
-                                    hdrfromfb(fbds,di._variables,cdmfb[k+'.'+d.element_name],ttrans(d.kind,kinds=gkinds)))
+                            groups[k][d.element_name]=( {'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(fbds,di._variables, cdmfb[k+'.'+d.element_name],ttrans(d.kind,kinds=gkinds) ) )
                         else:
-                            groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]},
-                                    hdrfromfb(fbds,di._variables,cdmfb[d.element_name],ttrans(d.kind,kinds=gkinds)))
-                        #print('got',k,d.element_name)
+                            groups[k][d.element_name]=( {'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(fbds,di._variables, cdmfb[d.element_name],ttrans(d.kind,kinds=gkinds) ) )
                         j=0
                             
                     except KeyError:                            
-                        # if not found, it fills the columns with nans of the specified kind. Same for the observation_tables 
                         if d.element_name in cdm['station_configuration'].columns:
                             x=numpy.zeros(di['recordindex'].shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
                             try:
@@ -1391,7 +1427,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                                 idx=numpy.where('0-20000-0-'+fnl[-1].split('_')[-1] == cdm['station_configuration']['primary_id'])[0][0]
                                 groups[k][d.element_name]=x.fill(cdm['station_configuration'][d.element_name][idx])
                             except:
-                                groups[k][d.element_name]=x
+                                groups[k][d.element_name]= ({'hdrlen':di['recordindex'].shape[0]},x)
                         else:
                             x=numpy.zeros(di['recordindex'].shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=okinds)))
                             x.fill(numpy.nan)
@@ -1403,6 +1439,8 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                             sci=numpy.where( cdm[k]['primary_id']== numpy.string_('0-20000-0-'+fbds['statid@hdr'][0][1:-1].decode('latin1')  )   )[0]
                         if len(sci)>0:
                             groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sci])
+                            fno_new = fno.replace('STATIONID' , station_id)
+                            
                         else:                                                                               
                             if dataset != 'era5_3188':
                                 sci=numpy.where(cdm[k]['secondary_id']== numpy.string_(fbds['statid@hdr'][0][1:-1].decode('latin1') )   )[0]                                
@@ -1412,6 +1450,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                                 
                             if len(sci)>0:
                                 groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sci])
+                                #fno_new = fno.replace('STATIONID' , cdm[k]['secondary_id'].split('-')[-1] )
                             
                             #print('statconf:',k,groups[k][d.element_name])
                     except KeyError:
@@ -1456,6 +1495,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                 groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') #
         #print('sizes: in: {:6.2f} out: {:6.2f}'.format(os.path.getsize(fn+'.gz')/1024/1024, os.path.getsize(fno)/1024/1024))
         del fbds
+        os.system('mv ' + fno + ' ' + fno_new )
     
     #print(fno,time.time()-t)
 
