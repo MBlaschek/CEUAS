@@ -89,15 +89,15 @@ def make_datetime(dvar,tvar):
     return numpy.array(dt-numpy.datetime64('1900-01-01'),dtype=int)//1000000000
 
 def make_obsid(ivar):
-    x=numpy.char.zfill(numpy.arange(ivar.shape[0]).astype('S8'),8)
+    x=numpy.char.zfill(numpy.arange(ivar.shape[0]).astype('S8'), 10)
     return x
 
 def make_recid(ivar):
-    x=numpy.char.zfill(numpy.arange(ivar.values.shape[0]).astype('S5'),5)
+    x=numpy.char.zfill(numpy.arange(ivar.values.shape[0]).astype('S5'), 10)
     return x
 
 def make_obsrecid(fbvar,ivar):
-    x=numpy.char.zfill(numpy.arange(ivar.values.shape[0]).astype('S5'),5)
+    x=numpy.char.zfill(numpy.arange(ivar.values.shape[0]).astype('S5'), 10)
     y=numpy.zeros(fbvar.shape[0]).astype('S5')
     for i in range(ivar.values.shape[0]-1):
         y[ivar.values[i]:ivar.values[i+1]]=x[i]
@@ -163,7 +163,8 @@ cdmfb={'observation_value':'obsvalue@body',
        'longitude':'lon@hdr',
        'latitude':'lat@hdr',
        'units':[make_units,'varno@body'],
-       'primary_station_id':'statid@hdr'   ,}
+       'primary_station_id':'statid@hdr',       
+       }
 
 
 cdmfb_noodb={'observation_value':'obsvalue@body',
@@ -695,7 +696,7 @@ def read_all_odbsql_stn_withfeedback(odbfile):
             
             # had to remove 'collection_identifier@conv'
             d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','lon@hdr','lat@hdr','seqno@hdr',
-                             'obsvalue@body','source@hdr']
+                             'obsvalue@body','source@hdr' , 'vertco_type@body']
             if 'fg_depar@body' in columns:
                 d=d+['fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','reportype','andate','antime']
             
@@ -954,7 +955,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                     
                     fd[k].create_dataset(v,f[v].values.shape,f[v].values.dtype,compression=fbencodings[v]['compression'],chunks=True)
                     fd[k][v][:]=f[v]
-                    if attrs:
+                    if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
                         if v in attrs.keys():
                             fd[k][v].attrs[attrs[v][0]]=numpy.bytes_(attrs[v][1])
                 else:
@@ -1009,7 +1010,7 @@ def initialize_output(fn, output_dir, station_id, dataset):
     """ Simple initializer for writing the output netCDF file """
     
     source_file =fn.split('/')[-1]
-    output_file = output_dir + '/' + '0-20000-0-STATIONID_' + dataset + '_harvested_' + source_file + '.nc'  # creating an output file name e.g. chera5.conv._10393.nc  , try 01009 faster
+    output_file = output_dir + '/' + station_id + '_' + dataset + '_harvested_' + source_file + '.nc'  # creating an output file name e.g. chera5.conv._10393.nc  , try 01009 faster
     return output_file , source_file 
 
 
@@ -1218,8 +1219,16 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
                             groups[k][d.element_name]=({k+'_len':len(cdm[k])}, cdm[k][d.element_name].values) # element_name is the netcdf variable name, which is the column name of the cdm table k 
                         except KeyError:
                             pass
+                        
+                        
+                    """ Tryin to add attributes, e.g. description and external tables """     
                     try:
-    
+                        groups[k][d.element_name].attrs['external_table']=d.external_table # defining variable attributes that point to other tables (3rd and 4th columns)
+                        groups[k][d.element_name].attrs['description']=d.description  # it faisl when trying with the observations_table 
+                    except:
+                        pass
+                        
+                    try:  
                         if type(groups[k][d.element_name].values[0])==str:
                             s=groups[k][d.element_name].values.shape
                             groupencodings[k][d.element_name]={'dtype':numpy.dtype('S80'),'compression': 'gzip','chunksizes':(min(100000,s[0]),80)}
@@ -1246,16 +1255,18 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
           
           
 
-def get_primary_id(station_id, station_configuration):
+def get_station_configuration(station_id, station_configuration):
     """ Gets the primary station_id from the station_configuration table. 
           station_id is the id taken from the input file.
           First it checks if a primary_id in th estation_conf file matches the station_id, 
           otherwise it looks for an element in the list of secondary ids.         
           """
-    if ':' in station_id:
-        station_id_primary = numpy.string_( '0-20000-0-' + station_id.split(':')[1] )   # remove the prefix to the station id 
+    si = station_id.decode('latin1')
+    
+    if ':' in si:
+        station_id_primary = numpy.string_( '0-20000-0-' + si.split(':')[1] )   # remove the prefix to the station id 
     else:
-        station_id_primary = numpy.string_('0-20000-0-' + station_id )
+        station_id_primary = numpy.string_('0-20000-0-' + si )
         
             
     #station_id = numpy.string_( '1:68351' )
@@ -1276,7 +1287,7 @@ def get_primary_id(station_id, station_configuration):
                 print('yesss')
                 sc = station_configuration.loc[station_configuration['secondary_id'] == s ]
                 return sc 
-                
+        return 0        
     
 
 def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
@@ -1305,18 +1316,21 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
     if not False:
         
         # era5 analysis feedback is read from compressed netcdf files era5.conv._?????.nc.gz in $RSCRATCH/era5/odbs/1
-        fbds=read_all_odbsql_stn_withfeedback(fn) # i.e. the xarray 
         
-        """ Read the station_id """
-        if dataset == 'era5_3188':
-            station_id = numpy.string_(fbds['statid@hdr'][0][3:-1].decode('latin1') )   
-        else:
-            station_id = str( fbds['statid@hdr'].values[0].decode('latin1') ).replace ("'", "")   
-            
+        fbds=read_all_odbsql_stn_withfeedback(fn) 
         
-        fno,  source_file = initialize_output(fn, output_dir, station_id, dataset)
+        """ Read the station_id, getting the station_configuration from the table list, extracting primary_id """
+       
+        #station_id = numpy.string_(fbds['statid@hdr'][0][1:-1].decode('latin1') )    
+        station_id = fbds['statid@hdr'][0][1:-1]
         
-        primary_id = get_primary_id(station_id, cdm['station_configuration'])
+        
+        station_configuration_retrieved = get_station_configuration( station_id, cdm['station_configuration'] )    
+        
+        primary_id = station_configuration_retrieved['primary_id'].values[0].decode('latin1')
+  
+        fno,  source_file = initialize_output(fn, output_dir, primary_id, dataset)        
+        
         #fbds['source_file'] = source_file
         if fbds is None:
             return
@@ -1370,7 +1384,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
         dcols=[]
         for d in fbds.columns:
             if d not in ['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body', 'lon@hdr','lat@hdr','seqno@hdr',
-                         'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv']:
+                         'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv', 'vertco_type@body']:
                 dcols.append(d)
         fbds.drop(columns=dcols,inplace=True)
 
@@ -1406,7 +1420,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                             groups[k][d.element_name]=fromfb_l(fbds,di._variables,cdmfb[d.element_name],
                                                              ttrans(d.kind,kinds=okinds))
                     except KeyError:
-                        x=numpy.zeros(fbds['date@hdr'].shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=okinds)))
+                        x=numpy.zeros(  fbds['date@hdr'].shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=okinds) ) )
                         x.fill(numpy.nan)
                         groups[k][d.element_name]=x
                         
@@ -1432,31 +1446,47 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                             x=numpy.zeros(di['recordindex'].shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=okinds)))
                             x.fill(numpy.nan)
                         groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]},x)
+               
                         
-                elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
-                    try:   
-                        if 'sci' not in locals(): 
-                            sci=numpy.where( cdm[k]['primary_id']== numpy.string_('0-20000-0-'+fbds['statid@hdr'][0][1:-1].decode('latin1')  )   )[0]
-                        if len(sci)>0:
-                            groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sci])
-                            fno_new = fno.replace('STATIONID' , station_id)
+                #elif k in ('station_configuration'): # station_configuration contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
+                    
+                    #try:   
+                        #if 'sci' not in locals(): 
+                            #sci=numpy.where( cdm[k]['primary_id']== numpy.string_('0-20000-0-'+fbds['statid@hdr'][0][1:-1].decode('latin1')  )   )[0]
+                        #if len(sci)>0:
+                            #groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sci])
+                            #fno_new = fno.replace('STATIONID' , station_id)
                             
-                        else:                                                                               
-                            if dataset != 'era5_3188':
-                                sci=numpy.where(cdm[k]['secondary_id']== numpy.string_(fbds['statid@hdr'][0][1:-1].decode('latin1') )   )[0]                                
-                            elif dataset == 'era5_3188':
-                                #if len ( str (numpy.string_(fbds['statid@hdr'][0].decode('latin1')) ) ):                                    
-                                sci=numpy.where( cdm[k]['secondary_id']== numpy.string_(fbds['statid@hdr'][0][3:-1].decode('latin1') )   )[0]
+                            
+                            
+                        #else:                                                                               
+                            #if dataset != 'era5_3188':
+                                #sci=numpy.where(cdm[k]['secondary_id']== numpy.string_(fbds['statid@hdr'][0][1:-1].decode('latin1') )   )[0]                                
+                            #elif dataset == 'era5_3188':
+                                ##if len ( str (numpy.string_(fbds['statid@hdr'][0].decode('latin1')) ) ):                                    
+                                #sci=numpy.where( cdm[k]['secondary_id']== numpy.string_(fbds['statid@hdr'][0][3:-1].decode('latin1') )   )[0]
                                 
-                            if len(sci)>0:
-                                groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sci])
-                                #fno_new = fno.replace('STATIONID' , cdm[k]['secondary_id'].split('-')[-1] )
+                            #if len(sci)>0:
+                                #groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sci])
+                                ##fno_new = fno.replace('STATIONID' , cdm[k]['secondary_id'].split('-')[-1] )
                             
-                            #print('statconf:',k,groups[k][d.element_name])
-                    except KeyError:
-                        #print('x')
-                        pass
+                            ##print('statconf:',k,groups[k][d.element_name])
+                            
+                    #except KeyError:
+                        ##print('x')
+                        #pass
                 
+                
+                
+                elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
+                    try:                        
+                        groups[k][d.element_name]=({'hdrlen': 1}, np.full( 1 , station_configuration_retrieved[d.element_name].values[0] ) )
+                        #print('working sc')
+                    except:
+                        #print('not working sc')
+                        pass
+
+
                 elif k in ('source_configuration'): # storing the source configuration info, e.g. original file name, 
                     if d.element_name=='source_file':
                         #  groups[k][d.element_name] = ( {'hdrlen':fbds.variables['date@hdr'].shape[0] } ,  np.full( fbds.variables['date@hdr'].shape[0] , source_file  ) ) 
@@ -1473,16 +1503,24 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                         groups[k][d.element_name]=({k+'_len':len(cdm[k])}, cdm[k][d.element_name].values) # element_name is the netcdf variable name, which is the column name of the cdm table k 
                     except KeyError:
                         pass
+                    
+                """ Tryin to add attributes, e.g. description and external tables """     
                 try:
-
+                    groups[k][d.element_name].attrs['external_table']=d.external_table # defining variable attributes that point to other tables (3rd and 4th columns)
+                    groups[k][d.element_name].attrs['description']=d.description  # it faisl when trying with the observations_table 
+                except:
+                    pass
+                
+                try:
+                    
                     if type(groups[k][d.element_name].values[0])==str:
                         s=groups[k][d.element_name].values.shape
-                        groupencodings[k][d.element_name]={'dtype':numpy.dtype('S80'),'compression': 'gzip','chunksizes':(min(100000,s[0]),80)}
+                        groupencodings[k][d.element_name]={'dtype':numpy.dtype('S80'),'compression': 'gzip','chunksizes':(min(100000, s[0] ) , 80 ) }
                     else:
                         groupencodings[k][d.element_name]={'compression': 'gzip'}
                     
                     if k in ('observations_table'):
-                        write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a',attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')})
+                        write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')})
 
                 except:
                     #print('bad:',k,d.element_name)
@@ -1495,8 +1533,9 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                 groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') #
         #print('sizes: in: {:6.2f} out: {:6.2f}'.format(os.path.getsize(fn+'.gz')/1024/1024, os.path.getsize(fno)/1024/1024))
         del fbds
-        os.system('mv ' + fno + ' ' + fno_new )
     
+    """ Storing the group encodings in a numpy dictionary to be reused by the merging script """
+    np.save('groups_encodings',  groupencodings)
     #print(fno,time.time()-t)
 
     return 0
