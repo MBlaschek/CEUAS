@@ -606,7 +606,7 @@ def odb_process(ci,unified,vola,chuan,igrainv,wbaninv,trans,fn):
 
     return transunified[0]
 
-def scini(station_configuration,ids,wmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc):
+def scini(station_configuration,ids,wmoid,cwmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc):
 
     try:
         station_configuration['longitude']=float(transunified[-1][kdict['lon']])
@@ -618,18 +618,33 @@ def scini(station_configuration,ids,wmoid,vola,transunified,kdict,dmax,dmin,cdm,
     if ids==0:
         station_configuration['primary_id']='0-20000-0-'+wmoid
         station_configuration['primary_id_scheme']=5
-        #station_configuration['secondary_id']=wmoid
-        #station_configuration['secondary_id_scheme']=0
+        if wmoid!=cwmoid:
+            
+            station_configuration['secondary_id']=cwmoid
+            station_configuration['secondary_id_scheme']=ids
     else:
+        station_configuration['secondary_id']=cwmoid
+        station_configuration['secondary_id_scheme']=ids
         dists=fdist(station_configuration['latitude'],station_configuration['longitude'],
                     vola['Latitude'].values,vola['Longitude'].values)*180./math.pi
-        idx=numpy.argmin(dists)
-        if dists[idx]<0.5:
+        
+        idy=numpy.argsort(dists)
+        #idx=numpy.argmin(dists)
+        i=0
+        while dists[idy[i]]<0.5:
+            idx=idy[i]
+            if '0-724-0-0' in  vola['StationId'][idx]:
+                i+=1
+                continue
             station_configuration['primary_id']=vola['StationId'][idx]
             station_configuration['primary_id_scheme']=5
             station_configuration['station_name']=vola.StationName[idx]
             cc= vola['CountryCode'][idx]
             print(wmoid,'colocated with WMO station',station_configuration['primary_id'])
+            if 'Upper' in vola['ObsRems'].values[idx] or '0-2000' in vola['StationId'][idx]:
+                print(wmoid,'colocated with WMO station',station_configuration['primary_id']+', used this')
+                break
+            i+=1
 
     station_configuration['station_crs']=0
     station_configuration['local_gravity']=numpy.NaN
@@ -743,19 +758,24 @@ def odb_cdm(ci,cdm,cdmd,unified,vola,chuan,igrainv,wbaninv,trans,fn):
                 if not fi:
                     transunified.append(row[:])
                     ids,wmoid,cc=insert(transunified[-1],vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,varno,dmin,dmax,dcount,fi,fn)
-                    scini(station_configuration,ids,wmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc)
-                    if '.3188.' in fn:
-                        idx=numpy.where(chuan['WMO ID']==wmoid)[0]
-                        if len(idx)>0:
-                            station_configuration['secondary_id']=chuan['StationId'].values[idx]
-                            station_configuration['secondary_id_scheme']=4
-                        else:
-                            idy=numpy.where(chuan['StationId']==wmoid)[0]
-                            if len(idy)==0:
-                                print('CHUANstation not identified')
-                            else:
-                                station_configuration['secondary_id']=wmoid
-                                station_configuration['secondary_id_scheme']=4
+                    if ':' in fn:  
+                        fnl=fn.split(':')
+                        cwmoid=fnl[-2][-1]+':'+fnl[-1]
+                    else:
+                        cwmoid=wmoid
+                    scini(station_configuration,ids,wmoid,cwmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc)
+                    #if '.3188.' in fn:
+                        #idx=numpy.where(chuan['WMO ID']==wmoid)[0]
+                        #if len(idx)>0:
+                            #station_configuration['secondary_id']=chuan['StationId'].values[idx]
+                            #station_configuration['secondary_id_scheme']=4
+                        #else:
+                            #idy=numpy.where(chuan['StationId']==wmoid)[0]
+                            #if len(idy)==0:
+                                #print('CHUANstation not identified')
+                            #else:
+                                #station_configuration['secondary_id']=wmoid
+                                #station_configuration['secondary_id_scheme']=4
                                 
                     
                     fi=True
@@ -1211,6 +1231,7 @@ if __name__ == '__main__':
         tu=dict()
         p=Pool(25)
         dbs=['igra2','ai_bfr','rda','3188','1759','1761']
+        dbs=['1759','1761']
         for odir in dbs: 
             with open(dpath+odir+'/orphans.csv','w'):
                 pass
@@ -1237,7 +1258,11 @@ if __name__ == '__main__':
 
             else:
                 flist=glob.glob(odir+'/'+'era5.'+odir+'.*:*')
-                transunified=list(p.map(func,flist))
+                hlist=[]
+                for f in flist:
+                    if '.nc' not in f and '.gz' not in f:
+                        hlist.append(f)
+                transunified=list(p.map(func,hlist))
 
             for i in range(len(transunified)-1,-1,-1):
                 if type(transunified[i]) is not tuple:
@@ -1277,3 +1302,5 @@ if __name__ == '__main__':
         for dec in range(1940,2020,10):
             
             plot_active(dbs,[str(dec),str(dec+10)],path=dpath)
+
+        print('ready')
