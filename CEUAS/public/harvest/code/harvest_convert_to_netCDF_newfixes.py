@@ -106,7 +106,7 @@ def make_obsrecid(fbvar,ivar):
     return y
 
 def make_vars(ivar):
-    tr=numpy.zeros(113,dtype=int) 
+    tr=numpy.zeros(300,dtype=int) 
     """ translates odb variables number to Lot3 numbering convention """
     tr[1]=117  # should change
     tr[2]=85
@@ -605,6 +605,8 @@ def igra2_ascii_to_dataframe(file=''):
                 wspd = wspd / 10.  
             else:
                 wspd = np.nan                  
+            if reltime == 9999.0:
+                reltime = np.nan 
                 
             for value,var in zip([gph, temp, wspd, wdir, rh, dpdp],  ['gph', 'temperature', 'wind_speed', 'wind_direction', 'relative_humidity' , 'dew_point_depression'] ):
                 obs_id = obs_id +1 
@@ -622,6 +624,8 @@ def igra2_ascii_to_dataframe(file=''):
     return df
 
 
+
+'''
 def read_all_odbsql_stn_withfeedback(odbfile):
 
     #alldata=''
@@ -781,6 +785,9 @@ def read_all_odbsql_stn_withfeedback(odbfile):
     print(odbfile,time.time()-t,sys.getsizeof(alldict))
 
     return alldict
+
+'''
+
 
 
 
@@ -1140,14 +1147,9 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
             try:               
                 report_timestamp_seconds = datetime_toseconds( df['report_timestamp'] )  # will fill the header_table 
                 df['report_timestamp'] = report_timestamp_seconds # replacing with seconds from 1900-01-01 00:00:00 
-            except KeyError:
-               print('Skipping report_timestamp, only available for IGRA2')
+            except :
+                print('Skipping report_timestamp, incorrect format ')
                
-            date_time_seconds = datetime_toseconds( df['date_time'] ) # will fill the observatiosn_table 
-            df['date_time'] = date_time_seconds # replacing with seconds from 1900-01-01 00:00:00 
-           
-           
-
            
             indices, date_times, counts = make_datetime_seconds_indices( df['iday'].values )   #only date information
             di['dateindex']  = ( { 'dateindex' :  date_times.shape } , date_times )          
@@ -1182,53 +1184,42 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
                 for i in range(len(cdmd[k])):
                     d=cdmd[k].iloc[i] 
                     
+                    """ Filling the observations_table """
                     if k in ('observations_table'):
-                        groups[k]=pd.DataFrame()
-                        try:
-
-                            if d.element_name=='report_id':                            
-                                groups[k][d.element_name]=fromfb_l(df, di._variables, cdmfb[k+'.'+d.element_name], ttrans(d.kind, kinds=okinds))
-                            else:
-                                groups[k][d.element_name]=fromfb_l(df,di._variables,cdmfb[d.element_name], ttrans(d.kind,kinds=okinds) )
-                            print('no key error')
-                            #groups[k][d.element_name]=fromfb_l(df,di._variables,cdmfb_noodb[d.element_name], ttrans(d.kind, kinds=okinds) )
-                            
+                        groups[k]=pd.DataFrame()  # creating dataframes that will be written to netcdf via h5py methods by the write_dict_h5() method 
+                        
+                        try:                            
+                            groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )
+                            #print('no key error')
+                            #groups[k][d.element_name]=fromfb_l(df,di._variables,cdmfb_noodb[d.element_name], ttrans(d.kind, kinds=okinds) )                            
                         except KeyError:
-                            print('key error!! )')
+                            #print('key error!! )')
                             x=numpy.zeros( df['record_timestamp'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=okinds) ) )
                             x.fill(numpy.nan)
                             groups[k][d.element_name]=x
                                   
+                                  
                     elif k in ('header_table'):
                               # if the element_name is found in the cdmfb dict, then it copies the data from the odb into the header_table
-                        try:
+                        if d.element_name not in station_configuration_retrieved.columns: # variables might be from the df (input file) or the from the retrieved station configuration 
                             
-                            if d.element_name=='report_id':
-                                groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(df, di._variables, cdmfb[k+'.'+d.element_name], ttrans(d.kind,kinds=gkinds) ) )
-                            else:
-                                groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(df, di._variables, cdmfb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )
-                            j=0
-                            
-                            
-                        except KeyError:                            
-                            if d.element_name in cdm['station_configuration'].columns:
-                                x=numpy.zeros(di['recordindex'].shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
-                                try:
-                                    idx=numpy.where('0-20000-0-'+ station_id == cdm['station_configuration']['primary_id'])[0][0]
-                                    groups[k][d.element_name]=x.fill(cdm['station_configuration'][d.element_name][idx])
-                                except:
-                                    groups[k][d.element_name]=x
-                            else:
+                            try:
+                                groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )
+                            except:  
                                 x=numpy.zeros(di['recordindex'].shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=okinds)))
                                 x.fill(numpy.nan)
-                            groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]},x)
+                                groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]},x)                                   
+                                pass
                             
+                        elif d.element_name in station_configuration_retrieved.columns:      
+                            
+                                x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
+                                groups[k][d.element_name]= x.fill( cdm['station_configuration'][d.element_name].values[0] )
+
  
                     elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
-                        try:                        
+                        if d.element_name in station_configuration_retrieved.columns:                            
                             groups[k][d.element_name]=({'hdrlen': 1}, np.full( 1 , station_configuration_retrieved[d.element_name].values[0] ) )
-                        except:
-                            pass
            
                     elif k in ('source_configuration'): # storing the source configuration info, e.g. original file name, 
                         if d.element_name=='source_file':
@@ -1289,8 +1280,11 @@ def get_station_configuration(station_id, station_configuration):
           First it checks if a primary_id in th estation_conf file matches the station_id, 
           otherwise it looks for an element in the list of secondary ids.         
           """
-    si = station_id.decode('latin1')
-    
+    try:
+        si = station_id.decode('latin1')
+    except:
+        si = station_id 
+        
     if ':' in si:  # primary ids can have either the 20000 or 20001 numerical flag 
         station_id_primary = numpy.string_( '0-20000-0-' + si.split(':')[1] )   # remove the prefix to the station id 
         station_id_primary_alternative = numpy.string_( '0-20001-0-' + si.split(':')[1] )
@@ -1513,7 +1507,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, obs_tab_attrs, fn):
                         groups[k][d.element_name]=({'hdrlen': 1 },   np.full( 1 , source_file) )
                     else:
                         try:   
-                            groups[k][d.element_name]=({{'hdrlen': 1 },   np.full (1, cdm[k][d.element_name].values[0] ) # element_name is the netcdf variable name, which is the column name of the cdm table k 
+                            groups[k][d.element_name]=({'hdrlen': 1 },   np.full (1, hdrfromfb(fbds,di._variables, cdmfb[k+'.'+d.element_name],ttrans(d.kind,kinds=gkinds) )  ) ) # element_name is the netcdf variable name, which is the column name of the cdm table k 
                         except KeyError:
                             pass
                        

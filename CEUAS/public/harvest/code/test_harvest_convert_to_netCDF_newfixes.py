@@ -32,6 +32,10 @@ small = { 'era5_1'    : '../data/example_stations/era5_1/era5.conv._82930'      
           'bufr'      :'/raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.82930.bfr' , }
 
 
+small = { 'era5_1' : '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._82930'   , 
+          'igra2'  : '../data/example_stations/igra2/BRM00082930-data.txt'        ,
+          'bufr'   : '/raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.82930.bfr' ,  }
+
 
 
 """ Select here the group of files """ 
