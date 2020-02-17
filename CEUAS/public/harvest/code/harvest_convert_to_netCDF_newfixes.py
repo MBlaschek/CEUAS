@@ -106,7 +106,7 @@ def make_obsrecid(fbvar,ivar):
     return y
 
 def make_vars(ivar):
-    tr=numpy.zeros(113,dtype=int) 
+    tr=numpy.zeros(300,dtype=int) 
     """ translates odb variables number to Lot3 numbering convention """
     tr[1]=117  # should change
     tr[2]=85
@@ -605,6 +605,8 @@ def igra2_ascii_to_dataframe(file=''):
                 wspd = wspd / 10.  
             else:
                 wspd = np.nan                  
+            if reltime == 9999.0:
+                reltime = np.nan 
                 
             for value,var in zip([gph, temp, wspd, wdir, rh, dpdp],  ['gph', 'temperature', 'wind_speed', 'wind_direction', 'relative_humidity' , 'dew_point_depression'] ):
                 obs_id = obs_id +1 
@@ -622,6 +624,8 @@ def igra2_ascii_to_dataframe(file=''):
     return df
 
 
+
+'''
 def read_all_odbsql_stn_withfeedback(odbfile):
 
     #alldata=''
@@ -782,6 +786,9 @@ def read_all_odbsql_stn_withfeedback(odbfile):
 
     return alldict
 
+'''
+
+
 
 
 
@@ -932,13 +939,24 @@ def find_recordindex_l(y,x):
     return z
 
 
+# write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')})
+
 def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}): # cuts vars and copies attributes of observation, feedback and header tables
-    #print('writing write_dict_h5' , k  )
+    """ Writes each separate variable from the observation or feedback tables inot netcdf using h5py.
+          f is a pandas dataframe with one column, one for each variable
+          k is either 'era5fb' or 'observations_table'
+          fbencodings is the encodings of variable types, e.g. {'observations_id': { 'compression': 'gzip' } }
+    """
+
+    print('writing write_dict_h5 for ' , k  )
+    #attrs=  {'date_time':('units','seconds since 1900-01-01 00:00:00')}
+    attrs = {'observation_id': ('description', 'unique ID for observation'), 'report_id': ('description', 'Link to header information') , 'date_time':('units','seconds since 1900-01-01 00:00:00') }
+    
     with h5py.File(dfile,mode) as fd:
         try:
             fd.create_group(k)
             index=numpy.zeros(f[f.columns[0]].shape[0],dtype='S1')
-            fd[k].create_dataset('index',data=index)
+            fd[k].create_dataset('index', data=index)
         except:
             pass
         if not var_selection:
@@ -951,16 +969,18 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
          
         for v in var_selection:
             if type(f[v].values[0]) not in [str,bytes,numpy.bytes_]:
-                if f[v].values.dtype!='S1':
+                if f[v].values.dtype !='S1':
                     
                     fd[k].create_dataset(v,f[v].values.shape,f[v].values.dtype,compression=fbencodings[v]['compression'],chunks=True)
                     fd[k][v][:]=f[v]
                     if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
                         if v in attrs.keys():
                             fd[k][v].attrs[attrs[v][0]]=numpy.bytes_(attrs[v][1])
+                            print (  fk, ' ' , v , ' ' ,   ) 
                 else:
                     fd[k].create_dataset(v,f[v].values.shape,f[v].values.dtype,compression=fbencodings[v]['compression'],chunks=True)
                     fd[k][v][:]=f[v][:]
+            
             else:
                 sleno=len(f[v].values[0])
                 slen=sleno
@@ -973,7 +993,11 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                         fd[k].create_dataset('string{}'.format(slen),data=string10[:slen])
                     except:
                         pass
-
+                #if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
+                #    if v in attrs.keys():
+                #        print  ('v is: !!! ' , v ) 
+                #        fd[k][v].attrs[attrs[v][0]]=numpy.bytes_(attrs[v][1])
+                            
                 x=x.reshape(f[v].values.shape[0],slen)
                 fd[k].create_dataset(v,data=x,compression=fbencodings[v]['compression'],chunks=True)
 
@@ -981,6 +1005,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                 
         for v in fd[k].keys(): #var_selection:
             l=0
+            
             try:
                 if 'string' not in v and v!='index':
                     
@@ -992,7 +1017,8 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                         #print('')
             except:
                 pass
-
+            
+            
         i=4        
         for v in slist:
             s='string{}'.format(v)
@@ -1023,7 +1049,7 @@ def convert_variable_type(df):
        'vertco_reference_1@body', 'obsvalue@body', 'varno@body', 'units',
        'number_of_pressure_levels'
     '''  
-    dic_var_type = { 'int32'     :  ['varno@body', 'number_of_pressure_levels']  ,
+    dic_var_type = { 'int32'     : ['varno@body', 'number_of_pressure_levels']  ,
                                 'float32' :  ['lat@hdr', 'lon@hdr' ,  'vertco_reference_1@body', 'obsvalue@body',  'iday' ]  ,
                                 'string'   :  ['source_id' , 'station_id' ,  'source_file' , 'report_id', 'observation_id',   'units',  ]  }
     
@@ -1042,6 +1068,17 @@ def convert_variable_type(df):
             
     return df
 
+ 
+def datetime_toseconds(date_time):
+    """ Converts a generic date_time array to seconds since '1900-01-01 00:00:00' """
+    offset = np.datetime64('1900-01-01 00:00:00')            
+    deltas =  [ dt - offset for dt in date_time ]
+    date_times_seconds  =  [ i.total_seconds() for i in deltas ] 
+    return date_times_seconds # replacing with seconds from 1900-01-01 00:00:00 
+    
+    
+    
+    
     
 def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
     """ Convert the  pandas dataframe from the file into cdm compliant netCDF files. Use with bufr, igra2 and ncar databases.
@@ -1050,17 +1087,12 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
               fn       :: odb file name (e.g. era5.conv._10393)
               cdm   :: cdm tables (read with pandas)
               cdmd :: cdm tables definitions ("")  """    
-    
-    if debug:
-        print("Running df_to_cdm for: ", fn)
         
     #station_id_fails = open('station_id_fail.log' , 'a') 
     #station_id_ok = open('station_id_correct.log' , 'a')
     
     t=time.time()
-
-    if not False:
-        
+    if not False:        
             # era5 analysis feedback is read from compressed netcdf files era5.conv._?????.nc.gz in $RSCRATCH/era5/odbs/1
             """ Reading the odb and convert to xarray """  
             if  'bufr' in dataset :
@@ -1076,11 +1108,15 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
                 print('Unidentified file is: ', fn)
                 raise ValueError('Cannot identify the type of file to be analized!!! ')
               
-            station_id = str( df['statid@hdr'].values[0].replace(' ','') )            
-            fno,  source_file = initialize_output(fn, output_dir, station_id, dataset)
-                 
+              
+            station_id = str( df['statid@hdr'].values[0].replace(' ','') )                          
+            station_configuration_retrieved = get_station_configuration( station_id, cdm['station_configuration'] )    
+            primary_id = station_configuration_retrieved['primary_id'].values[0].decode('latin1')      
+            fno,  source_file = initialize_output(fn, output_dir, primary_id, dataset)   
+            
+                             
             """ Casting the original variable types to appropriate numpy types """     
-            df = convert_variable_type(df)  
+            df = convert_variable_type(df)  # ->think this is overly complicated. 
                           
             """ Storing the variable encodings """
             fbencodings={}
@@ -1089,11 +1125,11 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
                 if v.dtype==numpy.dtype('float64'):
                         fbencodings[d]={'dtype':numpy.dtype('float32'),'compression': 'gzip'}           
                         
-                elif v.dtype==numpy.dtype('int32') :
+                elif v.dtype==numpy.dtype('int32'):
                     fbencodings[d]={'dtype':numpy.dtype('int32'),'compression': 'gzip'} 
                     
                 elif type(v.values[0])==bytes:
-                        fbencodings[d]={'compression': 'gzip', 'chunksizes':(min([10000,v.shape[0]]),10)}#,'chunksizes':(10000,10)
+                        fbencodings[d]={'compression': 'gzip', 'chunksizes': ( min( [10000,v.shape[0] ] ), 10 ) }#,'chunksizes':(10000,10)
                 else:
                         fbencodings[d]={'compression': 'gzip'}
             fbencodings['index']={'compression': 'gzip'}
@@ -1103,21 +1139,24 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
                 Converts the time variables in seconds since 1900-01-01 00:00:00 """  
             di=xr.Dataset() 
             
-            offset = np.datetime64('1900-01-01 00:00:00')
             
-            deltas =  [ dt - offset for dt in df['record_timestamp'] ]
-            date_times_seconds  =  [ i.total_seconds() for i in deltas ] 
-             
-            df['record_timestamp'] = date_times_seconds # replacing with seconds from 1900-01-01 00:00:00 
-            
-            
+
+            record_timestamp_seconds = datetime_toseconds( df['record_timestamp'] )  # will fill the header_table 
+            df['record_timestamp'] = record_timestamp_seconds # replacing with seconds from 1900-01-01 00:00:00 
+
+            try:               
+                report_timestamp_seconds = datetime_toseconds( df['report_timestamp'] )  # will fill the header_table 
+                df['report_timestamp'] = report_timestamp_seconds # replacing with seconds from 1900-01-01 00:00:00 
+            except :
+                print('Skipping report_timestamp, incorrect format ')
+               
+           
             indices, date_times, counts = make_datetime_seconds_indices( df['iday'].values )   #only date information
-            di['dateindex']  = ( { 'dateindex' :  date_times.shape } , date_times )
-            
+            di['dateindex']  = ( { 'dateindex' :  date_times.shape } , date_times )          
             
             indices, date_times , counts  = make_datetime_seconds_indices( df['record_timestamp'].values ) #date_time plus indices           
-            di['recordindex']          =  ( {'recordindex' : indices.shape } , indices )
-            di['recordtimestamp']  = (  {'recordtimestamp' : date_times.shape }, date_times  )
+            di['recordindex']          = ( {'recordindex' : indices.shape }, indices )
+            di['recordtimestamp']  = ( {'recordtimestamp' : date_times.shape }, date_times  )
             
             di['recordtimestamp'].attrs['units']='seconds since 1900-01-01 00:00:00'
 
@@ -1145,75 +1184,56 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
                 for i in range(len(cdmd[k])):
                     d=cdmd[k].iloc[i] 
                     
+                    """ Filling the observations_table """
                     if k in ('observations_table'):
-                        groups[k]=pd.DataFrame()
-                        try:
-
-                            if d.element_name=='report_id':                            
-                                groups[k][d.element_name]=fromfb_l(df, di._variables, cdmfb[k+'.'+d.element_name], ttrans(d.kind, kinds=okinds))
-                            else:
-                                groups[k][d.element_name]=fromfb_l(df,di._variables,cdmfb[d.element_name], ttrans(d.kind,kinds=okinds) )
-                            print('no key error')
-                            #groups[k][d.element_name]=fromfb_l(df,di._variables,cdmfb_noodb[d.element_name], ttrans(d.kind, kinds=okinds) )
-                            
+                        groups[k]=pd.DataFrame()  # creating dataframes that will be written to netcdf via h5py methods by the write_dict_h5() method 
+                        
+                        try:                            
+                            groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )
+                            #print('no key error')
+                            #groups[k][d.element_name]=fromfb_l(df,di._variables,cdmfb_noodb[d.element_name], ttrans(d.kind, kinds=okinds) )                            
                         except KeyError:
-                            print('key error!! )')
+                            #print('key error!! )')
                             x=numpy.zeros( df['record_timestamp'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=okinds) ) )
                             x.fill(numpy.nan)
                             groups[k][d.element_name]=x
                                   
+                                  
                     elif k in ('header_table'):
                               # if the element_name is found in the cdmfb dict, then it copies the data from the odb into the header_table
-                        try:
+                        if d.element_name not in station_configuration_retrieved.columns: # variables might be from the df (input file) or the from the retrieved station configuration 
                             
-                            if d.element_name=='report_id':
-                                groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(df, di._variables, cdmfb[k+'.'+d.element_name], ttrans(d.kind,kinds=gkinds) ) )
-                            else:
-                                groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(df, di._variables, cdmfb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )
-                            j=0
-                            
-                            
-                        except KeyError:                            
-                            if d.element_name in cdm['station_configuration'].columns:
-                                x=numpy.zeros(di['recordindex'].shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
-                                try:
-                                    idx=numpy.where('0-20000-0-'+ station_id == cdm['station_configuration']['primary_id'])[0][0]
-                                    groups[k][d.element_name]=x.fill(cdm['station_configuration'][d.element_name][idx])
-                                except:
-                                    groups[k][d.element_name]=x
-                            else:
+                            try:
+                                groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )
+                            except:  
                                 x=numpy.zeros(di['recordindex'].shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=okinds)))
                                 x.fill(numpy.nan)
-                            groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]},x)
+                                groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]},x)                                   
+                                pass
                             
-                    elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
-                        try:   
-                            if 'sci' not in locals(): 
-                                sci=numpy.where( cdm[k]['primary_id']== numpy.string_('0-20000-0-'+ station_id ) ) [0]
-                                
-                            if len(sci)>0:
-                                    groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sci])
-                                    fno_new = fno.replace('STATIONID' , station_id)
-                            else:                                                                               
-                                sci=numpy.where(cdm[k]['secondary_id'] == numpy.string_( station_id )   )[0]                                                                         
-                                if len(sci)>0:
-                                    groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sci])
-                                    fno_new = fno.replace('STATIONID' , cdm[k]['secondary_id'].split('-')[-1] )
-                                
+                        elif d.element_name in station_configuration_retrieved.columns:      
+                            
+                                x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
+                                groups[k][d.element_name]= x.fill( cdm['station_configuration'][d.element_name].values[0] )
 
-                        except KeyError:
-                            pass
-                          
+ 
+                    elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
+                        if d.element_name in station_configuration_retrieved.columns:                            
+                            groups[k][d.element_name]=({'hdrlen': 1}, np.full( 1 , station_configuration_retrieved[d.element_name].values[0] ) )
+           
                     elif k in ('source_configuration'): # storing the source configuration info, e.g. original file name, 
                         if d.element_name=='source_file':
                             #  groups[k][d.element_name] = ( {'hdrlen':fbds.variables['date@hdr'].shape[0] } ,  np.full( fbds.variables['date@hdr'].shape[0] , source_file  ) ) 
-                            groups[k][d.element_name]=({'hdrlen': 1 },   np.full( 1 , source_file) )
+                            groups[k][d.element_name] = ( {'hdrlen': 1 },   np.full( 1 , source_file) )
                         else:
                             try:   
-                                groups[k][d.element_name]=({k+'_len':len(cdm[k])}, cdm[k][d.element_name].values) # element_name is the netcdf variable name, which is the column name of the cdm table k 
+                                groups[k][d.element_name] = (  {'hdrlen': 1 }, np.full( 1 , np.nan) ) # element_name is the netcdf variable name, which is the column name of the cdm table k 
                             except KeyError:
-                                pass                 
-       
+                                pass
+
+
+
+
                     else : # this is the case where the cdm tables DO exist
                         try:   
                             groups[k][d.element_name]=({k+'_len':len(cdm[k])}, cdm[k][d.element_name].values) # element_name is the netcdf variable name, which is the column name of the cdm table k 
@@ -1248,7 +1268,6 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
                     print('Doing: ', k )
                     groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') #
             del df
-            os.system('mv ' + fno + ' ' + fno_new )
           
     return 0
           
@@ -1261,12 +1280,17 @@ def get_station_configuration(station_id, station_configuration):
           First it checks if a primary_id in th estation_conf file matches the station_id, 
           otherwise it looks for an element in the list of secondary ids.         
           """
-    si = station_id.decode('latin1')
-    
-    if ':' in si:
+    try:
+        si = station_id.decode('latin1')
+    except:
+        si = station_id 
+        
+    if ':' in si:  # primary ids can have either the 20000 or 20001 numerical flag 
         station_id_primary = numpy.string_( '0-20000-0-' + si.split(':')[1] )   # remove the prefix to the station id 
+        station_id_primary_alternative = numpy.string_( '0-20001-0-' + si.split(':')[1] )
     else:
         station_id_primary = numpy.string_('0-20000-0-' + si )
+        station_id_primary_alternative = numpy.string_( '0-20001-0-' + si )
         
             
     #station_id = numpy.string_( '1:68351' )
@@ -1274,23 +1298,26 @@ def get_station_configuration(station_id, station_configuration):
     """ First, check for matching primary_id. 
           If not found, check for secondary id. Note that secondary is a list, so must loop over the entry to find a matching one """
     
-    matching_primary = station_configuration.loc[station_configuration['primary_id'] == station_id ]
+    matching_primary = station_configuration.loc[station_configuration['primary_id'] == station_id_primary ]
+    matching_primary_alt= station_configuration.loc[station_configuration['primary_id'] == station_id_primary_alternative ]
     
     if len(matching_primary) > 0:
-        sc = station_configuration.iloc(matching_primary['index'])
-        return sc 
-       
+        return matching_primary 
+    
+    elif   len(matching_primary_alt) > 0  :
+        return matching_primary_alt 
+
     else:
         secondary = station_configuration['secondary_id'] 
         for s in secondary:
             if s == station_id:
-                print('yesss')
+                print('Found element in secondary ids')
                 sc = station_configuration.loc[station_configuration['secondary_id'] == s ]
                 return sc 
         return 0        
     
 
-def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
+def odb_to_cdm(cdm, cdmd, output_dir, dataset, obs_tab_attrs, fn):
     """ Convert the  file into cdm compliant netCDF files. 
         According to each file type, it will use the appropriate reading function to extract a Pandas DataFrame
         input:
@@ -1298,13 +1325,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
               cdm   :: cdm tables (read with pandas)
               cdmd :: cdm tables definitions ("")  """
 
-    source_file = [ f for f in fn.split('/') if '.conv' in f][0]
     process = psutil.Process(os.getpid())
-    
-    
-    if debug:
-        print("Running odb_to_cdm for: ", fn)
-
     t=time.time()
     #fno = initialize_convertion(fn, output_dir) 
     #station_id = ''    
@@ -1322,13 +1343,9 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
         """ Read the station_id, getting the station_configuration from the table list, extracting primary_id """
        
         #station_id = numpy.string_(fbds['statid@hdr'][0][1:-1].decode('latin1') )    
-        station_id = fbds['statid@hdr'][0][1:-1]
-        
-        
-        station_configuration_retrieved = get_station_configuration( station_id, cdm['station_configuration'] )    
-        
-        primary_id = station_configuration_retrieved['primary_id'].values[0].decode('latin1')
-  
+        station_id = fbds['statid@hdr'][0][1:-1]    
+        station_configuration_retrieved = get_station_configuration( station_id, cdm['station_configuration'] )            
+        primary_id = station_configuration_retrieved['primary_id'].values[0].decode('latin1')  
         fno,  source_file = initialize_output(fn, output_dir, primary_id, dataset)        
         
         #fbds['source_file'] = source_file
@@ -1391,7 +1408,6 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
         #print(sys.getsizeof(fbds)//1024//1024,process.memory_info().rss//1024//1024)        
         #print(time.time()-t)
 
-
         # each cdm table is written into an hdf group, groups is the dict of all the groups
         # to write the group to the disk, you need the group encoding dict
         groups={}
@@ -1414,11 +1430,9 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                     try:
                         # fbds is an xarray dataset , fbds._variables is a dict of the variables 
                         if d.element_name=='report_id':                            
-                            groups[k][d.element_name]=fromfb_l(fbds,di._variables,cdmfb[k+'.'+d.element_name],
-                                                             ttrans(d.kind,kinds=okinds))
+                            groups[k][d.element_name]=fromfb_l(fbds,di._variables,cdmfb[k+'.'+d.element_name], ttrans(d.kind,kinds=okinds))
                         else:
-                            groups[k][d.element_name]=fromfb_l(fbds,di._variables,cdmfb[d.element_name],
-                                                             ttrans(d.kind,kinds=okinds))
+                            groups[k][d.element_name]=fromfb_l(fbds,di._variables,cdmfb[d.element_name], ttrans(d.kind,kinds=okinds))
                     except KeyError:
                         x=numpy.zeros(  fbds['date@hdr'].shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=okinds) ) )
                         x.fill(numpy.nan)
@@ -1493,7 +1507,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                         groups[k][d.element_name]=({'hdrlen': 1 },   np.full( 1 , source_file) )
                     else:
                         try:   
-                            groups[k][d.element_name]=({k+'_len':len(cdm[k])}, cdm[k][d.element_name].values) # element_name is the netcdf variable name, which is the column name of the cdm table k 
+                            groups[k][d.element_name]=({'hdrlen': 1 },   np.full (1, hdrfromfb(fbds,di._variables, cdmfb[k+'.'+d.element_name],ttrans(d.kind,kinds=gkinds) )  ) ) # element_name is the netcdf variable name, which is the column name of the cdm table k 
                         except KeyError:
                             pass
                        
@@ -1504,12 +1518,13 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                     except KeyError:
                         pass
                     
-                """ Tryin to add attributes, e.g. description and external tables """     
-                try:
-                    groups[k][d.element_name].attrs['external_table']=d.external_table # defining variable attributes that point to other tables (3rd and 4th columns)
-                    groups[k][d.element_name].attrs['description']=d.description  # it faisl when trying with the observations_table 
-                except:
-                    pass
+                """ Tryin to add attributes, e.g. description and external tables """ 
+                if k not in ('observations_table'):               
+                    try:
+                        groups[k][d.element_name].attrs['external_table']=d.external_table # defining variable attributes that point to other tables (3rd and 4th columns)
+                        groups[k][d.element_name].attrs['description']=d.description  # it faisl when trying with the observations_table 
+                    except:
+                        pass
                 
                 try:
                     
@@ -1520,18 +1535,19 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, fn):
                         groupencodings[k][d.element_name]={'compression': 'gzip'}
                     
                     if k in ('observations_table'):
-                        write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')})
-
+                       write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs= obs_tab_attrs  )
+                       print ('writing observations_table')
                 except:
                     #print('bad:',k,d.element_name)
                     pass
         
+        
         for k in groups.keys():            
-            #this appends group by group to the netcdf file
-            if k not in ('observations_table'):           
+            ##this appends group by group to the netcdf file
+            if k not in ('observations_table') :           
                 print('ERA5 doing k: ' , k )
                 groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') #
-        #print('sizes: in: {:6.2f} out: {:6.2f}'.format(os.path.getsize(fn+'.gz')/1024/1024, os.path.getsize(fno)/1024/1024))
+        ##print('sizes: in: {:6.2f} out: {:6.2f}'.format(os.path.getsize(fn+'.gz')/1024/1024, os.path.getsize(fno)/1024/1024))
         del fbds
     
     """ Storing the group encodings in a numpy dictionary to be reused by the merging script """
@@ -1599,7 +1615,16 @@ def load_cdm_tables():
     cdm_tab['station_type']=pd.DataFrame({'type':[0,1],'description':['Radiosonde','Pilot']}) 
     cdm_tab['z_coordinate_type']=pd.DataFrame({'type':[0,1],'description':['height (m) above sea level','pressure (Pa)']})  # only the m above sea level is available currently in the GitHub cdm table, added pressure 
     
-    return cdm_tabdef  , cdm_tab, tdict
+    
+    """ Make dictionary of variables and attributes for the observations table """ 
+    dic_obs = {}
+    for index, row in cdm_tabdef['observations_table'].iterrows():
+        dic_obs[row['element_name'] ] = []
+        dic_obs[row['element_name'] ] = ['description' ,  row.description ]     
+    dic_obs['date_time'] = ['units',  'seconds since 1900-01-01 00:00:00' ]
+    
+
+    return cdm_tabdef  , cdm_tab, tdict , dic_obs 
 
 
 
@@ -1700,7 +1725,7 @@ if __name__ == '__main__':
         raise ValueError(" The selected dataset is not valid. Please choose from ['era5_1', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'igra2', 'ncar' ]  ")    
                         
     """ Loading the CDM tables into pandas dataframes """
-    cdm_tabdef  , cdm_tab , tdict = load_cdm_tables()
+    cdm_tabdef  , cdm_tab , tdict, obs_tab_attrs = load_cdm_tables()
      
     """ Paths to the output directory """    
     if not os.path.isdir(out_dir):
@@ -1750,7 +1775,7 @@ if __name__ == '__main__':
         print( blue + '*** Processing the database ' + dataset + ' ***  \n \n *** file: ' + File + '\n'  + cend)
                                     
         if 'era5' in dataset and 'bufr' not in dataset:   
-            odb_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset, File)
+            odb_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  obs_tab_attrs, File)
         else:
             df_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset, File)
 
