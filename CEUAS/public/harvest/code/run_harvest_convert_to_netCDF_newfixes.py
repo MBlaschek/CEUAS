@@ -43,27 +43,32 @@ def chunk_it(seq, num):
        return out
 
 
-out_dir = '/raid60/scratch/federico/NCAR_READING'
-processes = 10
+out_dir = '/raid60/scratch/federico/12MARCH2020_harvested'
+
+processes = 5 # number of process PER DATASET 
 
 """ Select the dataset to be processed """ 
 #datasets = ['era5_1', 'era5_3188', 'era5_1759', 'era5_1761', 'ncar', 'igra2', 'bufr' ]
 datasets = ['ncar']
 
+""" Check processed files """
 check_missing = False
+processed_dir = '/raid60/scratch/federico/READY_06MARCH2020/bufr'
 
 
-def rerun_list(f_list, processed_dir = '', name_dir = 'IGRAv2' , input_dir = ''):
-       processed = os.listdir(processed_dir) 
+def rerun_list(f_list, processed_dir = '', split = '' , input_dir = ''):
+       
+       processed = [ f.split('harvested_')[1].replace('.nc','') for f in os.listdir(processed_dir)  ]
+       f_list          = [ f.split(input_dir)[1] for f in f_list ]
+
+
        to_be_processed = []
-       for k in f_list:
-              print('KKKK IS', k)
-              k = k.split(name_dir)[1].replace('/','')
-              name = 'ch' + k + '.nc'
-              print(name)
-              if name not in processed:
-                     to_be_processed.append(input_dir + '/' + k)
-              
+       for file in f_list:
+              file = file.replace('/','')
+              if file in processed:
+                     continue
+              else:
+                     to_be_processed.append(input_dir + '/' + file )
        print('total to be processed: ', len(to_be_processed) )
        return to_be_processed
 
@@ -77,22 +82,14 @@ for d in datasets:
        f_list = filelist_cleaner(f_list, d = d)
        f_list = [ f.replace('\n','')  for f in f_list ]
        if check_missing == True:
-              processed_dir = out_dir + '/'
-              f_list = rerun_list(f_list, processed_dir = processed_dir , name_dir = d , input_dir =  db[d]['dbpath']  )
+              f_list = rerun_list(f_list, processed_dir = processed_dir , split = 'ai_bfr' , input_dir =  db[d]['dbpath']  )
    
        chunks = chunk_it(f_list, processes)
        print('+++++++++ TOTAL NUMBER OF FILES: ', len(f_list) )
        for c in chunks:
               print ('*** I am running CHUNK: ', chunks.index(c) , ' *** with: ' ,  len(c), ' files \n'  )
               c = str(','.join(c)).replace('#','')
-              
-     
-              os.system('/opt/anaconda3/bin/python3  harvest_convert_to_netCDF.py  -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')                                                                                                                                 
-   
-              #os.system('/opt/anaconda3/bin/python3  build_311c_cdmfiles_ALL_split.py -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')     
-              #comm = '/opt/anaconda3/bin/python3  build_311c_cdmfiles_ALL_split.py -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & '
-              #comm = '/opt/anaconda3/bin/python3 harvest_to_netCDF_converter_leo+federico.py -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ' 
-              #subprocess.call( comm, shell = True )
-
+                   
+              os.system('/opt/anaconda3/bin/python3  harvest_convert_to_netCDF_newfixes.py  -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')                                                                                                                                 
 
 print('\n\n\n *** Finished with the parallel running ***')

@@ -32,7 +32,13 @@ small = { 'era5_1'    : '../data/example_stations/era5_1/era5.conv._82930'      
           'bufr'      :'/raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.82930.bfr' , }
 
 
-small = { 'era5_1' : '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._82930'   , 
+small = { 'era5_1' : '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._82930.gz'   ,
+
+          'era5_1759' : '../data/example_stations/era5_1759/era5.1759.conv._1:82930.gz',
+ 
+          'ncar_t'    : '../data/example_stations/ncar/uadb_trhc_82930.txt'          ,
+          'ncar'      :'../data/example_stations/ncar/uadb_windc_82930.txt'          ,
+
           'igra2'  : '../data/example_stations/igra2/BRM00082930-data.txt'        ,
           'bufr'   : '/raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.82930.bfr' ,  }
 
@@ -57,7 +63,9 @@ if __name__ == '__main__':
 
 
 
-
+    os.system('rm -r    /raid8/srvx1/federico/GitHub/CEUAS_master_FEB202/CEUAS/CEUAS/public/merge/example_stations' )
+    os.system('cp -r output_test /raid8/srvx1/federico/GitHub/CEUAS_master_FEB202/CEUAS/CEUAS/public/merge/example_stations' )
+    print(' Done copying!!!')
 
 
 

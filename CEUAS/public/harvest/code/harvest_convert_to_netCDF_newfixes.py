@@ -30,7 +30,12 @@ from numba import njit
 
 warnings.simplefilter(action='ignore', category=FutureWarning) # deactivates Pandas warnings 
 
-
+"""
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+pd.set_option('display.width', None)
+pd.set_option('display.max_colwidth', -1)
+"""
 debug = False
 
 
@@ -41,9 +46,12 @@ blue   = '\033[34m'
 green  = '\033[92m'
 yellow = '\033[33m'
 
-""" Possible variable types as listed int he CMD tables S80 is a fixed 80 char. string. Compression does not work well with normal strings. """
-okinds={'varchar (pk)':np.dtype('|S80'),
-               'varchar':np.dtype('|S80'), 
+fixed_string_len = 80  # maximum allowed length of strings in header and observations_table
+id_string_length = 10 # maximum allowed length of strings for observation_id and report_id in header and observations_table
+
+""" Possible variable types as listed int he CMD tables """
+okinds={'varchar (pk)':np.dtype('|S' + str(fixed_string_len) ),
+               'varchar':np.dtype('|S' + str(fixed_string_len) ), 
                'numeric':np.float32, 
                'int':np.int32,
                #'timestamp with timezone':np.datetime64,
@@ -56,9 +64,14 @@ okinds={'varchar (pk)':np.dtype('|S80'),
 
 """ Variable types to be used in the compressed netCDF files """
 kinds={'varchar (pk)':str,
+             'varchar(pk)':str,
+             'varchar ':str,
              'varchar':str,
+             ' varchar':str,             
              'numeric':np.float32,
+             'numeric ':np.float32,             
              'int':np.int32,
+             'int ':np.int32,             
              'int(pk)' : np.int32,
              #'timestamp with timezone':np.datetime64,  # gives errore when wiritng out the netCDF file with the np.datetime64 
              'timestamp with timezone':np.float32,             
@@ -67,16 +80,31 @@ kinds={'varchar (pk)':str,
              'varchar[]*':list,
              'varchar[]':list}
 
-gkinds={'varchar (pk)':numpy.dtype('|S80'),
-               'varchar':numpy.dtype('|S80'),
+gkinds={'varchar (pk)':numpy.dtype('|S'+ str(fixed_string_len)  ),
+               'varchar':numpy.dtype('|S'+ str(fixed_string_len)  ),
                'numeric':numpy.float32,
+               
+               'int':numpy.int32,
+               'timestamp with timezone':numpy.datetime64,
+               'int[]*':numpy.int32,
+               'int[]':numpy.int32,
+               'varchar[]*':str,
+               'varchar[]':str}
+
+
+"""
+# changed because list is an object and gets converted to float64
+gkinds={'varchar (pk)':numpy.dtype('|S'+ str(fixed_string_len)  ),
+               'varchar':numpy.dtype('|S'+ str(fixed_string_len)  ),
+               'numeric':numpy.float32,
+               
                'int':numpy.int32,
                'timestamp with timezone':numpy.datetime64,
                'int[]*':list,
                'int[]':list,
                'varchar[]*':list,
                'varchar[]':list}
-
+"""
 
 
 def make_datetime(dvar,tvar):
@@ -89,16 +117,16 @@ def make_datetime(dvar,tvar):
     return numpy.array(dt-numpy.datetime64('1900-01-01'),dtype=int)//1000000000
 
 def make_obsid(ivar):
-    x=numpy.char.zfill(numpy.arange(ivar.shape[0]).astype('S8'), 10)
+    x=numpy.char.zfill(numpy.arange(ivar.shape[0]).astype('S'+ str(id_string_length)), id_string_length  )
     return x
 
 def make_recid(ivar):
-    x=numpy.char.zfill(numpy.arange(ivar.values.shape[0]).astype('S5'), 10)
+    x=numpy.char.zfill(numpy.arange(ivar.values.shape[0]).astype('S'+ str(id_string_length)) , id_string_length )
     return x
 
 def make_obsrecid(fbvar,ivar):
-    x=numpy.char.zfill(numpy.arange(ivar.values.shape[0]).astype('S5'), 10)
-    y=numpy.zeros(fbvar.shape[0]).astype('S5')
+    x=numpy.char.zfill(numpy.arange(ivar.values.shape[0]).astype('S' + str(id_string_length )) , id_string_length )
+    y=numpy.zeros(fbvar.shape[0]).astype('S' + str(id_string_length ) )
     for i in range(ivar.values.shape[0]-1):
         y[ivar.values[i]:ivar.values[i+1]]=x[i]
     if ivar.values.shape[0]>1:
@@ -162,6 +190,7 @@ cdmfb={'observation_value':'obsvalue@body',
        'record_timestamp':[make_datetime,'date@hdr','time@hdr'],
        'longitude':'lon@hdr',
        'latitude':'lat@hdr',
+       'source_id': 'source_id',       
        'units':[make_units,'varno@body'],
        'primary_station_id':'statid@hdr',       
        }
@@ -256,10 +285,17 @@ cdm_odb_var_dic = { 1    : 117    , # geopotential
 
 
 """ Common columns of the read dataframes (not from ODB files, which have their own fixed column names definitions) """
-column_names = [ 'source_id', 'report_id',  'observation_id', 'record_timestamp' , 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body', 'obsvalue@body', 'varno@body' , 'units',  'number_of_pressure_levels' ]
-column_names_igra2 = [ 'source_id', 'report_id',  'observation_id', 'record_timestamp' , 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body', 'obsvalue@body', 'varno@body' , 'units',  'number_of_pressure_levels', 'report_timestamp' ] 
+column_names = [ 'source_id', 'report_id',  'observation_id', 'record_timestamp' , 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body',
+                 'obsvalue@body', 'varno@body' , 'units',  'number_of_pressure_levels', 'vertco_type@body']
+
+column_names_igra2 = [ 'source_id', 'report_id',  'observation_id', 'record_timestamp' , 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body', 
+                       'obsvalue@body', 'varno@body' , 'units',  'number_of_pressure_levels',  'vertco_type@body', 'report_timestamp' ] 
+
+
+
+
 # record_timestamp: same as date_time in the observations_table
-# report_timestamp: only for igra2, representes the release time of the sonde 
+# report_timestamp: only for igra2, representes the release time of the sonde
 
 
 def bufr_to_dataframe(file=''):
@@ -278,11 +314,11 @@ def bufr_to_dataframe(file=''):
     check_read_file (file = file, read= False)
     f = open(file)
     #source_file = [l for l in file.split('/') if '.bfr' in l][0]
-    bufr_values = []
+    read_data = []
     
     """ Name of the columns as they will appear in the pandas dataframe (not necessarily CDM compliant) """
     #column_names = ['report_timestamp' , 'iday',  'station_id', 'latitude', 'longitude', 'pressure', 'value','varno@body']
-       
+            
     lat, lon, alt, blockNumber, stationNumber, statid = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan
     
     obs_id, report_id = -1, 0 # progressive observation id
@@ -344,29 +380,49 @@ def bufr_to_dataframe(file=''):
             press       = pressure[i]
             gph         =  geopotential[i]
             dp = dew_point[i]
+            if press == miss_value:
+                press = np.nan 
             if dp == miss_value:
                 dp = np.nan
             if airT == miss_value :    # replacing none values with numpy nans
                 airT = np.nan 
             if winds == miss_value:
                 winds = np.nan
+            if gph == miss_value:
+                gph = np.nan                
             if windd == 2147483647:
                 windd = np.nan 
                 
+     
             for value,var in zip( [gph, airT, winds, windd, dp],  ['gph', 'temperature', 'wind_speed', 'wind_direction', 'dew_point'] ):
                 obs_id = obs_id + 1 
-                bufr_values.append( ( 'BUFR', report_id, obs_id,  idate, iday, statid, lat, lon, press, value, cdmvar_dic[var]['odb_var'] , cdmvar_dic[var]['cdm_unit'], num_lev  ) ) 
-        
+                if not np.isnan(press):     # when pressure is available, z_coord== pressure and z_type==1
+                    z_type = 1                      
+                    read_data.append( ( 'BUFR'.rjust(10), report_id, int(obs_id),  idate, iday, statid, lat, lon, press, value, cdmvar_dic[var]['odb_var'] , int(cdmvar_dic[var]['cdm_unit']) , num_lev , z_type  ) ) 
+                elif  (np.isnan(press) and  not np.isnan(gph) ) :  # when pressure is not available, z_coord== gph and z_type==2 
+                    z_type = 2              
+                    read_data.append( ( 'BUFR'.rjust(10), report_id, int(obs_id),  idate, iday, statid, lat, lon, gph, value, cdmvar_dic[var]['odb_var'] , int(cdmvar_dic[var]['cdm_unit']) , num_lev , z_type  ) ) 
+                else:
+                    z_type = -2147483648              
+                    read_data.append( ( 'BUFR'.rjust(10), report_id, int(obs_id),  idate, iday, statid, lat, lon, press, value, cdmvar_dic[var]['odb_var'] , int(cdmvar_dic[var]['cdm_unit']) , num_lev , z_type  ) ) 
+
+
         report_id += 1
             
-    #column_names = ['source_file', 'product_code', 'report_id',  'observation_id', 'report_timestamp' , 'iday', 'station_id', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body', 'obsvalue@body', 'varno@body' , 'units',  'number_of_pressure_levels' ]
-    df = pd.DataFrame(data= bufr_values, columns= column_names)
-    df['vertco_type@body'] = 1        
+    df = pd.DataFrame(data= read_data, columns= column_names)       
+    
+    df['observation_id']  = np.chararray.zfill( (df['observation_id'].astype(int)) .astype('S'+str(id_string_length ) ), id_string_length  )  #converting to fixed length bite objects 
+    df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
+    
+    df = df.replace([-999.9, -9999, -999, -999.0, -99999.0, -99999.9, 99999.0,  -99999.00 ], np.nan)
+    
+    #df['observations_id'] =numpy.char.zfill(numpy.arange(ivar.shape[0]).astype('S10'), 10)
+        
     df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
-    df['report_id'] = numpy.int64 (df['report_id'] ) 
-    df['observation_id'] = numpy.int64 (df['observation_id'] )     
-    return df 
-    #return df.to_xarray()
+    #df['report_id'] = numpy.int64 (df['report_id'] ) 
+    #df['observation_id'] = numpy.int64 (df['observation_id'] ) 
+        
+    return df
     
     
 
@@ -403,9 +459,9 @@ def uadb_ascii_to_dataframe(file=''):
             try:
                 # Header
                 usi      = int(line[2:14])  # unique station identifier
-                ident    = line[15:21].replace(' ','')# WMO
-                if len(ident) == 4:
-                    ident = '0' + ident 
+                ident    = int(line[15:21].replace(' ',''))# WMO
+                #if len(ident) == 4:
+                #    ident = '0' + ident 
                 #idflag   = int(line[22:24])  # id flag
                 #d_src    = int(line[25:28])  # source dataset
                 #version  = float(line[29:34])  # version
@@ -441,7 +497,7 @@ def uadb_ascii_to_dataframe(file=''):
                 search_h = False
 
             except Exception as e:
-                print("Error: ", i, line, repr(e), "Skipping Block:")
+                #print("Error: ", i, line, repr(e), "Skipping Block:")
                 search_h = True
                 #iprev = i
 
@@ -461,8 +517,8 @@ def uadb_ascii_to_dataframe(file=''):
                 
             gph = float(line[14:22]) # gph [m]
             
-            ###if gph == -99999.0 or gph == -99999.00 or gph >= 99999.0:
-            ###    gph = np.nan
+            if gph == -999.0 or gph == -99999.00 or gph >= 99999.0:
+                gph = np.nan
          
             temp = float(line[23:29])
             if temp == -999.0:
@@ -482,26 +538,38 @@ def uadb_ascii_to_dataframe(file=''):
             
             wspd   = float(line[44:50])  # [m/s], module of the velocity
             if wspd <0 :
-                wspd = np.nan             
-                
-            for value,var in zip([gph, temp, wspd, wdir, rh],  ['gph', 'temperature', 'wind_speed', 'wind_direction', 'relative_humidity'] ):
+                wspd = np.nan     
+                        
+            for value,var in zip([ gph, temp, wspd, wdir, rh],  [ 'gph', 'temperature', 'wind_speed', 'wind_direction', 'relative_humidity'] ):
                 obs_id = obs_id +1
-                read_data.append( ( 'NCAR', usi, obs_id, idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['odb_var'] , cdmvar_dic[var]['cdm_unit'], numlev) )
-              
-              
+                if not np.isnan(press):     # when pressure is available, z_coord== pressure and z_type==1
+                    z_type = 1                    
+                    read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['odb_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type) )
+                elif  (np.isnan(press) and  not np.isnan(gph) ) :  # when pressure is not available, z_coord== gph and z_type==2 
+                    z_type = 2              
+                    read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, gph, value, cdmvar_dic[var]['odb_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type) )
+                else:
+                    z_type = -2147483648             
+                    read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['odb_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type) )
+                    
+    
+    
     
     #column_names = ['source_file', 'product_code', 'report_id', 'observation_id', 'report_timestamp' , 'iday', 'station_id', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body', 'obsvalue@body', 'varno@body' ,  'units',  'number_of_pressure_levels' ]
     
     df = pd.DataFrame(data= read_data, columns= column_names)       
+    
+    df['observation_id']  = np.chararray.zfill( (df['observation_id'].astype(int)) .astype('S'+str(id_string_length ) ), id_string_length  )  #converting to fixed length bite objects 
+    df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
+    
     df = df.replace([-999.9, -9999, -999, -999.0, -99999.0, -99999.9, 99999.0,  -99999.00 ], np.nan)
     
+    #df['observations_id'] =numpy.char.zfill(numpy.arange(ivar.shape[0]).astype('S10'), 10)
         
-    df['vertco_type@body'] = 1
     df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
-    df['report_id'] = numpy.int64 (df['report_id'] ) 
-    df['observation_id'] = numpy.int64 (df['observation_id'] ) 
+    #df['report_id'] = numpy.int64 (df['report_id'] ) 
+    #df['observation_id'] = numpy.int64 (df['observation_id'] ) 
     
-    #return df.to_xarray()
     return df
 
 
@@ -567,6 +635,10 @@ def igra2_ascii_to_dataframe(file=''):
             lvltyp2 = int(line[1])            # 2-  2   integer minor level type indicator
             etime   = int(line[3:8])          # 4-  8   integer elapsed time since launch
             press   = int(line[9:15])         # 10- 15  integer reported pressure
+            
+            if press == -9999:
+                press = np.nan
+                
             pflag   = line[15]                # 16- 16  character pressure processing flag
             
             gph     = int(line[16:21])        # 17- 21  integer geopotential height  [m]
@@ -608,191 +680,210 @@ def igra2_ascii_to_dataframe(file=''):
             if reltime == 9999.0:
                 reltime = np.nan 
                 
+            z_type = np.nan
+            if not (np.isnan(press)):
+                z_type = 1
+            elif  (np.isnan(press) and  not np.isnan(gph) ) :
+                z_type = 2     
+                    
             for value,var in zip([gph, temp, wspd, wdir, rh, dpdp],  ['gph', 'temperature', 'wind_speed', 'wind_direction', 'relative_humidity' , 'dew_point_depression'] ):
                 obs_id = obs_id +1 
-                #read_data.append( (source_file, 'NCAR', usi, obs_id,                idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['odb_var'] , cdmvar_dic[var]['cdm_unit'], numlev) )
-                read_data.append ( ( 'IGRA', head_count,  obs_id,  idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['odb_var'], cdmvar_dic[var]['cdm_unit'], numlev, reltime ) )
-                #print('check', value, cdmvar_dic[var] , var )                   
-            #column_names = ['product_code', 'report_id', 'observation_id', 'report_timestamp' , 'iday', 'station_id', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body', 'obsvalue@body', 'varno@body', 'number_of_pressure_levels' , 'units']
-            
+                if not np.isnan(press):     # when pressure is available, z_coord== pressure and z_type==1  
+                    z_type = 1                                        
+                    read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['odb_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, reltime ) )
+                elif  (np.isnan(press) and  not np.isnan(gph) ) :  # when pressure is not available, z_coord== gph and z_type==2 
+                    z_type = 2              
+                    
+                    read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, gph, value, cdmvar_dic[var]['odb_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, reltime ) )
+                else:
+                    z_type = -2147483648              
+                    read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['odb_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, reltime ) )
+
+
     df = pd.DataFrame(data= read_data, columns= column_names_igra2)
-    df['vertco_type@body'] = 1    
+        
+    df['observation_id']  = np.chararray.zfill( (df['observation_id'].astype(int)) .astype('S'+str(id_string_length ) ), id_string_length  )  #converting to fixed length bite objects 
+    df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
+    
+    df = df.replace([-999.9, -9999, -999, -999.0, -99999.0, -99999.9, 99999.0,  -99999.00 ], np.nan)
+    
+    #df['observations_id'] =numpy.char.zfill(numpy.arange(ivar.shape[0]).astype('S10'), 10)
+        
     df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
-    df['report_id'] = numpy.int64 (df['report_id'] ) 
-    df['observation_id'] = numpy.int64 (df['observation_id'] ) 
+    #df['report_id'] = numpy.int64 (df['report_id'] ) 
+    #df['observation_id'] = numpy.int64 (df['observation_id'] ) 
     
     return df
 
 
 
-'''
-def read_all_odbsql_stn_withfeedback(odbfile):
-
-    #alldata=''
-
-    alldict={} #xr.Dataset()
-    t=time.time()
-    #sonde_type=True
-    #obstype=True
-    ol=odbfile.split('.')
-    if ol[-1][0]!='_':
-        odbfile='.'.join(ol[:-1])+'._'+ol[-1]
-    if os.path.getsize(odbfile+'.gz')>0:
-        """ Read first the odbb header to extract the column names and type """
-        try:
-            try:                
-                with open(os.path.dirname(odbfile)+'/odbheader','rb') as f:
-                    rdata=f.read()
-                    print('read the odb file' , odbfile)
-            except:
-#                rdata=subprocess.check_output(["odb","header",'/3645/'.join(odbfile.split('/1/'))])
-                #rdata=subprocess.check_output(["odb","header",'.'.join(odbfile.split('._'))])
-                rdata=subprocess.check_output(["odb","header",'.'.join(odbfile.split('._'))])
-                
-                with open('odbheader','wb') as f:
-                    f.write(rdata)
-            rdata=rdata.decode('latin-1').split('\n')
-            columns=[]
-            kinds=[]
-            tdict={}
-            for r in rdata[2:-2]:
-                try:
-                    #print(r[:6])
-                    if r[:6]=='Header':
-                        break
-                    else:    
-                        columns.append(r.split('name: ')[1].split(',')[0])
-                        kinds.append(r.split('type: ')[1].split(',')[0])
-                        if kinds[-1]=='REAL':
-                            tdict[columns[-1]]=numpy.float32
-                        elif 'INTEGER' in kinds[-1] or 'BITFIELD' in kinds[-1]:
-                            #print(columns[-1])
-                            if columns[-1]=='sonde_type@conv' or columns[-1]=='station_type@conv':
-                                tdict[columns[-1]]=numpy.float32
-                            else: 
-                                tdict[columns[-1]]=numpy.int32
-                        else:
-                            tdict[columns[-1]]=numpy.dtype('S') # dict containng column name and type
-                                     
-                            
-                except IndexError:
-                    pass
-        except KeyError:
-            print('could not read odbfile '+odbfile)
-            return alldict
-        try:
-            # returns a byte string
-            t=time.time()
-            
-            try:
-                f=gzip.open(odbfile+'.gz')                 
-            except:
-                print(odbfile+'.gz','not found')
-                return
-                
-            # access the string like a file, return a file pointer to read the string with pandas
-            # nb  if you have null values, reading of integer fails and are read as floats
-            # to improve, you can convert the columns with nabs in the alldicts (pandas data frame) into int(np.nans)
-            # date values are large so float 32 precision is not sufficient 
-
-            #d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','reportype','andate','antime',
-            #                 'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','collection_identifier@conv','source@hdr']
-            
-            # had to remove 'collection_identifier@conv'
-            d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','lon@hdr','lat@hdr','seqno@hdr',
-                             'obsvalue@body','source@hdr' , 'vertco_type@body']
-            if 'fg_depar@body' in columns:
-                d=d+['fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','reportype','andate','antime']
-            
-            
-            for c in columns:
-                if c not in d:
-                    del tdict[c]
-                    
-            columns=d.copy()
-            
-            alldict=pd.read_csv(f,delimiter='\t',usecols=columns,quoting=3,comment='#', skipinitialspace=True,dtype=tdict)#,nrows=1000000)
-            
-            """ Case where erafb is not available """
-            if 'fg_depar@body' not in columns:
-                alldict['fg_depar@body']=numpy.float32(numpy.NaN)
-                alldict['an_depar@body']=numpy.float32(numpy.NaN)
-                alldict['biascorr@body']=numpy.float32(numpy.NaN)
-                alldict['sondetype@conv']=numpy.int32(-2147483648)
-                alldict['reportype']=numpy.int32(-2147483648)
-
-            #print(time.time()-t,sys.getsizeof(alldict)//1024//1024)
-            idx=numpy.where(numpy.logical_or(alldict.reportype.values==16045,alldict.reportype.values==16068))[0]
-            if len(idx)>0:
-                
-            #alldict.drop(index=alldict.index[idx],inplace=True)
-                y=numpy.int64(alldict['date@hdr'].values)*1000000+alldict['time@hdr'].values
-                x=numpy.unique(y)
-                dropindex=[]
-                for i in range(1,x.shape[0]):
-                    if x[i]-x[i-1]<60:
-                        idx=numpy.where(y==x[i-1])[0]
-                        if idx.shape[0]>0:
-                            dropindex.append(idx)
-                        else:
-                            print('empty index')
-                if dropindex:          
-                    dropindex = numpy.concatenate(dropindex).ravel()
-                    alldict.drop(index=alldict.index[dropindex],inplace=True)
+def make_odb_header(odbfile, dataset):
+    """ Create the header from the odb file, if not found in the 'headers/' directory.
+          Headers contain the columsn names and their respective variable types.
+          Only for ODB files. """
     
-                print(time.time()-t,sys.getsizeof(alldict)//1024//1024)
-                
-                idx=numpy.where(alldict.reportype.values==16045)[0]
-                if idx.shape[0]>0:
-                    idy=numpy.where(numpy.logical_and(alldict.reportype.values!=16045,alldict.reportype.values!=16068))[0]
-                    if idy.shape[0]>0:
-                        idz=numpy.isin(alldict.andate.values[idy],alldict.andate.values[idx])
-                        if numpy.sum(idz)>0:
-                            alldict.drop(index=alldict.index[idy[idz]],inplace=True)
-                           
-                idx=numpy.where(alldict.reportype.values==16068)[0]
-                if idx.shape[0]>0:
-                    idy=numpy.where(numpy.logical_and(alldict.reportype.values!=16045,alldict.reportype.values!=16068))[0]
-                    if idy.shape[0]>0:
-                        idz=numpy.isin(alldict.andate.values[idy],alldict.andate.values[idx])
-                        if numpy.sum(idz)>0:
-                            alldict.drop(index=alldict.index[idy[idz]],inplace=True)
-                          
+    header = 'headers/' + dataset + '_header.dat'
+    
+    if not os.path.isfile ( header ):
+        print(' Creating the header file for the dataset: ', dataset )
+        if dataset == 'era5_1':
+            
+            odbfile = odbfile.replace('.gz','')
+        else:
+            odbfile = odbfile.replace('.gz','').replace('.conv._','.conv.')
+            
+        rdata=subprocess.check_output(["odb","header",  odbfile ])
+        
+        with open( header , 'wb' ) as f:
+            f.write(rdata) 
+            
+        f = open(header , 'rb')
+        rdata=f.read()
+        rdata=rdata.decode('utf-8').split('\n')   
+        
+    else:
+        f = open(header , 'rb')
+        rdata=f.read()
+        rdata=rdata.decode('utf-8').split('\n')
+        print(' Done reading the existing header file for the dataset: ', dataset )
+        
+    columns, kinds, tdict =[] , [] , {} 
+        
+    for r in rdata[2:-2]:
+        try:
+            
+            if r[:6]=='Header':
+                break
+            else:    
+                columns.append(r.split('name: ')[1].split(',')[0])
+                kinds.append(r.split('type: ')[1].split(',')[0])
+                if kinds[-1]=='REAL':
+                    tdict[columns[-1]]=numpy.float32
+                elif 'INTEGER' in kinds[-1] or 'BITFIELD' in kinds[-1]:
+                    #print(columns[-1])
+                    if columns[-1]=='sonde_type@conv' or columns[-1]=='station_type@conv':
+                        tdict[columns[-1]]=numpy.float32
+                    else: 
+                        tdict[columns[-1]]=numpy.int32
+                else:
+                    tdict[columns[-1]]=numpy.dtype('S') # dict containng column name and type
+                    
+        except IndexError:
+            pass       
+        
+    return columns, kinds, tdict
+    
+    
 
+
+        
+        
+    
+def read_all_odbsql_stn_withfeedback(odbfile, dataset):
+    """ Read the text gzip files, created from the original ODB files. """
+    columns, kinds, tdict = make_odb_header(odbfile, dataset)      
+    try:            
+        t=time.time()                 
+        try:
+            f=gzip.open(odbfile)                 
+        except:
+            print(odbfile, 'The zipped ODB file was not found !')
+            return
+    
+        #d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','reportype','andate','antime',
+        #                 'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','collection_identifier@conv','source@hdr']
+        
+        # had to remove 'collection_identifier@conv' to make it work with 1, 3188, 1759, 1761 
+        
+        d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','lon@hdr','lat@hdr','seqno@hdr',
+                         'obsvalue@body','source@hdr' , 'vertco_type@body']
+        
+        if 'fg_depar@body' in columns:  # creating the colkumns for era5fb 
+            d=d+['fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','reportype','andate','antime']
+        
+        
+        for c in columns:
+            if c not in d:
+                del tdict[c]
+                    
+        columns=d.copy()
+            
+        alldict=pd.read_csv(f,delimiter='\t',usecols=columns,quoting=3,comment='#', skipinitialspace=True,dtype=tdict) #,nrows=1000000)
+            
+        """ Case where erafb is not available """
+        if 'fg_depar@body' not in columns:
+            alldict['fg_depar@body']=numpy.float32(numpy.NaN)
+            alldict['an_depar@body']=numpy.float32(numpy.NaN)
+            alldict['biascorr@body']=numpy.float32(numpy.NaN)
+            alldict['sondetype@conv']=numpy.int32(-2147483648)
+            alldict['reportype']=numpy.int32(-2147483648)
+    
+        #print(time.time()-t,sys.getsizeof(alldict)//1024//1024)
+        idx=numpy.where(numpy.logical_or(alldict.reportype.values==16045,alldict.reportype.values==16068))[0]
+        if len(idx)>0:
+                
+        #alldict.drop(index=alldict.index[idx],inplace=True)
+            y=numpy.int64(alldict['date@hdr'].values)*1000000+alldict['time@hdr'].values
+            x=numpy.unique(y)
+            dropindex=[]
+            for i in range(1,x.shape[0]):
+                if x[i]-x[i-1]<60:
+                    idx=numpy.where(y==x[i-1])[0]
+                    if idx.shape[0]>0:
+                        dropindex.append(idx)
+                    else:
+                        print('empty index')
+            if dropindex:          
+                dropindex = numpy.concatenate(dropindex).ravel()
+                alldict.drop(index=alldict.index[dropindex],inplace=True)
+    
             print(time.time()-t,sys.getsizeof(alldict)//1024//1024)
-
-            for c in alldict.columns:
                 
-                if type(alldict[c].iloc[0]) in [str,bytes]:
-                    l=alldict[c].shape[0]
-                    slen=len(alldict[c].values[0])
-                    #alldict[c]=numpy.array(alldict.pop(c).values,dtype='S{}'.format(slen))
-                    alldict[c]=numpy.string_(alldict[c])
+            idx=numpy.where(alldict.reportype.values==16045)[0]
+            if idx.shape[0]>0:
+                idy=numpy.where(numpy.logical_and(alldict.reportype.values!=16045,alldict.reportype.values!=16068))[0]
+                if idy.shape[0]>0:
+                    idz=numpy.isin(alldict.andate.values[idy],alldict.andate.values[idx])
+                    if numpy.sum(idz)>0:
+                        alldict.drop(index=alldict.index[idy[idz]],inplace=True)
+                           
+            idx=numpy.where(alldict.reportype.values==16068)[0]
+            if idx.shape[0]>0:
+                idy=numpy.where(numpy.logical_and(alldict.reportype.values!=16045,alldict.reportype.values!=16068))[0]
+                if idy.shape[0]>0:
+                    idz=numpy.isin(alldict.andate.values[idy],alldict.andate.values[idx])
+                    if numpy.sum(idz)>0:
+                        alldict.drop(index=alldict.index[idy[idz]],inplace=True)
+                                      
+    
+        print(time.time()-t,sys.getsizeof(alldict)//1024//1024)
+            
+        for c in alldict.columns:
+                            
+            if type(alldict[c].iloc[0]) in [str,bytes]:
+                l=alldict[c].shape[0]
+                slen=len(alldict[c].values[0])
+                #alldict[c]=numpy.array(alldict.pop(c).values,dtype='S{}'.format(slen))
+                alldict[c]=numpy.string_(alldict[c])
                     
-                if type(alldict[c].iloc[0]) is numpy.int64:
-                    alldict[c]=numpy.int32(alldict[c])
+            if type(alldict[c].iloc[0]) is numpy.int64:
+                alldict[c]=numpy.int32(alldict[c])
                     
-                if type(alldict[c].iloc[0]) is numpy.float64:
-                    alldict[c]=numpy.float32(alldict[c])
-
-            print('after odb:',time.time()-t)
-   
-        except subprocess.CalledProcessError as e:
-            print('odb failed!:'+' '+odbfile)
-            return alldict
-
+            if type(alldict[c].iloc[0]) is numpy.float64:
+                alldict[c]=numpy.float32(alldict[c])
+    
+        print('after odb:',time.time()-t)
+            
+    except:
+        print('Reading ODB failed !  ' + odbfile)
+        return alldict
+    
     print(odbfile,time.time()-t)
-    print(odbfile,time.time()-t,sys.getsizeof(alldict))
+    print(odbfile,time.time()-t, sys.getsizeof(alldict))
 
+    alldict['source_id'] = dataset.rjust(10)
+    
     return alldict
-
-'''
-
-
-
-
-
-
 
 
 def fromfb_l(fbv,di, cdmfb,cdmkind):
@@ -845,7 +936,7 @@ def ttrans(cdmtype, kinds=kinds):
     return nptype
 
 
-def make_datetime_seconds_indices(date_time):
+def make_datetime_indices(date_time):
     """ Extracts the list of observation dates, and store the indices of the first and last observations 
           Args:: 
                   list of *sorted* observation date_times
@@ -941,46 +1032,57 @@ def find_recordindex_l(y,x):
 
 # write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')})
 
-def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}): # cuts vars and copies attributes of observation, feedback and header tables
+#variables_dic = {}
+""" TODO to improve: make attrs variable a dictionary of dictionaries (so that it can handle multiple attributes definitions) """
+def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}): 
     """ Writes each separate variable from the observation or feedback tables inot netcdf using h5py.
           f is a pandas dataframe with one column, one for each variable
           k is either 'era5fb' or 'observations_table'
           fbencodings is the encodings of variable types, e.g. {'observations_id': { 'compression': 'gzip' } }
     """
 
-    print('writing write_dict_h5 for ' , k  )
     #attrs=  {'date_time':('units','seconds since 1900-01-01 00:00:00')}
-    attrs = {'observation_id': ('description', 'unique ID for observation'), 'report_id': ('description', 'Link to header information') , 'date_time':('units','seconds since 1900-01-01 00:00:00') }
+    #attrs = {'observation_id': ('description', 'unique ID for observation'), 'report_id': ('description', 'Link to header information') , 'date_time':('units','seconds since 1900-01-01 00:00:00') }
     
     with h5py.File(dfile,mode) as fd:
         try:
             fd.create_group(k)
-            index=numpy.zeros(f[f.columns[0]].shape[0],dtype='S1')
+            index=numpy.zeros (f[f.columns[0]].shape[0], dtype='S1')
             fd[k].create_dataset('index', data=index)
         except:
             pass
         if not var_selection:
             var_selection=list(f.keys())
         
-        string10=numpy.zeros(80,dtype='S1')
+        string10=numpy.zeros(fixed_string_len,dtype='S1')
         sdict={}
         slist=[]
 
-         
-        for v in var_selection:
+        #groupencodings     
+        
+        for v in var_selection:          
+            #variables_dic[v] = ''
+            
             if type(f[v].values[0]) not in [str,bytes,numpy.bytes_]:
                 if f[v].values.dtype !='S1':
                     
-                    fd[k].create_dataset(v,f[v].values.shape,f[v].values.dtype,compression=fbencodings[v]['compression'],chunks=True)
+                    fd[k].create_dataset(v,f[v].values.shape,f[v].values.dtype,compression=fbencodings[v]['compression'], chunks=True)
                     fd[k][v][:]=f[v]
                     if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
                         if v in attrs.keys():
-                            fd[k][v].attrs[attrs[v][0]]=numpy.bytes_(attrs[v][1])
-                            print (  fk, ' ' , v , ' ' ,   ) 
+                            fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
+                            fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])
+                            
+                            if v == 'date_time':
+                                fd[k][v].attrs['units']=numpy.bytes_('seconds since 1900-01-01 00:00:00')                            #print (  fk, ' ' , v , ' ' ,   ) 
+                                
                 else:
-                    fd[k].create_dataset(v,f[v].values.shape,f[v].values.dtype,compression=fbencodings[v]['compression'],chunks=True)
+                    fd[k].create_dataset(v,f[v].values.shape,f[v].values.dtype,compression=fbencodings[v]['compression'], chunks=True)
                     fd[k][v][:]=f[v][:]
-            
+                    if v in attrs.keys():
+                        fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
+                        fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])
+                        
             else:
                 sleno=len(f[v].values[0])
                 slen=sleno
@@ -989,34 +1091,33 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                 sdict[v]=slen
                 if slen not in slist:
                     slist.append(slen)
+                 
+                    
                     try:
-                        fd[k].create_dataset('string{}'.format(slen),data=string10[:slen])
+                        fd[k].create_dataset( 'string{}'.format(slen),  data=string10[:slen]  )
                     except:
-                        pass
-                #if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
-                #    if v in attrs.keys():
-                #        print  ('v is: !!! ' , v ) 
-                #        fd[k][v].attrs[attrs[v][0]]=numpy.bytes_(attrs[v][1])
-                            
+                        pass               
+                    
                 x=x.reshape(f[v].values.shape[0],slen)
                 fd[k].create_dataset(v,data=x,compression=fbencodings[v]['compression'],chunks=True)
-
-
-                
-        for v in fd[k].keys(): #var_selection:
-            l=0
-            
-            try:
-                if 'string' not in v and v!='index':
+                if v in attrs.keys():
+                    fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
+                    fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])                
                     
+            #variables_dic[v] = f[v].values.dtype
+             
+        for v in fd[k].keys(): #var_selection:
+            l=0            
+            try:
+                if 'string' not in v and v!='index':                    
                     fd[k][v].dims[l].attach_scale(fd[k]['index'])
                     if type(f[v].values[0]) in [str,bytes,numpy.bytes_]:
                         slen=sdict[v]
                         #slen=10
                         fd[k][v].dims[1].attach_scale(fd[k]['string{}'.format(slen)])
-                        #print('')
             except:
                 pass
+            
             
             
         i=4        
@@ -1026,6 +1127,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                 fd[k][s].attrs[a]=numpy.bytes_('This is a netCDF dimension but not a netCDF variable.')
             
             i+=1
+        
     return
 
         
@@ -1041,17 +1143,22 @@ def initialize_output(fn, output_dir, station_id, dataset):
 
 
 
+'''
 def convert_variable_type(df):
     """ Converts the variable type of the input DataFrame  (igra2,ncar,bufr) """
-    ''' # available columns
+     # available columns
+    """
     'source_file', 'source_id', 'report_id', 'observation_id',
        'record_timestamp', 'iday', 'station_id', 'lat@hdr', 'lon@hdr',
        'vertco_reference_1@body', 'obsvalue@body', 'varno@body', 'units',
        'number_of_pressure_levels'
-    '''  
-    dic_var_type = { 'int32'     : ['varno@body', 'number_of_pressure_levels']  ,
-                                'float32' :  ['lat@hdr', 'lon@hdr' ,  'vertco_reference_1@body', 'obsvalue@body',  'iday' ]  ,
-                                'string'   :  ['source_id' , 'station_id' ,  'source_file' , 'report_id', 'observation_id',   'units',  ]  }
+    """
+    dic_var_type = { 'int32'    : ['varno@body', 'number_of_pressure_levels' , 'units', 'z_coordinate_type' , 'vertco_type@body' ]  ,
+                                'float32' : ['lat@hdr', 'lon@hdr' ,  'vertco_reference_1@body', 'obsvalue@body',  'iday'  ]  ,
+                                'string'   : ['source_id' , 'station_id' ,  'source_file' , 'report_id', 'observation_id',   ] ,
+                                'int64'    : ['report_timestamp' , 'date_time'] }    
+    
+    
     
     for c in df.columns:
         if c == 'record_timestamp':
@@ -1064,23 +1171,59 @@ def convert_variable_type(df):
         elif c in dic_var_type['string']:
             df[c] = numpy.string_( df[c] )
         else:
-            df[c] = numpy.float32( df[c] )
+            df[c] = numpy.float32( df[c] )       
+            
+    return df
+'''
+
+def convert_variable_type_n(df):
+    """ Converts the variable type of the input DataFrame  (igra2,ncar,bufr) """
+     # available columns
+    """
+    'source_file', 'source_id', 'report_id', 'observation_id',
+       'record_timestamp', 'iday', 'station_id', 'lat@hdr', 'lon@hdr',
+       'vertco_reference_1@body', 'obsvalue@body', 'varno@body', 'units',
+       'number_of_pressure_levels'
+    """
+    dic_var_type = { 'int32'    : ['varno@body', 'number_of_pressure_levels' , 'units', 'z_coordinate_type' , 'vertco_type@body' ]  ,
+                                'float32' : ['lat@hdr', 'lon@hdr' ,  'vertco_reference_1@body', 'obsvalue@body',  'iday'  ]  ,
+                                'string'   : ['source_id' , 'station_id' ,  'source_file' , 'report_id', 'observation_id',   ] ,
+                                'int64'    : ['report_timestamp' , 'date_time', 'record_timestamp'] }    
+    
+    convert = { 'int32'    : np.int32    , 
+                        'string'   : np.bytes_  ,
+                        'float32' : np.float32 ,
+                        'float64' : np.float64
+                
+                }
+    # creating a dictionary variable - nptype 
+    mapping = {}
+    for k in dic_var_type.keys():
+        for l in dic_var_type[k]:
+            mapping[l] = k 
+
+    for c in df.columns:
+        try:
+            #print('converting ' , c , ' to type ' , mapping[c] )
+            df[c] =  df[c].astype( convert[mapping[c]] )
+            print('converted: ', c )
+            
+        except:
+            print('could not convert type column ' , c )
+            pass 
             
     return df
 
- 
+
 def datetime_toseconds(date_time):
     """ Converts a generic date_time array to seconds since '1900-01-01 00:00:00' """
     offset = np.datetime64('1900-01-01 00:00:00')            
     deltas =  [ dt - offset for dt in date_time ]
     date_times_seconds  =  [ i.total_seconds() for i in deltas ] 
-    return date_times_seconds # replacing with seconds from 1900-01-01 00:00:00 
+    return np.array(date_times_seconds).astype(np.int64) # replacing with seconds from 1900-01-01 00:00:00 
     
-    
-    
-    
-    
-def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
+        
+def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
     """ Convert the  pandas dataframe from the file into cdm compliant netCDF files. Use with bufr, igra2 and ncar databases.
         According to each file type, it will use the appropriate reading function to extract a Pandas DataFrame
         input:
@@ -1108,66 +1251,77 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
                 print('Unidentified file is: ', fn)
                 raise ValueError('Cannot identify the type of file to be analized!!! ')
               
-              
-            station_id = str( df['statid@hdr'].values[0].replace(' ','') )                          
+            station_id = str( df['statid@hdr'].values[0]).replace(' ','')                           
             station_configuration_retrieved = get_station_configuration( station_id, cdm['station_configuration'] )    
-            primary_id = station_configuration_retrieved['primary_id'].values[0].decode('latin1')      
+            #primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')      
+            try:
+                primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')
+            except:
+                print('CANT FIND STATION PRIMARY ID ')
+                primary_id = 'uknown_primary'
+          
+
             fno,  source_file = initialize_output(fn, output_dir, primary_id, dataset)   
-            
-                             
+            if primary_id == 'uknown_primary':
+                return                
+              
             """ Casting the original variable types to appropriate numpy types """     
-            df = convert_variable_type(df)  # ->think this is overly complicated. 
+            #df = convert_variable_type(df)  # ->think this is overly complicated. 
+            df = convert_variable_type_n(df)
+            #df = df.replace( -2147483648 , np.nan ) 
                           
-            """ Storing the variable encodings """
-            fbencodings={}
-            for d,v in df.items():
-                
-                if v.dtype==numpy.dtype('float64'):
-                        fbencodings[d]={'dtype':numpy.dtype('float32'),'compression': 'gzip'}           
-                        
-                elif v.dtype==numpy.dtype('int32'):
-                    fbencodings[d]={'dtype':numpy.dtype('int32'),'compression': 'gzip'} 
-                    
-                elif type(v.values[0])==bytes:
-                        fbencodings[d]={'compression': 'gzip', 'chunksizes': ( min( [10000,v.shape[0] ] ), 10 ) }#,'chunksizes':(10000,10)
-                else:
-                        fbencodings[d]={'compression': 'gzip'}
-            fbencodings['index']={'compression': 'gzip'}
+
 
     
             """ Extract the unique indices of each date observation, one for only dates, one for date_time (i.e. record index). 
                 Converts the time variables in seconds since 1900-01-01 00:00:00 """  
             di=xr.Dataset() 
-            
-            
-
-            record_timestamp_seconds = datetime_toseconds( df['record_timestamp'] )  # will fill the header_table 
+                       
+            record_timestamp_seconds = datetime_toseconds( df['record_timestamp'] )  # will fill the header_table TODO see if it improves by replacing values with dictionaries in pandas 
+                        
             df['record_timestamp'] = record_timestamp_seconds # replacing with seconds from 1900-01-01 00:00:00 
 
-            try:               
-                report_timestamp_seconds = datetime_toseconds( df['report_timestamp'] )  # will fill the header_table 
-                df['report_timestamp'] = report_timestamp_seconds # replacing with seconds from 1900-01-01 00:00:00 
-            except :
-                print('Skipping report_timestamp, incorrect format ')
-               
-           
-            indices, date_times, counts = make_datetime_seconds_indices( df['iday'].values )   #only date information
-            di['dateindex']  = ( { 'dateindex' :  date_times.shape } , date_times )          
+            indices, day, counts = make_datetime_indices( df['iday'].values )   #only date information
+            di['dateindex']  = ( { 'dateindex' :  day.shape } , indices )          
             
-            indices, date_times , counts  = make_datetime_seconds_indices( df['record_timestamp'].values ) #date_time plus indices           
+            indices, date_times , counts  = make_datetime_indices( df['record_timestamp'].values ) #date_time plus indices           
             di['recordindex']          = ( {'recordindex' : indices.shape }, indices )
             di['recordtimestamp']  = ( {'recordtimestamp' : date_times.shape }, date_times  )
-            
+
             di['recordtimestamp'].attrs['units']='seconds since 1900-01-01 00:00:00'
 
             di.to_netcdf( fno, format='netCDF4', engine='h5netcdf', mode='w' )
          
+         
+         
+            """ Storing the variable encodings """
+            fbencodings={}
+            for d,v in df.items():              
+                if v.dtype==numpy.dtype('float64'):
+                        fbencodings[d]={'dtype':numpy.dtype('float32'), 'compression': 'gzip'}  
+                        
+                elif v.dtype==numpy.dtype('float32'):
+                    fbencodings[d]={'dtype':numpy.dtype('float32'), 'compression': 'gzip'}      
+                    
+                elif v.dtype==numpy.dtype('int32'):
+                    fbencodings[d]={'dtype':numpy.dtype('int32'), 'compression': 'gzip'} 
+                    
+                elif v.dtype==numpy.dtype('int64'):
+                    fbencodings[d]={'dtype':numpy.dtype('int64'), 'compression': 'gzip'}                     
+                   
+                elif type(v.values[0])==bytes:
+                        fbencodings[d]={'compression': 'gzip', 'chunksizes': ( min( [10000,v.shape[0] ] ), 10 ) }#,'chunksizes':(10000,10)
+                else:
+                        fbencodings[d]={'compression': 'gzip'}
+            fbencodings['index']={'compression': 'gzip'}
+            
+            
             #write_dict_h5(fno, df, 'era5fb', fbencodings, var_selection=[],mode='a')
             dcols=[]
             for d in df.columns:
                     if d not in ['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body', 'lon@hdr','lat@hdr','seqno@hdr',
                                        'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv',  'record_timestamp' ,
-                                       'observation_id', 'report_id' ] :
+                                       'observation_id', 'report_id' , 'units' , 'vertco_type@body' ] :
                          
                         dcols.append(d)
             df.drop(columns=dcols,inplace=True)
@@ -1188,33 +1342,37 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
                     if k in ('observations_table'):
                         groups[k]=pd.DataFrame()  # creating dataframes that will be written to netcdf via h5py methods by the write_dict_h5() method 
                         
-                        try:                            
-                            groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )
-                            #print('no key error')
+                        try:         
+                            groups[k][d.element_name]= fromfb_l(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=okinds))                             
+                            #groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )                            
+                            #groups[k][d.element_name]=(di['recordindex'].shape[0], hdrfromfb(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )                            
                             #groups[k][d.element_name]=fromfb_l(df,di._variables,cdmfb_noodb[d.element_name], ttrans(d.kind, kinds=okinds) )                            
                         except KeyError:
-                            #print('key error!! )')
                             x=numpy.zeros( df['record_timestamp'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=okinds) ) )
                             x.fill(numpy.nan)
                             groups[k][d.element_name]=x
-                                  
+ 
+ 
+            
                                   
                     elif k in ('header_table'):
                               # if the element_name is found in the cdmfb dict, then it copies the data from the odb into the header_table
-                        if d.element_name not in station_configuration_retrieved.columns: # variables might be from the df (input file) or the from the retrieved station configuration 
-                            
+                        if d.element_name not in station_configuration_retrieved.columns: # variables might be from the df (input file) or the from the retrieved station configuration                            
                             try:
-                                groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )
+                                #print(d.element_name , ' ' , d.kind )
+                                #groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )                                
+                                groups[k][d.element_name]=(di['recordindex'].shape[0], hdrfromfb(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )
                             except:  
-                                x=numpy.zeros(di['recordindex'].shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=okinds)))
+                                x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
                                 x.fill(numpy.nan)
                                 groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]},x)                                   
-                                pass
-                            
-                        elif d.element_name in station_configuration_retrieved.columns:      
-                            
-                                x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
-                                groups[k][d.element_name]= x.fill( cdm['station_configuration'][d.element_name].values[0] )
+                                pass                            
+                        else:            
+                                #if d.element_name == 'longitude':
+                                    x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
+                                    x.fill( station_configuration_retrieved[d.element_name].values[0] )
+                                    groups[k][d.element_name]= ({'hdrlen':di['recordindex'].shape[0]},x) 
+
 
  
                     elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
@@ -1230,9 +1388,6 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
                                 groups[k][d.element_name] = (  {'hdrlen': 1 }, np.full( 1 , np.nan) ) # element_name is the netcdf variable name, which is the column name of the cdm table k 
                             except KeyError:
                                 pass
-
-
-
 
                     else : # this is the case where the cdm tables DO exist
                         try:   
@@ -1256,8 +1411,7 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
                             groupencodings[k][d.element_name]={'compression': 'gzip'}
                         
                         if k in ('observations_table'):
-                            write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')})
-                            print('written observations_table' , k )
+                            write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs= dic_obstab_attributes )
                             
                     except:
                         #print('bad:',k,d.element_name)
@@ -1265,7 +1419,6 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, fn):
                 
             for k in groups.keys():            
                 if k not in ('observations_table') :   
-                    print('Doing: ', k )
                     groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') #
             del df
           
@@ -1281,25 +1434,23 @@ def get_station_configuration(station_id, station_configuration):
           otherwise it looks for an element in the list of secondary ids.         
           """
     try:
-        si = station_id.decode('latin1')
+        si = station_id.decode('utf-8')
     except:
         si = station_id 
         
-    if ':' in si:  # primary ids can have either the 20000 or 20001 numerical flag 
-        station_id_primary = numpy.string_( '0-20000-0-' + si.split(':')[1] )   # remove the prefix to the station id 
-        station_id_primary_alternative = numpy.string_( '0-20001-0-' + si.split(':')[1] )
-    else:
-        station_id_primary = numpy.string_('0-20000-0-' + si )
-        station_id_primary_alternative = numpy.string_( '0-20001-0-' + si )
+    if ':' in si:
+        si = si.split(':')[1]
         
-            
+    station_id_primary = numpy.string_( '0-20000-0-' +si )   # remove the prefix to the station id 
+    station_id_primary_alternative = numpy.string_( '0-20001-0-' + si )
+
     #station_id = numpy.string_( '1:68351' )
     
     """ First, check for matching primary_id. 
           If not found, check for secondary id. Note that secondary is a list, so must loop over the entry to find a matching one """
     
-    matching_primary = station_configuration.loc[station_configuration['primary_id'] == station_id_primary ]
-    matching_primary_alt= station_configuration.loc[station_configuration['primary_id'] == station_id_primary_alternative ]
+    matching_primary       = station_configuration.loc[station_configuration['primary_id'] == station_id_primary ]
+    matching_primary_alt = station_configuration.loc[station_configuration['primary_id'] == station_id_primary_alternative ]
     
     if len(matching_primary) > 0:
         return matching_primary 
@@ -1310,14 +1461,17 @@ def get_station_configuration(station_id, station_configuration):
     else:
         secondary = station_configuration['secondary_id'] 
         for s in secondary:
-            if s == station_id:
-                print('Found element in secondary ids')
-                sc = station_configuration.loc[station_configuration['secondary_id'] == s ]
-                return sc 
+            try:  # TODO this try is needed when the secondary ids are not defined or wrong, and the primary id cannot be matched with the station_id      
+                s = s.decode('utf-8').replace('[','').replace(']','')
+                if s == si:
+                    sc = station_configuration.loc[station_configuration['secondary_id'] == secondary ]
+                    return sc 
+            except:
+                return 0
         return 0        
     
 
-def odb_to_cdm(cdm, cdmd, output_dir, dataset, obs_tab_attrs, fn):
+def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
     """ Convert the  file into cdm compliant netCDF files. 
         According to each file type, it will use the appropriate reading function to extract a Pandas DataFrame
         input:
@@ -1335,26 +1489,24 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, obs_tab_attrs, fn):
     fnl[-1]='ch'+fnl[-1]
         
     if not False:
+                
+        fbds=read_all_odbsql_stn_withfeedback(fn , dataset ) 
+        #fbds = fbds.replace( -2147483648 , np.nan ) 
         
-        # era5 analysis feedback is read from compressed netcdf files era5.conv._?????.nc.gz in $RSCRATCH/era5/odbs/1
-        
-        fbds=read_all_odbsql_stn_withfeedback(fn) 
-        
-        """ Read the station_id, getting the station_configuration from the table list, extracting primary_id """
-       
-        #station_id = numpy.string_(fbds['statid@hdr'][0][1:-1].decode('latin1') )    
+        """ Read the station_id, getting the station_configuration from the table list, extracting primary_id """      
         station_id = fbds['statid@hdr'][0][1:-1]    
         station_configuration_retrieved = get_station_configuration( station_id, cdm['station_configuration'] )            
-        primary_id = station_configuration_retrieved['primary_id'].values[0].decode('latin1')  
+        try:
+            primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')  
+        except:
+            primary_id = 'uknown_primary'
+            return 
         fno,  source_file = initialize_output(fn, output_dir, primary_id, dataset)        
         
         #fbds['source_file'] = source_file
         if fbds is None:
             return
-        #fbds=xr.open_dataset(f)
-        #print(time.time()-t) # to check the reading of the odb
-        # the fbencodings dictionary specifies how fbds will be written to disk in the CDM compliant netCDF file.
-        # float64 is often not necessary. Also int64 is often not necessary. 
+
         fbencodings={}
         
         for d,v in fbds.items():
@@ -1385,7 +1537,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, obs_tab_attrs, fn):
         df=pd.DataFrame({'year':x//10000000000,'month':(x%10000000000)//100000000,'day':x%100000000//1000000,
                             'hour':x%1000000//10000,'minute':(x%10000)//100,'second':x%100})
         dt=pd.to_datetime(df).values
-        di['recordtimestamp']=({'record':z.shape[1]},numpy.array(dt-numpy.datetime64('1900-01-01'),dtype=int)//1000000000)
+        di['recordtimestamp']=({'record':z.shape[1]}, numpy.array(dt-numpy.datetime64('1900-01-01'),dtype=int)//1000000000)
         di['recordtimestamp'].attrs['units']='seconds since 1900-01-01 00:00:00'
         del dt,df
         y=fbds['date@hdr'].values
@@ -1394,14 +1546,13 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, obs_tab_attrs, fn):
         di['dateindex']=({'days':z.shape[1],'drange':z.shape[0]},z) # date, index of the first occurrance, index of the last
         del y
 
-        #this writes the dateindex to the netcdf file. For faster access it is written into the root group
         di.to_netcdf(fno,format='netCDF4',engine='h5netcdf',mode='w')
           
         write_dict_h5(fno, fbds, 'era5fb', fbencodings, var_selection=[],mode='a')
         dcols=[]
         for d in fbds.columns:
             if d not in ['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body', 'lon@hdr','lat@hdr','seqno@hdr',
-                         'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv', 'vertco_type@body']:
+                         'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv', 'vertco_type@body' , 'source_id']:
                 dcols.append(d)
         fbds.drop(columns=dcols,inplace=True)
 
@@ -1438,8 +1589,8 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, obs_tab_attrs, fn):
                         x.fill(numpy.nan)
                         groups[k][d.element_name]=x
                         
+                        
                 elif k in ('header_table'):
-                    print(d.element_name)
                     try:
                         if d.element_name=='report_id':
                             groups[k][d.element_name]=( {'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(fbds,di._variables, cdmfb[k+'.'+d.element_name],ttrans(d.kind,kinds=gkinds) ) )
@@ -1447,9 +1598,10 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, obs_tab_attrs, fn):
                             groups[k][d.element_name]=( {'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(fbds,di._variables, cdmfb[d.element_name],ttrans(d.kind,kinds=gkinds) ) )
                         j=0
                             
-                    except KeyError:                            
+                    except KeyError:   
+                        print ('FFF ', d.element_name , ' ' , numpy.dtype(ttrans(d.kind,kinds=gkinds)) )
                         if d.element_name in cdm['station_configuration'].columns:
-                            x=numpy.zeros(di['recordindex'].shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
+                            x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
                             try:
                                 
                                 idx=numpy.where('0-20000-0-'+fnl[-1].split('_')[-1] == cdm['station_configuration']['primary_id'])[0][0]
@@ -1457,47 +1609,16 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, obs_tab_attrs, fn):
                             except:
                                 groups[k][d.element_name]= ({'hdrlen':di['recordindex'].shape[0]},x)
                         else:
-                            x=numpy.zeros(di['recordindex'].shape[0],dtype=numpy.dtype(ttrans(d.kind,kinds=okinds)))
+                            x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=okinds)))
                             x.fill(numpy.nan)
                         groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]},x)
-               
-                        
-                #elif k in ('station_configuration'): # station_configuration contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
-                    
-                    #try:   
-                        #if 'sci' not in locals(): 
-                            #sci=numpy.where( cdm[k]['primary_id']== numpy.string_('0-20000-0-'+fbds['statid@hdr'][0][1:-1].decode('latin1')  )   )[0]
-                        #if len(sci)>0:
-                            #groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sci])
-                            #fno_new = fno.replace('STATIONID' , station_id)
-                            
-                            
-                            
-                        #else:                                                                               
-                            #if dataset != 'era5_3188':
-                                #sci=numpy.where(cdm[k]['secondary_id']== numpy.string_(fbds['statid@hdr'][0][1:-1].decode('latin1') )   )[0]                                
-                            #elif dataset == 'era5_3188':
-                                ##if len ( str (numpy.string_(fbds['statid@hdr'][0].decode('latin1')) ) ):                                    
-                                #sci=numpy.where( cdm[k]['secondary_id']== numpy.string_(fbds['statid@hdr'][0][3:-1].decode('latin1') )   )[0]
-                                
-                            #if len(sci)>0:
-                                #groups[k][d.element_name]=({k+'_len':1}, cdm[k][d.element_name].values[sci])
-                                ##fno_new = fno.replace('STATIONID' , cdm[k]['secondary_id'].split('-')[-1] )
-                            
-                            ##print('statconf:',k,groups[k][d.element_name])
-                            
-                    #except KeyError:
-                        ##print('x')
-                        #pass
-                
-                
-                
+    
+    
+    
                 elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
                     try:                        
                         groups[k][d.element_name]=({'hdrlen': 1}, np.full( 1 , station_configuration_retrieved[d.element_name].values[0] ) )
-                        #print('working sc')
                     except:
-                        #print('not working sc')
                         pass
 
 
@@ -1522,7 +1643,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, obs_tab_attrs, fn):
                 if k not in ('observations_table'):               
                     try:
                         groups[k][d.element_name].attrs['external_table']=d.external_table # defining variable attributes that point to other tables (3rd and 4th columns)
-                        groups[k][d.element_name].attrs['description']=d.description  # it faisl when trying with the observations_table 
+                        groups[k][d.element_name].attrs['description']=d.description  # it fails when trying with the observations_table 
                     except:
                         pass
                 
@@ -1535,8 +1656,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, obs_tab_attrs, fn):
                         groupencodings[k][d.element_name]={'compression': 'gzip'}
                     
                     if k in ('observations_table'):
-                       write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs= obs_tab_attrs  )
-                       print ('writing observations_table')
+                        write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs= dic_obstab_attributes  )
                 except:
                     #print('bad:',k,d.element_name)
                     pass
@@ -1544,14 +1664,18 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, obs_tab_attrs, fn):
         
         for k in groups.keys():            
             ##this appends group by group to the netcdf file
-            if k not in ('observations_table') :           
-                print('ERA5 doing k: ' , k )
+            #if k not in ('observations_table') :       
+            if k not in ['observations_table'] :           
+            
                 groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') #
         ##print('sizes: in: {:6.2f} out: {:6.2f}'.format(os.path.getsize(fn+'.gz')/1024/1024, os.path.getsize(fno)/1024/1024))
         del fbds
     
     """ Storing the group encodings in a numpy dictionary to be reused by the merging script """
     np.save('groups_encodings',  groupencodings)
+   
+    np.save('era5fb_encodings',  fbencodings)
+    
     #print(fno,time.time()-t)
 
     return 0
@@ -1563,26 +1687,22 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, obs_tab_attrs, fn):
 
 def load_cdm_tables():
     """ Load the cdm tables into Panda DataFrames, reading the tables from the cdm GitHub page FF To do 
-    
-          Return:
-                      dictionary with a Panda DataFrame for each table """
-    
-    
-    
-    """ # Uncomment to get the list of all the .csv files present at the url specified
-    url = 'https://github.com/glamod/common_data_model/tree/master/table_definitions'
-    cdmtabledeflist = csvListFromUrls(url)
+
+    # Uncomment to get the list of all the .csv files present at the url specified
+    # url = 'https://github.com/glamod/common_data_model/tree/master/table_definitions'
+    # cdmtabledeflist = csvListFromUrls(url)
     """
     tpath = os.getcwd() + '/../data'
     cdmpath='https://raw.githubusercontent.com/glamod/common_data_model/master/tables/' # cdm tables            
     
     """ Selecting the list of table definitions. Some of the entires do not have the corresponding implemented tables """
-    cdmtabledeflist=['id_scheme', 'crs', 'station_type', 'observed_variable', 'station_configuration', 'station_configuration_codes', 'observations_table', 'header_table', 'source_configuration', 'units' , 'z_coordinate_type']  
+    cdmtabledeflist=['id_scheme', 'crs', 'station_type', 'observed_variable', 'station_configuration', 'station_configuration_codes', 'observations_table', 
+                                 'header_table', 'source_configuration', 'units' , 'z_coordinate_type']  
     cdm_tabdef = dict()
     for key in cdmtabledeflist:
         url='table_definitions'.join(cdmpath.split('tables'))+key+'.csv' # https://github.com/glamod/common_data_model/tree/master/table_definitions/ + ..._.dat 
         f=urllib.request.urlopen(url)
-        col_names=pd.read_csv(f,delimiter='\t',quoting=3,nrows=0,comment='#')
+        col_names=pd.read_csv(f, delimiter='\t',quoting=3,nrows=0,comment='#')
         f=urllib.request.urlopen(url)
         tdict={col: str for col in col_names}
         cdm_tabdef[key]=pd.read_csv(f,delimiter='\t',quoting=3,dtype=tdict,na_filter=False,comment='#')
@@ -1617,14 +1737,33 @@ def load_cdm_tables():
     
     
     """ Make dictionary of variables and attributes for the observations table """ 
-    dic_obs = {}
+    dic_obstab_attributes = {}
     for index, row in cdm_tabdef['observations_table'].iterrows():
-        dic_obs[row['element_name'] ] = []
-        dic_obs[row['element_name'] ] = ['description' ,  row.description ]     
-    dic_obs['date_time'] = ['units',  'seconds since 1900-01-01 00:00:00' ]
+        dic_obstab_attributes[row['element_name'] ] = {}
+        dic_obstab_attributes[row['element_name'] ]['description'] = row.description 
+        dic_obstab_attributes[row['element_name'] ]['external_table'] = row.external_table 
+        
+    #dic_obs['date_time'] = ['units',  'seconds since 1900-01-01 00:00:00' ]
     
+    if not os.path.isfile('dic_obstab_attributes.npy'): 
+        np.save( 'dic_obstab_attributes' , dic_obstab_attributes )
 
-    return cdm_tabdef  , cdm_tab, tdict , dic_obs 
+    variable_type = {}
+    
+    for tab in ['observations_table' , 'header_table']:    
+    #for tab in cdm_tabdef:    
+    
+        df = cdm_tabdef[tab]
+        variable_type[tab] = {}
+        for index,row in df.iterrows():
+            if 'kind' in df.columns:                
+                variable_type[tab][row.element_name ] = kinds[row.kind]                    
+            else:
+                variable_type[tab][row.element_name ] = kinds[row.type]       
+                
+    variable_type['observations_table']['date_time'] = np.int64
+                   
+    return cdm_tabdef, cdm_tab, tdict , dic_obstab_attributes 
 
 
 
@@ -1655,14 +1794,13 @@ def filelist_cleaner(lista, dataset=''):
 
 
 def clean_station_configuration(cdm_tab ):
-    """ Replace wrong characters from the station cofniguration tables """
+    """ Replace wrong characters from the station configuration tables """
     subs={'o':[240,242,243,244,245,246,248],'O':[210,211,212,213,214,216],
           'a':[224,225,226,227,228,229,230],'A':[192,193,194,195,196,197,198],
           'u':[249,250,251,252,253],'U':[217,218,219,220],
           'i':[236,237,238,239],'I':[204,205,206,207,304],
           'S':[350],'n':[241],'c':[231],'C':[199],'e':[232,233,234,235],'E':[200,201,202,203]}
     for k in cdm_tab['station_configuration'].columns:
-        #print(k,type(cdm['station_configuration'][k][0]))
         if type(cdm_tab['station_configuration'][k][0]) is str:
             try:               
                 cdm_tab['station_configuration'][k].values[:]=cdm_tab['station_configuration'][k].values[:].astype('S')
@@ -1678,7 +1816,7 @@ def clean_station_configuration(cdm_tab ):
                                         if ord(mychar) in v:
                                             cdm_tab['station_configuration'][k].values[l]=n.join(cdm_tab['station_configuration'][k].values[l].split(mychar))
                         
-                        cdm_tab['station_configuration'][k].values[l]=numpy.string_(cdm_tab['station_configuration'][k].values[l])
+                        cdm_tab['station_configuration'][k].values[l]=numpy.string_( (cdm_tab['station_configuration'][k].values[l] ).encode('utf-8') ) 
                 cdm_tab['station_configuration'][k]=numpy.string_(cdm_tab['station_configuration'][k])
 
     print('Cleaned station_configuration')
@@ -1686,14 +1824,14 @@ def clean_station_configuration(cdm_tab ):
 
     
 
-db   = { 'era5_1'       : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1'               } ,
-                  'era5_3188' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/3188'     } ,
-                  'era5_1759' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1759'     } ,
-                  'era5_1761' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1761'     } ,
-                  'ncar'           : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'        } ,
-                  'ncar'           : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'        } ,
-                  'igra2'          : { 'dbpath' : '/raid60/scratch/federico/databases/IGRAv2'      } ,
-                  'bufr'            : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/ai_bfr'    }   }
+db   = { 'era5_1'       : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1'              } ,
+                  'era5_3188' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/3188'    } ,
+                  'era5_1759' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1759'    } ,
+                  'era5_1761' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1761'    } ,
+                  'ncar'           : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'       } ,
+                  'ncar'           : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'       } ,
+                  'igra2'          : { 'dbpath' : '/raid60/scratch/federico/databases/IGRAv2'     } ,
+                  'bufr'            : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/ai_bfr'   }  }
         
 
     
@@ -1725,7 +1863,7 @@ if __name__ == '__main__':
         raise ValueError(" The selected dataset is not valid. Please choose from ['era5_1', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'igra2', 'ncar' ]  ")    
                         
     """ Loading the CDM tables into pandas dataframes """
-    cdm_tabdef  , cdm_tab , tdict, obs_tab_attrs = load_cdm_tables()
+    cdm_tabdef  , cdm_tab, tdict , dic_obstab_attributes= load_cdm_tables()
      
     """ Paths to the output directory """    
     if not os.path.isdir(out_dir):
@@ -1774,14 +1912,13 @@ if __name__ == '__main__':
                     
         print( blue + '*** Processing the database ' + dataset + ' ***  \n \n *** file: ' + File + '\n'  + cend)
                                     
-        if 'era5' in dataset and 'bufr' not in dataset:   
-            odb_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  obs_tab_attrs, File)
+        if 'era5' in dataset:   
+                odb_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)
         else:
-            df_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset, File)
-
+                df_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)
           
         print(' ***** Convertion of  ' , File ,  '  completed ! ***** ')   
-        
+
     
 
       
@@ -1793,8 +1930,10 @@ if __name__ == '__main__':
 
 
 """ Examples for running 
--f /raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._82930 -d era5_1 -o OUTPUT
+-f /raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._82930.gz  -d era5_1 -o OUTPUT
 -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.1:82930.gz -d era5_1759 -o OUTPUT
+
+
 -f /raid60/scratch/federico/databases/IGRAv2/BRM00082930-data.txt -d igra2 -o OUTPUT
 -f /raid60/scratch/federico/databases/UADB//uadb_windc_82930.txt -d ncar -o OUTPUT
 -f /raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.82930.bfr -d bufr -o OUTPUT
@@ -1803,5 +1942,20 @@ if __name__ == '__main__':
 -f /raid60/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.C:8022  -d era5_3188 -o OUTPUT
 
 -f /raid60/scratch/federico/databases/UADB//uadb_windc_27962.txt  -d  ncar  -o OUTPUT  (1553915536 vs 29374566 )
+
+/raid60/scratch/federico/databases/IGRAv2/AYXUAE05498-data.txt 
+
+-f  /raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.24240.bfr -d bufr -o OUTPUT
+
+
+
+
+
+-f /raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._74794.gz -o OUTPUT -d era5_1 
+
+
+-f /raid8/srvx1/federico/GitHub/CEUAS_master_FEB202/CEUAS/CEUAS/public/harvest/data/example_stations/era5_3188/era5.3188.conv._C:4629.gz  -d era5_3188 -o OUTPUT
+
+
 
 """
