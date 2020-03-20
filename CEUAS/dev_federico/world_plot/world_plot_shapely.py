@@ -99,8 +99,11 @@ def make_plot_gpd(WMO, df, start_date = '', end_date = '' ):
 
     for i in range(6):
         #print('Plotting WMO region: ' , i )
-        a = df.loc[ (df['wmo'] == i ) & (df['start_date'] <= start_date) & (df['end_date'] >=  end_date)   ]
-	print(a)
+        #a = df.loc[ (df['wmo'] == i ) & (df['start_date'] <= start_date) & (df['end_date'] >=  end_date)   ]
+
+        a = df.loc[ (df['wmo'] == i ) & (df['start_date'] <= start_date) & (df['end_date'] >=  start_date)   ]
+
+	#print(a)
         lat = list(a['latitude'].astype(np.float32) )
         lon = list(a['longitude'].astype(np.float32) )
         col = style_dic[i+1]['c'] 
@@ -111,17 +114,8 @@ def make_plot_gpd(WMO, df, start_date = '', end_date = '' ):
         if len(lon) == 0:            
             lon.append(-999) 
             plotto = plt.scatter( lon, lat , color = col , label = lab + '[0]', s = 0.7 )
-  
-	else:
+        else:
             plotto = plt.scatter( lon, lat , color = col , label = lab + ' [' + str(len(lat)) + ']', s = 0.7 )
-
-    """        
-    for k in geoPoints.keys():
-        xs = [point.x for point in  geoPoints[k] ]
-        ys = [point.y for point in  geoPoints[k] ]        
-        #plt.scatter( xs, ys , color = style_dic[k+1]['c'] , label = 'WMO region: ' +  style_dic[k+1]['l'], s = 1.5 )
-        plt.scatter( xs, ys , color = style_dic[k+1]['c'] , label = style_dic[k+1]['l'], s = 1.6 )
-    """
  
     plt.xlim([-180.,180.])
     plt.ylim([-90.,90.])
@@ -182,7 +176,6 @@ def make_plot_anim(WMO, df, start_date = '', end_date = '' ):
             lon.append(-999)
 
         plot = plt.scatter( lon, lat , color = col , label = lab, s = 0.7 )
-	print(lat, lon)
     	#plt.savefig(str(i) + '_Map_shapely_' + start_date_string + '.png', dpi= 250,   bbox_inches = 'tight' )
         ims.append ( plot )
 
