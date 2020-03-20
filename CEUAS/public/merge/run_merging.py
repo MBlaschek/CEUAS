@@ -1,7 +1,7 @@
 """ Utility to run the merging_cdm_netCDF.py script with parallel processes """
 
 import os,sys
-from merging_cdm_netCDF import data_directories,create_station_dics
+from merging_cdm_netCDF_newfixes import data_directories,create_station_dics
 
 
 def chunk_it(seq, num):
@@ -18,8 +18,7 @@ def chunk_it(seq, num):
 
 
 """ Select the number of parallel processes. Each will receive a list of stations to be merged """
-processes = 6
-
+processes = 10
 
 all_stat_dics = create_station_dics(data_directories)
 
@@ -27,9 +26,12 @@ stations = list (all_stat_dics.keys())
 
 
 chunks = chunk_it(stations,processes) # splitting into differnet list of stations
+max_size = 5*10**6 # 5*10**6 = 5 MB
 
 print(' Isplit the input stations list ' , len(stations) , '  into : ', processes, '  different parallel processes \n \n ' )
 for c in chunks:
     cc = str(','.join(c)).replace('#','')
     print(' I am running the chunk', chunks.index(c) , ' with  ' , len(c), '  stations ' )
-    os.system('/opt/anaconda3/bin/python3 merging_cdm_netCDF.py -s ' + cc + ' & ' )
+    os.system('/opt/anaconda3/bin/python3 merging_cdm_netCDF_newfixes.py -s ' + cc + ' -d ' + str(max_size) + '  -m run    & ' )
+
+

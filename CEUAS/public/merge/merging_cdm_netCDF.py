@@ -18,6 +18,11 @@ import xarray as xr
 import time 
 #from numba import njit
 
+sys.path.append('../harvest/code')
+from harvest_convert_to_netCDF import write_dict_h5 
+#from harvest_convert_to_netCDF import datetime_toseconds   # importing the function to write files with h5py 
+
+
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning) # deactivates Pandas warnings 
 
@@ -170,7 +175,7 @@ class Merger():
                         for t in [ 'crs' , 'observed_variable', 'units' , 'z_coordinate_type' , 'station_type']:                              
                               
                               d = xr.open_dataset(v , engine = 'h5netcdf' , group = t)                 
-                              data['cdm_tables'][t] = d.to_dataframe()   ### USELESS ?
+                              #data['cdm_tables'][t] = d.to_dataframe()   ### USELESS ?
                               data['cdm_tables'][t]  =    d   
                                    
                   d.close() 
@@ -458,7 +463,7 @@ class Merger():
             #for dt in date_times[3008:3100]: # loop over all the possible date_times 
             
             tot = len(date_times)
-            for dt, c in zip(date_times, range(tot) ): # loop over all the possible date_times 
+            for dt, c in zip(date_times[3008:3100], range(tot) ): # loop over all the possible date_times 
                   #print('Analize : ', str(c) , '/',  str(tot)  , ' ', dt , ' ', now(time.time()) )
                   
                   logging.info('Analize : %s %s /', str(c) ,  str(tot)  )
@@ -529,6 +534,7 @@ class Merger():
             """ Creating the merged dataframes """
             logging.debug('*** Concatenating the observations_table dataframes' )      
             merged_obs = pd.concat (all_merged_obs)
+            
             self.MergedObs = merged_obs                   
             logging.debug('*** Finished concatenating theobservations_table  dataframes' )             
             
@@ -667,6 +673,9 @@ class Merger():
             
             #out_name = os.getcwd() + '/FAST_INDEX_merged_' + [ x for x in self.datasets[ list(self.datasets_keys)[0]].split('/') if '.nc' in x   ] [0] 
             
+            """ Loading the econding of variables created from the harvester script """
+            encodings = np.load('groups_encodings.npy' , allow_pickle = True ).item()
+            
             if not os.path.isdir(self.out_dir):
                   Path(self.out_dir).mkdir(parents=True, exist_ok=True)
                   
@@ -675,17 +684,26 @@ class Merger():
             logging.info('Writing the observations_tables to the netCDF output via xarray to_netcdf() ')
             #obs_tab = self.MergedObs[ ['date_time' , 'latitude', 'longitude' ,  'observation_value' , 'observed_variable' , 'source_id' , 'observation_id',  'z_coordinate' ]     ] # including only some columns 
             obs_tab = self.MergedObs   # including only some columns             
-            obs_tab = self.add_cdm_missing_columns(obs_tab)            
-            obs_tab = obs_tab.to_xarray() 
+            obs_tab = self.add_cdm_missing_columns(obs_tab)     
             
-            """ Restoring the attributes for the observations_table"""
+            """  
+            # Old using xarray
+            obs_tab = obs_tab.to_xarray()             
             for v in obs_tab.variables:
                   if v == "index" or v == "hdrlen" or 'string' in v:
                         continue
                   obs_tab[v].attrs['external_table'] = self.attributes['observations_table'][v]['external_table']
-                  obs_tab[v].attrs['description']    =  self.attributes['observations_table'][v]['description']
+                  obs_tab[v].attrs['description']      =  self.attributes['observations_table'][v]['description']
+            """
+
+            for k in obs_tab.columns:
+                  print('Writing the observation table using h5py new method for the variable: ' , k )
+                  df = obs_tab[ [k] ]  # making a 1 column dataframe  
+                  write_dict_h5(out_name, df, k, encodings['observations_table'], var_selection=[], mode='a', attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')})
                         
-            obs_tab.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='w' , group = 'observations_table')  # writing the merged observations_table 
+            #obs_tab.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='w' , group = 'observations_table')  # writing the merged observations_table 
+    
+    
     
             logging.info('Writing the header_table to the netCDF output via xarray ')
             head_tab = self.MergedHead.to_xarray()
@@ -801,12 +819,12 @@ if not os.path.isdir(out_dir):
 """ Dictionary containing the data directories of each dataset """
 
 
-
+"""
 data_directories = { 'bufr'  : 'example_stations/bufr/' ,
                      'era5_1': 'example_stations/era5_1/', } 
+"""
 
-
-''' #Example
+#Example
 data_directories = {  'ncar'      : '/raid60/scratch/federico/netCDF_converted_Jan2020/ready_for_merging/ncar'    ,
                       'igra2'     : '/raid60/scratch/federico/netCDF_converted_Jan2020/ready_for_merging/igra2'               ,
                       'era5_1'    :  '/raid60/scratch/federico/netCDF_converted_Jan2020/ready_for_merging/era5_1'          ,
@@ -814,7 +832,7 @@ data_directories = {  'ncar'      : '/raid60/scratch/federico/netCDF_converted_J
                       'era5_1761' : '/raid60/scratch/federico/netCDF_converted_Jan2020/ready_for_merging/era5_1761'  ,
                       'era5_3188' : '/raid60/scratch/federico/netCDF_converted_Jan2020/ready_for_merging/era5_3188'  ,                                 
                       'bufr'      : '/raid60/scratch/federico/netCDF_converted_Jan2020/ready_for_merging/bufr'                     }
-'''
+
 
 def create_station_dics(data_directories):
       """ Create a list of dictionaries, one for each station to be merged. """
