@@ -1,4 +1,3 @@
-
 import os
 import sys
 import netCDF4 as nc
@@ -179,14 +178,18 @@ class Merger():
                   d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'header_table' ,  decode_times = False  )  
                   logging.debug('Loading the header_table')            
                   
-                  """
+                  
                   if 'header_table' not in list( self.attributes.keys() ):  # saving the attributes to be re-applied at the end
                         self.attributes['header_table'] = {}
                         for var in d.variables:
-                              self.attributes['header_table'][var] = {}
-                              self.attributes['header_table'][var]['description'] = d[var].description
-                              self.attributes['header_table'][var]['external_table'] = d[var].external_table           
-                  """ 
+                              try:
+                                    self.attributes['header_table'][var] = {}
+                                    self.attributes['header_table'][var]['description'] = d[var].description
+                                    self.attributes['header_table'][var]['external_table'] = d[var].external_table           
+                                    #print(var, ' ' , d[var].description , ' ' , type(d[var].values[0]) , ' ' )
+                              except:
+                                    print('Cannot extract description or external table for', var )
+                  #input('TO DO REMOVE FF')
                   if k == list(datasets.keys())[0]:
                         self.get_variable_type(k, d, 'header_table' )                    
                   data[k]['header_table'] = d.to_dataframe()   
@@ -746,13 +749,17 @@ class Merger():
                   
                   if not type(head_tab[v].values[0]) == self.variable_types['header_table'][v]:
                         try:                              
-                              head_tab[k] =  head_tab[v].astype(self.variable_types['header_table'][v] ) 
+                              head_tab[v] =  head_tab[v].astype(self.variable_types['header_table'][v] ) 
                         except:
                               print ('FAILED converting column' , v , '   type  ', type(head_tab[v].values[0]) , ' to type   ' ,  self.variable_types['header_table'][v]  )                              
                               
-                  else:      
-                        print ('ALREADY OK ' , v , '   type  ', type(head_tab[v].values[0]) , ' to type   ' ,  self.variable_types['header_table'][v]  )        
                         
+                  if 'time' not in v and type(head_tab[v].values[0]) == np.int64 :
+                         head_tab[v] = head_tab[v].astype(np.int32)
+                         #print('removing int64')
+                  if type(head_tab[v].values[0]) == np.float64:
+                         head_tab[v] = head_tab[v].astype(np.float32)
+                         #print('removing float64')
                   a = head_tab[ [v] ]  # making a 1 column dataframe  
                   #try:
                   #      write_dict_h5(out_name, df, 'header_table', encodings['header_table'], var_selection=[], mode='a', attrs = {}  ) ### TO DO !!!             
