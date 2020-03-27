@@ -16,6 +16,7 @@ import numpy.ma as ma
 import xarray as xr 
 import time 
 #from numba import njit
+import psutil
 
 sys.path.append('../harvest/code')
 from harvest_convert_to_netCDF_newfixes import write_dict_h5 
@@ -39,6 +40,11 @@ pd.set_option('display.max_rows', None)
 pd.set_option('display.width', None)
 pd.set_option('display.max_colwidth', -1)
 """
+
+process = psutil.Process(os.getpid())
+
+cend   = '\033[0m'
+blue   = '\033[34m'
 
 def now(time):
       """ For easily print a readable current time stamp """
@@ -107,6 +113,7 @@ class Merger():
                   
             data['cdm_tables'] = {}             
             
+            print(blue + 'Memory used before reading data: ', process.memory_info().rss/1000000000 , cend)
             """ Reading the header_table, station_configuration, source_configuration """
             for k,v in datasets.items() :  
                   
@@ -206,11 +213,11 @@ class Merger():
                   logging.info("*** Loading the observations_table (might take time) %s" , k )          
                   d.close() 
 
-                  if k == 'era5_1': # reading the whole era5_1 feedback (including reanalysis)
-                        d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'era5fb')     
-                        data[k]['era5fb'] = d.to_dataframe()                          
-                        self.get_variable_type(k, d, 'era5fb' )                        
-                        logging.debug('Done with %s era5 feedback ', k )
+                  #if k == 'era5_1': # reading the whole era5_1 feedback (including reanalysis)
+                  #      d = xr.open_dataset(v , engine = 'h5netcdf' , group = 'era5fb')     
+                  #      data[k]['era5fb'] = d.to_dataframe()                          
+                  #      self.get_variable_type(k, d, 'era5fb' )                        
+                  #      logging.debug('Done with %s era5 feedback ', k )
             
                   """ Reading the CDM tables that do not depend on specific stations or observations (fixed values), for the first file only """           
                   if list(datasets.keys()).index(k) == 0  : # reading the tables from the first dataset file only
@@ -221,6 +228,8 @@ class Merger():
                   d.close()    
             
             
+            print(blue + 'Memory used after reading data (ons_tables, stat_conf, header_tab): ', process.memory_info().rss/1000000000 , cend)
+
             self.data = data     
 
             
@@ -295,7 +304,8 @@ class Merger():
             self.dataset_per_dt = which_k_in_dt             
             self.merged_unique_dates = np.unique(np.array(all_uniques) )  # storing the set of all distinct dt values            
             logging.debug('make_all_datetime finished ')         
-      
+      print(blue + 'Memory used after makind all date_times : ', process.memory_info().rss/1000000000 , cend)
+
  
       
       def clean_dataframe(self, df_in , what = ''):  # NOT IN USE 
@@ -378,6 +388,8 @@ class Merger():
                         feedbacks.append(empty_fb)
                         
             merged_fb = pd.concat(feedbacks)
+            print(blue + 'Memory used after reading era5fb: ', process.memory_info().rss/1000000000 , cend)
+
             return merged_fb
                                                
       def get_header_table(self , dt, ds = '' , all_ds = '', length = '', report_id = '' , obs_tab = '' ):
@@ -491,6 +503,7 @@ class Merger():
             di['recordtimestamp'].attrs['units']='seconds since 1900-01-01 00:00:00'
                      
                      
+
             """ Creating the merged indices """
             mi.append(0)
             for i in range(len(merged_indices)):
@@ -502,15 +515,20 @@ class Merger():
                                                       
             """ Creating the merged dataframes """
             logging.debug('*** Concatenating the observations_table dataframes' )      
-            merged_obs = pd.concat(all_merged_obs)
 
+            print(blue + 'Memory used before concatenating the merged obs_tab: ', process.memory_info().rss/1000000000 , cend)
+            merged_obs = pd.concat(all_merged_obs)
+            print(blue + 'Memory used after concatenating the merged obs_tab: ', process.memory_info().rss/1000000000 , cend)
 
             del all_merged_obs
+
+            print(blue + 'Memory used after deleting all_merged obs_tab dic: ', process.memory_info().rss/1000000000 , cend)
 
             logging.debug('*** Finished concatenating theobservations_table  dataframes' )
             self.write_merged(content = 'observations_table', table= merged_obs)
             #del merged_obs 
-        
+            print(blue + 'Memory used after writing the merged obs_tab dataframe: ', process.memory_info().rss/1000000000 , cend)
+
             dateindex = np.array( [ i // 86400 for i in merged_obs['date_time'] ] )            
             date_times, indices, counts = np.unique(dateindex, return_counts = True, return_index= True)
             di['dateindex'] = ( {'dateindex' : indices.shape } , indices )  # considers the day only
@@ -523,13 +541,15 @@ class Merger():
             #merged_hd = merged_hd.replace( -2147483648 , np.nan )           
             self.write_merged(content = 'header_table', table= merged_hd)                          
             logging.debug('*** Finished concatenating the header_table dataframes'  )  
-            del merged_hd
+            del merged_hd , all_merged_head
 
             """ Make and write feedback tables """
+            print(blue + 'Memory used before writing era5fb: ', process.memory_info().rss/1000000000 , cend)
             fb_tab = self.get_reanalysis_feedback(dt_bestds_dic, reanalysis = 'era5fb')            
             del dt_bestds_dic
             self.write_merged(content = 'era5fb', table= fb_tab)
             del fb_tab
+            print(blue + 'Memory used after writing era5fb: ', process.memory_info().rss/1000000000 , cend)
 
             return 0      
       
