@@ -142,8 +142,20 @@ class Merger():
                   '''
                                                                                                                                                                                   
                   h5py_file = h5py.File(v, 'r')                                                                                                                                   
-                  obs_tab = h5py_file['observations_table']                                                                                                                      
-                                                                                                                                                                                        
+                  obs_tab = h5py_file['observations_table']                                                                                                      
+                  self.variable_types['observations_table'] = {}
+                  for i in obs_tab.items():
+                        var = i[0]
+                        #print(var)
+                        tipo = type(obs_tab[var][0]) 
+                        if tipo == np.float64 :  # there should be no float64 types                                                 
+                              tipo = np.float32
+                        self.variable_types['observations_table'][var] = tipo
+
+                  self.variable_types['observations_table']['processing_code'] = np.int32
+                  
+
+
                   data[k]['observations_table'] = obs_tab                                                                                                                         
                                                                                                                                                                                         
                   logging.debug('Done with %s observations_table with h5py' , str(k) )                                                                                            
@@ -425,7 +437,7 @@ class Merger():
 
             for v in self.observations_table_vars:
                   obs_tab_h5py = list(self.data[dataset]['observations_table'][v][index:index_up])
-                  print(obs_tab_h5py)
+                  #print(obs_tab_h5py)
                   df_dic[v] = obs_tab_h5py
             
 
@@ -452,7 +464,7 @@ class Merger():
             #for dt in date_times[3008:3100]: # loop over all the possible date_times 
             dt_bestds_dic = {} # store the selected best dataset for each dt             
             tot = len(date_times)
-            for dt, c in zip(date_times, range(tot) ): # loop over all the possible date_times 
+            for dt, c in zip(date_times[3008:3100], range(tot) ): # loop over all the possible date_times 
                   print('Analize : ', str(c+1) , '/',  str(tot)  , ' ', dt , ' ', now(time.time()) )
                   
                   #logging.info('Analize : %s %s /', str(c+1) ,  str(tot)  )
@@ -566,8 +578,8 @@ class Merger():
       def add_cdm_missing_columns(self, all_merged_obs , table = 'observations_table'):
             """ Add the CDM observations_table columns for which no data are available at the end of the merging """
             #cdm_keys = self.obs_table_columns 
-
-            for k in self.obs_table_columns:
+            print(self.encodings['observations_table'].keys() )
+            for k in self.encodings['observations_table'].keys():
                   if self.variable_types[table][k] == np.int32 :
                         nan = -2147483648
                   else:
@@ -781,7 +793,10 @@ class Merger():
                               continue
                         if not type(obs_tab[k].values[0]) == self.variable_types['observations_table'][k]:
                               #print ('Converting column' , k , '   type  ', type(obs_tab[k].values[0]) , ' to type   ' ,  self.variable_types['observations_table'][k]  )
-                              obs_tab[k] =  obs_tab[k].astype(self.variable_types['observations_table'][k] ) 
+                              try: ### FIX REPORT_ID
+                                    obs_tab[k] =  obs_tab[k].astype(self.variable_types['observations_table'][k] ) 
+                              except:
+                                    pass
                         #else:      
                              #print ('ALREADY OK ' , k , '   type  ', type(obs_tab[k].values[0]) , ' to type   ' ,  self.variable_types['observations_table'][k]  )                              
                         
