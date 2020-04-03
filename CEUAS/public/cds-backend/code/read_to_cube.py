@@ -4,11 +4,330 @@
 __all__ = ['read_ragged_array_to_cube']
 
 
+def read_ragged_cdm_to_array(filename, odb_codes=True, hours=False):
+    """
+    Read netCDF 4 HDF5 group data into a data cube on standard pressure levels
+    this meant only for the CDS backend, not public
+
+    duplicates are overwritten
+
+    Args:
+        filename (str): Filename of netcdf
+        odb_codes (bool): Search for ODB or CDM variable codes
+        hours (bool): enable hour split up (Caution does not work as expected), overwrites even more data
+
+    Returns:
+        xarray.Dataset : Dataset (plev, time)
+    """
+    import os
+    import h5py
+    import numpy as np
+    import xarray as xr
+
+    if not os.path.isfile(filename):
+        raise IOError('File can not be found', filename)
+
+    if odb_codes:
+        var_names = {'t': 85, 'rh': 38, 'td': 36, 'dpd': 34, 'z': 117, 'dd': 106, 'ff': 107, 'u': 104, 'v': 105,
+                     'q': 39}
+    else:
+        var_names = {'z': 1, 't': 2, 'u': 3, 'v': 4, 'dd': 111, 'ff': 112, 'td': 59, 'dpd': 299, 'rh': 29, 'p': 999}
+
+    var_names = dict({j: i for i, j in var_names.items()})
+    std_plevs = [10, 20, 30, 50, 70, 100, 150, 200, 250, 300, 400, 500, 700, 850, 925, 1000]
+    dim = 'date_time'
+    lev = 'z_coordinate'
+    # Pressure Array -> indices
+    ip = np.zeros(1001, dtype=np.int32)
+    for i, j in enumerate(std_plevs):
+        ip[j] = i
+
+    data = {}
+    with h5py.File(filename, 'r') as f:
+        #
+        # Header Group ?
+        #
+        if 'header_table' in f.keys():
+            igroup = 'header_table'
+            print("Header Table found", igroup)
+            #
+            # What to read from here?
+            #
+
+        #
+        # Observation Table
+        #
+        var_index = {}
+        if 'observations_table' in f.keys():
+            igroup = 'observations_table'
+            print("Observations Table found", igroup)
+            # get date_time
+            time = f[igroup][dim][:]  # should be seconds since 1900 01 01
+
+            if 'units' not in f[igroup][dim].attrs.keys():
+                print("Datetime dimension", dim, "has no units!!! Assuming seconds")
+
+            else:
+                if 'seconds' not in f[igroup][dim].attrs['units'].decode():
+                    raise RuntimeError("Datetime dimension", dim, "not in seconds since ????",
+                                       f[igroup][dim].attrs['units'].decode())
+
+            if 'units' in f[igroup][dim].attrs.keys():
+                time_unit = f[igroup][dim].attrs['units'].decode()
+            else:
+                time_unit = 'seconds since 1900-01-01 00:00:00'
+
+            # convert to datetime64 from seconds
+            try:
+                date = np.datetime64(" ".join(time_unit.split(' ')[-2:])) + time * np.timedelta64(1,
+                                                                                                  time_unit.split(' ')[
+                                                                                                      0][0])
+            except:
+                date = np.datetime64(" ".join(time_unit.split(' ')[-2:])) + time * np.timedelta64(1,
+                                                                                                  time_unit.split(' ')[
+                                                                                                      0][0].upper())
+
+            # get pressures
+            plev = f[igroup][lev][:].astype(np.int32) // 100  # requires hPa / because we only want std pressure levels
+            iplev = np.in1d(plev, std_plevs)  # only std pressure (can have NaN)
+            # get observed_variables
+            variables = f[igroup]['observed_variable'][:]
+            unique_variables = np.unique(variables)
+            # get observation_value
+            for i in unique_variables:
+                if i not in var_names.keys():
+                    print("Skipping.... ", i, "not in ", var_names.keys())
+                    continue
+                # only this variable + only standard pressure levels
+                ivar = (variables == i) & (iplev)
+                # check dates
+                timeplev = np.stack((time[ivar], plev[ivar],), axis=0)
+                # Duplicates will be overwritten if False
+                if False:
+                    # Check for duplicates ? // take first one
+                    u, ii, c = np.unique(timeplev, axis=1, return_counts=True, return_index=True)
+                    ivar = np.where(ivar)[0][ii]  # update only unique ivar
+                    print(igroup, i, "Duplicates", c[c > 1].size, "selected first")
+                else:
+                    u, c = np.unique(timeplev, axis=1, return_counts=True)
+                    print(igroup, i, "Duplicates", c[c > 1].size, "overwritten")
+
+                var_index[i] = ivar
+                itime, iobs = table_to_cube(time[ivar], ip[plev[ivar]], f[igroup]['observation_value'][ivar][:],
+                                            hours=hours)
+                if hours:
+                    data[var_names[i]] = xr.DataArray(iobs, coords=([0, 12], std_plevs, date[ivar][itime]),
+                                                      dims=('hour', 'plev', 'time'), name=var_names[i])
+                else:
+                    data[var_names[i]] = xr.DataArray(iobs, coords=(std_plevs, date[ivar][itime]),
+                                                      dims=('plev', 'time'), name=var_names[i])
+        #
+        # Feedback Group
+        #
+        if 'era5fb' in f.keys():
+            igroup = 'era5fb'
+            print("ERA5 Feedback  found", igroup)
+            #
+            # Analysis
+            #
+            if 'an_depar@body' in f[igroup].keys():
+                for i, ivar in var_index.items():
+                    itime, iobs = table_to_cube(time[ivar], ip[plev[ivar]], f[igroup]['an_depar@body'][ivar][:],
+                                                hours=hours)
+                    if hours:
+                        data[var_names[i] + '_an_dep'] = xr.DataArray(iobs,
+                                                                      coords=([0, 12], std_plevs, date[ivar][itime]),
+                                                                      dims=('hour', 'plev', 'time'),
+                                                                      name=var_names[i] + '_an_dep')
+                    else:
+                        data[var_names[i] + '_an_dep'] = xr.DataArray(iobs, coords=(std_plevs, date[ivar][itime]),
+                                                                      dims=('plev', 'time'),
+                                                                      name=var_names[i] + '_an_dep')
+
+            #
+            # First Guess
+            #
+            if 'fg_depar@body' in f[igroup].keys():
+                for i, ivar in var_index.items():
+                    itime, iobs = table_to_cube(time[ivar], ip[plev[ivar]], f[igroup]['fg_depar@body'][ivar][:],
+                                                hours=hours)
+                    if hours:
+                        data[var_names[i] + '_fg_dep'] = xr.DataArray(iobs,
+                                                                      coords=([0, 12], std_plevs, date[ivar][itime]),
+                                                                      dims=('hour', 'plev', 'time'),
+                                                                      name=var_names[i] + '_fg_dep')
+                    else:
+                        data[var_names[i] + '_fg_dep'] = xr.DataArray(iobs, coords=(std_plevs, date[ivar][itime]),
+                                                                      dims=('plev', 'time'),
+                                                                      name=var_names[i] + '_fg_dep')
+
+            #
+            # Biascorr
+            #
+            if 'biascorr@body' in f[igroup].keys():
+                for i, ivar in var_index.items():
+                    itime, iobs = table_to_cube(time[ivar], ip[plev[ivar]], f[igroup]['biascorr@body'][ivar][:],
+                                                hours=hours)
+                    if hours:
+                        data[var_names[i] + '_biascorr'] = xr.DataArray(iobs,
+                                                                        coords=([0, 12], std_plevs, date[ivar][itime]),
+                                                                        dims=('hour', 'plev', 'time'),
+                                                                        name=var_names[i] + '_biascorr')
+                    else:
+                        data[var_names[i] + '_biascorr'] = xr.DataArray(iobs, coords=(std_plevs, date[ivar][itime]),
+                                                                        dims=('plev', 'time'),
+                                                                        name=var_names[i] + '_biascorr')
+
+    data = xr.Dataset(data)
+    data['plev'].attrs.update({'units': 'hPa', 'standard_name': 'air_pressure'})
+    return data
+
+
+def table_to_cube(time, plev, obs, hours=False, return_indexes=False):
+    """ Helper Function to rearange the table to cube
+
+    Args:
+        time (array): time in seconds
+        plev (array): pressure level indices (not pressure itself)
+        obs (array): observation values
+        hours (bool): flag to enable hour
+        return_indexes (bool): do nothing, return only indices (deprecated)
+
+    Returns:
+        array, array : time indices, cube
+    """
+    import numpy as np
+
+    if hours:
+        ihour = np.array(((time + 21600) % 86400) // 43200, dtype=np.int32) # 0 or 12
+        time = time // 86400
+
+    xtime, jtime, itime = np.unique(time, return_index=True, return_inverse=True)
+    if hours:
+        ihour = np.array(((time + 21600) % 86400) // 43200, dtype=np.int32) # 0 or 12
+        if return_indexes:
+            return jtime, xtime.size, ihour, plev, itime
+        data = np.full((2, 16, xtime.size), np.nan, dtype=np.float32)
+        data[ihour, plev, itime] = obs
+    else:
+        if return_indexes:
+            return jtime, xtime.size, plev, itime
+        data = np.full((16, xtime.size), np.nan, dtype=np.float32)
+        data[plev, itime] = obs
+    return jtime, data
+
+
+def read_ragged_cdm(filename, odb_codes=True):
+    import os
+    import h5py
+    import numpy as np
+    import pandas as pd
+    import xarray as xr
+
+    if not os.path.isfile(filename):
+        raise IOError('File can not be found', filename)
+
+    if odb_codes:
+        var_names = {'t': 85, 'rh': 38, 'td': 36, 'dpd': 34, 'z': 117, 'dd': 106, 'ff': 107, 'u': 104, 'v': 105,
+                     'q': 39}
+    else:
+        var_names = {'z': 1, 't': 2, 'u': 3, 'v': 4, 'dd': 111, 'ff': 112, 'td': 59, 'dpd': 299, 'rh': 29, 'p': 999}
+    var_names = dict({j: i for i, j in var_names.items()})
+    # standard pressure levels
+    std_plevs = [10, 20, 30, 50, 70, 100, 150, 200, 250, 300, 400, 500, 700, 850, 925, 1000]
+    groups = ['observations_table', 'era5fb']
+    # Variables
+    variables = ['observed_variable', 'observation_value', 'an_depar@body', 'fg_depar@body',
+                 'biascorr@body']  # list(f.keys())
+
+    dim = 'date_time'
+    lev = 'z_coordinate'
+
+    data = {}
+    with h5py.File(filename, 'r') as f:
+        # Groups
+        for igroup in groups:
+            if igroup not in f.keys():
+                print("Group not found: ", igroup)
+                continue
+
+            if dim in f[igroup].keys():
+                # time
+                time = f[igroup][dim][:]  # should be seconds since 1900 01 01
+
+                if 'units' not in f[igroup][dim].attrs.keys():
+                    print("Datetime dimension", dim, "has no units!!! Assuming seconds")
+                else:
+                    if 'seconds' not in f[igroup][dim].attrs['units'].decode():
+                        raise RuntimeError("Datetime dimension", dim, "not in seconds since ????",
+                                           f[igroup][dim].attrs['units'].decode())
+                time_unit = f[igroup][dim].attrs['units'].decode() if 'units' in f[igroup][
+                    dim].attrs.keys() else 'seconds since 1900-01-01 00:00:00'
+                # convert to datetime64 from seconds
+                time = np.datetime64(" ".join(time_unit.split(' ')[-2:])) + time * np.timedelta64(1, 's')
+                data['time'] = xr.DataArray(time)
+
+            if lev in f[igroup].keys():
+                # pressure to hPa
+                plev = f[igroup][lev][:].astype(np.int32) // 100  # requires hPa
+                data['plev'] = xr.DataArray(plev, attrs={'units': 'hPa', 'standard_name': 'air_pressure'})
+            # Read data
+            for ivar in variables:
+                if ivar not in f[igroup].keys():
+                    continue
+
+                # Create Xarray DataArray
+                data[ivar] = xr.DataArray(f[igroup][ivar][:])
+                # Copy Attributes
+                data[ivar].attrs.update(
+                    {i: j.decode() for i, j in f[igroup][ivar].attrs.items() if isinstance(j, bytes)})
+        # Copy Global and Coordinate Attributes
+        # global_attributes = {i: j.decode() for i, j in f.attrs.items()}
+        # coord_attributes = {lev: {i: j.decode() for i, j in f[lev].attrs.items() if isinstance(j, bytes)}}
+
+    data = xr.Dataset(data)  # .sortby(dim)
+    data = data.swap_dims({'dim_0': 'time'})
+    # split into separate variables
+    # convert to xarray
+    print("Converting to 2D ...")
+    print(np.unique(data.observed_variable))
+    data = dict(data.groupby(data.observed_variable))
+    new = []
+    # Loop and rename
+    for i, j in data.items():
+        if i not in var_names.keys():
+            print("Skipping.... ", i, "not in ", var_names.keys())
+            continue
+        iname = var_names[i]
+        j = j.drop_vars('observed_variable').rename({'observation_value': iname})
+        j = j.rename({i: iname + "_" + i.replace('@body', '') for i in j.data_vars if i not in ['plev', iname]})
+        # Make 2D
+        j = j.to_dataframe()
+        j.index.name = 'time'
+        #
+        # select only valid levels
+        #
+        j = j[j['plev'].isin(std_plevs)]
+        #
+        # convert to xarray
+        #
+        j = j.reset_index().set_index(['time', 'plev'])
+        if not j.index.is_unique:
+            print(iname, "Non-unique index, removing duplicates...", j.index.duplicated().sum())
+            print(j.loc[j.index.duplicated(keep=False)])
+            j = j.loc[~j.index.duplicated()]  # remove duplicated
+
+        j = j.to_xarray()  # 1D -> 2D
+        new.append(j)
+    data = xr.merge(new)
+    return data
+
+
 def read_ragged_array_to_cube(filename, dim='time', lev='plev', variables=None, std_plevs=None, **kwargs):
     """
     The function reads a CF compliant upper air data file from the CDS backend and transforms the data into
     a three dimensional data cube with dimensions hour (2), plev (16), time (days).
-    This representation is convienient for statistical breakpoint analysis.
+    This representation is convenient for statistical breakpoint analysis.
 
     Args:
         filename (str): Input NetCDF file
@@ -145,6 +464,10 @@ def read_index(ovars={}, offset=0, ip=None, sname=''):
 
     Leo Haimberger, 19 February 2020
     '''
+    import time
+    import h5py
+    import numpy
+
     if sname == '' or ip is None:
         return dict()
     tt = time.time()
@@ -171,6 +494,10 @@ def read_index(ovars={}, offset=0, ip=None, sname=''):
 
 
 if __name__ == '__main__':
+
+    """
+    LEO Code to run read_index on a file
+    
     import os
     import h5py  # as h5py
     import numpy
@@ -219,3 +546,31 @@ if __name__ == '__main__':
     print(process.memory_info().rss / 1024 / 1024)
     print(time.time() - tt)
     plt.plot(numpy.arange(45000) / 365.25, tcube[1, 5, :] - tcube[0, 5, :])
+    """
+
+    # 53845
+    ifile = '/raid60/scratch/federico/20MARCH2020_SmallStations/0-20001-0-53845_CEUAS_merged_v0.nc'
+    # newer version (4.2020)
+    ifile = '/raid60/scratch/federico/0-20000-0-53845_CEUAS_merged_v0.nc'
+
+    # 41883
+    ifile = '/raid60/scratch/federico/20MARCH2020_SmallStations/0-20000-0-41883_CEUAS_merged_v0.nc'
+
+    # 72764
+    ifile = "/raid60/scratch/leo/scratch/era5/odbs/2/era5_2/" + "0-20000-0-STATIONID_era5_2_harvested_era5.conv._1:72764.nc"  # 1950 to 1978
+
+    # Read with an older version of the function
+    # converts to DataFrame and uses Xarray
+    # either it has odb_codes or cdm_codes
+    if False:
+        xx = read_ragged_cdm(ifile, odb_codes=True)
+        print(xx)
+
+    # Read with an modern version
+    #
+    xx = read_ragged_cdm_to_array(ifile, odb_codes=True)
+    print(xx)
+
+    jfile = "/raid60/scratch/leo/scratch/era5/odbs/1/era5_1/" + '0-20000-0-72764_era5_1_harvested_era5.conv.72764.txt.gz.nc'  # 1979 to present
+    xy = read_ragged_cdm_to_array(jfile, odb_codes=True)
+    print(xy)
