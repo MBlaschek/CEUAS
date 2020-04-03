@@ -100,17 +100,31 @@ def read_ragged_cdm_to_array(filename, odb_codes=True, hours=False):
                     continue
                 # only this variable + only standard pressure levels
                 ivar = (variables == i) & (iplev)
-                # check dates
-                timeplev = np.stack((time[ivar], plev[ivar],), axis=0)
-                # Duplicates will be overwritten if False
+                #
+                # Experimental Code
+                # Handle duplciates ?
                 if False:
-                    # Check for duplicates ? // take first one
-                    u, ii, c = np.unique(timeplev, axis=1, return_counts=True, return_index=True)
+                    sec_var = None
+                    # Can we use departures to find minimum ? -> but how to use the correct profile?
+                    # this would potentially merge profiles
+                    if 'era5fb' in f.keys() and 'an_depar@body' in f['era5fb'].keys():
+                        sec_var = f['era5fb']['an_depar@body'][ivar][:]
+
+                    ii = handle_duplicates(time[ivar], plev[ivar], f[igroup]['observation_value'][ivar][:],
+                                           secondary_var=sec_var)
                     ivar = np.where(ivar)[0][ii]  # update only unique ivar
-                    print(igroup, i, "Duplicates", c[c > 1].size, "selected first")
                 else:
-                    u, c = np.unique(timeplev, axis=1, return_counts=True)
-                    print(igroup, i, "Duplicates", c[c > 1].size, "overwritten")
+                    # check dates
+                    timeplev = np.stack((time[ivar], plev[ivar],), axis=0)
+                    # Duplicates will be overwritten if False
+                    if False:
+                        # Check for duplicates ? // take first one
+                        u, ii, c = np.unique(timeplev, axis=1, return_counts=True, return_index=True)
+                        ivar = np.where(ivar)[0][ii]  # update only unique ivar
+                        print(igroup, i, "Duplicates", c[c > 1].size, "selected first")
+                    else:
+                        u, c = np.unique(timeplev, axis=1, return_counts=True)
+                        print(igroup, i, "Duplicates", c[c > 1].size, "overwritten")
 
                 var_index[i] = ivar
                 itime, iobs = table_to_cube(time[ivar], ip[plev[ivar]], f[igroup]['observation_value'][ivar][:],
@@ -199,12 +213,12 @@ def table_to_cube(time, plev, obs, hours=False, return_indexes=False):
     import numpy as np
 
     if hours:
-        ihour = np.array(((time + 21600) % 86400) // 43200, dtype=np.int32) # 0 or 12
+        ihour = np.array(((time + 21600) % 86400) // 43200, dtype=np.int32)  # 0 or 12
         time = time // 86400
 
     xtime, jtime, itime = np.unique(time, return_index=True, return_inverse=True)
     if hours:
-        ihour = np.array(((time + 21600) % 86400) // 43200, dtype=np.int32) # 0 or 12
+        ihour = np.array(((time + 21600) % 86400) // 43200, dtype=np.int32)  # 0 or 12
         if return_indexes:
             return jtime, xtime.size, ihour, plev, itime
         data = np.full((2, 16, xtime.size), np.nan, dtype=np.float32)
@@ -215,6 +229,38 @@ def table_to_cube(time, plev, obs, hours=False, return_indexes=False):
         data = np.full((16, xtime.size), np.nan, dtype=np.float32)
         data[plev, itime] = obs
     return jtime, data
+
+
+def handle_duplicates(time, plev, obs, first=True, secondary_var=None):
+    import numpy as np
+    timeplev = np.stack((time, plev,), axis=0)
+    u, ii, c = np.unique(timeplev, axis=1, return_counts=True, return_index=True)
+    conflicts = np.where(c > 1)[0]
+    print("Duplicates: ", conflicts.size)
+    if conflicts.size > 0:
+        for iconflict in conflicts:
+            itx = np.where(timeplev == u[iconflict])[0]  # Find all instances
+            if np.size(np.unique(obs[itx])) == 1:
+                #
+                # all the same value
+                #
+                ii[iconflict] = itx[0]
+            else:
+                #
+                # different values
+                #
+                if first:
+                    for i in itx:
+                        if np.isfinite(obs[i]):
+                            break
+                elif secondary_var is not None:
+                    i = np.argmin(secondary_var[itx])
+                    i = itx[i]
+                else:
+                    i = itx[-1]  # LAST
+
+                ii[iconflict] = i  # update indices to be applied
+    return ii
 
 
 def read_ragged_cdm(filename, odb_codes=True):
