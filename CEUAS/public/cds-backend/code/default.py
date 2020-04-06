@@ -22,7 +22,7 @@ import socket
 host=socket.gethostname()
 print (host)
 if 'srvx' in host:
-    sys.path.append(os.path.expanduser('~/python/'))
+    sys.path.append(os.path.expanduser('~leo/python/'))
 else:
     sys.path.append('/data/private/soft/python/')
     os.environ["RSCRATCH"] = "/data/public/"
@@ -41,6 +41,9 @@ from falcon import HTTPError, HTTP_400, HTTP_422
 import copy
 import time
 from datetime import datetime, timedelta
+import io
+import matplotlib.pylab as plt
+import subprocess
 
 #@hug.exception(Exception)
 #def handler(exception):
@@ -61,7 +64,7 @@ def main():
         pass
     
     try:  
-        with open(os.path.expanduser('~/.tmp/xactive.json')) as f:
+        with open(os.path.expanduser('~/.tmp/active.json')) as f:
             active=json.load(f)
     except:
         slist=glob.glob(os.path.expandvars('$RSCRATCH/era5/odbs/merged/'+'0-20000-0-?????_CEUAS_merged_v0.nc'))
@@ -83,7 +86,8 @@ def main():
                     print(skey)
                     try:
                         
-                        funits=f['recordtimestamp'].attrs['units']
+                        #funits=f['recordtimestamp'].attrs['units']
+                        funits='seconds since 1900-01-01 00:00:00'
                         active[skey]=[int(eua.secsince(f['recordtimestamp'][0],funits)),int(eua.secsince(f['recordtimestamp'][-1],funits)),
                                       float(f['observations_table']['latitude'][-1]),float(f['observations_table']['longitude'][-1])]
                         idx=numpy.where(vola.IndexNbr.values==skey)[0]
@@ -128,27 +132,31 @@ def check_body(body,cdm):
     valid_keys=required_keys+['statid','fbstats','pressure_level','date','time','bbox','country']
     xor_keys=['statid','bbox','country']
     valid_ranges={}
-    valid_ranges['statid']=[1001,99999]
-    valid_ranges['country']=['globe','all']
-    valid_ranges['bbox']=[[-180,180],[-90,90],[-180,180],[-90,90]]# luro
-    valid_ranges['pressure_level']=[500,100000]
-    valid_ranges['date']=[19000101,20301231]
-    valid_ranges['time']=[0,230000]
+    #valid_ranges['statid']=list(active.keys())# ['01001','99999']
+    #if 'country' in body.keys():
+        #valid_ranges['country']=['GLOBE','ALL']
+        #for v in active.values():
+            #if v[4] not in valid_ranges['country']:
+                #valid_ranges['country'].append(v[4])
+    #valid_ranges['bbox']=[[-180,180],[-90,90],[-180,180],[-90,90]]# luro
+    valid_ranges['pressure_level']=['500','110000']
+    valid_ranges['date']=['19000101','20301231']
+    valid_ranges['time']=['0','24']
     valid_ranges['fbstats']=['obs_minus_an','obs_minus_bg','bias_estimate']
     valid_ranges['variable']=['temperature','u_component_of_wind','v_component_of_wind',
                               'wind_speed','wind_direction','relative_humidity',
-                              'specific_humidity','dew_point_temperature','geopotential']
+                              'specific_humidity','dew_point_temperature'] #,'geopotential']
     
     try:
         
         bk=list(body.keys())
         for r in required_keys:
             if r not in bk:
-                return 'argument '+r+' is missing'
+                return ['Missing argument:', 'Argument '+r+' is required']
     
         for b in bk:
             if b not in valid_keys:
-                return 'argument name '+b+' is invalid. Valid arguments:'+str(valid_keys)
+                return ['Invalid argument '+b+'.',' Valid arguments:'+str(valid_keys)]
             
         rxor=''
         for r in xor_keys:
@@ -157,36 +165,45 @@ def check_body(body,cdm):
                     
                     rxor=r
                 else:
-                    return 'Please do not specify both '+rxor+' and '+r
+                    return ['Invalid station selection','Please do not specify both '+rxor+' and '+r]
         
         if 'country' in bk:
-            vcountries=cdm['sub_region'].alpha_3_code.values
-            body['statid']=[]
-            for v in body['country']:
-                if v not in vcountries:
-                    return v+' is not a valid country code'
-                for k,vv in active.items():
-                    if vv[4]==v:
-                        body['statid'].append(k)
-            if len(body['statid'])==0:
-                return 'Countries '+str(body['country'])+' have no radiosondes'
-            del body['country']
+            if type(body['country']) is str:
+                
+                if body['country'].upper() in ('GLOBE','ALL'):
+                    body['statid']=slnum
+                    del body['country']
+                else:
+                    body['country']=[body['country']]
+                    
+            if 'country' in body.keys():
+                vcountries=cdm['sub_region'].alpha_3_code.values
+                body['statid']=[]
+                for v in body['country']:
+                    if v not in vcountries:
+                        return ['Invalid station selection',v+' is not a valid country code']
+                    for k,vv in active.items():
+                        if vv[4]==v:
+                            body['statid'].append(k)
+                if len(body['statid'])==0:
+                    return ['Invalid station selection','Countries '+str(body['country'])+' have no radiosondes']
+                del body['country']
         elif 'bbox' in bk:
             if type(body['bbox']) is not list:
-                return 'Bounding box: [lower, left, upper, right]'
+                return ['Invalid station selection','Bounding box: [lower, left, upper, right]']
             if len(body['bbox']) !=4:
-                return 'Bounding box: [lower, left, upper, right]' 
+                return ['Invalid station selection','Bounding box: [lower, left, upper, right]' ]
             try:
                 for i in range(4):
                     body['bbox'][i]=float(body['bbox'][i])
             except:
-                return 'Bounding box: [lower, left, upper, right] must be int or float'
+                return ['Invalid station selection','Bounding box: [lower, left, upper, right] must be int or float']
             if body['bbox'][0]>body['bbox'][2] or body['bbox'][1]>body['bbox'][3]:
-                return 'Bounding box requirements: lower<upper, left<right, -90<=lat<=90, -180<=lon<=360'
+                return ['Invalid station selection','Bounding box requirements: lower<upper, left<right, -90<=lat<=90, -180<=lon<=360']
             if body['bbox'][0]<-90 or body['bbox'][0]>90 or body['bbox'][2]<-90 or body['bbox'][2]>90 or \
                body['bbox'][1]<-180 or body['bbox'][1]>360 or body['bbox'][3]<-180 or body['bbox'][3]>360 \
                or body['bbox'][3]-body['bbox'][1] >360:
-                return 'Bounding box requirements: lower<upper, left<right, -90<=lat<=90, -180<=lon<=360'
+                return ['Invalid station selection','Bounding box requirements: lower<upper, left<right, -90<=lat<=90, -180<=lon<=360']
             
             body['statid']=[]            
             for k,v in active.items():
@@ -202,45 +219,82 @@ def check_body(body,cdm):
                             if v[3]>=body['bbox'][1] and v[3]<=body['bbox'][3]:
                                 body['statid'].append(k)
             if len(body['statid'])==0:
-                return 'Bounding box '+str(body['bbox'])+' contains no radiosondes'
+                return ['Invalid station selection','Bounding box '+str(body['bbox'])+' contains no radiosonde stations']
             del body['bbox']
         else:
             try:
-                if body['statid']=='all':
+                if type(body['statid'])==int:
+                    body['statid']=['{:0>5}'.format(body['statid'])]
+                elif body['statid']=='all':
                     body['statid']=slnum
-            except:
-                return 'Please specify either bbox, country or statid for station selection. Use "statid":"all" to select all stations'
-        if body['variable']=='all':
-            body['variable']=['temperature','u_component_of_wind','v_component_of_wind']
+                elif body['statid'][0]=='all':
+                    body['statid']=slnum
+                elif type(body['statid']) is not list:
+                    body['statid']=[str(body['statid'])]
+                else:
+                    if type(body['statid'][0])==int:
+                        for k in range(len(body['statid'])):
+                            body['statid'][k]='{:0>5}'.format(body['statid'][k])
+                    
+                    
+            except MemoryError:
+                return ['Invalid station selection','Please specify either bbox, country or statid for station selection. Use "statid":"all" to select all stations']
 
         bk=list(body.keys())
         for v in bk:
-                if type(valid_ranges[v][0]) is str:
-                    if type(body[v]) is not list:
-                        body[v]=[body[v],body[v]]
-                    for bv in body[v]:
-                        if bv not in valid_ranges[v]:
-                            return ['argument value(s) '+str(body[v])+' not valid.',
-                                    'Valid values:'+str(valid_ranges[v])]
-                    print('bodyx:',v,body[v][0],len(body[v]))
-                    if len(body[v])>1:
-                        if body[v][0]==body[v][1]:
-                            body[v].pop()
-                       
+            if v in valid_ranges:
+                if type(body[v]) is not list:
+                    body[v]=str(body[v])
+                    if '-' in body[v]:
+                        bvv=body[v].split('-')
+                    else:
+                        bvv=[body[v]]
+                        body[v]=[body[v]]
                 else:
-                    if type(body[v]) is not list:
-                        body[v]=[body[v],body[v]]
-                    for i in range(len(body[v])): #bv in body[v]:
-                        bv=body[v][i]
-                        print(bv)
-                        if int(bv) <valid_ranges[v][0] or int(bv)>valid_ranges[v][1]:
-                            return ['argument value(s) '+str(body[v])+' not valid.',
+                    for k in range(len(body[v])):
+                        body[v][k]=str(body[v][k])
+                    if len(body[v])==1 and '-' in body[v][0]:
+                        bvv=body[v][0].split('-')
+                    else:
+                        bvv=body[v]
+                    if v=='date':
+                        d=int(bvv[0])
+                        start=(datetime(year=d//10000,month=d%10000//100,day=d%100)-datetime(year=1900,month=1,day=1)).days
+                        d=int(bvv[-1])
+                        stop=(datetime(year=d//10000,month=d%10000//100,day=d%100)-datetime(year=1900,month=1,day=1)).days
+                        if len(bvv)==stop-start+1:
+                            body[v]=[bvv[0]+'-'+bvv[-1]]
+                            bvv=[bvv[0],bvv[-1]]
+                        
+                for bv in bvv:
+                    if v in ('pressure_level','date','time'):   
+                        if int(bv)>int(valid_ranges[v][1]) or int(bv)<int(valid_ranges[v][0]):
+                            return ['argument value(s) '+str(bvv)+' not valid.',
                                     'Valid values:'+str(valid_ranges[v])]
-                        if v != 'statid':
-                            body[v][i]=int(body[v][i])
-                    print('body:',v,body[v][0],len(body[v]))
-                    if body[v][0]==body[v][1]:
-                        body[v].pop()
+                    else:
+                        if bv not in valid_ranges[v]:
+                            return ['argument value(s) '+str(bv)+' not valid.',
+                                    'Valid values:'+str(valid_ranges[v])]
+                            
+                print('body:',v,bvv[0],bvv[-1],len(body[v]))
+                    #if len(bvv)>1:
+                        #if body[v][0]==body[v][1]:
+                            #body[v].pop()
+                       
+                #else:
+                    #if type(body[v]) is not list:
+                        #body[v]=[body[v],body[v]]
+                    #for i in range(len(body[v])): #bv in body[v]:
+                        #bv=body[v][i]
+                        #print(bv)
+                        #if int(bv) <valid_ranges[v][0] or int(bv)>valid_ranges[v][1]:
+                            #return ['argument value(s) '+str(body[v])+' not valid.',
+                                    #'Valid values:'+str(valid_ranges[v])]
+                        #if v != 'statid':
+                            #body[v][i]=int(body[v][i])
+                    #print('body:',v,body[v][0],len(body[v]))
+#                    if body[v][0]==body[v][1]:
+#                        body[v].pop()
     except IOError:
         return ['general syntax error ',body]
 
@@ -259,7 +313,7 @@ def makebodies(bodies,body,spv,bo,l):
             for s,b in zip(spv,bn): 
                 bodies[-1][s]=b
                 print('makebodies',l,s,b)
-        
+    return        
     
 def defproc(body,randdir,cdm):
 
@@ -267,7 +321,7 @@ def defproc(body,randdir,cdm):
     error=check_body(body,cdm)
     print('body',body)
     if len(error)>0:
-        return '',error
+        raise HTTPError(HTTP_422,description=error)
         
     
     try:
@@ -278,23 +332,53 @@ def defproc(body,randdir,cdm):
     bodies=[]
     spv=['statid','variable']
     bo=[]
-    makebodies(bodies,body,spv,bo,0) 
+    makebodies(bodies,body,spv,bo,0)         
     for k in range(len(bodies)-1,-1,-1):
         if 'date' in bodies[k].keys():
             #if bodies[k]['date'][0]>active[bodies[k]['statid']][1]//100 or bodies[k]['date'][-1]<active[bodies[k]['statid']][0]//100:
+            if type(bodies[k]['date']) is not list:
+                bodies[k]['date']=[bodies[k]['date']]
             dsec=[]
-            for d in bodies[k]['date']:
-                dsec.append(((datetime(year=d//10000,month=d%10000//100,day=d%100)-datetime(year=1900,month=1,day=1))).days*86400)
+            dssold=''
+            for ds in [bodies[k]['date'][0],bodies[k]['date'][-1]]:
+                if '-' in ds:
+                    if dssold=='':
+                        dssold='-'
+                        for dss in ds.split('-'):
+                            d=int(dss)
+                            dsec.append(((datetime(year=d//10000,month=d%10000//100,day=d%100)-datetime(year=1900,month=1,day=1))).days*86400)
+                else:
+                    d=int(ds)
+                    dsec.append(((datetime(year=d//10000,month=d%10000//100,day=d%100)-datetime(year=1900,month=1,day=1))).days*86400)
             try:
                 
                 if dsec[0]>active[bodies[k]['statid']][1] or dsec[-1]+86399<active[bodies[k]['statid']][0]:
                     del bodies[k]
+                    
             except KeyError:
-                raise HTTPError(HTTP_422,description=[body,'statid does not exist'])
+                    del bodies[k]
+        if 'time' in bodies[k].keys():
+            if type(bodies[k]['time']) is not list:
+                bodies[k]['time']=[bodies[k]['time']]
+            tsec=[]
+            tssold=''
+            for ds in [bodies[k]['time'][0],bodies[k]['time'][-1]]:
+                if '-' in ds:
+                    if tssold=='':
+                        tssold='-'
+                        for dss in ds.split('-'):
+                            d=int(dss)
+                            tsec.append(d)
+                else:
+                    d=int(ds)
+                    tsec.append(d)
+            print('tsec:',tsec)
                 
                                                                                                  
         
     
+    if len(bodies)==0:
+        raise HTTPError(HTTP_422,description=[body,'No selected station has data in specified date range'])
     print(bodies[:5])
     print('len:',len(bodies))
     
@@ -318,8 +402,8 @@ def defproc(body,randdir,cdm):
     p=Pool(10)
     func=partial(eua.process_flat,randdir,cf)
 
-    results=list(p.map(func,bodies))
-    p.close()
+    results=list(map(func,bodies))
+    del p
     wpath=''
     for r in results:
         if r[0]!='':
@@ -331,7 +415,8 @@ def defproc(body,randdir,cdm):
     else:      
         rfile=os.path.dirname(wpath)+'/download.zip'
 
-    print(results,'wpath:'+wpath+'x')
+    print(results)
+    print('wpath:'+wpath+';')
     with zipfile.ZipFile(rfile,'w') as f:
         for r in results:
             try:       
@@ -348,6 +433,98 @@ def defproc(body,randdir,cdm):
     print('rfile:',rfile,'time: {:7.4f}s'.format(time.time()-tt))
 
     return rfile,''
+
+def readandplot(rfile,body):
+
+    with zipfile.ZipFile(rfile,'r') as a:
+        for r in a.filelist:
+            try:       
+                with h5py.File(io.BytesIO(a.read(r)),'r') as hf:
+                    print(r.filename,hf.keys())
+                    qs='select date,time,vertco_reference_1,obsvalue,fg_depar@body,biascorr@body where date=20190101 and time>=40000 and time<50000 and varno=2'
+                    #qs='select * where date=20190101 and time>=40000 and time<50000 and varno=2'
+                    odbfile=os.path.expandvars('$RSCRATCH/era5/odbs/1/era5.conv.201901.10393')
+                    rdata=subprocess.check_output(["odb","sql","-q",qs,"-i",odbfile,'--no_alignment'])
+                    npos=rdata.index(b'\n')+1
+                    xx=numpy.fromstring(rdata[npos:],dtype='float',sep='\t')
+                    xx=xx.reshape((xx.shape[0]//6,6))
+                    header=rdata[:npos].split()
+                    check={}
+                    for i in range(len(header)):
+                        check[header[i]]=xx[:,i]
+                    header=rdata[:npos].split()
+                    datetime(1900,1,1)+timedelta(days=int(hf['time'][0]//86400),seconds=int(hf['time'][0]%86400))
+                    if 'fbstats' in body.keys():
+                        f,(ax1,ax2)=plt.subplots(1,2)
+                        if type(body['fbstats']) is not list:
+                            body['fbstats']=[body['fbstats']]
+                        for fbs in body['fbstats']:
+                            p=ax2.semilogy(hf[fbs],hf['plev'][:]/100,label=fbs)
+                            
+                        ax2.set_ylim(1030,5)
+                        ax2.legend()
+                        ax2.set_title(r.filename)
+                    else:
+                        f,ax1=plt.subplots(1,1)
+                        
+                    p=ax1.semilogy(hf['ta'],hf['plev'][:]/100,label='ta')
+                    ax1.set_ylim(1030,5)
+                    ax1.legend()
+                    ax1.set_title(r.filename)
+                    f.savefig(os.path.expanduser('~/plots/'+r.filename+'.png'))
+                    plt.close()
+                    
+                    
+            except MemoryError:
+                pass
+    return
+
+def readandplot_ts(rfile,body):
+
+    with zipfile.ZipFile(rfile,'r') as a:
+        for r in a.filelist:
+            try:       
+                with h5py.File(io.BytesIO(a.read(r)),'r') as hf:
+                    print(r.filename,hf.keys())
+                    qs='select date,time,vertco_reference_1,obsvalue,fg_depar@body,biascorr@body where varno=2 and vertco_reference_1=10000'
+                    #qs='select * where date=20190101 and time>=40000 and time<50000 and varno=2'
+                    odbfile=os.path.expandvars('$RSCRATCH/era5/odbs/1/era5.conv.201901.10393')
+                    rdata=subprocess.check_output(["odb","sql","-q",qs,"-i",odbfile,'--no_alignment'])
+                    npos=rdata.index(b'\n')+1
+                    rds=b'NaN'.join(rdata[npos:].split(b'NULL'))
+                    xx=numpy.fromstring(rds,dtype='float',sep='\t')
+                    xx=xx.reshape((xx.shape[0]//6,6))
+                    header=rdata[:npos].split()
+                    check={}
+                    for i in range(len(header)):
+                        check[header[i]]=xx[:,i]
+                    header=rdata[:npos].split()
+                    datetime(1900,1,1)+timedelta(days=int(hf['time'][0]//86400),seconds=int(hf['time'][0]%86400))
+                    if 'fbstats' in body.keys():
+                        f,(ax1,ax2)=plt.subplots(2,1)
+                        if type(body['fbstats']) is not list:
+                            body['fbstats']=[body['fbstats']]
+                        for fbs in body['fbstats']:
+                            mask=numpy.logical_and(hf['time'][:]%86400>=9*3600,hf['time'][:]%86400<15*3600)
+                            p=ax2.plot(hf['time'][mask]/86400/365.25,hf[fbs][mask],label=fbs)
+                            
+                        #ax2.set_ylim(1030,5)
+                        ax2.legend()
+                        ax2.set_title(r.filename)
+                    else:
+                        f,ax1=plt.subplots(1,1)
+                        
+                    p=ax1.plot(hf['time'][mask]/86400/365.25,hf['dew_point_temperature'][mask],label='td')
+                    #ax1.set_ylim(1030,5)
+                    ax1.legend()
+                    ax1.set_title(r.filename)
+                    f.savefig(os.path.expanduser('~/plots/'+r.filename+'.png'))
+                    plt.close()
+                    
+                    
+            except MemoryError:
+                pass
+    return
 
 
 @hug.get('/',output=hug.output_format.file)
