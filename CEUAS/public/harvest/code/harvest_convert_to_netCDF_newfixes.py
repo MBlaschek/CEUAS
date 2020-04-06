@@ -455,7 +455,7 @@ def bufr_to_dataframe(file=''):
                 winds = np.nan
             if gph == miss_value:
                 gph = np.nan                
-            if windd == 2147483647:
+            if windd == 2147483647 or windd == -2147483647:
                 windd = np.nan 
                 
      
@@ -463,13 +463,13 @@ def bufr_to_dataframe(file=''):
                 obs_id = obs_id + 1 
                 if not np.isnan(press):     # when pressure is available, z_coord== pressure and z_type==1
                     z_type = 1                      
-                    read_data.append( ( 'BUFR'.rjust(10), report_id, int(obs_id),  idate, iday, statid, lat, lon, press, value, cdmvar_dic[var]['odb_var'] , int(cdmvar_dic[var]['cdm_unit']) , num_lev , z_type  ) ) 
+                    read_data.append( ( 'BUFR'.rjust(10), report_id, int(obs_id),  idate, iday, statid, lat, lon, press, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']) , num_lev , z_type  ) ) 
                 elif  (np.isnan(press) and  not np.isnan(gph) ) :  # when pressure is not available, z_coord== gph and z_type==2 
                     z_type = 2              
-                    read_data.append( ( 'BUFR'.rjust(10), report_id, int(obs_id),  idate, iday, statid, lat, lon, gph, value, cdmvar_dic[var]['odb_var'] , int(cdmvar_dic[var]['cdm_unit']) , num_lev , z_type  ) ) 
+                    read_data.append( ( 'BUFR'.rjust(10), report_id, int(obs_id),  idate, iday, statid, lat, lon, gph, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']) , num_lev , z_type  ) ) 
                 else:
                     z_type = -2147483648              
-                    read_data.append( ( 'BUFR'.rjust(10), report_id, int(obs_id),  idate, iday, statid, lat, lon, press, value, cdmvar_dic[var]['odb_var'] , int(cdmvar_dic[var]['cdm_unit']) , num_lev , z_type  ) ) 
+                    read_data.append( ( 'BUFR'.rjust(10), report_id, int(obs_id),  idate, iday, statid, lat, lon, press, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']) , num_lev , z_type  ) ) 
 
 
         report_id += 1
@@ -609,13 +609,13 @@ def uadb_ascii_to_dataframe(file=''):
                 obs_id = obs_id +1
                 if not np.isnan(press):     # when pressure is available, z_coord== pressure and z_type==1
                     z_type = 1                    
-                    read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['odb_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type) )
+                    read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type) )
                 elif  (np.isnan(press) and  not np.isnan(gph) ) :  # when pressure is not available, z_coord== gph and z_type==2 
                     z_type = 2              
-                    read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, gph, value, cdmvar_dic[var]['odb_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type) )
+                    read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, gph, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type) )
                 else:
                     z_type = -2147483648             
-                    read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['odb_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type) )
+                    read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type) )
                     
     
     
@@ -755,14 +755,14 @@ def igra2_ascii_to_dataframe(file=''):
                 obs_id = obs_id +1 
                 if not np.isnan(press):     # when pressure is available, z_coord== pressure and z_type==1  
                     z_type = 1                                        
-                    read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['odb_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, reltime ) )
+                    read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, reltime ) )
                 elif  (np.isnan(press) and  not np.isnan(gph) ) :  # when pressure is not available, z_coord== gph and z_type==2 
                     z_type = 2              
                     
-                    read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, gph, value, cdmvar_dic[var]['odb_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, reltime ) )
+                    read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, gph, value, cdmvar_dic[var]['cdm_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, reltime ) )
                 else:
                     z_type = -2147483648              
-                    read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['odb_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, reltime ) )
+                    read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, reltime ) )
 
 
     df = pd.DataFrame(data= read_data, columns= column_names_igra2)
@@ -1793,9 +1793,13 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                         j=0
                             
                     except KeyError:   
+<<<<<<< HEAD
                         #if d.element_name=='duplicates':
                             #print('duplicates')
                         print ('FFF ', d.element_name , ' ' , numpy.dtype(ttrans(d.kind,kinds=gkinds)), time.time()-tt )
+=======
+                        #print ('FFF ', d.element_name , ' ' , numpy.dtype(ttrans(d.kind,kinds=gkinds)) )
+>>>>>>> 789651932faed5269989a17a0596104944fda573
                         if d.element_name in cdm['station_configuration'].columns:
                             x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
                             try:
@@ -2049,7 +2053,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Make CDM compliant netCDFs")
     parser.add_argument('--dataset' , '-d', 
                     help="Select the dataset to convert. Available options: all, era5_1, era5_1759, era5_1761, bufr, igra2, ncar, test. If not selected or equal to 'test', the script will run the example files in the /examples directory."  ,
-                    default = 'test',
                     type = str)
     
     parser.add_argument('--output' , '-o', 
@@ -2068,6 +2071,7 @@ if __name__ == '__main__':
     Files = args.files
 
     if dataset not in ['era5_1', 'era5_2', 'era5_3188', 'era5_1759', 'era5_1761', 'bufr', 'igra2', 'ncar']:
+        print('wrong dataset', dataset)
         raise ValueError(" The selected dataset is not valid. Please choose from ['era5_1', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'igra2', 'ncar' ]  ")    
                         
     """ Loading the CDM tables into pandas dataframes """
