@@ -1799,7 +1799,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                         print ('FFF ', d.element_name , ' ' , numpy.dtype(ttrans(d.kind,kinds=gkinds)), time.time()-tt )
 =======
                         #print ('FFF ', d.element_name , ' ' , numpy.dtype(ttrans(d.kind,kinds=gkinds)) )
->>>>>>> 789651932faed5269989a17a0596104944fda573
+>>>>>>> refs/remotes/origin/master
                         if d.element_name in cdm['station_configuration'].columns:
                             x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
                             try:
