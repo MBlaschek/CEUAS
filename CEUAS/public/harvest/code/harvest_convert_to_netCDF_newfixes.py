@@ -23,7 +23,10 @@ import argparse
 from io import StringIO
 #import h5netcdf
 import numpy as np
-from eccodes import *
+pv=sys.version.split('.')
+if pv[1]<'8':
+    
+    from eccodes import *
 import warnings
 import numpy
 from numba import njit
@@ -46,7 +49,8 @@ blue   = '\033[34m'
 green  = '\033[92m'
 yellow = '\033[33m'
 
-fixed_string_len = 80  # maximum allowed length of strings in header and observations_table
+long_string_len = 100  # maximum allowed length of strings in header and observations_table
+fixed_string_len = 20  # maximum allowed length of strings in header and observations_table
 id_string_length = 10 # maximum allowed length of strings for observation_id and report_id in header and observations_table
 
 """ Possible variable types as listed int he CMD tables """
@@ -55,7 +59,7 @@ okinds={'varchar (pk)':np.dtype('|S' + str(fixed_string_len) ),
                'numeric':np.float32, 
                'int':np.int32,
                #'timestamp with timezone':np.datetime64,
-               'timestamp with timezone':np.float32,
+               'timestamp with timezone':np.int64,
                
                'int[]*':list,
                'int[]':list,
@@ -88,8 +92,8 @@ gkinds={'varchar (pk)':numpy.dtype('|S'+ str(fixed_string_len)  ),
                'timestamp with timezone':numpy.datetime64,
                'int[]*':numpy.int32,
                'int[]':numpy.int32,
-               'varchar[]*':str,
-               'varchar[]':str}
+               'varchar[]*':numpy.dtype('|S'+ str(long_string_len)  ),
+               'varchar[]':numpy.dtype('|S'+ str(long_string_len)  )}
 
 
 """
@@ -106,31 +110,92 @@ gkinds={'varchar (pk)':numpy.dtype('|S'+ str(fixed_string_len)  ),
                'varchar[]':list}
 """
 
-
+@njit
+def dfdateinput(dvari,tvari,dhash,dsecs,dt):
+    j=0
+    for i in range(dvari.shape[0]):
+        while dhash[j]<dvari[i]:
+            j+=1
+        dt[i]=dsecs[j]+(tvari[i]//10000)*3600+((tvari[i]%10000)//100)*60+tvari[i]%100
+    
+    return
+    
 def make_datetime(dvar,tvar):
     """ Converts into dat-time """
-    dvari=dvar.astype(numpy.int)
-    tvari=tvar.astype(numpy.int)
-    df=pd.DataFrame({'year':dvar//10000,'month':(dvar%10000)//100,'day':dvar%100,
-                        'hour':tvar//10000,'minute':(tvar%10000)//100,'second':tvar%100})
-    dt=pd.to_datetime(df).values
-    return numpy.array(dt-numpy.datetime64('1900-01-01'),dtype=int)//1000000000
+    datelist = pd.date_range(pd.datetime(year=1900,month=1,day=1), periods=50000)
+    dhash=numpy.array(datelist.year)*10000+numpy.array(datelist.month)*100+numpy.array(datelist.day)
+    dt=numpy.empty_like(dvar,dtype=numpy.int)
+    dsecs=((datelist.values-datelist.values[0])//1000000000).astype(numpy.int)
 
+    #df=pd.DataFrame({'year':dvari//10000,'month':(dvari%10000)//100,'day':dvari%100,
+                        #'hour':tvari//10000,'minute':(tvari%10000)//100,'second':tvari%100})
+    
+    dfdateinput(dvar.values,tvar.values,dhash,dsecs,dt)
+    
+    return dt
+
+@njit(cache=True)
+def narange(x,y):
+#    y=numpy.arange(48,58,dtype=numpy.int32)
+    #y=numpy.array('0123456789').view('S1')
+    l=0
+    i=numpy.arange(10,dtype=numpy.int32)
+    for i[9] in range(10):
+        for i[8] in range(10):
+            for i[7] in range(10):
+                for i[6] in range(10):
+                    for i[5] in range(10):
+                        for i[4] in range(10):
+                            for i[3] in range(10):
+                                for i[2] in range(10):
+                                    for i[1] in range(10):
+                                        for i[0] in range(10):
+                                            for j in range(10):
+                                                if i[j]>0:
+                                                    x[l][9-j]=y[i[j]]
+                                                
+                                            l+=1
+                                            if l==x.shape[0]:
+                                                return
+                                            
+                                        
+            
+        
+    return
+        
 def make_obsid(ivar):
-    x=numpy.char.zfill(numpy.arange(ivar.shape[0]).astype('S'+ str(id_string_length)), id_string_length  )
+    x=numpy.zeros(ivar.shape[0],dtype='S'+ str(id_string_length))
+    x.fill(b'0000000000')
+    y=numpy.array(['0','1','2','3','4','5','6','7','8','9'],dtype='S1')
+
+    narange(x.view(dtype='S1').reshape(x.shape[0],10),y)
+    #slow old version
+    #x=numpy.char.zfill(numpy.arange(ivar.shape[0]).astype('S'+ str(id_string_length)), id_string_length  )
     return x
 
 def make_recid(ivar):
     x=numpy.char.zfill(numpy.arange(ivar.values.shape[0]).astype('S'+ str(id_string_length)) , id_string_length )
     return x
 
+@njit(cache=True)
+def nrecfill(y,x,ivv):
+    for i in range(x.shape[0]-1):
+        for j in range(ivv[i],ivv[i+1]):
+            y[j]=x[i]
+    if x.shape[0]>1:
+        for j in range(ivv[i+1],y.shape[0]):
+            y[j]=x[i+1]
+    return
+            
 def make_obsrecid(fbvar,ivar):
     x=numpy.char.zfill(numpy.arange(ivar.values.shape[0]).astype('S' + str(id_string_length )) , id_string_length )
     y=numpy.zeros(fbvar.shape[0]).astype('S' + str(id_string_length ) )
-    for i in range(ivar.values.shape[0]-1):
-        y[ivar.values[i]:ivar.values[i+1]]=x[i]
-    if ivar.values.shape[0]>1:
-        y[ivar.values[i+1]:]=x[i+1]
+    y.fill(b'0000000000')
+    nrecfill(y,x,ivar.values)
+    #for i in range(ivar.values.shape[0]-1):
+        #y[ivar.values[i]:ivar.values[i+1]]=x[i]
+    #if ivar.values.shape[0]>1:
+        #y[ivar.values[i+1]:]=x[i+1]
     return y
 
 def make_vars(ivar):
@@ -726,7 +791,7 @@ def make_odb_header(odbfile, dataset):
     
     if not os.path.isfile ( header ):
         print(' Creating the header file for the dataset: ', dataset )
-        if dataset == 'era5_1':
+        if dataset in ('era5_1','era5_2'):
             
             odbfile = odbfile.replace('.gz','')
         else:
@@ -779,7 +844,7 @@ def make_odb_header(odbfile, dataset):
         
         
     
-def read_all_odbsql_stn_withfeedback(odbfile, dataset):
+def read_all_odbsql_stn_withfeedback(dataset, odbfile):
     """ Read the text gzip files, created from the original ODB files. """
     columns, kinds, tdict = make_odb_header(odbfile, dataset)      
     try:            
@@ -837,26 +902,26 @@ def read_all_odbsql_stn_withfeedback(odbfile, dataset):
                 dropindex = numpy.concatenate(dropindex).ravel()
                 alldict.drop(index=alldict.index[dropindex],inplace=True)
     
-            print(time.time()-t,sys.getsizeof(alldict)//1024//1024)
+            print(time.time()-t) #,sys.getsizeof(alldict)//1024//1024)
                 
-            idx=numpy.where(alldict.reportype.values==16045)[0]
-            if idx.shape[0]>0:
-                idy=numpy.where(numpy.logical_and(alldict.reportype.values!=16045,alldict.reportype.values!=16068))[0]
-                if idy.shape[0]>0:
-                    idz=numpy.isin(alldict.andate.values[idy],alldict.andate.values[idx])
-                    if numpy.sum(idz)>0:
-                        alldict.drop(index=alldict.index[idy[idz]],inplace=True)
+            #idx=numpy.where(alldict.reportype.values==16045)[0]
+            #if idx.shape[0]>0:
+                #idy=numpy.where(numpy.logical_and(alldict.reportype.values!=16045,alldict.reportype.values!=16068))[0]
+                #if idy.shape[0]>0:
+                    #idz=numpy.isin(alldict.andate.values[idy],alldict.andate.values[idx])
+                    #if numpy.sum(idz)>0:
+                        #alldict.drop(index=alldict.index[idy[idz]],inplace=True)
                            
-            idx=numpy.where(alldict.reportype.values==16068)[0]
-            if idx.shape[0]>0:
-                idy=numpy.where(numpy.logical_and(alldict.reportype.values!=16045,alldict.reportype.values!=16068))[0]
-                if idy.shape[0]>0:
-                    idz=numpy.isin(alldict.andate.values[idy],alldict.andate.values[idx])
-                    if numpy.sum(idz)>0:
-                        alldict.drop(index=alldict.index[idy[idz]],inplace=True)
+            #idx=numpy.where(alldict.reportype.values==16068)[0]
+            #if idx.shape[0]>0:
+                #idy=numpy.where(numpy.logical_and(alldict.reportype.values!=16045,alldict.reportype.values!=16068))[0]
+                #if idy.shape[0]>0:
+                    #idz=numpy.isin(alldict.andate.values[idy],alldict.andate.values[idx])
+                    #if numpy.sum(idz)>0:
+                        #alldict.drop(index=alldict.index[idy[idz]],inplace=True)
                                       
     
-        print(time.time()-t,sys.getsizeof(alldict)//1024//1024)
+        #print(time.time()-t,sys.getsizeof(alldict)//1024//1024)
             
         for c in alldict.columns:
                             
@@ -874,12 +939,11 @@ def read_all_odbsql_stn_withfeedback(odbfile, dataset):
     
         print('after odb:',time.time()-t)
             
-    except:
+    except MemoryError:
         print('Reading ODB failed !  ' + odbfile)
         return alldict
     
-    print(odbfile,time.time()-t)
-    print(odbfile,time.time()-t, sys.getsizeof(alldict))
+    print(odbfile,time.time()-t)#, sys.getsizeof(alldict))
 
     alldict['source_id'] = dataset.rjust(10)
     
@@ -1032,8 +1096,6 @@ def find_recordindex_l(y,x):
 
 # write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')})
 
-#variables_dic = {}
-""" TODO to improve: make attrs variable a dictionary of dictionaries (so that it can handle multiple attributes definitions) """
 def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}): 
     """ Writes each separate variable from the observation or feedback tables inot netcdf using h5py.
           f is a pandas dataframe with one column, one for each variable
@@ -1047,7 +1109,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
     with h5py.File(dfile,mode) as fd:
         try:
             fd.create_group(k)
-            index=numpy.zeros (f[f.columns[0]].shape[0], dtype='S1')
+            index=numpy.zeros (f[list(f.keys())[0]].shape[0], dtype='S1')
             fd[k].create_dataset('index', data=index)
         except:
             pass
@@ -1063,11 +1125,15 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
         for v in var_selection:          
             #variables_dic[v] = ''
             
-            if type(f[v].values[0]) not in [str,bytes,numpy.bytes_]:
-                if f[v].values.dtype !='S1':
+            if type(f[v]) == pd.core.series.Series:
+                fvv=f[v].values
+            else:
+                fvv=f[v]
+            if type(fvv[0]) not in [str,bytes,numpy.bytes_]:
+                if fvv.dtype !='S1':
                     
-                    fd[k].create_dataset(v,f[v].values.shape,f[v].values.dtype,compression=fbencodings[v]['compression'], chunks=True)
-                    fd[k][v][:]=f[v]
+                    fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
+                    fd[k][v][:]=fvv[:]
                     if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
                         if v in attrs.keys():
                             fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
@@ -1077,17 +1143,17 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                                 fd[k][v].attrs['units']=numpy.bytes_('seconds since 1900-01-01 00:00:00')                            #print (  fk, ' ' , v , ' ' ,   ) 
                                 
                 else:
-                    fd[k].create_dataset(v,f[v].values.shape,f[v].values.dtype,compression=fbencodings[v]['compression'], chunks=True)
-                    fd[k][v][:]=f[v][:]
+                    fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
+                    fd[k][v][:]=fvv[:]
                     if v in attrs.keys():
                         fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
                         fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])
                         
             else:
-                sleno=len(f[v].values[0])
+                sleno=len(fvv[0])
                 slen=sleno
-                x=numpy.array(f[v].values,dtype='S').view('S1')
-                slen=x.shape[0]//f[v].values.shape[0]
+                x=numpy.array(fvv,dtype='S').view('S1')
+                slen=x.shape[0]//fvv.shape[0]
                 sdict[v]=slen
                 if slen not in slist:
                     slist.append(slen)
@@ -1098,7 +1164,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                     except:
                         pass               
                     
-                x=x.reshape(f[v].values.shape[0],slen)
+                x=x.reshape(fvv.shape[0],slen)
                 fd[k].create_dataset(v,data=x,compression=fbencodings[v]['compression'],chunks=True)
                 if v in attrs.keys():
                     fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
@@ -1109,13 +1175,126 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
         for v in fd[k].keys(): #var_selection:
             l=0            
             try:
+                if type(f[v]) == pd.core.series.Series:
+                    fvv=f[v].values
+                else:
+                    fvv=f[v]
                 if 'string' not in v and v!='index':                    
                     fd[k][v].dims[l].attach_scale(fd[k]['index'])
-                    if type(f[v].values[0]) in [str,bytes,numpy.bytes_]:
+                    if type(fvv[0]) in [str,bytes,numpy.bytes_]:
                         slen=sdict[v]
                         #slen=10
                         fd[k][v].dims[1].attach_scale(fd[k]['string{}'.format(slen)])
             except:
+                pass
+            
+            
+            
+        i=4        
+        for v in slist:
+            s='string{}'.format(v)
+            for a in ['NAME']:
+                fd[k][s].attrs[a]=numpy.bytes_('This is a netCDF dimension but not a netCDF variable.')
+            
+            i+=1
+        
+    return
+#variables_dic = {}
+""" TODO to improve: make attrs variable a dictionary of dictionaries (so that it can handle multiple attributes definitions) """
+def write_dict_h6(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}): 
+    """ Writes each separate variable from the observation or feedback tables inot netcdf using h5py.
+          f is a pandas dataframe with one column, one for each variable
+          k is either 'era5fb' or 'observations_table'
+          fbencodings is the encodings of variable types, e.g. {'observations_id': { 'compression': 'gzip' } }
+    """
+
+    #attrs=  {'date_time':('units','seconds since 1900-01-01 00:00:00')}
+    #attrs = {'observation_id': ('description', 'unique ID for observation'), 'report_id': ('description', 'Link to header information') , 'date_time':('units','seconds since 1900-01-01 00:00:00') }
+    
+    with h5py.File(dfile,mode) as fd:
+        try:
+            fd.create_group(k)
+#            if type(f[v]) == pd.core.frame.DataFrame:
+#                index=numpy.zeros (f[f.columns[0]].shape[0], dtype='S1')
+#            else:
+            index=numpy.zeros (f[list(f.keys())[0]].shape[0], dtype='S1')
+                
+            fd[k].create_dataset('index', data=index)
+        except:
+            pass
+        if not var_selection:
+            var_selection=list(f.keys())
+        
+        string10=numpy.zeros(fixed_string_len,dtype='S1')
+        sdict={}
+        slist=[]
+
+        #groupencodings     
+        
+        for v in var_selection:          
+            #variables_dic[v] = ''
+            
+            if type(f[v]) == pd.core.series.Series:
+                fvv=f[v].values
+            else:
+                fvv=f[v]
+            if type(fvv[0]) not in [str,bytes,numpy.bytes_]:
+                if fvv.dtype !='S1':
+                    
+                    fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
+                    fd[k][v][:]=fvv #f[v][:]
+                    if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
+                        if v in attrs.keys():
+                            fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
+                            fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])
+                            
+                            if v == 'date_time':
+                                fd[k][v].attrs['units']=numpy.bytes_('seconds since 1900-01-01 00:00:00')                            #print (  fk, ' ' , v , ' ' ,   ) 
+                                
+                else:
+                    fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
+                    fd[k][v][:]=fvv #f[v][:]
+                    if v in attrs.keys():
+                        fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
+                        fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])
+                        
+            else:
+                sleno=len(fvv[0])
+                slen=sleno
+                x=numpy.array(fvv,dtype='S').view('S1')
+                slen=x.shape[0]//fvv.shape[0]
+                sdict[v]=slen
+                if slen not in slist:
+                    slist.append(slen)
+                 
+                    
+                    try:
+                        fd[k].create_dataset( 'string{}'.format(slen),  data=string10[:slen]  )
+                    except:
+                        pass               
+                    
+                x=x.reshape(fvv.shape[0],slen)
+                fd[k].create_dataset(v,data=x,compression=fbencodings[v]['compression'],chunks=True)
+                if v in attrs.keys():
+                    fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
+                    fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])                
+                    
+            #variables_dic[v] = fvv.dtype
+             
+        for v in fd[k].keys(): #var_selection:
+            l=0            
+            try:
+                if 'string' not in v and v!='index':                    
+                    if type(f[v]) == pd.core.series.Series:
+                        fvv=f[v].values
+                    else:
+                        fvv=f[v]
+                    fd[k][v].dims[l].attach_scale(fd[k]['index'])
+                    if type(fvv[0]) in [str,bytes,numpy.bytes_]:
+                        slen=sdict[v]
+                        #slen=10
+                        fd[k][v].dims[1].attach_scale(fd[k]['string{}'.format(slen)])
+            except MemoryError:
                 pass
             
             
@@ -1489,8 +1668,17 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
     fnl[-1]='ch'+fnl[-1]
         
     if not False:
-                
-        fbds=read_all_odbsql_stn_withfeedback(fn , dataset ) 
+        
+        #fbds=read_all_odbsql_stn_withfeedback(fn , dataset )
+        p=Pool(25)
+        fns=sorted(glob.glob(fn))
+        func=partial(read_all_odbsql_stn_withfeedback,dataset)
+        fbds=list(p.map(func,fns))
+        p.close()
+        p.join()
+        del p
+        
+        fbds=pd.concat(fbds,axis=0,ignore_index=True)
         #fbds = fbds.replace( -2147483648 , np.nan ) 
         
         """ Read the station_id, getting the station_configuration from the table list, extracting primary_id """      
@@ -1526,11 +1714,14 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
         tt=time.time()
         idx=numpy.lexsort((fbds['vertco_reference_1@body'].values,y))
         y=y[idx]
+        print(time.time()-tt)
         for fb in fbds.keys():
             fbds[fb].values[:]=fbds[fb].values[idx]
-        #print(time.time()-tt)
+        print(time.time()-tt)
         x=numpy.unique(y)
+        print(time.time()-tt)
         z=find_recordindex_l(y,x)
+        print(time.time()-tt)
         di=xr.Dataset() 
         di['recordindex']=({'record':z.shape[1]},z[1])
         #x=make_datetime(x//1000000,x%1000000)
@@ -1546,6 +1737,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
         di['dateindex']=({'days':z.shape[1],'drange':z.shape[0]},z) # date, index of the first occurrance, index of the last
         del y
 
+        fno='.'.join(fno.split('.')[:2]+fno.split('.')[3:])
         di.to_netcdf(fno,format='netCDF4',engine='h5netcdf',mode='w')
           
         write_dict_h5(fno, fbds, 'era5fb', fbencodings, var_selection=[],mode='a')
@@ -1556,8 +1748,9 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                 dcols.append(d)
         fbds.drop(columns=dcols,inplace=True)
 
-        #print(sys.getsizeof(fbds)//1024//1024,process.memory_info().rss//1024//1024)        
-        #print(time.time()-t)
+        print(process.memory_info().rss//1024//1024)        
+        print(time.time()-t)
+        tt=time.time()
 
         # each cdm table is written into an hdf group, groups is the dict of all the groups
         # to write the group to the disk, you need the group encoding dict
@@ -1577,7 +1770,8 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                 # These are the observation_tables, the header_tables and the station_configuration.
                 # These tables are contained in the CEUAS GitHub but not in the cdm GitHub
                 if k in ('observations_table'):
-                    groups[k]=pd.DataFrame()
+                    groups[k]=dict() #pd.DataFrame()
+#                    groups[k]=pd.DataFrame()
                     try:
                         # fbds is an xarray dataset , fbds._variables is a dict of the variables 
                         if d.element_name=='report_id':                            
@@ -1599,7 +1793,13 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                         j=0
                             
                     except KeyError:   
+<<<<<<< HEAD
+                        #if d.element_name=='duplicates':
+                            #print('duplicates')
+                        print ('FFF ', d.element_name , ' ' , numpy.dtype(ttrans(d.kind,kinds=gkinds)), time.time()-tt )
+=======
                         #print ('FFF ', d.element_name , ' ' , numpy.dtype(ttrans(d.kind,kinds=gkinds)) )
+>>>>>>> refs/remotes/origin/master
                         if d.element_name in cdm['station_configuration'].columns:
                             x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
                             try:
@@ -1649,19 +1849,31 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                 
                 try:
                     
-                    if type(groups[k][d.element_name].values[0])==str:
-                        s=groups[k][d.element_name].values.shape
+                    
+                    if k in ('observations_table'):
+                        print('obs')
+                    if type(groups[k]) is dict:
+                        gkev=groups[k][d.element_name]
+                    else:
+                        gkev=groups[k][d.element_name].values
+                    if type(gkev[0])==str:
+                        s=gkev.shape
                         groupencodings[k][d.element_name]={'dtype':numpy.dtype('S80'),'compression': 'gzip','chunksizes':(min(100000, s[0] ) , 80 ) }
                     else:
                         groupencodings[k][d.element_name]={'compression': 'gzip'}
                     
                     if k in ('observations_table'):
+                        print(k,d.element_name,time.time()-tt,' mem:',process.memory_info().rss//1024//1024)
+                        #if d.element_name=='adjustment_id':
+                            #print('adjustment_id')
                         write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs= dic_obstab_attributes  )
                 except:
                     #print('bad:',k,d.element_name)
                     pass
         
         
+                if k=='observations_table':
+                    print(k,d.element_name,time.time()-tt,' mem:',process.memory_info().rss//1024//1024)
         for k in groups.keys():            
             ##this appends group by group to the netcdf file
             #if k not in ('observations_table') :       
@@ -1911,13 +2123,14 @@ if __name__ == '__main__':
             os.system('mkdir ' + output_dir )
                     
         print( blue + '*** Processing the database ' + dataset + ' ***  \n \n *** file: ' + File + '\n'  + cend)
-                                    
+        
+        tt=time.time()                            
         if 'era5' in dataset:   
                 odb_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)
         else:
                 df_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)
           
-        print(' ***** Convertion of  ' , File ,  '  completed ! ***** ')   
+        print(' ***** Convertion of  ' , File ,  '  completed after {:5.2f} seconds! ***** '.format(time.time()-tt))   
 
     
 
@@ -1956,6 +2169,8 @@ if __name__ == '__main__':
 
 -f /raid8/srvx1/federico/GitHub/CEUAS_master_FEB202/CEUAS/CEUAS/public/harvest/data/example_stations/era5_3188/era5.3188.conv._C:4629.gz  -d era5_3188 -o OUTPUT
 
+# use monthly input files, can be read in parallel
+-f /raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.10393.txt.gz  -d era5_1 -o /raid60/scratch/leo/scratch/era5/odbs/1
 
 
 """
