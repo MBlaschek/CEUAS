@@ -464,7 +464,7 @@ class Merger():
             #for dt in date_times[3008:3100]: # loop over all the possible date_times 
             dt_bestds_dic = {} # store the selected best dataset for each dt             
             tot = len(date_times)
-            for dt, c in zip(date_times[3008:3100], range(tot) ): # loop over all the possible date_times 
+            for dt, c in zip(date_times, range(tot) ): # loop over all the possible date_times 
                   print('Analize : ', str(c+1) , '/',  str(tot)  , ' ', dt , ' ', now(time.time()) )
                   
                   #logging.info('Analize : %s %s /', str(c+1) ,  str(tot)  )
@@ -1061,5 +1061,6 @@ if __name__ == '__main__':
 
 
 """ To test a single example station: 
-# -s 0-20000-0-82930 -d 1000000000000 
+# -s 0-20000-0-82930 -d 1000000000000 -m test
+# -s 0-20000-0-53845 -d 1000000000000 -m test                                                                                               
 """ 
