@@ -3,7 +3,7 @@ import h5py #ickle as h5py
 import numpy
 from numba import *
 #from numba.typed import List
-import xarray
+#import xarray
 import pandas as pd
 import copy
 import time
@@ -14,10 +14,106 @@ from functools import partial
 import xml.etree.ElementTree as ET
 import urllib.request
 import json
-import datetime
+from  datetime import *
+import zipfile,io
+import matplotlib.pylab as plt
+import subprocess
+import time
 
-def secsince(t,funits,ref=datetime.datetime.strptime('1900-01-01 00:00:00', '%Y-%m-%d %H:%M:%S')):
-    fstart=datetime.datetime.strptime(funits[-19:], '%Y-%m-%d %H:%M:%S')
+def readandplot(rfile,body):
+
+    with zipfile.ZipFile(rfile,'r') as a:
+        for r in a.filelist:
+            try:       
+                with h5py.File(io.BytesIO(a.read(r)),'r') as hf:
+                    print(r.filename,hf.keys())
+                    qs='select date,time,vertco_reference_1,obsvalue,fg_depar@body,biascorr@body where date=20190101 and time>=40000 and time<50000 and varno=2'
+                    #qs='select * where date=20190101 and time>=40000 and time<50000 and varno=2'
+                    odbfile=os.path.expandvars('$RSCRATCH/era5/odbs/1/era5.conv.201901.10393')
+                    rdata=subprocess.check_output(["odb","sql","-q",qs,"-i",odbfile,'--no_alignment'])
+                    npos=rdata.index(b'\n')+1
+                    xx=numpy.fromstring(rdata[npos:],dtype='float',sep='\t')
+                    xx=xx.reshape((xx.shape[0]//6,6))
+                    header=rdata[:npos].split()
+                    check={}
+                    for i in range(len(header)):
+                        check[header[i]]=xx[:,i]
+                    header=rdata[:npos].split()
+                    datetime(1900,1,1)+timedelta(days=int(hf['time'][0]//86400),seconds=int(hf['time'][0]%86400))
+                    if 'fbstats' in body.keys():
+                        f,(ax1,ax2)=plt.subplots(1,2)
+                        if type(body['fbstats']) is not list:
+                            body['fbstats']=[body['fbstats']]
+                        for fbs in body['fbstats']:
+                            p=ax2.semilogy(hf[fbs],hf['plev'][:]/100,label=fbs)
+                            
+                        ax2.set_ylim(1030,5)
+                        ax2.legend()
+                        ax2.set_title(r.filename)
+                    else:
+                        f,ax1=plt.subplots(1,1)
+                        
+                    p=ax1.semilogy(hf['ta'],hf['plev'][:]/100,label='ta')
+                    ax1.set_ylim(1030,5)
+                    ax1.legend()
+                    ax1.set_title(r.filename)
+                    f.savefig(os.path.expanduser('~/plots/'+r.filename+'.png'))
+                    plt.close()
+                    
+                    
+            except MemoryError:
+                pass
+    return
+
+def readandplot_ts(rfile,body):
+
+    with zipfile.ZipFile(rfile,'r') as a:
+        for r in a.filelist:
+            try:       
+                with h5py.File(io.BytesIO(a.read(r)),'r') as hf:
+                    print(r.filename,hf.keys())
+                    qs='select date,time,vertco_reference_1,obsvalue,fg_depar@body,biascorr@body where varno=2 and vertco_reference_1=10000'
+                    #qs='select * where date=20190101 and time>=40000 and time<50000 and varno=2'
+                    odbfile=os.path.expandvars('$RSCRATCH/era5/odbs/1/era5.conv.201901.10393')
+                    rdata=subprocess.check_output(["odb","sql","-q",qs,"-i",odbfile,'--no_alignment'])
+                    npos=rdata.index(b'\n')+1
+                    rds=b'NaN'.join(rdata[npos:].split(b'NULL'))
+                    xx=numpy.fromstring(rds,dtype='float',sep='\t')
+                    xx=xx.reshape((xx.shape[0]//6,6))
+                    header=rdata[:npos].split()
+                    check={}
+                    for i in range(len(header)):
+                        check[header[i]]=xx[:,i]
+                    header=rdata[:npos].split()
+                    datetime(1900,1,1)+timedelta(days=int(hf['time'][0]//86400),seconds=int(hf['time'][0]%86400))
+                    if 'fbstats' in body.keys():
+                        f,(ax1,ax2)=plt.subplots(2,1)
+                        if type(body['fbstats']) is not list:
+                            body['fbstats']=[body['fbstats']]
+                        for fbs in body['fbstats']:
+                            mask=numpy.logical_and(hf['time'][:]%86400>=9*3600,hf['time'][:]%86400<15*3600)
+                            p=ax2.plot(hf['time'][mask]/86400/365.25,hf[fbs][mask],label=fbs)
+                            
+                        #ax2.set_ylim(1030,5)
+                        ax2.legend()
+                        ax2.set_title(r.filename)
+                    else:
+                        f,ax1=plt.subplots(1,1)
+                        
+                    p=ax1.plot(hf['time'][mask]/86400/365.25,hf['dew_point_temperature'][mask],label='td')
+                    #ax1.set_ylim(1030,5)
+                    ax1.legend()
+                    ax1.set_title(r.filename)
+                    f.savefig(os.path.expanduser('~/plots/'+r.filename+'.png'))
+                    plt.close()
+                    
+                    
+            except MemoryError:
+                pass
+    return
+
+def secsince(t,funits,ref=datetime.strptime('1900-01-01 00:00:00', '%Y-%m-%d %H:%M:%S')):
+    fstart=datetime.strptime(funits[-19:], '%Y-%m-%d %H:%M:%S')
     offset=fstart-ref
     offsets=offset.days*24*3600+offset.seconds
     fak=1
@@ -457,8 +553,8 @@ def totimes(tinput):
     
     return out
 
-def ecdt(seconds,ref=datetime.datetime(1900,1,1)):
-    x=ref+datetime.timedelta(seconds=numpy.int(seconds)) 
+def ecdt(seconds,ref=datetime(1900,1,1)):
+    x=ref+timedelta(seconds=numpy.int(seconds)) 
     return str(x)#.year*10000+x.month*100+x.day)+' '+str(x.hour)+':'+str(x.minute)+':'+str(x.second) 
 
 @njit(cache=True)
@@ -564,6 +660,9 @@ def process_flat(randdir,cf,rvars):
         rfile=os.path.expandvars('$EUA_ROOT/subdaily/v0.1/source/ERA5_1/obs/0-20000-0-'+rvars['statid']+
                                  '/eua_subdaily_v0.1_source_ERA5_1_obs_0-20000-0-'+rvars['statid']+'_t.nc')
         rfile=os.path.expandvars('$RSCRATCH/era5/odbs/merged/'+'0-20000-0-'+rvars['statid']+'_CEUAS_merged_v0.nc')
+        if not os.path.isfile(rfile):
+            rfile=os.path.expandvars('$RSCRATCH/era5/odbs/merged/'+'0-20001-0-'+rvars['statid']+'_CEUAS_merged_v0.nc')
+            
         print(rfile)
         if len(rvkeys)>0:
             rvdict=copy.copy(rvars)
@@ -735,27 +834,15 @@ def process_flat(randdir,cf,rvars):
                     except:
                         print ('no data')
                         return '','No data found'
-                    
-                    fcold=0
-                    fc=f[criteria['time']][idx[0]:idx[-1]+1]
-                    for i in idx:
-                        e=fc[i-idx[0]]
-                        if fcold!=e:
-                            print(ecdt(e))
-                            fcold=e
-                    ## slow version ##
-                    #h=numpy.asarray(f['observations_table/report_id'][trange[0]:trange[1],:].view('S5'),dtype=numpy.int32)[:,0]
-                    #trajectory_index=h[idx-trange[0]]
-                    ## medium version ##
-                    #h=numpy.asarray(f['observations_table/report_id'][trange[0]:trange[1],:].view('S5')[idx-trange[0]],dtype=numpy.int32)[:,0]
-                    #trajectory_index=h[:]
-                    ##hilf=numpy.zeros(idx.shape[0],dtype=numpy.int32)
-                    #print('recordindex:',time.time()-t)
-                    #zidx=calc_trajindex(trajectory_index,h)
-    
-                    #trajectory_index_orig=trajectory_index[:]
-                    ##zidx=numpy.unique(h[idx-trange[0]])
-                    #z=f['recordindex'][:]
+                    # for debugging:
+                    #fcold=0
+                    #fc=f[criteria['time']][idx[0]:idx[-1]+1]
+                    #for i in idx:
+                        #e=fc[i-idx[0]]
+                        #if fcold!=e:
+                            #print(ecdt(e))
+                            #fcold=e
+ 
                     z=di[1,:]
                     trajectory_index=numpy.zeros_like(idx,dtype=numpy.int32)
                     zidx=numpy.where(numpy.logical_and(z>=trange[0],z<trange[1]))[0]
@@ -882,10 +969,10 @@ def process_flat(randdir,cf,rvars):
                         
                         for a,v in globatts.items():
                             fd.attrs[a]=numpy.string_(v)
-                        fd.attrs['history']=numpy.string_('Created by Copernicus Early Upper Air Service Version 0, '+ datetime.datetime.now().strftime("%d-%b-%Y %H:%M:%S"))
+                        fd.attrs['history']=numpy.string_('Created by Copernicus Early Upper Air Service Version 0, '+ datetime.now().strftime("%d-%b-%Y %H:%M:%S"))
                         fd.attrs['license']=numpy.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
                         print(os.getcwd()+'/'+dfile)
-            except MemoryError as e:
+            except Exception as e:
                 return '','exception "'+str(e)+'" occured while reading '+rfile
 
             print(time.time()-t)
