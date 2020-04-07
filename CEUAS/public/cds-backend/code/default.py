@@ -357,6 +357,10 @@ def defproc(body,randdir,cdm):
                     
             except KeyError:
                     del bodies[k]
+
+        if len(bodies)==0:
+            raise HTTPError(HTTP_422,description=[body,'No selected station has data in specified date range'])
+            
         if 'time' in bodies[k].keys():
             if type(bodies[k]['time']) is not list:
                 bodies[k]['time']=[bodies[k]['time']]
@@ -377,8 +381,6 @@ def defproc(body,randdir,cdm):
                                                                                                  
         
     
-    if len(bodies)==0:
-        raise HTTPError(HTTP_422,description=[body,'No selected station has data in specified date range'])
     print(bodies[:5])
     print('len:',len(bodies))
     
@@ -402,8 +404,8 @@ def defproc(body,randdir,cdm):
     p=Pool(10)
     func=partial(eua.process_flat,randdir,cf)
 
-    results=list(map(func,bodies))
-    del p
+    results=list(p.map(func,bodies))
+    p.close()
     wpath=''
     for r in results:
         if r[0]!='':
@@ -434,98 +436,6 @@ def defproc(body,randdir,cdm):
 
     return rfile,''
 
-def readandplot(rfile,body):
-
-    with zipfile.ZipFile(rfile,'r') as a:
-        for r in a.filelist:
-            try:       
-                with h5py.File(io.BytesIO(a.read(r)),'r') as hf:
-                    print(r.filename,hf.keys())
-                    qs='select date,time,vertco_reference_1,obsvalue,fg_depar@body,biascorr@body where date=20190101 and time>=40000 and time<50000 and varno=2'
-                    #qs='select * where date=20190101 and time>=40000 and time<50000 and varno=2'
-                    odbfile=os.path.expandvars('$RSCRATCH/era5/odbs/1/era5.conv.201901.10393')
-                    rdata=subprocess.check_output(["odb","sql","-q",qs,"-i",odbfile,'--no_alignment'])
-                    npos=rdata.index(b'\n')+1
-                    xx=numpy.fromstring(rdata[npos:],dtype='float',sep='\t')
-                    xx=xx.reshape((xx.shape[0]//6,6))
-                    header=rdata[:npos].split()
-                    check={}
-                    for i in range(len(header)):
-                        check[header[i]]=xx[:,i]
-                    header=rdata[:npos].split()
-                    datetime(1900,1,1)+timedelta(days=int(hf['time'][0]//86400),seconds=int(hf['time'][0]%86400))
-                    if 'fbstats' in body.keys():
-                        f,(ax1,ax2)=plt.subplots(1,2)
-                        if type(body['fbstats']) is not list:
-                            body['fbstats']=[body['fbstats']]
-                        for fbs in body['fbstats']:
-                            p=ax2.semilogy(hf[fbs],hf['plev'][:]/100,label=fbs)
-                            
-                        ax2.set_ylim(1030,5)
-                        ax2.legend()
-                        ax2.set_title(r.filename)
-                    else:
-                        f,ax1=plt.subplots(1,1)
-                        
-                    p=ax1.semilogy(hf['ta'],hf['plev'][:]/100,label='ta')
-                    ax1.set_ylim(1030,5)
-                    ax1.legend()
-                    ax1.set_title(r.filename)
-                    f.savefig(os.path.expanduser('~/plots/'+r.filename+'.png'))
-                    plt.close()
-                    
-                    
-            except MemoryError:
-                pass
-    return
-
-def readandplot_ts(rfile,body):
-
-    with zipfile.ZipFile(rfile,'r') as a:
-        for r in a.filelist:
-            try:       
-                with h5py.File(io.BytesIO(a.read(r)),'r') as hf:
-                    print(r.filename,hf.keys())
-                    qs='select date,time,vertco_reference_1,obsvalue,fg_depar@body,biascorr@body where varno=2 and vertco_reference_1=10000'
-                    #qs='select * where date=20190101 and time>=40000 and time<50000 and varno=2'
-                    odbfile=os.path.expandvars('$RSCRATCH/era5/odbs/1/era5.conv.201901.10393')
-                    rdata=subprocess.check_output(["odb","sql","-q",qs,"-i",odbfile,'--no_alignment'])
-                    npos=rdata.index(b'\n')+1
-                    rds=b'NaN'.join(rdata[npos:].split(b'NULL'))
-                    xx=numpy.fromstring(rds,dtype='float',sep='\t')
-                    xx=xx.reshape((xx.shape[0]//6,6))
-                    header=rdata[:npos].split()
-                    check={}
-                    for i in range(len(header)):
-                        check[header[i]]=xx[:,i]
-                    header=rdata[:npos].split()
-                    datetime(1900,1,1)+timedelta(days=int(hf['time'][0]//86400),seconds=int(hf['time'][0]%86400))
-                    if 'fbstats' in body.keys():
-                        f,(ax1,ax2)=plt.subplots(2,1)
-                        if type(body['fbstats']) is not list:
-                            body['fbstats']=[body['fbstats']]
-                        for fbs in body['fbstats']:
-                            mask=numpy.logical_and(hf['time'][:]%86400>=9*3600,hf['time'][:]%86400<15*3600)
-                            p=ax2.plot(hf['time'][mask]/86400/365.25,hf[fbs][mask],label=fbs)
-                            
-                        #ax2.set_ylim(1030,5)
-                        ax2.legend()
-                        ax2.set_title(r.filename)
-                    else:
-                        f,ax1=plt.subplots(1,1)
-                        
-                    p=ax1.plot(hf['time'][mask]/86400/365.25,hf['dew_point_temperature'][mask],label='td')
-                    #ax1.set_ylim(1030,5)
-                    ax1.legend()
-                    ax1.set_title(r.filename)
-                    f.savefig(os.path.expanduser('~/plots/'+r.filename+'.png'))
-                    plt.close()
-                    
-                    
-            except MemoryError:
-                pass
-    return
-
 
 @hug.get('/',output=hug.output_format.file)
 def index(request=None,response=None):
@@ -546,19 +456,23 @@ def index(request=None,response=None):
     if '=' not in request.query_string:
         raise HTTPError(HTTP_422,description='A query string must be supplied')
 
-    rs=request.query_string.split('&')
-    body={}
-    for r in rs:
-        k,v=r.split('=')
-        if '[' in v:
-            vl=v[1:-1]
-            if k in ['statid','variable','fbstats']:
-                body[k]=vl.split(',')
+    try:
+        rs=request.query_string.split('&')
+        body={}
+        for r in rs:
+            k,v=r.split('=')
+            if '[' in v:
+                vl=v[1:-1]
+                if k in ['statid','variable','fbstats']:
+                    body[k]=vl.split(',')
+                else:
+                    body[k]=list(numpy.fromstring(vl,sep=',',dtype='int'))
             else:
-                body[k]=list(numpy.fromstring(vl,sep=',',dtype='int'))
-        else:
-            body[k]=v
+                body[k]=v
 
+    except:
+        raise HTTPError(HTTP_422,description=[request.query_string,'malformed query string'])
+    
     randdir='{:012d}'.format(numpy.random.randint(100000000000))
 
     print(body)
