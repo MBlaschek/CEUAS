@@ -503,7 +503,7 @@ class Merger():
             # rand = datetime.strptime('1981-01-03 12:00:00', '%Y-%m-%d %H:%M:%S')  
             #for dt in date_times[3008:3100]: # loop over all the possible date_times 
             dt_bestds_dic = {} # store the selected best dataset for each dt     
-            date_times=date_times#[:20000]
+            date_times=date_times[:20000]
             tot = len(date_times)
             tt=time.time()
             for dt, c in zip(date_times, range(tot) ): # loop over all the possible date_times 
@@ -756,7 +756,8 @@ class Merger():
 
             """ Calculate new unique observation id """
             try: 
-                  obs_ids_merged=np.zeros((len(selected_df['observation_id']),self.id_string_length),dtype='S1')
+                  obs_ids_merged=np.empty((len(selected_df['observation_id']),self.id_string_length),dtype='S1')
+                  obs_ids_merged.fill(chr(48))
                   #bds=np.array([chr(48+self.observation_ids_merged[best_ds])],dtype='S1')
                   nobsfill(obs_ids_merged,selected_df['observation_id'],bds)
             except :
