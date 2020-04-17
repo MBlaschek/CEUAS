@@ -83,10 +83,10 @@ class Merger():
             self.data = {}                              # will contain the data for each different dataset 
             self.datasets = ''                          # will contain the input datasets (original dictionary)
             self.datasets_keys = ''                 # will contain the input datasets names only (i.e. keys of the datasets dictionary)
-            self.datasets_all = ['igra2' , 'era5_1' , 'ncar_w' ,  'ncar_t', 'bufr' , 'era5_1759' , 'era5_1761' , 'era5_3188']    # all possibly available datasets                          
+            self.datasets_all = ['igra2' , 'era5_1' , 'ncar_w' ,  'ncar_t', 'bufr' , 'era5_1759' , 'era5_1761' , 'era5_3188', 'era5_2']    # all possibly available datasets                          
             #self.observation_ids_merged  = {  'igra2':1 , 'ncar_t':2 , 'ncar_w':2, 'bufr':3,  'era5_1':4 , 'era5_1759' :5 , 'era5_1761':6 ,  'era5_3188' :7}  # values used to convert original record_id to the merged record_id, see method merge_all_data 
 
-            self.observation_ids_merged  = {  'igra2':1 , 'ncar':2, 'bufr':3,  'era5_1':4 , 'era5_1759' :5 , 'era5_1761':6 ,  'era5_3188' :7}  # values used to convert original record_id to the merged record_id, see method merge_all_data 
+            self.observation_ids_merged  = {  'igra2':1 , 'ncar':2, 'bufr':3,  'era5_1':4 , 'era5_1759' :5 , 'era5_1761':6 ,  'era5_3188' :7, 'era5_2' :8 }  # values used to convert original record_id to the merged record_id, see method merge_all_data 
 
             self.unique_dates = {}            
             self.attributes = {} # will keep the original attributes from the CDM tables, read from the netCDF files 
@@ -503,7 +503,7 @@ class Merger():
             # rand = datetime.strptime('1981-01-03 12:00:00', '%Y-%m-%d %H:%M:%S')  
             #for dt in date_times[3008:3100]: # loop over all the possible date_times 
             dt_bestds_dic = {} # store the selected best dataset for each dt     
-            date_times=date_times[:20000]
+            date_times=date_times#[:20000]
             tot = len(date_times)
             tt=time.time()
             for dt, c in zip(date_times, range(tot) ): # loop over all the possible date_times 
@@ -536,7 +536,7 @@ class Merger():
 
                   dt_bestds_dic[dt] = {}
                   dt_bestds_dic[dt]['best_ds'] = best_ds
-                  dt_bestds_dic[dt]['len'] = len(merged_observations_table)
+                  dt_bestds_dic[dt]['len'] = len(merged_observations_table['date_time'])
 
                   """ Adding source_id to the observations_table equal to the best_ds chosen """
                   merged_observations_table['source_id'] = [best_ds.rjust(10)]*len(merged_observations_table['date_time'])                             
@@ -1052,7 +1052,8 @@ data_directories = {  'era5_1'       :  '/raid60/scratch/leo/scratch/era5/odbs/1
 
                                   'ncar'          : '/raid60/scratch/federico/12MARCH2020_harvested/ncar'    ,
                                   'igra2'         : '/raid60/scratch/federico/12MARCH2020_harvested//igra2'  , 
-                                  'bufr'           : '/raid60/scratch/federico/12MARCH2020_harvested/bufr'         }
+                                  'bufr'           : '/raid60/scratch/federico/12MARCH2020_harvested/bufr' , 
+                                  'era5_2'       :  '/raid60/scratch/leo/scratch/era5/odbs/2/era5_2'       }
 
 
 
