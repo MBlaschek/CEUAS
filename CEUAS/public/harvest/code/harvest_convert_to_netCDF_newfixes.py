@@ -859,6 +859,8 @@ def read_all_odbsql_stn_withfeedback(dataset, odbfile):
         #                 'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','collection_identifier@conv','source@hdr']
         
         # had to remove 'collection_identifier@conv' to make it work with 1, 3188, 1759, 1761 
+        tdict['sensor@hdr']=numpy.float32
+        tdict['ppcode@conv_body']=numpy.float32
         
         d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','lon@hdr','lat@hdr','seqno@hdr',
                          'obsvalue@body','source@hdr' , 'vertco_type@body']
@@ -866,12 +868,12 @@ def read_all_odbsql_stn_withfeedback(dataset, odbfile):
         if 'fg_depar@body' in columns:  # creating the colkumns for era5fb 
             d=d+['fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','reportype','andate','antime']
         
-        
-        for c in columns:
-            if c not in d:
-                del tdict[c]
+# restrict feedback to certain columns        
+        #for c in columns:
+            #if c not in d:
+                #del tdict[c]
                     
-        columns=d.copy()
+        #columns=d.copy()
             
         alldict=pd.read_csv(f,delimiter='\t',usecols=columns,quoting=3,comment='#', skipinitialspace=True,dtype=tdict) #,nrows=1000000)
             
@@ -1612,43 +1614,39 @@ def get_station_configuration(station_id, station_configuration):
           First it checks if a primary_id in th estation_conf file matches the station_id, 
           otherwise it looks for an element in the list of secondary ids.         
           """
-    try:
-        si = station_id.decode('utf-8')
-    except:
-        si = station_id 
+    si = np.string_(station_id) 
         
-    if ':' in si:
-        si = si.split(':')[1]
-        
-    station_id_primary = numpy.string_( '0-20000-0-' +si )   # remove the prefix to the station id 
-    station_id_primary_alternative = numpy.string_( '0-20001-0-' + si )
-
-    #station_id = numpy.string_( '1:68351' )
-    
-    """ First, check for matching primary_id. 
-          If not found, check for secondary id. Note that secondary is a list, so must loop over the entry to find a matching one """
-    
-    matching_primary       = station_configuration.loc[station_configuration['primary_id'] == station_id_primary ]
-    matching_primary_alt = station_configuration.loc[station_configuration['primary_id'] == station_id_primary_alternative ]
-    
-    if len(matching_primary) > 0:
-        return matching_primary 
-    
-    elif   len(matching_primary_alt) > 0  :
-        return matching_primary_alt 
-
+    if b':' in si:
+#        #si = si.split(':')[1]
+        station_id_secondary = b'0-20000-0-' +si   # remove the prefix to the station id 
     else:
-        secondary = station_configuration['secondary_id'] 
-        for s in secondary:
-            try:  # TODO this try is needed when the secondary ids are not defined or wrong, and the primary id cannot be matched with the station_id      
-                s = s.decode('utf-8').replace('[','').replace(']','')
-                if s == si:
-                    sc = station_configuration.loc[station_configuration['secondary_id'] == secondary ]
-                    return sc 
-            except:
-                return 0
-        return 0        
-    
+        for iid in b'0',b'1':
+            
+            station_id_primary = b'0-2000'+iid+b'-0-' +si   # remove the prefix to the station id 
+            matching_primary   = np.where(station_configuration['primary_id'] == station_id_primary)[0]
+            if len(matching_primary) > 0:
+                return matching_primary[0]
+            else:
+                station_id_secondary=station_id_primary
+
+    secondary = station_configuration['secondary_id'] 
+    loc=0
+    for s in secondary:
+        try:  # TODO this try is needed when the secondary ids are not defined or wrong, and the primary id cannot be matched with the station_id      
+            if b'[' in s:
+                st = s.replace(b'[',b'').replace(b']',b'')
+                stl=st.split(b',')
+                for st in stl:
+                    if si==st:
+                       return loc 
+            else:
+                if si==s:                 
+                    return loc
+        except MemoryError:
+            return 0
+        loc=loc+1
+    return 0        
+
 
 def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
     """ Convert the  file into cdm compliant netCDF files. 
@@ -1670,13 +1668,12 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
     if not False:
         
         #fbds=read_all_odbsql_stn_withfeedback(fn , dataset )
-        p=Pool(25)
+        #p=Pool(10)
         fns=sorted(glob.glob(fn))
         func=partial(read_all_odbsql_stn_withfeedback,dataset)
-        fbds=list(p.map(func,fns))
-        p.close()
-        p.join()
-        del p
+        fbds=list(map(func,fns))
+        #p.close()
+        #del p
         
         fbds=pd.concat(fbds,axis=0,ignore_index=True)
         #fbds = fbds.replace( -2147483648 , np.nan ) 
@@ -1685,7 +1682,9 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
         station_id = fbds['statid@hdr'][0][1:-1]    
         station_configuration_retrieved = get_station_configuration( station_id, cdm['station_configuration'] )            
         try:
-            primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')  
+            primary_id = cdm['station_configuration']['primary_id'].values[station_configuration_retrieved].decode('utf-8')
+            if len(primary_id.split('-')[-1])<5: # fix for station_configuration file bug
+                primary_id=primary_id[:-4]+'0'+primary_id[-4:]
         except:
             primary_id = 'uknown_primary'
             return 
@@ -1737,7 +1736,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
         di['dateindex']=({'days':z.shape[1],'drange':z.shape[0]},z) # date, index of the first occurrance, index of the last
         del y
 
-        fno='.'.join(fno.split('.')[:2]+fno.split('.')[3:])
+        fno='.'.join(fno.split('.')[:2]+fno.split('.')[2:])
         di.to_netcdf(fno,format='netCDF4',engine='h5netcdf',mode='w')
           
         write_dict_h5(fno, fbds, 'era5fb', fbencodings, var_selection=[],mode='a')
@@ -1793,13 +1792,11 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                         j=0
                             
                     except KeyError:   
-<<<<<<< HEAD
                         #if d.element_name=='duplicates':
                             #print('duplicates')
                         print ('FFF ', d.element_name , ' ' , numpy.dtype(ttrans(d.kind,kinds=gkinds)), time.time()-tt )
-=======
                         #print ('FFF ', d.element_name , ' ' , numpy.dtype(ttrans(d.kind,kinds=gkinds)) )
->>>>>>> refs/remotes/origin/master
+
                         if d.element_name in cdm['station_configuration'].columns:
                             x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
                             try:
