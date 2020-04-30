@@ -514,12 +514,18 @@ class Merger():
 
             #self.tot_records = len(combined_obs['date_time'])
             del all_combined_obs
+
+
             print(blue + 'Memory used after deleting all_merged obs_tab dic: ', process.memory_info().rss/1000000000 , cend )
  
+
+            ####
+            #  INDEX
+            ###
             dateindex = combined_obs['date_time']//86400                                                                                                                                  
             date_times, indices, counts = np.unique(dateindex, return_counts = True, return_index= True)                                                                                  
-            di['dateindex'] = ( {'dateindex' : indices.shape } , indices )  # considers the day only                                                                                      
-            self.write_merged(content = 'recordindex', table = di)                                                                                                                        
+            di['dateindex'] = ( {'dateindex' : indices.shape } , indices )  # considers the day only        
+            #self.write_merged(content = 'recordindex', table = di)     
             del di , combined_obs
             
             combined_era5fb = {}
@@ -726,7 +732,7 @@ class Merger():
                         print('*** Writing the table ', content, ' variable ',  k)
 
                         dic = {k:table[k]}  # making a 1 colum dictionary
-                        #shape = table[k].shape
+                        shape = table[k].shape
                         #print('SHAPE IS FFF ', table[k].shape )
                         write_dict_h5(out_name, dic , content, self.encodings[content], var_selection=[], mode='a', attrs = attrs_dic  )
 
