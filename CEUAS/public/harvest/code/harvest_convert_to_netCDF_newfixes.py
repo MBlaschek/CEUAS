@@ -1668,12 +1668,12 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
     if not False:
         
         #fbds=read_all_odbsql_stn_withfeedback(fn , dataset )
-        #p=Pool(10)
+        p=Pool(10)
         fns=sorted(glob.glob(fn))
         func=partial(read_all_odbsql_stn_withfeedback,dataset)
-        fbds=list(map(func,fns))
-        #p.close()
-        #del p
+        fbds=list(p.map(func,fns))
+        p.close()
+        del p
         
         fbds=pd.concat(fbds,axis=0,ignore_index=True)
         #fbds = fbds.replace( -2147483648 , np.nan ) 
@@ -2167,7 +2167,7 @@ if __name__ == '__main__':
 -f /raid8/srvx1/federico/GitHub/CEUAS_master_FEB202/CEUAS/CEUAS/public/harvest/data/example_stations/era5_3188/era5.3188.conv._C:4629.gz  -d era5_3188 -o OUTPUT
 
 # use monthly input files, can be read in parallel
--f /raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.10393.txt.gz  -d era5_1 -o /raid60/scratch/leo/scratch/era5/odbs/1
+-f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.10393.txt.gz'  -d era5_1 -o OUTPUT
 
 
 """
