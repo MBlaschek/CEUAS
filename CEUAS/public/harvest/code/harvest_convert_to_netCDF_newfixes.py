@@ -1147,6 +1147,14 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                 else:
                     fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
                     fd[k][v][:]=fvv[:]
+                    slen=fvv.shape[1]
+                    sdict[v]=slen
+                    if slen not in slist:
+                        slist.append(slen)
+                        try:
+                            fd[k].create_dataset( 'string{}'.format(slen),  data=string10[:slen]  )
+                        except:
+                            pass               
                     if v in attrs.keys():
                         fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
                         fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])
@@ -1154,8 +1162,9 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
             else:
                 sleno=len(fvv[0])
                 slen=sleno
-                x=numpy.array(fvv,dtype='S').view('S1')
-                slen=x.shape[0]//fvv.shape[0]
+                #x=numpy.array(fvv,dtype='S').view('S1')
+                #slen=x.shape[0]//fvv.shape[0]
+                slen=int(fvv.dtype.descr[0][1].split('S')[1])
                 sdict[v]=slen
                 if slen not in slist:
                     slist.append(slen)
@@ -1166,8 +1175,8 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                     except:
                         pass               
                     
-                x=x.reshape(fvv.shape[0],slen)
-                fd[k].create_dataset(v,data=x,compression=fbencodings[v]['compression'],chunks=True)
+                #x=x.reshape(fvv.shape[0],slen)
+                fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)
                 if v in attrs.keys():
                     fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
                     fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])                
@@ -1183,7 +1192,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                     fvv=f[v]
                 if 'string' not in v and v!='index':                    
                     fd[k][v].dims[l].attach_scale(fd[k]['index'])
-                    if type(fvv[0]) in [str,bytes,numpy.bytes_]:
+                    if fvv.ndim==2 or type(fvv[0]) in [str,bytes,numpy.bytes_]:
                         slen=sdict[v]
                         #slen=10
                         fd[k][v].dims[1].attach_scale(fd[k]['string{}'.format(slen)])
