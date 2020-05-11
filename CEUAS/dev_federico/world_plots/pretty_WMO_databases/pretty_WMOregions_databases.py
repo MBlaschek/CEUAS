@@ -80,13 +80,15 @@ def make_plot_gpd(WMO, start_date = '', end_date = '' , databases = ''):
         LAT, LON = [], []
         for index, row in df.iterrows():
             start, end = np.datetime64(row['start']), np.datetime64(row['end'])
+            if start <= np.datetime64('1920-01-01'):
+                print(start)
             #print (start, end, start_date, end_date )
             try:
                 lat, lon = int(row['lat']) , int(row['lon'])
             except:
                 pass
 
-            if (start <= end_date) and (end >= start_date): # checking if the station is alive in the period
+            if (start <= end_date): # checking if the station is alive in the period
                 LAT.append(lat)
                 LON.append(lon)
 
