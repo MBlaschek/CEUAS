@@ -66,7 +66,7 @@ def make_plot_gpd(WMO, start_date = '', end_date = '' , databases = ''):
         
     style_dic = { 'era5_1'    : { 'c' : 'navy' ,    'l': 'ERA5 1'  , 's': 4 } , 
                   'era5_2'    : { 'c' : 'lime' ,    'l': 'ERA5 2'  , 's': 4 } ,
-                  'era5_3188' : { 'c' : 'black' ,   'l': '3188'    , 's': 9 } ,
+                  'era5_3188' : { 'c' : 'blue' ,   'l': '3188'    , 's': 9 } ,
                   'era5_1759' : { 'c' : 'magenta' , 'l': '1759'    , 's': 9 } ,
                   'era5_1761' : { 'c' : 'red' ,     'l': '1761'    , 's': 6 } ,
                   'bufr'      : { 'c' : 'orange' ,  'l': 'BUFR'    , 's': 6 } ,
