@@ -86,7 +86,7 @@ def make_plot_gpd(WMO, start_date = '', end_date = '' , databases = ''):
             except:
                 pass
 
-            if (start <= start_date) and (end >= start_date): # checking if the station is alive in the period
+            if (start <= end_date) and (end >= start_date): # checking if the station is alive in the period
                 LAT.append(lat)
                 LON.append(lon)
 
