@@ -19,6 +19,7 @@ import matplotlib.animation as animation
 
 import geopandas as gpd
 import numpy as np
+import cartopy.crs as ccrs
 
 
 pd.set_option('display.max_columns', None)
@@ -39,7 +40,7 @@ def loading_WMO_regions_gpd():
 
                     
     
-os.system('mkdir pretty_Plots ')
+os.system('mkdir Pretty_Plots ')
 
 def make_plot_gpd(WMO, start_date = '', end_date = '' , databases = ''):
     # https://stackoverflow.com/questions/59417997/how-to-plot-a-list-of-shapely-points
@@ -63,23 +64,27 @@ def make_plot_gpd(WMO, start_date = '', end_date = '' , databases = ''):
     
     plt.title ('Active Radiosondes between ' + start_date_string + ' and ' + end_date_string , fontsize = 9)
         
-    style_dic = { 'era5_1'    : { 'c' : 'navy' ,      'l': 'ERA5 1'} , 
-                  'era5_2'    : { 'c' : 'lime' ,      'l': 'ERA5 2' } ,
-                  'era5_3188' : { 'c' : 'red' ,       'l': '3188' } ,
-                  'era5_1759' : { 'c' : 'gold' ,      'l': '1759' } ,
-                  'era5_1761' : { 'c' : 'magenta' ,   'l': '1761' } ,
-                  'bufr'      : { 'c' : 'cyan' ,      'l': 'BUFR' } ,
-                  'igra2'     : { 'c' : 'cyan' ,      'l': 'IGRA2' } ,
-                  'ncar'      : { 'c' : 'cyan' ,      'l': 'NCAR' } ,
+    style_dic = { 'era5_1'    : { 'c' : 'navy' ,    'l': 'ERA5 1'  , 's': 4 } , 
+                  'era5_2'    : { 'c' : 'lime' ,    'l': 'ERA5 2'  , 's': 4 } ,
+                  'era5_3188' : { 'c' : 'black' ,   'l': '3188'    , 's': 9 } ,
+                  'era5_1759' : { 'c' : 'magenta' , 'l': '1759'    , 's': 9 } ,
+                  'era5_1761' : { 'c' : 'red' ,     'l': '1761'    , 's': 6 } ,
+                  'bufr'      : { 'c' : 'orange' ,  'l': 'BUFR'    , 's': 6 } ,
+                  'igra2'     : { 'c' : 'yellow' ,  'l': 'IGRA2'   , 's': 4 } ,
+                  'ncar'      : { 'c' : 'cyan' ,    'l': 'NCAR'    , 's': 4 } ,
 }
 
     for d in databases:
+        print(' *** processing the database::: ', d )
         df = pd.read_csv('summaries/' + d + '_summary_distribution.dat', delimiter = '\t')
         LAT, LON = [], []
         for index, row in df.iterrows():
             start, end = np.datetime64(row['start']), np.datetime64(row['end'])
             #print (start, end, start_date, end_date )
-            lat, lon = str(row['lat']) , str(row['lon'])
+            try:
+                lat, lon = int(row['lat']) , int(row['lon'])
+            except:
+                pass
 
             if (start <= start_date) and (end >= start_date): # checking if the station is alive in the period
                 LAT.append(lat)
@@ -89,21 +94,22 @@ def make_plot_gpd(WMO, start_date = '', end_date = '' , databases = ''):
         #lon = list(a['longitude'].astype(np.float32) )
         col = style_dic[d]['c'] 
         lab = style_dic[d]['l']
-
-        if len(lat) == 0:
-            lat.append(-999)
-        if len(lon) == 0:            
-            lon.append(-999) 
-            plotto = plt.scatter( lon, lat , color = col , label = lab + '[0]', s = 0.7 )
+    
+        if len(LAT) == 0:
+            LAT.append(-999)
+        if len(LON) == 0:            
+            LON.append(-999) 
+            plotto = plt.scatter( LON, LAT , color = col , label = lab + '[0]', s = 0.7 )
         else:
-            plotto = plt.scatter( lon, lat , color = col , label = lab + ' [' + str(len(lat)) + ']', s = 0.7 )
+            #print(LON, '\n', LAT )
+            plotto = plt.scatter( LON, LAT , color = col , label = lab + ' [' + str(len(LAT)) + ']', s = 0.7 )
  
 
     plt.xlim([-180.,180.])
     plt.ylim([-90.,90.])
 
     plt.legend(loc = 'lower left', fontsize = 6 ,ncol = 2)
-    plt.savefig('pretty_Plots/PROVA_' + start_date_string + '.png', dpi= 250,   bbox_inches = 'tight' )
+    plt.savefig('Pretty_Plots/PROVA_' + start_date_string + '.png', dpi= 250,   bbox_inches = 'tight' )
     
     print(1, ' PLOT MADE !!!' )
         
@@ -162,6 +168,10 @@ Start = ['1950-01-01'  , '1960-01-01' , '1970-01-01' , '1980-01-01' , '1990-01-0
 End   = ['1960-01-01' , '1970-01-01'  , '1980-01-01' , '1990-01-01' ,'2000-01-01' , '2010-01-01' , '2019-01-01']
  
  
+#Start = ['1950-01-01'  , '1960-01-01' , '1970-01-01' , '1980-01-01' , '1990-01-01']
+#End   = ['1960-01-01' , '1970-01-01'  , '1980-01-01' , '1990-01-01' ,'2000-01-01']
+
+
 databases = ['era5_1','era5_2','era5_1759','era5_1761','era5_3188','bufr','ncar', 'igra2' ]
 
 WMO = loading_WMO_regions_gpd()
