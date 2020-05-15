@@ -249,7 +249,8 @@ def uai_trans(uaikeys,unified):
 def odb_trans(odbkeys,unified):
     trans=dict(zip(odbkeys,['']*len(odbkeys)))
     trans['statid@hdr']='station_id',
-    trans['expver@desc']=('source_uid','data_repository_ftp')
+    #trans['expver@desc']=('source_uid','data_repository_ftp')
+    trans['expver']=('source_uid','data_repository_ftp')
     trans['source@hdr']='source_name',
     trans['collection_identifier@conv']='originator_Organisation',
     trans['obstype@hdr']='stationPlatformType',
@@ -1232,6 +1233,7 @@ if __name__ == '__main__':
         p=Pool(25)
         dbs=['igra2','ai_bfr','rda','3188','1759','1761']
         dbs=['1759','1761']
+        dbs=['2']
         for odir in dbs: 
             with open(dpath+odir+'/orphans.csv','w'):
                 pass
@@ -1248,7 +1250,7 @@ if __name__ == '__main__':
                         del flist[i]
                     else:
                         glist.append(s)
-                transunified=list(map(read_rda_meta,flist))
+                transunified=list(p.map(read_rda_meta,flist))
                 #transunified=[]
                 #for f in flist:
                     #transunified.append(read_rda_meta(f))
@@ -1257,10 +1259,10 @@ if __name__ == '__main__':
                 transunified=list(p.map(read_igra_meta,digrainv))
 
             else:
-                flist=glob.glob(odir+'/'+'era5.'+odir+'.*:*')
+                flist=glob.glob(odir+'/'+'era5.conv._*')
                 hlist=[]
                 for f in flist:
-                    if '.nc' not in f and '.gz' not in f:
+                    if '.nc' not in f and '.gz' not in f and '00000' not in f:
                         hlist.append(f)
                 transunified=list(p.map(func,hlist))
 
