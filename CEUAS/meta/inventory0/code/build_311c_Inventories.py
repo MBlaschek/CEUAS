@@ -403,7 +403,7 @@ def lot2units(vname,units):
 def do_row(row,kdict,meta,wmoid,nw,lat,lon,name) :
     try:
         if nw=='C' and 'Group' not in meta.columns:
-            return False
+            return []
 
         meta.name=name   
         if meta.name=='OSCAR':
@@ -442,7 +442,7 @@ def do_row(row,kdict,meta,wmoid,nw,lat,lon,name) :
 
 
         if len(z)==0:
-            return False
+            return []
         else:
             z=z[0]
             metaz=meta.loc[z]
@@ -462,7 +462,7 @@ def do_row(row,kdict,meta,wmoid,nw,lat,lon,name) :
                     row[kdict['descriptionDataset']]=metaz['Source']
             else:
                 print('Position Mismatch:',name,wmoid,metaz['Latitude'],metaz['Longitude'],lat,lon)
-                return False
+                return []
 
 
     except KeyError as e:
@@ -470,7 +470,7 @@ def do_row(row,kdict,meta,wmoid,nw,lat,lon,name) :
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(exc_type, fname, exc_tb.tb_lineno)
 
-    return True
+    return [z]
 
 def insert(row,vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,varno,dmin,dmax,dcount,fi,fn):
 
@@ -524,15 +524,22 @@ def insert(row,vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,var
                     except:
                         lat=numpy.nan
                         lon=numpy.nan
-                        wmoid=uai['statid@hdr'][0]
-                        if len(wmoid)>3:
-                            iwmoid=int(wmoid)
-
+                    wmoid=uai['statid@hdr'][0]
+                    if "'" in wmoid:
+                        wmoid=wmoid[1:-1]
+                    if len(wmoid)>3:
+                        iwmoid=int(wmoid)
+                            
                 if iwmoid>1000 and iwmoid<100000:
-                    if not do_row(row,kdict,vola,wmoid,nw,lat,lon,'OSCAR'):
-                        if not do_row(row,kdict,igrainv,wmoid,nw,lat,lon,'IGRA2'):
-                            if not do_row(row,kdict,wbaninv,wmoid,nw,lat,lon,'WBAN'):
-                                if not do_row(row,kdict,chuan,wmoid,nw,lat,lon,'CHUAN'):
+                    mi=do_row(row,kdict,vola,wmoid,nw,lat,lon,'OSCAR')
+                    if not mi:
+                        mi=do_row(row,kdict,igrainv,wmoid,nw,lat,lon,'IGRA2')
+                        if not mi:
+                            mi=do_row(row,kdict,wbaninv,wmoid,nw,lat,lon,'WBAN')
+                            if not mi:
+                                mi=do_row(row,kdict,chuan,wmoid,nw,lat,lon,'CHUAN')
+                                if not mi:
+                                        
                                     print(wmoid,'not found, not identifiable!')
                                     wait_time=0.2
                                     while not os.access(fn.split('/')[0]+'/'+'orphans.csv',os.W_OK ):
@@ -553,7 +560,11 @@ def insert(row,vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,var
                             else:
                                 ids=2
                         else:
-                            ids=3
+                            if igrainv['Network'].values[mi]=='M':
+                                print('IGRA2 WMO station')
+                                ids=0
+                            else:
+                                ids=3
                     else:
                         ids=0
                 else:
