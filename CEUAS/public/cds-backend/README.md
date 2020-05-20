@@ -38,7 +38,7 @@ The backend returns files, which are either
 | "variable"       | "['temperature', 'u_component_of_wind', 'v_component_of_wind', 'wind_speed', 'wind_direction', 'relative_humidity', 'specific_humidity']", String, required| Meteorological variables                                     |
 | - | - | - |
 | "homogenization" | "['ERA5', 'RAOBCOREv1.5.1', 'RICHv1.5.1',....]", String| not yet implemented|
-| "cdm" | "['True']","True", String, default False | not yet implemented|
+| "cdm" | "['True']","True", String, default False | Attach also Common Data Model tables to station files. This breaks CF compliance of netcdf files. Not yet implemented|
 
 
 Here we provide a brief description on the [installation](#Installation), [how to use the script](#How-to-use?) and the [license](#License).
