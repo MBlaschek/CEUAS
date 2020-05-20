@@ -14,7 +14,7 @@ from functools import partial
 import xml.etree.ElementTree as ET
 import urllib.request
 import json
-from  datetime import *
+from  datetime import datetime,timedelta
 import zipfile,io
 import matplotlib.pylab as plt
 import subprocess
@@ -698,7 +698,7 @@ def process_flat(randdir,cf,rvars):
                         
                         dsec=[]
                         for d in sdate:                                
-                            dsec.append(((datetime.datetime(year=d//10000,month=d%10000//100,day=d%100)-datetime.datetime(year=1900,month=1,day=1))).days*86400)
+                            dsec.append(((datetime(year=d//10000,month=d%10000//100,day=d%100)-datetime(year=1900,month=1,day=1))).days*86400)
                         if '-' in rvdpo[0]:
                             dsec=numpy.arange(dsec[0],dsec[-1]+1,86400,dtype=numpy.int)
                         if len(dsec)==1:
@@ -835,13 +835,13 @@ def process_flat(randdir,cf,rvars):
                         print ('no data')
                         return '','No data found'
                     # for debugging:
-                    #fcold=0
-                    #fc=f[criteria['time']][idx[0]:idx[-1]+1]
-                    #for i in idx:
-                        #e=fc[i-idx[0]]
-                        #if fcold!=e:
-                            #print(ecdt(e))
-                            #fcold=e
+                    fcold=0
+                    fc=f[criteria['time']][idx[0]:idx[-1]+1]
+                    for i in idx:
+                        e=fc[i-idx[0]]
+                        if fcold!=e:
+                            print(ecdt(e))
+                            fcold=e
  
                     z=di[1,:]
                     trajectory_index=numpy.zeros_like(idx,dtype=numpy.int32)
@@ -920,7 +920,7 @@ def process_flat(randdir,cf,rvars):
                                 elif k in ['header_table']:  # only records fitting criteria (zidx) are copied
                                     do_cfcopy(fd,f,k,zidx,ccf,'trajectory',var_selection=['report_id']) #,'station_name','primary_station_id'])
                                     print(k,'copied',time.time()-t)
-                                elif k in ['station_configuration']:  # only records fitting criteria (zidx) are copied
+                                elif 'station_configuration' in k:  # only records fitting criteria (zidx) are copied
                                     #sh=f['header_table']['primary_station_id'][0].shape[0]
                                     #sid=f['header_table']['primary_station_id'][0].view('S{}'.format(sh))[0].split(b"'")[1]
                                     #sid=sid.decode('latin1')
