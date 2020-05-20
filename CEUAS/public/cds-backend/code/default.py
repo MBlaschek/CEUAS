@@ -26,6 +26,8 @@ if 'srvx' in host:
 else:
     sys.path.append('/data/private/soft/python/')
     os.environ["RSCRATCH"] = "/data/public/"
+from multiprocessing import set_start_method,Pool
+set_start_method("spawn")
 import cds_eua2 as eua
 import pandas as pd
 import xarray
@@ -34,7 +36,6 @@ import hug
 import h5py #ickle as h5py
 import zipfile
 import json
-from multiprocessing import Pool
 import glob
 from functools import partial
 from falcon import HTTPError, HTTP_400, HTTP_422
@@ -129,7 +130,7 @@ slist=[os.path.expandvars('$RSCRATCH/era5/odbs/merged/')+'0-20000-0-'+s+'_CEUAS_
 
 def check_body(body,cdm):
     required_keys=['variable']
-    valid_keys=required_keys+['statid','fbstats','pressure_level','date','time','bbox','country']
+    valid_keys=required_keys+['statid','fbstats','pressure_level','date','time','bbox','country','format']
     xor_keys=['statid','bbox','country']
     valid_ranges={}
     #valid_ranges['statid']=list(active.keys())# ['01001','99999']
@@ -146,6 +147,7 @@ def check_body(body,cdm):
     valid_ranges['variable']=['temperature','u_component_of_wind','v_component_of_wind',
                               'wind_speed','wind_direction','relative_humidity',
                               'specific_humidity','dew_point_temperature'] #,'geopotential']
+    valid_ranges['format']=['nc','csv']
     
     try:
         
@@ -315,6 +317,24 @@ def makebodies(bodies,body,spv,bo,l):
                 print('makebodies',l,s,b)
     return        
     
+def to_csv(idir,flist,ofile='out.csv'):
+    
+    statindex=0
+    dfs=[]
+    for fn in flist:
+        ds=xarray.open_dataset(fn,drop_variables=['trajectory_label'])
+        df=ds.to_dataframe()
+        df['statid']=ds.attrs['primary_id']
+        df['statindex']=statindex
+        dfs.append(df)
+        statindex+=1
+
+    df=pd.concat(dfs,ignore_index=True)
+    df.index.name='obs_id'
+    df.to_csv(ofile)
+        
+    return ofile
+
 def defproc(body,randdir,cdm):
 
     tt=time.time()
@@ -334,6 +354,7 @@ def defproc(body,randdir,cdm):
     bo=[]
     makebodies(bodies,body,spv,bo,0)         
     for k in range(len(bodies)-1,-1,-1):
+        deleted=False
         if 'date' in bodies[k].keys():
             #if bodies[k]['date'][0]>active[bodies[k]['statid']][1]//100 or bodies[k]['date'][-1]<active[bodies[k]['statid']][0]//100:
             if type(bodies[k]['date']) is not list:
@@ -354,34 +375,34 @@ def defproc(body,randdir,cdm):
                 
                 if dsec[0]>active[bodies[k]['statid']][1] or dsec[-1]+86399<active[bodies[k]['statid']][0]:
                     del bodies[k]
+                    deleted=True
                     
             except KeyError:
                     del bodies[k]
+                    deleted=True
 
-        if len(bodies)==0:
-            raise HTTPError(HTTP_422,description=[body,'No selected station has data in specified date range'])
-            
-        if 'time' in bodies[k].keys():
-            if type(bodies[k]['time']) is not list:
-                bodies[k]['time']=[bodies[k]['time']]
-            tsec=[]
-            tssold=''
-            for ds in [bodies[k]['time'][0],bodies[k]['time'][-1]]:
-                if '-' in ds:
-                    if tssold=='':
-                        tssold='-'
-                        for dss in ds.split('-'):
-                            d=int(dss)
-                            tsec.append(d)
-                else:
-                    d=int(ds)
-                    tsec.append(d)
-            print('tsec:',tsec)
+        if not deleted:
+            if 'time' in bodies[k].keys():
+                if type(bodies[k]['time']) is not list:
+                    bodies[k]['time']=[bodies[k]['time']]
+                tsec=[]
+                tssold=''
+                for ds in [bodies[k]['time'][0],bodies[k]['time'][-1]]:
+                    if '-' in ds:
+                        if tssold=='':
+                            tssold='-'
+                            for dss in ds.split('-'):
+                                d=int(dss)
+                                tsec.append(d)
+                    else:
+                        d=int(ds)
+                        tsec.append(d)
+                print('tsec:',tsec)
                 
                                                                                                  
         
     
-    print(bodies[:5])
+#    print(bodies[:5])
     print('len:',len(bodies))
     
     #spvs={'statid':body.pop('statid'),'variable':body.pop('variable')}
@@ -400,12 +421,15 @@ def defproc(body,randdir,cdm):
                     #bodies[-1][splitvar]=s[-8:-3]
             #else:
                 #bodies.append(dict(body))
+    if len(bodies)==0:
+        raise HTTPError(HTTP_422,description=[body,'No selected station has data in specified date range'])
+            
 
-    p=Pool(10)
     func=partial(eua.process_flat,randdir,cf)
 
-    results=list(p.map(func,bodies))
-    p.close()
+    with Pool(10) as p:
+        results=list(p.map(func,bodies))
+
     wpath=''
     for r in results:
         if r[0]!='':
@@ -418,16 +442,46 @@ def defproc(body,randdir,cdm):
         rfile=os.path.dirname(wpath)+'/download.zip'
 
     print(results)
-    print('wpath:'+wpath+';')
-    with zipfile.ZipFile(rfile,'w') as f:
-        for r in results:
-            try:       
-                if len(r[0])>0:
-                    f.write(r[0],os.path.basename(r[0]))
-                    
-                os.remove(r[0])
-            except:
-                pass
+    try:
+        oformat=body['format'][0]
+    except:
+        oformat='nc'
+    print('wpath:'+wpath+'; format:',oformat)
+        
+    if oformat=='nc':
+        
+        with zipfile.ZipFile(rfile,'w') as f:
+            for r in results:
+                try:       
+                    if len(r[0])>0:
+                        f.write(r[0],os.path.basename(r[0]))
+                        
+                    os.remove(r[0])
+                except:
+                    pass
+    elif oformat=='csv':
+        ofiles=[]
+        for v in body['variable']:
+            #print('debug:',os.getcwd(),os.path.dirname(r[0]),r[0])
+            #os.chdir(os.getcwd()+'/'+os.path.dirname(r[0]))
+            ilist=glob.glob(os.getcwd()+'/'+os.path.dirname(r[0])+'/*'+v+'.nc')
+            if ilist:
+                ofiles.append(to_csv('./',ilist,v+'.csv'))
+                [os.remove(i) for i in ilist]
+                
+        if ofiles:
+            with zipfile.ZipFile(rfile,'w',compression=zipfile.ZIP_DEFLATED) as f:
+                for o in ofiles:
+                    try:       
+                        f.write(o,os.path.basename(o))
+                        print('writing',o,' to ',rfile)
+                            
+                        os.remove(o)
+                    except:
+                        pass
+            
+                          
+                         
 
     #for r in results:
         #os.remove(r[0])
@@ -514,7 +568,6 @@ def index(request=None,body=None,response=None):
 
     return rfile
 
-
     
 if __name__ == '__main__':
 
@@ -523,5 +576,8 @@ if __name__ == '__main__':
 
     randdir=os.path.expandvars('$RSCRATCH/tmp/{:012d}'.format(100000000000))
     ret=defproc(body,randdir,cdm)
+    idir=os.path.expandvars('$RSCRATCH/out')
+    os.chdir(idir)
+    #ofile=to_csv(idir,glob.glob('*temperature.nc'))
     print(ret)
     print('ready')
