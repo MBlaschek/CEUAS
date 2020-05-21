@@ -925,13 +925,15 @@ def read_all_odbsql_stn_withfeedback(dataset, odbfile):
     
         #print(time.time()-t,sys.getsizeof(alldict)//1024//1024)
             
+        alldict['source_id'] = dataset.rjust(10)
+
         for c in alldict.columns:
                             
             if type(alldict[c].iloc[0]) in [str,bytes]:
                 l=alldict[c].shape[0]
                 slen=len(alldict[c].values[0])
-                #alldict[c]=numpy.array(alldict.pop(c).values,dtype='S{}'.format(slen))
-                alldict[c]=numpy.string_(alldict[c])
+                alldict[c]=numpy.array(alldict.pop(c).values,dtype='S{}'.format(slen))
+                #alldict[c]=numpy.string_(alldict[c])
                     
             if type(alldict[c].iloc[0]) is numpy.int64:
                 alldict[c]=numpy.int32(alldict[c])
@@ -947,7 +949,6 @@ def read_all_odbsql_stn_withfeedback(dataset, odbfile):
     
     print(odbfile,time.time()-t)#, sys.getsizeof(alldict))
 
-    alldict['source_id'] = dataset.rjust(10)
     
     return alldict
 
@@ -1138,11 +1139,14 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                     fd[k][v][:]=fvv[:]
                     if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
                         if v in attrs.keys():
-                            fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
-                            fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])
-                            
-                            if v == 'date_time':
-                                fd[k][v].attrs['units']=numpy.bytes_('seconds since 1900-01-01 00:00:00')                            #print (  fk, ' ' , v , ' ' ,   ) 
+                            for kk,vv in attrs[v].items():
+                                if type(vv) is str:  
+                                    fd[k][v].attrs[kk]=numpy.bytes_(vv)
+                                else:
+                                    fd[k][v].attrs[kk]=vv
+                                                                
+                    if v == 'date_time':
+                        fd[k][v].attrs['units']=numpy.bytes_('seconds since 1900-01-01 00:00:00')                            #print (  fk, ' ' , v , ' ' ,   ) 
                                 
                 else:
                     fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
@@ -1164,7 +1168,12 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                 slen=sleno
                 #x=numpy.array(fvv,dtype='S').view('S1')
                 #slen=x.shape[0]//fvv.shape[0]
-                slen=int(fvv.dtype.descr[0][1].split('S')[1])
+                try:
+                    
+                    slen=int(fvv.dtype.descr[0][1].split('S')[1])
+                except:  # byte string?
+                    pass
+
                 sdict[v]=slen
                 if slen not in slist:
                     slist.append(slen)
@@ -1192,6 +1201,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                     fvv=f[v]
                 if 'string' not in v and v!='index':                    
                     fd[k][v].dims[l].attach_scale(fd[k]['index'])
+                    print(v,fvv.ndim,type(fvv[0]))
                     if fvv.ndim==2 or type(fvv[0]) in [str,bytes,numpy.bytes_]:
                         slen=sdict[v]
                         #slen=10
@@ -1680,7 +1690,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
         p=Pool(10)
         fns=sorted(glob.glob(fn))
         func=partial(read_all_odbsql_stn_withfeedback,dataset)
-        fbds=list(p.map(func,fns))
+        fbds=list(map(func,fns))
         p.close()
         del p
         
