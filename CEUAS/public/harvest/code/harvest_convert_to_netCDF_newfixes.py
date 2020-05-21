@@ -1690,7 +1690,11 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
         p=Pool(10)
         fns=sorted(glob.glob(fn))
         func=partial(read_all_odbsql_stn_withfeedback,dataset)
-        fbds=list(map(func,fns))
+        if len(fns)==1:       
+            fbds=list(map(func,fns))
+        else:
+            fbds=list(p.map(func,fns))
+            
         p.close()
         del p
         
