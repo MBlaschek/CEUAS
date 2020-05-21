@@ -1,4 +1,4 @@
-# Access to the CDS 
+# Description and Test of the Early Upper Air Service CDS backend 
 
 Related Milestones and Deliverables:
 
@@ -9,7 +9,7 @@ Deliverable | DC3S311c_Lot2.3.1.1 | UNIVIE | Software, Report | First access to 
 
 # Short Description
 
-The code supplied here allows to run a python web-server (hug) that will be a backend for the Copernicus Climate Change Service (C3S) - Upper Air Service.
+The code supplied here allows to run a python web-server [(hug)](https://github.com/hugapi/hug) that will be a backend for the Copernicus Early Upper Air Service, which will be accessible via the [Copernicus Data Store (CDS)](https://cds.climate.copernicus.eu). 
 
 The backend expects HTTP POST requests, where the query string must be in JSON format. Table 1 describes the allowed keys and values of the requests. HTTP GET requests may work as well but are accepted only for debugging.
 
@@ -17,21 +17,29 @@ The backend expects HTTP POST requests, where the query string must be in JSON f
 
 The backend returns files, which are either
 
-1. Zip files containing CF 1.7 compliant netCDF4 files (one per station). The default name is `download.zip`.
-2. JSON files containing error messages, if a HTTP error occurs
+1. Zip files containing CF 1.7 compliant netCDF4 files (one per station and per variable). The default name is `download.zip`.
+   The Zip file also contains a protocol file documenting which station files have been read and where data have been found. 
+2. Zip files containing CSV files (one per variable). The default name is `download.zip`.
+3. JSON files containing error messages, if a HTTP error occurs
 
  Both file formats can be dealt with in the CDS toolbox. 
 
 | Identifier       | All possible values                                          | Explanation                                                  |
 | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `date`           | `[YYYYMMDD,YYYYMMDD]`, `YYYYMMDD`, Integer or String         | Range of dates of radiosonde launches                        |
-| `country`        | `[“CCC”,…,”DDD”]`, String, Exclusive with `statid`, `bbox`, String | Country codes of stations to be selected                     |
-| `bbox`           | `[lower,left,upper,right]`, Float or String, Exclusive with `statid`, `country` | Boundaries of lat/lon rectangle to select stations           |
-| `fbstats`        | `["obs_minus_bg","obs_minus_an","bias_estimate"]`            | ERA5 feedback information                                    |
-| `pressure_level` | `[MMMM,…,NNNNN]`, `MMMM`, Integer or String                  | Pressure levels in Pascal. 16 standard pressure levels (10-1000 hPa) or significant levels (if omitted) |
-| `statid`         | `[“SSSSS”]`, String, Special value “all”, Exclusive with `country`, `bbox` | WMO or WIGOS station ID                                      |
-| `time`           | `[HHMMSS,HHMMSS]`                                            | List of times permitted.                                     |
-| `variable`       | `[„temperature“, “u_component_of_wind“, “v_component_of_wind“, “wind_speed”, ”wind_direction”, ”relative_humidity”, ”specific_humidity”]`, String | Meteorological variables                                     |
+| "date"           | "[YYYYMMDD,YYYYMMDD]", "['YYYYMMDD','YYYYMMDD']", "YYYYMMDD", Integer or String. If "date" is missing, all available dates are selected.         | List of dates of radiosonde launches                        |
+|          | "['YYYYMMDD-YYYYMMDD']", "YYYYMMDD-YYYYMMDD", String         | Range of dates of radiosonde launches                        |
+| "country"        | "['CCC',…,'DDD']", "CCC", String - Exclusive with "statid", "bbox", String | Country codes of stations to be selected                     |
+| "bbox"           | "[lower,left,upper,right]","['lower','left','upper','right']" Float or String, Exclusive with "statid", "country" | Boundaries of lat/lon rectangle to select stations           |
+| "fbstats"        | "['obs_minus_bg', 'obs_minus_an', 'bias_estimate']"            | ERA5 feedback information                                    |
+| "format"        | "['nc', 'csv']","'csv'", String, default is nc            | Format of retrieved data                                            |
+|"pressure_level" | "[MMMM,…,NNNNN]","['MMMM',…,'NNNNN']", "MMMM", "'MMMMM'", Integer or String. If "pressure_level" is missing all levels (standard and significant) are selected.  | Pressure levels in Pascal. 16 standard pressure levels (10,20,30,50,70,100,150,200,300,400,500,700,850,925,1000 hPa). At present no interpolation is done.|
+| "time"           | "[HH1,HH2]", "['HH1','HH2']", "HH", Integer or String  valid range 0-23. If "time" is missing, all available times are selected.      | List of hours of radiosonde launches. All launches with a release time between HH-1 and HH are retrieved. If HH=0 the launches released between 23h the preceding day and 00h are retrieved. If release time is not available, HH is the nominal time.   |
+|          | "['HH1-HH2']", "HH1-HH2", String         | Range of hours of radiosonde launches. If HH1>HH2 the range starts at HH1 of the preceding day.                        |
+| "variable"       | "['temperature', 'u_component_of_wind', 'v_component_of_wind', 'wind_speed', 'wind_direction', 'relative_humidity', 'specific_humidity']", String, required| Meteorological variables                                     |
+| - | - | - |
+| "homogenization" | "['ERA5', 'RAOBCOREv1.5.1', 'RICHv1.5.1',....]", String| not yet implemented|
+| "cdm" | "['True']","True", String, default False | Attach also Common Data Model tables to station files. This breaks CF compliance of netcdf files. Not yet implemented|
+
 
 Here we provide a brief description on the [installation](#Installation), [how to use the script](#How-to-use?) and the [license](#License).
 [Use Interactive Notebook on COLAB (requires Google Account to execute, but not to view)](https://colab.research.google.com/github/MBlaschek/CEUAS/blob/master/CEUAS/public/cds-backend/Example.ipynb)
