@@ -205,6 +205,80 @@ def plot_numbers(archives,path=''):
     plt.close()
     return
 
+def read_nasa_meta(cdmd,fpath):
+    
+    allrows={}
+    with open(fpath+'/info.txt') as f:
+        data=f.read().split('\n')
+    with open(fpath+'/readme') as f:
+        rdata=f.read().split('\n')
+    allrows['station_name']=data[0]
+    phase=int(data[0].split('Phase')[1][:2])
+    allrows['alternative_name']=data[1].split(':')[1].split(',')[0]
+    terr={'United Kingdom':76,'Virginia (NASA)':231,'Kazakstan (former USSR)':124,'Japan':113}
+    allrows['operating_territory']=terr[data[1].split(':')[1].split(',')[1].strip()]
+    pos=data[2].split()
+    sign={'North':1,'South':-1,'East':1,'West':-1}
+    allrows['latitude']=str(float(pos[0])*sign[pos[1]])
+    allrows['longitude']=str(float(pos[2])*sign[pos[3]])
+    allrows['bbox_min_latitude']=str(float(pos[0])*sign[pos[1]])
+    allrows['bbox_max_latitude']=str(float(pos[0])*sign[pos[1]])
+    allrows['bbox_min_longitude']=str(float(pos[2])*sign[pos[3]])
+    allrows['bbox_max_longitude']=str(float(pos[2])*sign[pos[3]])
+    allrows['altitude']=pos[4]
+    allrows['station_type']=1 # Land Station
+    allrows['platform_type']=7 # Land Station
+    allrows['platform_sub_type']=63 # Synoptic Network
+    allrows['operating_institute']='WMO'
+    allrows['station_crs']=0
+    allrows['primary_id_scheme']=5 # WIGOS identifier
+    
+    
+    dates=[]
+    for r in rdata:
+        if '/' in r and ':' in r:
+            llist=r.split('/')
+            if len(llist)==3:
+                
+#            dates.append(datetime.date(1900+int(llist[2][:2]),int(llist[0][-2:]),int(llist[1])))
+                if llist[2][:2].isnumeric():
+                    dates.append(llist[2][:2]+'-'+llist[0][-2:]+'-'+llist[1])
+            
+    allrows['start_date']=dates[0]
+    allrows['end_date']=dates[-1]
+    
+    msm=[]
+    if phase==4:
+        l=0
+        for r in rdata:
+            if ' - ' in r and 'PHASE' not in r and 'Description' not in r:
+                if ' - ' in rdata[l+1]:
+                    msm.append(r.split(' - ')[1].strip())
+                else:  
+                    msm.append(r.split(' - ')[1].strip()+' '+rdata[l+1].strip())
+            l+=1
+    else: 
+        for r in data:
+            if 'zip' in r:
+                msm.append(r.split('zip')[1].split('ASCII')[0].strip())
+            
+    
+    transunified=[]
+    i=0
+    for m in msm:
+        transunified.append({})
+        for c in cdmd['station_configuration'].element_name.values:
+            if c in allrows.keys():
+                transunified[-1][c]=allrows[c]
+            else:
+                transunified[-1][c]=''
+        transunified[-1]['measuring_system_model']=m
+        transunified[-1]['primary_id']='0-2010{}'.format(phase)+'-0-{:0>5}'.format(i)
+        i+=1
+        
+    return transunified
+    
+        
 def uai_trans(uaikeys,unified):
     trans=dict(zip(uaikeys,['']*len(uaikeys)))
     trans['ID']='station_id',
@@ -1245,6 +1319,8 @@ if __name__ == '__main__':
         dbs=['igra2','ai_bfr','rda','3188','1759','1761']
         dbs=['1759','1761']
         dbs=['2']
+        dbs=['RI/nasa']
+        #dbs=['igra2'] 
         for odir in dbs: 
             with open(dpath+odir+'/orphans.csv','w'):
                 pass
@@ -1267,7 +1343,17 @@ if __name__ == '__main__':
                     #transunified.append(read_rda_meta(f))
             elif 'igra2' in odir:
                 digrainv=igrainv.to_dict('records')
-                transunified=list(p.map(read_igra_meta,digrainv))
+                transunified=list(map(read_igra_meta,digrainv))
+
+            elif 'RI/nasa' in odir:
+                
+                paths=glob.glob(os.path.expandvars('$RSCRATCH/era5/odbs/'+odir+'/ph*'))
+                func=partial(read_nasa_meta,cdmd)
+                transunified=list(map(func,paths))
+                
+                transunified=sum(transunified,[])
+                for i in range(len(transunified)):
+                    transunified[i]=transunified[i],{}
 
             else:
                 flist=glob.glob(odir+'/'+'era5.conv._*')
