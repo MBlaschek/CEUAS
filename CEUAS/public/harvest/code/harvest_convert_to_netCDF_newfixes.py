@@ -17,7 +17,6 @@ import pandas as pd
 from functools import partial
 #from rasotools.utils import *
 from numba import *
-import cartopy.crs as ccrs
 import argparse
 #import copy
 from io import StringIO
@@ -332,7 +331,7 @@ cdmvar_dic = {'temperature'          : { 'odb_var': 2      , 'cdm_unit': 5      
                           }
 
 
-""" CDM variable codes for the corresponding ODB variables """
+""" CDM variable codes for the corresponding ODB variables 
 cdm_odb_var_dic = { 1    : 117    , # geopotential
                                    2    : 85        , # temperature K
                                    
@@ -347,7 +346,7 @@ cdm_odb_var_dic = { 1    : 117    , # geopotential
                                  999  : 57      , # Pa  (NOTE: it goes into z_coordinate type, not in the observed variables)                                 
                                  99    : 34   , # dew_point depression (non existing in ODB files )
                           }
-
+"""
 
 """ Common columns of the read dataframes (not from ODB files, which have their own fixed column names definitions) """
 column_names = [ 'source_id', 'report_id',  'observation_id', 'record_timestamp' , 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body',
@@ -771,12 +770,8 @@ def igra2_ascii_to_dataframe(file=''):
     df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
     
     df = df.replace([-999.9, -9999, -999, -999.0, -99999.0, -99999.9, 99999.0,  -99999.00 ], np.nan)
-    
-    #df['observations_id'] =numpy.char.zfill(numpy.arange(ivar.shape[0]).astype('S10'), 10)
-        
+           
     df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
-    #df['report_id'] = numpy.int64 (df['report_id'] ) 
-    #df['observation_id'] = numpy.int64 (df['observation_id'] ) 
     
     return df
 
@@ -1452,12 +1447,15 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
                 raise ValueError('Cannot identify the type of file to be analized!!! ')
               
             station_id = str( df['statid@hdr'].values[0]).replace(' ','')                           
-            station_configuration_retrieved = get_station_configuration( station_id, cdm['station_configuration'] )    
+            station_configuration_retrieved = get_station_configuration_f( station_id, cdm['station_configuration'] )    
             #primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')      
             try:
                 primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')
             except:
                 print('CANT FIND STATION PRIMARY ID ')
+                out =open(dataset + "_wrong_ids.txt" , 'a+')
+                out.write(fn + '\n')
+                
                 primary_id = 'uknown_primary'
           
 
@@ -1627,6 +1625,58 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
           
           
 
+def get_station_configuration_f(station_id, station_configuration):
+    """ Previous working version. Works wirh ncar, bufr, igra2.
+          The version below, changed by Leo, does not work anymore with the above files 
+    """
+   
+    """ Gets the primary station_id from the station_configuration table. 
+         station_id is the id taken from the input file.
+         First it checks if a primary_id in th estation_conf file matches the station_id, 
+         otherwise it looks for an element in the list of secondary ids.         
+         """
+    
+    try:
+       si = station_id.decode('utf-8')
+    except:
+       si = station_id 
+       
+    if ':' in si:
+       si = si.split(':')[1]
+       
+    station_id_primary = numpy.string_( '0-20000-0-' +si )   # remove the prefix to the station id 
+    station_id_primary_alternative = numpy.string_( '0-20001-0-' + si )
+ 
+    #station_id = numpy.string_( '1:68351' )
+    
+    """ First, check for matching primary_id. 
+          If not found, check for secondary id. Note that secondary is a list, so must loop over the entry to find a matching one """
+    
+    matching_primary       = station_configuration.loc[station_configuration['primary_id'] == station_id_primary ]
+    matching_primary_alt = station_configuration.loc[station_configuration['primary_id'] == station_id_primary_alternative ]
+    
+    if len(matching_primary) > 0:
+        return matching_primary 
+    
+    elif   len(matching_primary_alt) > 0  :
+        return matching_primary_alt 
+ 
+    else:
+        secondary = station_configuration['secondary_id'] 
+        for s in secondary:
+            try:  # TODO this try is needed when the secondary ids are not defined or wrong, and the primary id cannot be matched with the station_id      
+                sec_list = s.decode('utf-8').replace('[','').replace(']','').split(",")  # secondary ids are separated by a comma, so I loop over the list 
+                for sec_id in sec_list:                    
+                    if sec_id == si:
+                        sc = station_configuration.loc[station_configuration['secondary_id'] == s ]
+                        print("FOUND a secondary !!!")
+                        return sc 
+            except:
+                return 0
+        return 0        
+    
+
+
 def get_station_configuration(station_id, station_configuration):
     """ Gets the primary station_id from the station_configuration table. 
           station_id is the id taken from the input file.
@@ -1651,7 +1701,7 @@ def get_station_configuration(station_id, station_configuration):
     secondary = station_configuration['secondary_id'] 
     loc=0
     for s in secondary:
-        try:  # TODO this try is needed when the secondary ids are not defined or wrong, and the primary id cannot be matched with the station_id      
+        try:  # this try is needed when the secondary ids are not defined or wrong, and the primary id cannot be matched with the station_id      
             if b'[' in s:
                 st = s.replace(b'[',b'').replace(b']',b'')
                 stl=st.split(b',')
@@ -2174,16 +2224,6 @@ if __name__ == '__main__':
 
 -f /raid60/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.C:8022  -d era5_3188 -o OUTPUT
 
--f /raid60/scratch/federico/databases/UADB//uadb_windc_27962.txt  -d  ncar  -o OUTPUT  (1553915536 vs 29374566 )
-
-/raid60/scratch/federico/databases/IGRAv2/AYXUAE05498-data.txt 
-
--f  /raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.24240.bfr -d bufr -o OUTPUT
-
-
-
-
-
 -f /raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._74794.gz -o OUTPUT -d era5_1 
 
 
@@ -2191,6 +2231,11 @@ if __name__ == '__main__':
 
 # use monthly input files, can be read in parallel
 -f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.10393.txt.gz'  -d era5_1 -o OUTPUT
+
+
+### file containing a secondary id
+-f /raid60/scratch/federico/databases/UADB/ uadb_trhc_2225.txt -o OUTPUT -d ncar 
+0-20000-0-02225 2062,2225       OSTERSUND FROSON        63.18   14.5    rda/UADB_windc_002225.nc
 
 
 """
