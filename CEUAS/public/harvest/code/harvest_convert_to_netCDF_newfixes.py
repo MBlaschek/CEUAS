@@ -1216,7 +1216,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
         
     return
 #variables_dic = {}
-""" TODO to improve: make attrs variable a dictionary of dictionaries (so that it can handle multiple attributes definitions) """
+
 def write_dict_h6(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}): 
     """ Writes each separate variable from the observation or feedback tables inot netcdf using h5py.
           f is a pandas dataframe with one column, one for each variable
@@ -2214,28 +2214,24 @@ if __name__ == '__main__':
 
 """ Examples for running 
 -f /raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._82930.gz  -d era5_1 -o OUTPUT
+
 -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.1:82930.gz -d era5_1759 -o OUTPUT
+-f /raid60/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.C:8022.gz  -d era5_3188 -o OUTPUT
+-f /raid60/scratch/leo/scratch/era5/odbs/1761/era5.1761.conv._1:41675.gz -d era5_1761 -o OUTPUT
+
+
+# use monthly input files, can be read in parallel
+-f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.82930.txt.gz'  -d era5_1 -o OUTPUT
+
+
+### file containing a secondary id to test
+-f /raid60/scratch/federico/databases/UADB/ uadb_trhc_2225.txt -o OUTPUT -d ncar 
+0-20000-0-02225 2062,2225       OSTERSUND FROSON        63.18   14.5    rda/UADB_windc_002225.nc
+
+
 
 
 -f /raid60/scratch/federico/databases/IGRAv2/BRM00082930-data.txt -d igra2 -o OUTPUT
 -f /raid60/scratch/federico/databases/UADB//uadb_windc_82930.txt -d ncar -o OUTPUT
 -f /raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.82930.bfr -d bufr -o OUTPUT
--f /raid8/srvx1/federico/GitHub/CEUAS_master_FEB202/CEUAS/CEUAS/public/harvest/data/example_stations/era5_3188/era5.3188.conv.C:4629  -d era5_3188 -o OUTPUT
-
--f /raid60/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.C:8022  -d era5_3188 -o OUTPUT
-
--f /raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._74794.gz -o OUTPUT -d era5_1 
-
-
--f /raid8/srvx1/federico/GitHub/CEUAS_master_FEB202/CEUAS/CEUAS/public/harvest/data/example_stations/era5_3188/era5.3188.conv._C:4629.gz  -d era5_3188 -o OUTPUT
-
-# use monthly input files, can be read in parallel
--f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.10393.txt.gz'  -d era5_1 -o OUTPUT
-
-
-### file containing a secondary id
--f /raid60/scratch/federico/databases/UADB/ uadb_trhc_2225.txt -o OUTPUT -d ncar 
-0-20000-0-02225 2062,2225       OSTERSUND FROSON        63.18   14.5    rda/UADB_windc_002225.nc
-
-
 """
