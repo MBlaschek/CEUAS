@@ -2106,14 +2106,16 @@ def clean_station_configuration(cdm_tab ):
 
     
 
-db   = { 'era5_1'       : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1'              } ,
+db   = {     'era5_1'       : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1'              } ,
+                  'era5_2'       : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/2'    } ,
                   'era5_3188' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/3188'    } ,
                   'era5_1759' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1759'    } ,
                   'era5_1761' : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/1761'    } ,
                   'ncar'           : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'       } ,
-                  'ncar'           : { 'dbpath' : '/raid60/scratch/federico/databases/UADB'       } ,
                   'igra2'          : { 'dbpath' : '/raid60/scratch/federico/databases/IGRAv2'     } ,
-                  'bufr'            : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/ai_bfr'   }  }
+                  'bufr'            : { 'dbpath' : '/raid60/scratch/leo/scratch/era5/odbs/ai_bfr'   }  ,
+                  
+                  }
         
 
     
