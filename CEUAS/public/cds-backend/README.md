@@ -40,8 +40,8 @@ The backend returns files, which are either
 | "homogenization" | "['ERA5', 'RAOBCOREv1.5.1', 'RICHv1.5.1',....]", String| Homogeneity adjustments; not yet implemented|
 | "uncertainty" | "['Desroziers', ....]", String| Uncertainty estimates; not yet implemented|
 | "reanalysis" | "['ERA5', 'JRA55', '20CRv3', 'CERA20C',....]", String| Reanalysis values interpolated offline to station locations, not yet implemented|
-
 | "cdm" | "['True']","True", String, default False | Attach also Common Data Model tables to station files. This breaks CF compliance of netcdf files. Not yet implemented|
+
 Here we provide a brief description on the [installation](#Installation), [how to use the script](#How-to-use?) and the [license](#License).
 [Use Interactive Notebook on COLAB (requires Google Account to execute, but not to view)](https://colab.research.google.com/github/MBlaschek/CEUAS/blob/master/CEUAS/public/cds-backend/Example.ipynb)
 
