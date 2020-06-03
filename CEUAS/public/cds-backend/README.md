@@ -37,10 +37,11 @@ The backend returns files, which are either
 |          | "['HH1-HH2']", "HH1-HH2", String         | Range of hours of radiosonde launches. If HH1>HH2 the range starts at HH1 of the preceding day.                        |
 | "variable"       | "['temperature', 'u_component_of_wind', 'v_component_of_wind', 'wind_speed', 'wind_direction', 'relative_humidity', 'specific_humidity']", String, required| Meteorological variables                                     |
 | - | - | - |
-| "homogenization" | "['ERA5', 'RAOBCOREv1.5.1', 'RICHv1.5.1',....]", String| not yet implemented|
+| "homogenization" | "['ERA5', 'RAOBCOREv1.5.1', 'RICHv1.5.1',....]", String| Homogeneity adjustments; not yet implemented|
+| "uncertainty" | "['Desroziers', ....]", String| Uncertainty estimates; not yet implemented|
+| "reanalysis" | "['ERA5', 'JRA55', '20CRv3', 'CERA20C',....]", String| Reanalysis values interpolated offline to station locations, not yet implemented|
+
 | "cdm" | "['True']","True", String, default False | Attach also Common Data Model tables to station files. This breaks CF compliance of netcdf files. Not yet implemented|
-
-
 Here we provide a brief description on the [installation](#Installation), [how to use the script](#How-to-use?) and the [license](#License).
 [Use Interactive Notebook on COLAB (requires Google Account to execute, but not to view)](https://colab.research.google.com/github/MBlaschek/CEUAS/blob/master/CEUAS/public/cds-backend/Example.ipynb)
 
