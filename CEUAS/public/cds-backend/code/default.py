@@ -69,15 +69,17 @@ def main():
             active=json.load(f)
     except:
         slist=glob.glob(os.path.expandvars('$RSCRATCH/era5/odbs/merged/'+'0-20000-0-?????_CEUAS_merged_v0.nc'))
-        slnum=[i[-24:-19] for i in slist]
+        slnum=[i[-34:-19] for i in slist]
         
         volapath='https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
         f=urllib.request.urlopen(volapath)
         col_names=pd.read_csv(f,delimiter='\t',quoting=3,nrows=0)
+        #print(col_names)
         f=urllib.request.urlopen(volapath)
         tdict={col: str for col in col_names}
         vola=pd.read_csv(f,delimiter='\t',quoting=3,dtype=tdict,na_filter=False)
- 
+        #print (vola.iloc[0])
+        #exit()
         active={}
         
         for s,skey in zip(slist,slnum):
@@ -91,7 +93,7 @@ def main():
                         funits='seconds since 1900-01-01 00:00:00'
                         active[skey]=[int(eua.secsince(f['recordtimestamp'][0],funits)),int(eua.secsince(f['recordtimestamp'][-1],funits)),
                                       float(f['observations_table']['latitude'][-1]),float(f['observations_table']['longitude'][-1])]
-                        idx=numpy.where(vola.IndexNbr.values==skey)[0]
+                        idx=numpy.where(vola.StationId.values==skey)[0]
                         if len(idx)>0:
                             
                             active[skey].append(vola.CountryCode[idx[0]])
@@ -225,18 +227,41 @@ def check_body(body,cdm):
             del body['bbox']
         else:
             try:
+                suff=['0-20000-0-','0-20001-0-']
                 if type(body['statid'])==int:
-                    body['statid']=['{:0>5}'.format(body['statid'])]
+                    for s in suff:
+                        bd=s+'{:0>5}'.format(body['statid'])
+                        if bd in slnum:
+                            break
+                    body['statid']=[bd]
                 elif body['statid']=='all':
                     body['statid']=slnum
                 elif body['statid'][0]=='all':
                     body['statid']=slnum
                 elif type(body['statid']) is not list:
-                    body['statid']=[str(body['statid'])]
+                    bd=body['statid']
+                    if body['statid'][:3]!='0-2':
+                        for s in suff:
+                            bd=s+body['statid']
+                            if bd in slnum:
+                                    break
+                    body['statid']=[bd]
                 else:
                     if type(body['statid'][0])==int:
                         for k in range(len(body['statid'])):
-                            body['statid'][k]='{:0>5}'.format(body['statid'][k])
+                            for s in suff:
+                                bd=s+'{:0>5}'.format(body['statid'][k])
+                                if bd in slnum:
+                                    break
+                            body['statid'][k]=bd
+                    else:
+                        for k in range(len(body['statid'])):
+                            if body['statid'][k][:3]!='0-2':
+                                for s in suff:
+                                    bd=s+body['statid'][k]
+                                    if bd in slnum:
+                                        break
+                                body['statid'][k]=bd   
                     
                     
             except MemoryError:
@@ -269,10 +294,13 @@ def check_body(body,cdm):
                             bvv=[bvv[0],bvv[-1]]
                         
                 for bv in bvv:
-                    if v in ('pressure_level','date','time'):   
-                        if int(bv)>int(valid_ranges[v][1]) or int(bv)<int(valid_ranges[v][0]):
-                            return ['argument value(s) '+str(bvv)+' not valid.',
-                                    'Valid values:'+str(valid_ranges[v])]
+                    if v in ('pressure_level','date','time'):
+                        try: 
+                            if int(bv)>int(valid_ranges[v][1]) or int(bv)<int(valid_ranges[v][0]):
+                                return ['argument value(s) '+str(bvv)+' not valid.',
+                                        'Valid values:'+str(valid_ranges[v])]
+                        except:
+                            return ['only integer arguments allowed for '+v, str(bvv)+' not valid.']
                     else:
                         if bv not in valid_ranges[v]:
                             return ['argument value(s) '+str(bv)+' not valid.',
@@ -361,23 +389,27 @@ def defproc(body,randdir,cdm):
                 bodies[k]['date']=[bodies[k]['date']]
             dsec=[]
             dssold=''
-            for ds in [bodies[k]['date'][0],bodies[k]['date'][-1]]:
-                if '-' in ds:
-                    if dssold=='':
-                        dssold='-'
-                        for dss in ds.split('-'):
-                            d=int(dss)
-                            dsec.append(((datetime(year=d//10000,month=d%10000//100,day=d%100)-datetime(year=1900,month=1,day=1))).days*86400)
-                else:
-                    d=int(ds)
-                    dsec.append(((datetime(year=d//10000,month=d%10000//100,day=d%100)-datetime(year=1900,month=1,day=1))).days*86400)
             try:
+                for ds in [bodies[k]['date'][0],bodies[k]['date'][-1]]:
+                    if '-' in ds:
+                        if dssold=='':
+                            dssold='-'
+                            for dss in ds.split('-'):
+                                d=int(dss)
+                                dsec.append(((datetime(year=d//10000,month=d%10000//100,day=d%100)-datetime(year=1900,month=1,day=1))).days*86400)
+                    else:
+                        d=int(ds)
+                        dsec.append(((datetime(year=d//10000,month=d%10000//100,day=d%100)-datetime(year=1900,month=1,day=1))).days*86400)
+            except:
+                raise HTTPError(HTTP_422,description=[bodies[k]['date'],'Invalid date specification'])
+
+            if bodies[k]['statid'] in active.keys():
                 
                 if dsec[0]>active[bodies[k]['statid']][1] or dsec[-1]+86399<active[bodies[k]['statid']][0]:
                     del bodies[k]
                     deleted=True
                     
-            except KeyError:
+            else:
                     del bodies[k]
                     deleted=True
 
@@ -387,16 +419,19 @@ def defproc(body,randdir,cdm):
                     bodies[k]['time']=[bodies[k]['time']]
                 tsec=[]
                 tssold=''
-                for ds in [bodies[k]['time'][0],bodies[k]['time'][-1]]:
-                    if '-' in ds:
-                        if tssold=='':
-                            tssold='-'
-                            for dss in ds.split('-'):
-                                d=int(dss)
-                                tsec.append(d)
-                    else:
-                        d=int(ds)
-                        tsec.append(d)
+                try:
+                    for ds in [bodies[k]['time'][0],bodies[k]['time'][-1]]:
+                        if '-' in ds:
+                            if tssold=='':
+                                tssold='-'
+                                for dss in ds.split('-'):
+                                    d=int(dss)
+                                    tsec.append(d)
+                        else:
+                            d=int(ds)
+                            tsec.append(d)
+                except:
+                    raise HTTPError(HTTP_422,description=[bodies[k]['time'],'Invalid time specification'])
                 print('tsec:',tsec)
                 
                                                                                                  
@@ -427,6 +462,8 @@ def defproc(body,randdir,cdm):
 
     func=partial(eua.process_flat,randdir,cf)
 
+#    results=list(map(func,bodies))
+#    print(results)
     with Pool(10) as p:
         results=list(p.map(func,bodies))
 
