@@ -12,7 +12,7 @@ import time
 tt=time.time()
 
 c = cdsapi.Client(url='https://sis-dev.climate.copernicus.eu/api/v2',
-                  key='1113:e8b7f777-d553-434f-9c31-ef2820b069d4',
+                  key='please add your credentials here',
                   progress=True,retry_max=5)
 
 l=0
