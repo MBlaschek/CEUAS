@@ -656,13 +656,15 @@ def process_flat(randdir,cf,rvars):
     statid=rvars['statid']
     #cost=calculate_cost(rvars) # estimate size of output file
     if 'statid' in rvkeys:
-        #rfile='/fio/srvx7/leo/python/CEUAS/CEUAS/public/harvest/data/tables/'+'chera5.conv._'+rvars['statid']+'.nc'
-        rfile=os.path.expandvars('$EUA_ROOT/subdaily/v0.1/source/ERA5_1/obs/0-20000-0-'+rvars['statid']+
-                                 '/eua_subdaily_v0.1_source_ERA5_1_obs_0-20000-0-'+rvars['statid']+'_t.nc')
-        rfile=os.path.expandvars('$RSCRATCH/era5/odbs/merged/'+'0-20000-0-'+rvars['statid']+'_CEUAS_merged_v0.nc')
-        if not os.path.isfile(rfile):
-            rfile=os.path.expandvars('$RSCRATCH/era5/odbs/merged/'+'0-20001-0-'+rvars['statid']+'_CEUAS_merged_v0.nc')
-            
+        if rvars['statid'][:3]=='0-2':
+            suff=['']
+        else:
+            suff=['0-20000-0-','0-20001-0-']
+        for s in suff:
+            rfile=os.path.expandvars('$RSCRATCH/era5/odbs/merged/'+s+rvars['statid']+'_CEUAS_merged_v0.nc')
+            if os.path.isfile(rfile):
+                break
+           
         print(rfile)
         if len(rvkeys)>0:
             rvdict=copy.copy(rvars)

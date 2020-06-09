@@ -26,12 +26,12 @@ The front returns files, which are either
 | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | `date`           | `[YYYYMMDD,YYYYMMDD]`, `YYYYMMDD`, Integer or String         | Range of dates of radiosonde launches                        |
 | `country`        | `[“CCC”,…,”DDD”]`, String, Exclusive with `statid`, `bbox`, String | Country codes of stations to be selected                     |
-| `bbox`           | `[lower,left,upper,right]`, Float or String, Exclusive with `statid`, `country` | Boundaries of lat/lon rectangle to select stations           |
+| `bbox`           | `[upper,left,lower,right]`, Float or String, Exclusive with `statid`, `country` | Boundaries of lat/lon rectangle to select stations           |
 | `fbstats`        | `["obs_minus_bg","obs_minus_an","bias_estimate"]`            | ERA5 feedback information                                    |
 | `pressure_level` | `[MMMM,…,NNNNN]`, `MMMM`, Integer or String                  | Pressure levels in Pascal. 16 standard pressure levels (10-1000 hPa) or significant levels (if omitted) |
-| `statid`         | `[“SSSSS”]`, String, Special value “all”, Exclusive with `country`, `bbox` | WMO or WIGOS station ID                                      |
+| `statid`         | `[“SSSSS”]`, String, either WMO or WIGOS IDs. Special value “all”, Exclusive with `country`, `bbox` | WMO or WIGOS station ID                                      |
 | `time`           | `[HHMMSS,HHMMSS]`                                            | List of times permitted.                                     |
-| `variable`       | `[„temperature“, “u_component_of_wind“, “v_component_of_wind“, “wind_speed”, ”wind_direction”, ”relative_humidity”, ”specific_humidity”]`, String | Meteorological variables                                     |
+| `variable`       | `[„air_temperature“, “zonal_wind“, “meridional_wind“, “wind_speed”, ”wind_direction”, ”air_relative_humidity”, ”air_specific_humidity”, "air_dewpoint"]`, String | Meteorological variables                                     |
 
 
 
