@@ -805,7 +805,7 @@ def make_odb_header(odbfile, dataset):
         f = open(header , 'rb')
         rdata=f.read()
         rdata=rdata.decode('utf-8').split('\n')
-        print(' Done reading the existing header file for the dataset: ', dataset )
+        #print(' Done reading the existing header file for the dataset: ', dataset )
         
     columns, kinds, tdict =[] , [] , {} 
         
@@ -831,6 +831,25 @@ def make_odb_header(odbfile, dataset):
         except IndexError:
             pass       
         
+    """ This is done otherwise for the era5 databases (1759,1761,3188) the tdict has different length than the columns list.
+          So the following call alldict=pd.read_csv(f,delimiter='\t', usecols=columns, quoting=3,comment='#', skipinitialspace=True, dtype=tdict) breaks  """    
+    for t in tdict.keys():
+        if t not in columns:
+            #print("Removing non appearing fb column: " , c)          
+            del tdict[t]
+                   
+    """ These values must be removed rom the fb, since they have NULL values and it creates problem with 
+    alldict=pd.read_csv(f,delimiter='\t', usecols=columns, quoting=3,comment='#', skipinitialspace=True, dtype=tdict) """                  
+    
+    if dataset in ["era5_1759", "era5_1761", "era5_3188"]:
+        remove = ['sonde_type@conv' , "eda_spread@errstat", "bias_volatility@body" , "timeseries_index@conv"]
+        for c in remove:
+            #print("Removing wrong fb column: " , c)
+            try:
+                columns.remove(c)
+                del tdict[c]
+            except:
+                pass
     return columns, kinds, tdict
     
     
@@ -854,23 +873,26 @@ def read_all_odbsql_stn_withfeedback(dataset, odbfile):
         #                 'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','collection_identifier@conv','source@hdr']
         
         # had to remove 'collection_identifier@conv' to make it work with 1, 3188, 1759, 1761 
+        
         tdict['sensor@hdr']=numpy.float32
         tdict['ppcode@conv_body']=numpy.float32
         
+        '''
         d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','lon@hdr','lat@hdr','seqno@hdr',
                          'obsvalue@body','source@hdr' , 'vertco_type@body']
         
         if 'fg_depar@body' in columns:  # creating the colkumns for era5fb 
             d=d+['fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','reportype','andate','antime']
+        '''
         
 # restrict feedback to certain columns        
         #for c in columns:
-            #if c not in d:
-                #del tdict[c]
+        #    if c not in d:
+        #        del tdict[c]
                     
         #columns=d.copy()
             
-        alldict=pd.read_csv(f,delimiter='\t',usecols=columns,quoting=3,comment='#', skipinitialspace=True,dtype=tdict) #,nrows=1000000)
+        alldict=pd.read_csv(f,delimiter='\t', usecols=columns, quoting=3,comment='#', skipinitialspace=True, dtype=tdict) #nrows=1000000)
             
         """ Case where erafb is not available """
         if 'fg_depar@body' not in columns:
@@ -899,7 +921,7 @@ def read_all_odbsql_stn_withfeedback(dataset, odbfile):
                 dropindex = numpy.concatenate(dropindex).ravel()
                 alldict.drop(index=alldict.index[dropindex],inplace=True)
     
-            print(time.time()-t) #,sys.getsizeof(alldict)//1024//1024)
+            #print(time.time()-t) #,sys.getsizeof(alldict)//1024//1024)
                 
             #idx=numpy.where(alldict.reportype.values==16045)[0]
             #if idx.shape[0]>0:
@@ -936,13 +958,13 @@ def read_all_odbsql_stn_withfeedback(dataset, odbfile):
             if type(alldict[c].iloc[0]) is numpy.float64:
                 alldict[c]=numpy.float32(alldict[c])
     
-        print('after odb:',time.time()-t)
+        #print('after odb:',time.time()-t)
             
     except MemoryError:
         print('Reading ODB failed !  ' + odbfile)
         return alldict
     
-    print(odbfile,time.time()-t)#, sys.getsizeof(alldict))
+    #print(odbfile,time.time()-t)#, sys.getsizeof(alldict))
 
     
     return alldict
@@ -1196,7 +1218,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                     fvv=f[v]
                 if 'string' not in v and v!='index':                    
                     fd[k][v].dims[l].attach_scale(fd[k]['index'])
-                    print(v,fvv.ndim,type(fvv[0]))
+                    #print(v,fvv.ndim,type(fvv[0]))
                     if fvv.ndim==2 or type(fvv[0]) in [str,bytes,numpy.bytes_]:
                         slen=sdict[v]
                         #slen=10
@@ -1401,10 +1423,10 @@ def convert_variable_type_n(df):
         try:
             #print('converting ' , c , ' to type ' , mapping[c] )
             df[c] =  df[c].astype( convert[mapping[c]] )
-            print('converted: ', c )
+            #print('converted: ', c )
             
         except:
-            print('could not convert type column ' , c )
+            #print('could not convert type column ' , c )
             pass 
             
     return df
@@ -1443,7 +1465,7 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
                 df = igra2_ascii_to_dataframe(fn)
                 
             else:
-                print('Unidentified file is: ', fn)
+                #print('Unidentified file is: ', fn)
                 raise ValueError('Cannot identify the type of file to be analized!!! ')
               
             station_id = str( df['statid@hdr'].values[0]).replace(' ','')                           
@@ -1452,16 +1474,16 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
             try:
                 primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')
             except:
-                print('CANT FIND STATION PRIMARY ID ')
+                #print('CANT FIND STATION PRIMARY ID ')
                 out =open(dataset + "_wrong_ids.txt" , 'a+')
                 out.write(fn + '\n')
                 
-                primary_id = 'uknown_primary'
+                primary_id = '0[]'
           
 
             fno,  source_file = initialize_output(fn, output_dir, primary_id, dataset)   
-            if primary_id == 'uknown_primary':
-                return                
+            #if primary_id == 'uknown_primary':
+            #    return                
               
             """ Casting the original variable types to appropriate numpy types """     
             #df = convert_variable_type(df)  # ->think this is overly complicated. 
@@ -1549,34 +1571,45 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
                             x=numpy.zeros( df['record_timestamp'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=okinds) ) )
                             x.fill(numpy.nan)
                             groups[k][d.element_name]=x
- 
- 
-            
-                                  
+
+                        
                     elif k in ('header_table'):
-                              # if the element_name is found in the cdmfb dict, then it copies the data from the odb into the header_table
-                        if d.element_name not in station_configuration_retrieved.columns: # variables might be from the df (input file) or the from the retrieved station configuration                            
-                            try:
-                                #print(d.element_name , ' ' , d.kind )
-                                #groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )                                
+                        try:
+                            
+                            if d.element_name not in station_configuration_retrieved.columns: # variables might be from the df (input file) or from the retrieved station configuration                            
+                                try:                        
+                                    groups[k][d.element_name]=(di['recordindex'].shape[0], hdrfromfb(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )
+                                except:  
+                                    x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
+                                    x.fill(numpy.nan)
+                                    groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]},x)                                   
+                                    pass                            
+                            else:            
+                                        x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
+                                        x.fill( station_configuration_retrieved[d.element_name].values[0] )
+                                        groups[k][d.element_name]= ({'hdrlen':di['recordindex'].shape[0]},x) 
+                        except: # in case I cannot retrieve the station configuration file 
+                            try:                        
                                 groups[k][d.element_name]=(di['recordindex'].shape[0], hdrfromfb(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=gkinds) ) )
                             except:  
                                 x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
                                 x.fill(numpy.nan)
                                 groups[k][d.element_name]=({'hdrlen':di['recordindex'].shape[0]},x)                                   
-                                pass                            
-                        else:            
-                                #if d.element_name == 'longitude':
-                                    x=numpy.zeros(di['recordindex'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=gkinds)))
-                                    x.fill( station_configuration_retrieved[d.element_name].values[0] )
-                                    groups[k][d.element_name]= ({'hdrlen':di['recordindex'].shape[0]},x) 
-
+                                pass                                  
+                            
+                            
+                            
+                            
+                            
 
  
                     elif k in ('station_configuration'): # station_configurationt contains info of all the stations, so this extracts only the one line for the wanted station with the numpy.where
-                        if d.element_name in station_configuration_retrieved.columns:                            
-                            groups[k][d.element_name]=({'hdrlen': 1}, np.full( 1 , station_configuration_retrieved[d.element_name].values[0] ) )
-           
+                        try: # case when the station+conf cannot be retrieved 
+                            if d.element_name in station_configuration_retrieved.columns:                            
+                                groups[k][d.element_name]=({'hdrlen': 1}, np.full( 1 , station_configuration_retrieved[d.element_name].values[0] ) )
+                        except:
+                            pass
+                            
                     elif k in ('source_configuration'): # storing the source configuration info, e.g. original file name, 
                         if d.element_name=='source_file':
                             #  groups[k][d.element_name] = ( {'hdrlen':fbds.variables['date@hdr'].shape[0] } ,  np.full( fbds.variables['date@hdr'].shape[0] , source_file  ) ) 
@@ -1669,11 +1702,11 @@ def get_station_configuration_f(station_id, station_configuration):
                 for sec_id in sec_list:                    
                     if sec_id == si:
                         sc = station_configuration.loc[station_configuration['secondary_id'] == s ]
-                        print("FOUND a secondary !!!")
+                        #print("FOUND a secondary !!!")
                         return sc 
             except:
-                return 0
-        return 0        
+                return False
+        return False        
     
 
 
@@ -1701,8 +1734,10 @@ def get_station_configuration(station_id, station_configuration):
     secondary = station_configuration['secondary_id'] 
     loc=0
     for s in secondary:
+        s = np.bytes_(str(s))
         try:  # this try is needed when the secondary ids are not defined or wrong, and the primary id cannot be matched with the station_id      
             if b'[' in s:
+                print(' FFFFFF ' , s)
                 st = s.replace(b'[',b'').replace(b']',b'')
                 stl=st.split(b',')
                 for st in stl:
@@ -1711,7 +1746,9 @@ def get_station_configuration(station_id, station_configuration):
             else:
                 if si==s:                 
                     return loc
+        #except MemoryError:
         except MemoryError:
+            print('FFFF mistake' , s )
             return 0
         loc=loc+1
     return 0        
@@ -1737,7 +1774,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
     if not False:
         
         #fbds=read_all_odbsql_stn_withfeedback(fn , dataset )
-        p=Pool(10)
+        p=Pool(3)
         fns=sorted(glob.glob(fn))
         func=partial(read_all_odbsql_stn_withfeedback,dataset)
         if len(fns)==1:       
@@ -1786,14 +1823,14 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
         tt=time.time()
         idx=numpy.lexsort((fbds['vertco_reference_1@body'].values,y))
         y=y[idx]
-        print(time.time()-tt)
+        #print(time.time()-tt)
         for fb in fbds.keys():
             fbds[fb].values[:]=fbds[fb].values[idx]
-        print(time.time()-tt)
+        #print(time.time()-tt)
         x=numpy.unique(y)
-        print(time.time()-tt)
+        #print(time.time()-tt)
         z=find_recordindex_l(y,x)
-        print(time.time()-tt)
+        #print(time.time()-tt)
         di=xr.Dataset() 
         di['recordindex']=({'record':z.shape[1]},z[1])
         #x=make_datetime(x//1000000,x%1000000)
@@ -1820,8 +1857,8 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                 dcols.append(d)
         fbds.drop(columns=dcols,inplace=True)
 
-        print(process.memory_info().rss//1024//1024)        
-        print(time.time()-t)
+        #print(process.memory_info().rss//1024//1024)        
+        #print(time.time()-t)
         tt=time.time()
 
         # each cdm table is written into an hdf group, groups is the dict of all the groups
@@ -1865,9 +1902,10 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                         j=0
                             
                     except KeyError:   
+                        pass
                         #if d.element_name=='duplicates':
                             #print('duplicates')
-                        print ('FFF ', d.element_name , ' ' , numpy.dtype(ttrans(d.kind,kinds=gkinds)), time.time()-tt )
+                        #print ('FFF ', d.element_name , ' ' , numpy.dtype(ttrans(d.kind,kinds=gkinds)), time.time()-tt )
                         #print ('FFF ', d.element_name , ' ' , numpy.dtype(ttrans(d.kind,kinds=gkinds)) )
 
                         if d.element_name in cdm['station_configuration'].columns:
@@ -1920,8 +1958,8 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                 try:
                     
                     
-                    if k in ('observations_table'):
-                        print('obs')
+                    #if k in ('observations_table'):
+                    #    print('obs')
                     if type(groups[k]) is dict:
                         gkev=groups[k][d.element_name]
                     else:
@@ -1933,7 +1971,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                         groupencodings[k][d.element_name]={'compression': 'gzip'}
                     
                     if k in ('observations_table'):
-                        print(k,d.element_name,time.time()-tt,' mem:',process.memory_info().rss//1024//1024)
+                        #print(k,d.element_name,time.time()-tt,' mem:',process.memory_info().rss//1024//1024)
                         #if d.element_name=='adjustment_id':
                             #print('adjustment_id')
                         write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs= dic_obstab_attributes  )
@@ -1942,8 +1980,8 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                     pass
         
         
-                if k=='observations_table':
-                    print(k,d.element_name,time.time()-tt,' mem:',process.memory_info().rss//1024//1024)
+                #if k=='observations_table':
+                #    print(k,d.element_name,time.time()-tt,' mem:',process.memory_info().rss//1024//1024)
         for k in groups.keys():            
             ##this appends group by group to the netcdf file
             #if k not in ('observations_table') :       
@@ -1955,7 +1993,6 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
     
     """ Storing the group encodings in a numpy dictionary to be reused by the merging script """
     np.save('groups_encodings',  groupencodings)
-   
     np.save('era5fb_encodings',  fbencodings)
     
     #print(fno,time.time()-t)
@@ -2030,6 +2067,7 @@ def load_cdm_tables():
     if not os.path.isfile('dic_obstab_attributes.npy'): 
         np.save( 'dic_obstab_attributes' , dic_obstab_attributes )
 
+    ''' # not used anymore ?
     variable_type = {}
     
     for tab in ['observations_table' , 'header_table']:    
@@ -2044,9 +2082,9 @@ def load_cdm_tables():
                 variable_type[tab][row.element_name ] = kinds[row.type]       
                 
     variable_type['observations_table']['date_time'] = np.int64
+    '''               
                    
     return cdm_tabdef, cdm_tab, tdict , dic_obstab_attributes 
-
 
 
 def csvListFromUrls(url=''):
@@ -2215,15 +2253,31 @@ if __name__ == '__main__':
 
 
 """ Examples for running 
--f /raid60/scratch/leo/scratch/era5/odbs/1/era5.conv._82930.gz  -d era5_1 -o OUTPUT
 
--f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.1:82930.gz -d era5_1759 -o OUTPUT
--f /raid60/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.C:8022.gz  -d era5_3188 -o OUTPUT
+
+# ERA5_1
+-f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.82930.txt.gz'  -d era5_1 -o OUTPUT
+-f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.10393.txt.gz'  -d era5_1 -o OUTPUT
+
+
+# ERA5_2
+-f /raid60/scratch/leo/scratch/era5/odbs/2/era5.conv._C:4701.gz  -d era5_2 -o OUTPUT
+
+# ERA5 1759
+-f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._1:82930.gz -d era5_1759 -o OUTPUT
+-f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._2:12820.gz -d era5_1759 -o OUTPUT
+
+# ERA5 1761
 -f /raid60/scratch/leo/scratch/era5/odbs/1761/era5.1761.conv._1:41675.gz -d era5_1761 -o OUTPUT
+-f /raid60/scratch/leo/scratch/era5/odbs/1761/era5.1761.conv._1:72681.gz -d era5_1761 -o OUTPUT
+
+
+# ERA5 3188
+-f /raid60/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.C:8022.gz  -d era5_3188 -o OUTPUT
+
 
 
 # use monthly input files, can be read in parallel
--f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.82930.txt.gz'  -d era5_1 -o OUTPUT
 
 
 ### file containing a secondary id to test
