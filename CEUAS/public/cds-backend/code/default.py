@@ -27,7 +27,10 @@ else:
     sys.path.append('/data/private/soft/python/')
     os.environ["RSCRATCH"] = "/data/public/"
 from multiprocessing import set_start_method,Pool
-set_start_method("spawn")
+try:      
+    set_start_method("spawn")
+except RuntimeError:
+    pass
 import cds_eua2 as eua
 import pandas as pd
 import xarray
@@ -49,11 +52,49 @@ import subprocess
 #@hug.exception(Exception)
 #def handler(exception):
     #return str(exception)
+global wroot
+wroot='.'
+
+def makedaterange(vola,itup):
+    s,skey=itup
+    active={}
+    try:
+        
+        with h5py.File(s,'r') as f:
+            print(skey)
+            try:
+                
+                #funits=f['recordtimestamp'].attrs['units']
+                funits='seconds since 1900-01-01 00:00:00'
+                active[skey]=[int(eua.secsince(f['recordtimestamp'][0],funits)),int(eua.secsince(f['recordtimestamp'][-1],funits)),
+                              float(f['observations_table']['latitude'][-1]),float(f['observations_table']['longitude'][-1])]
+                idx=numpy.where(vola.StationId.values==skey)[0]
+                if len(idx)>0:
+                    
+                    active[skey].append(vola.CountryCode[idx[0]])
+                else:
+                    active[skey].append('')
+                    print('no key found for '+skey)
+            except KeyError:
+                print(skey+': a table is missing')
+    except:
+        print('file open error:'+s)
+    return active
 
 def main():
     
     
+#    try:      
+#        set_start_method("spawn")
+#    except RuntimeError:
+#        pass
     os.chdir(os.path.expandvars('$RSCRATCH/era5/odbs/merged'))
+#    os.chdir(os.path.expandvars('/raid60/scratch/federico/JUNE_TEST_MERGING_ALL'))
+    wroot=os.path.expandvars('$RSCRATCH/era5/odbs/merged/tmp')
+    try:
+        os.mkdir(wroot)
+    except:
+        pass
     z=numpy.zeros(1,dtype=numpy.int32)
     zidx=numpy.zeros(1,dtype=numpy.int)
     idx=numpy.zeros(1,dtype=numpy.int)
@@ -68,7 +109,7 @@ def main():
         with open(os.path.expanduser('~/.tmp/active.json')) as f:
             active=json.load(f)
     except:
-        slist=glob.glob(os.path.expandvars('$RSCRATCH/era5/odbs/merged/'+'0-20000-0-?????_CEUAS_merged_v0.nc'))
+        slist=glob.glob(os.path.expandvars('0-20000-0-?????_CEUAS_merged_v0.nc'))
         slnum=[i[-34:-19] for i in slist]
         
         volapath='https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
@@ -82,28 +123,15 @@ def main():
         #exit()
         active={}
         
-        for s,skey in zip(slist,slnum):
-            try:
-                
-                with h5py.File(s,'r') as f:
-                    print(skey)
-                    try:
-                        
-                        #funits=f['recordtimestamp'].attrs['units']
-                        funits='seconds since 1900-01-01 00:00:00'
-                        active[skey]=[int(eua.secsince(f['recordtimestamp'][0],funits)),int(eua.secsince(f['recordtimestamp'][-1],funits)),
-                                      float(f['observations_table']['latitude'][-1]),float(f['observations_table']['longitude'][-1])]
-                        idx=numpy.where(vola.StationId.values==skey)[0]
-                        if len(idx)>0:
-                            
-                            active[skey].append(vola.CountryCode[idx[0]])
-                        else:
-                            active[skey].append('')
-                            print('no key found for '+skey)
-                    except KeyError:
-                        print(skey+': a table is missing')
-            except:
-                print('file open error:'+s)
+        func=partial(makedaterange,vola)
+        #with Pool(10) as p:
+            #sklist=list(p.map(func,zip(slist,slnum)))
+        sklist=list(map(func,zip(slist,slnum)))
+        for s in sklist:
+            if s:
+                k=next(iter(s))
+                active[k]=s[k]
+            
         with open(os.path.expanduser('~/.tmp/active.json'),'w') as f:
             json.dump(active,f)
             
@@ -363,7 +391,7 @@ def to_csv(idir,flist,ofile='out.csv'):
         
     return ofile
 
-def defproc(body,randdir,cdm):
+def defproc(body,wroot,randdir,cdm):
 
     tt=time.time()
     error=check_body(body,cdm)
@@ -373,7 +401,7 @@ def defproc(body,randdir,cdm):
         
     
     try:
-        os.mkdir(randdir)
+        os.mkdir(wroot+'/'+randdir)
     except:
         pass
 
@@ -460,12 +488,12 @@ def defproc(body,randdir,cdm):
         raise HTTPError(HTTP_422,description=[body,'No selected station has data in specified date range'])
             
 
-    func=partial(eua.process_flat,randdir,cf)
+    func=partial(eua.process_flat,wroot,randdir,cf)
 
-#    results=list(map(func,bodies))
-#    print(results)
+    #results=list(map(func,bodies))
+    #print(results)
     with Pool(10) as p:
-        results=list(p.map(func,bodies))
+        results=list(p.map(func,bodies,chunksize=1))
 
     wpath=''
     for r in results:
@@ -568,7 +596,8 @@ def index(request=None,response=None):
 
     print(body)
 
-    rfile,error=defproc(body,randdir,cdm)   
+    wroot=os.path.expandvars('$RSCRATCH/tmp/')
+    rfile,error=defproc(body,wroot,randdir,cdm)   
 
     if rfile=='':
 
@@ -596,7 +625,8 @@ def index(request=None,body=None,response=None):
 
     print(json.dumps(body))
 
-    rfile,error=defproc(body,randdir,cdm)   
+    wroot=os.path.expandvars('$RSCRATCH/tmp/')
+    rfile,error=defproc(body,wroot,randdir,cdm)   
     print(rfile,error)
     if rfile=='':
         raise HTTPError(HTTP_422,description=error)
@@ -608,11 +638,13 @@ def index(request=None,body=None,response=None):
     
 if __name__ == '__main__':
 
-    #active,cdm,cf=main()
+    active,cdm,cf=main()
     body=eval(sys.argv[1])
 
-    randdir=os.path.expandvars('$RSCRATCH/tmp/{:012d}'.format(100000000000))
-    ret=defproc(body,randdir,cdm)
+    randdir=os.path.expandvars('{:012d}'.format(100000000000))
+    wroot=os.path.expandvars('$RSCRATCH/tmp/')
+    print(body)
+    ret=defproc(body,wroot,randdir,cdm)
     idir=os.path.expandvars('$RSCRATCH/out')
     os.chdir(idir)
     #ofile=to_csv(idir,glob.glob('*temperature.nc'))

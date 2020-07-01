@@ -364,79 +364,93 @@ def do_cfcopy(fd,f,k,idx,cf,dim0,var_selection=[]): # cuts vars and copies attri
             #print(k+'/'+v,cfv['cdmname'])
             if k+'/'+v==cfv['cdmname']:
                 vlist.append(cfv['shortname'])
-            
-                if f[k][v].ndim==1:
-                    try:               
-                        fd.create_dataset_like(vlist[-1],f[k][v],shape=idx.shape,chunks=True)
-                        hilf=f[k][v][idx[0]:idx[-1]+1]
-                        if 'time' in v: # convert time units 
-                            us=f[k][v].attrs['units']
-                            #dh=us.split(' ')[-1].split(':')
-                            
-                            if b'hours' in us:
-                                hilf=hilf*3600 # hilf+=int(dh[0])
-                            elif b'minutes' in us:
-                                hilf=hilf*60  #+int(dh[0])
-                            elif b'seconds' in us:
-                                hilf=hilf #//60//60+int(dh[0])
-                            elif b'days' in us:
-                                hilf*=24*3600
-
-                        fd[vlist[-1]][:]=hilf[idx-idx[0]]
-                    except:
-                        print(k,v)
-                        pass
-                else:
-                    s1=f[k][v].shape[1]
-                    fd.create_dataset_like(vlist[-1],f[k][v],shape=(idx.shape[0],s1),chunks=True)
-                    #if k=='header_table':
-                        #print(k,v,time.time()-tt, 'nach create')       
-                    #sname=f[k][v].dims[1][0].name.split('/')[-1]
-                    sname='string{}'.format(s1)
-                    #if k=='header_table':
-                        #print(k,v,time.time()-tt)       
-                    if sname not in fd.keys():
+                try:
+                    
+                    if f[k][v].ndim==1:
+                        try:               
+                            fd.create_dataset_like(vlist[-1],f[k][v],shape=idx.shape,chunks=True)
+                            hilf=f[k][v][idx[0]:idx[-1]+1]
+                            if 'time' in v: # convert time units 
+                                us=f[k][v].attrs['units']
+                                #dh=us.split(' ')[-1].split(':')
+                                
+                                if b'hours' in us:
+                                    hilf=hilf*3600 # hilf+=int(dh[0])
+                                elif b'minutes' in us:
+                                    hilf=hilf*60  #+int(dh[0])
+                                elif b'seconds' in us:
+                                    hilf=hilf #//60//60+int(dh[0])
+                                elif b'days' in us:
+                                    hilf*=24*3600
+    
+                            fd[vlist[-1]][:]=hilf[idx-idx[0]]
+                        except:
+                            print(k,v)
+                            pass
+                    else:
+                        s1=f[k][v].shape[1]
+                        fd.create_dataset_like(vlist[-1],f[k][v],shape=(idx.shape[0],s1),chunks=True)
+                        #if k=='header_table':
+                            #print(k,v,time.time()-tt, 'nach create')       
+                        #sname=f[k][v].dims[1][0].name.split('/')[-1]
+                        sname='string{}'.format(s1)
                         #if k=='header_table':
                             #print(k,v,time.time()-tt)       
-                        fd.create_dataset(sname,data=numpy.zeros(s1,dtype='S1'),chunks=True)
-                        fd[sname].attrs['NAME']=numpy.string_('This is a netCDF dimension but not a netCDF variable.')
-        
-                    #if k=='header_table':
-                        #print(k,v,time.time()-tt)       
-                    hilf=f[k][v][idx[0]:idx[-1]+1,:]
-                    if hilf.shape[0]==0:
-                        print('x')
-                    fd[vlist[-1]][:]=hilf[idx-idx[0],:]
+                        if sname not in fd.keys():
+                            #if k=='header_table':
+                                #print(k,v,time.time()-tt)       
+                            fd.create_dataset(sname,data=numpy.zeros(s1,dtype='S1'),chunks=True)
+                            fd[sname].attrs['NAME']=numpy.string_('This is a netCDF dimension but not a netCDF variable.')
+                            fd[sname].make_scale(sname)
+                        #if k=='header_table':
+                            #print(k,v,time.time()-tt)       
+                        hilf=f[k][v][idx[0]:idx[-1]+1,:]
+                        if hilf.shape[0]==0:
+                            print('x')
+                        fd[vlist[-1]][:]=hilf[idx-idx[0],:]
+                except:
+                    # fix for missing report_id SHOULD BE REMOVED
+                    hilf=numpy.zeros(shape=(idx.shape[0]),dtype='S10')
+                    for i in range(hilf.shape[0]):
+                        hilf[i]='{:0>10}'.format(i)
+                    fd.create_dataset(vlist[-1],data=hilf.view('S1'),shape=(idx.shape[0],10),chunks=True)
+                    
                     
                 #if k=='header_table':
-                    #print(k,v,time.time()-tt)       
-                for a in f[k][v].attrs.keys():
-                    if a not in ['DIMENSION_LIST','CLASS','external_table']:
-                        if type(f[k][v].attrs[a]) is str: 
-                            fd[vlist[-1]].attrs[a]=numpy.string_(f[k][v].attrs[a])
-                        else:
-                            fd[vlist[-1]].attrs[a]=f[k][v].attrs[a]
-                
-                for a in cfv.keys():
-                    if a not in ['shortname','odbcode','cdmcode']:
-                        fd[vlist[-1]].attrs[a]=numpy.string_(cfv[a]) 
-                    if a=='units' and cfv[a]=='NA':
-                        fd[vlist[-1]].attrs[a]=numpy.string_('')
-                    if a=='units' and vlist[-1]=='time':
-                        ahilf=numpy.bytes_(f[k][v].attrs[a])
-                        fd[vlist[-1]].attrs[a]=ahilf
-                        #if b'seconds' not in ahilf:
-                            #aa=ahilf.split()
-                            #fd[vlist[-1]].attrs[a]=b'seconds since '+aa[2]+b' '+aa[3].split(b':')[0]+b':00:00'
-                        #else:
-                            #fd[vlist[-1]].attrs[a]=ahilf
+                    #print(k,v,time.time()-tt)     
+                try:
+                    
+                    for a in f[k][v].attrs.keys():
+                        if a not in ['DIMENSION_LIST','CLASS','external_table']:
+                            if type(f[k][v].attrs[a]) is str: 
+                                fd[vlist[-1]].attrs[a]=numpy.string_(f[k][v].attrs[a])
+                            else:
+                                fd[vlist[-1]].attrs[a]=f[k][v].attrs[a]
+                    
+                    for a in cfv.keys():
+                        if a not in ['shortname','odbcode','cdmcode']:
+                            fd[vlist[-1]].attrs[a]=numpy.string_(cfv[a]) 
+                        if a=='units' and cfv[a]=='NA':
+                            fd[vlist[-1]].attrs[a]=numpy.string_('')
+                        if a=='units' and vlist[-1]=='time':
+                            ahilf=numpy.bytes_(f[k][v].attrs[a])
+                            fd[vlist[-1]].attrs[a]=ahilf
+                            #if b'seconds' not in ahilf:
+                                #aa=ahilf.split()
+                                #fd[vlist[-1]].attrs[a]=b'seconds since '+aa[2]+b' '+aa[3].split(b':')[0]+b':00:00'
+                            #else:
+                                #fd[vlist[-1]].attrs[a]=ahilf
+                except:
+                    # quick fix should be removed
+                    print(k+'/'+v+' has no attributes')
                     
                 
             
                 
                 #print(k,time.time()-tt)       
                 l=0
-                for d in f[k][v].dims:
+                #for d in f[k][v].dims:
+                for d in fd[cfv['shortname']].dims:
                     if len(d)>0:
                         #print(k,v,f[k][v].dims[l][0].name)
                         if l==0:
@@ -638,7 +652,7 @@ def orisin(mask,x,v):
                     break
             mask[i]=found
 
-def process_flat(randdir,cf,rvars):
+def process_flat(wroot,randdir,cf,rvars):
 
     t=time.time()
     vdict={}
@@ -665,7 +679,7 @@ def process_flat(randdir,cf,rvars):
             if os.path.isfile(rfile):
                 break
            
-        print(rfile)
+        print(rfile,datetime.now().isoformat(' ', 'milliseconds'))
         if len(rvkeys)>0:
             rvdict=copy.copy(rvars)
             del rvdict['statid']
@@ -823,7 +837,7 @@ def process_flat(randdir,cf,rvars):
                             except MemoryError as e:
                                 return '','Error "'+str(e)+'" occured while checking criteria'
                         
-                    print('mask:',time.time()-t)
+                    print('mask:',datetime.now().isoformat(' ', 'milliseconds'))
                     #t=time.time()
                     #y=f['era5fb/date@hdr'][mask]
                     idx=numpy.where(mask)[0]+trange[0]
@@ -842,7 +856,7 @@ def process_flat(randdir,cf,rvars):
                     for i in idx:
                         e=fc[i-idx[0]]
                         if fcold!=e:
-                            print(ecdt(e))
+                            #print(ecdt(e))
                             fcold=e
  
                     z=di[1,:]
@@ -851,7 +865,7 @@ def process_flat(randdir,cf,rvars):
                     z=z[zidx]
                     
                     zidx=calc_trajindexfast(z,zidx,idx,trajectory_index)
-                   
+                
                     dims={'obs':numpy.zeros(idx.shape[0],dtype=numpy.int32),
                           'trajectory':numpy.zeros(zidx.shape[0],dtype=numpy.int32)}
                     globatts={'Conventions':"CF-1.7" ,
@@ -888,28 +902,31 @@ def process_flat(randdir,cf,rvars):
                             pass
                     
                     
-                    print('recordindex:',time.time()-t)
-                    dfile=randdir+'/dest_'+statid+'_'+cdmnamedict[rvars['variable']]+'.nc'
+                    print('recordindex:',datetime.now().isoformat(' ', 'milliseconds'))
+                    dfile=wroot+'/'+randdir+'/dest_'+statid+'_'+cdmnamedict[rvars['variable']]+'.nc'
                     print(os.getcwd()+'/'+dfile)
                     with h5py.File(dfile,'w') as fd:
                         i=0
                         for d,v in dims.items():
                             fd.create_dataset(d,data=v)
+                            
                             fd[d].attrs['NAME']=numpy.string_('This is a netCDF dimension but not a netCDF variable.')
+                            fd[d].make_scale(d)
                             #fd[d].attrs['_Netcdf4Dimid']=numpy.int64(i)
                             i+=1
                         fd.create_dataset('trajectory_index',data=trajectory_index)
                         fd['trajectory_index'].attrs['long_name'] = numpy.string_("index of trajectory this obs belongs to")
                         fd['trajectory_index'].attrs['instance_dimension'] = numpy.string_("trajectory") 
                         fd['trajectory_index'].attrs['coordinates'] = numpy.string_("lat lon time plev") 
-                        print('trajectory stuff:',time.time()-t)
+                        # fd[['trajectory_index'].make_scale(['trajectory_index')
+                        #print('trajectory stuff:',time.time()-t)
                         for k in f.keys():
                             if isinstance(f[k],h5py.Group):
                                 #t=time.time()
                                 if k in ['observations_table']: # only obs, feedback fitting criteria (idx) is copied
                                     do_cfcopy(fd,f,k,idx,ccf,'obs',var_selection=['observation_id','latitude','longitude','z_coordinate',
                                                                                  'observation_value','date_time'])#'observed_variable','units'
-                                    print(k,'copied',time.time()-t)
+                                    #print(k,'copied',time.time()-t)
                                 elif k in ['era5fb']: # only obs, feedback fitting criteria (idx) is copied
                                     if 'fbstats' in rvdk:
                                         try:
@@ -921,7 +938,7 @@ def process_flat(randdir,cf,rvars):
                                     print(k,'copied',time.time()-t)
                                 elif k in ['header_table']:  # only records fitting criteria (zidx) are copied
                                     do_cfcopy(fd,f,k,zidx,ccf,'trajectory',var_selection=['report_id']) #,'station_name','primary_station_id'])
-                                    print(k,'copied',time.time()-t)
+                                    #print(k,'copied',time.time()-t)
                                 elif 'station_configuration' in k:  # only records fitting criteria (zidx) are copied
                                     #sh=f['header_table']['primary_station_id'][0].shape[0]
                                     #sid=f['header_table']['primary_station_id'][0].view('S{}'.format(sh))[0].split(b"'")[1]
@@ -934,7 +951,7 @@ def process_flat(randdir,cf,rvars):
                                         fd.attrs['primary_id']=f[k]['primary_id'][0].view('S{}'.format(sh))[0]
                                         sh=f[k]['station_name'].shape[1]                                
                                         fd.attrs['station_name']=f[k]['station_name'][0].view('S{}'.format(sh))[0]
-                                        print(k,'copied',time.time()-t)
+                                        #print(k,'copied',time.time()-t)
                                     except:
                                         
                                         print('no primary_id:',dfile)
@@ -977,7 +994,7 @@ def process_flat(randdir,cf,rvars):
             except Exception as e:
                 return '','exception "'+str(e)+'" occured while reading '+rfile
 
-            print(time.time()-t)
+            print('return:',datetime.now().isoformat(' ', 'milliseconds'))
 
         return dfile,''
     else:
@@ -992,6 +1009,7 @@ if __name__ == '__main__':
     os.chdir(os.path.expandvars('$HOME/python/web2py'))
     print(('called with ',sys.argv[1],sys.argv[2]))
     rvars=eval(sys.argv[2])
+    wroot=os.path.expandvars('$RSCRATCH/tmp/')
     try:
         
         if '[0' in rvars['statid']:
@@ -1023,7 +1041,7 @@ if __name__ == '__main__':
     cf=read_standardnames()
     randdir='{:012d}'.format(100000000000)
     try:
-        os.mkdir(randdir)
+        os.mkdir(wroot+'/'+randdir)
     except:
         pass
     func=partial(process_flat,randdir,cf)
