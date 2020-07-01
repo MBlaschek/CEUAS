@@ -216,7 +216,6 @@ class Merger():
                               cdm = xr.open_dataset(F , engine = 'h5netcdf' , group = t )
                               data['cdm_tables'][t] = cdm 
 
-            #code.interact(local = locals())
             print(blue + 'Memory used after reading data: ', process.memory_info().rss/1000000000 , cend)
 
             self.data = data
@@ -277,6 +276,7 @@ class Merger():
                   Will compare the unique date_time of each dataset and extract the global unique date_times
                   """
 
+
             logging.info('\n *** Running make_all_datetime ' )
 
             all_uniques = []  # storing a list with all the unique date_times            
@@ -316,7 +316,7 @@ class Merger():
                               try:
                                     index_up =  indices[ count + 1 ]  # works until the last available recordindex
                               except:                            
-                                    index_up = max(indices)+10000    
+                                    index_up = max(indices)+1000000 # dummy large number    
 
                               self.unique_dates[k][F]['indices'][dt]['up'] = index_up
 
@@ -383,12 +383,22 @@ class Merger():
             return hd
 
 
-      def make_obstab_era5fb_dic(self, dataset = '' , date_time = '', File = ''):                                                                                                                      
-            """ Create obs_tab and feedback tables """                                                                                  
+      def make_obstab_era5fb_dic(self, dataset = '' , date_time = '', File = ''):
+            OUT = open('wrong_datetime_indices.txt','a+')
+            
+            """ Create obs_tab and feedback tables """
+            #print('making make_obstab_era5fb_dic')
             index, index_up = self.unique_dates[dataset][File]['indices'][date_time]['low'] , self.unique_dates[dataset][File]['indices'][date_time]['up']                                             
-            # I exclude the data which do not have report_status@hdr==1 NO: this approach was abandoned                                                                                 
+            # I exclude the data which do not have report_status@hdr==1 NO: this approach was abandoned                                                                    
+            #print('making make_obstab_era5fb_dic indices', index, ' ' , index_up)
+            
+            if (index_up < index):
+                  print(' ###################### WRONG ', index, ' ', index_up, ' ' , date_time , ' ' , File )
+                  OUT.write(str(index) + ' '+ str(index_up) + ' ' + str(date_time) + ' ' + File )
+                  return
             obs_dic = {}                                    
-            for v in self.observations_table_vars:   
+            for v in self.observations_table_vars:
+                  #print('v is : ',  v )
                   obs_dic[v]    = self.data[dataset][File]['observations_table'][v][index:index_up]
 
             """ Loop over the obs_tab to find duplicates.
@@ -401,7 +411,11 @@ class Merger():
 
             already_selected = { }
             
+            #print('starting the loop: ' , date_time, ' '  , dataset, ' ', index, ' ' , index_up)
             for p,var,val,ind in zip ( obs_dic['z_coordinate'] , obs_dic['observed_variable'],obs_dic['observation_value'] ,range(len(obs_dic['z_coordinate'])) ):
+                  #print(p,var,val,ind)
+                  #if date_time > 2354300000:
+                  #      print('looping :::', var, ' ' , val, ' ' , ind , ' ', dataset, ' ' , index_up, ' ' , index, ' ', File)
                   if p not in already_selected.keys():
                         already_selected[p] = []
                   
@@ -414,6 +428,7 @@ class Merger():
                   else: # skipping nans
                         pass
 
+            #print('done with the loop')
             red_obs_dic = {} # dictionary for the reduced (removed duplicates) obs_tab
             for v in self.observations_table_vars:
                   red_obs_dic[v] = obs_dic[v][indices]
@@ -433,6 +448,7 @@ class Merger():
                 Era5_1 and era5_2 fb have different columns.
                 If data for a variable is not available, it fills with the appropriate null value '''
             
+            #print('making the era5fb  ', date_time, ' ' , dataset)
             red_era5fb_dic = {}
             for v in self.era5fb_columns:
                   tipo = self.dic_type_attributes['era5fb'][v]['type']                   
@@ -446,13 +462,14 @@ class Merger():
                         void = get_null(tipo = tipo)
                         red_era5fb_dic[v]= np.full(len(indices), void)
                           
+            #print('done making_obstab_era5fb')
             return red_obs_dic , red_era5fb_dic    
 
 
       def merge_all_data(self):       
             """ Construct a dictionary with all the dataframes of each dataset, either reading it from saved pickles or reading it from memory """
 
-            logging.info('***** Starting the merging process ')
+            logging.info('***** Starting the merging process merge_all_data')
 
             """ All possible unique_dates to loop on """
             date_times = self.merged_unique_dates
@@ -466,11 +483,24 @@ class Merger():
             """ Dictionary that will contain the merged file. """            
             # rand = datetime.strptime('1981-01-03 12:00:00', '%Y-%m-%d %H:%M:%S')  
             dt_bestds_dic = {} # store the selected best dataset for each dt     
-            #date_times=date_times[0:2000]
+            #date_times=date_times[1000:3000]
             tot = len(date_times)
             tt=time.time()
+            print('*** Merging ' , tot, '  records ***')
+            
+            early_datasets = True
             for dt, c in zip(date_times, range(tot) ): # loop over all the possible date_times 
-                  if (c+1)%100==0:
+                        
+                  #print(dt, ' doing ' )
+
+                  if (c+1)%1000==0:
+                        if dt > 2570745600 and early_datasets:
+                              for d in ['era5_2' , 'era5_1759', 'era5_1761' , 'era5_3188']:
+                                    if d in self.datasets_keys:                                   
+                                          del self.data[d]
+                                          print('Removing processed early dataset' )
+                              early_datasets = False
+                              
                         print('Analize : ', str(c+1) , '/',  str(tot)  , ' ', dt , ' ',
                               now(time.time()),'{:5.3f}'.format(time.time()-tt ))
 
@@ -479,25 +509,29 @@ class Merger():
                   for k in self.dataset_per_dt[dt].keys() :  # checking the list of available datasets  
                         ''' {'era5_2': ['example_stations/0-20000-0-82930_era5_2_harvested_era5.conv._1:82930.gz.nc', 
                                         'example_stations/0-20000-0-82930_era5_2_harvested_era5.conv._82930.gz.nc']}
-                        '''
-                        cleaned_df_container[k] = {}
+                        '''                        
 
                         all_len = []
                         for F in self.dataset_per_dt[dt][k]:
-                              cleaned_df_container[k][F] = {}
                               obs_tab, era5fb_tab = self.make_obstab_era5fb_dic(dataset = k , date_time = dt, File = F)
-                              all_len.append( len(obs_tab['date_time'][:] ) )
                               if len(obs_tab['date_time'][:])==0: 
-                                    print('skipping empty observations')
-                                    del cleaned_df_container[k]
+                                    #print('skipping empty observations')
                                     continue
+                              
+                              all_len.append( len(obs_tab['date_time'][:] ) )
+                              
+                              if k not in cleaned_df_container.keys():
+                                    cleaned_df_container[k] = {}
 
+                              cleaned_df_container[k][F] = {}
                               cleaned_df_container[k][F]['obs_tab']    = obs_tab         # cleaned dataframe 
-                              cleaned_df_container[k][F]['era5fb_tab'] = era5fb_tab       # cleaned dataframe                                                                                                                     
-                  if max(all_len) >  0: # skipping empty container dictionary
+                              cleaned_df_container[k][F]['era5fb_tab'] = era5fb_tab       # cleaned dataframe  
+                              #print('filling cleaned_df')
+
+                  if bool(all_len): # skipping empty container dictionary
                         best_ds, combined_obs_tab, combined_era5fb_tab, combined_head_tab, selected_file = self.combine_record(dt, container = cleaned_df_container)
                   else:
-                        print('Found an empty record ')
+                        print(' Found an empty record ')
                         continue
       
                   #if 'advanced_assimilation_feedback' not in combined_obs_tab.keys() and 'era5' in best_ds:
@@ -541,6 +575,7 @@ class Merger():
             pop = np.array(mi) # removing last unecessary index  
             di['recordindex']          = ( {'recordindex' : pop.shape } , pop )
 
+
             """ Creating the combined data """
             logging.debug('*** Concatenating the observations_table ' )      
             combined_obs = {}
@@ -549,7 +584,7 @@ class Merger():
                   combined_obs[k]=np.concatenate([all_combined_obs[i][k][:] for i in range(len(all_combined_obs))])
                   self.tot_records = len(combined_obs[k])
                   self.write_merged(content = 'observations_table', table= {k:combined_obs[k]})
-                  logging.info('*** Written observations table %s: ', k)
+                  #logging.info('*** Written observations table %s: ', k)
 
                   if k not in ['date_time']:
                         del combined_obs[k]
@@ -569,7 +604,7 @@ class Merger():
                   try:
                         combined_era5fb[k]=np.concatenate([all_combined_era5fb[i][k][:] for i in range(len(all_combined_era5fb))])
                         self.write_merged(content = 'era5fb', table= {k:combined_era5fb[k]})
-                        logging.info('*** Written era5fb %s: ', k)
+                        #logging.info('*** Written era5fb %s: ', k)
                   except:
                         print("FAILED feedback variable " , k)
 
@@ -588,6 +623,8 @@ class Merger():
                         self.write_merged(content = 'header_table', table= {k: tab})
                         logging.info('*** Written header table %s: ', k)
                   except:
+                        if k != 'primary_station_id':
+                              code.interact(local = locals() )
                         print('FFF FAILED variable in header table', k )
 
             del all_combined_head
@@ -642,6 +679,7 @@ class Merger():
             """ This is the main function that analize each record (i.e. separate ascent) and decides which one to keep as merged. 
                 Extracs the observations_table, header_table and era5fb accordingly """
             
+            #print('combining record')
             record_dataset_legth ={}     
 
             other_ds   = []
@@ -746,17 +784,19 @@ class Merger():
             else:
                   selected_obstab['advanced_assimilation_feedback'] = np.array([0]*len(selected_obstab['date_time']) )
 
-            #code.interact(local = locals() )
-
             best_ds_byte = np.bytes_(best_ds, ndtype = '|S10') # converting to bytes ojbect
             arr = np.full( (1, len( selected_obstab['date_time']) ) , best_ds_byte )[0]
             selected_obstab['source_id'] = arr
-            #code.interact(local = locals() )                                                                                                                 
-
 
             duplicate = b','.join(duplicates)
-            selected_head['duplicates'] = np.array(duplicate)
-            
+            #selected_head['duplicates'] = np.array(duplicate)
+
+            duplicate = np.array(duplicate).astype(dtype='|S70')
+            selected_head['duplicates'] = np.array([duplicate])
+            selected_head['report_id']  = np.array([selected_obstab['report_id'][0]])
+            selected_head['source_id']  = np.array([selected_obstab['source_id'][0]])
+            selected_head['report_timestamp']  = np.array([selected_obstab['date_time'][0]])
+
             selected_file = np.bytes_(best_file.split('/')[-1])
             
             return  best_ds, selected_obstab, selected_era5fb, selected_head, selected_file
@@ -798,18 +838,18 @@ class Merger():
 
 
             if content == 'recordindex':  # writing the recordindex, recordtimestamp, dateindex
-                  logging.info('Writing the merged record indices to the netCDF output ')
+                  #logging.info('Writing the merged record indices to the netCDF output ')
                   table.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a')
 
             elif content == 'cdm_tables':
                   for k in self.data['cdm_tables'].keys():
                         table = self.data['cdm_tables'][k]
                         table.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a', group = k)
-                        logging.info('Writing the cdm table %s to the netCDF output ', k)
+                        #logging.info('Writing the cdm table %s to the netCDF output ', k)
                   
             elif content == 'source_configuration':                 
                   table.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a', group = content)
-                  logging.info('Writing the source_configuration table to the netCDF output ')
+                  #logging.info('Writing the source_configuration table to the netCDF output ')
             
             
             #elif content == 'standard_cdm': # writing the station_configuration and source_configuration
@@ -842,9 +882,9 @@ class Merger():
                               try:
                                     table[k] = table[k].astype( var_type ) 
                               except:
-                                    print ('FAILED converting column ' , k, ' type ', type(table[v][0]) , ' to type ', var_type )
+                                    print ('FAILED converting column ' , k, ' type ', type(table[k][0]) , ' to type ', var_type )
 
-                        print('*** Writing the table ', content, ' variable ',  k)
+                        #print('*** Writing the table ', content, ' variable ',  k)
 
                         dic = {k:table[k]}  # making a 1 colum dictionary
                         shape = table[k].shape
@@ -863,7 +903,7 @@ class Merger():
                                     else:
                                           nan = np.float32(np.nan) 
       
-                                          print('fff Adding missing cdm colum with empty values: %s' , k, ' ' , shape )
+                                          #print('Adding missing cdm colum with empty values: %s' , k, ' ' , shape )
                               
                                           dic={k:np.empty(shape,dtype=np.dtype(nan))}
 
@@ -967,7 +1007,7 @@ data_directories   = {     'era5_1'       :  '/raid60/scratch/federico/TEST_MAY_
                                        'era5_3188' :  '/raid60/scratch/federico/TEST_MAY_ERA5/era5_3188'    ,
                                        'era5_1759' :  '/raid60/scratch/federico/TEST_MAY_ERA5/era5_1759'   ,
                                        'era5_1761' :  '/raid60/scratch/federico/TEST_MAY_ERA5/era5_1761'   ,
-                                       'ncar'           :  '/raid60/scratch/federico/TEST_MAY_ERA5/ncar'    ,
+                                       #'ncar'           :  '/raid60/scratch/federico/TEST_MAY_ERA5/ncar'    ,
                                        'igra2'          :  '/raid60/scratch/federico/TEST_MAY_ERA5/igra2'           ,
                                        'bufr'            :  '/raid60/scratch/federico/TEST_MAY_ERA5/bufr'            ,                
                                        }
@@ -987,14 +1027,14 @@ def create_stat_dic(stat_id, data_directories):
                         
                         total_dim. append( os.path.getsize (i + '/' + f) )
                         
-                        print('FOUND!' , d , '   ' , f )
+                        #print('FOUND!' , d , '   ' , f )
                         
       size = sum(total_dim)                 
       return station_dic, size 
 
 
 
-out_dir = '/raid60/scratch/federico/JUNE_TEST_MERGING_PARALLEL_THREE/'
+out_dir = '/raid60/scratch/federico/JUNE_TEST_MERGING_PARTIAL_26JUNE2020_srvx2_noNCAR/'
 run_mode = 'dummy'
 
 if __name__ == '__main__':
@@ -1006,30 +1046,59 @@ if __name__ == '__main__':
 
       parser.add_argument('--maximum' , '-m', 
                       help="Maximum size of a single station file "  ,
-                      type = int,
-                      default = 1000000000) # 1 GB
+                      type = int ) # 1 GB
+
+
+
+      parser.add_argument('--lightest' , '-l',
+                          help="Minimum size of a single station file "  ,
+                          type = int ) # 0.1 MB
+
+      parser.add_argument('--run_exception' , '-e',
+                          help="Run the station without raising errors"  ,
+                          type = bool,
+                          default = False ) # 0.1 MB 
       
       args = parser.parse_args()
       stations = args.stations
       max_size = args.maximum
-
+      min_size = args.lightest
+      run_exception = args.run_exception
 
       """ Initialize the merging class """
       Merging = Merger(out_dir)
 
-      
+      run_exception = False
+      print('run exception is ', run_exception )
+
+      out = open('Failed_merged.txt' , 'a+')
+      out.write('# Failed stations \n')
       for station in stations.split(','):
             print(station)
             station_dic, size = create_stat_dic(station, data_directories)
             
-            if size > max_size and size < 50*10**6:
-                  print('For now skipping large files ')
-                  continue 
- 
-            try:            
-                  a = Merging.merge(station,  datasets = station_dic , mode = run_mode ) # single station dictionary
-            except:
-                  print('Failed: ', station )
+            if size < max_size and size > min_size:
+                  if run_exception:
+                        try:
+                              a = Merging.merge(station,  datasets = station_dic , mode = run_mode ) # single station dictionary
+                        except:
+                              print(' ERROR, SKIPPED !!!')
+                              out.write( str(station) + '\n')
+                  else:
+                        a = Merging.merge(station,  datasets = station_dic , mode = run_mode ) # single station dictionary                
+
+                  print(' --------------------------------> finished station ', station )
+
+                  '''
+                  try:
+                        print(' I am running a total compressed size of ::: ', (size / 10**9) , '  GB   since minimum allowed:' , min_size , '  and maximum allowed: ', max_size , '   station: ' , station ) 
+                        a = Merging.merge(station,  datasets = station_dic , mode = run_mode ) # single station dictionary
+                  except:
+                        print('*** Failed :::  ', station , ' ::: must re-do ***')
+                        out.write(station + '\n' )
+                  '''
+            else:
+                  print(' The file size ' , size/10**9 , '   is not compatible with minimum allowed:' , min_size , '  and maximum allowed: ', max_size ) 
             
             
             
