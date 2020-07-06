@@ -24,29 +24,66 @@ The front returns files, which are either
 
 | Identifier       | All possible values                                          | Explanation                                                  |
 | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `date`           | `[YYYYMMDD,YYYYMMDD]`, `YYYYMMDD`, Integer or String         | Range of dates of radiosonde launches                        |
-| `country`        | `[“CCC”,…,”DDD”]`, String, Exclusive with `statid`, `bbox`, String | Country codes of stations to be selected                     |
+| `date`           | `[YYYYMMDD,YYYYMMDD]`, `YYYYMMDD`, Integer or String         | List of dates of launches                        |
+| `period`           | `[YYYYMMDD, YYYYMMDD]`, Integer or String         | Start and End of a period of dates of launches                        |
+| `country`        | `[“ALL”,…,”USA”]`, String, Exclusive with `statid`, `bbox`, String | Country codes of stations to be selected according to WMO, see examples below.                    |
 | `bbox`           | `[upper,left,lower,right]`, Float or String, Exclusive with `statid`, `country` | Boundaries of lat/lon rectangle to select stations           |
 | `fbstats`        | `["obs_minus_bg","obs_minus_an","bias_estimate"]`            | ERA5 feedback information                                    |
 | `pressure_level` | `[MMMM,…,NNNNN]`, `MMMM`, Integer or String                  | Pressure levels in Pascal. 16 standard pressure levels (10-1000 hPa) or significant levels (if omitted) |
 | `statid`         | `[“SSSSS”]`, String, either WMO or WIGOS IDs. Special value “all”, Exclusive with `country`, `bbox` | WMO or WIGOS station ID                                      |
 | `time`           | `[HHMMSS,HHMMSS]`                                            | List of times permitted.                                     |
 | `variable`       | `[„air_temperature“, “zonal_wind“, “meridional_wind“, “wind_speed”, ”wind_direction”, ”air_relative_humidity”, ”air_specific_humidity”, "air_dewpoint"]`, String | Meteorological variables                                     |
+| `format`         | `nc` or `csv`    | Output format |
 
 
 
 # Installation
 
-On the user side, python3 needs to be installed. The cdsapi module can be installed using conda:
+On the user side, python version 3 needs to be installed. The cdsapi module can be installed using:
+```python
+pip install cdsapi
+```
+Information on [pypi](https://pypi.org/project/cdsapi/) or at [cds]/https://cds.climate.copernicus.eu/api-how-to) 
+To use the example notebook scripts, please install the following packages:
+```python
+pip install numpy pandas xarray matplotlib 
+```
 
-https://anaconda.org/conda-forge/cdsapi
+# Usage
 
-To use the example notebook scripts, the netCDF4 or h5py packages need to be installed.
+There are examples for requests in the `Example.ipynb` Notebook and two simple requests are given here to show some functionality:
 
+1. Request one sounding at a specific date and at one station
 
-# usage
+```python
+import cdsapi
+c = cdsapi.Client(url='https://sis-dev.climate.copernicus.eu/api/v2')   # at the moment this is not in the default catalogue
+r = c.retrieve('insitu-comprehensive-upper-air-observation-network',
+               {
+                   'variable': ["air_temperature", "air_relative_humidity"],
+                   'year': '2000',
+                   'month':'02',
+                   'day':'01',
+                   'statid': '10393',
+               }, 
+               target='download.zip')
+```
 
-Run the notebook in your preferred IPython environment. 
+2. Request a timeseries of on station at a certain pressure level
+
+```python
+import cdsapi
+c = cdsapi.Client(url='https://sis-dev.climate.copernicus.eu/api/v2')   # at the moment this is not in the default catalogue
+r = c.retrieve('insitu-comprehensive-upper-air-observation-network',
+               {
+                   'variable': ["air_temperature", "air_relative_humidity"],
+                   'period': ['19000101', '20201231'],
+                   'statid': '10393',
+                   'pressure_level': 500
+               }, 
+               target='download.zip')
+```
+
 
 # License
 
