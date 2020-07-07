@@ -42,7 +42,7 @@ On the user side, Python (advised version 3) needs to be installed. The cdsapi m
 ```python
 pip install cdsapi
 ```
-Information on [pypi](https://pypi.org/project/cdsapi/) or at [cds]/https://cds.climate.copernicus.eu/api-how-to) 
+Information on how to install [pypi](https://pypi.org/project/cdsapi/) and create a `.cdsapirc` file with the valid access keys from your [cds account](https://cds.climate.copernicus.eu/api-how-to).
 To use the example notebook scripts, please install the following packages:
 ```python
 pip install numpy pandas xarray matplotlib 
