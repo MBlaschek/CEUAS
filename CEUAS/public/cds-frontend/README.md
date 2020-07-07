@@ -52,7 +52,7 @@ pip install numpy pandas xarray matplotlib
 
 There are examples for different requests in the `Example.ipynb` Notebook and two simple requests are given here to show some functionality:
 
-1. Request one sounding at a specific date and at one station:
+## Request one sounding at a specific date and at one station:
 We will ask for Lindenberg station on 1.February 2000. This will return a zip-File with two NetCDF files inside. One for air temperaure and one for air relative humidity. We specified not `pressure_level`, therefore all available pressure levels will be requested. We do not ask for a specific time, but all soundings on that day.
 ```python
 import cdsapi
@@ -81,8 +81,9 @@ z = zipfile.ZipFile('download.zip')
 z.extractall(path='./example_data/2')
 z.close()
 ```
-Finally we have two files in out directory: `example_data/2/dest_0-20000-0-10393_air_temperature.nc` and `example_data/2/dest_0-20000-0-10393_relative_humidity.nc`,
-which we can read in with `Xarray` and have a look at the data:
+
+Finally we have two files in the directory: `example_data/2/dest_0-20000-0-10393_air_temperature.nc` and `example_data/2/dest_0-20000-0-10393_relative_humidity.nc`,
+which we can read in with `xarray` and have a look at the data:
 ```python
 import xarray as xr
 tdata = xr.load_dataset('example_data/2/dest_0-20000-0-10393_air_temperature.nc')
@@ -112,7 +113,48 @@ Attributes:
 ```
 At the first look on `trajectory: 4` we know that there are 4 soundings on the requested day. A total of 227 observations are available. 
 
-2. Request a timeseries of one station at a certain pressure level
+### Same Request but csv
+A new feature is the CSV Output, so let's redo the request and set the format
+```python
+import cdsapi
+c = cdsapi.Client(url='https://sis-dev.climate.copernicus.eu/api/v2')   # at the moment this is not in the default catalogue
+r = c.retrieve('insitu-comprehensive-upper-air-observation-network',
+               {
+                   'variable': ["air_temperature", "air_relative_humidity"],
+                   'year': '2000',
+                   'month':'02',
+                   'day':'01',
+                   'statid': '10393',
+                   'format':'csv'
+               }, 
+               target='download.zip')
+``` 
+Redo the unzipping and let's read the `csv` file with `pandas`:
+
+```python
+import pandas
+tdata = pandas.read_csv('example_data/1/temperature.csv', index_col=0)
+print(tdata)
+
+          lat    lon     plev     ta                 time  trajectory_index           statid  statindex
+obs_id                                                                                                 
+0       52.22  14.12   4260.0  200.3  2000-02-01 05:00:00                 0  0-20000-0-10393          0
+1       52.22  14.12   4260.0  200.3  2000-02-01 05:00:00                 0  0-20000-0-10393          0
+2       52.22  14.12   4260.0  200.3  2000-02-01 05:00:00                 0  0-20000-0-10393          0
+3       52.22  14.12   4260.0  200.3  2000-02-01 05:00:00                 0  0-20000-0-10393          0
+4       52.22  14.12   4260.0  200.3  2000-02-01 05:00:00                 0  0-20000-0-10393          0
+...       ...    ...      ...    ...                  ...               ...              ...        ...
+9035    52.22  14.12  96100.0  278.2  2000-02-01 23:00:00                 3  0-20000-0-10393          0
+9036    52.22  14.12  96100.0  278.2  2000-02-01 23:00:00                 3  0-20000-0-10393          0
+9037    52.22  14.12  96100.0  278.2  2000-02-01 23:00:00                 3  0-20000-0-10393          0
+9038    52.22  14.12  96100.0  278.2  2000-02-01 23:00:00                 3  0-20000-0-10393          0
+9039    52.22  14.12  96100.0  278.2  2000-02-01 23:00:00                 3  0-20000-0-10393          0
+
+[7880 rows x 8 columns]
+```
+Please note that there are two files, one for temperature and one for relative humdity. In order to separate stations the `statid` is present as well as the `statindex` refering to a number for each station. When multiple stations are selected, data will be appended for these stations to the corresponding variable file.
+
+## Request a timeseries of one station at a certain pressure level
 We will ask for Lindenberg station on 500 hPa for all available dates and for air temperature and air relative humidity. This is a much larger request than the previous one.
 
 ```python
