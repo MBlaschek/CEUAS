@@ -20,6 +20,7 @@ logger.addHandler(ch)
 
 def read_ragged_cdm_to_array(filename: str, odb_codes: bool = True, daynight: bool = False,
                              variables: list = None, read_feedback: bool = True,
+                             optional_variables: dict = None,
                              **kwargs) -> xr.Dataset:
     """
     Read netCDF 4 HDF5 group data into a data cube on standard pressure levels
@@ -33,6 +34,7 @@ def read_ragged_cdm_to_array(filename: str, odb_codes: bool = True, daynight: bo
         daynight: Add hour dimension with 00Z and 12Z
         variables: List of variables as in the ODB Codes
         read_feedback: Look for ERA5 Feedback information
+        optional_variables: Dictionary with group and list of variables to read
 
     Notes:
         ODB Codes:
@@ -94,8 +96,7 @@ def read_ragged_cdm_to_array(filename: str, odb_codes: bool = True, daynight: bo
             logger.info("Header Table found: %s", igroup)
             #
             # What to read from here?
-            #
-
+            # and how ?
         #
         # Observation Table
         #
@@ -152,7 +153,7 @@ def read_ragged_cdm_to_array(filename: str, odb_codes: bool = True, daynight: bo
                 # only this variable + only standard pressure levels
                 ivar = (ovariables == i) & iplev
 
-                # check dates
+                # check dates and pressure levels for duplicates
                 timeplev = np.stack((time[ivar], plev[ivar],), axis=0)
                 u, c = np.unique(timeplev, axis=1, return_counts=True)
                 if c[c > 1].size > 0:
@@ -161,17 +162,13 @@ def read_ragged_cdm_to_array(filename: str, odb_codes: bool = True, daynight: bo
 
                 var_index[i] = ivar
                 logger.info("Converting to Cube .... %s %s", i, ivar.sum())
-        
+
                 itime, iobs = table_to_cube(time[ivar], ip[plev[ivar]], f[igroup]['observation_value'][ivar])
                 logger.info("Converting to Xarray ... %s", iobs.shape)
 
                 data[var_names[i]] = xr.DataArray(iobs, coords=(std_plevs, date[ivar][itime]),
                                                   dims=('plev', 'time'), name=var_names[i])
-            # end for
-            #
-            # read report_id for any variable and convert -> makes it possible to backtrace
-            #
-
+            # end for i in unique_variables
         #
         # Feedback Group
         #
@@ -216,7 +213,42 @@ def read_ragged_cdm_to_array(filename: str, odb_codes: bool = True, daynight: bo
                     data[var_names[i] + '_biascorr'] = xr.DataArray(iobs, coords=(std_plevs, date[ivar][itime]),
                                                                     dims=('plev', 'time'),
                                                                     name=var_names[i] + '_biascorr')
+        #
+        # Optional Variables (mostly in observations_table)
+        #
+        if len(optional_variables.keys()) > 0:
+            for igroup in optional_variables.keys():
+                if igroup not in f.keys():
+                    logger.warning('Optional Group %s not in file. skipping', igroup)
+                    continue
 
+                if igroup != 'observations_table':
+                    logger.info('not obs_table %s', igroup)
+                    continue
+
+                for jvar in optional_variables[igroup]:
+                    if jvar not in f[igroup].keys():
+                        logger.warning('Optional Variable %s not in group %s, file. skipping', jvar, igroup)
+                        continue
+
+                    logger.info('Reading: %s/%s', igroup, jvar)
+                    if len(f[igroup][jvar].shape) > 1:
+                        xobs = f[igroup][jvar][:, :]
+                        for i, ivar in var_index.items():
+                            iobs = xobs[ivar, :].astype(object).sum(1).astype(str)
+                            itime, iobs = table_to_cube(time[ivar], ip[plev[ivar]], iobs)
+                            data[var_names[i] + '_' + jvar] = xr.DataArray(iobs, coords=(std_plevs, date[ivar][itime]),
+                                                                           dims=('plev', 'time'),
+                                                                           name=var_names[i] + '_' + jvar)
+                    else:
+                        for i, ivar in var_index.items():
+                            itime, iobs = table_to_cube(time[ivar], ip[plev[ivar]], f[igroup][jvar][ivar])
+                            data[var_names[i] + '_' + jvar] = xr.DataArray(iobs, coords=(std_plevs, date[ivar][itime]),
+                                                                       dims=('plev', 'time'),
+                                                                       name=var_names[i] + '_' + jvar)
+        #
+        # end
+        #
     logger.info("Converting to Dataset....")
     data = xr.Dataset(data)
     data['plev'].attrs.update({'units': 'hPa', 'standard_name': 'air_pressure'})
@@ -224,7 +256,7 @@ def read_ragged_cdm_to_array(filename: str, odb_codes: bool = True, daynight: bo
     if daynight:
         # convert datetime to standard 00 and 12 times and add dimensions hour
         # ctmp = rt.met.std.to_hours(, times=(0, 12))
-        data = align_datetime(data, times=(0, 12), span=6, freq='12h')
+        data = align_datetime(data, times=(0, 12), span=kwargs.get('span', 6), freq='12h')
         dim = 'time'
         data = data.sel(**{dim: (data[dim].dt.hour.isin((0, 12)) & (data[dim].dt.minute == 0))})
         data = dict(data.groupby(dim + '.hour'))
@@ -461,7 +493,7 @@ def table_to_cube(time, plev, obs, return_indexes=False):
     xtime, jtime, itime = np.unique(time, return_index=True, return_inverse=True)
     if return_indexes:
         return jtime, xtime.size, plev, itime
-    data = np.full((16, xtime.size), np.nan, dtype=np.float32)
+    data = np.full((16, xtime.size), np.nan, dtype=obs.dtype)
     data[plev, itime] = obs
     return jtime, data
 
