@@ -20,10 +20,14 @@ The front returns files, which are either
 3. JSON file containing error messages, if an HTTP error occurs
 
 Both file formats can be dealt with in the CDS toolbox. 
+A typical request should contain at least a `variable` and some of the other Identifiers as shown below.
 
 | Identifier       | All possible values                                          | Explanation                                                  |
 | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | `date`           | `[YYYYMMDD,YYYYMMDD]`, `YYYYMMDD`, Integer or String         | List of dates of launches                        |
+| `year`           | `[YYYY,...,YYYY]`, `YYYY`, String         | Years                        |
+| `month`           | `[MM,..., MM]`, `MM`, String         | Months                    |
+| `day`           | `[DD,..., DD]`, `DD`, String         | Days                        |
 | `period`           | `[YYYYMMDD, YYYYMMDD]`, Integer or String         | Start and End of a period of dates of launches                        |
 | `country`        | `[“ALL”,…,”USA”]`, String, Exclusive with `statid`, `bbox` | Country codes of stations to be selected according to WMO, see examples below.                    |
 | `bbox`           | `[upper,left,lower,right]`, Float or String, Exclusive with `statid`, `country` | Boundaries of lat/lon rectangle to select stations           |
@@ -33,7 +37,6 @@ Both file formats can be dealt with in the CDS toolbox.
 | `time`           | `[HHMMSS,HHMMSS]`                                            | List of times permitted.                                     |
 | `variable`       | `[„air_temperature“, “zonal_wind“, “meridional_wind“, “wind_speed”, ”wind_direction”, ”air_relative_humidity”, ”air_specific_humidity”, "air_dewpoint"]`, String | Meteorological variables                                     |
 | `format`         | `nc` or `csv`    | Output format |
-
 
 
 # Installation
