@@ -779,10 +779,11 @@ def process_flat(wroot, randdir, cf, rvars):
                         rvdpo = ['']
                         prevday = 0
 
+
                     if didx[-1] + 1 == di.shape[1]:
-                        trange = [di[1, didx[0]], f['observations_table']['observation_value'].shape[0]]
+                        trange = [di[1, didx[0]], f['observations_table']['observation_value'].shape[0]]   # Maximum
                     else:
-                        trange = [di[1, didx[0]], di[1, didx[1] + 1]]
+                        trange = [di[1, didx[0]], di[1, didx[1] + 1]]  # Well within
 
                     logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange[0], trange[1], time.time() - t,
                                 rname)

@@ -15,27 +15,26 @@
 # - api is an example of Hypermedia API support and access control
 #########################################################################
 
-import copy
-import glob
-import json
-import logging
 import os
 import socket
 import sys
-import time
 import urllib
-import zipfile
-from datetime import datetime, timedelta
-from functools import partial
-from multiprocessing import set_start_method, Pool
-
 import cds_eua2 as eua
-import h5py  # pickle as h5py
-import hug
-import numpy
 import pandas as pd
 import xarray
+import numpy
+import hug
+import h5py  # pickle as h5py
+import zipfile
+import json
+import glob
+from functools import partial
 from falcon import HTTPError, HTTP_422
+import copy
+import time
+from datetime import datetime, timedelta
+import logging
+from multiprocessing import set_start_method, Pool
 
 try:
     set_start_method("spawn")
