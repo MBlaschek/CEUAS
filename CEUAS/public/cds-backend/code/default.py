@@ -131,7 +131,7 @@ def makedaterange(vola: pd.DataFrame, itup: tuple):
     return active
 
 
-def main():
+def init_server():
     #    try:
     #        set_start_method("spawn")
     #    except RuntimeError:
@@ -156,6 +156,7 @@ def main():
     try:
         with open(os.path.expanduser('~/.tmp/active.json')) as f:
             active = json.load(f)
+        logger.info('Active Stations read. [%d]', len(active))
     except:
         slist = glob.glob(os.path.expandvars('0-20000-0-?????_CEUAS_merged_v0.nc'))
         slnum = [i[-34:-19] for i in slist]
@@ -179,7 +180,7 @@ def main():
             if s:
                 k = next(iter(s))
                 active[k] = s[k]
-
+        logger.info('Active Stations created. [%d]', len(active))
         with open(os.path.expanduser('~/.tmp/active.json'), 'w') as f:
             json.dump(active, f)
 
@@ -199,7 +200,7 @@ def main():
     return active, cdm, cf
 
 
-active, cdm, cf = main()
+active, cdm, cf = init_server()
 
 slnum = list(active.keys())
 slist = [os.path.expandvars('$RSCRATCH/era5/odbs/merged/') + '0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
@@ -231,19 +232,64 @@ def check_body_new(variable: list = None, statid: list = None, product_type: str
                    format: str = None, period: list = None, cdm: dict = None, pass_unknown_keys: bool = False,
                    **kwargs) -> str or dict:
     d = {}
-
+    allowed_variables = ['temperature', 'u_component_of_wind', 'v_component_of_wind',
+                         'wind_speed', 'wind_direction', 'relative_humidity',
+                         'specific_humidity', 'dew_point_temperature']
+    #
+    # Unknown keys ?
+    #
     for ikey, ival in kwargs.items():
         logger.info('Requested key %s : %s unknown', ikey, ival)
         if pass_unknown_keys:
             d[ikey] = ival
+    #
+    # Product Type
+    #
+    # todo add product_type as a variable
+    # possible values: [sounding, monthly, gridded]
+    if product_type is not None:
+        logger.warning('Not yet implemented: product_type : %s' % product_type)
 
+    #
+    # Variable
+    #
     if variable is None:
         return 'Missing argument: variable'
+    else:
+        if not isinstance(variable, list):
+            variable = [variable]
 
-    if sum((statid is None, bbox is None, country is None)) != 1:
+        for ivar in variable:
+            if ivar not in allowed_variables:
+                return 'Invalid variable selected: ' + ivar
+        d['variable'] = variable
+    #
+    # fb stats
+    #
+    if fbstats is not None:
+        if not isinstance(fbstats, list):
+            fbstats = [fbstats]
+        for ifb in fbstats:
+            if ifb not in ['obs_minus_an', 'obs_minus_bg', 'bias_estimate']:
+                return 'Invalid fbstats variable selected: ' + ifb
+    #
+    # Format
+    #
+    if format is not None:
+        if format not in ['nc', 'csv']:
+            return 'Invalud format selected [nc, csv]: ' + format
+        d['format'] = format
+    else:
+        d['format'] = 'nc'
+    #
+    # only one of [statid, bbox, country]
+    #
+    if sum((statid is not None, bbox is not None, country is not None)) != 1:
         return 'Invalid selection, Specify only one of statid: %s, bbox: %s and country: %s' % (
             statid, bbox, country)
-
+    #
+    # Countries
+    #
     if country is not None:
         statid = []
         if isinstance(country, str):
@@ -263,7 +309,9 @@ def check_body_new(variable: list = None, statid: list = None, product_type: str
 
         if len(statid) == 0:
             return 'Invalid selection, no Stations for Countries %s' % str(country)
-
+    #
+    # BBOX [lower left upper right]
+    #
     elif bbox is not None:
         if not isinstance(bbox, (list, tuple)) or len(bbox) != 4:
             return 'Invalid selection, bounding box: [lower, left, upper, right]'
@@ -297,7 +345,9 @@ def check_body_new(variable: list = None, statid: list = None, product_type: str
                             statid.append(k)
         if len(statid) == 0:
             return 'Invalid selection, bounding box %s contains no radiosonde stations' % str(bbox)
-
+    #
+    # Stations
+    #
     else:
         try:
             if statid == 'all':
@@ -334,9 +384,13 @@ def check_body_new(variable: list = None, statid: list = None, product_type: str
                     new_statid.append(valid_id)
                 statid = new_statid
         except MemoryError:
-            return 'Invalid selection, specify either bbox, country or statid. Use "statid":"all" to select all stations'
-        d['statid'] = statid
-
+            return 'Invalid selection, specify either bbox, country or statid. Use "statid":"all" to select all ' \
+                   'stations '
+    d['statid'] = statid
+    #
+    # Date time selection
+    #
+    # todo only one date or two dates allowed at the moment by CDS
     if date is not None:
         # str, list (str, int)
         newdates = []
@@ -357,17 +411,50 @@ def check_body_new(variable: list = None, statid: list = None, product_type: str
                 except:
                     return 'only valid dates allowed for date: %s' % idate
         d['date'] = newdates
-
+    #
+    # Period ?
+    #
+    # todo not forward by CDS -> to date [start end]
     if period is not None:
         if not isinstance(period, list):
             return 'invalid period selection, period [startdate, enddate], but %s' % str(period)
         for i in range(len(period)):
             period[i] = str(period[i])
         d['date'] = ['{}-{}'.format(to_valid_datetime(period[0], as_string=True),
-                                   to_valid_datetime(period[-1], as_string=True))]
+                                    to_valid_datetime(period[-1], as_string=True))]
+    #
+    # Pressure levels
+    #
+    if pressure_level is not None:
+        if not isinstance(pressure_level, list):
+            pressure_level = [pressure_level]
 
-    if product_type is not None:
-        logger.warning('Not yet implemented: product_type : %s' % product_type)
+        for i in range(len(pressure_level)):
+            try:
+                # need to be string
+                pressure_level[i] = str(pressure_level[i])
+                # in Pa
+                if int(pressure_level[i]) < 500 or int(pressure_level[i]) > 110000:
+                    return 'invalid selection, pressure_level out of range [50-1100 hPa]: %d' % int(pressure_level[i])/100
+
+            except:
+                return 'invalid selection, pressure_level allows only integer, ' + pressure_level[i]
+        d['pressure_level'] = pressure_level
+    #
+    # times
+    #
+    if time is not None:
+        if not isinstance(time, list):
+            time = [time]
+        for i in range(len(time)):
+            try:
+                # need to be string
+                time[i] = str(time[i])
+                # in hours
+                if int(time[i]) < 0 or int(time[i]) > 24:
+                    return 'invalid selection, time out of range [0-24 h]: %d' % int(time[i])
+            except:
+                return 'invalid selection, pressure_level allows only integer, ' + time[i]
 
     return d
 
@@ -635,14 +722,16 @@ def to_csv(flist: list, ofile: str = 'out.csv'):
 
 def defproc(body: dict, wroot: str, randdir: str, cdm: dict):
     tt = time.time()
-    error = check_body(body, cdm)
-    if False:
+
+    if True:
         msg = check_body_new(cdm=cdm, **body)
         if isinstance(msg, str):
             return '', msg
         body = msg
-    if len(error) > 0:
-        return '', " ".join(error)
+    else:
+        error = check_body(body, cdm)
+        if len(error) > 0:
+            return '', " ".join(error)
 
     logger.debug('Cleaned Request %s', str(body))
     try:
@@ -880,7 +969,7 @@ def index(request=None, body=None, response=None):
 
 
 if __name__ == '__main__':
-    active, cdm, cf = main()
+    active, cdm, cf = init_server()
     #
     # Parse command line arguments for testing the server API
     #

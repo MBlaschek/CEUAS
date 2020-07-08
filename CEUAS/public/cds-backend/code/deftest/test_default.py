@@ -1,21 +1,41 @@
+#!/usr/bin/env python3
 import sys,os
-sys.path.append(os.path.expanduser('~/python/hug2'))
-from default import *
+sys.path.append(sys.path[0].replace('/deftest',''))
+try:
+	from default import init_server, defproc
+except ImportError as e:
+	print('Missing Package: default.py')
+	print(sys.path)
+	print(repr(e))
+	sys.exit(1)
+
 import io
 import h5py
+import logging
 
-active,cdm,cf=main()
+logger = logging.getLogger('upperair')
+logger.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s | %(funcName)s - %(levelname)s - %(message)s')
+ch = logging.StreamHandler(sys.stdout) 
+ch.setLevel(logging.DEBUG)
+ch.setFormatter(formatter)
+logger.addHandler(ch)
+
+logger.info('Importing Hug functions ...')
+active, cdm, cf = init_server()
 randdir='{:012d}'.format(100000000000)
+wroot = os.path.expandvars('$RSCRATCH/tmp/')
 dzip=randdir+'/download.zip'
+logger.info('Default Output: %s', wroot + dzip)
 
 def test_bbox1():
     body=eval('{"bbox":[40,0,50,20],"date":["19790101","19790131"],"variable":"temperature"}')
-    ret=defproc(body,randdir,cdm)
+    ret=defproc(body,wroot,randdir,cdm)
     assert ret[0]=='100000000000/download.zip' and ret[1]==''
     
 def test_bbox2():
     body=eval('{"bbox":[-40,140,80,359],"date":["19190101-20130131"],"variable":"temperature"}')
-    ret=defproc(body,randdir,cdm)
+    ret=defproc(body,wroot,randdir,cdm)
     with zipfile.ZipFile(dzip,'r') as f:
         x=f.namelist()
         hf = io.BytesIO(f.read(x[0]))
@@ -26,7 +46,7 @@ def test_bbox2():
     
 def test_country(statstr):
     body=eval('{"country":'+statstr+',"date":["19190101-20090131"],"variable":"temperature"}')
-    ret=defproc(body,randdir,cdm)
+    ret=defproc(body,wroot,randdir,cdm)
     assert ret[0]=='100000000000/download.zip' and ret[1]==''
 
 def test_statid(statstr):
@@ -36,7 +56,7 @@ def test_statid(statstr):
         evs='{"statid":'+statstr+',"date":["19190101-20190131"],"variable":"temperature"}'
         
     body=eval(evs)
-    ret=defproc(body,randdir,cdm)
+    ret=defproc(body,wroot, randdir,cdm)
     assert ret[0]=='100000000000/download.zip' and ret[1]==''
     
 
@@ -47,19 +67,19 @@ def test_date(statstr):
         evs='{"statid":"01002","date":'+statstr+',"variable":"temperature"}'
         
     body=eval(evs)
-    ret=defproc(body,randdir,cdm)
+    ret=defproc(body,wroot,randdir,cdm)
     assert ret[0]=='100000000000/download.zip' and ret[1]==''
 
 def test_dateplot(statstr):
     evs='{"statid":"10393","pressure_level":'+statstr+',"variable":"temperature","fbstats":["obs_minus_bg","bias_estimate"]}'
     body=eval(evs)
-    ret=defproc(body,randdir,cdm)
+    ret=defproc(body,wroot,randdir,cdm)
     readandplot_ts('100000000000/download.zip',eval(evs))
     
 def test_dateplot2(statstr):
     evs='{"statid":"72764","pressure_level":'+statstr+',"variable":"dew_point_temperature","fbstats":["obs_minus_bg","bias_estimate"]}'
     body=eval(evs)
-    ret=defproc(body,randdir,cdm)
+    ret=defproc(body,wroot,randdir,cdm)
     readandplot_ts('100000000000/download.zip',eval(evs))
     
 def test_plevel(statstr):
@@ -68,7 +88,7 @@ def test_plevel(statstr):
     else: 
         evs='{"statid":"10393","date":[20190101],"time":[5],"pressure_level":'+statstr+',"variable":"temperature"}'
     body=eval(evs)
-    ret=defproc(body,randdir,cdm)
+    ret=defproc(body,wroot,randdir,cdm)
     assert ret[0]=='100000000000/download.zip' and ret[1]==''
     
 def test_variable(statstr,fbstr):
@@ -80,7 +100,7 @@ def test_variable(statstr,fbstr):
         evs=evs[:-1]+',"fbstats":'+fbstr+'}'
 
     body=eval(evs)
-    ret=defproc(body,randdir,cdm)
+    ret=defproc(body,wroot,randdir,cdm)
     assert ret[0]=='100000000000/download.zip' and ret[1]==''
     readandplot('100000000000/download.zip',eval(evs))
     
@@ -91,7 +111,7 @@ def test_time(statstr,datestr):
         evs='{"statid":"10393","date":'+datestr+',"time":'+statstr+',"variable":"temperature"}' 
         
     body=eval(evs)
-    ret=defproc(body,randdir,cdm)
+    ret=defproc(body,wroot,randdir,cdm)
     assert ret[0]=='100000000000/download.zip' and ret[1]==''
     
 
