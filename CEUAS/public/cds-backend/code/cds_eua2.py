@@ -721,17 +721,29 @@ def process_flat(wroot, randdir, cf, rvars):
                     di = numpy.array((f['recordtimestamp'][:], f['recordindex'][:f['recordtimestamp'].shape[0]]))
                     try:
                         rvdpo = rvdict.pop('date')
-                        # format: 19990102, 19990103, ..., 19990102-19990106
-                        dsec = []
-                        for ievent in rvdpo:
-                            if '-' in ievent:
-                                ievent = ievent.split('-')  # Date range from - to
-                                dsec.extend(range(seconds_since_ref(int(ievent[0]), refdate),
-                                                  seconds_since_ref(int(ievent[-1]), refdate) + 1,
-                                                  86400))
-                            else:
+                        #
+                        # format: [DATE], [START, END], [DATE, DATE, DATE, ...] (min 3)
+                        #
+                        if len(rvdpo) > 2:
+                            dsec = []
+                            for ievent in rvdpo:
                                 dsec.append(seconds_since_ref(int(ievent), refdate))
-                        dsec = numpy.asarray(dsec, dtype=numpy.int)
+                            dsec = numpy.asarray(dsec, dtype=numpy.int)
+                        else:
+                            dsec = numpy.arange(seconds_since_ref(int(rvdpo[0]), refdate),
+                                                seconds_since_ref(int(rvdpo[-1]), refdate) + 1,
+                                                86400, dtype=numpy.int)
+
+                        if False:
+                            # old version with ranges and date list
+                            for ievent in rvdpo:
+                                if '-' in ievent:
+                                    ievent = ievent.split('-')  # Date range from - to
+                                    dsec.extend(range(seconds_since_ref(int(ievent[0]), refdate),
+                                                      seconds_since_ref(int(ievent[-1]), refdate) + 1,
+                                                      86400))
+                                else:
+                                    dsec.append(seconds_since_ref(int(ievent), refdate))
 
                         # if time interval e.g. 21h-3h is chosen, the previous day must be extracted as well.
                         prevday = 0
@@ -779,14 +791,13 @@ def process_flat(wroot, randdir, cf, rvars):
                         rvdpo = ['']
                         prevday = 0
 
-
                     if didx[-1] + 1 == di.shape[1]:
-                        trange = [di[1, didx[0]], f['observations_table']['observation_value'].shape[0]]   # Maximum
+                        trange = [di[1, didx[0]], f['observations_table']['observation_value'].shape[0]]  # Maximum
                     else:
                         trange = [di[1, didx[0]], di[1, didx[1] + 1]]  # Well within
 
                     logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange[0], trange[1], time.time() - t,
-                                rname)
+                                 rname)
                     mask = numpy.ones(trange[1] - trange[0], dtype=numpy.bool)
                     criteria = {'variable': 'era5fb/varno@body', 'level': 'era5fb/vertco_reference_1@body'}
                     criteria = {'variable': 'observations_table/observed_variable',
@@ -895,7 +906,7 @@ def process_flat(wroot, randdir, cf, rvars):
                                 logger.error('Error %s occurred while checking criteria', repr(e))
                                 return '', '"' + str(e) + '" occurred while checking criteria'
 
-                    logger.debug('Finished mask %s', rname)
+                    logger.debug('Finished mask %s [%5.2f s]', rname,  time.time() - t)
                     idx = numpy.where(mask)[0] + trange[0]  # make index for file subsetting
                     try:
                         if len(idx) > 0:
@@ -966,9 +977,8 @@ def process_flat(wroot, randdir, cf, rvars):
                         i = 0
                         for d, v in dims.items():
                             fd.create_dataset(d, data=v)
-
                             fd[d].attrs['NAME'] = numpy.string_('This is a netCDF dimension but not a netCDF variable.')
-                            fd[d].make_scale(d)
+                            fd[d].make_scale(d)   # resolves phony_dim problem
                             # fd[d].attrs['_Netcdf4Dimid']=numpy.int64(i)
                             i += 1
                         fd.create_dataset('trajectory_index', data=trajectory_index)
@@ -976,8 +986,7 @@ def process_flat(wroot, randdir, cf, rvars):
                             "index of trajectory this obs belongs to")
                         fd['trajectory_index'].attrs['instance_dimension'] = numpy.string_("trajectory")
                         fd['trajectory_index'].attrs['coordinates'] = numpy.string_("lat lon time plev")
-                        # fd[['trajectory_index'].make_scale(['trajectory_index')
-                        # print('trajectory stuff:',time.time()-t)
+
                         for k in f.keys():
                             if isinstance(f[k], h5py.Group):
                                 # t=time.time()

@@ -227,7 +227,7 @@ def to_valid_datetime(idate, as_string=False):
     return idate
 
 
-def check_body_new(variable: list = None, statid: list = None, product_type: str = None, pressure_level: list = None,
+def check_body(variable: list = None, statid: list = None, product_type: str = None, pressure_level: list = None,
                    date: list = None, time: list = None, fbstats=None, bbox: list = None, country: str = None,
                    format: str = None, period: list = None, cdm: dict = None, pass_unknown_keys: bool = False,
                    **kwargs) -> str or dict:
@@ -284,6 +284,9 @@ def check_body_new(variable: list = None, statid: list = None, product_type: str
     #
     # only one of [statid, bbox, country]
     #
+    if statid is None and bbox is None and country is None:
+        statid = 'all'
+
     if sum((statid is not None, bbox is not None, country is not None)) != 1:
         return 'Invalid selection, Specify only one of statid: %s, bbox: %s and country: %s' % (
             statid, bbox, country)
@@ -389,17 +392,21 @@ def check_body_new(variable: list = None, statid: list = None, product_type: str
     d['statid'] = statid
     #
     # Date time selection
+    # [DATE] or [START, END]
     #
     # todo only one date or two dates allowed at the moment by CDS
     if date is not None:
         # str, list (str, int)
         newdates = []
-        if isinstance(date, str):
+        # make a list
+        if isinstance(date, (int, str)):
             date = [date]
 
         for idate in date:
-            # if not isinstance(idate, list):
-            #     idate = str(idate)
+            # convert to string
+            if not isinstance(idate, str):
+                idate = str(idate)
+            # todo old style date range (not supported by CDS anymore ???)
             if '-' in idate:
                 idate = idate.split('-')
                 # check period dates (should not be out of range)
@@ -412,16 +419,16 @@ def check_body_new(variable: list = None, statid: list = None, product_type: str
                     return 'only valid dates allowed for date: %s' % idate
         d['date'] = newdates
     #
-    # Period ?
+    # Period [START, END] -> into date
     #
     # todo not forward by CDS -> to date [start end]
     if period is not None:
         if not isinstance(period, list):
             return 'invalid period selection, period [startdate, enddate], but %s' % str(period)
+
         for i in range(len(period)):
             period[i] = str(period[i])
-        d['date'] = ['{}-{}'.format(to_valid_datetime(period[0], as_string=True),
-                                    to_valid_datetime(period[-1], as_string=True))]
+        d['date'] = [to_valid_datetime(period[0], as_string=True), to_valid_datetime(period[-1], as_string=True)]
     #
     # Pressure levels
     #
@@ -460,7 +467,7 @@ def check_body_new(variable: list = None, statid: list = None, product_type: str
     return d
 
 
-def check_body(body: dict, cdm: dict):
+def check_body_deprecated(body: dict, cdm: dict):
     """ Check dictionary from request if required keys are present and within ranges
 
     Args:
@@ -725,12 +732,12 @@ def defproc(body: dict, wroot: str, randdir: str, cdm: dict):
     tt = time.time()
 
     if True:
-        msg = check_body_new(cdm=cdm, **body)
+        msg = check_body(cdm=cdm, **body)
         if isinstance(msg, str):
             return '', msg
         body = msg
     else:
-        error = check_body(body, cdm)
+        error = check_body_deprecated(body, cdm)
         if len(error) > 0:
             return '', " ".join(error)
 
@@ -741,36 +748,23 @@ def defproc(body: dict, wroot: str, randdir: str, cdm: dict):
         pass
 
     bodies = []
-    spv = ['statid', 'variable']
+    spv = ['statid', 'variable']   # potential split up variables
     bo = []
     refdate = datetime(year=1900, month=1, day=1)
-    makebodies(bodies, body, spv, bo, 0)
+    makebodies(bodies, body, spv, bo, 0)   # List of split requests
+    #
+    # Check all requests if dates are within active station limits
+    #
     for k in range(len(bodies) - 1, -1, -1):
-        deleted = False
-        if 'date' in bodies[k].keys():
-            # if bodies[k]['date'][0]>active[bodies[k]['statid']][1]//100 or bodies[k]['date'][-1]<active[bodies[k]['statid']][0]//100:
-            # if type(bodies[k]['date']) is not list:
-            #     bodies[k]['date'] = [bodies[k]['date']]  # as list
-            dsec = []
-            dssold = ''
-            try:
-                for ds in [bodies[k]['date'][0], bodies[k]['date'][-1]]:
-                    if '-' in ds:
-                        if dssold == '':
-                            dssold = '-'
-                            for dss in ds.split('-'):
-                                d = int(dss)
-                                dsec.append((datetime(year=d // 10000, month=d % 10000 // 100,
-                                                      day=d % 100) - refdate).days * 86400)
-                    else:
-                        d = int(ds)
-                        dsec.append(
-                            (datetime(year=d // 10000, month=d % 10000 // 100, day=d % 100) - refdate).days * 86400)
-            except:
-                return '', 'Invalid date specification' + str(bodies[k]['date'])
 
+        deleted = False  # delete sonde from request ?
+
+        if 'date' in bodies[k].keys():
+            # seconds since Reference date
+            start = (to_valid_datetime(bodies[k]['date'][0]) - refdate).days * 86400
+            ende = (to_valid_datetime(bodies[k]['date'][-1]) - refdate).days * 86400
             if bodies[k]['statid'] in active.keys():
-                if dsec[0] > active[bodies[k]['statid']][1] or dsec[-1] + 86399 < active[bodies[k]['statid']][0]:
+                if start > active[bodies[k]['statid']][1] or ende + 86399 < active[bodies[k]['statid']][0]:
                     logger.debug('%s outside Index range', bodies[k]['statid'])
                     del bodies[k]
                     deleted = True
@@ -778,44 +772,27 @@ def defproc(body: dict, wroot: str, randdir: str, cdm: dict):
                 else:
                     logger.debug('%s Index[%d (%d / %d) %d]', bodies[k]['statid'],
                                  active[bodies[k]['statid']][0],
-                                 dsec[0], dsec[-1],
+                                 start, ende,
                                  active[bodies[k]['statid']][1])
             else:
                 del bodies[k]
                 deleted = True
 
-        if not deleted:
-            if 'time' in bodies[k].keys():
-                if type(bodies[k]['time']) is not list:
-                    bodies[k]['time'] = [bodies[k]['time']]
-                tsec = []
-                tssold = ''
-                try:
-                    for ds in [bodies[k]['time'][0], bodies[k]['time'][-1]]:
-                        if '-' in ds:
-                            if tssold == '':
-                                tssold = '-'
-                                for dss in ds.split('-'):
-                                    d = int(dss)
-                                    tsec.append(d)
-                        else:
-                            d = int(ds)
-                            tsec.append(d)
-                except:
-                    return '', 'Invalid time specification: ' + bodies[k]['time']
-                logger.debug('tsec: %s', str(tsec))
-
-    #    print(bodies[:5])
     logger.debug('# requests %d', len(bodies))
-
     if len(bodies) == 0:
         return '', 'No selected station has data in specified date range: ' + str(body)
 
     func = partial(eua.process_flat, wroot, randdir, cf)
 
     if False:
+        #
+        # Single Threading
+        #
         results = list(map(func, bodies))
     else:
+        #
+        # Multi Threading
+        #
         with Pool(10) as p:
             results = list(p.map(func, bodies, chunksize=1))
 
@@ -830,36 +807,23 @@ def defproc(body: dict, wroot: str, randdir: str, cdm: dict):
     else:
         rfile = os.path.dirname(wpath) + '/download.zip'
 
-    try:
-        oformat = body['format'][0]
-    except:
-        oformat = 'nc'
-    logger.debug('wpath: %s; format %s', wpath, oformat)
+    logger.debug('wpath: %s; format %s', wpath, body['format'])
 
-    if False:
-        #
-        # just return a NetCDf file
-        #
-        if 'compression' in body.keys():
-            rfile = []
-            for r in results:
-                if len(r[0]) > 0:
-                    rfile.append(r[0])
+    if 'local_execution' in body.keys():
+        return rfile, ''
 
-            logger.debug('Request-File: %s [Time: %7.4f s]', rfile, (time.time() - tt))
-            return rfile, ''
-
-    if oformat == 'nc':
+    if body['format'] == 'nc':
         with zipfile.ZipFile(rfile, 'w') as f:
             for r in results:
                 try:
+                    # logger.debug('Zipping: %s in %s', r[0], os.path.basename(r[0]))
                     if len(r[0]) > 0:
                         f.write(r[0], os.path.basename(r[0]))
                     os.remove(r[0])
                 except:
                     pass
 
-    elif oformat == 'csv':
+    else:
         ofiles = []
         for v in body['variable']:
             ilist = glob.glob(os.path.dirname(wpath) + '/*' + v + '.nc')

@@ -2,33 +2,51 @@
 import io
 import os
 import unittest
+#import logging
 import zipfile
 
 import h5py
 
-from .default import init_server, defproc
+from default import defproc, active, cdm, cf
 
 #
 # global Informations for Tests
 #
-active, cdm, cf = init_server()
-randdir = '{:012d}'.format(100000000000)
+# active, cdm, cf = init_server()
+# randdir = '{:012d}'.format(100000000000)
+randdir = os.path.expandvars('{:012d}'.format(100000000000))
 wroot = os.path.expandvars('$RSCRATCH/tmp/')
 dzip = wroot + randdir + '/download.zip'
 
+#logger = logging.getLogger('TestLog')
+#logger.debug("DEFAULT ZIP: %s", dzip)
+
 default_request = {
-    "date": ["19790101", "19790131"],
+    # "date": ["19790101", "19790131"],
+    "date": ["20000101", "20000131"],
     "variable": ["temperature"]
 }
 
 
 def update_request(*args, **kwargs):
+    """ Allow update and copy of a dict with additonal keys
+
+    Args:
+        *args: dict or list(name, value)
+        **kwargs: dict
+
+    Returns:
+        dict : updated
+    """
     if len(args) == 1:
         kwargs.update(*args)
     else:
         kwargs.update({args[0]: args[1]})
     return kwargs
 
+
+"""
+Automated TestCase Builder ? not working at the moment
 
 # test Case Builder Function
 def make_request_case(request_body, expr, expected=True, msg=None):
@@ -47,70 +65,83 @@ def make_request_case(request_body, expr, expected=True, msg=None):
 # Dummy Test Case Wrapper
 class RequestTest(make_request_case(default_request, 'ret==dzip', expected=True)):
     pass
+"""
 
 
 class BoundingBox(unittest.TestCase):
-    bbox = {'bbox': [40, 0, 50, 20]}
+    bbox = {'bbox': ['40', '0', '50', '20']}
 
-    def test_str_bbox(self):
-        ret = defproc(update_request({'bbox': "40, 0, 50, 20"}, **default_request), wroot, randdir, cdm)
-        self.assertFalse(ret[0] == dzip and ret[1] == '')
+    def test_str_false(self):
+        current = update_request({'bbox': "40, 0, 50, 20"}, **default_request)
+        ret = defproc(current, wroot, randdir, cdm)
+        self.assertFalse(ret[0] == dzip and ret[1] == '', msg=str(ret) + str(current))
 
     # todo add all definition failures
 
-    def test_bbox(self):
-        ret = defproc(update_request(self.bbox, **default_request), wroot, randdir, cdm)
-        self.assertTrue(ret[0] == dzip and ret[1] == '')
+    def test_bbox_true(self):
+        current = update_request(self.bbox, **default_request)
+        ret = defproc(current, wroot, randdir, cdm)
+        self.assertTrue(ret[0] == dzip and ret[1] == '', msg=str(ret) + str(current))
 
-    def test_bbox_inside(self):
-        ret = defproc(update_request(self.bbox, **default_request), wroot, randdir, cdm)
+    def test_bbox_inside_true(self):
+        current = update_request(self.bbox, **default_request)
+        ret = defproc(current, wroot, randdir, cdm)
         with zipfile.ZipFile(ret[0], 'r') as f:
             x = f.namelist()
             hf = io.BytesIO(f.read(x[0]))
             h = h5py.File(hf, 'r')
-            self.assertTrue('ta' in h.keys())
+            self.assertTrue('ta' in h.keys(), msg=str(ret) + str(current))
 
 
 class Country(unittest.TestCase):
     country = {'country': 'DEU'}
 
-    def test_country(self):
-        ret = defproc(update_request(self.country, **default_request), wroot, randdir, cdm)
-        self.assertTrue(ret[0] == dzip and ret[1] == '')
+    def test_country_true(self):
+        current = update_request(self.country, **default_request)
+        ret = defproc(current, wroot, randdir, cdm)
+        self.assertTrue(ret[0] == dzip and ret[1] == '', msg=str(ret) + str(current))
 
 
 class Statid(unittest.TestCase):
     station = {'statid': '01001'}
 
-    def test_statid(self):
-        ret = defproc(update_request(self.station, **default_request), wroot, randdir, cdm)
-        self.assertTrue(ret[0] == dzip and ret[1] == '')
+    def test_statid_true(self):
+        current = update_request(self.station, **default_request)
+        ret = defproc(current, wroot, randdir, cdm)
+        self.assertTrue(ret[0] == dzip and ret[1] == '', msg=str(ret) + str(current))
 
 
 class Datetime(unittest.TestCase):
-    def test_date(self):
-        ret = defproc(default_request, wroot, randdir, cdm)
-        self.assertTrue(ret[0] == dzip and ret[1] == '')
 
-    def test_time(self):
-        ret = defproc(update_request('time', 6, **default_request), wroot, randdir, cdm)
-        self.assertTrue(ret[0] == dzip and ret[1] == '')
+    default_request = default_request.copy()
+    default_request['statid'] = '1001'  # Jan Mayen
+
+    def test_date_true(self):
+        ret = defproc(default_request, wroot, randdir, cdm)
+        self.assertTrue(ret[0] == dzip and ret[1] == '', msg=str(ret) + str(default_request))
+
+    def test_time_true(self):
+        current = update_request('time', 6, **default_request)
+        ret = defproc(current, wroot, randdir, cdm)
+        self.assertTrue(ret[0] == dzip and ret[1] == '', msg=str(ret) + str(current))
 
 
 class PressureLevel(unittest.TestCase):
-    def test_plevel(self):
-        ret = defproc(update_request('pressure_level', 500, **default_request), wroot, randdir, cdm)
-        self.assertTrue(ret[0] == dzip and ret[1] == '')
+    def test_plevel_true(self):
+        current = update_request('pressure_level', 500, **default_request)
+        ret = defproc(current, wroot, randdir, cdm)
+        self.assertTrue(ret[0] == dzip and ret[1] == '', msg=str(ret) + str(current))
 
 
 class Variables(unittest.TestCase):
-    def test_variable(self):
+    def test_variable_true(self):
         ret = defproc(default_request, wroot, randdir, cdm)
-        self.assertTrue(ret[0] == dzip and ret[1] == '')
+        self.assertTrue(ret[0] == dzip and ret[1] == '', msg=str(ret) + str(default_request))
 
-    def test_feedback(self):
-        ret = defproc(update_request('fbstats', ['biascorr'], **default_request), wroot, randdir, cdm)
-        self.assertTrue(ret[0] == dzip and ret[1] == '')
+    def test_feedback_true(self):
+        current = update_request('fbstats', ['biascorr'], **default_request)
+        ret = defproc(current, wroot, randdir, cdm)
+        self.assertTrue(ret[0] == dzip and ret[1] == '', msg=str(ret) + str(current))
 
 
 #
@@ -154,4 +185,4 @@ if __name__ == '__main__':
     #         test_variable(d, fb)
     #
     # print('ready')
-    unittest.main()
+    unittest.main(verbosity=2)
