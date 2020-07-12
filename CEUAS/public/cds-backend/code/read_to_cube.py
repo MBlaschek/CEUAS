@@ -216,7 +216,7 @@ def read_ragged_cdm_to_array(filename: str, odb_codes: bool = True, daynight: bo
         #
         # Optional Variables (mostly in observations_table)
         #
-        if len(optional_variables.keys()) > 0:
+        if optional_variables is not None and len(optional_variables.keys()) > 0:
             for igroup in optional_variables.keys():
                 if igroup not in f.keys():
                     logger.warning('Optional Group %s not in file. skipping', igroup)

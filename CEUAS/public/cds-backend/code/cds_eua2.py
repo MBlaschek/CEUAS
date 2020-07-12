@@ -345,17 +345,29 @@ def do_copy(fd, f, k, idx, cut_dimension,
             l += 1
 
 
-def do_cfcopy(fd, f, k, idx, cf, dim0,
-              var_selection=[]):  # cuts vars and copies attributes of observation, feedback and header tables
+def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=[]):
+    """ Copy H5PY variables and apply subsetting (idx)
 
+    Args:
+        fout: output file
+        fin: input file
+        group: group
+        idx: selection (mask)
+        cf: cdm mapping of names
+        dim0: record dimension name
+        var_selection: variables
+
+    """
+    # cuts vars and copies attributes of observation, feedback and header tables
     tt = time.time()
     if not var_selection:
-        var_selection = f[k].keys()
+        var_selection = fin[group].keys()
 
     vlist = []
     clist = []
     for i in cf.keys():
-        if i not in ['platform_id', 'platform_name']:  # , 'latitude', 'longitude', 'time', 'air_pressure']:
+        if i not in ['platform_id', 'platform_name']:
+            # , 'latitude', 'longitude', 'time', 'air_pressure']:
             clist.append(i)
             if i in ['air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
                      'eastward_wind', 'northward_wind', 'wind_speed', 'wind_direction', 'geopotential']:
@@ -363,25 +375,24 @@ def do_cfcopy(fd, f, k, idx, cf, dim0,
                     try:
                         cf[fb]['units'] = cf[i]['units']
                         cf[fb]['standard_name'] = i
-                        cf[fb]['long_name'] = k.split('fb')[0].upper() + ' reanalysis ' + fb
+                        cf[fb]['long_name'] = group.split('fb')[0].upper() + ' reanalysis ' + fb
                     except:
                         pass
 
     for cfk, cfv in cf.items():
         for v in var_selection:
-            # print(k+'/'+v,cfv['cdmname'])
-            if k + '/' + v == cfv['cdmname']:
+            if group + '/' + v == cfv['cdmname']:
                 vlist.append(cfv['shortname'])
                 try:
-
-                    if f[k][v].ndim == 1:
+                    if fin[group][v].ndim == 1:
                         try:
-                            fd.create_dataset_like(vlist[-1], f[k][v], shape=idx.shape, chunks=True)
-                            hilf = f[k][v][idx[0]:idx[-1] + 1]
-                            if 'time' in v:  # convert time units
-                                us = f[k][v].attrs['units']
-                                # dh=us.split(' ')[-1].split(':')
-
+                            fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                     shape=idx.shape,
+                                                     chunks=True)
+                            hilf = fin[group][v][idx[0]:idx[-1] + 1]
+                            if 'time' in v:
+                                # convert time units
+                                us = fin[group][v].attrs['units']
                                 if b'hours' in us:
                                     hilf = hilf * 3600  # hilf+=int(dh[0])
                                 elif b'minutes' in us:
@@ -391,84 +402,67 @@ def do_cfcopy(fd, f, k, idx, cf, dim0,
                                 elif b'days' in us:
                                     hilf *= 24 * 3600
 
-                            fd[vlist[-1]][:] = hilf[idx - idx[0]]
+                            fout[vlist[-1]][:] = hilf[idx - idx[0]]
                         except:
-                            logger.warning('not found: %s %s', k, v)
+                            logger.warning('not found: %s %s', group, v)
                             pass
                     else:
-                        s1 = f[k][v].shape[1]
-                        fd.create_dataset_like(vlist[-1], f[k][v], shape=(idx.shape[0], s1), chunks=True)
-                        # if k=='header_table':
-                        # print(k,v,time.time()-tt, 'nach create')
-                        # sname=f[k][v].dims[1][0].name.split('/')[-1]
+                        s1 = fin[group][v].shape[1]
+                        fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                 shape=(idx.shape[0], s1),
+                                                 chunks=True)
                         sname = 'string{}'.format(s1)
-                        # if k=='header_table':
-                        # print(k,v,time.time()-tt)
-                        if sname not in fd.keys():
-                            # if k=='header_table':
-                            # print(k,v,time.time()-tt)
-                            fd.create_dataset(sname, data=numpy.zeros(s1, dtype='S1'), chunks=True)
-                            fd[sname].attrs['NAME'] = numpy.string_(
+                        if sname not in fout.keys():
+                            fout.create_dataset(sname,
+                                                data=numpy.zeros(s1, dtype='S1'),
+                                                chunks=True)
+                            fout[sname].attrs['NAME'] = numpy.string_(
                                 'This is a netCDF dimension but not a netCDF variable.')
-                            fd[sname].make_scale(sname)
-                        # if k=='header_table':
-                        # print(k,v,time.time()-tt)
-                        hilf = f[k][v][idx[0]:idx[-1] + 1, :]
+                            fout[sname].make_scale(sname)
+                        hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
                         if hilf.shape[0] == 0:
                             print('x')
-                        fd[vlist[-1]][:] = hilf[idx - idx[0], :]
+                        fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                 except:
                     # fix for missing report_id SHOULD BE REMOVED
                     hilf = numpy.zeros(shape=(idx.shape[0]), dtype='S10')
                     for i in range(hilf.shape[0]):
                         hilf[i] = '{:0>10}'.format(i)
-                    fd.create_dataset(vlist[-1], data=hilf.view('S1'), shape=(idx.shape[0], 10), chunks=True)
+                    fout.create_dataset(vlist[-1],
+                                        data=hilf.view('S1'),
+                                        shape=(idx.shape[0], 10),
+                                        chunks=True)
 
-                # if k=='header_table':
-                # print(k,v,time.time()-tt)
                 try:
-
-                    for a in f[k][v].attrs.keys():
+                    for a in fin[group][v].attrs.keys():
                         if a not in ['DIMENSION_LIST', 'CLASS', 'external_table']:
-                            if type(f[k][v].attrs[a]) is str:
-                                fd[vlist[-1]].attrs[a] = numpy.string_(f[k][v].attrs[a])
+                            if type(fin[group][v].attrs[a]) is str:
+                                fout[vlist[-1]].attrs[a] = numpy.string_(fin[group][v].attrs[a])
                             else:
-                                fd[vlist[-1]].attrs[a] = f[k][v].attrs[a]
+                                fout[vlist[-1]].attrs[a] = fin[group][v].attrs[a]
 
                     for a in cfv.keys():
                         if a not in ['shortname', 'odbcode', 'cdmcode']:
-                            fd[vlist[-1]].attrs[a] = numpy.string_(cfv[a])
+                            fout[vlist[-1]].attrs[a] = numpy.string_(cfv[a])
                         if a == 'units' and cfv[a] == 'NA':
-                            fd[vlist[-1]].attrs[a] = numpy.string_('')
+                            fout[vlist[-1]].attrs[a] = numpy.string_('')
                         if a == 'units' and vlist[-1] == 'time':
-                            ahilf = numpy.bytes_(f[k][v].attrs[a])
-                            fd[vlist[-1]].attrs[a] = ahilf
-                            # if b'seconds' not in ahilf:
-                            # aa=ahilf.split()
-                            # fd[vlist[-1]].attrs[a]=b'seconds since '+aa[2]+b' '+aa[3].split(b':')[0]+b':00:00'
-                            # else:
-                            # fd[vlist[-1]].attrs[a]=ahilf
+                            ahilf = numpy.bytes_(fin[group][v].attrs[a])
+                            fout[vlist[-1]].attrs[a] = ahilf
                 except:
                     # quick fix should be removed
-                    logger.warning('%s/%s has no attributes', k, v)
-
-                # print(k,time.time()-tt)
+                    logger.warning('%s/%s has no attributes', group, v)
                 l = 0
-                # for d in f[k][v].dims:
-                for d in fd[cfv['shortname']].dims:
+                for d in fout[cfv['shortname']].dims:
                     if len(d) > 0:
-                        # print(k,v,f[k][v].dims[l][0].name)
                         if l == 0:
-
-                            fd[vlist[-1]].dims[l].attach_scale(fd[dim0])
+                            fout[vlist[-1]].dims[l].attach_scale(fout[dim0])
                         else:
-                            # fd[vlist[-1]].dims[l].attach_scale(fd[f[k][v].dims[l][0].name.split('/')[-1]])
-                            fd[vlist[-1]].dims[l].attach_scale(fd[sname])
+                            fout[vlist[-1]].dims[l].attach_scale(fout[sname])
                     l += 1
-
     tt = time.time() - tt
     if tt > 0.4:
-        logger.warning('slow copy: %s %f s', k, tt)
+        logger.warning('slow copy: %s %f s', group, tt)
 
 
 ''' Main routine for parsing the CDS request, writing into flat netCDF file
@@ -672,415 +666,387 @@ def seconds_since_ref(idate, refdate):
     return (datetime(year=idate // 10000, month=idate % 10000 // 100, day=idate % 100) - refdate).days * 86400
 
 
-def process_flat(wroot, randdir, cf, rvars):
-    t = time.time()
+def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: dict):
+    """ Main Reading and writing Routine
+
+    Args:
+        wroot: path to public workdir
+        randdir: path to random request dir
+        cdmtable: CDM definitions table
+        request_variables: request variables
+
+    Returns:
+        str, str : File path, Error message
+    """
+    time0 = time.time()
     vdict = {}
     cdmdict = {}
     cdmnamedict = {}
-    for k, v in cf.items():
+    for igroup, v in cdmtable.items():
         if "odbcode" in v.keys():
             vdict[v['cdsname']] = v['odbcode']
             cdmdict[v['cdsname']] = v['cdmcode']
-            cdmnamedict[v['cdsname']] = k
+            cdmnamedict[v['cdsname']] = igroup
 
     error = ''
-    rfile = ''
-    rvkeys = rvars.keys()
-    statid = rvars['statid']
+    filename = ''
+    request_variables = copy.copy(request_variables)  # copy the dictionary
+    statid = request_variables.pop('statid', None)
+    request_keys = request_variables.keys()
+
     # cost=calculate_cost(rvars) # estimate size of output file
-    if 'statid' in rvkeys:
-        if rvars['statid'][:3] == '0-2':
-            suff = ['']
-        else:
-            suff = ['0-20000-0-', '0-20001-0-']
-        for s in suff:
-            rfile = os.path.expandvars('$RSCRATCH/era5/odbs/merged/' + s + rvars['statid'] + '_CEUAS_merged_v0.nc')
-            if os.path.isfile(rfile):
-                break
 
-        rname = rfile.split('/')[-1]
-        logger.debug('Current: %s', rfile)
-        if len(rvkeys) > 0:
-            rvdict = copy.copy(rvars)
-            del rvdict['statid']
-            rvdk = list(rvdict.keys())
-            for k in rvdk:
-                if type(rvdict[k]) is not list:
-                    if rvdict[k] not in cdmdict.keys():
-                        rvdict[k] = [rvdict[k], rvdict[k]]
-                    else:
-                        rvdict[k] = [cdmdict[rvdict[k]], cdmdict[rvdict[k]]]
-
-            # print(rfile)
-            refdate = datetime(year=1900, month=1, day=1)
-            try:
-
-                with h5py.File(rfile, 'r') as f:
-                    t = time.time()
-                    # get time information from file
-                    di = numpy.array((f['recordtimestamp'][:], f['recordindex'][:f['recordtimestamp'].shape[0]]))
-                    try:
-                        rvdpo = rvdict.pop('date')
-                        #
-                        # format: [DATE], [START, END], [DATE, DATE, DATE, ...] (min 3)
-                        #
-                        if len(rvdpo) > 2:
-                            dsec = []
-                            for ievent in rvdpo:
-                                dsec.append(seconds_since_ref(int(ievent), refdate))
-                            dsec = numpy.asarray(dsec, dtype=numpy.int)
-                        else:
-                            dsec = numpy.arange(seconds_since_ref(int(rvdpo[0]), refdate),
-                                                seconds_since_ref(int(rvdpo[-1]), refdate) + 1,
-                                                86400, dtype=numpy.int)
-
-                        if False:
-                            # old version with ranges and date list
-                            for ievent in rvdpo:
-                                if '-' in ievent:
-                                    ievent = ievent.split('-')  # Date range from - to
-                                    dsec.extend(range(seconds_since_ref(int(ievent[0]), refdate),
-                                                      seconds_since_ref(int(ievent[-1]), refdate) + 1,
-                                                      86400))
-                                else:
-                                    dsec.append(seconds_since_ref(int(ievent), refdate))
-
-                        # if time interval e.g. 21h-3h is chosen, the previous day must be extracted as well.
-                        prevday = 0
-                        if 'time' in rvdict:
-                            tlist = totimes(rvdict['time'])
-                            if tlist[0] > tlist[-1]:
-                                prevday = 1
-
-                        if False:
-                            if '-' in rvdpo[0]:
-                                rvdp = rvdpo[0].split('-')
-                            else:
-                                rvdp = rvdpo
-                            sdate = numpy.array(rvdp, dtype='int')
-
-                            # if time interval e.g. 21h-3h is chosen, the previous day must be extracted as well.
-                            prevday = 0
-                            if 'time' in rvdict:
-                                tlist = totimes(rvdict['time'])
-                                if tlist[0] > tlist[-1]:
-                                    prevday = 1
-
-                            dsec = []
-                            for d in sdate:
-                                dsec.append(((datetime(year=d // 10000, month=d % 10000 // 100,
-                                                       day=d % 100) - refdate)).days * 86400)
-
-                            if '-' in rvdpo[0]:
-                                dsec = numpy.arange(dsec[0], dsec[-1] + 1, 86400, dtype=numpy.int)
-
-                            if len(dsec) == 1:
-                                dsec = numpy.concatenate((dsec, dsec))
-
-                        dsec[-1] += 86399
-                        didx = numpy.where(numpy.logical_and(di[0, :] >= dsec[0] - 86400, di[0, :] <= dsec[-1]))[
-                            0]  # -86400 in order to get late launches of previous day
-
-                        if didx.shape[0] == 0:
-                            logger.warning('No data in time interval %s', rname)
-                            return '', 'No data in specified time interval'
-
-                        didx = [didx[0], didx[-1]]
-                    except KeyError:  # all dates are considered
-                        didx = [0, di.shape[1] - 1]
-                        rvdpo = ['']
-                        prevday = 0
-
-                    if didx[-1] + 1 == di.shape[1]:
-                        trange = [di[1, didx[0]], f['observations_table']['observation_value'].shape[0]]  # Maximum
-                    else:
-                        trange = [di[1, didx[0]], di[1, didx[1] + 1]]  # Well within
-
-                    logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange[0], trange[1], time.time() - t,
-                                 rname)
-                    mask = numpy.ones(trange[1] - trange[0], dtype=numpy.bool)
-                    criteria = {'variable': 'era5fb/varno@body', 'level': 'era5fb/vertco_reference_1@body'}
-                    criteria = {'variable': 'observations_table/observed_variable',
-                                'pressure_level': 'observations_table/z_coordinate',
-                                'time': 'observations_table/date_time'}
-                    if True or '-' not in rvdpo[0]:
-                        criteria['date'] = 'observations_table/date_time'
-
-                    ck = criteria.keys()
-                    t = time.time()
-                    for ck, cv in criteria.items():
-                        if ck in rvdk:
-                            # mask=numpy.logical_and(mask,f[cv][trange[0]:trange[1]]>=rvdict[ck][0])
-                            # mask=numpy.logical_and(mask,f[cv][trange[0]:trange[1]]<=rvdict[ck][1])
-                            try:
-                                if ck == 'time':
-                                    us = numpy.string_(f[cv].attrs['units'])
-                                    dh = us.split(b' ')[-1].split(b':')
-                                    if b'seconds' in us:
-                                        # print('t vor ohilf', time.time() - t)
-                                        ohilf = f[cv][trange[0]:trange[1]]
-                                        # add almost an hour (3600-1 sec) to account for difference between releasetime and nominal time. Time unit in CDS interface is hours.
-                                        hhilf = numpy.empty_like(ohilf, dtype=numpy.int32)
-                                        dshift = numpy.zeros_like(ohilf, dtype=numpy.int32)
-                                        hilf = numpy.empty_like(ohilf, dtype=numpy.int32)
-                                        # print('t vor tohour', time.time() - t)
-                                        tohourday(hhilf, hilf, ohilf, dshift)
-                                        # tohour(hhilf,ohilf,dshift)
-                                        # today(hilf,ohilf)
-                                        tlist = totimes(rvdict[ck])
-                                        # print('t vor prevday', time.time() - t)
-                                        if prevday == 1:
-                                            ttlist = tlist[tlist < tlist[0]]  # use only late hours of the day before
-                                            # offset=di[1,didx[0]+1]-di[1,didx[0]]
-                                            # imask=numpy.zeros_like(mask)
-                                            # imask[offset:]=numpy.isin(hhilf[offset:],ttlist)
-
-                                            # ttlist=tlist[tlist>=tlist[0]] # use only early hours of last day
-                                            # offset=trange[1]-di[1,didx[1]]
-                                            # j=0
-                                            # while hhilf[-offset-1]>ttlist[0] and hilf[-offset-1]+dshift[-offset-1]==ohilf[-1]+dshift[-1]:
-                                            # j=j+1
-                                            # offset=trange[1]-di[1,didx[1]-j]
-
-                                            ##print(hilf[-offset-1],ecdt(f[cv][trange[0]:trange[1]][-offset-1]))
-                                            ##imask[:-offset]=numpy.logical_or(imask[:-offset],numpy.isin(hhilf[:-offset],ttlist))
-                                            # orisin(imask[:-offset],hhilf[:-offset],ttlist)
-
-                                            # mask=numpy.logical_and(mask,imask)
-                                        else:
-                                            andisin(mask, hhilf, tlist)
-
-                                        # print('t nach prevday',time.time()-t)
-                                    else:
-                                        logger.warning('Units not given in seconds, %s %s', us, rname)
-                                        return '', 'Units not given in seconds'
-
-                                elif ck == 'date':
-                                    us = numpy.string_(f[cv].attrs['units'])
-                                    dh = us.split(b' ')[-1].split(b':')
-                                    if b'seconds' in us:
-                                        if 'ohilf' not in locals():
-                                            ohilf = f[cv][trange[0]:trange[1]]
-                                            hhilf = numpy.empty_like(ohilf)
-                                            dshift = numpy.zeros_like(ohilf, dtype=numpy.int32)
-                                            hilf = numpy.empty_like(ohilf)
-                                            tohourday(hhilf, hilf, ohilf, dshift)
-                                            tlist = totimes(['0-23'])
-                                        #                                            tohour(hhilf,ohilf,dshift)
-                                        #                                            today(hilf,ohilf)
-                                        else:
-                                            tlist = totimes(rvdict['time'])
-                                        # print('vor ohilf', time.time() - t)
-                                        dsec = numpy.array(dsec) // 86400
-                                        # tlist=totimes(rvdict['time'])
-                                        # print('vor prevday', time.time() - t)
-                                        if prevday == 1:
-                                            logger.debug('selecting previous day %s', rname)
-                                            # imask=numpy.zeros_like(mask)
-                                            ttlist = tlist[tlist < tlist[0]]  # use only late hours of the day before
-                                            # imask[:]=numpy.logical_and(numpy.isin(hilf,dsec),hhilf<=ttlist[-1])
-                                            imask = hhilf <= ttlist[-1]
-                                            andisin_t(imask, hilf + dshift, dsec)
-                                            ttlist = tlist[tlist >= tlist[0]]  # use only early hours of last day
-                                            imask2 = hhilf >= ttlist[0]
-                                            # imask[:]=numpy.logical_or(imask,
-                                            # numpy.logical_and(numpy.isin(hilf,dsec-1),hhilf>=ttlist[0]))
-                                            andisin_t(imask2, hilf, dsec - 1)
-                                            # print('nach andisin', time.time() - t)
-                                            imask = numpy.logical_or(imask, imask2)
-                                            mask = numpy.logical_and(mask, imask)
-                                        else:
-                                            andisin_t(mask, hilf + dshift, dsec)
-                                        # print('nach prevday', time.time() - t)
-                                    else:
-                                        logger.warning('Units not given in seconds, %s %s', us, rname)
-                                        return '', 'Units not given in seconds'
-                                else:
-                                    rvdict[ck] = numpy.unique(rvdict[ck])
-                                    andisin(mask, f[cv][trange[0]:trange[1]], numpy.int32(rvdict[ck]))
-                                    # mask=numpy.logical_and(mask,numpy.isin(f[cv][trange[0]:trange[1]],
-                                    # rvdict[ck]))
-                                logger.debug('Finished %s [%5.2f s] %s', ck, time.time() - t, rname)
-
-                            except MemoryError as e:
-                                logger.error('Error %s occurred while checking criteria', repr(e))
-                                return '', '"' + str(e) + '" occurred while checking criteria'
-
-                    logger.debug('Finished mask %s [%5.2f s]', rname,  time.time() - t)
-                    idx = numpy.where(mask)[0] + trange[0]  # make index for file subsetting
-                    try:
-                        if len(idx) > 0:
-                            logger.debug('Data found: %d %s', len(idx), rname)
-                        else:
-                            logger.warning('No matching data found %s', rname)
-                            return '', 'No matching data found'
-
-                    except:
-                        logger.warning('No matching data found %s', rname)
-                        return '', 'No data found'
-                    # for debugging:
-                    fcold = 0
-                    fc = f[criteria['time']][idx[0]:idx[-1] + 1]
-                    for i in idx:
-                        e = fc[i - idx[0]]
-                        if fcold != e:
-                            # print(ecdt(e))
-                            fcold = e
-
-                    z = di[1, :]
-                    trajectory_index = numpy.zeros_like(idx, dtype=numpy.int32)
-                    zidx = numpy.where(numpy.logical_and(z >= trange[0], z < trange[1]))[0]
-                    z = z[zidx]
-
-                    zidx = calc_trajindexfast(z, zidx, idx, trajectory_index)
-
-                    dims = {'obs': numpy.zeros(idx.shape[0], dtype=numpy.int32),
-                            'trajectory': numpy.zeros(zidx.shape[0], dtype=numpy.int32)}
-                    globatts = {'Conventions': "CF-1.7",
-                                'source': "radiosonde",
-                                'featureType': "trajectory"}
-
-                    snames = ['report_id', 'platform_id', 'platform_name', 'observation_value', 'latitude', 'longitude',
-                              'time', 'air_pressure', 'trajectory_label']
-
-                    logger.debug('Request-keys: %s', str(rvdk))
-                    if 'variable' in rvdk:
-                        if type(rvars['variable']) is list:
-                            # for r in rvars['variable']:
-                            # snames.append(cdmnamedict[r])
-                            snames.append(cdmnamedict[rvars['variable'][0]])
-                        else:
-                            snames.append(cdmnamedict[rvars['variable']])
-                    else:
-                        logger.error('No variable specified %s %s', str(rvdk), rname)
-                        return '', 'No variable specified'
-
-                    if 'fbstats' in rvdk:
-                        if type(rvars['fbstats']) is list:
-                            for c in rvars['fbstats']:
-                                snames.append(cdmnamedict[c])
-                        else:
-                            snames.append(cdmnamedict[rvars['fbstats']])
-                    # else:
-                    # rvars['fbstats']=['observation_value']
-
-                    ccf = {}
-                    for s in snames:
-                        try:
-                            ccf[s] = cf[s]
-                        except:
-                            pass
-
-                    dfile = wroot + '/' + randdir + '/dest_' + statid + '_' + cdmnamedict[rvars['variable']] + '.nc'
-                    logger.debug('Writing: %s', dfile)
-                    with h5py.File(dfile, 'w') as fd:
-                        i = 0
-                        for d, v in dims.items():
-                            fd.create_dataset(d, data=v)
-                            fd[d].attrs['NAME'] = numpy.string_('This is a netCDF dimension but not a netCDF variable.')
-                            fd[d].make_scale(d)   # resolves phony_dim problem
-                            # fd[d].attrs['_Netcdf4Dimid']=numpy.int64(i)
-                            i += 1
-                        fd.create_dataset('trajectory_index', data=trajectory_index)
-                        fd['trajectory_index'].attrs['long_name'] = numpy.string_(
-                            "index of trajectory this obs belongs to")
-                        fd['trajectory_index'].attrs['instance_dimension'] = numpy.string_("trajectory")
-                        fd['trajectory_index'].attrs['coordinates'] = numpy.string_("lat lon time plev")
-
-                        for k in f.keys():
-                            if isinstance(f[k], h5py.Group):
-                                # t=time.time()
-                                if k in ['observations_table']:  # only obs, feedback fitting criteria (idx) is copied
-                                    do_cfcopy(fd, f, k, idx, ccf, 'obs',
-                                              var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
-                                                             'observation_value',
-                                                             'date_time'])  # 'observed_variable','units'
-                                    # print(k,'copied',time.time()-t)
-                                elif k in ['era5fb']:  # only obs, feedback fitting criteria (idx) is copied
-                                    if 'fbstats' in rvdk:
-                                        try:
-                                            # if f[ccf[rvars['fbstats'][0]]].shape[0]>0:
-                                            do_cfcopy(fd, f, k, idx, ccf, 'obs',
-                                                      var_selection=['fg_depar@body', 'an_depar@body',
-                                                                     'biascorr@body'])  # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
-                                        except KeyError:
-                                            return '', 'no ' + ccf[rvars['fbstats'][0]][
-                                                'cdmname'] + ' found in ' + rfile
-
-                                    logger.debug('Group %s copied [%5.2f s]', k, time.time() - t)
-                                elif k in ['header_table']:  # only records fitting criteria (zidx) are copied
-                                    do_cfcopy(fd, f, k, zidx, ccf, 'trajectory',
-                                              var_selection=['report_id'])  # ,'station_name','primary_station_id'])
-                                    # todo could be read from the observations_table
-
-                                    # print(k,'copied',time.time()-t)
-                                elif 'station_configuration' in k:  # only records fitting criteria (zidx) are copied
-                                    # sh=f['header_table']['primary_station_id'][0].shape[0]
-                                    # sid=f['header_table']['primary_station_id'][0].view('S{}'.format(sh))[0].split(b"'")[1]
-                                    # sid=sid.decode('latin1')
-                                    # for k in f['station_configuration']['primary_id'].values:
-                                    # if sid in k[-5:]:
-                                    try:
-
-                                        sh = f[k]['primary_id'].shape[1]
-                                        fd.attrs['primary_id'] = f[k]['primary_id'][0].view('S{}'.format(sh))[0]
-                                        sh = f[k]['station_name'].shape[1]
-                                        fd.attrs['station_name'] = f[k]['station_name'][0].view('S{}'.format(sh))[0]
-                                        # print(k,'copied',time.time()-t)
-                                    except:
-                                        logger.warning('No primary_id in %s', dfile)
-
-                                    # fd['primary_id'][:]=f[k]['primary_id'][:]
-                                    # fd['station_name'][:]=f[k]['station_name'][:]
-
-                                else:  # groups that are simply copied
-                                    # print(k)
-                                    if False:  ## for now commented out
-                                        fd.create_group(k)
-                                        for v in f[k].keys():
-                                            f.copy(f[k][v], fd[k], name=v, without_attrs=True)
-                                        for a in f[k].attrs.keys():
-                                            fd[k].attrs[a] = f[k].attrs[a]
-                                        for v in f[k].keys():
-                                            # print(k,v)
-                                            # fd[k].create_dataset_like(v,f[k][v])
-                                            for a in f[k][v].attrs.keys():
-                                                print(k, v, a)
-                                                if a not in ['DIMENSION_LIST', 'CLASS']:
-                                                    if type(f[k][v].attrs[a]) is str:
-                                                        fd[k][v].attrs[a] = numpy.string_(f[k][v].attrs[a])
-                                                    else:
-                                                        fd[k][v].attrs[a] = f[k][v].attrs[a]
-                                            l = 0
-                                            for d in f[k][v].dims:
-                                                if len(d) > 0:
-                                                    fd[k][v].dims[l].attach_scale(fd[k][f[k][v].dims[l][0].name])
-                                                l += 1
-                                        print(k, 'copied', time.time() - t)
-
-                        fd['trajectory_label'].attrs['cf_role'] = numpy.string_('trajectory_id')
-                        fd['trajectory_label'].attrs['long_name'] = numpy.string_('Label of trajectory')
-
-                        for a, v in globatts.items():
-                            fd.attrs[a] = numpy.string_(v)
-                        fd.attrs['history'] = numpy.string_(
-                            'Created by Copernicus Early Upper Air Service Version 0, ' + datetime.now().strftime(
-                                "%d-%b-%Y %H:%M:%S"))
-                        fd.attrs['license'] = numpy.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
-
-            except Exception as e:
-                logger.error('Exception %s occurred while reading %s', repr(e), rfile)
-                return '', 'exception "' + str(e) + '" occurred while reading ' + rfile
-
-            logger.debug('Finished %s [%5.2f s]', rname, time.time() - t)
-        return dfile, ''
+    if statid is None:
+        logger.error('No station ID (statid) specified. %s', filename)
+        return filename, 'No station ID (statid) specified'
+    if statid[:3] == '0-2':
+        suffix = ['']
     else:
-        logger.error('No station ID (statid) specified. %s', rfile)
-        return rfile, 'No station ID (statid) specified'
+        suffix = ['0-20000-0-', '0-20001-0-']
+
+    for ss in suffix:
+        filename = os.path.expandvars('$RSCRATCH/era5/odbs/merged/' + ss + statid + '_CEUAS_merged_v0.nc')
+        if os.path.isfile(filename):
+            break
+
+    rname = filename.split('/')[-1]
+    logger.debug('Current: %s', filename)
+
+    if len(request_keys) == 0:
+        return filename, ''
+
+    for igroup in request_keys:
+        if not isinstance(request_variables[igroup], list):
+            if request_variables[igroup] not in cdmdict.keys():
+                request_variables[igroup] = [request_variables[igroup], request_variables[igroup]]
+            else:
+                request_variables[igroup] = [cdmdict[request_variables[igroup]], cdmdict[request_variables[igroup]]]
+
+    refdate = datetime(year=1900, month=1, day=1)
+    try:
+        with h5py.File(filename, 'r') as finput:
+            time0 = time.time()
+            # get time information from file
+            # recordindex -> index of start position [start next[
+            # recordtimestamp -> datetime seconds since for index position
+            # Array [starttimestamp, index]
+            dateindex = numpy.array((finput['recordtimestamp'][:],
+                                     finput['recordindex'][:finput['recordtimestamp'].shape[0]]))
+            try:
+                request_date = request_variables.pop('date')
+                #
+                # format: [DATE], [START, END], [DATE, DATE, DATE, ...] (min 3)
+                #
+                if len(request_date) > 2:
+                    dsec = []
+                    for ievent in request_date:
+                        dsec.append(seconds_since_ref(int(ievent), refdate))
+                    dsec = numpy.asarray(dsec, dtype=numpy.int)
+                else:
+                    dsec = numpy.arange(seconds_since_ref(int(request_date[0]), refdate),
+                                        seconds_since_ref(int(request_date[-1]), refdate) + 1,
+                                        86400, dtype=numpy.int)
+
+                if False:
+                    # old version with ranges and date list
+                    for ievent in request_date:
+                        if '-' in ievent:
+                            ievent = ievent.split('-')  # Date range from - to
+                            dsec.extend(range(seconds_since_ref(int(ievent[0]), refdate),
+                                              seconds_since_ref(int(ievent[-1]), refdate) + 1,
+                                              86400))
+                        else:
+                            dsec.append(seconds_since_ref(int(ievent), refdate))
+
+                # if time interval e.g. 21h-3h is chosen, the previous day must be extracted as well.
+                prevday = 0
+                if 'time' in request_keys:
+                    tlist = totimes(request_variables['time'])
+                    if tlist[0] > tlist[-1]:
+                        prevday = 1
+
+                if False:
+                    if '-' in request_date[0]:
+                        rvdp = request_date[0].split('-')
+                    else:
+                        rvdp = request_date
+                    sdate = numpy.array(rvdp, dtype='int')
+
+                    # if time interval e.g. 21h-3h is chosen, the previous day must be extracted as well.
+                    prevday = 0
+                    if 'time' in request_variables:
+                        tlist = totimes(request_variables['time'])
+                        if tlist[0] > tlist[-1]:
+                            prevday = 1
+
+                    dsec = []
+                    for d in sdate:
+                        dsec.append(((datetime(year=d // 10000, month=d % 10000 // 100,
+                                               day=d % 100) - refdate)).days * 86400)
+
+                    if '-' in request_date[0]:
+                        dsec = numpy.arange(dsec[0], dsec[-1] + 1, 86400, dtype=numpy.int)
+
+                    if len(dsec) == 1:
+                        dsec = numpy.concatenate((dsec, dsec))
+
+                dsec[-1] += 86399
+                # request range [from - to]  (can be really large)
+                # -86400 in order to get late launches of previous day
+                didx = numpy.where(numpy.logical_and(dateindex[0, :] >= dsec[0] - 86400,
+                                                     dateindex[0, :] <= dsec[-1]
+                                                     )
+                                   )[0]
+
+                if didx.shape[0] == 0:
+                    logger.warning('No data in time interval %s', rname)
+                    return '', 'No data in specified time interval'
+
+                didx = [didx[0], didx[-1]]
+            except KeyError:  # all dates are considered
+                didx = [0, dateindex.shape[1] - 1]
+                request_date = ['']
+                prevday = 0
+
+            if didx[-1] + 1 == dateindex.shape[1]:
+                trange = [dateindex[1, didx[0]], finput['observations_table']['observation_value'].shape[0]]  # Maximum
+            else:
+                trange = [dateindex[1, didx[0]], dateindex[1, didx[1] + 1]]  # Well within
+
+            logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange[0], trange[1],
+                         time.time() - time0, rname)
+            mask = numpy.ones(trange[1] - trange[0], dtype=numpy.bool)
+            # criteria = {'variable': 'era5fb/varno@body', 'level': 'era5fb/vertco_reference_1@body'}
+            criteria = {'variable': 'observations_table/observed_variable',
+                        'pressure_level': 'observations_table/z_coordinate',
+                        'time': 'observations_table/date_time'}
+            if True or '-' not in request_date[0]:
+                criteria['date'] = 'observations_table/date_time'
+
+            time0 = time.time()
+            for ckey, cval in criteria.items():
+                if ckey in request_keys:
+                    # mask=numpy.logical_and(mask,f[cv][trange[0]:trange[1]]>=rvdict[ck][0])
+                    # mask=numpy.logical_and(mask,f[cv][trange[0]:trange[1]]<=rvdict[ck][1])
+                    try:
+                        if ckey == 'time':
+                            us = numpy.string_(finput[cval].attrs['units'])
+                            dh = us.split(b' ')[-1].split(b':')
+                            if b'seconds' not in us:
+                                logger.warning('Units not given in seconds, %s %s', us, rname)
+                                return '', 'Units not given in seconds'
+
+                            ohilf = finput[cval][trange[0]:trange[1]]
+                            # add almost an hour (3600-1 sec) to account for difference between
+                            # releasetime and nominal time. Time unit in CDS interface is hours.
+                            hhilf = numpy.empty_like(ohilf, dtype=numpy.int32)
+                            dshift = numpy.zeros_like(ohilf, dtype=numpy.int32)
+                            hilf = numpy.empty_like(ohilf, dtype=numpy.int32)
+                            tohourday(hhilf, hilf, ohilf, dshift)
+                            # tohour(hhilf,ohilf,dshift)
+                            # today(hilf,ohilf)
+                            tlist = totimes(request_variables[ckey])
+                            if prevday == 1:
+                                ttlist = tlist[tlist < tlist[0]]  # use only late hours of the day before
+                            else:
+                                andisin(mask, hhilf, tlist)
+                        elif ckey == 'date':
+                            us = numpy.string_(finput[cval].attrs['units'])
+                            dh = us.split(b' ')[-1].split(b':')
+                            if b'seconds' not in us:
+                                logger.warning('Units not given in seconds, %s %s', us, rname)
+                                return '', 'Units not given in seconds'
+
+                            if 'ohilf' not in locals():
+                                ohilf = finput[cval][trange[0]:trange[1]]
+                                hhilf = numpy.empty_like(ohilf)
+                                dshift = numpy.zeros_like(ohilf, dtype=numpy.int32)
+                                hilf = numpy.empty_like(ohilf)
+                                tohourday(hhilf, hilf, ohilf, dshift)
+                                tlist = totimes(['0-23'])
+                            # tohour(hhilf,ohilf,dshift)
+                            # today(hilf,ohilf)
+                            else:
+                                tlist = totimes(request_variables['time'])
+                            dsec = numpy.array(dsec) // 86400
+                            if prevday == 1:
+                                logger.debug('selecting previous day %s', rname)
+                                # imask=numpy.zeros_like(mask)
+                                ttlist = tlist[tlist < tlist[0]]  # use only late hours of the day before
+                                # imask[:]=numpy.logical_and(numpy.isin(hilf,dsec),hhilf<=ttlist[-1])
+                                imask = hhilf <= ttlist[-1]
+                                andisin_t(imask, hilf + dshift, dsec)
+                                ttlist = tlist[tlist >= tlist[0]]  # use only early hours of last day
+                                imask2 = hhilf >= ttlist[0]
+                                # imask[:]=numpy.logical_or(imask,
+                                # numpy.logical_and(numpy.isin(hilf,dsec-1),hhilf>=ttlist[0]))
+                                andisin_t(imask2, hilf, dsec - 1)
+                                # print('nach andisin', time.time() - t)
+                                imask = numpy.logical_or(imask, imask2)
+                                mask = numpy.logical_and(mask, imask)
+                            else:
+                                andisin_t(mask, hilf + dshift, dsec)
+                        else:
+                            request_variables[ckey] = numpy.unique(request_variables[ckey])
+                            andisin(mask, finput[cval][trange[0]:trange[1]],
+                                    numpy.int32(request_variables[ckey]))
+                        logger.debug('Finished %s [%5.2f s] %s', ckey, time.time() - time0, rname)
+
+                    except MemoryError as e:
+                        logger.error('Error %s occurred while checking criteria', repr(e))
+                        return '', '"' + str(e) + '" occurred while checking criteria'
+
+            logger.debug('Finished mask %s [%5.2f s]', rname, time.time() - time0)
+            idx = numpy.where(mask)[0] + trange[0]  # make index for file subsetting
+            if len(idx) == 0:
+                logger.warning('No matching data found %s', rname)
+                return '', 'No matching data found'
+            logger.debug('Data found: %d %s', len(idx), rname)
+            if False:
+                # for debugging:
+                fcold = 0
+                fc = finput[criteria['time']][idx[0]:idx[-1] + 1]
+                for i in idx:
+                    e = fc[i - idx[0]]
+                    if fcold != e:
+                        # print(ecdt(e))
+                        fcold = e
+
+            trajectory_index = numpy.zeros_like(idx, dtype=numpy.int32)
+            recordindex = dateindex[1, :]  # recordindex
+            zidx = numpy.where(numpy.logical_and(recordindex >= trange[0], recordindex < trange[1]))[0]
+            recordindex = recordindex[zidx]
+            zidx = calc_trajindexfast(recordindex, zidx, idx, trajectory_index)
+
+            dims = {'obs': numpy.zeros(idx.shape[0], dtype=numpy.int32),
+                    'trajectory': numpy.zeros(zidx.shape[0], dtype=numpy.int32)}
+            globatts = {'Conventions': "CF-1.7",
+                        'source': "radiosonde",
+                        'featureType': "trajectory"}
+
+            snames = ['report_id', 'platform_id', 'platform_name', 'observation_value', 'latitude',
+                      'longitude', 'time', 'air_pressure', 'trajectory_label']
+
+            logger.debug('Request-keys: %s', str(request_keys))
+            if 'variable' not in request_keys:
+                logger.error('No variable specified %s %s', str(request_keys), rname)
+                return '', 'No variable specified'
+
+            if not isinstance(request_variables['variable'], list):
+                snames.append(cdmnamedict[request_variables['variable'][0]])
+            else:
+                snames.append(cdmnamedict[request_variables['variable']])
+
+            if 'fbstats' in request_keys:
+                if isinstance(request_variables['fbstats'], list):
+                    for c in request_variables['fbstats']:
+                        snames.append(cdmnamedict[c])
+                else:
+                    snames.append(cdmnamedict[request_variables['fbstats']])
+            name_to_cdm = {}
+            for ss in snames:
+                try:
+                    name_to_cdm[ss] = cdmtable[ss]
+                except:
+                    pass
+
+            filename_out = wroot + '/' + randdir + '/dest_' + statid + '_' + cdmnamedict[request_variables['variable']] + '.nc'
+            logger.debug('Writing: %s', filename_out)
+            with h5py.File(filename_out, 'w') as fout:
+                i = 0
+                for d, v in dims.items():
+                    fout.create_dataset(d, data=v)
+                    fout[d].attrs['NAME'] = numpy.string_('This is a netCDF dimension but not a netCDF variable.')
+                    fout[d].make_scale(d)  # resolves phony_dim problem
+                    i += 1
+                fout.create_dataset('trajectory_index', data=trajectory_index)
+                fout['trajectory_index'].attrs['long_name'] = numpy.string_(
+                    "index of trajectory this obs belongs to")
+                fout['trajectory_index'].attrs['instance_dimension'] = numpy.string_("trajectory")
+                fout['trajectory_index'].attrs['coordinates'] = numpy.string_("lat lon time plev")
+                for igroup in finput.keys():
+                    if not isinstance(finput[igroup], h5py.Group):
+                        continue
+
+                    if igroup in ['observations_table']:
+                        # only obs, feedback fitting criteria (idx) is copied
+                        do_cfcopy(fout, finput, igroup, idx, name_to_cdm, 'obs',
+                                  var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
+                                                 'observation_value', 'date_time'])
+                        # 'observed_variable','units'
+                        logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    elif igroup in ['era5fb']:
+                        # only obs, feedback fitting criteria (idx) is copied
+                        if 'fbstats' in request_keys:
+                            try:
+                                do_cfcopy(fout, finput, igroup, idx, name_to_cdm, 'obs',
+                                          var_selection=['fg_depar@body', 'an_depar@body',
+                                                         'biascorr@body'])
+                                # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
+                                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                            except KeyError:
+                                return '', 'no ' + name_to_cdm[request_variables['fbstats'][0]][
+                                    'cdmname'] + ' found in ' + filename
+                    elif igroup in ['header_table']:
+                        # only records fitting criteria (zidx) are copied
+                        do_cfcopy(fout, finput, igroup, zidx, name_to_cdm, 'trajectory',
+                                  var_selection=['report_id'])
+                        logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                        # ,'station_name','primary_station_id'])
+                        # todo could be read from the observations_table
+                    elif 'station_configuration' in igroup:
+                        # only records fitting criteria (zidx) are copied
+                        try:
+                            sh = finput[igroup]['primary_id'].shape[1]
+                            fout.attrs['primary_id'] = finput[igroup]['primary_id'][0].view('S{}'.format(sh))[0]
+                            sh = finput[igroup]['station_name'].shape[1]
+                            fout.attrs['station_name'] = finput[igroup]['station_name'][0].view('S{}'.format(sh))[0]
+                        except:
+                            logger.warning('No primary_id in %s', filename_out)
+                        logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+
+                    else:
+                        # groups that are simply copied
+                        if False:
+                            # for now commented out
+                            fout.create_group(igroup)
+                            for v in finput[igroup].keys():
+                                finput.copy(finput[igroup][v], fout[igroup], name=v, without_attrs=True)
+                            for a in finput[igroup].attrs.keys():
+                                fout[igroup].attrs[a] = finput[igroup].attrs[a]
+                            for v in finput[igroup].keys():
+                                # print(k,v)
+                                # fd[k].create_dataset_like(v,f[k][v])
+                                for a in finput[igroup][v].attrs.keys():
+                                    print(igroup, v, a)
+                                    if a not in ['DIMENSION_LIST', 'CLASS']:
+                                        if type(finput[igroup][v].attrs[a]) is str:
+                                            fout[igroup][v].attrs[a] = numpy.string_(finput[igroup][v].attrs[a])
+                                        else:
+                                            fout[igroup][v].attrs[a] = finput[igroup][v].attrs[a]
+                                l = 0
+                                for d in finput[igroup][v].dims:
+                                    if len(d) > 0:
+                                        fout[igroup][v].dims[l].attach_scale(fout[igroup][finput[igroup][v].dims[l][0].name])
+                                    l += 1
+                            print(igroup, 'copied', time.time() - time0)
+                fout['trajectory_label'].attrs['cf_role'] = numpy.string_('trajectory_id')
+                fout['trajectory_label'].attrs['long_name'] = numpy.string_('Label of trajectory')
+                for a, v in globatts.items():
+                    fout.attrs[a] = numpy.string_(v)
+
+                fout.attrs['history'] = numpy.string_(
+                    'Created by Copernicus Early Upper Air Service Version 0, ' + datetime.now().strftime(
+                        "%d-%b-%Y %H:%M:%S"))
+                fout.attrs['license'] = numpy.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
+
+    except Exception as e:
+        logger.error('Exception %s occurred while reading %s', repr(e), filename)
+        return '', 'exception "' + str(e) + '" occurred while reading ' + filename
+    logger.debug('Finished %s [%5.2f s]', rname, time.time() - time0)
 
 
 if __name__ == '__main__':
-
     read_standardnames()
     os.chdir(os.path.expandvars('$HOME/python/web2py'))
     print(('called with ', sys.argv[1], sys.argv[2]))
@@ -1091,7 +1057,6 @@ if __name__ == '__main__':
         if '[0' in rvars['statid']:
             rvars['statid'] = "['" + rvars['statid'][1:7] + "']"
     except:
-
         pass
 
     # df=cdmexplainer(rvars)
