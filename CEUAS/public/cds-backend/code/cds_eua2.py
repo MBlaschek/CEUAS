@@ -1,8 +1,8 @@
-import os
 import copy
 import glob
 import io
 import json
+import logging
 import subprocess
 import time
 import urllib.request
@@ -16,7 +16,6 @@ import h5py  # ickle as h5py
 import matplotlib.pylab as plt
 import numpy
 from numba import *
-import logging
 
 logger = logging.getLogger('upperair.eua')
 
@@ -699,6 +698,7 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
     if statid is None:
         logger.error('No station ID (statid) specified. %s', filename)
         return filename, 'No station ID (statid) specified'
+
     if statid[:3] == '0-2':
         suffix = ['']
     else:
@@ -710,17 +710,19 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
             break
 
     rname = filename.split('/')[-1]
+    filename_out = ''
     logger.debug('Current: %s', filename)
 
     if len(request_keys) == 0:
         return filename, ''
 
-    for igroup in request_keys:
-        if not isinstance(request_variables[igroup], list):
-            if request_variables[igroup] not in cdmdict.keys():
-                request_variables[igroup] = [request_variables[igroup], request_variables[igroup]]
-            else:
-                request_variables[igroup] = [cdmdict[request_variables[igroup]], cdmdict[request_variables[igroup]]]
+    # for igroup in request_keys:
+    #     if not isinstance(request_variables[igroup], list):
+    #         if request_variables[igroup] not in cdmdict.keys():
+    #             request_variables[igroup] = [request_variables[igroup], request_variables[igroup]]
+    #         else:
+    #             # replace variable name with cdmcode
+    #             request_variables[igroup] = [cdmdict[request_variables[igroup]], cdmdict[request_variables[igroup]]]
 
     refdate = datetime(year=1900, month=1, day=1)
     try:
@@ -887,9 +889,13 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
                             else:
                                 andisin_t(mask, hilf + dshift, dsec)
                         else:
-                            request_variables[ckey] = numpy.unique(request_variables[ckey])
-                            andisin(mask, finput[cval][trange[0]:trange[1]],
-                                    numpy.int32(request_variables[ckey]))
+                            if ckey == 'variable':
+                                andisin(mask, finput[cval][trange[0]:trange[1]],
+                                        numpy.int32(numpy.unique(cdmdict[request_variables[ckey]])))
+                            else:
+                                # pressure levels
+                                andisin(mask, finput[cval][trange[0]:trange[1]],
+                                        numpy.int32(numpy.unique(request_variables[ckey])))
                         logger.debug('Finished %s [%5.2f s] %s', ckey, time.time() - time0, rname)
 
                     except MemoryError as e:
@@ -927,12 +933,13 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
             snames = ['report_id', 'platform_id', 'platform_name', 'observation_value', 'latitude',
                       'longitude', 'time', 'air_pressure', 'trajectory_label']
 
-            logger.debug('Request-keys: %s', str(request_keys))
+            logger.debug('Request-keys: %s', str(list(request_keys)))
             if 'variable' not in request_keys:
                 logger.error('No variable specified %s %s', str(request_keys), rname)
                 return '', 'No variable specified'
 
-            if not isinstance(request_variables['variable'], list):
+            logger.debug('Variable: %s', str(request_variables['variable']))
+            if isinstance(request_variables['variable'], list):
                 snames.append(cdmnamedict[request_variables['variable'][0]])
             else:
                 snames.append(cdmnamedict[request_variables['variable']])
@@ -1044,6 +1051,7 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
         logger.error('Exception %s occurred while reading %s', repr(e), filename)
         return '', 'exception "' + str(e) + '" occurred while reading ' + filename
     logger.debug('Finished %s [%5.2f s]', rname, time.time() - time0)
+    return filename_out, ''
 
 
 if __name__ == '__main__':
