@@ -1,20 +1,36 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# this file is released under public domain and you can use without limitations
+__version__ = '0.3'
+__author__ = 'LH'
+__status__ = 'dev'
+__date__ = 'Mon Jul 13 10:29:21 CEST 2020'
+__institute__ = 'UNIVIE'
+__github__ = 'git@github.com:MBlaschek/CEUAS.git'
+__doc__ = """
+HUG Server v%s
+Maintained by %s at %s
+Github: %s [%s]
+Updated: %s
+""" % (__version__, __author__, __institute__, __github__, __status__, __date__)
 
-#########################################################################
-# This is a simple controller
-# - index is the default action of any application
-#   here it forwards the request from a CDS server to further processing
-#   with python
-#
-#   For queries ask early-upper-air@copernicus-climate.eu
-#   The C3S 311c Lot2 group
-#   Vienna, 26 August 2019
-# - user is required for authentication and authorization
-# - download is for downloading files uploaded in the db (does streaming)
-# - api is an example of Hypermedia API support and access control
-#########################################################################
+"""
+This is a simple controller
+ - index is the default action of any application
+   here it forwards the request from a CDS server to further processing
+   with python
 
+   For queries ask early-upper-air@copernicus-climate.eu
+   The C3S 311c Lot2 group
+   Vienna, 26 August 2019
+ - user is required for authentication and authorization
+ - download is for downloading files uploaded in the db (does streaming)
+ - api is an example of Hypermedia API support and access control
+
+
+License
+This file is released under public domain and you can use without limitations
+
+"""
 import copy
 import glob
 import logging
@@ -23,11 +39,13 @@ import socket
 import sys
 import time
 import zipfile
+from typing import Union
 from datetime import datetime, timedelta
 from functools import partial
 from multiprocessing import set_start_method, Pool
+
 import cds_eua2 as eua
-import h5py  # pickle as h5py
+import h5py
 import hug
 import numpy
 import pandas as pd
@@ -56,8 +74,8 @@ class MyFilter(object):
     def __init__(self, level):
         self.__level = level
 
-    def filter(self, logRecord):
-        return logRecord.levelno <= self.__level
+    def filter(self, logrecord):
+        return logrecord.levelno <= self.__level
 
 
 logger = logging.getLogger('upperair')
@@ -93,15 +111,22 @@ else:
     sys.path.append('/data/private/soft/python/')
     os.environ["RSCRATCH"] = "/data/public/"
 
-# @hug.exception(Exception)
-# def handler(exception):
-# return str(exception)
 global wroot
 wroot = '.'
 
 
-def makedaterange(vola: pd.DataFrame, itup: tuple):
-    s, skey = itup
+def makedaterange(vola: pd.DataFrame, itup: tuple) -> dict:
+    """ Read HDF5 radiosonde cdm backend file and extract datetime and geo information
+
+    Args:
+        vola: WMO Oscar Radiosonde list + Metadata
+        itup: (filename, ID)
+
+    Returns:
+        dict : File Information:
+            [ID] = [1.Date, last.Date, Lat, Lon, Country Code]
+    """
+    s, skey = itup  # filename, ID
     active = {}
     try:
 
@@ -117,7 +142,6 @@ def makedaterange(vola: pd.DataFrame, itup: tuple):
                                 float(f['observations_table']['longitude'][-1])]
                 idx = numpy.where(vola.StationId.values == skey)[0]
                 if len(idx) > 0:
-
                     active[skey].append(vola.CountryCode[idx[0]])
                 else:
                     active[skey].append('')
@@ -129,15 +153,20 @@ def makedaterange(vola: pd.DataFrame, itup: tuple):
     return active
 
 
-def init_server():
+def init_server() -> tuple:
+    """ Initialize Radiosonde Archive and read CDM Informations and CF Convention
+
+    https://raw.githubusercontent.com/glamod/common_data_model/master/tables/
+
+    Returns:
+        dict : active stations
+        dict : Common Data Model Name and Attributes
+        dict : Climate Convention Naming
+    """
     import os
     import json
-    import urllib
-    # unclear if that is useful?
-    #    try:
-    #        set_start_method("spawn")
-    #    except RuntimeError:
-    #        pass
+    import urllib.request
+    # todo make filepath more global and not defined in some function !!!
     os.chdir(os.path.expandvars('$RSCRATCH/era5/odbs/merged'))
     wroot = os.path.expandvars('$RSCRATCH/era5/odbs/merged/tmp')
     os.makedirs(wroot, exist_ok=True)
@@ -208,17 +237,54 @@ def init_server():
     return active, cdm, cf
 
 
+###############################################################################
+#
+# Common Data Objects
+#
+# Active Station Dictionary
+# CDM Table
+# CF Table Naming
+###############################################################################
+
+
 active, cdm, cf = init_server()
+
+# Active Station Numbers
 slnum = list(active.keys())
 slist = [os.path.expandvars('$RSCRATCH/era5/odbs/merged/') + '0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
 
 
-def last_day_of_month(any_day):
+###############################################################################
+#
+# Functions
+#
+###############################################################################
+
+
+def last_day_of_month(any_day: datetime) -> datetime:
+    """ Get the last day of a month
+
+    Args:
+        any_day: Datetime
+
+    Returns:
+        datetime : last day of the month
+    """
     next_month = any_day.replace(day=28) + timedelta(days=4)  # this will never fail
     return next_month - timedelta(days=next_month.day)
 
 
-def to_valid_datetime(idate, as_string=False):
+def to_valid_datetime(idate: str, as_string: bool = False) -> Union[str, datetime]:
+    """ Convert date string or integer to a valid datetime (last day of the month)
+
+    Args:
+        idate: datetime like: 19990131
+        as_string: return a string or the datetime object
+
+    Returns:
+        str : '19990131'
+        datetime : datetime(1999,1,31)
+    """
     d = 0
     try:
         d = int(idate)
@@ -233,10 +299,63 @@ def to_valid_datetime(idate, as_string=False):
     return idate
 
 
+def to_csv(flist: list, ofile: str = 'out.csv'):
+    """ Convert every file in flist to CSV
+
+    Args:
+        flist: list fo files
+        ofile: output filename
+
+    Returns:
+        str: output filename (returned by the request)
+    """
+    statindex = 0
+    dfs = []
+    for fn in flist:
+        ds = xarray.open_dataset(fn, drop_variables=['trajectory_label'])
+        df = ds.to_dataframe()
+        df['statid'] = ds.attrs['primary_id']
+        df['statindex'] = statindex
+        dfs.append(df)
+        statindex += 1
+
+    df = pd.concat(dfs, ignore_index=True)
+    df.index.name = 'obs_id'
+    df.to_csv(ofile)
+    return ofile
+
+
+###############################################################################
+
+
 def check_body(variable: list = None, statid: list = None, product_type: str = None, pressure_level: list = None,
-                   date: list = None, time: list = None, fbstats=None, bbox: list = None, country: str = None,
-                   format: str = None, period: list = None, cdm: dict = None, pass_unknown_keys: bool = False,
-                   **kwargs) -> str or dict:
+               date: list = None, time: list = None, fbstats=None, bbox: list = None, country: str = None,
+               format: str = None, period: list = None, cdm: dict = None, pass_unknown_keys: bool = False,
+               **kwargs) -> Union[dict, str]:
+    """ Check Request for valid values and keys
+
+    Args:
+        variable: e.g. temperature, ...
+        statid: e.g. 01001
+        product_type: currently unused
+        pressure_level: 500, ...
+        date: '19990131' or ['19990101', '20000101'] as range
+        time: 1,... or 0-23
+        fbstats: only these are currently allowed: 'obs_minus_an', 'obs_minus_bg', 'bias_estimate'
+        bbox: Bounding Box [lower left upper right]
+        country: Country Code, e.g. DEU, AUT, USA, GBR
+        format: nc or csv
+        period: ['19990101', '20000101'] see Notes
+        cdm: CDM definition Table
+        pass_unknown_keys: only for debugging and local use
+        **kwargs:
+
+    Returns:
+        dict : Clean Request
+
+    Notes:
+        date and period are currently not really separated due to CDS filtering
+    """
     d = {}
     allowed_variables = ['temperature', 'u_component_of_wind', 'v_component_of_wind',
                          'wind_speed', 'wind_direction', 'relative_humidity',
@@ -473,238 +592,23 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     return d
 
 
-def check_body_deprecated(body: dict, cdm: dict):
-    """ Check dictionary from request if required keys are present and within ranges
-
-    Args:
-        body: request body
-        cdm: CDM definitions table (here used only for Country codes)
-
-    Returns:
-        list: title, description
-        str: empty
-    """
-    required_keys = ['variable']
-    valid_keys = required_keys + ['statid', 'fbstats', 'pressure_level', 'date', 'time', 'bbox', 'country', 'format',
-                                  'period']
-    xor_keys = ['statid', 'bbox', 'country']
-    valid_ranges = {'pressure_level': ['500', '110000'],
-                    'date': ['19000101', '20301231'], 'time': ['0', '24'],
-                    'fbstats': ['obs_minus_an', 'obs_minus_bg', 'bias_estimate'],
-                    'variable': ['temperature', 'u_component_of_wind', 'v_component_of_wind',
-                                 'wind_speed', 'wind_direction', 'relative_humidity',
-                                 'specific_humidity', 'dew_point_temperature'],
-                    'format': ['nc', 'csv']}
-
-    try:
-        bk = list(body.keys())
-        for r in required_keys:
-            if r not in bk:
-                return ['Missing argument:', 'Argument ' + r + ' is required']
-
-        for b in bk:
-            if b not in valid_keys:
-                logger.warning('Invalid argument key: %s', b)
-                continue
-                # return ['Invalid argument ' + b + '.', ' Valid arguments:' + str(valid_keys)]
-
-        rxor = ''
-        for r in xor_keys:
-            if r in bk:
-                if len(rxor) == 0:
-                    rxor = r
-                else:
-                    return ['Invalid station selection', 'Please do not specify both ' + rxor + ' and ' + r]
-
-        if 'date' in bk and 'period' in bk:
-            return ['Invalid datetime selection', 'Please do not specify both date and period']
-
-        if 'country' in bk:
-            if type(body['country']) is str:
-
-                if body['country'].upper() in ('GLOBE', 'ALL'):
-                    body['statid'] = slnum
-                    del body['country']
-                else:
-                    body['country'] = [body['country']]
-
-            if 'country' in body.keys():
-                vcountries = cdm['sub_region'].alpha_3_code.values
-                body['statid'] = []
-                for v in body['country']:
-                    if v not in vcountries:
-                        return ['Invalid station selection', v + ' is not a valid country code']
-                    for k, vv in active.items():
-                        if vv[4] == v:
-                            body['statid'].append(k)
-                if len(body['statid']) == 0:
-                    return ['Invalid station selection', 'Countries ' + str(body['country']) + ' have no radiosondes']
-                del body['country']
-        elif 'bbox' in bk:
-            if type(body['bbox']) is not list:
-                return ['Invalid station selection', 'Bounding box: [lower, left, upper, right]']
-            if len(body['bbox']) != 4:
-                return ['Invalid station selection', 'Bounding box: [lower, left, upper, right]']
-            try:
-                for i in range(4):
-                    body['bbox'][i] = float(body['bbox'][i])
-            except:
-                return ['Invalid station selection', 'Bounding box: [lower, left, upper, right] must be int or float']
-            if body['bbox'][0] > body['bbox'][2] or body['bbox'][1] > body['bbox'][3]:
-                return ['Invalid station selection',
-                        'Bounding box requirements: lower<upper, left<right, -90<=lat<=90, -180<=lon<=360']
-            if body['bbox'][0] < -90 or body['bbox'][0] > 90 or body['bbox'][2] < -90 or body['bbox'][2] > 90 or \
-                    body['bbox'][1] < -180 or body['bbox'][1] > 360 or body['bbox'][3] < -180 or body['bbox'][3] > 360 \
-                    or body['bbox'][3] - body['bbox'][1] > 360:
-                return ['Invalid station selection',
-                        'Bounding box requirements: lower<upper, left<right, -90<=lat<=90, -180<=lon<=360']
-
-            body['statid'] = []
-            for k, v in active.items():
-                if v[2] >= body['bbox'][0] and v[2] <= body['bbox'][2]:
-                    if body['bbox'][3] <= 180:
-                        if v[3] >= body['bbox'][1] and v[3] <= body['bbox'][3]:
-                            body['statid'].append(k)
-                    else:  # rectangle crossing date line
-                        if v[3] < 0:
-                            if v[3] >= body['bbox'][1] - 360 and v[3] + 360 <= body['bbox'][3]:
-                                body['statid'].append(k)
-                        else:
-                            if v[3] >= body['bbox'][1] and v[3] <= body['bbox'][3]:
-                                body['statid'].append(k)
-            if len(body['statid']) == 0:
-                return ['Invalid station selection',
-                        'Bounding box ' + str(body['bbox']) + ' contains no radiosonde stations']
-            del body['bbox']
-        else:
-            try:
-                suff = ['0-20000-0-', '0-20001-0-']
-                if type(body['statid']) == int:
-                    for s in suff:
-                        bd = s + '{:0>5}'.format(body['statid'])
-                        if bd in slnum:
-                            break
-                    body['statid'] = [bd]
-                elif body['statid'] == 'all':
-                    body['statid'] = slnum
-                elif body['statid'][0] == 'all':
-                    body['statid'] = slnum
-                elif type(body['statid']) is not list:
-                    bd = body['statid']
-                    if body['statid'][:3] != '0-2':
-                        for s in suff:
-                            bd = s + body['statid']
-                            if bd in slnum:
-                                break
-                    body['statid'] = [bd]
-                else:
-                    if type(body['statid'][0]) == int:
-                        for k in range(len(body['statid'])):
-                            for s in suff:
-                                bd = s + '{:0>5}'.format(body['statid'][k])
-                                if bd in slnum:
-                                    break
-                            body['statid'][k] = bd
-                    else:
-                        for k in range(len(body['statid'])):
-                            if body['statid'][k][:3] != '0-2':
-                                for s in suff:
-                                    bd = s + body['statid'][k]
-                                    if bd in slnum:
-                                        break
-                                body['statid'][k] = bd
-
-            except MemoryError:
-                return ['Invalid station selection',
-                        'Please specify either bbox, country or statid for station selection. Use "statid":"all" to select all stations']
-
-        refdate = datetime(year=1900, month=1, day=1)
-        bk = list(body.keys())
-        for v in bk:
-            if v in valid_ranges:
-                #
-                # Convert to list
-                #
-                if isinstance(body[v], (str, int)):
-                    body[v] = str(body[v])
-                    body[v] = [body[v]]
-                #
-                # Convert to String
-                #
-                for k in range(len(body[v])):
-                    body[v][k] = str(body[v][k])
-
-                #
-                # Check Valid Ranges
-                #
-                for bv in body[v]:
-                    if v in ('pressure_level', 'time'):
-                        try:
-                            if int(bv) > int(valid_ranges[v][1]) or int(bv) < int(valid_ranges[v][0]):
-                                return ['argument value(s) ' + str(bvv) + ' not valid.',
-                                        'Valid values:' + str(valid_ranges[v])]
-                        except:
-                            return ['only integer arguments allowed for ' + v, str(bvv) + ' not valid.']
-                    elif v == 'date':
-                        continue
-                    else:
-                        if bv not in valid_ranges[v]:
-                            return ['argument value(s) ' + str(bv) + ' not valid.',
-                                    'Valid values:' + str(valid_ranges[v])]
-
-                if v == 'date':
-                    newdates = []
-                    singledates = []
-                    for k in range(len(body[v])):
-                        # period
-                        if '-' in body[v][k]:
-                            bvv = body[v][k].split('-')
-                            # check period dates (should not be out of range)
-                            newdates.append('{}-{}'.format(to_valid_datetime(bvv[0], as_string=True),
-                                                           to_valid_datetime(bvv[-1], as_string=True)))
-                        else:
-                            # try:
-                            #     if int(body[v][k]) > int(valid_ranges[v][1]) or int(body[v][k]) < int(
-                            #             valid_ranges[v][0]):
-                            #         return ['argument value(s) ' + str(body[v][k]) + ' not valid.',
-                            #                 'Valid values:' + str(valid_ranges[v])]
-                            # except:
-                            #     return ['only integer arguments allowed for ' + v, str(body[v][k]) + ' not valid.']
-                            #
-                            try:
-                                singledates.append(to_valid_datetime(body[v][k], as_string=True))
-                            except:
-                                return ['only valid dates allowed for ' + v, str(body[v][k])]
-                    #
-                    # Continuous block of dates ?
-                    #
-                    if len(singledates) > 0:
-                        start = (to_valid_datetime(singledates[0]) - refdate).days
-                        stop = (to_valid_datetime(singledates[-1]) - refdate).days
-
-                        # check if number of days between start and stop match length -> continous block
-                        if len(singledates) == stop - start + 1:
-                            newdates.append('{}-{}'.format(to_valid_datetime(singledates[0], as_string=True),
-                                                           to_valid_datetime(singledates[-1], as_string=True)))
-                            logger.debug('Dates to period: %s', newdates[-1])
-                        else:
-                            newdates.extend(singledates)
-
-                    body[v] = newdates  # list(set(sorted(newdates)))   # unique list of dates
-                if v == 'period':
-                    body['date'] = '{}-{}'.format(to_valid_datetime(body[v][0], as_string=True),
-                                                  to_valid_datetime(body[v][-1], as_string=True))
-                    del body[v]
-                logger.debug('%s %s %s [%d]', v, body[v][0], body[v][-1], len(body[v]))
-
-    except IOError:
-        logger.error("General syntax error %s", str(body))
-        return ['general syntax error ', body]
-
-    return ''
+###############################################################################
 
 
 def makebodies(bodies, body, spv, bo, l):
+    """ Split Request by Variable and Station ID -> MP
+
+    Args:
+        bodies: list of requests
+        body: request dictionary
+        spv: variables to split by
+        bo: tmp var ?
+        l: 0
+
+    Returns:
+        bodies
+    """
+    # todo this fucntion is wired ... redesign needed
     for b in body[spv[l]]:
         if l < len(spv) - 1:
             makebodies(bodies, body, spv, copy.copy(bo) + [b], l + 1)
@@ -717,45 +621,32 @@ def makebodies(bodies, body, spv, bo, l):
     return
 
 
-def to_csv(flist: list, ofile: str = 'out.csv'):
-    statindex = 0
-    dfs = []
-    for fn in flist:
-        ds = xarray.open_dataset(fn, drop_variables=['trajectory_label'])
-        df = ds.to_dataframe()
-        df['statid'] = ds.attrs['primary_id']
-        df['statindex'] = statindex
-        dfs.append(df)
-        statindex += 1
+def defproc(body: dict, wroot: str, randdir: str, cdm: dict, debug:bool=False) -> tuple:
+    """ Main fucntion of the hug server
 
-    df = pd.concat(dfs, ignore_index=True)
-    df.index.name = 'obs_id'
-    df.to_csv(ofile)
-    return ofile
+    Args:
+        body: request dictionary
+        wroot: station path root
+        randdir: temporary directory for request
+        cdm: CDM table definitions from init_server()
+        debug: for debugging
 
-
-def defproc(body: dict, wroot: str, randdir: str, cdm: dict):
+    Returns:
+        str : filename of zipped requested files
+        str : message or error
+    """
     tt = time.time()
-    #
-    # New routine for request check
-    #
-    if True:
-        msg = check_body(cdm=cdm, **body)
-        if isinstance(msg, str):
-            return '', msg
-        body = msg
-    else:
-        error = check_body_deprecated(body, cdm)
-        if len(error) > 0:
-            return '', " ".join(error)
-
+    msg = check_body(cdm=cdm, **body)
+    if isinstance(msg, str):
+        return '', msg
+    body = msg
     logger.debug('Cleaned Request %s', str(body))
     os.makedirs(wroot + '/' + randdir, exist_ok=True)
     bodies = []
-    spv = ['statid', 'variable']   # potential split up variables
+    spv = ['statid', 'variable']  # potential split up variables
     bo = []
     refdate = datetime(year=1900, month=1, day=1)
-    makebodies(bodies, body, spv, bo, 0)   # List of split requests
+    makebodies(bodies, body, spv, bo, 0)  # List of split requests
     #
     # Check all requests if dates are within active station limits
     #
@@ -787,7 +678,7 @@ def defproc(body: dict, wroot: str, randdir: str, cdm: dict):
 
     func = partial(eua.process_flat, wroot, randdir, cf)
 
-    if False:
+    if debug:
         #
         # Single Threading
         #
@@ -852,19 +743,17 @@ def defproc(body: dict, wroot: str, randdir: str, cdm: dict):
 
 @hug.get('/', output=hug.output_format.file)
 def index(request=None, response=None):
-    """
-    index function requests get URI and converts into dictionary.
-    Lists may be given via "[]"
-    Allowed keys:
-    statid (List) of strings
-    bb= lat/lon rectangle (lower left upper right)
-    variable (string) variable (one at a time)
-    level (List) of levels in Pascal
-    siglevs (bool) y/n
-    glamod (bool)  y/n # add tables as hdf groups
-    format (nc)
-    """
+    """ Main Hug Index Function on get requests
 
+    index function requests get URI and converts into dictionary.
+
+    Args:
+        request: dictionary
+        response: str
+
+    Returns:
+
+    """
     logger.debug("GET %s", request.query_string)
     if '=' not in request.query_string:
         raise HTTPError(HTTP_422, title='malformed get request', description='A query string must be supplied')
@@ -900,24 +789,36 @@ def index(request=None, response=None):
 
 @hug.post('/', output=hug.output_format.file)
 def index(request=None, body=None, response=None):
+    """ Main Hug index function for Post requests
+
+    Args:
+        request: not used
+        body: dictionary of request
+        response:
+
+    Returns:
+
+    Body:
+     - variable         – e.g. temperature, ... as list or string
+     - statid           – e.g. 01001 as list or string
+     - product_type     – currently unused
+     - pressure_level   – 500, ...
+     - date             – '19990131' or ['19990101', '20000101'] as range
+     - time             – 1,... or 0-23
+     - fbstats          – only these are currently allowed: 'obs_minus_an', 'obs_minus_bg', 'bias_estimate'
+     - bbox             – Bounding Box [lower left upper right]
+     - country          – Country Code, e.g. DEU, AUT, USA, GBR
+     - format           – 'nc' or 'csv'
+     - period           – ['19990101', '20000101']
+
     """
-    index function requests get URI and converts into dictionary.
-    Lists may be given via "[]"
-    Allowed keys:
-    statid (List) of strings
-    bb= lat/lon rectangle (lower left upper right)
-    variable (string) variable (one at a time)
-    level (List) of levels in Pascal
-    siglevs (bool) y/n
-    glamod (bool)  y/n # add tables as hdf groups
-    format (nc)
-    """
+    # todo add trigger for reloading active stations and restarting hug
+    # todo add status request including uptime, ...
     randdir = '{:012d}'.format(numpy.random.randint(100000000000))
     request_id = id(body)  # or somthing better?
     logger.info("%s POST %s", request_id, str(body))
     wroot = os.path.expandvars('$RSCRATCH/tmp/')
     rfile, error = defproc(body, wroot, randdir, cdm)
-    # os.makedirs('logs', exist_ok=True)
     if rfile == '':
         logger.error("POST Request failed, %s", error)
         with open('./logs/failed_requests.log', 'a+') as ff:
@@ -944,7 +845,7 @@ if __name__ == '__main__':
     body = eval(sys.argv[1])
     debug = body.pop('debug', False)
     #
-    # Logging to DEBUG
+    # Logging to DEBUG to std.out and hug.debug.local.log
     #
     logger.setLevel(10)
     for i in logger.handlers:
@@ -966,5 +867,4 @@ if __name__ == '__main__':
     ret = defproc(body, wroot, randdir, cdm)
     idir = os.path.expandvars('$RSCRATCH/out')
     os.chdir(idir)
-    # ofile=to_csv(idir,glob.glob('*temperature.nc'))
     logger.debug(str(ret))
