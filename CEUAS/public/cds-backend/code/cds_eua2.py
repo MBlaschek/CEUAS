@@ -1,24 +1,43 @@
+#!/usr/bin/env python3
+__version__ = '0.2'
+__author__ = 'LH'
+__status__ = 'dev'
+__date__ = 'Mon Jul 13 10:29:21 CEST 2020'
+__institute__ = 'UNIVIE'
+__github__ = 'git@github.com:MBlaschek/CEUAS.git'
+__doc__ = """
+CDS_EUA Functions v%s
+Maintained by %s at %s
+Github: %s [%s]
+Updated: %s
+""" % (__version__, __author__, __institute__, __github__, __status__, __date__)
+
+"""
+Documented Version of cds_eua2
+"""
+import os
 import copy
 import glob
 import io
-import json
-import logging
 import subprocess
 import time
-import urllib.request
-import xml.etree.ElementTree as ET
+
 import zipfile
 from datetime import datetime, timedelta
 from functools import partial
 from multiprocessing import Pool
 
-import h5py  # ickle as h5py
+import h5py
 import matplotlib.pylab as plt
 import numpy
 from numba import *
+import logging
 
 logger = logging.getLogger('upperair.eua')
 
+#
+# Plotting functions for testing
+#
 
 def readandplot(rfile, body):
     with zipfile.ZipFile(rfile, 'r') as a:
@@ -132,94 +151,85 @@ def secsince(t, funits, ref=datetime.strptime('1900-01-01 00:00:00', '%Y-%m-%d %
 
 # @njit(cache=True)
 def read_standardnames() -> dict:
-    try:
-        with open(os.path.expanduser('~/.tmp/cf.json')) as f:
-            cf = json.load(f)
+    import urllib.request
+    import xml.etree.ElementTree as ET
+    url = 'http://cfconventions.org/Data/cf-standard-names/69/src/cf-standard-name-table.xml'
+    response = urllib.request.urlopen(url).read()
+    tree = ET.fromstring(response)
+    snames = ['platform_id', 'platform_name', 'latitude', 'longitude', 'time', 'air_pressure',
+              'air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
+              'eastward_wind', 'northward_wind', 'wind_speed', 'wind_direction', 'geopotential', 'trajectory_label',
+              'obs_minus_bg', 'obs_minus_an', 'bias_estimate']
+    cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
+                'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
+    cdmnames += 9 * ['observations_table/observation_value']
+    cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body']
+    cf = {}
+    for c, cdm in zip(snames, cdmnames):
+        cf[c] = {'cdmname': cdm, 'units': 'NA', 'shortname': c}
+        if c not in 'latitude longitude time air_pressure':
+            cf[c]['coordinates'] = 'lat lon time plev'  # short names
+    l = 0
+    for child in tree:
+        # print(child.tag,child.attrib)
+        try:
+            c = child.attrib['id']
+            if c in snames:
+                i = snames.index(c)
+                logger.debug(c)
 
-    except:
+                cf[c]['cdmname'] = cdmnames[i]
+                if child[0].text is not None:
+                    cf[c]['units'] = child[0].text
+                if child[2].text is not None:
+                    cf[c]['shortname'] = child[2].text
+                cf[c]['standard_name'] = c
+        except:
+            pass
+        l += 1
+    cf['latitude']['shortname'] = 'lat'
+    cf['longitude']['shortname'] = 'lon'
+    cf['air_pressure']['shortname'] = 'plev'
+    cf['time']['shortname'] = 'time'
+    cf['bias_estimate']['cdsname'] = 'bias_estimate'
+    cf['bias_estimate']['cdmcode'] = 0
+    cf['bias_estimate']['odbcode'] = 0
+    cf['obs_minus_bg']['cdsname'] = 'obs_minus_bg'
+    cf['obs_minus_bg']['cdmcode'] = 0
+    cf['obs_minus_bg']['odbcode'] = 0
+    cf['obs_minus_an']['cdsname'] = 'obs_minus_an'
+    cf['obs_minus_an']['cdmcode'] = 0
+    cf['obs_minus_an']['odbcode'] = 0
+    cf['air_temperature']['cdsname'] = 'temperature'
+    cf['air_temperature']['cdmcode'] = 85
+    cf['air_temperature']['odbcode'] = 2
+    cf['eastward_wind']['cdsname'] = 'u_component_of_wind'
+    cf['eastward_wind']['cdmcode'] = 104
+    cf['eastward_wind']['odbcode'] = 3
+    cf['northward_wind']['cdsname'] = 'v_component_of_wind'
+    cf['northward_wind']['cdmcode'] = 105
+    cf['northward_wind']['odbcode'] = 4
+    cf['wind_speed']['cdsname'] = 'wind_speed'
+    cf['wind_speed']['cdmcode'] = 107
+    cf['wind_speed']['odbcode'] = 112
+    cf['wind_direction']['cdsname'] = 'wind_direction'
+    cf['wind_direction']['cdmcode'] = 106
+    cf['wind_direction']['odbcode'] = 111
+    cf['relative_humidity']['cdsname'] = 'relative_humidity'
+    cf['relative_humidity']['cdmcode'] = 38
+    cf['relative_humidity']['odbcode'] = 29
+    cf['specific_humidity']['cdsname'] = 'specific_humidity'
+    cf['specific_humidity']['cdmcode'] = 39
+    cf['specific_humidity']['odbcode'] = 7
+    cf['dew_point_temperature']['cdsname'] = 'dew_point_temperature'
+    cf['dew_point_temperature']['cdmcode'] = 36
+    cf['dew_point_temperature']['odbcode'] = 59
+    cf['geopotential']['cdsname'] = 'geopotential'
+    cf['geopotential']['cdmcode'] = -1
+    cf['geopotential']['odbcode'] = 1
 
-        url = 'http://cfconventions.org/Data/cf-standard-names/69/src/cf-standard-name-table.xml'
-        response = urllib.request.urlopen(url).read()
-        tree = ET.fromstring(response)
-        snames = ['platform_id', 'platform_name', 'latitude', 'longitude', 'time', 'air_pressure',
-                  'air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
-                  'eastward_wind', 'northward_wind', 'wind_speed', 'wind_direction', 'geopotential', 'trajectory_label',
-                  'obs_minus_bg', 'obs_minus_an', 'bias_estimate']
-        cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
-                    'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
-        cdmnames += 9 * ['observations_table/observation_value']
-        cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body']
-        cf = {}
-        for c, cdm in zip(snames, cdmnames):
-            cf[c] = {'cdmname': cdm, 'units': 'NA', 'shortname': c}
-            if c not in 'latitude longitude time air_pressure':
-                cf[c]['coordinates'] = 'lat lon time plev'  # short names
-        l = 0
-        for child in tree:
-            # print(child.tag,child.attrib)
-            try:
-                c = child.attrib['id']
-                if c in snames:
-                    i = snames.index(c)
-                    logger.debug(c)
-
-                    cf[c]['cdmname'] = cdmnames[i]
-                    if child[0].text is not None:
-                        cf[c]['units'] = child[0].text
-                    if child[2].text is not None:
-                        cf[c]['shortname'] = child[2].text
-                    cf[c]['standard_name'] = c
-            except:
-                pass
-            l += 1
-        cf['latitude']['shortname'] = 'lat'
-        cf['longitude']['shortname'] = 'lon'
-        cf['air_pressure']['shortname'] = 'plev'
-        cf['time']['shortname'] = 'time'
-        cf['bias_estimate']['cdsname'] = 'bias_estimate'
-        cf['bias_estimate']['cdmcode'] = 0
-        cf['bias_estimate']['odbcode'] = 0
-        cf['obs_minus_bg']['cdsname'] = 'obs_minus_bg'
-        cf['obs_minus_bg']['cdmcode'] = 0
-        cf['obs_minus_bg']['odbcode'] = 0
-        cf['obs_minus_an']['cdsname'] = 'obs_minus_an'
-        cf['obs_minus_an']['cdmcode'] = 0
-        cf['obs_minus_an']['odbcode'] = 0
-        cf['air_temperature']['cdsname'] = 'temperature'
-        cf['air_temperature']['cdmcode'] = 85
-        cf['air_temperature']['odbcode'] = 2
-        cf['eastward_wind']['cdsname'] = 'u_component_of_wind'
-        cf['eastward_wind']['cdmcode'] = 104
-        cf['eastward_wind']['odbcode'] = 3
-        cf['northward_wind']['cdsname'] = 'v_component_of_wind'
-        cf['northward_wind']['cdmcode'] = 105
-        cf['northward_wind']['odbcode'] = 4
-        cf['wind_speed']['cdsname'] = 'wind_speed'
-        cf['wind_speed']['cdmcode'] = 107
-        cf['wind_speed']['odbcode'] = 112
-        cf['wind_direction']['cdsname'] = 'wind_direction'
-        cf['wind_direction']['cdmcode'] = 106
-        cf['wind_direction']['odbcode'] = 111
-        cf['relative_humidity']['cdsname'] = 'relative_humidity'
-        cf['relative_humidity']['cdmcode'] = 38
-        cf['relative_humidity']['odbcode'] = 29
-        cf['specific_humidity']['cdsname'] = 'specific_humidity'
-        cf['specific_humidity']['cdmcode'] = 39
-        cf['specific_humidity']['odbcode'] = 7
-        cf['dew_point_temperature']['cdsname'] = 'dew_point_temperature'
-        cf['dew_point_temperature']['cdmcode'] = 36
-        cf['dew_point_temperature']['odbcode'] = 59
-        cf['geopotential']['cdsname'] = 'geopotential'
-        cf['geopotential']['cdmcode'] = -1
-        cf['geopotential']['odbcode'] = 1
-
-        # vdict={'111':'windDirection','112':'windSpeed','1':'geopotentialHeight',
-        # '2':'airTemperature','59':'dewpointTemperature','29':'relativeHumidity'}
-
-        with open(os.path.expanduser('~/.tmp/cf.json'), 'w') as f:
-
-            json.dump(cf, f)
-
+    # vdict={'111':'windDirection','112':'windSpeed','1':'geopotentialHeight',
+    # '2':'airTemperature','59':'dewpointTemperature','29':'relativeHumidity'}
     return cf
 
 
@@ -698,7 +708,6 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
     if statid is None:
         logger.error('No station ID (statid) specified. %s', filename)
         return filename, 'No station ID (statid) specified'
-
     if statid[:3] == '0-2':
         suffix = ['']
     else:
@@ -710,7 +719,6 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
             break
 
     rname = filename.split('/')[-1]
-    filename_out = ''
     logger.debug('Current: %s', filename)
 
     if len(request_keys) == 0:
@@ -721,7 +729,6 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
     #         if request_variables[igroup] not in cdmdict.keys():
     #             request_variables[igroup] = [request_variables[igroup], request_variables[igroup]]
     #         else:
-    #             # replace variable name with cdmcode
     #             request_variables[igroup] = [cdmdict[request_variables[igroup]], cdmdict[request_variables[igroup]]]
 
     refdate = datetime(year=1900, month=1, day=1)
@@ -825,7 +832,7 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
             if True or '-' not in request_date[0]:
                 criteria['date'] = 'observations_table/date_time'
 
-            time0 = time.time()
+            # time0 = time.time()
             for ckey, cval in criteria.items():
                 if ckey in request_keys:
                     # mask=numpy.logical_and(mask,f[cv][trange[0]:trange[1]]>=rvdict[ck][0])
@@ -870,6 +877,7 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
                             # today(hilf,ohilf)
                             else:
                                 tlist = totimes(request_variables['time'])
+
                             dsec = numpy.array(dsec) // 86400
                             if prevday == 1:
                                 logger.debug('selecting previous day %s', rname)
@@ -888,14 +896,10 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
                                 mask = numpy.logical_and(mask, imask)
                             else:
                                 andisin_t(mask, hilf + dshift, dsec)
+                        elif ckey == 'variable':
+                            andisin(mask, finput[cval][trange[0]:trange[1]], numpy.int32(numpy.unique(cdmdict[request_variables[ckey]])))
                         else:
-                            if ckey == 'variable':
-                                andisin(mask, finput[cval][trange[0]:trange[1]],
-                                        numpy.int32(numpy.unique(cdmdict[request_variables[ckey]])))
-                            else:
-                                # pressure levels
-                                andisin(mask, finput[cval][trange[0]:trange[1]],
-                                        numpy.int32(numpy.unique(request_variables[ckey])))
+                            andisin(mask, finput[cval][trange[0]:trange[1]], numpy.int32(numpy.unique(request_variables[ckey])))
                         logger.debug('Finished %s [%5.2f s] %s', ckey, time.time() - time0, rname)
 
                     except MemoryError as e:
@@ -933,12 +937,11 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
             snames = ['report_id', 'platform_id', 'platform_name', 'observation_value', 'latitude',
                       'longitude', 'time', 'air_pressure', 'trajectory_label']
 
-            logger.debug('Request-keys: %s', str(list(request_keys)))
+            logger.debug('Request-keys: %s', str(request_keys))
             if 'variable' not in request_keys:
                 logger.error('No variable specified %s %s', str(request_keys), rname)
                 return '', 'No variable specified'
 
-            logger.debug('Variable: %s', str(request_variables['variable']))
             if isinstance(request_variables['variable'], list):
                 snames.append(cdmnamedict[request_variables['variable'][0]])
             else:
@@ -1046,12 +1049,12 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
                     'Created by Copernicus Early Upper Air Service Version 0, ' + datetime.now().strftime(
                         "%d-%b-%Y %H:%M:%S"))
                 fout.attrs['license'] = numpy.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
+        logger.debug('Finished %s [%5.2f s]', rname, time.time() - time0)
+        return filename_out, ''
 
     except Exception as e:
         logger.error('Exception %s occurred while reading %s', repr(e), filename)
         return '', 'exception "' + str(e) + '" occurred while reading ' + filename
-    logger.debug('Finished %s [%5.2f s]', rname, time.time() - time0)
-    return filename_out, ''
 
 
 if __name__ == '__main__':

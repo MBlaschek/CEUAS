@@ -17,18 +17,15 @@
 
 import copy
 import glob
-import json
 import logging
 import os
 import socket
 import sys
 import time
-import urllib
 import zipfile
 from datetime import datetime, timedelta
 from functools import partial
 from multiprocessing import set_start_method, Pool
-
 import cds_eua2 as eua
 import h5py  # pickle as h5py
 import hug
@@ -133,35 +130,37 @@ def makedaterange(vola: pd.DataFrame, itup: tuple):
 
 
 def init_server():
+    import os
+    import json
+    import urllib
+    # unclear if that is useful?
     #    try:
     #        set_start_method("spawn")
     #    except RuntimeError:
     #        pass
     os.chdir(os.path.expandvars('$RSCRATCH/era5/odbs/merged'))
-    #    os.chdir(os.path.expandvars('/raid60/scratch/federico/JUNE_TEST_MERGING_ALL'))
     wroot = os.path.expandvars('$RSCRATCH/era5/odbs/merged/tmp')
-    try:
-        os.mkdir(wroot)
-    except:
-        pass
+    os.makedirs(wroot, exist_ok=True)
     z = numpy.zeros(1, dtype=numpy.int32)
     zidx = numpy.zeros(1, dtype=numpy.int)
     idx = numpy.zeros(1, dtype=numpy.int)
     trajectory_index = numpy.zeros(1, dtype=numpy.int)
+    # What get's updated here?
     zz = eua.calc_trajindexfast(z, zidx, idx, trajectory_index)
-    try:
-        os.mkdir(os.path.expanduser('~/.tmp'))
-    except:
-        pass
+    os.makedirs(os.path.expanduser('~/.tmp'), exist_ok=True)
+    active_file = os.path.expanduser('~/.tmp/active.json')
+    active = None
+    if os.path.isfile(active_file):
+        try:
+            with open(active_file) as f:
+                active = json.load(f)
+            logger.info('Active Stations read. [%d]', len(active))
+        except:
+            active = None
 
-    try:
-        with open(os.path.expanduser('~/.tmp/active.json')) as f:
-            active = json.load(f)
-        logger.info('Active Stations read. [%d]', len(active))
-    except:
+    if active is None:
         slist = glob.glob(os.path.expandvars('0-20000-0-?????_CEUAS_merged_v0.nc'))
         slnum = [i[-34:-19] for i in slist]
-
         volapath = 'https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
         f = urllib.request.urlopen(volapath)
         col_names = pd.read_csv(f, delimiter='\t', quoting=3, nrows=0)
@@ -172,7 +171,6 @@ def init_server():
         # print (vola.iloc[0])
         # exit()
         active = {}
-
         func = partial(makedaterange, vola)
         # with Pool(10) as p:
         # sklist=list(p.map(func,zip(slist,slnum)))
@@ -182,10 +180,19 @@ def init_server():
                 k = next(iter(s))
                 active[k] = s[k]
         logger.info('Active Stations created. [%d]', len(active))
-        with open(os.path.expanduser('~/.tmp/active.json'), 'w') as f:
+        with open(active_file, 'w') as f:
             json.dump(active, f)
-
-    cf = eua.read_standardnames()
+    #
+    # Read CDM Definitions
+    #
+    cdm_file = os.path.expanduser('~/.tmp/cf.json')
+    if os.path.isfile(cdm_file):
+        with open(cdm_file) as f:
+            cf = json.load(f)
+    else:
+        cf = eua.read_standardnames()
+        with open(cdm_file, 'w') as f:
+            json.dump(cf, f)
 
     # cdmtablelist=['id_scheme','crs','station_type','observed_variable','station_configuration_codes','units','sub_region']
     cdmpath = 'https://raw.githubusercontent.com/glamod/common_data_model/master/tables/'
@@ -202,12 +209,10 @@ def init_server():
 
 
 active, cdm, cf = init_server()
-
 slnum = list(active.keys())
 slist = [os.path.expandvars('$RSCRATCH/era5/odbs/merged/') + '0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
 
 
-# filelist=glob.glob('chera5.conv._?????.nc')
 def last_day_of_month(any_day):
     next_month = any_day.replace(day=28) + timedelta(days=4)  # this will never fail
     return next_month - timedelta(days=next_month.day)
@@ -731,7 +736,9 @@ def to_csv(flist: list, ofile: str = 'out.csv'):
 
 def defproc(body: dict, wroot: str, randdir: str, cdm: dict):
     tt = time.time()
-
+    #
+    # New routine for request check
+    #
     if True:
         msg = check_body(cdm=cdm, **body)
         if isinstance(msg, str):
@@ -743,11 +750,7 @@ def defproc(body: dict, wroot: str, randdir: str, cdm: dict):
             return '', " ".join(error)
 
     logger.debug('Cleaned Request %s', str(body))
-    try:
-        os.mkdir(wroot + '/' + randdir)
-    except:
-        pass
-
+    os.makedirs(wroot + '/' + randdir, exist_ok=True)
     bodies = []
     spv = ['statid', 'variable']   # potential split up variables
     bo = []
@@ -757,13 +760,12 @@ def defproc(body: dict, wroot: str, randdir: str, cdm: dict):
     # Check all requests if dates are within active station limits
     #
     for k in range(len(bodies) - 1, -1, -1):
-
         deleted = False  # delete sonde from request ?
-
         if 'date' in bodies[k].keys():
             # seconds since Reference date
             start = (to_valid_datetime(bodies[k]['date'][0]) - refdate).days * 86400
             ende = (to_valid_datetime(bodies[k]['date'][-1]) - refdate).days * 86400
+            # Station Active ?
             if bodies[k]['statid'] in active.keys():
                 if start > active[bodies[k]['statid']][1] or ende + 86399 < active[bodies[k]['statid']][0]:
                     logger.debug('%s outside Index range', bodies[k]['statid'])
