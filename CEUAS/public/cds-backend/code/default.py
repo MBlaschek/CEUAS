@@ -33,16 +33,17 @@ This file is released under public domain and you can use without limitations
 """
 import copy
 import glob
+import json
 import logging
 import os
 import socket
 import sys
 import time
 import zipfile
-from typing import Union
 from datetime import datetime, timedelta
 from functools import partial
 from multiprocessing import set_start_method, Pool
+from typing import Union
 
 import cds_eua2 as eua
 import h5py
@@ -50,26 +51,42 @@ import hug
 import numpy
 import pandas as pd
 import xarray
-from falcon import HTTPError, HTTP_422
 
 try:
-    set_start_method("spawn")
+    set_start_method("spawn")  # or fork ? not sure why, pickling?
 except RuntimeError:
     pass
 
-"""
-Logging by external:
-STDOUT > hug.log
-STDERR > hug.err
+###############################################################################
+#
+# CONFIG
+#
+###############################################################################
+config_file = 'hug.default.config.json'
+global config
+config = {'logger_name': 'upperair',
+          'logger_level': 10,
+          'logger_debug': 'hug.debug.log',
+          'logger_dir': './logs',
+          'src_path': '.',
+          'data_dir': '.',
+          'tmp_dir': '.',
+          'config_dir': './config',
+          'reload_pwd': 'reload'}
 
-hug.log (INFO)
-hug.err (ERROR)
-hug.debug.log (DEBUG)
-finished_requests.log : Add successfully delivered requests
-failed_requests.log : Add failed requests
-"""
+if os.path.isfile(config_file):
+    new = json.load(open(config_file, 'r'))
+    config.update(new)
+else:
+    print("Writing new config file:", config_file, "Adjust accordingly!")
+    json.dump(config, open(config_file, 'w'))
 
 
+###############################################################################
+#
+# LOGGING
+#
+###############################################################################
 class MyFilter(object):
     def __init__(self, level):
         self.__level = level
@@ -78,8 +95,8 @@ class MyFilter(object):
         return logrecord.levelno <= self.__level
 
 
-logger = logging.getLogger('upperair')
-logger.setLevel(logging.DEBUG)
+logger = logging.getLogger(config['logger_name'])
+logger.setLevel(config['logger_level'])
 # create formatter
 formatter = logging.Formatter('%(asctime)s - %(name)s | %(funcName)s - %(levelname)s - %(message)s')
 # create console handler and set level to warning for stderr
@@ -95,24 +112,34 @@ logger.addHandler(ch2)
 ch2.addFilter(MyFilter(logging.INFO))
 
 try:
-    ch3 = logging.FileHandler('logs/hug.debug.log')
+    ch3 = logging.FileHandler(config['logger_dir'] + '/' + config['logger_debug'])
 except PermissionError:
-    ch3 = logging.FileHandler('logs/hug.debug.local.log')
+    ch3 = logging.FileHandler(config['logger_dir'] + '/' + config['logger_debug'].replace('.log', '.local.log'))
 ch3.setLevel(logging.DEBUG)  # respond only to Debug and above
 ch3.setFormatter(formatter)
 logger.addHandler(ch3)
 
-host = socket.gethostname()
+for i, j in config.items():
+    logger.debug('CONFIG %s : %s', i, j)
 
+###############################################################################
+#
+# SPECIALS
+#
+###############################################################################
+host = socket.gethostname()
 logger.info("HUG started on %s", host)
+# todo this part is deprecated / LEO delete?
 if 'srvx' in host:
     sys.path.append(os.path.expanduser('~leo/python/'))
-else:
-    sys.path.append('/data/private/soft/python/')
-    os.environ["RSCRATCH"] = "/data/public/"
+    config['data_dir'] = os.environ["RSCRATCH"]  # ?
 
-global wroot
-wroot = '.'
+
+###############################################################################
+#
+# MAIN FUNCTIONS
+#
+###############################################################################
 
 
 def makedaterange(vola: pd.DataFrame, itup: tuple) -> dict:
@@ -153,7 +180,7 @@ def makedaterange(vola: pd.DataFrame, itup: tuple) -> dict:
     return active
 
 
-def init_server() -> tuple:
+def init_server(force_reload: bool = False, force_download: bool = False) -> tuple:
     """ Initialize Radiosonde Archive and read CDM Informations and CF Convention
 
     https://raw.githubusercontent.com/glamod/common_data_model/master/tables/
@@ -166,20 +193,20 @@ def init_server() -> tuple:
     import os
     import json
     import urllib.request
-    # todo make filepath more global and not defined in some function !!!
-    os.chdir(os.path.expandvars('$RSCRATCH/era5/odbs/merged'))
-    wroot = os.path.expandvars('$RSCRATCH/era5/odbs/merged/tmp')
-    os.makedirs(wroot, exist_ok=True)
+
+    # os.chdir(os.path.expandvars('$RSCRATCH/era5/odbs/merged'))
+    # wroot = os.path.expandvars('$RSCRATCH/era5/odbs/merged/tmp')
+    # os.makedirs(wroot, exist_ok=True)
     z = numpy.zeros(1, dtype=numpy.int32)
     zidx = numpy.zeros(1, dtype=numpy.int)
     idx = numpy.zeros(1, dtype=numpy.int)
     trajectory_index = numpy.zeros(1, dtype=numpy.int)
     # What get's updated here?
     zz = eua.calc_trajindexfast(z, zidx, idx, trajectory_index)
-    os.makedirs(os.path.expanduser('~/.tmp'), exist_ok=True)
-    active_file = os.path.expanduser('~/.tmp/active.json')
+    os.makedirs(config['config_dir'], exist_ok=True)
+    active_file = config['config_dir'] + '/active.json'
     active = None
-    if os.path.isfile(active_file):
+    if os.path.isfile(active_file) and not force_reload:
         try:
             with open(active_file) as f:
                 active = json.load(f)
@@ -188,7 +215,7 @@ def init_server() -> tuple:
             active = None
 
     if active is None:
-        slist = glob.glob(os.path.expandvars('0-20000-0-?????_CEUAS_merged_v0.nc'))
+        slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-20000-0-?????_CEUAS_merged_v0.nc'))
         slnum = [i[-34:-19] for i in slist]
         volapath = 'https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
         f = urllib.request.urlopen(volapath)
@@ -214,8 +241,8 @@ def init_server() -> tuple:
     #
     # Read CDM Definitions
     #
-    cdm_file = os.path.expanduser('~/.tmp/cf.json')
-    if os.path.isfile(cdm_file):
+    cdm_file = config['config_dir'] + '/cf.json'
+    if os.path.isfile(cdm_file) and not force_download:
         with open(cdm_file) as f:
             cf = json.load(f)
     else:
@@ -223,7 +250,6 @@ def init_server() -> tuple:
         with open(cdm_file, 'w') as f:
             json.dump(cf, f)
 
-    # cdmtablelist=['id_scheme','crs','station_type','observed_variable','station_configuration_codes','units','sub_region']
     cdmpath = 'https://raw.githubusercontent.com/glamod/common_data_model/master/tables/'
     cdmtablelist = ['sub_region']
     cdm = dict()
@@ -242,16 +268,16 @@ def init_server() -> tuple:
 # Common Data Objects
 #
 # Active Station Dictionary
-# CDM Table
+# WMO Regions Table for Country Codes
 # CF Table Naming
 ###############################################################################
 
 
-active, cdm, cf = init_server()
+active, wmo_regions, cf = init_server()
 
 # Active Station Numbers
 slnum = list(active.keys())
-slist = [os.path.expandvars('$RSCRATCH/era5/odbs/merged/') + '0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
+slist = [config['data_dir'] + '/0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
 
 
 ###############################################################################
@@ -299,29 +325,140 @@ def to_valid_datetime(idate: str, as_string: bool = False) -> Union[str, datetim
     return idate
 
 
-def to_csv(flist: list, ofile: str = 'out.csv'):
+@hug.get_post('/status')
+def status_test(command=None) -> dict:
+    """ Return the status of the hug server
+
+    Returns:
+
+    """
+    import psutil
+    hproc = None
+    for proc in psutil.process_iter():
+        if 'bin/hug' in " ".join(proc.cmdline()):
+            hproc = proc
+            break
+
+    if hproc is not None:
+        elapsed = datetime.now() - datetime.fromtimestamp(hproc.create_time())
+        status_msg = {"version": __version__, "status": hproc.status(), "running": hproc.is_running(),
+                      "available": str(elapsed), "memory": hproc.memory_percent(), "cpu": hproc.cpu_percent(),
+                      "stations": len(slnum)}
+        # psutil.disk_usage('/data/public/')  # '/data/private/',
+        if command == config['reload_pwd']:
+            if elapsed.total_seconds() > 120:
+                init_server(force_reload=True, force_download=False)
+                hproc.kill()  # this should end the hug server and cron should restart it
+            return status_msg
+
+        if command == 'cleanup':
+            # search for request directories and results / remove them and report back
+            pass
+
+        if command == 'failed_requests':
+            messages = {}
+            with open(config['logger_dir'] + '/failed_requests.log', 'r') as f:
+                tmp = f.read().splitlines()
+                for iline in tmp:
+                    idate = iline.split(' [')[0]
+                    iline = iline.replace(idate, '').split('Message:')
+                    messages[idate] = {'request': eval(iline[0].strip()[1:-1]), 'message': iline[1].strip()}
+            status_msg["failed_requests"] = messages
+
+        if command == 'finished_requests':
+            messages = {}
+            with open(config['logger_dir'] + '/finished_requests.log', 'r') as f:
+                tmp = f.read().splitlines()
+                for iline in tmp:
+                    idate = iline.split(' [')[0]
+                    iline = iline.replace(idate, '')
+                    messages[idate] = {'request': eval(iline.strip()[1:-1])}
+            status_msg["finsihed_requests"] = messages
+
+        if command == 'running':
+            return {'running': hproc.is_running()}
+
+        return status_msg
+
+    return {'error': "Can't find me....? :("}
+
+
+def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
     """ Convert every file in flist to CSV
 
     Args:
         flist: list fo files
         ofile: output filename
+        name: variable filename inside zip file
 
     Returns:
         str: output filename (returned by the request)
+
+    Profiling:
+        on    Tue Jul 28 09:12:40 UTC 2020, 1143 temperature files, 1979-01, stdplevs
+
+        Total time: 56.3918 s (load_dataset)
+        Total time: 41.8788 s (zipping)
+        Total time: 39.8347 s (open_dataset)
+        File: /data/private/soft/python/hug/default.py
+        Function: to_csv at line 366
+
+        Line #      Hits         Time  Per Hit   % Time  Line Contents
+        ==============================================================
+           366                                           def to_csv(flist: list, ofile: str = 'out.csv'):
+           377         1          2.0      2.0      0.0      statindex = 0
+           378         1          1.0      1.0      0.0      dfs = []
+           379      1144       1654.0      1.4      0.0      for fn in flist:
+           380                                                   # changed from open_dataset to load_dataset
+           381      1143   14480897.0  12669.2     36.4          ds = xarray.open_dataset(fn, drop_variables=['trajectory_label', 'trajectory_index', 'trajectory'])
+           382      1143    7763230.0   6792.0     19.5          df = ds.to_dataframe()
+           383      1143       9120.0      8.0      0.0          if 'primary_id' not in ds.attrs:
+           384                                                       # /data/public//tmp//006691463272/dest_0-20000-0-53513_relative_humidity.nc
+           385      1143    1462572.0   1279.6      3.7              df['statid'] = fn.split('/')[-1].split('_')[1]
+           386                                                       # logger.warning('CSV no primary_id in %s', fn)
+           387                                                       # continue
+           388                                                   else:
+           389                                                       df['statid'] = ds.attrs['primary_id']
+           390      1143    1332445.0   1165.7      3.3          df['statindex'] = statindex
+           391      1143       3120.0      2.7      0.0          dfs.append(df)
+           392      1143       1151.0      1.0      0.0          statindex += 1
+           393
+           394         1     646098.0 646098.0      1.6      df = pd.concat(dfs, ignore_index=True)
+           395         1         16.0     16.0      0.0      df.index.name = 'obs_id'
+           396         1   14134345.0 14134345.0   35.5      df.to_csv(ofile)
+           397         1          2.0      2.0      0.0      return ofile
+
     """
     statindex = 0
     dfs = []
     for fn in flist:
-        ds = xarray.open_dataset(fn, drop_variables=['trajectory_label'])
+        # open_dataset (~20 s faster) than load_dataset
+        ds = xarray.open_dataset(fn, drop_variables=['trajectory_label', 'trajectory_index', 'trajectory'])
         df = ds.to_dataframe()
-        df['statid'] = ds.attrs['primary_id']
+        #
+        # todo fix the primary_id in the NetCDF files
+        #
+        if 'primary_id' not in ds.attrs:
+            # /data/public//tmp//006691463272/dest_0-20000-0-53513_relative_humidity.nc
+            df['statid'] = fn.split('/')[-1].split('_')[1]
+            # logger.warning('CSV no primary_id in %s', fn)
+            # continue
+        else:
+            df['statid'] = ds.attrs['primary_id']
+        #
+        #
+        #
         df['statindex'] = statindex
         dfs.append(df)
         statindex += 1
 
     df = pd.concat(dfs, ignore_index=True)
     df.index.name = 'obs_id'
-    df.to_csv(ofile)
+    # this part
+    if '.zip' in ofile:
+        df.to_csv(ofile, compression=dict(method='zip', archive_name=name + '.csv'))  # might be 10x faster
+    else:
+        df.to_csv(ofile)
     return ofile
 
 
@@ -330,8 +467,8 @@ def to_csv(flist: list, ofile: str = 'out.csv'):
 
 def check_body(variable: list = None, statid: list = None, product_type: str = None, pressure_level: list = None,
                date: list = None, time: list = None, fbstats=None, bbox: list = None, country: str = None,
-               format: str = None, period: list = None, cdm: dict = None, pass_unknown_keys: bool = False,
-               **kwargs) -> Union[dict, str]:
+               format: str = None, period: list = None, wmotable: dict = None, pass_unknown_keys: bool = False,
+               **kwargs) -> dict:
     """ Check Request for valid values and keys
 
     Args:
@@ -346,7 +483,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         country: Country Code, e.g. DEU, AUT, USA, GBR
         format: nc or csv
         period: ['19990101', '20000101'] see Notes
-        cdm: CDM definition Table
+        wmotable: WMO Regions definition Table
         pass_unknown_keys: only for debugging and local use
         **kwargs:
 
@@ -379,14 +516,14 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     # Variable
     #
     if variable is None:
-        return 'Missing argument: variable'
+        raise KeyError('Missing argument: variable')
     else:
         if not isinstance(variable, list):
             variable = [variable]
 
         for ivar in variable:
             if ivar not in allowed_variables:
-                return 'Invalid variable selected: ' + ivar
+                raise KeyError('Invalid variable selected: ' + ivar)
         d['variable'] = variable
     #
     # fb stats
@@ -396,13 +533,13 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             fbstats = [fbstats]
         for ifb in fbstats:
             if ifb not in ['obs_minus_an', 'obs_minus_bg', 'bias_estimate']:
-                return 'Invalid fbstats variable selected: ' + ifb
+                raise KeyError('Invalid fbstats variable selected: ' + ifb)
     #
     # Format
     #
     if format is not None:
         if format not in ['nc', 'csv']:
-            return 'Invalud format selected [nc, csv]: ' + format
+            raise ValueError('Invalid format selected [nc, csv]: ' + format)
         d['format'] = format
     else:
         d['format'] = 'nc'
@@ -413,8 +550,8 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         statid = 'all'
 
     if sum((statid is not None, bbox is not None, country is not None)) != 1:
-        return 'Invalid selection, Specify only one of statid: %s, bbox: %s and country: %s' % (
-            statid, bbox, country)
+        raise RuntimeError('Invalid selection, Specify only one of statid: %s, bbox: %s and country: %s' % (
+            statid, bbox, country))
     #
     # Countries
     #
@@ -426,37 +563,37 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 country = []
             else:
                 country = [country]
-        vcountries = cdm['sub_region'].alpha_3_code.values
+        vcountries = wmotable['sub_region'].alpha_3_code.values
         for icountry in country:
             if icountry not in vcountries:
-                return 'Invalid selection, %s is not a valid country code' % icountry
+                raise ValueError('Invalid selection, %s is not a valid country code' % icountry)
 
             for k, vv in active.items():
                 if vv[4] == icountry:
                     statid.append(k)
 
         if len(statid) == 0:
-            return 'Invalid selection, no Stations for Countries %s' % str(country)
+            raise RuntimeError('Invalid selection, no Stations for Countries %s' % str(country))
     #
     # BBOX [lower left upper right]
     #
     elif bbox is not None:
         if not isinstance(bbox, (list, tuple)) or len(bbox) != 4:
-            return 'Invalid selection, bounding box: [lower, left, upper, right]'
+            raise ValueError('Invalid selection, bounding box: [lower, left, upper, right]')
 
         try:
             for i in range(4):
                 bbox[i] = float(bbox[i])
         except ValueError:
-            return 'Invalid selection, bounding box: [lower, left, upper, right] must be int or float'
+            raise ValueError('Invalid selection, bounding box: [lower, left, upper, right] must be int or float')
 
         if bbox[0] > bbox[2] or bbox[1] > bbox[3]:
-            return 'Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]'
+            raise ValueError('Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]')
 
         if bbox[0] < -90 or bbox[0] > 90 or bbox[2] < -90 or bbox[2] > 90 or \
                 bbox[1] < -180 or bbox[1] > 360 or bbox[3] < -180 or bbox[3] > 360 \
                 or bbox[3] - bbox[1] > 360:
-            return 'Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]'
+            raise ValueError('Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]')
         statid = []
         for k, v in active.items():
             if bbox[0] <= v[2] <= bbox[2]:
@@ -472,7 +609,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                         if bbox[1] <= v[3] <= bbox[3]:
                             statid.append(k)
         if len(statid) == 0:
-            return 'Invalid selection, bounding box %s contains no radiosonde stations' % str(bbox)
+            raise RuntimeError('Invalid selection, bounding box %s contains no radiosonde stations' % str(bbox))
     #
     # Stations
     #
@@ -512,8 +649,9 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                     new_statid.append(valid_id)
                 statid = new_statid
         except MemoryError:
-            return 'Invalid selection, specify either bbox, country or statid. Use "statid":"all" to select all ' \
-                   'stations '
+            raise RuntimeError(
+                'Invalid selection, specify either bbox, country or statid. Use "statid":"all" to select all ' \
+                'stations ')
     d['statid'] = statid
     #
     # Date time selection
@@ -535,21 +673,23 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             if '-' in idate:
                 idate = idate.split('-')
                 # check period dates (should not be out of range)
-                newdates.append('{}-{}'.format(to_valid_datetime(idate[0], as_string=True),
-                                               to_valid_datetime(idate[-1], as_string=True)))
+                newdates.append(to_valid_datetime(idate[0], as_string=True))
+                newdates.append(to_valid_datetime(idate[-1], as_string=True))
+                # newdates.append('{}-{}'.format(to_valid_datetime(idate[0], as_string=True),
+                #                                to_valid_datetime(idate[-1], as_string=True)))
             else:
                 try:
                     newdates.append(to_valid_datetime(idate, as_string=True))
                 except:
-                    return 'only valid dates allowed for date: %s' % idate
+                    raise ValueError('only valid dates allowed for date: %s' % idate)
         d['date'] = newdates
     #
     # Period [START, END] -> into date
     #
-    # todo not forward by CDS -> to date [start end]
+    # todo not forward by CDS -> to date [start-end]
     if period is not None:
         if not isinstance(period, list):
-            return 'invalid period selection, period [startdate, enddate], but %s' % str(period)
+            raise ValueError('invalid period selection, period [startdate, enddate], but %s' % str(period))
 
         for i in range(len(period)):
             period[i] = str(period[i])
@@ -567,11 +707,11 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 pressure_level[i] = str(pressure_level[i])
                 # in Pa
                 if int(pressure_level[i]) < 500 or int(pressure_level[i]) > 110000:
-                    return 'invalid selection, pressure_level out of range [50-1100 hPa]: %d' % int(
-                        pressure_level[i]) / 100
+                    raise ValueError('invalid selection, pressure_level out of range [50-1100 hPa]: %d' % int(
+                        pressure_level[i]) / 100)
 
             except:
-                return 'invalid selection, pressure_level allows only integer, ' + pressure_level[i]
+                raise ValueError('invalid selection, pressure_level allows only integer, ' + pressure_level[i])
         d['pressure_level'] = pressure_level
     #
     # times
@@ -585,9 +725,9 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 time[i] = str(time[i])
                 # in hours
                 if int(time[i]) < 0 or int(time[i]) > 24:
-                    return 'invalid selection, time out of range [0-24 h]: %d' % int(time[i])
+                    raise ValueError('invalid selection, time out of range [0-24 h]: %d' % int(time[i]))
             except:
-                return 'invalid selection, pressure_level allows only integer, ' + time[i]
+                raise ValueError('invalid selection, pressure_level allows only integer, ' + time[i])
 
     return d
 
@@ -608,7 +748,7 @@ def makebodies(bodies, body, spv, bo, l):
     Returns:
         bodies
     """
-    # todo this fucntion is wired ... redesign needed
+    # todo this fucntion is wired ... redesign needed ?
     for b in body[spv[l]]:
         if l < len(spv) - 1:
             makebodies(bodies, body, spv, copy.copy(bo) + [b], l + 1)
@@ -621,27 +761,41 @@ def makebodies(bodies, body, spv, bo, l):
     return
 
 
-def defproc(body: dict, wroot: str, randdir: str, cdm: dict, debug:bool=False) -> tuple:
-    """ Main fucntion of the hug server
+def process_request(body: dict, output_dir: str, input_dir: str, wmotable: dict, debug: bool = False) -> str:
+    """ Main function of the hug server
 
     Args:
         body: request dictionary
-        wroot: station path root
-        randdir: temporary directory for request
-        cdm: CDM table definitions from init_server()
+        output_dir: Output directory
+        input_dir: Data input directory
+        wmotable: WMO regions definitions from init_server()
         debug: for debugging
 
     Returns:
         str : filename of zipped requested files
-        str : message or error
     """
     tt = time.time()
-    msg = check_body(cdm=cdm, **body)
-    if isinstance(msg, str):
-        return '', msg
-    body = msg
+    #
+    # Raises Errors will be handled by base_exception_handler of the hug server
+    # in debug this will give a traceback
+    #
+    body = check_body(wmotable=wmotable, **body)
+    if False:
+        # todo could add a zip file for all radiosondes all times std plevs or all levels,
+        #  prepared aforehand, here simply write this into the json
+        #  could be as soon as we know which requests are really popular, then prepare these.
+        body_hash = hash(str(body))  # might be useful to identify same requests and availability
+        if os.path.isfile(config['logger_dir'] + '/request_hashes.json'):
+            hashes = json.load(open(config['logger_dir'] + '/request_hashes.json', 'r'))
+            if body_hash in hashes.keys():
+                return hashes[body_hash]['rfile']
+            hashes[body_hash] = {'request': body, 'rfile': output_dir + '/download.zip'}
+        else:
+            hashes = {body_hash: {'request': body, 'rfile': output_dir + '/download.zip'}}
+            json.dump(hashes, open(config['logger_dir'] + '/request_hashes.json', 'w'))
+    #
     logger.debug('Cleaned Request %s', str(body))
-    os.makedirs(wroot + '/' + randdir, exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)  # double check
     bodies = []
     spv = ['statid', 'variable']  # potential split up variables
     bo = []
@@ -651,7 +805,7 @@ def defproc(body: dict, wroot: str, randdir: str, cdm: dict, debug:bool=False) -
     # Check all requests if dates are within active station limits
     #
     for k in range(len(bodies) - 1, -1, -1):
-        deleted = False  # delete sonde from request ?
+        # date selection ? do all the stations have data in this period?
         if 'date' in bodies[k].keys():
             # seconds since Reference date
             start = (to_valid_datetime(bodies[k]['date'][0]) - refdate).days * 86400
@@ -661,7 +815,6 @@ def defproc(body: dict, wroot: str, randdir: str, cdm: dict, debug:bool=False) -
                 if start > active[bodies[k]['statid']][1] or ende + 86399 < active[bodies[k]['statid']][0]:
                     logger.debug('%s outside Index range', bodies[k]['statid'])
                     del bodies[k]
-                    deleted = True
 
                 else:
                     logger.debug('%s Index[%d (%d / %d) %d]', bodies[k]['statid'],
@@ -670,13 +823,12 @@ def defproc(body: dict, wroot: str, randdir: str, cdm: dict, debug:bool=False) -
                                  active[bodies[k]['statid']][1])
             else:
                 del bodies[k]
-                deleted = True
 
     logger.debug('# requests %d', len(bodies))
     if len(bodies) == 0:
-        return '', 'No selected station has data in specified date range: ' + str(body)
+        raise RuntimeError('No selected station has data in specified date range: ' + str(body))
 
-    func = partial(eua.process_flat, wroot, randdir, cf)
+    func = partial(eua.process_flat, output_dir, cf, input_dir)
 
     if debug:
         #
@@ -697,48 +849,60 @@ def defproc(body: dict, wroot: str, randdir: str, cdm: dict, debug:bool=False) -
             break
 
     if wpath == '':
-        return '', 'Error: %s (%s)' % (results[0][1], str(body))
+        raise RuntimeError('Error: %s (%s)' % (results[0][1], str(body)))
     else:
         rfile = os.path.dirname(wpath) + '/download.zip'
 
     logger.debug('wpath: %s; format %s', wpath, body['format'])
 
     if 'local_execution' in body.keys():
-        return rfile, ''
+        return rfile
 
     if body['format'] == 'nc':
         with zipfile.ZipFile(rfile, 'w') as f:
             for r in results:
                 try:
-                    # logger.debug('Zipping: %s in %s', r[0], os.path.basename(r[0]))
                     if len(r[0]) > 0:
                         f.write(r[0], os.path.basename(r[0]))
-                    os.remove(r[0])
+                    if debug:
+                        continue  # do not remove
+                    os.remove(r[0])  # remove NetCDF file
                 except:
                     pass
+        logger.debug('netcdfs compressed [%d] to %s', len(results), rfile)
 
     else:
-        ofiles = []
         for v in body['variable']:
             ilist = glob.glob(os.path.dirname(wpath) + '/*' + v + '.nc')
             if len(ilist) > 0:
-                ofiles.append(to_csv(ilist, v + '.csv'))
+                _ = to_csv(ilist, ofile=rfile, name=v)
                 logger.debug('writing csv %s [%d] to %s', v, len(ilist), rfile)
+                if debug:
+                    continue  # do not remove
                 for i in ilist:
-                    os.remove(i)
+                    os.remove(i)  # remove NetCDF file
 
-        if len(ofiles) > 0:
-            with zipfile.ZipFile(rfile, 'w', compression=zipfile.ZIP_DEFLATED) as f:
-                for o in ofiles:
-                    try:
-                        f.write(o, os.path.basename(o))
-                        logger.debug('writing %s to %s', o, rfile)
-                        os.remove(o)
-                    except:
-                        pass
+        # ofiles = []
+        # for v in body['variable']:
+        #     ilist = glob.glob(os.path.dirname(wpath) + '/*' + v + '.nc')
+        #     if len(ilist) > 0:
+        #         ofiles.append(to_csv(ilist, v + '.csv'))
+        #         logger.debug('writing csv %s [%d] to %s', v, len(ilist), rfile)
+        #         if not debug:
+        #             for i in ilist:
+        #                 os.remove(i)
 
+        # if len(ofiles) > 0:
+        #     with zipfile.ZipFile(rfile, 'w', compression=zipfile.ZIP_DEFLATED) as f:
+        #         for o in ofiles:
+        #             try:
+        #                 f.write(o, os.path.basename(o))
+        #                 logger.debug('writing %s to %s', o, rfile)
+        #                 if not debug: os.remove(o)
+        #             except:
+        #                 pass
     logger.debug('Request-File: %s [Time: %7.4f s]', rfile, (time.time() - tt))
-    return rfile, ''
+    return rfile
 
 
 @hug.get('/', output=hug.output_format.file)
@@ -756,7 +920,8 @@ def index(request=None, response=None):
     """
     logger.debug("GET %s", request.query_string)
     if '=' not in request.query_string:
-        raise HTTPError(HTTP_422, title='malformed get request', description='A query string must be supplied')
+        response.status = hug.HTTP_422
+        raise Exception('A query string must be supplied')
 
     try:
         rs = request.query_string.split('&')
@@ -773,18 +938,46 @@ def index(request=None, response=None):
                 body[k] = v
 
     except:
-        raise HTTPError(HTTP_422, title='malformed query string', description=request.query_string)
+        response.status = hug.HTTP_422
+        raise Exception(request.query_string)
 
     randdir = '{:012d}'.format(numpy.random.randint(100000000000))
-    logger.debug("GET BODY %s", str(body))
-    wroot = os.path.expandvars('$RSCRATCH/tmp/')
-    rfile, error = defproc(body, wroot, randdir, cdm)
-    if rfile == '':
-        logger.error("GET Request failed, %s", error)
-        raise HTTPError(HTTP_422, title='malformed request', description=error)
+    logger.info("%s GET %s", randdir, str(body))
+    tmpdir = config['tmp_dir'] + '/' + randdir
+    try:
+        rfile = process_request(body, tmpdir, config['data_dir'], wmo_regions)
+    except Exception as e:
+        logger.error("%s GET FAILED, %s", randdir, e)
+        with open(config['logger_dir'] + '/failed_requests.log', 'a+') as ff:
+            ff.write('%s - %s [%s] Message: %s \n' % (str(datetime.now()), randdir, str(body), e))
+
+        logger.info("%s GET FAILED %s", randdir, e)
+        raise e
+    logger.info("%s GET FINISHED", randdir)
+    #
+    # Write successful requests
+    #
+    with open(config['logger_dir'] + '/finished_requests.log', 'a+') as ff:
+        ff.write('%s - %s [%s] \n' % (str(datetime.now()), randdir, str(body)))
 
     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
     return rfile
+
+
+@hug.exception(Exception)
+def base_exception_handler(exception, response=None):
+    """ This captures any Exception from the Server
+
+    Args:
+        exception: hug.exceptions.Exception class
+        response: HTTP Response
+
+    Returns:
+        str :  Message
+    """
+    response.status = hug.HTTP_422  # Always the same Error ? or dependent on exception?
+    # one of the arguments could be the response status
+    return ",".join(exception.args)
 
 
 @hug.post('/', output=hug.output_format.file)
@@ -812,38 +1005,39 @@ def index(request=None, body=None, response=None):
      - period           – ['19990101', '20000101']
 
     """
-    # todo add trigger for reloading active stations and restarting hug
-    # todo add status request including uptime, ...
     randdir = '{:012d}'.format(numpy.random.randint(100000000000))
-    request_id = id(body)  # or somthing better?
-    logger.info("%s POST %s", request_id, str(body))
-    wroot = os.path.expandvars('$RSCRATCH/tmp/')
-    rfile, error = defproc(body, wroot, randdir, cdm)
-    if rfile == '':
-        logger.error("POST Request failed, %s", error)
-        with open('./logs/failed_requests.log', 'a+') as ff:
-            ff.write('%s - %s [%s] Message: %s \n' % (str(datetime.now()), request_id, str(body), error))
+    logger.info("%s POST %s", randdir, str(body))
+    tmpdir = config['tmp_dir'] + '/' + randdir
+    try:
+        rfile = process_request(body, tmpdir, config['data_dir'], wmo_regions)
+    except Exception as e:
+        logger.error("%s POST FAILED, %s", randdir, e)
+        with open(config['logger_dir'] + '/failed_requests.log', 'a+') as ff:
+            ff.write('%s - %s [%s] Message: %s \n' % (str(datetime.now()), randdir, str(body), e))
 
-        logger.info("%s POST FAILED %s", request_id, error)
-        raise HTTPError(HTTP_422, title='malformed request', description=error)
-    logger.info("%s POST FINISHED", request_id)
+        logger.info("%s POST FAILED %s", randdir, e)
+        raise e
+    logger.info("%s POST FINISHED", randdir)
     #
     # Write successful requests
     #
-    with open('./logs/finished_requests.log', 'a+') as ff:
-        ff.write('%s - %s [%s] \n' % (str(datetime.now()), request_id, str(body)))
+    with open(config['logger_dir'] + '/finished_requests.log', 'a+') as ff:
+        ff.write('%s - %s [%s] \n' % (str(datetime.now()), randdir, str(body)))
 
     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
     return rfile
 
 
 if __name__ == '__main__':
-    active, cdm, cf = init_server()
+    active, wmo_regions, cf = init_server()
     #
     # Parse command line arguments for testing the server API
     #
     body = eval(sys.argv[1])
     debug = body.pop('debug', False)
+    if 'status' in body.keys():
+        print(status_test(command=body['status']))
+        sys.exit()
     #
     # Logging to DEBUG to std.out and hug.debug.local.log
     #
@@ -851,7 +1045,7 @@ if __name__ == '__main__':
     for i in logger.handlers:
         i.setLevel(10)
     #
-    # Specific directory for testing
+    # Specific directory for testing and clean it if necessary
     #
     randdir = os.path.expandvars('{:012d}'.format(100000000000))
     if os.path.isdir(randdir):
@@ -859,12 +1053,10 @@ if __name__ == '__main__':
             print(randdir + '/' + ifile)
             os.remove(randdir + '/' + ifile)
 
-    wroot = os.path.expandvars('$RSCRATCH/tmp/')
     logger.debug(str(body))
     #
     # Run the request
     #
-    ret = defproc(body, wroot, randdir, cdm)
-    idir = os.path.expandvars('$RSCRATCH/out')
-    os.chdir(idir)
+    tmpdir = config['tmp_dir'] + '/' + randdir
+    ret = process_request(body, tmpdir, config['data_dir'], wmo_regions, debug=debug)
     logger.debug(str(ret))
