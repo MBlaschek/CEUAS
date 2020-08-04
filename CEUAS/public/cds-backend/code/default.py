@@ -81,6 +81,9 @@ else:
     print("Writing new config file:", config_file, "Adjust accordingly!")
     json.dump(config, open(config_file, 'w'))
 
+os.makedirs(config['logger_dir'], exist_ok=True)
+os.makedirs(config['config_dir'], exist_ok=True)
+
 
 ###############################################################################
 #
@@ -129,10 +132,13 @@ for i, j in config.items():
 ###############################################################################
 host = socket.gethostname()
 logger.info("HUG started on %s", host)
-# todo this part is deprecated / LEO delete?
-if 'srvx' in host:
-    sys.path.append(os.path.expanduser('~leo/python/'))
-    config['data_dir'] = os.environ["RSCRATCH"]  # ?
+try:
+    # todo this part is deprecated / LEO delete?
+    if 'srvx' in host:
+        sys.path.append(os.path.expanduser('~leo/python/'))
+        config['data_dir'] = os.environ["RSCRATCH"]  # ?
+except:
+    pass
 
 
 ###############################################################################
@@ -1014,7 +1020,6 @@ def index(request=None, body=None, response=None):
     return rfile
 
 
-
 # @hug.get('/dataset')
 # def dataset():
 #     from pydap.wsgi.app import DapServer
@@ -1037,6 +1042,10 @@ if __name__ == '__main__':
     #
     # Parse command line arguments for testing the server API
     #
+    if len(sys.argv) == 1:
+        print(
+            "python default.py ""{'variable':['temperature'],'date':['20000101','20190131'], 'pressure_level': 500}""")
+        sys.exit(0)
     body = eval(sys.argv[1])
     debug = body.pop('debug', False)
     if 'status' in body.keys():
