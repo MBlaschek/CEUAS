@@ -81,6 +81,9 @@ else:
     print("Writing new config file:", config_file, "Adjust accordingly!")
     json.dump(config, open(config_file, 'w'))
 
+os.makedirs(config['logger_dir'], exist_ok=True)
+os.makedirs(config['config_dir'], exist_ok=True)
+
 
 ###############################################################################
 #
@@ -129,10 +132,13 @@ for i, j in config.items():
 ###############################################################################
 host = socket.gethostname()
 logger.info("HUG started on %s", host)
-# todo this part is deprecated / LEO delete?
-if 'srvx' in host:
-    sys.path.append(os.path.expanduser('~leo/python/'))
-    config['data_dir'] = os.environ["RSCRATCH"]  # ?
+try:
+    # todo this part is deprecated / LEO delete?
+    if 'srvx' in host:
+        sys.path.append(os.path.expanduser('~leo/python/'))
+        config['data_dir'] = os.environ["RSCRATCH"]  # ?
+except:
+    pass
 
 
 ###############################################################################
@@ -347,6 +353,7 @@ def status_test(command=None) -> dict:
         # psutil.disk_usage('/data/public/')  # '/data/private/',
         if command == config['reload_pwd']:
             if elapsed.total_seconds() > 120:
+                # todo run this in background and wait until a request is finished before restarting
                 init_server(force_reload=True, force_download=False)
                 hproc.kill()  # this should end the hug server and cron should restart it
             return status_msg
@@ -454,11 +461,10 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
 
     df = pd.concat(dfs, ignore_index=True)
     df.index.name = 'obs_id'
-    # this part
-    if '.zip' in ofile:
-        df.to_csv(ofile, compression=dict(method='zip', archive_name=name + '.csv'))  # might be 10x faster
-    else:
-        df.to_csv(ofile)
+    # if '.zip' in ofile:
+    #    df.to_csv(ofile, compression=dict(method='zip', archive_name=name + '.csv'), mode='a')  # might be 10x faster
+    # else:
+    df.to_csv(ofile)
     return ofile
 
 
@@ -475,7 +481,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         variable: e.g. temperature, ...
         statid: e.g. 01001
         product_type: currently unused
-        pressure_level: 500, ...
+        pressure_level: Pa, 500 - 110000 Pa values allowed
         date: '19990131' or ['19990101', '20000101'] as range
         time: 1,... or 0-23
         fbstats: only these are currently allowed: 'obs_minus_an', 'obs_minus_bg', 'bias_estimate'
@@ -702,16 +708,18 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             pressure_level = [pressure_level]
 
         for i in range(len(pressure_level)):
+            # need to be string
+            pressure_level[i] = str(pressure_level[i])
             try:
-                # need to be string
-                pressure_level[i] = str(pressure_level[i])
-                # in Pa
-                if int(pressure_level[i]) < 500 or int(pressure_level[i]) > 110000:
-                    raise ValueError('invalid selection, pressure_level out of range [50-1100 hPa]: %d' % int(
-                        pressure_level[i]) / 100)
-
+                pressure_level[i] = int(pressure_level[i])  # if not integer raises a ValueError
             except:
-                raise ValueError('invalid selection, pressure_level allows only integer, ' + pressure_level[i])
+                raise TypeError('invalid selection, pressure_level allows only integer, ' + pressure_level[i])
+            # pressure should be in Pa and between
+            if pressure_level[i] < 500 or pressure_level[i] > 110000:
+                raise ValueError(
+                    'invalid selection, pressure_level out of range [5-1100 hPa]: %d Pa' % pressure_level[i])
+            # need to be a string for processing
+            pressure_level[i] = str(pressure_level[i])
         d['pressure_level'] = pressure_level
     #
     # times
@@ -842,7 +850,7 @@ def process_request(body: dict, output_dir: str, input_dir: str, wmotable: dict,
         with Pool(10) as p:
             results = list(p.map(func, bodies, chunksize=1))
 
-    wpath = ''
+    wpath = ''  # same as output_dir ?
     for r in results:
         if r[0] != '':
             wpath = r[0]
@@ -872,35 +880,19 @@ def process_request(body: dict, output_dir: str, input_dir: str, wmotable: dict,
         logger.debug('netcdfs compressed [%d] to %s', len(results), rfile)
 
     else:
-        for v in body['variable']:
-            ilist = glob.glob(os.path.dirname(wpath) + '/*' + v + '.nc')
-            if len(ilist) > 0:
-                _ = to_csv(ilist, ofile=rfile, name=v)
-                logger.debug('writing csv %s [%d] to %s', v, len(ilist), rfile)
-                if debug:
-                    continue  # do not remove
-                for i in ilist:
-                    os.remove(i)  # remove NetCDF file
+        with zipfile.ZipFile(rfile, 'w', compression=zipfile.ZIP_DEFLATED) as f:
+            for v in body['variable']:
+                ilist = glob.glob(output_dir + '/*' + v + '.nc')
+                if len(ilist) > 0:
+                    ifile = to_csv(ilist, ofile=output_dir + '/' + v + '.csv')  # todo add correct name into zip
+                    f.write(ifile, os.path.basename(ifile))
+                    logger.debug('writing csv %s [%d] to %s', v, len(ilist), rfile)
+                    if debug:
+                        continue  # do not remove
+                    for i in ilist:
+                        os.remove(i)  # remove NetCDF file
+                    os.remove(ifile)  # remove csv
 
-        # ofiles = []
-        # for v in body['variable']:
-        #     ilist = glob.glob(os.path.dirname(wpath) + '/*' + v + '.nc')
-        #     if len(ilist) > 0:
-        #         ofiles.append(to_csv(ilist, v + '.csv'))
-        #         logger.debug('writing csv %s [%d] to %s', v, len(ilist), rfile)
-        #         if not debug:
-        #             for i in ilist:
-        #                 os.remove(i)
-
-        # if len(ofiles) > 0:
-        #     with zipfile.ZipFile(rfile, 'w', compression=zipfile.ZIP_DEFLATED) as f:
-        #         for o in ofiles:
-        #             try:
-        #                 f.write(o, os.path.basename(o))
-        #                 logger.debug('writing %s to %s', o, rfile)
-        #                 if not debug: os.remove(o)
-        #             except:
-        #                 pass
     logger.debug('Request-File: %s [Time: %7.4f s]', rfile, (time.time() - tt))
     return rfile
 
@@ -1028,11 +1020,32 @@ def index(request=None, body=None, response=None):
     return rfile
 
 
+# @hug.get('/dataset')
+# def dataset():
+#     from pydap.wsgi.app import DapServer
+#     return DapServer('/data/public/tmp/100000000000')  # maybe ??
+
+# @hug.get('/dataset', output=hug.output_format.file)
+# def opendap(request=None, response=None):
+#     # todo does not work with pydap
+#     #  it seems that
+#     # from pydap.wsgi.app import DapServer
+#     # application = DapServer('/data/public/tmp/100000000000')  # maybe ??
+#     # should we return the DapServer ?
+#     rfile = '/data/public/tmp/100000000000/dest_0-20000-0-70398_air_temperature.nc'
+#     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
+#     return rfile
+
+
 if __name__ == '__main__':
     active, wmo_regions, cf = init_server()
     #
     # Parse command line arguments for testing the server API
     #
+    if len(sys.argv) == 1:
+        print(
+            "python default.py ""{'variable':['temperature'],'date':['20000101','20190131'], 'pressure_level': 500}""")
+        sys.exit(0)
     body = eval(sys.argv[1])
     debug = body.pop('debug', False)
     if 'status' in body.keys():

@@ -3,8 +3,10 @@
 
 __all__ = ['read_ragged_array_to_cube']
 
-import xarray as xr
 import logging
+import warnings
+
+import xarray as xr
 
 logger = logging.getLogger(__name__)
 # create console handler and set level to debug
@@ -16,6 +18,8 @@ formatter = logging.Formatter('%(asctime)s - %(name)s | %(funcName)s - %(levelna
 ch.setFormatter(formatter)
 # add ch to logger
 logger.addHandler(ch)
+
+warnings.warn('This module is being replaced by cds_eua3', DeprecationWarning)
 
 
 def read_ragged_cdm_to_array(filename: str, odb_codes: bool = True, daynight: bool = False,
@@ -502,7 +506,6 @@ def read_ragged_cdm(filename, odb_codes=True, **kwargs):
     import os
     import h5py
     import numpy as np
-    import pandas as pd
     import xarray as xr
 
     if not os.path.isfile(filename):

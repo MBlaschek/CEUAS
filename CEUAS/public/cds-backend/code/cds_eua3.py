@@ -23,7 +23,6 @@ Performance
   give a slice per Variable to speed up reading performance.
 - HDF5 files could be split by variable, would improve reading performance dramatically, especially in MP
 """
-
 import logging
 import time
 from datetime import datetime, timedelta
@@ -34,9 +33,19 @@ import pandas as pd
 import xarray as xr
 from numba import njit
 
-odb_codes = {'t': 85, 'rh': 38, 'td': 36, 'dpd': 34, 'z': 117, 'dd': 106, 'ff': 107, 'u': 104, 'v': 105,
-             'q': 39}
-cdm_codes = {'z': 1, 't': 2, 'u': 3, 'v': 4, 'dd': 111, 'ff': 112, 'td': 59, 'dpd': 299, 'rh': 29, 'p': 999}
+# check codes from there
+# https://github.com/glamod/common_data_model/blob/master/tables/observed_variable.dat
+cdm_codes = {'temperature': 85, 'relative_humidity': 38, 'dew_point_temperature': 36, 'dew_point_departure': 34,
+             'geopotential': 117, 'wind_direction': 106, 'wind_speed': 107, 'u_component_of_wind': 104,
+             'v_component_of_wind': 105,
+             'specific_humidity': 39}
+# get codes from there
+# https://apps.ecmwf.int/odbgov/varno/
+odb_codes = {'geopotential': 1, 'temperature': 2, 'u_component_of_wind': 3, 'v_component_of_wind': 4,
+             'wind_direction': 111, 'wind_speed': 112, 'dew_point_temperature': 59, 'dew_point_departure': 299,
+             'relative_humidity': 29, 'p': 999,
+             'specific_humidity': 7}
+
 std_plevs = np.asarray([10, 20, 30, 50, 70, 100, 150, 200, 250, 300, 400, 500, 700, 850, 925, 1000])
 logger = logging.getLogger('upperair.cdm')
 
@@ -110,6 +119,44 @@ def andisin_t(mask, x, v):
     return
 
 
+@njit
+def is_sorted(a):
+    for i in range(a.size - 1):
+        if a[i + 1] < a[i]:
+            return False
+    return True
+
+
+@njit(cache=True)
+def reverse_index(mask, dates, plevs, idates, iplevs):
+    # I assume that dates, idates and iplevs (per idate) are sorted !!!
+    # plevs do not need to be sorted, but is faster
+    k = 0
+    for i in range(mask.shape[0]):
+        # 1. Align dates (in seconds)
+        if dates[i] < idates[k]:
+            continue
+        if dates[i] > idates[k]:
+            for j in range(k, idates.shape[0]):
+                if dates[i] > idates[k]:
+                    k = k + 1
+                else:
+                    break
+        # 2. Loop pressure levels
+        for j in range(k, idates.shape[0]):
+            if dates[i] == idates[j]:
+                if plevs[i] == iplevs[j]:
+                    mask[i] = j  # True
+                    # print('MASK {:6} : {:6} {:4} {} == {}  {:6} == {:6}'.format(i, k, j, dates[i], idates[j], plevs[i], iplevs[j]))
+                    break
+                # loop j
+            else:
+                break
+        # 3. End of dates to match
+        if k >= (idates.shape[0] - 1):
+            break
+
+
 @njit(cache=True)
 def andisin(mask, x, v):
     for i in range(mask.shape[0]):
@@ -141,51 +188,184 @@ def tohourday(hhilf, hilf, ohilf, dshift):
     return
 
 
-def read_standardnames() -> dict:
-    """ Read the Climate and Forcast Convention data
+def get_attributes(cdmname=None, cdsname=None, cdmcode=None, odbcode=None, cf=None, url=None, feedback=None) -> dict:
+    """ Get attributes from CF Table for a code
+
+    Args:
+        cdmcode: 85, 38, 36, 34, 117, 106, 107, 104, 105, 39
+        odbcode: 1, 2, 3, 4, 111, 112, 59, 299, 29, 999, 7
+        cf: cf table read_standardnames()
+        url: url for cf table
+        feedback: feeedback variable: 'obs_minus_bg', 'obs_minus_an', 'bias_estimate'
 
     Returns:
+        dict : Attributes
+
+    Notes:
+        ODB Codes
+            geopotential : 1
+            temperature : 2
+            u_component_of_wind : 3
+            v_component_of_wind : 4
+            wind_direction : 111
+            wind_speed : 112
+            dew_point_temperature : 59
+            dew_point_departure : 299
+            relative_humidity : 29
+            p : 999
+            specific_humidity : 7
+
+        CDM Codes
+            temperature : 85
+            relative_humidity : 38
+            dew_point_temperature : 36
+            dew_point_departure : 34
+            geopotential : 117
+            wind_direction : 106
+            wind_speed : 107
+            u_component_of_wind : 104
+            v_component_of_wind : 105
+            specific_humidity : 39
+    """
+    if cf is None:
+        cf = read_standardnames(url=url)
+
+    if feedback is not None:
+        if '@' in feedback:
+            # currently the only accessable
+            if feedback in ['fg_depar@body', 'an_depar@body', 'biascorr@body']:
+                if 'fg_depar' in feedback:
+                    feedback = 'obs_minus_bg'
+                elif 'an_depar' in feedback:
+                    feedback = 'obs_minus_an'
+                else:
+                    feedback = 'bias_estimate'
+        if feedback not in cf.keys():
+            return {}
+
+    if cdmcode is not None:
+        # 85 -> {air_temperature : {'units':'K', ...}}
+        for ivar, iattrs in cf.items():
+            if 'cdmcode' in iattrs.keys():
+                if iattrs['cdmcode'] == cdmcode:
+                    if feedback is None:
+                        return {ivar: cf[ivar]}
+                    else:
+                        tmp = cf[feedback].copy()
+                        tmp.update({'units': cf[ivar]['units'],
+                                    'standard_name': cf[ivar]['standard_name'],
+                                    'long_name': cf[feedback]['cdmname'].split('fb')[
+                                                     0].upper() + ' reanalysis ' + feedback
+                                    })
+                        return {feedback: tmp}
+
+    if odbcode is not None:
+        # 2 -> {air_temperature : {'units':'K', ...}}
+        for ivar, iattrs in cf.items():
+            if 'odbcode' in iattrs.keys():
+                if iattrs['odbcode'] == odbcode:
+                    if feedback is None:
+                        return {ivar: cf[ivar]}
+                    else:
+                        tmp = cf[feedback].copy()
+                        tmp.update({'units': cf[ivar]['units'],
+                                    'standard_name': cf[ivar]['standard_name'],
+                                    'long_name': cf[feedback]['cdmname'].split('fb')[
+                                                     0].upper() + ' reanalysis ' + feedback
+                                    })
+                        return {feedback: tmp}
+
+    if cdmname is not None:
+        cdmname = cdm_to_cds(cdmname)
+        # feedback missing
+        return {cdmname: cf[cdmname]}
+
+    if cdsname is not None:
+        return {cds_to_cdm(cdsname): cf[cdsname]}
+
+    return {}
+
+
+def cds_to_cdm(var, cf=None, url=None, ):
+    # air_temperature -> temperature
+    if cf is None:
+        cf = read_standardnames(url=url)
+    if var in cf.keys():
+        if 'cdsname' in cf[var].keys():
+            return cf[var]['cdsname']
+    return var
+
+
+def cdm_to_cds(var, cf=None, url=None, ):
+    # temperature -> air_temperature
+    if cf is None:
+        cf = read_standardnames(url=url)
+    for ivar, iattrs in cf.items():
+        if 'cdsname' in iattrs.keys():
+            if iattrs['cdsname'] == var:
+                return ivar
+    return var
+
+
+def get_global_attributes(cf=None, url=None):
+    # todo add more information, based on CF Table ?
+    return {'Conventions': "CF-1.7", 'source': "radiosonde", 'featureType': "trajectory"}
+
+
+def read_standardnames(url: str = None) -> dict:
+    """ Read the Climate and Forcast Convention data
+
+    Args:
+        url : CF convention XML file
+              default: http://cfconventions.org/Data/cf-standard-names/69/src/cf-standard-name-table.xml
+    Returns:
         dict : Standard Names and Units for variables
+
     Notes:
             https://cfconventions.org/
 
     """
     import urllib.request
     import xml.etree.ElementTree as ET
+    if url is None:
+        url = 'http://cfconventions.org/Data/cf-standard-names/69/src/cf-standard-name-table.xml'
 
-    url = 'http://cfconventions.org/Data/cf-standard-names/69/src/cf-standard-name-table.xml'
     response = urllib.request.urlopen(url).read()
-    tree = ET.fromstring(response)
+    xmldocument = ET.fromstring(response)
+
     snames = ['platform_id', 'platform_name', 'latitude', 'longitude', 'time', 'air_pressure',
               'air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
-              'eastward_wind', 'northward_wind', 'wind_speed', 'wind_direction', 'geopotential', 'trajectory_label',
+              'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential',
+              'trajectory_label',
               'obs_minus_bg', 'obs_minus_an', 'bias_estimate']
+
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
                 'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
+
     cdmnames += 9 * ['observations_table/observation_value']
     cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body']
     cf = {}
     for c, cdm in zip(snames, cdmnames):
         cf[c] = {'cdmname': cdm, 'units': 'NA', 'shortname': c}
         if c not in 'latitude longitude time air_pressure':
-            cf[c]['coordinates'] = 'lat lon time plev'  # short names
+            cf[c]['coordinates'] = 'lat lon time plev'  # short names of dimensions
     l = 0
-    for child in tree:
-        # print(child.tag,child.attrib)
-        try:
-            c = child.attrib['id']
-            if c in snames:
-                i = snames.index(c)
-                logger.debug(c)
+    for child in xmldocument:
+        if 'id' not in child.keys():
+            continue
+        c = child.attrib['id']  # standard name
+        if c in snames:
+            i = snames.index(c)
 
-                cf[c]['cdmname'] = cdmnames[i]
-                if child[0].text is not None:
-                    cf[c]['units'] = child[0].text
-                if child[2].text is not None:
-                    cf[c]['shortname'] = child[2].text
-                cf[c]['standard_name'] = c
-        except:
-            pass
+            cf[c]['cdmname'] = cdmnames[i]
+            if child[0].text is not None:
+                cf[c]['units'] = child[0].text  # unit
+
+            if child[2].text is not None:
+                cf[c]['shortname'] = child[2].text  # shortname
+
+            cf[c]['standard_name'] = c  # standard name
+
         l += 1
     cf['latitude']['shortname'] = 'lat'
     cf['longitude']['shortname'] = 'lon'
@@ -212,9 +392,9 @@ def read_standardnames() -> dict:
     cf['wind_speed']['cdsname'] = 'wind_speed'
     cf['wind_speed']['cdmcode'] = 107
     cf['wind_speed']['odbcode'] = 112
-    cf['wind_direction']['cdsname'] = 'wind_direction'
-    cf['wind_direction']['cdmcode'] = 106
-    cf['wind_direction']['odbcode'] = 111
+    cf['wind_from_direction']['cdsname'] = 'wind_direction'
+    cf['wind_from_direction']['cdmcode'] = 106
+    cf['wind_from_direction']['odbcode'] = 111
     cf['relative_humidity']['cdsname'] = 'relative_humidity'
     cf['relative_humidity']['cdmcode'] = 38
     cf['relative_humidity']['odbcode'] = 29
@@ -227,13 +407,10 @@ def read_standardnames() -> dict:
     cf['geopotential']['cdsname'] = 'geopotential'
     cf['geopotential']['cdmcode'] = -1
     cf['geopotential']['odbcode'] = 1
-
-    # vdict={'111':'windDirection','112':'windSpeed','1':'geopotentialHeight',
-    # '2':'airTemperature','59':'dewpointTemperature','29':'relativeHumidity'}
     return cf
 
 
-def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=[]):
+def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
     """ Copy H5PY variables and apply subsetting (idx)
 
     Args:
@@ -251,14 +428,13 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=[]):
     if not var_selection:
         var_selection = fin[group].keys()
 
-    vlist = []
-    clist = []
+    if not isinstance(var_selection, list):
+        var_selection = [var_selection]
+
     for i in cf.keys():
         if i not in ['platform_id', 'platform_name']:
-            # , 'latitude', 'longitude', 'time', 'air_pressure']:
-            clist.append(i)
             if i in ['air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
-                     'eastward_wind', 'northward_wind', 'wind_speed', 'wind_direction', 'geopotential']:
+                     'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential']:
                 for fb in ['obs_minus_bg', 'obs_minus_an', 'bias_estimate']:
                     try:
                         cf[fb]['units'] = cf[i]['units']
@@ -266,7 +442,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=[]):
                         cf[fb]['long_name'] = group.split('fb')[0].upper() + ' reanalysis ' + fb
                     except:
                         pass
-
+    vlist = []
     for cfk, cfv in cf.items():
         for v in var_selection:
             if group + '/' + v == cfv['cdmname']:
@@ -277,7 +453,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=[]):
                             fout.create_dataset_like(vlist[-1], fin[group][v],
                                                      shape=idx.shape,
                                                      chunks=True)
-                            hilf = fin[group][v][idx[0]:idx[-1] + 1]
+                            hilf = fin[group][v][idx[0]:idx[-1] + 1]  # use a min:max range
                             if 'time' in v:
                                 # convert time units
                                 us = fin[group][v].attrs['units']
@@ -290,7 +466,8 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=[]):
                                 elif b'days' in us:
                                     hilf *= 24 * 3600
 
-                            fout[vlist[-1]][:] = hilf[idx - idx[0]]
+                            fout[vlist[-1]][:] = hilf[
+                                idx - idx[0]]  # but write just the subset corresponding to the variable
                         except:
                             logger.warning('not found: %s %s', group, v)
                             pass
@@ -312,7 +489,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=[]):
                             print('x')
                         fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                 except:
-                    # fix for missing report_id SHOULD BE REMOVED
+                    # todo fix for missing report_id SHOULD BE REMOVED
                     hilf = np.zeros(shape=(idx.shape[0]), dtype='S10')
                     for i in range(hilf.shape[0]):
                         hilf[i] = '{:0>10}'.format(i)
@@ -400,6 +577,7 @@ def to_seconds_since(time_elapsed: int, time_unit: str, reference=None):
 
 
 def seconds_to_datetime(seconds, ref='1900-01-01'):
+    seconds = np.asarray(seconds)
     return pd.to_datetime(seconds, unit='s', origin=ref).values
 
 
@@ -440,9 +618,13 @@ def convert_datetime(idate, return_string=False, return_seconds=False, reference
             if (d % 100) > 28:
                 idate = last_day_of_month(datetime(year=d // 10000, month=d % 10000 // 100, day=1))
 
+    if isinstance(idate, np.datetime64):
+        idate = idate.astype('M8[ms]').astype('O')
+
     if return_seconds:
         reference = reference if reference is not None else datetime(1900, 1, 1)
         return int((idate - reference).total_seconds())
+
     if return_string:
         if format is None:
             return idate.strftime('%Y%m%d')  # used by the request library
@@ -451,7 +633,8 @@ def convert_datetime(idate, return_string=False, return_seconds=False, reference
     return idate
 
 
-def table_to_cube(time: np.ndarray, plev: np.ndarray, obs: np.ndarray, nplev: int = 16) -> tuple:
+def table_to_cube(time: np.ndarray, plev: np.ndarray, obs: np.ndarray, nplev: int = 16,
+                  return_index_array: bool = False) -> tuple:
     """ Convert a ragged variable (table) to a data cube
 
     Args:
@@ -465,7 +648,11 @@ def table_to_cube(time: np.ndarray, plev: np.ndarray, obs: np.ndarray, nplev: in
     """
     xtime, jtime, itime = np.unique(time, return_index=True, return_inverse=True)
     data = np.full((xtime.size, nplev), np.nan, dtype=obs.dtype)
-    data[itime, plev] = obs
+    data[itime, plev] = obs  # sortby date and plev after
+    if return_index_array:
+        indexes = np.full(data.shape, -1, dtype=np.int32)
+        indexes[itime, plev] = np.arange(0, obs.size, dtype=np.int32)
+        return jtime, indexes, data
     return jtime, data
 
 
@@ -505,6 +692,7 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables:
             if "odbcode" in v.keys():
                 cdmnamedict[v['cdsname']] = igroup
 
+        # todo this could be changed to the cf.keys() -> cdm names of the variables
         filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
             request_variables['variable']] + '.nc'
 
@@ -522,27 +710,234 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables:
 
 ###############################################################################
 #
-# Xarray return Accesor for index attachment, might be useful for reading
+# Xarray return Accessor for index attachment, might be useful for reading
 # and rewriting to h5py CDM backend files
 # as it is currently used in adjust to write back adjustments and interpolated
 # results.
 #
+# not used anymore, because cdm Accessor gets easily removed
 ###############################################################################
 
 
-@xr.register_dataarray_accessor('cdm')
-class CDMAccessor:
-    def __init__(self, data_array):
-        self._data_array = data_array
-        self.ragged_index = None  # np.array
-        self.filename = None  # str
-        self.info = None  # variable, plevs, date
+# @xr.register_dataarray_accessor('cdm')
+# class CDMAccessor:
+#     def __init__(self, data_array):
+#         self._data_array = data_array
+#         self.ragged_index = None  # np.array
+#         self.filename = None  # str
+#         self.info = None  # variable, plevs, date
+#
+#
+# def xarray_to_cdm_xarray(data: xr.DataArray, index: np.ndarray):
+#     new = CDMAccessor(data)
+#     new.cdm.ragged_index = index
+#     return new
+
+###############################################################################
+#
+# CDMCube class the includes the index and a file reference
+#
+###############################################################################
 
 
-def xarray_to_cdm_xarray(data: xr.DataArray, index: np.ndarray):
-    new = CDMAccessor(data)
-    new.cdm.ragged_index = index
-    return new
+def align_datetime(data, dim: str = 'time', plev: str = 'plev', times: tuple = (0, 12), span: int = 3,
+                   freq: str = '12h', **kwargs):
+    """ Standardize datetime to times per date, try to fill gaps
+
+    Args:
+        data (DataArray, Dataset): Input data
+        dim (str): datetime dimension
+        plev (str): pressure level dimension
+        times (tuple): sounding times
+        span (int): plus minus times (smaller than freq/2)
+        freq (str): frequency of output times
+
+    Returns:
+        xarray.DataArray : datetime standardized DataArray
+
+    """
+    import numpy as np
+    from pandas import DatetimeIndex
+    from xarray import DataArray, Dataset
+
+    if not isinstance(data, (DataArray, Dataset)):
+        raise ValueError('Requires a DataArray or Dataset', type(data))
+
+    if dim not in data.dims:
+        raise ValueError('Requires a datetime dimension', dim)
+
+    if int(24 / (len(times) * 2)) < span:
+        raise ValueError("Times and span do not agree!?", times, span)
+
+    if int(24 / int(freq[:-1])) != len(times):
+        raise ValueError("Times and freq do not match:", times, freq)
+
+    if span > int(freq[:-1]) // 2:
+        raise ValueError("Frequency and Span need to be consistent (span < freq/2): ", freq, span)
+
+    dates = data[dim].values.copy()
+    #
+    # Convert all dates to standard_dates -> 0, 6, 12, 18 (times +/- span (3))
+    #
+    _fix_datetime = np.vectorize(fix_datetime)
+    newdates = _fix_datetime(dates, span=span)  # (time: 33%)
+    resolution = np.zeros(newdates.size)  # same size as dates
+    #
+    # check for duplicates in standard launch times
+    #
+    u, c = np.unique(newdates, return_counts=True)
+    conflicts = u[c > 1]
+    if conflicts.size > 0:
+        counts = _count_data(data, dim=dim, plev=plev)
+        logger.warning("Conflicts: %d in %d", conflicts.size, newdates.size)
+        for i in conflicts:
+            indices = np.where(newdates == i)[0]  # numbers  (time: 45%)
+            #
+            # Count available data (DataArray or Dataset)
+            #
+            # slow
+            # counts = data.isel(**{dim: indices}).count(plev).values
+            # counts = _count_data(data.isel(**{dim: indices}), dim=dim, plev=plev)
+            # slow end
+            icounts = counts[indices]
+            #
+            # offsets to standard launch time
+            #
+            offset = np.abs((dates[indices] - i) / np.timedelta64(1, 'h'))
+            j = np.argsort(offset)  # sort time offsets (first we want)
+            jmax = np.argmax(icounts[j])  # check if counts from other time is larger
+            if jmax != 0:
+                #
+                # there is a sounding with more level data (+/- 1 hour)
+                #
+                if (offset[j][0] + 1) <= offset[j][jmax]:
+                    # ok close enough
+                    jj = j.copy()
+                    jj[j == 0] = jmax  # first pos is now at the position of the maximum
+                    jj[j == jmax] = 0  # maximum is now first
+                    j = jj
+                #
+                # there is a sounding with + 2 more levels
+                #
+                elif (icounts[j][0] + 2) <= icounts[j][jmax]:
+                    # a lot more
+                    jj = j.copy()
+                    jj[j == 0] = jmax  # first pos is now at the position of the maximum
+                    jj[j == jmax] = 0  # maximum is now first
+                    j = jj
+                else:
+                    pass  # keep time sorting
+
+            for m, k in enumerate(offset[j]):
+                if m == 0:
+                    continue  # this is the minimum
+
+                # change back the others or add a delay to remove duplicates
+                if k == 0:
+                    newdates[indices[j][m]] += np.timedelta64(1, 'h')  # add offset
+                    resolution[indices[j][m]] = 1  # add hour
+                else:
+                    newdates[indices[j][m]] = dates[indices[j][m]]  # revert back
+                    resolution[indices[j][m]] = -1  # revert back
+    #
+    # recheck for standard times
+    #
+    idx_std = DatetimeIndex(newdates).hour.isin(times)  # this is the selection index
+    u, c = np.unique(newdates[idx_std], return_counts=True)  # check only standard times
+    conflicts = u[c > 1]
+    if conflicts.size > 0:
+        logger.warning("Conflicts remain: %d  Std: %d New: %d", conflicts.size, idx_std.sum(), newdates.size)
+        if kwargs.get('debug', False): raise RuntimeError("Duplicates")
+    #
+    # new dates / new object
+    #
+    data = data.assign_coords({dim: newdates})
+    #
+    # delay
+    #
+    nn = (resolution > 0).sum()
+    nx = (~idx_std).sum()
+    data['hours'] = (dim, DatetimeIndex(dates).hour.astype(int))  # new coordinate for delays
+    data.attrs['std_times'] = str(times)
+    data['hours'].attrs.update({'long_name': 'Launch time', 'units': 'h', 'times': str(times)})
+    data['flag_stdtime'] = (dim, resolution.astype(int))
+    data['flag_stdtime'].attrs.update({'units': '1', 'standard_name': 'flag_standard_time_conflict_resolution',
+                                       'info': '0: preferred, -1: lesser candidate, 1: duplicate, less data'})
+
+    logger.info("Modified: %d No Standard: %d of %d", nn, nx, newdates.size)
+
+    if not all(data[dim].values == np.sort(data[dim].values)):
+        logger.info("Sorting by %s", dim)
+        data = data.sortby(dim)
+    return data
+
+
+def _count_data(data: xr.DataArray, dim: str = 'time', plev: str = 'plev') -> np.ndarray:
+    #
+    # Count data per pressure level (if it is a dimension)
+    #
+    if plev in data.dims:
+        #
+        # Array format
+        #
+        if isinstance(data, xr.DataArray):
+            return data.count(plev).values
+        else:
+            return data.count(plev).to_dataframe().sum(axis=1).values  # sum across variables
+
+    elif data[dim].to_index().is_unique:
+        #
+        # has not pressure levels
+        #
+        if isinstance(data, xr.DataArray):
+            return data.count(dim).values
+        else:
+            return data.count(dim).to_dataframe().sum(axis=1).values
+    else:
+        #
+        # Table format
+        #
+        return data.groupby(dim).count().to_dataframe().max(axis=1).values
+
+
+def fix_datetime(itime: np.datetime64, span: int = 6, debug: bool = False) -> np.datetime64:
+    """ Fix datetime to standard datetime with hour precision
+
+    Args:
+        itime (datetime): Datetime
+        span (int): allowed difference to standard datetime (0,6,12,18)
+
+    Returns:
+        datetime : standard datetime
+    """
+    import pandas as pd
+    itime = pd.Timestamp(itime)  # (time: 34%)
+    # span=6 -> 0, 12
+    # [18, 6[ , [6, 18[
+    # span=3 -> 0, 6, 12, 18
+    # [21, 3[, [3,9[, [9,15[, [15,21[
+    for ihour in range(0, 24, span * 2):
+        # 0 - 6 + 24 = 18
+        lower = (ihour - span + 24) % 24
+        # 0 + 6 + 24 = 6
+        upper = (ihour + span + 24) % 24
+        # 18 >= 18 or 18 < 6  > 00
+        # 0 >= 18 or 0 < 6    > 00
+        if debug:
+            print("%d [%d] %d >= %d < %d" % (ihour, span, lower, itime.hour, upper))
+
+        if (ihour - span) < 0:
+            if itime.hour >= lower or itime.hour < upper:
+                rx = itime.replace(hour=ihour, minute=0, second=0, microsecond=0)
+                if itime.hour >= (24 - span):
+                    rx = rx + pd.DateOffset(days=1)
+                return rx.to_datetime64()
+        else:
+            if lower <= itime.hour < upper:
+                rx = itime.replace(hour=ihour, minute=0, second=0, microsecond=0)
+                if itime.hour >= (24 - span):
+                    rx = rx + pd.DateOffset(days=1)
+                return rx.to_datetime64()
 
 
 ###############################################################################
@@ -585,17 +980,24 @@ class CDMVariable:
     def keys(self):
         return self._names
 
+    def isArray(self):
+        return False if 'HDF5' in str(self._origin) else True
+
 
 class CDMGroup(CDMVariable):
     def __repr__(self):
         text = ''
         for i in self.keys():
-            ivar = getattr(self, i)
-            if 'HDF5' in str(getattr(ivar, '_origin', 'HDF5')):
-                istatus = ' '
-            else:
-                istatus = 'L'
-            text += "\n{:_<50} :{:1}: {}".format(i, istatus, getattr(ivar, 'shape', ''))
+            if i in ['shape']:
+                continue
+            istatus = 'L' if self[i].isArray() else ' '
+            # ivar = getattr(self, i)
+            # if 'HDF5' in str(getattr(ivar, '_origin', 'HDF5')):
+            #     istatus = ' '
+            # else:
+            #     istatus = 'L'
+            # text += "\n{:_<50} :{:1}: {}".format(i, istatus, getattr(ivar, 'shape', ''))
+            text += "\n{:_<50} :{:1}: {}".format(i, istatus, self[i].shape)
         return self._name + ":\n" + text
 
     def __getitem__(self, item):
@@ -603,10 +1005,12 @@ class CDMGroup(CDMVariable):
 
 
 class CDMDataset:
+    # memory efficient, no duplicates
     # __slots__ = ['filename', 'file', 'groups', 'data']
 
     def __init__(self, filename: str):
         self.filename = filename
+        self.name = filename.split('/')[-1]  # just the name as in rname
         self.file = h5py.File(filename, 'r')
         logger.debug("[OPEN] %s", self.filename)
         self.hasgroups = False
@@ -621,13 +1025,16 @@ class CDMDataset:
         text = "Filename: " + self.filename
         text += "\n(G)roups/(V)ariables: \n"
         for igroup in self.groups:
-            ivar = getattr(self, igroup)
-            if 'HDF5' in str(getattr(ivar, '_origin', 'HDF5')):
-                istatus = ' '
-            else:
-                istatus = 'L'
+            istatus = 'L' if self[igroup].isArray() else ' '
+            # ivar = getattr(self, igroup)
+            # if 'HDF5' in str(getattr(ivar, '_origin', 'HDF5')):
+            #     istatus = ' '
+            # else:
+            #     istatus = 'L'
+            # text += "\n - {} | {:_<45} :{:1}: {}".format('G' if isinstance(self[igroup], CDMGroup) else 'V',
+            #                                              igroup, istatus, getattr(ivar, 'shape'))
             text += "\n - {} | {:_<45} :{:1}: {}".format('G' if isinstance(self[igroup], CDMGroup) else 'V',
-                                                         igroup, istatus, getattr(ivar, 'shape'))
+                                                         igroup, istatus, self[igroup].shape)
         # text += "\n".join(["- {} - {} : {}".format('G' if isinstance(self[igroup], CDMGroup) else 'V', igroup,
         #                                           getattr(self[igroup], 'shape')) for igroup in self.groups])
         return text
@@ -641,19 +1048,29 @@ class CDMDataset:
     def inquire(self):
         try:
             for igroup in self.file.keys():
-                self.groups.append(igroup)
+                # Group or Variable
+                new = False
+                if igroup not in self.groups:
+                    self.groups.append(igroup)
+                    new = True
+
                 if isinstance(self.file[igroup], h5py.Group):
-                    jgroup = CDMGroup(self.file[igroup], igroup)
+                    if new:
+                        jgroup = CDMGroup(self.file[igroup], igroup)
+                    else:
+                        jgroup = getattr(self, igroup)  # Get CDMGroup
 
                     for ivar in self.file[igroup].keys():
-                        shape = self.file[igroup][ivar].shape
-                        jgroup[ivar] = CDMVariable(self.file[igroup][ivar], ivar, shape=shape)
+                        if ivar not in jgroup.keys():
+                            shape = self.file[igroup][ivar].shape
+                            jgroup[ivar] = CDMVariable(self.file[igroup][ivar], ivar, shape=shape)
 
-                    jgroup['shape'] = len(jgroup.keys())
+                    jgroup['shape'] = len(jgroup.keys())  # update never hurts
                     setattr(self, igroup, jgroup)  # attach to class
                     self.hasgroups = True
                 else:
-                    setattr(self, igroup, CDMVariable(self.file[igroup], igroup, shape=self.file[igroup].shape))
+                    if new:
+                        setattr(self, igroup, CDMVariable(self.file[igroup], igroup, shape=self.file[igroup].shape))
 
         except Exception as e:
             logger.debug(repr(e))
@@ -666,16 +1083,37 @@ class CDMDataset:
         self.file.close()
         logger.debug("[CLOSED] %s", self.filename)
 
-    def reopen(self, mode: str = 'r', **kwargs):
+    def reopen(self, mode: str = 'r', tmpdir='~/tmp', **kwargs):
         """ Reopen the H5py file with different mode
 
         Args:
             mode: r, r+, w, w+, a
+            tmpdir: temporary directory for writing
             **kwargs: other options to h5py.File( )
         """
+        import os
+        import shutil
         self.file.close()
-        logger.debug("[REOPEN] %s [%s]", (self.filename, mode))
-        self.file = h5py.File(self.filename, mode=mode, **kwargs)
+        try:
+            self.file = h5py.File(self.filename, mode=mode, **kwargs)
+        except OSError:
+            if '~' in tmpdir:
+                tmpdir = os.path.expanduser(tmpdir)
+
+            if '$' in tmpdir:
+                tmpdir = os.path.expandvars(tmpdir)
+
+            os.makedirs(tmpdir, exist_ok=True)
+            if os.path.isdir(tmpdir):
+                shutil.copy(self.filename, '{}/{}'.format(tmpdir, self.name))
+                # p = os.popen('cp -f {} {}/{}'.format(self.filename, tmpdir, self.name))
+                # p.wait()
+                logger.warning("reopen [%s] Copy file to %s/%s", mode, tmpdir, self.name)
+                self.filename = '{}/{}'.format(tmpdir, self.name)
+                self.file = h5py.File(self.filename, mode=mode, **kwargs)
+            else:
+                raise OSError('reopen with', mode, self.filename)
+        logger.debug("reopen %s [%s]", self.filename, mode)
 
     def read_attributes(self, name: str, group: str = None, subset: list = None):
         """ Return all attributes or a subset for a variable
@@ -705,10 +1143,16 @@ class CDMDataset:
         # can raise a KeyError if name not in file
         for ikey, ival in self.file[name].attrs.items():
             if subset is not None and ikey in subset:
-                attributes[ikey] = ival.decode()
+                try:
+                    attributes[ikey] = ival.decode()
+                except AttributeError:
+                    attributes[ikey] = ival
             else:
                 if ikey not in ['DIMENSION_LIST']:
-                    attributes[ikey] = ival.decode()
+                    try:
+                        attributes[ikey] = ival.decode()
+                    except AttributeError:
+                        attributes[ikey] = ival
         return attributes
 
     def read_write_request(self, filename_out: str, request: dict, cf_dict: dict):
@@ -721,257 +1165,143 @@ class CDMDataset:
 
         """
         # version of process_flat with Leo's optimizations
-        rname = self.filename.split('/')[-1]
-
         if 'variable' not in request.keys():
-            logger.error('No variable specified %s %s', str(request.keys()), rname)
+            logger.error('No variable specified %s %s', str(request.keys()), self.name)
             raise ValueError('No variable specified')
 
-        cdmdict = {}
-        cdmnamedict = {}
-        for igroup, v in cf_dict.items():
-            if "odbcode" in v.keys():
-                cdmdict[v['cdsname']] = v['cdmcode']
-                cdmnamedict[v['cdsname']] = igroup
+        if len(request['variable']) > 1:
+            # todo potentially launch here recursive ?
+            raise RuntimeError('Requests need to be split up by variable')
+
+        variable = request['variable']
+        if not isinstance(variable, str):
+            variable = variable[0]
+
+        if cf_dict is None:
+            cf_dict = read_standardnames()
+
+        cdsname = cdm_to_cds(variable, cf=cf_dict)
+        cdmattrs = cf_dict[cdsname]  #
+        cdmnum = cdmattrs['cdmcode']  # 85 for air_temperature
         time0 = time.time()
-        # get time information from file
-        # recordindex -> index of start position [start next[
-        # recordtimestamp -> datetime seconds since for index position
-        # Array [starttimestamp, index]
-        dateindex = np.array((self.file['recordtimestamp'][:],
-                              self.file['recordindex'][:self.file['recordtimestamp'].shape[0]]))
-        if 'date' in request.keys():
-            #
-            # format: [DATE], [START, END], [DATE, DATE, DATE, ...] (min 3)
-            #
-            if len(request['date']) > 2:
-                dsec = []
-                for ievent in request['date']:
-                    dsec.append(convert_datetime(ievent, return_seconds=True))
-                dsec = np.asarray(dsec, dtype=np.int)
-            else:
-                dsec = np.arange(convert_datetime(request['date'][0], return_seconds=True),
-                                 convert_datetime(request['date'][-1], return_seconds=True) + 1,
-                                 86400, dtype=np.int)
-            # if time interval e.g. 21h-3h is chosen, the previous day must be extracted as well.
-            prevday = 0
-            if 'time' in request.keys():
-                tlist = totimes(request['time'])
-                if tlist[0] > tlist[-1]:
-                    prevday = 1
-
-            dsec[-1] += 86399
-            # request range [from - to]  (can be really large)
-            # -86400 in order to get late launches of previous day
-            didx = np.where(np.logical_and(dateindex[0, :] >= dsec[0] - 86400,
-                                           dateindex[0, :] <= dsec[-1]
-                                           )
-                            )[0]
-            if didx.shape[0] == 0:
-                logger.warning('No data in time interval %s', rname)
-                raise ValueError('No data in specified time interval')
-
-            didx = [didx[0], didx[-1]]
-        else:
-            # read everything ? todo check if recordindex[-1] is really everything. I don't think so.
-            didx = [0, dateindex.shape[1] - 1]
-            request_date = ['']
-            prevday = 0
-
-        if didx[-1] + 1 == dateindex.shape[1]:
-            trange = [dateindex[1, didx[0]],
-                      self.file['observations_table']['observation_value'].shape[0]]  # Maximum
-        else:
-            trange = [dateindex[1, didx[0]], dateindex[1, didx[1] + 1]]  # Well within
-
-        logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange[0], trange[1],
-                     time.time() - time0, rname)
-        mask = np.ones(trange[1] - trange[0], dtype=np.bool)
-        criteria = {'variable': 'observations_table/observed_variable',
-                    'pressure_level': 'observations_table/z_coordinate',
-                    'time': 'observations_table/date_time'}
-        # todo understand why that is not necessary ?
-        # this causes the performance issue
-        # Maybe that is not executed in cds_eua2
-        #            'date': 'observations_table/date_time'}
-
-        for ckey, cval in criteria.items():
-            if ckey in request.keys():
-                try:
-                    if ckey == 'time':
-                        us = np.string_(self.file[cval].attrs['units'])
-                        dh = us.split(b' ')[-1].split(b':')
-                        if b'seconds' not in us:
-                            logger.warning('Units not given in seconds, %s %s', us, rname)
-                            raise RuntimeError('Units not given in seconds')
-
-                        ohilf = self.file[cval][trange[0]:trange[1]]
-                        # add almost an hour (3600-1 sec) to account for difference between
-                        # releasetime and nominal time. Time unit in CDS interface is hours.
-                        hhilf = np.empty_like(ohilf, dtype=np.int32)
-                        dshift = np.zeros_like(ohilf, dtype=np.int32)
-                        hilf = np.empty_like(ohilf, dtype=np.int32)
-                        tohourday(hhilf, hilf, ohilf, dshift)
-                        # tohour(hhilf,ohilf,dshift)
-                        # today(hilf,ohilf)
-                        tlist = totimes(request[ckey])
-                        if prevday == 1:
-                            ttlist = tlist[tlist < tlist[0]]  # use only late hours of the day before
-                        else:
-                            andisin(mask, hhilf, tlist)
-
-                    elif ckey == 'date':
-                        us = np.string_(self.file[cval].attrs['units'])
-                        dh = us.split(b' ')[-1].split(b':')
-                        if b'seconds' not in us:
-                            logger.warning('Units not given in seconds, %s %s', us, rname)
-                            raise RuntimeError('Units not given in seconds')
-
-                        if 'ohilf' not in locals():
-                            ohilf = self.file[cval][trange[0]:trange[1]]
-                            hhilf = np.empty_like(ohilf)
-                            dshift = np.zeros_like(ohilf, dtype=np.int32)
-                            hilf = np.empty_like(ohilf)
-                            tohourday(hhilf, hilf, ohilf, dshift)
-                            tlist = totimes(['0-23'])
-                        # tohour(hhilf,ohilf,dshift)
-                        # today(hilf,ohilf)
-                        else:
-                            tlist = totimes(request['time'])
-
-                        dsec = np.array(dsec) // 86400
-                        if prevday == 1:
-                            logger.debug('selecting previous day %s', rname)
-                            # imask=numpy.zeros_like(mask)
-                            ttlist = tlist[tlist < tlist[0]]  # use only late hours of the day before
-                            # imask[:]=numpy.logical_and(numpy.isin(hilf,dsec),hhilf<=ttlist[-1])
-                            imask = hhilf <= ttlist[-1]
-                            andisin_t(imask, hilf + dshift, dsec)
-                            ttlist = tlist[tlist >= tlist[0]]  # use only early hours of last day
-                            imask2 = hhilf >= ttlist[0]
-                            # imask[:]=numpy.logical_or(imask,
-                            # numpy.logical_and(numpy.isin(hilf,dsec-1),hhilf>=ttlist[0]))
-                            andisin_t(imask2, hilf, dsec - 1)
-                            # print('nach andisin', time.time() - t)
-                            imask = np.logical_or(imask, imask2)
-                            mask = np.logical_and(mask, imask)
-                        else:
-                            andisin_t(mask, hilf + dshift, dsec)
-
-                    elif ckey == 'variable':
-                        andisin(mask, self.file[cval][trange[0]:trange[1]],
-                                np.int32(np.unique(cdmdict[request[ckey]])))
-
-                    else:
-                        andisin(mask, self.file[cval][trange[0]:trange[1]],
-                                np.int32(np.unique(request[ckey])))
-                    logger.debug('Finished %s [%5.2f s] %s', ckey, time.time() - time0, rname)
-                except MemoryError as e:
-                    logger.error('Error %s occurred while checking criteria', repr(e))
-                    raise MemoryError('"{}" occurred while checking criteria'.format(e))
-
-        logger.debug('Finished mask %s [%5.2f s]', rname, time.time() - time0)
-        idx = np.where(mask)[0] + trange[0]  # make index for file subsetting
+        # datetime slice, logic mask for time, plev
+        trange, mask = self.read_observed_variable(cdmnum,
+                                                   variable='observation_value',
+                                                   dates=request.get('date', None),
+                                                   plevs=request.get('pressure_levels', None),
+                                                   times=request.get('time', None),
+                                                   observed_variable_name='observed_variable',
+                                                   date_time_name='date_time',
+                                                   date_time_in_seconds=False,
+                                                   z_coordinate_name='z_coordinate',
+                                                   group='observations_table',
+                                                   dimgroup='observations_table',
+                                                   return_index=True
+                                                   )
+        logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange.start,
+                     trange.stop, time.time() - time0, self.name)
+        idx = np.where(mask)[0] + trange.start  # make index for file subsetting
         if len(idx) == 0:
-            logger.warning('No matching data found %s', rname)
+            logger.warning('No matching data found %s', self.name)
             raise ValueError('No matching data found')
 
-        logger.debug('Data found: %d %s', len(idx), rname)
+        logger.debug('Data found: %d %s', len(idx), self.name)
         trajectory_index = np.zeros_like(idx, dtype=np.int32)
-        recordindex = dateindex[1, :]  # recordindex
-        zidx = np.where(np.logical_and(recordindex >= trange[0], recordindex < trange[1]))[0]
+        recordindex = self['recordindex'][()]
+        zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex < trange.stop))[0]
         recordindex = recordindex[zidx]
         zidx = calc_trajindexfast(recordindex, zidx, idx, trajectory_index)
-
         dims = {'obs': np.zeros(idx.shape[0], dtype=np.int32),
                 'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
-        globatts = {'Conventions': "CF-1.7",
-                    'source': "radiosonde",
-                    'featureType': "trajectory"}
 
+        globatts = get_global_attributes()  # could put more infors there ?
+        #
+        # Common Variables needed for a request
+        #
         snames = ['report_id', 'platform_id', 'platform_name', 'observation_value', 'latitude',
                   'longitude', 'time', 'air_pressure', 'trajectory_label']
 
         logger.debug('Request-keys: %s', str(request.keys()))
-
-        if isinstance(request['variable'], list):
-            snames.append(cdmnamedict[request['variable'][0]])
-        else:
-            snames.append(cdmnamedict[request['variable']])
-
+        # Add requested variable
+        snames.append(cdsname)
+        # Add Feedback Variables
         if 'fbstats' in request.keys():
             if isinstance(request['fbstats'], list):
                 for c in request['fbstats']:
-                    snames.append(cdmnamedict[c])
+                    snames.append(c)
             else:
-                snames.append(cdmnamedict[request['fbstats']])
-        name_to_cdm = {}
+                snames.append(request['fbstats'])
+        # todo add Bias adjustment variables
+        if 'adjust' in request.keys():
+            pass
+
+        cfcopy = {}  # Copy only relevant variables
         for ss in snames:
             try:
-                name_to_cdm[ss] = cf_dict[ss]
+                cfcopy[ss] = cf_dict[ss]
             except:
                 pass
 
         logger.debug('Writing: %s', filename_out)
         with h5py.File(filename_out, 'w') as fout:
-            i = 0
+            #
+            # Dimensions (obs, trajectory)
+            #
             for d, v in dims.items():
                 fout.create_dataset(d, data=v)
                 fout[d].attrs['NAME'] = np.string_('This is a netCDF dimension but not a netCDF variable.')
                 fout[d].make_scale(d)  # resolves phony_dim problem
-                i += 1
+
             fout.create_dataset('trajectory_index', data=trajectory_index)
             fout['trajectory_index'].attrs['long_name'] = np.string_(
                 "index of trajectory this obs belongs to")
             fout['trajectory_index'].attrs['instance_dimension'] = np.string_("trajectory")
             fout['trajectory_index'].attrs['coordinates'] = np.string_("lat lon time plev")
-            for igroup in self.file.keys():
-                if not isinstance(self.file[igroup], h5py.Group):
-                    continue
+            #
+            # Variables
+            #
+            if 'observations_table' in self.groups:
+                igroup = 'observations_table'
+                do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                          var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
+                                         'observation_value', 'date_time'])
+                # 'observed_variable','units'
+                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
 
-                if igroup in ['observations_table']:
-                    # only obs, feedback fitting criteria (idx) is copied
-                    do_cfcopy(fout, self.file, igroup, idx, name_to_cdm, 'obs',
-                              var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
-                                             'observation_value', 'date_time'])
-                    # 'observed_variable','units'
+            if 'era5fb' in self.groups:
+                igroup = 'era5fb'
+                try:
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                              var_selection=['fg_depar@body', 'an_depar@body',
+                                             'biascorr@body'])
+                    # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                except KeyError as e:
+                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['fbstats']), self.name))
 
-                elif igroup in ['era5fb']:
-                    # only obs, feedback fitting criteria (idx) is copied
-                    if 'fbstats' in request.keys():
-                        try:
-                            do_cfcopy(fout, self.file, igroup, idx, name_to_cdm, 'obs',
-                                      var_selection=['fg_depar@body', 'an_depar@body',
-                                                     'biascorr@body'])
-                            # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
-                            logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                        except KeyError:
-                            raise KeyError('no {} found in {}'.format(name_to_cdm[request['fbstats'][0]][
-                                                                          'cdmname'], self.filename))
+            if 'header_table' in self.groups:
+                igroup = 'header_table'
+                # only records fitting criteria (zidx) are copied
+                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
+                          var_selection=['report_id'])
+                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                # ,'station_name','primary_station_id'])
+                # todo could be read from the observations_table
 
-                elif igroup in ['header_table']:
-                    # only records fitting criteria (zidx) are copied
-                    do_cfcopy(fout, self.file, igroup, zidx, name_to_cdm, 'trajectory',
-                              var_selection=['report_id'])
-                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                    # ,'station_name','primary_station_id'])
-                    # todo could be read from the observations_table
-
-                elif 'station_configuration' in igroup:
-                    # only records fitting criteria (zidx) are copied
-                    try:
-                        sh = self.file[igroup]['primary_id'].shape[1]
-                        fout.attrs['primary_id'] = self.file[igroup]['primary_id'][0].view('S{}'.format(sh))[0]
-                        sh = self.file[igroup]['station_name'].shape[1]
-                        fout.attrs['station_name'] = self.file[igroup]['station_name'][0].view('S{}'.format(sh))[0]
-                    except:
-                        logger.warning('No primary_id in %s', filename_out)
-                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-
-                else:
-                    # groups that are simply copied
-                    pass
+            if 'station_configuration' in self.groups:
+                igroup = 'station_configuration'
+                # only records fitting criteria (zidx) are copied
+                try:
+                    sh = self.file[igroup]['primary_id'].shape[1]
+                    fout.attrs['primary_id'] = self.file[igroup]['primary_id'][0].view('S{}'.format(sh))[0]
+                    sh = self.file[igroup]['station_name'].shape[1]
+                    fout.attrs['station_name'] = self.file[igroup]['station_name'][0].view('S{}'.format(sh))[0]
+                except:
+                    logger.warning('No primary_id in %s', filename_out)
+                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+            #
+            # Fix Attributes and Globals
+            #
             fout['trajectory_label'].attrs['cf_role'] = np.string_('trajectory_id')
             fout['trajectory_label'].attrs['long_name'] = np.string_('Label of trajectory')
             for a, v in globatts.items():
@@ -981,21 +1311,94 @@ class CDMDataset:
                 'Created by Copernicus Early Upper Air Service Version 0, ' + datetime.now().strftime(
                     "%d-%b-%Y %H:%M:%S"))
             fout.attrs['license'] = np.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
-        logger.debug('Finished %s [%5.2f s]', rname, time.time() - time0)
+        logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
+
+    def make_datetime_slice(self, dates: list = None, date_time_name: str = 'date_time',
+                            date_time_in_seconds: bool = False,
+                            add_day_before: bool = False):
+        """
+
+        Args:
+            dates:
+            date_time_name:
+            date_time_in_seconds:
+            add_day_before:
+
+        Returns:
+
+        """
+        if self.hasgroups:
+            group = 'observations_table'
+            date_time_name = date_time_name if date_time_name != 'date_time' else 'date_time'
+        else:
+            group = '/'
+            date_time_name = date_time_name if date_time_name != 'date_time' else 'time'
+
+        if dates is not None:
+            # loading variables allows reusing them in memory
+            if 'recordtimestamp' in self.groups:
+                timestamp = self.load_variable_from_file('recordtimestamp', return_data=True)[0]
+                timestamp_units = self.read_attributes('recordtimestamp').get('units', None)
+            else:
+                timestamp = self.load_variable_from_file(date_time_name, return_data=True)[0]
+                timestamp_units = self.read_attributes(date_time_name).get('units', None)
+
+            if timestamp_units is None:
+                timestamp_units = 'seconds since 1900-01-01 00:00:00'
+            if 'seconds' not in timestamp_units:
+                timestamp = to_seconds_since(timestamp, timestamp_units)
+
+            if not date_time_in_seconds:
+                # to seconds since 1900-01-01
+                if len(dates) == 1:
+                    dates = [convert_datetime(dates[0], return_seconds=True)]
+                else:
+                    dates = [convert_datetime(dates[0], return_seconds=True),
+                             convert_datetime(dates[-1], return_seconds=True)]
+            if add_day_before:
+                logic = (timestamp >= (dates[0] - 86400)) & (timestamp <= (dates[-1] + 86399))
+            else:
+                logic = (timestamp >= (dates[0])) & (timestamp <= (dates[-1] + 86399))
+
+            timeindex = np.where(logic)[0]  # large arrays with duplicated dates, hence the last is in
+
+            if timeindex.shape[0] == 0:
+                logger.warning('No data in time interval %s', self.name)
+                raise ValueError('No data in specified time interval')
+
+            if 'recordindex' in self.groups:
+                recordindex = self.load_variable_from_file('recordindex', return_data=True)[0]
+                if timeindex[-1] < (recordindex.shape[0] - 1):
+                    trange = slice(recordindex[timeindex[0]], recordindex[timeindex[-1] + 1])
+                else:
+                    trange = slice(recordindex[timeindex[0]], recordindex[timeindex[-1]])
+            else:
+                trange = slice(timeindex[0], timeindex[-1] + 1)
+            time_units = self.read_attributes(date_time_name, group=group).get('units', '')
+            if timestamp_units != time_units:
+                logger.warning('Timeunits missmatch? %s <> %s', timestamp_units, time_units)
+                raise ValueError('Timeunits missmatch?', timestamp_units, time_units)
+        else:
+            trange = slice(0, self[group][date_time_name].shape[0])
+        logger.debug('Datetime selection: %d - %d', trange.start, trange.stop)
+        return trange
 
     def read_observed_variable(self, varnum: int,
                                variable: str = 'observation_value',
                                dates: list = None,
                                plevs: list = None,
+                               times: list = None,
                                observed_variable_name: str = 'observed_variable',
                                date_time_name: str = 'date_time',
                                date_time_in_seconds: bool = False,
                                z_coordinate_name: str = 'z_coordinate',
                                group: str = 'observations_table',
+                               dimgroup: str = 'observations_table',
                                return_coordinates: bool = False,
                                return_index: bool = False,
-                               use_odb_codes: bool = True,
-                               return_xarray: bool = False
+                               use_odb_codes: bool = False,
+                               return_xarray: bool = False,
+                               **kwargs
                                ):
         """ Read a variable from a CDM backend file
         Uses recordtimestamp and observed_variable for subsetting and z_coordinate as well
@@ -1005,11 +1408,13 @@ class CDMDataset:
             variable: CDM variable name: observation_value
             dates: [start end]
             plevs: [plevs] in Pa
+            times: [sounding times] in hours
             observed_variable_name:
             date_time_name:
             date_time_in_seconds:
             z_coordinate_name:
-            group:
+            group: group of variable
+            dimgroup: group of date_time and z_coordinate and observed_variable
             return_coordinates: dates and pressure levels
             return_index: subset and logic array
             use_odb_codes: ODB Codes or CDM Codes
@@ -1034,8 +1439,11 @@ class CDMDataset:
         if not self.hasgroups:
             raise RuntimeError('This function only works with CDM Backend files')
 
+        if dimgroup not in self.groups:
+            raise ValueError('Missing group?', dimgroup)
+
         if group not in self.groups:
-            raise ValueError('Missing observations_table group?')
+            raise ValueError('Missing group?', group)
 
         if not isinstance(variable, str):
             raise ValueError('(variable) Requires a string name, not ', str(variable))
@@ -1050,8 +1458,8 @@ class CDMDataset:
             if varnum not in cdm_codes.values():
                 raise ValueError('(varnum) Code not in CDM Codes', variable, str(cdm_codes))
 
-        if observed_variable_name not in self[group].keys():
-            raise ValueError('Observed variable not found:', observed_variable_name, self[group].keys())
+        if observed_variable_name not in self[dimgroup].keys():
+            raise ValueError('Observed variable not found:', observed_variable_name, self[dimgroup].keys())
 
         if dates is not None:
             if not isinstance(dates, list):
@@ -1061,75 +1469,70 @@ class CDMDataset:
             if not isinstance(plevs, (list, np.ndarray)):
                 plevs = [plevs]
 
-        xdates = None
-        trange = slice(None, None)
-        #
-        # Select based on recordtimestamp (only for CDM Group files)
-        #
-        if 'recordtimestamp' in self.groups:
-            timestamp_units = None
-            if dates is not None:
-                # loading variables allows reusing them in memory
-                timestamp = self.load_variable('recordtimestamp', return_data=True)
-                #
-                # Make sure units are in seconds
-                #
-                timestamp_units = self['recordtimestamp'].attrs.get('units', None)
-                if timestamp_units is None:
-                    timestamp_units = 'seconds since 1900-01-01 00:00:00'
-                if 'seconds' not in timestamp_units:
-                    timestamp = to_seconds_since(timestamp, timestamp_units)
-                #
-                # Index
-                #
-                timeindex = self.load_variable('recordindex', return_data=True)
-                if not date_time_in_seconds:
-                    # to seconds since
-                    if len(dates) == 1:
-                        dates = [convert_datetime(dates[0], return_seconds=True)]
-                    else:
-                        dates = [convert_datetime(dates[0], return_seconds=True),
-                                 convert_datetime(dates[-1], return_seconds=True)]
-                logic = (timestamp >= dates[0]) & (timestamp <= dates[-1])
-                timeindex = timeindex[logic]
-                trange = slice(timeindex[0], timeindex[-1])
-                if timestamp_units != self[group][date_time_name].attrs.get('units', '').decode():
-                    raise ValueError('Timeunits missmatch?', timestamp_units,
-                                     self[group][date_time_name].attrs.get('units', '').decode())
-                xdates = self[group][date_time_name][trange]
-            else:
-                trange = slice(0, self[group][date_time_name].shape[0])
-                xdates = self.load_variable(date_time_name, group=group, return_data=True)
-            logger.info('[READ] recordtimestamp: %s', str(trange))
+        trange = self.make_datetime_slice(dates, date_time_name=date_time_name,
+                                          date_time_in_seconds=date_time_in_seconds,
+                                          add_day_before=True if times is not None else False)
+        if dates is not None:
+            xdates = self[dimgroup][date_time_name][trange]
+        else:
+            xdates = self.load_variable_from_file(date_time_name, group=dimgroup, return_data=True)[0]
         #
         # Observed Code
         #
         if dates is None:
-            self.load_variable(observed_variable_name, group=group)
+            self.load_variable_from_file(observed_variable_name, group=dimgroup)
 
-        logic = (self[group][observed_variable_name][trange] == varnum)
+        if False:
+            # not really faster ?
+            logic = np.ones(trange.stop - trange.start, dtype=np.bool)
+            andisin(logic, self[dimgroup][observed_variable_name][trange], np.asarray([varnum], dtype=np.int32))
+        else:
+            logic = (self[dimgroup][observed_variable_name][trange] == varnum)
         logger.info('[READ] Observed variable %s', varnum)
         #
         # Pressure levels
         #
         xplevs = None
         if plevs is not None:
-            if z_coordinate_name not in self[group].keys():
-                raise ValueError('Pressure variable not found:', z_coordinate_name, self[group].keys())
-            p_attrs = self.read_attributes(z_coordinate_name, group=group)
+            if z_coordinate_name not in self[dimgroup].keys():
+                raise ValueError('Pressure variable not found:', z_coordinate_name, self[dimgroup].keys())
+            p_attrs = self.read_attributes(z_coordinate_name, group=dimgroup)
             p_units = p_attrs.get('units', 'Pa')
             if p_units != 'Pa':
                 RuntimeWarning('Pressure variable wrong unit [Pa], but', p_units)
 
             if dates is None:
-                xplevs = self.load_variable(z_coordinate_name, group=group, return_data=True)
+                xplevs = self.load_variable_from_file(z_coordinate_name, group=dimgroup, return_data=True)[0]
             else:
-                xplevs = self[group][z_coordinate_name][trange]
+                xplevs = self[dimgroup][z_coordinate_name][trange]
             if len(plevs) == 1:
                 logic = logic & (xplevs == plevs[0])
             else:
-                logic = logic & (np.in1d(xplevs, plevs))
+                andisin(logic, xplevs, np.asarray(plevs))  # for cube that make 2s
+                # logic = logic & (np.in1d(xplevs, plevs))
             logger.info('[READ] pressure levels %s', str(plevs))
+        #
+        # Times
+        #
+        if times is not None:
+            # standard times [0-23], day before has been added
+            times = np.sort(totimes(times))  # not sure why this does notsort ?
+            hours = np.empty_like(xdates)
+            date_shift = np.zeros_like(xdates, dtype=np.int32)  # earlier date, but would be
+            days = np.empty_like(xdates)
+            tohourday(hours, days, xdates, date_shift)
+            # all previous day profiles should be included due to day before flag
+            # match all times in hours (logical and)
+            andisin(logic, hours, times)
+            if any(times >= 21):
+                # use only late hours for the first day
+                first_day = days[logic][0]  # first day
+                first_day_logic = logic[days == first_day]
+                # only true if lat times
+                andisin(first_day_logic, hours[days == first_day], times[times >= 21])
+                logic[days == first_day] = first_day_logic  # modify logic
+                logger.info('[READ] first day (%s) times %d/%d', seconds_to_datetime([first_day * 86400]),
+                            first_day_logic.sum(), first_day_logic.size)
 
         if return_xarray:
             return_coordinates = True
@@ -1137,15 +1540,23 @@ class CDMDataset:
         if return_coordinates:
             if xdates is None:
                 if dates is None:
-                    xdates = self.load_variable(date_time_name, group=group, return_data=True)
+                    xdates = self.load_variable_from_file(date_time_name, group=dimgroup, return_data=True)[0]
                 else:
-                    xdates = self[group][date_time_name][trange]
+                    xdates = self[dimgroup][date_time_name][trange]
 
             if xplevs is None:
-                if plevs is None:
-                    xplevs = self.load_variable(z_coordinate_name, group=group, return_data=True)
+                if dates is None:
+                    xplevs = self.load_variable_from_file(z_coordinate_name, group=dimgroup, return_data=True)[0]
                 else:
-                    xplevs = self[group][z_coordinate_name][trange]
+                    xplevs = self[dimgroup][z_coordinate_name][trange]
+
+        if return_index:
+            if return_coordinates:
+                return trange, logic, xdates[logic], xplevs[logic]  # no trange here????
+            return trange, logic
+
+        if dates is None:
+            self.load_variable_from_file(variable, group=group)
 
         if return_xarray:
             # todo add attributes from CF Table
@@ -1153,27 +1564,23 @@ class CDMDataset:
             logger.info('[READ] xarray ... %s', data.shape)
             if xdates is not None:
                 data[date_time_name] = ('obs', seconds_to_datetime(xdates[logic]))
-                logger.debug('[READ] datetime conversion')
+                logger.debug('[READ] datetime conversion %d', data[date_time_name].size)
             if xplevs is not None:
                 data[z_coordinate_name] = ('obs', xplevs[logic])
                 data[z_coordinate_name].attrs.update({'units': 'Pa', 'standard_name': 'air_pressure'})
             if len(data.coords) > 0:
                 data = data.set_index(obs=list(data.coords))
-            data.cdm.ragged_index = trange.start + np.where(logic)[0]
             return data
 
-        if return_index:
-            # logic = trange.start + np.where(logic)[0]
-            if return_coordinates:
-                return trange, logic, xdates[logic], xplevs[logic]
-            return trange, logic
         if return_coordinates:
             return self[group][variable][trange][logic], xdates[logic], xplevs[logic]
+
         return self[group][variable][trange][logic]
 
     def read_variable(self, name,
                       dates: list = None,
                       plevs: list = None,
+                      times: list = None,
                       date_time_name: str = 'time',
                       date_time_in_seconds: bool = False,
                       z_coordinate_name: str = 'plev',
@@ -1224,27 +1631,33 @@ class CDMDataset:
             if not isinstance(plevs, (list, np.ndarray)):
                 plevs = [plevs]
 
-        trange = slice(None)
-        xdates = None
-        logic = np.ones(self[name].shape, dtype=np.bool)  # all True
+        trange = self.make_datetime_slice(dates=dates, date_time_name=date_time_name,
+                                          date_time_in_seconds=date_time_in_seconds)
         if dates is not None:
-            timestamp = self[date_time_name][()]
-            d_attrs = self.read_attributes(date_time_name)
-            time_units = d_attrs.get('units', 'seconds since 1900-01-01 00:00:00')
-            if 'seconds' not in time_units:
-                dates = to_seconds_since(timestamp, time_units)
-            if not date_time_in_seconds:
-                # to seconds since
-                if len(dates) == 1:
-                    dates = [convert_datetime(dates[0], return_seconds=True)]
-                else:
-                    dates = [convert_datetime(dates[0], return_seconds=True),
-                             convert_datetime(dates[-1], return_seconds=True)]
-            logic = (timestamp >= dates[0]) & (timestamp <= dates[-1])
-            timeindex = np.where(logic)[0]
-            trange = slice(timeindex[0], timeindex[-1])
-            xdates = timestamp[trange]
-            logger.info('[READ] %s : %s [%s]', date_time_name, str(trange), time_units)
+            xdates = self[date_time_name][trange]
+        else:
+            xdates = self.load_variable_from_file(date_time_name, return_data=True)[0]
+        # trange = slice(None)
+        # xdates = None
+        # logic = np.ones(self[name].shape, dtype=np.bool)  # all True
+        # if dates is not None:
+        #     timestamp = self[date_time_name][()]
+        #     d_attrs = self.read_attributes(date_time_name)
+        #     time_units = d_attrs.get('units', 'seconds since 1900-01-01 00:00:00')
+        #     if 'seconds' not in time_units:
+        #         dates = to_seconds_since(timestamp, time_units)
+        #     if not date_time_in_seconds:
+        #         # to seconds since
+        #         if len(dates) == 1:
+        #             dates = [convert_datetime(dates[0], return_seconds=True)]
+        #         else:
+        #             dates = [convert_datetime(dates[0], return_seconds=True),
+        #                      convert_datetime(dates[-1], return_seconds=True)]
+        #     logic = (timestamp >= dates[0]) & (timestamp <= dates[-1])
+        #     timeindex = np.where(logic)[0]
+        #     trange = slice(timeindex[0], timeindex[-1])
+        #     xdates = timestamp[trange]
+        #     logger.info('[READ] %s : %s [%s]', date_time_name, str(trange), time_units)
 
         xplevs = None
         if plevs is not None:
@@ -1253,142 +1666,104 @@ class CDMDataset:
             p_units = p_attrs.get('units', 'Pa')
 
             if len(plevs) == 1:
-                logic = logic & (xplevs == plevs[0])
+                logic = xplevs == plevs[0]
             else:
-                logic = logic & (np.in1d(xplevs, plevs))
+                # could be fast with andisin
+                logic = np.in1d(xplevs, plevs)
             logger.info('[READ] %s : %s [%s]', z_coordinate_name, str(plevs), p_units)
+        else:
+            logic = np.ones(xdates.size, dtype=np.bool)
+
+        if times is not None:
+            # todo add time selection
+            pass
 
         if return_xarray:
-            return_coordinates = True
+            return_coordinates = True  # need to be available for coordinates
 
         if return_coordinates:
             if xdates is None:
                 try:
-                    xdates = self[date_time_name][trange]
+                    xdates = self[date_time_name][trange]  # read the data
                 except:
                     pass
             if xplevs is None:
                 try:
-                    xplevs = self[z_coordinate_name][trange]
+                    xplevs = self[z_coordinate_name][trange]  # read the data
                 except:
                     pass
 
+        # return only indices for repeated use, e.g. temperature + fbstats
+        if return_index:
+            if return_coordinates:
+                return trange, logic, xdates[logic], xplevs[logic]
+            return trange, logic
+
+        if dates is None:
+            self.load_variable_from_file(name)  # performance might be better if the whole is read and subset
+
         if return_xarray:
-            data = xr.DataArray(self[name][trange][logic], dims=('obs'), attrs=self.read_attributes(name))
+            # create a DataArray
+            data = xr.DataArray(self[name][trange][logic], dims=('obs',), attrs=self.read_attributes(name))
             if xdates is not None:
                 data[date_time_name] = ('obs', seconds_to_datetime(xdates[logic]))
+                data[date_time_name].attrs.update(self.read_attributes(date_time_name))
             if xplevs is not None:
                 data[z_coordinate_name] = ('obs', xplevs[logic])
                 data[z_coordinate_name].attrs.update(self.read_attributes(z_coordinate_name))
             if len(data.coords) > 0:
                 data = data.set_index(obs=list(data.coords))
-            data.cdm.ragged_index = trange.start + np.where(logic)[0]
             return data
 
-        if return_index:
-            if return_coordinates:
-                return trange, logic, xdates[logic], xplevs[logic]
-            return trange, logic
         if return_coordinates:
             return self[name][trange][logic], xdates[logic], xplevs[logic]
         return self[name][trange][logic]
 
-    def load_variable(self, name, group: str = None, return_data: bool = False):
+    def load_variable_from_file(self, name, group: str = None, return_data: bool = False,
+                                decode_byte_array: bool = True) -> list:
         """ Allow to load a variable from a group
 
         Args:
-            name: name of the variable
-            group: group
-            return_data: read data and return?
+            name (str, list): name of the variable
+            group (str): group
+            return_data (bool): read data and return?
+            decode_byte_array (bool): decode string arrays
 
         Returns:
-            data
+            data: list of data variables requested
         """
         if group is not None:
             if group not in self.groups:
                 raise ValueError('Group not found', group)
-            if name not in self[group].keys():
-                raise ValueError('Variable not found', group, name)
-            self.read_group(group, name)
-            if return_data:
-                return self[group][name][()]
-        else:
-            data = self[name][()]  # Read data
-            setattr(self, name, CDMVariable(data, name, shape=data.shape))
-            if return_data:
-                return self[name][()]
 
-    def read_group(self, group: str, variables: str or list, decode_byte_array: bool = True, **kwargs):
-        """ Return data from variables and concat string-byte arrays
+            if isinstance(name, str):
+                name = [name]
 
+            for iname in name:
+                if iname not in self[group].keys():
+                    raise ValueError('Variable not found', group, iname)
+                if self[group][iname].isArray():
+                    continue
 
-        Args:
-            group:
-            variables:
-            decode_byte_array:
-            **kwargs:
-
-        Returns:
-
-        Examples:
-            >>> tmp = CDMDataset('/raid60/scratch/federico/JUNE_TEST_MERGING_ALL/0-20000-0-01001_CEUAS_merged_v0.nc')
-            This will load two Variables from the observations_table into Memory
-            >>> tmp.read_group('observations_table', variables=['observed_variable', 'z_coordinate'])
-            2020-07-15 12:48:29,702 - cdm | read_group - INFO - Loading ... observations_table observed_variable (137205730,)
-            2020-07-15 12:49:18,027 - cdm | read_group - INFO - Loading ... observations_table z_coordinate (137205730,)
-            2020-07-15 12:49:56,094 - cdm | read_group - DEBUG - observations_table [loaded]
-
-            Loaded Variables are indicated by an L
-            >>> tmp.observations_table
-            observations_table:
-
-            adjustment_id_____________________________________ : : (137205730,)
-            advanced_assimilation_feedback____________________ : : (137205730,)
-            bbox_max_latitude_________________________________ : : (137205730,)
-            bbox_max_longitude________________________________ : : (137205730,)
-            bbox_min_latitude_________________________________ : : (137205730,)
-            bbox_min_longitude________________________________ : : (137205730,)
-            date_time_________________________________________ : : (137205730,)
-            index_____________________________________________ : : (137205730,)
-            latitude__________________________________________ : : (137205730,)
-            location_precision________________________________ : : (137205730,)
-            longitude_________________________________________ : : (137205730,)
-            numerical_precision_______________________________ : : (137205730,)
-            observation_height_above_station_surface__________ : : (137205730,)
-            observation_id____________________________________ : : (137205730, 11)
-            observation_value_________________________________ : : (137205730,)
-            observed_variable_________________________________ :L: (137205730,)
-            original_precision________________________________ : : (137205730,)
-            original_value____________________________________ : : (137205730,)
-            report_id_________________________________________ : : (137205730, 11)
-            sensor_id_________________________________________ : : (137205730,)
-            source_id_________________________________________ : : (137205730, 9)
-            string11__________________________________________ : : (11,)
-            string9___________________________________________ : : (9,)
-            units_____________________________________________ : : (137205730,)
-            z_coordinate______________________________________ :L: (137205730,)
-            z_coordinate_type_________________________________ : : (137205730,)
-            shape_____________________________________________ : :
-        """
-        if not self.hasgroups:
-            raise RuntimeError('CDM File has no Groups, only for CDM Backend Files')
-
-        if not isinstance(variables, list):
-            variables = [variables]
-
-        if group in self.groups:
-            jgroup = getattr(self, group)
-            for ivar in variables:
-                if ivar in jgroup.keys():
-                    logger.info('Loading ... %s %s %s', group, ivar, jgroup[ivar].shape)
-                    if len(jgroup[ivar].shape) > 1 and decode_byte_array:
-                        # concat byte-char-array
-                        data = jgroup[ivar][()].astype(object).sum(axis=1).astype(str)
-                    else:
-                        data = jgroup[ivar][()]  # get the full numpy array
-                    setattr(self[group], ivar, CDMVariable(data, ivar, shape=data.shape))
+                if len(self[group][iname].shape) > 1 and decode_byte_array:
+                    # concat byte-char-array
+                    data = self[group][iname][()].astype(object).sum(axis=1).astype(str)
                 else:
-                    logger.info('Skipping ... %s', ivar)
+                    data = self[group][iname][()]  # get the full numpy array
+                setattr(self[group], iname, CDMVariable(data, iname, shape=data.shape))
+
+            if return_data:
+                return [self[group][iname][()] for iname in name]
+        else:
+            if isinstance(name, str):
+                name = [name]
+            for iname in name:
+                if self[iname].isArray():
+                    continue
+                data = self[iname][()]  # Read data
+                setattr(self, iname, CDMVariable(data, iname, shape=data.shape))
+            if return_data:
+                return [self[iname][()] for iname in name]
 
     def profile_to_dataframe(self, groups, variables, date,
                              date_time_name: str = 'date_time',
@@ -1413,12 +1788,12 @@ class CDMDataset:
 
                 date = convert_datetime(date, return_seconds=True)
                 if 'recordtimestamp' in self.groups:
-                    timestamp = self.load_variable('recordtimestamp', return_data=True)
+                    timestamp = self.load_variable_from_file('recordtimestamp', return_data=True)[0]
                     logic = np.where(timestamp == date)[0][0]
-                    timeindex = self.load_variable('recordindex', return_data=True)
+                    timeindex = self.load_variable_from_file('recordindex', return_data=True)[0]
                     date = slice(timeindex[logic], timeindex[logic + 1])
                 else:
-                    timestamp = self.load_variable(date_time_name, group=group, return_data=True)
+                    timestamp = self.load_variable_from_file(date_time_name, group=group, return_data=True)[0]
                     logic = (timestamp == date)
                     timeindex = np.where(logic)[0]
                     date = slice(timeindex[0], timeindex[-1])
@@ -1438,18 +1813,19 @@ class CDMDataset:
                 data[ivar] = data[ivar].astype(object).sum(1).astype(str)
         return pd.DataFrame(data)
 
-    def read_data_to_cube(self, variables: dict,
+    def read_data_to_cube(self, variables: list,
                           dates: list = None,
                           plevs: list = None,
-                          plev_in_hpa: bool = False,
-                          **kwargs):
+                          feedback: list = None,
+                          feedback_group: str = 'era5fb',
+                          **kwargs) -> dict:
         """
-
         Args:
-            variables: {varnum : [group/variable]}
+            variables: list of variables, e.g. temperature
             dates: [start, stop], str, int or datetime
             plevs: [list] in Pa or hPa
-            plev_in_hpa: convert input pressure or not?
+            feedback: list of feedback variables
+            feedback_group: group name of the feedback
             **kwargs:
 
         Optional Keywords:
@@ -1457,27 +1833,24 @@ class CDMDataset:
             z_coordinate_name: Name of the pressure level variable
 
         Returns:
-
-
-        Notes:
-            Converting from ragged arraay to Cube requires a index
-            save the index for the group
-            for later writing
-            return a Xarray Dataset with cdm Accessor
+            dict : {variable : CDMCube}
         """
+        if len(variables) == 0:
+            raise ValueError('Need a variables', str(cdm_codes.keys()))
+
+        if isinstance(variables, str):
+            variables = [variables]
+
         data = {}
         if plevs is not None:
-            if plev_in_hpa:
-                plevs = np.array(plevs) * 100  # need Pa
-            else:
-                plevs = np.asarray(plevs)
-
+            plevs = np.asarray(plevs)
             if any((plevs > 110000) | (plevs < 500)):
                 raise ValueError('Pressure levels outside range [5, 1100] hPa')
         else:
             plevs = std_plevs * 100  # in Pa
 
-        std_plevs_indices = np.zeros(1001, dtype=np.int32)
+        std_plevs_indices = np.zeros(1001, dtype=np.int32)  # hPa
+        # in hPa
         for i, j in enumerate(plevs // 100):
             std_plevs_indices[j] = i
 
@@ -1485,134 +1858,65 @@ class CDMDataset:
             #
             # check variables
             #
-            varnum = variables.keys()
-            var_names = dict({j: i for i, j in odb_codes.items()})  # reverse
+            varnum = []
+            for ivar in variables:
+                if ivar not in cdm_codes.keys():
+                    raise ValueError('Variable not found', ivar)
+                varnum.append(
+                    {'varnum': cdm_codes[ivar], 'variable': 'observation_value', 'group': 'observations_table',
+                     'bkp_var': ivar})
+                if feedback is not None:
+                    if isinstance(feedback, str):
+                        feedback = [feedback]
+                    for jvar in feedback:
+                        # jvar -> @body rename
+                        varnum.append({'varnum': cdm_codes[ivar], 'variable': jvar, 'group': feedback_group,
+                                       'bkp_var': ivar})
+            # multiprocessing of the requests?
             for ivarnum in varnum:
-                if ivarnum not in odb_codes.values():
-                    raise ValueError('(varnum) Code not in ODB Codes', ivarnum, str(odb_codes))
-
-                if not isinstance(variables[ivarnum], list):
-                    variables[ivarnum] = [variables[ivarnum]]
-
-                igroup = 'observations_table'
-                for ivar in variables[ivarnum]:
-                    if '/' in ivar:
-                        try:
-                            self.file[ivar]
-                        except KeyError:
-                            raise ValueError('(variable) not found', ivar)
-                    else:
-                        if ivar not in self[igroup].keys():
-                            raise ValueError('(variable) not found', ivar)
-            #
-            # really read stuff
-            #
-            for ivarnum in varnum:
-                logger.info('Reading ... %d  %s', ivarnum, str(variables[ivarnum]))
-                if len(variables[ivarnum]) > 1:
-                    # TIME SLICE, INDEX, SECONDS ARRAY, PRESSURE LEVELS
-                    trange, indices, secarray, pressure = self.read_observed_variable(ivarnum,
-                                                                                      dates=dates,
-                                                                                      plevs=plevs,
-                                                                                      return_coordinates=True,
-                                                                                      return_index=True,
-                                                                                      **kwargs)
-                    logger.info('[CUBE] Variable Group %d %s %s', ivarnum, str(trange), str(secarray.shape))
-                    igroup = 'observations_table'
-                    # todo multi process read -- this part could be multi processing
-                    for ivar in variables[ivarnum]:
-                        if '/' in ivar:
-                            obs = self.file[ivar][trange][indices]  # Observations
-                            _, ivar = ivar.split('/')
-                        else:
-                            obs = self[igroup][ivar][trange][indices]  # Observations
-                        #
-                        # to Cube
-                        #
-                        # requires hPa for indices
-                        itime, iobs = table_to_cube(secarray,
-                                                    std_plevs_indices[pressure.astype(np.int32) // 100],
-                                                    obs,
-                                                    nplev=plevs.size)
-                        if ivar == 'observation_value':
-                            ivar = var_names[ivarnum]
-                        else:
-                            ivar = var_names[ivarnum] + '_' + ivar
-                        logger.info('[CUBE] %s %s', ivar, iobs.shape)
-                        # Convert to Xarray [time x plev]
-                        data[ivar] = xr.DataArray(iobs,
-                                                  coords=(seconds_to_datetime(secarray[itime]), plevs),
-                                                  dims=('time', 'plev'),
-                                                  name=ivar)
-                        # todo index does not fit array because of missing levels
-                        data[ivar].cdm.ragged_index = trange.start + np.where(indices)[0]
-                        # read attributes ?
-                else:
-                    ivar = variables[ivarnum][0]
-                    igroup = 'observations_table'  # Default
-                    # DATA, SECONDS ARRAY, PRESSURE LEVELS
-                    if '/' in ivar:
-                        igroup, ivar = ivar.split('/')
-                    trange, indices, secarray, pressure = self.read_observed_variable(ivarnum, ivar,
-                                                                                      dates=dates,
-                                                                                      plevs=plevs,
-                                                                                      return_coordinates=True,
-                                                                                      return_index=True,
-                                                                                      group=igroup,
-                                                                                      **kwargs)
-
-                    obs = self[igroup][ivar][trange][indices]  # Observations
-                    logger.info('[CUBE] Variable %d %s', ivarnum, secarray.shape)
-                    # requires hPa for indices
-                    itime, iobs = table_to_cube(secarray,
-                                                std_plevs_indices[pressure.astype(np.int32) // 100],
-                                                obs)
-                    if ivar == 'observation_value':
-                        ivar = var_names[ivarnum]
-                    else:
-                        ivar = var_names[ivarnum] + '_' + ivar
-                    logger.info('[CUBE] %s %s', ivar, iobs.shape)
-                    # Convert to Xarray [time x plev]
-                    data[ivar] = xr.DataArray(iobs,
-                                              coords=(seconds_to_datetime(secarray[itime]), std_plevs),
-                                              dims=('time', 'plev'),
-                                              name=ivar)
-                    data[ivar].cdm.ragged_index = trange.start + np.where(indices)[0]
-                    data[ivar]['plev'].attrs.update({'units': 'hPa', 'standard_name': 'air_pressure'})
-                    # read attributes ?
-                    # -> standardnames
-        else:
-            # todo replace with just self.read_variable()
-            date_time_name = kwargs.get('date_time_name', 'time')
-            if date_time_name not in self.groups:
-                raise ValueError('date_time_name not found, specify', date_time_name)
-            z_coordinate_name = kwargs.get('z_coordinate_name', 'plev')
-            if z_coordinate_name not in self.groups:
-                raise ValueError('z_coordinate_name not found, specify', z_coordinate_name)
-
-            d_attrs = self.read_attributes(date_time_name)
-            # units of pressure ?
-            p_attrs = self.read_attributes(z_coordinate_name)
-            p_unit = p_attrs.get("units", 'Pa')
-            if p_unit == 'Pa':
-                pfactor = 100
-            elif p_unit == 'hPa':
-                pfactor = 1
-            else:
-                raise AttributeError('Unknown pressure unit', p_unit, z_coordinate_name)
-
-            secarray = self[date_time_name][()]
-            pressure = self[z_coordinate_name][()] // pfactor
-
-            for ivar, iobs in variables.items():
-                if iobs not in self.groups:
-                    raise ValueError('Known variable', iobs)
-
-                # Read Attributes Variable
-                v_attrs = self.read_attributes(iobs)
+                logger.info('Reading ... %d  %s', ivarnum['varnum'], ivarnum['bkp_var'])
+                ivarnum.update(kwargs)
+                # TIME SLICE, INDEX, SECONDS ARRAY, PRESSURE LEVELS
+                trange, indices, secarray, pressure = self.read_observed_variable(dates=dates,
+                                                                                  plevs=plevs,
+                                                                                  return_coordinates=True,
+                                                                                  return_index=True,
+                                                                                  **ivarnum)
+                logger.info('[CUBE] Variable Group %d %s %s', ivarnum['varnum'], str(trange), str(secarray.shape))
+                obs = self[ivarnum['group']][ivarnum['variable']][trange][indices]
+                #
+                # to Cube
+                #
+                # requires hPa for indices
                 itime, iobs = table_to_cube(secarray,
-                                            std_plevs_indices[pressure.astype(np.int32)],
-                                            self[iobs][()])
+                                            std_plevs_indices[pressure.astype(np.int32) // 100],
+                                            obs,
+                                            nplev=plevs.size)
+                logger.info('[CUBE] %s %s', ivarnum['bkp_var'], iobs.shape)
+                v_attrs = get_attributes(cdmcode=ivarnum['varnum'],
+                                         feedback=ivarnum['variable'] if feedback is not None else None)
+                if len(v_attrs) > 0:
+                    v_attrs = v_attrs[list(v_attrs.keys())[0]]
+                # Convert to Xarray [time x plev]
+                data[ivarnum['bkp_var']] = xr.DataArray(iobs,
+                                                        coords=(seconds_to_datetime(secarray[itime]), plevs),
+                                                        dims=('time', 'plev'),
+                                                        name=ivarnum['bkp_var'],
+                                                        attrs=v_attrs,
+                                                        )
+        else:
+            for ivar in variables:
+                # Read Attributes Variable
+                v_attrs = self.read_attributes(ivar)
+                # why no trange?
+                iobs, secarray, pressure = self.read_variable(ivar,
+                                                              dates=dates,
+                                                              plevs=plevs,
+                                                              return_coordinates=True)
+
+                itime, iobs = table_to_cube(secarray,
+                                            std_plevs_indices[pressure.astype(np.int32) // 100],
+                                            iobs)
                 logger.info('[CUBE] %s %s', ivar, iobs.shape)
                 # Convert to Xarray [time x plev]
                 data[ivar] = xr.DataArray(iobs,
@@ -1620,12 +1924,9 @@ class CDMDataset:
                                           dims=('time', 'plev'),
                                           name=ivar,
                                           attrs=v_attrs)
-                data[ivar]['time'].attrs.update(d_attrs)
-                data[ivar]['plev'].attrs.update(p_attrs)
-                # data[ivar].cdm.ragged_index = trange.start + np.where(indices)[0]
-
-        # when the dict is converted to a dataset the cdm Accessor is emptied ? Why?
-        return data  # xr.Dataset(data)
+                # data[ivar].data['time'].attrs.update(self.read_attributes(kwargs.get('date_time_name', 'time')))
+                # data[ivar].data['plev'].attrs.update(self.read_attributes(kwargs.get('z_coordinate_name', 'plev')))
+        return data
 
     def trajectory_data(self):
         # todo finish this function
@@ -1634,36 +1935,138 @@ class CDMDataset:
             # what to read here? station_configuration ?
             pass
         else:
-            # read trajectory information
+            # read trajectory information, each profile has exectly one position, how much data is there per profile?
             pass
 
-    def write_group(self, group: str, name: str, data: np.ndarray, index: np.ndarray, varnum: int = None, **kwargs):
-        """ Write a new group to HDF5 file
-        or add to group ?
+    def write_to_file(self, name: str,
+                      cube: xr.DataArray = None,
+                      ragged: xr.DataArray = None,
+                      varnum: int = None,
+                      variable: str = None,
+                      group: str = None,
+                      interpolation: bool = False,
+                      time: str = 'time',
+                      pressure: str = 'plev',
+                      **kwargs):
+        """
 
         Args:
-            group:
             name:
-            data:
-            index:
+            cube:
+            ragged:
             varnum:
+            variable:
+            group:
+            interpolation:
+            time:
+            pressure:
+
             **kwargs:
+        Optional Keywords:
+                    date_time_name:
+            z_coordinate_name:
+            observed_variable_name:
+                        dimgroup:
 
         Returns:
 
+        Examples:
+            Write an adjusted temperature to a CDM Backend file within a new group mytests that is align
+            with 85 temperature. data is a ragged table
+            >>> data = self.read_observed_variable(85)
+            >>> write_to_file('temperature_adjust', ragged=data, varnum=85, variable='observation_value',
+            >>>               group='mytests')
         """
-        # need to have an index for mapping
-        # if index is present use it
-        # search file for different
-        # new datetime index ?
-        if group in self.groups:
-            # WOWOWOWOW
+        if cube is None and ragged is None:
+            raise ValueError('Requires a Cube or a ragged Array')
 
-            pass
+        if cube is not None:
+            #  CUBE (time x plev)
+            if time not in cube.dims:
+                raise ValueError('Datetime dimension not found', time)
+
+            if pressure not in cube.dims:
+                raise ValueError('Z coordinate not found', pressure)
+
+            data = cube.stack(obs=(time, pressure)).dropna('obs')  # need to remove NaN
+
+        if ragged is not None:
+            # assumes this is a Multi-Index Table, Xarray
+            data = ragged  # is allready a table
+            idim = data.dims
+            data = data.rename(**{idim: 'obs'})  # make sure the name is fixed
+
+        if time not in data.coords:
+            raise ValueError('Datetime dimension not found', time)
+
+        if pressure not in data.coords:
+            raise ValueError('Z coordinate not found', pressure)
+
+        if not data.indexes['obs'].is_monotonic:
+            logger.warning('Data not sorted !!!')
+            # todo sort here ?
+
+        in_dates = data[time].values  # Probably np.datetime64
+        # times ? -> dates or ???
+        times = None
+        slice_dates = [in_dates[0], in_dates[-1]]  # for trange (slice)
+        in_plevs = data[pressure].values.astype(np.int32)
+        if isinstance(in_dates[0], np.datetime64):
+            # to seconds since
+            in_dates = ((in_dates - np.datetime64('1900-01-01T00:00:00')) / np.timedelta64(1, 's')).astype(np.int64)
+
+        if 'r' == self.file.mode:
+            self.reopen(mode='r+', tmpdir=kwargs.get('tmpdir', '~/tmp'))
+
+        if self.hasgroups:
+            # CDM Backend file
+            if varnum is None:
+                if 'cdmcode' in data.attrs.keys():
+                    varnum = data.attrs['cdmcode']
+
+            # Read coordinate informations
+            # Make a time-slice (trange), a observed variable subset (mask)
+            # datetime in s (f_dates, mask applied), p-levels accordingly
+            trange, mask, f_dates, f_plevs = self.read_observed_variable(varnum,
+                                                                         dates=slice_dates,
+                                                                         return_index=True,
+                                                                         return_coordinates=True)
+            reverse_sort = False
+            if not is_sorted(f_dates):
+                idx = np.argsort(f_dates)
+                reverse_sort = True
+                logger.info('%s not sorted in file', kwargs.get('date_time_name', 'date_time'))
+                f_dates = f_dates[idx]
+                f_plevs = f_dates[idx]
+
+            if interpolation:
+                # todo use routine from adjust for interpolation
+                # use all levels and make sure shapes match
+                pass
+            else:
+                # Match Input datetime and p-levs with the ones in the file
+                match_index = np.full(f_dates.shape, -1, dtype=np.int32)  # Matching indices
+                # Loop input and file dates/pressures -> Matches
+                reverse_index(match_index, f_dates, f_plevs, in_dates, in_plevs)
+
+            if group in self.groups:
+                gid = self.file[group]  # Group Pointer
+            else:
+                gid = self.file.create_group(group)  # New Group Pointer (need to flush it, only in memory)
+
+            if name in gid.keys():
+                # overwrite
+                pass
+
+            # Create a dataset that is like the observations_value
+            gid.create_dataset_like(name, self.file[group][variable], chunks=True)  # shape ?
+            gid[name] = 0  # fill data / sorting is according to input ?
+
         else:
-            if self.file.mode == 'r':
-                self.reopen(mode='a')
-                # igroup = self.file.create_group()
+            # CDM Frontend file
+            trange = self.make_datetime_slice(dates=slice_dates, **kwargs)
+
+        self.inquire()  # update Groups and variable lists
 
     def report_quality(self, filename: str = None):
         """
@@ -1714,8 +2117,8 @@ class CDMDataset:
         igroup = 'observations_table'
         if igroup in self.groups:
             # Load groups (full arrays)
-            self.read_group(igroup, ['observed_variable', 'units', 'observation_value',
-                                     'z_coordinate', 'date_time'])
+            self.load_variable_from_file(['observed_variable', 'units', 'observation_value',
+                                          'z_coordinate', 'date_time'], group=igroup)
             #
             # observed_variables
             #
@@ -1743,6 +2146,23 @@ class CDMDataset:
                              date_time_name: str = 'date_time',
                              z_coordinate_name: str = 'z_coordinate',
                              **kwargs):
+        """ Run a duplication check on a group and some variables
+
+        Args:
+            groups: CDMDataset group
+            variables: CDMDataset group variables
+            observed_variable_name:
+            date_time_name:
+            z_coordinate_name:
+            **kwargs:
+
+        Returns:
+
+        Examples:
+            >>> data = CDMDataset('0-20000-0-01001_CEUAS_merged_v0.nc')
+            >>> data.check_cdm_duplicates('observations_table', ['observation_value', 'date_time', 'z_coordinate', 'observed_variable', 'source_id', 'z_coordinate_type'])
+
+        """
 
         if not self.hasgroups:
             raise RuntimeError('Only for CDM Backend files')

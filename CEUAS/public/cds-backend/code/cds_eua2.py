@@ -12,9 +12,6 @@ Github: %s [%s]
 Updated: %s
 """ % (__version__, __author__, __institute__, __github__, __status__, __date__)
 
-"""
-Documented Version of cds_eua2
-"""
 import copy
 import glob
 import io
