@@ -257,6 +257,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=[]):
         if i not in ['platform_id', 'platform_name']:
             # , 'latitude', 'longitude', 'time', 'air_pressure']:
             clist.append(i)
+            # todo this should not be defined here, but from cftable
             if i in ['air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
                      'eastward_wind', 'northward_wind', 'wind_speed', 'wind_direction', 'geopotential']:
                 for fb in ['obs_minus_bg', 'obs_minus_an', 'bias_estimate']:
@@ -505,6 +506,7 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables:
             if "odbcode" in v.keys():
                 cdmnamedict[v['cdsname']] = igroup
 
+        # todo this could be changed to the cf.keys() -> cdm names of the variables
         filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
             request_variables['variable']] + '.nc'
 
@@ -522,7 +524,7 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables:
 
 ###############################################################################
 #
-# Xarray return Accesor for index attachment, might be useful for reading
+# Xarray return Accessor for index attachment, might be useful for reading
 # and rewriting to h5py CDM backend files
 # as it is currently used in adjust to write back adjustments and interpolated
 # results.
