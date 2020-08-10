@@ -17,9 +17,14 @@ randdir = os.path.expandvars('{:012d}'.format(100000000000))
 output_dir = config['tmp_dir'] + '/' + randdir
 dzip = output_dir + '/download.zip'
 
-
 # logger = logging.getLogger('TestLog')
 # logger.debug("DEFAULT ZIP: %s", dzip)
+
+default_request = {
+    "date": ["20000101", "20000131"],
+    "variable": ["temperature"]
+}
+
 
 def clean_output_dir():
     list(map(os.unlink, (os.path.join(output_dir, f) for f in os.listdir(output_dir))))
@@ -66,82 +71,69 @@ class RequestTest(make_request_case(default_request, 'ret==dzip', expected=True)
 
 
 class BoundingBox(unittest.TestCase):
-    default_request = {
-        "date": ["20000101", "20000131"],
-        "variable": ["temperature"],
-        'bbox': ['40', '0', '50', '20']
-    }
+    bbox = {'bbox': ['40', '0', '50', '20']}
 
     def test_str_false(self):
-        current = update_request({'bbox': "40, 0, 50, 20"}, **self.default_request)
+        current = update_request({'bbox': "40, 0, 50, 20"}, **default_request)
         self.assertRaises(ValueError,
                           process_request,
                           current, output_dir, config['data_dir'], wmo_regions
                           )
 
     def test_float_false(self):
-        current = update_request({'bbox': [40.0, 30, 30, 50.3]}, **self.default_request)
+        current = update_request({'bbox': [40.0, 30, 30, 50.3]}, **default_request)
         self.assertRaises(ValueError,
                           process_request,
                           current, output_dir, config['data_dir'], wmo_regions
                           )
 
     def test_true(self):
-        ret = process_request(self.default_request, output_dir, config['data_dir'], wmo_regions)
-        self.assertTrue(ret == dzip, msg=str(ret) + str(self.default_request))
+        current = update_request(self.bbox, **default_request)
+        ret = process_request(current, output_dir, config['data_dir'], wmo_regions)
+        self.assertTrue(ret == dzip, msg=str(ret) + str(current))
         clean_output_dir()
 
     def test_data_true(self):
-        ret = process_request(self.default_request, output_dir, config['data_dir'], wmo_regions)
+        current = update_request(self.bbox, **default_request)
+        ret = process_request(current, output_dir, config['data_dir'], wmo_regions)
         with zipfile.ZipFile(ret, 'r') as f:
             x = f.namelist()
             hf = io.BytesIO(f.read(x[0]))
             h = h5py.File(hf, 'r')
-            self.assertTrue('ta' in h.keys(), msg=str(ret) + str(self.default_request))
+            self.assertTrue('ta' in h.keys(), msg=str(ret) + str(current))
         clean_output_dir()
 
 
 class Country(unittest.TestCase):
-    default_request = {
-        "date": ["20000101", "20000131"],
-        "variable": ["temperature"],
-        'country': 'DEU'
-    }
+    country = {'country': 'DEU'}
 
     def test_deu_true(self):
-        ret = process_request(self.default_request, output_dir, config['data_dir'], wmo_regions)
-        self.assertTrue(ret == dzip, msg=str(ret) + str(self.default_request))
+        current = update_request(self.country, **default_request)
+        ret = process_request(current, output_dir, config['data_dir'], wmo_regions)
+        self.assertTrue(ret == dzip, msg=str(ret) + str(current))
         clean_output_dir()
 
     def test_atu_false(self):
-        current = update_request({'country': 'ATU'}, **self.default_request)
+        current = update_request({'country': 'ATU'}, **default_request)
         self.assertRaises(ValueError,
                           process_request,
                           current, output_dir, config['data_dir'], wmo_regions
                           )
 
+
+# check more values or the data inside ?
 
 class Statid(unittest.TestCase):
-    default_request = {
-        "date": ["20000101", "20000131"],
-        "variable": ["temperature"],
-        'statid': '10393'
-    }
+    station = {'statid': '10393'}
 
     def test_statid_true(self):
-        ret = process_request(self.default_request, output_dir, config['data_dir'], wmo_regions)
-        self.assertTrue(ret == dzip, msg=str(ret) + str(self.default_request))
+        current = update_request(self.station, **default_request)
+        ret = process_request(current, output_dir, config['data_dir'], wmo_regions)
+        self.assertTrue(ret == dzip, msg=str(ret) + str(current))
         clean_output_dir()
 
-    def test_statid_str_false(self):
-        current = update_request('statid', 'A10393', **self.default_request)
-        self.assertRaises(ValueError,
-                          process_request,
-                          current, output_dir, config['data_dir'], wmo_regions
-                          )
-
     def test_nostatid_false(self):
-        current = update_request('date', '20000101', **self.default_request)
+        current = dict(variable='temperature', date='20000101')
         ret = process_request(current, output_dir, config['data_dir'], wmo_regions)
         with zipfile.ZipFile(ret, 'r') as f:
             x = f.namelist()
@@ -154,11 +146,8 @@ class Statid(unittest.TestCase):
 
 
 class Datetime(unittest.TestCase):
-    default_request = {
-        "date": ["20000101", "20000131"],
-        "variable": ["temperature"],
-        'statid': '10393'
-    }
+    default_request = default_request.copy()
+    default_request['statid'] = '10393'  # Lindenberg
 
     def test_date_true(self):
         ret = process_request(self.default_request, output_dir, config['data_dir'], wmo_regions)
@@ -178,37 +167,10 @@ class Datetime(unittest.TestCase):
                           current, output_dir, config['data_dir'], wmo_regions
                           )
 
-    def test_one_date_true(self):
-        # just one date
-        pass
-
-    def test_two_date_true(self):
-        # period
-        pass
-
-    def test_three_date_true(self):
-        # three individual dates, check data
-        pass
-
-    def test_period_true(self):
-        # correct date range
-        pass
-
-    def test_period_type_false(self):
-        # more than two dates, wrong order
-        pass
-
-    def test_date_format_false(self):
-        # 1900-01-01, 01-01-1900, 01011900, 2000/01/01,
-        pass
-
 
 class PressureLevel(unittest.TestCase):
-    default_request = {
-        "date": ["20000101", "20000131"],
-        "variable": ["temperature"],
-        'statid': '10393'
-    }
+    default_request = default_request.copy()
+    default_request['statid'] = '10393'  # Lindenberg
 
     def test_50000_true(self):
         current = update_request('pressure_level', 50000, **self.default_request)
@@ -241,12 +203,8 @@ class Variables(unittest.TestCase):
     for ikey, ival in cf.items():
         if "odbcode" in ival.keys():
             default_cdmname[ival['cdsname']] = ikey
-
-    default_request = {
-        "date": ["20000101", "20000131"],
-        "variable": ["temperature"],
-        'statid': '10393'
-    }
+    default_request = default_request.copy()
+    default_request['statid'] = '10393'  # Lindenberg
 
     def test_temperature_true(self):
         ret = process_request(self.default_request, output_dir, config['data_dir'], wmo_regions)
@@ -280,11 +238,8 @@ class Variables(unittest.TestCase):
 class Feedback(unittest.TestCase):
     # todo check all variables and data
     default_variables = ['obs_minus_an', 'obs_minus_bg', 'bias_estimate']
-    default_request = {
-        "date": ["20000101", "20000131"],
-        "variable": ["temperature"],
-        'statid': '10393'
-    }
+    default_request = default_request.copy()
+    default_request['statid'] = '10393'  # Lindenberg
 
     def test_an_true(self):
         current = update_request('fbstats', ['obs_minus_an'], **self.default_request)
@@ -306,11 +261,8 @@ class Feedback(unittest.TestCase):
 
 
 class Format(unittest.TestCase):
-    default_request = {
-        "date": ["20000101", "20000131"],
-        "variable": ["temperature"],
-        'statid': '10393'
-    }
+    default_request = default_request.copy()
+    default_request['statid'] = '10393'  # Lindenberg
 
     def test_format_false(self):
         current = update_request('format', 'h5', **self.default_request)
@@ -343,7 +295,6 @@ class Plotting(unittest.TestCase):
 
     def test_timeseries(self):
         # temperature at one level, make a long plot and compare to ?
-        # request, open zip, read netcdf, plot, count data as verification for testing, direct user to plots
         pass
 
     def test_feedback(self):

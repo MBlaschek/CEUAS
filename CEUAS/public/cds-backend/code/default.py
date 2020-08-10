@@ -461,9 +461,9 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
 
     df = pd.concat(dfs, ignore_index=True)
     df.index.name = 'obs_id'
-    # if '.zip' in ofile:
+    #if '.zip' in ofile:
     #    df.to_csv(ofile, compression=dict(method='zip', archive_name=name + '.csv'), mode='a')  # might be 10x faster
-    # else:
+    #else:
     df.to_csv(ofile)
     return ofile
 

@@ -3,10 +3,9 @@
 
 __all__ = ['read_ragged_array_to_cube']
 
+import xarray as xr
 import logging
 import warnings
-
-import xarray as xr
 
 logger = logging.getLogger(__name__)
 # create console handler and set level to debug
@@ -506,6 +505,7 @@ def read_ragged_cdm(filename, odb_codes=True, **kwargs):
     import os
     import h5py
     import numpy as np
+    import pandas as pd
     import xarray as xr
 
     if not os.path.isfile(filename):

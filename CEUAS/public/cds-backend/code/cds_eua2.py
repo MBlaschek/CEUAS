@@ -12,10 +12,10 @@ Github: %s [%s]
 Updated: %s
 """ % (__version__, __author__, __institute__, __github__, __status__, __date__)
 
+import os
 import copy
 import glob
 import io
-import logging
 import subprocess
 import time
 import zipfile
@@ -28,6 +28,7 @@ import matplotlib.pylab as plt
 import numpy
 from numba import *
 
+import logging
 logger = logging.getLogger('upperair.eua')
 
 #
