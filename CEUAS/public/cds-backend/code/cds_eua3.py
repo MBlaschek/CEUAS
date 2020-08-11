@@ -871,6 +871,33 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables:
 ###############################################################################
 
 
+def stack_cube_by_time(data: xr.DataArray, times: tuple =(0, 12), span:int=3, freq:str='12h', dim:str = 'time'):
+    """ Stack time as a new dimension
+
+    Args:
+        data:
+        times:
+        span:
+        freq:
+        dim:
+
+    Returns:
+        xr.DataArray : (time x date x plev)
+    """
+    data = align_datetime(data, times=times, span=span, freq=freq)
+    data = data.sel(**{dim: (data[dim].dt.hour.isin(times) & (data[dim].dt.minute == 0))})
+    data = dict(data.groupby(dim + '.hour'))
+    for ikey in data.keys():
+        data[ikey] = data[ikey].assign_coords(
+            {dim: data[ikey][dim].to_index().to_period('D').to_timestamp().values})
+
+    data = xr.concat(data.values(), dim=pd.Index(data.keys(), name='hour'))
+    data['flag_stdtime'] = data['flag_stdtime'].fillna(0)
+    # make sure the shape is as promissed:
+    data = data.reindex({'hour': list(times)})
+    return data
+
+
 def align_datetime(data, dim: str = 'time', plev: str = 'plev', times: tuple = (0, 12), span: int = 3,
                    freq: str = '12h', **kwargs):
     """ Standardize datetime to times per date, try to fill gaps

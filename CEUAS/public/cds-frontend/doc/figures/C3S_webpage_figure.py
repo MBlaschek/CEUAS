@@ -16,7 +16,7 @@ from matplotlib.colors import BoundaryNorm
 import pandas as pd
 
 
-idir = '../../harvest/data/station_configurations/'
+idir = '../../../harvest/data/station_configurations/'
 
 
 # In[8]:

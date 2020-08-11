@@ -1,0 +1,35 @@
+--- 
+description: 
+  - 
+    Description: "Atmospheric eastward wind component at given pressure level"
+    Name: "Eastward wind component"
+    Units: "m s-1"
+  - 
+    Description: "Geopotential altitude from corrected pressure product"
+    Name: "Geopotential height"
+    Units: m
+  - 
+    Description: "Atmospheric northward wind component at given pressure level"
+    Name: "Northward wind component"
+    Units: "m s-1"
+  - 
+    Description: "Ratio of actual water vapor pressure to saturation water vapor pressure"
+    Name: "Relative humidity"
+    Units: "%"
+  - 
+    Description: "Mass fraction of water vapor in atmospheric volume"
+    Name: "Specific humidity"
+    Units: Kg/kg
+  - 
+    Description: "Atmospheric temperature at given pressure level"
+    Name: Temperature
+    Units: K
+  - 
+    Description: "Atmospheric wind direction at given pressure or height level, following the metorological convention, i.e. wind direction is wind from direction, it increases clockwise and starts with 0 deg if wind comes from North"
+    Name: "Wind from direction"
+    Units: "Deg (0=N, 90=E)"
+  - 
+    Description: "Atmospheric wind speed at given pressure or height level"
+    Name: "Wind speed"
+    Units: "m s-1"
+

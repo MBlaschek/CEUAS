@@ -1,0 +1,11 @@
+--- 
+description: 
+  data-type: "Vertical profiles"
+  file-format: "NetCDF 4, CSV"
+  horizontal-coverage: "Global land"
+  horizontal-resolution: Variable
+  temporal-coverage: "1905 to present, start date is depending on single stations"
+  temporal-resolution: Sub-daily
+  update-frequency: Annually
+  vertical-resolution: Variable
+
