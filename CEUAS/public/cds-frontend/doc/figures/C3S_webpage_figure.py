@@ -91,24 +91,42 @@ if False:
     ax.add_feature(cpy.feature.RIVERS, zorder=1)
 
 unique_stations = []
+data_src = {}
 # Sources:
 for ifile in files_ordered:
     idata = pd.read_csv(idir + ifile,  delimiter='\t', quoting=3, comment='#')
     lon = idata['longitude'].values
     lat = idata['latitude'].values
+    if any(lon > 180):
+        lon = np.where(lon > 180, lon - 360, lon)
     idx = np.isfinite(lon) & np.isfinite(lat) & ((lon >= -180) & (lon <= 180)) & ((lat >= -90) & (lat <= 90)) & (idata['primary_id'].str.contains('0'))
-    ilabel = ifile.replace('station_configuration_','').replace('.dat','').upper().replace('_',' ') + ' (# %d)' % idx.sum()
+    idata = idata[idx].drop_duplicates(subset='primary_id', keep='last')
+    lon = idata['longitude'].values
+    if any(lon > 180):
+        lon = np.where(lon > 180, lon - 360, lon)
+    lat = idata['latitude'].values
+    ilabel = ifile.replace('station_configuration_','').replace('.dat','').upper().replace('_',' ') #+ ' (# %d)' % idx.sum()
     if '3188' in ilabel:
-        ilabel = 'CHUAN (# %d)' % idx.sum()
+        ilabel = 'CHUAN'
     if 'BUFR' in ilabel:
-        ilabel = 'ERA40 (# %d)' % idx.sum()
+        ilabel = 'ERA40'
     if 'ERA5' in ilabel:
         print(ilabel, 'to ECMWF')
-        ilabel = 'ECMWF (# %d)' % idx.sum()
+        ilabel = 'ECMWF'
     
-    ax.scatter(lon[idx], lat[idx], s=40 , transform=cpy.crs.PlateCarree(), edgecolor='k', 
-               label=ilabel)  # ontop
-    unique_stations = list(np.unique(unique_stations + ["{:.1f}{:.1f}".format(i, j) for i,j in zip(lon,lat)]))
+    
+    if ilabel in data_src.keys():
+        data_src[ilabel] = np.unique(data_src[ilabel] + list(zip(lon,lat)),axis=1).tolist()
+    else:
+        data_src[ilabel] = list(zip(lon,lat))
+    
+for ikey in data_src.keys():
+    tmp = np.array(data_src[ikey])
+    ilon, ilat = tmp[:,0], tmp[:,1]
+    print(ikey, ilon.size)
+    ax.scatter(ilon,ilat, s=40 , transform=cpy.crs.PlateCarree(), edgecolor='k', 
+               label=ikey + ' (# %d)' % ilon.size)  # ontop
+    unique_stations = list(np.unique(unique_stations + ["{:.1f}{:.1f}".format(i, j) for i,j in zip(ilon,ilat)]))
 
 if True:
     try:
@@ -126,7 +144,7 @@ title = 'Locations of Ballon Records since 1905'
 ax.set_title(title)
 ax.legend(bbox_to_anchor=(0.5,-0.15), loc='lower center', ncol=4)
 # savefig('C3S_webpage_logo.pdf', dpi=300, bbox_inches = 'tight',  pad_inches = 0)
-savefig('C3S_webpage_logo.png', dpi=150, bbox_inches = 'tight',  pad_inches = 0)
+savefig('CEUAS_network_v2.png', dpi=150, bbox_inches = 'tight',  pad_inches = 0)
 
 
 
