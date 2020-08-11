@@ -4,20 +4,27 @@ according to `In situ <variables> from <period> from <sources>`
 
 previously called: `Comprehensive network for upper-air temperature, relative humidity and wind observations`
 
-The Copernicus Early Upper Air Sub-daily Data set is designed to contain all available upper air data from radiosondes and PILOT balloons prior to 1979. It is organised in station time series of records on significant levels, where they can be on height or pressure levels in the source data sets, and where they are on significant pressure levels in the merged data sets. Main data sources are the NCAR and NCEI upper air data sets as well as data collected at ECMWF during operational assimilation activities. Data collected during the ERA-CLIM and ERA-CLIM2 projects are another important data source. The source data sets are the basis for a merged data set, which is subject to strict quality control in order to choose the best available source in case of duplicates. The merged data set is then homogenised in order to reduce systematic errors, which helps to reduce also the overall observation errors. These are estimated using Desroziers’ method if background and analysis departure information from reanalyses available. The homogenisation method is mainly based on analysing background departure time series from reanalyses, as established in the literature. Users can download the source data, the merged and adjusted merged data, as well as the bias and uncertainty estimates. While data on significant levels are not that convenient to use due to their varying record length, they are uniquely suited for calculating climatologies of e.g. tropopause height, Convective Available Potential Energy or precipitable water. The merged data set is supposed to be the cleanest and most complete upper air data set available for assimilation before 1979 but also for climate research. Data for the period after 1979 are available as well, since they are needed for the used homogenisation method anyway, and can be compared with harmonised upper air data as provided by the C3S 311a Lot3 service. The data content is also available in more integrated form in the companion monthly data set , which contains gridded fields calculated from the station data, which can be directly compared to other gridded data such as reanalyses or satellite products. The user should also be aware of an additional historical radiosonde inter-comparison data set ,which provides unique opportunities to diagnose systematic errors between radiosonde types.
+Main Text:
+
+The **In situ temperature, wind and humidity from 1905 to present from radiosondes** data set contains all available upper air data from radiosondes and pilot balloons prior to 1979 and additionally data from 1979 to present. The data set is organised by stations (e.g. WMO Station 10393, Lindenberg in Germany) and contains observations on standard pressure levels (16, e.g. 10, ..., 300,.., 1000 hPa) as well as significant pressure levels (e.g. at temperature inversions) for standard observing variables such as air temperature, winds and air humidity. Despite the observations, the data set contains bias estimates, radiosonde type information as well as reanalysis departures (e.g. ERA5). The data set provides the most complete and quality-assured station records ready for data assimilation (e.g. before 1979) and climate research. Data from 1979 to present are available, because these are required by the homogenisation and consolidation procedure employed. Two other upper air data sets provide radiosonde observations from 1979 to present: **In situ IGRA radiosoundings baseline network** and **In situ temperature, relative humidity and wind profiles from 2006 to March 2020 from the GRUAN reference network**. Both data sets include different bias estimates and uncertainty estimations only available to the modern observing system. The present data set has been compiled from a number of different sources (NCEI IGRA version 2, NCAR UADB, ECMWF ODB, CHUAN, ERA-CLIM, ERA-CLIM2, more details are given in the documentation) and a quality and consolidation procedure has been applied to remove duplicates and spurious data and combine records to produce long term climate records. Reanalysis departures have been used to estimate observation uncertainty based on Desroziers' method. The current data set is ready for applications developed to look at long term climate change on standard pressure levels or calculated quantities (e.g. tropopause height, convective available potential energy (CAPE),...) from significant level data and provides the users with much needed homogeneity to facilitate research and production of applications. 
 
 More details about the product are given in the Documentation section.
 
 
 
-Key Questions to be answered in this document:
+## to be added in a next version, when these data sets are available
 
-- What is provided (no details about duration, coverage etc, focus on what are the quantities) ?
-- Why is it provided to the users? 
-- What was the input data?
+The data content is also available in more integrated form in the companion monthly data set , which contains gridded fields calculated from the station data, which can be directly compared to other gridded data such as reanalyses or satellite products. The user should also be aware of an additional historical radiosonde inter-comparison data set ,which provides unique opportunities to diagnose systematic errors between radiosonde types.
+
+
+
+## Key Questions to be answered in this document:
+
+- [x] What is provided (no details about duration, coverage etc, focus on what are the quantities) ?
+- [x] What was the input data?
 - How the input data was transformed ?
-- Why is the dataset provided to the users? Main selling points.
-- Relationship with other datasets in the CDS to help comparisons and improve synergies. 
-- Who produce the data?
+- [x] Why is the dataset provided to the users? Main selling points.
+- [x] Relationship with other datasets in the CDS to help comparisons and improve synergies. 
+- [x] Who produce the data?
 - Evolution of the dataset. Future and past.
 

@@ -7,6 +7,8 @@
 ## Required files:
 
 1. `abstract.md`, Summary of the data set
+   1. NAME of the dataset ?
+   2. Add Reference to gridded version and intercomparisons
 2. `dataset.yaml` Data set name, license, ...
 3. `overview.png` Main figure
 4. `variables.yaml` Definition of the variables and description
