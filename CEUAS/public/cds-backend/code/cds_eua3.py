@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 __version__ = '0.3'
 __author__ = 'MB'
 __status__ = 'dev'
@@ -16,7 +17,7 @@ Updated: %s
 
 Context
 - This class CDMDataset with process_flat will replace the hug cds_eua2 function sets
-- This class CDMDataset will be used in adjust and quality control 
+- This class CDMDataset will be used in adjust and quality control
 
 Performance
 - HDF5 Netcdf files should be chunked or sorted by variable and a variable lie=ke recordindex , e.g. varindex could
@@ -227,7 +228,7 @@ def andisin(mask, x, v):
 @njit(cache=True)
 def tohourday(hours, days, datetimes, day_shift):
     """ convert datetimes to hours, days and day_shift
-    
+
     Args:
         hours: hours from datetimes
         days: days from datetimes
@@ -717,6 +718,11 @@ def seconds_to_datetime(seconds, ref='1900-01-01'):
     return pd.to_datetime(seconds, unit='s', origin=ref).values
 
 
+def datetime_to_seconds(dates, ref='1900-01-01T00:00:00'):
+    """ from datetime64 to seconds since 1900-01-01 00:00:00"""
+    return ((dates - np.datetime64(ref)) / np.timedelta64(1, 's')).astype(np.int64)
+
+
 # too slow
 # @np.vectorize
 # def seconds_to_datetime(seconds, ref=datetime(1900, 1, 1)):
@@ -871,7 +877,7 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables:
 ###############################################################################
 
 
-def stack_cube_by_time(data: xr.DataArray, times: tuple =(0, 12), span:int=3, freq:str='12h', dim:str = 'time'):
+def stack_cube_by_time(data: xr.DataArray, times: tuple = (0, 12), span: int = 3, freq: str = '12h', dim: str = 'time'):
     """ Stack time as a new dimension
 
     Args:
@@ -885,7 +891,16 @@ def stack_cube_by_time(data: xr.DataArray, times: tuple =(0, 12), span:int=3, fr
         xr.DataArray : (time x date x plev)
     """
     data = align_datetime(data, times=times, span=span, freq=freq)
-    data = data.sel(**{dim: (data[dim].dt.hour.isin(times) & (data[dim].dt.minute == 0))})
+    # problems can arrive here, because of minutes, seconds and nano seconds differences
+    # the standard times do not have minutes, seconds, nano seconds
+    if False:
+        sec = datetime_to_seconds(data[dim].values)
+        fullhour = (sec % 3600) == 0
+        hour = (sec + 3599) // 3600 % 24
+        # data = data.sel(**{dim: (data[dim].dt.hour.isin(times) & fullhour)})
+        data = data.sel(**{dim: (np.in1d(hour, times) & fullhour)})
+
+    data = data.sel(**{dim: (data[dim].dt.hour.isin(times) & (data[dim].dt.minute == 0) & (data[dim].dt.second == 0))})
     data = dict(data.groupby(dim + '.hour'))
     for ikey in data.keys():
         data[ikey] = data[ikey].assign_coords(
@@ -1013,6 +1028,7 @@ def align_datetime(data, dim: str = 'time', plev: str = 'plev', times: tuple = (
     #
     # delay
     #
+    # todo preserve old timestamp
     nn = (resolution > 0).sum()
     nx = (~idx_std).sum()
     data['hours'] = (dim, DatetimeIndex(dates).hour.astype(int))  # new coordinate for delays
@@ -1100,9 +1116,86 @@ def to_standard_launch_time(itime: np.datetime64, span: int = 3, debug: bool = F
                 return rx.to_datetime64()
 
 
+def level_interpolation(idata: xr.DataArray, dim: str = 'time', method: str = 'linear', fill_value=None,
+                        extrapolate: bool = False, **kwargs) -> xr.DataArray:
+    """ Interpolate CDM variable per dimension (time, plev)
+
+    Args:
+        idata: Inputdata
+        dim: coordinate of input, e.g. time, plev
+        method: interpolation method, e.g. linear, log-linear for plev
+        fill_value: Interpolation fill_value: 'extrapolate', None, np.nan
+        extrapolate: fill missing values [False]
+
+    Returns:
+        xr.DataArray : Interpolate data, same as input
+
+    Examples:
+        Interpolate adjustments per level backwards and forward in time
+        >>> data['hur_q'].groupby('plev').apply(level_interpolation)
+
+        Interpolate adjustments per profile up and down in pressure using a log-linear interpolation
+        >>> data['hur_q'].groupby('time').apply(level_interpolation, dim='plev', method='log-linear')
+
+        Interpolate relative humidity per profile up and down in pressure using a log-linear interpolation, but no
+        extrapolation
+        >>> data['hur'].groupby('time').apply(level_interpolation, dim='plev', method='log-linear', extrapolate=False)
+
+    """
+    if not isinstance(idata, xr.DataArray):
+        raise ValueError("Requires a DataArray, not ", type(idata))
+    #
+    # maybe check if dimensions are present
+    #
+    if idata.isnull().all().item():
+        return idata
+
+    idim = idata.dims[0]  # first dimension
+    obs = idata[idim].values.copy()  # copy Dimension values
+    #
+    # swap first to interpolation dimension (dim)
+    #
+    idata = idata.swap_dims({idim: dim})
+    #
+    # Find duplicated values /not allowed in interpolation
+    #
+    itx = idata[dim].to_index()
+    ittx = itx.duplicated(keep=False) & ~np.isfinite(idata.values)  # BUG duplicates in dim & not a value -> skip
+    ittx = np.where(~np.isfinite(itx), True, ittx)  # BUG missing values can be in the coordinate (e.g. plev)
+    #
+    # some duplicates might remain
+    #
+    if itx[~ittx].duplicated().any():
+        ittx[~ittx] = itx[~ittx].duplicated()  # duplicates with same values / should not happen
+
+    # message(itx.size, ittx.sum(), mname='DUPLICATES', **update_kw('level', 1, **kwargs))
+    # logger.debug('Int %s %d > %d', dim, itx.size, ittx.sum())
+    if method == 'log-linear':
+        #
+        # Pressure levels to log
+        #
+        idata.values[~ittx] = idata[~ittx] \
+            .assign_coords({'plev': np.log(idata['plev'].values[~ittx])}) \
+            .interpolate_na(dim, method='linear', fill_value=fill_value) \
+            .values
+    else:
+        idata[~ittx] = idata[~ittx].interpolate_na(dim, method=method, fill_value=fill_value)
+    #
+    # Extrapolate in dimension (backward and forward) or (up and down)
+    #
+    if extrapolate:
+        idata = idata.bfill(dim).ffill(dim)
+    #
+    # revert to initial dimension
+    #
+    idata[idim] = (dim, obs)  # add coordinate / dimension
+    # todo figure out if drop(obs) is required
+    return idata.swap_dims({dim: idim}).drop('obs')  # swap dimension back, remove obs coordinate
+
+
 ###############################################################################
 #
-# CDM Backend / Frontend Classes
+# CDM Backend / Frontend Classesx
 # 1. CDMVariable
 #       * origin -> Link to H5PY file location
 #       * Attributes, e.g.: shape : shape of H5PY Variable
@@ -1368,7 +1461,7 @@ class CDMDataset:
         self.file.close()
         logger.debug("[CLOSED] %s", self.filename)
 
-    def reopen(self, mode: str = 'r', tmpdir='~/tmp', **kwargs):
+    def reopen(self, mode: str = 'r', tmpdir='~/tmp', write_to_filename: str = None, **kwargs):
         """ Reopen the HDF5 file with different mode
 
         Args:
@@ -1379,25 +1472,30 @@ class CDMDataset:
         import os
         import shutil
         self.file.close()
-        try:
+        if write_to_filename is not None:
+            # cp file to that name and open with mode
+            shutil.copy(self.filename, write_to_filename)
+            logger.warning("reopen [%s] Copy file to %s", mode, write_to_filename)
+            self.filename = write_to_filename
             self.file = h5py.File(self.filename, mode=mode, **kwargs)
-        except OSError:
-            if '~' in tmpdir:
-                tmpdir = os.path.expanduser(tmpdir)
-
-            if '$' in tmpdir:
-                tmpdir = os.path.expandvars(tmpdir)
-
-            os.makedirs(tmpdir, exist_ok=True)
-            if os.path.isdir(tmpdir):
-                shutil.copy(self.filename, '{}/{}'.format(tmpdir, self.name))
-                # p = os.popen('cp -f {} {}/{}'.format(self.filename, tmpdir, self.name))
-                # p.wait()
-                logger.warning("reopen [%s] Copy file to %s/%s", mode, tmpdir, self.name)
-                self.filename = '{}/{}'.format(tmpdir, self.name)
+        else:
+            try:
                 self.file = h5py.File(self.filename, mode=mode, **kwargs)
-            else:
-                raise OSError('reopen with', mode, self.filename)
+            except OSError:
+                if '~' in tmpdir:
+                    tmpdir = os.path.expanduser(tmpdir)
+
+                if '$' in tmpdir:
+                    tmpdir = os.path.expandvars(tmpdir)
+
+                os.makedirs(tmpdir, exist_ok=True)
+                if os.path.isdir(tmpdir):
+                    shutil.copy(self.filename, '{}/{}'.format(tmpdir, self.name))
+                    logger.warning("reopen [%s] Copy file to %s/%s", mode, tmpdir, self.name)
+                    self.filename = '{}/{}'.format(tmpdir, self.name)
+                    self.file = h5py.File(self.filename, mode=mode, **kwargs)
+                else:
+                    raise OSError('reopen with', mode, self.filename)
         logger.debug("reopen %s [%s]", self.filename, mode)
         self.inquire()  # Need to update links
 
@@ -2126,30 +2224,38 @@ class CDMDataset:
         Returns:
 
         """
-        if not self.hasgroups:
-            raise RuntimeError('Only for CDM Backend Files')
-
         if isinstance(groups, str):
-            groups = [groups]
+            if groups == '/':
+                groups = None
+            else:
+                groups = [groups]
 
         if isinstance(variables, str):
             variables = [variables]
 
         if date is not None:
+            if isinstance(date, (str, int)):
+                date = [date]
+
             if date_is_index:
-                date = slice(date, date + 1)
+                date = slice(date[0], date[-1] + 1)
             else:
-                date = self.make_datetime_slice(dates=[date, date], date_time_name=date_time_name)
+                date = self.make_datetime_slice(dates=[date[0], date[-1]], date_time_name=date_time_name)
         else:
             date = slice(None)
 
         logger.info("Reading Profile on %s", str(date))
         data = {}
-        for igroup in groups:
+        if groups is not None:
+            for igroup in groups:
+                for ivar in variables:
+                    if ivar in self[igroup].keys():
+                        data[ivar] = self[igroup][ivar][date]
+        else:
             for ivar in variables:
-                if ivar in self[igroup].keys():
-                    data[ivar] = self[igroup][ivar][date]
-
+                if ivar in self.groups:
+                    data[ivar] = self[ivar][date]
+        
         logger.debug('Read variables: %s', str(data.keys()))
         for ivar in data.keys():
             if len(data[ivar].shape) > 1:
@@ -2246,6 +2352,7 @@ class CDMDataset:
                                                         name=ivarnum['bkp_var'],
                                                         attrs=v_attrs,
                                                         )
+                # todo add attributes for coordinates
         else:
             for ivar in variables:
                 # Read Attributes Variable
@@ -2262,7 +2369,7 @@ class CDMDataset:
                 logger.info('[CUBE] %s %s', ivar, iobs.shape)
                 # Convert to Xarray [time x plev]
                 data[ivar] = xr.DataArray(iobs,
-                                          coords=(seconds_to_datetime(secarray[itime]), std_plevs),
+                                          coords=(seconds_to_datetime(secarray[itime]), plevs),
                                           dims=('time', 'plev'),
                                           name=ivar,
                                           attrs=v_attrs)
@@ -2288,11 +2395,14 @@ class CDMDataset:
                             group: str = None,
                             variable: str = 'observation_value',
                             dimgroup: str = 'observations_table',
-                            interpolation: bool = False,
-                            time: str = 'time',
-                            pressure: str = 'plev',
+                            data_time: str = 'time',
+                            data_plevs: str = 'plev',
                             force_replace: bool = False,
                             attributes: dict = None,
+                            interpolate: bool = False,
+                            interpolate_datetime: bool = False,
+                            extrapolate_time: bool = True,
+                            extrapolate_plevs:bool = False,
                             **kwargs):
         """ Write a DataCube or a Table (DataArray, DataFrame) with Multiindex to CDMBackend file
 
@@ -2304,18 +2414,10 @@ class CDMDataset:
             group: new Group
             variable: Variable Name
             dimgroup: Variable group
-            interpolation: Use interpolation for other dates and pressure levels ?
-            time: time dimension input name
-            pressure: pressure dimension input name
+            data_time: time dimension input name
+            data_plevs: pressure dimension input name
             force_replace: overwrite string array due to shape missmatch?
-
-        Optional Keywords:
-            date_time_name:
-            z_coordinate_name:
-            observed_variable_name:
-            dimgroup:
-
-        Returns:
+            attributes: add Attributes to HDF variable
 
         Examples:
             Write an adjusted temperature to a CDM Backend file within a new group mytests that is align
@@ -2339,13 +2441,13 @@ class CDMDataset:
         #  CUBE (time x plev)
         #
         if cube is not None:
-            if time not in cube.dims:
-                raise ValueError('Datetime dimension not found', time)
+            if data_time not in cube.dims:
+                raise ValueError('Datetime dimension not found', data_time)
 
-            if pressure not in cube.dims:
-                raise ValueError('Z coordinate not found', pressure)
+            if data_plevs not in cube.dims:
+                raise ValueError('Z coordinate not found', data_plevs)
 
-            data = cube.stack(obs=(time, pressure)).dropna('obs')  # need to remove NaN
+            data = cube.stack(obs=(data_time, data_plevs)).dropna('obs')  # need to remove NaN
         #
         # Ragged Array (index (time x plev))
         #
@@ -2366,14 +2468,14 @@ class CDMDataset:
         # Get data coordinate information
         #
         try:
-            in_dates = data[time].values  # Probably np.datetime64
+            in_dates = data[data_time].values  # Probably np.datetime64
         except:
-            raise ValueError('Datetime dimension not found', time)
+            raise ValueError('Datetime dimension not found', data_time)
 
         try:
-            in_plevs = data[pressure].values.astype(np.int32)
+            in_plevs = data[data_plevs].values.astype(np.int32)
         except:
-            raise ValueError('Z coordinate not found', pressure)
+            raise ValueError('Z coordinate not found', data_plevs)
         #
         # Make datetime slice
         #
@@ -2392,8 +2494,8 @@ class CDMDataset:
         # Read coordinate informations
         # - trange      - Make a time-slice
         # - mask        - a observed variable subset
-        # - f_dates     - datetime in s with mask applied
-        # - f_plevs     - p-levels with mask applied
+        # - f_dates     - datetime[mask] in s
+        # - f_plevs     - p-levels[mask]
         trange, mask, f_dates, f_plevs = self.read_observed_variable(varnum,
                                                                      dates=slice_dates,
                                                                      return_index=True,
@@ -2415,21 +2517,50 @@ class CDMDataset:
         #
         # Find reverse index for writing
         #
-        if interpolation:
-            # mask should be everything -> because data should be the size of the whole file !?
-            pass
+        match_index = np.full(f_dates.shape, -1, dtype=np.int32)  # Matching indices
+        # Loop input and file dates/pressures -> Matches
+        reverse_index(match_index, f_dates, f_plevs, in_dates, in_plevs)
+        logic = (match_index > -1)
+        if logic.sum() != in_dates.shape[0]:
+            missing = in_dates[~np.in1d(in_dates, in_dates[match_index[logic]])]
+            logger.warning('Not all input dates are found %s', missing.shape)
+            logger.debug('Missing dates: %s', str(missing))
         else:
-            # Match Input datetime and p-levs with the ones in the file
-            match_index = np.full(f_dates.shape, -1, dtype=np.int32)  # Matching indices
-            # Loop input and file dates/pressures -> Matches
-            reverse_index(match_index, f_dates, f_plevs, in_dates, in_plevs)
-            logic = (match_index > -1)
-            if logic.sum() != in_dates.shape[0]:
-                missing = in_dates[~np.in1d(in_dates, in_dates[match_index[logic]])]
-                logger.warning('Not all input dates are found %s', missing.shape)
-                logger.debug('Missing dates: %s', str(missing))
-            else:
-                logger.info('All dates found')
+            logger.info('All dates found')
+
+        values = data.values
+        if interpolate and not np.issubdtype(values.dtype, str):
+            mask = np.where(mask)[0]  # every observed value
+            # create array [trange] -> all levels
+            fvalues = np.full(f_dates.shape, np.nan, dtype=values.dtype)  # not compatible with interpolation
+            # fill in data that is now sorted like in the file
+            fvalues[logic] = values[match_index[logic]]
+            logger.info('Interpolation: %d < %d', f_dates.shape[0], np.isfinite(values).sum())
+            # interpolate data to missing parts
+            farray = xr.DataArray(fvalues, dims=('obs'), coords={data_time: ('obs', f_dates), data_plevs: ('obs', f_plevs)})
+            if interpolate_datetime:
+                #
+                # Interpolate back/forward in time
+                # extrapolate=True
+                #
+                subset = farray[data_plevs].isin(std_plevels)
+                farray[subset] = farray[subset].groupby(data_plevs).apply(level_interpolation,
+                                                                          dim=data_time,
+                                                                          extrapolate=extrapolate_time)
+            #
+            # Interpolate up/down levels
+            #
+            farray = farray.groupby(data_time).apply(level_interpolation, dim=data_plevs, method='log-linear',
+                                                     extrapolate=extrapolate_plevs)
+            values = farray.values
+            logger.info('Post-Interpolation: %d < %d', f_dates.shape[0], np.isfinite(values).sum())
+            #
+            # logic / match_index are useless now (replace with dummys)
+            #
+            logic = np.ones(values.shape[0], dtype=np.bool)
+            match_index = np.arange(values.shape[0], dtype=np.int)
+
+        else:
             mask = np.where(mask)[0][logic]
         #
         # Get Group / New Group
@@ -2445,8 +2576,8 @@ class CDMDataset:
             #
             # String Arrays are different
             #
-            if np.issubdtype(data.values.dtype, str):
-                n = len(data.values[0])
+            if np.issubdtype(values.dtype, str):
+                n = len(values[0])
                 m = gid[name].shape[0]
                 # Shapes of file and input do not match?
                 if gid[name].shape[1] != n:
@@ -2455,7 +2586,7 @@ class CDMDataset:
                         # Replace existing variable
                         #
                         logger.info('Removing %s/%s (%s) with (%d, %d)', group, name, gid[name].shape,
-                                    data.values.shape, n)
+                                    values.shape, n)
                         gid.create_dataset_like('temp123',
                                                 self.file[group][name],
                                                 dtype='S{}'.format(n),
@@ -2482,7 +2613,10 @@ class CDMDataset:
                         #
                         # Attach dimensions from file
                         #
-                        idim = self.file[dimgroup][variable].dims[0].keys()[0]
+                        try:
+                            idim = self.file[dimgroup][variable].dims[0].keys()[0]
+                        except:
+                            idim = ''
                         idim = idim if idim != '' else 'index'
                         if idim not in gid.keys():
                             gid[idim] = self.file[dimgroup][idim]
@@ -2492,24 +2626,24 @@ class CDMDataset:
                         assert gid[name].shape[1] == n, 'Shapes do not match, force_replace=True to overwrite '
                     self.file.flush()  # write changes to file
                 writeme = gid[name][()]  # get all data
-                chardata = data.values.astype('S{}'.format(n)).view('S1').reshape((m, n))
+                chardata = values.astype('S{}'.format(n)).view('S1').reshape((m, n))
                 writeme[trange, :][mask, :] = chardata[match_index[logic], :]  # fill Array
             else:
                 #
                 # load exisiting data
                 #
                 writeme = self.load_variable_from_file(name, group=group, return_data=True)[0]
-                writeme[trange][mask] = data.values[match_index[logic]]  # Write the data into the file
+                writeme[trange][mask] = values[match_index[logic]]  # Write the data into the file
         else:
             #
             # create a new dataset
             #
             logger.info('Creating Dataset %s (%s/%s, %s)', name, dimgroup, variable,
                         self.file[dimgroup][variable].shape)
-            if np.issubdtype(data.values.dtype, str):
-                n = len(data.values[0])
-                m = data.values.shape[0]
-                chararray = data.values.astype('S{}'.format(n)).view('S1').reshape((m, n))
+            if np.issubdtype(values.dtype, str):
+                n = len(values[0])
+                m = values.shape[0]
+                chararray = values.astype('S{}'.format(n)).view('S1').reshape((m, n))
                 gid.create_dataset(name,
                                    dtype='S{}'.format(n),
                                    shape=(self.file[dimgroup][variable].shape[0], n),
@@ -2530,7 +2664,7 @@ class CDMDataset:
                 #
                 # Different fillvalues for float, integer
                 #
-                if np.issubdtype(data.values.dtype, int):
+                if np.issubdtype(values.dtype, int):
                     fillvalue = np.int32(-2147483648)
                 else:
                     fillvalue = np.float32(np.nan)
@@ -2541,11 +2675,14 @@ class CDMDataset:
                 writeme = np.full(self.file[dimgroup][variable].shape,
                                   fillvalue,
                                   dtype=self.file[dimgroup][variable].dtype)
-                writeme[trange][mask] = data.values[match_index[logic]]  # Write the data into the file
+                writeme[trange][mask] = values[match_index[logic]]  # Write the data into the file
             #
             # Attach dimensions from file
             #
-            idim = self.file[dimgroup][variable].dims[0].keys()[0]
+            try:
+                idim = self.file[dimgroup][variable].dims[0].keys()[0]
+            except:
+                idim = ''
             idim = idim if idim != '' else 'index'
             if idim not in gid.keys():
                 gid[idim] = self.file[dimgroup][idim]
@@ -2555,7 +2692,7 @@ class CDMDataset:
         #
         # Write and finish
         #
-        gid[name][()] = writeme                 # Write the new data
+        gid[name][()] = writeme  # Write the new data
         #
         # Write Attributes
         #
@@ -2565,142 +2702,22 @@ class CDMDataset:
                     gid[name].attrs[ikey] = np.string_(ival)
                 else:
                     gid[name].attrs[ikey] = ival
-        self.file.flush()                       # Put changes into the file
-        self.inquire()                          # update Groups and variable lists
+        self.file.flush()  # Put changes into the file
+        self.inquire()  # update Groups and variable lists
         self[group][name].update(data=writeme)  # update class in memory
         logger.info('Finsihed writing %s to %s', name, self.name)
-
-    def write_group(self, name: str, group: str,
-                    cube: xr.DataArray = None,
-                    ragged=None,
-                    time: str = 'time',
-                    pressure: str = 'plev',
-                    force_replace: bool = False,
-                    **kwargs):
-        """ Write a DataCube or a Table (DataArray, DataFrame) with Multiindex as a new group
-
-        Args:
-            name:
-            cube:
-            ragged:
-            group:
-            time:
-            pressure:
-            force_replace:
-            **kwargs:
-
-        Examples:
-            >>>
-
-        """
-        if cube is None and ragged is None:
-            raise ValueError('Requires a Cube or a ragged Array')
-
-        if cube is not None:
-            #  CUBE (time x plev)
-            if time not in cube.dims:
-                raise ValueError('Datetime dimension not found', time)
-
-            if pressure not in cube.dims:
-                raise ValueError('Z coordinate not found', pressure)
-
-            data = cube.stack(obs=(time, pressure)).dropna('obs')  # need to remove NaN
-
-        if ragged is not None:
-            if isinstance(ragged, pd.DataFrame):
-                ragged = ragged.to_xarray()
-
-            # todo check this, assumes this is a Multi-Index Table, Xarray
-            data = ragged  # is allready a table
-            idim = data.dims[0]
-            data = data.rename(**{idim: 'obs'})  # make sure the name is fixed
-
-        if not data.indexes['obs'].is_monotonic:
-            logger.warning('Data not sorted !!!')
-
-        try:
-            in_dates = data[time].values  # Probably np.datetime64
-        except:
-            raise ValueError('Datetime dimension not found', time)
-
-        # times ? -> dates or ???
-        times = None
-
-        try:
-            in_plevs = data[pressure].values.astype(np.int32)
-        except:
-            raise ValueError('Z coordinate not found', pressure)
-
-        slice_dates = [in_dates[0], in_dates[-1]]  # for trange (slice)
-        if isinstance(in_dates[0], np.datetime64):
-            # to seconds since
-            in_dates = ((in_dates - np.datetime64('1900-01-01T00:00:00')) / np.timedelta64(1, 's')).astype(np.int64)
-
-        if 'r' == self.file.mode:
-            self.reopen(mode='r+', tmpdir=kwargs.get('tmpdir', '~/tmp'))
-        else:
-            logger.debug('File mode: [%s] %s', self.file.mode, self.name)
-
-        if group not in self.groups:
-            gid = self.file.create_group(group)  # new group
-        else:
-            gid = self.file[group]  # get group from file
-
-        if name in gid.keys():
-            if not force_replace:
-                raise RuntimeError('Variable exists %s in %s | %s', name, group, self.name)
-            logger.warning('Overwriting %s in %s | %s', name, group, self.name)
-            del gid[name]
-        #
-        # Coordinates ?
-        #
-        raise NotImplementedError('Unfinished yet')
-        #
-        # Data
-        #
-        if np.issubdtype(data.values.dtype, str):
-            fillvalue = ''
-            n = len(data.values[0])
-            m = data.values.shape[0]
-            chararray = data.values.astype('S{}'.format(n)).view('S1').reshape((m, n))
-            gid.create_dataset(name,
-                               dtype='S{}'.format(n),
-                               shape=(m, n),
-                               data=chararray,
-                               chunks=True,
-                               fillvalue=fillvalue,
-                               compression='gzip')
-            # Need to make a dimension for the Strings
-            sname = 'string{}'.format(n)
-            if sname not in gid.keys():
-                gid.create_dataset(sname, data=np.zeros(n, dtype='S1'), chunks=True)
-                gid[sname].attrs['NAME'] = np.string_('This is a netCDF dimension but not a netCDF variable.')
-                gid[sname].make_scale(sname)
-        else:
-            if np.issubdtype(data.values.dtype, int):
-                fillvalue = np.int32(-2147483648)
-            else:
-                fillvalue = np.float32(np.nan)
-            gid.create_dataset(name,
-                               dtype=data.values.dtype,
-                               shape=data.values.shape,
-                               data=data.values,
-                               chunks=True,
-                               fillvalue=fillvalue,
-                               compression='gzip')  # Create a new dataset
-        self.file.flush()
-        self.inquire()
-        self[group][name].update(data=data.values)
-        logger.info('Finsihed writing %s/%s to %s', group, name, self.name)
 
     def write_variable(self, name: str,
                        cube: xr.DataArray = None,
                        ragged=None,
                        data_time: str = 'time',
                        data_plevs: str = 'plev',
-                       interpolation: bool = False,
                        force_replace: bool = False,
                        attributes: dict = None,
+                       interpolate: bool = False,
+                       interpolate_datetime: bool = False,
+                       extrapolate_time:bool = True,
+                       extrapolate_plevs:bool = False,
                        **kwargs):
         """ Write a DataCube or a Table (DataArray, DataFrame) with Multiindex to CDM Frontend
 
@@ -2710,7 +2727,6 @@ class CDMDataset:
             ragged: Table input data
             data_time: time dimension input name
             data_plevs: pressure dimension input name
-            interpolation: Use interpolation for other dates and pressure levels ?
             force_replace: overwrite string array
             attributes: data attributes to be written
 
@@ -2721,7 +2737,7 @@ class CDMDataset:
         Examples:
             Write an adjusted temperature to a CDM Frontend file. data is a ragged table
             >>> data = self.read_variable('ta')
-            >>> write_data('temperature_adjust', ragged=data, variable='ta')
+            >>> write_variable('temperature_adjust', ragged=data, variable='ta')
         """
         if self.hasgroups:
             raise RuntimeError('Only CDS frontend files')
@@ -2807,29 +2823,59 @@ class CDMDataset:
         #
         # Find reverse index for writing
         #
-        if interpolation:
-            # mask should be everything -> because data should be the size of the whole file !?
-            pass
+        # Match Input datetime and p-levs with the ones in the file
+        match_index = np.full(f_dates.shape, -1, dtype=np.int32)  # Matching indices
+        # Loop input and file dates/pressures -> Matches
+        reverse_index(match_index, f_dates, f_plevs, in_dates, in_plevs)
+        logic = (match_index > -1)
+        if logic.sum() != in_dates.shape[0]:
+            missing = in_dates[~np.in1d(in_dates, in_dates[match_index[logic]])]
+            logger.warning('Not all input dates are found %s', missing.shape)
+            logger.debug('Missing dates: %s', str(missing))
         else:
-            # Match Input datetime and p-levs with the ones in the file
-            match_index = np.full(f_dates.shape, -1, dtype=np.int32)  # Matching indices
-            # Loop input and file dates/pressures -> Matches
-            reverse_index(match_index, f_dates, f_plevs, in_dates, in_plevs)
-            logic = (match_index > -1)
-            if logic.sum() != in_dates.shape[0]:
-                missing = in_dates[~np.in1d(in_dates, in_dates[match_index[logic]])]
-                logger.warning('Not all input dates are found %s', missing.shape)
-                logger.debug('Missing dates: %s', str(missing))
-            else:
-                logger.info('All dates found')
-            mask = np.where(logic)[0]
+            logger.info('All dates found')
 
+        values = data.values
+        if interpolate and not np.issubdtype(values.dtype, str):
+            mask = np.arange(trange.start, trange.stop, dtype=np.int)
+            # create array of file dimensions
+            fvalues = np.full(f_dates.shape, np.nan, dtype=values.dtype)  # not compatible with interpolation
+            # fill in data
+            fvalues[logic] = values[match_index[logic]]
+            logger.info('Interpolation: %d < %d', f_dates.shape[0], np.isfinite(values).sum())
+            # interpolate data to missing parts
+            farray = xr.DataArray(fvalues, dims=('obs'), coords={data_time: ('obs', f_dates), data_plevs: ('obs', f_plevs)})
+            if interpolate_datetime:
+                #
+                # Interpolate back/forward in time
+                # extrapolate=True
+                #
+                subset = farray[data_plevs].isin(std_plevels)
+                farray[subset] = farray[subset].groupby(data_plevs).apply(level_interpolation,
+                                                                          dim=data_time,
+                                                                          extrapolate=extrapolate_time)
+            #
+            # Interpolate up/down levels
+            #
+            farray = farray.groupby(data_time).apply(level_interpolation, 
+                                                     dim=data_plevs, 
+                                                     method='log-linear',
+                                                     extrapolate=extrapolate_plevs)
+            values = farray.values
+            logger.info('Post-Interpolation: %d < %d', f_dates.shape[0], np.isfinite(values).sum())
+            #
+            # logic / match_index are useless now (replace with dummys)
+            #
+            logic = np.ones(values.shape[0], dtype=np.bool)
+            match_index = np.arange(values.shape[0], dtype=np.int)
+        else:
+            mask = np.where(logic)[0]
         #
         # String Arrays are different
         #
-        if np.issubdtype(data.values.dtype, str):
-            n = len(data.values[0])
-            m = data.values.shape[0]
+        if np.issubdtype(values.dtype, str):
+            n = len(values[0])
+            m = values.shape[0]
             if name in self.groups:
                 # shapes of file and input do not match?
                 if self[name].shape[1] != n:
@@ -2872,23 +2918,23 @@ class CDMDataset:
                     else:
                         assert self[name].shape[1] == n, 'Shapes do not match, force_replace=True to ' \
                                                          'overwrite '
-                    self.file.flush()   # write changes to file
+                    self.file.flush()  # write changes to file
                 writeme = self.file[name][()]  # get all data
-                chardata = data.values.astype('S{}'.format(n)).view('S1').reshape((m, n))
+                chardata = values.astype('S{}'.format(n)).view('S1').reshape((m, n))
                 # writeme = np.full((self[name].shape[0], n), '', dtype='S1')
-                writeme[trange, :][mask, :] = chardata[match_index[logic], :]  # fill Array
+                writeme[mask, :] = chardata[match_index[logic], :]  # fill Array
             else:
                 #
                 # create a new dataset
                 #
-                chararray = data.values.astype('S{}'.format(n)).view('S1').reshape((m, n))
+                chararray = values.astype('S{}'.format(n)).view('S1').reshape((m, n))
                 self.file.create_dataset(name,
                                          dtype='S{}'.format(n),
                                          shape=(f_dates.shape[0], n),
                                          chunks=True,
                                          compression='gzip')
                 writeme = np.zeros((f_dates.shape[0], n), dtype='S1')
-                writeme[trange, :][mask, :] = chararray[match_index[logic], :]  # fill Array
+                writeme[mask, :] = chararray[match_index[logic], :]  # fill Array
                 #
                 # String dimensionwith with size (n)
                 #
@@ -2914,7 +2960,7 @@ class CDMDataset:
             #
             # Different fillvalues for float, integer
             #
-            if np.issubdtype(data.values.dtype, int):
+            if np.issubdtype(values.dtype, int):
                 fillvalue = np.int32(-2147483648)
             else:
                 fillvalue = np.float32(np.nan)
@@ -2929,9 +2975,9 @@ class CDMDataset:
                 #
                 # create a new dataset
                 #
-                logger.info('Creating Dataset %s (%s)', name, data.values.shape)
+                logger.info('Creating Dataset %s (%s)', name, values.shape)
                 self.file.create_dataset(name,
-                                         dtype=data.values.dtype,
+                                         dtype=values.dtype,
                                          shape=f_dates.shape,
                                          chunks=True,
                                          fillvalue=fillvalue,
@@ -2939,7 +2985,10 @@ class CDMDataset:
                 #
                 # Attach dimensions from file
                 #
-                idim = self.file[name].dims[0].keys()[0]
+                try:
+                    idim = self.file[name].dims[0].keys()[0]
+                except:
+                    idim = ''
                 idim = idim if idim != '' else 'obs'
                 if idim not in self.file.keys():
                     self.file[idim] = self.file[idim]
@@ -2947,9 +2996,9 @@ class CDMDataset:
                 self.file[name].dims[0].attach_scale(self.file[idim])
                 writeme = np.full(f_dates.shape,
                                   fillvalue,
-                                  dtype=data.values.dtype)
+                                  dtype=values.dtype)
 
-            writeme[trange][mask] = data.values[match_index[logic]]  # Write the data
+            writeme[mask] = values[match_index[logic]]  # Write the data
         #
         # Write and finish
         #
@@ -2963,9 +3012,9 @@ class CDMDataset:
                     self.file[name].attrs[ikey] = np.string_(ival)
                 else:
                     self.file[name].attrs[ikey] = ival
-        self.file.flush()                   # Put changes into the file
-        self.inquire()                      # update Groups and variable lists
-        self[name].update(data=writeme)     # update class in memory
+        self.file.flush()  # Put changes into the file
+        self.inquire()  # update Groups and variable lists
+        self[name].update(data=writeme)  # update class in memory
         logger.info('Finsihed writing %s to %s', name, self.name)
 
     def report_quality(self, filename: str = None):
@@ -3087,21 +3136,21 @@ Speed test of h5py fancy indexing:
 
 tmp = CDMDataset('01001')
 
-%%time  
-    ...: idx = np.where(tmp.observations_table.observed_variable[()]==85) 
-    ...: tmp.observations_table.observation_value[()][idx], tmp.observations_table.date_time[()][idx], tmp.observations_table.z_coordinate[()][idx] 
-    ...:  
-    ...:                                                                                                                                                                         
+%%time
+    ...: idx = np.where(tmp.observations_table.observed_variable[()]==85)
+    ...: tmp.observations_table.observation_value[()][idx], tmp.observations_table.date_time[()][idx], tmp.observations_table.z_coordinate[()][idx]
+    ...:
+    ...:
 CPU times: user 18.8 s, sys: 5.17 s, total: 24 s
 Wall time: 24 s
 
 
 # insane indexing time
 
-%%time  
-    ...: idx = np.where(tmp.observations_table.observed_variable[()]==85) 
-    ...: tmp.observations_table.observation_value[idx], tmp.observations_table.date_time[idx], tmp.observations_table.z_coordinate[idx] 
-    ...:  
-    ...:   
+%%time
+    ...: idx = np.where(tmp.observations_table.observed_variable[()]==85)
+    ...: tmp.observations_table.observation_value[idx], tmp.observations_table.date_time[idx], tmp.observations_table.z_coordinate[idx]
+    ...:
+    ...:
 
 """
