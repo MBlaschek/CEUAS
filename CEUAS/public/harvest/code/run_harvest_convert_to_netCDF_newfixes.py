@@ -45,7 +45,7 @@ def chunk_it(seq, num):
        return out
 
 
-out_dir = '/raid60/scratch/federico/TEST_MAY_ERA5_third'
+out_dir = '/raid60/scratch/federico/FIX_LATEST_IDS'
 
 processes = 10 # number of process PER DATASET 
 
@@ -53,15 +53,16 @@ processes = 10 # number of process PER DATASET
 
 """ Select the dataset to be processed """ 
 datasets = ['era5_1', 'era5_2', 'era5_3188', 'era5_1759', 'era5_1761', 'ncar', 'igra2', 'bufr' ]
-datasets = ['igra2']
+
+datasets = ['ncar']
 
 
 
 """ Check processed files """
-check_missing = True
-#processed_dir = '/raid60/scratch/federico/TEST_MAY_ERA5/era5_1761/'
-processed_base = '/raid60/scratch/federico/TEST_MAY_ERA5/'
+check_missing = False
+#processed_base = '/raid60/scratch/federico/TEST_MAY_ERA5/'
 
+REDO = True
 
 def rerun_list(f_list, processed_dir = '', split = '' , input_dir = ''):
        
@@ -82,12 +83,16 @@ def rerun_list(f_list, processed_dir = '', split = '' , input_dir = ''):
 
 
 for d in datasets:
-       processed_dir = '/raid60/scratch/federico/TEST_MAY_ERA5/' + d 
+       processed_base = '/raid60/scratch/federico/TEST_MAY_ERA5/' + d 
        print ('DATASET IS', d )
        #files_list = [ db[d]['dbpath'] + '/' + f for f in os.listdir(db[d]['dbpath']) if os.path.isfile( db[d]['dbpath']+'/'+f ) ] # extracting the files list stores in the database path                   
        if d != 'era5_1':
               files_list = [ db[d]['dbpath'] + '/' + f for f in os.listdir(db[d]['dbpath']) if os.path.isfile( db[d]['dbpath']+'/'+f ) ] # extracting the \
 
+              if REDO:
+                     files_list = [db['ncar']['dbpath'] + '/' + f.replace('0[]_ncar_harvested_','').replace('.nc','') for f in os.listdir('/raid60/scratch/federico/HARVESTED_JULY2020/ncar/') if f.split("_")[0] == '0[]' ]
+
+              print(files_list)
               f_list = [ f for f in files_list if os.path.getsize(f) > 1 ] # cleaning the list of files in the original database directories                                                               
               f_list = filelist_cleaner(f_list, d = d)
               f_list = [ f.replace('\n','')  for f in f_list ]

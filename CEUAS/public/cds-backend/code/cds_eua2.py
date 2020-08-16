@@ -12,16 +12,12 @@ Github: %s [%s]
 Updated: %s
 """ % (__version__, __author__, __institute__, __github__, __status__, __date__)
 
-"""
-Documented Version of cds_eua2
-"""
 import os
 import copy
 import glob
 import io
 import subprocess
 import time
-
 import zipfile
 from datetime import datetime, timedelta
 from functools import partial
@@ -31,8 +27,8 @@ import h5py
 import matplotlib.pylab as plt
 import numpy
 from numba import *
-import logging
 
+import logging
 logger = logging.getLogger('upperair.eua')
 
 #
@@ -675,13 +671,13 @@ def seconds_since_ref(idate, refdate):
     return (datetime(year=idate // 10000, month=idate % 10000 // 100, day=idate % 100) - refdate).days * 86400
 
 
-def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: dict):
+def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables: dict):
     """ Main Reading and writing Routine
 
     Args:
-        wroot: path to public workdir
-        randdir: path to random request dir
-        cdmtable: CDM definitions table
+        outputdir: output directory
+        cftable: CDM definitions table
+        datadir: data directory
         request_variables: request variables
 
     Returns:
@@ -691,7 +687,7 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
     vdict = {}
     cdmdict = {}
     cdmnamedict = {}
-    for igroup, v in cdmtable.items():
+    for igroup, v in cftable.items():
         if "odbcode" in v.keys():
             vdict[v['cdsname']] = v['odbcode']
             cdmdict[v['cdsname']] = v['cdmcode']
@@ -714,7 +710,7 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
         suffix = ['0-20000-0-', '0-20001-0-']
 
     for ss in suffix:
-        filename = os.path.expandvars('$RSCRATCH/era5/odbs/merged/' + ss + statid + '_CEUAS_merged_v0.nc')
+        filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')
         if os.path.isfile(filename):
             break
 
@@ -956,11 +952,11 @@ def process_flat(wroot: str, randdir: str, cdmtable: dict, request_variables: di
             name_to_cdm = {}
             for ss in snames:
                 try:
-                    name_to_cdm[ss] = cdmtable[ss]
+                    name_to_cdm[ss] = cftable[ss]
                 except:
                     pass
 
-            filename_out = wroot + '/' + randdir + '/dest_' + statid + '_' + cdmnamedict[request_variables['variable']] + '.nc'
+            filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[request_variables['variable']] + '.nc'
             logger.debug('Writing: %s', filename_out)
             with h5py.File(filename_out, 'w') as fout:
                 i = 0
