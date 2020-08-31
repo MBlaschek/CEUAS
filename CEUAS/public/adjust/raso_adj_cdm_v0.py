@@ -19,6 +19,8 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 from numba import njit
+import warnings
+warnings.simplefilter("ignore")
 
 np.seterr(invalid='ignore')
 
@@ -890,7 +892,10 @@ def level_interpolation(idata, dim='time', method='linear', fill_value=None, ext
     #
     itx = idata[dim].to_index()
     ittx = itx.duplicated(keep=False) & ~np.isfinite(idata.values)  # BUG duplicates in dim & not a value -> skip
-    ittx = np.where(~np.isfinite(itx), True, ittx)  # BUG missing values can be in the coordinate (e.g. plev)
+    try:
+        ittx = np.where(~np.isfinite(itx), True, ittx)  # BUG missing values can be in the coordinate (e.g. plev)
+    except TypeError:
+        ittx = np.where(np.isnat(itx), True, ittx)  # BUG missing values can be in the coordinate (e.g. plev)
     #
     # some duplicates might remain
     #
@@ -1329,7 +1334,8 @@ def main(ifile=None, ofile=None, ta_feature_enabled=False, interpolate_missing=F
 
     data = xr.concat(data.values(), dim=dim).sortby(dim)
     data = data.reset_coords('hour').rename({'hour': 'standard_hour'})
-    data = data.sel(time=np.isfinite(data.time))
+    # data = data.sel(time=np.isfinite(data.time))
+    data = data.sel(time=~np.isnat(data.time))
     #
     # Merge Variables back into raw_data
     #

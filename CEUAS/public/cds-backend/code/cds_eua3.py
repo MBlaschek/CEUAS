@@ -908,6 +908,7 @@ def stack_cube_by_time(data: xr.DataArray, times: tuple = (0, 12), span: int = 3
             {dim: data[ikey][dim].to_index().to_period('D').to_timestamp().values})
 
     data = xr.concat(data.values(), dim=pd.Index(data.keys(), name='hour'))
+
     data['flag_stdtime'] = data['flag_stdtime'].fillna(0)  # not sure what to do with this?
     # make sure the shape is as promissed:
     data = data.reindex({'hour': list(times)})
