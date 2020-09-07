@@ -45,7 +45,11 @@ from functools import partial
 from multiprocessing import set_start_method, Pool
 from typing import Union
 
-import cds_eua2 as eua
+if False:
+    import cds_eua2 as eua  # old version
+else:
+    import cds_eua3 as eua  # new version with CDMDataset class
+
 import h5py
 import hug
 import numpy
@@ -789,19 +793,6 @@ def process_request(body: dict, output_dir: str, input_dir: str, wmotable: dict,
     # in debug this will give a traceback
     #
     body = check_body(wmotable=wmotable, **body)
-    if False:
-        # todo could add a zip file for all radiosondes all times std plevs or all levels,
-        #  prepared aforehand, here simply write this into the json
-        #  could be as soon as we know which requests are really popular, then prepare these.
-        body_hash = hash(str(body))  # might be useful to identify same requests and availability
-        if os.path.isfile(config['logger_dir'] + '/request_hashes.json'):
-            hashes = json.load(open(config['logger_dir'] + '/request_hashes.json', 'r'))
-            if body_hash in hashes.keys():
-                return hashes[body_hash]['rfile']
-            hashes[body_hash] = {'request': body, 'rfile': output_dir + '/download.zip'}
-        else:
-            hashes = {body_hash: {'request': body, 'rfile': output_dir + '/download.zip'}}
-            json.dump(hashes, open(config['logger_dir'] + '/request_hashes.json', 'w'))
     #
     logger.debug('Cleaned Request %s', str(body))
     os.makedirs(output_dir, exist_ok=True)  # double check
@@ -837,6 +828,7 @@ def process_request(body: dict, output_dir: str, input_dir: str, wmotable: dict,
     if len(bodies) == 0:
         raise RuntimeError('No selected station has data in specified date range: ' + str(body))
 
+    # Make process_flat a function of only request_variables (dict)
     func = partial(eua.process_flat, output_dir, cf, input_dir)
 
     if debug:

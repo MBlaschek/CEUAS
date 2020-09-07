@@ -24,9 +24,8 @@ Performance
   give a slice per Variable to speed up reading performance.
 - HDF5 files could be split by variable, would improve reading performance dramatically, especially in MP
 """
-import sys
-import os
 import logging
+import os
 import time
 from datetime import datetime, timedelta
 
@@ -297,6 +296,7 @@ def read_standardnames(url: str = None) -> dict:
                 'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
 
     cdmnames += 9 * ['observations_table/observation_value']
+    # todo at the moment this is hard coded here, what if JRA55 is requested?
     cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body']
     cf = {}
     for c, cdm in zip(snames, cdmnames):
@@ -869,55 +869,66 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables:
 ###############################################################################
 #
 # POST PROCESS FUNCTIONS
-# - align_datetime      - Make datetime to day and standard hour [hour x day x plev]
-#
+# - align_datetime          - Make datetime to day and standard hour [hour x day x plev]
+# - stack_cube_by_hour      -
+# - unstack_cube_by_hour    -
+# - to_standard_launch_time -
+# - level_interpolation     -
 #
 # Function is needed for post processing bias adjustments
 #
 ###############################################################################
 
 
-def stack_cube_by_time(data: xr.DataArray, times: tuple = (0, 12), span: int = 3, freq: str = '12h', dim: str = 'time'):
-    """ Stack time as a new dimension
+def stack_cube_by_hour(data: xr.DataArray, dim: str = 'time', hour: str = 'hour',
+                       times: list = [0, 12]) -> xr.DataArray:
+    """ Stack hour as a new dimension
 
     Args:
-        data:
-        times:
-        span:
-        freq:
-        dim:
+        data: data cube
+        dim: datetime dimension
+        hour: hour dimension
+        times: nominal times
 
     Returns:
-        xr.DataArray : (time x date x plev)
-    """
-    data = align_datetime(data, times=times, span=span, freq=freq)
-    # problems can arrive here, because of minutes, seconds and nano seconds differences
-    # the standard times do not have minutes, seconds, nano seconds
-    if False:
-        sec = datetime_to_seconds(data[dim].values)
-        fullhour = (sec % 3600) == 0
-        hour = (sec + 3599) // 3600 % 24
-        # data = data.sel(**{dim: (data[dim].dt.hour.isin(times) & fullhour)})
-        data = data.sel(**{dim: (np.in1d(hour, times) & fullhour)})
+        xr.DataArray : (hour x time x plev)
 
-    # TODO use hours insteda of datetime to make the selection <- that is standard already
-    data = data.sel(**{dim: (data[dim].dt.hour.isin(times) & (data[dim].dt.minute == 0) & (data[dim].dt.second == 0))})
+    """
     data = dict(data.groupby(dim + '.hour'))
     for ikey in data.keys():
         data[ikey] = data[ikey].assign_coords(
             {dim: data[ikey][dim].to_index().to_period('D').to_timestamp().values})
 
-    data = xr.concat(data.values(), dim=pd.Index(data.keys(), name='hour'))
-
-    data['flag_stdtime'] = data['flag_stdtime'].fillna(0)  # not sure what to do with this?
-    # make sure the shape is as promissed:
-    data = data.reindex({'hour': list(times)})
+    data = xr.concat(data.values(), dim=pd.Index(data.keys(), name=hour))
+    data = data.reindex({hour: list(times)})
     return data
 
 
-def align_datetime(data, dim: str = 'time', plev: str = 'plev', times: tuple = (0, 12), span: int = 3,
-                   freq: str = '12h', **kwargs):
-    """ Standardize datetime to times per date, try to fill gaps
+def unstack_cube_by_hour(data: xr.DataArray, dim: str = 'time', hour: str = 'hour') -> xr.DataArray:
+    """ Unstack hour to time dimension
+
+    Args:
+        data: input data cube
+        dim: datetime dimension
+        hour: hour dimension
+
+    Returns:
+        xr.DataArray : (time x plev) cube
+    """
+    data = dict(data.groupby(hour))
+    for ikey in data.keys():
+        data[ikey] = data[ikey].assign_coords({dim: data[ikey][dim].values + np.timedelta64(ikey, 'h')})
+
+    data = xr.concat(data.values(), dim=dim).sortby(dim)
+    del data[hour]
+    data = data.dropna(dim, how='all')
+    return data
+
+
+def align_datetime(data: xr.DataArray, dim: str = 'time', plev: str = 'plev', times: tuple = (0, 12), span: int = 3,
+                   freq: str = '12h', **kwargs) -> xr.DataArray:
+    """ Align dates and times according to times (0,12) and within a time span (e.g. 3 hours).
+    Add a coordinate (e.g. standard_time) with nominal launch times according to times and span and freq.
 
     Args:
         data (DataArray, Dataset): Input data
@@ -928,15 +939,13 @@ def align_datetime(data, dim: str = 'time', plev: str = 'plev', times: tuple = (
         freq (str): frequency of output times
 
     Returns:
-        xarray.DataArray : datetime standardized DataArray
-
+        xr.DataArray : datetime standardized DataArray
     """
     import numpy as np
     from pandas import DatetimeIndex
-    from xarray import DataArray, Dataset
 
-    if not isinstance(data, (DataArray, Dataset)):
-        raise ValueError('Requires a DataArray or Dataset', type(data))
+    if not isinstance(data, xr.DataArray):
+        raise ValueError('Requires a DataArray', type(data))
 
     if dim not in data.dims:
         raise ValueError('Requires a datetime dimension', dim)
@@ -956,15 +965,17 @@ def align_datetime(data, dim: str = 'time', plev: str = 'plev', times: tuple = (
     #
     _fix_datetime = np.vectorize(to_standard_launch_time)
     newdates = _fix_datetime(dates, span=span)  # (time: 33%)
+    idx_std = DatetimeIndex(newdates).hour.isin(times)
     resolution = np.zeros(newdates.size)  # same size as dates
     #
     # check for duplicates in standard launch times
     #
-    u, c = np.unique(newdates, return_counts=True)
+    u, c = np.unique(newdates[idx_std], return_counts=True)
     conflicts = u[c > 1]
     if conflicts.size > 0:
         counts = _count_data(data, dim=dim, plev=plev)
-        logger.warning("Conflicts: %d in %d", conflicts.size, newdates.size)
+        logger.warning("Conflicts %s [+/- %d]: %d (# %d) of %d", str(times), span, conflicts.size, c[c > 1].sum(),
+                       idx_std.sum())
         for i in conflicts:
             indices = np.where(newdates == i)[0]  # numbers  (time: 45%)
             #
@@ -1007,45 +1018,42 @@ def align_datetime(data, dim: str = 'time', plev: str = 'plev', times: tuple = (
                 if m == 0:
                     continue  # this is the minimum
 
-                # change back the others or add a delay to remove duplicates
                 if k == 0:
-                    newdates[indices[j][m]] += np.timedelta64(1, 'h')  # add offset
-                    resolution[indices[j][m]] = 1  # add hour
+                    # same date/hour, but less data
+                    newdates[indices[j][m]] += np.timedelta64(1, 'h')
+                    resolution[indices[j][m]] = -1  # add hour
                 else:
-                    newdates[indices[j][m]] = dates[indices[j][m]]  # revert back
-                    resolution[indices[j][m]] = -1  # revert back
+                    resolution[indices[j][m]] = -2  # revert back
+
     #
-    # recheck for standard times
+    # Select standard times (input) and resolved conflicts
     #
-    idx_std = DatetimeIndex(newdates).hour.isin(times)  # this is the selection index
+    idx_std = DatetimeIndex(newdates).hour.isin(times) & (resolution >= 0)  # this is the selection index
+    resolution[idx_std] = 1
     u, c = np.unique(newdates[idx_std], return_counts=True)  # check only standard times
     conflicts = u[c > 1]
     if conflicts.size > 0:
         logger.warning("Conflicts remain: %d  Std: %d New: %d", conflicts.size, idx_std.sum(), newdates.size)
-        if kwargs.get('debug', False): raise RuntimeError("Duplicates")
-    #
-    # new dates / new object
-    #
-    data = data.assign_coords({dim: newdates})
-    #
-    # delay
-    #
-    # TODO preserve old timestamp
-    nn = (resolution > 0).sum()
-    nx = (~idx_std).sum()
-    # TODO check hours to be variable to select from (do not change datetime anymore)
-    data['hours'] = (dim, DatetimeIndex(dates).hour.astype(int))  # new coordinate for delays
-    data.attrs['std_times'] = str(times)
-    data['hours'].attrs.update({'long_name': 'Launch time', 'units': 'h', 'times': str(times)})
-    data['flag_stdtime'] = (dim, resolution.astype(int))
-    data['flag_stdtime'].attrs.update({'units': '1', 'standard_name': 'flag_standard_time_conflict_resolution',
-                                       'info': '0: preferred, -1: lesser candidate, 1: duplicate, less data'})
+        if kwargs.get('debug', False):
+            raise RuntimeError("Duplicates")
 
-    logger.info("Modified: %d No Standard: %d of %d", nn, nx, newdates.size)
+    nn = (resolution < 0).sum()  # number of resolved conflicts
+    nx = (~idx_std).sum()  # number of non-standard times
+    #
+    # Standard datetime
+    #
+    jname = 'standard_{}'.format(dim)
+    data[jname] = (dim, newdates)  # new coordinate
+    data.attrs['info'] = 'Selected hours: %s' % str(times)
+    data[jname].attrs.update({'long_name': 'nominal hour', 'units': 'h', 'info': str(times)})
+    data[jname + '_flag'] = (dim, resolution.astype(int))
+    data[jname + '_flag'].attrs.update({'units': '1', 'standard_name': 'flag_conflict_resolution',
+                                        'info': '0: no conflict, 1: standard time, -1: datetime duplicate, less data, -2: lesser candidate'})
 
-    if not all(data[dim].values == np.sort(data[dim].values)):
-        logger.info("Sorting by %s", dim)
-        data = data.sortby(dim)
+    logger.info("Modified dates: %d, Standard %s: %d / %d / %d", nn, str(times), idx_std.sum(), nx, newdates.size)
+    if not all(data[jname].values == np.sort(data[jname].values)):
+        logger.warning("Values are not sorted by %s", jname)
+        # data = data.sortby(jname)
     return data
 
 
@@ -1193,7 +1201,7 @@ def level_interpolation(idata: xr.DataArray, dim: str = 'time', method: str = 'l
     #
     idata[idim] = (dim, obs)  # add coordinate / dimension
     # todo figure out if drop(obs) is required
-    return idata.swap_dims({dim: idim}).drop('obs')  # swap dimension back, remove obs coordinate
+    return idata.swap_dims({dim: idim}).drop_vars('obs')  # swap dimension back, remove obs coordinate
 
 
 ###############################################################################
@@ -1232,6 +1240,13 @@ class CDMVariable:
 
     def __getitem__(self, item):
         return self._data[item]
+
+    def __delitem__(self, item):
+        try:
+            self.__delattr__(item)
+            self._names.remove(item)
+        except:
+            pass
 
     def __repr__(self):
         return self._name + " : " + " ".join(["{}".format(str(getattr(self, i))) for i in self._names])
@@ -1396,19 +1411,39 @@ class CDMDataset:
                 logger.error('VM Request failed %s', str(vm_request))
                 raise e
 
-        self.filename = filename
-        self.name = filename.split('/')[-1]  # just the name as in rname
-        self.file = h5py.File(filename, 'r')
-        logger.debug("[OPEN] %s", self.filename)
-        self.hasgroups = False
-        self.groups = []
-        self.inquire()  # Get variables and Groups
+        if filename == 'empty':
+            self.filename = ''
+            self.name = ''
+            self.file = None
+            self.hasgroups = False
+            self.groups = []
+        else:
+            self.filename = filename
+            self.name = filename.split('/')[-1]  # just the name as in rname
+            self.file = h5py.File(filename, 'r')
+            logger.debug("[OPEN] %s", self.filename)
+            self.hasgroups = False
+            self.groups = []
+            self.inquire()  # Get variables and Groups
 
     def __getitem__(self, item):
         return self.__getattribute__(item)
 
+    def __delitem__(self, item):
+        if '/' in item:
+            if self.hasgroups:
+                item = item.split('/')
+                del self[item[0]][item[1]]
+        else:
+            try:
+                delattr(self, item)
+                self.groups.remove(item)
+            except:
+                pass
+
     def __repr__(self):
-        text = "Filename: " + self.filename
+        text = "File: " + repr(self.file)
+        text += "\nFilename: " + self.filename
         text += "\n(G)roups/(V)ariables: \n"
         for igroup in self.groups:
             istatus = 'L' if self[igroup].isArray() else ' '
@@ -1474,13 +1509,16 @@ class CDMDataset:
         """
         import os
         import shutil
+
         self.file.close()
+
         if write_to_filename is not None:
             # cp file to that name and open with mode
             shutil.copy(self.filename, write_to_filename)
             logger.warning("reopen [%s] Copy file to %s", mode, write_to_filename)
             self.filename = write_to_filename
             self.file = h5py.File(self.filename, mode=mode, **kwargs)
+
         else:
             try:
                 self.file = h5py.File(self.filename, mode=mode, **kwargs)
@@ -1586,7 +1624,10 @@ class CDMDataset:
             for iname in name:
                 if self[iname].isArray():
                     continue
-                data = self[iname][()]  # Read data
+                if len(self[iname].shape) > 1 and decode_byte_array:
+                    data = self[iname][()].astype(object).sum(axis=1).astype(str)
+                else:
+                    data = self[iname][()]  # Read data
                 # setattr(self, iname, CDMVariable(data, iname, shape=data.shape))
                 self[iname].update(data=data)
             if return_data:
@@ -1682,34 +1723,49 @@ class CDMDataset:
                 'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
         globatts = get_global_attributes()  # could put more infors there ?
         #
+        # Definition of Variables to write
+        #
         # Common Variables needed for a requested file
         #
         snames = ['report_id', 'platform_id', 'platform_name', 'observation_value', 'latitude',
                   'longitude', 'time', 'air_pressure', 'trajectory_label']
-
         logger.debug('Request-keys: %s', str(request.keys()))
         snames.append(cdsname)  # Add requested variable
+        #
         # Add Feedback Variables
+        # todo currently only ERA5 feedback information can be requested (hard coded in cf_dict -> read_standardnames)
         if 'fbstats' in request.keys():
             if isinstance(request['fbstats'], list):
                 for c in request['fbstats']:
                     snames.append(c)
             else:
                 snames.append(request['fbstats'])
+        #
+        # Add Bias Adjustment Variables
         # todo add Bias adjustment variables
         if 'adjust' in request.keys():
+            # add to snames -> add to read_standardnames()
+            #
             pass
-
-        cfcopy = {}  # Copy only relevant variables
+        #
+        # Add Intercomparion Variables
+        #
+        if 'comparison' in request.keys():
+            # todo add sensor_id, ???
+            pass
+        # Copy Metadata -> used by do_cfcopy
+        cfcopy = {}  # Copy of CDM Info Dictionary (read_standard_names())
         for ss in snames:
             try:
                 cfcopy[ss] = cf_dict[ss]
             except:
                 pass
-
+        #
+        # End Definition of Variables to write
+        #
         logger.debug('Writing: %s', filename_out)
         with h5py.File(filename_out, 'w') as fout:
-            # todo this could be replaced by a self.write_to_file()
+            # todo future -> this could be replaced by a self.write_to_frontend_file(filename_out, )
             #
             # Dimensions (obs, trajectory)
             #
@@ -1724,7 +1780,7 @@ class CDMDataset:
             fout['trajectory_index'].attrs['instance_dimension'] = np.string_("trajectory")
             fout['trajectory_index'].attrs['coordinates'] = np.string_("lat lon time plev")
             #
-            # Variables
+            # Variables based on cfcopy
             #
             if 'observations_table' in self.groups:
                 igroup = 'observations_table'
@@ -1752,6 +1808,7 @@ class CDMDataset:
             if 'header_table' in self.groups:
                 igroup = 'header_table'
                 # only records fitting criteria (zidx) are copied
+                # todo why is lon, lat not here?
                 do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
                           var_selection=['report_id'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
@@ -2225,7 +2282,7 @@ class CDMDataset:
             **kwargs:
 
         Returns:
-
+            DataFrame
         """
         if isinstance(groups, str):
             if groups == '/':
@@ -2405,7 +2462,7 @@ class CDMDataset:
                             interpolate: bool = False,
                             interpolate_datetime: bool = False,
                             extrapolate_time: bool = True,
-                            extrapolate_plevs:bool = False,
+                            extrapolate_plevs: bool = False,
                             **kwargs):
         """ Write a DataCube or a Table (DataArray, DataFrame) with Multiindex to CDMBackend file
 
@@ -2421,6 +2478,10 @@ class CDMDataset:
             data_plevs: pressure dimension input name
             force_replace: overwrite string array due to shape missmatch?
             attributes: add Attributes to HDF variable
+            interpolate: interpolate to all pressure levels available in the file
+            interpolate_datetime: interpolate values backwards and forward in time?
+            extrapolate_plevs: when interpolating, extrapolate outside of given values? constant
+            extrapolate_time: when interpolating, extrapolate outside of given dates? constant
 
         Examples:
             Write an adjusted temperature to a CDM Backend file within a new group mytests that is align
@@ -2428,6 +2489,14 @@ class CDMDataset:
             >>> data = self.read_observed_variable(85)
             >>> write_observed_data('temperature_adjust', ragged=data, varnum=85, variable='observation_value',
             >>>               group='mytests')
+
+        Notes:
+            Interpolation
+                When interpolating one should be careful. Interpolation for pressure is done using log-p.
+                using interpolate_na from xarray
+
+            Extrapolation
+                using backward-fill and forward-fill for the dimension (time, plev), thus constant outside of range.
         """
         if not self.hasgroups:
             raise RuntimeError('This routine is intended for CDM Backend files')
@@ -2516,7 +2585,7 @@ class CDMDataset:
                 f_dates = f_dates[idx]
                 f_plevs = f_dates[idx]
                 idx = np.argsort(idx)  # -> reverse sort index
-            logger.warning('%s not sorted in file', idate_name)
+            logger.warning('%s not sorted in file', data_time)
         #
         # Find reverse index for writing
         #
@@ -2540,13 +2609,14 @@ class CDMDataset:
             fvalues[logic] = values[match_index[logic]]
             logger.info('Interpolation: %d < %d', f_dates.shape[0], np.isfinite(values).sum())
             # interpolate data to missing parts
-            farray = xr.DataArray(fvalues, dims=('obs'), coords={data_time: ('obs', f_dates), data_plevs: ('obs', f_plevs)})
+            farray = xr.DataArray(fvalues, dims=('obs'),
+                                  coords={data_time: ('obs', f_dates), data_plevs: ('obs', f_plevs)})
             if interpolate_datetime:
                 #
                 # Interpolate back/forward in time
                 # extrapolate=True
                 #
-                subset = farray[data_plevs].isin(std_plevels)
+                subset = farray[data_plevs].isin(std_plevs * 100)  # needs to be in Pa?
                 farray[subset] = farray[subset].groupby(data_plevs).apply(level_interpolation,
                                                                           dim=data_time,
                                                                           extrapolate=extrapolate_time)
@@ -2719,8 +2789,8 @@ class CDMDataset:
                        attributes: dict = None,
                        interpolate: bool = False,
                        interpolate_datetime: bool = False,
-                       extrapolate_time:bool = True,
-                       extrapolate_plevs:bool = False,
+                       extrapolate_time: bool = True,
+                       extrapolate_plevs: bool = False,
                        **kwargs):
         """ Write a DataCube or a Table (DataArray, DataFrame) with Multiindex to CDM Frontend
 
@@ -2847,21 +2917,22 @@ class CDMDataset:
             fvalues[logic] = values[match_index[logic]]
             logger.info('Interpolation: %d < %d', f_dates.shape[0], np.isfinite(values).sum())
             # interpolate data to missing parts
-            farray = xr.DataArray(fvalues, dims=('obs'), coords={data_time: ('obs', f_dates), data_plevs: ('obs', f_plevs)})
+            farray = xr.DataArray(fvalues, dims=('obs'),
+                                  coords={data_time: ('obs', f_dates), data_plevs: ('obs', f_plevs)})
             if interpolate_datetime:
                 #
                 # Interpolate back/forward in time
                 # extrapolate=True
                 #
-                subset = farray[data_plevs].isin(std_plevels)
+                subset = farray[data_plevs].isin(std_plevs * 100)  # needs to be in Pa?
                 farray[subset] = farray[subset].groupby(data_plevs).apply(level_interpolation,
                                                                           dim=data_time,
                                                                           extrapolate=extrapolate_time)
             #
             # Interpolate up/down levels
             #
-            farray = farray.groupby(data_time).apply(level_interpolation, 
-                                                     dim=data_plevs, 
+            farray = farray.groupby(data_time).apply(level_interpolation,
+                                                     dim=data_plevs,
                                                      method='log-linear',
                                                      extrapolate=extrapolate_plevs)
             values = farray.values
@@ -3019,6 +3090,37 @@ class CDMDataset:
         self.inquire()  # update Groups and variable lists
         self[name].update(data=writeme)  # update class in memory
         logger.info('Finsihed writing %s to %s', name, self.name)
+
+    def write_to_frontend_file(self, filename: str, variables: list, index: np.ndarray = None, cf_dict: dict = None,
+                               **kwargs):
+        """
+
+        Args:
+            filename:
+            variables:
+            index:
+            cf_dict:
+            **kwargs:
+
+        Examples:
+            >>> data = CDMDataset('testfile.nc')
+            >>> data.write_to_frontend_file('only_wind.nc', ['wind_speed', 'wind_from_direction'])
+
+        """
+        # search for variables if cdmname not in cf_dict
+        if not self.hasgroups:
+            raise NotImplementedError('Not yet implemented')
+
+        # make a decision which dimension requires what
+        # observations_table -> obs
+        # header_table -> trajectory
+        # stations_configuration -> trajectory
+
+        # trajectory index?
+        # do_cfcopy
+
+        # global attributes
+        pass
 
     def report_quality(self, filename: str = None):
         """ Compile a quality report
