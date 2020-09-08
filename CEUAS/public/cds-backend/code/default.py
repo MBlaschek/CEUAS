@@ -47,8 +47,11 @@ from typing import Union
 
 if False:
     import cds_eua2 as eua  # old version
+    CDS_EUA_VERSION = 2
 else:
     import cds_eua3 as eua  # new version with CDMDataset class
+
+    CDS_EUA_VERSION = 3
 
 import h5py
 import hug
@@ -173,10 +176,16 @@ def makedaterange(vola: pd.DataFrame, itup: tuple) -> dict:
 
                 # funits=f['recordtimestamp'].attrs['units']
                 funits = 'seconds since 1900-01-01 00:00:00'
-                active[skey] = [int(eua.secsince(f['recordtimestamp'][0], funits)),
-                                int(eua.secsince(f['recordtimestamp'][-1], funits)),
-                                float(f['observations_table']['latitude'][-1]),
-                                float(f['observations_table']['longitude'][-1])]
+                if CDS_EUA_VERSION == 2:
+                    active[skey] = [int(eua.secsince(f['recordtimestamp'][0], funits)),
+                                    int(eua.secsince(f['recordtimestamp'][-1], funits)),
+                                    float(f['observations_table']['latitude'][-1]),
+                                    float(f['observations_table']['longitude'][-1])]
+                if CDS_EUA_VERSION == 3:
+                    active[skey] = [int(eua.to_seconds_since(f['recordtimestamp'][0], funits)),
+                                    int(eua.to_seconds_since(f['recordtimestamp'][-1], funits)),
+                                    float(f['observations_table']['latitude'][-1]),
+                                    float(f['observations_table']['longitude'][-1])]
                 idx = numpy.where(vola.StationId.values == skey)[0]
                 if len(idx) > 0:
                     active[skey].append(vola.CountryCode[idx[0]])
