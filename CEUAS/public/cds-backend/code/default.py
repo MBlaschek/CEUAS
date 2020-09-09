@@ -77,6 +77,7 @@ config = {'logger_name': 'upperair',
           'logger_dir': './logs',
           'src_path': '.',
           'data_dir': '.',
+          'comp_dir': '.',
           'tmp_dir': '.',
           'config_dir': './config',
           'reload_pwd': 'reload'}
@@ -234,8 +235,13 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
             active = None
 
     if active is None:
-        slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-20000-0-?????_CEUAS_merged_v0.nc'))
-        slnum = [i[-34:-19] for i in slist]
+        #
+        # find Merged Netcdf files and intercomparison files
+        #
+        slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v0.nc'))
+        slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20100-0-?????.nc'))
+        # slnum = [i[-34:-19] for i in slist]
+        slnum = [i.split('/')[-1].split('_')[0].replace('.nc','') for i in slist]
         volapath = 'https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
         f = urllib.request.urlopen(volapath)
         col_names = pd.read_csv(f, delimiter='\t', quoting=3, nrows=0)
