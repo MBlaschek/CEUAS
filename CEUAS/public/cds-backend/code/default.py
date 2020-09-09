@@ -680,7 +680,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 statid = [valid_id]
             else:
                 new_statid = []
-                for k in range(len(statid)):
+                for k in statid:
                     for s in ['0-20000-0-', '0-20001-0-']:
                         if isinstance(k, int):
                             valid_id = s + '{:0>5}'.format(k)
@@ -862,17 +862,18 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
                                  start, ende,
                                  active[bodies[k]['statid']][1])
                     # add data path to request
-                    input_dirs.append(active[k][5])  # path from makedaterange (init_server)
+                    input_dirs.append(active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
             else:
                 del bodies[k]
         else:
-            input_dirs.append(active[k][5])  # path from makedaterange (init_server)
+            input_dirs.append(active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
 
     logger.debug('# requests %d', len(bodies))
     if len(bodies) == 0:
         raise RuntimeError('No selected station has data in specified date range: ' + str(body))
 
     # Make process_flat a function of only request_variables (dict)
+    #
     func = partial(eua.process_flat, output_dir, cf)
 
     if debug:

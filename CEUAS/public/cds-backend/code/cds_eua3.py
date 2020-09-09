@@ -1677,13 +1677,12 @@ class CDMDataset:
             logger.error('No variable specified %s %s', str(request.keys()), self.name)
             raise ValueError('No variable specified')
 
-        if len(request['variable']) > 1:
-            # todo potentially launch here recursive ?
-            raise RuntimeError('Requests need to be split up by variable')
-
         variable = request['variable']
-        if not isinstance(variable, str):
-            variable = variable[0]
+        if isinstance(variable, list):
+            if len(variable) > 1:
+                # todo potentially launch here recursive ?
+                raise RuntimeError('Requests need to be split up by variable')
+            variable = variable[0]  # assumes a list ?
 
         if cf_dict is None:
             cf_dict = read_standardnames()
