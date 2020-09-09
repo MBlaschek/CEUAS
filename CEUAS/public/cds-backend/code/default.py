@@ -865,6 +865,8 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
                     input_dirs.append(active[k][5])  # path from makedaterange (init_server)
             else:
                 del bodies[k]
+        else:
+            input_dirs.append(active[k][5])  # path from makedaterange (init_server)
 
     logger.debug('# requests %d', len(bodies))
     if len(bodies) == 0:
