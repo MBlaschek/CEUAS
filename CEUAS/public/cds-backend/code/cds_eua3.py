@@ -828,29 +828,40 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables:
         str : message or error
     """
     import os
+    import glob
     # mimicks process_flat from cds_eua2
     msg = ''  # Message or error
     filename = ''  # Filename
     try:
+        # todo change this use the path
         statid = request_variables.pop('statid', None)
         if statid is None:
             logger.error('No station ID (statid) specified. %s', filename)
             raise ValueError('No station ID (statid) specified')
+
         if statid[:3] == '0-2':
             suffix = ['']
         else:
             suffix = ['0-20000-0-', '0-20001-0-']
 
         for ss in suffix:
-            filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  # version as a variable
+            # filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  # version as a variable
+            filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
+            if len(filename) > 0:
+                filename = filename[0]
+            else:
+                filename = ''
+
             if os.path.isfile(filename):
                 break
+
         cdmnamedict = {}
         for igroup, v in cftable.items():
             if "odbcode" in v.keys():
                 cdmnamedict[v['cdsname']] = igroup
 
         # todo this could be changed to the cf.keys() -> cdm names of the variables
+        # request_variables['variable'] is a list
         filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
             request_variables['variable']] + '.nc'
 
@@ -1750,9 +1761,8 @@ class CDMDataset:
         #
         # Add Intercomparion Variables
         #
-        if 'comparison' in request.keys():
-            # todo add sensor_id, ???
-            pass
+        if 'intercomparison' in request.keys():
+            snames.extend(request['intercomparison'])
         # Copy Metadata -> used by do_cfcopy
         cfcopy = {}  # Copy of CDM Info Dictionary (read_standard_names())
         for ss in snames:

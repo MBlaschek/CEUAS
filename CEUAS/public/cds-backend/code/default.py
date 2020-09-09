@@ -177,6 +177,7 @@ def makedaterange(vola: pd.DataFrame, itup: tuple) -> dict:
 
                 # funits=f['recordtimestamp'].attrs['units']
                 funits = 'seconds since 1900-01-01 00:00:00'
+                # todo add list of available variables for future
                 if CDS_EUA_VERSION == 2:
                     active[skey] = [int(eua.secsince(f['recordtimestamp'][0], funits)),
                                     int(eua.secsince(f['recordtimestamp'][-1], funits)),
@@ -193,6 +194,8 @@ def makedaterange(vola: pd.DataFrame, itup: tuple) -> dict:
                 else:
                     active[skey].append('')
                     logger.debug('no key found for %s', skey)
+                # add data directory for process_flat
+                active[skey].append(os.path.dirname(s))
             except KeyError:
                 logger.error('%s : a table is missing', skey)
     except:
@@ -224,6 +227,11 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
     # What get's updated here?
     zz = eua.calc_trajindexfast(z, zidx, idx, trajectory_index)
     os.makedirs(config['config_dir'], exist_ok=True)
+    #
+    # Active Json:
+    # [WIGOS ID] = [start time in seconds, end time in seconds, lat, lon, datadir]
+    # seconds since 1900-01-01
+    #
     active_file = config['config_dir'] + '/active.json'
     active = None
     if os.path.isfile(active_file) and not force_reload:
@@ -261,8 +269,11 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
                 k = next(iter(s))
                 active[k] = s[k]
         logger.info('Active Stations created. [%d]', len(active))
-        with open(active_file, 'w') as f:
-            json.dump(active, f)
+        try:
+            with open(active_file, 'w') as f:
+                json.dump(active, f)
+        except Exception as e:
+            logger.warning('Cannot write %s: %s', active_file, e)
     #
     # Read CDM Definitions
     #
@@ -272,9 +283,14 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
             cf = json.load(f)
     else:
         cf = eua.read_standardnames()
-        with open(cdm_file, 'w') as f:
-            json.dump(cf, f)
-
+        try:
+            with open(cdm_file, 'w') as f:
+                json.dump(cf, f)
+        except Exception as e:
+            logger.warning('Cannot write %s: %s', cdm_file, e)
+    #
+    # list of country codes -> used for country selection in check_body
+    #
     cdmpath = 'https://raw.githubusercontent.com/glamod/common_data_model/master/tables/'
     cdmtablelist = ['sub_region']
     cdm = dict()
@@ -302,7 +318,10 @@ active, wmo_regions, cf = init_server()
 
 # Active Station Numbers
 slnum = list(active.keys())
-slist = [config['data_dir'] + '/0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
+
+
+# slist = [config['data_dir'] + '/0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
+# slist = [s[5] for _,s in active.items()]
 
 
 ###############################################################################
@@ -492,7 +511,8 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
 
 def check_body(variable: list = None, statid: list = None, product_type: str = None, pressure_level: list = None,
                date: list = None, time: list = None, fbstats=None, bbox: list = None, country: str = None,
-               format: str = None, period: list = None, wmotable: dict = None, pass_unknown_keys: bool = False,
+               format: str = None, period: list = None, intercomparison: list = None, wmotable: dict = None,
+               pass_unknown_keys: bool = False,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
 
@@ -588,6 +608,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 country = []
             else:
                 country = [country]
+        # wmotable <-
         vcountries = wmotable['sub_region'].alpha_3_code.values
         for icountry in country:
             if icountry not in vcountries:
@@ -641,7 +662,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     else:
         try:
             if statid == 'all':
-                statid = slnum
+                statid = slnum  # <- list of all station ids from init_server
 
             elif isinstance(statid, (str, int)):
                 # todo fix if '1001' given as string, creates not working ID
@@ -789,13 +810,12 @@ def makebodies(bodies, body, spv, bo, l):
     return
 
 
-def process_request(body: dict, output_dir: str, input_dir: str, wmotable: dict, debug: bool = False) -> str:
+def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = False) -> str:
     """ Main function of the hug server
 
     Args:
         body: request dictionary
         output_dir: Output directory
-        input_dir: Data input directory
         wmotable: WMO regions definitions from init_server()
         debug: for debugging
 
@@ -816,16 +836,21 @@ def process_request(body: dict, output_dir: str, input_dir: str, wmotable: dict,
     bo = []
     refdate = datetime(year=1900, month=1, day=1)
     makebodies(bodies, body, spv, bo, 0)  # List of split requests
+    input_dirs = []
     #
     # Check all requests if dates are within active station limits
     #
     for k in range(len(bodies) - 1, -1, -1):
         # date selection ? do all the stations have data in this period?
         if 'date' in bodies[k].keys():
+            #
             # seconds since Reference date
+            #
             start = (to_valid_datetime(bodies[k]['date'][0]) - refdate).days * 86400
             ende = (to_valid_datetime(bodies[k]['date'][-1]) - refdate).days * 86400
+            #
             # Station Active ?
+            #
             if bodies[k]['statid'] in active.keys():
                 if start > active[bodies[k]['statid']][1] or ende + 86399 < active[bodies[k]['statid']][0]:
                     logger.debug('%s outside Index range', bodies[k]['statid'])
@@ -836,6 +861,8 @@ def process_request(body: dict, output_dir: str, input_dir: str, wmotable: dict,
                                  active[bodies[k]['statid']][0],
                                  start, ende,
                                  active[bodies[k]['statid']][1])
+                    # add data path to request
+                    input_dirs.append(active[k][5])  # path from makedaterange (init_server)
             else:
                 del bodies[k]
 
@@ -844,19 +871,19 @@ def process_request(body: dict, output_dir: str, input_dir: str, wmotable: dict,
         raise RuntimeError('No selected station has data in specified date range: ' + str(body))
 
     # Make process_flat a function of only request_variables (dict)
-    func = partial(eua.process_flat, output_dir, cf, input_dir)
+    func = partial(eua.process_flat, output_dir, cf)
 
     if debug:
         #
         # Single Threading
         #
-        results = list(map(func, bodies))
+        results = list(map(func, input_dirs, bodies))
     else:
         #
         # Multi Threading
         #
         with Pool(10) as p:
-            results = list(p.map(func, bodies, chunksize=1))
+            results = list(p.map(func, input_dirs, bodies, chunksize=1))
 
     wpath = ''  # same as output_dir ?
     for r in results:
