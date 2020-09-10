@@ -45,7 +45,14 @@ from functools import partial
 from multiprocessing import set_start_method, Pool
 from typing import Union
 
-import cds_eua2 as eua
+if False:
+    import cds_eua2 as eua  # old version
+    CDS_EUA_VERSION = 2
+else:
+    import cds_eua3 as eua  # new version with CDMDataset class
+
+    CDS_EUA_VERSION = 3
+
 import h5py
 import hug
 import numpy
@@ -70,6 +77,7 @@ config = {'logger_name': 'upperair',
           'logger_dir': './logs',
           'src_path': '.',
           'data_dir': '.',
+          'comp_dir': '.',
           'tmp_dir': '.',
           'config_dir': './config',
           'reload_pwd': 'reload'}
@@ -169,16 +177,25 @@ def makedaterange(vola: pd.DataFrame, itup: tuple) -> dict:
 
                 # funits=f['recordtimestamp'].attrs['units']
                 funits = 'seconds since 1900-01-01 00:00:00'
-                active[skey] = [int(eua.secsince(f['recordtimestamp'][0], funits)),
-                                int(eua.secsince(f['recordtimestamp'][-1], funits)),
-                                float(f['observations_table']['latitude'][-1]),
-                                float(f['observations_table']['longitude'][-1])]
+                # todo add list of available variables for future
+                if CDS_EUA_VERSION == 2:
+                    active[skey] = [int(eua.secsince(f['recordtimestamp'][0], funits)),
+                                    int(eua.secsince(f['recordtimestamp'][-1], funits)),
+                                    float(f['observations_table']['latitude'][-1]),
+                                    float(f['observations_table']['longitude'][-1])]
+                if CDS_EUA_VERSION == 3:
+                    active[skey] = [int(eua.to_seconds_since(f['recordtimestamp'][0], funits)),
+                                    int(eua.to_seconds_since(f['recordtimestamp'][-1], funits)),
+                                    float(f['observations_table']['latitude'][-1]),
+                                    float(f['observations_table']['longitude'][-1])]
                 idx = numpy.where(vola.StationId.values == skey)[0]
                 if len(idx) > 0:
                     active[skey].append(vola.CountryCode[idx[0]])
                 else:
                     active[skey].append('')
                     logger.debug('no key found for %s', skey)
+                # add data directory for process_flat
+                active[skey].append(os.path.dirname(s))
             except KeyError:
                 logger.error('%s : a table is missing', skey)
     except:
@@ -210,6 +227,11 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
     # What get's updated here?
     zz = eua.calc_trajindexfast(z, zidx, idx, trajectory_index)
     os.makedirs(config['config_dir'], exist_ok=True)
+    #
+    # Active Json:
+    # [WIGOS ID] = [start time in seconds, end time in seconds, lat, lon, datadir]
+    # seconds since 1900-01-01
+    #
     active_file = config['config_dir'] + '/active.json'
     active = None
     if os.path.isfile(active_file) and not force_reload:
@@ -221,8 +243,13 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
             active = None
 
     if active is None:
-        slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-20000-0-?????_CEUAS_merged_v0.nc'))
-        slnum = [i[-34:-19] for i in slist]
+        #
+        # find Merged Netcdf files and intercomparison files
+        #
+        slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v0.nc'))
+        slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20100-0-?????.nc'))
+        # slnum = [i[-34:-19] for i in slist]
+        slnum = [i.split('/')[-1].split('_')[0].replace('.nc','') for i in slist]
         volapath = 'https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
         f = urllib.request.urlopen(volapath)
         col_names = pd.read_csv(f, delimiter='\t', quoting=3, nrows=0)
@@ -242,8 +269,11 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
                 k = next(iter(s))
                 active[k] = s[k]
         logger.info('Active Stations created. [%d]', len(active))
-        with open(active_file, 'w') as f:
-            json.dump(active, f)
+        try:
+            with open(active_file, 'w') as f:
+                json.dump(active, f)
+        except Exception as e:
+            logger.warning('Cannot write %s: %s', active_file, e)
     #
     # Read CDM Definitions
     #
@@ -253,9 +283,14 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
             cf = json.load(f)
     else:
         cf = eua.read_standardnames()
-        with open(cdm_file, 'w') as f:
-            json.dump(cf, f)
-
+        try:
+            with open(cdm_file, 'w') as f:
+                json.dump(cf, f)
+        except Exception as e:
+            logger.warning('Cannot write %s: %s', cdm_file, e)
+    #
+    # list of country codes -> used for country selection in check_body
+    #
     cdmpath = 'https://raw.githubusercontent.com/glamod/common_data_model/master/tables/'
     cdmtablelist = ['sub_region']
     cdm = dict()
@@ -283,7 +318,10 @@ active, wmo_regions, cf = init_server()
 
 # Active Station Numbers
 slnum = list(active.keys())
-slist = [config['data_dir'] + '/0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
+
+
+# slist = [config['data_dir'] + '/0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
+# slist = [s[5] for _,s in active.items()]
 
 
 ###############################################################################
@@ -440,7 +478,19 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
     dfs = []
     for fn in flist:
         # open_dataset (~20 s faster) than load_dataset
-        ds = xarray.open_dataset(fn, drop_variables=['trajectory_label', 'trajectory_index', 'trajectory'])
+        # ds = xarray.open_dataset(fn, drop_variables=['trajectory_label', 'trajectory_index', 'trajectory'])
+        ds = xarray.open_dataset(fn)
+        # fix trajectory_label
+        if 'trajectory_label' in ds.variables:
+            report_id = ds['trajectory_label'].astype(object).sum(axis=1).astype(str)
+            ds = ds.drop_vars(['trajectory_label', 'trajectory'])
+            ds['trajectory_label'] = ('obs', report_id.values[ds.trajectory_index.values])  # todo obs ???
+            ds = ds.drop_vars('trajectory_index')
+
+        for ivar in list(ds.variables):
+            if 'string' in ivar:
+                ds = ds.drop_vars(ivar)
+
         df = ds.to_dataframe()
         #
         # todo fix the primary_id in the NetCDF files
@@ -473,7 +523,8 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
 
 def check_body(variable: list = None, statid: list = None, product_type: str = None, pressure_level: list = None,
                date: list = None, time: list = None, fbstats=None, bbox: list = None, country: str = None,
-               format: str = None, period: list = None, wmotable: dict = None, pass_unknown_keys: bool = False,
+               format: str = None, period: list = None, intercomparison: list = None, wmotable: dict = None,
+               pass_unknown_keys: bool = False,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
 
@@ -569,6 +620,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 country = []
             else:
                 country = [country]
+        # wmotable <-
         vcountries = wmotable['sub_region'].alpha_3_code.values
         for icountry in country:
             if icountry not in vcountries:
@@ -622,7 +674,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     else:
         try:
             if statid == 'all':
-                statid = slnum
+                statid = slnum  # <- list of all station ids from init_server
 
             elif isinstance(statid, (str, int)):
                 # todo fix if '1001' given as string, creates not working ID
@@ -640,7 +692,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 statid = [valid_id]
             else:
                 new_statid = []
-                for k in range(len(statid)):
+                for k in statid:
                     for s in ['0-20000-0-', '0-20001-0-']:
                         if isinstance(k, int):
                             valid_id = s + '{:0>5}'.format(k)
@@ -770,13 +822,12 @@ def makebodies(bodies, body, spv, bo, l):
     return
 
 
-def process_request(body: dict, output_dir: str, input_dir: str, wmotable: dict, debug: bool = False) -> str:
+def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = False) -> str:
     """ Main function of the hug server
 
     Args:
         body: request dictionary
         output_dir: Output directory
-        input_dir: Data input directory
         wmotable: WMO regions definitions from init_server()
         debug: for debugging
 
@@ -789,19 +840,6 @@ def process_request(body: dict, output_dir: str, input_dir: str, wmotable: dict,
     # in debug this will give a traceback
     #
     body = check_body(wmotable=wmotable, **body)
-    if False:
-        # todo could add a zip file for all radiosondes all times std plevs or all levels,
-        #  prepared aforehand, here simply write this into the json
-        #  could be as soon as we know which requests are really popular, then prepare these.
-        body_hash = hash(str(body))  # might be useful to identify same requests and availability
-        if os.path.isfile(config['logger_dir'] + '/request_hashes.json'):
-            hashes = json.load(open(config['logger_dir'] + '/request_hashes.json', 'r'))
-            if body_hash in hashes.keys():
-                return hashes[body_hash]['rfile']
-            hashes[body_hash] = {'request': body, 'rfile': output_dir + '/download.zip'}
-        else:
-            hashes = {body_hash: {'request': body, 'rfile': output_dir + '/download.zip'}}
-            json.dump(hashes, open(config['logger_dir'] + '/request_hashes.json', 'w'))
     #
     logger.debug('Cleaned Request %s', str(body))
     os.makedirs(output_dir, exist_ok=True)  # double check
@@ -810,16 +848,21 @@ def process_request(body: dict, output_dir: str, input_dir: str, wmotable: dict,
     bo = []
     refdate = datetime(year=1900, month=1, day=1)
     makebodies(bodies, body, spv, bo, 0)  # List of split requests
+    input_dirs = []
     #
     # Check all requests if dates are within active station limits
     #
     for k in range(len(bodies) - 1, -1, -1):
         # date selection ? do all the stations have data in this period?
         if 'date' in bodies[k].keys():
+            #
             # seconds since Reference date
+            #
             start = (to_valid_datetime(bodies[k]['date'][0]) - refdate).days * 86400
             ende = (to_valid_datetime(bodies[k]['date'][-1]) - refdate).days * 86400
+            #
             # Station Active ?
+            #
             if bodies[k]['statid'] in active.keys():
                 if start > active[bodies[k]['statid']][1] or ende + 86399 < active[bodies[k]['statid']][0]:
                     logger.debug('%s outside Index range', bodies[k]['statid'])
@@ -830,26 +873,32 @@ def process_request(body: dict, output_dir: str, input_dir: str, wmotable: dict,
                                  active[bodies[k]['statid']][0],
                                  start, ende,
                                  active[bodies[k]['statid']][1])
+                    # add data path to request
+                    input_dirs.append(active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
             else:
                 del bodies[k]
+        else:
+            input_dirs.append(active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
 
     logger.debug('# requests %d', len(bodies))
     if len(bodies) == 0:
         raise RuntimeError('No selected station has data in specified date range: ' + str(body))
 
-    func = partial(eua.process_flat, output_dir, cf, input_dir)
+    # Make process_flat a function of only request_variables (dict)
+    #
+    func = partial(eua.process_flat, output_dir, cf)
 
     if debug:
         #
         # Single Threading
         #
-        results = list(map(func, bodies))
+        results = list(map(func, input_dirs, bodies))
     else:
         #
         # Multi Threading
         #
         with Pool(10) as p:
-            results = list(p.map(func, bodies, chunksize=1))
+            results = list(p.map(func, input_dirs, bodies, chunksize=1))
 
     wpath = ''  # same as output_dir ?
     for r in results:
