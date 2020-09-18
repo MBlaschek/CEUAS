@@ -285,19 +285,21 @@ def read_standardnames(url: str = None) -> dict:
 
     response = urllib.request.urlopen(url).read()
     xmldocument = ET.fromstring(response)
-
+    #
+    # add all additional intercomparions variables
+    #
     snames = ['platform_id', 'platform_name', 'latitude', 'longitude', 'time', 'air_pressure',
               'air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
               'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential',
-              'trajectory_label',
-              'obs_minus_bg', 'obs_minus_an', 'bias_estimate']
+              'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type', 'aggregated_quantity', 'variance']
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
                 'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
 
     cdmnames += 9 * ['observations_table/observation_value']
     # todo at the moment this is hard coded here, what if JRA55 is requested?
-    cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body']
+    cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body', 'observations_table/sensor_id',
+                 'observations_table/secondary_value', 'observations_table/original_precision']
     cf = {}
     for c, cdm in zip(snames, cdmnames):
         cf[c] = {'cdmname': cdm, 'units': 'NA', 'shortname': c}
@@ -361,6 +363,10 @@ def read_standardnames(url: str = None) -> dict:
     cf['geopotential']['cdsname'] = 'geopotential'
     cf['geopotential']['cdmcode'] = -1
     cf['geopotential']['odbcode'] = 1
+    cf['trajectory_label']['shortname'] = 'trajectory_label'
+    cf['sonde_type']['shortname'] = 'sonde_type'
+    cf['aggregated_quantity']['shortname'] = 'aggregated_quantity'
+    cf['variance']['shortname'] = 'variance'
     return cf
 
 
@@ -605,8 +611,9 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
                         if hilf.shape[0] == 0:
                             print('x')
                         fout[vlist[-1]][:] = hilf[idx - idx[0], :]
-                except:
+                except Exception as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
+                    print(e)
                     hilf = np.zeros(shape=(idx.shape[0]), dtype='S10')
                     for i in range(hilf.shape[0]):
                         hilf[i] = '{:0>10}'.format(i)
@@ -1738,7 +1745,7 @@ class CDMDataset:
         # Common Variables needed for a requested file
         #
         snames = ['report_id', 'platform_id', 'platform_name', 'observation_value', 'latitude',
-                  'longitude', 'time', 'air_pressure', 'trajectory_label']
+                  'longitude', 'time', 'air_pressure', 'trajectory_label'] 
         logger.debug('Request-keys: %s', str(request.keys()))
         snames.append(cdsname)  # Add requested variable
         #
@@ -1776,6 +1783,9 @@ class CDMDataset:
         with h5py.File(filename_out, 'w') as fout:
             # todo future -> this could be replaced by a self.write_to_frontend_file(filename_out, )
             #
+            # chose wich variable will be selected and copied into the outputfile 
+            # from all the sources: observations_table, era5fb, header_table,...
+            #
             # Dimensions (obs, trajectory)
             #
             for d, v in dims.items():
@@ -1795,7 +1805,8 @@ class CDMDataset:
                 igroup = 'observations_table'
                 do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
-                                         'observation_value', 'date_time'])
+                                         'observation_value', 'date_time', 'sensor_id', 'secondary_value', 
+                                         'original_precision'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
