@@ -1,9 +1,3 @@
-""" Utility to postprocess the merged files from v1 of the CEAUS database
-    - Add instrument type from Schroeder's list
-    - ...
-"""
-
-
 import os
 import sys
 import netCDF4 as nc
@@ -30,6 +24,11 @@ import urllib.request
 
 sys.path.append('../harvest/code')
 from harvest_convert_to_netCDF_newfixes import load_cdm_tables 
+
+#from Desrozier import * 
+
+
+# nan int = -2147483648 
 
 
 import warnings
@@ -69,12 +68,13 @@ class MergedFile(object):
         self.out_dir = out_dir 
         self.station_id = station_id
         self.file = file 
+        self.summary_file =  station_id + '_' + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_summary.txt'
     
-    def load(self, file=''):
+    def load(self):
         
         data = {}
         
-        h5py_file = h5py.File(file, 'r+')
+        h5py_file = h5py.File(self.file, 'r+')
         
         data['h5py_file'] = h5py_file 
         data['station_id'] = self.station_id 
@@ -88,26 +88,34 @@ class MergedFile(object):
         
         #data['sensor_id'] = h5py_file['observations_table']['sensor_id']
         data['length_max'] = len(h5py_file['observations_table']['date_time'] )
-        
-        print(0)
-        
-        return data 
 
-
+        self.data = data 
+        #return data 
+    
+    def load_obstab_era5fb(self):
+        obs_tab = xr.open_dataset (file, engine = 'h5netcdf'      , group = 'observations_table', decode_times = True )
+        obs_tab_vars = ['z_coordinate_type' , 'z_coordinate' , 'observation_value' , 'observed_variable', 'date_time']
+        
+        era5fb_tab = xr.open_dataset (file, engine = 'h5netcdf' , group = 'era5fb', decode_times = True )
+        self.data['obs_tab'] = obs_tab
+        self.data['era5fb'] = era5fb_tab
+        
+        
+        
+    def write_summary(self, what = '', done = False):
+        """ Write report summary """
+        a = open(self.summary_file , 'a')
+        a.write(self.file + '_' + what + '_' + str(done) )
         
 
 class Sensor(MergedFile):
-    """ Main class to extract the sensor type from Schroeder's list, 
-        and write it back to the observations_table
-        Moreover, it creates the sensor_configuration table """
-
-    def __init__(self, data = '', file='' , out_dir = '' , station_id = '' ):
+    
+    def __init__(self, data = '', MF = ''  ):
         
-        self.data = data 
+        #MF = MergedFile.__init__(self, out_dir = out_dir, station_id = station_id, file= file )
+        self.MergedFile = MF
+        self.data = MF.data 
         
-        MergedFile.__init__(self, out_dir = out_dir, station_id = station_id, file= file )
-
-
     def load_cdm_tables(self):
         
         cdmpath='https://raw.githubusercontent.com/glamod/common_data_model/master/tables/' # cdm tables            
@@ -125,7 +133,6 @@ class Sensor(MergedFile):
             cdm_tabdef[key]=pd.read_csv(f,delimiter='\t',quoting=3,dtype=tdict,na_filter=False,comment='#')
             
         self.cdm_tabdef = cdm_tabdef 
-        
         
     def load_Schroeder_tables(self):
         """ Load the Schroeder's tables """
@@ -195,19 +202,18 @@ class Sensor(MergedFile):
                     print('Failed --- ')
                     pass
                 
-                  
                 groupencodings[k][d.element_name]={'compression': 'gzip'}
 
         # self.data['crs'].to_netcdf(self.file, format='netCDF4', engine='h5netcdf',group='ciao', mode='a') #
                 
         for k in groups.keys():  
             try:           
-                groups[k].to_netcdf(self.file, format='netCDF4', engine='h5netcdf', encoding=groupencodings[k], group=k, mode='a') #
+                groups[k].to_netcdf(self.MergedFile.file, format='netCDF4', engine='h5netcdf', encoding=groupencodings[k], group=k, mode='a') #
                 print('+++ Written sensor_configuration ' )
             except  KeyError:
                 print('--- Passing variable ' )
                     
-                    
+        return 'done'           
                     
                     
     def extract_sensor_id(self):
@@ -238,36 +244,27 @@ class Sensor(MergedFile):
             
             if dt == '0':
                 ddt =  np.datetime64( datetime(1900, 1, 1, 0 , 0 ) )
-                sensor_datetime[ddt] = {'sensor': sensor, 'min_index': 0}
+                sensor_datetime[ddt] = {'sensor' : sensor, 'min_index' : 0}
                 
             else:
                 year, month, day, hour, minute =  int(dt[0:4]) , int(dt[4:6]) , int(dt[6:8]) , int(dt[8:10])  , int(dt[10:12] ) 
                 try:
                     dt = np.datetime64( datetime ( year, month, day, hour, minute ) )
                     near = nearest(self.data['recordtimestampdecoded'].values, dt)
-                    sensor_datetime[near] = {'sensor': sensor } 
+                    sensor_datetime[near] = {'sensor' : sensor } 
                     
                 except: # this does not work because I cannot match the date_time anymore   
                     pass
-                    """ 
-                    if month <= 0:
-                        month = 1
-                    if day <=0:
-                        day = 1
-    
-                    dt = np.datetime64( datetime ( year, month, day, hour, minute ) )
-                    """
-
-            
+                
             print (0)
-            
 
         """ If I have only one entry, this instrument will be applied to the entire list of observations """
         lista = list(sensor_datetime.keys())
         lista.sort() 
         if len ( lista ) == 1:
-            return sensor_datetime
-        
+            sensor_datetime[ lista[0] ] ['max_index'] = -1
+            sensor_datetime[ lista[0] ] ['min_index']  = -1
+            
         else: # if I have more entries, I have different instruments for different period
             
             for dt, num in zip(lista, range(len(lista)) ) :
@@ -281,10 +278,10 @@ class Sensor(MergedFile):
                 elif num > 0 and dt != lista[-1]: # all the values until the last one in the list (most recent datetime available in Schroeder's data)
                     index_dt = np.where( self.data['recordtimestampdecoded'] == lista[num+1] )[0][0]  # getting the following datetime 
                     index_max = self.data['recordindex'][index_dt]
-                    
+    
                     sensor_datetime[dt]['max_index'] = index_max 
                     sensor_datetime[dt]['min_index'] = sensor_datetime[lista[num-1]]['max_index']
-                
+                    
                 else:
                     sensor_datetime[dt]['max_index'] = self.data['length_max']                      
                     sensor_datetime[dt]['min_index'] = sensor_datetime[lista[num-1]]['max_index']
@@ -308,10 +305,22 @@ class Sensor(MergedFile):
         temp_sensor_list = [] 
         for dt in lista:
             sensor_id = sensor_datetime[dt]['sensor']
-            length = sensor_datetime[dt]['max_index'] - sensor_datetime[dt]['min_index']
+            while len(sensor_id) < 3:
+                sensor_id = sensor_id + b' ' 
+                print(sensor_id)
+                
+            """ If I have only one sensor, it will be applied to the whole length of the observations_table """    
+            
+            if  sensor_datetime[dt]['max_index'] == -1:
+                length = self.data['length_max']
+            else:
+                length = sensor_datetime[dt]['max_index'] - sensor_datetime[dt]['min_index']
             sensor_id_array = np.full( ( length )  , sensor_id ).astype(  np.dtype('|S3')  ) 
             temp_sensor_list.append(sensor_id_array)
-            print(2)
+        
+        if not temp_sensor_list:
+            print('No sensor found ::: ')
+            return 'NoSensor'  # stop here if no sensor is found 
         
         sensor_list = np.concatenate(temp_sensor_list)
         
@@ -331,7 +340,7 @@ class Sensor(MergedFile):
         except:
             pass
         
-        """ Checking if index dimension variable exists, if not create it """
+        """ Checkingn if index dimension variable exists, if not create it """
         if 'index' not in self.data['h5py_file']['observations_table'].keys():
             index = np.zeros (  self.data['h5py_file']['observations_table']['date_time'] .shape[0], dtype='S1')           
             data['observations_table'].create_dataset('index', data=index)
@@ -341,65 +350,131 @@ class Sensor(MergedFile):
             data['observations_table']['sensor_id'].dims[0].attach_scale( data['observations_table']['index'] )
             data['observations_table'].create_dataset( s ,  data=stringa[:slen]  )
             data['observations_table']['sensor_id'].dims[1].attach_scale(data['observations_table']['string{}'.format(slen)])
-
             data['observations_table']['string{}'.format(slen)].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')
             print(' *** Done with the attributes of the dimension *** ')
             
         except ValueError:
             print('Dimension already exist, passing ')
-            
-        print(0)
 
         self.data['h5py_file'].close()
         
+    def run(self):
+        ''' This willl be kept in the main 
+        """ Initialize classes, read data """
+        MF = MergedFile(out_dir = '' , station_id = station_id , file = file  )
+        data = MF.load(file = file )
+
+        """ Load Schroeder """
+        sensor = Sensor(data= data, out_dir = '' , station_id = station_id , file = file )
+        '''
+        cdm_tables = self.load_cdm_tables()      
+        load_Schroeder_table = self.load_Schroeder_tables()
+        dummy = self.extract_sensor_id()
+        status = self.replace_sensor_id()
+        
+        if status != 'NoSensor':
+            status = sensor.write_sensorconfig()
+    
+    
+        write = self.MergedFile.write_summary( what = 'sensor', done = True)
+        
+        os.system('mv  ' + self.MergedFile.file + '   ' +  self.MergedFile.out_dir )
+        print(' --- Done writing the output file ' + self.MergedFile.file + '  ! ---  ' )
+        return 0 
+        
+        
+        
+        
+        
+
+""" File source direcotry """
+merged_directory = '/raid60/scratch/federico/do/'
+
+""" Moving postprocessed files to new directory """
+postprocessed_new = '/raid60/scratch/federico/CIAONE'
+os.system('mkdir ' + postprocessed_new)
+
+""" Set if running is enforced (False: will crash at errors) """
 
 if __name__ == '__main__':
         
             parser = argparse.ArgumentParser(description="Postprocessing Utility")
             
             parser.add_argument('--stations' , '-s', 
-                                  help="Station to postprocess"  ,
+                                  help="List of Station Ids to Postprocess"  ,
                                   type = str,
                                   default = 'a')
         
             parser.add_argument('--instrument' , '-i', 
-                                  help="Add instrument type"  ,
-                                  type = bool,
-                                  default = True )
+                                  help="Add Instrument Type"  ,
+                                  type = str,
+                                  default = 'False'  )
+            
+            parser.add_argument('--force_run' , '-f', 
+                                  help="Force running the file(s)"  ,
+                                  type = str,
+                                  default = 'False' )
+            
+            parser.add_argument('--desrozier' , '-d', 
+                                  help="Calculate Desroziers' statistics"  ,
+                                  type = str,
+                                  default = 'False'  )
             
             args = parser.parse_args()
             
-            stations       = args.stations
+            stations             = args.stations
             get_instrument = args.instrument
-
-            # 0-20000-0-70316_CEUAS_merged_v0.nc
+            force_run          = args.force_run
+            get_desrozier    = args.desrozier
             
-            """ for now, the file and stations are here hardcoded """
-
-            file = '0-20000-0-70316_CEUAS_merged_v0.nc' 
-            station_id = 70316
-
-            """ Initialize classes """
-            MF = MergedFile(out_dir = '' , station_id = station_id , file = file  )
+            # 0-20000-0-70316_CEUAS_merged_v0.nc   ### check if this file works now 
+            #file = '0-20000-0-70316_CEUAS_merged_v0.nc' 
             
-            """ Read data """
-            data = MF.load(file = file )
-            
-            """ Load Schroeder """
-            Sensor = Sensor(data= data, out_dir = '' , station_id = station_id , file = file )
-            cdm_tables = Sensor.load_cdm_tables()      
-            
-            load_Schroeder_table = Sensor.load_Schroeder_tables()
-            
-            dummy = Sensor.extract_sensor_id()
-            dummy = Sensor.replace_sensor_id()
-            dummy = Sensor.write_sensorconfig()
-            
-            print('*** Done ***')
+            stations_list = os.listdir(merged_directory)                        
 
+            for s in stations_list:
+                
+                file = merged_directory + '/' + s
+                
+                station_id = file.split("_CEUAS")[0].split(merged_directory)[1].replace('/','').split('-')[-1]
 
+                print (' I will process the file ::: ' , file , ' ::: station_id ::: ' , station_id )  
+                
+                """ Initialize classes """
+                MF = MergedFile(out_dir = postprocessed_new , station_id = station_id , file = file  )
+                """ Read data """
+                data = MF.load()
+                
+                if force_run in ['yes', 'y', 'YES', 'Y', 'True', 'true']:   
+                    print("    === Running in force mode ===     ")
+                    
+                    try:
+                        
+                        """ Running sensor module """
+                        if get_instrument in  ['yes', 'y', 'YES', 'Y', 'True', 'true'] :
+                                       
+                            sensor = Sensor( MF = MF  )  # loading sensor class 
+                            run = sensor.run() # running module 
+                            
+                        if desrozier_statistics in ['yes', 'y', 'YES', 'Y', 'True', 'true'] :
+                            
+                            tabs = MF.load_obstab_era5fb()
+                            print('Running Desroziers statistics')
+                        
+                            
+                    except:
+                        print(" The file " + file + ' hase failed! MUST REDO! ')
+                    
+                else:
+                    print('   +++ Running in normal mode +++')
+                    """ Running sensor module """
+                    if get_instrument:
+                                   
+                        sensor = Sensor( MF = MF  )  # loading sensor class 
+                        run = sensor.run() # running module 
+                        
+                    if desrozier_statistics in ['yes', 'y', 'YES', 'Y', 'True', 'true'] :
 
+                            tabs = MF.load_obstab_era5fb()
+                            print('Running Desroziers statistics')                        
 
-""" To run simply type 
-                         python postprocess.py 
-    (you might want to modify the file path and the station id variables above) """
