@@ -291,7 +291,8 @@ def read_standardnames(url: str = None) -> dict:
     snames = ['platform_id', 'platform_name', 'latitude', 'longitude', 'time', 'air_pressure',
               'air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
               'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential',
-              'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type', 'aggregated_quantity', 'variance']
+              'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type', 
+              'aggregated_quantity', 'variance', 'report_id', 'reference_sonde_type']
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
                 'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
@@ -299,7 +300,7 @@ def read_standardnames(url: str = None) -> dict:
     cdmnames += 9 * ['observations_table/observation_value']
     # todo at the moment this is hard coded here, what if JRA55 is requested?
     cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body', 'observations_table/sensor_id',
-                 'observations_table/secondary_value', 'observations_table/original_precision']
+                 'observations_table/secondary_value', 'observations_table/original_precision', 'observations_table/report_id', 'observations_table/reference_sensor_id']
     cf = {}
     for c, cdm in zip(snames, cdmnames):
         cf[c] = {'cdmname': cdm, 'units': 'NA', 'shortname': c}
@@ -367,6 +368,8 @@ def read_standardnames(url: str = None) -> dict:
     cf['sonde_type']['shortname'] = 'sonde_type'
     cf['aggregated_quantity']['shortname'] = 'aggregated_quantity'
     cf['variance']['shortname'] = 'variance'
+    cf['report_id']['shortname'] = 'report_id'
+    cf['reference_sonde_type']['shortname'] = 'reference_sonde_type'
     return cf
 
 
@@ -1806,7 +1809,7 @@ class CDMDataset:
                 do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value', 
-                                         'original_precision'])
+                                         'original_precision', 'report_id', 'reference_sensor_id'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
