@@ -248,6 +248,7 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
         #
         slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v0.nc'))
         slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20100-0-?????.nc'))
+        slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20200-0-?????.nc'))
         # slnum = [i[-34:-19] for i in slist]
         slnum = [i.split('/')[-1].split('_')[0].replace('.nc','') for i in slist]
         volapath = 'https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
