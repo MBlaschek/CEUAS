@@ -291,7 +291,7 @@ def read_standardnames(url: str = None) -> dict:
     snames = ['platform_id', 'platform_name', 'latitude', 'longitude', 'time', 'air_pressure',
               'air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
               'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential',
-              'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type', 
+              'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type',
               'aggregated_quantity', 'variance', 'report_id', 'reference_sonde_type']
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
@@ -299,8 +299,10 @@ def read_standardnames(url: str = None) -> dict:
 
     cdmnames += 9 * ['observations_table/observation_value']
     # todo at the moment this is hard coded here, what if JRA55 is requested?
-    cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body', 'observations_table/sensor_id',
-                 'observations_table/secondary_value', 'observations_table/original_precision', 'observations_table/report_id', 'observations_table/reference_sensor_id']
+    cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body',
+                 'observations_table/sensor_id',
+                 'observations_table/secondary_value', 'observations_table/original_precision',
+                 'observations_table/report_id', 'observations_table/reference_sensor_id']
     cf = {}
     for c, cdm in zip(snames, cdmnames):
         cf[c] = {'cdmname': cdm, 'units': 'NA', 'shortname': c}
@@ -1224,12 +1226,36 @@ def level_interpolation(idata: xr.DataArray, dim: str = 'time', method: str = 'l
     # todo figure out if drop(obs) is required
     return idata.swap_dims({dim: idim}).drop_vars('obs')  # swap dimension back, remove obs coordinate
 
+
 ###############################################################################
 #
 # Request Functions for initiating CDMDataset
 #
+###############################################################################
 
-def cds_request_wrapper(request:dict, request_filename:str=None, cds_url:str=None, overwrite:bool=False):
+
+def cds_request_wrapper(request: dict, request_filename: str = None, cds_dataset: str = None, cds_url: str = None,
+                        overwrite: bool = False):
+    """ Run a CDS Request and return a CDMDataset or a CDMDatasetList if more variables are requested
+
+    Args:
+        request: dictionary with CDS request
+        request_filename: Output filename (zip)
+        cds_dataset: CDS Dataset (insitu-comprehensive-upper-air-observation-network)
+        cds_url: CDS Server URL (https://sis-dev.climate.copernicus.eu/api/v2)
+        overwrite: flag if caching is disabled
+
+    Returns:
+        CDMDataset
+        CDMDatasetList
+
+    Examples:
+            Request for Station 10393 Lindenberg the variable air_temperature for every available time and pressure
+            level. The request will be forwarded to the CDS and to the VM, downloaded and loaded into the CDMDataset
+            class.
+            >>> data = cds_request_wrapper({'statid':'10393', 'variable':'air_temperature'})
+
+    """
     import zlib
     import zipfile
     import cdsapi
@@ -1257,13 +1283,83 @@ def cds_request_wrapper(request:dict, request_filename:str=None, cds_url:str=Non
             f.extractall(idir + '/')
             for ifile in files:
                 logger.debug('Extracting %s/%s', idir, ifile)
-
+        if 'format' in request:
+            if request['format'] == 'csv':
+                # todo read multiple csv files and return a DataFrame
+                raise NotImplementedError()
+                
+                
+        files = ["{}/{}".format(idir, ifile) for ifile in files]
         if len(files) > 1:
-            logger.warning('Using %s/%s', idir, files[0])
+            return CDMDatasetList(*files)
+        return CDMDataset(filename=files[0])
 
-        filename = idir + '/' + files[0]
     except Exception as e:
-        logger.error('CDSAPI Request failed %s', str(cds_request))
+        logger.error('CDSAPI Request failed %s', str(request))
+        raise e
+
+
+def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str = None, overwrite: bool = False):
+    """ Run a VM Request and return a CDMDataset or a CDMDatasetList if more variables are requested
+
+    Args:
+        request: dictionary with VM request
+        request_filename: Output filename (zip)
+        vm_url: VM Server URL (http://early-upper-air.copernicus-climate.eu)
+        overwrite: flag if caching is disabled
+
+    Returns:
+        CDMDataset
+        CDMDatasetList
+
+    Examples:
+            Request for Station 10393 Lindenberg the variable air_temperature for every available time and pressure
+            level. The request will be forwarded to the CDS and to the VM, downloaded and loaded into the CDMDataset
+            class.
+            The same request as with the CDSAPI, but with the VM.
+            >>> data = vm_request_wrapper({'statid':'10393', 'variable': ['temperature']})
+
+    """
+    import zlib
+    import zipfile
+    import requests
+    import urllib3
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    try:
+        if request_filename is None:
+            request_filename = '{}.zip'.format(zlib.adler32(bytes(repr(request), 'utf-8')))
+
+        if not os.path.isfile(request_filename) or overwrite:
+            r = requests.post('http://early-upper-air.copernicus-climate.eu' if vm_url is None else vm_url,
+                              headers={'content-type': 'application/json'},
+                              json=request,
+                              stream=True, )
+            if r.status_code != requests.codes.ok:
+                raise RuntimeError(r.text)
+
+            with open(request_filename, 'wb') as f:
+                f.write(r.content)
+
+        idir = os.path.dirname(request_filename) if '/' in request_filename else '.'
+        os.makedirs(idir, exist_ok=True)
+        with zipfile.ZipFile(request_filename, 'r') as f:
+            files = f.namelist()
+            f.extractall(idir + '/')
+            for ifile in files:
+                logger.debug('Extracting %s/%s', idir, ifile)
+        
+        if 'format' in request:
+            if request['format'] == 'csv':
+                # todo read multiple csv files and return a DataFrame
+                raise NotImplementedError()
+                
+        files = ["{}/{}".format(idir, ifile) for ifile in files]
+        if len(files) > 1:
+            return CDMDatasetList(*files)
+        return CDMDataset(filename=files[0])
+
+    except Exception as e:
+        logger.error('VM Request failed %s', str(request))
         raise e
 
 
@@ -1357,10 +1453,24 @@ class CDMGroup(CDMVariable):
     def __getitem__(self, item):
         return self.__getattribute__(item)
 
+
 class CDMDatasetList(dict):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    """ This is the dict subclass for CDMDataset with multiple variables
+    """
+    def __init__(self, *args):
+        data = {}
+        for ifile in args:
+            name = (ifile.split('/')[-1]).replace('.nc','')
+            data[name] = CDMDataset(filename=ifile)
+        super().__init__(data)
         self.__dict__ = self
+    def __repr__(self):
+        text = "CDMDatasetList <{}>".format(len(self.keys()))
+        for ikey in self.keys():
+            text += "\n- {}\n  {}".format(ikey, "\n  ".join(str(self[ikey]).splitlines()))
+            
+        return text
+
 
 class CDMDataset:
     """ This is the main CDM Class for handling CDM files, both frontend and backend
@@ -1369,19 +1479,11 @@ class CDMDataset:
     # memory efficient, no duplicates
     # __slots__ = ['filename', 'file', 'groups', 'data']
 
-    def __init__(self, filename: str = None, cds_request: dict = None, cds_url: str = None, cds_dataset: str = None,
-                 vm_request: dict = None, vm_url: str = None, request_filename: str = None, overwrite: bool = False):
+    def __init__(self, filename: str = None):
         """ Init Class CDMDataset with a filename, cds_request or vm_request
 
         Args:
             filename: path of NetCDF HDF5 backend of frontend file
-            cds_request: dictionary CDS request
-            cds_url: CDS URL
-            cds_dataset: CDS Dataset
-            vm_request: VM (Backend) request
-            vm_url: VM hostname
-            request_filename: output filename for requests
-            overwrite: rerun request or read
 
         Examples:
             Open a CDM Backend file
@@ -1390,93 +1492,9 @@ class CDMDataset:
             Open a CDM frontend file
             >>> data = CDMDataset(filename='dest_0-20000-0-01001_air_temperature.nc')
 
-            Request for Station 10393 Lindenberg the variable air_temperature for every available time and pressure
-            level. The request will be forwarded to the CDS and to the VM, downloaded and loaded into the CDMDataset
-            class.
-            >>> data = CDMDataset(cds_request={'statid':'10393', 'variable':'air_temperature'})
-
-            The same request as witht eh CDSAPI, but with the VM.
-            >>> data = CDMDataset(vm_request={'statid':'10393', 'variable': ['temperature']})
-
-
         """
-        if filename is None and cds_request is None and vm_request is None:
-            raise ValueError('Specifiy either filename or cds_request or vm_request')
-
-        if cds_request is not None:
-            try:
-                import zlib
-                import zipfile
-                import cdsapi
-                import urllib3
-                urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-                if request_filename is None:
-                    request_filename = '{}.zip'.format(zlib.adler32(bytes(repr(cds_request), 'utf-8')))
-
-                if not os.path.isfile(request_filename) or overwrite:
-                    client = cdsapi.Client(
-                        'https://sis-dev.climate.copernicus.eu/api/v2' if cds_url is None else cds_url)
-                    client.retrieve(
-                        cds_dataset if cds_dataset is not None else 'insitu-comprehensive-upper-air-observation-network',
-                        cds_request,
-                        request_filename)
-                    # file is downloaded to cds_outputfile
-                else:
-                    logger.info('Requested file exists: %s', request_filename)
-
-                idir = os.path.dirname(request_filename) if '/' in request_filename else '.'
-                os.makedirs(idir, exist_ok=True)
-                with zipfile.ZipFile(request_filename, 'r') as f:
-                    files = f.namelist()
-                    f.extractall(idir + '/')
-                    for ifile in files:
-                        logger.debug('Extracting %s/%s', idir, ifile)
-
-                if len(files) > 1:
-                    logger.warning('Using %s/%s', idir, files[0])
-
-                filename = idir + '/' + files[0]
-            except Exception as e:
-                logger.error('CDSAPI Request failed %s', str(cds_request))
-                raise e
-
-        if vm_request is not None:
-            try:
-                import zlib
-                import zipfile
-                import requests
-                import urllib3
-                urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-                if request_filename is None:
-                    request_filename = '{}.zip'.format(zlib.adler32(bytes(repr(vm_request), 'utf-8')))
-
-                if not os.path.isfile(request_filename) or overwrite:
-                    r = requests.post('http://early-upper-air.copernicus-climate.eu' if vm_url is None else vm_url,
-                                      headers={'content-type': 'application/json'},
-                                      json=vm_request,
-                                      stream=True, )
-                    if r.status_code != requests.codes.ok:
-                        raise RuntimeError(r.text)
-
-                    with open(request_filename, 'wb') as f:
-                        f.write(r.content)
-
-                idir = os.path.dirname(request_filename) if '/' in request_filename else '.'
-                os.makedirs(idir, exist_ok=True)
-                with zipfile.ZipFile(request_filename, 'r') as f:
-                    files = f.namelist()
-                    f.extractall(idir + '/')
-                    for ifile in files:
-                        logger.debug('Extracting %s/%s', idir, ifile)
-
-                if len(files) > 1:
-                    logger.warning('Using %s/%s', idir, files[0])
-
-                filename = idir + '/' + files[0]
-            except Exception as e:
-                logger.error('VM Request failed %s', str(vm_request))
-                raise e
+        if filename is None:
+            raise ValueError('Specifiy either filename.')
 
         if filename == 'empty':
             self.filename = ''
@@ -1794,7 +1812,7 @@ class CDMDataset:
         # Common Variables needed for a requested file
         #
         snames = ['report_id', 'platform_id', 'platform_name', 'observation_value', 'latitude',
-                  'longitude', 'time', 'air_pressure', 'trajectory_label'] 
+                  'longitude', 'time', 'air_pressure', 'trajectory_label']
         logger.debug('Request-keys: %s', str(request.keys()))
         snames.append(cdsname)  # Add requested variable
         #
@@ -1854,7 +1872,7 @@ class CDMDataset:
                 igroup = 'observations_table'
                 do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
-                                         'observation_value', 'date_time', 'sensor_id', 'secondary_value', 
+                                         'observation_value', 'date_time', 'sensor_id', 'secondary_value',
                                          'original_precision', 'report_id', 'reference_sensor_id'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
@@ -2336,11 +2354,14 @@ class CDMDataset:
             return self[name][trange][logic], xdates[logic], xplevs[logic]
         return self[name][trange][logic]
 
-    def profile_to_dataframe(self, groups, variables, date,
+    def to_dataframe(self, groups=None, variables:list=None, date=None,
                              date_time_name: str = 'date_time',
                              date_is_index: bool = False,
+                     decode_datetime:bool=True,
                              **kwargs):
-        """ Convert HDF5 variables to a DataFrame
+        """ Convert variables to a DataFrame
+        CDM Backend files need groups and variables
+        CDM Frontend files do not
 
         Args:
             groups: list of groups to search in
@@ -2353,15 +2374,22 @@ class CDMDataset:
         Returns:
             DataFrame
         """
-        if isinstance(groups, str):
-            if groups == '/':
-                groups = None
-            else:
-                groups = [groups]
+        if self.hasgroups:
+            if isinstance(groups, str):
+                if groups == '/':
+                    groups = None
+                else:
+                    groups = [groups]
 
-        if isinstance(variables, str):
-            variables = [variables]
-
+            if isinstance(variables, str):
+                variables = [variables]
+        else:
+            if variables is None:
+                variables = self.groups  # all variables
+                
+            if date_time_name == 'date_time':
+                date_time_name = 'time'
+                
         if date is not None:
             if isinstance(date, (str, int)):
                 date = [date]
@@ -2371,25 +2399,47 @@ class CDMDataset:
             else:
                 date = self.make_datetime_slice(dates=[date[0], date[-1]], date_time_name=date_time_name)
         else:
+
             date = slice(None)
 
         logger.info("Reading Profile on %s", str(date))
         data = {}
         if groups is not None:
+            # Backend file
             for igroup in groups:
                 for ivar in variables:
                     if ivar in self[igroup].keys():
                         data[ivar] = self[igroup][ivar][date]
         else:
+            # Frontend file
             for ivar in variables:
                 if ivar in self.groups:
-                    data[ivar] = self[ivar][date]
-
+                    if ivar in ['trajectory_label', 'trajectory']:
+                        data[ivar] = self[ivar][:]  # get data
+                        continue
+                    if 'string' in ivar:
+                        continue
+                    
+                    data[ivar] = self[ivar][date]  # get data
+        # raise RuntimeError()
         logger.debug('Read variables: %s', str(data.keys()))
-        for ivar in data.keys():
+        for ivar in list(data.keys()):
+            # check if var still exists
+            if ivar not in data.keys():
+                continue
+
+            # convert char arrays to string
             if len(data[ivar].shape) > 1:
-                # convert char arrays to string
-                data[ivar] = data[ivar].astype(object).sum(1).astype(str)
+                data[ivar] = data[ivar].astype(object).sum(axis=1).astype(str)
+        
+            # Trajectory info
+            if ivar == 'trajectory_label':
+                data['trajectory_label'] = data['trajectory_label'][data['trajectory_index']]
+                del data['trajectory_index']
+                del data['trajectory']
+            if ivar == date_time_name and decode_datetime:
+                data[ivar] = seconds_to_datetime(data[ivar])
+                
         return pd.DataFrame(data)
 
     def read_data_to_cube(self, variables: list, dates: list = None, plevs: list = None, feedback: list = None,
@@ -2533,7 +2583,7 @@ class CDMDataset:
                             extrapolate_time: bool = True,
                             extrapolate_plevs: bool = False,
                             **kwargs):
-        """ Write a DataCube or a Table (DataArray, DataFrame) with Multiindex to CDMBackend file
+        """ Write a DataCube or a Table (DataArray, DataFrame) with Multiindex to CDM Backend file
 
         Args:
             name: name of variable to write to
@@ -3160,36 +3210,36 @@ class CDMDataset:
         self[name].update(data=writeme)  # update class in memory
         logger.info('Finsihed writing %s to %s', name, self.name)
 
-    def write_to_frontend_file(self, filename: str, variables: list, index: np.ndarray = None, cf_dict: dict = None,
-                               **kwargs):
-        """
+#     def write_to_frontend_file(self, filename: str, variables: list, index: np.ndarray = None, cf_dict: dict = None,
+#                                **kwargs):
+#         """ Write a
 
-        Args:
-            filename:
-            variables:
-            index:
-            cf_dict:
-            **kwargs:
+#         Args:
+#             filename:
+#             variables:
+#             index:
+#             cf_dict:
+#             **kwargs:
 
-        Examples:
-            >>> data = CDMDataset('testfile.nc')
-            >>> data.write_to_frontend_file('only_wind.nc', ['wind_speed', 'wind_from_direction'])
+#         Examples:
+#             >>> data = CDMDataset('testfile.nc')
+#             >>> data.write_to_frontend_file('only_wind.nc', ['wind_speed', 'wind_from_direction'])
 
-        """
-        # search for variables if cdmname not in cf_dict
-        if not self.hasgroups:
-            raise NotImplementedError('Not yet implemented')
+#         """
+#         # search for variables if cdmname not in cf_dict
+#         if not self.hasgroups:
+#             raise NotImplementedError('Not yet implemented')
 
-        # make a decision which dimension requires what
-        # observations_table -> obs
-        # header_table -> trajectory
-        # stations_configuration -> trajectory
+#         # make a decision which dimension requires what
+#         # observations_table -> obs
+#         # header_table -> trajectory
+#         # stations_configuration -> trajectory
 
-        # trajectory index?
-        # do_cfcopy
+#         # trajectory index?
+#         # do_cfcopy
 
-        # global attributes
-        pass
+#         # global attributes
+#         pass
 
     def report_quality(self, filename: str = None):
         """ Compile a quality report
@@ -3297,7 +3347,7 @@ class CDMDataset:
         if z_coordinate_name not in variables:
             variables.append(z_coordinate_name)
 
-        data = self.profile_to_dataframe(groups, variables, None, **kwargs)
+        data = self.to_dataframe(groups, variables, None, **kwargs)
         logger.info("Evaluating for duplicates ... (pandas)")
         data = data[
             data.duplicated([date_time_name, z_coordinate_name, observed_variable_name], keep=False)].sort_values(
