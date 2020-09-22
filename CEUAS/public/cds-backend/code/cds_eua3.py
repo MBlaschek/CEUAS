@@ -1224,6 +1224,48 @@ def level_interpolation(idata: xr.DataArray, dim: str = 'time', method: str = 'l
     # todo figure out if drop(obs) is required
     return idata.swap_dims({dim: idim}).drop_vars('obs')  # swap dimension back, remove obs coordinate
 
+###############################################################################
+#
+# Request Functions for initiating CDMDataset
+#
+
+def cds_request_wrapper(request:dict, request_filename:str=None, cds_url:str=None, overwrite:bool=False):
+    import zlib
+    import zipfile
+    import cdsapi
+    import urllib3
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    try:
+        if request_filename is None:
+            request_filename = '{}.zip'.format(zlib.adler32(bytes(repr(request), 'utf-8')))
+
+        if not os.path.isfile(request_filename) or overwrite:
+            client = cdsapi.Client(
+                'https://sis-dev.climate.copernicus.eu/api/v2' if cds_url is None else cds_url)
+            client.retrieve(
+                cds_dataset if cds_dataset is not None else 'insitu-comprehensive-upper-air-observation-network',
+                request,
+                request_filename)
+            # file is downloaded to cds_outputfile
+        else:
+            logger.info('Requested file exists: %s', request_filename)
+
+        idir = os.path.dirname(request_filename) if '/' in request_filename else '.'
+        os.makedirs(idir, exist_ok=True)
+        with zipfile.ZipFile(request_filename, 'r') as f:
+            files = f.namelist()
+            f.extractall(idir + '/')
+            for ifile in files:
+                logger.debug('Extracting %s/%s', idir, ifile)
+
+        if len(files) > 1:
+            logger.warning('Using %s/%s', idir, files[0])
+
+        filename = idir + '/' + files[0]
+    except Exception as e:
+        logger.error('CDSAPI Request failed %s', str(cds_request))
+        raise e
+
 
 ###############################################################################
 #
@@ -1315,6 +1357,10 @@ class CDMGroup(CDMVariable):
     def __getitem__(self, item):
         return self.__getattribute__(item)
 
+class CDMDatasetList(dict):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__dict__ = self
 
 class CDMDataset:
     """ This is the main CDM Class for handling CDM files, both frontend and backend
