@@ -247,7 +247,7 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
         # find Merged Netcdf files and intercomparison files
         #
         slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v0.nc'))
-        slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20100-0-?????.nc'))
+        slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
         # slnum = [i[-34:-19] for i in slist]
         slnum = [i.split('/')[-1].split('_')[0].replace('.nc','') for i in slist]
         volapath = 'https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
@@ -387,13 +387,15 @@ def status_test(command=None) -> dict:
         elapsed = datetime.now() - datetime.fromtimestamp(hproc.create_time())
         status_msg = {"version": __version__, "status": hproc.status(), "running": hproc.is_running(),
                       "available": str(elapsed), "memory": hproc.memory_percent(), "cpu": hproc.cpu_percent(),
-                      "stations": len(slnum)}
+                      "num_stations": len(slnum), "active": active}
         # psutil.disk_usage('/data/public/')  # '/data/private/',
         if command == config['reload_pwd']:
             if elapsed.total_seconds() > 120:
                 # todo run this in background and wait until a request is finished before restarting
                 init_server(force_reload=True, force_download=False)
                 hproc.kill()  # this should end the hug server and cron should restart it
+            else:
+                status_msg['command'] = 'Sorry restarted only %d seconds ago [120 s]' % elapsed.total_seconds()
             return status_msg
 
         if command == 'cleanup':

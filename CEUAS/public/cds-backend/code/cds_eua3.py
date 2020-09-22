@@ -18,7 +18,7 @@ Updated: %s
 Context
 - This class CDMDataset with process_flat will replace the hug cds_eua2 function sets
 - This class CDMDataset will be used in adjust and quality control
-
+  
 Performance
 - HDF5 Netcdf files should be chunked or sorted by variable and a variable lie=ke recordindex , e.g. varindex could
   give a slice per Variable to speed up reading performance.
@@ -290,14 +290,14 @@ def read_standardnames(url: str = None) -> dict:
               'air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
               'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential',
               'trajectory_label',
-              'obs_minus_bg', 'obs_minus_an', 'bias_estimate']
+              'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type']
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
                 'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
 
     cdmnames += 9 * ['observations_table/observation_value']
     # todo at the moment this is hard coded here, what if JRA55 is requested?
-    cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body']
+    cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body', 'observations_table/sensor_id']
     cf = {}
     for c, cdm in zip(snames, cdmnames):
         cf[c] = {'cdmname': cdm, 'units': 'NA', 'shortname': c}
