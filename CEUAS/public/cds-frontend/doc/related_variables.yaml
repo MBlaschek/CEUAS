@@ -22,12 +22,38 @@ description:
   - Description: "WIGOS Station Identifier, only available in csv"
     Name: Statid
     Units: 1
-  - Description: "Station Index for mulitple stations in one file, only in csv"
+  - Description: "Station Index for multiple stations in one file, only in csv"
     Name: Statindex
     Units: 1
-  - Description: "ERA5 reanalysis observation minus analysis"
+  - Description: "optional, ERA5 reanalysis observation minus analysis"
     Name: Obs_minus_an
     Units: "same as variable"
-  - Description: "ERA5 reanalysis observation minus first guess"
+  - Description: "optional, ERA5 reanalysis observation minus first guess"
     Name: Obs_minus_fg
     Units: "same as variable"
+  - Description: "optional, ERA5 reanalysis observation bias estimate"
+    Name: Bias_estimate
+    Units: "same as variable"
+  - Description: "optional, Sonde Type"
+    Name: Sonde_type
+    Units: 1
+  - Description: "optional, Observation Error (estimated with Desrozier's method)"
+    Name: Observation_error
+    Units: "same as variable"
+  - Description: "optional, Sample size of aggregated difference, only for IDs starting with 20200"
+    Name: Sample_size
+    Units: 1
+  - Description: "optional, Reference Sonde Type, only for IDs starting with 20200"
+    Name: Reference_sonde_type
+    Units: 1   
+  - Description: "optional, Error standard deviation of aggregated difference, only for IDs starting with 20200"
+    Name: Sample_error
+    Units: "same as variable"
+  - Description: "optional, RAOBCORE bias estimate"
+    Name: RAOBCORE_bias_estimate
+    Units: "same as variable"
+  - Description: "optional, RICH bias estimate"
+    Name: RICH_bias_estimate
+    Units: "same as variable"
+    
+    
