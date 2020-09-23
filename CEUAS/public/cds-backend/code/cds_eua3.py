@@ -292,7 +292,7 @@ def read_standardnames(url: str = None) -> dict:
               'air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
               'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential',
               'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type',
-              'aggregated_quantity', 'variance', 'report_id', 'reference_sonde_type']
+              'sample_size', 'sample_error', 'report_id', 'reference_sonde_type']
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
                 'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
@@ -368,8 +368,8 @@ def read_standardnames(url: str = None) -> dict:
     cf['geopotential']['odbcode'] = 1
     cf['trajectory_label']['shortname'] = 'trajectory_label'
     cf['sonde_type']['shortname'] = 'sonde_type'
-    cf['aggregated_quantity']['shortname'] = 'aggregated_quantity'
-    cf['variance']['shortname'] = 'variance'
+    cf['sample_size']['shortname'] = 'sample_size'
+    cf['sample_error']['shortname'] = 'sample_error'
     cf['report_id']['shortname'] = 'report_id'
     cf['reference_sonde_type']['shortname'] = 'reference_sonde_type'
     return cf
