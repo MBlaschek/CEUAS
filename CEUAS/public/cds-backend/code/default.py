@@ -525,7 +525,7 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
 
 def check_body(variable: list = None, statid: list = None, product_type: str = None, pressure_level: list = None,
                date: list = None, time: list = None, fbstats=None, bbox: list = None, country: str = None,
-               format: str = None, period: list = None, intercomparison: list = None, wmotable: dict = None,
+               format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                pass_unknown_keys: bool = False,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
@@ -594,10 +594,10 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             if ifb not in ['obs_minus_an', 'obs_minus_bg', 'bias_estimate']:
                 raise KeyError('Invalid fbstats variable selected: ' + ifb)
     #
-    # Intercomparison
+    # Optional
     # todo check variables
-    if intercomparison is not None:
-        d['intercomparison'] = intercomparison
+    if optional is not None:
+        d['optional'] = optional
 
     #
     # Format
