@@ -1,0 +1,12 @@
+{
+  "logger_name": "upperair",
+  "logger_level": 10,
+  "logger_debug": "hug.debug.log",
+  "logger_dir": "./logs",
+  "src_path": ".",
+  "data_dir": "/raid60/scratch/federico/DATABASE_V1_11SEPTEMBER2020",
+  "tmp_dir": "$SCRTACH",
+  "comp_dir": "/raid60/scratch/leo/scratch/RI/Pangaea/nc",
+  "config_dir": "./config",
+  "reload_pwd": "reload"
+}

@@ -594,6 +594,12 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             if ifb not in ['obs_minus_an', 'obs_minus_bg', 'bias_estimate']:
                 raise KeyError('Invalid fbstats variable selected: ' + ifb)
     #
+    # Intercomparison
+    # todo check variables
+    if intercomparison is not None:
+        d['intercomparison'] = intercomparison
+
+    #
     # Format
     #
     if format is not None:
