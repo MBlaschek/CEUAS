@@ -1832,10 +1832,10 @@ class CDMDataset:
             #
             pass
         #
-        # Add Intercomparion Variables
+        # Add Optional Variables
         #
-        if 'intercomparison' in request.keys():
-            snames.extend(request['intercomparison'])
+        if 'optional' in request.keys():
+            snames.extend(request['optional'])
         # Copy Metadata -> used by do_cfcopy
         cfcopy = {}  # Copy of CDM Info Dictionary (read_standard_names())
         for ss in snames:
