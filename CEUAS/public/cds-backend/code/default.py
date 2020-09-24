@@ -483,9 +483,10 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
         # ds = xarray.open_dataset(fn, drop_variables=['trajectory_label', 'trajectory_index', 'trajectory'])
         ds = xarray.open_dataset(fn)            
 
+        to_be_removed = ['trajectory_index', 'trajectory']
         for ivar in list(ds.variables):
             if 'string' in ivar:
-                ds = ds.drop_vars(ivar)
+                to_be_removed.append(ivar)
             
             if 'trajectory' in ds[ivar].dims:
                 report_id = ds[ivar].astype(object).sum(axis=1).astype(str)
@@ -497,8 +498,8 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
                 ds = ds.drop_vars(ivar)
                 idim = tmp.dims[0]
                 ds[ivar] = (idim, tmp)
-                        
-        ds = ds.drop_vars(['trajectory_index', 'trajectory'])
+        
+        ds = ds.drop_vars(to_be_removed)
         df = ds.to_dataframe()
         #
         # todo fix the primary_id in the NetCDF files
