@@ -481,18 +481,24 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
     for fn in flist:
         # open_dataset (~20 s faster) than load_dataset
         # ds = xarray.open_dataset(fn, drop_variables=['trajectory_label', 'trajectory_index', 'trajectory'])
-        ds = xarray.open_dataset(fn)
-        # fix trajectory_label
-        if 'trajectory_label' in ds.variables:
-            report_id = ds['trajectory_label'].astype(object).sum(axis=1).astype(str)
-            ds = ds.drop_vars(['trajectory_label', 'trajectory'])
-            ds['trajectory_label'] = ('obs', report_id.values[ds.trajectory_index.values])  # todo obs ???
-            ds = ds.drop_vars('trajectory_index')
+        ds = xarray.open_dataset(fn)            
 
         for ivar in list(ds.variables):
             if 'string' in ivar:
                 ds = ds.drop_vars(ivar)
-
+            
+            if 'trajectory' in ds[ivar].dims:
+                report_id = ds[ivar].astype(object).sum(axis=1).astype(str)
+                ds = ds.drop_vars(ivar)
+                ds[ivar] = ('obs', report_id.values[ds.trajectory_index.values])  # todo obs ???
+                
+            if ds[ivar].ndim > 1:
+                tmp= ds[ivar].astype(object).sum(axis=1).astype(str)
+                ds = ds.drop_vars(ivar)
+                idim = tmp.dims[0]
+                ds[ivar] = (idim, tmp)
+                        
+        ds = ds.drop_vars(['trajectory_index', 'trajectory'])
         df = ds.to_dataframe()
         #
         # todo fix the primary_id in the NetCDF files
