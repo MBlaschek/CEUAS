@@ -1129,5 +1129,5 @@ if __name__ == '__main__':
     # Run the request
     #
     tmpdir = config['tmp_dir'] + '/' + randdir
-    ret = process_request(body, tmpdir, config['data_dir'], wmo_regions, debug=debug)
+    ret = process_request(body, tmpdir, wmo_regions, debug=debug)
     logger.debug(str(ret))

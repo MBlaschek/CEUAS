@@ -576,6 +576,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
             if group + '/' + v == cfv['cdmname']:
                 vlist.append(cfv['shortname'])
                 try:
+                    logger.info('CFCOPY %s %s', v, vlist[-1])
                     if fin[group][v].ndim == 1:
                         try:
                             fout.create_dataset_like(vlist[-1], fin[group][v],
