@@ -481,8 +481,9 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
     for fn in flist:
         # open_dataset (~20 s faster) than load_dataset
         # ds = xarray.open_dataset(fn, drop_variables=['trajectory_label', 'trajectory_index', 'trajectory'])
+        logger.debug('Converting %s', fn)
         ds = xarray.open_dataset(fn)            
-
+        
         to_be_removed = ['trajectory_index', 'trajectory']
         for ivar in list(ds.variables):
             if 'string' in ivar:
@@ -604,8 +605,10 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     # Optional
     # todo check variables
     if optional is not None:
-        d['optional'] = optional
-
+        if not isinstance(optional, list):
+            d['optional'] = [optional]
+        else:
+            d['optional'] = optional
     #
     # Format
     #
@@ -914,7 +917,10 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
         #
         with Pool(10) as p:
             results = list(p.map(func, input_dirs, bodies, chunksize=1))
-
+    #
+    # Process the output 
+    # todo catch Error Messages and store in a log file?
+    #
     wpath = ''  # same as output_dir ?
     for r in results:
         if r[0] != '':
