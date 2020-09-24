@@ -24,26 +24,34 @@ The backend returns files, which are either
 
  Both file formats can be dealt with in the CDS toolbox. 
 
-| Identifier       | All possible values                                          | Explanation                                                  |
-| ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `date`           | [YYYYMMDD,YYYYMMDD], ['YYYYMMDD','YYYYMMDD'], YYYYMMDD, Integer or String. If "date" is missing, all available dates are selected.         | List of dates of radiosonde launches                        |
-|          | ['YYYYMMDD-YYYYMMDD'], YYYYMMDD-YYYYMMDD, String         | Range of dates of radiosonde launches                        |
-| `country`        | ['CCC',…,'DDD']", "CCC", String - Exclusive with "statid", "bbox", String | Country codes of stations to be selected                     |
-| `bbox`        | "[lower,left,upper,right]","['lower','left','upper','right']" Float or String, Exclusive with "statid", "country" | Boundaries of lat/lon rectangle to select stations           |
-| `optional`        | ['obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type']            | ERA5 feedback information                                    |
-| `format`        | ['nc', 'csv'],'csv', String, default is nc            | Format of retrieved data                                            |
-| `pressure_level` | [MMMM,…,NNNNN],['MMMM',…,'NNNNN'], MMMM, 'MMMMM', Integer or String. If "pressure_level" is missing all levels (standard and significant) are selected.  | Pressure levels in Pascal. 16 standard pressure levels (10,20,30,50,70,100,150,200,300,400,500,700,850,925,1000 hPa). At present no interpolation is done.|
-| "time"           | "[HH1,HH2]", "['HH1','HH2']", "HH", Integer or String  valid range 0-23. If "time" is missing, all available times are selected.      | List of hours of radiosonde launches. All launches with a release time between HH-1 and HH are retrieved. If HH=0 the launches released between 23h the preceding day and 00h are retrieved. If release time is not available, HH is the nominal time.   |
-|          | "['HH1-HH2']", "HH1-HH2", String         | Range of hours of radiosonde launches. If HH1>HH2 the range starts at HH1 of the preceding day.                        |
-| "variable"       | "['temperature', 'u_component_of_wind', 'v_component_of_wind', 'wind_speed', 'wind_direction', 'relative_humidity', 'specific_humidity']", String, required| Meteorological variables                                     |
-| - | - | - |
-| "homogenization" | "['ERA5', 'RAOBCOREv1.5.1', 'RICHv1.5.1',....]", String| Homogeneity adjustments; not yet implemented|
-| "uncertainty" | "['Desroziers', ....]", String| Uncertainty estimates; not yet implemented|
-| "reanalysis" | "['ERA5', 'JRA55', '20CRv3', 'CERA20C',....]", String| Reanalysis values interpolated offline to station locations, not yet implemented|
-| "cdm" | "['True']","True", String, default False | Attach also Common Data Model tables to station files. This breaks CF compliance of netcdf files. Not yet implemented|
-| "type" | "['VN8',...]","DG6", 106, "106" String, | Use radiosonde type for station selection. Valid types are from S. Schroeder's VAPOR project or WMO BUFR radiosonde type codes. Not yet implemented|
+| Identifier       | Request             | Frontend/Backend | All possible values                                          | Type           | Explanation                                                  |
+| ---------------- | ------------------- | ---------------- | ------------------------------------------------------------ | -------------- | ------------------------------------------------------------ |
+| `variable`       | Mandatory           | Same             | `[temperature, u_component_of_wind, v_component_of_wind, wind_speed, wind_direction, relative_humidity, specific_humidity]` | String         | Meteorological variables                                     |
+| `country`        | Exclusive           | Same             | `[ALL, ..., USA]`                                            | String         | Country codes of stations to be selected. Exclusive with `statid`, `bbox` |
+| `bbox`           | Exclusive           | Same             | `[lower,left,upper,right]`                                   | Numbers        | Boundaries of lat/lon rectangle to select stations. Exclusive with `statid`, `bbox` |
+| `statid`         | Exclusive           | Same             | `[SSSSS,...],SSSSS, ALL`                                     | String         | WMO or WIGOS station ID, ALL                                 |
+| `date`           | Optional            | Backend          | `[YYYYMMDD, YYYYMMDD],YYYYMMDD, YYYYMMDD-YYYYMMDD`           | Integer/String | If `date` is missing, all available dates are selected. Range is possible. |
+| `optional`       | Optional            | Same             | `obs_minus_bg, obs_minus_an, bias_estimate, type`            | String         | Optional Variables. ERA5 feedback information, Radiosonde types. See table below. |
+| `format`         | Optional            | Same             | `nc` or `csv`                                                | String         | Output format, NetCDF4 (nc) or Comma Separated Values (csv)  |
+| `pressure_level` | Optional            | Same             | `[1000 - 100000]` Pa                                         | Integer        | If `pressure_level` is missing all levels (standard and significant) are selected. |
+| `time`           | Optional            | Same             | `[HH1,HH2], HH,  [0 - 23]`                                   | Integer        | Launch time, If `time` is missing, all available times are selected. If HH1>HH2 the range starts at HH1 of the preceding day. |
+| -                |                     |                  | -                                                            | -              | -                                                            |
+| `homogenization` | Not Implemented Yet | -                | ERA5, RAOBCOREv1.5.1, RICHv1.5.1                             | String         | Homogeneity adjustments                                      |
+| `uncertainty`    | Not Implemented Yet | -                | Desroziers                                                   | String         | Uncertainty estimates                                        |
+| `reanalysis`     | Not Implemented Yet | -                | ERA5, JRA55, 20CRv3, CERA20C                                 | String         | Reanalysis values interpolated offline to station locations  |
+| `cdm`            | Not Implemented Yet | -                | True or False                                                | String         | Attach also Common Data Model tables to station files. This breaks CF compliance of netCDF files. |
+
+
+| Optional | Description |
+| --- | --- |
+| `obs_minux_bg` | ERA5 observation minus first guess |
+| `obs_minus_an` | ERA5 observation minus analysis |
+| `bias_estimate` | ERA5 variational bias estimate |
+| `type` | Radiosonde types from S. Schroeder's VAPOR project or WMO BUFR radiosonde type codes. |
+
 
 Here we provide a brief description on the [installation](#Installation), [how to use the script](#How-to-use?) and the [license](#License).
+
 [Use Interactive Notebook on COLAB (requires Google Account to execute, but not to view)](https://colab.research.google.com/github/MBlaschek/CEUAS/blob/master/CEUAS/public/cds-backend/Example.ipynb)
 
 
@@ -137,7 +145,7 @@ r = requests.post('http://early-upper-air.copernicus-climate.eu',
                         "pressure_level": [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000,
                                            50000, 70000, 85000, 92500, 100000],
                         "variable": ["temperature", "relative_humidity"],
-                        "fbstats": ["obs_minus_bg", "obs_minus_an", "bias_estimate"]
+                        "optional": ["obs_minus_bg", "obs_minus_an", "bias_estimate"]
                         },
                   stream=True)
 #
