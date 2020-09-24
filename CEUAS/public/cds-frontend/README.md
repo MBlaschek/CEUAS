@@ -9,9 +9,9 @@ Deliverable | DC3S311c_Lot2.3.1.1 | UNIVIE | Software, Report | First access to 
 
 # Short Description
 
-This directory contains a collection of python scripts and an IPython notebook that access the Copernicus Climate Change Service (C3S) - Upper Air Service using the CDSAPI in Python.
+This directory contains a collection of Python scripts and an IPython notebook that access the Copernicus Climate Change Service (C3S) - Upper Air Service using the CDSAPI in Python.
 
-At present, the cdsapi is directed to the sis-dev developer frontend. Once the service has been approved for public use the scripts can be used also via the standard server cds.copernicus.eu.
+At present, the cdsapi is directed to [sis-dev.climate.copernicus.eu]() - the developer frontend. Once the service has been approved for public use the scripts can be used also via the standard server [cds.copernicus.eu]().
 
 The front returns files, which are either
 
@@ -19,24 +19,24 @@ The front returns files, which are either
 2. Zip file containing CSV files, which can be read in directly with spreadsheet applications such as Excel. 
 3. JSON file containing error messages, if an HTTP error occurs
 
-Both file formats can be dealt with in the CDS toolbox. 
+Both file formats (csv, netCDF) can be dealt with in the CDS toolbox. 
 A typical request should contain at least a `variable` and some of the other Identifiers as shown below.
 
-| Identifier       | All possible values                                          | Explanation                                                  |
-| ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| `date`           | `[YYYYMMDD,YYYYMMDD]`, `YYYYMMDD`, Integer or String         | List of dates of launches                        |
-| `year`           | `[YYYY,...,YYYY]`, `YYYY`, String         | Years                        |
-| `month`           | `[MM,..., MM]`, `MM`, String         | Months                    |
-| `day`           | `[DD,..., DD]`, `DD`, String         | Days                        |
-| `period`           | `[YYYYMMDD, YYYYMMDD]`, Integer or String         | Start and End of a period of dates of launches                        |
-| `country`        | `[“ALL”,…,”USA”]`, String, Exclusive with `statid`, `bbox` | Country codes of stations to be selected according to WMO, see examples below.                    |
-| `bbox`           | `[upper,left,lower,right]`, Float or String, Exclusive with `statid`, `country` | Boundaries of lat/lon rectangle to select stations           |
-| `fbstats`        | `["obs_minus_bg","obs_minus_an","bias_estimate"]`            | ERA5 feedback information                                    |
-| `pressure_level` | `[MMMM,…,NNNNN]`, `MMMM`, Integer or String                  | Pressure levels in Pascal. 16 standard pressure levels (10-1000 hPa) or significant levels (if omitted) |
-| `statid`         | `[“SSSSS”]`, String, either WMO or WIGOS IDs. Special value “all”, Exclusive with `country`, `bbox` | WMO or WIGOS station ID                                      |
-| `time`           | `[HHMMSS,HHMMSS]`                                            | List of times permitted.                                     |
-| `variable`       | `[„air_temperature“, “zonal_wind“, “meridional_wind“, “wind_speed”, ”wind_direction”, ”air_relative_humidity”, ”air_specific_humidity”, "air_dewpoint"]`, String | Meteorological variables                                     |
-| `format`         | `nc` or `csv`    | Output format |
+| Identifier       | Request    | All possible values                                    | Type     | Explanation                                                  |
+| ---------------- | ---------- | -------------------------------------------------------|--------- | ------------------------------------------------------------ |
+| `variable`       | Mandatory | `[„air_temperature“, “zonal_wind“, “meridional_wind“, “wind_speed”, ”wind_direction”, ”air_relative_humidity”, ”air_specific_humidity”, "air_dewpoint"]` | String | Meteorological variables                                     |
+| `country`        | Exclusive | `[“ALL”,…,”USA”]`| String|  Country codes of stations to be selected according to WMO, see examples below. Exclusive with `bbox` and `statid`|
+| `bbox`           | Exclusive | `[upper,left,lower,right]`| Float or String | Boundaries of lat/lon rectangle to select stations|
+| `statid`         | Exclusive | `[“SSSSS”]` | String | WMO or WIGOS station ID, “all”|
+| `date`           | Optional | `[YYYYMMDD,YYYYMMDD]`, `YYYYMMDD`| Integer or String | List of dates of launches|
+| `time`           | Optional  | `[HHMMSS,HHMMSS]` | Integer or String | List of times permitted.                                     |
+| `year`           | Optional | `[YYYY,...,YYYY]`, `YYYY`| String | Years|
+| `month`          | Optional | `[MM,..., MM]`, `MM`| String | Months|
+| `day`            | Optional | `[DD,..., DD]`, `DD`| String | Days|
+| `period`         | Optional | `[YYYYMMDD, YYYYMMDD]`| Integer or String | Start and End of a period of dates of launches|
+| `fbstats`        | Optional | `["obs_minus_bg","obs_minus_an","bias_estimate"]`| String | ERA5 feedback information|
+| `pressure_level` | Optional |  `[MMMM,…,NNNNN]`, `MMMM` | Integer or String| Pressure levels in Pascal. 16 standard pressure levels (10-1000 hPa) or significant levels (if omitted) |
+| `format`         | Optional  | `nc` or `csv`  | String  | Output format |
 
 
 # Installation
