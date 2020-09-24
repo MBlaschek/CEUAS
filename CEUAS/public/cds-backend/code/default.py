@@ -397,7 +397,9 @@ def status_test(command=None) -> dict:
             else:
                 status_msg['command'] = 'Sorry restarted only %d seconds ago [120 s]' % elapsed.total_seconds()
             return status_msg
-
+        if command == 'restart':
+            raise RuntimeError("Restart requested ... killing myself softly.")
+            
         if command == 'cleanup':
             # search for request directories and results / remove them and report back
             pass
