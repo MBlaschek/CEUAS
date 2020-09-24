@@ -26,13 +26,13 @@ The backend returns files, which are either
 
 | Identifier       | All possible values                                          | Explanation                                                  |
 | ---------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| "date"           | "[YYYYMMDD,YYYYMMDD]", "['YYYYMMDD','YYYYMMDD']", "YYYYMMDD", Integer or String. If "date" is missing, all available dates are selected.         | List of dates of radiosonde launches                        |
-|          | "['YYYYMMDD-YYYYMMDD']", "YYYYMMDD-YYYYMMDD", String         | Range of dates of radiosonde launches                        |
-| "country"        | "['CCC',…,'DDD']", "CCC", String - Exclusive with "statid", "bbox", String | Country codes of stations to be selected                     |
-| "bbox"           | "[lower,left,upper,right]","['lower','left','upper','right']" Float or String, Exclusive with "statid", "country" | Boundaries of lat/lon rectangle to select stations           |
-| "fbstats"        | "['obs_minus_bg', 'obs_minus_an', 'bias_estimate']"            | ERA5 feedback information                                    |
-| "format"        | "['nc', 'csv']","'csv'", String, default is nc            | Format of retrieved data                                            |
-|"pressure_level" | "[MMMM,…,NNNNN]","['MMMM',…,'NNNNN']", "MMMM", "'MMMMM'", Integer or String. If "pressure_level" is missing all levels (standard and significant) are selected.  | Pressure levels in Pascal. 16 standard pressure levels (10,20,30,50,70,100,150,200,300,400,500,700,850,925,1000 hPa). At present no interpolation is done.|
+| `date`           | [YYYYMMDD,YYYYMMDD], ['YYYYMMDD','YYYYMMDD'], YYYYMMDD, Integer or String. If "date" is missing, all available dates are selected.         | List of dates of radiosonde launches                        |
+|          | ['YYYYMMDD-YYYYMMDD'], YYYYMMDD-YYYYMMDD, String         | Range of dates of radiosonde launches                        |
+| `country`        | ['CCC',…,'DDD']", "CCC", String - Exclusive with "statid", "bbox", String | Country codes of stations to be selected                     |
+| `bbox`        | "[lower,left,upper,right]","['lower','left','upper','right']" Float or String, Exclusive with "statid", "country" | Boundaries of lat/lon rectangle to select stations           |
+| `optional`        | ['obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type']            | ERA5 feedback information                                    |
+| `format`        | ['nc', 'csv'],'csv', String, default is nc            | Format of retrieved data                                            |
+| `pressure_level` | [MMMM,…,NNNNN],['MMMM',…,'NNNNN'], MMMM, 'MMMMM', Integer or String. If "pressure_level" is missing all levels (standard and significant) are selected.  | Pressure levels in Pascal. 16 standard pressure levels (10,20,30,50,70,100,150,200,300,400,500,700,850,925,1000 hPa). At present no interpolation is done.|
 | "time"           | "[HH1,HH2]", "['HH1','HH2']", "HH", Integer or String  valid range 0-23. If "time" is missing, all available times are selected.      | List of hours of radiosonde launches. All launches with a release time between HH-1 and HH are retrieved. If HH=0 the launches released between 23h the preceding day and 00h are retrieved. If release time is not available, HH is the nominal time.   |
 |          | "['HH1-HH2']", "HH1-HH2", String         | Range of hours of radiosonde launches. If HH1>HH2 the range starts at HH1 of the preceding day.                        |
 | "variable"       | "['temperature', 'u_component_of_wind', 'v_component_of_wind', 'wind_speed', 'wind_direction', 'relative_humidity', 'specific_humidity']", String, required| Meteorological variables                                     |
