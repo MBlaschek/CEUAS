@@ -488,7 +488,7 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
             if 'string' in ivar:
                 to_be_removed.append(ivar)
             
-            if 'trajectory' in ds[ivar].dims:
+            if 'trajectory' in ds[ivar].dims and ivar not in list(ds.coords):
                 report_id = ds[ivar].astype(object).sum(axis=1).astype(str)
                 ds = ds.drop_vars(ivar)
                 ds[ivar] = ('obs', report_id.values[ds.trajectory_index.values])  # todo obs ???
