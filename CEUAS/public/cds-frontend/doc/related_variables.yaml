@@ -1,59 +1,74 @@
 --- 
-description:
-  - Description: "Date and time of observation"
+description: 
+  - 
+    Description: "Date and time of observation"
     Name: Time
-    Units: YYYY-MM-DD HH:MM:SS
-  -
+    Units: "YYYY-MM-DD HH:MM:SS"
+  - 
     Description: "Observation latitude"
     Name: Lat
     Units: "degrees north (-90,90)"
-  - Description: "Observation longitude"
+  - 
+    Description: "Observation longitude"
     Name: Lon
     Units: "degrees east (-180,180)"
-  - Description: "Atmospheric pressure as measured with pressure sensor (on significant levels) or interpolated (on standard levels) or derived from height measurements (in case of PILOT soundings)"
+  - 
+    Description: "Atmospheric pressure as measured with pressure sensor (on significant levels) or interpolated (on standard levels) or derived from height measurements (in case of PILOT soundings)"
     Name: Plev
     Units: Pa
-  - Description: "Index of unique ID for each observation"
+  - 
+    Description: "Index of unique ID for each observation"
     Name: Trajectory_index
     Units: 1
-  - Description: "Unique ID for each report (unique ID given by report_id and observation_id)"
+  - 
+    Description: "Unique ID for each report (unique ID given by report_id and observation_id)"
     Name: Trajectory_label
     Units: 1
-  - Description: "WIGOS Station Identifier, only available in csv"
+  - 
+    Description: "WIGOS Station Identifier, only available in csv"
     Name: Statid
     Units: 1
-  - Description: "Station Index for multiple stations in one file, only in csv"
+  - 
+    Description: "Station Index for multiple stations in one file, only in csv"
     Name: Statindex
     Units: 1
-  - Description: "optional, ERA5 reanalysis observation minus analysis"
+  - 
+    Description: "optional, ERA5 reanalysis observation minus analysis"
     Name: Obs_minus_an
     Units: "same as variable"
-  - Description: "optional, ERA5 reanalysis observation minus first guess"
+  - 
+    Description: "optional, ERA5 reanalysis observation minus first guess"
     Name: Obs_minus_fg
     Units: "same as variable"
-  - Description: "optional, ERA5 reanalysis observation bias estimate"
+  - 
+    Description: "optional, ERA5 reanalysis observation bias estimate"
     Name: Bias_estimate
     Units: "same as variable"
-  - Description: "optional, Sonde Type"
+  - 
+    Description: "optional, Sonde Type"
     Name: Sonde_type
     Units: 1
-  - Description: "optional, Observation Error (estimated with Desrozier's method)"
+  - 
+    Description: "optional, Observation Error (estimated with Desrozier's method)"
     Name: Observation_error
     Units: "same as variable"
-  - Description: "optional, Sample size of aggregated difference, only for IDs starting with 20200"
+  - 
+    Description: "optional, Sample size of aggregated difference, only for IDs starting with 20200"
     Name: Sample_size
     Units: 1
-  - Description: "optional, Reference Sonde Type, only for IDs starting with 20200"
+  - 
+    Description: "optional, Reference Sonde Type, only for IDs starting with 20200"
     Name: Reference_sonde_type
-    Units: 1   
-  - Description: "optional, Error standard deviation of aggregated difference, only for IDs starting with 20200"
+    Units: 1
+  - 
+    Description: "optional, Error standard deviation of aggregated difference, only for IDs starting with 20200"
     Name: Sample_error
     Units: "same as variable"
-  - Description: "optional, RAOBCORE bias estimate"
+  - 
+    Description: "optional, RAOBCORE bias estimate"
     Name: RAOBCORE_bias_estimate
     Units: "same as variable"
-  - Description: "optional, RICH bias estimate"
+  - 
+    Description: "optional, RICH bias estimate"
     Name: RICH_bias_estimate
     Units: "same as variable"
-    
-    
