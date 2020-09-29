@@ -828,7 +828,7 @@ def table_to_cube(time: np.ndarray, plev: np.ndarray, obs: np.ndarray, nplev: in
 #
 ###############################################################################
 
-def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables: dict) -> tuple:
+def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables: dict, debug:bool=False) -> tuple:
     """ Process a station file with the requested variables
 
     Args:
@@ -873,7 +873,7 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables:
         if '0-20200-0' in statid:
             if 'optional' not in request_variables.keys():
                 request_variables['optional'] = []
-            request_variables['optional'] = request_variables['optional'].extend(['reference_sonde_type', 'sample_size', 'sample_error']) 
+            request_variables['optional'].extend(['reference_sonde_type', 'sample_size', 'sample_error']) 
 
         cdmnamedict = {}
         for igroup, v in cftable.items():
@@ -891,6 +891,8 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables:
                                     cf_dict=cftable)
 
     except Exception as e:
+        if debug:
+            raise e
         logger.error('Exception %s occurred while reading %s', repr(e), filename)
         return '', 'exception "{}" occurred while reading {}'.format(e, filename)
 
@@ -1844,12 +1846,7 @@ class CDMDataset:
         #
         if 'optional' in request.keys():
             snames.extend(request['optional'])
-            
-        # Automaticaly adding variables for 20200- requests:
-        if 'statid' in request.keys():
-            for sid in request['statid']:
-                if sid == '0-20200-0-*':
-                    snames.extend('reference_sonde_type', 'sample_size', 'sample_error') 
+        
         # Copy Metadata -> used by do_cfcopy
         cfcopy = {}  # Copy of CDM Info Dictionary (read_standard_names())
         for ss in snames:

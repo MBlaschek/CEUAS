@@ -80,10 +80,15 @@ config = {'logger_name': 'upperair',
           'comp_dir': '.',
           'tmp_dir': '.',
           'config_dir': './config',
+          'debug': False,
           'reload_pwd': 'reload'}
 
 if os.path.isfile(config_file):
     new = json.load(open(config_file, 'r'))
+    # expand ENVIRONMENTAL VARIABLES if any
+    for ikey,ival in new.items():
+        if 'dir' in ikey:
+            new[ikey] = os.path.expandvars(ival)
     config.update(new)
 else:
     print("Writing new config file:", config_file, "Adjust accordingly!")
@@ -907,7 +912,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
 
     # Make process_flat a function of only request_variables (dict)
     #
-    func = partial(eua.process_flat, output_dir, cf)
+    func = partial(eua.process_flat, output_dir, cf, debug=debug)
 
     if debug:
         #
@@ -919,6 +924,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
         # Multi Threading
         #
         with Pool(10) as p:
+            # error with chunksize
             results = list(p.map(func, input_dirs, bodies, chunksize=1))
     #
     # Process the output 
