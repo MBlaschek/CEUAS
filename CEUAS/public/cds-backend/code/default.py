@@ -112,29 +112,36 @@ class MyFilter(object):
 
 
 logger = logging.getLogger(config['logger_name'])
-logger.setLevel(config['logger_level'])
+logger.setLevel(config['logger_level'])  # 10 Debug
 # create formatter
 formatter = logging.Formatter('%(asctime)s - %(name)s | %(funcName)s - %(levelname)s - %(message)s')
 # create console handler and set level to warning for stderr
-ch = logging.StreamHandler()  # goes to std.err
-ch.setLevel(logging.ERROR)  # respond only to Debug and above
-ch.setFormatter(formatter)
-logger.addHandler(ch)
-# create console handler and set level to info for stdout
-ch2 = logging.StreamHandler(sys.stdout)
-ch2.setLevel(logging.INFO)  # respond only to Debug and above
-ch2.setFormatter(formatter)
-logger.addHandler(ch2)
-ch2.addFilter(MyFilter(logging.INFO))
+if not config['debug']:
+    ch = logging.StreamHandler()  # goes to std.err
+    ch.setLevel(logging.ERROR)  # respond only to Debug and above
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    # create console handler and set level to info for stdout
+    ch2 = logging.StreamHandler(sys.stdout)
+    ch2.setLevel(logging.INFO)  # respond only to Debug and above
+    ch2.setFormatter(formatter)
+    logger.addHandler(ch2)
+    ch2.addFilter(MyFilter(logging.INFO))
 
-try:
-    ch3 = logging.FileHandler(config['logger_dir'] + '/' + config['logger_debug'])
-except PermissionError:
-    ch3 = logging.FileHandler(config['logger_dir'] + '/' + config['logger_debug'].replace('.log', '.local.log'))
-ch3.setLevel(logging.DEBUG)  # respond only to Debug and above
-ch3.setFormatter(formatter)
-logger.addHandler(ch3)
-
+    try:
+        ch3 = logging.FileHandler(config['logger_dir'] + '/' + config['logger_debug'])
+    except PermissionError:
+        ch3 = logging.FileHandler(config['logger_dir'] + '/' + config['logger_debug'].replace('.log', '.local.log'))
+    ch3.setLevel(logging.DEBUG)  # respond only to Debug and above
+    ch3.setFormatter(formatter)
+    logger.addHandler(ch3)
+else:
+    # create console handler and set level to info for stdout
+    ch2 = logging.StreamHandler(sys.stdout)
+    ch2.setLevel(logging.DEBUG)  # respond only to Debug and above
+    ch2.setFormatter(formatter)
+    logger.addHandler(ch2)
+    
 for i, j in config.items():
     logger.debug('CONFIG %s : %s', i, j)
 
@@ -912,6 +919,8 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
 
     # Make process_flat a function of only request_variables (dict)
     #
+    # process_flat(outputdir: str, cftable: dict, datadir: str, request_variables: dict, debug:bool=False) -> tuple:
+
     func = partial(eua.process_flat, output_dir, cf, debug=debug)
 
     if debug:
@@ -924,8 +933,8 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
         # Multi Threading
         #
         with Pool(10) as p:
-            # error with chunksize
-            results = list(p.map(func, input_dirs, bodies, chunksize=1))
+            # error with chunksize (from p.map to p.starmap)
+            results = list(p.starmap(func, zip(input_dirs, bodies), chunksize=1))
     #
     # Process the output 
     # todo catch Error Messages and store in a log file?

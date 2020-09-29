@@ -8,5 +8,6 @@
   "tmp_dir": "$SCRATCH/hug/tmp",
   "comp_dir": "/raid60/scratch/leo/scratch/RI/Pangaea/nc",
   "config_dir": "$SCRATCH/hug/config",
-  "reload_pwd": "reload"
+  "reload_pwd": "reload",
+    "debug": true
 }
