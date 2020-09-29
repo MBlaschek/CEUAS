@@ -868,6 +868,12 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables:
 
             if os.path.isfile(filename):
                 break
+        
+        # Automaticaly adding variables for 20200- requests:
+        if '0-20200-0' in statid:
+            if 'optional' not in request_variables.keys():
+                request_variables['optional'] = []
+            request_variables['optional'] = request_variables['optional'].extend(['reference_sonde_type', 'sample_size', 'sample_error']) 
 
         cdmnamedict = {}
         for igroup, v in cftable.items():
@@ -1838,6 +1844,12 @@ class CDMDataset:
         #
         if 'optional' in request.keys():
             snames.extend(request['optional'])
+            
+        # Automaticaly adding variables for 20200- requests:
+        if 'statid' in request.keys():
+            for sid in request['statid']:
+                if sid == '0-20200-0-*':
+                    snames.extend('reference_sonde_type', 'sample_size', 'sample_error') 
         # Copy Metadata -> used by do_cfcopy
         cfcopy = {}  # Copy of CDM Info Dictionary (read_standard_names())
         for ss in snames:

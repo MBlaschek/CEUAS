@@ -692,6 +692,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     # Stations
     #
     else:
+        # '0-20200-0-*': 
         try:
             if statid == 'all':
                 statid = slnum  # <- list of all station ids from init_server
