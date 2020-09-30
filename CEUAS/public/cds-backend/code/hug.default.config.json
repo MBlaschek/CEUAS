@@ -1,12 +1,1 @@
-{
-  "logger_name": "upperair",
-  "logger_level": 10,
-  "logger_debug": "hug.debug.log",
-  "logger_dir": "./logs",
-  "src_path": ".",
-  "data_dir": ".",
-  "tmp_dir": ".",
-  "comp_dir": ".",
-  "config_dir": "./config",
-  "reload_pwd": "reload"
-}
+hug.srvx8.config.json
