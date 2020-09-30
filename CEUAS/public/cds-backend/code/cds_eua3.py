@@ -1343,7 +1343,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
             r = requests.post('http://early-upper-air.copernicus-climate.eu' if vm_url is None else vm_url,
                               headers={'content-type': 'application/json'},
                               json=request,
-                              stream=True, )
+                              stream=True)
             if r.status_code != requests.codes.ok:
                 raise RuntimeError(r.text)
 
@@ -1799,7 +1799,7 @@ class CDMDataset:
         idx = np.where(mask)[0] + trange.start  # absolute integer index
         if len(idx) == 0:
             logger.warning('No matching data found %s', self.name)
-            raise ValueError('No matching data found')
+            raise ValueError('No matching data found')  # add CDMname for logging
 
         logger.debug('Data found: %d %s', len(idx), self.name)
         #

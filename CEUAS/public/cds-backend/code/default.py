@@ -922,7 +922,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
     # process_flat(outputdir: str, cftable: dict, datadir: str, request_variables: dict, debug:bool=False) -> tuple:
 
     func = partial(eua.process_flat, output_dir, cf, debug=debug)
-
+    # print(func)
     if debug:
         #
         # Single Threading
@@ -1026,7 +1026,8 @@ def index(request=None, response=None):
     logger.info("%s GET %s", randdir, str(body))
     tmpdir = config['tmp_dir'] + '/' + randdir
     try:
-        rfile = process_request(body, tmpdir, config['data_dir'], wmo_regions)
+        # rfile = process_request(body, tmpdir, config['data_dir'], wmo_regions)
+        rfile = process_request(body, tmpdir, wmo_regions, debug=config['debug'])
     except Exception as e:
         logger.error("%s GET FAILED, %s", randdir, e)
         with open(config['logger_dir'] + '/failed_requests.log', 'a+') as ff:
@@ -1090,7 +1091,7 @@ def index(request=None, body=None, response=None):
     logger.info("%s POST %s", randdir, str(body))
     tmpdir = config['tmp_dir'] + '/' + randdir
     try:
-        rfile = process_request(body, tmpdir, config['data_dir'], wmo_regions)
+        rfile = process_request(body, tmpdir, wmo_regions, debug=config['debug'])
     except Exception as e:
         logger.error("%s POST FAILED, %s", randdir, e)
         with open(config['logger_dir'] + '/failed_requests.log', 'a+') as ff:
