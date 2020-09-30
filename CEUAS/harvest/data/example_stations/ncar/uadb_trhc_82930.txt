@@ -1,0 +1,1 @@
+../../../../public/harvest/data/example_stations/ncar/uadb_trhc_82930.txt
