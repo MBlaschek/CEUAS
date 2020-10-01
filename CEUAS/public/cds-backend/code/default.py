@@ -711,10 +711,18 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
 
             elif isinstance(statid, (str, int)):
                 # todo fix if '1001' given as string, creates not working ID
-                for s in ['0-20000-0-', '0-20001-0-']:
+                for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-']:
                     if isinstance(statid, int):
                         valid_id = s + '{:0>5}'.format(statid)
                     else:
+                        if('*' in statid):
+                            stats = []
+                            for l in slnum: # -> searches all slnum for matching statids
+                                if statid[:statid.index('*')] in l: 
+                                    stats.append(l)
+                            valid_id = stats
+                            break
+                            
                         if statid[:3] == '0-2':
                             valid_id = statid
                             break
@@ -722,14 +730,27 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                         valid_id = s + statid
                     if valid_id in slnum:
                         break
-                statid = [valid_id]
+                # if wildcard was used, valid_id is already a list so it can be directly given to statid:
+                if type(valid_id) == list:
+                    statid = valid_id
+                else:
+                    statid = [valid_id]
+
             else:
                 new_statid = []
                 for k in statid:
-                    for s in ['0-20000-0-', '0-20001-0-']:
+                    for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-']:
                         if isinstance(k, int):
                             valid_id = s + '{:0>5}'.format(k)
                         else:
+                            if('*' in k):
+                                stats = []
+                                for l in slnum: # -> searches all slnum for matching statids
+                                    if k[:k.index('*')] in l: 
+                                        stats.append(l)
+                                valid_id = stats
+                                break
+
                             if k[:3] == '0-2':
                                 valid_id = k
                                 break
@@ -737,8 +758,11 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                             valid_id = s + k
                         if valid_id in slnum:
                             break
-
-                    new_statid.append(valid_id)
+                    # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
+                    if type(valid_id) == list:
+                        new_statid = new_statid + valid_id
+                    else:
+                        new_statid.append(valid_id)
                 statid = new_statid
         except MemoryError:
             raise RuntimeError(
