@@ -116,7 +116,7 @@ logger.setLevel(config['logger_level'])  # 10 Debug
 # create formatter
 formatter = logging.Formatter('%(asctime)s - %(name)s | %(funcName)s - %(levelname)s - %(message)s')
 # create console handler and set level to warning for stderr
-if not config['debug']:
+if config['debug']:
     ch = logging.StreamHandler()  # goes to std.err
     ch.setLevel(logging.ERROR)  # respond only to Debug and above
     ch.setFormatter(formatter)
@@ -712,10 +712,18 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
 
             elif isinstance(statid, (str, int)):
                 # todo fix if '1001' given as string, creates not working ID
-                for s in ['0-20000-0-', '0-20001-0-']:
+                for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-']:
                     if isinstance(statid, int):
                         valid_id = s + '{:0>5}'.format(statid)
                     else:
+                        if('*' in statid):
+                            stats = []
+                            for l in slnum: # -> searches all slnum for matching statids
+                                if statid[:statid.index('*')] in l: 
+                                    stats.append(l)
+                            valid_id = stats
+                            break
+                            
                         if statid[:3] == '0-2':
                             valid_id = statid
                             break
@@ -723,14 +731,27 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                         valid_id = s + statid
                     if valid_id in slnum:
                         break
-                statid = [valid_id]
+                # if wildcard was used, valid_id is already a list so it can be directly given to statid:
+                if type(valid_id) == list:
+                    statid = valid_id
+                else:
+                    statid = [valid_id]
+
             else:
                 new_statid = []
                 for k in statid:
-                    for s in ['0-20000-0-', '0-20001-0-']:
+                    for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-']:
                         if isinstance(k, int):
                             valid_id = s + '{:0>5}'.format(k)
                         else:
+                            if('*' in k):
+                                stats = []
+                                for l in slnum: # -> searches all slnum for matching statids
+                                    if k[:k.index('*')] in l: 
+                                        stats.append(l)
+                                valid_id = stats
+                                break
+
                             if k[:3] == '0-2':
                                 valid_id = k
                                 break
@@ -738,8 +759,11 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                             valid_id = s + k
                         if valid_id in slnum:
                             break
-
-                    new_statid.append(valid_id)
+                    # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
+                    if type(valid_id) == list:
+                        new_statid = new_statid + valid_id
+                    else:
+                        new_statid.append(valid_id)
                 statid = new_statid
         except MemoryError:
             raise RuntimeError(
@@ -1126,6 +1150,27 @@ def index(request=None, body=None, response=None):
 #     rfile = '/data/public/tmp/100000000000/dest_0-20000-0-70398_air_temperature.nc'
 #     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
 #     return rfile
+
+@hug.get('/constraints/', output=hug.output_format.file)
+def index(request=None, response=None):
+    """ Main Hug Index Function on get requests
+
+    index function requests get URI and converts into dictionary.
+
+    Args:
+        request: dictionary
+        response: str
+
+    Returns:
+
+    """
+    logger.debug("GET %s", request.query_string)
+
+
+    rfile='/data/public/df_pickled_constraints.pkl'
+
+    response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
+    return rfile
 
 
 if __name__ == '__main__':
