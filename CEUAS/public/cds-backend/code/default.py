@@ -1150,6 +1150,27 @@ def index(request=None, body=None, response=None):
 #     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
 #     return rfile
 
+@hug.get('/constraints/', output=hug.output_format.file)
+def index(request=None, response=None):
+    """ Main Hug Index Function on get requests
+
+    index function requests get URI and converts into dictionary.
+
+    Args:
+        request: dictionary
+        response: str
+
+    Returns:
+
+    """
+    logger.debug("GET %s", request.query_string)
+
+
+    rfile='/data/public/df_pickled_constraints.pkl'
+
+    response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
+    return rfile
+
 
 if __name__ == '__main__':
     active, wmo_regions, cf = init_server()
