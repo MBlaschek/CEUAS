@@ -725,7 +725,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                         break
                 
                 # if wildcard was used, valid_id is already a list so it can be directly given to statid:
-                if type(valid_id) == list:
+                if isinstance(valid_id, list):
                     statid = valid_id
                 else:
                     statid = [valid_id]
@@ -741,8 +741,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                                 stats = []
                                 for l in slnum: # -> searches all slnum for matching statids
                                     if k[:k.index('*')] in l: 
-                                        stats.append(l)
-                                valid_id = stats
+                                        new_statid.append(l)
                                 break
 
                             if k[:3] == '0-2':
@@ -753,11 +752,9 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                         if valid_id in slnum:
                             break
                     # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
-                    if type(valid_id) == list:
-                        new_statid = new_statid + valid_id
-                    else:
-                        new_statid.append(valid_id)
+                    new_statid.append(valid_id)
                 statid = new_statid
+                statid = list(set(statid))
         except MemoryError:
             raise RuntimeError(
                 'Invalid selection, specify either bbox, country or statid. Use "statid":"all" to select all ' \
