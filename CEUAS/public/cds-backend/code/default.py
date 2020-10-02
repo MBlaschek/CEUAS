@@ -116,7 +116,7 @@ logger.setLevel(config['logger_level'])  # 10 Debug
 # create formatter
 formatter = logging.Formatter('%(asctime)s - %(name)s | %(funcName)s - %(levelname)s - %(message)s')
 # create console handler and set level to warning for stderr
-if not config['debug']:
+if config['debug']:
     ch = logging.StreamHandler()  # goes to std.err
     ch.setLevel(logging.ERROR)  # respond only to Debug and above
     ch.setFormatter(formatter)
