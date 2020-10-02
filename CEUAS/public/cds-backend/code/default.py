@@ -608,14 +608,22 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         d['variable'] = variable
     #
     # Optional
-    # todo check variables
+    #
+    allowed_optionals = ['sonde_type',]
     if optional is not None:
         if not isinstance(optional, list):
-            d['optional'] = [optional]
+            if optional in allowed_optionals:
+                d['optional'] = [optional]
+            else:
+                raise KeyError('Invalid optional selected: ' + optional)
         else:
+            for iopt in optional:
+                if iopt not in allowed_optionals:
+                    raise KeyError('Invalid optional selected: ' + optional)
             d['optional'] = optional
-        # Check values:
-        # ['obs_minus_an', 'obs_minus_bg', 'bias_estimate']
+    # Check values:
+    # ['obs_minus_an', 'obs_minus_bg', 'bias_estimate']
+    
     #
     # Format
     #
