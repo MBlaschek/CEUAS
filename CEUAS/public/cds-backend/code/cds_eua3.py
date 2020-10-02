@@ -1825,23 +1825,8 @@ class CDMDataset:
         logger.debug('Request-keys: %s', str(request.keys()))
         snames.append(cdsname)  # Add requested variable
         #
-        # Add Feedback Variables
-        # todo currently only ERA5 feedback information can be requested (hard coded in cf_dict -> read_standardnames)
-        if 'fbstats' in request.keys():
-            if isinstance(request['fbstats'], list):
-                for c in request['fbstats']:
-                    snames.append(c)
-            else:
-                snames.append(request['fbstats'])
-        #
-        # Add Bias Adjustment Variables
-        # todo add Bias adjustment variables
-        if 'adjust' in request.keys():
-            # add to snames -> add to read_standardnames()
-            #
-            pass
-        #
         # Add Optional Variables
+        # Check read_standard_names for correct names otherwise it will be rejected
         #
         if 'optional' in request.keys():
             snames.extend(request['optional'])
@@ -1898,7 +1883,19 @@ class CDMDataset:
                     # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:
-                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['fbstats']), self.name))
+                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+            #
+            # Adjusted Values with ERA5
+            # TODO: Names not set, group missing
+            if 'adjera5' in self.groups:
+                igroup = 'adjera5'
+                try:
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                              var_selection=['bias_estimate'])
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                except KeyError as e:
+                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+            
             #
             # Header Information
             #
@@ -1965,8 +1962,11 @@ class CDMDataset:
             date_time_name = date_time_name if date_time_name != 'date_time' else 'time'
 
         if dates is not None:
+            #
             # loading variables allows reusing them in memory / faster for follow up requests
             # recordtimestamp gives unique dates (smaller array)
+            # todo future update will have more dimensions / sorted by variable
+            # structure yet unclear
             if 'recordtimestamp' in self.groups:
                 timestamp = self.load_variable_from_file('recordtimestamp', return_data=True)[0]
                 timestamp_units = self.read_attributes('recordtimestamp').get('units', None)
