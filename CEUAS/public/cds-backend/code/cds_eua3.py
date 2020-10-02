@@ -14,7 +14,6 @@ Updated: %s
 """ % (__version__, __author__, __institute__, __github__, __status__, __date__)
 
 """
-
 Context
 - This class CDMDataset with process_flat will replace the hug cds_eua2 function sets
 - This class CDMDataset will be used in adjust and quality control
