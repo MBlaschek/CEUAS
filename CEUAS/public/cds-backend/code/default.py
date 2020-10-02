@@ -547,7 +547,7 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
 
 
 def check_body(variable: list = None, statid: list = None, product_type: str = None, pressure_level: list = None,
-               date: list = None, time: list = None, fbstats=None, bbox: list = None, country: str = None,
+               date: list = None, time: list = None, bbox: list = None, country: str = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                pass_unknown_keys: bool = False,
                **kwargs) -> dict:
@@ -560,7 +560,6 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         pressure_level: Pa, 500 - 110000 Pa values allowed
         date: '19990131' or ['19990101', '20000101'] as range
         time: 1,... or 0-23
-        fbstats: only these are currently allowed: 'obs_minus_an', 'obs_minus_bg', 'bias_estimate'
         bbox: Bounding Box [lower left upper right]
         country: Country Code, e.g. DEU, AUT, USA, GBR
         format: nc or csv
@@ -608,15 +607,6 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 raise KeyError('Invalid variable selected: ' + ivar)
         d['variable'] = variable
     #
-    # fb stats
-    #
-    if fbstats is not None:
-        if not isinstance(fbstats, list):
-            fbstats = [fbstats]
-        for ifb in fbstats:
-            if ifb not in ['obs_minus_an', 'obs_minus_bg', 'bias_estimate']:
-                raise KeyError('Invalid fbstats variable selected: ' + ifb)
-    #
     # Optional
     # todo check variables
     if optional is not None:
@@ -624,6 +614,8 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             d['optional'] = [optional]
         else:
             d['optional'] = optional
+        # Check values:
+        # ['obs_minus_an', 'obs_minus_bg', 'bias_estimate']
     #
     # Format
     #
@@ -731,6 +723,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                         valid_id = s + statid
                     if valid_id in slnum:
                         break
+                
                 # if wildcard was used, valid_id is already a list so it can be directly given to statid:
                 if type(valid_id) == list:
                     statid = valid_id
