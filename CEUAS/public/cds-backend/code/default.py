@@ -1169,7 +1169,7 @@ def index(request=None, response=None):
     logger.debug("GET %s", request.query_string)
 
 
-    rfile='/data/public/df_pickled_constraints.pkl'
+    rfile='/data/public/constraints.csv'
 
     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
     return rfile
