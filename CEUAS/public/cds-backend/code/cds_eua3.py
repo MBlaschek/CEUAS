@@ -33,6 +33,8 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 from numba import njit
+import geopy
+import datetime
 
 # check codes from there
 # https://github.com/glamod/common_data_model/blob/master/tables/observed_variable.dat
@@ -3251,7 +3253,24 @@ class CDMDataset:
 #         # global attributes
 #         pass
 
-    def report_quality(self, filename: str = None):
+    #
+    # finding country for coordinates:
+    #
+    def get_address_by_location(self, latitude, longitude, language="en"):
+        """This function returns an address as raw from a location
+        will repeat until success"""
+        app = geopy.geocoders.Nominatim(user_agent="eua_cds3")
+        # build coordinates string to pass to reverse() function
+        coordinates = f"{latitude}, {longitude}"
+        # sleep for a second to respect Usage Policy
+        time.sleep(1)
+        try:
+            return app.reverse(coordinates, language=language).raw
+        except:
+            return get_address_by_location(latitude, longitude)
+        
+
+    def report_quality(self, filename: str = None, **kwargs):
         """ Compile a quality report
 
         Args:
@@ -3267,8 +3286,7 @@ class CDMDataset:
                       other lon, lat combinations
 
             Merged Stations : IDs
-            Distance between Stations :
-                1.2 km ID
+            Distance between Stations : 1.2 km ID
             Temporal Coverage: [Start, End]
             before 1940: xxx
             before 1950: xxx
@@ -3288,40 +3306,212 @@ class CDMDataset:
         # run a duplicated controller
         # run a values consistency check
         # Calculate climatology and outlier statistics
+        
+        writerep = [] # list for writing report
+
+        
         if not self.hasgroups:
             raise RuntimeError('Only available for CDM Backend files')
 
-        report = {'Station': '', 'Region': '', 'Country': '', 'Location': [], 'Merged_Stations': []}
+        report = {'Station': '', 'Country': '', 'State': '', 'Latitude': [], 'Longitude': [], 
+                  'Temporal_Coverage':'', 'Ascents':'', 'Observations':'', 'b1940':'', 'b1950':'', 'b1979':'' , 'a1979':'', 'l00':'', 'l06':'', 'l12':'', 'l18':'', 
+                  # 'Merged_Stations':[], 
+                  'Merged_Observations': [],  'Merged_Sources':[],
+                  'Variable_Code':[], 'Variables':[], 'Missing_Values': [], 'Min_Value':[], 'Max_Value':[], 
+                  'PLvl':[85000,], 'PLvl_Observations':[], 'Outliers':[],}
 
         igroup = 'header_table'
         if igroup in self.groups:
-            pass
+            #
+            # station id:
+            #
+            rdvar = None
+            try:
+                rdvar = self['header_table']['primary_station_id'][()][0]
+            except:
+                # not available right now - will be in 'primary_station_id' in the header_table or 'primary_id' in the station_configuration
+                pass
+            if rdvar is not None:
+                wrtvar = ''
+                for i in rdvar:
+                    wrtvar = wrtvar + i.decode()
+                report['Station'] = wrtvar
+                writerep.append('station_id: '+ report['Station'])
+            else:
+                writerep.append('station_id: not readable')
+            #
+            # location:
+            #
+            lat = self['header_table']['latitude'][()][0]
+            lon = self['header_table']['longitude'][()][0]
+            writerep.append('latitude: '+ str(lat))
+            report['Latitude'] = lat
+            writerep.append('longitude: '+ str(lon))
+            report['Longitude'] = lon
+            location = self.get_address_by_location(lat, lon)
+            report['Country'] = location['address']['country']
+            writerep.append('Country: '+ report['Country'])
+            report['State'] = location['address']['state']
+            writerep.append('State: '+ report['State'])
+        else:
+            writerep.append('header_table: not readable')
+        #
+        # time:
+        #
+        try:
+            startt = datetime.datetime.utcfromtimestamp(self.recordtimestamp[()][0]-2208988800)
+            endt = datetime.datetime.utcfromtimestamp(self.recordtimestamp[()][-1]-2208988800)
+            if endt >= startt:
+                report['Temporal_Coverage'] = (str(startt.year) + '-' + str(startt.month) + '-' + str(startt.day) + ' - ' + str(endt.year) + '-' + str(endt.month) + '-' + 
+                                               str(endt.day))
+                writerep.append('Temporal Coverage:' + report['Temporal_Coverage'])
+        except:
+            writerep.append('Temporal Coverage: not readable')
 
+            
         igroup = 'observations_table'
         if igroup in self.groups:
-            # Load groups (full arrays)
-            self.load_variable_from_file(['observed_variable', 'units', 'observation_value',
-                                          'z_coordinate', 'date_time'], group=igroup)
+            # converting self into dataframe
+            data = self.to_dataframe('observations_table', ['observation_value', 'date_time', 'z_coordinate', 'observed_variable', 'report_id', 'source_id'], None, **kwargs)
             #
-            # observed_variables
+            # Ascents & Observations
             #
-            varcodes = self[igroup]['observed_variable'][()]
-            unique_varcodes = np.unique(varcodes)
-            for ivar in unique_varcodes:
-                _, idx = self.read_observed_variable(ivar, return_index=True)
-                # Check units
-                units = self[igroup]['units'][idx]
-                # Check observation_value
-                obs = self[igroup]['observation_value'][idx]
-                # only on standard pressure levels ?
+            try:
+                asc = data.report_id.drop_duplicates() 
+                report['Ascents'] = len(asc)
+                writerep.append('Over all Ascents: ' + str(report['Ascents']))
+                report['Observations'] = len(data.report_id)
+                writerep.append('Over all Observations: ' + str(report['Observations']))
+            except:
+                writerep.append('Ascents and Observations: not readable')
+            #
+            # period:
+            #
+            try: 
+                report['b1940'] = len(data[data.date_time.dt.year < 1940])
+                report['b1950'] = len(data[data.date_time.dt.year < 1950])
+                report['b1979'] = len(data[data.date_time.dt.year < 1979])
+                report['a1979'] = len(data[data.date_time.dt.year >= 1979])
+                writerep.append('Observations before 1940: ' + str(report['b1940']))
+                writerep.append('Observations before 1950: ' + str(report['b1950']))
+                writerep.append('Observations before 1979: ' + str(report['b1979']))
+                writerep.append('Observations after 1979: ' + str(report['a1979']))
+            except:
+                writerep.append('Observations in Period: not readable')
+            #
+            # Launch times:
+            #
+#             try:
+            report['l00'] = len(data[data.date_time.dt.hour >= 0][data.date_time.dt.hour < 6])
+            report['l06'] = len(data[data.date_time.dt.hour >= 6][data.date_time.dt.hour < 12])
+            report['l12'] = len(data[data.date_time.dt.hour >= 12][data.date_time.dt.hour < 18])
+            report['l18'] = len(data[data.date_time.dt.hour >= 18][data.date_time.dt.hour < 24])
+            writerep.append('Sonde starts at 00 UTC: ' + str(report['l00']))
+            writerep.append('Sonde starts at 06 UTC: ' + str(report['l06']))
+            writerep.append('Sonde starts at 12 UTC: ' + str(report['l12']))
+            writerep.append('Sonde starts at 18 UTC: ' + str(report['l18']))
+#             except:
+#                 writerep.append('Sonde starts: not readable')
+            #
+            # Merge:
+            #
+            try:
+#                 merge_stations = len(data.report_id.drop_duplicates())
+#                 report['Merged_Stations'].append(merge_stations)
+#                 writerep.append('Merged Stations: ' + str(merge_stations))
+                for i in data.source_id.drop_duplicates():
+                    merge_data = data[data.source_id == i]
+                    merge_name = i
+                    report['Merged_Observations'].append(len(merge_data))
+                    report['Merged_Sources'].append(merge_name)
+                    writerep.append('Observations merged from ' + merge_name + ': ' + str(len(merge_data)))
+            except:
+                writerep.append('Observations merged from: not readable')
+            #
+            # Value Check:
+            #
+            try:
+                for i in data.observed_variable.drop_duplicates(): 
+                    report['Variable_Code'].append(i)
+                    vcheck = data[data.observed_variable == i]
+                    report['Variables'].append(len(vcheck))
+                    report['Missing_Values'].append(len(vcheck[vcheck.observed_variable == np.nan].observation_value)) # -> is it rly np.nan, or another value?
+                    report['Min_Value'].append(np.nanmin(vcheck.observation_value))
+                    report['Max_Value'].append(np.nanmax(vcheck.observation_value))                    
+                writerep.append('Variable Codes: ' + str(report['Variable_Code']))
+                writerep.append('Variables: ' + str(report['Variables']))
+                writerep.append('Missing Values: ' + str(report['Missing_Values']))
+                writerep.append('Minimum Values: ' + str(report['Min_Value']))
+                writerep.append('Maximum Values: ' + str(report['Max_Value']))                
+            except:
+                writerep.append('Value Check: not readable')
+        else:
+            writerep.append('observations_table: not readable')
+        #
+        # check for Outliers
+        #
+        min_p = 25
+        max_p = 75
+        cut = 2
+        skewed= False
+        for j in report['PLvl']:
+            for i in data.observed_variable.drop_duplicates():
+                outl = 0
+                da = data[data.observed_variable == i]
+                da = da[da.z_coordinate == j]
+                da = np.array(da.observation_value)
 
-        if 'era5fb' in self.groups:
-            pass
+                q_min, q_max = np.nanpercentile(da, min_p), np.nanpercentile(da, max_p)
+                cut_off = (q_max - q_min) * cut
+                lower, upper = q_min-cut_off, q_max+cut_off
 
-        # if 'station_'
-        if filename is not None:
-            pass
+                if skewed==True:
+                    q50 = np.nanpercentile(da, 50)
+                    lower , upper = q_min-(q50-q_min)*cut ,  q_max+(q_max-q50)*cut  # the higher the cut, the more relaxed the contition for exclusion 
 
+                median = np.nanmedian(da)
+                cleaned, outliers = [],[]
+
+                for d in np.asarray(da):
+                    if not(d >= lower and d <= upper):
+                        outl += 1
+                report['Outliers'].append(outl)
+                report['PLvl_Observations'].append(len(da))
+            writerep.append('Pressurelevel: ' + str(j))
+            writerep.append('Observations on Pressurelevel: ' + str(report['PLvl_Observations']))
+            writerep.append('Outliers on Pressurelevel: ' + str(report['Outliers']))
+                
+
+#         igroup = 'observations_table'
+#         if igroup in self.groups:
+#             # Load groups (full arrays)
+#             self.load_variable_from_file(['observed_variable', 'units', 'observation_value',
+#                                           'z_coordinate', 'date_time'], group=igroup)
+#             #
+#             # observed_variables
+#             #
+#             varcodes = self[igroup]['observed_variable'][()]
+            
+#             unique_varcodes = np.unique(varcodes)
+#             for ivar in unique_varcodes:
+#                 _, idx = self.read_observed_variable(ivar, return_index=True)
+#                 # Check units
+#                 units = self[igroup]['units'][idx]
+#                 # Check observation_value
+#                 obs = self[igroup]['observation_value'][idx]
+#                 # only on standard pressure levels ?
+
+#         if 'era5fb' in self.groups:
+#             pass
+
+#         # if 'station_'
+#         if filename is not None:
+#             pass
+        
+        with open("quality_report_"+report['Station']+".txt", "w") as text_file:
+            for i in writerep:
+                print(i, file=text_file)
+        
         return report
 
     def check_cdm_duplicates(self, groups, variables,
