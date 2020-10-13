@@ -2592,7 +2592,7 @@ def ir_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
     t=time.time()
     #fno = initialize_convertion(fn, output_dir) 
     #station_id = ''    
-    cdm['iri_rstype_map']=pd.read_csv(os.path.expanduser('~/tables/iri_rstype_map.dat'),sep='\t',
+    cdm['iri_rstype_map']=pd.read_csv(os.path.expanduser('../data/tables/iri_rstype_map.dat'),sep='\t',
                                       dtype={'riname':np.dtype('S10'),'vapor_name':'S4','wmo_C2011_code':np.float32,'ri_long_name':'S80'})
     cdm['iri_rstype_map']['wmo_C2011_code']=numpy.int32(cdm['iri_rstype_map']['wmo_C2011_code'])
     cdmd['iri_rstype_map']=pd.DataFrame(data=None, columns=cdmd['observations_table'].columns)
@@ -2603,6 +2603,20 @@ def ir_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                                        'description':k},ignore_index=True)
         l+=1
     
+    # to do remove if wrong 
+    cdms=pd.read_csv(os.path.expanduser('../data/tables/vapor.instruments.all'),sep=':',names=('sensor_id','comments'))
+    cdm['sensor_configuration']=pd.DataFrame(columns=cdmd['sensor_configuration'].element_name)
+    for c in cdm['sensor_configuration'].columns:
+        if c not in ('sensor_id','comments'):   
+            cdm['sensor_configuration'][c]=cdm['sensor_configuration'].pop(c).astype('int64')
+    cdm['sensor_configuration'].sensor_id=cdms['sensor_id']
+    cdm['sensor_configuration'].comments=cdms['comments']
+
+    for k in range(len(cdm['sensor_configuration'].sensor_id)):
+        cdm['sensor_configuration'].sensor_id.values[k]=cdm['sensor_configuration'].sensor_id.values[k].strip()
+    cdm['sensor_configuration']['sensor_id']=cdm['sensor_configuration'].pop('sensor_id').astype('|S4')
+    cdm['sensor_configuration']['comments']=cdm['sensor_configuration'].pop('comments').astype('|S200')
+        
     fdict={'observations_table':{},'header_table':{}}
     flist=glob.glob(fn)
     for fn in flist:
@@ -2798,11 +2812,11 @@ def ubern_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
     for k in range(len(cdm['sensor_configuration'].sensor_id)):
         cdm['sensor_configuration'].sensor_id.values[k]=cdm['sensor_configuration'].sensor_id.values[k].strip()
     cdm['sensor_configuration']['sensor_id']=cdm['sensor_configuration'].pop('sensor_id').astype('|S4')
-        
     cdm['sensor_configuration']['comments']=cdm['sensor_configuration'].pop('comments').astype('|S200')
 
     
-    flist=glob.glob(fn+'/COMP004*')
+    #flist=glob.glob(fn+'/COMP004*')  # cant understand this piece
+    flist=glob.glob(fn+'/COMP/COMP*') # fixed by F 
     campaigns=pd.read_excel(fn+'/Table1_Campaigns.xls')
     fdicts={}
     for fn in flist:
@@ -3085,7 +3099,7 @@ def load_cdm_tables():
 
     """ Adding the  tables that currently only have the definitions but not the implementation in the CDM, OR    need extensions """  
     cdm_tabdef['header_table']          = pd.read_csv(tpath+'/table_definitions/header_table.csv',delimiter='\t',quoting=3,comment='#')
-    cdm_tabdef['observations_table'] = pd.read_csv(tpath+'/table_definitions/observations_table.csv',delimiter='\t',quoting=3,comment='#')
+    #cdm_tabdef['observations_table'] = pd.read_csv(tpath+'/table_definitions/observations_table.csv',delimiter='\t',quoting=3,comment='#')
 
     id_scheme={ cdm_tabdef['id_scheme'].element_name.values[0]:[0,1,2,3,4,5,6],
                          cdm_tabdef['id_scheme'].element_name.values[1]:['WMO Identifier','Volunteer Observing Ships network code',
@@ -3351,3 +3365,8 @@ RI UBERN Pangea
 
 -f '/raid60/scratch/leo/scratch/era5/odbs/RI/Pangaea/COMP' -d ubern -o OUTPUT
 """
+
+# yes # -f /raid8/srvx1/federico/GitHub/CEUAS_master_OCTOBER2020/CEUAS/CEUAS/public/harvest/RI/Pangaea -d ubern -o OUTPUT  
+
+
+# yes -f /raid8/srvx1/federico/GitHub/CEUAS_master_OCTOBER2020/CEUAS/CEUAS/public/harvest/RI/nasa/phase1/p1beu.zip -d nasa -o OUTPUT
