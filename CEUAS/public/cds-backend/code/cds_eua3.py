@@ -34,7 +34,6 @@ import pandas as pd
 import xarray as xr
 from numba import njit
 import geopy
-import datetime
 
 # check codes from there
 # https://github.com/glamod/common_data_model/blob/master/tables/observed_variable.dat
@@ -3359,8 +3358,8 @@ class CDMDataset:
         # time:
         #
         try:
-            startt = datetime.datetime.utcfromtimestamp(self.recordtimestamp[()][0]-2208988800)
-            endt = datetime.datetime.utcfromtimestamp(self.recordtimestamp[()][-1]-2208988800)
+            startt = datetime.utcfromtimestamp(self.recordtimestamp[()][0]-2208988800)
+            endt = datetime.utcfromtimestamp(self.recordtimestamp[()][-1]-2208988800)
             if endt >= startt:
                 report['Temporal_Coverage'] = (str(startt.year) + '-' + str(startt.month) + '-' + str(startt.day) + ' - ' + str(endt.year) + '-' + str(endt.month) + '-' + 
                                                str(endt.day))
