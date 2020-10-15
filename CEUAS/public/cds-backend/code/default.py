@@ -775,7 +775,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     #
     # Date time selection
     # [DATE] or [START, END]
-    #
+    #    
     # todo only one date or two dates allowed at the moment by CDS
     if date is not None:
         # str, list (str, int)
@@ -783,7 +783,8 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         # make a list
         if isinstance(date, (int, str)):
             date = [date]
-
+        # BUG: date list is not sorted from CDS -> sort here
+        date.sort()
         for idate in date:
             # convert to string
             if not isinstance(idate, str):
