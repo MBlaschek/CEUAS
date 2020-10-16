@@ -609,7 +609,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     #
     # Optional
     #
-    allowed_optionals = ['sonde_type',]
+    allowed_optionals = ['sonde_type', 'bias_estimate']
     if optional is not None:
         if not isinstance(optional, list):
             if optional in allowed_optionals:
