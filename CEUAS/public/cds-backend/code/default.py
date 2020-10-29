@@ -547,7 +547,8 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
 
 
 def check_body(variable: list = None, statid: list = None, product_type: str = None, pressure_level: list = None,
-               date: list = None, time: list = None, bbox: list = None, country: str = None,
+               day: list = None, month: list = None, year: list = None, date: list = None, time: list = None, 
+               bbox: list = None, country: str = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                pass_unknown_keys: bool = False,
                **kwargs) -> dict:
@@ -773,11 +774,30 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 'stations ')
     d['statid'] = statid
     #
+    #
+    # Only pick one format for dates:
+    date_not_yet_existing = True
+    # prioritized order: Period, date, day/month/year
+    #
+    #
+    # Period [START, END] -> into date
+    #
+    # todo not forward by CDS -> to date [start-end]
+    if period is not None:
+        if not isinstance(period, list):
+            raise ValueError('invalid period selection, period [startdate, enddate], but %s' % str(period))
+
+        for i in range(len(period)):
+            period[i] = str(period[i])
+        d['date'] = [to_valid_datetime(period[0], as_string=True), to_valid_datetime(period[-1], as_string=True)]
+        date_not_yet_existing = False
+
+    #
     # Date time selection
     # [DATE] or [START, END]
-    #    
+    #
     # todo only one date or two dates allowed at the moment by CDS
-    if date is not None:
+    if date is not None and date_not_yet_existing:
         # str, list (str, int)
         newdates = []
         # make a list
@@ -803,17 +823,32 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 except:
                     raise ValueError('only valid dates allowed for date: %s' % idate)
         d['date'] = newdates
+        date_not_yet_existing = False
     #
-    # Period [START, END] -> into date
+    # day/month/year selection
     #
-    # todo not forward by CDS -> to date [start-end]
-    if period is not None:
-        if not isinstance(period, list):
-            raise ValueError('invalid period selection, period [startdate, enddate], but %s' % str(period))
-
-        for i in range(len(period)):
-            period[i] = str(period[i])
-        d['date'] = [to_valid_datetime(period[0], as_string=True), to_valid_datetime(period[-1], as_string=True)]
+    if year is not None and month is not None and day is not None and date_not_yet_existing:
+        datelist = []
+        newdates = []
+        if isinstance(year, (int, str)):
+            year = [year]
+        if isinstance(month, (int, str)):
+            month = [month]
+        if isinstance(day, (int, str)):
+            day = [day]
+        for i in year:
+            for j in month:
+                for k in day:
+                    try:
+                        datetime.strptime(str(i)+str(j)+str(k), '%Y%m%d')
+                        datelist.append(str(i)+str(j)+str(k))
+                    except:
+                        pass
+        datelist.sort()
+        newdates.append(to_valid_datetime(datelist[0], as_string=True))
+        newdates.append(to_valid_datetime(datelist[-1], as_string=True))
+        d['date'] = newdates
+        date_not_yet_existing = False
     #
     # Pressure levels
     #
