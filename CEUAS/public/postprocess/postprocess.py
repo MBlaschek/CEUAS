@@ -102,7 +102,7 @@ def remove_outliers(data= '', min_p= 25, max_p= 75, cut= 1, skewed= False):
                            min_p , max_p = minimum and maximum values of the percentile to consider to determine outliers 
                            skewed = use True to consider a skewed (not symmetricla Gaussian) distribution 
                            cut = factor to allow slight deviation from given percentiles 
-         returns ::   cleaned   = list of values without outliers (filled with nans replacing outliers)                                                                                                                                                                   
+         returns ::   cleaned   = list of values without outliers                                                                                                                                                                    
                            outliers   = list of outlier values                                                                                                                                                                                                               
                            lower,upper, median = outliers delimiter and median values """
 
@@ -112,7 +112,7 @@ def remove_outliers(data= '', min_p= 25, max_p= 75, cut= 1, skewed= False):
 
     if skewed==True:
         q50 = np.nanpercentile(data, 50)
-        lower , upper = q_min-(q50-q_min)*cut ,  q_max+(q_max-q50)*cut
+        lower , upper = q_min-(q50-q_min)*cut ,  q_max+(q_max-q50)*cut  # the higher the cut, the more relaxed the contition for exclusion 
 
     median = np.nanmedian(data)
     cleaned, outliers = [],[]
@@ -165,9 +165,9 @@ class MergedFile(object):
         data['station_id'] = self.station_id 
         
         data['recordtimestamp']               = xr.open_dataset (file, engine = 'h5netcdf' , decode_times = False )['recordtimestamp']
-        data['recordtimestampdecoded'] = xr.open_dataset (file, engine = 'h5netcdf' , decode_times = True )['recordtimestamp']
+        data['recordtimestampdecoded'] = xr.open_dataset (file, engine = 'h5netcdf' , decode_times = True )['recordtimestamp'].values
         
-        data['recordindex']         = xr.open_dataset (file, engine = 'h5netcdf' , decode_times = False )['recordindex']
+        data['recordindex']         = xr.open_dataset (file, engine = 'h5netcdf' , decode_times = False )['recordindex'].values
         data['dateindex']            = h5py_file['dateindex']
         
         #data['sensor_id'] = h5py_file['observations_table']['sensor_id']
@@ -191,7 +191,9 @@ class MergedFile(object):
             self.other_columns           = [c for c in self.data['obs_tab'].keys() if c not in self.fixed_columns and c not in self.unavailable_columns] # to be calculated by averaging 
             
         if era5fb:
+            #era5fb_tab = xr.open_dataset (file, engine = 'h5netcdf' , group = 'era5fb', decode_times = True ,  drop_variables=None ) # biascorr@body ,  biascorr_fg@body 
             era5fb_tab = xr.open_dataset (file, engine = 'h5netcdf' , group = 'era5fb', decode_times = True )
+            
             self.data['era5fb'] = era5fb_tab
         
     def write_summary(self, what = '', done = False):
@@ -351,22 +353,21 @@ class Sensor(MergedFile):
             sensor = j.rstype
             
             if dt == '0':
-                ddt =  np.datetime64( datetime(1900, 1, 1, 0 , 0 ) )
+                ddt =  np.datetime64( datetime(1900, 1, 1, 0 , 0 ) ) 
                 sensor_datetime[ddt] = {'sensor' : sensor, 'min_index' : 0}
                 
             else:
                 year, month, day, hour, minute =  int(dt[0:4]) , int(dt[4:6]) , int(dt[6:8]) , int(dt[8:10])  , int(dt[10:12] ) 
                 try:
                     dt = np.datetime64( datetime ( year, month, day, hour, minute ) )
-                    near = nearest(self.data['recordtimestampdecoded'].values, dt)
+                    near = nearest(self.data['recordtimestampdecoded'], dt)
                     sensor_datetime[near] = {'sensor' : sensor } 
                     
                 except: # this does not work because I cannot match the date_time anymore   
                     pass
                 
-            print (0)
 
-        """ If I have only one entry, this instrument will be applied to the entire list of observations """
+        """ If I have only one entry, this instrument will be applied to the entire list of source_id  """
         lista = list(sensor_datetime.keys())
         lista.sort() 
         if len ( lista ) == 1:
@@ -426,46 +427,65 @@ class Sensor(MergedFile):
             sensor_id_array = np.full( ( length )  , sensor_id ).astype(  np.dtype('|S3')  ) 
             temp_sensor_list.append(sensor_id_array)
         
-        if not temp_sensor_list:
-            print('No sensor found ::: ')
-            return 'NoSensor'  # stop here if no sensor is found 
-        
-        sensor_list = np.concatenate(temp_sensor_list)
-        
-        data = self.data['h5py_file']
-        slen=len(sensor_list[0]) # =3
-        
-        # making an array of 1-byte elements
-        data['observations_table'].create_dataset('sensor_id', data = sensor_list.view('S1').reshape(sensor_list.shape[0], slen ), compression = 'gzip' ,  chunks=True)
-        
-        s = 'string{}'.format(slen)
-        stringa=np.zeros(slen,dtype='S1')
-        
-        try:    
-            del  self.data['h5py_file']['observations_table'][s]
-            del self.data['observations_table']['index']
-            
-        except:
-            pass
+        #if not temp_sensor_list:
+        #    print('No sensor found ::: ')
+        #    return 'NoSensor'  # stop here if no sensor is found 
         
         """ Checking if index dimension variable exists, if not create it """
         if 'index' not in self.data['h5py_file']['observations_table'].keys():
             index = np.zeros (  self.data['h5py_file']['observations_table']['date_time'] .shape[0], dtype='S1')           
             data['observations_table'].create_dataset('index', data=index)
-
-        """ Adding missing dimensions """
-        try:            
-            data['observations_table']['sensor_id'].dims[0].attach_scale( data['observations_table']['index'] )
-            data['observations_table'].create_dataset( s ,  data=stringa[:slen]  )
-            data['observations_table']['sensor_id'].dims[1].attach_scale(data['observations_table']['string{}'.format(slen)])
-            data['observations_table']['string{}'.format(slen)].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')
-            print(' *** Done with the attributes of the dimension *** ')
             
-        except ValueError:
-            print('Dimension already exist, passing ')
+        data = self.data['h5py_file']
+            
+        if temp_sensor_list: # case where I found some sensor_ids inside Schroeder's table 
+            
+            sensor_list = np.concatenate(temp_sensor_list)
+            slen=len(sensor_list[0]) # =3
+            
+            # making an array of 1-byte elements
+            data['observations_table'].create_dataset('sensor_id', data = sensor_list.view('S1').reshape(sensor_list.shape[0], slen ), compression = 'gzip' ,  chunks=True)
+            
+            s = 'string{}'.format(slen)
+            stringa=np.zeros(slen,dtype='S1')
+            
+            try: # TO DO check what this is for 
+                del  self.data['h5py_file']['observations_table'][s]
+                del self.data['observations_table']['index']
+            except:
+                pass
 
+            """ Adding missing dimensions """
+            try:            
+                data['observations_table']['sensor_id'].dims[0].attach_scale( data['observations_table']['index'] )
+                data['observations_table'].create_dataset( s ,  data=stringa[:slen]  )
+                data['observations_table']['sensor_id'].dims[1].attach_scale(data['observations_table']['string{}'.format(slen)])
+                data['observations_table']['string{}'.format(slen)].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')
+                print(' *** Done with the attributes of the dimension *** ')
+                
+            except ValueError:
+                print('Dimension already exist, passing ')
+    
+            
+        else:
+            sensor_id = b'NA '
+            slen = len(sensor_id)
+            s = 'string{}'.format(slen)
+            stringa=np.zeros(slen,dtype='S1')
+            s_id_vec = np.full( (len(data['observations_table']['index']) ), sensor_id).astype(  np.dtype('|S3')  )
+            
+            try:
+                data['observations_table'].create_dataset('sensor_id', data = s_id_vec.view('S1').reshape( len(s_id_vec), 3 )  , compression = 'gzip' ,  chunks=True)                  
+                data['observations_table']['sensor_id'].dims[0].attach_scale( data['observations_table']['index'] )  
+                data['observations_table'].create_dataset( s ,  data=stringa[:slen]  )                
+                data['observations_table']['sensor_id'].dims[1].attach_scale(data['observations_table']['string{}'.format(slen)])
+                data['observations_table']['string{}'.format(slen)].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')             
+                print(' *** Done with the attributes of the dimension *** ')
+            except ValueError:
+                print('Dimension already exist, passing ')
+                
         self.data['h5py_file'].close()
-        
+            
     def run(self):
 
         cdm_tables = self.load_cdm_tables()      
@@ -511,27 +531,30 @@ class MonthlyAverages(MergedFile):
             index = np.zeros (  len(monthly_tab['date_time']) , dtype='S1')                       
             out_netcdf['observations_table'].create_dataset('index', data=index)
                         
-            """ Converitng to proper data type """                   
+            """ Converting to proper data type """                   
             for variable in monthly_tab.keys(): 
-                var_type = self.MergedFile.dic_type_attributes['observations_table'][variable]['type']
-        
-                '''
-                """ trying to convert the variable types to the correct types stored as attribute, read from the numpy dic file """
-                if type(self.data['monthly_obs_tab'][variable][0]) != var_type:       
-                    try:
-                        self.data['monthly_obs_tab'][variable] = self.data['monthly_obs_tab'][variable].astype( var_type ) 
-                    except:
-                        print ('FAILED converting column ' , variable, ' type ', type(self.data['monthly_obs_tab'][variable][0]) , ' to type ', var_type )
-                '''
-                
                 try:
-                    data = np.array( monthly_tab[variable] ).astype(var_type)       
+                    var_type = self.MergedFile.dic_type_attributes['observations_table'][variable]['type']               
+                    try:
+                        data = np.array( monthly_tab[variable] ).astype(var_type)       
+                    except:
+                        data = np.array( monthly_tab[variable] )   
+                        
                 except:
-                    data = np.array( monthly_tab[variable] )      
+                    var_type = np.float32
+                    try:
+                        data = np.array( monthly_tab[variable] ).astype(var_type)       
+                    except:
+                        data = np.array( monthly_tab[variable] )                       
                     
-                out_netcdf['observations_table'].create_dataset(variable, data.shape, data.dtype, compression=self.MergedFile.encodings['observations_table'][variable]['compression'], chunks=True)
-                out_netcdf['observations_table'][variable][:]=data[:]
-                
+                try:
+                    out_netcdf['observations_table'].create_dataset(variable, data.shape, data.dtype, compression=self.MergedFile.encodings['observations_table'][variable]['compression'], chunks=True)
+                    out_netcdf['observations_table'][variable][:]=data[:]
+                except:
+                    out_netcdf['observations_table'].create_dataset(variable, data.shape, data.dtype, chunks=True) # otherwise doenst work with the additional variables I defined e.g. "observation_value_reanalyses" since they are not real CDM vars.
+                    out_netcdf['observations_table'][variable][:]=data[:]
+                    
+                    
                 """ Setting the attributes """
                 if variable == 'date_time':
                     out_netcdf['observations_table'][variable].attrs['units'] = np.bytes_('seconds since 1900-01-01 00:00:00')            
@@ -548,27 +571,11 @@ class MonthlyAverages(MergedFile):
                 except:
                     print('Failed dimensions +++++++++++++++++= ')
 
-        """ ### Checkign if index dimension variable exists, if not create it 
-        if 'index' not in self.data['h5py_file']['observations_table'].keys():
-            index = np.zeros (  self.data['h5py_file']['observations_table']['date_time'] .shape[0], dtype='S1')           
-            data['observations_table'].create_dataset('index', data=index)
-
-        try:            
-            data['observations_table']['sensor_id'].dims[0].attach_scale( data['observations_table']['index'] )
-            data['observations_table'].create_dataset( s ,  data=stringa[:slen]  )
-            data['observations_table']['sensor_id'].dims[1].attach_scale(data['observations_table']['string{}'.format(slen)])
-            data['observations_table']['string{}'.format(slen)].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')
-            print(' *** Done with the attributes of the dimension *** ')
-            
-        except ValueError:
-            print('Dimension already exist, passing ')
-                
-            """
 
     def get_dates_indices(self):
         """ This function analyzes the recordtimestamp and extracts the indices for the observations_table """
-        timestamps = self.data['recordtimestampdecoded'].values
-        indices         = self.data['recordindex'].values
+        timestamps = self.data['recordtimestampdecoded']
+        indices         = self.data['recordindex']
         indices_plus = [i-1 for i in indices[1:]]# getting the upper index of each record  
         indices_plus.append (len(self.data['obs_tab']['date_time']) )  
         
@@ -620,104 +627,149 @@ class MonthlyAverages(MergedFile):
         
         print("LOADING variables::: "  , T.time() )
         monthly_dates = self.get_dates_indices() # independent on the variables, depends only on the records time_stamps 
+        
         obs_var          = self.data['obs_tab']['observed_variable'].values
         z_coord_type = self.data['obs_tab']['z_coordinate_type'].values
-        z_coord          = self.data['obs_tab']['z_coordinate'].values
+        z_coord          = self.data['obs_tab']['z_coordinate'         ].values
         obs_val          = self.data['obs_tab']['observation_value'].values
         std_plevels    = np.array(self.MergedFile.std_plevs)           
-        print("FONE LOADING variables::: "  , T.time() )
+        
+        """ I store also press and obs var to check if indices are working well """
+        era5fb_departures = self.data['era5fb']['an_depar@body'        ].values
+        z_coord_era5 = self.data['era5fb']['vertco_reference_1@body'].values
+        obs_var_era5 = self.data['era5fb']['varno@body'                     ].values
+        obs_era5       = self.data['era5fb']['obsvalue@body'                 ].values
+        era5_bias       = self.data['era5fb']['biascorr@body'                  ].values
+        
+        print("DONE LOADING variables::: "  , T.time() )
         
         
-        """ Auxilliary functions """
+        '''
+        def analyse_departures(extracted_data , extracted_era5fb , departures, p ):
+            
+            """ give the dictionary contaisng the values of the """
+            dep = extracted_era5fb[p]['era5fb_departures']
+            for p in self.MergedFile.std_plevs:
+                print( extracted_data[p]['observation_values'] , '  ' ,   extracted_era5fb[p]['observation_values'] , '    '  ,  extracted_era5fb[p]['era5fb_departures'] )
+                print(0)
+        '''       
+            
         def get_mostcommon_value(indices, column, index_min='', index_max=''):
             """ Extracts the most common values (in a given moth) for the variable considered. 
                   E.g. the sensor_id of the monthly average would be the most common sensor id found in the records for that specific  month. 
                   Indices is the list of indices, of the chucnked obs_tab[index_min:index_max] where I have the observation values.
                   So index_min+indices[0] is the first available value of the desired variable. """
             
-            #print("EXTRACTING values get_mostcommon_value " , T.time() )
-            #values = self.data['obs_tab'][column][index_min:index_max][indices]
-            
-            #most_common = self.data['obs_tab'][column][index_min:index_max][indices[0]]
-
-            #most_common = self.data['obs_tab'][column][index_min:index_max][indices[0]]
-            
             ### HAD TO SIMPLY: returns the first value of the list 
-            #most_common =self.data['obs_tab'][column][index_min + indices[0] ].values
+            # I simply pick the first value available for that chunk, for these three columns. Otherwise I set it to nan 
+            if column in ['sensor_id', 'latitude', 'longitude']:
+                most_common =self.data['obs_tab'][column][index_min ].values
+            else:
+                most_common = np.nan 
             
-            most_common =self.data['obs_tab'][column][index_min].values # try this. pick the fiurst value of the obs table 
-            
-
             return most_common
             
-            """
-            try:
-                (values,counts) = np.unique(values,return_counts=True)
-                ind=np.argmax(counts)
-                most_common =  values[ind]
-                
-                #occurence_count = Counter( list(values.values) )
-                #most_common=occurence_count.most_common(1)[0][0]
-            except:
-                most_common = np.nan 
-                
-            #print(" DONE return get_mostcommon_value " , T.time() )
-            
-            return most_common 
-            """
-
-        def get_observation_indices(v, obs_var, z_coord_type, z_coord, obs_val, std_plevels, indices = '' ):
-            """ Loop over the indices of the records and extract the specific indices of the observations, and the values of the observations """
+        def get_observations(var, obs_var, z_coord_type, z_coord, obs_val,  indices = '' , era5fb = False , era5fb_departures = '' , era5obs = '', era5_bias = ''):
+            """ Loop over the indices of the records and extract the specific indices of the observations, and the values of the observations.
+                  if era5fb == True, it also exctacts the departures. """
             #results_dic = Dict.empty( key_type=types.unicode_type ,  value_type=types.float32[:],  ) ## for numba but it does not work
 
+            if era5fb:
+                cdm_to_era5 = {85: 2} # converting observed variable from cdm to odb standards 
+                var = cdm_to_era5[var]
+                
             results = {} # firsty solum,nc will hold variable number, second the value 
             results['is_there_data'] = False 
+            
+            obs_columns     = ['observation_values' ,  'observation_indices' ]
+            era5fb_columns = ['observation_values_era5fb' ,  'era5fb_departures' , 'era5_bias' ]   
+            
             for i in range(len(indices[0]) ):
-                ind_min, ind_max = indices[0][i] , indices[1][i]
+                ind_min, ind_max = indices[0][i] , indices[1][i]+1  # you ahve to increase by 1 unit otherwise you miss the last element when slicing 
                                 
                 plevels = z_coord[ind_min: ind_max]  # available pressure levels in the records 
-                                
-                for p in std_plevels:
+                
+                f = self.data['obs_tab']['date_time'].values[ind_min: ind_max]
+                for p in self.MergedFile.std_plevs:
                     
-                    results[p] = {}
-                    results[p]['observation_values']  = []
-                    results[p]['observation_indices'] = []
-                    
-                    if p not in list(plevels):
-                        results[p]['observation_values'].append(np.nan)
-                        results[p]['observation_indices'].append(np.nan )
+                    if p not in results.keys():
+                        results[p] = {}
                         
-                    else:
-                        unique_ind = np.where ( ( obs_var[ind_min: ind_max] == v ) & (z_coord_type[ind_min: ind_max] == 1.)   &   (z_coord[ind_min: ind_max] == p)  ) [0]         
-                        if bool(unique_ind):
+                        for v in obs_columns :
+                            if v not in results[p].keys():
+                                results[p][v] = []                        
+
+                        if era5fb:
+                            for c in era5fb_columns:
+                                if c not in  results[p].keys():
+                                    results[p][c] = []  
+                        
+                    # case where the standard p level IS NOT availabe in the data pressure levels 
+                    if p not in list(plevels):
+                        for v in obs_columns :
+                            results[p][v].append(np.nan)
+                        
+                        if era5fb:
+                            for v in era5fb_columns :
+                                results[p][v].append(np.nan)        
+                     
+                    else: # case where the standard p level IS  availabe in the data pressure levels  
+                        unique_ind = np.where ( ( obs_var[ind_min: ind_max] == var ) & (z_coord_type[ind_min: ind_max] == 1.)   &   (z_coord[ind_min: ind_max] == p)  ) [0]
+                        
+                        if len(unique_ind)>=1:
                             val = obs_val[ind_min: ind_max][unique_ind][0] 
+
+                            """ 
                             if val < -1*10**(-18) and val > -1*10**(-15):
                                 continue
                             if val > 99999999:
                                 continue
-    
+                            """
+                            
                             results[p]['observation_values'].append(val)
                             results[p]['observation_indices'].append(unique_ind[0] )
+                            
                             results['is_there_data'] = True 
                             
+                            if era5fb: 
+                                dep         = era5fb_departures[ind_min: ind_max][unique_ind][0] # departures from era5fb
+                                era5_obs = era5obs[ind_min: ind_max][unique_ind][0]  # observations from era5fb (must be identical to the ones from the observations_table)
+                                era5_b   = era5_bias[ind_min: ind_max][unique_ind][0]
+                                
+                                results[p]['era5fb_departures']             .append(dep)        
+                                results[p]['observation_values_era5fb'].append(era5_obs)
+                                results[p]['era5_bias'].append(era5_b)
+                                
+
                         else:
-                            results[p]['observation_values'].append(np.nan)
-                            results[p]['observation_indices'].append(np.nan )
+                            for v in obs_columns:   
+                                results[p][v].append(np.nan)
+                            if era5fb:
+                                for n in era5fb_columns:                                
+                                    results[p][n]  .append(np.nan)        
                  
             return results ,  ind_min, ind_max 
                         
-        def fill_columns(monthly_observations_table , tot_observations , unavailable_columns = '' , other_columns = '', index_min = '', indices = '' ):
+        def fill_columns(variable, monthly_observations_table , tot_observations , unavailable_columns = '' , other_columns = '', index_min = '', indices = '' , dt = '', fill_obs = False  ):
             """ Fill the dictionary of the observations_table. when there is no observation data available (dummy empty record) """
 
             monthly_observations_table['z_coordinate']         .extend ( self.MergedFile.std_plevs )
             monthly_observations_table['date_time']             .extend ( [dt] * tot_observations )  # must be converted to seconds after 1900-01-01
             monthly_observations_table['z_coordinate_type'].extend ( [1] * tot_observations )
             monthly_observations_table['value_significance'].extend ( [2] * tot_observations )
-            monthly_observations_table['observed_variable'].extend ( [v] * tot_observations ) 
+            monthly_observations_table['observed_variable'].extend ( [variable] * tot_observations ) 
+            
+            if fill_obs: # filling nan values 
+                for v in [ 'observation_value' , 'secondary_value', 'original_precision' , 
+                                'observation_value_global' , 'original_precision_global' , 'secondary_value_global'  , 
+                                'observation_value_reanalysis', 'original_precision_reanalysis', 'secondary_value_reanalysis' , 
+                                'observation_value_bias', 'original_precision_bias', 'secondary_value_bias' , ] :
+                    
+                    monthly_observations_table[v].extend ( [np.nan] * tot_observations )             
             
             # setting nans for all the columns with unavailable data e.g. observations_id 
-            for column in other_columns:
-                monthly_observations_table[column].extend( [np.nan] * tot_observations )   
+            #for column in other_columns:
+            #    monthly_observations_table[column].extend( [np.nan] * tot_observations )   
                     
             for column in other_columns:
                 if index_min: # case where I am filling  data for an existing record 
@@ -728,10 +780,123 @@ class MonthlyAverages(MergedFile):
 
             return 
         
+        def get_all_obs_per_month( monthly_dates, variable= 85 ):
+            """ Extract all the values for all the months, pressure levels and time.
+                  Will be used to calculate the global statistics. Era5 biases are not needed in this step. """
+            
+            obs_var          = self.data['obs_tab']['observed_variable'].values
+            z_coord_type = self.data['obs_tab']['z_coordinate_type'].values
+            z_coord          = self.data['obs_tab']['z_coordinate'].values
+            obs_val          = self.data['obs_tab']['observation_value'].values
+            std_plevels    = np.array(self.MergedFile.std_plevs)     
+                        
+            era5fb_departures = self.data['era5fb']['an_depar@body'].values
+            z_coord_era5         = self.data['era5fb']['vertco_reference_1@body'].values
+            obs_var_era5         = self.data['era5fb']['varno@body'].values
+            obs_era5                = self.data['era5fb']['obsvalue@body'].values
+            era5_bias               = self.data['era5fb']['biascorr@body'].values
+
+            results = {}                
+            for i in range(1,13):
+                results[i] = {}                
+                    
+                for m in monthly_dates.keys():
+                    month = int(m.split('_')[1])
+                    #year    = int(m.split('_')[0]) # not needed ?
+                    if month == i:
+                        for time in ['00','12'] :
+                            if time not in results[i].keys():
+                                results[i][time] = {}  
+                            
+                            indices = monthly_dates[m][time]['indices'] 
+                            # NB: if the month is not availble at all, the data will not appear, not even as nans
+                            if indices:  
+                                ind = np.array ( ([ i[0] for i in indices ] , [ i[1] for i in indices ]  ) , dtype = np.int32 )
+                                extracted_data    , index_min, index_max = get_observations(variable, obs_var, z_coord_type, z_coord, obs_val,  indices = ind )
+                                
+                                # get_observations(v, obs_var, z_coord_type, z_coord, obs_val,  indices = '' , era5fb = False , era5fb_departures = '' , era5fb_obs = '' )
+                                extracted_era5fb , index_min, index_max = get_observations(variable, obs_var_era5, z_coord_type, z_coord_era5, obs_val, indices = ind , 
+                                                                                                                                   era5fb=True , era5fb_departures = era5fb_departures , era5obs = obs_era5 , era5_bias = era5_bias )      
+                                
+                                for p in self.MergedFile.std_plevs:
+                                    if p not in results[i][time].keys():
+                                        results[i][time][p] = {}
+                                        results[i][time][p]['all_observations'] = []
+                                        results[i][time][p]['all_departures']    = []
+                                    for v in extracted_data[p]['observation_values']:
+                                        if not np.isnan(v):
+                                            results[i][time][p]['all_observations'].append(v)
+                                    for d in extracted_era5fb[p]['era5fb_departures']:
+                                        if not np.isnan(d):
+                                            results[i][time][p]['all_departures'].append(d)             
+                                            
+            return results                
+        
+        def global_statistics( all_obs  ):
+            """ Calculate the average, std_dev, quartiles for the complete set of observations and departures (all available data) """
+            
+            stat = {}
+            for i in range(1,13) :
+                stat[i] = {}                
+                for time in ['00','12'] :
+                    stat[i][time] = {}                
+                    for p in self.MergedFile.std_plevs:
+                        stat[i][time][p] = {}                
+                        
+                        try:
+                            data = all_obs[i][time][p]['all_observations']  # if the month_year is not available at all, the data dict does not have this key 
+                        except:
+                            data = []
+                            
+                        """ calculating statistics of observed values """
+                        if data:                              
+                            cleaned_obs, outliers_obs , lower_obs, upper_obs, median_obs = remove_outliers(data= np.array(data), min_p=25, max_p=75, cut= 2, skewed=False)
+                            mean, std = np.nanmean(cleaned_obs)  , np.std(cleaned_obs) 
+                        else:
+                            mean, std , lower_obs, upper_obs = np.nan, np.nan, np.nan, np.nan 
+                            
+                        stat[i][time][p]['obs_average'] = mean       
+                        stat[i][time][p]['obs_std_dev']  = std    
+                        stat[i][time][p]['obs_lower']      = lower_obs    # lower threshold for valid data (i.e. data < lower_obs are considered outliers ) 
+                        stat[i][time][p]['obs_upper']     = upper_obs    # lower threshold for valid data (i.e. data > upper_obs are considered outliers )                       
+                        
+                        """ calculating the statistics of departures  """
+                        try:
+                            data_dep = all_obs[i][time][p]['all_departures']      
+                        except:
+                            data_dep = []
+                            
+                        if data and data_dep: # calculating statistics of departures  
+                            cleaned_dep, outliers_dep, lower_dep, upper_dep, median_dep = remove_outliers(data= np.array(data_dep), min_p=25, max_p=75, cut= 2, skewed=False)
+                            mean_dep, std_dep = np.nanmean(cleaned_dep)  , np.std(cleaned_dep)
+                        else:
+                            cleaned_dep, outliers_dep, lower_dep, upper_dep =  np.nan, np.nan, np.nan, np.nan
+                            
+                        stat[i][time][p]['dep_average'] = np.nanmean(cleaned_dep)        
+                        stat[i][time][p]['dep_std_dev']  = np.std(cleaned_dep)   
+                        stat[i][time][p]['dep_lower']     = lower_dep        
+                        stat[i][time][p]['dep_upper']     = upper_dep                            
+                          
+            return stat            
+                   
         for v in variables:
             """ Start the loop over the records """
-            monthly_observations_table = {k: [] for k in self.data['obs_tab'].keys() }  # container for the averages observations_table 
             
+            all_obs = get_all_obs_per_month( monthly_dates , variable = v )  # extracts all the observations and departures for each plevel
+            self.global_statistics = global_statistics(all_obs)                                   # calculate all the statistics
+            
+            monthly_observations_table = {k: [] for k in self.data['obs_tab'].keys() }  # container for the averages observations_table (these are the common CDM columns)
+            
+            #monthly_observations_table['observation_value'] = []  # these three might not be necessary, check TODO
+            #monthly_observations_table['original_precision']  = []
+            #monthly_observations_table['secondary_value']   = []
+            
+            """ Adding th eextra non-CDM columns for the observations """
+            for c in [ 'observation_value_global' , 'original_precision_global' , 'secondary_value_global' ,     # will contain gloabl averages 
+                            'observation_value_reanalysis' , 'original_precision_reanalysis' , 'secondary_value_reanalysis' ,  # will contain averages with outliers removed by comapring departures
+                             'observation_value_bias', 'original_precision_bias', 'secondary_value_bias' ]:  # will contain unbiased averages 
+                monthly_observations_table[c] = [] 
+                
             unavailable_columns = self.MergedFile.unavailable_columns 
             other_columns           = self.MergedFile.other_columns 
             tot_observations        = len(self.MergedFile.std_plevs)
@@ -740,53 +905,121 @@ class MonthlyAverages(MergedFile):
             
             for m in tqdm(monthly_dates.keys() ): 
                 value = monthly_dates[m] # loop over the months    
+                month = int(m.split('_')[1] )
                 print("\n \n MONTH IS::: " , m , '   ', T.time() )
                 for time in ['00','12'] :
+
                     dt = datetime.strptime(m + '_15 ' + time + ':00:00', '%Y_%m_%d %H:%M:%S')   # create the date time for the 15th day of that particular month at 12 o'clock               
                     indices = value[time]['indices']         
 
-                    if not indices: # if I have no indices, I fill with nans
-                        dummy = fill_columns(monthly_observations_table , tot_observations , unavailable_columns = unavailable_columns , other_columns = other_columns  ) 
-
-                    else:  # check if I have records within this period of time  
+                    if not indices: # if I have no indices, I fill every column with nans
+                        dummy = fill_columns(v, monthly_observations_table , tot_observations , unavailable_columns = unavailable_columns , other_columns = other_columns  , 
+                                             dt = dt , fill_obs = True) 
+                        continue
+                    
+                    elif indices:  # check if I have records within this period of time  
                                                 
                         ind = np.array ( ([ i[0] for i in indices ] , [ i[1] for i in indices ]  ) , dtype = np.int32 )  # can simplify this, it is a leftover from trying numba  
                         #print('DO get_observation_indices +++ ' ,  T.time()  )                                   
-                        extracted_data, index_min, index_max = get_observation_indices(v, obs_var, z_coord_type, z_coord, obs_val, std_plevels, indices = ind )
-                        #print('DONE get_observation_indices +++ ' ,  T.time()  )           
+                        extracted_data    , index_min, index_max = get_observations(v, obs_var, z_coord_type, z_coord, obs_val,  indices = ind )
+                        extracted_era5fb , index_min, index_max = get_observations(v, obs_var_era5, z_coord_type, z_coord_era5, obs_val, indices = ind , 
+                                                                                                                           era5fb=True , era5fb_departures = era5fb_departures ,  era5obs = obs_era5 , era5_bias = era5_bias )
                         
+                        #print('DONE get_observation_indices +++ ' ,  T.time()  )           
                         if extracted_data['is_there_data']: # check if I have at least one valid observation, otherwise do nothing 
                             
-                            dummy = fill_columns(monthly_observations_table , tot_observations , unavailable_columns = unavailable_columns , other_columns = other_columns , index_min = index_min, indices = '' ) 
+                            dummy = fill_columns(v, monthly_observations_table , tot_observations , 
+                                                 unavailable_columns = unavailable_columns , other_columns = other_columns , index_min = index_min, indices = '' , dt = dt , fill_obs = False ) 
 
                             """ loop over the available std pressure levels """
                             for p in self.MergedFile.std_plevs:  # (self.MergedFile.std_plevs to keep same order ### extracted_data.keys()
                                 #print("month, level, hour " , m , '  ' , p , '  ' , time , '  ' , T.time())
-                                
+
                                 values = [f for f in extracted_data[p]['observation_values'] if not np.isnan(f)  ]
                                 
                                 if values:
+                                    """ Method 1: calculate average and outliers for each month individually - might suffer from low statistics """
                                     values_cleaned, outliers, lower, upper, median = remove_outliers(data= np.array(values), min_p=25, max_p=75, cut= 2, skewed=False)
-                                    #if m == '1979_3' and p == 7000:
+                                    mean, std, Len = np.nanmean(values_cleaned), np.std(values_cleaned), len(values_cleaned)
 
-                                    #print("CALCULATING ::: " , T.time() )
-                                    monthly_observations_table['observation_value'].append(np.nanmean(values_cleaned) )
-                                    monthly_observations_table['original_precision'] .append(np.std(values_cleaned) ) 
-                                    monthly_observations_table['secondary_value']  .append( len(values_cleaned) )
-                                    #print("DONE CALCULATING ::: " , T.time() )
-   
+                                    """ Method 2: calculate average and outliers for all the months together month (observations) """
+                                    lower_global , upper_global = self.global_statistics[month][time][p]['obs_lower'] , self.global_statistics[month][time][p]['obs_upper'] 
+                                    values_global_stat = [ v for v in values if v > lower_global and v < upper_global ]
+                                    
+                                    if values_global_stat:
+                                        mean_glob, std_glob, len_glob = np.nanmean(values_global_stat) , np.std(values_global_stat) , len(values_global_stat) 
+                                    else:
+                                        mean_glob, std_glob, len_glob = np.nan, np.nan, np.nan 
+
+                                    """ Method 3: if available, check departure statistics, and remove observation data if the corresponding departure is an outlier """
+                                    
+                                    if extracted_era5fb['is_there_data']:
+                                        observations, departures, observations_era5, biases = extracted_era5fb[p]['observation_values'], extracted_era5fb[p]['era5fb_departures'], extracted_era5fb[p]['observation_values_era5fb'], extracted_era5fb[p]['era5_bias']
+                                        #if len(observations) != len(departures) and len(observations) != len(observations_era5):
+                                        """ By contruction, the check that the observation values ffrom the observation table and the observation from the era5fb are identical is redundant.
+                                              In fact, if I have feedback, it means I am taking era5 data so they must be identical.
+                                              I do this to spot bugs. """
+                                        
+                                        values_departures = [] 
+                                        values_departures_unbiased = [] 
+                                        for o,d,f,b in zip(observations, departures, observations_era5, biases ):
+                                            if o == f and not np.isnan(o) and not np.isnan(d):
+                                                # check if the departures values are not outliers, so that I keep the observations
+                                                if d > self.global_statistics[month][time][p]['dep_lower'] and d < self.global_statistics[month][time][p]['dep_upper']:
+                                                    values_departures.append(o)
+                                                if not np.isnan(b):
+                                                    unbiased = o + b 
+                                                    values_departures_unbiased.append(unbiased) # TODOhere
+                                                    
+                                        if values_departures:
+                                            mean_dep, std_dep, len_dep = np.nanmean(values_departures) , np.std(values_departures) , len(values_departures)
+                                        else:
+                                            mean_dep, std_dep, len_dep = np.nan , np.nan , np.nan 
+                                            
+                                        if values_departures_unbiased:
+                                            mean_bias, std_bias, len_bias = np.nanmean(values_departures_unbiased) , np.std(values_departures_unbiased) , len(values_departures_unbiased)
+                                        else:
+                                            mean_bias, std_bias, len_bias =  np.nan , np.nan , np.nan 
+                                            
                                 else:
-                                    monthly_observations_table['observation_value'].append( np.nan )
-                                    monthly_observations_table['original_precision'] .append( np.nan ) 
-                                    monthly_observations_table['secondary_value']  .append( np.nan )
-                                    for column in other_columns: # other_columns: columns for which we want to keep the most freque value, e.g. latitude or sensor_id 
-                                        monthly_observations_table[column].append(np.nan)
-
+                                    mean, std, Len                         = np.nan , np.nan , np.nan 
+                                    mean_glob, std_glob, len_glob = np.nan , np.nan , np.nan 
+                                    mean_dep, std_dep, len_dep    = np.nan , np.nan , np.nan 
+                                    mean_bias, std_bias, len_bias  = np.nan , np.nan , np.nan
+                                    
+                                    #for column in other_columns: # other_columns: columns for which we want to keep the most freque value, e.g. latitude or sensor_id 
+                                    #    monthly_observations_table[column].append(np.nan)
+                                    
+                                """ Filling the values """    
+                                monthly_observations_table['observation_value'].append( mean )
+                                monthly_observations_table['original_precision'] .append( std ) 
+                                monthly_observations_table['secondary_value']  .append( Len )
+                                
+                                monthly_observations_table['observation_value_global'].append(mean_glob)
+                                monthly_observations_table['original_precision_global'] .append(std_glob ) 
+                                monthly_observations_table['secondary_value_global']  .append( len_glob )            
+                                
+                                monthly_observations_table['observation_value_reanalysis'].append(mean_dep)
+                                monthly_observations_table['original_precision_reanalysis'] .append(std_dep ) 
+                                monthly_observations_table['secondary_value_reanalysis']  .append( len_dep )  
+                                
+                                monthly_observations_table['observation_value_bias'].append(mean_bias)
+                                monthly_observations_table['original_precision_bias'] .append(std_bias ) 
+                                monthly_observations_table['secondary_value_bias']  .append( len_bias )  
+                                
+                        else:
+                            dummy = fill_columns(v, monthly_observations_table , tot_observations , 
+                                                 unavailable_columns = unavailable_columns , other_columns = other_columns , index_min = index_min, indices = '' , dt = dt , fill_obs = True ) 
+                            
 
             monthly_observations_table['date_time'] =  datetime_toseconds( monthly_observations_table['date_time'] ) 
+            for c in ['report_id' , 'source_id' , 'observation_id']:
+                monthly_observations_table[c].extend([np.nan] * len(monthly_observations_table['date_time']) )
+                
             self.data['monthly_obs_tab'] = monthly_observations_table
 
-            
+            for c in monthly_observations_table.keys():
+                print(c , '     ' , len(monthly_observations_table[c] ) )
             """ Finally writing the output file """
             a = self.write_monthly_file(monthly_observations_table)
             
@@ -798,13 +1031,32 @@ class MonthlyAverages(MergedFile):
 """ File source direcotry """
 #merged_directory = '/raid60/scratch/federico/do/'
 
-merged_directory = '/raid8/srvx1/federico/GitHub/CEUAS_master_MAY/CEUAS/CEUAS/public/merge/PROVA_stdplevels_only'
+#merged_directory = '/raid8/srvx1/federico/GitHub/CEUAS_master_MAY/CEUAS/CEUAS/public/merge/PROVA_stdplevels_only'
+
+
+merged_directory = '/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020'
+
 
 """ Moving postprocessed files to new directory """
-postprocessed_new = '/raid60/scratch/federico/CIAONE'
+postprocessed_new = '/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020_sensor'
 os.system('mkdir ' + postprocessed_new)
 
 """ Set if running is enforced (False: will crash at errors) """
+
+'''
+TEST = True
+if TEST:
+    
+    os.system('rm -r  /raid60/scratch/federico/test_files')      
+    os.system('cp -r /raid60/scratch/federico/do_to_copy  /raid60/scratch/federico/test_files')  
+    merged_directory = '/raid60/scratch/federico/test_files'
+    
+    """ Moving postprocessed files to new directory """
+    postprocessed_new = '/raid60/scratch/federico/CIAONE'
+    os.system('rm -r  ' + postprocessed_new)
+    os.system('mkdir ' + postprocessed_new)    
+    
+'''
 
 if __name__ == '__main__':
         
@@ -847,7 +1099,7 @@ if __name__ == '__main__':
             #file = '0-20000-0-70316_CEUAS_merged_v0.nc' 
             
             stations_list = os.listdir(merged_directory)                        
-
+            #stations_list = ['0-20000-0-82930_CEUAS_merged_v0.nc']
             for s in stations_list:
                 file = merged_directory + '/' + s
                 station_id = file.split("_CEUAS")[0].split(merged_directory)[1].replace('/','').split('-')[-1]
@@ -859,7 +1111,7 @@ if __name__ == '__main__':
                 """ Read data """
                 data = MF.load()
                 
-                if force_run in ['yes', 'y', 'YES', 'Y', 'True', 'true']: 
+                if force_run in ['yes', 'y', 'YES', 'Y', 'True', 'true']:   # still to implement 
                     print("    === Running in force mode ===     ")
                     
                     try:                        
@@ -873,7 +1125,9 @@ if __name__ == '__main__':
                             print('Running Desroziers statistics')
                             
                         if monthly_averages in ['yes', 'y', 'YES', 'Y', 'True', 'true'] :                       
-                            tabs = MF.load_obstab_era5fb(obs_tab=True, era5fb=False)
+                            tabs = MF.load_obstab_era5fb(obs_tab=True, era5fb=True) # reanalyses needed to remove outliers, 2nd method 
+                            monthly = MonthlyAverages(MF)
+                            a = monthly.make_monthly_observations_table( variables = [85])                            
                             print('Extracting Monthly Averages')                          
                             
                     except:
@@ -891,7 +1145,7 @@ if __name__ == '__main__':
                         print('Running Desroziers statistics')     
                             
                     if monthly_averages in ['yes', 'y', 'YES', 'Y', 'True', 'true'] :                       
-                        tabs = MF.load_obstab_era5fb(obs_tab=True, era5fb=False)
+                        tabs = MF.load_obstab_era5fb(obs_tab=True, era5fb=True)
                         monthly = MonthlyAverages(MF)
                         a = monthly.make_monthly_observations_table( variables = [85])
                         
