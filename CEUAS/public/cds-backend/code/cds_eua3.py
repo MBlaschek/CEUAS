@@ -1344,6 +1344,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
                               headers={'content-type': 'application/json'},
                               json=request,
                               stream=True)
+            
             if r.status_code != requests.codes.ok:
                 raise RuntimeError(r.text)
 
@@ -1938,14 +1939,15 @@ class CDMDataset:
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         # FIN
 
-    def make_datetime_slice(self, dates: list = None, date_time_name: str = 'date_time',
+    def make_datetime_slice(self, varnum:int = None, dates: list = None, date_time_name: str = 'date_time',
                             date_time_in_seconds: bool = False,
                             add_day_before: bool = False,
                             **kwargs) -> slice:
         """ Create a datetime slice for HDF5 optimal reading
 
         Args:
-            dates:
+            varum: variable id number, e.g. 85 for temperature
+            dates: date selection
             date_time_name: name of the datetime variable
             date_time_in_seconds: are dates in seconds ?
             add_day_before: do we have time in the request and need to make sure we have early launches?
@@ -2001,7 +2003,9 @@ class CDMDataset:
                 logger.warning('No data in time interval %s', self.name)
                 raise ValueError('No data in specified time interval')
 
+                
             if 'recordindex' in self.groups:
+                # read correct var from group recordindices
                 recordindex = self.load_variable_from_file('recordindex', return_data=True)[0]
                 if timeindex[-1] < (recordindex.shape[0] - 1):
                     # within datetime range
@@ -2009,16 +2013,40 @@ class CDMDataset:
                 else:
                     #
                     trange = slice(recordindex[timeindex[0]], self[group][date_time_name].shape[0])
+                    
+            elif 'recordindices' in self.groups:
+                # update for sorted backend files
+                recordindex = self.load_variable_from_file(str(varnum), group='recordindices', return_data=True)[0]
+                itx = np.isfinite(recordindex)
+                
+                if not np.all(itx):
+                    # no values:
+                    # return slice(0, None)
+                    raise ValueError("No data for variable")
+                
+                if timeindex[-1] < (recordindex.shape[0] - 1):
+                    # within datetime range
+                    trange = slice(int(recordindex[itx][timeindex[0]]), int(recordindex[itx][timeindex[-1] + 1]))
+                else:
+                    #
+                    trange = slice(int(recordindex[itx][timeindex[0]]), int(recordindex[itx][-1]))
             else:
-                trange = slice(timeindex[0], timeindex[-1] + 1)
+                trange = slice(timeindex[itx][0], timeindex[itx][-1] + 1)
 
             time_units = self.read_attributes(date_time_name, group=group).get('units', '')
             if timestamp_units != time_units:
                 logger.warning('Timeunits missmatch? %s <> %s', timestamp_units, time_units)
                 raise ValueError('Timeunits missmatch?', timestamp_units, time_units)
         else:
-            if group is not None:
+            # ALL
+            if 'recordindices' in self.groups:
+                recordindex = self.load_variable_from_file(str(varnum), group='recordindices', return_data=True)[0]
+                itx = np.isfinite(recordindex)
+                trange = slice(int(recordindex[itx][0]), int(recordindex[itx][-1]))  # all
+            
+            elif group is not None:
                 trange = slice(0, self[group][date_time_name].shape[0])
+            
             else:
                 trange = slice(0, self[date_time_name].shape[0])
 
@@ -2115,25 +2143,28 @@ class CDMDataset:
             if not isinstance(plevs, (list, np.ndarray)):
                 plevs = [plevs]
 
-        trange = self.make_datetime_slice(dates, date_time_name=date_time_name,
+        trange = self.make_datetime_slice(dates=dates, varnum=varnum, date_time_name=date_time_name,
                                           date_time_in_seconds=date_time_in_seconds,
                                           add_day_before=True if times is not None else False)
         if dates is not None:
             xdates = self[dimgroup][date_time_name][trange]
         else:
-            xdates = self.load_variable_from_file(date_time_name, group=dimgroup, return_data=True)[0]
+            xdates = self.load_variable_from_file(date_time_name, group=dimgroup, return_data=True)[0][trange]
         #
         # Observed Code
         #
-        if dates is None:
+        if dates is None and 'recordindex' in self.groups:
             self.load_variable_from_file(observed_variable_name, group=dimgroup)
 
         if False:
             # not really faster ?
             logic = np.ones(trange.stop - trange.start, dtype=np.bool)
             andisin(logic, self[dimgroup][observed_variable_name][trange], np.asarray([varnum], dtype=np.int32))
-        else:
+        elif 'recordindex' in self.groups:
             logic = (self[dimgroup][observed_variable_name][trange] == varnum)
+        else:
+            logic = np.ones(xdates.shape, dtype=np.bool)
+            # todo apply trange before, to make a subset 
         logger.info('[READ] Observed variable %s', varnum)
         #
         # Pressure levels
@@ -2148,7 +2179,7 @@ class CDMDataset:
                 RuntimeWarning('Pressure variable wrong unit [Pa], but', p_units)
 
             if dates is None:
-                xplevs = self.load_variable_from_file(z_coordinate_name, group=dimgroup, return_data=True)[0]
+                xplevs = self.load_variable_from_file(z_coordinate_name, group=dimgroup, return_data=True)[0][trange]
             else:
                 xplevs = self[dimgroup][z_coordinate_name][trange]
             if len(plevs) == 1:
@@ -2186,13 +2217,13 @@ class CDMDataset:
         if return_coordinates:
             if xdates is None:
                 if dates is None:
-                    xdates = self.load_variable_from_file(date_time_name, group=dimgroup, return_data=True)[0]
+                    xdates = self.load_variable_from_file(date_time_name, group=dimgroup, return_data=True)[0][trange]
                 else:
                     xdates = self[dimgroup][date_time_name][trange]
 
             if xplevs is None:
                 if dates is None:
-                    xplevs = self.load_variable_from_file(z_coordinate_name, group=dimgroup, return_data=True)[0]
+                    xplevs = self.load_variable_from_file(z_coordinate_name, group=dimgroup, return_data=True)[0][trange]
                 else:
                     xplevs = self[dimgroup][z_coordinate_name][trange]
 
@@ -2401,7 +2432,8 @@ class CDMDataset:
             if date_time_name == 'date_time':
                 date_time_name = 'time'
                 
-        if date is not None:
+        if date is not None and 'recordindex' in self.groups:
+            # todo missing feature, ask for varnum
             if isinstance(date, (str, int)):
                 date = [date]
 
@@ -2410,7 +2442,6 @@ class CDMDataset:
             else:
                 date = self.make_datetime_slice(dates=[date[0], date[-1]], date_time_name=date_time_name)
         else:
-
             date = slice(None)
 
         logger.info("Reading Profile on %s", str(date))
