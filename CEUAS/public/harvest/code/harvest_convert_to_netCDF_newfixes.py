@@ -1727,6 +1727,71 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
           
           
           
+def get_station_configuration_new(stations_id, station_configuration):
+    """ Previous working version. Works wirh ncar, bufr, igra2.
+          The version below, changed by Leo, does not work anymore with the above files 
+    """
+   
+    """ Gets the primary station_id from the station_configuration table. 
+         station_id is the id taken from the input file.
+         First it checks if a primary_id in th estation_conf file matches the station_id, 
+         otherwise it looks for an element in the list of secondary ids.         
+         """
+
+    for s in stations_id:
+        s = str(s)
+        try:
+           si = s.decode('utf-8')
+        except:
+           si = s 
+        #if ':' in si:
+        #   si = si.split(':')[1]
+           
+        station_id_primary                    = numpy.string_( '0-20000-0-' + si )   # remove the prefix to the station id 
+        station_id_primary_alternative  = numpy.string_( '0-20001-0-' + si )
+             
+        """ First, check for matching primary_id. 
+              If not found, check for secondary id. Note that secondary is a list, so must loop over the entry to find a matching one """
+        
+        matching_primary       = station_configuration.loc[station_configuration['primary_id'] == station_id_primary ]
+        matching_primary_alt = station_configuration.loc[station_configuration['primary_id'] == station_id_primary_alternative ]
+        
+        if len(matching_primary) > 0:
+            return matching_primary 
+        
+        elif   len(matching_primary_alt) > 0  :
+            return matching_primary_alt 
+     
+        else:
+            secondary = station_configuration['secondary_id'] 
+            
+            for second in secondary:
+                try:  # this try is needed when the secondary ids are not defined or wrong, and the primary id cannot be matched with the station_id      
+                    sec_list = second.decode('utf-8')  # secondary ids are separated by a comma, so I loop over the list
+                except:
+                    try:
+                        sec_list = str(second)
+                    except:    
+                        pass
+                
+                #if ':' in sec_list:  # might be : or C: in the secndary id , e.g. C:5852 
+                #    sec_list = sec_list.split(':')[1]
+                        
+                if sec_list == si:
+                    sc = station_configuration.loc[station_configuration['secondary_id'] == second ]
+                            #print("FOUND a secondary !!!" 
+                    return sc 
+                try:
+                        if str(second) == si:
+                            sc = station_configuration.loc[station_configuration['secondary_id'] == second ]
+                            #print("FOUND a secondary !!!")
+                            return sc         
+                except:
+                    pass 
+        
+    return None
+
+
 
 def get_station_configuration_f(stations_id, station_configuration):
     """ Previous working version. Works wirh ncar, bufr, igra2.
@@ -1738,8 +1803,7 @@ def get_station_configuration_f(stations_id, station_configuration):
          First it checks if a primary_id in th estation_conf file matches the station_id, 
          otherwise it looks for an element in the list of secondary ids.         
          """
-    
-    
+
     for s in stations_id:
         s = str(s)
         try:
@@ -1750,7 +1814,7 @@ def get_station_configuration_f(stations_id, station_configuration):
            si = si.split(':')[1]
            
         station_id_primary                    = numpy.string_( '0-20000-0-' +si )   # remove the prefix to the station id 
-        station_id_primary_alternative = numpy.string_( '0-20001-0-' + si )
+        station_id_primary_alternative  = numpy.string_( '0-20001-0-' + si )
      
         
         """ First, check for matching primary_id. 
@@ -1940,10 +2004,16 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
         #fbds = fbds.replace( -2147483648 , np.nan ) 
         
         """ Read the station_id, getting the station_configuration from the table list, extracting primary_id """      
-        station_id = [  fbds['statid@hdr'][0][1:-1].decode('utf-8') ]  
-        station_id = [ s.split(':')[1] if ':' in s else s for s in station_id ]
+        #station_id = [  fbds['statid@hdr'][0][1:-1].decode('utf-8') ]  
+        #station_id = [ s.split(':')[1] if ':' in s else s for s in station_id ]
         
-        station_configuration_retrieved = get_station_configuration_f( station_id, cdm['station_configuration'] )            
+        station_id =  [ fbds['statid@hdr'][0][1:-1].decode('utf-8') ]
+        #station_id = [ s.split(':')[1] if ':' in s else s for s in station_id ]
+        
+        # TO DO verify it still works with igra, ncar etc. 
+        #station_configuration_retrieved = get_station_configuration_f( station_id, cdm['station_configuration'] )            
+        station_configuration_retrieved = get_station_configuration_new( station_id, cdm['station_configuration'] )            
+        
         try:
             #primary_id = cdm['station_configuration']['primary_id'].values[loc].decode('utf-8') # OLD
             primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')     
@@ -3370,3 +3440,5 @@ RI UBERN Pangea
 
 
 # yes -f /raid8/srvx1/federico/GitHub/CEUAS_master_OCTOBER2020/CEUAS/CEUAS/public/harvest/RI/nasa/phase1/p1beu.zip -d nasa -o OUTPUT
+
+# /raid60/scratch/leo/scratch/era5/odbs/2/era5.conv._2\:23022.gz.nc
