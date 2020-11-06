@@ -1807,7 +1807,13 @@ class CDMDataset:
         # Make Trajectory Information (lon, lat, profile id, ...)
         #
         trajectory_index = np.zeros_like(idx, dtype=np.int32)
-        recordindex = self['recordindex'][()]
+        if 'recordinindex' in self.groups:
+            # unsorted indices in root
+            recordindex = self['recordindex'][()]
+        else:
+            # sorted indices are in recordindices group / by variable
+            recordindex = self['recordindices'][str(cdmnum)][()]  # values
+            
         zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex < trange.stop))[0]
         recordindex = recordindex[zidx]
         zidx = calc_trajindexfast(recordindex, zidx, idx, trajectory_index)
@@ -1971,8 +1977,12 @@ class CDMDataset:
             # todo future update will have more dimensions / sorted by variable
             # structure yet unclear
             if 'recordtimestamp' in self.groups:
-                timestamp = self.load_variable_from_file('recordtimestamp', return_data=True)[0]
-                timestamp_units = self.read_attributes('recordtimestamp').get('units', None)
+                if isinstance(self['recordindices'], CDMGroup):
+                    timestamp = self.load_variable_from_file('recordtimestamp', group='recordindices', return_data=True)[0]
+                    timestamp_units = self.read_attributes('recordtimestamp', group='recordindices').get('units', None)
+                else:
+                    timestamp = self.load_variable_from_file('recordtimestamp', return_data=True)[0]
+                    timestamp_units = self.read_attributes('recordtimestamp').get('units', None)
             else:
                 # backup if recordtimestamp not present
                 timestamp = self.load_variable_from_file(date_time_name, return_data=True)[0]
@@ -2017,19 +2027,25 @@ class CDMDataset:
             elif 'recordindices' in self.groups:
                 # update for sorted backend files
                 recordindex = self.load_variable_from_file(str(varnum), group='recordindices', return_data=True)[0]
-                itx = np.isfinite(recordindex)
-                
-                if not np.all(itx):
-                    # no values:
-                    # return slice(0, None)
-                    raise ValueError("No data for variable")
-                
                 if timeindex[-1] < (recordindex.shape[0] - 1):
                     # within datetime range
-                    trange = slice(int(recordindex[itx][timeindex[0]]), int(recordindex[itx][timeindex[-1] + 1]))
+                    trange = slice(recordindex[timeindex[0]], recordindex[timeindex[-1] + 1])
                 else:
                     #
-                    trange = slice(int(recordindex[itx][timeindex[0]]), int(recordindex[itx][-1]))
+                    trange = slice(recordindex[timeindex[0]], self[group][date_time_name].shape[0])
+#                 itx = np.isfinite(recordindex)
+                
+#                 if not np.all(itx):
+#                     # no values:
+#                     # return slice(0, None)
+#                     raise ValueError("No data for variable")
+                
+#                 if timeindex[-1] < (recordindex.shape[0] - 1):
+#                     # within datetime range
+#                     trange = slice(int(recordindex[itx][timeindex[0]]), int(recordindex[itx][timeindex[-1] + 1]))
+#                 else:
+#                     #
+#                     trange = slice(int(recordindex[itx][timeindex[0]]), int(recordindex[itx][-1]))
             else:
                 trange = slice(timeindex[itx][0], timeindex[itx][-1] + 1)
 
@@ -2041,9 +2057,9 @@ class CDMDataset:
             # ALL
             if 'recordindices' in self.groups:
                 recordindex = self.load_variable_from_file(str(varnum), group='recordindices', return_data=True)[0]
-                itx = np.isfinite(recordindex)
-                trange = slice(int(recordindex[itx][0]), int(recordindex[itx][-1]))  # all
-            
+#                 itx = np.isfinite(recordindex)
+#                 trange = slice(int(recordindex[itx][0]), int(recordindex[itx][-1]))  # all
+                trange = slice(recordindex[0], recordindex[-1])
             elif group is not None:
                 trange = slice(0, self[group][date_time_name].shape[0])
             
