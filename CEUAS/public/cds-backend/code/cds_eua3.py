@@ -1977,12 +1977,11 @@ class CDMDataset:
             # todo future update will have more dimensions / sorted by variable
             # structure yet unclear
             if 'recordtimestamp' in self.groups:
-                if isinstance(self['recordindices'], CDMGroup):
-                    timestamp = self.load_variable_from_file('recordtimestamp', group='recordindices', return_data=True)[0]
-                    timestamp_units = self.read_attributes('recordtimestamp', group='recordindices').get('units', None)
-                else:
-                    timestamp = self.load_variable_from_file('recordtimestamp', return_data=True)[0]
-                    timestamp_units = self.read_attributes('recordtimestamp').get('units', None)
+                timestamp = self.load_variable_from_file('recordtimestamp', return_data=True)[0]
+                timestamp_units = self.read_attributes('recordtimestamp').get('units', None)
+            elif isinstance(self['recordindices'], CDMGroup):
+                timestamp = self.load_variable_from_file('recordtimestamp', group='recordindices', return_data=True)[0]
+                timestamp_units = self.read_attributes('recordtimestamp', group='recordindices').get('units', None)
             else:
                 # backup if recordtimestamp not present
                 timestamp = self.load_variable_from_file(date_time_name, return_data=True)[0]
@@ -2027,12 +2026,13 @@ class CDMDataset:
             elif 'recordindices' in self.groups:
                 # update for sorted backend files
                 recordindex = self.load_variable_from_file(str(varnum), group='recordindices', return_data=True)[0]
+                # last time index 
                 if timeindex[-1] < (recordindex.shape[0] - 1):
                     # within datetime range
                     trange = slice(recordindex[timeindex[0]], recordindex[timeindex[-1] + 1])
                 else:
                     #
-                    trange = slice(recordindex[timeindex[0]], self[group][date_time_name].shape[0])
+                    trange = slice(recordindex[timeindex[0]], recordindex[-1])
 #                 itx = np.isfinite(recordindex)
                 
 #                 if not np.all(itx):
