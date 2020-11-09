@@ -15,7 +15,7 @@ import gzip
 import pandas as pd    
 import zipfile
 from functools import partial
-from numba import *
+from numba import njit
 import argparse
 from io import StringIO
 import numpy as np
