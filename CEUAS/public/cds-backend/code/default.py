@@ -196,10 +196,16 @@ def makedaterange(vola: pd.DataFrame, itup: tuple) -> dict:
                                     float(f['observations_table']['latitude'][-1]),
                                     float(f['observations_table']['longitude'][-1])]
                 if CDS_EUA_VERSION == 3:
-                    active[skey] = [int(eua.to_seconds_since(f['recordtimestamp'][0], funits)),
-                                    int(eua.to_seconds_since(f['recordtimestamp'][-1], funits)),
+                    if isinstance(f['recordindices'], h5py._hl.group.Group):
+                        active[skey] = [int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][0], funits)),
+                                    int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][-1], funits)),
                                     float(f['observations_table']['latitude'][-1]),
                                     float(f['observations_table']['longitude'][-1])]
+                    else:
+                        active[skey] = [int(eua.to_seconds_since(f['recordtimestamp'][0], funits)),
+                                        int(eua.to_seconds_since(f['recordtimestamp'][-1], funits)),
+                                        float(f['observations_table']['latitude'][-1]),
+                                        float(f['observations_table']['longitude'][-1])]
                 idx = numpy.where(vola.StationId.values == skey)[0]
                 if len(idx) > 0:
                     active[skey].append(vola.CountryCode[idx[0]])
