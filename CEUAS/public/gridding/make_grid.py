@@ -15,6 +15,11 @@ import numpy as np
 from multiprocessing import Pool
 from functools  import partial
 
+pd.set_option('display.max_columns', None)
+pd.set_option('display.max_rows', None)
+pd.set_option('display.width', None)
+pd.set_option('display.max_colwidth', -1)
+
 
 merged_database = '/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020_sensor/'
 station_configuration = []
@@ -153,7 +158,7 @@ else:
 
 
 
-def calculate_anomaly(file, years=20, min_days=10, min_months=10, variables= [85] ):
+def calculate_anomaly(file, years_window=20, min_days=10, min_months=10, variables= [85] ):
     """ main utiliy to calculate the monthly anomalies.
           Read the monthly file (on std pressure levels) and calculate the anomaly.
           input :: 
@@ -165,10 +170,18 @@ def calculate_anomaly(file, years=20, min_days=10, min_months=10, variables= [85
 
     std_plevs    = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000]
     
-    obs_tab = xr.open_dataset(file , engine = 'h5netcdf' , group = 'observations_table' , decode_times = True ).to_dataframe()
+    to_drop = ['adjustment_id', 'advanced_assimilation_feedback', 'advanced_homogenisation', 'advanced_qc', 'advanced_uncertainty', 
+                          'bbox_max_latitude', 'bbox_max_longitude', 'bbox_min_latitude', 'bbox_min_longitude', 'code_table', 'conversion_flag', 'conversion_method', 
+                          'crs', 'data_policy_licence', 'date_time_meaning', 'exposure_of_sensor', 'latitude', 'location_method', 'location_precision', 'longitude', 'numerical_precision', 
+                          'observation_duration', 'observation_height_above_station_surface', 'observation_id', 'original_code_table', 'original_units', 'original_value', 
+                          'processing_level', 'quality_flag', 'report_id', 'secondary_variable', 'sensor_automation_status', 'source_id', 'spatial_representativeness', 
+                          'traceability', 'units', 'z_coordinate_method',  'sensor_id',  'value_significance' ]
+    
+    obs_tab = xr.open_dataset(file , engine = 'h5netcdf' , group = 'observations_table' , decode_times = True, drop_variables = to_drop ).to_dataframe()
     
     print('Loading the observations_table as a pandas dataframe')
-    dates = pd.arrays.DatetimeArray(obs_tab['date_time'].values)
+    #dates = np.unique(obs_tab['date_time'].values)
+    #dates = pd.arrays.DatetimeArray(dates)
     
     """ Exracting the first date of the station """
     obs_tab['year']     = pd.arrays.DatetimeArray (obs_tab['date_time'].values[:] ).year
@@ -178,33 +191,70 @@ def calculate_anomaly(file, years=20, min_days=10, min_months=10, variables= [85
     first_date =  pd.to_datetime (obs_tab['date_time'].values[0] )
     first_date_year, first_date_month = first_date.year , first_date.month
 
-    start_year = first_date_year + int(20)
+    start_year = first_date_year + years_window # since I calclate anomalies I need to start from 20 years after the first available date 
 
+    """
     # observation_value_reanalysis -> monthly averages calculated based on reanalyses deviations
-    # secondary_value_reanalysis -> number of months used to calculate the monthly average
+    # secondary_value_reanalysis -> number of days used to calculate the monthly average. Must be > min_days value 
     # original_precision_reanalysis -> std of the the monthly average
-    
+    """
     anomaly, date_time, year, month, hour, average, num_months = [],[],[],[],[],[],[] 
+    
+    """ - loop over the variable,
+          - loop over the time [0,12] 
+          - loop over the available dates 
+          - loop over the pressure levels """
+    
     for v in variables:
         for t in [0,12]:  # loop over the time values i.e. 00 and 12
             
-            df_red = obs_tab.loc [ (obs_tab['observed_variable']==v) &  (obs_tab['hour']==t)   ] 
-            for d in dates:
+            df_red = obs_tab.loc [ (obs_tab['observed_variable']==v) 
+                                   &  (obs_tab['hour']==t)  
+                                   &  (obs_tab['secondary_value_reanalysis']> min_days) ] 
+            
+            dates = np.unique(df_red['date_time'].values)
+            dates = pd.arrays.DatetimeArray(dates)
+            
+            for d in tqdm(dates):
                 
                 y, m = d.year , d.month 
+                
                 if y < start_year:
                     continue
 
-                else:              
-                    for p in std_plevs:
-                        df = df_red.loc [ (df_red['z_coordinate']==p) & (df_red['secondary_value_reanalysis']> min_days) ]
+                else:           
+                    for m in range(1,13):  # loop over months
                         
-                        print(0)
+                        """ First entry available for Lindenberg: 206/562, @Timestamp('1974-01-15 00:00:00'), 10 mindays, 10 min years  """
+                        for p in std_plevs:
+                            df = df_red.loc [ (df_red['z_coordinate']==p) 
+                                                      & (df_red['month'] == m)
+                                                      & (df_red['year'] > y - years_window )
+                                                      & (df_red['year']  <= y - 1) ]
+                        
+                        """ This reduced df contains only the monthly averages for the particular variable, pressure, time, 
+                              that are calculated using more than the minimum required number of days """
+                        
+                        if len(df) < 2:
+                            continue
+                        
+                        if len(df) > min_months:
+                            current_average =  df_red.loc [ (df_red['z_coordinate']==p) 
+                                                      & (df_red['month'] == m)
+                                                      & (df_red['year'] == y )  ]['observation_value_reanalysis'].values
+                            
+                            reference_average = np.mean(df['observation_value_reanalysis'].values)
+                            
+                            anomaly = current_average - reference_average
+                            
+                            
+                            
+                            print('Found!' )
+                            
                         
                         
-                        0
     
 f = '/raid60/scratch/federico/MONTHLY_MEAN_NOVEMBER2020/0-20000-0-10393_monthly_averages_VARIABLE.nc'
 
-calculate_anomaly(file=f, years=20, min_days=10, min_months=10, variables= [85] )
+calculate_anomaly(file=f, years_window=20, min_days=10, min_months=10, variables= [85] )
 
