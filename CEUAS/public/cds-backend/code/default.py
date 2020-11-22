@@ -49,6 +49,7 @@ if False:
     import cds_eua2 as eua  # old version
     CDS_EUA_VERSION = 2
 else:
+    sys.path.append(os.path.expanduser('~leo/python/'))
     import cds_eua3 as eua  # new version with CDMDataset class
 
     CDS_EUA_VERSION = 3
@@ -60,7 +61,8 @@ import pandas as pd
 import xarray
 
 try:
-    set_start_method("spawn")  # or fork ? not sure why, pickling?
+#    set_start_method("spawn")  # or fork ? not sure why, pickling?
+    set_start_method("forkserver")  # or fork ? not sure why, pickling?
 except RuntimeError:
     pass
 
@@ -568,7 +570,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         date: '19990131' or ['19990101', '20000101'] as range
         time: 1,... or 0-23
         bbox: Bounding Box [lower left upper right]
-        country: Country Code, e.g. DEU, AUT, USA, GBR
+        country: Country Code, e.g. DEU, AUT, USA, GBR'
         format: nc or csv
         period: ['19990101', '20000101'] see Notes
         wmotable: WMO Regions definition Table
@@ -616,7 +618,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     #
     # Optional
     #
-    allowed_optionals = ['sonde_type', 'bias_estimate']
+    allowed_optionals = ['sonde_type', 'bias_estimate','obs_minus_an','obs_minus_bg']
     if optional is not None:
         if not isinstance(optional, list):
             if optional in allowed_optionals:
@@ -890,7 +892,8 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 if int(time[i]) < 0 or int(time[i]) > 24:
                     raise ValueError('invalid selection, time out of range [0-24 h]: %d' % int(time[i]))
             except:
-                raise ValueError('invalid selection, pressure_level allows only integer, ' + time[i])
+                raise ValueError('invalid selection, time allows only integer, ' + time[i])
+        d['time']=time
 
     return d
 
@@ -950,8 +953,9 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
                 + (int(body['date'][-1][4:6])-int(body['date'][0][4:6])))) # months
     if len(body['variable']) == 1 and ((int(body['date'][-1][:4])-int(body['date'][0][:4]))*12 + (int(body['date'][-1][4:6])-int(body['date'][0][4:6]))) == 1:
         logger.warning('Requesting more than 500 elements - Exception: 1 variable and 1 month of every station')
-    elif lenprod > 500:
-        raise RuntimeError('Request too large - please split')
+    elif lenprod > 500000:
+        #raise RuntimeError('Request too large - please split')
+        logger.warning('Request very large - please split')
     #
     logger.debug('Cleaned Request %s', str(body))
     os.makedirs(output_dir, exist_ok=True)  # double check
@@ -1000,20 +1004,23 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
     #
     # process_flat(outputdir: str, cftable: dict, datadir: str, request_variables: dict, debug:bool=False) -> tuple:
 
-    func = partial(eua.process_flat, output_dir, cf, debug=debug)
+    func = partial(eua.process_flat, output_dir, cf, input_dirs[0],debug)
+#def process_flat(outputdir: str, cftable: dict, datadir: str, debug:bool, request_variables: dict) -> tuple:
     # print(func)
-    if debug:
+    #debug=True
+    if debug or len(body['variable']) * len(body['statid'])<10:
         #
         # Single Threading
         #
-        results = list(map(func, input_dirs, bodies))
+        results = list(map(func, bodies))
     else:
         #
         # Multi Threading
         #
         with Pool(10) as p:
             # error with chunksize (from p.map to p.starmap)
-            results = list(p.starmap(func, zip(input_dirs, bodies), chunksize=1))
+            results = p.map(func, bodies)
+            #results = list(p.starmap(func, zip(input_dirs, bodies), chunksize=1))
     #
     # Process the output 
     # todo catch Error Messages and store in a log file?
@@ -1029,7 +1036,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
     else:
         rfile = os.path.dirname(wpath) + '/download.zip'
 
-    logger.debug('wpath: %s; format %s', wpath, body['format'])
+    logger.debug('wpath: %s; format %s Time %f', wpath, body['format'],time.time()-tt)
 
     if 'local_execution' in body.keys():
         return rfile
@@ -1170,6 +1177,7 @@ def index(request=None, body=None, response=None):
     logger.info("%s POST %s", randdir, str(body))
     tmpdir = config['tmp_dir'] + '/' + randdir
     try:
+        #rfile='/fio/srvx7/leo/x'
         rfile = process_request(body, tmpdir, wmo_regions, debug=config['debug'])
     except Exception as e:
         logger.error("%s POST FAILED, %s", randdir, e)
