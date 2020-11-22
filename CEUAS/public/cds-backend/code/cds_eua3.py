@@ -828,7 +828,7 @@ def table_to_cube(time: np.ndarray, plev: np.ndarray, obs: np.ndarray, nplev: in
 #
 ###############################################################################
 
-def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables: dict, debug:bool=False) -> tuple:
+def process_flat(outputdir: str, cftable: dict, datadir: str, debug:bool, request_variables: dict) -> tuple:
     """ Process a station file with the requested variables
 
     Args:
@@ -859,12 +859,12 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables:
             suffix = ['0-20000-0-', '0-20001-0-']
 
         for ss in suffix:
-            # filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  # version as a variable
-            filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
-            if len(filename) > 0:
-                filename = filename[0]
-            else:
-                filename = ''
+            filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  # version as a variable
+            #filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
+            #if len(filename) > 0:
+                #filename = filename[0]
+            #else:
+                #filename = ''
 
             if os.path.isfile(filename):
                 break
@@ -884,11 +884,18 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, request_variables:
         # request_variables['variable'] is a list
         filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
             request_variables['variable']] + '.nc'
-
-        with CDMDataset(filename=filename) as data:
+        
+        tt=time.time()
+        with CDMDataset(filename=filename,groups={'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
+                                                  'observations_table':['date_time','z_coordinate','observation_value','observed_variable'],
+                                                  'header_table':[],"era5fb":[]}) as data: #,'observations_table','header_table'
+#        with CDMDataset(filename=filename) as data:
+            print('x',time.time()-tt)
             data.read_write_request(filename_out=filename_out,
                                     request=request_variables,
                                     cf_dict=cftable)
+        print(time.time()-tt)
+        print('')
 
     except Exception as e:
         if debug:
@@ -1490,7 +1497,7 @@ class CDMDataset:
     # memory efficient, no duplicates
     # __slots__ = ['filename', 'file', 'groups', 'data']
 
-    def __init__(self, filename: str = None):
+    def __init__(self, filename: str = None,groups ={}):
         """ Init Class CDMDataset with a filename, cds_request or vm_request
 
         Args:
@@ -1520,7 +1527,7 @@ class CDMDataset:
             logger.debug("[OPEN] %s", self.filename)
             self.hasgroups = False
             self.groups = []
-            self.inquire()  # Get variables and Groups
+            self.inquire(groupdict=groups)  # Get variables and Groups
 
     def __getitem__(self, item):
         return self.__getattribute__(item)
@@ -1553,11 +1560,15 @@ class CDMDataset:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
 
-    def inquire(self):
+    def inquire(self,groupdict={}):
         """ Read HDF5 file structures
         """
+        if not groupdict:
+            groups=list(self.file.keys())
+        else:
+            groups=list(groupdict.keys())
         try:
-            for igroup in self.file.keys():
+            for igroup in groups:
                 # Group or Variable
                 new = False
                 if igroup not in self.groups:
@@ -1571,7 +1582,11 @@ class CDMDataset:
                         jgroup = getattr(self, igroup)  # Get CDMGroup
 
                     jgroup.update(link=self.file[igroup])  # reconnect to Group, e.g. if reopened
-                    for ivar in self.file[igroup].keys():
+                    if groupdict:
+                        varkeys=groupdict[igroup]
+                    else:
+                        varkeys=list(self.file[igroup].keys())
+                    for ivar in varkeys:
                         if ivar not in jgroup.keys():
                             shape = self.file[igroup][ivar].shape
                             jgroup[ivar] = CDMVariable(self.file[igroup][ivar], ivar, shape=shape)
@@ -1782,10 +1797,11 @@ class CDMDataset:
         # - trange      - datetime slice
         # - mask        - logical array applied after trange for time, plev, variable
         #
+
         trange, mask = self.read_observed_variable(cdmnum,
                                                    variable='observation_value',
                                                    dates=request.get('date', None),
-                                                   plevs=request.get('pressure_levels', None),
+                                                   plevs=request.get('pressure_level', None),
                                                    times=request.get('time', None),
                                                    observed_variable_name='observed_variable',
                                                    date_time_name='date_time',
@@ -1797,6 +1813,8 @@ class CDMDataset:
                                                    )
         logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange.start,
                      trange.stop, time.time() - time0, self.name)
+        tt=time.time() - time0
+        print(tt)
         idx = np.where(mask)[0] + trange.start  # absolute integer index
         if len(idx) == 0:
             logger.warning('No matching data found %s', self.name)
@@ -1820,6 +1838,8 @@ class CDMDataset:
         #
         # Dimensions and Global Attributes
         #
+        tt=time.time() - time0
+        print(tt)
         dims = {'obs': np.zeros(idx.shape[0], dtype=np.int32),
                 'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
         globatts = get_global_attributes()  # could put more infors there ?
@@ -1850,6 +1870,8 @@ class CDMDataset:
         # End Definition of Variables to write
         #
         logger.debug('Writing: %s', filename_out)
+        tt=time.time() - time0
+        print(tt)
         with h5py.File(filename_out, 'w') as fout:
             # todo future -> this could be replaced by a self.write_to_frontend_file(filename_out, )
             #
@@ -1943,6 +1965,9 @@ class CDMDataset:
                     "%d-%b-%Y %H:%M:%S"))
             fout.attrs['license'] = np.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
+        tt=time.time() - time0
+        print(tt)
+    
         # FIN
 
     def make_datetime_slice(self, varnum:int = None, dates: list = None, date_time_name: str = 'date_time',
@@ -2158,15 +2183,19 @@ class CDMDataset:
         if plevs is not None:
             if not isinstance(plevs, (list, np.ndarray)):
                 plevs = [plevs]
-
+            plevs=np.asarray(plevs,dtype=np.float32)
+        
+        
         trange = self.make_datetime_slice(dates=dates, varnum=varnum, date_time_name=date_time_name,
                                           date_time_in_seconds=date_time_in_seconds,
                                           add_day_before=True if times is not None else False)
+        
         if dates is not None:
             xdates = self[dimgroup][date_time_name][trange]
         else:
             xdates = self.load_variable_from_file(date_time_name, group=dimgroup, return_data=True)[0][trange]
-        #
+        
+       #
         # Observed Code
         #
         if dates is None and 'recordindex' in self.groups:
