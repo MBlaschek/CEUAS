@@ -886,9 +886,13 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, debug:bool, reques
             request_variables['variable']] + '.nc'
         
         tt=time.time()
-        with CDMDataset(filename=filename,groups={'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
+        gdict={'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
                                                   'observations_table':['date_time','z_coordinate','observation_value','observed_variable'],
-                                                  'header_table':[],"era5fb":[]}) as data: #,'observations_table','header_table'
+                                                  'header_table':[]}
+        if '0-20100-0' not in statid and '0-20200-0' not in statid:
+            gdict["era5fb"]=[]
+            
+        with CDMDataset(filename=filename,groups=gdict) as data: #,'observations_table','header_table'
 #        with CDMDataset(filename=filename) as data:
             print('x',time.time()-tt)
             data.read_write_request(filename_out=filename_out,
