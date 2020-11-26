@@ -889,8 +889,8 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, debug:bool, reques
         gdict={'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
                                                   'observations_table':['date_time','z_coordinate','observation_value','observed_variable'],
                                                   'header_table':[]}
-#         if '0-20100-0' not in statid and '0-20200-0' not in statid:
-#             gdict["era5fb"]=[]
+        if '0-20100-0' not in statid and '0-20200-0' not in statid:
+            gdict["era5fb"]=[]
             
         with CDMDataset(filename=filename,groups=gdict) as data: #,'observations_table','header_table'
 #        with CDMDataset(filename=filename) as data:
