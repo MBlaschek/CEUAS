@@ -36,8 +36,8 @@ def get_sc(file):
 def make_grid(size=10):
     """ Divide the globe into squared boxes of the given size (default 10 degrees) """
     boxes = {}
-    for i, n in zip ( range(-180,180, size) , range(1,100000) ):     # longitude
-        for j,m in zip( range(-180,180, size) , range (1,100000) ): # latitude 
+    for i, n in zip ( range(-180,180, size) , range(1,100000) ):     # lat
+        for j,m in zip( range(-180,180, size) , range (1,100000) ): # lon 
 
             center_lat = i + size/2
             center_lon = j + size/2
@@ -113,7 +113,7 @@ to_drop = ['adjustment_id', 'advanced_assimilation_feedback', 'advanced_homogeni
                           'processing_level', 'quality_flag', 'report_id', 'secondary_variable', 'sensor_automation_status', 'source_id', 'spatial_representativeness', 
                           'traceability', 'units', 'z_coordinate_method',  'sensor_id',  'value_significance' ]
 
-def reduce_dataframe(obs_tab, variable=85, low_year = 1980 , max_year=1990, min_days=10, hour = 12):
+def reduce_dataframe(obs_tab, variable=85, low_year = 1980 , max_year=1990, min_days='', hour = 12):
     """ Reduces the total initial dataframe removing variables and values that are not needed """
     
     if not low_year:
@@ -133,7 +133,7 @@ def reduce_dataframe(obs_tab, variable=85, low_year = 1980 , max_year=1990, min_
     return df_red
 
     
-def calculate_anomaly(obs_tab, years_window=20, min_months=10, month ='', year ='', hour ='' ):
+def calculate_anomaly(obs_tab, years_window='', min_months='', month ='', year ='', hour ='' ):
     """ main utility to calculate the monthly anomalies.
           Read the monthly file (on std pressure levels) and calculate the anomaly.
           input :: 
@@ -264,10 +264,8 @@ def extract_data_box( monthly_file_dir, out_dir, box):
         return
 
 
-    stations_info = {}
-    stations_info['latitude'] = []
-    stations_info['longitude'] = []
-    
+
+    data_files = 0
     for f,n in zip(bbox['files'], range(len(bbox['files']) ) ):              # loop over each station file (if any)
         station = f.split('sensor//')[1].split('_CEUAS')[0]
         file = monthly_file_dir + '/' + station + '_monthly_averages_VARIABLE.nc'
@@ -283,12 +281,12 @@ def extract_data_box( monthly_file_dir, out_dir, box):
                 obs_tab = xr.open_dataset(file , engine = 'h5netcdf' , group = 'observations_table' , decode_times = True, drop_variables = to_drop ).to_dataframe()
                 #print('--- Extracting data from' , file )
             except:
-                #print('---> Wrong dataframe, skipping!' , file ) # it can happen since Temperature might not be present in the average files (e.g. only wind data)
+                print('---> Wrong dataframe, skipping!' , file ) # it can happen since Temperature might not be present in the average files (e.g. only wind data)
                 continue 
         
             for v in [85]: # looping over variables 
                 for h in [0,12]:                  
-                    red_df = reduce_dataframe(obs_tab, variable= v, low_year = 1905 , max_year=2021, min_days=10, hour = h)
+                    red_df = reduce_dataframe(obs_tab, variable= v, low_year = 1905 , max_year=2021, min_days=5, hour = h)
                   
                     if red_df.empty : 
                         continue
@@ -309,7 +307,7 @@ def extract_data_box( monthly_file_dir, out_dir, box):
                             m = dt.month
                             y = dt.year
                             
-                            average, average_bias, anomaly, anomaly_bias, plevels = calculate_anomaly(red_df, years_window=20, min_months=10, month =dt.month , year = dt.year , hour = h )
+                            average, average_bias, anomaly, anomaly_bias, plevels = calculate_anomaly(red_df, years_window=30, min_months=10, month =dt.month , year = dt.year , hour = h )
                        
                             for p, a, ab, an, anb in zip (plevels, average, average_bias, anomaly, anomaly_bias ):
                                 results['res'][station]['averages'].append(a)  
@@ -327,11 +325,15 @@ def extract_data_box( monthly_file_dir, out_dir, box):
                             
                             results['res'][station]['date_time'].extend ( [dt] * 16 )  
                             
-            stations_info['latitude'].append(obs_tab['latitude'].values[0])
-            stations_info['longitude'].append(obs_tab['longitude'].values[0])      
-        print('Extracted :::' , box , ' ' ,  len(bbox['files']) , '/' , n +1 , '  ' , file )    
+        print('Extracted :::' , box , ' ' ,  len(bbox['files']) , '/' , n +1 , '  ' , file )   
+        data_files += 1
         
-    def make_write_box_df(results, stations_info, out_dir, box ):
+    if data_files < 1:
+        a = open( out_dir + '/' +  name + '_nodatainbox.dat' , 'w') 
+        print('Station files exist but could not be found! +++ ')
+        return
+    
+    def make_write_box_df(results, out_dir, box ):
         """ Combine data from differnet stations and save netcdf file output """
         output_df_columns =   ['average' , 'anomaly' , 'average_bias' , 'anomaly_bias' ]
         names_res              =   ['averages' , 'anomalies' , 'averages_bias' , 'anomalies_bias' ]
@@ -375,16 +377,13 @@ def extract_data_box( monthly_file_dir, out_dir, box):
         output_df['longitude'] = ( [Lon] * len(results['res']['empty']['date_time'] ) )
         output_df['grid_size']  = ( [size] * len(results['res']['empty']['date_time'] ) )
 
-        """ Saving array with stations """
+
         if stations:
-            if len(stations) < 5:
-                stat = '_'.join(stations)
-            else:
-                stat=  '_'.join(stations[:5]) + '_others'
-            
+            stat = '_'.join(stations)
         else:
             stat = 'None'
-            
+
+    
         #output_df['primary_ids']      = ( [stat] * len(results['res']['empty']['date_time'] ) ) # might not work 
 
         xarray = output_df.to_xarray()
@@ -400,9 +399,7 @@ def extract_data_box( monthly_file_dir, out_dir, box):
             print('FAILS ' , box )
             
 
-     
-        
-    dummy = make_write_box_df(results, stations_info, out_dir, box )     
+    dummy = make_write_box_df(results, out_dir, box )     
         
 
     
@@ -414,7 +411,7 @@ if __name__ == '__main__':
     std_plevs    = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000]
     
     merged_database = '/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020_sensor/'
-    monthly_file_dir = '/raid60/scratch/federico/MONTHLY_26NOV/'
+    monthly_file_dir = '/raid60/scratch/federico/MONTHLY_AVERAGE_27NOV_biascorrection'
     
     station_configuration = []
     file_list = os.listdir(merged_database)
@@ -441,21 +438,23 @@ if __name__ == '__main__':
         sc['latitude']   = lat_fix
         sc['longitude'] = lon_fix
         
-        print(0)
     print('*** DONE extracting all the station_configuration tables ')
     
     
     
     
     """ Creating the gridded boxes """
-    boxes = make_grid(size=10)
-    
+    boxes = make_grid(size=5)
+
+    assigned_boxes = get_box(sc= sc, boxes = boxes)
+
+    '''
     if os.path.isfile('gridded_stations.npy'):
         print('*** Loading the gridded stations :::')
         assigned_boxes = np.load('gridded_stations.npy' , allow_pickle= True ).item()
     else:
         assigned_boxes = get_box(sc= sc, boxes = boxes)
-        
+    '''    
         
     
     """ Creating the gridded files per box
@@ -467,7 +466,9 @@ if __name__ == '__main__':
           First, look inside the output directory and look for already processed boxes if any.
           Then, loop over the remaining one using either multiprocessing Pool or box by box """
     
-    out_dir = '/raid60/scratch/federico/GRIDDED_FILES_LATEST'
+    out_dir = '/raid60/scratch/federico/GRIDDED_FILES_28NOV_10_min10yearsin30years_5dayspermonth'
+
+    #os.system('rm -r ' + out_dir )
     os.system('mkdir ' + out_dir )
     
     all_boxes = list(assigned_boxes.keys())
@@ -483,7 +484,7 @@ if __name__ == '__main__':
     POOL = True
 
     if POOL:
-        p = Pool(30)
+        p = Pool(20)
         func = partial(extract_data_box, monthly_file_dir, out_dir)
         out = p.map(func, to_be_processed)
 
