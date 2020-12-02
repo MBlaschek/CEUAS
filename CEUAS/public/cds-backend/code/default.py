@@ -719,6 +719,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         try:
             if statid == 'all':
                 statid = slnum  # <- list of all station ids from init_server
+                print(slnum)
 
             elif isinstance(statid, (str, int)):
                 # todo fix if '1001' given as string, creates not working ID
