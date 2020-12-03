@@ -871,6 +871,14 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         newdates.append(to_valid_datetime(datelist[-1], as_string=True))
         d['date'] = newdates
         date_not_yet_existing = False
+        
+    #
+    # no given date:
+    #
+    if date is None and date_not_yet_existing:
+        d['date'] = ['19000101', '21000101']
+        date_not_yet_existing = False
+    
     #
     # Pressure levels
     #
