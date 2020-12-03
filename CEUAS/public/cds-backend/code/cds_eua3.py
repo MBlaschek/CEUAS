@@ -828,13 +828,12 @@ def table_to_cube(time: np.ndarray, plev: np.ndarray, obs: np.ndarray, nplev: in
 #
 ###############################################################################
 
-def process_flat(outputdir: str, cftable: dict, datadir: str, debug:bool, request_variables: dict) -> tuple:
+def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: dict) -> tuple:
     """ Process a station file with the requested variables
 
     Args:
         outputdir: output directory
         cftable: CF convention definitions table
-        datadir: data directory
         request_variables: request dictionary
 
     Returns:
@@ -853,21 +852,24 @@ def process_flat(outputdir: str, cftable: dict, datadir: str, debug:bool, reques
             logger.error('No station ID (statid) specified. %s', filename)
             raise ValueError('No station ID (statid) specified')
 
-        if statid[:3] == '0-2':
-            suffix = ['']
-        else:
-            suffix = ['0-20000-0-', '0-20001-0-']
+        filename = request_variables.pop('filename', None)
+        if False:
+            # old version
+            if statid[:3] == '0-2':
+                suffix = ['']
+            else:
+                suffix = ['0-20000-0-', '0-20001-0-']
 
-        for ss in suffix:
-            filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  # version as a variable
-            #filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
-            #if len(filename) > 0:
-                #filename = filename[0]
-            #else:
-                #filename = ''
+            for ss in suffix:
+                filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  # version as a variable
+                #filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
+                #if len(filename) > 0:
+                    #filename = filename[0]
+                #else:
+                    #filename = ''
 
-            if os.path.isfile(filename):
-                break
+                if os.path.isfile(filename):
+                    break
         
         # Automaticaly adding variables for 20200- requests:
         if '0-20200-0' in statid:

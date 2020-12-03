@@ -49,9 +49,8 @@ if False:
     import cds_eua2 as eua  # old version
     CDS_EUA_VERSION = 2
 else:
-    sys.path.append(os.path.expanduser('~leo/python/'))
+    #sys.path.append(os.path.expanduser('~leo/python/'))
     import cds_eua3 as eua  # new version with CDMDataset class
-
     CDS_EUA_VERSION = 3
 
 import h5py
@@ -91,6 +90,8 @@ if os.path.isfile(config_file):
     for ikey,ival in new.items():
         if 'dir' in ikey:
             new[ikey] = os.path.expandvars(ival)
+            if '$' in new[ikey]:
+                raise RuntimeError('configuration path expansion failed %' % new[ikey])
     config.update(new)
 else:
     print("Writing new config file:", config_file, "Adjust accordingly!")
@@ -170,7 +171,7 @@ except:
 ###############################################################################
 
 
-def makedaterange(vola: pd.DataFrame, itup: tuple) -> dict:
+def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
     """ Read HDF5 radiosonde cdm backend file and extract datetime and geo information
 
     Args:
@@ -198,7 +199,8 @@ def makedaterange(vola: pd.DataFrame, itup: tuple) -> dict:
                                     float(f['observations_table']['latitude'][-1]),
                                     float(f['observations_table']['longitude'][-1])]
                 if CDS_EUA_VERSION == 3:
-                    if isinstance(f['recordindices'], h5py._hl.group.Group):
+                    #if isinstance(f['recordindices'], h5py._hl.group.Group):
+                    if 'recordindices' in f.keys():
                         active[skey] = [int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][0], funits)),
                                     int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][-1], funits)),
                                     float(f['observations_table']['latitude'][-1]),
@@ -215,10 +217,16 @@ def makedaterange(vola: pd.DataFrame, itup: tuple) -> dict:
                     active[skey].append('')
                     logger.debug('no key found for %s', skey)
                 # add data directory for process_flat
-                active[skey].append(os.path.dirname(s))
-            except KeyError:
+                # active[skey].append(os.path.dirname(s))
+                # add filepath
+                active[skey].append(s)
+            except KeyError as e:
+                if debug:
+                    raise e
                 logger.error('%s : a table is missing', skey)
     except:
+        if debug:
+            raise 
         logger.error('file open error: %s', s)
     return active
 
@@ -267,7 +275,7 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
         # find Merged Netcdf files and intercomparison files
         #
         slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v0.nc'))
-#         slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
+        slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
         slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
         # slnum = [i[-34:-19] for i in slist]
         slnum = [i.split('/')[-1].split('_')[0].replace('.nc','') for i in slist]
@@ -282,9 +290,12 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
         # exit()
         active = {}
         func = partial(makedaterange, vola)
-        # with Pool(10) as p:
-        # sklist=list(p.map(func,zip(slist,slnum)))
-        sklist = list(map(func, zip(slist, slnum)))
+        if False:
+            with Pool(10) as p:
+                sklist=list(p.map(func,zip(slist,slnum)))
+        else:
+            sklist = list(map(func, zip(slist, slnum)))
+        
         for s in sklist:
             if s:
                 k = next(iter(s))
@@ -967,7 +978,6 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
     bo = []
     refdate = datetime(year=1900, month=1, day=1)
     makebodies(bodies, body, spv, bo, 0)  # List of split requests
-    input_dirs = []
     #
     # Check all requests if dates are within active station limits
     #
@@ -993,11 +1003,15 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
                                  start, ende,
                                  active[bodies[k]['statid']][1])
                     # add data path to request
-                    input_dirs.append(active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
+                    # input_dirs.append(active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
+                    # file_paths.insert(0, active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
+                    bodies[k]['filename'] = active[bodies[k]['statid']][5]
             else:
                 del bodies[k]
         else:
-            input_dirs.append(active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
+            # input_dirs.append(active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
+            bodies[k]['filename'] = active[bodies[k]['statid']][5]
+            # file_paths.insert(0, active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
 
     logger.debug('# requests %d', len(bodies))
     if len(bodies) == 0:
@@ -1005,12 +1019,12 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
 
     # Make process_flat a function of only request_variables (dict)
     #
-    # process_flat(outputdir: str, cftable: dict, datadir: str, request_variables: dict, debug:bool=False) -> tuple:
-
-    func = partial(eua.process_flat, output_dir, cf, input_dirs[0],debug)
-#def process_flat(outputdir: str, cftable: dict, datadir: str, debug:bool, request_variables: dict) -> tuple:
-    # print(func)
-    #debug=True
+    # process_flat(outputdir: str, cftable: dict, debug:bool=False, request_variables: dict) -> tuple:
+    # func = partial(eua.process_flat, output_dir, cf, input_dirs[0], debug)
+    func = partial(eua.process_flat, output_dir, cf, debug)
+    #
+    # Smaller request?
+    #
     if debug or len(body['variable']) * len(body['statid'])<10:
         #
         # Single Threading
@@ -1023,7 +1037,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
         with Pool(10) as p:
             # error with chunksize (from p.map to p.starmap)
             results = p.map(func, bodies)
-            #results = list(p.starmap(func, zip(input_dirs, bodies), chunksize=1))
+            # results = list(p.starmap(func, zip(input_dirs, [debug]*len(bodies), bodies), chunksize=1))
     #
     # Process the output 
     # todo catch Error Messages and store in a log file?
