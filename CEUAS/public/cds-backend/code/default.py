@@ -862,8 +862,17 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             for j in month:
                 for k in day:
                     try:
-                        datetime.strptime(str(i)+str(j)+str(k), '%Y%m%d')
-                        datelist.append(str(i)+str(j)+str(k))
+                        # for removal of e.g. 31.02.:
+                        if len(str(j)) < 2:
+                            m = '0'+str(j)
+                        else:
+                            m = str(j)
+                        if len(str(k)) < 2:
+                            d = '0'+str(k)
+                        else:
+                            d = str(k)
+                        datetime.strptime(str(i)+m+d, '%Y%m%d')
+                        datelist.append(str(i)+m+d)
                     except:
                         pass
         datelist.sort()
@@ -976,7 +985,8 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
     if len(body['variable']) == 1 and ((int(body['date'][-1][:4])-int(body['date'][0][:4]))*12 + (int(body['date'][-1][4:6])-int(body['date'][0][4:6]))) == 1:
         logger.warning('Requesting more than 500 elements - Exception: 1 variable and 1 month of every station')
     elif lenprod > 500000:
-        #raise RuntimeError('Request too large - please split')
+        # lenght restriction deactivated as long following line is out commented.
+        # raise RuntimeError('Request too large - please split')
         logger.warning('Request very large - please split')
     #
     logger.debug('Cleaned Request %s', str(body))
