@@ -873,7 +873,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
 #                             d = str(k)
 #                         datetime.strptime(str(i)+m+d, '%Y%m%d')
                         datetime.strptime(str(i)+str(j)+str(k), '%Y%m%d')
-                        datelist.append(str(i)+m+d)
+                        datelist.append(str(i)+str(j)+str(k))
                     except:
                         pass
         datelist.sort()
