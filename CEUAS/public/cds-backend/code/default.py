@@ -863,26 +863,24 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             for j in month:
                 for k in day:
                     try:
-                        y = str(i)
-                        if len(str(j)) == 1:
-                            m = '0'+str(j)
-                        else:
-                            m = str(j)
-                        if len(str(k)) == 1:
-                            d = '0'+str(k)
-                        else:
-                            d = str(k)
-                        datetime.strptime(y+m+d, '%Y%m%d')
-                        datelist.append(y+m+d)
-#                         datetime.strptime(str(i)+str(j)+str(k), '%Y%m%d')
-#                         datelist.append(str(i)+str(j)+str(k))
+#                         y = str(i)
+#                         if len(str(j)) == 1:
+#                             m = '0'+str(j)
+#                         else:
+#                             m = str(j)
+#                         if len(str(k)) == 1:
+#                             d = '0'+str(k)
+#                         else:
+#                             d = str(k)
+#                         datetime.strptime(y+m+d, '%Y%m%d')
+#                         datelist.append(y+m+d)
+                        datetime.strptime(str(i)+str(j)+str(k), '%Y%m%d')
+                        datelist.append(str(i)+str(j)+str(k))
                     except:
                         pass
         datelist.sort()
-        newdates.append(datelist[0])
-        newdates.append(datelist[-1])
-#         newdates.append(to_valid_datetime(datelist[0], as_string=True))
-#         newdates.append(to_valid_datetime(datelist[-1], as_string=True))
+        newdates.append(to_valid_datetime(datelist[0], as_string=True))
+        newdates.append(to_valid_datetime(datelist[-1], as_string=True))
         d['date'] = newdates
         date_not_yet_existing = False
         
