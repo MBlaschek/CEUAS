@@ -863,19 +863,8 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             for j in month:
                 for k in day:
                     try:
-#                         y = str(i)
-#                         if len(str(j)) == 1:
-#                             m = '0'+str(j)
-#                         else:
-#                             m = str(j)
-#                         if len(str(k)) == 1:
-#                             d = '0'+str(k)
-#                         else:
-#                             d = str(k)
-#                         datetime.strptime(y+m+d, '%Y%m%d')
-#                         datelist.append(y+m+d)
-                        datetime.strptime(str(i)+str(j)+str(k), '%Y%m%d')
-                        datelist.append(str(i)+str(j)+str(k))
+                        datetime.strptime(str(i)+str(j).zfill(2)+str(k).zfill(2), '%Y%m%d')
+                        datelist.append(str(i)+str(j).zfill(2)+str(k).zfill(2))
                     except:
                         pass
         datelist.sort()
