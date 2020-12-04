@@ -862,16 +862,17 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             for j in month:
                 for k in day:
                     try:
-                        # for removal of e.g. 31.02.:
-                        if len(str(j)) < 2:
-                            m = '0'+str(j)
-                        else:
-                            m = str(j)
-                        if len(str(k)) < 2:
-                            d = '0'+str(k)
-                        else:
-                            d = str(k)
-                        datetime.strptime(str(i)+m+d, '%Y%m%d')
+#                         # for removal of e.g. 31.02.:
+#                         if len(str(j)) < 2:
+#                             m = '0'+str(j)
+#                         else:
+#                             m = str(j)
+#                         if len(str(k)) < 2:
+#                             d = '0'+str(k)
+#                         else:
+#                             d = str(k)
+#                         datetime.strptime(str(i)+m+d, '%Y%m%d')
+                        datetime.strptime(str(i)+str(j)+str(k), '%Y%m%d')
                         datelist.append(str(i)+m+d)
                     except:
                         pass
