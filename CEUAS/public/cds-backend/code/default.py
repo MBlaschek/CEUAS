@@ -879,8 +879,10 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                     except:
                         pass
         datelist.sort()
-        newdates.append(to_valid_datetime(datelist[0], as_string=True))
-        newdates.append(to_valid_datetime(datelist[-1], as_string=True))
+        newdates.append(datelist[0])
+        newdates.append(datelist[-1])
+#         newdates.append(to_valid_datetime(datelist[0], as_string=True))
+#         newdates.append(to_valid_datetime(datelist[-1], as_string=True))
         d['date'] = newdates
         date_not_yet_existing = False
         
