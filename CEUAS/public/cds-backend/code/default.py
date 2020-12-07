@@ -980,12 +980,12 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
     lenprod = (len(body['variable']) * len(body['statid']) * # variables and stations
                ((int(body['date'][-1][:4])-int(body['date'][0][:4]))*12 # years in months
                 + (int(body['date'][-1][4:6])-int(body['date'][0][4:6])))) # months
-    if len(body['variable']) == 1 and ((int(body['date'][-1][:4])-int(body['date'][0][:4]))*12 + (int(body['date'][-1][4:6])-int(body['date'][0][4:6]))) == 1:
-        logger.warning('Requesting more than 500 elements - Exception: 1 variable and 1 month of every station')
-    elif lenprod > 500000:
+#     if len(body['variable']) == 1 and ((int(body['date'][-1][:4])-int(body['date'][0][:4]))*12 + (int(body['date'][-1][4:6])-int(body['date'][0][4:6]))) == 1:
+#         logger.warning('Requesting more than 500 elements - Exception: 1 variable and 1 month of every station')
+    elif lenprod > 10000:
         # lenght restriction deactivated as long following line is out commented.
-        # raise RuntimeError('Request too large - please split')
-        logger.warning('Request very large - please split')
+        raise RuntimeError('Request too large - please split')
+#         logger.warning('Request very large - please split')
     #
     logger.debug('Cleaned Request %s', str(body))
     os.makedirs(output_dir, exist_ok=True)  # double check
