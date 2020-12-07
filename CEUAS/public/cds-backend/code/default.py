@@ -849,14 +849,20 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     #
     # day/month/year selection
     #
-    if year is not None and month is not None and day is not None and date_not_yet_existing:
+    if year is not None and date_not_yet_existing:
         datelist = []
         newdates = []
         if isinstance(year, (int, str)):
             year = [year]
-        if isinstance(month, (int, str)):
+        if month is None:
+            month = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+        elif isinstance(month, (int, str)):
             month = [month]
-        if isinstance(day, (int, str)):
+        if day is not None:
+            day = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12',
+                   '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24',
+                   '25', '26', '27', '28', '29', '30', '31']
+        elif isinstance(day, (int, str)):
             day = [day]
         # for removal of e.g. 31.02.:
         for i in year:
