@@ -1,1 +1,1 @@
-# Example of statio files form different databases 
+# Example of station files from different databases
