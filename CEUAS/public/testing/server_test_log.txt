@@ -1,0 +1,130 @@
+Testing Server Requests 
+0 = failed | 1 = succeeded 
+
+
+---STATID---
+1 request successful: None
+1 request successful: all
+1 request successful: 11035
+1 request successful: 0-20000-0-11035
+1 request successful: 0-20100-0-00701
+1 request successful: 1103*
+1 request successful: 0-20100*
+1 request successful: ['0-20000-0-11035', '0-20000-0-10393']
+1 request successfully failed: 110350
+1 request successfully failed: 1103
+1 request successfully failed: 0-20000-0-1103
+1 request successfully failed: 0-20000-0-110350
+
+---VARIABLE---
+1 request successful: air_temperature
+1 request successful: dew_point_temperature
+1 request successful: eastward_wind_speed
+1 request successful: northward_wind_speed
+1 request successful: relative_humidity
+1 request successful: specific_humidity
+1 request successful: wind_from_direction
+1 request successful: wind_speed
+0 request falsely successful: temperature
+1 request successfully failed: dew_point
+1 request successfully failed: wind
+1 request successfully failed: humidity
+1 request successfully failed: sonde_type
+
+---OPTIONAL---
+1 request successful: sonde_type
+1 request successful: bias_estimate
+1 request successful: obs_minus_an
+1 request successful: obs_minus_bg
+1 request successfully failed: sonde
+1 request successfully failed: air_temperature
+1 request successfully failed: dew_point_temperature
+
+---AREA---
+1 request successful: [-40, 140, 80, 359]
+1 request successful: [40, 0, 50, 20]
+0 request falsely successful: [-40, 140, 80, 360]
+0 request falsely successful: [0, 0, 0, 0]
+0 request falsely successful: [50, 20, 40, 0]
+
+---COUNTRY---
+1 request successful: GLOBE
+1 request successful: ALL
+1 request successful: NOR
+1 request successful: ['NOR', 'DEU']
+1 request successfully failed: NORWAY
+1 request successfully failed: nor
+
+---DATE---
+1 request successful: None
+1 request successful: 20000101
+1 request successful: 20000101-20000201
+1 request successful: ['20000101', '20000103', '20000106']
+1 request successful: ['20000102', '20000101']
+1 request successfully failed: 2000011
+1 request successfully failed: 20000100
+1 request successfully failed: 00000000
+0 request falsely successful: 20000132
+1 request successfully failed: 20001301
+
+---PERIOD---
+1 request successful: None
+1 request successful: 1979-01-01/1980-08-16
+1 request successfully failed: 1980-01-02/1980-01-01
+
+---PRESSURE LEVEL---
+1 request successful: 100
+1 request successful: 100
+1 request successful: [100, 200]
+1 request successful: ['100', '200']
+1 request successfully failed: 0
+1 request successfully failed: 2000
+
+---TIME---
+1 request successful: [22, 23, 0, 1, 2, 3]
+1 request successful: ['22', '23', '00', '01', '02', '03']
+1 request successful: 
+1 request successful: 0
+1 request successful: 00
+1 request successful: ['00']
+1 request successful: [0, 12]
+1 request successful: ['0', '12']
+1 request successfully failed: 24
+1 request successfully failed: 25
+1 request successfully failed: 12.5
+
+---FORMAT---
+1 request successful: None
+1 request successful: csv
+1 request successful: nc
+1 request successfully failed: netcdf
+1 request successfully failed: csb
+1 request successfully failed: txt
+
+---YEAR---
+1 request successful: None
+1 request successful: 2000
+1 request successful: 2000
+1 request successful: ['2000', '2001']
+1 request successful: [2000, 2001]
+1 request successfully failed: 0
+1 request successfully failed: 20000
+1 request successfully failed: -2000---MONTH---
+1 request successful: None
+1 request successful: 1
+1 request successful: 1
+1 request successful: 01
+1 request successful: ['01', '02']
+1 request successful: ['1', '2']
+1 request successful: [1, 2]
+1 request successfully failed: 00
+1 request successfully failed: 0
+1 request successfully failed: 13---DAY---
+1 request successful: 01
+1 request successful: 31
+1 request successful: ['01', '02']
+1 request successful: ['1', '2']
+1 request successful: [1, 2]
+1 request successfully failed: 00
+1 request successfully failed: 0
+0 request falsely successful: 32
