@@ -699,7 +699,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         except ValueError:
             raise ValueError('Invalid selection, bounding box: [lower, left, upper, right] must be int or float')
 
-        if bbox[0] > bbox[2] or bbox[1] > bbox[3]:
+        if bbox[0] >= bbox[2] or bbox[1] >= bbox[3]:
             raise ValueError('Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]')
 
         if bbox[0] < -90 or bbox[0] > 90 or bbox[2] < -90 or bbox[2] > 90 or \
@@ -835,11 +835,15 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             if '-' in idate:
                 idate = idate.split('-')
                 # check period dates (should not be out of range)
+                if int(idate[0][-2:]) > 31 or int(idate[-1][-2:]) > 31:
+                    raise ValueError('only valid dates allowed for date: %s' % idate)
                 newdates.append(to_valid_datetime(idate[0], as_string=True))
                 newdates.append(to_valid_datetime(idate[-1], as_string=True))
                 # newdates.append('{}-{}'.format(to_valid_datetime(idate[0], as_string=True),
                 #                                to_valid_datetime(idate[-1], as_string=True)))
             else:
+                if int(idate[-2:]) > 31:
+                    raise ValueError('only valid dates allowed for date: %s' % idate)
                 try:
                     newdates.append(to_valid_datetime(idate, as_string=True))
                 except:
