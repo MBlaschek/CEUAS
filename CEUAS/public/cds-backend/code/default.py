@@ -568,7 +568,7 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
 
 def check_body(variable: list = None, statid: list = None, product_type: str = None, pressure_level: list = None,
                day: list = None, month: list = None, year: list = None, date: list = None, time: list = None, 
-               bbox: list = None, country: str = None,
+               bbox: list = None, country: str = None, area: list = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                pass_unknown_keys: bool = False,
                **kwargs) -> dict:
@@ -663,6 +663,13 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     if sum((statid is not None, bbox is not None, country is not None)) != 1:
         raise RuntimeError('Invalid selection, Specify only one of statid: %s, bbox: %s and country: %s' % (
             statid, bbox, country))
+        
+    #
+    # area to bbox
+    #
+    if area is not None:
+        bbox = area
+    
     #
     # Countries
     #
