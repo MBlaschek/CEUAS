@@ -54,9 +54,14 @@ Testing Server Requests
 ---AREA---
 1 request successful: [-40, 140, 80, 359]
 1 request successful: [40, 0, 50, 20]
-0 request falsely successful: [-40, 140, 80, 360]
-0 request falsely successful: [0, 0, 0, 0]
-0 request falsely successful: [50, 20, 40, 0]
+1 request successful: [48, -180, 49, 180]
+1 request successful: [48, 0, 49, 360]
+1 request successfully failed: [0, 0, 0, 0]
+     '"Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]"'.
+1 request successfully failed: [50, 20, 40, 0]
+     '"Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]"'.
+1 request successfully failed: [48, -180, 49, 360]
+     '"Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]"'.
 
 ---COUNTRY---
 1 request successful: GLOBE
@@ -70,6 +75,7 @@ Testing Server Requests
 
 ---DATE---
 1 request successful: None
+1 request successful: 20000231
 1 request successful: 20000101
 1 request successful: 20000101-20000201
 1 request successful: ['20000101', '20000103', '20000106']
@@ -80,7 +86,8 @@ Testing Server Requests
      '"only valid dates allowed for date: 20000100"'.
 1 request successfully failed: 00000000
      '"only valid dates allowed for date: 00000000"'.
-0 request falsely successful: 20000132
+1 request successfully failed: 20000132
+     '"only valid dates allowed for date: 20000132"'.
 1 request successfully failed: 20001301
      '"only valid dates allowed for date: 20001301"'.
 
@@ -138,7 +145,7 @@ Testing Server Requests
 1 request successfully failed: 20000
      '"only valid dates allowed for date: 200000101"'.
 1 request successfully failed: -2000
-     '"\'str\' object has no attribute \'strftime\'"'.
+     '"invalid literal for int() with base 10: \'\'"'.
 
 ---MONTH---
 1 request successful: None
@@ -165,7 +172,8 @@ Testing Server Requests
      '"only valid dates allowed for date: 20000100"'.
 1 request successfully failed: 0
      '"only valid dates allowed for date: 20000100"'.
-0 request falsely successful: 32
+1 request successfully failed: 32
+     '"only valid dates allowed for date: 20000132"'.
 
 ---SIZE---
 1 request successful: air_temperature 11035
