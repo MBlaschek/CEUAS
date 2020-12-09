@@ -1,0 +1,8 @@
+# commands
+export RSCRATCH=$PATH:${PWD}:../data
+/opt/anaconda3/bin/python3 build_311c_Inventories.py --help 
+
+(default)
+/opt/anaconda3/bin/python3 build_311c_Inventories.py
+
+
