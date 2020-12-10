@@ -831,7 +831,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             if '-' in idate:
                 idate = idate.split('-')
                 if idate[0] > idate[1]:
-                    raise ValueError('starting date has to be before ending date: %s - %s' % idate[0], idate[-1])
+                    raise ValueError('starting date has to be before ending date: %s - %s' % (idate[0], idate[-1]))
                 # check period dates (should not be out of range)
                 if int(idate[0][-2:]) > 31 or int(idate[-1][-2:]) > 31:
                     raise ValueError('only valid dates allowed for date: %s' % idate)
