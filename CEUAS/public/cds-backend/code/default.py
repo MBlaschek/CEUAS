@@ -809,7 +809,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                             k = k.zfill(5)
 
                         if not ((len(k) == 15) or (len(k) == 5)):
-                        raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
+                            raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
 
                         if len(k) == 5:
                             for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-']:
