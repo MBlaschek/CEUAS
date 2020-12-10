@@ -735,33 +735,46 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     else:
         # '0-20200-0-*': 
         try:
-            if statid == 'all':
+            if statid == 'all' or statid == None:
                 statid = slnum  # <- list of all station ids from init_server
-                print(slnum)
-
+                
             elif isinstance(statid, (str, int)):
-                # todo fix if '1001' given as string, creates not working ID
-                for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-']:
-                    if isinstance(statid, int):
-                        valid_id = s + '{:0>5}'.format(statid)
+                
+                if('*' in statid):
+                    if statid[:3] == '0-2':
+                        stats = []
+                        pat=statid[:statid.index('*')]
+                        for l in slnum: # -> searches all slnum for matching statids
+                            if pat in l: 
+                                stats.append(l)
+                        valid_id = stats
                     else:
-                        if('*' in statid):
-                            stats = []
+                        stats = []
+                        for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-']:
+                            statid = s + statid
                             pat=statid[:statid.index('*')]
                             for l in slnum: # -> searches all slnum for matching statids
                                 if pat in l: 
                                     stats.append(l)
                             valid_id = stats
-                            break
                             
-                        if statid[:3] == '0-2':
-                            valid_id = statid
-                            break
+                else:
+                    if isinstance(statid, int):
+                        statid = str(statid)
+                        statid = statid.zfill(5)
 
-                        valid_id = s + statid
-                    if valid_id in slnum:
-                        break
-                
+                    if not ((len(statid) == 15) or (len(statid) == 5)):
+                        raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
+
+                    if len(statid) == 5:
+                        for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-']:
+                            statid = s + statid
+                            if statid in slnum:
+                                valid_id = statid
+                                break
+                    elif statid[:3] == '0-2':
+                        valid_id = statid
+
                 # if wildcard was used, valid_id is already a list so it can be directly given to statid:
                 if isinstance(valid_id, list):
                     statid = valid_id
@@ -771,30 +784,47 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             else:
                 new_statid = []
                 for k in statid:
-                    for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-']:
-                        if isinstance(k, int):
-                            valid_id = s + '{:0>5}'.format(k)
+                    
+                    if('*' in k):
+                        if k[:3] == '0-2':
+                            stats = []
+                            pat=k[:k.index('*')]
+                            for l in slnum: # -> searches all slnum for matching statids
+                                if pat in l: 
+                                    stats.append(l)
+                            valid_id = stats
                         else:
-                            if('*' in k):
-                                stats = []
+                            stats = []
+                            for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-']:
+                                k = s + k
+                                pat=k[:k.index('*')]
                                 for l in slnum: # -> searches all slnum for matching statids
-                                    if k[:k.index('*')] in l: 
+                                    if pat in l: 
                                         stats.append(l)
                                 valid_id = stats
-                                break
-
-                            if k[:3] == '0-2':
-                                valid_id = k
-                                break
-
-                            valid_id = s + k
-                        if valid_id in slnum:
-                            break
-                    # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
-                    if isinstance(valid_id, list):
-                        new_statid = new_statid + valid_id
+                            
                     else:
-                        new_statid.append(valid_id)
+                        if isinstance(k, int):
+                            k = str(k)
+                            k = k.zfill(5)
+
+                        if not ((len(k) == 15) or (len(k) == 5)):
+                        raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
+
+                        if len(k) == 5:
+                            for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-']:
+                                k = s + k
+                                if k in slnum:
+                                    valid_id = k
+                                    break
+                        elif k[:3] == '0-2':
+                            valid_id = k
+
+                        # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
+                        if isinstance(valid_id, list):
+                            new_statid = new_statid + valid_id
+                        else:
+                            new_statid.append(valid_id)
                 statid = [] 
                 [statid.append(x) for x in new_statid if x not in statid] 
         except MemoryError:
