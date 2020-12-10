@@ -806,21 +806,10 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     #
     # Only pick one format for dates:
     date_not_yet_existing = True
-    # prioritized order: Period, date, day/month/year
+    # prioritized order:, date, day/month/year
+    # Period removed -> cds always converts period to date in this format: '19990101-20000101'
     #
-    #
-    # Period [START, END] -> into date
-    #
-    # todo not forward by CDS -> to date [start-end]
-    if period is not None:
-        if not isinstance(period, list):
-            raise ValueError('invalid period selection, period [startdate, enddate], but %s' % str(period))
-
-        for i in range(len(period)):
-            period[i] = str(period[i])
-        d['date'] = [to_valid_datetime(period[0], as_string=True), to_valid_datetime(period[-1], as_string=True)]
-        date_not_yet_existing = False
-
+    
     #
     # Date time selection
     # [DATE] or [START, END]
@@ -841,6 +830,8 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             # todo old style date range (not supported by CDS anymore ???)
             if '-' in idate:
                 idate = idate.split('-')
+                if idate[0] > idate[1]:
+                    raise ValueError('starting date has to be before ending date: %s - %s' % idate[0], idate[-1])
                 # check period dates (should not be out of range)
                 if int(idate[0][-2:]) > 31 or int(idate[-1][-2:]) > 31:
                     raise ValueError('only valid dates allowed for date: %s' % idate)
