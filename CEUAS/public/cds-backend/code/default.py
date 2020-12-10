@@ -759,10 +759,6 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                             valid_id = stats
                             
                 else:
-                    if isinstance(statid, int):
-                        statid = str(statid)
-                        statid = statid.zfill(5)
-
                     if not ((len(statid) == 15) or (len(statid) == 5)):
                         raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
 
@@ -804,10 +800,6 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                                 valid_id = stats
                             
                     else:
-                        if isinstance(k, int):
-                            k = str(k)
-                            k = k.zfill(5)
-
                         if not ((len(k) == 15) or (len(k) == 5)):
                             raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
 
