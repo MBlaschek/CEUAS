@@ -1,0 +1,16 @@
+#!/bin/bash
+
+
+if [[ $# -ne 1 ]]; then
+    echo "Writing Radiosonde Notebook"
+    echo "Give Station ID"
+    exit 0
+fi
+
+template=$(python -c "import rasotools; print(rasotools.fun.get_data('sonde_template.ipynb'))")
+if [[ -e ${template} ]]; then
+    cat ${template} | sed "s/SONDE/$1/g" > sonde_$1.ipynb
+    echo "Jupyter Notebook has been written to: sonde_$1.ipynb"
+else
+    echo "rasotools not found: $template"
+fi
