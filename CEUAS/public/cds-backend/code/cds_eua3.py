@@ -854,11 +854,11 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
 
         filename = request_variables.pop('filename', None)
         if False:
-            # old version
+            # old version -> not necessary anymore? will be added in check_body anyway
             if statid[:3] == '0-2':
                 suffix = ['']
             else:
-                suffix = ['0-20000-0-', '0-20001-0-']
+                suffix = ['0-20000-0-', '0-20300-0-', '0-20001-0-']
 
             for ss in suffix:
                 filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  # version as a variable
