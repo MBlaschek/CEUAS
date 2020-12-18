@@ -768,13 +768,13 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                         valid_id = statid
                     else:
                         for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
-                            statid = s + statid
-                            if statid in slnum:
-                                valid_id = statid
+                            l = s + statid
+                            if l in slnum:
+                                valid_id = l
                                 break
                 
                 if valid_id == None:
-                    raise ValueError('statid %s not available - please select an area, country or check your statid' % str(statid))
+                    raise ValueError('statid not available - please select an area, country or check your statid')
 
                 # if wildcard was used, valid_id is already a list so it can be directly given to statid:
                 if isinstance(valid_id, list):
@@ -813,9 +813,9 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                             valid_id = k
                         else:
                             for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
-                                k = s + k
-                                if k in slnum:
-                                    valid_id = k
+                                l = s + k
+                                if l in slnum:
+                                    valid_id = l
                                     break
 
                         # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
@@ -825,7 +825,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                             new_statid.append(valid_id)
                             
                 if valid_id == None:
-                    raise ValueError('statid %s not available - please select an area, country or check your statid' % str(statid))
+                    raise ValueError('statid not available - please select an area, country or check your statid')
                     
                 statid = [] 
                 [statid.append(x) for x in new_statid if x not in statid] 
