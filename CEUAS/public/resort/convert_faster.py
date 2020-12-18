@@ -377,7 +377,9 @@ def convert_missing(fn, destination: str = opath):
                     dpd = t-dp
                     
                     if not np.isnan(dpd).any():
-
+                        
+                        idx=np.where(obsvr==85)[0][0]
+                        iselect=select[idx]
                         for o in range(len(obskeys)):
                             # write the new variable everywhere into the observationstable
                             if obskeys[o] == 'observed_variable':
@@ -417,7 +419,9 @@ def convert_missing(fn, destination: str = opath):
                     rh = rasotools.met.convert.to_rh(temp=raso_t, spec_humi=raso_sh, press=raso_p)
                     
                     if not np.isnan(rh).any():
-
+                
+                        idx=np.where(obsvr==85)[0][0]
+                        iselect=select[idx]
                         for o in range(len(obskeys)):
                             # write the new variable everywhere into the observationstable
                             if obskeys[o] == 'observed_variable':
@@ -461,7 +465,9 @@ def convert_missing(fn, destination: str = opath):
                     rh = rasotools.met.convert.to_rh(temp=raso_t,dpd=raso_dpd)
                     
                     if not np.isnan(rh).any():
-
+                
+                        idx=np.where(obsvr==85)[0][0]
+                        iselect=select[idx]
                         for o in range(len(obskeys)):
                             # write the new variable everywhere into the observationstable
                             if obskeys[o] == 'observed_variable':
@@ -495,7 +501,9 @@ def convert_missing(fn, destination: str = opath):
                     rh = rasotools.met.convert.to_rh(temp=raso_t, dpd=raso_dpd)
                     
                     if not np.isnan(rh).any():
-
+                
+                        idx=np.where(obsvr==85)[0][0]
+                        iselect=select[idx]
                         for o in range(len(obskeys)):
                             # write the new variable everywhere into the observationstable
                             if obskeys[o] == 'observed_variable':
@@ -535,7 +543,9 @@ def convert_missing(fn, destination: str = opath):
                     sh = rasotools.met.convert.to_sh(temp=raso_t, press=raso_p, rel_humi=raso_rh)
                     
                     if not np.isnan(sh).any():
-
+                
+                        idx=np.where(obsvr==85)[0][0]
+                        iselect=select[idx]
                         for o in range(len(obskeys)):
                             # write the new variable everywhere into the observationstable
                             if obskeys[o] == 'observed_variable':
@@ -579,6 +589,8 @@ def convert_missing(fn, destination: str = opath):
                     
                     if not np.isnan(sh).any():
 
+                        idx=np.where(obsvr==85)[0][0]
+                        iselect=select[idx]
                         for o in range(len(obskeys)):
                             # write the new variable everywhere into the observationstable
                             if obskeys[o] == 'observed_variable':
@@ -614,7 +626,9 @@ def convert_missing(fn, destination: str = opath):
                     sh = rasotools.met.convert.to_sh(dpd=raso_dpd, press=raso_p, temp=raso_t)
                     
                     if not np.isnan(sh).any():
-
+                
+                        idx=np.where(obsvr==85)[0][0]
+                        iselect=select[idx]
                         for o in range(len(obskeys)):
                             # write the new variable everywhere into the observationstable
                             if obskeys[o] == 'observed_variable':
@@ -650,6 +664,9 @@ def convert_missing(fn, destination: str = opath):
                     ws = obsvl[obsvr == 107]
                     u = ws * np.cos(np.radians(wd))
                     v = ws * np.sin(np.radians(wd))
+                    
+                    idx=np.where(obsvr==106)[0][0]
+                    iselect=select[idx]
 
                     if not (104 in obsvr) and not np.isnan(u).any():
                         for o in range(len(obskeys)):
@@ -665,14 +682,14 @@ def convert_missing(fn, destination: str = opath):
 #                                 elif obskeys[o] == 'observation_id':
 #                                     obstab_writetofile[o].append(np.asarray([b'']))
                             else:
-                                obstab_writetofile[o].append(obstab[o][select][obsvr == 106][0])
+                                obstab_writetofile[o].append(obstab[o][iselect])
 
                         for o in range(len(fbkeys)):
                             # write the new variable everywhere into the fb
                             if ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
                                 fb_writetofile[o].append(float('nan'))
                             else:
-                                fb_writetofile[o].append(fb[o][select][obsvr == 106][0])
+                                fb_writetofile[o].append(fb[o][iselect])
                         addedvarscount += 1
 
                     if not (105 in obsvr) and not np.isnan(v).any():
@@ -689,14 +706,14 @@ def convert_missing(fn, destination: str = opath):
 #                                 elif obskeys[o] == 'observation_id':
 #                                     obstab_writetofile[o].append(np.asarray([b'']))
                             else:
-                                obstab_writetofile[o].append(obstab[o][select][obsvr == 106][0])
+                                obstab_writetofile[o].append(obstab[o][iselect])
 
                         for o in range(len(fbkeys)):
                             # write the new variable everywhere into the fb
                             if ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
                                 fb_writetofile[o].append(float('nan'))
                             else:
-                                fb_writetofile[o].append(fb[o][select][obsvr == 106][0])
+                                fb_writetofile[o].append(fb[o][iselect])
                         addedvarscount += 1
                     convertedfrom.append(106)
                     convertedfrom.append(107)
@@ -712,6 +729,9 @@ def convert_missing(fn, destination: str = opath):
                     ws = np.sqrt(u ** 2 + v ** 2)
                     wd = 90 - np.arctan2(-v, -u) * 180 / np.pi - 180.
                     wd = np.where(wd > 0., wd, 360.+wd)
+                    
+                    idx=np.where(obsvr==104)[0][0]
+                    iselect=select[idx]
 
                     if not (106 in obsvr) and not np.isnan(wd).any():
                         for o in range(len(obskeys)):
@@ -727,11 +747,11 @@ def convert_missing(fn, destination: str = opath):
 #                                 elif obskeys[o] == 'observation_id':
 #                                     obstab_writetofile[o].append(np.asarray([b'']))
                             else:
-                                obstab_writetofile[o].append(obstab[o][select][obsvr == 104][0])
+                                obstab_writetofile[o].append(obstab[o][iselect])
 
                         for o in range(len(fbkeys)):
                             # write the new variable everywhere into the fb
-                            if ((o == depar) or (o == fg_depar)) and (not (fb[o][select][obsvr == 104][0] in nanlist)) and (not (fb[o][select][obsvr == 105][0] in nanlist)):
+                            if ((o == depar) or (o == fg_depar)) and (not (fb[o][iselect] in nanlist)) and (not (fb[o][select][obsvr == 105][0] in nanlist)):
                                 dep_u = u - fb[o][select][obsvr == 104][0]
                                 dep_v = v - fb[o][select][obsvr == 105][0]
                                 dep_wd = 90 - np.arctan2(-dep_v, -dep_u) * 180 / np.pi - 180.
@@ -740,7 +760,7 @@ def convert_missing(fn, destination: str = opath):
                             elif ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
                                 fb_writetofile[o].append(float('nan'))
                             else:
-                                fb_writetofile[o].append(fb[o][select][obsvr == 104][0])
+                                fb_writetofile[o].append(fb[o][iselect])
                         addedvarscount += 1
 
                     if not (107 in obsvr) and not np.isnan(ws).any():
@@ -757,11 +777,11 @@ def convert_missing(fn, destination: str = opath):
 #                                 elif obskeys[o] == 'observation_id':
 #                                     obstab_writetofile[o].append(np.asarray([b'']))
                             else:
-                                obstab_writetofile[o].append(obstab[o][select][obsvr == 104][0])
+                                obstab_writetofile[o].append(obstab[o][iselect])
 
                         for o in range(len(fbkeys)):
                             # write the new variable everywhere into the fb
-                            if ((o == depar) or (o == fg_depar)) and (not (fb[o][select][obsvr == 104][0] in nanlist)) and (not (fb[o][select][obsvr == 105][0] in nanlist)):
+                            if ((o == depar) or (o == fg_depar)) and (not (fb[o][iselect] in nanlist)) and (not (fb[o][select][obsvr == 105][0] in nanlist)):
                                 dep_u = u - fb[o][select][obsvr == 104][0]
                                 dep_v = v - fb[o][select][obsvr == 105][0]
                                 dep_ws = np.sqrt(dep_u ** 2 + dep_v ** 2)
@@ -769,7 +789,7 @@ def convert_missing(fn, destination: str = opath):
                             if ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
                                 fb_writetofile[o].append(float('nan'))
                             else:
-                                fb_writetofile[o].append(fb[o][select][obsvr == 104][0])
+                                fb_writetofile[o].append(fb[o][iselect])
                         addedvarscount += 1
                     convertedfrom.append(104)
                     convertedfrom.append(105)
@@ -959,10 +979,10 @@ files = glob.glob('/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020_sensor/*
 # print(files[:10])
 
 # convert_missing(files[6020])
-# convert_missing('/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020_sensor/0-20000-0-11035_CEUAS_merged_v0.nc')
+convert_missing('/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020_sensor/0-20000-0-03414_CEUAS_merged_v0.nc')
 
-if __name__ == '__main__':
-#    pool = multiprocessing.Pool(processes=20)
-#    result_list = pool.map(convert_missing, files[100:1000])
-    result_list = list(map(convert_missing, files[0:1000]))
-    print(result_list)
+# if __name__ == '__main__':
+# #    pool = multiprocessing.Pool(processes=20)
+# #    result_list = pool.map(convert_missing, files[100:1000])
+#     result_list = list(map(convert_missing, files[0:1000]))
+#     print(result_list)
