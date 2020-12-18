@@ -753,8 +753,8 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                     else:
                         stats = []
                         for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
-                            statid = s + statid
-                            pat=statid[:statid.index('*')]
+                            m = s + statid
+                            pat=m[:m.index('*')]
                             for l in slnum: # -> searches all slnum for matching statids
                                 if pat in l: 
                                     stats.append(l)
@@ -764,7 +764,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
 #                     if not ((len(statid) == 15) or (len(statid) == 5)):
 #                         raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
 
-                    if statid[:3] == '0-2':
+                    if statid[:3] == '0-2' and statid in slnum:
                         valid_id = statid
                     else:
                         for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
@@ -798,8 +798,8 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                         else:
                             stats = []
                             for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
-                                k = s + k
-                                pat=k[:k.index('*')]
+                                m = s + k
+                                pat=m[:m.index('*')]
                                 for l in slnum: # -> searches all slnum for matching statids
                                     if pat in l: 
                                         stats.append(l)
@@ -809,7 +809,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
 #                         if not ((len(k) == 15) or (len(k) == 5)):
 #                             raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
 
-                        if k[:3] == '0-2':
+                        if k[:3] == '0-2' and k in slnum:
                             valid_id = k
                         else:
                             for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
