@@ -741,7 +741,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 statid = slnum  # <- list of all station ids from init_server
                 
             elif isinstance(statid, (str, int)):
-                
+                valid_id = None
                 if('*' in statid):
                     if statid[:3] == '0-2':
                         stats = []
@@ -772,6 +772,9 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                             if statid in slnum:
                                 valid_id = statid
                                 break
+                
+                if valid_id == None:
+                    raise ValueError('statid %s not available - please select an area, country or check your statid' % str(statid))
 
                 # if wildcard was used, valid_id is already a list so it can be directly given to statid:
                 if isinstance(valid_id, list):
@@ -780,6 +783,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                     statid = [valid_id]
 
             else:
+                valid_id = None
                 new_statid = []
                 for k in statid:
                     
@@ -816,9 +820,13 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
 
                         # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
                         if isinstance(valid_id, list):
-                            new_statid = new_statid + valid_id
+                            new_statid = new_statid.extend(valid_id)
                         else:
                             new_statid.append(valid_id)
+                            
+                if valid_id == None:
+                    raise ValueError('statid %s not available - please select an area, country or check your statid' % str(statid))
+                    
                 statid = [] 
                 [statid.append(x) for x in new_statid if x not in statid] 
         except MemoryError:
