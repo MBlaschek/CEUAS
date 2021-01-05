@@ -261,6 +261,8 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
     # seconds since 1900-01-01
     #
     active_file = config['config_dir'] + '/active.json'
+    namelist_file  = config['config_dir'] + '/namelist.json'
+    namelist = None
     active = None
     if os.path.isfile(active_file) and not force_reload:
         try:
@@ -269,6 +271,13 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
             logger.info('Active Stations read. [%d]', len(active))
         except:
             active = None
+    if os.path.isfile(namelist_file) and not force_reload:
+        try:
+            with open(namelist_file) as f:
+                namelist = json.load(f)
+            logger.info('Namelist read. [%d]', len(namelist))
+        except:
+            namelist = None
 
     if active is None:
         #
@@ -307,6 +316,36 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
                 json.dump(active, f)
         except Exception as e:
             logger.warning('Cannot write %s: %s', active_file, e)
+            
+    if namelist is None:
+        volapath = 'https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
+        f = urllib.request.urlopen(volapath)
+        col_names = pd.read_csv(f, delimiter='\t', quoting=3, nrows=0)
+        f = urllib.request.urlopen(volapath)
+        tdict = {col: str for col in col_names}
+        vola = pd.read_csv(f, delimiter='\t', quoting=3, dtype=tdict, na_filter=False)
+        active_file = config['config_dir'] + '/active.json'
+        act = json.load(open(active_file,"r"))
+
+        namelist = {}
+        for i in act:
+            try:
+                name = vola[vola['StationId']==i]['StationName'].iloc[0]
+            except:
+                if (i[:5] == '0-200'):
+                    name = i
+                elif (i[:5] == '0-201') or (i[:5] == '0-202'):
+                    name = 'intercomparison campagne'
+                elif (i[:5] == '0-203'):
+                    name = 'xxxxxx'
+                else:
+                    name = 'missing station name'
+            namelist[i]=name
+        try:
+            with open(namelist_file, 'w') as f:
+                json.dump(namelist, f)
+        except Exception as e:
+            logger.warning('Cannot write %s: %s', namelist_file, e)
     #
     # Read CDM Definitions
     #
@@ -1301,6 +1340,61 @@ def index(request=None, response=None):
 
     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
     return rfile
+
+@hug.get('/maplist/', output=hug.output_format.file)
+def mapdata(date=None, enddate=None, response=None):
+    """ Main Hug Index Function on get requests
+
+    index function requests get URI and converts into dictionary.
+
+    Args:
+        request: dictionary
+        response: str
+
+    Returns:
+
+    """
+    active_file = config['config_dir'] + '/active.json'
+    act = json.load(open(active_file,"r"))
+    
+    namelist_file = config['config_dir'] + '/namelist.json'
+    namelist = json.load(open(namelist_file,"r"))
+    
+    output_file = '/data/public/maplist_'+date
+    
+    if enddate is None:
+        date = datetime_to_seconds(date)
+        rows = []
+        rows.append(['station_name', 'longitude', 'latitude'])
+        for i in act:
+            if (date >= act[i][0]) and (date <= act[i][1]):
+                name = namelist[i]
+                rows.append([name, act[i][3], act[i][2]])
+
+        with open(output_file, 'w') as csvfile:  
+            # creating a csv writer object  
+            csvwriter = csv.writer(csvfile)  
+            # writing the data rows  
+            csvwriter.writerows(rows) 
+            
+    if not enddate is None:
+        date = datetime_to_seconds(date)
+        enddate = datetime_to_seconds(enddate)
+        rows = []
+        rows.append(['station_name', 'longitude', 'latitude'])
+        for i in act:
+            if (date >= act[i][0]) and (enddate <= act[i][1]):
+                name = namelist[i]
+                rows.append([name, act[i][3], act[i][2]])
+
+        with open(output_file, 'w') as csvfile:  
+            # creating a csv writer object  
+            csvwriter = csv.writer(csvfile)  
+            # writing the data rows  
+            csvwriter.writerows(rows)
+
+    response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(output_file))
+    return output_file
 
 
 if __name__ == '__main__':
