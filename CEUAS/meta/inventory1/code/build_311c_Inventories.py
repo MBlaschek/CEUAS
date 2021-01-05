@@ -64,7 +64,7 @@ def fdist(slat,slon,lat,lon):
             flat=slat
         
         
-        lats=numpy.append(flat,lat)
+        lats=numpy.append(flat,lat) # TODO changed this 
         lons=numpy.append(flon,lon)
         
         x=numpy.cos(lats*math.pi/180.)*numpy.cos(lons*math.pi/180.)
@@ -113,8 +113,7 @@ def get_secondary_nrda(file):
                         if ident not in stations_id:
                                 stations_id.append(ident)
         stat_ids = ','.join(stations_id)
-        if len(stations_id) > 1:
-                print('ah')
+
         return stat_ids
         
 def read_nasa_meta(cdmd,fpath):
@@ -144,7 +143,6 @@ def read_nasa_meta(cdmd,fpath):
     allrows['operating_institute']='WMO'
     allrows['station_crs']=0
     allrows['primary_id_scheme']=5 # WIGOS identifier
-    
     
     dates=[]
     for r in rdata:
@@ -349,8 +347,6 @@ def uai_unified(trans,unified,uai,fips=None):
                         if int(uai[k][i])>1000 and int(uai[k][i])<100000:
                             ulist[-1][kdict[vv]]='0-20000-0-'+uai[k][i]
 
-
-
             #print(unified.loc[l])
         else:
             for k,v in trans.items():
@@ -386,78 +382,186 @@ def lot2end(vname):
 def lot2units(vname,units):
     return vndict[vname]
 
-def do_row(row,kdict,meta,wmoid,nw,lat,lon,name) :
+def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name) :
     # meta is the data source (as a pd dataframe) of the metadata e.g. vola, wban etc. 
+     
     try:
-        if nw=='C' and 'Group' not in meta.columns:
-            return []
+        #if nw=='C' and 'Group' not in meta.columns:
+        #    return []
+            
+        z = []
 
-        meta.name=name   
+        meta.name=name
+
+        print('Testing the ' , meta.name , '  inventory ')
+
         if meta.name=='OSCAR':
-            z=numpy.where(meta['StationId']=='0-20000-0-{:0>5}'.format(int(wmoid)))[0]
-            if len(z)==0:
-                dists=fdist(lat,lon,meta['Latitude'].values,meta['Longitude'].values)*180./math.pi
-                z=numpy.nanargmin(dists)
-                if dists[z]<0.5:
-                    z=[z]
-                    print(meta['StationId'][z[0]],meta['StationName'][z[0]])
-                else:
-                    z=[]
-        elif meta.name=='IGRA2':
-            z=numpy.where(meta['StationId']==wmoid)[0]
-            if len(z)==0:
-                dists=fdist(lat,lon,meta['Latitude'].values,meta['Longitude'].values)*180./math.pi
-                z=numpy.nanargmin(dists)
-                if dists[z]<0.5:
-                    z=[z]
-                    print(meta['StationId'][z[0]],meta['StationName'][z[0]])
-                else:
-                    z=[]
-        elif meta.name=='WBAN':
-            z=numpy.where(meta['StationId']==wmoid)[0]
-            if len(z)==0:
-                dists=fdist(lat,lon,meta['Latitude'].values,meta['Longitude'].values)*180./math.pi
-                z=numpy.nanargmin(dists)
-                if dists[z]<0.5:
-                    z=[z]
-                    print(meta['StationId'][z[0]],meta['StationName'][z[0]])
-                else:
-                    z=[]
-                                        
+                z=numpy.where(meta['StationId']=='0-20000-0-{:0>5}'.format(int(iwmoid)))[0]
         else:
+                z=numpy.where(meta['StationId']==wmoid)[0]
+                
+        
+        if len(z) !=0: # stationId found in the inventory 
+                ind=z[0]
+                metaz=meta.loc[ind]
+                # check position mismatch: just by looking at the stationid, I might find wrong coordinates 
+                if fdist(metaz['Latitude'],metaz['Longitude'],lat,lon)*180./math.pi > 1.0:
+                        print('StationId ' , wmoid , 'found in the ' , meta.name , ' report as ' , '0-20000-0-{:0>5}'.format(int(iwmoid)) , ' but coordinates do not match')
+                        print('Lat, lon' , lat, lon , '    ', meta.name , ' lat,lon' , metaz['Latitude'],metaz['Longitude'] )
+                        found = False
+                        
+                else: # if also coordinates match, keep the record found
+
+                        print(meta.name , ' coordinates match do_row for station: ' , wmoid, ' ' , meta['StationId'][z[0]], ' ' , meta['StationName'][z[0]])
+                        row[kdict['station name']]=metaz['StationName']
+                        row[kdict['stationDescription']]=metaz['StationName']
+                        #print('Found: ', wmoid ,' inside the ', meta.name+' database with id' , meta['StationId'][z].values[0] )
+                        row[kdict['stationPlatformUniqueIdentifier']]=metaz['StationId']
+                        row[kdict['station name']]=metaz['StationName']
+                        row[kdict['stationDescription']]=metaz['StationName']
+                        
+                        if meta.name == 'OSCAR':
+                                row[kdict['regionOfOriginOfData']]=metaz['RegionName']
+                                row[kdict['territoryOfOriginOfData_Name']]=metaz['CountryArea']
+                                row[kdict['territoryOfOriginOfData_ISO3CountryCode']]=metaz['CountryCode']  
+                        if meta.name=='CHUAN': 
+                                row[kdict['descriptionDataset']]=metaz['Source']
+                                
+                        #if meta.name == 'OSCAR':
+                        #        row[kdict['regionOfOriginOfData']]=metaz['RegionName']
+                        #        row[kdict['territoryOfOriginOfData_Name']]=metaz['CountryArea']
+                        #        row[kdict['territoryOfOriginOfData_ISO3CountryCode']]=metaz['CountryCode']   
+                        #if meta.name=='CHUAN': 
+                        #        row[kdict['descriptionDataset']]=metaz['Source']           
+                                
+                        #row[kdict['station name']]=metaz['StationName']
+                        #row[kdict['stationDescription']]=metaz['StationName']
+                        #print('Found: ', wmoid ,' inside the ', meta.name+' database with id' , meta['StationId'][z] )
+                        #row[kdict['stationPlatformUniqueIdentifier']]=metaz['StationId']
+                        #row[kdict['station name']]=metaz['StationName']
+                        #row[kdict['stationDescription']]=metaz['StationName']
+                        found = True
+                        return ind
+        if len(z)==0 or not found: # if no station id is found or coords do not match, check for matching coordinates, take the closest station 
+                dists = fdist(lat, lon, meta['Latitude'],meta['Longitude'])*180./math.pi # !! DONOT invert the order of the lats and longs!!! 
+                
+                if meta.name =='OSCAR': # for OSCAR I have to loop over the possible stations since not all are upper air, and find the correct ones 
+                        idy=numpy.argsort(dists) # Returns the indices that would sort an array
+                        i=0
+                        while dists[idy[i]]<0.5:
+                            idx=idy[i]
+                            #cc= vola['CountryCode'][idx]
+                            if 'Upper' in vola['ObsRems'].values[idx] or '0-2000' in vola['StationId'][idx]:
+                                print('Found an OSCAR upper air station with compatible coordinates ')
+                                row[kdict['station name']]=meta.StationName[idx]
+                                row[kdict['stationPlatformUniqueIdentifier']]=meta.StationId[idx]
+                                row[kdict['stationDescription']]=meta.StationName[idx]
+                                row[kdict['regionOfOriginOfData']]=meta.RegionName[idx]
+                                row[kdict['territoryOfOriginOfData_Name']]=meta.CountryArea[idx]
+                                row[kdict['territoryOfOriginOfData_ISO3CountryCode']]=meta.CountryCode[idx]  
+                                return idx
+                                
+                            i+=1
+                            
+                        
+  
+                else:
+                        
+                        z=numpy.nanargmin(dists)
+                        if dists[z]<0.5:
+                            z=[z]
+                            metaz=meta.loc[z]
+                            print(meta.name , ' coordinates match do_row  ' , wmoid, ' ' , metaz['StationId'].values[0], ' ' , metaz['StationName'].values[0])
+                            if len(z) > 0:
+                                    row[kdict['station name']]=metaz['StationName'].values[0]
+                                    row[kdict['stationDescription']]=metaz['StationName'].values[0]
+                                    #print('Found: ', wmoid ,' inside the ', meta.name+' database with id' , meta['StationId'][z] )
+                                    row[kdict['stationPlatformUniqueIdentifier']]=metaz['StationId'].values[0]
+                                    row[kdict['station name']]=metaz['StationName'].values[0]
+                                    row[kdict['stationDescription']]=metaz['StationName'].values[0]
+                                    
+                                    if meta.name=='CHUAN': 
+                                            row[kdict['descriptionDataset']]=metaz['Source'].values[0] 
+                                            
+                                    return z[0]
+                            else:
+                                    return False
+            
+           
+                        
+        '''
+        elif meta.name=='IGRA2':
+            z=numpy.where(meta['StationId']==iwmoid)[0]
+            if len(z)==0:
+                dists=fdist(lat,lon,meta['Latitude'].values,meta['Longitude'].values)*180./math.pi
+                z=numpy.nanargmin(dists)
+                if dists[z]<0.5:
+                    z=[z]
+                    print('IGRA2 coordinates match do_row  ', meta['StationId'][z[0]],meta['StationName'][z[0]])
+                else:
+                    z=[]
+                    
+        elif meta.name=='WBAN':
+            z=numpy.where(meta['StationId']==iwmoid)[0]
+            
+            if len(z)==0:
+                dists=fdist( lat,lon,meta['Latitude'].values,meta['Longitude'].values)*180./math.pi
+                z=numpy.nanargmin(dists)
+                if dists[z]<0.5:
+                    z=[z]
+                    print('WBAN coordinates match do_row  ', meta['StationId'][z[0]],meta['StationName'][z[0]] )
+                else:
+                    z=[]
+            
+        elif meta.name=='CHUAN':
             z=numpy.where(meta['StationId']==wmoid)[0]
-
-
+            if len(z)==0:
+                dists=fdist( lat,lon,meta['Latitude'].values,meta['Longitude'].values)*180./math.pi
+                z=numpy.nanargmin(dists)
+                if dists[z]<0.5:
+                    z=[z]
+                    print('CHUAN coordinates match do_row  ', meta['StationId'][z[0]],meta['StationName'][z[0]] )
+                else:
+                    z=[]
+                  
+            
+        '''
+        '''
         if len(z)==0:
             return []
+    
         else:
-            z=z[0]
-            metaz=meta.loc[z]
-            if fdist(metaz['Latitude'],metaz['Longitude'],lat,lon)*180./math.pi<1.0: 
+            #z=z[0]
+            #metaz=meta.loc[z]
+            
+            if fdist(metaz['Latitude'],metaz['Longitude'],lat,lon)*180./math.pi< 1.0: 
                 row[kdict['station name']]=metaz['StationName']
                 row[kdict['stationDescription']]=metaz['StationName']
-                print(wmoid,': ',meta.name+' match')
+                print('Found: ', wmoid ,' inside the ', meta.name+' database with id' , meta['StationId'][z] )
                 row[kdict['stationPlatformUniqueIdentifier']]=metaz['StationId']
                 row[kdict['station name']]=metaz['StationName']
                 row[kdict['stationDescription']]=metaz['StationName']
-                if meta.name=='OSCAR': 
-                    row[kdict['regionOfOriginOfData']]=metaz['RegionName']
-                    row[kdict['territoryOfOriginOfData_Name']]=metaz['CountryArea']
-                    row[kdict['territoryOfOriginOfData_ISO3CountryCode']]=metaz['CountryCode']
+                
+                #if meta.name=='OSCAR': 
+                #    row[kdict['regionOfOriginOfData']]=metaz['RegionName']
+                #    row[kdict['territoryOfOriginOfData_Name']]=metaz['CountryArea']
+                #    row[kdict['territoryOfOriginOfData_ISO3CountryCode']]=metaz['CountryCode']
 
-                if meta.name=='CHUAN': 
-                    row[kdict['descriptionDataset']]=metaz['Source']
+                #if meta.name=='CHUAN': 
+                #    row[kdict['descriptionDataset']]=metaz['Source']
             else:
                 print('Position Mismatch:',name,wmoid,metaz['Latitude'],metaz['Longitude'],lat,lon)
+                # position mismatch might happen when the station id is found in the database but the location does not match for more than 1 degree
                 return []
-
+        '''
 
     except KeyError as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         print(exc_type, fname, exc_tb.tb_lineno, 'FAILED do row: ' , wmoid)
 
-    return [z]
+     
+    
 
 def insert(row,vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,varno,dmin,dmax,dcount,fi,fn):
 
@@ -466,6 +570,8 @@ def insert(row,vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,var
     ids=-1
     wmoid=''
     iwmoid=0
+    mi = False         
+    
     if not fi:
         uai=dict(zip(rdata[0].split(),zip(rdata[1].split(),rdata[-2].split())))
         uai['statid@hdr']=list(uai['statid@hdr'])
@@ -493,6 +599,8 @@ def insert(row,vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,var
                             wmoid=fn.split(':')[-1]
                             if wmoid[-1] in 'AB':
                                 wmoid=wmoid[:-1]
+                            if wmoid[-1] in 'AB':
+                                wmoid=wmoid[:-1]                                
                         else:
                             wmoid=uai['statid@hdr'][0][1:-1].split(':')[1]
 
@@ -514,48 +622,54 @@ def insert(row,vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,var
                     if "'" in wmoid:
                         wmoid=wmoid[1:-1]
                     if len(wmoid)>3:
-                        iwmoid=int(wmoid)
-                            
+                            # error case: W5331. This will break the code. I then remove the non digits characters
+                        try:                              
+                                iwmoid=int(wmoid)
+                        except:
+                                import re
+                                iwmoid = int(re.sub('\D', '', wmoid ))
+                        
+
                 if iwmoid>1000 and iwmoid<100000:
-                    mi=do_row(row,kdict,vola,wmoid,nw,lat,lon,'OSCAR') # mi is the number of the row inside the OSCAR database for the station
-                    if not mi:
-                        mi=do_row(row,kdict,igrainv,wmoid,nw,lat,lon,'IGRA2')
+                        mi=do_row(row,kdict,vola,wmoid, iwmoid, nw,lat,lon,'OSCAR') # mi is the number of the row inside the OSCAR database for the station
                         if not mi:
-                            mi=do_row(row,kdict,wbaninv,wmoid,nw,lat,lon,'WBAN')
-                            if not mi:
-                                mi=do_row(row,kdict,chuan,wmoid,nw,lat,lon,'CHUAN')
+                                mi=do_row(row,kdict,igrainv,wmoid, iwmoid,nw,lat,lon,'IGRA2')
                                 if not mi:
-                                        
-                                    print(wmoid,'not found, not identifiable!')
-                                    a = open(home + '/' + fn.split('/')[0] + '_' + 'orphans_not_identified.dat','a')
-                                    a.write(fn + '\n' )
-                                    wait_time=0.2
-                                    filepath = home + '/' + fn.split('/')[0] + '_orphans.csv'
-                                    #while not os.access(home + '/' + fn.split('/')[0] + '_orphans.csv', os.W_OK ):
-                                    #    if os.path.isfile(filepath):
-                                    #        time.sleep(wait_time)
-                                    with open(filepath,'a') as f:
-                                        x=numpy.where(wbaninv.StationId==wmoid)
-                                        if len(x[0])==0:
-                                            f.write(fn+','+wmoid+',{:7.2f},{:7.2f},,,,\n'.format(lat,lon))
+                                        mi=do_row(row,kdict,wbaninv,wmoid, iwmoid, nw,lat,lon,'WBAN')
+                                        if not mi:
+                                                mi=do_row(row,kdict,chuan,wmoid, iwmoid, nw,lat,lon,'CHUAN')
+                                                if not mi:
+                                                        print(wmoid,'not found, not identifiable!')
+                                                        a = open(home + '/' + fn.split('/')[0] + '_' + 'orphans_not_identified.dat','a')
+                                                        a.write(fn + '\n' )
+                                                        filepath = home + '/' + fn.split('/')[0] + '_orphans.csv'
+                                                        #wait_time=0.2                                    
+                                                        #while not os.access(home + '/' + fn.split('/')[0] + '_orphans.csv', os.W_OK ):
+                                                        #    if os.path.isfile(filepath):
+                                                        #        time.sleep(wait_time)
+                                                        with open(filepath,'a') as f:
+                                                                x=numpy.where(wbaninv.StationId==wmoid)
+                                                                if len(x[0])==0:
+                                                                        f.write(fn+','+wmoid+',{:7.2f},{:7.2f},,,,\n'.format(lat,lon))
+                                                                else:
+                                                                        f.write(fn+','+wmoid+',{:7.2f},{:7.2f},{:7.2f},{:7.2f},{},{}\n'.format(lat,lon,wbaninv.Latitude.values[x[0][0]],
+                                                                                                       wbaninv.Longitude.values[x[0][0]],
+                                                                                                       numpy.int(wbaninv.From.values[x[0][0]]),numpy.int(wbaninv.To.values[x[0][0]])))
+                                                        ids=-1
+                                                else:
+                                                    ids=4
+                                                    print('FOUND CHUAN' , fn )
+                                                    
                                         else:
-                                            f.write(fn+','+wmoid+',{:7.2f},{:7.2f},{:7.2f},{:7.2f},{},{}\n'.format(lat,lon,wbaninv.Latitude.values[x[0][0]],
-                                                                                   wbaninv.Longitude.values[x[0][0]],
-                                                                                   numpy.int(wbaninv.From.values[x[0][0]]),numpy.int(wbaninv.To.values[x[0][0]])))
-                                            
-                                    ids=-1
+                                            ids=2
                                 else:
-                                    ids=4
-                            else:
-                                ids=2
+                                    if igrainv['Network'].values[mi]=='M':
+                                        print('IGRA2 WMO station , set ids=0 ')
+                                        ids=0
+                                    else:
+                                        ids=3
                         else:
-                            if igrainv['Network'].values[mi]=='M':
-                                print('IGRA2 WMO station')
-                                ids=0
-                            else:
-                                ids=3
-                    else:
-                        ids=0
+                            ids=0
                 else:
                     ids=-1
                 row[kdict[varno]]=dmin
@@ -567,10 +681,10 @@ def insert(row,vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,var
         #fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
         #print(exc_type, fname, exc_tb.tb_lineno)
 
-    cc=row[kdict['territoryOfOriginOfData_ISO3CountryCode']]
-    a = open(home + '/' + fn.split('/')[0] + '_all_files.dat' , 'a')
-    a.write(fn + ',' + wmoid + ',' + row[kdict['stationPlatformUniqueIdentifier']] + '\n')
-    return ids, wmoid, row[kdict['territoryOfOriginOfData_ISO3CountryCode']] , row[kdict['stationPlatformUniqueIdentifier'] ] 
+   # cc=row[kdict['territoryOfOriginOfData_ISO3CountryCode']]
+    #a = open(home + '/' + fn.split('/')[0] + '_all_files.dat' , 'a')
+    #a.write(fn + ',' + wmoid + ',' + row[kdict['stationPlatformUniqueIdentifier']] + '\n')
+    return ids, wmoid, row[kdict['territoryOfOriginOfData_ISO3CountryCode']] , row[kdict['stationPlatformUniqueIdentifier'] ] , mi 
 
 def odb_process(ci,unified,vola,chuan,igrainv,wbaninv,trans,fn):           
     
@@ -595,9 +709,9 @@ def odb_process(ci,unified,vola,chuan,igrainv,wbaninv,trans,fn):
                     insert(transunified[-1],vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,varno,dmin,dmax,dcount,fi,fn)
                     fi=True
 
-
             except subprocess.CalledProcessError as e:
                 print(e, 'odb call failed')
+                
     except Exception as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
         fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
@@ -611,7 +725,7 @@ def odb_process(ci,unified,vola,chuan,igrainv,wbaninv,trans,fn):
 
     return transunified[0]
 
-def scini(station_configuration,ids,station_id,cwmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc):
+def scini(station_configuration,ids,station_id,cwmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc, mi):
 
     try:
         station_configuration['longitude']=float(transunified[-1][kdict['lon']])
@@ -620,18 +734,52 @@ def scini(station_configuration,ids,station_id,cwmoid,vola,transunified,kdict,dm
         station_configuration['longitude']=numpy.nan
         station_configuration['latitude']=numpy.nan
     station_configuration['station_name']=transunified[-1][kdict['station name']]
+    
+    station_configuration['secondary_id']=cwmoid
+    station_configuration['primary_id_scheme']= ids
+    
+    #station_configuration['secondary_id_scheme']=ids
+    
+    """ If ids==0, the station id was found either in the OSCAR or in the IGRA inventory but from a  WMO network station """
     if ids==0:
-        #station_configuration['primary_id']='0-20000-0-'+ station_id
+        station_configuration['primary_id']='0-20000-0-'+ station_id
+        if '0-2000' not in station_id:
+                station_id =  '0-20000-0-' + station_id 
         station_configuration['primary_id']= station_id
-        
         station_configuration['primary_id_scheme']=5
             
-        station_configuration['secondary_id']=cwmoid  # ALWAYS write also the secondary id! 
-        station_configuration['secondary_id_scheme']=ids
+    elif ids == 3: # case of IGRA station not from a WMO network, use full IGRA id 
+            igrainv_row = igrainv.iloc[mi]
+            try:
+                    station_configuration['primary_id']= '0-20300-0-' + igrainv_row['igraId'].values[0]
+            except:
+                    station_configuration['primary_id']= '0-20300-0-' + igrainv_row['igraId']
+                    
+            station_configuration['primary_id_scheme']=3
+            
+    elif ids ==2: # case of WBAN station
+            wbaninv_row = wbaninv.iloc[mi]
+            try:
+                    station_configuration['primary_id']= '0-20500-0-' + str(wbaninv_row['StationId'].values[0])
+            except:
+                    station_configuration['primary_id']= '0-20500-0-' + str(wbaninv_row['StationId'])                    
+                    
+            station_configuration['primary_id_scheme']=2
+            #vola,chuan,igrainv,wbaninv
+            print(0)
+            
+    elif ids==4: # case of CHUAN station
+            print ('CHUAN ************************** ' , ids, station_id, cwmoid )
+            chuan_row = chuan.iloc[mi]
+            station_configuration['primary_id']= '0-20400-0-' + str(chuan_row['StationId'])
+            station_configuration['primary_id_scheme']=4
     else:
-        #for ncar rda the secondary is a list of statins ids contained in the original txt files. The secondary_id entry be replaced inside the read_rda function
-        station_configuration['secondary_id']=cwmoid
-        station_configuration['secondary_id_scheme']=ids
+            
+        print ('CANNOT FIND ************************** ' , ids, station_id, cwmoid )
+
+
+
+        '''
         dists=fdist(station_configuration['latitude'],station_configuration['longitude'],
                     vola['Latitude'].values,vola['Longitude'].values)*180./math.pi
         
@@ -640,19 +788,24 @@ def scini(station_configuration,ids,station_id,cwmoid,vola,transunified,kdict,dm
         i=0
         while dists[idy[i]]<0.5:
             idx=idy[i]
-            if '0-724-0-0' in  vola['StationId'][idx]:
-                i+=1
-                continue
+            #if '0-724-0-0' in  vola['StationId'][idx]:  # I think this code is indeed right and should be included 
+            #    i+=1
+            #   continue
             station_configuration['primary_id']=vola['StationId'][idx]
             station_configuration['primary_id_scheme']=5
             station_configuration['station_name']=vola.StationName[idx]
             cc= vola['CountryCode'][idx]
             print(station_id,'colocated with WMO station',station_configuration['primary_id'])
             if 'Upper' in vola['ObsRems'].values[idx] or '0-2000' in vola['StationId'][idx]:
-                print(station_id,'colocated with WMO station',station_configuration['primary_id']+', used this')
+                print(cwmoid , ' ' , station_id,'colocated with WMO station',station_configuration['primary_id'])
                 break
             i+=1
-
+        '''
+        
+    ''' dists=fdist(lat,lon,meta['Latitude'].values,meta['Longitude'].values)*180./math.pi
+                z=numpy.nanargmin(dists)
+                if dists[z]<0.5:
+                    z=[z]'''
     station_configuration['station_crs']=0
     station_configuration['local_gravity']=numpy.NaN
     try:
@@ -718,7 +871,7 @@ def scini(station_configuration,ids,station_id,cwmoid,vola,transunified,kdict,dm
     return    
 
 def odb_cdm(ci,cdm,cdmd,unified,vola,chuan,igrainv,wbaninv,trans,fn):           
-    print(fn)
+    #print(fn)
     transunified=[]
     station_configuration=dict()
     for k in cdmd['station_configuration'].element_name.values:
@@ -764,7 +917,7 @@ def odb_cdm(ci,cdm,cdmd,unified,vola,chuan,igrainv,wbaninv,trans,fn):
                     transodb,kdict=odb_trans(cols,unified)
                 if not fi:
                     transunified.append(row[:])
-                    ids,wmoid,cc, primary_id =insert(transunified[-1],vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,varno,dmin,dmax,dcount,fi,fn)
+                    ids,wmoid,cc, primary_id, z =insert(transunified[-1],vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,varno,dmin,dmax,dcount,fi,fn)
                     # ids,wmoid,cc, station_id =insert(transunified[-1],vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,varno,dmin,dmax,dcount,fi,fn)
 
                     if ':' in fn:  
@@ -774,7 +927,7 @@ def odb_cdm(ci,cdm,cdmd,unified,vola,chuan,igrainv,wbaninv,trans,fn):
                         cwmoid=wmoid
                                 
                     # do not understand why I need cwmoid, wmoid when I need actually station_id 
-                    scini(station_configuration,ids,primary_id,cwmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc)
+                    scini(station_configuration,ids,primary_id,cwmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc,z)
                     #if '.3188.' in fn:
                         #idx=numpy.where(chuan['WMO ID']==wmoid)[0]
                         #if len(idx)>0:
@@ -815,7 +968,7 @@ def odb_cdm(ci,cdm,cdmd,unified,vola,chuan,igrainv,wbaninv,trans,fn):
         station_configuration['station_configuration_code']=8 # Pilot, taken from station_configuration_code cdm table
     
     a = open(home + '/' + fn.split('/')[0] + '_correctly_processed.dat' , 'a')
-    print('Done === ' , fn )
+    #print('Done === ' , fn )
     a.write(fn + '\n')
     
     return station_configuration,transunified[0] 
@@ -872,7 +1025,7 @@ def read_bufr_stn_meta(varno,bufrfile):
                     if keyname=='localHour':
                         datum='{}-{:0>2}-{:0>2}'.format(d['localYear'][0],d['localMonth'][0],d['localDay'][0])
                         hour='{:0>2}'.format(d['localHour'][0])
-                        print(datum)
+                        #print(datum)
                 # delete the key iterator
                 codes_bufr_keys_iterator_delete(iterid)
 
@@ -915,13 +1068,13 @@ def read_bufr_stn_meta(varno,bufrfile):
                 dcount=0
             if not fi:
                 transunified.append(row[:])
-            ids,wmoid,cc, primary_id =insert(transunified[-1],vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,varno,dmin,dmax,dcount,fi,bufrfile)
+            ids,wmoid,cc, primary_id, z =insert(transunified[-1],vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,varno,dmin,dmax,dcount,fi,bufrfile)
             if not fi:
-                scini(station_configuration,ids,primary_id,wmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc)
+                scini(station_configuration,ids,primary_id,wmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc, z)
                 fi=True
             station_configuration['observed_variables'].append(int(varno)) 
 
-    print ('/'.join(bufrfile.split('/')[-1:]),cnt,"messages",time.time()-tx)
+    #print ('/'.join(bufrfile.split('/')[-1:]),cnt,"messages",time.time()-tx)
 
     if len(transunified)==0:
         transunified.append(row[:])
@@ -976,14 +1129,14 @@ def read_rda_meta(ncfile):
                 dcount=0
             if not fi:
                 transunified.append(row[:])
-            ids,wmoid,cc,primary_id =insert(transunified[-1],vola,chuan,igrainv,wbaninv,transodb,trans,
+            ids,wmoid,cc,primary_id, z=insert(transunified[-1],vola,chuan,igrainv,wbaninv,transodb,trans,
                                 kdict,unified,rdata,varno,dmin,dmax,dcount,fi,ncfile)
             if not fi:
-                scini(station_conf,ids,primary_id,wmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc)
+                scini(station_conf,ids,primary_id,wmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc,z)
                 fi=True
             station_conf['observed_variables'].append(int(varno)) 
 
-    print ('/'.join(ncfile.split('/')[-1:]),time.time()-tx)
+    #print ('/'.join(ncfile.split('/')[-1:]),time.time()-tx)
 
     if len(transunified)==0:
         transunified.append(row[:])
@@ -1034,20 +1187,23 @@ def read_igra_meta(line):
             dcount=0
         if not fi:
             transunified.append(row[:])
-        ids,wmoid,cc=insert(transunified[-1],vola,chuan,igrainv,wbaninv,transodb,trans,
+            
+        ids,wmoid,cc,primary_id, z=insert(transunified[-1],vola,chuan,igrainv,wbaninv,transodb,trans,
                             kdict,unified,rdata,varno,dmin,dmax,dcount,fi,line['StationId'])
         if not fi:
-            scini(station_conf,ids,primary_id,wmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc)
+            scini(station_conf,ids,primary_id,wmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc, z)
             fi=True
         station_conf['observed_variables'].append(int(varno)) 
 
 
 
-    print ('/'.join(line['StationId'].split('/')[-1:]),time.time()-tx)
+    #print ('/'.join(line['StationId'].split('/')[-1:]),time.time()-tx)
 
     if len(transunified)==0:
         transunified.append(row[:])
 
+    station_conf['secondary_id'] = line['igraId'] 
+    station_conf['secondary_id_scheme'] = 3    
     return station_conf,transunified[0]
 
 
@@ -1162,9 +1318,11 @@ if __name__ == '__main__':
     igrainv=pd.read_fwf(tpath+url.split('/')[-1],widths=(2,1,3,5,9,10,7,4,30,5,5,7),
                         names=('CC','Network','Code','StationId','Latitude','Longitude','Elev','dummy','StationName','From','To','Nrec'))
 
+    igrainv['igraId'] =  igrainv['CC'] + igrainv['Network'] + igrainv['Code'] + igrainv['StationId']
     #f=urllib.request.urlopen(url)
     #igrainv=pd.read_fwf(f,widths=(2,1,3,5,9,10,7,4,30,5,5,7),
                         #names=('CC','Network','Code','StationId','Latitude','Longitude','Elev','dummy','StationName','From','To','Nrec'))
+    
     idx=numpy.where(igrainv.Latitude<-90.)
     igrainv.Latitude.iloc[idx]=numpy.nan
     igrainv.Longitude.iloc[idx]=numpy.nan
@@ -1212,6 +1370,9 @@ if __name__ == '__main__':
                         z[l].append(li[l])
 
             chuan=dict(zip(rdata[0].split('\t'),z))
+            chuan['Lat_DegN']  = [float(l.replace(',','.')) for l in chuan['Lat_DegN'] ]
+            chuan['Lon_DegE'] = [float(l.replace(',','.')) for l in chuan['Lon_DegE']]
+            
             chuan=pd.DataFrame(chuan)
             chuan=chuan.rename(columns = {'unique_record_ID':'StationId','WMO#':'WMO ID','Stationname':'StationName',
                                           'Lon_DegE':'Longitude', 'Lat_DegN':'Latitude', 'Alt_masl':'Elev'})
@@ -1244,25 +1405,50 @@ if __name__ == '__main__':
         bfunc=partial(read_bufr_stn_meta,2)
         rfunc=partial(read_rda_meta) 
         tu=dict()
-        p=Pool(30)
+        p=Pool(25)
         dbs=['igra2','ai_bfr','rda','3188','1759','1761']
         dbs=['1759','1761']
         dbs=['RI/nasa']
-        
         dbs=['2']
+        
+        dbs=['3188','rda', '1759', '1761']
 
-        dbs = ['ai_bfr']        
-        PARALLEL = True
+        dbs=['1']
+        
+        PARALLEL = True  
         
         transunified = []
-        #dbs=['igra2'] 
+
         for odir in dbs: 
             #with open(dpath+odir+'/orphans.csv','w'):
             #    pass
             if 'ai' in odir:
                 flist=glob.glob(odir+'/'+'era5.*.bfr')
-                transunified=list(map(bfunc,flist))
                 
+                #flist = ['ai_bfr/era5.10106.bfr']
+                
+                flist = [f for f in flist if 'undef' not in f ] # clean some wrong files
+                #proc = open(home + '/ai_bfr_correctly_processed.dat').readlines()
+                #proc = [f.replace('\n','') for f in proc]
+                
+                if os.path.isfile(home + '/' + odir +'_correctly_processed.dat'):
+                        proc = open(home + '/' + odir +'_correctly_processed.dat').readlines()
+                        proc = [f.replace('\n','') for f in proc]
+                else:
+                        proc = []
+                flist = [ f for f in flist if f not in proc ]
+                #transunified=list(map(bfunc,flist))
+                #flist = ['ai_bfr/era5.37260.bfr']
+                #flist = ['ai_bfr/era5.70292.bfr']
+                
+                if PARALLEL:
+                        
+                        transunified=list(p.map(bfunc,flist))
+                else:
+                        for f in flist:
+                                
+                                transunified.append(read_bufr_stn_meta(2,f))
+                        
             elif 'rda' in odir:
                 flist=glob.glob(odir+'/'+'UADB_[tw]*.nc')
                 flist.sort()
@@ -1300,25 +1486,33 @@ if __name__ == '__main__':
             else:
                 if odir == '1' or odir == '2':
                      flist=glob.glob(odir+'/'+'era5.conv._*')
+                     #flist = ['1/era5.conv._73033']
+                     
                 elif odir == '1759':
                      flist=glob.glob(odir+'/'+'era5.1759.conv.*')
                 elif odir == '1761':
                      flist=glob.glob(odir+'/'+'era5.1761.conv.*')
                 elif odir =='3188':
                      flist=glob.glob(odir+'/'+'era5.3188.conv.*')
-                        
-                flist =  [f for f in flist if 'gz' not in f ]
-                #flist = [f for f in flist if '2:40306' in f or '40308' in f or '91413' in f ]
-                #flist = [f for f in flist if '0306' in f or '40308' in f  ]
-		
-                #done = open(home + '/' + odir + '_correctly_processed.dat' , 'r').readlines()
-                #done = [f.replace('\n','') for f in done ]
+                     #flist = [f for f in flist if '4581' in f ]
+                flist =  [f for f in flist if 'gz' not in f and f != '3188/era5.3188.conv.' ]
+
+
+                #flist = [f for  f in flist if '_03158' in f ]
+                
+                
+                if os.path.isfile(home + '/' + odir +'_correctly_processed.dat'):
+                        proc = open(home + '/' + odir +'_correctly_processed.dat').readlines()
+                        proc = [f.replace('\n','') for f in proc]
+                else:
+                        proc = []
+                flist = [ f for f in flist if f not in proc ]
+                
                 hlist=[]
                 for f in flist:
                     if '.nc' not in f and '.gz' not in f and '00000' not in f:
                         hlist.append(f)
                         
-                #hlist = [ f for f in hlist if f not in done ]
 
                 #hlist = hlist[:100]
                 print('running ', len(hlist) , '  files')

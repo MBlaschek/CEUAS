@@ -275,6 +275,7 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
         # find Merged Netcdf files and intercomparison files
         #
         slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v0.nc'))
+        slist += glob.glob(os.path.expandvars(config['data_dir'] + '/0-20?00-0-*_CEUAS_merged_v0.nc'))
         slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
         slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
         # slnum = [i[-34:-19] for i in slist]
@@ -697,14 +698,16 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     # BBOX [lower left upper right]
     #
     elif bbox is not None:
+        # converting from BBOX [lower left upper right] to BBOX [upper left lower right]:
+        bbox = [bbox[2], bbox[1], bbox[0], bbox[3]]
         if not isinstance(bbox, (list, tuple)) or len(bbox) != 4:
-            raise ValueError('Invalid selection, bounding box: [lower, left, upper, right]')
+            raise ValueError('Invalid selection, bounding box: [upper left lower right]')
 
         try:
             for i in range(4):
                 bbox[i] = float(bbox[i])
         except ValueError:
-            raise ValueError('Invalid selection, bounding box: [lower, left, upper, right] must be int or float')
+            raise ValueError('Invalid selection, bounding box: [upper left lower right] must be int or float')
 
         if bbox[0] >= bbox[2] or bbox[1] >= bbox[3]:
             raise ValueError('Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]')
@@ -735,33 +738,45 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     else:
         # '0-20200-0-*': 
         try:
-            if statid == 'all':
+            if statid == 'all' or statid == None:
                 statid = slnum  # <- list of all station ids from init_server
-                print(slnum)
-
+                
             elif isinstance(statid, (str, int)):
-                # todo fix if '1001' given as string, creates not working ID
-                for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-']:
-                    if isinstance(statid, int):
-                        valid_id = s + '{:0>5}'.format(statid)
+                valid_id = None
+                if('*' in statid):
+                    if statid[:3] == '0-2':
+                        stats = []
+                        pat=statid[:statid.index('*')]
+                        for l in slnum: # -> searches all slnum for matching statids
+                            if pat in l: 
+                                stats.append(l)
+                        valid_id = stats
                     else:
-                        if('*' in statid):
-                            stats = []
-                            pat=statid[:statid.index('*')]
+                        stats = []
+                        for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
+                            m = s + statid
+                            pat=m[:m.index('*')]
                             for l in slnum: # -> searches all slnum for matching statids
                                 if pat in l: 
                                     stats.append(l)
                             valid_id = stats
-                            break
                             
-                        if statid[:3] == '0-2':
-                            valid_id = statid
-                            break
+                else:
+#                     if not ((len(statid) == 15) or (len(statid) == 5)):
+#                         raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
 
-                        valid_id = s + statid
-                    if valid_id in slnum:
-                        break
+                    if statid[:3] == '0-2' and statid in slnum:
+                        valid_id = statid
+                    else:
+                        for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
+                            l = s + statid
+                            if l in slnum:
+                                valid_id = l
+                                break
                 
+                if valid_id == None:
+                    raise ValueError('statid not available - please select an area, country or check your statid')
+
                 # if wildcard was used, valid_id is already a list so it can be directly given to statid:
                 if isinstance(valid_id, list):
                     statid = valid_id
@@ -769,32 +784,50 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                     statid = [valid_id]
 
             else:
+                valid_id = None
                 new_statid = []
                 for k in statid:
-                    for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-']:
-                        if isinstance(k, int):
-                            valid_id = s + '{:0>5}'.format(k)
+                    
+                    if('*' in k):
+                        if k[:3] == '0-2':
+                            stats = []
+                            pat=k[:k.index('*')]
+                            for l in slnum: # -> searches all slnum for matching statids
+                                if pat in l: 
+                                    stats.append(l)
+                            valid_id = stats
                         else:
-                            if('*' in k):
-                                stats = []
+                            stats = []
+                            for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
+                                m = s + k
+                                pat=m[:m.index('*')]
                                 for l in slnum: # -> searches all slnum for matching statids
-                                    if k[:k.index('*')] in l: 
+                                    if pat in l: 
                                         stats.append(l)
                                 valid_id = stats
-                                break
-
-                            if k[:3] == '0-2':
-                                valid_id = k
-                                break
-
-                            valid_id = s + k
-                        if valid_id in slnum:
-                            break
-                    # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
-                    if isinstance(valid_id, list):
-                        new_statid = new_statid + valid_id
+                            
                     else:
-                        new_statid.append(valid_id)
+#                         if not ((len(k) == 15) or (len(k) == 5)):
+#                             raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
+
+                        if k[:3] == '0-2' and k in slnum:
+                            valid_id = k
+                        else:
+                            for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
+                                l = s + k
+                                if l in slnum:
+                                    valid_id = l
+                                    break
+
+                        # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
+                        if isinstance(valid_id, list):
+                            new_statid = new_statid.extend(valid_id)
+                        else:
+                            new_statid.append(valid_id)
+                            
+                if valid_id == None:
+                    raise ValueError('statid not available - please select an area, country or check your statid')
+                    
                 statid = [] 
                 [statid.append(x) for x in new_statid if x not in statid] 
         except MemoryError:
@@ -806,21 +839,10 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     #
     # Only pick one format for dates:
     date_not_yet_existing = True
-    # prioritized order: Period, date, day/month/year
+    # prioritized order:, date, day/month/year
+    # Period removed -> cds always converts period to date in this format: '19990101-20000101'
     #
-    #
-    # Period [START, END] -> into date
-    #
-    # todo not forward by CDS -> to date [start-end]
-    if period is not None:
-        if not isinstance(period, list):
-            raise ValueError('invalid period selection, period [startdate, enddate], but %s' % str(period))
-
-        for i in range(len(period)):
-            period[i] = str(period[i])
-        d['date'] = [to_valid_datetime(period[0], as_string=True), to_valid_datetime(period[-1], as_string=True)]
-        date_not_yet_existing = False
-
+    
     #
     # Date time selection
     # [DATE] or [START, END]
@@ -841,6 +863,8 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             # todo old style date range (not supported by CDS anymore ???)
             if '-' in idate:
                 idate = idate.split('-')
+                if idate[0] > idate[1]:
+                    raise ValueError('starting date has to be before ending date: %s - %s' % (idate[0], idate[-1]))
                 # check period dates (should not be out of range)
                 if int(idate[0][-2:]) > 31 or int(idate[-1][-2:]) > 31:
                     raise ValueError('only valid dates allowed for date: %s' % idate)
