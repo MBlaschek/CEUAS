@@ -861,7 +861,8 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 suffix = ['0-20000-0-', '0-20300-0-', '0-20001-0-']
 
             for ss in suffix:
-                filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  # version as a variable
+                filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  
+                # version as a variable
                 #filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
                 #if len(filename) > 0:
                     #filename = filename[0]
@@ -887,21 +888,24 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
         filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
             request_variables['variable']] + '.nc'
         
-        tt=time.time()
-        gdict={'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
-                                                  'observations_table':['date_time','z_coordinate','observation_value','observed_variable'],
-                                                  'header_table':[]}
+        if debug: tt=time.time()
+        # Make a subset of groups/variables to read (speed up)
+        gdict = {
+            'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
+            'observations_table':['date_time','z_coordinate','observation_value','observed_variable'],
+            'header_table':[]
+        }
         if '0-20100-0' not in statid and '0-20200-0' not in statid:
             gdict["era5fb"]=[]
             
-        with CDMDataset(filename=filename,groups=gdict) as data: #,'observations_table','header_table'
-#        with CDMDataset(filename=filename) as data:
-            print('x',time.time()-tt)
+        with CDMDataset(filename=filename, groups=gdict) as data:
+            if debug: print('x',time.time()-tt)
             data.read_write_request(filename_out=filename_out,
                                     request=request_variables,
                                     cf_dict=cftable)
-        print(time.time()-tt)
-        print('')
+        if debug: 
+            print(time.time()-tt)
+            print('')
 
     except Exception as e:
         if debug:
@@ -1503,11 +1507,12 @@ class CDMDataset:
     # memory efficient, no duplicates
     # __slots__ = ['filename', 'file', 'groups', 'data']
 
-    def __init__(self, filename: str = None,groups ={}):
+    def __init__(self, filename: str = None, groups: dict = None):
         """ Init Class CDMDataset with a filename, cds_request or vm_request
 
         Args:
             filename: path of NetCDF HDF5 backend of frontend file
+            groups: read only these groups in
 
         Examples:
             Open a CDM Backend file
@@ -1519,7 +1524,10 @@ class CDMDataset:
         """
         if filename is None:
             raise ValueError('Specifiy either filename.')
-
+        
+        #
+        # Create an Empty Class ?
+        #
         if filename == 'empty':
             self.filename = ''
             self.name = ''
@@ -1566,13 +1574,13 @@ class CDMDataset:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.close()
 
-    def inquire(self,groupdict={}):
+    def inquire(self, groupdict: dict = None):
         """ Read HDF5 file structures
         """
-        if not groupdict:
-            groups=list(self.file.keys())
-        else:
-            groups=list(groupdict.keys())
+        groups = list(self.file.keys())
+        if groupdict is not None:
+            groups = [igroup for igroup in groups if igroup in groupdict.keys()]
+        
         try:
             for igroup in groups:
                 # Group or Variable
@@ -1588,16 +1596,19 @@ class CDMDataset:
                         jgroup = getattr(self, igroup)  # Get CDMGroup
 
                     jgroup.update(link=self.file[igroup])  # reconnect to Group, e.g. if reopened
-                    if groupdict:
-                        varkeys=groupdict[igroup]
-                    else:
-                        varkeys=list(self.file[igroup].keys())
+                    varkeys=list(self.file[igroup].keys())
+                    if groupdict is not None:
+                        varkeys = groupdict[igroup] if len(groupdict[igroup]) > 0 else varkeys
+                    
                     for ivar in varkeys:
-                        if ivar not in jgroup.keys():
-                            shape = self.file[igroup][ivar].shape
-                            jgroup[ivar] = CDMVariable(self.file[igroup][ivar], ivar, shape=shape)
-                        jgroup[ivar].update(link=self.file[igroup][ivar])
-
+                        try:
+                            if ivar not in jgroup.keys():
+                                shape = self.file[igroup][ivar].shape
+                                jgroup[ivar] = CDMVariable(self.file[igroup][ivar], ivar, shape=shape)
+                            jgroup[ivar].update(link=self.file[igroup][ivar])
+                        except:
+                            # can fail if variable not present
+                            pass
                     jgroup['shape'] = len(jgroup.keys())  # update never hurts
                     setattr(self, igroup, jgroup)  # attach to class
                     self.hasgroups = True
