@@ -1360,7 +1360,7 @@ def mapdata(date=None, enddate=None, response=None):
     namelist_file = config['config_dir'] + '/namelist.json'
     namelist = json.load(open(namelist_file,"r"))
     
-    output_file = '/data/public/maplist_'+date
+    output_file = '/data/public/maplist_'+str(date)
     
     if enddate is None:
         date = datetime_to_seconds(date)
