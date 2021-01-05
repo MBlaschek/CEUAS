@@ -1343,7 +1343,7 @@ def index(request=None, response=None):
 
 def datetime_to_seconds(dates, ref='1900-01-01T00:00:00'):
     """ from datetime64 to seconds since 1900-01-01 00:00:00"""
-    return ((dates - numpy.datetime64(ref)) / numpy.timedelta64(1, 's')).astype(numpy.int64)
+    return ((numpy.datetime64(dates) - numpy.datetime64(ref)) / numpy.timedelta64(1, 's')).astype(numpy.int64)
 
 @hug.get('/maplist/', output=hug.output_format.file)
 def mapdata(date=None, enddate=None, response=None):
