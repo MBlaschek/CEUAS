@@ -1579,7 +1579,6 @@ class CDMDataset:
         """
         groups = list(self.file.keys())
         if groupdict is not None:
-            # groups = list(groupdict.keys()) # non existing groups cause problems
             groups = [igroup for igroup in groups if igroup in groupdict.keys()]
         
         try:
@@ -1597,18 +1596,19 @@ class CDMDataset:
                         jgroup = getattr(self, igroup)  # Get CDMGroup
 
                     jgroup.update(link=self.file[igroup])  # reconnect to Group, e.g. if reopened
-                    
                     varkeys=list(self.file[igroup].keys())
                     if groupdict is not None:
-                        varkeys = groupdict[igroup] 
-                        varkeys = [igroup for igroup in groups if igroup in groupdict[igroup]]
+                        varkeys = groupdict[igroup] if len(groupdict[igroup]) > 0 else varkeys
                     
                     for ivar in varkeys:
-                        if ivar not in jgroup.keys():
-                            shape = self.file[igroup][ivar].shape
-                            jgroup[ivar] = CDMVariable(self.file[igroup][ivar], ivar, shape=shape)
-                        jgroup[ivar].update(link=self.file[igroup][ivar])
-
+                        try:
+                            if ivar not in jgroup.keys():
+                                shape = self.file[igroup][ivar].shape
+                                jgroup[ivar] = CDMVariable(self.file[igroup][ivar], ivar, shape=shape)
+                            jgroup[ivar].update(link=self.file[igroup][ivar])
+                        except:
+                            # can fail if variable not present
+                            pass
                     jgroup['shape'] = len(jgroup.keys())  # update never hurts
                     setattr(self, igroup, jgroup)  # attach to class
                     self.hasgroups = True
