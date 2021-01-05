@@ -22,6 +22,7 @@ import numpy as np
 import warnings
 import numpy
 from numba import njit
+from eccodes import *
 
 pv=sys.version.split('.')
 if pv[1]<'8':
@@ -460,7 +461,9 @@ def bufr_to_dataframe(file=''):
     df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
     
     df = df.replace([-999.9, -9999, -999, -999.0, -99999.0, -99999.9, 99999.0,  -99999.00 ], np.nan)
-           
+      
+    df['report_timestamp'] = np.nan 
+         
     df = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
         
     return df, stations_id
@@ -615,6 +618,7 @@ def uadb_ascii_to_dataframe(file=''):
     df = df.replace([-999.9, -9999, -999, -999.0, -99999.0, -99999.9, 99999.0,  -99999.00 ], np.nan)
     
     #df['observations_id'] =numpy.char.zfill(numpy.arange(ivar.shape[0]).astype('S10'), 10)
+    df['report_timestamp'] = np.nan 
         
     df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
     #df['report_id'] = numpy.int64 (df['report_id'] ) 
@@ -691,7 +695,7 @@ def igra2_ascii_to_dataframe(file=''):
             head_count = head_count +1 
             # Info from the Header line of each ascent                                                                                                                                                                                                                   
             ident     = line[1:12]               # station identifier
-            ident     = ident[6:12]
+            #ident     = ident[6:12]
             if ident not in stations_id:
                 stations_id.append(ident)
                 
@@ -1538,7 +1542,7 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
                 #print('Unidentified file is: ', fn)
                 raise ValueError('Cannot identify the type of file to be analized!!! ')
             
-            station_configuration_retrieved = get_station_configuration_f( stations_id, cdm['station_configuration'] )    
+            station_configuration_retrieved = get_station_configuration_new( stations_id, cdm['station_configuration'] )    
             #primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')      
             try:
                 primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')
@@ -1641,12 +1645,12 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
 
                         
                     elif k in ('header_table'):
-                        if d.element_name == 'report_timestamp':
+                        if d.element_name == 'record_timestamp':
                             groups[k][d.element_name]= ( {'hdrlen':di['recordindex'].shape[0]} , np.take(df[d.element_name], di['recordindex'] ) )
                             groups[k][d.element_name].attrs['units'] = 'seconds since 1900-01-01 00:00:00'
-                        elif  d.element_name == 'record_timestamp':
+                        elif  d.element_name == 'report_timestamp':
                             groups[k][d.element_name]= ( {'hdrlen':di['recordindex'].shape[0]} , np.take(df[d.element_name], di['recordindex'] ) )
-                            groups[k][d.element_name].attrs['units'] = 'seconds since 1900-01-01 00:00:00'                        
+                            groups[k][d.element_name].attrs['units'] = 'seconds since 1900-01-01 00:00:00'                           
                         else:
                             try:
                             
@@ -1746,49 +1750,38 @@ def get_station_configuration_new(stations_id, station_configuration):
            si = s 
         #if ':' in si:
         #   si = si.split(':')[1]
-           
-        station_id_primary                    = numpy.string_( '0-20000-0-' + si )   # remove the prefix to the station id 
-        station_id_primary_alternative  = numpy.string_( '0-20001-0-' + si )
-             
-        """ First, check for matching primary_id. 
-              If not found, check for secondary id. Note that secondary is a list, so must loop over the entry to find a matching one """
         
-        matching_primary       = station_configuration.loc[station_configuration['primary_id'] == station_id_primary ]
-        matching_primary_alt = station_configuration.loc[station_configuration['primary_id'] == station_id_primary_alternative ]
-        
-        if len(matching_primary) > 0:
-            return matching_primary 
-        
-        elif   len(matching_primary_alt) > 0  :
-            return matching_primary_alt 
-     
-        else:
-            secondary = station_configuration['secondary_id'] 
+        if len(s) > 10: # taking only the last 5 digits if IGRA file 
+            si = s[-5:]
+        if ':' in si:  # adjusting for era5 files which might contain ':'
+            si = si.split(':')[1]
             
-            for second in secondary:
-                try:  # this try is needed when the secondary ids are not defined or wrong, and the primary id cannot be matched with the station_id      
-                    sec_list = second.decode('utf-8')  # secondary ids are separated by a comma, so I loop over the list
-                except:
-                    try:
-                        sec_list = str(second)
-                    except:    
-                        pass
-                
-                #if ':' in sec_list:  # might be : or C: in the secndary id , e.g. C:5852 
-                #    sec_list = sec_list.split(':')[1]
-                        
-                if sec_list == si:
-                    sc = station_configuration.loc[station_configuration['secondary_id'] == second ]
-                            #print("FOUND a secondary !!!" 
-                    return sc 
-                try:
-                        if str(second) == si:
-                            sc = station_configuration.loc[station_configuration['secondary_id'] == second ]
-                            #print("FOUND a secondary !!!")
-                            return sc         
-                except:
-                    pass 
+        # checking first for primary ids
+        for prefix in ['0-2030','0-2000'] :            
+            for code in ['0' , '1']:
+                station_id_primary = prefix + code + '-0-' + si
+                #station_id_primary                    = numpy.string_( '0-20000-0-' + si )   # remove the prefix to the station id 
+
+                matching_primary       = station_configuration.loc[station_configuration['primary_id'] == station_id_primary ]
         
+                # returning a primary id if found 
+                if len(matching_primary) > 0:
+                    return matching_primary 
+
+     
+        # checking for secondary ids      
+        secondary = station_configuration['secondary_id'] 
+        for second in secondary:
+            try:
+                sec_dec = second.decode('utf-8')
+            except:
+                sec_dec = str(second)
+                    
+            if s == sec_dec:
+                        
+                sc = station_configuration.loc[station_configuration['secondary_id'] == second ]
+                return sc
+    
     return None
 
 
@@ -3393,6 +3386,17 @@ if __name__ == '__main__':
 # use monthly input files, can be read in parallel
 small file
 -f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.82930.txt.gz'  -d era5_1 -o OUTPUT
+-f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.71910.txt.gz'  -d era5_1 -o OUTPUT
+
+-f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.01003.txt.gz' -d era5_1 -o OUTPUT
+
+-f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.04692.txt.gz'  -d era5_1 -o OUTPUT
+
+
+BUFR
+-f /raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.10106.bfr -d bufr -o OUTPUT
+
+# 0-20000-0-71910
 biggest file
 -f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.10393.txt.gz'  -d era5_1 -o OUTPUT
 
@@ -3400,15 +3404,18 @@ REMEBER:
 for the largest file you need python3.8 which is not from the /opt/anaconda3/bin/python
 but you have source the .tcshrc  file,
 use a tcsh shell
-
-
+ 
 
 # ERA5_2
 -f /raid60/scratch/leo/scratch/era5/odbs/2/era5.conv._C:4701.gz  -d era5_2 -o OUTPUT
+-f /raid60/scratch/leo/scratch/era5/odbs/2/era5.conv._10090.gz  -d era5_2 -o OUTPUT
+
+
+_era5.conv._10090.gz
 
 # ERA5 1759
 -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._1:82930.gz -d era5_1759 -o OUTPUT
-
+-f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._2:3136.gz  -d era5_1759 -o OUTPUT
 # ERA5 1761
 -f /raid60/scratch/leo/scratch/era5/odbs/1761/era5.1761.conv._1:41675.gz -d era5_1761 -o OUTPUT
 
@@ -3416,11 +3423,11 @@ use a tcsh shell
 -f /raid60/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv._C:4879.gz -d era5_3188 -o OUTPUT
 
 #NCAR
--f /raid60/scratch/federico/databases/UADB/uadb_windc_7180.txt -d ncar -o OUTPUT 
+-f /raid60/scratch/federico/databases/UADB/uadb_windc_82930.txt -d ncar -o OUTPUT 
 
 #IGRA2
 -f /raid60/scratch/federico/databases/IGRAv2/BRM00082930-data.txt -d igra2 -o OUTPUT 
-
+-f /raid60/scratch/federico/databases/IGRAv2/UKM00003023-data.txt -d igra2 -o OUTPUT 
 
 ### file containing a secondary id to test
 -f /raid60/scratch/federico/databases/UADB/ uadb_trhc_2225.txt -o OUTPUT -d ncar 
