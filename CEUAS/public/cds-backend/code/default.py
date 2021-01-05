@@ -33,6 +33,7 @@ This file is released under public domain and you can use without limitations
 """
 import copy
 import glob
+import csv
 import json
 import logging
 import os
@@ -40,6 +41,7 @@ import socket
 import sys
 import time
 import zipfile
+import urllib
 from datetime import datetime, timedelta
 from functools import partial
 from multiprocessing import set_start_method, Pool
