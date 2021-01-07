@@ -295,7 +295,6 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
         f = urllib.request.urlopen(volapath)
         col_names = pd.read_csv(f, delimiter='\t', quoting=3, nrows=0)
         # print(col_names)
-        f = urllib.request.urlopen(volapath)
         tdict = {col: str for col in col_names}
         vola = pd.read_csv(f, delimiter='\t', quoting=3, dtype=tdict, na_filter=False)
         # print (vola.iloc[0])
@@ -323,7 +322,6 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
         volapath = 'https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
         f = urllib.request.urlopen(volapath)
         col_names = pd.read_csv(f, delimiter='\t', quoting=3, nrows=0)
-        f = urllib.request.urlopen(volapath)
         tdict = {col: str for col in col_names}
         vola = pd.read_csv(f, delimiter='\t', quoting=3, dtype=tdict, na_filter=False)
         active_file = config['config_dir'] + '/active.json'
