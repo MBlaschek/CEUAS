@@ -33,8 +33,11 @@ This file is released under public domain and you can use without limitations
 """
 import copy
 import glob
+import geopy
 import csv
 import json
+import reverse_geocoder as rg
+import pycountry
 import logging
 import os
 import socket
@@ -172,7 +175,6 @@ except:
 #
 ###############################################################################
 
-
 def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
     """ Read HDF5 radiosonde cdm backend file and extract datetime and geo information
 
@@ -186,6 +188,10 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
     """
     s, skey = itup  # filename, ID
     active = {}
+    # creating a list for conversion between alpha_2 and alpha_3 countrycodes
+    countrycodes = {}
+    for country in pycountry.countries:
+        countrycodes[country.alpha_2] = country.alpha_3
     try:
 
         with h5py.File(s, 'r') as f:
@@ -216,8 +222,12 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
                 if len(idx) > 0:
                     active[skey].append(vola.CountryCode[idx[0]])
                 else:
-                    active[skey].append('')
-                    logger.debug('no key found for %s', skey)
+                    # if no country code available -> reverse geo search for them 
+                    coordinates = (float(f['observations_table']['latitude'][-1]), float(f['observations_table']['longitude'][-1]))
+                    cc = rg.search(coordinates)[0]['cc']
+                    # results are in alpha_2 country codes -> convert to alpha_3 like it is in the vola file
+                    active[skey].append(countrycodes[cc])
+#                     logger.debug('no key found for %s', skey)
                 # add data directory for process_flat
                 # active[skey].append(os.path.dirname(s))
                 # add filepath
