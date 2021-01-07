@@ -227,7 +227,7 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
                     cc = rg.search(coordinates)[0]['cc']
                     # results are in alpha_2 country codes -> convert to alpha_3 like it is in the vola file
                     active[skey].append(countrycodes[cc])
-#                     logger.debug('no key found for %s', skey)
+                    logger.debug('reverse geo searche for: %s', skey)
                 # add data directory for process_flat
                 # active[skey].append(os.path.dirname(s))
                 # add filepath
