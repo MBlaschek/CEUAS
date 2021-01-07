@@ -190,6 +190,7 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
     active = {}
     # creating a list for conversion between alpha_2 and alpha_3 countrycodes
     countrycodes = {}
+    countrycodes['XK'] = 'XXK'
     for country in pycountry.countries:
         countrycodes[country.alpha_2] = country.alpha_3
     try:
