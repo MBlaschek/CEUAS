@@ -741,8 +741,12 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 raise ValueError('Invalid selection, %s is not a valid country code' % icountry)
 
             for k, vv in active.items():
-                if vv[4] == icountry:
-                    statid.append(k)
+                try:
+                    if vv[4] == icountry:
+                        statid.append(k)
+                except:
+                    raise ValueError(vv, k)
+                    
 
         if len(statid) == 0:
             raise RuntimeError('Invalid selection, no Stations for Countries %s' % str(country))
