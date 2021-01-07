@@ -333,6 +333,7 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
         for i in act:
             try:
                 name = vola[vola['StationId']==i]['StationName'].iloc[0]
+                name = name[:name.find(',')]
             except:
                 if (i[:5] == '0-200'):
                     name = i
