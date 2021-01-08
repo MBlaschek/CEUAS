@@ -33,8 +33,11 @@ This file is released under public domain and you can use without limitations
 """
 import copy
 import glob
+import geopy
 import csv
 import json
+import reverse_geocoder as rg
+import pycountry
 import logging
 import os
 import socket
@@ -172,7 +175,6 @@ except:
 #
 ###############################################################################
 
-
 def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
     """ Read HDF5 radiosonde cdm backend file and extract datetime and geo information
 
@@ -186,6 +188,11 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
     """
     s, skey = itup  # filename, ID
     active = {}
+    # creating a list for conversion between alpha_2 and alpha_3 countrycodes
+    countrycodes = {}
+    for country in pycountry.countries:
+        countrycodes[country.alpha_2] = country.alpha_3
+    countrycodes['XK']='XXK'
     try:
 
         with h5py.File(s, 'r') as f:
@@ -216,9 +223,17 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
                 if len(idx) > 0:
                     active[skey].append(vola.CountryCode[idx[0]])
                 else:
-                    active[skey].append('')
-                    logger.debug('no key found for %s', skey)
-                # add data directory for process_flat
+                    # if no country code available -> reverse geo search for them 
+                    coordinates = (float(f['observations_table']['latitude'][-1]), float(f['observations_table']['longitude'][-1]))
+                    cc = rg.search(coordinates)[0]['cc']
+#                     if cc == 'XK':
+#                         active[skey].append('XXK')
+#                         logger.debug('reverse geo searche for: %s', skey)
+#                     else:
+                    # results are in alpha_2 country codes -> convert to alpha_3 like it is in the vola file
+                    active[skey].append(countrycodes[cc])
+                    logger.debug('reverse geo searche for: %s', skey)
+            # add data directory for process_flat
                 # active[skey].append(os.path.dirname(s))
                 # add filepath
                 active[skey].append(s)
@@ -333,6 +348,7 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
         for i in act:
             try:
                 name = vola[vola['StationId']==i]['StationName'].iloc[0]
+                name = name[:name.find(',')]
             except:
                 if (i[:5] == '0-200'):
                     name = i
@@ -730,8 +746,12 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 raise ValueError('Invalid selection, %s is not a valid country code' % icountry)
 
             for k, vv in active.items():
-                if vv[4] == icountry:
-                    statid.append(k)
+                try:
+                    if vv[4] == icountry:
+                        statid.append(k)
+                except:
+                    raise ValueError(vv, k)
+                    
 
         if len(statid) == 0:
             raise RuntimeError('Invalid selection, no Stations for Countries %s' % str(country))
