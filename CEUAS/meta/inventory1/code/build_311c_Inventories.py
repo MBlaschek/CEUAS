@@ -115,7 +115,86 @@ def get_secondary_nrda(file):
         stat_ids = ','.join(stations_id)
 
         return stat_ids
-        
+def read_ubern_meta(cdmd,fpath):
+
+        comp=fpath.split('/')[-1]
+        try:
+                proflist=pd.read_excel(fpath+'/'+comp+'_ListProfiles.xls')
+        except:
+                try:
+                        proflist=pd.read_excel(fpath+'/'+comp+'_ListProfiles.xlsx')
+                except:
+                        proflist=None
+
+        campaigns=pd.read_excel(fpath+'/../../'+'Table1_Campaigns.xls')
+        try:
+                soundlist=pd.read_excel(fpath+'/'+comp+'_ListSoundings.xls')
+        except:
+                print('No soundlist')
+                soundlist=None
+
+        mon='mo'
+        if proflist is None:
+                print('No proflist')
+                if soundlist is None:
+                        return []
+                proflist=copy.copy(soundlist)
+                proflist.ri_name=soundlist.ri_names_group
+
+                mon='mon'
+
+        allrows={}
+        transunified=[]
+        i=0
+        l=0
+        for ri in proflist.ri_name:
+                if ri not in allrows.keys():
+                        l+=1
+                        allrows[ri]={}
+                        idx=campaigns.index[campaigns.ID==comp]
+                        allrows[ri]['alternative_name']=campaigns.Location[idx].values[0]
+                        allrows[ri]['station_name']=campaigns.Name[idx].values[0]
+                        terr={'United Kingdom':76,'Virginia (NASA)':231,'Kazakstan (former USSR)':124,'Japan':113}
+                        allrows[ri]['operating_territory']='NA'
+                        try:
+                                allrows[ri]['operating_territory']=campaigns.Country[idx].values[0]
+                        except:
+                                allrows[ri]['operating_territory']='NA'
+
+                #    pos=data[2].split()
+                #    sign={'North':1,'South':-1,'East':1,'West':-1}
+                        allrows[ri]['latitude']=proflist.lat[i]
+                        allrows[ri]['longitude']=proflist.lon[i]
+                        allrows[ri]['bbox_min_latitude']=proflist.lat[i]
+                        allrows[ri]['bbox_max_latitude']=proflist.lat[i]
+                        allrows[ri]['bbox_min_longitude']=proflist.lon[i]
+                        allrows[ri]['bbox_max_longitude']=proflist.lon[i]
+                        allrows[ri]['altitude']=proflist.alt[i]
+                        allrows[ri]['station_type']=1 # Land Station
+                        allrows[ri]['platform_type']=7 # Land Station
+                        allrows[ri]['platform_sub_type']=63 # Synoptic Network
+                        allrows[ri]['operating_institute']='WMO'
+                        allrows[ri]['station_crs']=0
+                        allrows[ri]['primary_id_scheme']=5 # WIGOS identifier
+
+                        allrows[ri]['start_date']='{}-{:0>2}-{:0>2}'.format(proflist['yr'][0],proflist[mon][0],proflist['day'][0])
+                        ilen=len(proflist['yr'])
+                        allrows[ri]['end_date']='{}-{:0>2}-{:0>2}'.format(proflist['yr'][ilen-1],proflist[mon][ilen-1],proflist['day'][ilen-1])
+
+                        allrows[ri]['measuring_system_id']=ri
+                        transunified.append({})
+                        for c in cdmd['station_configuration'].element_name.values:
+                                if c in allrows[ri].keys():
+                                        transunified[-1][c]=allrows[ri][c]
+                                else:
+                                        transunified[-1][c]=''
+                        transunified[-1]['primary_id']='0-20100-0-{:0>3}{:0>2}'.format(int(comp[4:]),l)
+        #transunified[-1]['station_abbreviation']=s
+        #transunified[-1]['measuring_system_model']=m
+                i+=1
+
+        return transunified
+
 def read_nasa_meta(cdmd,fpath):
     
     allrows={}
@@ -1217,7 +1296,6 @@ if __name__ == '__main__':
                     type = str)
     parser.add_argument('--auxtables_dir' , '-a', 
                     help="Optional: path to the auxiliary tables directory. If not given, will use the files in the data/tables directory" ,
-                    default = '../data/tables/',
                     type = str)
     args = parser.parse_args()
     dpath = args.database_dir
@@ -1228,7 +1306,8 @@ if __name__ == '__main__':
         dpath = '../data/'
    
     if not tpath:
-        tpath = '../data/tables/'
+        tpath = home + '/tables/'
+        tpath = tpath.replace('code','data')
    
     print ('Analysing the databases stored in ', dpath)
     cdmpath='https://raw.githubusercontent.com/glamod/common_data_model/master/tables/'                                                                                                                                                                                               
@@ -1352,7 +1431,7 @@ if __name__ == '__main__':
     wbaninv['Elev'][wbaninv['Elev']==-99999.0*0.3048]=numpy.nan
     wbaninv.name='WBAN'
 
-    lot2= pd.read_excel(tpath+'UA_Inventory_field_explanation.xlsx', sheet_name=None)
+    lot2= pd.read_excel(tpath+'UA_Inventory_field_explanation.xlsx', sheet_name=None, engine ='openpyxl')
     unified=pd.DataFrame(columns=lot2['all_column_inventory']['Column_header'])
     col_names=pd.read_csv(os.path.expanduser(tpath+'uao_data.csv'),sep=';',nrows=0)
     trans=uai_trans(list(col_names),list(unified))
@@ -1406,15 +1485,16 @@ if __name__ == '__main__':
         rfunc=partial(read_rda_meta) 
         tu=dict()
         p=Pool(25)
-        dbs=['igra2','ai_bfr','rda','3188','1759','1761']
-        dbs=['1759','1761']
+        dbs=['igra2','ai_bfr','rda','3188','1759','1761','1','2']
         dbs=['RI/nasa']
+        dbs=['RI/Pangaea/COMP']
+        
         dbs=['2']
         
-        dbs=['3188','rda', '1759', '1761']
+        dbs=['RI/nasa']
+        dbs=['RI/Pangaea/COMP']
 
-        dbs=['1']
-        
+
         PARALLEL = True  
         
         transunified = []
@@ -1475,14 +1555,24 @@ if __name__ == '__main__':
 
             elif 'RI/nasa' in odir:
                 
-                paths=glob.glob(os.path.expandvars('$RSCRATCH/era5/odbs/'+odir+'/ph*'))
+                paths=glob.glob(os.path.expandvars(odir+'/ph*'))
                 func=partial(read_nasa_meta,cdmd)
                 transunified=list(map(func,paths))
                 
                 transunified=sum(transunified,[])
                 for i in range(len(transunified)):
                     transunified[i]=transunified[i],{}
+                    
+            elif 'RI/Pangaea/COMP' in odir:
+    
+                paths=glob.glob(os.path.expandvars(odir+'/COMP*'))
+                func=partial(read_ubern_meta,cdmd)
+                transunified=list(map(func,paths[:]))
 
+                transunified=sum(transunified,[])
+                for i in range(len(transunified)):
+                        transunified[i]=transunified[i],{}
+                            
             else:
                 if odir == '1' or odir == '2':
                      flist=glob.glob(odir+'/'+'era5.conv._*')
@@ -1544,7 +1634,7 @@ if __name__ == '__main__':
             
             tu[odir]=pd.DataFrame(transunified)
             tu[odir].name=odir
-            tu[odir].to_csv(home + '/' +  odir + '_meta.csv', na_rep='NA',sep='\t',index=False, mode = 'a')
+            tu[odir].to_csv(home + '/' +  odir.replace('/','_') + '_meta.csv', na_rep='NA',sep='\t',index=False, mode = 'a')
             print('written stat_conf file')
             
            
