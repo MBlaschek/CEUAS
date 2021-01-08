@@ -192,6 +192,7 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
     countrycodes = {}
     for country in pycountry.countries:
         countrycodes[country.alpha_2] = country.alpha_3
+    countrycodes['XK']='XXK'
     try:
 
         with h5py.File(s, 'r') as f:
@@ -225,13 +226,13 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
                     # if no country code available -> reverse geo search for them 
                     coordinates = (float(f['observations_table']['latitude'][-1]), float(f['observations_table']['longitude'][-1]))
                     cc = rg.search(coordinates)[0]['cc']
-                    if cc == 'XK':
-                        active[skey].append('XXK')
-                        logger.debug('reverse geo searche for: %s', skey)
-                    else:
-                        # results are in alpha_2 country codes -> convert to alpha_3 like it is in the vola file
-                        active[skey].append(countrycodes[cc])
-                        logger.debug('reverse geo searche for: %s', skey)
+#                     if cc == 'XK':
+#                         active[skey].append('XXK')
+#                         logger.debug('reverse geo searche for: %s', skey)
+#                     else:
+                    # results are in alpha_2 country codes -> convert to alpha_3 like it is in the vola file
+                    active[skey].append(countrycodes[cc])
+                    logger.debug('reverse geo searche for: %s', skey)
             # add data directory for process_flat
                 # active[skey].append(os.path.dirname(s))
                 # add filepath
