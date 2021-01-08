@@ -243,7 +243,7 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
     return active
 
 
-def init_server(force_reload: bool = False, force_download: bool = False) -> tuple:
+def init_server(force_reload: bool = False, force_download: bool = False, debug:bool = False) -> tuple:
     """ Initialize Radiosonde Archive and read CDM Informations and CF Convention
 
     https://raw.githubusercontent.com/glamod/common_data_model/master/tables/
@@ -306,11 +306,12 @@ def init_server(force_reload: bool = False, force_download: bool = False) -> tup
         col_names = pd.read_csv(f, delimiter='\t', quoting=3, nrows=0)
         # print(col_names)
         tdict = {col: str for col in col_names}
+        f = urllib.request.urlopen(volapath)
         vola = pd.read_csv(f, delimiter='\t', quoting=3, dtype=tdict, na_filter=False)
         # print (vola.iloc[0])
         # exit()
         active = {}
-        func = partial(makedaterange, vola)
+        func = partial(makedaterange, vola, debug=debug)
         if False:
             with Pool(10) as p:
                 sklist=list(p.map(func,zip(slist,slnum)))
