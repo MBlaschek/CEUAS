@@ -22,12 +22,13 @@ import cdsapi, zipfile, os, time
 import copy
 from shutil import copyfile
 import multiprocessing
-sys.path.append(os.getcwd()+'/../resort/rasotools-master/')
+sys.path.insert(0,os.getcwd()+'/../resort/rasotools-master/')
 import rasotools
 import warnings
 warnings.filterwarnings('ignore')
 
 opath='/raid60/scratch/uli/converted_v2/'
+opath='/raid60/scratch/leo/scratch/converted_v2/'
 # if there are nan values in the pressure level - we will just sort without any converting!
 def do_resort(fn):
     targetfile = opath+fn.split('/')[-1]  
@@ -178,7 +179,278 @@ def do_resort(fn):
 
     print('elapsed:',time.time()-tt)
 
+from numba.typed import List
 
+@njit(boundscheck=True)
+def ipl(observed_variable,observation_value,z_coordinate,z_coordinate_type,recordtimestamp):
+    jdx=numpy.where(numpy.logical_and(observed_variable==85,~numpy.isnan(observation_value)))[0]
+    idx=numpy.empty(len(jdx),dtype=numpy.int64)
+    press=numpy.empty(len(jdx),dtype=z_coordinate.dtype)
+    relhum=numpy.empty(len(jdx),dtype=observation_value.dtype)
+    dewpoint=numpy.empty(len(jdx),dtype=observation_value.dtype)
+    dpd=numpy.empty(len(jdx),dtype=observation_value.dtype)
+    spechum=numpy.empty(len(jdx),dtype=observation_value.dtype)
+    
+    uwind=numpy.empty(len(jdx),dtype=observation_value.dtype)
+    vwind=numpy.empty(len(jdx),dtype=observation_value.dtype)
+    ws=numpy.empty(len(jdx),dtype=observation_value.dtype)
+    wd=numpy.empty(len(jdx),dtype=observation_value.dtype)
+
+    for v in relhum,dewpoint,dpd,spechum:
+        v.fill(numpy.nan)
+    temp=numpy.empty(len(jdx),dtype=observation_value.dtype)
+    p=z_coordinate[0]-1.
+    rts=recordtimestamp[0]-1
+    j=0
+    good=True
+    for i in range(observed_variable.shape[0]):
+        if z_coordinate[i]==z_coordinate[i] and (z_coordinate[i]!=p or recordtimestamp[i]!=rts):
+            if not good:
+                j-=1
+            if j<temp.shape[0]:
+                idx[j]=i
+                press[j]=z_coordinate[i]
+            good=False
+            p=z_coordinate[i]
+            rts=recordtimestamp[i]
+            j+=1
+            if j==2446:
+                print(j)
+
+        if observed_variable[i]==38 and observation_value[i]==observation_value[i]:
+            relhum[j-1]=observation_value[i]
+        if observed_variable[i]==39 and observation_value[i]==observation_value[i]:
+            if j<=spechum.shape[0]:
+                spechum[j-1]=observation_value[i]
+        if observed_variable[i]==34 and observation_value[i]==observation_value[i]:
+            dpd[j-1]=observation_value[i]
+        if observed_variable[i]==36 and observation_value[i]==observation_value[i] and z_coordinate[i]==z_coordinate[i]:
+            dewpoint[j-1]=observation_value[i]
+        if observed_variable[i]==85 and observation_value[i]==observation_value[i]:
+            temp[j-1]=observation_value[i]
+            good=True
+
+    return idx,press,temp,relhum,spechum,dpd,dewpoint
+
+@njit(boundscheck=True)
+def ipl2(observed_variable,observation_value,z_coordinate,z_coordinate_type,recordtimestamp):
+    
+    jdx=0
+    dpress=-1.
+    dts=-1
+    for i in range(observation_value.shape[0]):
+        if z_coordinate[i]!=dpress or recordtimestamp[i]!=dts:
+            dpress=z_coordinate[i]
+            dts=recordtimestamp[i]
+            jdx+=1
+                
+                
+    #jdx=len(numpy.where(numpy.logical_and(observed_variable==85,~numpy.isnan(observation_value)))[0]
+    idx=numpy.empty(jdx,dtype=numpy.int64)
+    press=numpy.empty(jdx,dtype=z_coordinate.dtype) # either height or pressure, depending on coordinate type
+    relhum=numpy.empty(jdx,dtype=observation_value.dtype)
+    dewpoint=numpy.empty(jdx,dtype=observation_value.dtype)
+    dpd=numpy.empty(jdx,dtype=observation_value.dtype)
+    spechum=numpy.empty(jdx,dtype=observation_value.dtype)
+    
+    uwind=numpy.empty(jdx,dtype=observation_value.dtype)
+    vwind=numpy.empty(jdx,dtype=observation_value.dtype)
+    ws=numpy.empty(jdx,dtype=observation_value.dtype)
+    wd=numpy.empty(jdx,dtype=observation_value.dtype)
+
+    temp=numpy.empty(jdx,dtype=observation_value.dtype)
+    
+    for v in temp,relhum,dewpoint,dpd,spechum,uwind,vwind,wd,ws:
+        v.fill(numpy.nan)
+    p=z_coordinate[0]-1.
+    rts=recordtimestamp[0]-1
+    j=-1
+    good=True
+    for i in range(observation_value.shape[0]):
+        if z_coordinate[i]!=p or recordtimestamp[i]!=rts:
+            p=z_coordinate[i]
+            rts=recordtimestamp[i]
+            j+=1
+            press[j]=p
+            idx[j]=i
+    
+        if observed_variable[i]==38:
+            relhum[j]=observation_value[i]
+        elif observed_variable[i]==39:
+            spechum[j]=observation_value[i]
+        elif observed_variable[i]==34:
+            dpd[j]=observation_value[i]
+        elif observed_variable[i]==36:
+            dewpoint[j]=observation_value[i]
+        elif observed_variable[i]==85:
+            temp[j]=observation_value[i]
+        elif observed_variable[i]==104:
+            uwind[j]=observation_value[i]
+        elif observed_variable[i]==105:
+            vwind[j]=observation_value[i]
+        elif observed_variable[i]==106:
+            wd[j]=observation_value[i]
+        elif observed_variable[i]==107:
+            ws[j]=observation_value[i]
+        else:
+            pass
+                
+            
+    print(j,jdx)
+    return idx,press,temp,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws
+
+@njit(boundscheck=True)
+def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd):
+    if h==34:
+        if cdpddp[k]==cdpddp[k]:
+            a_observation_value[j]=cdpddp[k]
+            if numpy.abs(cdpddp[k])>50:
+                #print(k,cdpddp[k],cdpdrh[k],temp[k],press[k],dewpoint[k],i-1)
+                a_observation_value[j]=numpy.nan
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=2
+        else:
+            a_observation_value[j]=cdpdrh[k]
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=3
+            
+    elif h==36:
+        a_observation_value[j]=temp[k]-cdpdrh[k]
+        a_conversion_flag[j]=0
+        a_conversion_method[j]=3
+    elif h==38:
+        a_observation_value[j]=crhdpd[k]
+        a_conversion_flag[j]=0
+        a_conversion_method[j]=2
+    elif h==39:
+        if cshrh[k]==cshrh[k]:
+            a_observation_value[j]=cshrh[k]
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=3
+        else:
+            a_observation_value[j]=cshdpd[k]
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=2
+    else:
+        print('qconvert called with wrong variable')
+        
+    return
+
+@njit(boundscheck=True)
+def wconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,cuwind,cvwind,cwd,cws):
+    if h==104:
+        if cuwind[k]==cuwind[k]:
+            a_observation_value[j]=cuwind[k]
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=1
+    elif h==105:
+        if cvwind[k]==cvwind[k]:
+            a_observation_value[j]=cvwind[k]
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=1
+    elif h==106:
+        if cwd[k]==cwd[k]:
+            a_observation_value[j]=cwd[k]
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=2
+    elif h==107:
+        if cws[k]==cws[k]:
+            a_observation_value[j]=cws[k]
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=2
+    else:
+        print('wconvert called with wrong variable')
+    
+
+@njit(boundscheck=True)          
+def augment(observed_variable,observation_value,z_coordinate,z_coordinate_type,date_time,conversion_flag,conversion_method,
+        idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
+        cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,cuwind,cvwind,cwd,cws,humvar,wvar):
+    
+    a_observed_variable=numpy.empty(observed_variable.shape[0]*3,observed_variable.dtype)
+    a_observation_value=numpy.empty(observed_variable.shape[0]*3,observation_value.dtype)
+    a_z_coordinate=numpy.empty(observed_variable.shape[0]*3,z_coordinate.dtype)
+    a_z_coordinate_type=numpy.empty(observed_variable.shape[0]*3,z_coordinate_type.dtype)
+    a_date_time=numpy.empty(observed_variable.shape[0]*3,date_time.dtype)
+    a_conversion_flag=numpy.empty(observed_variable.shape[0]*3,z_coordinate_type.dtype)
+    a_conversion_method=numpy.empty(observed_variable.shape[0]*3,z_coordinate_type.dtype)
+    recordindex=numpy.empty(idx.shape[0],date_time.dtype)
+    recordtimestamp=numpy.empty(idx.shape[0],date_time.dtype)
+    
+    j=-1 # augmented index
+    p=z_coordinate[0]-1
+    rts=date_time[0]
+   
+    humlist=List()
+    wlist=List()
+    recordindex[0]=0
+    recordtimestamp[0]=date_time[0]
+    ri=1
+    for k in range(idx.shape[0]):  # no new levels are created, but variables per level will increase
+        if k==idx.shape[0]-2:
+            print('vor Schluss')
+        if k==idx.shape[0]-1:
+            idxu=observation_value.shape[0]
+        else:
+            idxu=idx[k+1]
+        for i in range(idx[k],idxu):
+            j+=1
+            if observation_value[i]==observation_value[i]:
+                a_observation_value[j]=observation_value[i]
+                a_observed_variable[j]=observed_variable[i]
+                a_date_time[j]=date_time[i]
+                a_z_coordinate[j]=z_coordinate[i]
+                if observed_variable[i] in humvar:
+                    humlist.append(observed_variable[i])
+                elif observed_variable[i] in wvar:
+                    wlist.append(observed_variable[i])
+            else:
+                a_observed_variable[j]=observed_variable[i]
+                a_date_time[j]=date_time[i]
+                a_z_coordinate[j]=z_coordinate[i]
+                if observed_variable[i] in humvar:
+                    qconvert(j,k,observed_variable[i],a_observation_value,a_conversion_flag,a_conversion_method,temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd)
+                elif observed_variable[i] in wvar:
+                    wconvert(j,k,observed_variable[i],a_observation_value,a_conversion_flag,a_conversion_method,cuwind,cvwind,cwd,cws)
+                else:
+                    a_observation_value[j]=observation_value[k]
+                    a_conversion_flag[j]=conversion_flag[k]
+                    a_conversion_method[j]=a_conversion_method[k]
+        if humlist:
+            for h in humvar:
+                if h not in humlist:
+                    j+=1
+                    a_observed_variable[j]=h
+                    qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd)
+                    a_date_time[j]=date_time[i]
+                    a_z_coordinate[j]=z_coordinate[i]
+                    if a_observation_value[j]!=a_observation_value[j]:
+                        j-=1
+            humlist.clear()
+        if wlist:
+            for h in wvar:
+                if h not in wlist:
+                    j+=1
+                    a_observed_variable[j]=h
+                    wconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,cuwind,cvwind,cwd,cws)
+                    a_date_time[j]=date_time[i]
+                    a_z_coordinate[j]=z_coordinate[i]
+                    if a_observation_value[j]!=a_observation_value[j]:
+                        j-=1
+            wlist.clear()
+        if idxu!=observation_value.shape[0]:        
+            if date_time[idxu] != date_time[idx[k]]:
+                recordindex[ri]=j+1
+                recordtimestamp[ri]=date_time[idxu]
+                ri+=1
+
+    
+        if k%100000==0:
+            print(k,idx.shape[0])
+    print(k,j,i,observed_variable.shape[0],a_observed_variable.shape[0])
+    j=j+1
+    return a_observed_variable[:j],a_observation_value[:j],a_z_coordinate[:j],a_z_coordinate_type[:j],a_date_time[:j],a_conversion_flag[:j],a_conversion_method[:j],recordindex[:ri],recordtimestamp[:ri]
+    
 
 def convert_missing(fn, destination: str = opath):
     tt=time.time()
@@ -186,18 +458,21 @@ def convert_missing(fn, destination: str = opath):
     with eua.CDMDataset(fn) as data:
         arrayconverter = data.to_dataframe(groups='observations_table', variables=['observed_variable'])
         arrayconverter = arrayconverter.observed_variable.head(1).to_xarray()
-        rt = data.recordtimestamp[:]
+        rto = data.recordtimestamp[:]
+        rio = data.recordindex[:]
         keys = data.observations_table.keys()
-        keys = [x for x in keys if not x.startswith('string')]
-        keys.remove('index')
-        keys.remove('shape')
+        #keys = [x for x in keys if not x.startswith('string')]
+        keys = [x for x in keys if x in ['observation_id','date_time','observed_variable','z_coordinate','z_coordinate_type','observation_value','conversion_method','conversion_flag']]
+        #keys.remove('index')
+        #keys.remove('shape')
         obskeys = keys
         obstab_writetofile = [[] for i in range(len(obskeys))]
         
         keys = data.era5fb.keys()
-        keys = [x for x in keys if not x.startswith('string')]
-        keys.remove('index')
-        keys.remove('shape')
+        #keys = [x for x in keys if not x.startswith('string')]
+        keys = [x for x in keys if x in ['fg_depar@body','an_depar@body','biascorr@body','biascorr_fg@body']]
+        #keys.remove('index')
+        #keys.remove('shape')
         fg_depar = keys.index('fg_depar@body')
         depar = keys.index('an_depar@body')
         biascorr = keys.index('biascorr@body')
@@ -215,615 +490,68 @@ def convert_missing(fn, destination: str = opath):
             onlyone = True
         
         # loading data:
-        loaded_data = [[]]*len(obskeys)
-        for o in range(len(obskeys)):
-            loaded_data[o] = np.asarray(data.observations_table[obskeys[o]][:])
+        loaded_data = {}#[[]]*len(obskeys)
+        for o in obskeys:
+            loaded_data[o] = data.observations_table[o][:]
             
-        loaded_fb = [[]]*len(fbkeys)
-        for o in range(len(fbkeys)):
-            loaded_fb[o] = np.asarray(data.era5fb[fbkeys[o]][:])
+        loaded_fb = {}#[[]]*len(fbkeys)
+        for o in fbkeys:
+            loaded_fb[o] = data.era5fb[o][:]
             
         recordindex = data.recordindex[:]
         # --->
-    tt=time.time()
-    tttp=0.
-    for i in range(recidxlen-1):
-        obstab = [[]]*len(obskeys)
-        fb = [[]]*len(fbkeys)
-#         if i%10==0 :
-#             print(i,time.time()-tt)
 
-        for o in range(len(obskeys)):
-            if onlyone:
-                obstab[o] = loaded_data[o][recordindex[i]:]
-            else:
-                obstab[o] = loaded_data[o][recordindex[i]:recordindex[i+1]]
-            if obskeys[o] == 'observed_variable':
-                obsvar = obstab[o]
-            elif obskeys[o] == 'z_coordinate':
-                plev = obstab[o]
-            elif obskeys[o] == 'observation_value':
-                obsval = obstab[o]
-            elif obskeys[o] == 'z_coordinate_type':
-                plevtype = obstab[o]
-                
-        if np.isnan(plev).any():
-            do_resort(fn)
-            return
+    print(time.time()-tt)
+    idx,press,temp,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws=ipl2(loaded_data['observed_variable'],loaded_data['observation_value'],loaded_data['z_coordinate'],
+                                  loaded_data['z_coordinate_type'],loaded_data['date_time'])
+#    idx=numpy.array(result[0])
+    xtemp=xr.DataArray(temp)
+    xpress=xr.DataArray(press)
+    xrelhum=xr.DataArray(relhum)
+    xspechum=xr.DataArray(spechum)
+    xdpd=xr.DataArray(dpd)
+    xdewpoint=xr.DataArray(dewpoint)
+    cdpddp=temp-dewpoint
+    cdpdrh=rasotools.met.convert.to_dpd(temp=xtemp,press=xpress,rel_humi=xrelhum).values
+#    cdpdsh=rasotools.met.convert.to_dpd(temp=xtemp,press=xpress,spec_humi=xspechum).values
+    cshrh = rasotools.met.convert.to_sh(temp=xtemp, press=xpress, rel_humi=xrelhum).values
+    cshdpd = rasotools.met.convert.to_sh(dpd=xtemp-xdewpoint, press=xpress, temp=xtemp).values
+#    crhsh = rasotools.met.convert.to_rh(temp=xtemp, spec_humi=xspechum, press=xpress).values
+    crhdpd = rasotools.met.convert.to_rh(temp=xtemp,dpd=xtemp-xdewpoint).values
 
-        for o in range(len(fbkeys)):
-            if onlyone:
-                fb[o] = loaded_fb[o][recordindex[i]:]
-            else:
-                fb[o] = loaded_fb[o][recordindex[i]:recordindex[i+1]]
-
-        raso_t = arrayconverter.copy()
-        raso_p = arrayconverter.copy()
-        raso_raso_rh = arrayconverter.copy()
-        raso_sh = arrayconverter.copy()
-        raso_rh = arrayconverter.copy()
-        raso_dep_t = arrayconverter.copy()
-        raso_dep_rh = arrayconverter.copy()
-        raso_dep_sh = arrayconverter.copy()
-        raso_dpd = arrayconverter.copy()
-        for j in np.unique(plev):
-            convertedfrom = []
-            #select = plev == j
-            select=np.where(plev==j)[0]
-            obsvr = obsvar[select]
-            obsvl = obsval[select]
-            ptype = plevtype[select]
-            
-            #
-            # Converting to dewpointdepression
-            #
-            valid_conversion_found = False
-
-            if not (34 in obsvr) and (38 in obsvr) and not valid_conversion_found:
-                if (85 in obsvr) and (ptype[obsvr == 85] == 1):
-                    raso_t.values = obsvl[obsvr == 85]
-                    #t = arrayconverter.copy()
-                    raso_p.values = np.array([j])
-                    #p = arrayconverter.copy()
-                    raso_rh.values = obsvl[obsvr == 38]
-                    #rh = arrayconverter.copy()
-                    dpd = rasotools.met.convert.to_dpd(temp=raso_t,press=raso_p,rel_humi=raso_rh)
-                    
-                    if not np.isnan(dpd).any():
-
-                        idx=np.where(obsvr==85)[0][0]
-                        iselect=select[idx]
-                        for o in range(len(obskeys)):
-                            # write the new variable everywhere into the observationstable
-                            if obskeys[o] == 'observed_variable':
-                                obstab_writetofile[o].append(34)
-                            elif obskeys[o] == 'observation_value':
-                                obstab_writetofile[o].append(dpd[0])
-                            elif obskeys[o] == 'conversion_method':
-                                obstab_writetofile[o].append(3) # 'from_relative_humidity'
-                            elif obskeys[o] == 'conversion_flag':
-                                obstab_writetofile[o].append(0)
-                            else:
-#                                obstab_writetofile[o].append(obstab[o][select][obsvr == 85][0])
-                                obstab_writetofile[o].append(obstab[o][iselect])
-
-                        for o in range(len(fbkeys)):
-                            # write the new variable everywhere into the fb
-                            #if ((o == depar) or (o == fg_depar)) and (not (fb[o][select][obsvr == 85][0] in nanlist)) and (not (fb[o][select][obsvr == 38][0] in nanlist)):
-                            if ((o == depar) or (o == fg_depar)) and (not (fb[o][iselect] in nanlist)) and (not (fb[o][select][obsvr == 38][0] in nanlist)):
-                                raso_dep_t.values = obsvl[obsvr == 85] - fb[o][iselect]
-                                #dep_t = arrayconverter.copy()
-                                raso_dep_rh.values = obsvl[obsvr == 38] - fb[o][select][obsvr == 38]
-                                #dep_rh = arrayconverter.copy()
-                                fb_writetofile[o].append(dpd.values[0] - rasotools.met.convert.to_dpd(temp=raso_dep_t,press=raso_p,rel_humi=raso_dep_rh).values[0])
-                            elif ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
-                                fb_writetofile[o].append(float('nan'))
-                            else:
-                                fb_writetofile[o].append(fb[o][iselect])
-                        addedvarscount += 1
-                        convertedfrom.append(38)
-                        valid_conversion_found = True
-
-
-            if not (34 in obsvr) and (39 in obsvr) and not valid_conversion_found:
-                if (85 in obsvr) and (ptype[obsvr == 85] == 1): 
-                    raso_t.values = obsvl[obsvr == 85]
-#                     t = arrayconverter.copy()
-                    raso_p.values = [j]
-#                     p = arrayconverter.copy()
-                    raso_sh.values = obsvl[obsvr == 39]
-#                     sh = arrayconverter.copy()
-                    dpd = rasotools.met.convert.to_dpd(temp=raso_t,press=raso_p,spec_humi=raso_sh)
-                    
-                    if not np.isnan(dpd).any():
-                        
-                        idx=np.where(obsvr==85)[0][0]
-                        iselect=select[idx]
-                        for o in range(len(obskeys)):
-                            # write the new variable everywhere into the observationstable
-                            if obskeys[o] == 'observed_variable':
-                                obstab_writetofile[o].append(34)
-                            elif obskeys[o] == 'observation_value':
-                                obstab_writetofile[o].append(dpd[0])
-                            elif obskeys[o] == 'conversion_method':
-                                obstab_writetofile[o].append(4) # 'from_specific_humidity'
-                            elif obskeys[o] == 'conversion_flag':
-                                obstab_writetofile[o].append(0)
-                            else:
-                                obstab_writetofile[o].append(obstab[o][iselect])
-
-#                         dep_t = arrayconverter.copy()
-#                         dep_sh = arrayconverter.copy()
-                        for o in range(len(fbkeys)):
-                            # write the new variable everywhere into the fb
-                            if ((o == depar) or (o == fg_depar)) and (not (fb[o][iselect] in nanlist)) and (not (fb[o][select][obsvr == 39][0] in nanlist)):
-                                raso_dep_t.values = obsvl[obsvr == 85] - fb[o][iselect]
-                                #dep_t = arrayconverter.copy()
-                                raso_dep_sh.values = obsvl[obsvr == 39][0] - fb[o][select][obsvr == 39]
-                                #dep_sh = arrayconverter.copy()
-                                fb_writetofile[o].append(dpd.values[0] - rasotools.met.convert.to_dpd(temp=raso_dep_t,press=raso_p,spec_humi=raso_dep_sh).values[0])
-                            elif ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
-                                fb_writetofile[o].append(float('nan'))
-                            else:
-                                fb_writetofile[o].append(fb[o][iselect])
-                        addedvarscount += 1
-                        convertedfrom.append(39)
-                        valid_conversion_found = True
-
-            if not (34 in obsvr) and (36 in obsvr) and not valid_conversion_found:
-                if 85 in obsvr: 
-                    t = obsvl[obsvr == 85]
-                    dp = obsvl[obsvr == 36]
-                    dpd = t-dp
-                    
-                    if not np.isnan(dpd).any():
-                        
-                        idx=np.where(obsvr==85)[0][0]
-                        iselect=select[idx]
-                        for o in range(len(obskeys)):
-                            # write the new variable everywhere into the observationstable
-                            if obskeys[o] == 'observed_variable':
-                                obstab_writetofile[o].append(34)
-                            elif obskeys[o] == 'observation_value':
-                                obstab_writetofile[o].append(dpd[0])
-                            elif obskeys[o] == 'conversion_method':
-                                obstab_writetofile[o].append(2) # 'from_dewpoint'
-                            elif obskeys[o] == 'conversion_flag':
-                                obstab_writetofile[o].append(0)
-                            else:
-                                obstab_writetofile[o].append(obstab[o][iselect])
-
-                        for o in range(len(fbkeys)):
-                            # write the new variable everywhere into the fb
-                            if ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
-                                fb_writetofile[o].append(float('nan'))
-                            else:
-                                fb_writetofile[o].append(fb[o][iselect])
-                        addedvarscount += 1
-                        convertedfrom.append(36)
-                        valid_conversion_found = True
-
-            #
-            # Converting to relative humidity
-            #
-            valid_conversion_found = False
-
-            if not (38 in obsvr) and (39 in obsvr) and not valid_conversion_found:
-                if (85 in obsvr) and (ptype[obsvr == 85] == 1): 
-                    raso_t.values = obsvl[obsvr == 85]
-#                     t = arrayconverter.copy()
-                    raso_p.values = [j]
-#                     p = arrayconverter.copy()
-                    raso_sh.values = obsvl[obsvr == 39]
-#                     sh = arrayconverter.copy()
-                    rh = rasotools.met.convert.to_rh(temp=raso_t, spec_humi=raso_sh, press=raso_p)
-                    
-                    if not np.isnan(rh).any():
-                
-                        idx=np.where(obsvr==85)[0][0]
-                        iselect=select[idx]
-                        for o in range(len(obskeys)):
-                            # write the new variable everywhere into the observationstable
-                            if obskeys[o] == 'observed_variable':
-                                obstab_writetofile[o].append(38)
-                            elif obskeys[o] == 'observation_value':
-                                obstab_writetofile[o].append(rh[0])
-                            elif obskeys[o] == 'conversion_method':
-                                obstab_writetofile[o].append(4) # 'from_specific_humidity'
-                            elif obskeys[o] == 'conversion_flag':
-                                obstab_writetofile[o].append(0)
-                            else:
-                                obstab_writetofile[o].append(obstab[o][iselect])
-
-#                         dep_t = arrayconverter.copy()
-#                         dep_sh = arrayconverter.copy()
-                        for o in range(len(fbkeys)):
-                            # write the new variable everywhere into the fb
-                            if ((o == depar) or (o == fg_depar)) and (not (fb[o][iselect] in nanlist)) and (not (fb[o][select][obsvr == 39][0] in nanlist)):
-                                raso_dep_t.values = obsvl[obsvr == 85] - fb[o][iselect]
-                                #dep_t = arrayconverter.copy()
-                                raso_dep_sh.values = obsvl[obsvr == 39] - fb[o][select][obsvr == 39]
-                                #dep_sh = arrayconverter.copy()
-                                fb_writetofile[o].append(rh.values[0] - rasotools.met.convert.to_rh(temp=raso_dep_t,press=raso_p,spec_humi=raso_dep_sh).values[0])
-                            elif ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
-                                fb_writetofile[o].append(float('nan'))
-                            else:
-                                fb_writetofile[o].append(fb[o][iselect])
-                        addedvarscount += 1
-                        convertedfrom.append(39)
-                        valid_conversion_found = True
-
-            if not (38 in obsvr) and (36 in obsvr) and not valid_conversion_found:
-                if (85 in obsvr): 
-                    t = obsvl[obsvr == 85]
-                    dp = obsvl[obsvr == 36]
-                    raso_dpd.values = t-dp
-#                     arrayconverter.values = dpd
-#                     dpd = arrayconverter
-                    raso_t.values = t
-#                     t = arrayconverter
-                    rh = rasotools.met.convert.to_rh(temp=raso_t,dpd=raso_dpd)
-                    
-                    if not np.isnan(rh).any():
-                
-                        idx=np.where(obsvr==85)[0][0]
-                        iselect=select[idx]
-                        for o in range(len(obskeys)):
-                            # write the new variable everywhere into the observationstable
-                            if obskeys[o] == 'observed_variable':
-                                obstab_writetofile[o].append(38)
-                            elif obskeys[o] == 'observation_value':
-                                obstab_writetofile[o].append(rh[0])
-                            elif obskeys[o] == 'conversion_method':
-                                obstab_writetofile[o].append(2) # 'from_dewpoint'
-                            elif obskeys[o] == 'conversion_flag':
-                                obstab_writetofile[o].append(0)
-                            else:
-                                obstab_writetofile[o].append(obstab[o][iselect])
-
-                        for o in range(len(fbkeys)):
-                            # write the new variable everywhere into the fb
-                            if ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
-                                fb_writetofile[o].append(float('nan'))
-                            else:
-                                fb_writetofile[o].append(fb[o][iselect])
-                        addedvarscount += 1 
-                        convertedfrom.append(36)
-                        valid_conversion_found = True
-
-            if not (38 in obsvr) and (34 in obsvr) and not valid_conversion_found:
-                if (85 in obsvr): 
-                    t = obsvl[obsvr == 85]
-                    raso_t.values = t
-#                     t = arrayconverter.copy()
-                    raso_dpd.values = t - obsvl[obsvr == 34]
-#                     dpd = arrayconverter.copy()
-                    rh = rasotools.met.convert.to_rh(temp=raso_t, dpd=raso_dpd)
-                    
-                    if not np.isnan(rh).any():
-                
-                        idx=np.where(obsvr==85)[0][0]
-                        iselect=select[idx]
-                        for o in range(len(obskeys)):
-                            # write the new variable everywhere into the observationstable
-                            if obskeys[o] == 'observed_variable':
-                                obstab_writetofile[o].append(38)
-                            elif obskeys[o] == 'observation_value':
-                                obstab_writetofile[o].append(rh[0])
-                            elif obskeys[o] == 'conversion_method':
-                                obstab_writetofile[o].append(3) # 'from_dewpointdepression'
-                            elif obskeys[o] == 'conversion_flag':
-                                obstab_writetofile[o].append(0)
-                            else:
-                                obstab_writetofile[o].append(obstab[o][iselect])
-
-                        for o in range(len(fbkeys)):
-                            # write the new variable everywhere into the fb
-                            if ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
-                                fb_writetofile[o].append(float('nan'))
-                            else:
-                                fb_writetofile[o].append(fb[o][iselect])
-                        addedvarscount += 1
-                        convertedfrom.append(34)
-                        valid_conversion_found = True
-
-            #
-            # Converting to specific humidity
-            #
-            valid_conversion_found = False
-
-            if not (39 in obsvr) and (38 in obsvr) and not valid_conversion_found:
-                if (85 in obsvr) and (ptype[obsvr == 85] == 1): 
-                    raso_t.values = obsvl[obsvr == 85]
-#                     t = arrayconverter.copy()
-                    raso_p.values = [j]
-#                     p = arrayconverter.copy()
-                    raso_rh.values = obsvl[obsvr == 38]
-#                     rh = arrayconverter.copy()
-                    sh = rasotools.met.convert.to_sh(temp=raso_t, press=raso_p, rel_humi=raso_rh)
-                    
-                    if not np.isnan(sh).any():
-                
-                        idx=np.where(obsvr==85)[0][0]
-                        iselect=select[idx]
-                        for o in range(len(obskeys)):
-                            # write the new variable everywhere into the observationstable
-                            if obskeys[o] == 'observed_variable':
-                                obstab_writetofile[o].append(39)
-                            elif obskeys[o] == 'observation_value':
-                                obstab_writetofile[o].append(sh[0])
-                            elif obskeys[o] == 'conversion_method':
-                                obstab_writetofile[o].append(2) # 'from_relative_humidity'
-                            elif obskeys[o] == 'conversion_flag':
-                                obstab_writetofile[o].append(0)
-                            else:
-                                obstab_writetofile[o].append(obstab[o][iselect])
-
-                        dep_t = arrayconverter.copy()
-                        dep_rh = arrayconverter.copy()
-                        for o in range(len(fbkeys)):
-                            # write the new variable everywhere into the fb
-                            if ((o == depar) or (o == fg_depar)) and (not (fb[o][iselect] in nanlist)) and (not (fb[o][select][obsvr == 38][0] in nanlist)):
-                                raso_dep_t.values = obsvl[obsvr == 85] - fb[o][iselect]
-                                #dep_t = arrayconverter.copy()
-                                raso_dep_rh.values = obsvl[obsvr == 38] - fb[o][select][obsvr == 38]
-                                #dep_rh = arrayconverter.copy()
-                                fb_writetofile[o].append(sh.values[0] - rasotools.met.convert.to_sh(temp=raso_dep_t, press=raso_p, rel_humi=raso_dep_rh).values[0])
-                            elif ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
-                                fb_writetofile[o].append(float('nan'))
-                            else:
-                                fb_writetofile[o].append(fb[o][iselect])
-                        addedvarscount += 1   
-                        convertedfrom.append(38)
-                        valid_conversion_found = True
-
-            if not (39 in obsvr) and (34 in obsvr) and not valid_conversion_found:
-                if (85 in obsvr) and (ptype[obsvr == 85] == 1): 
-                    raso_t.values = obsvl[obsvr == 85]
-#                     t = arrayconverter.copy()
-                    raso_dpd.values = obsvl[obsvr == 34]
-#                     dpd = arrayconverter.copy()
-                    raso_p.values = np.array([j])
-#                     p = arrayconverter.copy()
-                    sh = rasotools.met.convert.to_sh(dpd=raso_dpd, press=raso_p, temp=raso_t)
-                    
-                    if not np.isnan(sh).any():
-
-                        idx=np.where(obsvr==85)[0][0]
-                        iselect=select[idx]
-                        for o in range(len(obskeys)):
-                            # write the new variable everywhere into the observationstable
-                            if obskeys[o] == 'observed_variable':
-                                obstab_writetofile[o].append(39)
-                            elif obskeys[o] == 'observation_value':
-                                obstab_writetofile[o].append(rh[0])
-                            elif obskeys[o] == 'conversion_method':
-                                obstab_writetofile[o].append(3) # 'from_dewpointdepression'
-                            elif obskeys[o] == 'conversion_flag':
-                                obstab_writetofile[o].append(0)
-                            else:
-                                obstab_writetofile[o].append(obstab[o][iselect])
-
-                        for o in range(len(fbkeys)):
-                            # write the new variable everywhere into the fb
-                            if ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
-                                fb_writetofile[o].append(float('nan'))
-                            else:
-                                fb_writetofile[o].append(fb[o][iselect])
-                        addedvarscount += 1
-                        convertedfrom.append(34)
-
-            if not (39 in obsvr) and (36 in obsvr) and not valid_conversion_found:
-                if (85 in obsvr) and (ptype[obsvr == 85] == 1): 
-                    t = obsvl[obsvr == 85]
-                    dp = obsvl[obsvr == 36]
-                    raso_dpd.values = t-dp
-#                     dpd = arrayconverter.copy()
-                    raso_t.values = t
-#                     t = arrayconverter.copy()
-                    raso_p.values = [j]
-#                     p = arrayconverter.copy()
-                    sh = rasotools.met.convert.to_sh(dpd=raso_dpd, press=raso_p, temp=raso_t)
-                    
-                    if not np.isnan(sh).any():
-                
-                        idx=np.where(obsvr==85)[0][0]
-                        iselect=select[idx]
-                        for o in range(len(obskeys)):
-                            # write the new variable everywhere into the observationstable
-                            if obskeys[o] == 'observed_variable':
-                                obstab_writetofile[o].append(39)
-                            elif obskeys[o] == 'observation_value':
-                                obstab_writetofile[o].append(rh[0])
-                            elif obskeys[o] == 'conversion_method':
-                                obstab_writetofile[o].append(4) # 'from_dewpoint'
-                            elif obskeys[o] == 'conversion_flag':
-                                obstab_writetofile[o].append(0)
-    #                             elif obskeys[o] == 'observation_id':
-    #                                 obstab_writetofile[o].append(np.asarray([b'']))
-                            else:
-                                obstab_writetofile[o].append(obstab[o][iselect])
-
-                        for o in range(len(fbkeys)):
-                            # write the new variable everywhere into the fb
-                            if ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
-                                fb_writetofile[o].append(float('nan'))
-                            else:
-                                fb_writetofile[o].append(fb[o][iselect])
-                        addedvarscount += 1
-                        convertedfrom.append(36)
-                        valid_conversion_found = True
-
-            #
-            # Converting to wind components
-            #
-
-            if not (104 in obsvr) or not (105 in obsvr):
-                if 106 in obsvr and 107 in obsvr:
-                    wd = obsvl[obsvr == 106]
-                    ws = obsvl[obsvr == 107]
-                    u = ws * np.cos(np.radians(wd))
-                    v = ws * np.sin(np.radians(wd))
-                    
-                    idx=np.where(obsvr==106)[0][0]
-                    iselect=select[idx]
-
-                    if not (104 in obsvr) and not np.isnan(u).any():
-                        for o in range(len(obskeys)):
-                            # write the new variable everywhere into the observationstable
-                            if obskeys[o] == 'observed_variable':
-                                obstab_writetofile[o].append(104)
-                            elif obskeys[o] == 'observation_value':
-                                obstab_writetofile[o].append(u[0])
-                            elif obskeys[o] == 'conversion_method':
-                                obstab_writetofile[o].append(2) # 'from_speed_and_direction'
-                            elif obskeys[o] == 'conversion_flag':
-                                obstab_writetofile[o].append(0)
-#                                 elif obskeys[o] == 'observation_id':
-#                                     obstab_writetofile[o].append(np.asarray([b'']))
-                            else:
-                                obstab_writetofile[o].append(obstab[o][iselect])
-
-                        for o in range(len(fbkeys)):
-                            # write the new variable everywhere into the fb
-                            if ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
-                                fb_writetofile[o].append(float('nan'))
-                            else:
-                                fb_writetofile[o].append(fb[o][iselect])
-                        addedvarscount += 1
-
-                    if not (105 in obsvr) and not np.isnan(v).any():
-                        for o in range(len(obskeys)):
-                            # write the new variable everywhere into the observationstable
-                            if obskeys[o] == 'observed_variable':
-                                obstab_writetofile[o].append(105)
-                            elif obskeys[o] == 'observation_value':
-                                obstab_writetofile[o].append(v[0])
-                            elif obskeys[o] == 'conversion_method':
-                                obstab_writetofile[o].append(2) # 'from_speed_and_direction'
-                            elif obskeys[o] == 'conversion_flag':
-                                obstab_writetofile[o].append(0)
-#                                 elif obskeys[o] == 'observation_id':
-#                                     obstab_writetofile[o].append(np.asarray([b'']))
-                            else:
-                                obstab_writetofile[o].append(obstab[o][iselect])
-
-                        for o in range(len(fbkeys)):
-                            # write the new variable everywhere into the fb
-                            if ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
-                                fb_writetofile[o].append(float('nan'))
-                            else:
-                                fb_writetofile[o].append(fb[o][iselect])
-                        addedvarscount += 1
-                    convertedfrom.append(106)
-                    convertedfrom.append(107)
-
-            #
-            # Converting to windspeed and winddirection
-            #
-
-            if not (106 in obsvr) or not (107 in obsvr):
-                if 104 in obsvr and 105 in obsvr:
-                    u = obsvl[obsvr == 104][0]
-                    v = obsvl[obsvr == 105][0]
-                    ws = np.sqrt(u ** 2 + v ** 2)
-                    wd = 90 - np.arctan2(-v, -u) * 180 / np.pi - 180.
-                    wd = np.where(wd > 0., wd, 360.+wd)
-                    
-                    idx=np.where(obsvr==104)[0][0]
-                    iselect=select[idx]
-
-                    if not (106 in obsvr) and not np.isnan(wd).any():
-                        for o in range(len(obskeys)):
-                            # write the new variable everywhere into the observationstable
-                            if obskeys[o] == 'observed_variable':
-                                obstab_writetofile[o].append(106)
-                            elif obskeys[o] == 'observation_value':
-                                obstab_writetofile[o].append(wd)
-                            elif obskeys[o] == 'conversion_method':
-                                obstab_writetofile[o].append(2) # 'from_wind_components'
-                            elif obskeys[o] == 'conversion_flag':
-                                obstab_writetofile[o].append(0)
-#                                 elif obskeys[o] == 'observation_id':
-#                                     obstab_writetofile[o].append(np.asarray([b'']))
-                            else:
-                                obstab_writetofile[o].append(obstab[o][iselect])
-
-                        for o in range(len(fbkeys)):
-                            # write the new variable everywhere into the fb
-                            if ((o == depar) or (o == fg_depar)) and (not (fb[o][iselect] in nanlist)) and (not (fb[o][select][obsvr == 105][0] in nanlist)):
-                                dep_u = u - fb[o][select][obsvr == 104][0]
-                                dep_v = v - fb[o][select][obsvr == 105][0]
-                                dep_wd = 90 - np.arctan2(-dep_v, -dep_u) * 180 / np.pi - 180.
-                                dep_wd = np.where(dep_wd > 0., dep_wd, 360.+dep_wd)
-                                fb_writetofile[o].append(float(wd - dep_wd))
-                            elif ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
-                                fb_writetofile[o].append(float('nan'))
-                            else:
-                                fb_writetofile[o].append(fb[o][iselect])
-                        addedvarscount += 1
-
-                    if not (107 in obsvr) and not np.isnan(ws).any():
-                        for o in range(len(obskeys)):
-                            # write the new variable everywhere into the observationstable
-                            if obskeys[o] == 'observed_variable':
-                                obstab_writetofile[o].append(107)
-                            elif obskeys[o] == 'observation_value':
-                                obstab_writetofile[o].append(ws)
-                            elif obskeys[o] == 'conversion_method':
-                                obstab_writetofile[o].append(2) # 'from_wind_components'
-                            elif obskeys[o] == 'conversion_flag':
-                                obstab_writetofile[o].append(0)
-#                                 elif obskeys[o] == 'observation_id':
-#                                     obstab_writetofile[o].append(np.asarray([b'']))
-                            else:
-                                obstab_writetofile[o].append(obstab[o][iselect])
-
-                        for o in range(len(fbkeys)):
-                            # write the new variable everywhere into the fb
-                            if ((o == depar) or (o == fg_depar)) and (not (fb[o][iselect] in nanlist)) and (not (fb[o][select][obsvr == 105][0] in nanlist)):
-                                dep_u = u - fb[o][select][obsvr == 104][0]
-                                dep_v = v - fb[o][select][obsvr == 105][0]
-                                dep_ws = np.sqrt(dep_u ** 2 + dep_v ** 2)
-                                fb_writetofile[o].append(float(ws - dep_ws))
-                            if ((o == depar) or (o == fg_depar) or (o == biascorr) or (o == fg_biascorr)):
-                                fb_writetofile[o].append(float('nan'))
-                            else:
-                                fb_writetofile[o].append(fb[o][iselect])
-                        addedvarscount += 1
-                    convertedfrom.append(104)
-                    convertedfrom.append(105)
-
-            #
-            # add all the non converted variables into the list
-            #
-            ttt=time.time()
-            for o in range(len(obskeys)):
-                # write everything what was already in the file
-                if obskeys[o] == 'conversion_flag' and  len(convertedfrom) > 0:
-                    wrt = obstab[o][select]
-                    for pp in convertedfrom:
-                        wrt[obsvr == pp] = 0
-                    obstab_writetofile[o].extend(wrt)
-                else:
-                    obstab_writetofile[o].extend(obstab[o][select])
-            for o in range(len(fbkeys)):
-                # write everything what was already in the file
-                fb_writetofile[o].extend(fb[o][select])
-
-        # adjusting the recordindex
-#             tttp+=time.time()-ttt
-        addtorecordindex.append(addedvarscount)
-#         if i%10==0:
-#             print('writetofile',tttp)
-#             tttp=0.
-        
-    ri = recordindex
-    ri = np.asarray([0] + (addtorecordindex)) + np.asarray(ri) # [0] before the array!
-          
-#     for ow in range(len(obstab_writetofile)):
-#         print(obskeys[ow], len(obstab_writetofile[ow]))
+    idy=numpy.where(loaded_data['z_coordinate_type'][idx]==2) # do not convert humidity if data are not on pressure coordinates
+    for c in cdpdrh,cshrh,cshdpd,crhdpd:
+        c[idy]=numpy.nan
     
+    cuwind = ws * np.cos(np.radians(wd))
+    cvwind = ws * np.sin(np.radians(wd))
+    cws = np.sqrt(uwind ** 2 + vwind ** 2)
+    cwd = 90 - np.arctan2(-vwind, -uwind) * 180 / np.pi - 180.
+    cwd = np.where(cwd > 0., cwd, 360.+cwd)
+
+    humvar=numpy.array((34,36,38,39)) #dpd,dp,rh,sh
+    wvar=numpy.array((104,105,106,107)) #dpd,dp,rh,sh
+    alist=augment(loaded_data['observed_variable'],loaded_data['observation_value'],loaded_data['z_coordinate'],
+        loaded_data['z_coordinate_type'],loaded_data['date_time'],loaded_data['conversion_flag'],loaded_data['conversion_method'],
+        idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
+        cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,cuwind,cvwind,cwd,cws,humvar,wvar)
+    
+    avarkeys='observed_variable','observation_value','z_coordinate','z_coordinate_type','date_time','conversion_flag','conversion_method','ri','rt'
+    avars=dict()
+    for i in range(len(avarkeys)):
+        avars[avarkeys[i]]=alist[i]
+    
+    print(time.time()-tt)
+    import matplotlib.pylab as plt
+#    plt.plot(loaded_data['date_time'][idx],crhdpd*100)
+    idz=numpy.where(numpy.logical_and(cdpdrh==cdpdrh ,press==50000))[0]
+    plt.plot(loaded_data['date_time'][idx[idz]],cdpdrh[idz],linewidth=3)
+    idy=np.where(avars['observed_variable']==34)[0]
+    idzz=numpy.where(numpy.logical_and(~numpy.isnan(avars['observation_value'][idy]),avars['z_coordinate'][idy]==50000))[0]
+    plt.plot(avars['date_time'][idy[idzz]],avars['observation_value'][idy[idzz]])
+    #plt.show()
+    
+          
     # sorting:
     print('start sorting')
     targetfile = destination+fn.split('/')[-1]  
@@ -833,8 +561,9 @@ def convert_missing(fn, destination: str = opath):
             groups = []
             for i in file.keys():
                 if type(file[i]) == h5py._hl.group.Group:
-                    newfile.create_group(i)
-                    groups.append(i)
+                    if i not in ('observations_table','era5fb'):
+                        newfile.create_group(i)
+                        groups.append(i)
                 elif i == 'recordindex' or i == 'recordtimestamp':
                     pass
                 else:
@@ -847,14 +576,14 @@ def convert_missing(fn, destination: str = opath):
                         newfile[i].create_dataset(j, data=file[i][j][:])
     
 #     data =  eua.CDMDataset(fn)
-    allvars = np.asarray(obstab_writetofile[obskeys.index('observed_variable')])
+    allvars = copy.copy(avars['observed_variable'])
     allvars.sort()
     allvars = numpy.unique(allvars)
     #
 #     ri = data.recordindex[()]
 #     print('recordindex: ', len(ri))
 #     rt = data.recordtimestamp[()]
-    keys = obskeys # data.observations_table.keys()[:-1]
+    keys = avarkeys[:-2] # data.observations_table.keys()[:-1]
     fbkeys = fbkeys # data.era5fb.keys()[:-1]
     # dropping all keys, where dimensions won't work - just help variabels for dimensions
     pops = []
@@ -881,7 +610,7 @@ def convert_missing(fn, destination: str = opath):
     #
     # loading the observed_variables
     #
-    obsv = np.asarray(obstab_writetofile[obskeys.index('observed_variable')]) # data.observations_table.observed_variable[:]
+    obsv = avars['observed_variable']
     #
     # resorting the data
     #
@@ -895,6 +624,7 @@ def convert_missing(fn, destination: str = opath):
                 l=i
         vridx[ridx[i]:]=len(idx) # next record for the last element is the len of the data
 
+    ri=avars['ri']
     ridxall=np.zeros(obsv.shape[0],dtype=np.int64) # reverse index - index of the record index
     j=-1
     for j in range(len(ri)-1):
@@ -926,7 +656,7 @@ def convert_missing(fn, destination: str = opath):
     #
     # recordtimestamps are only necessary once
     #
-    recordtimestamps = recordtimestamps[0]
+    recordtimestamps = avars['rt']
     #
     # targetfile has to be a copy of the original file
     #
@@ -940,7 +670,7 @@ def convert_missing(fn, destination: str = opath):
 #     print('writing '+targetfile)
     
     for i in range(len(keys)):
-        ov_vars = np.asarray(obstab_writetofile[i]) # data.observations_table[keys[i]][:]
+        ov_vars = avars[keys[i]]
         ov_vars = ov_vars[absidx]
         if keys[i] == 'index':
             pass
@@ -951,17 +681,18 @@ def convert_missing(fn, destination: str = opath):
             alldict = pandas.DataFrame({keys[i]:ov_vars})
             write_dict_h5(targetfile, alldict, 'observations_table', {keys[i]: { 'compression': 'gzip' } }, [keys[i]])  
 
-    for i in range(len(fbkeys)):
-        fb_vars = np.asarray(fb_writetofile[i]) # data.era5fb[fbkeys[i]][:]
-        fb_vars = fb_vars[absidx]
-        if fbkeys[i] == 'index' or fbkeys[i] == 'string6' or fbkeys[i] == 'string7' or fbkeys[i] == 'string10':
-            pass
-        elif fbkeys[i] == 'expver' or fbkeys[i] == 'source@hdr' or fbkeys[i] == 'source_id' or fbkeys[i] == 'statid@hdr':
-            alldict = {fbkeys[i]:np.asarray(fb_vars, dtype='S1')}
-            write_dict_h5(targetfile, alldict, 'era5fb', {fbkeys[i]: { 'compression': 'gzip' } }, [fbkeys[i]])
-        else:
-            alldict = pandas.DataFrame({fbkeys[i]:fb_vars})
-            write_dict_h5(targetfile, alldict, 'era5fb', {fbkeys[i]: { 'compression': 'gzip' } }, [fbkeys[i]]) 
+# geht noch nicht
+    #for i in range(len(fbkeys)):
+        #fb_vars = np.asarray(fb_writetofile[i]) # data.era5fb[fbkeys[i]][:]
+        #fb_vars = fb_vars[absidx]
+        #if fbkeys[i] == 'index' or fbkeys[i] == 'string6' or fbkeys[i] == 'string7' or fbkeys[i] == 'string10':
+            #pass
+        #elif fbkeys[i] == 'expver' or fbkeys[i] == 'source@hdr' or fbkeys[i] == 'source_id' or fbkeys[i] == 'statid@hdr':
+            #alldict = {fbkeys[i]:np.asarray(fb_vars, dtype='S1')}
+            #write_dict_h5(targetfile, alldict, 'era5fb', {fbkeys[i]: { 'compression': 'gzip' } }, [fbkeys[i]])
+        #else:
+            #alldict = pandas.DataFrame({fbkeys[i]:fb_vars})
+            #write_dict_h5(targetfile, alldict, 'era5fb', {fbkeys[i]: { 'compression': 'gzip' } }, [fbkeys[i]]) 
     #
     # writing the recordindices and recordtimestamp.
     #       
@@ -970,12 +701,13 @@ def convert_missing(fn, destination: str = opath):
         testvar = pandas.DataFrame({str(allvars[i]):recordindices[i]})
         write_dict_h5(targetfile, testvar, 'recordindices', {str(allvars[i]): { 'compression': None } }, [str(allvars[i])]) 
 
-    write_dict_h5(targetfile, {'recordtimestamp':rt}, 'recordindices', {'recordtimestamp': { 'compression': None } }, ['recordtimestamp'])
+    write_dict_h5(targetfile, {'recordtimestamp':recordtimestamps}, 'recordindices', {'recordtimestamp': { 'compression': None } }, ['recordtimestamp'])
 
     print('elapsed writing:',time.time()-tt)
+    return
     
 
-files = glob.glob('/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020_sensor/*.nc')
+files = glob.glob('/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020_sensor/0-20000-0-01*.nc')
 # print(files[:10])
 
 # convert_missing(files[6020])
@@ -984,5 +716,11 @@ files = glob.glob('/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020_sensor/*
 if __name__ == '__main__':
 #    pool = multiprocessing.Pool(processes=20)
 #    result_list = pool.map(convert_missing, files[100:1000])
-    result_list = list(map(convert_missing, files[0:1000]))
+    idx=0
+    for f in files:
+        if '20000-0-01384' in f:
+            print(idx)
+            break
+        idx+=1
+    result_list = list(map(convert_missing, [files[idx]]))
     print(result_list)

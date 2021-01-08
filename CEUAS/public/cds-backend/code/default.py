@@ -192,6 +192,7 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
     countrycodes = {}
     for country in pycountry.countries:
         countrycodes[country.alpha_2] = country.alpha_3
+    countrycodes['XK']='XXK'
     try:
 
         with h5py.File(s, 'r') as f:
@@ -225,10 +226,14 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
                     # if no country code available -> reverse geo search for them 
                     coordinates = (float(f['observations_table']['latitude'][-1]), float(f['observations_table']['longitude'][-1]))
                     cc = rg.search(coordinates)[0]['cc']
+#                     if cc == 'XK':
+#                         active[skey].append('XXK')
+#                         logger.debug('reverse geo searche for: %s', skey)
+#                     else:
                     # results are in alpha_2 country codes -> convert to alpha_3 like it is in the vola file
                     active[skey].append(countrycodes[cc])
                     logger.debug('reverse geo searche for: %s', skey)
-                # add data directory for process_flat
+            # add data directory for process_flat
                 # active[skey].append(os.path.dirname(s))
                 # add filepath
                 active[skey].append(s)
@@ -305,6 +310,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         f = urllib.request.urlopen(volapath)
         col_names = pd.read_csv(f, delimiter='\t', quoting=3, nrows=0)
         # print(col_names)
+        f = urllib.request.urlopen(volapath)
         tdict = {col: str for col in col_names}
         f = urllib.request.urlopen(volapath)
         vola = pd.read_csv(f, delimiter='\t', quoting=3, dtype=tdict, na_filter=False)
@@ -333,6 +339,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         volapath = 'https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
         f = urllib.request.urlopen(volapath)
         col_names = pd.read_csv(f, delimiter='\t', quoting=3, nrows=0)
+        f = urllib.request.urlopen(volapath)
         tdict = {col: str for col in col_names}
         vola = pd.read_csv(f, delimiter='\t', quoting=3, dtype=tdict, na_filter=False)
         active_file = config['config_dir'] + '/active.json'
@@ -740,8 +747,12 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 raise ValueError('Invalid selection, %s is not a valid country code' % icountry)
 
             for k, vv in active.items():
-                if vv[4] == icountry:
-                    statid.append(k)
+                try:
+                    if vv[4] == icountry:
+                        statid.append(k)
+                except:
+                    raise ValueError(vv, k)
+                    
 
         if len(statid) == 0:
             raise RuntimeError('Invalid selection, no Stations for Countries %s' % str(country))
