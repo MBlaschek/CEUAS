@@ -27,8 +27,8 @@ import rasotools
 import warnings
 warnings.filterwarnings('ignore')
 
-opath='/raid60/scratch/uli/converted_v2/'
-opath='/raid60/scratch/leo/scratch/converted_v2/'
+opath='/raid60/scratch/uli/converted_test/'
+# opath='/raid60/scratch/leo/scratch/converted_v2/'
 # if there are nan values in the pressure level - we will just sort without any converting!
 def do_resort(fn):
     targetfile = opath+fn.split('/')[-1]  
@@ -362,7 +362,7 @@ def wconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,cuw
         print('wconvert called with wrong variable')
     
 
-@njit(boundscheck=True)          
+#@njit(boundscheck=True)          
 def augment(observed_variable,observation_value,z_coordinate,z_coordinate_type,date_time,conversion_flag,conversion_method,
         idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
         cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,cuwind,cvwind,cwd,cws,humvar,wvar):
@@ -413,9 +413,9 @@ def augment(observed_variable,observation_value,z_coordinate,z_coordinate_type,d
                 elif observed_variable[i] in wvar:
                     wconvert(j,k,observed_variable[i],a_observation_value,a_conversion_flag,a_conversion_method,cuwind,cvwind,cwd,cws)
                 else:
-                    a_observation_value[j]=observation_value[k]
-                    a_conversion_flag[j]=conversion_flag[k]
-                    a_conversion_method[j]=a_conversion_method[k]
+                    a_observation_value[j]=observation_value[i]
+                    a_conversion_flag[j]=conversion_flag[i]
+                    a_conversion_method[j]=a_conversion_method[i]
         if humlist:
             for h in humvar:
                 if h not in humlist:
@@ -554,7 +554,12 @@ def convert_missing(fn, destination: str = opath):
           
     # sorting:
     print('start sorting')
-    targetfile = destination+fn.split('/')[-1]  
+    targetfile = destination+fn.split('/')[-1]
+    if os.path.isfile(targetfile):
+        try:
+            os.remove(targetfile)
+        except:
+            print('file could not be removed - overwriting will lead to errors')
     
     with h5py.File(fn, 'r') as file:
         with h5py.File(targetfile, 'w') as newfile:
