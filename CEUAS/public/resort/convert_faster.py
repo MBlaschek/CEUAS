@@ -362,94 +362,120 @@ def wconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,cuw
         print('wconvert called with wrong variable')
     
 
-#@njit(boundscheck=True)          
-def augment(observed_variable,observation_value,z_coordinate,z_coordinate_type,date_time,conversion_flag,conversion_method,
-        idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
-        cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,cuwind,cvwind,cwd,cws,humvar,wvar):
-    
-    a_observed_variable=numpy.empty(observed_variable.shape[0]*3,observed_variable.dtype)
-    a_observation_value=numpy.empty(observed_variable.shape[0]*3,observation_value.dtype)
-    a_z_coordinate=numpy.empty(observed_variable.shape[0]*3,z_coordinate.dtype)
-    a_z_coordinate_type=numpy.empty(observed_variable.shape[0]*3,z_coordinate_type.dtype)
-    a_date_time=numpy.empty(observed_variable.shape[0]*3,date_time.dtype)
-    a_conversion_flag=numpy.empty(observed_variable.shape[0]*3,z_coordinate_type.dtype)
-    a_conversion_method=numpy.empty(observed_variable.shape[0]*3,z_coordinate_type.dtype)
-    recordindex=numpy.empty(idx.shape[0],date_time.dtype)
-    recordtimestamp=numpy.empty(idx.shape[0],date_time.dtype)
+# @njit(boundscheck=True)          
+def augment(obstab, obskeys,
+            # observed_variable,observation_value,z_coordinate,z_coordinate_type,date_time,conversion_flag,conversion_method,
+            idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
+            cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,cuwind,cvwind,cwd,cws,humvar,wvar):
+    a_obstab = {}
+    for o in obskeys:
+        if o == 'observation_id' or o == 'report_id' or o == 'sensor_id' or o == 'source_id':
+            a_obstab[o] = numpy.empty((obstab[o].shape[0]*3,obstab[o].shape[1]),obstab[o].dtype)
+        else:
+            a_obstab[o] = numpy.empty(obstab[o].shape[0]*3,obstab[o].dtype)
+#     a_observed_variable=numpy.empty(observed_variable.shape[0]*3,observed_variable.dtype)
+#     a_observation_value=numpy.empty(observed_variable.shape[0]*3,observation_value.dtype)
+#     a_z_coordinate=numpy.empty(observed_variable.shape[0]*3,z_coordinate.dtype)
+#     a_z_coordinate_type=numpy.empty(observed_variable.shape[0]*3,z_coordinate_type.dtype)
+#     a_date_time=numpy.empty(observed_variable.shape[0]*3,date_time.dtype)
+#     a_conversion_flag=numpy.empty(observed_variable.shape[0]*3,z_coordinate_type.dtype)
+#     a_conversion_method=numpy.empty(observed_variable.shape[0]*3,z_coordinate_type.dtype)
+    recordindex=numpy.empty(idx.shape[0],obstab['date_time'].dtype)
+    recordtimestamp=numpy.empty(idx.shape[0],obstab['date_time'].dtype)
     
     j=-1 # augmented index
-    p=z_coordinate[0]-1
-    rts=date_time[0]
+    p= obstab['z_coordinate'][0]-1 # z_coordinate[0]-1
+    rts= obstab['date_time'][0] # date_time[0]
    
     humlist=List()
     wlist=List()
     recordindex[0]=0
-    recordtimestamp[0]=date_time[0]
+    recordtimestamp[0]=obstab['date_time'][0] # date_time[0]
     ri=1
     for k in range(idx.shape[0]):  # no new levels are created, but variables per level will increase
         if k==idx.shape[0]-2:
             print('vor Schluss')
         if k==idx.shape[0]-1:
-            idxu=observation_value.shape[0]
+            idxu= obstab['observation_value'].shape[0] # observation_value.shape[0]
         else:
             idxu=idx[k+1]
         for i in range(idx[k],idxu):
             j+=1
-            if observation_value[i]==observation_value[i]:
-                a_observation_value[j]=observation_value[i]
-                a_observed_variable[j]=observed_variable[i]
-                a_date_time[j]=date_time[i]
-                a_z_coordinate[j]=z_coordinate[i]
-                if observed_variable[i] in humvar:
-                    humlist.append(observed_variable[i])
-                elif observed_variable[i] in wvar:
-                    wlist.append(observed_variable[i])
+            if obstab['observation_value'][i]==obstab['observation_value'][i]: # observation_value[i]==observation_value[i]:
+                for o in obskeys:
+                    a_obstab[o][j]=obstab[o][i]
+#                 a_obstab['observation_value'][j]=obstab['observation_value'][i] # a_observation_value[j]=observation_value[i]
+#                 a_observed_variable[j]=observed_variable[i]
+#                 a_date_time[j]=date_time[i]
+#                 a_z_coordinate[j]=z_coordinate[i]
+                if obstab['observed_variable'][i] in humvar:
+                    humlist.append(obstab['observed_variable'][i])
+                elif obstab['observed_variable'][i] in wvar:
+                    wlist.append(obstab['observed_variable'][i])
             else:
-                a_observed_variable[j]=observed_variable[i]
-                a_date_time[j]=date_time[i]
-                a_z_coordinate[j]=z_coordinate[i]
-                if observed_variable[i] in humvar:
-                    qconvert(j,k,observed_variable[i],a_observation_value,a_conversion_flag,a_conversion_method,temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd)
-                elif observed_variable[i] in wvar:
-                    wconvert(j,k,observed_variable[i],a_observation_value,a_conversion_flag,a_conversion_method,cuwind,cvwind,cwd,cws)
-                else:
-                    a_observation_value[j]=observation_value[i]
-                    a_conversion_flag[j]=conversion_flag[i]
-                    a_conversion_method[j]=a_conversion_method[i]
+                # writing all obstab vars and overwriting them if needed:
+                for o in obskeys:
+                    a_obstab[o][j]=obstab[o][i]
+#                 a_observed_variable[j]=observed_variable[i]
+#                 a_date_time[j]=date_time[i]
+#                 a_z_coordinate[j]=z_coordinate[i]
+                if obstab['observed_variable'][i] in humvar:
+                    qconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd)
+                    # set rest of obstable too
+                elif obstab['observed_variable'][i] in wvar:
+                    wconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],cuwind,cvwind,cwd,cws)
+                    # set rest of obstable too
+#                 else:
+#                     a_observation_value[j]=observation_value[i]
+#                     a_conversion_flag[j]=conversion_flag[i]
+#                     a_conversion_method[j]=a_conversion_method[i]
         if humlist:
             for h in humvar:
                 if h not in humlist:
                     j+=1
-                    a_observed_variable[j]=h
-                    qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd)
-                    a_date_time[j]=date_time[i]
-                    a_z_coordinate[j]=z_coordinate[i]
-                    if a_observation_value[j]!=a_observation_value[j]:
+                    # writing all obstab vars and overwriting them if needed:
+                    for o in obskeys:
+                        a_obstab[o][j]=obstab[o][i]
+                    a_obstab['observed_variable'][j]=h
+                    qconvert(j,k,h,a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd)
+#                     # set rest of obstable too
+#                     a_date_time[j]=date_time[i]
+#                     a_z_coordinate[j]=z_coordinate[i]
+                    if a_obstab['observation_value'][j]!=a_obstab['observation_value'][j]:
                         j-=1
             humlist.clear()
         if wlist:
             for h in wvar:
                 if h not in wlist:
                     j+=1
-                    a_observed_variable[j]=h
-                    wconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,cuwind,cvwind,cwd,cws)
-                    a_date_time[j]=date_time[i]
-                    a_z_coordinate[j]=z_coordinate[i]
-                    if a_observation_value[j]!=a_observation_value[j]:
+                    # writing all obstab vars and overwriting them if needed:
+                    for o in obskeys:
+                        a_obstab[o][j]=obstab[o][i]
+                    a_obstab['observed_variable'][j]=h
+                    wconvert(j,k,h,a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],cuwind,cvwind,cwd,cws)
+                    # set rest of obstable too
+#                     a_date_time[j]=date_time[i]
+#                     a_z_coordinate[j]=z_coordinate[i]
+                    if a_obstab['observation_value'][j]!=a_obstab['observation_value'][j]:
                         j-=1
             wlist.clear()
-        if idxu!=observation_value.shape[0]:        
-            if date_time[idxu] != date_time[idx[k]]:
+        if idxu!=obstab['observation_value'].shape[0]:        
+            if obstab['date_time'][idxu] != obstab['date_time'][idx[k]]:
                 recordindex[ri]=j+1
-                recordtimestamp[ri]=date_time[idxu]
+                recordtimestamp[ri]=obstab['date_time'][idxu]
                 ri+=1
 
     
         if k%100000==0:
             print(k,idx.shape[0])
-    print(k,j,i,observed_variable.shape[0],a_observed_variable.shape[0])
+#     print(k,j,i,observed_variable.shape[0],a_observed_variable.shape[0])
     j=j+1
-    return a_observed_variable[:j],a_observation_value[:j],a_z_coordinate[:j],a_z_coordinate_type[:j],a_date_time[:j],a_conversion_flag[:j],a_conversion_method[:j],recordindex[:ri],recordtimestamp[:ri]
+    out = {}
+    for o in obskeys:
+        out[o] = a_obstab[o][:j]
+    out['ri']=recordindex[:ri]
+    out['rt']=recordtimestamp[:ri]
+    return out #a_observed_variable[:j],a_observation_value[:j],a_z_coordinate[:j],a_z_coordinate_type[:j],a_date_time[:j],a_conversion_flag[:j],a_conversion_method[:j],recordindex[:ri],recordtimestamp[:ri]
     
 
 def convert_missing(fn, destination: str = opath):
@@ -461,16 +487,16 @@ def convert_missing(fn, destination: str = opath):
         rto = data.recordtimestamp[:]
         rio = data.recordindex[:]
         keys = data.observations_table.keys()
-        #keys = [x for x in keys if not x.startswith('string')]
-        keys = [x for x in keys if x in ['observation_id','date_time','observed_variable','z_coordinate','z_coordinate_type','observation_value','conversion_method','conversion_flag']]
-        #keys.remove('index')
-        #keys.remove('shape')
+#         keys = [x for x in keys if x in ['observation_id','date_time','observed_variable','z_coordinate','z_coordinate_type','observation_value','conversion_method','conversion_flag']]
+        keys = [x for x in keys if not x.startswith('string')]
+        keys.remove('index')
+        keys.remove('shape')
         obskeys = keys
         obstab_writetofile = [[] for i in range(len(obskeys))]
         
         keys = data.era5fb.keys()
-        #keys = [x for x in keys if not x.startswith('string')]
         keys = [x for x in keys if x in ['fg_depar@body','an_depar@body','biascorr@body','biascorr_fg@body']]
+        #keys = [x for x in keys if not x.startswith('string')]
         #keys.remove('index')
         #keys.remove('shape')
         fg_depar = keys.index('fg_depar@body')
@@ -490,11 +516,11 @@ def convert_missing(fn, destination: str = opath):
             onlyone = True
         
         # loading data:
-        loaded_data = {}#[[]]*len(obskeys)
+        loaded_data = {}
         for o in obskeys:
             loaded_data[o] = data.observations_table[o][:]
             
-        loaded_fb = {}#[[]]*len(fbkeys)
+        loaded_fb = {}
         for o in fbkeys:
             loaded_fb[o] = data.era5fb[o][:]
             
@@ -531,17 +557,26 @@ def convert_missing(fn, destination: str = opath):
 
     humvar=numpy.array((34,36,38,39)) #dpd,dp,rh,sh
     wvar=numpy.array((104,105,106,107)) #dpd,dp,rh,sh
-    alist=augment(loaded_data['observed_variable'],loaded_data['observation_value'],loaded_data['z_coordinate'],
-        loaded_data['z_coordinate_type'],loaded_data['date_time'],loaded_data['conversion_flag'],loaded_data['conversion_method'],
-        idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
-        cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,cuwind,cvwind,cwd,cws,humvar,wvar)
+#     alist=augment(loaded_data, obskeys, 
+#                   # loaded_data['observed_variable'],loaded_data['observation_value'],loaded_data['z_coordinate'], 
+#                   # loaded_data['z_coordinate_type'],loaded_data['date_time'],loaded_data['conversion_flag'],loaded_data['conversion_method'],
+#                   idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
+#                   cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,cuwind,cvwind,cwd,cws,humvar,wvar)
+    avars=augment(loaded_data, obskeys, 
+                  # loaded_data['observed_variable'],loaded_data['observation_value'],loaded_data['z_coordinate'], 
+                  # loaded_data['z_coordinate_type'],loaded_data['date_time'],loaded_data['conversion_flag'],loaded_data['conversion_method'],
+                  idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
+                  cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,cuwind,cvwind,cwd,cws,humvar,wvar)
     
-    avarkeys='observed_variable','observation_value','z_coordinate','z_coordinate_type','date_time','conversion_flag','conversion_method','ri','rt'
-    avars=dict()
-    for i in range(len(avarkeys)):
-        avars[avarkeys[i]]=alist[i]
+#     avarkeys='observed_variable','observation_value','z_coordinate','z_coordinate_type','date_time','conversion_flag','conversion_method','ri','rt'
+    avarkeys = copy.copy(obskeys)
+    avarkeys.extend(['ri','rt'])
+#     avars=dict()
+#     for i in range(len(avarkeys)):
+#         avars[avarkeys[i]]=alist[i]
     
     print(time.time()-tt)
+    
     import matplotlib.pylab as plt
 #    plt.plot(loaded_data['date_time'][idx],crhdpd*100)
     idz=numpy.where(numpy.logical_and(cdpdrh==cdpdrh ,press==50000))[0]
@@ -584,36 +619,6 @@ def convert_missing(fn, destination: str = opath):
     allvars = copy.copy(avars['observed_variable'])
     allvars.sort()
     allvars = numpy.unique(allvars)
-    #
-#     ri = data.recordindex[()]
-#     print('recordindex: ', len(ri))
-#     rt = data.recordtimestamp[()]
-    keys = avarkeys[:-2] # data.observations_table.keys()[:-1]
-    fbkeys = fbkeys # data.era5fb.keys()[:-1]
-    # dropping all keys, where dimensions won't work - just help variabels for dimensions
-    pops = []
-    for i in range(len(keys)):
-        if 'string' in keys[i]:
-            pops.append(keys[i])
-    for i in pops: keys.remove(i)
-    pops = []
-    for i in range(len(fbkeys)):
-        if 'string' in fbkeys[i]:
-            pops.append(fbkeys[i])
-    for i in pops: fbkeys.remove(i)
-
-    recordindices = [[] for i in range(len(allvars))]
-    recordtimestamps = [[] for i in range(len(allvars))]
-
-    # output variables (from observations_table)
-    ov = []
-    for o in keys:
-        ov.append([[] for i in range(len(allvars))])
-    fb = []
-    for o in fbkeys:
-        fb.append([[] for i in range(len(allvars))])
-    #
-    # loading the observed_variables
     #
     obsv = avars['observed_variable']
     #
@@ -674,17 +679,17 @@ def convert_missing(fn, destination: str = opath):
 #     print()
 #     print('writing '+targetfile)
     
-    for i in range(len(keys)):
-        ov_vars = avars[keys[i]]
+    for i in range(len(obskeys)):
+        ov_vars = avars[obskeys[i]]
         ov_vars = ov_vars[absidx]
-        if keys[i] == 'index':
+        if obskeys[i] == 'index':
             pass
-        elif keys[i] == 'observation_id' or keys[i] == 'report_id' or keys[i] == 'sensor_id' or keys[i] == 'source_id':
-            alldict = {keys[i]:np.asarray(ov_vars, dtype='S1')}
-            write_dict_h5(targetfile, alldict, 'observations_table', {keys[i]: { 'compression': 'gzip' } }, [keys[i]])
+        elif obskeys[i] == 'observation_id' or obskeys[i] == 'report_id' or obskeys[i] == 'sensor_id' or obskeys[i] == 'source_id':
+            alldict = {obskeys[i]:np.asarray(ov_vars, dtype='S1')}
+            write_dict_h5(targetfile, alldict, 'observations_table', {obskeys[i]: { 'compression': 'gzip' } }, [obskeys[i]])
         else:
-            alldict = pandas.DataFrame({keys[i]:ov_vars})
-            write_dict_h5(targetfile, alldict, 'observations_table', {keys[i]: { 'compression': 'gzip' } }, [keys[i]])  
+            alldict = pandas.DataFrame({obskeys[i]:ov_vars})
+            write_dict_h5(targetfile, alldict, 'observations_table', {obskeys[i]: { 'compression': 'gzip' } }, [obskeys[i]])  
 
 # geht noch nicht
     #for i in range(len(fbkeys)):
