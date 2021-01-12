@@ -233,7 +233,13 @@ def ipl(observed_variable,observation_value,z_coordinate,z_coordinate_type,recor
     return idx,press,temp,relhum,spechum,dpd,dewpoint
 
 @njit(boundscheck=True)
-def ipl2(observed_variable,observation_value,z_coordinate,z_coordinate_type,recordtimestamp):
+def ipl2(lobs):
+    
+    observed_variable=lobs['observed_variable']
+    observation_value=lobs['observation_value']
+    z_coordinate=lobs['z_coordinate']
+    z_coordinate_type=lobs['z_coordinate_type']
+    recordtimestamp=lobs['date_time']
     
     jdx=0
     dpress=-1.
@@ -245,7 +251,7 @@ def ipl2(observed_variable,observation_value,z_coordinate,z_coordinate_type,reco
             jdx+=1
                 
                 
-    #jdx=len(numpy.where(numpy.logical_and(observed_variable==85,~numpy.isnan(observation_value)))[0]
+    ##jdx=len(numpy.where(numpy.logical_and(observed_variable==85,~numpy.isnan(observation_value)))[0]
     idx=numpy.empty(jdx,dtype=numpy.int64)
     press=numpy.empty(jdx,dtype=z_coordinate.dtype) # either height or pressure, depending on coordinate type
     relhum=numpy.empty(jdx,dtype=observation_value.dtype)
@@ -265,7 +271,7 @@ def ipl2(observed_variable,observation_value,z_coordinate,z_coordinate_type,reco
     p=z_coordinate[0]-1.
     rts=recordtimestamp[0]-1
     j=-1
-    good=True
+   #good=True
     for i in range(observation_value.shape[0]):
         if z_coordinate[i]!=p or recordtimestamp[i]!=rts:
             p=z_coordinate[i]
@@ -295,12 +301,13 @@ def ipl2(observed_variable,observation_value,z_coordinate,z_coordinate_type,reco
         else:
             pass
                 
-            
+    #return        
     print(j,jdx)
     return idx,press,temp,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws
 
 @njit(boundscheck=True)
 def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd):
+    
     if h==34:
         if cdpddp[k]==cdpddp[k]:
             a_observation_value[j]=cdpddp[k]
@@ -360,24 +367,39 @@ def wconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,cuw
             a_conversion_method[j]=2
     else:
         print('wconvert called with wrong variable')
-    
+
+@njit
+def do_copy(a_obstab,obstab,j,i):
+    # eigentlich sollte diese Schleife gehen, leider gibt es da einen Fehler. Daher mache ich konkrete Zuweisungen.
+    #for o in obskeys:
+    #for o in 'date_time', 'observation_id', 'observation_value', 'observed_variable', 'z_coordinate', 'z_coordinate_type':
+        #a_obstab[o][j]=obstab[o][i]
+    a_obstab['date_time'][j]=obstab['date_time'][i]
+    a_obstab['observation_id'][j]=obstab['observation_id'][i]
+    a_obstab['observation_value'][j]=obstab['observation_value'][i]
+    a_obstab['observed_variable'][j]=obstab['observed_variable'][i]
+    a_obstab['z_coordinate'][j]=obstab['z_coordinate'][i]
+    a_obstab['z_coordinate_type'][j]=obstab['z_coordinate_type'][i]
+
+    return
 
 @njit(boundscheck=True)          
-def augment(obstab, obskeys, observation_id ,report_id, sensor_id, source_id,
+def augment(obstab, a_obstab,obskeys,
              idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
              cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,cuwind,cvwind,cwd,cws,humvar,wvar):
     
-    a_data = []
-    a_type = []
-    for o in obskeys:
-        a_data.append(numpy.empty(obstab[o].shape[0]*3), obstab[o].dtype)
-        a_type.append((o, obstab[o].dtype))
-    a_obstab = numpy.array(list(map(tuple, numpy.swapaxes(a_data,0,1))), dtype=a_type)
+    print(obskeys,humvar)
+    ##a_data = []
+    ##a_type = []
+    ##for o in obskeys:
+        ##a_data.append(numpy.empty(obstab[o].shape[0]*3), obstab[o].dtype)
+        ##a_type.append((o, obstab[o].dtype))
+    ##a_obstab = numpy.array(list(map(tuple, numpy.swapaxes(a_data,0,1))), dtype=a_type)
 
-    a_observation_id=numpy.empty((observation_id.shape[0]*3,observation_id.shape[1]),observation_id.dtype)
-    a_report_id=numpy.empty((report_id.shape[0]*3,report_id.shape[1]),report_id.dtype)
-    a_sensor_id=numpy.empty((sensor_id.shape[0]*3,sensor_id.shape[1]),sensor_id.dtype)
-    a_source_id=numpy.empty((source_id.shape[0]*3,source_id.shape[1]),source_id.dtype)
+    ##a_observation_id=a_obstab['observation_id'] #numpy.empty((observation_id.shape[0]*3,observation_id.shape[1]),observation_id.dtype)
+    ##a_report_id=numpy.empty((report_id.shape[0]*3,report_id.shape[1]),report_id.dtype)
+    ##a_sensor_id=numpy.empty((sensor_id.shape[0]*3,sensor_id.shape[1]),sensor_id.dtype)
+    ##a_source_id=numpy.empty((source_id.shape[0]*3,source_id.shape[1]),source_id.dtype)
     recordindex=numpy.empty(idx.shape[0],obstab['date_time'].dtype)
     recordtimestamp=numpy.empty(idx.shape[0],obstab['date_time'].dtype)
     
@@ -400,25 +422,20 @@ def augment(obstab, obskeys, observation_id ,report_id, sensor_id, source_id,
         for i in range(idx[k],idxu):
             j+=1
             if obstab['observation_value'][i]==obstab['observation_value'][i]: # observation_value[i]==observation_value[i]:
-                for o in obskeys:
-                    a_obstab[o][j]=obstab[o][i]
-                a_observation_id[j]=observation_id[i]
-                a_report_id[j]=report_id[i]
-                a_sensor_id[j]=sensor_id[i]
-                a_source_id[j]=source_id[i]
+                #for o in 'date_time', 'observation_id', 'observation_value', 'observed_variable', 'z_coordinate', 'z_coordinate_type':
+                    #a_obstab[o][j]=obstab[o][i]
+                do_copy(a_obstab,obstab,j,i)
                 if obstab['observed_variable'][i] in humvar:
                     humlist.append(obstab['observed_variable'][i])
                 elif obstab['observed_variable'][i] in wvar:
                     wlist.append(obstab['observed_variable'][i])
             else:
                 # writing all obstab vars and overwriting them if needed:
-                for o in obskeys:
-                    a_obstab[o][j]=obstab[o][i]
-                a_observation_id[j]=observation_id[i]
-                a_report_id[j]=report_id[i]
-                a_sensor_id[j]=sensor_id[i]
-                a_source_id[j]=source_id[i]
+                #for o in obskeys:
+                    #a_obstab[o][j]=obstab[o][i]
+                do_copy(a_obstab,obstab,j,i)
                 if obstab['observed_variable'][i] in humvar:
+                    print('x')
                     qconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd)
                 elif obstab['observed_variable'][i] in wvar:
                     wconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],cuwind,cvwind,cwd,cws)
@@ -428,12 +445,9 @@ def augment(obstab, obskeys, observation_id ,report_id, sensor_id, source_id,
                 if h not in humlist:
                     j+=1
                     # writing all obstab vars and overwriting them if needed:
-                    for o in obskeys:
-                        a_obstab[o][j]=obstab[o][i]
-                    a_observation_id[j]=observation_id[i]
-                    a_report_id[j]=report_id[i]
-                    a_sensor_id[j]=sensor_id[i]
-                    a_source_id[j]=source_id[i]
+                    #for o in obskeys:
+                        #a_obstab[o][j]=obstab[o][i]
+                    do_copy(a_obstab,obstab,j,i)
                     a_obstab['observed_variable'][j]=h
                     qconvert(j,k,h,a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd)
                     if a_obstab['observation_value'][j]!=a_obstab['observation_value'][j]:
@@ -444,12 +458,9 @@ def augment(obstab, obskeys, observation_id ,report_id, sensor_id, source_id,
                 if h not in wlist:
                     j+=1
                     # writing all obstab vars and overwriting them if needed:
-                    for o in obskeys:
-                        a_obstab[o][j]=obstab[o][i]
-                    a_observation_id[j]=observation_id[i]
-                    a_report_id[j]=report_id[i]
-                    a_sensor_id[j]=sensor_id[i]
-                    a_source_id[j]=source_id[i]
+                    #for o in obskeys:
+                        #a_obstab[o][j]=obstab[o][i]
+                    do_copy(a_obstab,obstab,j,i)
                     a_obstab['observed_variable'][j]=h
                     wconvert(j,k,h,a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],cuwind,cvwind,cwd,cws)
                     if a_obstab['observation_value'][j]!=a_obstab['observation_value'][j]:
@@ -466,17 +477,25 @@ def augment(obstab, obskeys, observation_id ,report_id, sensor_id, source_id,
             print(k,idx.shape[0])
 #     print(k,j,i,observed_variable.shape[0],a_observed_variable.shape[0])
     j=j+1
-    out = {}
-    for o in obskeys:
-        out[o] = a_obstab[o][:j]
-    out['observation_id']=observation_id[:j]
-    out['report_id']=report_id[:j]
-    out['sensor_id']=sensor_id[:j]
-    out['source_id']=source_id[:j]
-    out['ri']=recordindex[:ri]
-    out['rt']=recordtimestamp[:ri]
-    return out #a_observed_variable[:j],a_observation_value[:j],a_z_coordinate[:j],a_z_coordinate_type[:j],a_date_time[:j],a_conversion_flag[:j],a_conversion_method[:j],recordindex[:ri],recordtimestamp[:ri]
+    ##out = {}
+    ##for o in obskeys:
+        ##out[o] = a_obstab[o][:j]
+    ##out['observation_id']=observation_id[:j]
+    ##out['report_id']=report_id[:j]
+    ##out['sensor_id']=sensor_id[:j]
+    ##out['source_id']=source_id[:j]
+    ##out['ri']=recordindex[:ri]
+    ##out['rt']=recordtimestamp[:ri]
+    return a_obstab #a_observed_variable[:j],a_observation_value[:j],a_z_coordinate[:j],a_z_coordinate_type[:j],a_date_time[:j],a_conversion_flag[:j],a_conversion_method[:j],recordindex[:ri],recordtimestamp[:ri]
     
+@njit
+def xtest(loaded_obstab):
+    print(loaded_obstab.dtype.fields)
+    #obsnames=[]
+    #for i in loaded_obstab.dtype:
+        #print(i)
+    #print(obsnames)
+    return
 
 def convert_missing(fn, destination: str = opath):
     tt=time.time()
@@ -517,16 +536,28 @@ def convert_missing(fn, destination: str = opath):
         
         # loading data:
         loaded_data = []
-        loaded_type = []
+        a_loaded_data=[]
+        loaded_type = {'names':[],'formats':[]}
+        ld=[]
         for o in obskeys:
-            if not (o == 'observation_id' or o == 'report_id' or o == 'sensor_id' or o == 'source_id'):
-                loaded_data.append((data.observations_table[o][:]))
-                loaded_type.append((o, data.observations_table[o][:].dtype))
-        loaded_obstab = numpy.array(list(map(tuple, numpy.swapaxes(loaded_data,0,1))), dtype=loaded_type)
-        loaded_observation_id = numpy.asarray(data.observations_table['observation_id'][:])
-        loaded_report_id= numpy.asarray(data.observations_table['report_id'][:])
-        loaded_sensor_id = numpy.asarray(data.observations_table['sensor_id'][:])
-        loaded_source_id = numpy.asarray(data.observations_table['source_id'][:])
+            #if not (o == 'observation_id' or o == 'report_id' or o == 'sensor_id' or o == 'source_id'):
+            if o in ['observed_variable','observation_value','z_coordinate','z_coordinate_type','date_time','observation_id','conversion_flag','conversion_method']:  
+                if len(data.observations_table[o].shape)==1:
+                    loaded_data.append((data.observations_table[o][:]))
+                    a_loaded_data.append(numpy.empty_like(loaded_data[-1],shape=3*len(loaded_data[-1])))
+                else:
+                    loaded_data.append(data.observations_table[o][:].view('S{}'.format(data.observations_table[o].shape[1])).flatten())   
+                    a_loaded_data.append(numpy.empty_like(loaded_data[-1],shape=3*len(loaded_data[-1])))
+                    a_loaded_data[-1].fill(b' '*data.observations_table[o].shape[1])
+                loaded_type['names'].append(o)
+                loaded_type['formats'].append(loaded_data[-1].dtype)
+                ld.append((o,loaded_data[-1].dtype))
+        loaded_obstab = numpy.rec.fromarrays(loaded_data, dtype=ld)
+        a_loaded_obstab = numpy.rec.fromarrays(a_loaded_data, dtype=ld)
+        #loaded_observation_id = numpy.asarray(data.observations_table['observation_id'][:])
+        #loaded_report_id= numpy.asarray(data.observations_table['report_id'][:])
+        #loaded_sensor_id = numpy.asarray(data.observations_table['sensor_id'][:])
+        #loaded_source_id = numpy.asarray(data.observations_table['source_id'][:])
 
         loaded_fb = {}
         for o in fbkeys:
@@ -536,8 +567,11 @@ def convert_missing(fn, destination: str = opath):
         # --->
 
     print(time.time()-tt)
-    idx,press,temp,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws=ipl2(loaded_obstab['observed_variable'],loaded_obstab['observation_value'],loaded_obstab['z_coordinate'],
-                                  loaded_obstab['z_coordinate_type'],loaded_obstab['date_time'])
+    #idx,press,temp,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws=ipl2(loaded_obstab['observed_variable'],loaded_obstab['observation_value'],loaded_obstab['z_coordinate'],
+                                  #loaded_obstab['z_coordinate_type'],loaded_obstab['date_time'])
+                                  
+    idx,press,temp,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws=ipl2(loaded_obstab)
+    
 #    idx=numpy.array(result[0])
     xtemp=xr.DataArray(temp)
     xpress=xr.DataArray(press)
@@ -570,7 +604,10 @@ def convert_missing(fn, destination: str = opath):
     a_keys.remove('report_id')
     a_keys.remove('sensor_id')
     a_keys.remove('source_id')
-    avars=augment(loaded_obstab, a_keys, loaded_observation_id ,loaded_report_id, loaded_sensor_id, loaded_source_id,
+    
+#    xtest(loaded_obstab)
+    obskeys=List(loaded_obstab.dtype.fields.keys())
+    avars=augment(loaded_obstab, a_loaded_obstab, obskeys,
                   idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
                   cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,cuwind,cvwind,cwd,cws,humvar,wvar)
     
