@@ -565,24 +565,24 @@ def convert_missing(fn, destination: str = opath):
     avars = {}
     for i in reduced_obskeys:
         avars[i] = out[i][:j]
-    print(addedvar[-10:])
-    for i in obskeys:
-        if i in reduced_obskeys:
-            avars[i] = out[i][:j]
-        else: 
-            print(i)
-            print(time.time()-tt)
-            with eua.CDMDataset(fn) as data:
-                rest_data = data.observations_table[i][:]
-            final = []
-            for o in addedvar:
-                cc = o[0]
-                final.append(rest_data[cc])
-                while len(final) < o[1]:
-                    final.append(rest_data[cc])
-            while len(final) < j:
-                final.append(rest_data[cc])
-            avars[i] = numpy.array(final)
+#     print(addedvar[-10:])
+#     for i in obskeys:
+#         if i in reduced_obskeys:
+#             avars[i] = out[i][:j]
+#         else: 
+#             print(i)
+#             print(time.time()-tt)
+#             with eua.CDMDataset(fn) as data:
+#                 rest_data = data.observations_table[i][:]
+#             final = []
+#             for o in addedvar:
+#                 cc = o[0]
+#                 final.append(rest_data[cc])
+#                 while len(final) < o[1]:
+#                     final.append(rest_data[cc])
+#             while len(final) < j:
+#                 final.append(rest_data[cc])
+#             avars[i] = numpy.array(final)
                 
         
     print(time.time()-tt)
@@ -686,20 +686,37 @@ def convert_missing(fn, destination: str = opath):
         mode='r+'
     else:
         mode='w'
-#     print()
-#     print('writing '+targetfile)
     
-    for i in range(len(obskeys)):
-        ov_vars = avars[obskeys[i]]
+    for i in obskeys:
+        print(i)
+        print(time.time()-tt)
+        
+        if i in reduced_obskeys:
+            ov_vars = avars[i]
+            
+        else: 
+            with eua.CDMDataset(fn) as data:
+                rest_data = data.observations_table[i][:]
+            final = []
+            for o in addedvar:
+                cc = o[0]
+                final.append(rest_data[cc])
+                while len(final) < o[1]:
+                    final.append(rest_data[cc])
+            while len(final) < j:
+                final.append(rest_data[cc])
+    #         avars[i] = numpy.array(final)
+            ov_vars = numpy.array(final)
+        
         ov_vars = ov_vars[absidx]
-        if obskeys[i] == 'index':
+        if i == 'index':
             pass
-        elif obskeys[i] == 'observation_id' or obskeys[i] == 'report_id' or obskeys[i] == 'sensor_id' or obskeys[i] == 'source_id':
-            alldict = {obskeys[i]:np.asarray(ov_vars, dtype='S1')}
-            write_dict_h5(targetfile, alldict, 'observations_table', {obskeys[i]: { 'compression': 'gzip' } }, [obskeys[i]])
+        elif i == 'observation_id' or i == 'report_id' or i == 'sensor_id' or i == 'source_id':
+            alldict = {i:np.asarray(ov_vars, dtype='S1')}
+            write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])
         else:
-            alldict = pandas.DataFrame({obskeys[i]:ov_vars})
-            write_dict_h5(targetfile, alldict, 'observations_table', {obskeys[i]: { 'compression': 'gzip' } }, [obskeys[i]])  
+            alldict = pandas.DataFrame({i:ov_vars})
+            write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])  
 
 # geht noch nicht
     #for i in range(len(fbkeys)):
