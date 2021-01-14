@@ -370,17 +370,15 @@ def wconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,cuw
 
 @njit
 def do_copy(a_obstab,obstab,j,i):
-    # eigentlich sollte diese Schleife gehen, leider gibt es da einen Fehler. Daher mache ich konkrete Zuweisungen.
-    #for o in obskeys:
-    #for o in 'date_time', 'observation_id', 'observation_value', 'observed_variable', 'z_coordinate', 'z_coordinate_type':
-        #a_obstab[o][j]=obstab[o][i]
+    # all written here - * will be overwritten if it's a converted variable
     a_obstab['date_time'][j]=obstab['date_time'][i]
-    a_obstab['observation_id'][j]=obstab['observation_id'][i]
-    a_obstab['observation_value'][j]=obstab['observation_value'][i]
-    a_obstab['observed_variable'][j]=obstab['observed_variable'][i]
+    a_obstab['observation_id'][j]=obstab['observation_id'][i] # *
+    a_obstab['observation_value'][j]=obstab['observation_value'][i] # *
+    a_obstab['observed_variable'][j]=obstab['observed_variable'][i] # *
     a_obstab['z_coordinate'][j]=obstab['z_coordinate'][i]
     a_obstab['z_coordinate_type'][j]=obstab['z_coordinate_type'][i]
-
+    a_obstab['conversion_flag'][j]=obstab['conversion_flag'][i] # *
+    a_obstab['conversion_method'][j]=obstab['conversion_method'][i] # *
     return
 
 @njit(boundscheck=True)          
@@ -421,9 +419,10 @@ def augment(obstab, a_obstab,obskeys,
             else:
                 do_copy(a_obstab,obstab,j,i)
                 if obstab['observed_variable'][i] in humvar:
-                    print('x')
+#                     a_obstab['observation_id'][j] = b'99' + obstab['observation_id'][j][2:]
                     qconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd)
                 elif obstab['observed_variable'][i] in wvar:
+#                     a_obstab['observation_id'][j] = b'99' + obstab['observation_id'][j][2:]
                     wconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],cuwind,cvwind,cwd,cws)
                     
         if humlist:
@@ -432,6 +431,7 @@ def augment(obstab, a_obstab,obskeys,
                     j+=1
                     do_copy(a_obstab,obstab,j,i)
                     a_obstab['observed_variable'][j]=h
+#                     a_obstab['observation_id'][j] = b'99' + obstab['observation_id'][j][2:]
                     qconvert(j,k,h,a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd)
                     if a_obstab['observation_value'][j]!=a_obstab['observation_value'][j]:
                         j-=1
@@ -442,6 +442,7 @@ def augment(obstab, a_obstab,obskeys,
                     j+=1
                     do_copy(a_obstab,obstab,j,i)
                     a_obstab['observed_variable'][j]=h
+#                     a_obstab['observation_id'][j] = b'99' + obstab['observation_id'][j][2:]
                     wconvert(j,k,h,a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],cuwind,cvwind,cwd,cws)
                     if a_obstab['observation_value'][j]!=a_obstab['observation_value'][j]:
                         j-=1
@@ -464,14 +465,28 @@ def xtest(loaded_obstab):
     print(loaded_obstab.dtype.fields)
     return
 
+@njit
+def fill_restdata(final, rest_data, addedvar, j):
+    fidx=0
+    for o in addedvar:
+        cc = o[0]
+        final[fidx]=rest_data[cc]
+        fidx+=1
+        while fidx < o[1]:
+            final[fidx]=rest_data[cc]
+            fidx+=1
+    while len(final) < j:
+        final[fidx]=rest_data[cc]
+        fidx+=1
+    return final
+
+def split(x): 
+    return [i.encode() for i in x.decode()]
+
 def convert_missing(fn, destination: str = opath):
     tt=time.time()
     nanlist = [float('nan'), np.nan, 0, -2147483648]
     with eua.CDMDataset(fn) as data:
-        arrayconverter = data.to_dataframe(groups='observations_table', variables=['observed_variable'])
-        arrayconverter = arrayconverter.observed_variable.head(1).to_xarray()
-        rto = data.recordtimestamp[:]
-        rio = data.recordindex[:]
         keys = data.observations_table.keys()
         keys = [x for x in keys if not x.startswith('string')]
         keys.remove('index')
@@ -505,6 +520,7 @@ def convert_missing(fn, destination: str = opath):
                     a_loaded_data.append(numpy.empty_like(loaded_data[-1],shape=3*len(loaded_data[-1])))
                 else:
                     loaded_data.append(data.observations_table[o][:].view('S{}'.format(data.observations_table[o].shape[1])).flatten())   
+#                     a_loaded_data.append(numpy.empty((3*len(loaded_data[-1]),len(loaded_data[-1][0])), dtype=loaded_data[-1][0].dtype))
                     a_loaded_data.append(numpy.empty_like(loaded_data[-1],shape=3*len(loaded_data[-1])))
                     a_loaded_data[-1].fill(b' '*data.observations_table[o].shape[1])
                 loaded_type['names'].append(o)
@@ -512,7 +528,6 @@ def convert_missing(fn, destination: str = opath):
                 ld.append((o,loaded_data[-1].dtype))
         loaded_obstab = numpy.rec.fromarrays(loaded_data, dtype=ld)
         a_loaded_obstab = numpy.rec.fromarrays(a_loaded_data, dtype=ld)
-
         loaded_fb = {}
         for o in fbkeys:
             loaded_fb[o] = data.era5fb[o][:]
@@ -550,52 +565,16 @@ def convert_missing(fn, destination: str = opath):
 
     humvar=numpy.array((34,36,38,39)) #dpd,dp,rh,sh
     wvar=numpy.array((104,105,106,107)) #dpd,dp,rh,sh
-#     a_keys = copy.copy(obskeys)
-#     a_keys.remove('observation_id')
-#     a_keys.remove('report_id')
-#     a_keys.remove('sensor_id')
-#     a_keys.remove('source_id')
-    
-#    xtest(loaded_obstab)
-#     obskeys=List(loaded_obstab.dtype.fields.keys())
+                       
     reduced_obskeys=List(loaded_obstab.dtype.fields.keys())
     out, ri, rt, j, addedvar=augment(loaded_obstab, a_loaded_obstab, reduced_obskeys,
                   idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
                   cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,cuwind,cvwind,cwd,cws,humvar,wvar)
     avars = {}
     for i in reduced_obskeys:
-        avars[i] = out[i][:j]
-#     print(addedvar[-10:])
-#     for i in obskeys:
-#         if i in reduced_obskeys:
-#             avars[i] = out[i][:j]
-#         else: 
-#             print(i)
-#             print(time.time()-tt)
-#             with eua.CDMDataset(fn) as data:
-#                 rest_data = data.observations_table[i][:]
-#             final = []
-#             for o in addedvar:
-#                 cc = o[0]
-#                 final.append(rest_data[cc])
-#                 while len(final) < o[1]:
-#                     final.append(rest_data[cc])
-#             while len(final) < j:
-#                 final.append(rest_data[cc])
-#             avars[i] = numpy.array(final)
-                
+        avars[i] = out[i][:j]                
         
-    print(time.time()-tt)
-    
-#     import matplotlib.pylab as plt
-# #    plt.plot(loaded_obstab['date_time'][idx],crhdpd*100)
-#     idz=numpy.where(numpy.logical_and(cdpdrh==cdpdrh ,press==50000))[0]
-#     plt.plot(loaded_obstab['date_time'][idx[idz]],cdpdrh[idz],linewidth=3)
-#     idy=np.where(avars['observed_variable']==34)[0]
-#     idzz=numpy.where(numpy.logical_and(~numpy.isnan(avars['observation_value'][idy]),avars['z_coordinate'][idy]==50000))[0]
-#     plt.plot(avars['date_time'][idy[idzz]],avars['observation_value'][idy[idzz]])
-#     #plt.show()
-    
+    print(time.time()-tt)    
           
     # sorting:
     print('start sorting')
@@ -625,7 +604,6 @@ def convert_missing(fn, destination: str = opath):
                     for j in file[i].keys():
                         newfile[i].create_dataset(j, data=file[i][j][:])
     
-#     data =  eua.CDMDataset(fn)
     allvars = copy.copy(avars['observed_variable'])
     allvars.sort()
     allvars = numpy.unique(allvars)
@@ -634,7 +612,6 @@ def convert_missing(fn, destination: str = opath):
     #
     # resorting the data
     #
-#     print('resort:start')
     @njit
     def make_vrindex(vridx,ridx,idx):
         l=0
@@ -644,7 +621,6 @@ def convert_missing(fn, destination: str = opath):
                 l=i
         vridx[ridx[i]:]=len(idx) # next record for the last element is the len of the data
 
-#     ri=avars['ri']
     ridxall=np.zeros(obsv.shape[0],dtype=np.int64) # reverse index - index of the record index
     j=-1
     for j in range(len(ri)-1):
@@ -665,21 +641,11 @@ def convert_missing(fn, destination: str = opath):
 
         absidx.append(copy.copy(idx)) # why copy? - to make sure it's not just the ref. - maybe ok without the cp
         abscount+=len(idx)
-
-    # finishing the sorting 
-    #
     absidx=np.concatenate(absidx)
-#     try:
-#         absidx=np.concatenate(absidx)
-#     except:
-#         absidx = absidx[0]
-    #
+                       
     # recordtimestamps are only necessary once
-    #
-    recordtimestamps = rt # avars['rt']
-    #
-    # targetfile has to be a copy of the original file
-    #
+    recordtimestamps = rt 
+    
     print('elapsed converting: ',time.time()-tt)
     tt=time.time()
     if os.path.isfile(targetfile):
@@ -691,22 +657,27 @@ def convert_missing(fn, destination: str = opath):
         print(i)
         print(time.time()-tt)
         
-        if i in reduced_obskeys:
+        if i == 'observation_id':
+#             ov_vars = avars[i]
+            ov_vars = copy.copy(avars[i])
+#             ov_vars = numpy.array([b'99'+x[:2] for x in ov_vars[avars['conversion_flag'] == 0]])
+            for o in range(len(ov_vars)):
+                if avars['conversion_flag'][o] == 0:
+                    ov_vars[o]=b'99'+ov_vars[o][:2]
+                    
+            ov_vars = ov_vars.view('S1').reshape((len(avars[i]),11))
+
+        elif i in reduced_obskeys:
             ov_vars = avars[i]
             
         else: 
             with eua.CDMDataset(fn) as data:
                 rest_data = data.observations_table[i][:]
-            final = []
-            for o in addedvar:
-                cc = o[0]
-                final.append(rest_data[cc])
-                while len(final) < o[1]:
-                    final.append(rest_data[cc])
-            while len(final) < j:
-                final.append(rest_data[cc])
-    #         avars[i] = numpy.array(final)
-            ov_vars = numpy.array(final)
+            if i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
+                final = numpy.empty((addedvar[-1][1],len(rest_data[0])), dtype=rest_data[0].dtype)
+            else:
+                final = numpy.empty(addedvar[-1][1], dtype=rest_data[0].dtype)
+            ov_vars = fill_restdata(final, rest_data, addedvar, j)
         
         ov_vars = ov_vars[absidx]
         if i == 'index':
