@@ -27,8 +27,8 @@ import rasotools
 import warnings
 warnings.filterwarnings('ignore')
 
-opath='/raid60/scratch/uli/converted_test/'
-# opath='/raid60/scratch/leo/scratch/converted_v2/'
+#opath='/raid60/scratch/uli/converted_test/'
+opath='/raid60/scratch/leo/scratch/converted_v2/'
 # if there are nan values in the pressure level - we will just sort without any converting!
 def do_resort(fn):
     targetfile = opath+fn.split('/')[-1]  
@@ -461,9 +461,15 @@ def augment(obstab, a_obstab,obskeys,
     return a_obstab, recordindex[:ri], recordtimestamp[:ri], j, addedvar
     
 @njit
-def xtest(loaded_obstab):
-    print(loaded_obstab.dtype.fields)
-    return
+def fill_obsid(avar,conversion_flag):
+    
+#             ov_vars = numpy.array([b'99'+x[:2] for x in ov_vars[avars['conversion_flag'] == 0]])
+    for o in range(avar.shape[0]):
+        if conversion_flag[o] == 0:
+            for i in range(2):
+                avar[o,i]=b'9'
+    
+    return avar
 
 @njit
 def fill_restdata(final, rest_data, addedvar, j):
@@ -661,11 +667,13 @@ def convert_missing(fn, destination: str = opath):
 #             ov_vars = avars[i]
             ov_vars = copy.copy(avars[i])
 #             ov_vars = numpy.array([b'99'+x[:2] for x in ov_vars[avars['conversion_flag'] == 0]])
-            for o in range(len(ov_vars)):
-                if avars['conversion_flag'][o] == 0:
-                    ov_vars[o]=b'99'+ov_vars[o][:2]
+            #for o in range(len(ov_vars)):
+                #if avars['conversion_flag'][o] == 0:
+                    #ov_vars[o]=b'99'+ov_vars[o][:2]
+
+            ov_vars=fill_obsid(ov_vars.view('S1').reshape((len(ov_vars),11)),avars['conversion_flag'])
                     
-            ov_vars = ov_vars.view('S1').reshape((len(avars[i]),11))
+            #ov_vars = ov_vars.view('S1').reshape((len(avars[i]),11))
 
         elif i in reduced_obskeys:
             ov_vars = avars[i]
@@ -711,7 +719,7 @@ def convert_missing(fn, destination: str = opath):
 
     write_dict_h5(targetfile, {'recordtimestamp':recordtimestamps}, 'recordindices', {'recordtimestamp': { 'compression': None } }, ['recordtimestamp'])
 
-    print('elapsed writing:',time.time()-tt)
+    print('elapsed writing '+targetfile+':',time.time()-tt)
     return
     
 
