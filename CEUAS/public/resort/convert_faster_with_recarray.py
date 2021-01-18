@@ -306,36 +306,73 @@ def ipl2(lobs):
     return idx,press,temp,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws
 
 @njit(boundscheck=True)
-def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd):
+def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd,crhsh,cdpdsh):
     
     if h==34:
         if cdpddp[k]==cdpddp[k]:
             a_observation_value[j]=cdpddp[k]
-            if numpy.abs(cdpddp[k])>50:
-                #print(k,cdpddp[k],cdpdrh[k],temp[k],press[k],dewpoint[k],i-1)
+            if (numpy.abs(cdpddp[k])>80) or (cdpddp[k]<0.01):
+                a_observation_value[j]=numpy.nan
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=2
+        elif cdpdrh[k]==cdpdrh[k]:
+            a_observation_value[j]=cdpdrh[k]
+            if (numpy.abs(cdpdrh[k])>80) or (cdpdrh[k]<0.01):
+                a_observation_value[j]=numpy.nan
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=3
+        else:
+            a_observation_value[j]=cdpdsh[k]
+            if (numpy.abs(cdpdsh[k])>80) or (cdpdsh[k]<0.01):
+                a_observation_value[j]=numpy.nan
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=4
+            
+    elif h==36:
+        if cdpdrh[k]==cdpdrh[k]:
+            a_observation_value[j]=temp[k]-cdpdrh[k]
+            if (numpy.abs(cdpdrh[k])>80) or (cdpdrh[k]<0.01):
+                a_observation_value[j]=numpy.nan
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=3
+        elif cdpdrh[k]==cdpdrh[k]:
+            a_observation_value[j]=temp[k]-cdpddp[k]
+            if (numpy.abs(cdpddp[k])>80) or (cdpddp[k]<0.01):
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=2
         else:
-            a_observation_value[j]=cdpdrh[k]
+            a_observation_value[j]=temp[k]-cdpdsh[k]
+            if (numpy.abs(cdpdsh[k])>80) or (cdpdsh[k]<0.01):
+                a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
-            a_conversion_method[j]=3
-            
-    elif h==36:
-        a_observation_value[j]=temp[k]-cdpdrh[k]
-        a_conversion_flag[j]=0
-        a_conversion_method[j]=3
+            a_conversion_method[j]=4
+        
     elif h==38:
-        a_observation_value[j]=crhdpd[k]
-        a_conversion_flag[j]=0
-        a_conversion_method[j]=2
+        if crhdpd[k]==crhdpd[k]:
+            a_observation_value[j]=crhdpd[k]
+            if (crhdpd[k]<0.) or (crhdpd[k]>1.03):
+                a_observation_value[j]=numpy.nan
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=2
+        else: 
+            a_observation_value[j]=crhsh[k]
+            if (crhsh[k]<0.) or (crhsh[k]>1.03):
+                a_observation_value[j]=numpy.nan
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=4
+            
     elif h==39:
         if cshrh[k]==cshrh[k]:
             a_observation_value[j]=cshrh[k]
+            if (cshrh[k]<0.) or (cshrh[k]>50.):
+                a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=3
         else:
             a_observation_value[j]=cshdpd[k]
+            if (cshdpd[k]<0.) or (cshdpd[k]>50.):
+                a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=2
     else:
@@ -358,6 +395,8 @@ def wconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,cuw
     elif h==106:
         if cwd[k]==cwd[k]:
             a_observation_value[j]=cwd[k]
+            if (cwd[k]<0.) or (cwd[k]>360.):
+                a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=2
     elif h==107:
@@ -384,7 +423,7 @@ def do_copy(a_obstab,obstab,j,i):
 @njit(boundscheck=True)          
 def augment(obstab, a_obstab,obskeys,
              idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
-             cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,cuwind,cvwind,cwd,cws,humvar,wvar):
+             cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,crhsh,cdpdsh,cuwind,cvwind,cwd,cws,humvar,wvar):
     
     print(obskeys,humvar)
     
@@ -419,7 +458,7 @@ def augment(obstab, a_obstab,obskeys,
             else:
                 do_copy(a_obstab,obstab,j,i)
                 if obstab['observed_variable'][i] in humvar:
-                    qconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd)
+                    qconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd,crhsh, cdpdsh)
                 elif obstab['observed_variable'][i] in wvar:
                     wconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],cuwind,cvwind,cwd,cws)
                     
@@ -430,7 +469,7 @@ def augment(obstab, a_obstab,obskeys,
                     do_copy(a_obstab,obstab,j,i)
                     a_obstab['observed_variable'][j]=h
 #                     a_obstab['observation_id'][j] = b'99' + obstab['observation_id'][j][2:]
-                    qconvert(j,k,h,a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd)
+                    qconvert(j,k,h,a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd,crhsh,cdpdsh)
                     if a_obstab['observation_value'][j]!=a_obstab['observation_value'][j]:
                         j-=1
             humlist.clear()
@@ -558,10 +597,10 @@ def convert_missing(fn, destination: str = opath):
     xdewpoint=xr.DataArray(dewpoint)
     cdpddp=temp-dewpoint
     cdpdrh=rasotools.met.convert.to_dpd(temp=xtemp,press=xpress,rel_humi=xrelhum).values
-#    cdpdsh=rasotools.met.convert.to_dpd(temp=xtemp,press=xpress,spec_humi=xspechum).values
+    cdpdsh=rasotools.met.convert.to_dpd(temp=xtemp,press=xpress,spec_humi=xspechum).values
     cshrh = rasotools.met.convert.to_sh(temp=xtemp, press=xpress, rel_humi=xrelhum).values
     cshdpd = rasotools.met.convert.to_sh(dpd=xtemp-xdewpoint, press=xpress, temp=xtemp).values
-#    crhsh = rasotools.met.convert.to_rh(temp=xtemp, spec_humi=xspechum, press=xpress).values
+    crhsh = rasotools.met.convert.to_rh(temp=xtemp, spec_humi=xspechum, press=xpress).values
     crhdpd = rasotools.met.convert.to_rh(temp=xtemp,dpd=xtemp-xdewpoint).values
 
     idy=numpy.where(loaded_obstab['z_coordinate_type'][idx]==2) # do not convert humidity if data are not on pressure coordinates
@@ -581,7 +620,7 @@ def convert_missing(fn, destination: str = opath):
     reduced_fbkeys=List(loaded_feedback.dtype.fields.keys())
     out, ri, rt, j, addedvar=augment(loaded_obstab, a_loaded_obstab, reduced_obskeys,
                   idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
-                  cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,cuwind,cvwind,cwd,cws,humvar,wvar)
+                  cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,crhsh,cdpdsh,cuwind,cvwind,cwd,cws,humvar,wvar)
     avars = {}
     for i in reduced_obskeys:
         avars[i] = out[i][:j]                
