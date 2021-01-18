@@ -365,13 +365,13 @@ def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,tem
     elif h==39:
         if cshrh[k]==cshrh[k]:
             a_observation_value[j]=cshrh[k]
-            if (cshrh[k]<0.) or (cshrh[k]>3.):
+            if (cshrh[k]<0.) or (cshrh[k]>50.):
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=3
         else:
             a_observation_value[j]=cshdpd[k]
-            if (cshdpd[k]<0.) or (cshdpd[k]>3.):
+            if (cshdpd[k]<0.) or (cshdpd[k]>50.):
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=2
@@ -395,6 +395,8 @@ def wconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,cuw
     elif h==106:
         if cwd[k]==cwd[k]:
             a_observation_value[j]=cwd[k]
+            if (cwd[k]<0.) or (cwd[k]>360.):
+                a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=2
     elif h==107:
