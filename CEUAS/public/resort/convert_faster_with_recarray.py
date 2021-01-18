@@ -233,13 +233,16 @@ def ipl(observed_variable,observation_value,z_coordinate,z_coordinate_type,recor
     return idx,press,temp,relhum,spechum,dpd,dewpoint
 
 @njit(boundscheck=True)
-def ipl2(lobs):
+def ipl2(lobs, fb):
     
     observed_variable=lobs['observed_variable']
     observation_value=lobs['observation_value']
     z_coordinate=lobs['z_coordinate']
     z_coordinate_type=lobs['z_coordinate_type']
     recordtimestamp=lobs['date_time']
+    
+    departure=fb['an_depar@body']
+    fg_departure=fb['fg_depar@body']
     
     jdx=0
     dpress=-1.
@@ -258,15 +261,33 @@ def ipl2(lobs):
     dewpoint=numpy.empty(jdx,dtype=observation_value.dtype)
     dpd=numpy.empty(jdx,dtype=observation_value.dtype)
     spechum=numpy.empty(jdx,dtype=observation_value.dtype)
-    
     uwind=numpy.empty(jdx,dtype=observation_value.dtype)
     vwind=numpy.empty(jdx,dtype=observation_value.dtype)
     ws=numpy.empty(jdx,dtype=observation_value.dtype)
     wd=numpy.empty(jdx,dtype=observation_value.dtype)
-
     temp=numpy.empty(jdx,dtype=observation_value.dtype)
     
-    for v in temp,relhum,dewpoint,dpd,spechum,uwind,vwind,wd,ws:
+    d_temp=numpy.empty(jdx,dtype=observation_value.dtype)
+    d_relhum=numpy.empty(jdx,dtype=observation_value.dtype)
+    d_spechum=numpy.empty(jdx,dtype=observation_value.dtype)
+    d_dpd=numpy.empty(jdx,dtype=observation_value.dtype)
+    d_dewpoint=numpy.empty(jdx,dtype=observation_value.dtype)
+    d_uwind=numpy.empty(jdx,dtype=observation_value.dtype)
+    d_vwind=numpy.empty(jdx,dtype=observation_value.dtype)
+    d_wd=numpy.empty(jdx,dtype=observation_value.dtype)
+    d_ws=numpy.empty(jdx,dtype=observation_value.dtype)
+    
+    fgd_temp=numpy.empty(jdx,dtype=observation_value.dtype)
+    fgd_relhum=numpy.empty(jdx,dtype=observation_value.dtype)
+    fgd_spechum=numpy.empty(jdx,dtype=observation_value.dtype)
+    fgd_dpd=numpy.empty(jdx,dtype=observation_value.dtype)
+    fgd_dewpoint=numpy.empty(jdx,dtype=observation_value.dtype)
+    fgd_uwind=numpy.empty(jdx,dtype=observation_value.dtype)
+    fgd_vwind=numpy.empty(jdx,dtype=observation_value.dtype)
+    fgd_wd=numpy.empty(jdx,dtype=observation_value.dtype)
+    fgd_ws=numpy.empty(jdx,dtype=observation_value.dtype)
+    
+    for v in temp,relhum,dewpoint,dpd,spechum,uwind,vwind,wd,ws,d_temp,d_relhum,d_spechum,d_dpd,d_dewpoint,d_uwind,d_vwind,d_wd,d_ws,fgd_temp,fgd_relhum,fgd_spechum,fgd_dpd,fgd_dewpoint,fgd_uwind,fgd_vwind,fgd_wd,fgd_ws:
         v.fill(numpy.nan)
     p=z_coordinate[0]-1.
     rts=recordtimestamp[0]-1
@@ -282,47 +303,75 @@ def ipl2(lobs):
     
         if observed_variable[i]==38:
             relhum[j]=observation_value[i]
+            d_relhum[j]=observation_value[i]-departure[i]
+            fgd_relhum[j]=observation_value[i]-fg_departure[i]
         elif observed_variable[i]==39:
             spechum[j]=observation_value[i]
+            d_spechum[j]=observation_value[i]-departure[i]
+            fgd_spechum[j]=observation_value[i]-fg_departure[i]
         elif observed_variable[i]==34:
             dpd[j]=observation_value[i]
+            d_dpd[j]=observation_value[i]-departure[i]
+            fgd_dpd[j]=observation_value[i]-fg_departure[i]
         elif observed_variable[i]==36:
             dewpoint[j]=observation_value[i]
+            d_dewpoint[j]=observation_value[i]-departure[i]
+            fgd_dewpoint[j]=observation_value[i]-fg_departure[i]
         elif observed_variable[i]==85:
             temp[j]=observation_value[i]
+            d_temp[j]=observation_value[i]-departure[i]
+            fgd_temp[j]=observation_value[i]-fg_departure[i]
         elif observed_variable[i]==104:
             uwind[j]=observation_value[i]
+            d_uwind[j]=observation_value[i]-departure[i]
+            fgd_uwind[j]=observation_value[i]-fg_departure[i]
         elif observed_variable[i]==105:
             vwind[j]=observation_value[i]
+            d_vwind[j]=observation_value[i]-departure[i]
+            fgd_vwind[j]=observation_value[i]-fg_departure[i]
         elif observed_variable[i]==106:
             wd[j]=observation_value[i]
+            d_wd[j]=observation_value[i]-departure[i]
+            fgd_wd[j]=observation_value[i]-fg_departure[i]
         elif observed_variable[i]==107:
             ws[j]=observation_value[i]
+            d_ws[j]=observation_value[i]-departure[i]
+            fgd_ws[j]=observation_value[i]-fg_departure[i]
         else:
             pass
                 
     #return        
     print(j,jdx)
-    return idx,press,temp,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws
+    return idx,press,temp,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,d_temp,d_relhum,d_spechum,d_dpd,d_dewpoint,d_uwind,d_vwind,d_wd,d_ws,fgd_temp,fgd_relhum,fgd_spechum,fgd_dpd,fgd_dewpoint,fgd_uwind,fgd_vwind,fgd_wd,fgd_ws
 
 @njit(boundscheck=True)
-def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd,crhsh,cdpdsh):
+def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,
+             a_an_depar,a_fg_depar,
+             temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd,crhsh,cdpdsh,
+             d_cdpddp,d_cdpdrh,d_cdpdsh,d_cshrh,d_cshdpd,d_crhsh,d_crhdpd,
+             fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd):
     
     if h==34:
         if cdpddp[k]==cdpddp[k]:
             a_observation_value[j]=cdpddp[k]
+            a_an_depar[j]=cdpddp[k]-d_cdpddp[k]
+            a_fg_depar[j]=cdpddp[k]-fgd_cdpddp[k]
             if (numpy.abs(cdpddp[k])>80) or (cdpddp[k]<0.01):
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=2
         elif cdpdrh[k]==cdpdrh[k]:
             a_observation_value[j]=cdpdrh[k]
+            a_an_depar[j]=cdpdrh[k]-d_cdpdrh[k]
+            a_fg_depar[j]=cdpdrh[k]-fgd_cdpdrh[k]
             if (numpy.abs(cdpdrh[k])>80) or (cdpdrh[k]<0.01):
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=3
         else:
             a_observation_value[j]=cdpdsh[k]
+            a_an_depar[j]=cdpdsh[k]-d_cdpdsh[k]
+            a_fg_depar[j]=cdpdsh[k]-fgd_cdpdsh[k]
             if (numpy.abs(cdpdsh[k])>80) or (cdpdsh[k]<0.01):
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
@@ -331,18 +380,24 @@ def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,tem
     elif h==36:
         if cdpdrh[k]==cdpdrh[k]:
             a_observation_value[j]=temp[k]-cdpdrh[k]
+            a_an_depar[j]=(temp[k]-cdpdrh[k])-(temp[k]-d_cdpdrh[k])
+            a_fg_depar[j]=(temp[k]-cdpdrh[k])-(temp[k]-fgd_cdpdrh[k])
             if (numpy.abs(cdpdrh[k])>80) or (cdpdrh[k]<0.01):
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=3
         elif cdpdrh[k]==cdpdrh[k]:
             a_observation_value[j]=temp[k]-cdpddp[k]
+            a_an_depar[j]=(temp[k]-cdpddp[k])-(temp[k]-d_cdpddp[k])
+            a_fg_depar[j]=(temp[k]-cdpddp[k])-(temp[k]-fgd_cdpddp[k])
             if (numpy.abs(cdpddp[k])>80) or (cdpddp[k]<0.01):
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=2
         else:
             a_observation_value[j]=temp[k]-cdpdsh[k]
+            a_an_depar[j]=(temp[k]-cdpdsh[k])-(temp[k]-d_cdpdsh[k])
+            a_fg_depar[j]=(temp[k]-cdpdsh[k])-(temp[k]-fgd_cdpdsh[k])
             if (numpy.abs(cdpdsh[k])>80) or (cdpdsh[k]<0.01):
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
@@ -351,12 +406,16 @@ def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,tem
     elif h==38:
         if crhdpd[k]==crhdpd[k]:
             a_observation_value[j]=crhdpd[k]
+            a_an_depar[j]=crhdpd[k]-d_crhdpd[k]
+            a_fg_depar[j]=crhdpd[k]-fgd_crhdpd[k]
             if (crhdpd[k]<0.) or (crhdpd[k]>1.03):
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=2
         else: 
             a_observation_value[j]=crhsh[k]
+            a_an_depar[j]=crhsh[k]-d_crhsh[k]
+            a_fg_depar[j]=crhsh[k]-fgd_crhsh[k]
             if (crhsh[k]<0.) or (crhsh[k]>1.03):
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
@@ -365,12 +424,16 @@ def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,tem
     elif h==39:
         if cshrh[k]==cshrh[k]:
             a_observation_value[j]=cshrh[k]
+            a_an_depar[j]=cshrh[k]-d_cshrh[k]
+            a_fg_depar[j]=cshrh[k]-fgd_cshrh[k]
             if (cshrh[k]<0.) or (cshrh[k]>50.):
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=3
         else:
             a_observation_value[j]=cshdpd[k]
+            a_an_depar[j]=cshdpd[k]-d_cshdpd[k]
+            a_fg_depar[j]=cshdpd[k]-fgd_cshdpd[k]
             if (cshdpd[k]<0.) or (cshdpd[k]>50.):
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
@@ -381,20 +444,30 @@ def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,tem
     return
 
 @njit(boundscheck=True)
-def wconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,cuwind,cvwind,cwd,cws):
+def wconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,
+             a_an_depar,a_fg_depar,
+             cuwind,cvwind,cwd,cws,
+             d_cwd,d_cws,
+             fgd_cwd,fgd_cws):
     if h==104:
         if cuwind[k]==cuwind[k]:
             a_observation_value[j]=cuwind[k]
+            a_an_depar[j]=numpy.nan
+            a_fg_depar[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=1
     elif h==105:
         if cvwind[k]==cvwind[k]:
             a_observation_value[j]=cvwind[k]
+            a_an_depar[j]=numpy.nan
+            a_fg_depar[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=1
     elif h==106:
         if cwd[k]==cwd[k]:
             a_observation_value[j]=cwd[k]
+            a_an_depar[j]=d_cwd[k]
+            a_fg_depar[j]=fgd_cwd[k]
             if (cwd[k]<0.) or (cwd[k]>360.):
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
@@ -402,6 +475,8 @@ def wconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,cuw
     elif h==107:
         if cws[k]==cws[k]:
             a_observation_value[j]=cws[k]
+            a_an_depar[j]=d_cws[k]
+            a_fg_depar[j]=fgd_cws[k]
             a_conversion_flag[j]=0
             a_conversion_method[j]=2
     else:
@@ -420,12 +495,24 @@ def do_copy(a_obstab,obstab,j,i):
     a_obstab['conversion_method'][j]=obstab['conversion_method'][i] # *
     return
 
+@njit
+def do_fb_copy(a_loaded_feedback,loaded_feedback,j,i):
+    # all written here - * will be overwritten if it's a converted variable
+    a_loaded_feedback['fg_depar@body'][j]=loaded_feedback['fg_depar@body'][i] # *
+    a_loaded_feedback['an_depar@body'][j]=loaded_feedback['an_depar@body'][i] # *
+    a_loaded_feedback['biascorr@body'][j]=loaded_feedback['biascorr@body'][i]
+    a_loaded_feedback['biascorr_fg@body'][j]=loaded_feedback['biascorr_fg@body'][i]
+    return
+
 @njit(boundscheck=True)          
-def augment(obstab, a_obstab,obskeys,
-             idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
-             cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,crhsh,cdpdsh,cuwind,cvwind,cwd,cws,humvar,wvar):
+def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
+            idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
+            cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,crhsh,cdpdsh,cuwind,cvwind,cwd,cws,
+            d_cdpddp,d_cdpdrh,d_cdpdsh,d_cshrh,d_cshdpd,d_crhsh,d_crhdpd,
+            fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd,
+            d_cwd,d_cws,fgd_cwd,fgd_cws,
+            humvar,wvar):
     
-    print(obskeys,humvar)
     
     recordindex=numpy.empty(idx.shape[0],obstab['date_time'].dtype)
     recordtimestamp=numpy.empty(idx.shape[0],obstab['date_time'].dtype)
@@ -451,25 +538,45 @@ def augment(obstab, a_obstab,obskeys,
             j+=1
             if obstab['observation_value'][i]==obstab['observation_value'][i]: 
                 do_copy(a_obstab,obstab,j,i)
+                do_fb_copy(a_loaded_feedback,loaded_feedback,j,i)
                 if obstab['observed_variable'][i] in humvar:
                     humlist.append(obstab['observed_variable'][i])
                 elif obstab['observed_variable'][i] in wvar:
                     wlist.append(obstab['observed_variable'][i])
             else:
                 do_copy(a_obstab,obstab,j,i)
+                a_loaded_feedback['biascorr@body'][j]=numpy.nan
+                a_loaded_feedback['biascorr_fg@body'][j]=numpy.nan
                 if obstab['observed_variable'][i] in humvar:
-                    qconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd,crhsh, cdpdsh)
+                    a_loaded_feedback['biascorr@body'][j]=numpy.nan
+                    a_loaded_feedback['biascorr_fg@body'][j]=numpy.nan
+                    qconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],
+                             a_loaded_feedback['an_depar@body'],a_loaded_feedback['fg_depar@body'],
+                             temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd,crhsh, cdpdsh, 
+                             d_cdpddp,d_cdpdrh,d_cdpdsh,d_cshrh,d_cshdpd,d_crhsh,d_crhdpd,
+                             fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd)
                 elif obstab['observed_variable'][i] in wvar:
-                    wconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],cuwind,cvwind,cwd,cws)
+                    a_loaded_feedback['biascorr@body'][j]=numpy.nan
+                    a_loaded_feedback['biascorr_fg@body'][j]=numpy.nan
+                    wconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],
+                             a_loaded_feedback['an_depar@body'],a_loaded_feedback['fg_depar@body'],
+                             cuwind,cvwind,cwd,cws,
+                             d_cwd,d_cws,
+                             fgd_cwd,fgd_cws)
                     
         if humlist:
             for h in humvar:
                 if h not in humlist:
                     j+=1
                     do_copy(a_obstab,obstab,j,i)
+                    a_loaded_feedback['biascorr@body'][j]=numpy.nan
+                    a_loaded_feedback['biascorr_fg@body'][j]=numpy.nan
                     a_obstab['observed_variable'][j]=h
-#                     a_obstab['observation_id'][j] = b'99' + obstab['observation_id'][j][2:]
-                    qconvert(j,k,h,a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd,crhsh,cdpdsh)
+                    qconvert(j,k,h,a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],
+                             a_loaded_feedback['an_depar@body'],a_loaded_feedback['fg_depar@body'],
+                             temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd,crhsh, cdpdsh, 
+                             d_cdpddp,d_cdpdrh,d_cdpdsh,d_cshrh,d_cshdpd,d_crhsh,d_crhdpd,
+                             fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd)
                     if a_obstab['observation_value'][j]!=a_obstab['observation_value'][j]:
                         j-=1
             humlist.clear()
@@ -478,9 +585,14 @@ def augment(obstab, a_obstab,obskeys,
                 if h not in wlist:
                     j+=1
                     do_copy(a_obstab,obstab,j,i)
+                    a_loaded_feedback['biascorr@body'][j]=numpy.nan
+                    a_loaded_feedback['biascorr_fg@body'][j]=numpy.nan
                     a_obstab['observed_variable'][j]=h
-#                     a_obstab['observation_id'][j] = b'99' + obstab['observation_id'][j][2:]
-                    wconvert(j,k,h,a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],cuwind,cvwind,cwd,cws)
+                    wconvert(j,k,h,a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],
+                             a_loaded_feedback['an_depar@body'],a_loaded_feedback['fg_depar@body'],
+                             cuwind,cvwind,cwd,cws,
+                             d_cwd,d_cws,
+                             fgd_cwd,fgd_cws)
                     if a_obstab['observation_value'][j]!=a_obstab['observation_value'][j]:
                         j-=1
             wlist.clear()
@@ -495,7 +607,7 @@ def augment(obstab, a_obstab,obskeys,
             print(k,idx.shape[0])
     j=j+1
     addedvar.append([i, j])
-    return a_obstab, recordindex[:ri], recordtimestamp[:ri], j, addedvar
+    return a_obstab, a_loaded_feedback, recordindex[:ri], recordtimestamp[:ri], j, addedvar
     
 @njit
 def fill_obsid(avar,conversion_flag):
@@ -532,19 +644,13 @@ def convert_missing(fn, destination: str = opath):
         keys.remove('index')
         keys.remove('shape')
         obskeys = keys
-        obstab_writetofile = [[] for i in range(len(obskeys))]
         
         keys = data.era5fb.keys()
 #         keys = [x for x in keys if x in ['fg_depar@body','an_depar@body','biascorr@body','biascorr_fg@body']]
         keys = [x for x in keys if not x.startswith('string')]
         keys.remove('index')
         keys.remove('shape')
-        fg_depar = keys.index('fg_depar@body')
-        depar = keys.index('an_depar@body')
-        biascorr = keys.index('biascorr@body')
-        fg_biascorr = keys.index('biascorr_fg@body')
         fbkeys = keys
-        fb_writetofile = [[] for i in range(len(fbkeys))]
         
         
         # loading data:
@@ -586,8 +692,7 @@ def convert_missing(fn, destination: str = opath):
         # --->
 
     print(time.time()-tt)
-    
-    idx,press,temp,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws=ipl2(loaded_obstab)
+    idx,press,temp,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,d_temp,d_relhum,d_spechum,d_dpd,d_dewpoint,d_uwind,d_vwind,d_wd,d_ws,fgd_temp,fgd_relhum,fgd_spechum,fgd_dpd,fgd_dewpoint,fgd_uwind,fgd_vwind,fgd_wd,fgd_ws=ipl2(loaded_obstab, loaded_feedback)
     
     xtemp=xr.DataArray(temp)
     xpress=xr.DataArray(press)
@@ -602,6 +707,32 @@ def convert_missing(fn, destination: str = opath):
     cshdpd = rasotools.met.convert.to_sh(dpd=xtemp-xdewpoint, press=xpress, temp=xtemp).values
     crhsh = rasotools.met.convert.to_rh(temp=xtemp, spec_humi=xspechum, press=xpress).values
     crhdpd = rasotools.met.convert.to_rh(temp=xtemp,dpd=xtemp-xdewpoint).values
+    
+    d_xtemp=xr.DataArray(d_temp)
+    d_xrelhum=xr.DataArray(d_relhum)
+    d_xspechum=xr.DataArray(d_spechum)
+    d_xdpd=xr.DataArray(d_dpd)
+    d_xdewpoint=xr.DataArray(d_dewpoint)
+    d_cdpddp=d_temp-d_dewpoint
+    d_cdpdrh=rasotools.met.convert.to_dpd(temp=d_xtemp,press=xpress,rel_humi=d_xrelhum).values
+    d_cdpdsh=rasotools.met.convert.to_dpd(temp=d_xtemp,press=xpress,spec_humi=d_xspechum).values
+    d_cshrh = rasotools.met.convert.to_sh(temp=d_xtemp, press=xpress, rel_humi=d_xrelhum).values
+    d_cshdpd = rasotools.met.convert.to_sh(dpd=d_xtemp-d_xdewpoint, press=xpress, temp=d_xtemp).values
+    d_crhsh = rasotools.met.convert.to_rh(temp=d_xtemp, spec_humi=d_xspechum, press=xpress).values
+    d_crhdpd = rasotools.met.convert.to_rh(temp=d_xtemp,dpd=d_xtemp-d_xdewpoint).values
+    
+    fgd_xtemp=xr.DataArray(fgd_temp)
+    fgd_xrelhum=xr.DataArray(fgd_relhum)
+    fgd_xspechum=xr.DataArray(fgd_spechum)
+    fgd_xdpd=xr.DataArray(fgd_dpd)
+    fgd_xdewpoint=xr.DataArray(fgd_dewpoint)
+    fgd_cdpddp=fgd_temp-fgd_dewpoint
+    fgd_cdpdrh=rasotools.met.convert.to_dpd(temp=fgd_xtemp,press=xpress,rel_humi=fgd_xrelhum).values
+    fgd_cdpdsh=rasotools.met.convert.to_dpd(temp=fgd_xtemp,press=xpress,spec_humi=fgd_xspechum).values
+    fgd_cshrh = rasotools.met.convert.to_sh(temp=fgd_xtemp, press=xpress, rel_humi=fgd_xrelhum).values
+    fgd_cshdpd = rasotools.met.convert.to_sh(dpd=fgd_xtemp-fgd_xdewpoint, press=xpress, temp=fgd_xtemp).values
+    fgd_crhsh = rasotools.met.convert.to_rh(temp=fgd_xtemp, spec_humi=fgd_xspechum, press=xpress).values
+    fgd_crhdpd = rasotools.met.convert.to_rh(temp=fgd_xtemp,dpd=fgd_xtemp-fgd_xdewpoint).values
 
     idy=numpy.where(loaded_obstab['z_coordinate_type'][idx]==2) # do not convert humidity if data are not on pressure coordinates
     for c in cdpdrh,cshrh,cshdpd,crhdpd:
@@ -610,20 +741,34 @@ def convert_missing(fn, destination: str = opath):
     cuwind = ws * np.cos(np.radians(wd))
     cvwind = ws * np.sin(np.radians(wd))
     cws = np.sqrt(uwind ** 2 + vwind ** 2)
+    d_ws = np.sqrt(d_uwind ** 2 + d_vwind ** 2)
+    fgd_ws = np.sqrt(fgd_uwind ** 2 + fgd_vwind ** 2)
     cwd = 90 - np.arctan2(-vwind, -uwind) * 180 / np.pi - 180.
     cwd = np.where(cwd > 0., cwd, 360.+cwd)
+    d_cwd = 90 - np.arctan2(-d_vwind, -d_uwind) * 180 / np.pi - 180.
+    d_cwd = np.where(cwd > 0., cwd, 360.+cwd)
+    fgd_cwd = 90 - np.arctan2(-fgd_vwind, -fgd_uwind) * 180 / np.pi - 180.
+    fgd_cwd = np.where(cwd > 0., cwd, 360.+cwd)
 
     humvar=numpy.array((34,36,38,39)) #dpd,dp,rh,sh
     wvar=numpy.array((104,105,106,107)) #dpd,dp,rh,sh
                        
     reduced_obskeys=List(loaded_obstab.dtype.fields.keys())
     reduced_fbkeys=List(loaded_feedback.dtype.fields.keys())
-    out, ri, rt, j, addedvar=augment(loaded_obstab, a_loaded_obstab, reduced_obskeys,
-                  idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
-                  cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,crhsh,cdpdsh,cuwind,cvwind,cwd,cws,humvar,wvar)
+    out, fb_out, ri, rt, j, addedvar=augment(loaded_obstab, a_loaded_obstab, loaded_feedback, a_loaded_feedback,
+                                             idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
+                                             cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,crhsh,cdpdsh,cuwind,cvwind,cwd,cws,
+                                             d_cdpddp,d_cdpdrh,d_cdpdsh,d_cshrh,d_cshdpd,d_crhsh,d_crhdpd,
+                                             fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd,
+                                             d_cwd,d_ws,fgd_cwd,fgd_ws,
+                                             humvar,wvar)
     avars = {}
+    fb_avars = {}
     for i in reduced_obskeys:
-        avars[i] = out[i][:j]                
+        avars[i] = out[i][:j]  
+        
+    for i in reduced_fbkeys:
+        fb_avars[i] = fb_out[i][:j]
         
     print(time.time()-tt)    
           
@@ -710,12 +855,6 @@ def convert_missing(fn, destination: str = opath):
         
         if i == 'observation_id':
             ov_vars = copy.copy(avars[i])
-#             ov_vars = numpy.array([b'99'+x[:2] for x in ov_vars[avars['conversion_flag'] == 0]])
-#             for o in range(len(ov_vars)):
-#                 if avars['conversion_flag'][o] == 0:
-#                     ov_vars[o]=b'99'+ov_vars[o][:2]
-#             ov_vars = ov_vars.view('S1').reshape((len(avars[i]),11))
-
             ov_vars=fill_obsid(ov_vars.view('S1').reshape((len(ov_vars),11)),avars['conversion_flag'])
 
         elif i in reduced_obskeys:
@@ -733,25 +872,38 @@ def convert_missing(fn, destination: str = opath):
         ov_vars = ov_vars[absidx]
         if i == 'index':
             pass
-        elif i == 'observation_id' or i == 'report_id' or i == 'sensor_id' or i == 'source_id':
+        elif i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
             alldict = {i:np.asarray(ov_vars, dtype='S1')}
             write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])
         else:
             alldict = pandas.DataFrame({i:ov_vars})
             write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])  
 
-# geht noch nicht
-    #for i in range(len(fbkeys)):
-        #fb_vars = np.asarray(fb_writetofile[i]) # data.era5fb[fbkeys[i]][:]
-        #fb_vars = fb_vars[absidx]
-        #if fbkeys[i] == 'index' or fbkeys[i] == 'string6' or fbkeys[i] == 'string7' or fbkeys[i] == 'string10':
-            #pass
-        #elif fbkeys[i] == 'expver' or fbkeys[i] == 'source@hdr' or fbkeys[i] == 'source_id' or fbkeys[i] == 'statid@hdr':
-            #alldict = {fbkeys[i]:np.asarray(fb_vars, dtype='S1')}
-            #write_dict_h5(targetfile, alldict, 'era5fb', {fbkeys[i]: { 'compression': 'gzip' } }, [fbkeys[i]])
-        #else:
-            #alldict = pandas.DataFrame({fbkeys[i]:fb_vars})
-            #write_dict_h5(targetfile, alldict, 'era5fb', {fbkeys[i]: { 'compression': 'gzip' } }, [fbkeys[i]]) 
+    for i in fbkeys:
+        print(i)
+        print(time.time()-tt)
+        
+        if i in reduced_obskeys:
+            ov_vars = fb_avars[i]
+            
+        else: 
+            with eua.CDMDataset(fn) as data:
+                rest_data = data.era5fb[i][:]
+            if i in ['expver', 'source@hdr', 'source_id', 'statid@hdr']:
+                final = numpy.empty((addedvar[-1][1],len(rest_data[0])), dtype=rest_data[0].dtype)
+            else:
+                final = numpy.empty(addedvar[-1][1], dtype=rest_data[0].dtype)
+            ov_vars = fill_restdata(final, rest_data, addedvar, j)
+        
+        ov_vars = ov_vars[absidx]
+        if i == 'index':
+            pass
+        elif i in ['expver', 'source@hdr', 'source_id', 'statid@hdr']:
+            alldict = {i:np.asarray(ov_vars, dtype='S1')}
+            write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i])
+        else:
+            alldict = pandas.DataFrame({i:ov_vars})
+            write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i]) 
     #
     # writing the recordindices and recordtimestamp.
     #       
