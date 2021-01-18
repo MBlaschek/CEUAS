@@ -311,7 +311,7 @@ def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,tem
     if h==34:
         if cdpddp[k]==cdpddp[k]:
             a_observation_value[j]=cdpddp[k]
-            if numpy.abs(cdpddp[k])>50:
+            if (numpy.abs(cdpddp[k])>50) or (cdpddp[k]<0.01):
                 #print(k,cdpddp[k],cdpdrh[k],temp[k],press[k],dewpoint[k],i-1)
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
@@ -326,9 +326,13 @@ def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,tem
         a_conversion_flag[j]=0
         a_conversion_method[j]=3
     elif h==38:
-        a_observation_value[j]=crhdpd[k]
-        a_conversion_flag[j]=0
-        a_conversion_method[j]=2
+        if crhdpd[k]==crhdpd[k]:
+            a_observation_value[j]=crhdpd[k]
+            if (crhdpd[k]>1.):
+                #print(k,cdpddp[k],cdpdrh[k],temp[k],press[k],dewpoint[k],i-1)
+                a_observation_value[j]=numpy.nan
+            a_conversion_flag[j]=0
+            a_conversion_method[j]=2
     elif h==39:
         if cshrh[k]==cshrh[k]:
             a_observation_value[j]=cshrh[k]
