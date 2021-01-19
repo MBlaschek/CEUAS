@@ -350,7 +350,6 @@ def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,
              temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd,crhsh,cdpdsh,
              d_cdpddp,d_cdpdrh,d_cdpdsh,d_cshrh,d_cshdpd,d_crhsh,d_crhdpd,
              fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd):
-    
     if h==34:
         if cdpddp[k]==cdpddp[k]:
             a_observation_value[j]=cdpddp[k]
@@ -545,15 +544,17 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
                     wlist.append(obstab['observed_variable'][i])
             else:
                 do_copy(a_obstab,obstab,j,i)
-                a_loaded_feedback['biascorr@body'][j]=numpy.nan
-                a_loaded_feedback['biascorr_fg@body'][j]=numpy.nan
                 if obstab['observed_variable'][i] in humvar:
+                    a_loaded_feedback['biascorr@body'][j]=numpy.nan
+                    a_loaded_feedback['biascorr_fg@body'][j]=numpy.nan
                     qconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],
                              a_loaded_feedback['an_depar@body'],a_loaded_feedback['fg_depar@body'],
                              temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd,crhsh, cdpdsh, 
                              d_cdpddp,d_cdpdrh,d_cdpdsh,d_cshrh,d_cshdpd,d_crhsh,d_crhdpd,
                              fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd)
                 elif obstab['observed_variable'][i] in wvar:
+                    a_loaded_feedback['biascorr@body'][j]=numpy.nan
+                    a_loaded_feedback['biascorr_fg@body'][j]=numpy.nan
                     wconvert(j,k,obstab['observed_variable'][i],a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],
                              a_loaded_feedback['an_depar@body'],a_loaded_feedback['fg_depar@body'],
                              cuwind,cvwind,cwd,cws,
