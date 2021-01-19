@@ -880,7 +880,7 @@ def convert_missing(fn, destination: str = opath):
         print(i)
         print(time.time()-tt)
         
-        if i in reduced_obskeys:
+        if i in reduced_fbkeys:
             ov_vars = fb_avars[i]
             
         else: 
