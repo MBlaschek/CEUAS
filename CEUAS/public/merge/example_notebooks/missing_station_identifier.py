@@ -6,10 +6,20 @@ import os,sys
 import numpy as np
 
 import matplotlib.pyplot as plt
+
+from multiprocessing import Pool
+from functools import partial
+
+
+dirs = ['bufr', 'ncar' , 'era5_1' , 'era5_2' , 'era5_3188' , 'era5_1759' , 'era5_1761' , 'igra2']
+harvested_dir = '/raid60/scratch/federico/HARVESTED_JAN2021/'
+
+
 '''
+
 """ Create a list of up-to-date missing station files, taken from the harvested files """
 harvested_dir = '/raid60/scratch/federico/HARVESTED_JAN2021/'
-dirs = ['bufr', 'ncar' , 'era5_1' , 'era5_2' , 'era5_3188' , 'era5_1759' , 'era5_1761' ]
+#dirs = ['bufr', 'ncar' , 'era5_1' , 'era5_2' , 'era5_3188' , 'era5_1759' , 'era5_1761' ]
 
 a = open('unidentified_station_files.txt' , 'w')
 
@@ -28,6 +38,7 @@ a.close()
 df = pd.read_csv('unidentified_station_files.txt')
 '''
 
+'''
 """ Dowload orginal stat_conf file """
 d = 'raw.githubusercontent.com/MBlaschek/CEUAS/'
 os.system('mkdir first_stat_conf' )
@@ -45,7 +56,7 @@ for f in F:
     
 
 """ Copy most up-to-date stat_conf files """
-os.system ('cp -r /raid8/srvx1/federico/GitHub/CEUAS_master_JANUARY2021/CEUAS/CEUAS/public/harvest/data/station_configurations new_stat_conf')        
+#os.system ('cp -r /raid8/srvx1/federico/GitHub/CEUAS_master_JANUARY2021/CEUAS/CEUAS/public/harvest/data/station_configurations new_stat_conf')        
 
 def count(df):
     oscar, igra2, wban, chuan, missing = 0,0,0,0,0
@@ -70,7 +81,6 @@ def count(df):
     return oscar, igra2, wban, chuan, missing
     
 
-dirs = ['bufr', 'ncar' , 'era5_1' , 'era5_2' , 'era5_3188' , 'era5_1759' , 'era5_1761' , 'igra2']
 
 for d in dirs:
     name = 'station_configuration_' + d + '.dat'
@@ -107,3 +117,118 @@ for d in dirs:
     
 
 print('Finished analyzing station_configurations files ')
+'''
+
+
+missing_files = {}
+
+
+for d in dirs:
+    missing_files[d] = []
+    for f in os.listdir(harvested_dir + '/' + d):
+        path = harvested_dir + '/' + d + '/' + f 
+        if '.nc' not in f:
+            continue
+        if f[0] == '-':   
+            missing_files[d].append(path)
+            
+            
+
+def analyze_missing_station_records(path):
+    try:
+        print('Doing' , path)
+        sc = xr.open_dataset(path , engine = 'h5netcdf' , group = 'station_configuration' , decode_times = False )
+        lat, lon = sc['latitude'].values[0],  sc['longitude'].values[0]
+        if lon > 180:
+            lon = lon - 360
+        size = os.path.getsize(path) / 10**6 
+    
+        ts = xr.open_dataset(path , engine = 'h5netcdf' , decode_times = True )['recordtimestamp'][:].values
+        min_date, max_date = min(ts), max (ts)
+        print(path)        
+        return [lat, lon, size, min_date, max_date, len(ts)]
+    
+    except:
+        print('Failing ' , path )
+        #return [np.nan, np.nan, np.nan, np.nan, np.nan, np.nan ]
+    
+    
+    
+    
+func=partial(analyze_missing_station_records)
+p=Pool(40)    
+missing_data = {}
+
+#files = missing_files['bufr'][:10]
+#missing_data=p.map(func,files)
+#missing_data=p.map(func,f)
+
+#for fi,num in zip(files, range(len(files)) ) :
+ #   a = analyze_missing_station_records(fi)
+    
+print(1)
+
+for k in missing_files.keys():
+    missing_data[k] = {}
+    files = missing_files[k]
+    #missing_data=list(p.map(func,f))
+    data=p.map(func,files)
+    for i,v in zip([0,1,2,3,4,5] , ['lat',  'lon', 'size', 'min_date', 'max_date', 'records' ] ):
+        values = [v for v in data if v ]
+        missing_data[k][v] = [ p[i] for p in values  ]
+    print('Exracted data')
+    
+    
+
+""" To plot:
+- locations of unidentfied stations
+- distribution of size (MB) of files
+- distribution of number of records
+"""
+def plot_stations(data):
+    import shapely
+    from shapely.geometry import Point, Polygon    
+    import geopandas as gpd
+    
+    out_dir = 'Missing_ids'
+    os.system('mkdir Plots')
+    os.system('mkdir Plots/' + out_dir)
+    
+    """ Getting the WMO regions json file """
+    WMO_json = 'WMO_regions.json'
+    if not os.path.isfile(WMO_json):
+        os.system( 'wget https://cpdb.wmo.int/js/json/WMO_regions.json --no-check-certificate ')
+
+    WMO =  gpd.read_file('WMO_regions.json')
+    
+
+    #clb=f.colorbar(c,ax=ax,orientation='horizontal')                                                                                                                                                                                                                                     
+    #clb.ax.set_title('{:6.4f}'.format(np.mean(ds[k]).values/43200)+' '+units)                                                                                                                                                                                                            
+
+    """ Loading from geopandas built-in methods """
+    world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres')) 
+    world = world.plot()
+    WMO.plot( ax=world,  facecolor="none", edgecolor="lightgray", lw = 0.8)
+
+    for d in data.keys():
+        world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+        world = world.plot()
+            WMO.plot( ax=world,  facecolor="none", edgecolor="lightgray", lw = 0.8)
+        
+        lat, lon, records= data[d]['lat'] , data[d]['lon'], data[d]['records']
+        
+        plotto = plt.scatter( lon, lat , c= records,  s = 0.7, cmap='rainbow' )
+        cbar = plt.colorbar(fraction=0.03, pad=0.03) # pad moves bar to left-right, fractions is the length of the bar
+        cbar.set_label('Number of Records ')
+
+
+        plt.title ('Missing Stations Id: ' + d , fontsize = 15)
+        plt.xlim([-180.,180.])
+        plt.ylim([-90.,90.])
+        #plt.legend(loc = 'lower left', fontsize = 6 ,ncol = 2)
+        plt.savefig('Plots/' + out_dir + '/MissingId_location_' +d +  '.png', dpi= 250,   bbox_inches = 'tight' )
+        print('Processed database ' , d )
+        plt.close()
+
+
+dummy = plot_stations(missing_data)
