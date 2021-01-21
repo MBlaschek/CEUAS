@@ -915,20 +915,26 @@ def convert_missing(fn, destination: str = opath):
     return
     
 
-files = glob.glob('/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020_sensor/0-20000-0-01*.nc')
+# files = glob.glob('/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020_sensor/0-20000-0-01*.nc')
+# files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_sensor/0-20000-0-97690*.nc')
+# files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_sensor/0-20500-0-93954*.nc')
+# files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_sensor/0-20400-0-04665*.nc')
+files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_sensor/*.nc')
+
+
 # print(files[:10])
 
 # convert_missing(files[6020])
 # convert_missing('/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020_sensor/0-20000-0-03414_CEUAS_merged_v0.nc')
 
 if __name__ == '__main__':
-#    pool = multiprocessing.Pool(processes=20)
-#    result_list = pool.map(convert_missing, files[100:1000])
-    idx=0
-    for f in files:
-        if '20000-0-01384' in f:
-            print(idx)
-            break
-        idx+=1
-    result_list = list(map(convert_missing, [files[idx]]))
+    pool = multiprocessing.Pool(processes=20)
+    result_list = pool.map(convert_missing, files[0:20])
+#     idx=0
+#     for f in files:
+#         if '20000-0-01384' in f:
+#             print(idx)
+#             break
+#         idx+=1
+#     result_list = list(map(convert_missing, [files[idx]]))
     print(result_list)
