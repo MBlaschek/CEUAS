@@ -22,7 +22,7 @@ import numpy as np
 import warnings
 import numpy
 from numba import njit
-from eccodes import *
+#from eccodes import *
 
 pv=sys.version.split('.')
 if pv[1]<'8':
@@ -1750,18 +1750,19 @@ def get_station_configuration_new(stations_id, station_configuration):
            si = s 
         #if ':' in si:
         #   si = si.split(':')[1]
-        
-        if len(s) > 10: # taking only the last 5 digits if IGRA file 
+        si_full = si
+        if len(si) > 10: # taking only the last 5 digits if IGRA file 
             si = s[-5:]
         if ':' in si:  # adjusting for era5 files which might contain ':'
-            si = si.split(':')[1]
-            
+            prim = si.split(':')[1]
+        else:
+            prim = si
         # checking first for primary ids
-        for prefix in ['0-2030','0-2000'] :            
+        for prefix in ['0-2030','0-2000','0-2040','0-2050' ] :            
             for code in ['0' , '1']:
-                station_id_primary = prefix + code + '-0-' + si
+                station_id_primary = prefix + code + '-0-' + prim
                 #station_id_primary                    = numpy.string_( '0-20000-0-' + si )   # remove the prefix to the station id 
-
+                station_id_primary = np.bytes_(station_id_primary)
                 matching_primary       = station_configuration.loc[station_configuration['primary_id'] == station_id_primary ]
         
                 # returning a primary id if found 
@@ -1770,18 +1771,27 @@ def get_station_configuration_new(stations_id, station_configuration):
 
      
         # checking for secondary ids      
-        secondary = station_configuration['secondary_id'] 
+        secondary = station_configuration['secondary_id'].astype(np.bytes_) # pandas interprets the secondary as integers, so when converting to strings 
+        # the zeroes in front of the numbers disappear. So I use bytes then convert to strings 
+        if len(si_full) == 4 : # bufr might have secondaries where the initial 0 was artificially added in the build_inventory, but not present in the file data 
+            si_full_2 = '0' + si_full
+            
+        si_full_2 = '0'+si_full if len(si_full) == 4 else '0'
         for second in secondary:
             try:
                 sec_dec = second.decode('utf-8')
             except:
                 sec_dec = str(second)
+            for ss in sec_dec.split(','):
+                
+                for f in [si_full, si_full_2]:
                     
-            if s == sec_dec:
-                        
-                sc = station_configuration.loc[station_configuration['secondary_id'] == second ]
-                return sc
-    
+                    if ss == f:
+                        index = np.where ( secondary == second )
+                        sc = station_configuration.loc[index]
+                        return sc
+                            
+        
     return None
 
 
@@ -2007,6 +2017,10 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
         #station_configuration_retrieved = get_station_configuration_f( station_id, cdm['station_configuration'] )            
         station_configuration_retrieved = get_station_configuration_new( station_id, cdm['station_configuration'] )            
         
+        if (station_configuration_retrieved['latitude'].values[0] < 0 and fbds['lat@hdr'][0] > 0) :
+            print('*** Correcting latitude missing minus sign ') # files from era5_1759 might have missing minus sign form the WBAN inventory 
+            fbds['lat@hdr'] =- fbds['lat@hdr']
+            
         try:
             #primary_id = cdm['station_configuration']['primary_id'].values[loc].decode('utf-8') # OLD
             primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')     
@@ -3320,6 +3334,8 @@ if __name__ == '__main__':
     
     stat_conf_path = '../data/station_configurations/'     
     stat_conf_file = stat_conf_path +   '/station_configuration_' + dataset + '.dat'    
+    tdict['prmary_id'] = np.bytes_
+    tdict['secondary_id'] = np.bytes_    
     cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
     clean_station_configuration(cdm_tab)              
             
@@ -3396,9 +3412,15 @@ small file
 BUFR
 -f /raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.10106.bfr -d bufr -o OUTPUT
 
+-f /raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.3124.bfr.nc -d bufr -o OUTPUT 
+
+
 # 0-20000-0-71910
 biggest file
 -f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.10393.txt.gz'  -d era5_1 -o OUTPUT
+-f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.01492.txt.gz'  -d era5_1 -o OUTPUT
+
+
 
 REMEBER:
 for the largest file you need python3.8 which is not from the /opt/anaconda3/bin/python
@@ -3416,6 +3438,8 @@ _era5.conv._10090.gz
 # ERA5 1759
 -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._1:82930.gz -d era5_1759 -o OUTPUT
 -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._2:3136.gz  -d era5_1759 -o OUTPUT
+-f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._2:50801.gz -d era5_1759 -o OUTPUT
+
 # ERA5 1761
 -f /raid60/scratch/leo/scratch/era5/odbs/1761/era5.1761.conv._1:41675.gz -d era5_1761 -o OUTPUT
 
@@ -3424,11 +3448,13 @@ _era5.conv._10090.gz
 
 #NCAR
 -f /raid60/scratch/federico/databases/UADB/uadb_windc_82930.txt -d ncar -o OUTPUT 
+-f /raid60/scratch/federico/databases/UADB/uadb_trhc_10184.txt -d ncar -o OUTPUT 
 
 #IGRA2
 -f /raid60/scratch/federico/databases/IGRAv2/BRM00082930-data.txt -d igra2 -o OUTPUT 
 -f /raid60/scratch/federico/databases/IGRAv2/UKM00003023-data.txt -d igra2 -o OUTPUT 
 
+-f /raid60/scratch/federico/databases/IGRAv2/USW00023103-data.txt -d igra2 -o OUTPUT 
 ### file containing a secondary id to test
 -f /raid60/scratch/federico/databases/UADB/ uadb_trhc_2225.txt -o OUTPUT -d ncar 
 0-20000-0-02225 2062,2225       OSTERSUND FROSON        63.18   14.5    rda/UADB_windc_002225.nc
