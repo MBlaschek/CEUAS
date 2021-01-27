@@ -27,11 +27,17 @@ import rasotools
 import warnings
 warnings.filterwarnings('ignore')
 
-opath='/raid60/scratch/uli/converted_test/'
+opath='/raid60/scratch/uli/converted_v5/'
 # opath='/raid60/scratch/leo/scratch/converted_v2/'
 # if there are nan values in the pressure level - we will just sort without any converting!
 def do_resort(fn):
-    targetfile = opath+fn.split('/')[-1]  
+    targetfile = opath+fn.split('/')[-1] 
+    
+    if os.path.isfile(targetfile):
+        try:
+            os.remove(targetfile)
+        except:
+            print('file could not be removed - overwriting will lead to errors')
     
     with h5py.File(fn, 'r') as file:
         with h5py.File(targetfile, 'w') as newfile:
@@ -641,15 +647,15 @@ def convert_missing(fn, destination: str = opath):
         keys.remove('index')
         keys.remove('shape')
         obskeys = keys
-        
+
         keys = data.era5fb.keys()
 #         keys = [x for x in keys if x in ['fg_depar@body','an_depar@body','biascorr@body','biascorr_fg@body']]
         keys = [x for x in keys if not x.startswith('string')]
         keys.remove('index')
         keys.remove('shape')
         fbkeys = keys
-        
-        
+
+
         # loading data:
         loaded_data=[]
         a_loaded_data=[]
@@ -670,7 +676,7 @@ def convert_missing(fn, destination: str = opath):
                 ld.append((o,loaded_data[-1].dtype))
         loaded_obstab = numpy.rec.fromarrays(loaded_data, dtype=ld)
         a_loaded_obstab = numpy.rec.fromarrays(a_loaded_data, dtype=ld)
-        
+
         loaded_fb=[]
         a_loaded_fb=[]
         loaded_type = {'names':[],'formats':[]}
@@ -684,13 +690,13 @@ def convert_missing(fn, destination: str = opath):
                 lf.append((o,loaded_fb[-1].dtype))
         loaded_feedback = numpy.rec.fromarrays(loaded_fb, dtype=lf)
         a_loaded_feedback = numpy.rec.fromarrays(a_loaded_fb, dtype=lf)
-            
+
         recordindex = data.recordindex[:]
         # --->
 
     print(time.time()-tt)
     idx,press,temp,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,d_temp,d_relhum,d_spechum,d_dpd,d_dewpoint,d_uwind,d_vwind,d_wd,d_ws,fgd_temp,fgd_relhum,fgd_spechum,fgd_dpd,fgd_dewpoint,fgd_uwind,fgd_vwind,fgd_wd,fgd_ws=ipl2(loaded_obstab, loaded_feedback)
-    
+
     xtemp=xr.DataArray(temp)
     xpress=xr.DataArray(press)
     xrelhum=xr.DataArray(relhum)
@@ -704,7 +710,7 @@ def convert_missing(fn, destination: str = opath):
     cshdpd = rasotools.met.convert.to_sh(dpd=xtemp-xdewpoint, press=xpress, temp=xtemp).values
     crhsh = rasotools.met.convert.to_rh(temp=xtemp, spec_humi=xspechum, press=xpress).values
     crhdpd = rasotools.met.convert.to_rh(temp=xtemp,dpd=xtemp-xdewpoint).values
-    
+
     d_xtemp=xr.DataArray(d_temp)
     d_xrelhum=xr.DataArray(d_relhum)
     d_xspechum=xr.DataArray(d_spechum)
@@ -717,7 +723,7 @@ def convert_missing(fn, destination: str = opath):
     d_cshdpd = rasotools.met.convert.to_sh(dpd=d_xtemp-d_xdewpoint, press=xpress, temp=d_xtemp).values
     d_crhsh = rasotools.met.convert.to_rh(temp=d_xtemp, spec_humi=d_xspechum, press=xpress).values
     d_crhdpd = rasotools.met.convert.to_rh(temp=d_xtemp,dpd=d_xtemp-d_xdewpoint).values
-    
+
     fgd_xtemp=xr.DataArray(fgd_temp)
     fgd_xrelhum=xr.DataArray(fgd_relhum)
     fgd_xspechum=xr.DataArray(fgd_spechum)
@@ -734,7 +740,7 @@ def convert_missing(fn, destination: str = opath):
     idy=numpy.where(loaded_obstab['z_coordinate_type'][idx]==2) # do not convert humidity if data are not on pressure coordinates
     for c in cdpdrh,cshrh,cshdpd,crhdpd:
         c[idy]=numpy.nan
-    
+
     cuwind = ws * np.cos(np.radians(wd))
     cvwind = ws * np.sin(np.radians(wd))
     cws = np.sqrt(uwind ** 2 + vwind ** 2)
@@ -749,7 +755,7 @@ def convert_missing(fn, destination: str = opath):
 
     humvar=numpy.array((34,36,38,39)) #dpd,dp,rh,sh
     wvar=numpy.array((104,105,106,107)) #dpd,dp,rh,sh
-                       
+
     reduced_obskeys=List(loaded_obstab.dtype.fields.keys())
     reduced_fbkeys=List(loaded_feedback.dtype.fields.keys())
     out, fb_out, ri, rt, j, addedvar=augment(loaded_obstab, a_loaded_obstab, loaded_feedback, a_loaded_feedback,
@@ -763,12 +769,12 @@ def convert_missing(fn, destination: str = opath):
     fb_avars = {}
     for i in reduced_obskeys:
         avars[i] = out[i][:j]  
-        
+
     for i in reduced_fbkeys:
         fb_avars[i] = fb_out[i][:j]
-        
+
     print(time.time()-tt)    
-          
+
     # sorting:
     print('start sorting')
     targetfile = destination+fn.split('/')[-1]
@@ -777,7 +783,7 @@ def convert_missing(fn, destination: str = opath):
             os.remove(targetfile)
         except:
             print('file could not be removed - overwriting will lead to errors')
-    
+
     with h5py.File(fn, 'r') as file:
         with h5py.File(targetfile, 'w') as newfile:
             groups = []
@@ -796,7 +802,7 @@ def convert_missing(fn, destination: str = opath):
                 else:
                     for j in file[i].keys():
                         newfile[i].create_dataset(j, data=file[i][j][:])
-    
+
     allvars = copy.copy(avars['observed_variable'])
     allvars.sort()
     allvars = numpy.unique(allvars)
@@ -835,28 +841,28 @@ def convert_missing(fn, destination: str = opath):
         absidx.append(copy.copy(idx)) # why copy? - to make sure it's not just the ref. - maybe ok without the cp
         abscount+=len(idx)
     absidx=np.concatenate(absidx)
-                       
+
     # recordtimestamps are only necessary once
     recordtimestamps = rt 
-    
+
     print('elapsed converting: ',time.time()-tt)
     tt=time.time()
     if os.path.isfile(targetfile):
         mode='r+'
     else:
         mode='w'
-    
+
     for i in obskeys:
         print(i)
         print(time.time()-tt)
-        
+
         if i == 'observation_id':
             ov_vars = copy.copy(avars[i])
             ov_vars=fill_obsid(ov_vars.view('S1').reshape((len(ov_vars),11)),avars['conversion_flag'])
 
         elif i in reduced_obskeys:
             ov_vars = avars[i]
-            
+
         else: 
             with eua.CDMDataset(fn) as data:
                 rest_data = data.observations_table[i][:]
@@ -865,7 +871,7 @@ def convert_missing(fn, destination: str = opath):
             else:
                 final = numpy.empty(addedvar[-1][1], dtype=rest_data[0].dtype)
             ov_vars = fill_restdata(final, rest_data, addedvar, j)
-        
+
         ov_vars = ov_vars[absidx]
         if i == 'index':
             pass
@@ -879,10 +885,10 @@ def convert_missing(fn, destination: str = opath):
     for i in fbkeys:
         print(i)
         print(time.time()-tt)
-        
+
         if i in reduced_fbkeys:
             ov_vars = fb_avars[i]
-            
+
         else: 
             with eua.CDMDataset(fn) as data:
                 rest_data = data.era5fb[i][:]
@@ -891,7 +897,7 @@ def convert_missing(fn, destination: str = opath):
             else:
                 final = numpy.empty(addedvar[-1][1], dtype=rest_data[0].dtype)
             ov_vars = fill_restdata(final, rest_data, addedvar, j)
-        
+
         ov_vars = ov_vars[absidx]
         if i == 'index':
             pass
@@ -912,6 +918,9 @@ def convert_missing(fn, destination: str = opath):
     write_dict_h5(targetfile, {'recordtimestamp':recordtimestamps}, 'recordindices', {'recordtimestamp': { 'compression': None } }, ['recordtimestamp'])
 
     print('elapsed writing '+targetfile+':',time.time()-tt)
+    f= open("/raid60/scratch/uli/converted_v5/log/"+fn.split('/')[-1]+".txt","w+")
+    f.write("done") 
+    f.close()
     return
     
 
@@ -919,8 +928,7 @@ def convert_missing(fn, destination: str = opath):
 # files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_sensor/0-20000-0-97690*.nc')
 # files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_sensor/0-20500-0-93954*.nc')
 # files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_sensor/0-20400-0-04665*.nc')
-files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_sensor/*.nc')
-
+# files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_sensor/*.nc')
 
 # print(files[:10])
 
@@ -928,13 +936,44 @@ files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_sensor/*.nc')
 # convert_missing('/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020_sensor/0-20000-0-03414_CEUAS_merged_v0.nc')
 
 if __name__ == '__main__':
-    pool = multiprocessing.Pool(processes=20)
-    result_list = pool.map(convert_missing, files[0:20])
-#     idx=0
-#     for f in files:
-#         if '20000-0-01384' in f:
-#             print(idx)
-#             break
-#         idx+=1
-#     result_list = list(map(convert_missing, [files[idx]]))
+    
+    no_height = ['/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-41915_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-94231_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-43009_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-40951_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-43042_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-94323_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-41565_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-41738_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-42484_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-42354_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-43259_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-62381_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20500-0-80417_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-95721_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-78088_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-87544_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-38696_CEUAS_merged_v0.nc',
+                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-04085_CEUAS_merged_v0.nc',]    
+    for i in no_height:
+        do_resort(i)
+        f= open("/raid60/scratch/uli/converted_v5/log/"+i.split('/')[-1]+".txt","w+")
+        f.write("done") 
+        f.close()
+
+    files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/*.nc')
+    already_done = glob.glob('/raid60/scratch/uli/converted_v5/log/*.txt')
+
+    files_to_convert = []
+    for i in files:
+        if not '/raid60/scratch/uli/converted_v5/log/'+i.split('/')[-1]+'.txt' in already_done:
+            files_to_convert.append(i)
+    
+#     for i in files_to_convert:
+#         print(i)
+#         convert_missing(i)
+
+    pool = multiprocessing.Pool(processes=10)
+    result_list = pool.map(convert_missing, files_to_convert)
     print(result_list)
+
