@@ -1423,6 +1423,63 @@ def mapdata(date=None, enddate=None, response=None):
     return output_file
 
 
+@hug.get('/statlist/', output=hug.output_format.file)
+def statdata(date=None, enddate=None, response=None):
+    """ Main Hug Index Function on get requests
+
+    index function requests get URI and converts into dictionary.
+
+    Args:
+        request: dictionary
+        response: str
+
+    Returns:
+
+    """
+    active_file = config['config_dir'] + '/active.json'
+    act = json.load(open(active_file,"r"))
+    
+#     namelist_file = config['config_dir'] + '/namelist.json'
+#     namelist = json.load(open(namelist_file,"r"))
+    
+    output_file = '/data/public/maplist_'+str(date)
+    
+    if enddate is None:
+        date = datetime_to_seconds(date)
+        rows = []
+        rows.append(['station', 'longitude', 'latitude'])
+        for i in act:
+            if (date >= act[i][0]) and (date <= act[i][1]):
+#                 name = namelist[i]
+                rows.append([i, act[i][3], act[i][2]])
+
+        with open(output_file, 'w') as csvfile:  
+            # creating a csv writer object  
+            csvwriter = csv.writer(csvfile)  
+            # writing the data rows  
+            csvwriter.writerows(rows) 
+            
+    if not enddate is None:
+        date = datetime_to_seconds(date)
+        enddate = datetime_to_seconds(enddate)
+        rows = []
+        rows.append(['station', 'longitude', 'latitude'])
+        for i in act:
+            if (date >= act[i][0]) and (enddate <= act[i][1]):
+#                 name = namelist[i]
+                rows.append([i, act[i][3], act[i][2]])
+
+        with open(output_file, 'w') as csvfile:  
+            # creating a csv writer object  
+            csvwriter = csv.writer(csvfile)  
+            # writing the data rows  
+            csvwriter.writerows(rows)
+
+    response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(output_file))
+    return output_file
+
+
+
 if __name__ == '__main__':
     active, wmo_regions, cf = init_server()
     #
