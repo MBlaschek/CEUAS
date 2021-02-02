@@ -1424,7 +1424,7 @@ def mapdata(date=None, enddate=None, response=None):
 
 
 @hug.get('/statlist/', output=hug.output_format.file)
-def statdata(date=None, enddate=None, response=None):
+def statdata(date=None, mindate=None, enddate=None, response=None):
     """ Main Hug Index Function on get requests
 
     index function requests get URI and converts into dictionary.
@@ -1459,7 +1459,27 @@ def statdata(date=None, enddate=None, response=None):
             # writing the data rows  
             csvwriter.writerows(rows) 
             
-    if not enddate is None:
+    elif ((not enddate is None) and (not mindate is None)):
+        mindate = datetime_to_seconds(mindate)
+        enddate = datetime_to_seconds(enddate)
+        rows = []
+        rows.append(['station', 'longitude', 'latitude'])
+        for i in act:
+            if (((mindate >= act[i][0]) and (enddate <= act[i][1])) or
+                ((mindate <= act[i][0]) and (enddate >= act[i][1])) or
+                ((mindate >= act[i][0]) and (enddate >= act[i][1])) or
+                ((mindate <= act[i][0]) and (enddate <= act[i][1]))
+               ):
+#                 name = namelist[i]
+                rows.append([i, act[i][3], act[i][2]])
+
+        with open(output_file, 'w') as csvfile:  
+            # creating a csv writer object  
+            csvwriter = csv.writer(csvfile)  
+            # writing the data rows  
+            csvwriter.writerows(rows)
+            
+    elif not enddate is None:
         date = datetime_to_seconds(date)
         enddate = datetime_to_seconds(enddate)
         rows = []
@@ -1474,6 +1494,7 @@ def statdata(date=None, enddate=None, response=None):
             csvwriter = csv.writer(csvfile)  
             # writing the data rows  
             csvwriter.writerows(rows)
+            
 
     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(output_file))
     return output_file
