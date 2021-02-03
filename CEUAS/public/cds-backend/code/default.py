@@ -1465,10 +1465,9 @@ def statdata(date=None, mindate=None, enddate=None, response=None):
         rows = []
         rows.append(['station', 'longitude', 'latitude'])
         for i in act:
-            if (((mindate >= act[i][0]) and (enddate <= act[i][1])) or
-                ((mindate <= act[i][0]) and (enddate >= act[i][1])) or
-                ((mindate >= act[i][0]) and (enddate >= act[i][1])) or
-                ((mindate <= act[i][0]) and (enddate <= act[i][1]))
+            if (((mindate >= act[i][0]) and (mindate <= act[i][1])) or
+                ((enddate >= act[i][0]) and (enddate <= act[i][1])) or
+                ((mindate <= act[i][0]) and (enddate >= act[i][1])) 
                ):
 #                 name = namelist[i]
                 rows.append([i, act[i][3], act[i][2]])
