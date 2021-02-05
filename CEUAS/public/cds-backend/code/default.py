@@ -1394,7 +1394,9 @@ def mapdata(date=None, enddate=None, response=None):
         rows.append(['station_name', 'longitude', 'latitude'])
         for i in act:
             if (date >= act[i][0]) and (date <= act[i][1]):
-                name = namelist[i]
+                # renaming deactivated for now
+                # name = namelist[i]
+                name = i
                 rows.append([name, act[i][3], act[i][2]])
 
         with open(output_file, 'w') as csvfile:  
@@ -1410,7 +1412,9 @@ def mapdata(date=None, enddate=None, response=None):
         rows.append(['station_name', 'longitude', 'latitude'])
         for i in act:
             if (date >= act[i][0]) and (enddate <= act[i][1]):
-                name = namelist[i]
+                # renaming deactivated for now
+                # name = namelist[i]
+                name = i
                 rows.append([name, act[i][3], act[i][2]])
 
         with open(output_file, 'w') as csvfile:  
