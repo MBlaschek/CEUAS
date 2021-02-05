@@ -890,10 +890,13 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
         
         if debug: tt=time.time()
         # Make a subset of groups/variables to read (speed up)
+        # Need to add station_configuration (required later) in read_write_request
+        #
         gdict = {
             'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
             'observations_table':['date_time','z_coordinate','observation_value','observed_variable'],
-            'header_table':[]
+            'header_table':[],
+            'station_configuration': ['station_name', 'primary_id']
         }
         if '0-20100-0' not in statid and '0-20200-0' not in statid:
             gdict["era5fb"]=[]
@@ -1866,7 +1869,9 @@ class CDMDataset:
         # Common Variables needed for a requested file
         #
         snames = ['platform_id', 'platform_name', 'observation_value', 'latitude',
-                  'longitude', 'time', 'air_pressure', 'trajectory_label']
+                  'longitude', 'time', 'air_pressure', 'trajectory_label', 
+                  'report_id']
+        # added report_id -> in observations_table, not to be confused with report_id from header_table -> trajectory_label
         logger.debug('Request-keys: %s', str(request.keys()))
         snames.append(cdsname)  # Add requested variable
         #
@@ -1958,6 +1963,7 @@ class CDMDataset:
             #
             # Station Configuration
             #
+            # station_configuration
             if 'station_configuration' in self.groups:
                 igroup = 'station_configuration'
                 # only records fitting criteria (zidx) are copied
@@ -1965,7 +1971,14 @@ class CDMDataset:
                     sh = self.file[igroup]['primary_id'].shape[1]
                     fout.attrs['primary_id'] = self.file[igroup]['primary_id'][0].view('S{}'.format(sh))[0]
                     sh = self.file[igroup]['station_name'].shape[1]
-                    fout.attrs['station_name'] = self.file[igroup]['station_name'][0].view('S{}'.format(sh))[0]
+                    station_name = self.file[igroup]['station_name'][0]
+                    fout.attrs['station_name'] = station_name.view('S{}'.format(sh))[0]
+                    # Add 
+                    fout.create_dataset('station_id', (idx.shape[0], sh))
+                    fout['station_id'][:,:] = station_name
+                    fout['station_id'].attrs['long_name'] = 'Name of Station'
+                    fout['station_id'].attrs['coordinates'] = np.string_("lat lon time plev")
+
                 except:
                     logger.warning('No primary_id in %s', filename_out)
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
