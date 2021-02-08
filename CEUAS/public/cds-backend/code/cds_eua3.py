@@ -1920,7 +1920,6 @@ class CDMDataset:
             #
             if 'observations_table' in self.groups:
                 igroup = 'observations_table'
-                logger.debug(cfcopy)
                 do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value',
@@ -1933,7 +1932,6 @@ class CDMDataset:
             if 'era5fb' in self.groups:
                 igroup = 'era5fb'
                 try:
-                    logger.debug(cfcopy)
                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                               var_selection=['fg_depar@body', 'an_depar@body',
                                              'biascorr@body'])
@@ -1947,7 +1945,6 @@ class CDMDataset:
             if 'adjera5' in self.groups:
                 igroup = 'adjera5'
                 try:
-                    logger.debug(cfcopy)
                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                               var_selection=['bias_estimate'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
@@ -1961,7 +1958,6 @@ class CDMDataset:
                 igroup = 'header_table'
                 # only records fitting criteria (zidx) are copied
                 # todo why is lon, lat not here?
-                logger.debug(cfcopy)
                 do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
                           var_selection=['report_id'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
@@ -1973,7 +1969,8 @@ class CDMDataset:
             # station_configuration
             if 'station_configuration' in self.groups:
                 igroup = 'station_configuration'
-                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'station_id',
+                cfcstationcon = {'station_name': {'cdmname': 'station_configuration/station_name', 'units': 'NA', 'shortname': 'station_name', 'coordinates': 'lat lon time plev', 'standard_name': 'station_name'}} 
+                do_cfcopy(fout, self.file, igroup, zidx, cfcstationcon, 'station_id',
                           var_selection=['station_name'])
                 # only records fitting criteria (zidx) are copied
                 
