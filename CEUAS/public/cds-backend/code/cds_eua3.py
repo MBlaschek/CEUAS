@@ -1967,20 +1967,20 @@ class CDMDataset:
             if 'station_configuration' in self.groups:
                 igroup = 'station_configuration'
                 # only records fitting criteria (zidx) are copied
-                try:
-                    sh = self.file[igroup]['primary_id'].shape[1]
-                    fout.attrs['primary_id'] = self.file[igroup]['primary_id'][0].view('S{}'.format(sh))[0]
-                    sh = self.file[igroup]['station_name'].shape[1]
-                    station_name = self.file[igroup]['station_name'][0]
-                    fout.attrs['station_name'] = station_name.view('S{}'.format(sh))[0]
-                    # Add 
-                    fout.create_dataset('station_id', (idx.shape[0], sh))
-                    fout['station_id'][:,:] = station_name
-                    fout['station_id'].attrs['long_name'] = 'Name of Station'
-                    fout['station_id'].attrs['coordinates'] = np.string_("lat lon time plev")
+                
+                sh = self.file[igroup]['primary_id'].shape[1]
+                fout.attrs['primary_id'] = self.file[igroup]['primary_id'][0].view('S{}'.format(sh))[0]
+                sh = self.file[igroup]['station_name'].shape[1]
+                station_name = self.file[igroup]['station_name'][0]
+                fout.attrs['station_name'] = station_name.view('S{}'.format(sh))[0]
+                # Add 
+                fout.create_dataset('station_id', (idx.shape[0], sh))
+                fout['station_id'][:,:] = station_name
+                fout['station_id'].attrs['long_name'] = 'Name of Station'
+                fout['station_id'].attrs['coordinates'] = np.string_("lat lon time plev")
 
-                except:
-                    logger.warning('No primary_id in %s', filename_out)
+#                 except:
+#                     logger.warning('No primary_id in %s', filename_out)
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
             # Fix Attributes and Globals
