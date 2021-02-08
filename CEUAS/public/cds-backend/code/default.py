@@ -657,7 +657,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     d = {}
     allowed_variables = ['temperature', 'u_component_of_wind', 'v_component_of_wind',
                          'wind_speed', 'wind_direction', 'relative_humidity',
-                         'specific_humidity', 'dew_point_temperature']
+                         'specific_humidity', 'dew_point_temperature', 'geopotential']
     #
     # Unknown keys ?
     #
