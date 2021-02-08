@@ -1983,7 +1983,7 @@ class CDMDataset:
                 # Add 
                 fout.create_dataset('station_id', (idx.shape[0], sh))
                 logger.debug(fout['station_id'])
-                fout['station_id'][:,:] = station_name
+                fout['station_id'][:] = station_name
                 fout['station_id'].attrs['long_name'] = 'Name of Station'
                 fout['station_id'].attrs['coordinates'] = np.string_("lat lon time plev")
                 logger.debug(fout['station_id'])
