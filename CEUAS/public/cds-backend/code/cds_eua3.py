@@ -1873,7 +1873,7 @@ class CDMDataset:
         #
         snames = ['platform_id', 'platform_name', 'observation_value', 'latitude',
                   'longitude', 'time', 'air_pressure', 'trajectory_label', 
-                  'report_id']
+                  'report_id', 'station_id']
         # added report_id -> in observations_table, not to be confused with report_id from header_table -> trajectory_label
         logger.debug('Request-keys: %s', str(request.keys()))
         snames.append(cdsname)  # Add requested variable
