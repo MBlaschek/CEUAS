@@ -1986,6 +1986,7 @@ class CDMDataset:
                 fout['station_id'][:,:] = station_name
                 fout['station_id'].attrs['long_name'] = 'Name of Station'
                 fout['station_id'].attrs['coordinates'] = np.string_("lat lon time plev")
+                logger.debug(fout['station_id'])
 
 #                 except:
 #                     logger.warning('No primary_id in %s', filename_out)
