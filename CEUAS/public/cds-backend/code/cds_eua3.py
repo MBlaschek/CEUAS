@@ -292,7 +292,8 @@ def read_standardnames(url: str = None) -> dict:
               'air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
               'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential',
               'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type',
-              'sample_size', 'sample_error', 'report_id', 'reference_sonde_type']
+              'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 
+              'station_name']
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
                 'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
@@ -302,7 +303,8 @@ def read_standardnames(url: str = None) -> dict:
     cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body',
                  'observations_table/sensor_id',
                  'observations_table/secondary_value', 'observations_table/original_precision',
-                 'observations_table/report_id', 'observations_table/reference_sensor_id']
+                 'observations_table/report_id', 'observations_table/reference_sensor_id',
+                 'station_configuration/station_name']
     cf = {}
     for c, cdm in zip(snames, cdmnames):
         cf[c] = {'cdmname': cdm, 'units': 'NA', 'shortname': c}
@@ -372,6 +374,7 @@ def read_standardnames(url: str = None) -> dict:
     cf['sample_error']['shortname'] = 'sample_error'
     cf['report_id']['shortname'] = 'report_id'
     cf['reference_sonde_type']['shortname'] = 'reference_sonde_type'
+    cf['station_name']['shortname'] = 'station_name'
     return cf
 
 
@@ -1870,7 +1873,7 @@ class CDMDataset:
         #
         snames = ['platform_id', 'platform_name', 'observation_value', 'latitude',
                   'longitude', 'time', 'air_pressure', 'trajectory_label', 
-                  'report_id']
+                  'report_id', 'station_id']
         # added report_id -> in observations_table, not to be confused with report_id from header_table -> trajectory_label
         logger.debug('Request-keys: %s', str(request.keys()))
         snames.append(cdsname)  # Add requested variable
