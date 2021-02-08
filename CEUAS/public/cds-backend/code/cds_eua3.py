@@ -1969,12 +1969,20 @@ class CDMDataset:
                 # only records fitting criteria (zidx) are copied
                 
                 sh = self.file[igroup]['primary_id'].shape[1]
+                print(sh)
                 fout.attrs['primary_id'] = self.file[igroup]['primary_id'][0].view('S{}'.format(sh))[0]
+                print(self.file[igroup]['primary_id'][0].view('S{}'.format(sh))[0])
+                print(fout)
                 sh = self.file[igroup]['station_name'].shape[1]
+                print(sh)
                 station_name = self.file[igroup]['station_name'][0]
+                print(station_name)
                 fout.attrs['station_name'] = station_name.view('S{}'.format(sh))[0]
+                print(station_name.view('S{}'.format(sh))[0])
+                print(fout)
                 # Add 
                 fout.create_dataset('station_id', (idx.shape[0], sh))
+                print(fout['station_id'])
                 fout['station_id'][:,:] = station_name
                 fout['station_id'].attrs['long_name'] = 'Name of Station'
                 fout['station_id'].attrs['coordinates'] = np.string_("lat lon time plev")
