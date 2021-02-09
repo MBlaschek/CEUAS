@@ -1970,8 +1970,8 @@ class CDMDataset:
             if 'station_configuration' in self.groups:
                 igroup = 'station_configuration'
                 cfcstationcon = {'station_name': {'cdmname': 'station_configuration/station_name', 'units': 'NA', 'shortname': 'station_id', 'coordinates': 'lat lon time plev', 'standard_name': 'station_name'}} 
-                logger.debug(idx)
-                do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'station_id',
+                logger.debug(zidx)
+                do_cfcopy(fout, self.file, igroup, zidx, cfcstationcon, 'station_id',
                           var_selection=['station_name'])
                 # only records fitting criteria (zidx) are copied
                 
