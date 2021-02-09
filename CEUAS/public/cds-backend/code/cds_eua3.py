@@ -1991,7 +1991,7 @@ class CDMDataset:
                 cfcstationcon = {'station_name': {'cdmname': 'station_configuration/station_name', 'units': 'NA', 'shortname': 'station_id', 'coordinates': 'lat lon time plev', 'standard_name': 'station_name'}} 
                 logger.debug(zidx)
                 do_cfcopy(fout, self.file, igroup, zidx, cfcstationcon, 'station_id',
-                          var_selection=['station_name'])
+                          var_selection=['station_name'], idx)
                 # only records fitting criteria (zidx) are copied
                 
 #                 sh = self.file[igroup]['primary_id'].shape[1]
