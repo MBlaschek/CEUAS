@@ -541,7 +541,7 @@ def get_global_attributes(cf=None, url=None):
 #
 ###############################################################################
 
-def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None, helpidx=None):
+def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
     """ Copy H5PY variables and apply subsetting (idx)
 
     Args:
@@ -608,7 +608,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None, helpidx=None)
                         if dim0 == 'station_id':
                             s1 = fin[group][v].shape[1]
                             fout.create_dataset_like(vlist[-1], fin[group][v],
-                                                     shape=(helpidx.shape[0], s1),
+                                                     shape=(idx.shape[0], s1),
                                                      chunks=True)
                             sname = 'string{}'.format(s1)
                             if sname not in fout.keys():
@@ -1990,8 +1990,8 @@ class CDMDataset:
                 igroup = 'station_configuration'
                 cfcstationcon = {'station_name': {'cdmname': 'station_configuration/station_name', 'units': 'NA', 'shortname': 'station_id', 'coordinates': 'lat lon time plev', 'standard_name': 'station_name'}} 
                 logger.debug(zidx)
-                do_cfcopy(fout, self.file, igroup, zidx, cfcstationcon, 'station_id',
-                          var_selection=['station_name'], helpidx=idx)
+                do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'station_id',
+                          var_selection=['station_name'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
             # Fix Attributes and Globals
