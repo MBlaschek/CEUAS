@@ -1991,31 +1991,7 @@ class CDMDataset:
                 cfcstationcon = {'station_name': {'cdmname': 'station_configuration/station_name', 'units': 'NA', 'shortname': 'station_id', 'coordinates': 'lat lon time plev', 'standard_name': 'station_name'}} 
                 logger.debug(zidx)
                 do_cfcopy(fout, self.file, igroup, zidx, cfcstationcon, 'station_id',
-                          var_selection=['station_name'], idx)
-                # only records fitting criteria (zidx) are copied
-                
-#                 sh = self.file[igroup]['primary_id'].shape[1]
-#                 logger.debug(sh)
-#                 fout.attrs['primary_id'] = self.file[igroup]['primary_id'][0].view('S{}'.format(sh))[0]
-#                 logger.debug(self.file[igroup]['primary_id'][0].view('S{}'.format(sh))[0])
-#                 logger.debug(fout)
-#                 sh = self.file[igroup]['station_name'].shape[1]
-#                 logger.debug(sh)
-#                 station_name = self.file[igroup]['station_name'][0]
-#                 logger.debug(station_name)
-#                 fout.attrs['station_name'] = station_name.view('S{}'.format(sh))[0]
-#                 logger.debug(station_name.view('S{}'.format(sh))[0])
-#                 logger.debug(fout)
-#                 # Add 
-#                 fout.create_dataset('station_id', (idx.shape[0], sh))
-#                 logger.debug(fout['station_id'])
-#                 fout['station_id'][:] = station_name
-#                 fout['station_id'].attrs['long_name'] = 'Name of Station'
-#                 fout['station_id'].attrs['coordinates'] = np.string_("lat lon time plev")
-#                 logger.debug(fout['station_id'])
-
-#                 except:
-#                     logger.warning('No primary_id in %s', filename_out)
+                          var_selection=['station_name'], helpidx=idx)
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
             # Fix Attributes and Globals
