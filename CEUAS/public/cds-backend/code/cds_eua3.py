@@ -541,7 +541,7 @@ def get_global_attributes(cf=None, url=None):
 #
 ###############################################################################
 
-def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
+def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None, helpidx=None):
     """ Copy H5PY variables and apply subsetting (idx)
 
     Args:
@@ -605,22 +605,41 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
                             logger.warning('not found: %s %s', group, v)
                             pass
                     else:
-                        s1 = fin[group][v].shape[1]
-                        fout.create_dataset_like(vlist[-1], fin[group][v],
-                                                 shape=(idx.shape[0], s1),
-                                                 chunks=True)
-                        sname = 'string{}'.format(s1)
-                        if sname not in fout.keys():
-                            fout.create_dataset(sname,
-                                                data=np.zeros(s1, dtype='S1'),
-                                                chunks=True)
-                            fout[sname].attrs['NAME'] = np.string_(
-                                'This is a netCDF dimension but not a netCDF variable.')
-                            fout[sname].make_scale(sname)
-                        hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
-                        if hilf.shape[0] == 0:
-                            print('x')
-                        fout[vlist[-1]][:] = hilf[idx - idx[0], :]
+                        if dim0 == 'station_id':
+                            s1 = fin[group][v].shape[1]
+                            fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                     shape=(helpidx.shape[0], s1),
+                                                     chunks=True)
+                            sname = 'string{}'.format(s1)
+                            if sname not in fout.keys():
+                                fout.create_dataset(sname,
+                                                    data=np.zeros(s1, dtype='S1'),
+                                                    chunks=True)
+                                fout[sname].attrs['NAME'] = np.string_(
+                                    'This is a netCDF dimension but not a netCDF variable.')
+                                fout[sname].make_scale(sname)
+                            hilf = fin[group][v][0]
+                            if hilf.shape[0] == 0:
+                                print('x')
+                            fout[vlist[-1]][:] = hilf[0]
+                        
+                        else:
+                            s1 = fin[group][v].shape[1]
+                            fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                     shape=(idx.shape[0], s1),
+                                                     chunks=True)
+                            sname = 'string{}'.format(s1)
+                            if sname not in fout.keys():
+                                fout.create_dataset(sname,
+                                                    data=np.zeros(s1, dtype='S1'),
+                                                    chunks=True)
+                                fout[sname].attrs['NAME'] = np.string_(
+                                    'This is a netCDF dimension but not a netCDF variable.')
+                                fout[sname].make_scale(sname)
+                            hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+                            if hilf.shape[0] == 0:
+                                print('x')
+                            fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                 except Exception as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
