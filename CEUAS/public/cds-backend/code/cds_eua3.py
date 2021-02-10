@@ -621,7 +621,8 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
                             hilf = fin[group][v][0]
                             if hilf.shape[0] == 0:
                                 print('x')
-                            fout[vlist[-1]][:] = hilf[idx - idx[0], :]
+                            hilf = [hilf]*len(fout[vlist[-1]])
+                            fout[vlist[-1]][:] = numpy.array(hilf)
                         
                         else:
                             s1 = fin[group][v].shape[1]
