@@ -541,7 +541,7 @@ def get_global_attributes(cf=None, url=None):
 #
 ###############################################################################
 
-def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
+def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None, eidx=None):
     """ Copy H5PY variables and apply subsetting (idx)
 
     Args:
@@ -604,7 +604,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
                         except:
                             logger.warning('not found: %s %s', group, v)
                             pass
-                    else:
+                    else:                        
                         if dim0 == 'station_id':
                             s1 = fin[group][v].shape[1]
                             fout.create_dataset_like(vlist[-1], fin[group][v],
@@ -1943,8 +1943,6 @@ class CDMDataset:
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value',
                                          'original_precision', 'report_id', 'reference_sensor_id'])
-                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
-                          var_selection=['report_id'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
@@ -1975,15 +1973,15 @@ class CDMDataset:
             #
             # Header Information
             #
-#             if 'header_table' in self.groups:
-#                 igroup = 'header_table'
-#                 # only records fitting criteria (zidx) are copied
-#                 # todo why is lon, lat not here?
-#                 do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
-#                           var_selection=['report_id'])
-#                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-#                 # ,'station_name','primary_station_id'])
-#                 # todo could be read from the observations_table
+            if 'header_table' in self.groups:
+                igroup = 'header_table'
+                # only records fitting criteria (zidx) are copied
+                # todo why is lon, lat not here?
+                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
+                          var_selection=['report_id'])
+                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                # ,'station_name','primary_station_id'])
+                # todo could be read from the observations_table
             #
             # Station Configuration
             #
