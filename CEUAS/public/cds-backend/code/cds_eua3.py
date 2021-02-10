@@ -621,7 +621,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
                             hilf = fin[group][v][0]
                             if hilf.shape[0] == 0:
                                 print('x')
-                            fout[vlist[-1]][:] = hilf
+                            fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                         
                         else:
                             s1 = fin[group][v].shape[1]
@@ -1943,6 +1943,8 @@ class CDMDataset:
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value',
                                          'original_precision', 'report_id', 'reference_sensor_id'])
+                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
+                          var_selection=['report_id'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
@@ -1973,15 +1975,15 @@ class CDMDataset:
             #
             # Header Information
             #
-            if 'header_table' in self.groups:
-                igroup = 'header_table'
-                # only records fitting criteria (zidx) are copied
-                # todo why is lon, lat not here?
-                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
-                          var_selection=['report_id'])
-                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                # ,'station_name','primary_station_id'])
-                # todo could be read from the observations_table
+#             if 'header_table' in self.groups:
+#                 igroup = 'header_table'
+#                 # only records fitting criteria (zidx) are copied
+#                 # todo why is lon, lat not here?
+#                 do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
+#                           var_selection=['report_id'])
+#                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+#                 # ,'station_name','primary_station_id'])
+#                 # todo could be read from the observations_table
             #
             # Station Configuration
             #
@@ -1989,7 +1991,6 @@ class CDMDataset:
             if 'station_configuration' in self.groups:
                 igroup = 'station_configuration'
                 cfcstationcon = {'station_name': {'cdmname': 'station_configuration/station_name', 'units': 'NA', 'shortname': 'station_id', 'coordinates': 'lat lon time plev', 'standard_name': 'station_name'}} 
-                logger.debug(zidx)
                 do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'station_id',
                           var_selection=['station_name'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
