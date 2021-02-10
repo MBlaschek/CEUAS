@@ -618,7 +618,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None, eidx=None):
                                 fout[sname].attrs['NAME'] = np.string_(
                                     'This is a netCDF dimension but not a netCDF variable.')
                                 fout[sname].make_scale(sname)
-                            hilf = fin[group][v][0]
+                            hilf = [fin[group][v][0]]*len(fout[vlist[-1]])
                             if hilf.shape[0] == 0:
                                 print('x')
                             fout[vlist[-1]][:] = hilf
