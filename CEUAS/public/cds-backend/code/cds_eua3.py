@@ -1976,7 +1976,7 @@ class CDMDataset:
             # Header Information
             #
             if 'header_table' in self.groups:
-                igroup = 'observations_table' # 'header_table'
+                igroup = 'header_table'
                 # only records fitting criteria (zidx) are copied
                 # todo why is lon, lat not here?
                 do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
