@@ -541,7 +541,7 @@ def get_global_attributes(cf=None, url=None):
 #
 ###############################################################################
 
-def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None, zidx=None):
+def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
     """ Copy H5PY variables and apply subsetting (idx)
 
     Args:
@@ -641,6 +641,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None, zidx=None):
                             if hilf.shape[0] == 0:
                                 print('x')
                             fout[vlist[-1]][:] = hilf[idx - idx[0], :]
+                            
                 except Exception as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
