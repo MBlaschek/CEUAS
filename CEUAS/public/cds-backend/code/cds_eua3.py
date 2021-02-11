@@ -541,7 +541,7 @@ def get_global_attributes(cf=None, url=None):
 #
 ###############################################################################
 
-def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None, eidx=None):
+def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
     """ Copy H5PY variables and apply subsetting (idx)
 
     Args:
@@ -605,7 +605,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None, eidx=None):
                             logger.warning('not found: %s %s', group, v)
                             pass
                     else:                        
-                        if dim0 == 'station_id':
+                        if v == 'station_name':
                             s1 = fin[group][v].shape[1]
                             fout.create_dataset_like(vlist[-1], fin[group][v],
                                                      shape=(idx.shape[0], s1),
@@ -624,7 +624,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None, eidx=None):
                             hilf = np.array([hilf]*idx.shape[0])
                             fout[vlist[-1]][:] = hilf
                         
-                        else:
+                        else:                                
                             s1 = fin[group][v].shape[1]
                             fout.create_dataset_like(vlist[-1], fin[group][v],
                                                      shape=(idx.shape[0], s1),
@@ -1945,8 +1945,6 @@ class CDMDataset:
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value',
                                          'original_precision', 'report_id', 'reference_sensor_id'])
                 # 'observed_variable','units'
-                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
-                          var_selection=['report_id'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
             # Feedback Information
@@ -1976,13 +1974,13 @@ class CDMDataset:
             #
             # Header Information
             #
-#             if 'header_table' in self.groups:
-#                 igroup = 'header_table'
-#                 # only records fitting criteria (zidx) are copied
-#                 # todo why is lon, lat not here?
-#                 do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
-#                           var_selection=['report_id'])
-#                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+            if 'header_table' in self.groups:
+                igroup = 'observations_table' # 'header_table'
+                # only records fitting criteria (zidx) are copied
+                # todo why is lon, lat not here?
+                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
+                          var_selection=['report_id'])
+                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 # ,'station_name','primary_station_id'])
                 # todo could be read from the observations_table
             #
@@ -1991,8 +1989,16 @@ class CDMDataset:
             # station_configuration
             if 'station_configuration' in self.groups:
                 igroup = 'station_configuration'
-                cfcstationcon = {'station_name': {'cdmname': 'station_configuration/station_name', 'units': 'NA', 'shortname': 'station_id', 'coordinates': 'lat lon time plev', 'standard_name': 'station_name'}} 
-                do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'station_id',
+                cfcstationcon = {'station_name': 
+                                 {
+                                     'cdmname': 'station_configuration/station_name',
+                                     'units': 'NA',
+                                     'shortname': 'station_id',
+                                     'coordinates': 'lat lon time plev',
+                                     'standard_name': 'station_name'
+                                 }
+                                } 
+                do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs',
                           var_selection=['station_name'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
