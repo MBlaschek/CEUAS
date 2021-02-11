@@ -1877,9 +1877,12 @@ class CDMDataset:
             recordindex = self['recordindices'][str(cdmnum)][()]  # values
             
         zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex < trange.stop))[0]
+        print(recordindex)
         print(zidx)
-        print(len(zidx))
+        print(idx)
+        print(trajectory_index)
         recordindex = recordindex[zidx]
+        print(len(zidx))
         zidx = calc_trajindexfast(recordindex, zidx, idx, trajectory_index)
         print(zidx)
         print(len(zidx))
