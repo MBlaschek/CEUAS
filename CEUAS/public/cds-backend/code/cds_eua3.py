@@ -574,7 +574,6 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None, zidx=None):
                     except:
                         pass
     vlist = []
-    second_report_id = False
     for _, cfv in cf.items():
         logger.debug('CFCOPY Looking for: %s in %s', cfv['cdmname'], group)
         for v in var_selection:
@@ -626,40 +625,22 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None, zidx=None):
                             fout[vlist[-1]][:] = hilf
                         
                         else: 
-                            if second_report_id:
-                                s1 = fin[group][v].shape[1]
-                                fout.create_dataset_like(vlist[-1], fin[group][v],
-                                                         shape=(zidx.shape[0], s1),
-                                                         chunks=True)
-                                sname = 'string{}'.format(s1)
-                                if sname not in fout.keys():
-                                    fout.create_dataset(sname,
-                                                        data=np.zeros(s1, dtype='S1'),
-                                                        chunks=True)
-                                    fout[sname].attrs['NAME'] = np.string_(
-                                        'This is a netCDF dimension but not a netCDF variable.')
-                                    fout[sname].make_scale(sname)
-                                hilf = fin[group][v][zidx[0]:zidx[-1] + 1, :]
-                                if hilf.shape[0] == 0:
-                                    print('x')
-                                fout[vlist[-1]][:] = hilf[zidx - zidx[0], :]
-                            else:
-                                s1 = fin[group][v].shape[1]
-                                fout.create_dataset_like(vlist[-1], fin[group][v],
-                                                         shape=(idx.shape[0], s1),
-                                                         chunks=True)
-                                sname = 'string{}'.format(s1)
-                                if sname not in fout.keys():
-                                    fout.create_dataset(sname,
-                                                        data=np.zeros(s1, dtype='S1'),
-                                                        chunks=True)
-                                    fout[sname].attrs['NAME'] = np.string_(
-                                        'This is a netCDF dimension but not a netCDF variable.')
-                                    fout[sname].make_scale(sname)
-                                hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
-                                if hilf.shape[0] == 0:
-                                    print('x')
-                                fout[vlist[-1]][:] = hilf[idx - idx[0], :]
+                            s1 = fin[group][v].shape[1]
+                            fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                     shape=(idx.shape[0], s1),
+                                                     chunks=True)
+                            sname = 'string{}'.format(s1)
+                            if sname not in fout.keys():
+                                fout.create_dataset(sname,
+                                                    data=np.zeros(s1, dtype='S1'),
+                                                    chunks=True)
+                                fout[sname].attrs['NAME'] = np.string_(
+                                    'This is a netCDF dimension but not a netCDF variable.')
+                                fout[sname].make_scale(sname)
+                            hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+                            if hilf.shape[0] == 0:
+                                print('x')
+                            fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                 except Exception as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
@@ -693,15 +674,11 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None, zidx=None):
                 l = 0
                 for d in fout[cfv['shortname']].dims:
                     if len(d) > 0:
-                        if l == 0 and second_report_id:
-                            fout[vlist[-1]].dims[l].attach_scale(fout['trajectory'])
-                        elif l == 0:
+                        if l == 0:
                             fout[vlist[-1]].dims[l].attach_scale(fout[dim0])
                         else:
                             fout[vlist[-1]].dims[l].attach_scale(fout[sname])
                     l += 1
-                if v == 'report_id':
-                    second_report_id=True
     tt = time.time() - tt
     if tt > 0.4:
         logger.warning('slow copy: %s %f s', group, tt)
@@ -1966,7 +1943,7 @@ class CDMDataset:
                 do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                         'original_precision', 'reference_sensor_id', 'report_id', 'report_id'], zidx=zidx) # << report_id has to be twice in the the list AT THE END!
+                                         'original_precision', 'reference_sensor_id', 'report_id'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
@@ -1997,15 +1974,15 @@ class CDMDataset:
             #
             # Header Information
             #
-#             if 'header_table' in self.groups:
-#                 igroup = 'observations_table' # 'header_table'
-#                 # only records fitting criteria (zidx) are copied
-#                 # todo why is lon, lat not here?
-#                 do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
-#                           var_selection=['report_id'])
-#                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-#                 # ,'station_name','primary_station_id'])
-#                 # todo could be read from the observations_table
+            if 'header_table' in self.groups:
+                igroup = 'observations_table' # 'header_table'
+                # only records fitting criteria (zidx) are copied
+                # todo why is lon, lat not here?
+                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
+                          var_selection=['report_id'])
+                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                # ,'station_name','primary_station_id'])
+                # todo could be read from the observations_table
             #
             # Station Configuration
             #
