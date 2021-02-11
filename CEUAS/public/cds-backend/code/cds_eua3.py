@@ -1879,8 +1879,8 @@ class CDMDataset:
         zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex < trange.stop))[0]
         print(zidx)
         recordindex = recordindex[zidx]
-        zidx = calc_trajindexfast(recordindex, zidx, idx, trajectory_index)
-        print(zidx)
+#         zidx = calc_trajindexfast(recordindex, zidx, idx, trajectory_index)
+#         print(zidx)
         #
         # Dimensions and Global Attributes
         #
