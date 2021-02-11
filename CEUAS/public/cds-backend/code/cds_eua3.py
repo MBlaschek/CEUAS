@@ -1966,7 +1966,7 @@ class CDMDataset:
                 do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                         'original_precision', 'reference_sensor_id', 'report_id', 'report_id'], zidx) # << report_id has to be twice in the the list AT THE END!
+                                         'original_precision', 'reference_sensor_id', 'report_id', 'report_id'], zidx=zidx) # << report_id has to be twice in the the list AT THE END!
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
