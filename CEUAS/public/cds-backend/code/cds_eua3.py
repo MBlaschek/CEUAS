@@ -104,8 +104,11 @@ def calc_trajindexfast(z, zidx, idx, trajectory_index):
             trajectory_index[j] = l
             j += 1
         else:
-#             while (idx[j] >= z[i] and idx[j] < z[i + 1]):
-            while (idx[j] >= z[i] and z[i] != z[i-1]):
+            nextz = z[i+i]
+            nexti = i + 1
+            while (z[nexti] == z[i]):
+                nexti += 1
+            while (idx[j] >= z[i] and idx[j] < z[nexti]):
                 print('idx[j] im while', idx[j])
                 print('z[i] im while', z[i])
                 print('j', j)
