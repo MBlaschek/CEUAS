@@ -104,7 +104,6 @@ def calc_trajindexfast(z, zidx, idx, trajectory_index):
             trajectory_index[j] = l
             j += 1
         else:
-            nextz = z[i+i]
             nexti = i + 1
             while (z[nexti] == z[i]):
                 nexti += 1
