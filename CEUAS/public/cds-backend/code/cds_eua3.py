@@ -94,6 +94,7 @@ def calc_trajindexfast(z, zidx, idx, trajectory_index):
     for i in range(z.shape[0] - 1):
         print('i', i)
         print('z[i]', z[i])
+        print('idx[i]', idx[i])
         jold = j
         if i == 0:
             print('idx[j] im while', idx[j])
