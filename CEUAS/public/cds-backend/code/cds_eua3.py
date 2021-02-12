@@ -103,7 +103,7 @@ def calc_trajindexfast(z, zidx, idx, trajectory_index):
             print('l', l)
             trajectory_index[j] = l
             j += 1
-        elif i < z.shape[0]:
+        elif i < (z.shape[0] - 1):
             nexti = i + 1
             while (z[nexti] == z[i]):
                 nexti += 1
