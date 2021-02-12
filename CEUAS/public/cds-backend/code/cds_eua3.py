@@ -92,15 +92,8 @@ def calc_trajindexfast(z, zidx, idx, trajectory_index):
     l = 0
     i = 0
     for i in range(z.shape[0] - 1):
-        print('i', i)
-        print('z[i]', z[i])
-        print('idx[j]', idx[j])
         jold = j
         if i == 0:
-            print('idx[j] im while', idx[j])
-            print('z[i] im while', z[i])
-            print('j', j)
-            print('l', l)
             trajectory_index[j] = l
             j += 1
         else:
@@ -110,23 +103,22 @@ def calc_trajindexfast(z, zidx, idx, trajectory_index):
                     nexti += 1
             if nexti < (z.shape[0] -1):
                 while (idx[j] >= z[i] and idx[j] < z[nexti]):
-                    print('idx[j] im while', idx[j])
-                    print('z[i] im while', z[i])
-                    print('j', j)
-                    print('l', l)
                     trajectory_index[j] = l
                     j += 1
                     if j == idx.shape[0]:
                         break
         if j > jold:
             zidx[l] = z0 + i
-            print('z0 + i', z0 + i)
             l += 1
         if j == idx.shape[0]:
             break
-    print('j < idx.shape[0]', j < idx.shape[0])
+            
     if j < idx.shape[0]:
-
+        print('last element')
+        print('j', j)
+        print('i', i)
+        print('idx[j]', idx[j])
+        print('z[i]', z[i])
         if z.shape[0] > 1:
             i += 1
         jold = j
