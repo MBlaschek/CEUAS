@@ -112,13 +112,12 @@ def calc_trajindexfast(z, zidx, idx, trajectory_index):
             l += 1
         if j == idx.shape[0]:
             break
-            
-    if j <= idx.shape[0]:
-        print('last element')
-        print('j', j)
-        print('i', i)
-        print('idx[j]', idx[j])
-        print('z[i]', z[i])
+    print('last element')
+    print('j', j)
+    print('i', i)
+    print('idx[j]', idx[j])
+    print('z[i]', z[i])
+    if j < idx.shape[0]:
         if z.shape[0] > 1:
             i += 1
         jold = j
