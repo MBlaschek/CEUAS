@@ -103,7 +103,6 @@ def calc_trajindexfast(z, zidx, idx, trajectory_index):
                     nexti += 1
             if nexti < (z.shape[0] -1):
                 while (idx[j] >= z[i] and idx[j] < z[nexti]):
-                    print('trajectory_index[',j,'=', l)
                     trajectory_index[j] = l
                     j += 1
                     if j == idx.shape[0]:
@@ -1885,14 +1884,8 @@ class CDMDataset:
             recordindex = self['recordindices'][str(cdmnum)][()]  # values
             
         zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex < trange.stop))[0]
-        print(zidx)
-        print(idx)
-        print(trajectory_index)
         recordindex = recordindex[zidx]
-        print('recordindex', recordindex)
         zidx = calc_trajindexfast(recordindex, zidx, idx, trajectory_index)
-        print(zidx)
-        print(len(zidx))
         #
         # Dimensions and Global Attributes
         #
