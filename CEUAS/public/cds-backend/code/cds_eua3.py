@@ -85,27 +85,37 @@ def logging_set_level(level: int):
 
 @njit(cache=True)
 def calc_trajindexfast(z, zidx, idx, trajectory_index):
-    """ Calculate Trajectory Index """
+    """ Calculate Trajectory Index 
+Args:
+    z : absolute index of all (variable)
+    zidx : index of valid times in z
+    idx : index of selected levels absolute
+    trajectory_index : output
+    """
     # zidx=numpy.zeros(z.shape[0],dtype=numpy.int32)
     z0 = zidx[0]
-    j = 0
-    l = 0
+    j = 0  # idx shape index
+    l = 0  # new unique change index -> zidx
     i = 0
+    # Search for every recordindex
     for i in range(z.shape[0] - 1):
         jold = j
+        # if they are inside idx
         while idx[j] >= z[i] and idx[j] < z[i + 1]:
-            trajectory_index[j] = l
+            trajectory_index[j] = l 
             j += 1
             if j == idx.shape[0]:
                 break
+        # if a break as been found, write that position into zidx
         if j > jold:
             zidx[l] = z0 + i
             l += 1
+        # at the end?
         if j == idx.shape[0]:
             break
-
+    
+    # 
     if j < idx.shape[0]:
-
         if z.shape[0] > 1:
             i += 1
         jold = j
@@ -1883,6 +1893,10 @@ class CDMDataset:
         #
         if 'optional' in request.keys():
             snames.extend(request['optional'])
+            
+        if 'bias_estimate_method' in request.keys():
+            # use era5adj group
+            pass
         
         # Copy Metadata -> used by do_cfcopy
         cfcopy = {}  # Copy of CDM Info Dictionary (read_standard_names())
@@ -1946,7 +1960,7 @@ class CDMDataset:
                 igroup = 'adjera5'
                 try:
                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-                              var_selection=['bias_estimate'])
+                              var_selection=['bias_estimate', 'bias_estimation_method'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))

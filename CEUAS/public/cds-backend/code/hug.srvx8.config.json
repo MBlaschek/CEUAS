@@ -4,7 +4,7 @@
   "logger_debug": "hug.debug.log",
   "logger_dir": "$SCRATCH/hug/logs",
   "src_path": ".",
-  "data_dir": "/raid60/scratch/federico/DATABASE_V1_11SEPTEMBER2020",
+  "data_dir": "/raid60/scratch/uli/resorted_files_correct",
   "tmp_dir": "$SCRATCH/hug/tmp",
   "comp_dir": "/raid60/scratch/leo/scratch/RI/Pangaea/nc",
   "config_dir": "$SCRATCH/hug/config",
