@@ -100,12 +100,20 @@ Args:
     # Search for every recordindex
     for i in range(z.shape[0] - 1):
         jold = j
-        # if they are inside idx
-        while idx[j] >= z[i] and idx[j] < z[i + 1]:
-            trajectory_index[j] = l 
+        if i == 0:
+            trajectory_index[j] = l
             j += 1
-            if j == idx.shape[0]:
-                break
+        else:
+            nexti = i + 1
+            if nexti < (z.shape[0] -1):
+                while (z[nexti] == z[i]):
+                    nexti += 1
+            if nexti < (z.shape[0] -1):
+                while (idx[j] >= z[i] and idx[j] < z[nexti]):
+                    trajectory_index[j] = l
+                    j += 1
+                    if j == idx.shape[0]:
+                        break
         # if a break as been found, write that position into zidx
         if j > jold:
             zidx[l] = z0 + i
@@ -114,19 +122,17 @@ Args:
         if j == idx.shape[0]:
             break
     
-    # 
     if j < idx.shape[0]:
-        if z.shape[0] > 1:
-            i += 1
         jold = j
-        while idx[j] >= z[i]:
-            trajectory_index[j] = l
-            j += 1
-            if j == idx.shape[0]:
-                break
-        if j > jold:
-            zidx[l] = z0 + i
-            l += 1
+    while (idx[j] >= z[i]): #and idx[j] < z[-1]):
+        trajectory_index[j] = l
+        zidx[l] = z0 + i
+        j += 1
+        l += 1
+        i += 1
+        if j == idx.shape[0]:
+            break
+            
     zidx = zidx[:l]
 
     return zidx
@@ -614,23 +620,44 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
                         except:
                             logger.warning('not found: %s %s', group, v)
                             pass
-                    else:
-                        s1 = fin[group][v].shape[1]
-                        fout.create_dataset_like(vlist[-1], fin[group][v],
-                                                 shape=(idx.shape[0], s1),
-                                                 chunks=True)
-                        sname = 'string{}'.format(s1)
-                        if sname not in fout.keys():
-                            fout.create_dataset(sname,
-                                                data=np.zeros(s1, dtype='S1'),
-                                                chunks=True)
-                            fout[sname].attrs['NAME'] = np.string_(
-                                'This is a netCDF dimension but not a netCDF variable.')
-                            fout[sname].make_scale(sname)
-                        hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
-                        if hilf.shape[0] == 0:
-                            print('x')
-                        fout[vlist[-1]][:] = hilf[idx - idx[0], :]
+                    else:                        
+                        if v == 'station_name':
+                            s1 = fin[group][v].shape[1]
+                            fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                     shape=(idx.shape[0], s1),
+                                                     chunks=True)
+                            sname = 'string{}'.format(s1)
+                            if sname not in fout.keys():
+                                fout.create_dataset(sname,
+                                                    data=np.zeros(s1, dtype='S1'),
+                                                    chunks=True)
+                                fout[sname].attrs['NAME'] = np.string_(
+                                    'This is a netCDF dimension but not a netCDF variable.')
+                                fout[sname].make_scale(sname)
+                            hilf = fin[group][v][0]
+                            if hilf.shape[0] == 0:
+                                print('x')
+                            hilf = np.array([hilf]*idx.shape[0])
+                            fout[vlist[-1]][:] = hilf
+                        
+                        else: 
+                            s1 = fin[group][v].shape[1]
+                            fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                     shape=(idx.shape[0], s1),
+                                                     chunks=True)
+                            sname = 'string{}'.format(s1)
+                            if sname not in fout.keys():
+                                fout.create_dataset(sname,
+                                                    data=np.zeros(s1, dtype='S1'),
+                                                    chunks=True)
+                                fout[sname].attrs['NAME'] = np.string_(
+                                    'This is a netCDF dimension but not a netCDF variable.')
+                                fout[sname].make_scale(sname)
+                            hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+                            if hilf.shape[0] == 0:
+                                print('x')
+                            fout[vlist[-1]][:] = hilf[idx - idx[0], :]
+                            
                 except Exception as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
@@ -1937,7 +1964,7 @@ class CDMDataset:
                 do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                         'original_precision', 'report_id', 'reference_sensor_id'])
+                                         'original_precision', 'reference_sensor_id', 'report_id'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
@@ -1983,33 +2010,17 @@ class CDMDataset:
             # station_configuration
             if 'station_configuration' in self.groups:
                 igroup = 'station_configuration'
-                cfcstationcon = {'station_name': {'cdmname': 'station_configuration/station_name', 'units': 'NA', 'shortname': 'station_id', 'coordinates': 'lat lon time plev', 'standard_name': 'station_name'}} 
-                do_cfcopy(fout, self.file, igroup, zidx, cfcstationcon, 'station_id',
+                cfcstationcon = {'station_name': 
+                                 {
+                                     'cdmname': 'station_configuration/station_name',
+                                     'units': 'NA',
+                                     'shortname': 'station_id',
+                                     'coordinates': 'lat lon time plev',
+                                     'standard_name': 'station_name'
+                                 }
+                                } 
+                do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs',
                           var_selection=['station_name'])
-                # only records fitting criteria (zidx) are copied
-                
-#                 sh = self.file[igroup]['primary_id'].shape[1]
-#                 logger.debug(sh)
-#                 fout.attrs['primary_id'] = self.file[igroup]['primary_id'][0].view('S{}'.format(sh))[0]
-#                 logger.debug(self.file[igroup]['primary_id'][0].view('S{}'.format(sh))[0])
-#                 logger.debug(fout)
-#                 sh = self.file[igroup]['station_name'].shape[1]
-#                 logger.debug(sh)
-#                 station_name = self.file[igroup]['station_name'][0]
-#                 logger.debug(station_name)
-#                 fout.attrs['station_name'] = station_name.view('S{}'.format(sh))[0]
-#                 logger.debug(station_name.view('S{}'.format(sh))[0])
-#                 logger.debug(fout)
-#                 # Add 
-#                 fout.create_dataset('station_id', (idx.shape[0], sh))
-#                 logger.debug(fout['station_id'])
-#                 fout['station_id'][:] = station_name
-#                 fout['station_id'].attrs['long_name'] = 'Name of Station'
-#                 fout['station_id'].attrs['coordinates'] = np.string_("lat lon time plev")
-#                 logger.debug(fout['station_id'])
-
-#                 except:
-#                     logger.warning('No primary_id in %s', filename_out)
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
             # Fix Attributes and Globals
