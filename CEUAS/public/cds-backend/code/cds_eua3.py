@@ -129,10 +129,6 @@ Args:
     
 #     if j < idx.shape[0]:
 #         jold = j
-    print('j: ',j)
-    print('idxlen: ',len(idx))
-    print('i: ',i)
-    print('zlen: ',len(z))
 
     while (idx[j] >= z[i]): #and idx[j] < z[-1]):
         trajectory_index[j] = l
@@ -144,7 +140,8 @@ Args:
             break
             
     zidx = zidx[:l]
-
+    print('zidx: ',zidx)
+    print('trajectory_index: ', trajectory_index)
     return zidx
 
 
