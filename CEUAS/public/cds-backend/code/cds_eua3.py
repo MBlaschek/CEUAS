@@ -83,11 +83,8 @@ def logging_set_level(level: int):
 #
 ###############################################################################
 
-# @njit(cache=True)
+@njit(cache=True, NUMBA_FULL_TRACEBACKS=1, NUMBA_BOUNDSCHECK=1)
 def calc_trajindexfast(z, zidx, idx, trajectory_index):
-    print('z', z)
-    print('zidx', zidx)
-    print('idx', idx)
     """ Calculate Trajectory Index 
 Args:
     z : absolute index of all (variable)
@@ -95,7 +92,6 @@ Args:
     idx : index of selected levels absolute
     trajectory_index : output
     """
-    # zidx=numpy.zeros(z.shape[0],dtype=numpy.int32)
     z0 = zidx[0]
     j = 0  # idx shape index
     l = 0  # new unique change index -> zidx
@@ -108,17 +104,15 @@ Args:
             j += 1
         else:
             nexti = i + 1
-            if nexti < (z.shape[0]): # -1):
+            if nexti < (z.shape[0] -1):
                 while (z[nexti] == z[i]):
                     nexti += 1
-                    if nexti >= (z.shape[0]): # -1):
+            if nexti < (z.shape[0] -1):
+                while (idx[j] >= z[i] and idx[j] < z[nexti]):
+                    trajectory_index[j] = l
+                    j += 1
+                    if j == idx.shape[0]:
                         break
-#             if nexti < (z.shape[0] -1):
-            while (idx[j] >= z[i] and idx[j] < z[nexti]):
-                trajectory_index[j] = l
-                j += 1
-                if j == idx.shape[0]:
-                    break
         # if a break as been found, write that position into zidx
         if j > jold:
             zidx[l] = z0 + i
@@ -129,7 +123,6 @@ Args:
     
 #     if j < idx.shape[0]:
 #         jold = j
-
     while (idx[j] >= z[i]): #and idx[j] < z[-1]):
         trajectory_index[j] = l
         zidx[l] = z0 + i
@@ -140,8 +133,6 @@ Args:
             break
             
     zidx = zidx[:l]
-    print('zidx: ',zidx)
-    print('trajectory_index: ', trajectory_index)
     return zidx
 
 
