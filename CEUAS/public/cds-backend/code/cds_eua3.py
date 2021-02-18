@@ -82,7 +82,7 @@ def logging_set_level(level: int):
 # - tohourday           - datetime to hours, days and day_shift
 #
 ###############################################################################
-@njit(cache=True, boundscheck=True)
+# @njit(cache=True)
 def calc_trajindexfast(z, zidx, idx, trajectory_index):
     """ Calculate Trajectory Index 
 Args:
