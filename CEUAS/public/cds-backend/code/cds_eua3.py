@@ -111,6 +111,8 @@ Args:
             if nexti < (z.shape[0] -1):
                 while (z[nexti] == z[i]):
                     nexti += 1
+                    if nexti >= (z.shape[0] -1):
+                        break
             if nexti < (z.shape[0] -1):
                 while (idx[j] >= z[i] and idx[j] < z[nexti]):
                     trajectory_index[j] = l
