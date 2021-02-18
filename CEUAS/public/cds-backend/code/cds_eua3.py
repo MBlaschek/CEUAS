@@ -83,7 +83,7 @@ def logging_set_level(level: int):
 #
 ###############################################################################
 
-# @njit(cache=True)
+@njit(cache=True)
 def calc_trajindexfast(z, zidx, idx, trajectory_index):
     """ Calculate Trajectory Index 
 Args:
