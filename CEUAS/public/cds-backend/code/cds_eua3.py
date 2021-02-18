@@ -108,17 +108,17 @@ Args:
             j += 1
         else:
             nexti = i + 1
-            if nexti < (z.shape[0] -1):
+            if nexti < (z.shape[0]): # -1):
                 while (z[nexti] == z[i]):
                     nexti += 1
-                    if nexti >= (z.shape[0] -1):
+                    if nexti >= (z.shape[0]): # -1):
                         break
-            if nexti < (z.shape[0] -1):
-                while (idx[j] >= z[i] and idx[j] < z[nexti]):
-                    trajectory_index[j] = l
-                    j += 1
-                    if j == idx.shape[0]:
-                        break
+#             if nexti < (z.shape[0] -1):
+            while (idx[j] >= z[i] and idx[j] < z[nexti]):
+                trajectory_index[j] = l
+                j += 1
+                if j == idx.shape[0]:
+                    break
         # if a break as been found, write that position into zidx
         if j > jold:
             zidx[l] = z0 + i
