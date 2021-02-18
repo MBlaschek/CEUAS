@@ -82,20 +82,15 @@ def logging_set_level(level: int):
 # - tohourday           - datetime to hours, days and day_shift
 #
 ###############################################################################
-# @njit(cache=True)
+
+@njit(cache=True)
 def calc_trajindexfast(z, zidx, idx, trajectory_index):
-    """ Calculate Trajectory Index 
-Args:
-    z : absolute index of all (variable)
-    zidx : index of valid times in z
-    idx : index of selected levels absolute
-    trajectory_index : output
-    """
+    """ Calculate Trajectory Index """
+    # zidx=numpy.zeros(z.shape[0],dtype=numpy.int32)
     z0 = zidx[0]
-    j = 0  # idx shape index
-    l = 0  # new unique change index -> zidx
+    j = 0
+    l = 0
     i = 0
-    # Search for every recordindex
     for i in range(z.shape[0] - 1):
         jold = j
         if i == 0:
@@ -108,20 +103,19 @@ Args:
                     nexti += 1
             if nexti < (z.shape[0] -1):
                 while (idx[j] >= z[i] and idx[j] < z[nexti]):
+                    print('trajectory_index[',j,'=', l)
                     trajectory_index[j] = l
                     j += 1
                     if j == idx.shape[0]:
                         break
-        # if a break as been found, write that position into zidx
         if j > jold:
             zidx[l] = z0 + i
             l += 1
-        # at the end?
         if j == idx.shape[0]:
             break
     
-#     if j < idx.shape[0]:
-#         jold = j
+    if j < idx.shape[0]:
+        jold = j
     while (idx[j] >= z[i]): #and idx[j] < z[-1]):
         trajectory_index[j] = l
         zidx[l] = z0 + i
@@ -132,7 +126,6 @@ Args:
             break
             
     zidx = zidx[:l]
-    return zidx
 
 
 @njit(cache=True)
