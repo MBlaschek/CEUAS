@@ -85,6 +85,9 @@ def logging_set_level(level: int):
 
 # @njit(cache=True)
 def calc_trajindexfast(z, zidx, idx, trajectory_index):
+    print('z', z)
+    print('zidx', zidx)
+    print('idx', idx)
     """ Calculate Trajectory Index 
 Args:
     z : absolute index of all (variable)
