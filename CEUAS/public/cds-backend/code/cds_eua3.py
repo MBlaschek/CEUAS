@@ -124,14 +124,14 @@ Args:
     
     if j < idx.shape[0]:
         jold = j
-    while (idx[j] >= z[i]): #and idx[j] < z[-1]):
-        trajectory_index[j] = l
-        zidx[l] = z0 + i
-        j += 1
-        l += 1
-        i += 1
-        if j == idx.shape[0]:
-            break
+        while (idx[j] >= z[i]): #and idx[j] < z[-1]):
+            trajectory_index[j] = l
+            zidx[l] = z0 + i
+            j += 1
+            l += 1
+            i += 1
+            if j == idx.shape[0]:
+                break
             
     zidx = zidx[:l]
 
