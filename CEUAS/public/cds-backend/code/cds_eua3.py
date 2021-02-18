@@ -83,40 +83,56 @@ def logging_set_level(level: int):
 #
 ###############################################################################
 
-@njit(cache=True)
+# @njit(cache=True)
 def calc_trajindexfast(z, zidx, idx, trajectory_index):
-    """ Calculate Trajectory Index """
+    """ Calculate Trajectory Index 
+Args:
+    z : absolute index of all (variable)
+    zidx : index of valid times in z
+    idx : index of selected levels absolute
+    trajectory_index : output
+    """
     # zidx=numpy.zeros(z.shape[0],dtype=numpy.int32)
     z0 = zidx[0]
-    j = 0
-    l = 0
+    j = 0  # idx shape index
+    l = 0  # new unique change index -> zidx
     i = 0
+    # Search for every recordindex
     for i in range(z.shape[0] - 1):
         jold = j
-        while idx[j] >= z[i] and idx[j] < z[i + 1]:
+        if i == 0:
             trajectory_index[j] = l
             j += 1
-            if j == idx.shape[0]:
-                break
+        else:
+            nexti = i + 1
+            if nexti < (z.shape[0] -1):
+                while (z[nexti] == z[i]):
+                    nexti += 1
+            if nexti < (z.shape[0] -1):
+                while (idx[j] >= z[i] and idx[j] < z[nexti]):
+                    trajectory_index[j] = l
+                    j += 1
+                    if j == idx.shape[0]:
+                        break
+        # if a break as been found, write that position into zidx
         if j > jold:
             zidx[l] = z0 + i
             l += 1
+        # at the end?
         if j == idx.shape[0]:
             break
-
+    
     if j < idx.shape[0]:
-
-        if z.shape[0] > 1:
-            i += 1
         jold = j
-        while idx[j] >= z[i]:
+        while (idx[j] >= z[i]): #and idx[j] < z[-1]):
             trajectory_index[j] = l
+            zidx[l] = z0 + i
             j += 1
+            l += 1
+            i += 1
             if j == idx.shape[0]:
                 break
-        if j > jold:
-            zidx[l] = z0 + i
-            l += 1
+            
     zidx = zidx[:l]
 
     return zidx
@@ -292,7 +308,8 @@ def read_standardnames(url: str = None) -> dict:
               'air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
               'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential',
               'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type',
-              'sample_size', 'sample_error', 'report_id', 'reference_sonde_type']
+              'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 
+              'station_name']
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
                 'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
@@ -302,7 +319,8 @@ def read_standardnames(url: str = None) -> dict:
     cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body',
                  'observations_table/sensor_id',
                  'observations_table/secondary_value', 'observations_table/original_precision',
-                 'observations_table/report_id', 'observations_table/reference_sensor_id']
+                 'observations_table/report_id', 'observations_table/reference_sensor_id',
+                 'station_configuration/station_name']
     cf = {}
     for c, cdm in zip(snames, cdmnames):
         cf[c] = {'cdmname': cdm, 'units': 'NA', 'shortname': c}
@@ -364,7 +382,7 @@ def read_standardnames(url: str = None) -> dict:
     cf['dew_point_temperature']['cdmcode'] = 36
     cf['dew_point_temperature']['odbcode'] = 59
     cf['geopotential']['cdsname'] = 'geopotential'
-    cf['geopotential']['cdmcode'] = -1
+    cf['geopotential']['cdmcode'] = 117
     cf['geopotential']['odbcode'] = 1
     cf['trajectory_label']['shortname'] = 'trajectory_label'
     cf['sonde_type']['shortname'] = 'sonde_type'
@@ -372,6 +390,7 @@ def read_standardnames(url: str = None) -> dict:
     cf['sample_error']['shortname'] = 'sample_error'
     cf['report_id']['shortname'] = 'report_id'
     cf['reference_sonde_type']['shortname'] = 'reference_sonde_type'
+    cf['station_name']['shortname'] = 'station_name'
     return cf
 
 
@@ -601,23 +620,44 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
                         except:
                             logger.warning('not found: %s %s', group, v)
                             pass
-                    else:
-                        s1 = fin[group][v].shape[1]
-                        fout.create_dataset_like(vlist[-1], fin[group][v],
-                                                 shape=(idx.shape[0], s1),
-                                                 chunks=True)
-                        sname = 'string{}'.format(s1)
-                        if sname not in fout.keys():
-                            fout.create_dataset(sname,
-                                                data=np.zeros(s1, dtype='S1'),
-                                                chunks=True)
-                            fout[sname].attrs['NAME'] = np.string_(
-                                'This is a netCDF dimension but not a netCDF variable.')
-                            fout[sname].make_scale(sname)
-                        hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
-                        if hilf.shape[0] == 0:
-                            print('x')
-                        fout[vlist[-1]][:] = hilf[idx - idx[0], :]
+                    else:                        
+                        if v == 'station_name':
+                            s1 = fin[group][v].shape[1]
+                            fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                     shape=(idx.shape[0], s1),
+                                                     chunks=True)
+                            sname = 'string{}'.format(s1)
+                            if sname not in fout.keys():
+                                fout.create_dataset(sname,
+                                                    data=np.zeros(s1, dtype='S1'),
+                                                    chunks=True)
+                                fout[sname].attrs['NAME'] = np.string_(
+                                    'This is a netCDF dimension but not a netCDF variable.')
+                                fout[sname].make_scale(sname)
+                            hilf = fin[group][v][0]
+                            if hilf.shape[0] == 0:
+                                print('x')
+                            hilf = np.array([hilf]*idx.shape[0])
+                            fout[vlist[-1]][:] = hilf
+                        
+                        else: 
+                            s1 = fin[group][v].shape[1]
+                            fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                     shape=(idx.shape[0], s1),
+                                                     chunks=True)
+                            sname = 'string{}'.format(s1)
+                            if sname not in fout.keys():
+                                fout.create_dataset(sname,
+                                                    data=np.zeros(s1, dtype='S1'),
+                                                    chunks=True)
+                                fout[sname].attrs['NAME'] = np.string_(
+                                    'This is a netCDF dimension but not a netCDF variable.')
+                                fout[sname].make_scale(sname)
+                            hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+                            if hilf.shape[0] == 0:
+                                print('x')
+                            fout[vlist[-1]][:] = hilf[idx - idx[0], :]
+                            
                 except Exception as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
@@ -890,10 +930,13 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
         
         if debug: tt=time.time()
         # Make a subset of groups/variables to read (speed up)
+        # Need to add station_configuration (required later) in read_write_request
+        #
         gdict = {
             'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
             'observations_table':['date_time','z_coordinate','observation_value','observed_variable'],
-            'header_table':[]
+            'header_table':[],
+            'station_configuration': ['station_name', 'primary_id']
         }
         if '0-20100-0' not in statid and '0-20200-0' not in statid:
             gdict["era5fb"]=[]
@@ -1866,7 +1909,9 @@ class CDMDataset:
         # Common Variables needed for a requested file
         #
         snames = ['platform_id', 'platform_name', 'observation_value', 'latitude',
-                  'longitude', 'time', 'air_pressure', 'trajectory_label']
+                  'longitude', 'time', 'air_pressure', 'trajectory_label', 
+                  'report_id', 'station_id']
+        # added report_id -> in observations_table, not to be confused with report_id from header_table -> trajectory_label
         logger.debug('Request-keys: %s', str(request.keys()))
         snames.append(cdsname)  # Add requested variable
         #
@@ -1875,6 +1920,10 @@ class CDMDataset:
         #
         if 'optional' in request.keys():
             snames.extend(request['optional'])
+            
+        if 'bias_estimate_method' in request.keys():
+            # use era5adj group
+            pass
         
         # Copy Metadata -> used by do_cfcopy
         cfcopy = {}  # Copy of CDM Info Dictionary (read_standard_names())
@@ -1915,7 +1964,7 @@ class CDMDataset:
                 do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                         'original_precision', 'report_id', 'reference_sensor_id'])
+                                         'original_precision', 'reference_sensor_id', 'report_id'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
@@ -1938,7 +1987,7 @@ class CDMDataset:
                 igroup = 'adjera5'
                 try:
                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-                              var_selection=['bias_estimate'])
+                              var_selection=['bias_estimate', 'bias_estimation_method'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
@@ -1958,16 +2007,20 @@ class CDMDataset:
             #
             # Station Configuration
             #
+            # station_configuration
             if 'station_configuration' in self.groups:
                 igroup = 'station_configuration'
-                # only records fitting criteria (zidx) are copied
-                try:
-                    sh = self.file[igroup]['primary_id'].shape[1]
-                    fout.attrs['primary_id'] = self.file[igroup]['primary_id'][0].view('S{}'.format(sh))[0]
-                    sh = self.file[igroup]['station_name'].shape[1]
-                    fout.attrs['station_name'] = self.file[igroup]['station_name'][0].view('S{}'.format(sh))[0]
-                except:
-                    logger.warning('No primary_id in %s', filename_out)
+                cfcstationcon = {'station_name': 
+                                 {
+                                     'cdmname': 'station_configuration/station_name',
+                                     'units': 'NA',
+                                     'shortname': 'station_id',
+                                     'coordinates': 'lat lon time plev',
+                                     'standard_name': 'station_name'
+                                 }
+                                } 
+                do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs',
+                          var_selection=['station_name'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             #
             # Fix Attributes and Globals

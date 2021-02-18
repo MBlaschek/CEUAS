@@ -68,40 +68,6 @@ def logging_set_level(level: int):
 std_plevs = np.asarray([10, 20, 30, 50, 70, 100, 150, 200, 250, 300, 400, 500, 700, 850, 925, 1000])
 
 
-def usage():
-    print("""
-Run standardized radiosonde homogenisation software on CDM compliant file
-
-{} -h -f [file] -o [name] 
-
-Options:
-    -h              Help
-    --help      
-    -f []           Input CDM compliant file
-    --file []       
-    -o []           Output name
-    --output []
-    
-Optional Keyword Options:
-    --thres []          Threshold value for SNHT, default: 50
-    --window []         Moving Window for SNHT, default: 1470 (in days, 4 years)
-    --missing []        Maximum allowed missing values in window, default: 600 (in days)
-    --min_levels []     Minimum required levels for significant breakpoint, default: 3
-    --dist []           Minimum distance between breakpoints, default: 730 (in days, 2 years)
-    --sample_size []    Minimum sample size for statistics, default: 130 (in days)
-    --borders []        Breakpoint zone, default: 90 (in days)
-    --ratio []          Use ratio instead of differences, default: 0 (not)
-
-    --logfile []        Write messages to a log file
-
-Experimental Keyword Options:
-    --donotwrite          Returns xarray Dataset
-    --enable_ta_feature   Apply Temperature adjustments
-    --interpolate_missing Interpolate Adjustments to non-standard times and pressure levels
-    
-    """.format(__file__.split('/')[-1]))
-
-
 # -----------------------------------------------------------------------------
 #
 # Helper functions
@@ -1281,6 +1247,38 @@ def adjustment_procedure_wind(obs_ws, obs_wd, dep_ws, dep_wd, dim:str='time', pl
                         'day-night': 'added'})
 
 
+__doc__ = """
+Run standardized radiosonde homogenisation software on CDM compliant file
+
+{} -h -f [file] -o [name] 
+
+Options:
+    -h              Help
+    --help      
+    -f []           Input CDM compliant file
+    --file []       
+    -o []           Output name
+    --output []
+    
+Optional Keyword Options:
+    --thres []          Threshold value for SNHT, default: 50
+    --window []         Moving Window for SNHT, default: 1470 (in days, 4 years)
+    --missing []        Maximum allowed missing values in window, default: 600 (in days)
+    --min_levels []     Minimum required levels for significant breakpoint, default: 3
+    --dist []           Minimum distance between breakpoints, default: 730 (in days, 2 years)
+    --sample_size []    Minimum sample size for statistics, default: 130 (in days)
+    --borders []        Breakpoint zone, default: 90 (in days)
+    --ratio []          Use ratio instead of differences, default: 0 (not)
+
+    --logfile []        Write messages to a log file
+
+Experimental Keyword Options:
+    --donotwrite          Returns xarray Dataset
+    --enable_ta_feature   Apply Temperature adjustments
+    --interpolate_missing Interpolate Adjustments to non-standard times and pressure levels
+    
+    """.format(__file__.split('/')[-1])
+
 # -----------------------------------------------------------------------------
 #
 # Script entry point
@@ -1312,7 +1310,7 @@ if __name__ == "__main__":
         opts, args = getopt.getopt(sys.argv[1:], "b:f:ho:v:d:p:", known)
 
     except getopt.GetoptError as err:
-        usage()
+        print(__doc__)
         raise err
 
     for opt, arg in opts:
@@ -1355,7 +1353,7 @@ if __name__ == "__main__":
             feedback_group = arg  
 
         elif opt in ("-h", "--help"):
-            usage()
+            print(__doc__)
             sys.exit(0)
 
         elif opt == "--interpolate_missing":
@@ -1373,7 +1371,7 @@ if __name__ == "__main__":
     # Check input
     #
     if ifile is None:
-        usage()
+        print(__doc__)
         raise RuntimeError("Missing input file (-f, -b)", ifile)
     
     if not (do_winds or do_temperature or do_humidity):
@@ -1506,5 +1504,4 @@ if __name__ == "__main__":
             write_adjustments(iofile, stest, breaks, adj_depar, variable, interpolate_missing=interpolate_missing)
             variable = 'wind_speed'
             write_adjustments(iofile, stest, breaks, adj_depar, variable, interpolate_missing=interpolate_missing)
- 
-    # FIN
+# FIN
