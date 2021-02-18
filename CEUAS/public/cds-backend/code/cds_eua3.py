@@ -83,7 +83,7 @@ def logging_set_level(level: int):
 #
 ###############################################################################
 
-@njit(cache=True)
+# @njit(cache=True)
 def calc_trajindexfast(z, zidx, idx, trajectory_index):
     """ Calculate Trajectory Index 
 Args:
@@ -122,8 +122,13 @@ Args:
         if j == idx.shape[0]:
             break
     
-    if j < idx.shape[0]:
-        jold = j
+#     if j < idx.shape[0]:
+#         jold = j
+    print('j: ',j)
+    print('idxlen: ',len(idx))
+    print('i: ',i)
+    print('zlen: ',len(z))
+
     while (idx[j] >= z[i]): #and idx[j] < z[-1]):
         trajectory_index[j] = l
         zidx[l] = z0 + i
