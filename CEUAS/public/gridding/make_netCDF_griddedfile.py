@@ -83,7 +83,7 @@ for lat in range(len(Lat)):
                 res[lat,lon,h,p,:] = temp
                 0
 
-da = xr.DataArray (data = res, 
+da = xr.DataArray (data = res, name = 'temperature',
                                 dims = ["lat","lon","hour","pressure","time"],
                                 coords = dict( lat = Lat ,
                                                          lon =  Lon,
@@ -96,10 +96,10 @@ da = xr.DataArray (data = res,
                                                  title = 'CEUAS gridded data for temperatures and anomalies',
                                                  institution = 'University of Vienna',
                                                  source = 'Institut fuer Meteorologie und Geophysik, leopold.haimberger@univie.ac.at',
-                                                 history = '2021-02-19 09:54:0') 
+                                                 history = '2021-02-19 09:54:00') 
                                    )
                                                          
                                                  
-                                           
+              
 dummy = da.to_netcdf('Try_temp_gridded.nc' , mode = 'w')                          
 0
