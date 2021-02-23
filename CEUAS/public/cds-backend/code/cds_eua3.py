@@ -83,10 +83,75 @@ def logging_set_level(level: int):
 #
 ###############################################################################
 
-### OLD VERSION: For Benchmark only
-@njit(cache=True)
+
+@njit
+def calc_trajindexfast_rt(rt,trajectory_index):
+    #rt=self.observations_table.date_time[idx]
+    j=-1
+    rtold=-1
+    for i in range(trajectory_index.shape[0]):
+        if rt[i]>rtold:
+            j+=1
+            rtold=rt[i]
+        trajectory_index[i]=j
+    return
+
 def calc_trajindexfast(z, zidx, idx, trajectory_index):
     """ Calculate Trajectory Index """
+    # zidx=numpy.zeros(z.shape[0],dtype=numpy.int32)
+    z0 = zidx[0]
+    j = 0
+    l = 0
+    i = 0
+    for i in range(z.shape[0] - 1):
+        jold = j
+        #if i == 0:
+            #trajectory_index[j] = l
+            ##j += 1
+        #else:
+        nexti = i + 1
+        if nexti < (z.shape[0] -1):
+            while (z[nexti] == z[i]):
+                nexti += 1
+                if nexti==z.shape[0]:
+                    break
+        if nexti < (z.shape[0] -1):
+            while (idx[j] >= z[i] and idx[j] < z[nexti]):
+                print('trajectory_index[',j,']=', l)
+                trajectory_index[j] = l
+                j += 1
+                if j == idx.shape[0]:
+                    break
+        if j > jold:
+            zidx[l] = z0 + i
+            l += 1
+        if j == idx.shape[0]:
+            break
+    if j < idx.shape[0]:
+        jold = j
+        while (idx[j] >= z[i]): #and idx[j] < z[-1]):
+            trajectory_index[j] = l
+            zidx[l] = z0 + i
+            j += 1
+            #l += 1
+            #i += 1
+            if j == idx.shape[0]:
+                break
+
+           
+    zidx = zidx[:l]
+
+    return zidx#, trajectory_index
+
+# @njit(cache=True)
+def calc_trajindexfastl(z, zidx, idx, trajectory_index):
+    """ Calculate Trajectory Index 
+Args:
+    z : absolute index of all (variable)
+    zidx : index of valid times in z
+    idx : index of selected levels absolute
+    trajectory_index : output
+    """
     # zidx=numpy.zeros(z.shape[0],dtype=numpy.int32)
     z0 = zidx[0]
     j = 0
@@ -275,6 +340,33 @@ def andisin(mask, x, v):
                     break
             mask[i] = found
 
+# daysx2 puts a time array into an array of shape days x 2, where days is the number of days since 19000101
+# and the second index is 0 for midnight (GMT+/- 3hrs) ascents and 1 for midday (GMT +/- 3hrs ascents).
+# ascents between 3 and 9 and 15 and 21 are discarded
+def daysx2(time,pindex,nplev,obs):
+    dsecs=86400
+    tofday=time%dsecs
+    dindex=time//dsecs
+    hindex=np.zeros(time.shape[0],dtype=np.int32)-1
+    tevening=np.where(tofday>=6*dsecs//8)
+    tmorning=np.where(tofday<2*dsecs//8)
+    tmidday=np.where(np.logical_and(tofday>=2*dsecs/8,tofday<6*dsecs/8))
+    dindex[tevening]+=1
+    hindex[tmorning]=0
+    hindex[tevening]=0
+    hindex[tmidday]=1
+    hgood=np.where(hindex>-1)
+    gdays=np.unique(dindex)
+    rdays=np.zeros(np.max(gdays)+1,dtype=np.int32)-1
+    for i in range(gdays.shape[0]): # reverse index
+        rdays[gdays[i]]=i
+        
+    cobs=np.full((2,nplev,gdays.shape[0]),np.nan,dtype=obs.dtype)
+    cobs[hindex[hgood],pindex[hgood],rdays[dindex[hgood]]]=obs[hgood]
+    
+    
+    return cobs,hindex[hgood],pindex[hgood],rdays[dindex[hgood]],hgood,gdays
+    
 
 @njit(cache=True)
 def tohourday(hours, days, datetimes, day_shift):
@@ -970,7 +1062,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
         #
         gdict = {
             'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
-            'observations_table':['date_time','z_coordinate','observation_value','observed_variable'],
+            'observations_table':['date_time','z_coordinate','observation_value','observed_variable','report_id'],
             'header_table':[],
             'station_configuration': ['station_name', 'primary_id']
         }
@@ -986,7 +1078,8 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             print(time.time()-tt)
             print('')
 
-    except Exception as e:
+    #except Exception as e:
+    except MemoryError as e:
         if debug:
             raise e
         logger.error('Exception %s occurred while reading %s', repr(e), filename)
@@ -1929,8 +2022,11 @@ class CDMDataset:
             recordindex = self['recordindices'][str(cdmnum)][()]  # values
             
         zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex < trange.stop))[0]
+            
         recordindex = recordindex[zidx]
-        zidx = calc_trajindexfast(recordindex, zidx, idx, trajectory_index)
+        rt=self.observations_table.date_time[trange]
+        calc_trajindexfast_rt(rt,trajectory_index)
+#        zidx = calc_trajindexfast(recordindex, zidx, idx, trajectory_index)
         #
         # Dimensions and Global Attributes
         #
@@ -2745,6 +2841,131 @@ class CDMDataset:
                                           dims=('time', 'plev'),
                                           name=ivar,
                                           attrs=v_attrs)
+                # data[ivar].data['time'].attrs.update(self.read_attributes(kwargs.get('date_time_name', 'time')))
+                # data[ivar].data['plev'].attrs.update(self.read_attributes(kwargs.get('z_coordinate_name', 'plev')))
+        return data
+
+    def read_data_to_3dcube(self, variables: list, dates: list = None, plevs: list = None, feedback: list = None,
+                          feedback_group: str = 'era5fb', **kwargs) -> dict:
+        """ Read standard pressure levels and return a DataCube
+
+        Args:
+            variables: list of variables, e.g. temperature
+            dates: [start, stop], str, int or datetime
+            plevs: [list] in Pa or hPa
+            feedback: list of feedback variables
+            feedback_group: group name of the feedback
+            **kwargs:
+
+        Optional Keywords:
+            date_time_name: Name of the datetime variable
+            z_coordinate_name: Name of the pressure level variable
+
+        Returns:
+            dict : {variable : xr.DataArray}
+        """
+        if len(variables) == 0:
+            raise ValueError('Need a variables', str(cdm_codes.keys()))
+
+        if isinstance(variables, str):
+            variables = [variables]
+
+        data = {}
+        if plevs is not None:
+            plevs = np.asarray(plevs)
+            if any((plevs > 110000) | (plevs < 500)):
+                raise ValueError('Pressure levels outside range [5, 1100] hPa')
+        else:
+            plevs = std_plevs * 100  # in Pa
+
+        std_plevs_indices = np.zeros(1001, dtype=np.int32)  # hPa
+        # in hPa
+        for i, j in enumerate(plevs // 100):
+            std_plevs_indices[j] = i
+
+        # todo check if variable can be replaced inside HDF5 ?
+        if self.hasgroups:
+            #
+            # check variables
+            #
+            varnum = []
+            for ivar in variables:
+                if ivar not in cdm_codes.keys():
+                    raise ValueError('Variable not found', ivar)
+                varnum.append(
+                    {'varnum': cdm_codes[ivar], 'variable': 'observation_value', 'group': 'observations_table',
+                     'bkp_var': ivar})
+                if feedback is not None:
+                    if isinstance(feedback, str):
+                        feedback = [feedback]
+                    for jvar in feedback:
+                        # jvar -> @body rename
+                        varnum.append({'varnum': cdm_codes[ivar], 'variable': jvar, 'group': feedback_group,
+                                       'bkp_var': ivar})
+            # multiprocessing of the requests?
+            for ivarnum in varnum:
+                logger.info('Reading ... %d  %s', ivarnum['varnum'], ivarnum['bkp_var'])
+                ivarnum.update(kwargs)
+                # TIME SLICE, INDEX, SECONDS ARRAY, PRESSURE LEVELS
+                trange, indices, secarray, pressure = self.read_observed_variable(dates=dates,
+                                                                                  plevs=plevs,
+                                                                                  return_coordinates=True,
+                                                                                  return_index=True,
+                                                                                  **ivarnum)
+                logger.info('[CUBE] Variable Group %d %s %s', ivarnum['varnum'], str(trange), str(secarray.shape))
+                obs = self[ivarnum['group']][ivarnum['variable']][trange][indices]
+                #
+                # to Cube
+                #
+                # requires hPa for indices
+                itime, iobs = table_to_cube(secarray,
+                                            std_plevs_indices[pressure.astype(np.int32) // 100],
+                                            obs,
+                                            nplev=plevs.size)
+                logger.info('[CUBE] %s %s', ivarnum['bkp_var'], iobs.shape)
+                v_attrs = get_attributes(cdmcode=ivarnum['varnum'],
+                                         feedback=ivarnum['variable'] if feedback is not None else None)
+                if len(v_attrs) > 0:
+                    v_attrs = v_attrs[list(v_attrs.keys())[0]]
+                # Convert to Xarray [time x plev]
+                data[ivarnum['bkp_var']] = xr.DataArray(iobs,
+                                                        coords=(seconds_to_datetime(secarray[itime]), plevs),
+                                                        dims=('time', 'plev'),
+                                                        name=ivarnum['bkp_var'],
+                                                        attrs=v_attrs,
+                                                        )
+                # todo add attributes for coordinates
+        else:
+            splevs=[1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,
+                    100000]
+            ldaysx2=False
+            for ivar in variables:
+                # Read Attributes Variable
+                v_attrs = self.read_attributes(ivar)
+                # why no trange?
+                iobs, secarray, pressure = self.read_variable(ivar,
+                                                              dates=dates,
+                                                              plevs=plevs,
+                                                              return_coordinates=True)
+                if ldaysx2:
+                    cobs=np.full(cobs.shape,np.nan,dtype=iobs.dtype)
+                    cobs[hindex,pindex,dindex]=iobs[hgood]
+                else:
+                    cobs,hindex,pindex,dindex,hgood,gdays=daysx2(secarray,
+                                                             std_plevs_indices[pressure.astype(np.int32) // 100],
+                                                             plevs.shape[0],iobs)
+                #itime, iobs = table_to_3dcube(secarray,
+                                            #std_plevs_indices[pressure.astype(np.int32) // 100],
+                                            #iobs)
+                logger.info('[CUBE] %s %s %s', ivar, iobs.shape,cobs.shape)
+                # Convert to Xarray [time x plev]
+                data[ivar] = xr.DataArray(cobs,
+                                          coords=(np.array((0,12)),plevs/100,gdays),
+                                          dims=('hours', 'press','datum'),
+                                          name=ivar,
+                                          attrs=v_attrs)
+                data[ivar]['datum'].attrs['units']='days since 1900-01-01 00:00:00'
+                data[ivar]['press'].attrs['units']='hPa'
                 # data[ivar].data['time'].attrs.update(self.read_attributes(kwargs.get('date_time_name', 'time')))
                 # data[ivar].data['plev'].attrs.update(self.read_attributes(kwargs.get('z_coordinate_name', 'plev')))
         return data

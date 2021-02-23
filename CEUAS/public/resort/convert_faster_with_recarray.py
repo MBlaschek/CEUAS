@@ -27,8 +27,8 @@ import rasotools
 import warnings
 warnings.filterwarnings('ignore')
 
-opath='/raid60/scratch/uli/converted_v5/'
-# opath='/raid60/scratch/leo/scratch/converted_v2/'
+#opath='/raid60/scratch/uli/converted_v5/'
+opath='/raid60/scratch/leo/scratch/converted_v5/'
 # if there are nan values in the pressure level - we will just sort without any converting!
 def do_resort(fn):
     targetfile = opath+fn.split('/')[-1] 
@@ -135,6 +135,7 @@ def do_resort(fn):
     # finishing the sorting 
     #
     absidx=np.concatenate(absidx)
+    del obsv
     #
     # recordtimestamps are only necessary once
     #
@@ -492,6 +493,7 @@ def do_copy(a_obstab,obstab,j,i):
     # all written here - * will be overwritten if it's a converted variable
     a_obstab['date_time'][j]=obstab['date_time'][i]
     a_obstab['observation_id'][j]=obstab['observation_id'][i] # *
+    #a_obstab['report_id'][j]=obstab['report_id'][i] 
     a_obstab['observation_value'][j]=obstab['observation_value'][i] # *
     a_obstab['observed_variable'][j]=obstab['observed_variable'][i] # *
     a_obstab['z_coordinate'][j]=obstab['z_coordinate'][i]
@@ -526,12 +528,13 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
     p= obstab['z_coordinate'][0]-1 # z_coordinate[0]-1
     rts= obstab['date_time'][0] # date_time[0]
     
-    addedvar=List()
+    addedvar=numpy.zeros((a_obstab['observation_value'].shape[0],2),dtype=numpy.int32)
     humlist=List()
     wlist=List()
     recordindex[0]=0
     recordtimestamp[0]=obstab['date_time'][0] # date_time[0]
     ri=1
+    l=1
     for k in range(idx.shape[0]):  # no new levels are created, but variables per level will increase
         if k==idx.shape[0]-2:
             print('vor Schluss')
@@ -583,7 +586,7 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
                     if a_obstab['observation_value'][j]!=a_obstab['observation_value'][j]:
                         j-=1
             humlist.clear()
-        if wlist:
+        if len(wlist)>1:
             for h in wvar:
                 if h not in wlist:
                     j+=1
@@ -605,12 +608,22 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
                 recordtimestamp[ri]=obstab['date_time'][idxu]
                 ri+=1
 
-        addedvar.append([i, j])
+        addedvar[l,0]=i
+        addedvar[l,1]=j#.append([i, j])
+        l+=1
         if k%100000==0:
             print(k,idx.shape[0])
     j=j+1
-    addedvar.append([i, j])
-    return a_obstab, a_loaded_feedback, recordindex[:ri], recordtimestamp[:ri], j, addedvar
+    addedvar[l,0]=i+1
+    addedvar[l,1]=j#.append([i, j])
+    l+=1
+    #addedvar[i]=j#.append([i, j])
+    #addv=numpy.empty((len(addedvar),2),dtype=numpy.int64)
+    #for k in range(len(addedvar)):
+        #for l in range(2):
+            #addv[k,l]=addedvar[k][l]
+    return a_obstab, a_loaded_feedback, recordindex[:ri], recordtimestamp[:ri], j, addedvar[:l]
+
     
 @njit
 def fill_obsid(avar,conversion_flag):
@@ -620,19 +633,20 @@ def fill_obsid(avar,conversion_flag):
                 avar[o,i]=b'9'
     return avar
 
-@njit
-def fill_restdata(final, rest_data, addedvar, j):
-    fidx=0
-    for o in addedvar:
-        cc = o[0]
-        final[fidx]=rest_data[cc]
-        fidx+=1
-        while fidx < o[1]:
-            final[fidx]=rest_data[cc]
-            fidx+=1
-    while len(final) < j:
-        final[fidx]=rest_data[cc]
-        fidx+=1
+@njit()
+def fill_restdata(final, rest_data, addedvar, j): #,test):
+
+    for l in range(addedvar.shape[0]-1):
+        diff=(addedvar[l+1,1]-addedvar[l,1])-(addedvar[l+1,0]-addedvar[l,0])
+        final[addedvar[l,1]:addedvar[l+1,1]-diff]=rest_data[addedvar[l,0]:addedvar[l+1,0]]
+        if diff>0:
+            for i in range(diff):
+                final[addedvar[l+1,1]-diff+i]=rest_data[addedvar[l+1,0]-1]
+        #x=numpy.nansum(final[addedvar[l,1]:addedvar[l+1,1]]-test[addedvar[l,1]:addedvar[l+1,1]])
+        #if ~numpy.isnan(x) and x!=0:
+                     #print(addedvar[l:l+2])                             
+                     #print('x')
+        
     return final
 
 def split(x): 
@@ -644,12 +658,13 @@ def convert_missing(fn, destination: str = opath):
     with eua.CDMDataset(fn) as data:
         keys = data.observations_table.keys()
         keys = [x for x in keys if not x.startswith('string')]
+        #keys = [x for x in keys if x in ['conversion_flag','conversion_method','report_id','date_time','observation_value','observed_variable','observation_id','z_coordinate','z_coordinate_type']]
         keys.remove('index')
         keys.remove('shape')
         obskeys = keys
 
         keys = data.era5fb.keys()
-#         keys = [x for x in keys if x in ['fg_depar@body','an_depar@body','biascorr@body','biascorr_fg@body']]
+        #keys = [x for x in keys if x in ['fg_depar@body','an_depar@body','biascorr@body','biascorr_fg@body']]
         keys = [x for x in keys if not x.startswith('string')]
         keys.remove('index')
         keys.remove('shape')
@@ -661,21 +676,24 @@ def convert_missing(fn, destination: str = opath):
         a_loaded_data=[]
         loaded_type = {'names':[],'formats':[]}
         ld=[]
+        addmem=1000000
         for o in obskeys:
-            if o in ['observed_variable','observation_value','z_coordinate','z_coordinate_type','date_time','observation_id','conversion_flag','conversion_method']:  
+            if o in ['observed_variable','observation_value','observation_id','z_coordinate','z_coordinate_type','date_time','conversion_flag','conversion_method']:  
                 if len(data.observations_table[o].shape)==1:
                     loaded_data.append((data.observations_table[o][:]))
-                    a_loaded_data.append(numpy.empty_like(loaded_data[-1],shape=3*len(loaded_data[-1])))
+                    a_loaded_data.append(numpy.empty_like(loaded_data[-1],shape=2*len(loaded_data[-1])+addmem))
                 else:
                     loaded_data.append(data.observations_table[o][:].view('S{}'.format(data.observations_table[o].shape[1])).flatten())   
-#                     a_loaded_data.append(numpy.empty((3*len(loaded_data[-1]),len(loaded_data[-1][0])), dtype=loaded_data[-1][0].dtype))
-                    a_loaded_data.append(numpy.empty_like(loaded_data[-1],shape=3*len(loaded_data[-1])))
+#                     a_loaded_data.append(numpy.empty((2*len(loaded_data[-1]),len(loaded_data[-1][0])), dtype=loaded_data[-1][0].dtype))
+                    a_loaded_data.append(numpy.empty_like(loaded_data[-1],shape=2*len(loaded_data[-1])+addmem))
                     a_loaded_data[-1].fill(b' '*data.observations_table[o].shape[1])
                 loaded_type['names'].append(o)
                 loaded_type['formats'].append(loaded_data[-1].dtype)
                 ld.append((o,loaded_data[-1].dtype))
         loaded_obstab = numpy.rec.fromarrays(loaded_data, dtype=ld)
+        del loaded_data
         a_loaded_obstab = numpy.rec.fromarrays(a_loaded_data, dtype=ld)
+        del a_loaded_data
 
         loaded_fb=[]
         a_loaded_fb=[]
@@ -684,12 +702,14 @@ def convert_missing(fn, destination: str = opath):
         for o in fbkeys:
             if o in ['fg_depar@body','an_depar@body','biascorr@body','biascorr_fg@body']:  
                 loaded_fb.append((data.era5fb[o][:]))
-                a_loaded_fb.append(numpy.empty_like(loaded_fb[-1],shape=3*len(loaded_fb[-1])))
+                a_loaded_fb.append(numpy.empty_like(loaded_fb[-1],shape=2*len(loaded_fb[-1])+addmem))
                 loaded_type['names'].append(o)
                 loaded_type['formats'].append(loaded_fb[-1].dtype)
                 lf.append((o,loaded_fb[-1].dtype))
         loaded_feedback = numpy.rec.fromarrays(loaded_fb, dtype=lf)
+        del loaded_fb
         a_loaded_feedback = numpy.rec.fromarrays(a_loaded_fb, dtype=lf)
+        del a_loaded_fb
 
         recordindex = data.recordindex[:]
         # --->
@@ -758,20 +778,20 @@ def convert_missing(fn, destination: str = opath):
 
     reduced_obskeys=List(loaded_obstab.dtype.fields.keys())
     reduced_fbkeys=List(loaded_feedback.dtype.fields.keys())
-    out, fb_out, ri, rt, j, addedvar=augment(loaded_obstab, a_loaded_obstab, loaded_feedback, a_loaded_feedback,
+    out, fb_out, ri, rt, jj, addedvar=augment(loaded_obstab, a_loaded_obstab, loaded_feedback, a_loaded_feedback,
                                              idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
                                              cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,crhsh,cdpdsh,cuwind,cvwind,cwd,cws,
                                              d_cdpddp,d_cdpdrh,d_cdpdsh,d_cshrh,d_cshdpd,d_crhsh,d_crhdpd,
                                              fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd,
                                              d_cwd,d_ws,fgd_cwd,fgd_ws,
                                              humvar,wvar)
-    avars = {}
-    fb_avars = {}
-    for i in reduced_obskeys:
-        avars[i] = out[i][:j]  
+    #avars = {}
+    #fb_avars = {}
+    #for i in reduced_obskeys:
+        #avars[i] = out[i][:jj]  
 
-    for i in reduced_fbkeys:
-        fb_avars[i] = fb_out[i][:j]
+    #for i in reduced_fbkeys:
+        #fb_avars[i] = fb_out[i][:jj]
 
     print(time.time()-tt)    
 
@@ -803,11 +823,11 @@ def convert_missing(fn, destination: str = opath):
                     for j in file[i].keys():
                         newfile[i].create_dataset(j, data=file[i][j][:])
 
-    allvars = copy.copy(avars['observed_variable'])
-    allvars.sort()
-    allvars = numpy.unique(allvars)
+#    allvars = copy.copy(avars['observed_variable'])
+#    allvars.sort()
+    obsv = out['observed_variable'][:jj]
+    allvars = numpy.sort(numpy.unique(obsv))
     #
-    obsv = avars['observed_variable']
     #
     # resorting the data
     #
@@ -857,20 +877,62 @@ def convert_missing(fn, destination: str = opath):
         print(time.time()-tt)
 
         if i == 'observation_id':
-            ov_vars = copy.copy(avars[i])
-            ov_vars=fill_obsid(ov_vars.view('S1').reshape((len(ov_vars),11)),avars['conversion_flag'])
+            ov_vars = numpy.empty(jj,dtype='S11')
+            ov_vars[:]=out[i][:jj]
+            ov_vars=fill_obsid(ov_vars.view('S1').reshape((len(ov_vars),11)),out['conversion_flag'][:jj])
 
         elif i in reduced_obskeys:
-            ov_vars = avars[i]
+            ov_vars = out[i][:jj]
+        else:
+            continue
 
+        ov_vars = ov_vars[absidx]
+        if i == 'index':
+            pass
+        elif i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
+            alldict = {i:np.asarray(ov_vars, dtype='S1')}
+            write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])
+        else:
+            alldict = pandas.DataFrame({i:ov_vars})
+            write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])  
+    del ov_vars
+    del out
+    
+    for i in fbkeys:
+        print(i)
+        print(time.time()-tt)
+
+        if i in reduced_fbkeys:
+            ov_vars = fb_out[i][:jj]
         else: 
-            with eua.CDMDataset(fn) as data:
-                rest_data = data.observations_table[i][:]
-            if i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
-                final = numpy.empty((addedvar[-1][1],len(rest_data[0])), dtype=rest_data[0].dtype)
-            else:
-                final = numpy.empty(addedvar[-1][1], dtype=rest_data[0].dtype)
-            ov_vars = fill_restdata(final, rest_data, addedvar, j)
+            continue
+
+        ov_vars = ov_vars[absidx]
+        
+        if i == 'index':
+            pass
+        elif i in ['expver', 'source@hdr', 'source_id', 'statid@hdr']:
+            alldict = {i:np.asarray(ov_vars, dtype='S1')}
+            write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i])
+        else:
+            alldict = pandas.DataFrame({i:ov_vars})
+            write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i]) 
+
+    del fb_out
+    
+    for i in obskeys:
+        if i in reduced_obskeys or i == 'observation_id':
+            continue
+        print(i)
+        print(time.time()-tt)
+        with eua.CDMDataset(fn) as data:
+            #i='z_coordinate'
+            rest_data = data.observations_table[i][:]
+        if i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
+            final = numpy.empty((addedvar[-1][1],len(rest_data[0])), dtype=rest_data[0].dtype)
+        else:
+            final = numpy.empty(addedvar[-1][1], dtype=rest_data[0].dtype)
+        ov_vars = fill_restdata(final, rest_data, addedvar, jj) #,out['z_coordinate'][:jj])
 
         ov_vars = ov_vars[absidx]
         if i == 'index':
@@ -887,8 +949,7 @@ def convert_missing(fn, destination: str = opath):
         print(time.time()-tt)
 
         if i in reduced_fbkeys:
-            ov_vars = fb_avars[i]
-
+            continue
         else: 
             with eua.CDMDataset(fn) as data:
                 rest_data = data.era5fb[i][:]
@@ -896,9 +957,10 @@ def convert_missing(fn, destination: str = opath):
                 final = numpy.empty((addedvar[-1][1],len(rest_data[0])), dtype=rest_data[0].dtype)
             else:
                 final = numpy.empty(addedvar[-1][1], dtype=rest_data[0].dtype)
-            ov_vars = fill_restdata(final, rest_data, addedvar, j)
+            ov_vars = fill_restdata(final, rest_data, addedvar, jj)
 
         ov_vars = ov_vars[absidx]
+        
         if i == 'index':
             pass
         elif i in ['expver', 'source@hdr', 'source_id', 'statid@hdr']:
@@ -918,7 +980,7 @@ def convert_missing(fn, destination: str = opath):
     write_dict_h5(targetfile, {'recordtimestamp':recordtimestamps}, 'recordindices', {'recordtimestamp': { 'compression': None } }, ['recordtimestamp'])
 
     print('elapsed writing '+targetfile+':',time.time()-tt)
-    f= open("/raid60/scratch/uli/converted_v5/log/"+fn.split('/')[-1]+".txt","w+")
+    f= open(wlpath+fn.split('/')[-1]+".txt","w+")
     f.write("done") 
     f.close()
     return
@@ -955,18 +1017,27 @@ if __name__ == '__main__':
                  '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-87544_CEUAS_merged_v0.nc',
                  '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-38696_CEUAS_merged_v0.nc',
                  '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-04085_CEUAS_merged_v0.nc',]    
-    for i in no_height:
-        do_resort(i)
-        f= open("/raid60/scratch/uli/converted_v5/log/"+i.split('/')[-1]+".txt","w+")
-        f.write("done") 
-        f.close()
+
+    wpath='/raid60/scratch/leo/scratch/converted_v5/'
+    wlpath=wpath+'log/'
+    try:
+        os.mkdir(wpath)
+        os.mkdir(wlpath)
+    except:
+        pass
+    
+    #for i in no_height:
+        #do_resort(i)
+        #f= open(wlpath+i.split('/')[-1]+".txt","w+")
+        #f.write("done") 
+        #f.close()
 
     files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/*.nc')
-    already_done = glob.glob('/raid60/scratch/uli/converted_v5/log/*.txt')
+    already_done = glob.glob(wlpath+'*.txt')
 
     files_to_convert = []
     for i in files:
-        if not '/raid60/scratch/uli/converted_v5/log/'+i.split('/')[-1]+'.txt' in already_done:
+        if not wlpath+i.split('/')[-1]+'.txt' in already_done:
             files_to_convert.append(i)
     
 #     for i in files_to_convert:
@@ -974,6 +1045,7 @@ if __name__ == '__main__':
 #         convert_missing(i)
 
     pool = multiprocessing.Pool(processes=10)
-    result_list = pool.map(convert_missing, files_to_convert)
+    #result_list = pool.map(convert_missing, files_to_convert)
+    result_list = list(map(convert_missing, files_to_convert))
     print(result_list)
 

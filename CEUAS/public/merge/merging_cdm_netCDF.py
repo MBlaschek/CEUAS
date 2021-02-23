@@ -22,7 +22,7 @@ from numba import njit
 import code
 
 sys.path.append('../harvest/code')
-from harvest_convert_to_netCDF_newfixes import write_dict_h5 
+from harvest_convert_to_netCDF import write_dict_h5 
 
 # nan int = -2147483648 
 #from harvest_convert_to_netCDF import datetime_toseconds   # importing the function to write files with h5py 
@@ -423,14 +423,14 @@ class Merger():
             ''' Simply returns the proper format for ''null' value '''
             def get_null( tipo = ''):
                   if tipo == np.int32 :
-                        void = 0
+                        void = -2147483648
                   elif tipo == np.float32 :
-                        void = 0.0
+                        void = np.nan
                   elif tipo == np.bytes_ :
                         void = b'nan'
                   return void
                   
-            ''' Filling the feedback table. Only feednack for era5_1 and era5_2 are currently available. 
+            ''' Filling the feedback table. Only feedback for era5_1 and era5_2 are currently available. 
                 Reads the total number of possible columns from the dic_type_attributes dictionary.
                 Era5_1 and era5_2 fb have different columns.
                 If data for a variable is not available, it fills with the appropriate null value '''
@@ -781,6 +781,10 @@ class Merger():
 
             duplicates = []
 
+            found_era5 = False
+            if 'era5_1' in container.keys() or 'era5_2' in container.keys() :
+                  found_era5 = True
+                  
             for k in container.keys(): # loop over the dataset
                   if k not in other_ds:
                         other_ds.append(k)
@@ -800,26 +804,30 @@ class Merger():
                         record_dataset_legth[num_rec]['best_ds'].append(k)
                         record_dataset_legth[num_rec]['file'].append(f)
 
-            max_entries = max(record_dataset_legth.keys())
+
+            entries = list(record_dataset_legth.keys())
+            entries.sort(reverse= True)
             
-            ''' best_ds is the list of longest datasets, best_datasets the list of all the datasets available including best_ds '''
-            best_datasets = record_dataset_legth[max_entries]
+            if found_era5:                       
+                  for e in entries:
+                      best_datasets = record_dataset_legth[e]['best_ds']
+                      if 'era5_2' in best_datasets:  # era5_1 and era5_2 should never be both present anyway...
+                            best_ds = 'era5_2'      
+                            break
+                      elif 'era5_1' in best_datasets:
+                            best_ds = 'era5_1'
+                            break  # will pick either era5_1 or era5_2 if available
 
-            """ Choosing the priority of the datasets:
-                - if era5_1 or era5_2 are present, pick them (they cant be both present for the same date_time)
-                - else, if igra2 is present, pick it
-                - else, one of the remaining ones """
+            else:
+                  for e in entries:
+                        if 'igra2' in record_dataset_legth[entries[0]]['best_ds']:
+                              best_ds = 'igra2' # will pick igra2 if available
+                              break
+                        elif 'igra2' not in record_dataset_legth[entries[0]]['best_ds']:
+                              best_ds = record_dataset_legth[entries[0]]['best_ds'][0] # will pick anything else if available
+                              break
 
-            if 'era5_2' in best_datasets and 'era5_1' not in best_datasets:  # era5_1 and era5_2 should never be both present anyway...
-                  best_ds = 'era5_2'                   
-            elif 'era5_1' in best_datasets and 'era5_2' not in best_datasets:
-                  best_ds = 'era5_1'
-            elif 'era5_1' not in best_datasets and 'era5_2' not in best_datasets and 'igra2' in best_datasets:
-                  best_ds = 'igra2'
-            elif 'era5_1' not in best_datasets and 'era5_2' not in best_datasets and 'igra2' not in best_datasets:
-                  best_ds =  record_dataset_legth[max_entries]['best_ds'][0]  # pick the first of the list 
-
-            best_file = record_dataset_legth[max_entries]['file'][0]
+            best_file = record_dataset_legth[e]['file'][record_dataset_legth[e]['best_ds'].index(best_ds)]
 
             ''' If more file are available for the same best_ds, pick the first one from the list '''
             selected_obstab, selected_era5fb = container[best_ds][best_file]['obs_tab'] , container[best_ds][best_file]['era5fb_tab']
@@ -1096,7 +1104,7 @@ base_dir = '/raid60/scratch/federico/HARVESTED_OCTOBER2020'
 
 
 
-base_dir = '/raid60/scratch/federico/HARVESTED_OCTOBER2020_NEW'
+base_dir = '/raid60/scratch/federico/HARVESTED_JAN2021'
 
 
 data_directories   = { 'era5_1'       : base_dir + '/era5_1'     ,
@@ -1116,9 +1124,9 @@ data_directories   = {  'ncar'      : '/raid60/scratch/federico/HARVESTED_JULY20
 
 #os.system('rm  /raid8/srvx1/federico/GitHub/CEUAS_master_MAY/CEUAS/CEUAS/public/merge/PROVA_stdplevels_only/0-20000-0-82930_CEUAS_merged_v0.nc')
  
-#out_dir = '/raid60/scratch/federico/DATABASE_standard_plevels_OCTOBER2020'
+out_dir = '/raid60/scratch/federico/MERGING_JAN2021_FIXED'
 
-out_dir = 'PROVA'
+#out_dir = 'PROVA'
 
 run_mode = 'dummy'
 
