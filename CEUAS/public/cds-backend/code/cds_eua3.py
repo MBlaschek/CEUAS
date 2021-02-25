@@ -84,16 +84,12 @@ def logging_set_level(level: int):
 ###############################################################################
 
 
-@njit
-def calc_trajindexfast_rt(rt,trajectory_index):
-    #rt=self.observations_table.date_time[idx]
-    j=-1
-    rtold=-1
-    for i in range(trajectory_index.shape[0]):
-        if rt[i]>rtold:
-            j+=1
-            rtold=rt[i]
-        trajectory_index[i]=j
+#@njit
+def calc_trajindexfast_rt(zidx,trajectory_index,tstart):
+
+    for i in range(zidx.shape[0]-1):
+        trajectory_index[zidx[i]-tstart:zidx[i+1]-tstart]=i
+
     return
 
 def calc_trajindexfast(z, zidx, idx, trajectory_index):
@@ -169,6 +165,7 @@ Args:
             l += 1
         if j == idx.shape[0]:
             break
+
     if j < idx.shape[0]:
         if z.shape[0] > 1:
             i += 1
@@ -1078,8 +1075,8 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             print(time.time()-tt)
             print('')
 
-    #except Exception as e:
     except MemoryError as e:
+    #except MemoryError as e:
         if debug:
             raise e
         logger.error('Exception %s occurred while reading %s', repr(e), filename)
@@ -2014,6 +2011,7 @@ class CDMDataset:
         # Make Trajectory Information (lon, lat, profile id, ...)
         #
         trajectory_index = np.zeros_like(idx, dtype=np.int32)
+        trajectory_index2 = np.zeros_like(idx, dtype=np.int32)
         if 'recordinindex' in self.groups:
             # unsorted indices in root
             recordindex = self['recordindex'][()]
@@ -2021,12 +2019,32 @@ class CDMDataset:
             # sorted indices are in recordindices group / by variable
             recordindex = self['recordindices'][str(cdmnum)][()]  # values
             
-        zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex < trange.stop))[0]
+        zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex <= trange.stop))[0]
+        #zidx2=np.zeros_like(zidx)
             
-        recordindex = recordindex[zidx]
-        rt=self.observations_table.date_time[trange]
-        calc_trajindexfast_rt(rt,trajectory_index)
-#        zidx = calc_trajindexfast(recordindex, zidx, idx, trajectory_index)
+        #zidx2 = recordindex[zidx]
+        #recordindex=np.unique(recordindex)
+        #zidx=np.unique(recordindex)
+        
+        #rt=self.observations_table.date_time[trange][idx-trange.start]
+        #for i in range(rt.shape[0]-1):
+            #if rt[i+1]>rt[i]:
+                #if i+1+trange.start not in recordindex:
+                    #print(i)
+        
+        
+        #rr=self.observations_table.report_id[trange][idx-trange.start]
+        #rp=self.observations_table.z_coordinate[trange][idx-trange.start]
+        #l=0
+        #for a,b,c in zip(rt,rr,rp):
+            #print(a,b.view('S11'),c)
+            #l+=1
+            #if l>100:
+                #break
+        
+        
+        #calc_trajindexfast_rt(recordindex,trajectory_index,trange.start)
+        zidx = calc_trajindexfastl(recordindex, zidx, idx, trajectory_index)
         #
         # Dimensions and Global Attributes
         #
