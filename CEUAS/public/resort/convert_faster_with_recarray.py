@@ -15,6 +15,7 @@ import h5py
 sys.path.append(os.getcwd()+'/../cds-backend/code/')
 sys.path.append(os.getcwd()+'/../harvest/code/')
 from harvest_convert_to_netCDF_newfixes import write_dict_h5
+import gc
 import cds_eua3 as eua
 eua.logging_set_level(30)
 import xarray as xr
@@ -136,6 +137,7 @@ def do_resort(fn):
     #
     absidx=np.concatenate(absidx)
     del obsv
+    del dt
     #
     # recordtimestamps are only necessary once
     #
@@ -785,6 +787,15 @@ def convert_missing(fn, destination: str = opath):
                                              fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd,
                                              d_cwd,d_ws,fgd_cwd,fgd_ws,
                                              humvar,wvar)
+    
+    del temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,\
+                                             cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,crhsh,cdpdsh,cuwind,cvwind,cwd,cws,\
+                                             d_cdpddp,d_cdpdrh,d_cdpdsh,d_cshrh,d_cshdpd,d_crhsh,d_crhdpd,\
+                                             fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd,\
+                                             d_cwd,d_ws,fgd_cwd,fgd_ws,xtemp,xpress,xrelhum,xspechum,xdpd,xdewpoint,\
+                                             d_xtemp,d_xrelhum,d_xspechum,d_xdpd,d_xdewpoint,\
+                                             fgd_xtemp,fgd_xrelhum,fgd_xspechum,fgd_xdpd,fgd_xdewpoint
+
     #avars = {}
     #fb_avars = {}
     #for i in reduced_obskeys:
@@ -838,6 +849,28 @@ def convert_missing(fn, destination: str = opath):
             if ridx[i]>ridx[i-1]:
                 vridx[ridx[i-1]:ridx[i]]=l # next record after l
                 l=i
+        vridx[ridx[i]:]=l #len(idx) # next record for the last element is the len of the data
+
+    @njit
+    def make_vrindexn(vridx,ridx,idx,dta):
+        #lold=0
+        l=0
+        for i in range(1,len(idx)): # to set the recordindices
+            if dta[idx[i]]>dta[idx[i-1]]:
+                vridx[ridx[l]:ridx[i]]=l # next record after l
+                l=i
+        vridx[ridx[i]:]=l
+#        vridx[-1]=len(idx)
+#                l+=1
+#        vridx[ridx[i]:]=len(idx) # next record for the last element is the len of the data
+
+    @njit
+    def make_vrindex2(vridx,ridx,idx,dta):
+        l=0
+        for i in range(1,len(idx)): # to set the recordindices
+            if ridx[i]>ridx[i-1] or dta[idx[i]]>dta[idx[i-1]]:
+                vridx[ridx[i-1]:ridx[i]]=l # next record after l
+                l=i
         vridx[ridx[i]:]=len(idx) # next record for the last element is the len of the data
 
     ridxall=np.zeros(obsv.shape[0],dtype=np.int64) # reverse index - index of the record index
@@ -846,24 +879,29 @@ def convert_missing(fn, destination: str = opath):
         ridxall[ri[j]:ri[j+1]]=j
     j+=1
     ridxall[ri[j]:]=j # for the last elemenet
+    #dta=a_loaded_obstab['date_time'][:jj]
     ridx=[]
     vridx=[]
     absidx=[]
+    absidx=np.empty_like(obsv)
     abscount=0
     for j in range(len(allvars)):
         idx=np.where(obsv==allvars[j])[0] # index of all elements form certain variable j
 #         print(j,len(idx),',',end='')
-        vridx.append(np.zeros(ri.shape[0],dtype=np.int64)) # all zeros in lenght of record index
+        vridx.append(np.zeros(ri.shape[0]+1,dtype=np.int64)) # all zeros in lenght of record index
         ridx=ridxall[idx] # ridxall where variable is j
         make_vrindex(vridx[-1],ridx,idx)
+        #make_vrindex(vridx[-1],ridx,idx)
         vridx[-1]+=abscount # abscount for stacking the recordindex
 
-        absidx.append(copy.copy(idx)) # why copy? - to make sure it's not just the ref. - maybe ok without the cp
+        absidx[abscount:abscount+len(idx)]=idx # why copy? - to make sure it's not just the ref. - maybe ok without the cp
         abscount+=len(idx)
-    absidx=np.concatenate(absidx)
+        vridx[-1][-1]=abscount
+    #absidx=np.concatenate(absidx)
 
     # recordtimestamps are only necessary once
     recordtimestamps = rt 
+    del ridxall
 
     print('elapsed converting: ',time.time()-tt)
     tt=time.time()
@@ -896,82 +934,89 @@ def convert_missing(fn, destination: str = opath):
             alldict = pandas.DataFrame({i:ov_vars})
             write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])  
     del ov_vars
+    del obsv
+    #del dta
     del out
+    del a_loaded_obstab
+    gc.collect()
     
-    for i in fbkeys:
-        print(i)
-        print(time.time()-tt)
-
-        if i in reduced_fbkeys:
-            ov_vars = fb_out[i][:jj]
-        else: 
-            continue
-
-        ov_vars = ov_vars[absidx]
+    if True:
+        for i in fbkeys:
+            print(i)
+            print(time.time()-tt)
+    
+            if i in reduced_fbkeys:
+                ov_vars = fb_out[i][:jj]
+            else: 
+                continue
+    
+            ov_vars = ov_vars[absidx]
+            
+            if i == 'index':
+                pass
+            elif i in ['expver', 'source@hdr', 'source_id', 'statid@hdr']:
+                alldict = {i:np.asarray(ov_vars, dtype='S1')}
+                write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i])
+            else:
+                alldict = pandas.DataFrame({i:ov_vars})
+                write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i]) 
+    
+        del fb_out
+        del a_loaded_feedback
+        gc.collect()
         
-        if i == 'index':
-            pass
-        elif i in ['expver', 'source@hdr', 'source_id', 'statid@hdr']:
-            alldict = {i:np.asarray(ov_vars, dtype='S1')}
-            write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i])
-        else:
-            alldict = pandas.DataFrame({i:ov_vars})
-            write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i]) 
-
-    del fb_out
-    
-    for i in obskeys:
-        if i in reduced_obskeys or i == 'observation_id':
-            continue
-        print(i)
-        print(time.time()-tt)
-        with eua.CDMDataset(fn) as data:
-            #i='z_coordinate'
-            rest_data = data.observations_table[i][:]
-        if i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
-            final = numpy.empty((addedvar[-1][1],len(rest_data[0])), dtype=rest_data[0].dtype)
-        else:
-            final = numpy.empty(addedvar[-1][1], dtype=rest_data[0].dtype)
-        ov_vars = fill_restdata(final, rest_data, addedvar, jj) #,out['z_coordinate'][:jj])
-
-        ov_vars = ov_vars[absidx]
-        if i == 'index':
-            pass
-        elif i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
-            alldict = {i:np.asarray(ov_vars, dtype='S1')}
-            write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])
-        else:
-            alldict = pandas.DataFrame({i:ov_vars})
-            write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])  
-
-    for i in fbkeys:
-        print(i)
-        print(time.time()-tt)
-
-        if i in reduced_fbkeys:
-            continue
-        else: 
+        for i in obskeys:
+            if i in reduced_obskeys or i == 'observation_id':
+                continue
+            print(i)
+            print(time.time()-tt)
             with eua.CDMDataset(fn) as data:
-                rest_data = data.era5fb[i][:]
-            if i in ['expver', 'source@hdr', 'source_id', 'statid@hdr']:
+                #i='z_coordinate'
+                rest_data = data.observations_table[i][:]
+            if i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
                 final = numpy.empty((addedvar[-1][1],len(rest_data[0])), dtype=rest_data[0].dtype)
             else:
                 final = numpy.empty(addedvar[-1][1], dtype=rest_data[0].dtype)
-            ov_vars = fill_restdata(final, rest_data, addedvar, jj)
-
-        ov_vars = ov_vars[absidx]
-        
-        if i == 'index':
-            pass
-        elif i in ['expver', 'source@hdr', 'source_id', 'statid@hdr']:
-            alldict = {i:np.asarray(ov_vars, dtype='S1')}
-            write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i])
-        else:
-            alldict = pandas.DataFrame({i:ov_vars})
-            write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i]) 
-    #
-    # writing the recordindices and recordtimestamp.
-    #       
+            ov_vars = fill_restdata(final, rest_data, addedvar, jj) #,out['z_coordinate'][:jj])
+    
+            ov_vars = ov_vars[absidx]
+            if i == 'index':
+                pass
+            elif i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
+                alldict = {i:np.asarray(ov_vars, dtype='S1')}
+                write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])
+            else:
+                alldict = pandas.DataFrame({i:ov_vars})
+                write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])  
+    
+        for i in fbkeys:
+            print(i)
+            print(time.time()-tt)
+    
+            if i in reduced_fbkeys:
+                continue
+            else: 
+                with eua.CDMDataset(fn) as data:
+                    rest_data = data.era5fb[i][:]
+                if i in ['expver', 'source@hdr', 'source_id', 'statid@hdr']:
+                    final = numpy.empty((addedvar[-1][1],len(rest_data[0])), dtype=rest_data[0].dtype)
+                else:
+                    final = numpy.empty(addedvar[-1][1], dtype=rest_data[0].dtype)
+                ov_vars = fill_restdata(final, rest_data, addedvar, jj)
+    
+            ov_vars = ov_vars[absidx]
+            
+            if i == 'index':
+                pass
+            elif i in ['expver', 'source@hdr', 'source_id', 'statid@hdr']:
+                alldict = {i:np.asarray(ov_vars, dtype='S1')}
+                write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i])
+            else:
+                alldict = pandas.DataFrame({i:ov_vars})
+                write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i]) 
+        #
+        # writing the recordindices and recordtimestamp.
+        #       
     recordindices=vridx
     for i in range(len(recordindices)):
         testvar = pandas.DataFrame({str(allvars[i]):recordindices[i]})
@@ -1032,7 +1077,7 @@ if __name__ == '__main__':
         #f.write("done") 
         #f.close()
 
-    files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/*.nc')
+    files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/*6610*.nc')
     already_done = glob.glob(wlpath+'*.txt')
 
     files_to_convert = []
