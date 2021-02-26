@@ -2117,6 +2117,7 @@ class CDMDataset:
                                          'original_precision', 'reference_sensor_id', 'report_id'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                fout['time'].make_scale('time')
             #
             # Feedback Information
             #
@@ -2184,6 +2185,11 @@ class CDMDataset:
                 'Created by Copernicus Early Upper Air Service Version 0, ' + datetime.now().strftime(
                     "%d-%b-%Y %H:%M:%S"))
             fout.attrs['license'] = np.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
+            
+            for i in fout.keys():
+                if (i == 'obs' or i == 'trajectory' or 'string' in i):
+                    fout.__delitem__(i)
+                    
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
         print(tt)
