@@ -2117,7 +2117,7 @@ class CDMDataset:
                                          'original_precision', 'reference_sensor_id', 'report_id'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                fout['time'].make_scale('time')
+#                 fout['time'].make_scale('time')
             #
             # Feedback Information
             #
@@ -2146,15 +2146,15 @@ class CDMDataset:
             #
             # Header Information
             #
-#             if 'header_table' in self.groups:
-#                 igroup = 'header_table'
-#                 # only records fitting criteria (zidx) are copied
-#                 # todo why is lon, lat not here?
-#                 do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
-#                           var_selection=['report_id'])
-#                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-#                 # ,'station_name','primary_station_id'])
-#                 # todo could be read from the observations_table
+            if 'header_table' in self.groups:
+                igroup = 'header_table'
+                # only records fitting criteria (zidx) are copied
+                # todo why is lon, lat not here?
+                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
+                          var_selection=['report_id'])
+                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                # ,'station_name','primary_station_id'])
+                # todo could be read from the observations_table
             #
             # Station Configuration
             #
@@ -2176,8 +2176,8 @@ class CDMDataset:
             #
             # Fix Attributes and Globals
             #
-#             fout['trajectory_label'].attrs['cf_role'] = np.string_('trajectory_id')
-#             fout['trajectory_label'].attrs['long_name'] = np.string_('Label of trajectory')
+            fout['trajectory_label'].attrs['cf_role'] = np.string_('trajectory_id')
+            fout['trajectory_label'].attrs['long_name'] = np.string_('Label of trajectory')
             for a, v in globatts.items():
                 fout.attrs[a] = np.string_(v)
 
@@ -2186,9 +2186,9 @@ class CDMDataset:
                     "%d-%b-%Y %H:%M:%S"))
             fout.attrs['license'] = np.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
             
-            for i in fout.keys():
-                if (i == 'obs' or i == 'trajectory' or 'string' in i):
-                    fout.__delitem__(i)
+#             for i in fout.keys():
+#                 if (i == 'obs' or i == 'trajectory' or 'string' in i):
+#                     fout.__delitem__(i)
                     
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
