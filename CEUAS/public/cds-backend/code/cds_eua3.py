@@ -2146,15 +2146,15 @@ class CDMDataset:
             #
             # Header Information
             #
-            if 'header_table' in self.groups:
-                igroup = 'header_table'
-                # only records fitting criteria (zidx) are copied
-                # todo why is lon, lat not here?
-                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
-                          var_selection=['report_id'])
-                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                # ,'station_name','primary_station_id'])
-                # todo could be read from the observations_table
+#             if 'header_table' in self.groups:
+#                 igroup = 'header_table'
+#                 # only records fitting criteria (zidx) are copied
+#                 # todo why is lon, lat not here?
+#                 do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
+#                           var_selection=['report_id'])
+#                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+#                 # ,'station_name','primary_station_id'])
+#                 # todo could be read from the observations_table
             #
             # Station Configuration
             #
