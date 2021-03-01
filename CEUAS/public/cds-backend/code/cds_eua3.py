@@ -139,7 +139,7 @@ def calc_trajindexfast(z, zidx, idx, trajectory_index):
 
     return zidx#, trajectory_index
 
-# @njit(cache=True)
+@njit(cache=True)
 def calc_trajindexfastl(z, zidx, idx, trajectory_index):
     """ Calculate Trajectory Index 
 Args:
@@ -149,7 +149,7 @@ Args:
     trajectory_index : output
     """
     # zidx=numpy.zeros(z.shape[0],dtype=numpy.int32)
-    z0 = zidx[0]
+    z0 = 0 #zidx[0]
     j = 0
     l = 0
     i = 0
@@ -161,7 +161,7 @@ Args:
             if j == idx.shape[0]:
                 break
         if j > jold:
-            zidx[l] = z0 + i
+            zidx[l] = z0 + i-1
             l += 1
         if j == idx.shape[0]:
             break
@@ -783,7 +783,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
                                 print('x')
                             fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                             
-                except Exception as e:
+                except MemoryError as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
                     hilf = np.zeros(shape=(idx.shape[0]), dtype='S10')
@@ -1786,7 +1786,7 @@ class CDMDataset:
                         setattr(self, igroup, CDMVariable(self.file[igroup], igroup, shape=self.file[igroup].shape))
                     self[igroup].update(link=self.file[igroup])
 
-        except Exception as e:
+        except MemoryError as e:
             logger.debug(repr(e))
             self.close()
 
