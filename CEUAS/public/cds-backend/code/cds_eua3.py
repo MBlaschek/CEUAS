@@ -2748,8 +2748,14 @@ class CDMDataset:
             # Trajectory info
             if ivar == 'trajectory_label':
                 data['trajectory_label'] = data['trajectory_label'][data['trajectory_index']]
-                del data['trajectory_index']
-                del data['trajectory']
+                try:
+                    del data['trajectory_index']
+                except:
+                    pass
+                try:
+                    del data['trajectory']
+                except: 
+                    pass
             if ivar == date_time_name and decode_datetime:
                 data[ivar] = seconds_to_datetime(data[ivar])
                 
