@@ -106,8 +106,6 @@ class Merger():
         self.index_offset = 0 # will be replaced when running 
         self.hour_time_delta = 60 * 60 * 2 # decide up to which time shift records are considered identical  
 
-        #self.hour_time_delta = 2 # decide up to which time shift records are considered identical  
-
         self.only_std_plevels = False  # set to True to store only standard pressure level data 
         self.std_plevs    = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000]
 
@@ -1081,7 +1079,7 @@ data_directories   = { 'era5_1'       : base_dir + '/era5_1'     ,
 
 out_dir = '/raid60/scratch/federico/MERGED_MARCH2021/'
 
-out_dir = 'PROVA'
+#out_dir = 'PROVA'
 
 run_mode = 'dummy'
 
