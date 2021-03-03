@@ -1973,9 +1973,13 @@ class CDMDataset:
                 # select via time 
                 if len(request['time']) == 1 and request['time'] in [0, 12]:
                     data =  data.where(data.hour == request['time'], drop=True)
+                if len(request['gridded']) == 4 :
+                    bounds = request['gridded']
+                    data = data.where(data.lat >= bounds[0], drop=True).where(data.lat <= bounds[2], drop=True)
+                    data = data.where(data.lon >= bounds[1], drop=True).where(data.lon <= bounds[3], drop=True)
         except:
             logger.error('No gridded data available')
-        out.to_netcdf(path=filename_out)
+        data.to_netcdf(path=filename_out)
                     
 
     def read_write_request(self, filename_out: str, request: dict, cf_dict: dict):
