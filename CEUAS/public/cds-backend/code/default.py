@@ -629,6 +629,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                day: list = None, month: list = None, year: list = None, date: list = None, time: list = None, 
                bbox: list = None, country: str = None, area: list = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
+               gridded: list = None,
                pass_unknown_keys: bool = False,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
@@ -702,9 +703,28 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 if iopt not in allowed_optionals:
                     raise KeyError('Invalid optional selected: ' + optional)
             d['optional'] = optional
-    # Check values:
-    # ['obs_minus_an', 'obs_minus_bg', 'bias_estimate']
-    
+            
+    #
+    # gridded [lower left upper right]
+    #
+    elif gridded is not None:
+        if not isinstance(gridded, (list, tuple)) or len(gridded) != 4:
+            raise ValueError('Invalid selection, gridded: [lower left upper right]')
+        try:
+            for i in range(4):
+                gridded[i] = float(gridded[i])
+        except ValueError:
+            raise ValueError('Invalid selection, gridded: [lower left upper right] must be int or float')
+
+        if gridded[0] >= gridded[2] or gridded[1] >= gridded[3]:
+            raise ValueError('Invalid selection, gridded: lower<upper [-90, 90], left<right [-180, 360]')
+
+        if gridded[0] < -90 or gridded[0] > 90 or gridded[2] < -90 or gridded[2] > 90 or \
+                gridded[1] < -180 or gridded[1] > 360 or gridded[3] < -180 or gridded[3] > 360 \
+                or gridded[3] - gridded[1] > 360:
+            raise ValueError('Invalid selection, gridded: lower<upper [-90, 90], left<right [-180, 360]')
+        d['gridded'] = gridded
+            
     #
     # Format
     #
