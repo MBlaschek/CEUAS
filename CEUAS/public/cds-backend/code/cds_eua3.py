@@ -1010,10 +1010,47 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
     # mimicks process_flat from cds_eua2
     msg = ''  # Message or error
     filename = ''  # Filename
+    print(request_variables)
     try:
         if 'gridded' in request_variables:
-            slice_write_request(filename_out=filename_out, request=request_variables, cf_dict=cftable)
+            filename_out = outputdir + '/dest_gridded_' + str(request_variables['variable']) + '.nc'
+            request = request_variables
+            print(filename_out)
+            print(request['variable'])
+            # select via variable
+            #
+            # ToDo: EDIT FOR MULTIPLE VARIABLE REQUEST
+            #
+            if 'temperature' in request['variable']:
+                reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_ta_gridded.nc'
+            elif 'relative_humidity' in request['variable']:
+                reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_hur_gridded.nc'
+            elif 'specific_humidity' in request['variable']:
+                reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_hus_gridded.nc'
+            elif 'wind_speed' in request['variable']:
+                reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_wind_speed_gridded.nc'
+            elif 'dew_point_temperature' in request['variable']:
+                reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_dew_point_temperature_gridded.nc'
             
+            with xr.load_dataset(reqfile) as f:
+                # select via date
+                if ('date' in request.keys()) and (len(request['date']) > 1):
+                    data = f.loc[dict(time=slice(request['date'][0], request['date'][-1]))]
+                # select via pressure
+                if ('pressure_level' in request.keys()) and (len(request['pressure_level']) > 0):
+                    data =  data.where(data.pressure.isin(request['pressure_level']), drop=True)
+                # select via time 
+                if ('time' in request.keys()) and (len(request['time']) == 1 and request['time'] in [0, 12]):
+                    data =  data.where(data.hour == request['time'], drop=True)
+                # select via coords
+                if len(request['gridded']) == 4 :
+                    bounds = request['gridded']
+                    data = data.where(data.lat >= bounds[0], drop=True).where(data.lat <= bounds[2], drop=True)
+                    data = data.where(data.lon >= bounds[1], drop=True).where(data.lon <= bounds[3], drop=True)
+#             except:
+#                 logger.error('No gridded data available')
+            data.to_netcdf(path=filename_out)
+
             
         else:
             # todo change this use the path
@@ -1950,37 +1987,6 @@ class CDMDataset:
             timestamp, num_rec = np.unique(timestamp, return_counts=True)
             return pd.Series(data=num_rec, index=seconds_to_datetime(timestamp), name='num_obs')
         
-    def slice_write_request(self, filename_out: str, request: dict, cf_dict: dict):
-        # select via variable
-        if request['variable'] == 'temperature':
-            reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_ta_gridded.nc'
-        elif request['variable'] == 'relative_humidity':
-            reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_hur_gridded.nc'
-        elif request['variable'] == 'specific_humidity':
-            reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_hus_gridded.nc'
-        elif request['variable'] == 'wind_speed':
-            reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_wind_speed_gridded.nc'
-        elif request['variable'] == 'dew_point_temperature':
-            reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_dew_point_temperature_gridded.nc'
-        try:
-            with xarray.load_dataset(reqfile) as f:
-                # select via date
-                if len(request['date']) > 1:
-                    data = f.loc[dict(time=slice(request['date'][0], request['date'][-1]))]
-                # select via pressure
-                if len(request['pressure_level']) > 0:
-                    data =  data.where(data.pressure.isin(request['pressure_level']), drop=True)
-                # select via time 
-                if len(request['time']) == 1 and request['time'] in [0, 12]:
-                    data =  data.where(data.hour == request['time'], drop=True)
-                if len(request['gridded']) == 4 :
-                    bounds = request['gridded']
-                    data = data.where(data.lat >= bounds[0], drop=True).where(data.lat <= bounds[2], drop=True)
-                    data = data.where(data.lon >= bounds[1], drop=True).where(data.lon <= bounds[3], drop=True)
-        except:
-            logger.error('No gridded data available')
-        data.to_netcdf(path=filename_out)
-                    
 
     def read_write_request(self, filename_out: str, request: dict, cf_dict: dict):
         """ This is the basic request used in the cds_eua2 script
