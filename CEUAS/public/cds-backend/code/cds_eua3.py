@@ -1011,69 +1011,74 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
     msg = ''  # Message or error
     filename = ''  # Filename
     try:
-        # todo change this use the path
-        statid = request_variables.pop('statid', None)
-        if statid is None:
-            logger.error('No station ID (statid) specified. %s', filename)
-            raise ValueError('No station ID (statid) specified')
-
-        filename = request_variables.pop('filename', None)
-        if False:
-            # old version -> not necessary anymore? will be added in check_body anyway
-            if statid[:3] == '0-2':
-                suffix = ['']
-            else:
-                suffix = ['0-20000-0-', '0-20300-0-', '0-20001-0-']
-
-            for ss in suffix:
-                filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  
-                # version as a variable
-                #filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
-                #if len(filename) > 0:
-                    #filename = filename[0]
-                #else:
-                    #filename = ''
-
-                if os.path.isfile(filename):
-                    break
-        
-        # Automaticaly adding variables for 20200- requests:
-        if '0-20200-0' in statid:
-            if 'optional' not in request_variables.keys():
-                request_variables['optional'] = []
-            request_variables['optional'].extend(['reference_sonde_type', 'sample_size', 'sample_error']) 
-
-        cdmnamedict = {}
-        for igroup, v in cftable.items():
-            if "odbcode" in v.keys():
-                cdmnamedict[v['cdsname']] = igroup
-
-        # todo this could be changed to the cf.keys() -> cdm names of the variables
-        # request_variables['variable'] is a list
-        filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
-            request_variables['variable']] + '.nc'
-        
-        if debug: tt=time.time()
-        # Make a subset of groups/variables to read (speed up)
-        # Need to add station_configuration (required later) in read_write_request
-        #
-        gdict = {
-            'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
-            'observations_table':['date_time','z_coordinate','observation_value','observed_variable','report_id'],
-            'header_table':[],
-            'station_configuration': ['station_name', 'primary_id']
-        }
-        if '0-20100-0' not in statid and '0-20200-0' not in statid:
-            gdict["era5fb"]=[]
+        if 'gridded' in request_variables:
+            slice_write_request(filename_out=filename_out, request=request_variables, cf_dict=cftable)
             
-        with CDMDataset(filename=filename, groups=gdict) as data:
-            if debug: print('x',time.time()-tt)
-            data.read_write_request(filename_out=filename_out,
-                                    request=request_variables,
-                                    cf_dict=cftable)
-        if debug: 
-            print(time.time()-tt)
-            print('')
+            
+        else:
+            # todo change this use the path
+            statid = request_variables.pop('statid', None)
+            if statid is None:
+                logger.error('No station ID (statid) specified. %s', filename)
+                raise ValueError('No station ID (statid) specified')
+
+            filename = request_variables.pop('filename', None)
+            if False:
+                # old version -> not necessary anymore? will be added in check_body anyway
+                if statid[:3] == '0-2':
+                    suffix = ['']
+                else:
+                    suffix = ['0-20000-0-', '0-20300-0-', '0-20001-0-']
+
+                for ss in suffix:
+                    filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  
+                    # version as a variable
+                    #filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
+                    #if len(filename) > 0:
+                        #filename = filename[0]
+                    #else:
+                        #filename = ''
+
+                    if os.path.isfile(filename):
+                        break
+
+            # Automaticaly adding variables for 20200- requests:
+            if '0-20200-0' in statid:
+                if 'optional' not in request_variables.keys():
+                    request_variables['optional'] = []
+                request_variables['optional'].extend(['reference_sonde_type', 'sample_size', 'sample_error']) 
+
+            cdmnamedict = {}
+            for igroup, v in cftable.items():
+                if "odbcode" in v.keys():
+                    cdmnamedict[v['cdsname']] = igroup
+
+            # todo this could be changed to the cf.keys() -> cdm names of the variables
+            # request_variables['variable'] is a list
+            filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
+                request_variables['variable']] + '.nc'
+
+            if debug: tt=time.time()
+            # Make a subset of groups/variables to read (speed up)
+            # Need to add station_configuration (required later) in read_write_request
+            #
+            gdict = {
+                'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
+                'observations_table':['date_time','z_coordinate','observation_value','observed_variable','report_id'],
+                'header_table':[],
+                'station_configuration': ['station_name', 'primary_id']
+            }
+            if '0-20100-0' not in statid and '0-20200-0' not in statid:
+                gdict["era5fb"]=[]
+
+            with CDMDataset(filename=filename, groups=gdict) as data:
+                if debug: print('x',time.time()-tt)
+                data.read_write_request(filename_out=filename_out,
+                                        request=request_variables,
+                                        cf_dict=cftable)
+            if debug: 
+                print(time.time()-tt)
+                print('')
 
     except MemoryError as e:
     #except MemoryError as e:
@@ -1944,6 +1949,34 @@ class CDMDataset:
             timestamp = self.load_variable_from_file('time', return_data=True)[0]
             timestamp, num_rec = np.unique(timestamp, return_counts=True)
             return pd.Series(data=num_rec, index=seconds_to_datetime(timestamp), name='num_obs')
+        
+    def slice_write_request(self, filename_out: str, request: dict, cf_dict: dict):
+        # select via variable
+        if request['variable'] == 'temperature':
+            reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_ta_gridded.nc'
+        elif request['variable'] == 'relative_humidity':
+            reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_hur_gridded.nc'
+        elif request['variable'] == 'specific_humidity':
+            reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_hus_gridded.nc'
+        elif request['variable'] == 'wind_speed':
+            reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_wind_speed_gridded.nc'
+        elif request['variable'] == 'dew_point_temperature':
+            reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_dew_point_temperature_gridded.nc'
+        try:
+            with xarray.load_dataset(reqfile) as f:
+                # select via date
+                if len(request['date']) > 1:
+                    data = f.loc[dict(time=slice(request['date'][0], request['date'][-1]))]
+                # select via pressure
+                if len(request['pressure_level']) > 0:
+                    data =  data.where(data.pressure.isin(request['pressure_level']), drop=True)
+                # select via time 
+                if len(request['time']) == 1 and request['time'] in [0, 12]:
+                    data =  data.where(data.hour == request['time'], drop=True)
+        except:
+            logger.error('No gridded data available')
+        out.to_netcdf(path=filename_out)
+                    
 
     def read_write_request(self, filename_out: str, request: dict, cf_dict: dict):
         """ This is the basic request used in the cds_eua2 script
