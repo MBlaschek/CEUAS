@@ -1046,7 +1046,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     print('request[pressure_level]', request['pressure_level'])
                     print('data.pressure', data.pressure)
 #                     data =  data.where(data.pressure.isin(request['pressure_level']), drop=True)
-                    data =  data.where(data.pressure. == request['pressure_level'][0], drop=True)
+                    data =  data.where(data.pressure == request['pressure_level'][0], drop=True)
                     print('pselect worked')
                 # select via time 
                 if ('time' in request.keys()) and (len(request['time']) == 1 and request['time'] in [0, 12]):
