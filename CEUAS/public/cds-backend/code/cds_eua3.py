@@ -34,6 +34,7 @@ import pandas as pd
 import xarray as xr
 from numba import njit
 import geopy
+import json
 
 # check codes from there
 # https://github.com/glamod/common_data_model/blob/master/tables/observed_variable.dat
@@ -1013,24 +1014,27 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
     print(request_variables)
     try:
         if 'gridded' in request_variables:
-            filename_out = outputdir + '/dest_gridded_' + str(request_variables['variable']) + '.nc'
+            filename_out = outputdir + '/dest_gridded_' + str(request_variables['variable'][0]) + '.nc'
             request = request_variables
-            print(filename_out)
-            print(request['variable'])
             # select via variable
             #
             # ToDo: EDIT FOR MULTIPLE VARIABLE REQUEST
             #
+            
+            config_file = 'hug.default.config.json'
+            if os.path.isfile(config_file):
+                config = json.load(open(config_file, 'r'))
+            
             if 'temperature' in request['variable']:
-                reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_ta_gridded.nc'
+                reqfile = config['grid_dir'] + '/CEUAS_ta_gridded.nc'
             elif 'relative_humidity' in request['variable']:
-                reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_hur_gridded.nc'
+                reqfile = config['grid_dir'] + '/CEUAS_hur_gridded.nc'
             elif 'specific_humidity' in request['variable']:
-                reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_hus_gridded.nc'
+                reqfile = config['grid_dir'] + '/CEUAS_hus_gridded.nc'
             elif 'wind_speed' in request['variable']:
-                reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_wind_speed_gridded.nc'
+                reqfile = config['grid_dir'] + '/CEUAS_wind_speed_gridded.nc'
             elif 'dew_point_temperature' in request['variable']:
-                reqfile = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/CEUAS_dew_point_temperature_gridded.nc'
+                reqfile = config['grid_dir'] + '/CEUAS_dew_point_temperature_gridded.nc'
             
             with xr.load_dataset(reqfile) as f:
                 # select via date
@@ -1094,7 +1098,6 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             # request_variables['variable'] is a list
             filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
                 request_variables['variable']] + '.nc'
-
             if debug: tt=time.time()
             # Make a subset of groups/variables to read (speed up)
             # Need to add station_configuration (required later) in read_write_request
