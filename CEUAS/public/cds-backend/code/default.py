@@ -1166,6 +1166,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
     print('body', body)
     if 'gridded' in body:
         body['statid']=''
+        print('body', body)
         results = [eua.process_flat(outputdir = output_dir, cftable = cf, debug = True, request_variables = body)]
     #
     # Smaller request?
