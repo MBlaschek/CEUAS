@@ -35,6 +35,7 @@ import xarray as xr
 from numba import njit
 import geopy
 import json
+import netCDF4
 
 # check codes from there
 # https://github.com/glamod/common_data_model/blob/master/tables/observed_variable.dat
@@ -1055,6 +1056,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     data = data.where(data.lon >= bounds[1], drop=True).where(data.lon <= bounds[3], drop=True)
 #             except:
 #                 logger.error('No gridded data available')
+            print(data)
             data.to_netcdf(path=filename_out)
 
             
