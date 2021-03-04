@@ -329,7 +329,7 @@ class Monthly_Average(object):
                             dep         = self.data['obs_minus_an'][ind_min: ind_max][unique_ind[0]] # departures from era5fb
                             era5_b    = self.data['bias_estimate'][ind_min: ind_max][unique_ind[0]]
                                 
-                            results[p]['obs_minus_an']             .append(dep)        
+                            results[p]['obs_minus_an'].append(dep)        
                             results[p]['bias_estimate'].append(era5_b)
 
                         else:
@@ -613,10 +613,25 @@ class Monthly_Average(object):
 
         
   
+""" Possible variables 
+air_temperature  -> ta
+dew_point_temperature -> dew_point_temperature
+wind_speed -> wind_speed
+relative_humidity -> rhu
 
+"""
+variable = 'dew_point_temperature'
+files_directory = '/raid60/scratch/federico/CDS_DATABASE_01FEB2021/DATA/' + variable
+out_dir = '/raid60/scratch/federico/MONTHLY_FEB2021/' + variable 
+ 
+ 
+variable = 'hur'
+files_directory = '/raid60/scratch/federico/CDS_DATABASE_01FEB2021/DATA/relative_humidity/'
+out_dir = '/raid60/scratch/federico/MONTHLY_FEB2021/relative_humidity/' 
 
-files_directory = '/raid60/scratch/federico/CDS_DATABASE_01FEB2021/temperature'
-out_dir = '/raid60/scratch/federico/MONTHLY_FEB2021'
+variable = 'hus'
+files_directory = '/raid60/scratch/federico/CDS_DATABASE_01FEB2021/DATA/specific_humidity/'
+out_dir = '/raid60/scratch/federico/MONTHLY_FEB2021/specific_humidity/' 
  
 if __name__ == '__main__':
         
@@ -638,12 +653,12 @@ if __name__ == '__main__':
             monthly_averages  = args.monthly_averages
 
             stations_list = [f for f in os.listdir(files_directory) if '.nc' in f ]
-            stations_list = [f for f in stations_list if '82930' in f ]
+            #stations_list = [f for f in stations_list if '10393' in f ]
             
-            POOL = False  
+            POOL = True  
             
             if POOL:
-                files = [ files_directory + '/' + s for s in stations_list ]
+                files = [ files_directory + '/' + s for s in stations_list  ]
                 def run(out_dir, variable, file ):
                     try:
                         Average = Monthly_Average( out_dir = out_dir, file= file , variable = variable) 
@@ -655,16 +670,15 @@ if __name__ == '__main__':
                         a = open('Failed_monthly_extraction.txt' , 'a+')
                         a.write(file + '\n')
                 
-                p = Pool(30)
-                func = partial(run, out_dir, 'ta')
+                p = Pool(20)
+                func = partial(run, out_dir, variable)
                 out = p.map(func, files)                      
-        
         
             else:
                 for s in stations_list:
                     file =  files_directory + '/' + s 
                     
-                    Average = Monthly_Average( out_dir = out_dir , file= file , variable = 'ta' ) 
+                    Average = Monthly_Average( out_dir = out_dir , file= file , variable = variable ) 
                     load = Average.load()   
                     monthly = Average.make_monthly_data()
                             

@@ -34,6 +34,7 @@ import pandas as pd
 import xarray as xr
 from numba import njit
 import geopy
+import json
 
 # check codes from there
 # https://github.com/glamod/common_data_model/blob/master/tables/observed_variable.dat
@@ -1010,70 +1011,114 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
     # mimicks process_flat from cds_eua2
     msg = ''  # Message or error
     filename = ''  # Filename
+    print(request_variables)
     try:
-        # todo change this use the path
-        statid = request_variables.pop('statid', None)
-        if statid is None:
-            logger.error('No station ID (statid) specified. %s', filename)
-            raise ValueError('No station ID (statid) specified')
-
-        filename = request_variables.pop('filename', None)
-        if False:
-            # old version -> not necessary anymore? will be added in check_body anyway
-            if statid[:3] == '0-2':
-                suffix = ['']
-            else:
-                suffix = ['0-20000-0-', '0-20300-0-', '0-20001-0-']
-
-            for ss in suffix:
-                filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  
-                # version as a variable
-                #filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
-                #if len(filename) > 0:
-                    #filename = filename[0]
-                #else:
-                    #filename = ''
-
-                if os.path.isfile(filename):
-                    break
-        
-        # Automaticaly adding variables for 20200- requests:
-        if '0-20200-0' in statid:
-            if 'optional' not in request_variables.keys():
-                request_variables['optional'] = []
-            request_variables['optional'].extend(['reference_sonde_type', 'sample_size', 'sample_error']) 
-
-        cdmnamedict = {}
-        for igroup, v in cftable.items():
-            if "odbcode" in v.keys():
-                cdmnamedict[v['cdsname']] = igroup
-
-        # todo this could be changed to the cf.keys() -> cdm names of the variables
-        # request_variables['variable'] is a list
-        filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
-            request_variables['variable']] + '.nc'
-        
-        if debug: tt=time.time()
-        # Make a subset of groups/variables to read (speed up)
-        # Need to add station_configuration (required later) in read_write_request
-        #
-        gdict = {
-            'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
-            'observations_table':['date_time','z_coordinate','observation_value','observed_variable','report_id'],
-            'header_table':[],
-            'station_configuration': ['station_name', 'primary_id']
-        }
-        if '0-20100-0' not in statid and '0-20200-0' not in statid:
-            gdict["era5fb"]=[]
+        if 'gridded' in request_variables:
+            filename_out = outputdir + '/dest_gridded_' + str(request_variables['variable'][0]) + '.nc'
+            request = request_variables
+            # select via variable
+            #
+            # ToDo: EDIT FOR MULTIPLE VARIABLE REQUEST
+            #
             
-        with CDMDataset(filename=filename, groups=gdict) as data:
-            if debug: print('x',time.time()-tt)
-            data.read_write_request(filename_out=filename_out,
-                                    request=request_variables,
-                                    cf_dict=cftable)
-        if debug: 
-            print(time.time()-tt)
-            print('')
+            config_file = 'hug.default.config.json'
+            if os.path.isfile(config_file):
+                config = json.load(open(config_file, 'r'))
+            
+            if 'temperature' in request['variable']:
+                reqfile = config['grid_dir'] + '/CEUAS_ta_gridded.nc'
+            elif 'relative_humidity' in request['variable']:
+                reqfile = config['grid_dir'] + '/CEUAS_hur_gridded.nc'
+            elif 'specific_humidity' in request['variable']:
+                reqfile = config['grid_dir'] + '/CEUAS_hus_gridded.nc'
+            elif 'wind_speed' in request['variable']:
+                reqfile = config['grid_dir'] + '/CEUAS_wind_speed_gridded.nc'
+            elif 'dew_point_temperature' in request['variable']:
+                reqfile = config['grid_dir'] + '/CEUAS_dew_point_temperature_gridded.nc'
+            
+            with xr.load_dataset(reqfile) as f:
+                # select via date
+                if ('date' in request.keys()) and (len(request['date']) > 1):
+                    data = f.loc[dict(time=slice(request['date'][0], request['date'][-1]))]
+                # select via pressure
+                if ('pressure_level' in request.keys()) and (len(request['pressure_level']) > 0):
+                    data =  data.where(data.pressure.isin(request['pressure_level']), drop=True)
+                # select via time 
+                if ('time' in request.keys()) and (len(request['time']) == 1 and request['time'] in [0, 12]):
+                    data =  data.where(data.hour == request['time'], drop=True)
+                # select via coords
+                if len(request['gridded']) == 4 :
+                    bounds = request['gridded']
+                    data = data.where(data.lat >= bounds[0], drop=True).where(data.lat <= bounds[2], drop=True)
+                    data = data.where(data.lon >= bounds[1], drop=True).where(data.lon <= bounds[3], drop=True)
+#             except:
+#                 logger.error('No gridded data available')
+            data.to_netcdf(path=filename_out)
+
+            
+        else:
+            # todo change this use the path
+            statid = request_variables.pop('statid', None)
+            if statid is None:
+                logger.error('No station ID (statid) specified. %s', filename)
+                raise ValueError('No station ID (statid) specified')
+
+            filename = request_variables.pop('filename', None)
+            if False:
+                # old version -> not necessary anymore? will be added in check_body anyway
+                if statid[:3] == '0-2':
+                    suffix = ['']
+                else:
+                    suffix = ['0-20000-0-', '0-20300-0-', '0-20001-0-']
+
+                for ss in suffix:
+                    filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  
+                    # version as a variable
+                    #filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
+                    #if len(filename) > 0:
+                        #filename = filename[0]
+                    #else:
+                        #filename = ''
+
+                    if os.path.isfile(filename):
+                        break
+
+            # Automaticaly adding variables for 20200- requests:
+            if '0-20200-0' in statid:
+                if 'optional' not in request_variables.keys():
+                    request_variables['optional'] = []
+                request_variables['optional'].extend(['reference_sonde_type', 'sample_size', 'sample_error']) 
+
+            cdmnamedict = {}
+            for igroup, v in cftable.items():
+                if "odbcode" in v.keys():
+                    cdmnamedict[v['cdsname']] = igroup
+
+            # todo this could be changed to the cf.keys() -> cdm names of the variables
+            # request_variables['variable'] is a list
+            filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
+                request_variables['variable']] + '.nc'
+            if debug: tt=time.time()
+            # Make a subset of groups/variables to read (speed up)
+            # Need to add station_configuration (required later) in read_write_request
+            #
+            gdict = {
+                'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
+                'observations_table':['date_time','z_coordinate','observation_value','observed_variable','report_id'],
+                'header_table':[],
+                'station_configuration': ['station_name', 'primary_id']
+            }
+            if '0-20100-0' not in statid and '0-20200-0' not in statid:
+                gdict["era5fb"]=[]
+
+            with CDMDataset(filename=filename, groups=gdict) as data:
+                if debug: print('x',time.time()-tt)
+                data.read_write_request(filename_out=filename_out,
+                                        request=request_variables,
+                                        cf_dict=cftable)
+            if debug: 
+                print(time.time()-tt)
+                print('')
 
     except MemoryError as e:
     #except MemoryError as e:
@@ -1944,6 +1989,7 @@ class CDMDataset:
             timestamp = self.load_variable_from_file('time', return_data=True)[0]
             timestamp, num_rec = np.unique(timestamp, return_counts=True)
             return pd.Series(data=num_rec, index=seconds_to_datetime(timestamp), name='num_obs')
+        
 
     def read_write_request(self, filename_out: str, request: dict, cf_dict: dict):
         """ This is the basic request used in the cds_eua2 script
@@ -2146,15 +2192,15 @@ class CDMDataset:
             #
             # Header Information
             #
-#             if 'header_table' in self.groups:
-#                 igroup = 'header_table'
-#                 # only records fitting criteria (zidx) are copied
-#                 # todo why is lon, lat not here?
-#                 do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
-#                           var_selection=['report_id'])
-#                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-#                 # ,'station_name','primary_station_id'])
-#                 # todo could be read from the observations_table
+            if 'header_table' in self.groups:
+                igroup = 'header_table'
+                # only records fitting criteria (zidx) are copied
+                # todo why is lon, lat not here?
+                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
+                          var_selection=['report_id'])
+                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                # ,'station_name','primary_station_id'])
+                # todo could be read from the observations_table
             #
             # Station Configuration
             #
@@ -2176,8 +2222,8 @@ class CDMDataset:
             #
             # Fix Attributes and Globals
             #
-#             fout['trajectory_label'].attrs['cf_role'] = np.string_('trajectory_id')
-#             fout['trajectory_label'].attrs['long_name'] = np.string_('Label of trajectory')
+            fout['trajectory_label'].attrs['cf_role'] = np.string_('trajectory_id')
+            fout['trajectory_label'].attrs['long_name'] = np.string_('Label of trajectory')
             for a, v in globatts.items():
                 fout.attrs[a] = np.string_(v)
 
@@ -2748,8 +2794,14 @@ class CDMDataset:
             # Trajectory info
             if ivar == 'trajectory_label':
                 data['trajectory_label'] = data['trajectory_label'][data['trajectory_index']]
-                del data['trajectory_index']
-                del data['trajectory']
+                try:
+                    del data['trajectory_index']
+                except:
+                    pass
+                try:
+                    del data['trajectory']
+                except: 
+                    pass
             if ivar == date_time_name and decode_datetime:
                 data[ivar] = seconds_to_datetime(data[ivar])
                 

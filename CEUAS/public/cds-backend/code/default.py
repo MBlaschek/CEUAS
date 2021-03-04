@@ -84,6 +84,7 @@ config = {'logger_name': 'upperair',
           'src_path': '.',
           'data_dir': '.',
           'comp_dir': '.',
+          'grid_dir': '.',
           'tmp_dir': '.',
           'config_dir': './config',
           'debug': False,
@@ -629,6 +630,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                day: list = None, month: list = None, year: list = None, date: list = None, time: list = None, 
                bbox: list = None, country: str = None, area: list = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
+               gridded: list = None,
                pass_unknown_keys: bool = False,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
@@ -702,9 +704,28 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 if iopt not in allowed_optionals:
                     raise KeyError('Invalid optional selected: ' + optional)
             d['optional'] = optional
-    # Check values:
-    # ['obs_minus_an', 'obs_minus_bg', 'bias_estimate']
-    
+            
+    #
+    # gridded [lower left upper right]
+    #
+    elif gridded is not None:
+        if not isinstance(gridded, (list, tuple)) or len(gridded) != 4:
+            raise ValueError('Invalid selection, gridded: [lower left upper right]')
+        try:
+            for i in range(4):
+                gridded[i] = float(gridded[i])
+        except ValueError:
+            raise ValueError('Invalid selection, gridded: [lower left upper right] must be int or float')
+
+        if gridded[0] >= gridded[2] or gridded[1] >= gridded[3]:
+            raise ValueError('Invalid selection, gridded: lower<upper [-90, 90], left<right [-180, 360]')
+
+        if gridded[0] < -90 or gridded[0] > 90 or gridded[2] < -90 or gridded[2] > 90 or \
+                gridded[1] < -180 or gridded[1] > 360 or gridded[3] < -180 or gridded[3] > 360 \
+                or gridded[3] - gridded[1] > 360:
+            raise ValueError('Invalid selection, gridded: lower<upper [-90, 90], left<right [-180, 360]')
+        d['gridded'] = gridded
+            
     #
     # Format
     #
@@ -898,6 +919,12 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 'Invalid selection, specify either bbox, country or statid. Use "statid":"all" to select all ' \
                 'stations ')
     d['statid'] = statid
+    #
+    #
+    # remove statids i
+    
+    
+    
     #
     #
     # Only pick one format for dates:
@@ -1136,10 +1163,13 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
     # process_flat(outputdir: str, cftable: dict, debug:bool=False, request_variables: dict) -> tuple:
     # func = partial(eua.process_flat, output_dir, cf, input_dirs[0], debug)
     func = partial(eua.process_flat, output_dir, cf, debug)
+    if 'gridded' in body:
+        body['statid']=''
+        results = [eua.process_flat(outputdir = output_dir, cftable = cf, debug = True, request_variables = body)]
     #
     # Smaller request?
     #
-    if debug or len(body['variable']) * len(body['statid'])<10:
+    elif debug or len(body['variable']) * len(body['statid'])<10:
         #
         # Single Threading
         #
@@ -1156,6 +1186,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
     # Process the output 
     # todo catch Error Messages and store in a log file?
     #
+    print(results)
     wpath = ''  # same as output_dir ?
     for r in results:
         if r[0] != '':
@@ -1166,6 +1197,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
         raise RuntimeError('Error: %s (%s)' % (results[0][1], str(body)))
     else:
         rfile = os.path.dirname(wpath) + '/download.zip'
+        print(rfile)
 
     logger.debug('wpath: %s; format %s Time %f', wpath, body['format'],time.time()-tt)
 

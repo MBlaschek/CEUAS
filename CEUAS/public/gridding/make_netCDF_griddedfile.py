@@ -1,4 +1,4 @@
-""" Create a single netCDF file contaning gridded data.
+B""" Create a single netCDF file contaning gridded data.
       structure of file:
       - dimensions
           lat
@@ -23,7 +23,10 @@ def initialize(variable = '' ):
     out_dir = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/'
     
     """ Directory with gridded files, list of files """
+    
     gridded_files_dir = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/' + var + '/'
+    
+    
     files =  os.listdir(gridded_files_dir)
     
     """ Creating the latitude and longitude lists """
@@ -46,7 +49,10 @@ def initialize(variable = '' ):
     
     """ Total length of data """
     Time = df.loc [ (df['hour'] == 12) & (df['plev']==100000) ]['time'].values  # just need one plev per  hour, i.e. this is the list of distinct  time stamps
-
+    Time = pd.arrays.DatetimeArray(Time)
+    Time = Time.date
+    Time = Time.astype(np.datetime64)
+    print('*** Finished initialization ***')
 
 
 #Lat = Lat[:3]
@@ -87,8 +93,8 @@ def make_xarray():
                         ano = df_red[var + '_anomaly'].values                        
 
                     
-                    res_average[np.where(Lat == lat),np.where(Lon == lon),h,p,:] = values
-                    res_anomaly[np.where(Lat == lat),np.where(Lon == lon),h,p,:] = ano
+                    res_average[np.where(Lat == lat),np.where(Lon == lon),h,p,:] = values.astype(float)
+                    res_anomaly[np.where(Lat == lat),np.where(Lon == lon),h,p,:] = ano.astype(float)
                     
     return res_average, res_anomaly
 
@@ -115,7 +121,11 @@ def write_gridded_netCDF(res_average, res_anomaly):
     attr_dic = { 'ta' :                {'variable': 'Air temperature' , 'units': 'Kelvin [K]' },
                         'wind_speed' : {'variable': 'Wind speed' , 'units': 'meter per second [m/s]' },
                         'dew_point_temperature' : {'variable': 'Dew point temperature' , 'units': 'Kelvin [K]' },
-                        'relative_humidity' : {'variable': 'relative humidity' , 'units': 'unitless [0-1]' } }
+                        'hur' : {'variable': 'Relative humidity' , 'units': 'unitless [0-1]' },
+                        'hus' : {'variable': 'Specific humidity' , 'units': 'kilograms per kilogram	[kg/kg]' },
+                        
+                        
+                        }
                         
 
     da.attrs['variable'] = attr_dic[var]['variable']
@@ -142,37 +152,14 @@ def write_gridded_netCDF(res_average, res_anomaly):
     dt = now.strftime("%d/%m/%Y %H:%M:%S")# dd/mm/YY H:M:S
     da.attrs['history'] = dt                    
     
-                                                                 
-    da.to_netcdf( out_dir + '/CEUAS_' + var +'_gridded.nc' )
+    """ Setting the encoding for compression """
+    enc = {}
+    for v in da:
+        enc[v] = {'compression': 'gzip' }
+        
+    print(enc)
+    da.to_netcdf( out_dir + '/CEUAS_' + var +'_gridded.nc' , format='netCDF4', engine='h5netcdf', encoding= enc )
     print('**Written file: ' ,   out_dir + '/CEUAS_' + var +'_gridded.nc *** '  )
-
-""""
-da = xr.Dataset ( { var + '_average' : ( ['lat','lon','hour','pressure','time'] ,  res_average ), # variables 
-                                 var + '_anomaly' : ( ['lat','lon','hour','pressure','time'] ,  res_anomaly ) },
-                  
-                  #dims = ["lat","lon","hour","pressure","time"],
-                  coords = dict(   lat = Lat ,
-                                           lon =  Lon,
-                                           hour = Hour,
-                                           pressure = Plev,
-                                           time = Time,                  
-                                           ),
-                     )
-                                                             
-
-
-
-da = xr.DataArray (data = res, name = 'ta',
-                                dims = ["lat","lon","hour","pressure","time"],
-                                coords = dict(   lat = Lat ,
-                                                         lon =  Lon,
-                                                         hour = Hour,
-                                                         pressure = Plev,
-                                                         time = Time,                  
-                                                         ),
-                                   )
-"""                                                                                                       
-                                           
 
 
     
@@ -180,16 +167,18 @@ da = xr.DataArray (data = res, name = 'ta',
 """ Select here the variable to process.
       Will locate the proper directory and file list """
 
-var = 'ta'
+var = 'ta'  # ta, dew_point_temperature, wind_speed, hur, hus 
 #Lat = Lat[:3]
 #Lon = Lon[:5]
 if __name__ == '__main__':
 
-    dummy = initialize(variable = var)
-    #Lat = Lat[10:]  ### uncomment for testing 
-    #Lon = Lon[15:]    
-    res_average, res_anomaly = make_xarray()
-    write_gridded_netCDF(res_average, res_anomaly )
+    vars = ['ta','dew_point_temperature','wind_speed','hur','hus']
+    for var in vars:
+        dummy = initialize(variable = var)
+        #Lat = Lat[:5]  ### uncomment for testing 
+        #Lon = Lon[:3]    
+        res_average, res_anomaly = make_xarray()
+        write_gridded_netCDF(res_average, res_anomaly )
 
 
 

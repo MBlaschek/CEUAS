@@ -108,7 +108,7 @@ class Gridding():
             obs_tab['month'] = pd.arrays.DatetimeArray (obs_tab['time'].values[:] ).month
             obs_tab['hour']    = pd.arrays.DatetimeArray (obs_tab['time'].values[:] ).hour
             
-            df_red = obs_tab.loc [ (obs_tab[self.variable + '_num_obs_dep'] > min_days) 
+            df_red = obs_tab.loc [ (obs_tab[self.variable + '_num_obs_glob'] > min_days) 
                                             &  (obs_tab['hour'] == hour ) ] 
             return df_red
         
@@ -139,6 +139,7 @@ class Gridding():
                       see self.reduce_dataframe(min_days=10) """
     
                 if len(previous_climatology) > min_months:
+                    #print(self.file, ' CHEEEEECK !!!! '  )
                     # dataframe of the year-month of which I want to calculate the anomaly  
                     current_df = obs_tab.loc [ (obs_tab['plev']==p) 
                                        & (obs_tab['month'] == month)
@@ -146,21 +147,21 @@ class Gridding():
                                        & (obs_tab['year'] == year) ]
     
                     """ Reading the values of the current entry of the dataframe """
-                    try:
                         
-                        average = current_df[var + '_dep'].values[0]
-                        average_bias =  current_df[var + '_bias'].values[0]
-                    except:
-                        average = current_df[var + '_dep'].values
-                        average_bias =  current_df[var + '_bias'].values    
-                    
-                    """ Calculating the values of the previous climatology entries """                    
-                    climatology_average = np.mean(previous_climatology[var + '_dep'].values)
-                    climatology_average_bias = np.mean(previous_climatology[var + '_bias'].values)
-                    
-                    anomaly = average - climatology_average
-                    anomaly_bias = average_bias - climatology_average_bias
-    
+                    if len(current_df) >=1: # case where there is data 
+
+                            average = current_df[var + '_glob'].values[0]
+                            average_bias =  current_df[var + '_bias'].values[0] 
+                            """ Calculating the values of the previous climatology entries """                    
+                            climatology_average = np.mean(previous_climatology[var + '_glob'].values)
+                            climatology_average_bias = np.mean(previous_climatology[var + '_bias'].values)
+                            
+                            anomaly = average - climatology_average
+                            anomaly_bias = average_bias - climatology_average_bias
+                            
+                    else:
+                            average, average_bias, anomaly, anomaly_bias = np.nan, np.nan, np.nan, np.nan
+
                 else:                
                     average, average_bias, anomaly, anomaly_bias = np.nan, np.nan, np.nan, np.nan 
                     
@@ -170,8 +171,11 @@ class Gridding():
                 anomalies_bias.append(anomaly_bias) # bias corrected anomaly
                 plevels.append(p) # pressure level 
                     
+        #if len ([f for f in averages  if not np.isnan(f)]) >0:
+        #    print(0)
         return averages, averages_bias, anomalies, anomalies_bias, plevels 
                               
+                                                       
                                                        
     def calculate_box(self):
         """ Main utility to run the calculation over each gridded box.
@@ -198,7 +202,9 @@ class Gridding():
             for station in bbox['files']:          # loop over each station file (if any)
             #for station in stations:          # loop over each station file (if any)
             
-                print('*** Processing station *** ' , station , str(bbox['files'].index(station)) + '/' + str(len(bbox['files'])) , '  of box: ' , bbox  )
+                #if '10393' not in station:
+                #    continue 
+                print('*** Processing station *** ' , station , str(bbox['files'].index(station)+1) + '/' + str(len(bbox['files'])) , '  of box: ' , bbox  )
                 station = station.replace("b'" , ''  ).replace("'",'')
                 dummy_load = self.find_file(station) 
                 
@@ -347,13 +353,23 @@ class Gridding():
 
 
 """ Initialize relevant variable for input/output """
-monthly_file_dir = '/raid60/scratch/federico/MONTHLY_FEB2021/wind_speed/'
-out_dir = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/wind_speed'
+variable = 'dew_point_temperature'
+monthly_file_dir = '/raid60/scratch/federico/MONTHLY_FEB2021/' + variable 
+out_dir = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/' + variable
 
-out_dir = '/raid60/scratch/federico/PROVA_WINDSPEED_FEB2021/'
+variable = 'hur'
+monthly_file_dir = '/raid60/scratch/federico/MONTHLY_FEB2021/relative_humidity' 
+out_dir = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/relative_humidity' 
+
+variable = 'ta'
+monthly_file_dir = '/raid60/scratch/federico/MONTHLY_FEB2021/' + variable 
+out_dir = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/' + variable
+
+variable = 'hus'
+monthly_file_dir = '/raid60/scratch/federico/MONTHLY_FEB2021/specific_humidity/' 
+out_dir = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/specific_humidity/'
 
 boxes_file = 'stations_per_box_size_10.npy'
-variable = 'wind_speed'
 
 """ Numpy file containing the grid boxes """
 boxes = np.load(boxes_file, allow_pickle = True).item()
@@ -361,12 +377,11 @@ boxes = np.load(boxes_file, allow_pickle = True).item()
 remove = [] 
 
 
-""" # for analsing one specific box 
+# for analsing one specific box 
 for k in boxes.keys():
     lat, lon, latm, lonm = boxes[k]['lat'][0] , boxes[k]['lon'][0], boxes[k]['lat'][1], boxes[k]['lon'][1]
-    if latm > 90 or lat < -90 or lon < -180 or lonm > 180 or  k != '24_20':
+    if latm > 90 or lat < -90 or lon < -180 or lonm > 180:
         remove.append(k)
-"""  
 
     
 print('*** Cleaning wrong boxes ***')
@@ -409,7 +424,7 @@ if __name__ == '__main__':
         #for b in bboxes:
         #    run(out_dir = out_dir , monthly_dir = monthly_file_dir, variable = variable, box = b)
         func = partial(run, out_dir , monthly_file_dir, variable )        
-        p = Pool(40)
+        p = Pool(30)
         out = p.map(func, bboxes)
 
     else:  
