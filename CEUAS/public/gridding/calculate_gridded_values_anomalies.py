@@ -20,7 +20,7 @@ pd.set_option('display.max_colwidth', -1)
 class Gridding():
     """ Main class to hold utilities to create gridded average monthly files and anomalies calculation """
     
-    def __init__(self, out_dir = '', monthly_dir ='' , box = {'':''}, variable = 'ta' ):
+    def __init__(self, out_dir = '', monthly_dir ='' , box = {'':''}, variable = '' ):
         
         self.out_dir = out_dir    # desired output directory 
         if not os.path.isdir(out_dir):
@@ -33,7 +33,7 @@ class Gridding():
         self.box = list(box.values())[0]
         self.variable = variable 
         
-    def make_all_datetime(self, start_year=1900, end_year=2020):
+    def make_all_datetime(self, start_year=1900, end_year=2021):
         """ Create all date_time, on the day 15 of each month, at hours 00 and 12, 
               from start_year to end_year.
     
@@ -94,9 +94,13 @@ class Gridding():
           'ta_num_obs_bias','ta_num_obs_dep','ta_num_obs_glob','ta_std_dev','ta_std_dev_bias',
           'ta_std_dev_dep', 'ta_std_dev_glob', 'time']
         """
-        df = xr.open_dataset(self.file , engine = 'h5netcdf', decode_times = True ).to_dataframe()
-        return df 
-            
+        try:
+            df = xr.open_dataset(self.file , engine = 'h5netcdf', decode_times = True ).to_dataframe()
+            return df 
+        except:
+            print('*** ERROR: no available data in file: ' , self.file )
+            return None
+        
     def reduce_dataframe(self, obs_tab, min_days=10, hour = ''):
             """ Reduces the initial dataframe(obs_tab) removing variables and values that are not needed """
 
@@ -104,7 +108,7 @@ class Gridding():
             obs_tab['month'] = pd.arrays.DatetimeArray (obs_tab['time'].values[:] ).month
             obs_tab['hour']    = pd.arrays.DatetimeArray (obs_tab['time'].values[:] ).hour
             
-            df_red = obs_tab.loc [ (obs_tab['ta_num_obs_dep'] > min_days) 
+            df_red = obs_tab.loc [ (obs_tab[self.variable + '_num_obs_glob'] > min_days) 
                                             &  (obs_tab['hour'] == hour ) ] 
             return df_red
         
@@ -135,6 +139,7 @@ class Gridding():
                       see self.reduce_dataframe(min_days=10) """
     
                 if len(previous_climatology) > min_months:
+                    #print(self.file, ' CHEEEEECK !!!! '  )
                     # dataframe of the year-month of which I want to calculate the anomaly  
                     current_df = obs_tab.loc [ (obs_tab['plev']==p) 
                                        & (obs_tab['month'] == month)
@@ -142,16 +147,21 @@ class Gridding():
                                        & (obs_tab['year'] == year) ]
     
                     """ Reading the values of the current entry of the dataframe """
-                    average = current_df[var + '_dep'].values
-                    average_bias =  current_df[var + '_bias'].values
-                    
-                    """ Calculating the values of the previous climatology entries """                    
-                    climatology_average = np.mean(previous_climatology[var + '_dep'].values)
-                    climatology_average_bias = np.mean(previous_climatology[var + '_bias'].values)
-                    
-                    anomaly = average - climatology_average
-                    anomaly_bias = average_bias - climatology_average_bias
-    
+                        
+                    if len(current_df) >=1: # case where there is data 
+
+                            average = current_df[var + '_glob'].values[0]
+                            average_bias =  current_df[var + '_bias'].values[0] 
+                            """ Calculating the values of the previous climatology entries """                    
+                            climatology_average = np.mean(previous_climatology[var + '_glob'].values)
+                            climatology_average_bias = np.mean(previous_climatology[var + '_bias'].values)
+                            
+                            anomaly = average - climatology_average
+                            anomaly_bias = average_bias - climatology_average_bias
+                            
+                    else:
+                            average, average_bias, anomaly, anomaly_bias = np.nan, np.nan, np.nan, np.nan
+
                 else:                
                     average, average_bias, anomaly, anomaly_bias = np.nan, np.nan, np.nan, np.nan 
                     
@@ -161,8 +171,11 @@ class Gridding():
                 anomalies_bias.append(anomaly_bias) # bias corrected anomaly
                 plevels.append(p) # pressure level 
                     
+        #if len ([f for f in averages  if not np.isnan(f)]) >0:
+        #    print(0)
         return averages, averages_bias, anomalies, anomalies_bias, plevels 
                               
+                                                       
                                                        
     def calculate_box(self):
         """ Main utility to run the calculation over each gridded box.
@@ -174,7 +187,7 @@ class Gridding():
         self.results = results 
         
         #bbox = self.boxes[box] # analyzing a specific box
-        if abs(bbox['lat'][0]) >= 90 or abs(bbox['lon'][0]) >= 180 :
+        if abs(bbox['lat'][0]) > 90 or abs(bbox['lon'][0]) > 180 :
             print('*** WARNING: wrong lat/lon' , bbox['lat'][0] , ' ' , bbox['lon'][0] )
             return False
     
@@ -184,16 +197,25 @@ class Gridding():
             pass
         
         else:        
-            
+            #stations = [s for s in bbox['files'] if '10393' in s] 
             """ Loop over stations in the box """
             for station in bbox['files']:          # loop over each station file (if any)
-                print('*** Processing station *** ' , station )
+            #for station in stations:          # loop over each station file (if any)
+            
+                #if '10393' not in station:
+                #    continue 
+                print('*** Processing station *** ' , station , str(bbox['files'].index(station)+1) + '/' + str(len(bbox['files'])) , '  of box: ' , bbox  )
                 station = station.replace("b'" , ''  ).replace("'",'')
-                file = self.find_file(station) 
+                dummy_load = self.find_file(station) 
                 
                 if self.file:   # load dataframe if file exists 
                     df = self.load_df()
-                    if df.empty:
+                    
+                    if not isinstance(df, pd.DataFrame): # check if valid DataFrame exists
+                        print('*** ERROR: invalid dataframe ***' , station )
+                        continue
+
+                    if df.empty: # check if DataFrame not empty
                         continue 
                     
                     for h in [0,12]:    # loop over the two possible hours 
@@ -210,11 +232,14 @@ class Gridding():
                         results['res'][station]['plev'] = []
                         results['res'][station]['time'] = []
                         
-                        date_time_df = list(red_df['time'])
                         
+                        all_dt = np.unique(df['time'])
                         for dt in self.date_time: # all possible date_time starting from 1900 until 12/2020
-                            if dt in date_time_df : #  available date_time for this station, will calculate values 
-                                dt = pd.to_datetime(dt)
+                            dt = pd.to_datetime(dt)
+                            
+                            results['res'][station]['time'].extend ( [dt] * 16 )      
+    
+                            if dt in all_dt : #  available date_time for this station, will calculate values
                                 average, average_bias, anomaly, anomaly_bias, plevels = self.calculate_anomaly(red_df, years_window=20, min_months=10,
                                                                                                                month =dt.month , year = dt.year , hour = h )
                            
@@ -224,6 +249,7 @@ class Gridding():
                                     results['res'][station][var + '_anomaly'].append(an)
                                     results['res'][station][var + '_anomaly_bias'].append(anb)
                                     results['res'][station]['plev'].append(p)
+                                
                                                                     
                             else:
                                 results['res'][station][var + '_average']          .extend ( [np.nan] * 16 )  
@@ -232,9 +258,9 @@ class Gridding():
                                 results['res'][station][var + '_anomaly_bias'].extend ( [np.nan] * 16 )
                                 results['res'][station]['plev'].extend ( self.std_plevs )   
                                 
-                            results['res'][station]['time'].extend ( [dt] * 16 )      
     
                 else:
+                    print('*** WARNING: file not found in the mothly directory created with the CDS database, skipping station ***' , station )
                     pass
                 
                 self.results = results 
@@ -260,9 +286,10 @@ class Gridding():
         
         stations = [ s for s in results['res'].keys() if 'empty' not in s ]
 
-        """ Here, loop over the calculated  results.
+        """ Here, loop over the entire length of calculated  results,
+              which are already sorted by time from 1900 to 2021, and by plevels.
               If no stations are available, use dummy nan results. """
-        for column in  output_columns :
+        for column in  output_columns : # loop over each desired column
             # need to add a sum!!! 
             means = []
             if len(stations) >=1 :             
@@ -304,6 +331,8 @@ class Gridding():
         xarray['lat'].attrs['stations'] = stat 
         xarray['lon'].attrs['stations'] = stat 
         
+        if len(stat) > 50:
+            stat = stat.split('_')[0] + stat.split('_')[1] + stat.split('_')[1] + '_others'
         box_name = self.box_code + '_' + 'lat_lon_size_' + str(Lat) + '_' + str(Lon) + '_' + str(size) + '_' + stat        
         dummy = xarray.to_netcdf ( self.out_dir + '/' +  box_name + '.nc' , mode = 'w' )
         print('*** Written output file: ' , box_name )
@@ -324,12 +353,44 @@ class Gridding():
 
 
 """ Initialize relevant variable for input/output """
-monthly_file_dir = '/raid60/scratch/federico/MONTHLY_FEB2021'
-out_dir = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021'
-boxes_file = 'stations_per_box_size_10.npy'
+variable = 'dew_point_temperature'
+monthly_file_dir = '/raid60/scratch/federico/MONTHLY_FEB2021/' + variable 
+out_dir = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/' + variable
+
+variable = 'hur'
+monthly_file_dir = '/raid60/scratch/federico/MONTHLY_FEB2021/relative_humidity' 
+out_dir = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/relative_humidity' 
+
 variable = 'ta'
+monthly_file_dir = '/raid60/scratch/federico/MONTHLY_FEB2021/' + variable 
+out_dir = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/' + variable
+
+variable = 'hus'
+monthly_file_dir = '/raid60/scratch/federico/MONTHLY_FEB2021/specific_humidity/' 
+out_dir = '/raid60/scratch/federico/GRIDDED_FILES_FEB2021/specific_humidity/'
+
+boxes_file = 'stations_per_box_size_10.npy'
+
 """ Numpy file containing the grid boxes """
 boxes = np.load(boxes_file, allow_pickle = True).item()
+
+remove = [] 
+
+
+# for analsing one specific box 
+for k in boxes.keys():
+    lat, lon, latm, lonm = boxes[k]['lat'][0] , boxes[k]['lon'][0], boxes[k]['lat'][1], boxes[k]['lon'][1]
+    if latm > 90 or lat < -90 or lon < -180 or lonm > 180:
+        remove.append(k)
+
+    
+print('*** Cleaning wrong boxes ***')
+
+for r in remove:
+    del boxes[r]
+
+
+
 
 if __name__ == '__main__':
 
@@ -349,7 +410,6 @@ if __name__ == '__main__':
     POOL = True
 
     if POOL:
-        p = Pool(40)
         
         def run(out_dir,monthly_dir, variable, box):
             try:             
@@ -357,13 +417,14 @@ if __name__ == '__main__':
                 MakeGrid.process_box() 
             except:
                 a = open('Failed_boxes.dat' , 'a')
-                a.write(list(b.keys())[0] + '\n')
+                a.write(list(box.keys())[0] + '\n')
         """ List of boxes to process (list of dictionaries) """
         bboxes = [{b:boxes[b]} for b in boxes.keys() ]        
         
         #for b in bboxes:
         #    run(out_dir = out_dir , monthly_dir = monthly_file_dir, variable = variable, box = b)
-        func = partial(run, out_dir , monthly_file_dir, variable )
+        func = partial(run, out_dir , monthly_file_dir, variable )        
+        p = Pool(30)
         out = p.map(func, bboxes)
 
     else:  
