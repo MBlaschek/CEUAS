@@ -973,7 +973,7 @@ def convert_missing(fn, destination: str = opath):
             with eua.CDMDataset(fn) as data:
                 #i='z_coordinate'
                 rest_data = data.observations_table[i][:]
-            if i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
+            if rest_data.ndim==2: #i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
                 final = numpy.empty((addedvar[-1][1],len(rest_data[0])), dtype=rest_data[0].dtype)
             else:
                 final = numpy.empty(addedvar[-1][1], dtype=rest_data[0].dtype)
@@ -1077,20 +1077,21 @@ if __name__ == '__main__':
         #f.write("done") 
         #f.close()
 
-    files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/*6610*.nc')
+    files = glob.glob('/raid60/scratch/federico/MERGED_MARCH2021/*.nc')
     already_done = glob.glob(wlpath+'*.txt')
 
     files_to_convert = []
     for i in files:
         if not wlpath+i.split('/')[-1]+'.txt' in already_done:
             files_to_convert.append(i)
+    files_to_convert.sort()
     
 #     for i in files_to_convert:
 #         print(i)
 #         convert_missing(i)
 
-    pool = multiprocessing.Pool(processes=10)
-    #result_list = pool.map(convert_missing, files_to_convert)
-    result_list = list(map(convert_missing, files_to_convert))
+    pool = multiprocessing.Pool(processes=20)
+    result_list = pool.map(convert_missing, files_to_convert)
+    #result_list = list(map(convert_missing, files_to_convert))
     print(result_list)
 
