@@ -84,6 +84,7 @@ config = {'logger_name': 'upperair',
           'src_path': '.',
           'data_dir': '.',
           'comp_dir': '.',
+          'grid_dir': '.',
           'tmp_dir': '.',
           'config_dir': './config',
           'debug': False,
@@ -1163,10 +1164,8 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
     # func = partial(eua.process_flat, output_dir, cf, input_dirs[0], debug)
     func = partial(eua.process_flat, output_dir, cf, debug)
     if 'gridded' in body:
-        print('gridding!')
         body['statid']=''
-        print(body)
-        results = eua.process_flat(outputdir = output_dir, cftable = cf, debug = True, request_variables = body)
+        results = [eua.process_flat(outputdir = output_dir, cftable = cf, debug = True, request_variables = body)]
     #
     # Smaller request?
     #
@@ -1187,6 +1186,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
     # Process the output 
     # todo catch Error Messages and store in a log file?
     #
+    print(results)
     wpath = ''  # same as output_dir ?
     for r in results:
         if r[0] != '':
@@ -1197,6 +1197,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
         raise RuntimeError('Error: %s (%s)' % (results[0][1], str(body)))
     else:
         rfile = os.path.dirname(wpath) + '/download.zip'
+        print(rfile)
 
     logger.debug('wpath: %s; format %s Time %f', wpath, body['format'],time.time()-tt)
 
