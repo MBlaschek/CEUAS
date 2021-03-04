@@ -35,6 +35,7 @@ import xarray as xr
 from numba import njit
 import geopy
 import json
+import netCDF4
 
 # check codes from there
 # https://github.com/glamod/common_data_model/blob/master/tables/observed_variable.dat
@@ -1042,7 +1043,10 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     data = f.loc[dict(time=slice(request['date'][0], request['date'][-1]))]
                 # select via pressure
                 if ('pressure_level' in request.keys()) and (len(request['pressure_level']) > 0):
-                    data =  data.where(data.pressure.isin(request['pressure_level']), drop=True)
+                    print('request[pressure_level]', request['pressure_level'])
+                    print('data.pressure', data.pressure)
+                    data =  data.where(data.pressure.isin([int(a) for a in request['pressure_level']]), drop=True)
+                    print('pselect worked')
                 # select via time 
                 if ('time' in request.keys()) and (len(request['time']) == 1 and request['time'] in [0, 12]):
                     data =  data.where(data.hour == request['time'], drop=True)
@@ -1053,6 +1057,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     data = data.where(data.lon >= bounds[1], drop=True).where(data.lon <= bounds[3], drop=True)
 #             except:
 #                 logger.error('No gridded data available')
+            print(data)
             data.to_netcdf(path=filename_out)
 
             
