@@ -1042,6 +1042,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     data = f.loc[dict(time=slice(request['date'][0], request['date'][-1]))]
                 # select via pressure
                 if ('pressure_level' in request.keys()) and (len(request['pressure_level']) > 0):
+                    print(request['pressure_level'])
                     data =  data.where(data.pressure.isin(request['pressure_level']), drop=True)
                 # select via time 
                 if ('time' in request.keys()) and (len(request['time']) == 1 and request['time'] in [0, 12]):
