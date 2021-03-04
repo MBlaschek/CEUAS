@@ -784,7 +784,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
                                 print('x')
                             fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                             
-                except MemoryError as e:
+                except Exception as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
                     hilf = np.zeros(shape=(idx.shape[0]), dtype='S10')
@@ -1120,8 +1120,8 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 print(time.time()-tt)
                 print('')
 
-    except MemoryError as e:
-    #except MemoryError as e:
+    except Exception as e:
+    #except Exception as e:
         if debug:
             raise e
         logger.error('Exception %s occurred while reading %s', repr(e), filename)
@@ -1831,7 +1831,7 @@ class CDMDataset:
                         setattr(self, igroup, CDMVariable(self.file[igroup], igroup, shape=self.file[igroup].shape))
                     self[igroup].update(link=self.file[igroup])
 
-        except MemoryError as e:
+        except Exception as e:
             logger.debug(repr(e))
             self.close()
 
