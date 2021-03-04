@@ -1163,6 +1163,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
     # process_flat(outputdir: str, cftable: dict, debug:bool=False, request_variables: dict) -> tuple:
     # func = partial(eua.process_flat, output_dir, cf, input_dirs[0], debug)
     func = partial(eua.process_flat, output_dir, cf, debug)
+    print('body', body)
     if 'gridded' in body:
         body['statid']=''
         results = [eua.process_flat(outputdir = output_dir, cftable = cf, debug = True, request_variables = body)]
