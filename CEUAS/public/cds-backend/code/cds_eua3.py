@@ -1048,7 +1048,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     data =  data.where(data.pressure.isin([int(a) for a in request['pressure_level']]), drop=True)
                 # select via time 
                 if ('time' in request.keys()) and (len(request['time']) == 1 and request['time'] in [0, 12]):
-                    print('request['time']', request['time'])
+                    print('request[time]', request['time'])
                     data =  data.where(data.hour == request['time'], drop=True)
                 # select via coords
                 if len(request['gridded']) == 4 :
