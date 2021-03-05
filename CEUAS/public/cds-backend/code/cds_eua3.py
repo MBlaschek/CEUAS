@@ -787,7 +787,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
                                 print('x')
                             fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                             
-                except MemoryError as e:
+                except Exception as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
                     hilf = np.zeros(shape=(idx.shape[0]), dtype='S10')
@@ -1127,12 +1127,12 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 print(time.time()-tt)
                 print('')
 
-    except MemoryError as e:
-    #except MemoryError as e:
+    except Exception as e:
+    #except Exception as e:
         if debug:
             raise e
-        logger.error('MemoryError %s occurred while reading %s', repr(e), filename)
-        return '', 'MemoryError "{}" occurred while reading {}'.format(e, filename)
+        logger.error('Exception %s occurred while reading %s', repr(e), filename)
+        return '', 'Exception "{}" occurred while reading {}'.format(e, filename)
 
     return filename_out, msg
 
@@ -1508,7 +1508,7 @@ def cds_request_wrapper(request: dict, request_filename: str = None, cds_dataset
     import zipfile
     import cdsapi
     import urllib3
-    urllib3.disable_warnings(urllib3.MemoryErrors.InsecureRequestWarning)
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     try:
         if request_filename is None:
             request_filename = '{}.zip'.format(zlib.adler32(bytes(repr(request), 'utf-8')))
@@ -1542,7 +1542,7 @@ def cds_request_wrapper(request: dict, request_filename: str = None, cds_dataset
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except MemoryError as e:
+    except Exception as e:
         logger.error('CDSAPI Request failed %s', str(request))
         raise e
 
@@ -1572,7 +1572,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
     import zipfile
     import requests
     import urllib3
-    urllib3.disable_warnings(urllib3.MemoryErrors.InsecureRequestWarning)
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     try:
         if request_filename is None:
             request_filename = '{}.zip'.format(zlib.adler32(bytes(repr(request), 'utf-8')))
@@ -1607,7 +1607,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except MemoryError as e:
+    except Exception as e:
         logger.error('VM Request failed %s', str(request))
         raise e
 
@@ -1838,7 +1838,7 @@ class CDMDataset:
                         setattr(self, igroup, CDMVariable(self.file[igroup], igroup, shape=self.file[igroup].shape))
                     self[igroup].update(link=self.file[igroup])
 
-        except MemoryError as e:
+        except Exception as e:
             logger.debug(repr(e))
             self.close()
 
