@@ -1047,8 +1047,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 if ('pressure_level' in request.keys()) and (len(request['pressure_level']) > 0):
                     data =  data.where(data.pressure.isin([int(a) for a in request['pressure_level']]), drop=True)
                 # select via time 
-                if ('time' in request.keys()) and (len(request['time']) == 1 and request['time'] in [0, 12]):
-                    print('int(request[time][0])', int(request['time'][0]))
+                if ('time' in request.keys()) and (len(request['time']) == 1):
                     data =  data.where(data.hour == int(request['time'][0]), drop=True)
                 # select via coords
                 if len(request['gridded']) == 4 :
@@ -1057,7 +1056,6 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     data = data.where(data.lon >= bounds[1], drop=True).where(data.lon <= bounds[3], drop=True)
 #             except:
 #                 logger.error('No gridded data available')
-            print(data)
             data.to_netcdf(path=filename_out)
 
             
