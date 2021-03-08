@@ -1043,7 +1043,9 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 # select via date
                 if ('date' in request.keys()) and (len(request['date']) == 1):
                     odate = (request['date'][0])
-                    data = f.sel(time = odate[:4]+'-'+odate[4:6]+'-'+odate[6:])
+                    odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
+                    print(odate)
+                    data = f.sel(time = odate)
                 # select via pressure
                 if ('pressure_level' in request.keys()) and (len(request['pressure_level']) > 0):
                     data =  data.where(data.pressure.isin([int(a) for a in request['pressure_level']]), drop=True)
