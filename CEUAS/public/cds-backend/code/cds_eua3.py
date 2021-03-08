@@ -1061,6 +1061,9 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 # select via time 
                 if ('time' in request.keys()) and (len(request['time']) == 1):
                     data =  data.where(data.hour == int(request['time'][0]), drop=True)
+                else:
+                    data =  data.where(data.hour == 12, drop=True)
+                data = data.drop('hour')
                 # select via coords
                 if len(request['gridded']) == 4 :
                     bounds = request['gridded']
