@@ -1063,7 +1063,6 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     data =  data.where(data.hour == int(request['time'][0]), drop=True)
                 else:
                     data =  data.where(data.hour == 12, drop=True)
-                data = data.drop('hour')
                 # select via coords
                 if len(request['gridded']) == 4 :
                     bounds = request['gridded']
@@ -1071,6 +1070,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     data = data.where(data.lon >= bounds[1], drop=True).where(data.lon <= bounds[3], drop=True)
 #             except:
 #                 logger.error('No gridded data available')
+            data = data.squeeze(drop=True)
             data.to_netcdf(path=filename_out)
 
             
