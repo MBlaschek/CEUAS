@@ -1041,11 +1041,20 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             
             with xr.load_dataset(reqfile) as f:
                 # select via date
-                if ('date' in request.keys()) and (len(request['date']) == 1):
-                    odate = (request['date'][0])
-                    odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
-                    print(odate)
-                    data = f.sel(time = odate)
+                if ('date' in request.keys()) and (len(request['date']) >= 1):
+                    if len(request['date']) == 1:
+                        odate = (request['date'][0])
+                        odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
+                        print(odate)
+                        data = f.sel(time = odate)
+                    else:
+                        odate = (request['date'][0])
+                        odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
+                        edate = (request['date'][1])
+                        edate = edate[:4]+'-'+edate[4:6]+'-'+edate[6:]
+                        print(odate, edate)
+                        data = f.sel(time=slice(odate, edate)
+                        
                 # select via pressure
                 if ('pressure_level' in request.keys()) and (len(request['pressure_level']) > 0):
                     data =  data.where(data.pressure.isin([int(a) for a in request['pressure_level']]), drop=True)
