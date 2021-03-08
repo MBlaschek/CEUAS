@@ -1046,7 +1046,8 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                         odate = (request['date'][0])
                         odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
                         print(odate)
-                        data = f.sel(time = odate)
+                        data = f.where(f.time == odate, drop=True)
+#                         data = f.sel(time = odate)
                     else:
                         odate = (request['date'][0])
                         odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
