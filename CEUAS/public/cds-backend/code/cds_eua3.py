@@ -1050,7 +1050,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     else:
                         odate = (request['date'][0])
                         odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
-                        edate = (request['date'][1])
+                        edate = (request['date'][-1])
                         edate = edate[:4]+'-'+edate[4:6]+'-'+edate[6:]
                         print(odate, edate)
                         data = f.sel(time=slice(odate, edate))
