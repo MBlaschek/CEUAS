@@ -28,10 +28,12 @@ import os
 import time
 from datetime import datetime, timedelta
 
-import h5py
+import h5py  # most likely non standard on CDS
 import numpy as np
 import pandas as pd
 import xarray as xr
+
+# most likely non standard libraries on CDS
 from numba import njit
 import geopy
 import json
@@ -1251,8 +1253,9 @@ def align_datetime(data: xr.DataArray, dim: str = 'time', plev: str = 'plev', ti
     #
     # Convert all dates to standard_dates -> 0, 6, 12, 18 (times +/- span (3))
     #
-    _fix_datetime = np.vectorize(to_standard_launch_time)
-    newdates = _fix_datetime(dates, span=span)  # (time: 33%)
+    #_fix_datetime = np.vectorize(to_standard_launch_time)
+    # newdates = _fix_datetime(dates, span=span)  # (time: 33%)
+    newdates = to_standard_launch_time(dates, times, span=span)
     idx_std = DatetimeIndex(newdates).hour.isin(times)
     resolution = np.zeros(newdates.size)  # same size as dates
     #
@@ -1341,6 +1344,7 @@ def align_datetime(data: xr.DataArray, dim: str = 'time', plev: str = 'plev', ti
     logger.info("Modified dates: %d, Standard %s: %d / %d / %d", nn, str(times), idx_std.sum(), nx, newdates.size)
     if not all(data[jname].values == np.sort(data[jname].values)):
         logger.warning("Values are not sorted by %s", jname)
+        pass
         # data = data.sortby(jname)
     return data
 
@@ -1374,45 +1378,29 @@ def _count_data(data: xr.DataArray, dim: str = 'time', plev: str = 'plev') -> np
         return data.groupby(dim).count().to_dataframe().max(axis=1).values
 
 
-def to_standard_launch_time(itime: np.datetime64, span: int = 3, debug: bool = False) -> np.datetime64:
-    """ Convert to standard (nominal) launch datetime with hour precision
+def to_standard_launch_time(dates: np.datetime64, std_times: list, span: int =3, debug: bool = False):
+    """ Convert datetime64 to standard launch times
 
     Args:
-        itime (np.datetime64): Datetime
-        span (int): allowed difference to standard datetime (0,6,12,18)
-        debug (bool): show debugging information
-
-    Returns:
-        np.datetime64 : standard datetime
+        dates: input datetime64
+        std_times: list of standard launch times, e.g. 0, 12
+        span: allowed time departure, e.g. 3 for 3 hours (+/-)
+        debug: debug flag
     """
-    import pandas as pd
-    itime = pd.Timestamp(itime)  # (time: 34%)
-    # span=6 -> 0, 12
-    # [18, 6[ , [6, 18[
-    # span=3 -> 0, 6, 12, 18
-    # [21, 3[, [3,9[, [9,15[, [15,21[
-    for ihour in range(0, 24, span * 2):
-        # 0 - 6 + 24 = 18
-        lower = (ihour - span + 24) % 24
-        # 0 + 6 + 24 = 6
-        upper = (ihour + span + 24) % 24
-        # 18 >= 18 or 18 < 6  > 00
-        # 0 >= 18 or 0 < 6    > 00
-        if debug:
-            print("%d [%d] %d >= %d < %d" % (ihour, span, lower, itime.hour, upper))
-
-        if (ihour - span) < 0:
-            if itime.hour >= lower or itime.hour < upper:
-                rx = itime.replace(hour=ihour, minute=0, second=0, microsecond=0)
-                if itime.hour >= (24 - span):
-                    rx = rx + pd.DateOffset(days=1)
-                return rx.to_datetime64()
-        else:
-            if lower <= itime.hour < upper:
-                rx = itime.replace(hour=ihour, minute=0, second=0, microsecond=0)
-                if itime.hour >= (24 - span):
-                    rx = rx + pd.DateOffset(days=1)
-                return rx.to_datetime64()
+    dateshour = dates.astype(np.datetime64(1, 'h'))  # truncate to hour
+    hour = pd.DatetimeIndex(dateshour).hour.astype(int) # only the hour
+    tcorr = np.zeros(hour.size, dtype=np.int)
+    for itime in std_times:
+        # +- (span) - > itime
+        diff = (hour - itime)
+        # within add the inverse, everywhere else 0
+        tcorr = np.where(np.abs(diff) <= span, -1*diff, tcorr)
+        if itime == 0:
+            # check for values before midnight?
+            tcorr = np.where(np.abs(diff -24) <= span, -1*(diff-24), tcorr)
+    newdates = dateshour + (tcorr + np.timedelta64(0,'h'))
+    newdates = np.where(tcorr == 0, dates, newdates) # fillback
+    return newdates
 
 
 def level_interpolation(idata: xr.DataArray, dim: str = 'time', method: str = 'linear', fill_value=None,
@@ -1999,16 +1987,39 @@ class CDMDataset:
             if return_data:
                 return [self[iname][()] for iname in name]
 
-    def availability(self):
+    def availability(self, varnum: int = None, date_time_name: str = 'date_time'):
         """ Read datetime and check how much data is available
         Returns:
-            pd.DataFrame : counts
+            pd.DataFrame or pd.Series: counts per profile
         """
         if self.hasgroups:
-            timestamp = self.load_variable_from_file('recordtimestamp', return_data=True)[0]
-            recindex = self.load_variable_from_file('recordindex', return_data=True)[0]
-            num_rec = np.diff(recindex).tolist() + [self['observations_table']['date_time'].shape[0] - recindex[-1]]
-            return pd.Series(data=num_rec, index=seconds_to_datetime(timestamp), name='num_obs')
+            if 'recordtimestamp' in self.groups:
+                timestamp = self.load_variable_from_file('recordtimestamp', return_data=True)[0]
+            elif isinstance(self['recordindices'], CDMGroup):
+                timestamp = self.load_variable_from_file('recordtimestamp', group='recordindices', return_data=True)[0]
+            else:
+                timestamp = self.load_variable_from_file(date_time_name, return_data=True)[0]
+
+            if 'recordindex' in self.groups:
+                recindex = self.load_variable_from_file('recordindex', return_data=True)[0]
+                num_rec = np.diff(recindex).tolist() + [self['observations_table']['date_time'].shape[0] - recindex[-1]]
+                return pd.Series(data=num_rec, index=seconds_to_datetime(timestamp), name='num_obs')
+            elif 'recordindices' in self.groups:
+                num_rec = {}
+                for ikey in self['recordindices'].keys():
+                    try:
+                        ikey = int(ikey)
+                        if varnum:
+                            if ikey not in varnum:
+                                continue
+                        recindex = self.load_variable_from_file(str(ikey), group='recordindices', return_data=True)[0]
+                        num_rec[ikey] = np.diff(recindex).tolist() + [0]
+                    except:
+                        pass
+                return pd.DataFrame(data=num_rec, index=seconds_to_datetime(timestamp))
+            else:
+                num_rec = np.ones(timestamp.shape[0])
+                return pd.Series(data=num_rec, index=seconds_to_datetime(timestamp), name='num_obs')
         else:
             timestamp = self.load_variable_from_file('time', return_data=True)[0]
             timestamp, num_rec = np.unique(timestamp, return_counts=True)
@@ -2491,7 +2502,7 @@ class CDMDataset:
         else:
             xdates = self.load_variable_from_file(date_time_name, group=dimgroup, return_data=True)[0][trange]
         
-       #
+        #
         # Observed Code
         #
         if dates is None and 'recordindex' in self.groups:
@@ -2737,11 +2748,11 @@ class CDMDataset:
             return self[name][trange][logic], xdates[logic], xplevs[logic]
         return self[name][trange][logic]
 
-    def to_dataframe(self, groups=None, variables:list=None, date=None,
-                             date_time_name: str = 'date_time',
-                             date_is_index: bool = False,
-                     decode_datetime:bool=True,
-                             **kwargs):
+    def to_dataframe(self, groups=None, variables: list = None, date=None,
+                     date_time_name: str = 'date_time',
+                     date_is_index: bool = False,
+                     decode_datetime: bool = True,
+                     **kwargs):
         """ Convert variables to a DataFrame
         CDM Backend files need groups and variables
         CDM Frontend files do not
@@ -2878,19 +2889,18 @@ class CDMDataset:
             for ivar in variables:
                 if ivar not in cdm_codes.keys():
                     raise ValueError('Variable not found', ivar)
-                varnum.append(
-                    {'varnum': cdm_codes[ivar], 'variable': 'observation_value', 'group': 'observations_table',
-                     'bkp_var': ivar})
+                varnum.append({'varnum': cdm_codes[ivar], 'out_name': ivar,'variable': 'observation_value', 'group': 'observations_table', 'bkp_var': ivar})
                 if feedback is not None:
                     if isinstance(feedback, str):
                         feedback = [feedback]
+
                     for jvar in feedback:
                         # jvar -> @body rename
-                        varnum.append({'varnum': cdm_codes[ivar], 'variable': jvar, 'group': feedback_group,
-                                       'bkp_var': ivar})
+                        # MB Update: new output name based on ivar and jvar
+                        varnum.append({'varnum': cdm_codes[ivar], 'out_name': '{}_{}'.format(ivar, jvar.split('@')[0] if '@' in jvar else jvar),'variable': jvar, 'group': feedback_group, 'bkp_var': ivar})
             # multiprocessing of the requests?
             for ivarnum in varnum:
-                logger.info('Reading ... %d  %s', ivarnum['varnum'], ivarnum['bkp_var'])
+                logger.info('Reading ... %d  %s', ivarnum['varnum'], ivarnum['variable'])
                 ivarnum.update(kwargs)
                 # TIME SLICE, INDEX, SECONDS ARRAY, PRESSURE LEVELS
                 trange, indices, secarray, pressure = self.read_observed_variable(dates=dates,
@@ -2908,13 +2918,13 @@ class CDMDataset:
                                             std_plevs_indices[pressure.astype(np.int32) // 100],
                                             obs,
                                             nplev=plevs.size)
-                logger.info('[CUBE] %s %s', ivarnum['bkp_var'], iobs.shape)
+                logger.info('[CUBE] %s %s', ivarnum['variable'], iobs.shape)
                 v_attrs = get_attributes(cdmcode=ivarnum['varnum'],
                                          feedback=ivarnum['variable'] if feedback is not None else None)
                 if len(v_attrs) > 0:
                     v_attrs = v_attrs[list(v_attrs.keys())[0]]
                 # Convert to Xarray [time x plev]
-                data[ivarnum['bkp_var']] = xr.DataArray(iobs,
+                data[ivarnum['out_name']] = xr.DataArray(iobs,
                                                         coords=(seconds_to_datetime(secarray[itime]), plevs),
                                                         dims=('time', 'plev'),
                                                         name=ivarnum['bkp_var'],
