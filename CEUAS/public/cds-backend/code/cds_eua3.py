@@ -1048,9 +1048,9 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     if len(request['date']) == 1:
                         odate = (request['date'][0])
                         odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
-                        odate = pd.to_datetime(odate, format='%Y-%m-%d')
-                        data = f.where(f.time == odate, drop=True)
-#                         data = f.sel(time = odate)
+#                         odate = pd.to_datetime(odate, format='%Y-%m-%d')
+#                         data = f.where(f.time == odate, drop=True)
+                        data = f.sel(time = odate)
                     else:
                         odate = (request['date'][0])
                         odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
