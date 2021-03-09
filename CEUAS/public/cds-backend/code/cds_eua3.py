@@ -1082,11 +1082,17 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
 #                 logger.error('No gridded data available')
                 print('done')
             print('cleanup output file')
+            print('rename dims')
             data = data.rename_dims({'lat':'latitude','lon':'longitude'})
+            print('rename vars')
             data = data.rename_vars({'ta_anomaly':'t', 'lat':'latitude', 'lon':'longitude'})
+            print('drop vars')
             data = data.drop(['pressure','ta_average'])
+            print('squeeze hour')
             data = data.squeeze(dim='hour', drop=True)
+            print('write to file')
             data.to_netcdf(path=filename_out)
+            print('done')
 
             
         else:
