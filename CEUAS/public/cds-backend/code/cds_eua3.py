@@ -3060,8 +3060,7 @@ class CDMDataset:
         dim = 'time'
         plev = 'plev'
         # need standard times -> 0,12
-        tdata[variable] = eua.align_datetime(
-            tdata[variable], times=times, span=span, freq=freq, dim=dim, plev=plev)
+        tdata[variable] = align_datetime(tdata[variable], times=times, span=span, freq=freq, dim=dim, plev=plev)
         icoord = 'standard_%s' % dim
         # Index for only standard times
         standard_index = np.where(
@@ -3070,8 +3069,7 @@ class CDMDataset:
         # 1. Select only standard times
         # 2. Swap dimension to new standard time
         # 3. Convert to a cube hour x time x pressure
-        tdata = eua.stack_cube_by_hour(tdata.isel(
-            **{dim: standard_index}).swap_dims({'time': icoord}), dim=icoord, times=times)
+        tdata = stack_cube_by_hour(tdata.isel(**{dim: standard_index}).swap_dims({'time': icoord}), dim=icoord, times=times)
         # add hours variable
         # variable with the correct hours inside
         tdata['hours'] = tdata.time.dt.hour
