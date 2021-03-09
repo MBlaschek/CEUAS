@@ -1887,6 +1887,43 @@ class CDMDataset:
         logger.debug("reopen %s [%s]", self.filename, mode)
         self.inquire()  # Need to update links
 
+    def select_variables(self, names: list, groups:list=None, fuzzy:bool = False):
+        """Generate a list of existing variables based on names and groups
+        Args:
+            names: list of variables
+            groups: list of groups
+            fuzzy: partial match
+        
+        Returns:
+            list: list of variables / groups
+              (variable, group) or (variable)
+        """
+        if isinstance(names, str):
+            names = [names]
+
+        found = []
+        if self.hasgroups:
+            if groups is None:
+                groups = self.groups
+
+            for igroup in groups:
+                for ivar in names:
+                    if ivar in self[igroup].keys():
+                        found.append((ivar, igroup))
+                    else:
+                        if fuzzy:
+                            if any([ivar in i for i in self[igroup].keys()]):
+                                found.append((ivar, igroup))
+        else:
+            for ivar in names:
+                if ivar in self.keys():
+                    found.append(ivar)
+                else:
+                    if fuzzy:
+                        if any([ivar in i for i in self.keys()]):
+                            found.append(ivar)
+        return found
+
     def read_attributes(self, name: str, group: str = None, subset: list = None):
         """ Return all attributes or a subset for a variable
 
@@ -2791,6 +2828,12 @@ class CDMDataset:
 
         logger.info("Reading Profile on %s", str(date))
         data = {}
+
+        # update / need to check
+        # 
+        # for ivar,igroup in self.select_variables(variables, groups=groups):
+        #   data[ivar] = self[igroup][ivar]
+
         if groups is not None:
             # Backend file
             for igroup in groups:
@@ -2835,8 +2878,8 @@ class CDMDataset:
                 
         return pd.DataFrame(data)
 
-    def read_data_to_cube(self, variables: list, dates: list = None, plevs: list = None, feedback: list = None,
-                          feedback_group: str = 'era5fb', **kwargs) -> dict:
+    def read_data_to_cube(self, variables: list, dates: list = None, plevs: list = None, feedback = None,
+                          feedback_group = 'era5fb', **kwargs) -> dict:
         """ Read standard pressure levels and return a DataCube
 
         Args:
@@ -2844,7 +2887,7 @@ class CDMDataset:
             dates: [start, stop], str, int or datetime
             plevs: [list] in Pa or hPa
             feedback: list of feedback variables
-            feedback_group: group name of the feedback
+            feedback_group: list of feedback groups (era5fb, adjust, ...)
             **kwargs:
 
         Optional Keywords:
@@ -2882,15 +2925,22 @@ class CDMDataset:
             for ivar in variables:
                 if ivar not in cdm_codes.keys():
                     raise ValueError('Variable not found', ivar)
+
                 varnum.append({'varnum': cdm_codes[ivar], 'out_name': ivar,'variable': 'observation_value', 'group': 'observations_table', 'bkp_var': ivar})
                 if feedback is not None:
                     if isinstance(feedback, str):
                         feedback = [feedback]
+                    if isinstance(feedback_group, str):
+                        feedback_group = [feedback_group]
 
-                    for jvar in feedback:
+                    for jvar, jgroup in self.select_variables(feedback, groups=feedback_group):
                         # jvar -> @body rename
                         # MB Update: new output name based on ivar and jvar
-                        varnum.append({'varnum': cdm_codes[ivar], 'out_name': '{}_{}'.format(ivar, jvar.split('@')[0] if '@' in jvar else jvar),'variable': jvar, 'group': feedback_group, 'bkp_var': ivar})
+                        varnum.append({'varnum': cdm_codes[ivar],
+                                       'out_name': '{}_{}'.format(ivar, jvar.split('@')[0] if '@' in jvar else jvar),
+                                       'variable': jvar,
+                                       'group': jgroup,
+                                       'bkp_var': ivar})
             # multiprocessing of the requests?
             for ivarnum in varnum:
                 logger.info('Reading ... %d  %s', ivarnum['varnum'], ivarnum['variable'])
@@ -2947,6 +2997,125 @@ class CDMDataset:
                 # data[ivar].data['time'].attrs.update(self.read_attributes(kwargs.get('date_time_name', 'time')))
                 # data[ivar].data['plev'].attrs.update(self.read_attributes(kwargs.get('z_coordinate_name', 'plev')))
         return data
+
+    def convert_to_raobcore(self, variable: str, filename: str = None, dates: list = None, plevs: list = None,
+                            times=[0, 12], span=3, freq='12h', feedback: list = None, feedback_group: str = 'era5fb',
+                            source: str = 'RAOBCORE/RICH v1.7.2 + solar elevation dependency (from 197901 onward)',
+                            title: str = 'Station daily temperature series with JRA55/CERA20C/ERApreSAT background departure statistics and RISE bias estimates',
+                            attrs: dict = None,
+                            global_attrs: dict = None,
+                            **kwargs):
+        if feedback:
+            if not isinstance(feedback, list):
+                feedback = [feedback]
+        else:
+            feedback = ['biascorr@body', 'fg_depar@body', 'an_depar@body']
+
+        default_attrs = {
+            "lat":  {'axis': 'Y', 'units': 'degrees_north', 'long_name': 'station latitude'},
+            "lon": {'axis': 'X', 'units': 'degrees_east', 'long_name': 'station longitude'},
+            "alt": {'axis': 'Z', 'units': 'm', 'long_name': 'station altitude'},
+            "press": {"long_name": "pressure levels", "units": "hPa", "axis": "Z"},
+            "datum": {"long_name": "datum", "axis": "T"},
+            "hours": {"long_name": "launch time", "units": "hr", "valid_range": (0, 23)}
+        }
+        if attrs:
+            default_attrs.update(attrs)
+
+        default_global = {'Conventions': 'CF-1.1',
+                            'title': title,
+                            'institution': 'University of Vienna',
+                            'history': '2020/02/15',
+                            'source': source,
+                            'references': 'www.univie.ac.at/theoret-met/research/raobcore',
+                            'Stationnname': self.header_table.station_name[-1, :].tobytes().decode()}
+        if global_attrs:
+            default_global.update(global_attrs)
+
+        # They will all have the same time and plev shapes
+        # per variable of course (temp, hum, wind)
+        tdata = self.read_data_to_cube(
+            variable, dates=dates, plevs=plevs, feedback=feedback, feedback_group=feedback_group, **kwargs)
+        dim = 'time'
+        plev = 'plev'
+        # need standard times -> 0,12
+        tdata[variable] = eua.align_datetime(
+            tdata[variable], times=times, span=span, freq=freq, dim=dim, plev=plev)
+        icoord = 'standard_%s' % dim
+        # Index for only standard times
+        standard_index = np.where(
+            tdata[variable][icoord + '_flag'].values == 1)[0]
+        tdata = xr.Dataset(tdata)  # Convert to Dataset
+        # 1. Select only standard times
+        # 2. Swap dimension to new standard time
+        # 3. Convert to a cube hour x time x pressure
+        tdata = eua.stack_cube_by_hour(tdata.isel(
+            **{dim: standard_index}).swap_dims({'time': icoord}), dim=icoord, times=times)
+        # add hours variable
+        # variable with the correct hours inside
+        tdata['hours'] = tdata.time.dt.hour
+        # reset time to index
+        tdata['time'] = (icoord, range(tdata.standard_time.shape[0]))
+        # rename pressure
+        tdata = tdata.rename_dims({'plev': 'pressure'})
+        # swap standard time back to time
+        tdata = tdata.swap_dims({icoord: 'time'})
+        # Cube hour x pressure x time
+        tdata = tdata.transpose("hour", "pressure", "time")
+        # pressure values in hPa
+        tdata['press'] = ('pressure', tdata['plev'].values / 100)
+        # datum variable with days
+        tdata['datum'] = ('time', tdata[icoord].values)
+        tdata['datum'] = tdata['datum'].expand_dims({'numdat': 1})
+        # remove other variables and coordinates
+        tdata = tdata.drop(icoord + '_flag')
+        tdata = tdata.drop(icoord)
+        tdata = tdata.drop('plev').drop(
+            'hour', dim=None).drop('time', dim=None)
+        # Rename variables
+        if 'temperature' in tdata.variables:
+            tdata = tdata.rename_vars({'temperature': 'temperatures'})
+        if '{}_fg_depar'.format(variable) in tdata.variables:
+            tdata = tdata.rename_vars(
+                {'{}_fg_depar'.format(variable): 'fg_dep'})
+        if '{}_biascorr'.format(variable) in tdata.variables:
+            tdata = tdata.rename_vars({'{}_biascorr'.format(variable): 'bias'})
+        if '{}_an_depar'.format(variable) in tdata.variables:
+            tdata = tdata.rename_vars(
+                {'{}_an_depar'.format(variable): 'an_dep'})
+
+        # Add station information (latest)
+        tdata['lat'] = ('station', [self.header_table.latitude[-1]])
+        tdata['lon'] = ('station', [self.header_table.longitude[-1]])
+        try:
+            tdata['alt'] = (
+                'station', [self.header_table.height_of_station_above_sea_level[-1]])
+        except:
+            tdata['alt'] = ('station', [0])
+        # Add attributes
+        for ikey, ival in default_attrs.items():
+            tdata[ikey].attrs.update(ival)
+        # Global Attributes
+        tdata.attrs.update(default_global)
+        if filename is not None:
+            if os.path.isfile(filename):
+                # write only variables, no dims (assuming dims are all the same anyway)
+                with xr.open_dataset(filename) as fopen:
+                    for ivar in tdata.variables:
+                        if ivar in fopen.variables:
+                            logger.debug("Skipping {}".format(ivar))
+                        else:
+                            fopen[ivar] = tdata[ivar]
+                            logger.info("Writing {}".format(ivar))
+                    fopen.attrs.update(default_global)
+                logger.info("Appended to {}".format(filename))
+            else:
+                # write a new file
+                tdata.to_netcdf(filename)
+                logger.info("Written to {}".format(filename))
+        else:
+            return tdata
+     
 
     def read_data_to_3dcube(self, variables: list, dates: list = None, plevs: list = None, feedback: list = None,
                           feedback_group: str = 'era5fb', **kwargs) -> dict:
