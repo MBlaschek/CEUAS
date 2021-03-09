@@ -1043,6 +1043,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             
             with xr.load_dataset(reqfile) as f:
                 # select via date
+                print('selecting date: ', )
                 if ('date' in request.keys()) and (len(request['date']) >= 1):
                     if len(request['date']) == 1:
                         odate = (request['date'][0])
@@ -1057,24 +1058,30 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                         edate = edate[:4]+'-'+edate[4:6]+'-'+edate[6:]
                         print(odate, edate)
                         data = f.sel(time=slice(odate, edate))
+                print('done: ', odate)
                         
                 # select via pressure
+                print('selecting date: ', )
                 if ('pressure_level' in request.keys()) and (len(request['pressure_level']) > 0):
                     data =  data.where(data.pressure.isin([int(a) for a in request['pressure_level']]), drop=True)
+                print('done: ', [int(a) for a in request['pressure_level']])
                     
                 # select via time 
+                print('selectin time: ')
                 if ('time' in request.keys()) and (len(request['time']) == 1):
                     data =  data.where(data.hour == int(request['time'][0]), drop=True)
                 else:
                     data =  data.where(data.hour == 12, drop=True)
                 # select via coords
+                print('selecting lat/lon: ')
                 if len(request['gridded']) == 4 :
                     bounds = request['gridded']
                     data = data.where(data.lat >= bounds[0], drop=True).where(data.lat <= bounds[2], drop=True)
                     data = data.where(data.lon >= bounds[1], drop=True).where(data.lon <= bounds[3], drop=True)
 #             except:
 #                 logger.error('No gridded data available')
-            
+                print('done')
+            print('cleanup output file')
             data = data.rename_dims({'lat':'latitude','lon':'longitude'})
             data = data.rename_vars({'ta_anomaly':'t', 'lat':'latitude', 'lon':'longitude'})
             data = data.drop(['pressure','ta_average'])
