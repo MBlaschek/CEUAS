@@ -36,6 +36,8 @@ import xarray as xr
 # most likely non standard libraries on CDS
 from numba import njit
 import geopy
+import json
+import netCDF4
 
 # check codes from there
 # https://github.com/glamod/common_data_model/blob/master/tables/observed_variable.dat
@@ -85,8 +87,64 @@ def logging_set_level(level: int):
 #
 ###############################################################################
 
-@njit(cache=True)
+
+#@njit
+def calc_trajindexfast_rt(zidx,trajectory_index,tstart):
+
+    for i in range(zidx.shape[0]-1):
+        trajectory_index[zidx[i]-tstart:zidx[i+1]-tstart]=i
+
+    return
+
 def calc_trajindexfast(z, zidx, idx, trajectory_index):
+    """ Calculate Trajectory Index """
+    # zidx=numpy.zeros(z.shape[0],dtype=numpy.int32)
+    z0 = zidx[0]
+    j = 0
+    l = 0
+    i = 0
+    for i in range(z.shape[0] - 1):
+        jold = j
+        #if i == 0:
+            #trajectory_index[j] = l
+            ##j += 1
+        #else:
+        nexti = i + 1
+        if nexti < (z.shape[0] -1):
+            while (z[nexti] == z[i]):
+                nexti += 1
+                if nexti==z.shape[0]:
+                    break
+        if nexti < (z.shape[0] -1):
+            while (idx[j] >= z[i] and idx[j] < z[nexti]):
+                print('trajectory_index[',j,']=', l)
+                trajectory_index[j] = l
+                j += 1
+                if j == idx.shape[0]:
+                    break
+        if j > jold:
+            zidx[l] = z0 + i
+            l += 1
+        if j == idx.shape[0]:
+            break
+    if j < idx.shape[0]:
+        jold = j
+        while (idx[j] >= z[i]): #and idx[j] < z[-1]):
+            trajectory_index[j] = l
+            zidx[l] = z0 + i
+            j += 1
+            #l += 1
+            #i += 1
+            if j == idx.shape[0]:
+                break
+
+           
+    zidx = zidx[:l]
+
+    return zidx#, trajectory_index
+
+@njit(cache=True)
+def calc_trajindexfastl(z, zidx, idx, trajectory_index):
     """ Calculate Trajectory Index 
 Args:
     z : absolute index of all (variable)
@@ -95,49 +153,93 @@ Args:
     trajectory_index : output
     """
     # zidx=numpy.zeros(z.shape[0],dtype=numpy.int32)
-    z0 = zidx[0]
-    j = 0  # idx shape index
-    l = 0  # new unique change index -> zidx
+    z0 = 0 #zidx[0]
+    j = 0
+    l = 0
     i = 0
-    # Search for every recordindex
     for i in range(z.shape[0] - 1):
         jold = j
-        if i == 0:
+        while idx[j] >= z[i] and idx[j] < z[i + 1]:
             trajectory_index[j] = l
             j += 1
-        else:
-            nexti = i + 1
-            if nexti < (z.shape[0] -1):
-                while (z[nexti] == z[i]):
-                    nexti += 1
-            if nexti < (z.shape[0] -1):
-                while (idx[j] >= z[i] and idx[j] < z[nexti]):
-                    trajectory_index[j] = l
-                    j += 1
-                    if j == idx.shape[0]:
-                        break
-        # if a break as been found, write that position into zidx
+            if j == idx.shape[0]:
+                break
+        if j > jold:
+            zidx[l] = z0 + i-1
+            if zidx[l]<0:
+                zidx[l]=0
+            l += 1
+        if j == idx.shape[0]:
+            break
+
+    if j < idx.shape[0]:
+        if z.shape[0] > 1:
+            i += 1
+        jold = j
+        while idx[j] >= z[i]:
+            trajectory_index[j] = l
+            j += 1
+            if j == idx.shape[0]:
+                break
         if j > jold:
             zidx[l] = z0 + i
             l += 1
-        # at the end?
-        if j == idx.shape[0]:
-            break
-    
-    if j < idx.shape[0]:
-        jold = j
-    while (idx[j] >= z[i]): #and idx[j] < z[-1]):
-        trajectory_index[j] = l
-        zidx[l] = z0 + i
-        j += 1
-        l += 1
-        i += 1
-        if j == idx.shape[0]:
-            break
-            
     zidx = zidx[:l]
-
     return zidx
+
+# @njit(cache=True)
+# def calc_trajindexfast(z, zidx, idx, trajectory_index):
+#     """ Calculate Trajectory Index 
+# Args:
+#     z : absolute index of all (variable)
+#     zidx : index of valid times in z
+#     idx : index of selected levels absolute
+#     trajectory_index : output
+#     """
+#     # zidx=numpy.zeros(z.shape[0],dtype=numpy.int32)
+#     z0 = zidx[0]
+#     j = 0  # idx shape index
+#     l = 0  # new unique change index -> zidx
+#     i = 0
+#     # Search for every recordindex
+#     for i in range(z.shape[0] - 1):
+#         jold = j
+#         if i == 0:
+#             trajectory_index[j] = l
+#             j += 1
+#         else:
+#             nexti = i + 1
+#             if nexti < (z.shape[0] -1):
+#                 while (z[nexti] == z[i]):
+#                     nexti += 1
+#             if nexti < (z.shape[0] -1):
+#                 while (idx[j] >= z[i] and idx[j] < z[nexti]):
+#                     trajectory_index[j] = l
+#                     j += 1
+#                     if j == idx.shape[0]:
+#                         break
+#         # if a break as been found, write that position into zidx
+#         if j > jold:
+#             zidx[l] = z0 + i
+#             l += 1
+#         # at the end?
+#         if j == idx.shape[0]:
+#             break
+    
+#     if j < idx.shape[0]:
+#         jold = j
+#         while (idx[j] >= z[i]): #and idx[j] < z[-1]):
+#             trajectory_index[j] = l
+#             zidx[l] = z0 + i
+#             j += 1
+#             l += 1
+#             i += 1
+#             if j == idx.shape[0]:
+#                 break
+            
+#     zidx = zidx[:l]
+
+#     return zidx
 
 
 @njit(cache=True)
@@ -241,6 +343,33 @@ def andisin(mask, x, v):
                     break
             mask[i] = found
 
+# daysx2 puts a time array into an array of shape days x 2, where days is the number of days since 19000101
+# and the second index is 0 for midnight (GMT+/- 3hrs) ascents and 1 for midday (GMT +/- 3hrs ascents).
+# ascents between 3 and 9 and 15 and 21 are discarded
+def daysx2(time,pindex,nplev,obs):
+    dsecs=86400
+    tofday=time%dsecs
+    dindex=time//dsecs
+    hindex=np.zeros(time.shape[0],dtype=np.int32)-1
+    tevening=np.where(tofday>=6*dsecs//8)
+    tmorning=np.where(tofday<2*dsecs//8)
+    tmidday=np.where(np.logical_and(tofday>=2*dsecs/8,tofday<6*dsecs/8))
+    dindex[tevening]+=1
+    hindex[tmorning]=0
+    hindex[tevening]=0
+    hindex[tmidday]=1
+    hgood=np.where(hindex>-1)
+    gdays=np.unique(dindex)
+    rdays=np.zeros(np.max(gdays)+1,dtype=np.int32)-1
+    for i in range(gdays.shape[0]): # reverse index
+        rdays[gdays[i]]=i
+        
+    cobs=np.full((2,nplev,gdays.shape[0]),np.nan,dtype=obs.dtype)
+    cobs[hindex[hgood],pindex[hgood],rdays[dindex[hgood]]]=obs[hgood]
+    
+    
+    return cobs,hindex[hgood],pindex[hgood],rdays[dindex[hgood]],hgood,gdays
+    
 
 @njit(cache=True)
 def tohourday(hours, days, datetimes, day_shift):
@@ -887,76 +1016,135 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
     # mimicks process_flat from cds_eua2
     msg = ''  # Message or error
     filename = ''  # Filename
+    print(request_variables)
     try:
-        # todo change this use the path
-        statid = request_variables.pop('statid', None)
-        if statid is None:
-            logger.error('No station ID (statid) specified. %s', filename)
-            raise ValueError('No station ID (statid) specified')
-
-        filename = request_variables.pop('filename', None)
-        if False:
-            # old version -> not necessary anymore? will be added in check_body anyway
-            if statid[:3] == '0-2':
-                suffix = ['']
-            else:
-                suffix = ['0-20000-0-', '0-20300-0-', '0-20001-0-']
-
-            for ss in suffix:
-                filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  
-                # version as a variable
-                #filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
-                #if len(filename) > 0:
-                    #filename = filename[0]
-                #else:
-                    #filename = ''
-
-                if os.path.isfile(filename):
-                    break
-        
-        # Automaticaly adding variables for 20200- requests:
-        if '0-20200-0' in statid:
-            if 'optional' not in request_variables.keys():
-                request_variables['optional'] = []
-            request_variables['optional'].extend(['reference_sonde_type', 'sample_size', 'sample_error']) 
-
-        cdmnamedict = {}
-        for igroup, v in cftable.items():
-            if "odbcode" in v.keys():
-                cdmnamedict[v['cdsname']] = igroup
-
-        # todo this could be changed to the cf.keys() -> cdm names of the variables
-        # request_variables['variable'] is a list
-        filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
-            request_variables['variable']] + '.nc'
-        
-        if debug: tt=time.time()
-        # Make a subset of groups/variables to read (speed up)
-        # Need to add station_configuration (required later) in read_write_request
-        #
-        gdict = {
-            'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
-            'observations_table':['date_time','z_coordinate','observation_value','observed_variable'],
-            'header_table':[],
-            'station_configuration': ['station_name', 'primary_id']
-        }
-        if '0-20100-0' not in statid and '0-20200-0' not in statid:
-            gdict["era5fb"]=[]
+        if 'gridded' in request_variables:
+            filename_out = outputdir + '/dest_gridded_' + str(request_variables['variable'][0]) + '.nc'
+            request = request_variables
+            # select via variable
+            #
+            # ToDo: EDIT FOR MULTIPLE VARIABLE REQUEST
+            #
             
-        with CDMDataset(filename=filename, groups=gdict) as data:
-            if debug: print('x',time.time()-tt)
-            data.read_write_request(filename_out=filename_out,
-                                    request=request_variables,
-                                    cf_dict=cftable)
-        if debug: 
-            print(time.time()-tt)
-            print('')
+            config_file = 'hug.default.config.json'
+            if os.path.isfile(config_file):
+                config = json.load(open(config_file, 'r'))
+            
+            if 'temperature' in request['variable']:
+                reqfile = config['grid_dir'] + '/CEUAS_ta_gridded.nc'
+            elif 'relative_humidity' in request['variable']:
+                reqfile = config['grid_dir'] + '/CEUAS_hur_gridded.nc'
+            elif 'specific_humidity' in request['variable']:
+                reqfile = config['grid_dir'] + '/CEUAS_hus_gridded.nc'
+            elif 'wind_speed' in request['variable']:
+                reqfile = config['grid_dir'] + '/CEUAS_wind_speed_gridded.nc'
+            elif 'dew_point_temperature' in request['variable']:
+                reqfile = config['grid_dir'] + '/CEUAS_dew_point_temperature_gridded.nc'
+            
+            with xr.load_dataset(reqfile) as f:
+                # select via date
+                if ('date' in request.keys()) and (len(request['date']) >= 1):
+                    if len(request['date']) == 1:
+                        odate = (request['date'][0])
+                        odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
+                        data = f.sel(time = odate)
+                    else:
+                        odate = (request['date'][0])
+                        odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
+                        edate = (request['date'][-1])
+                        edate = edate[:4]+'-'+edate[4:6]+'-'+edate[6:]
+                        print(odate, edate)
+                        data = f.sel(time=slice(odate, edate))
+                        
+                # select via pressure
+                if ('pressure_level' in request.keys()) and (len(request['pressure_level']) > 0):
+                    data =  data.where(data.pressure.isin([int(a) for a in request['pressure_level']]), drop=True)
+                # select via time 
+                if ('time' in request.keys()) and (len(request['time']) == 1):
+                    data =  data.where(data.hour == int(request['time'][0]), drop=True)
+                else:
+                    data =  data.where(data.hour == 12, drop=True)
+                # select via coords
+                if len(request['gridded']) == 4 :
+                    bounds = request['gridded']
+                    data = data.where(data.lat >= bounds[0], drop=True).where(data.lat <= bounds[2], drop=True)
+                    data = data.where(data.lon >= bounds[1], drop=True).where(data.lon <= bounds[3], drop=True)
+#             except:
+#                 logger.error('No gridded data available')
+            data = data.squeeze(dim='hour', drop=True)
+            data.to_netcdf(path=filename_out)
+
+            
+        else:
+            # todo change this use the path
+            statid = request_variables.pop('statid', None)
+            if statid is None:
+                logger.error('No station ID (statid) specified. %s', filename)
+                raise ValueError('No station ID (statid) specified')
+
+            filename = request_variables.pop('filename', None)
+            if False:
+                # old version -> not necessary anymore? will be added in check_body anyway
+                if statid[:3] == '0-2':
+                    suffix = ['']
+                else:
+                    suffix = ['0-20000-0-', '0-20300-0-', '0-20001-0-']
+
+                for ss in suffix:
+                    filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  
+                    # version as a variable
+                    #filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
+                    #if len(filename) > 0:
+                        #filename = filename[0]
+                    #else:
+                        #filename = ''
+
+                    if os.path.isfile(filename):
+                        break
+
+            # Automaticaly adding variables for 20200- requests:
+            if '0-20200-0' in statid:
+                if 'optional' not in request_variables.keys():
+                    request_variables['optional'] = []
+                request_variables['optional'].extend(['reference_sonde_type', 'sample_size', 'sample_error']) 
+
+            cdmnamedict = {}
+            for igroup, v in cftable.items():
+                if "odbcode" in v.keys():
+                    cdmnamedict[v['cdsname']] = igroup
+
+            # todo this could be changed to the cf.keys() -> cdm names of the variables
+            # request_variables['variable'] is a list
+            filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
+                request_variables['variable']] + '.nc'
+            if debug: tt=time.time()
+            # Make a subset of groups/variables to read (speed up)
+            # Need to add station_configuration (required later) in read_write_request
+            #
+            gdict = {
+                'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
+                'observations_table':['date_time','z_coordinate','observation_value','observed_variable','report_id'],
+                'header_table':[],
+                'station_configuration': ['station_name', 'primary_id']
+            }
+            if '0-20100-0' not in statid and '0-20200-0' not in statid:
+                gdict["era5fb"]=[]
+
+            with CDMDataset(filename=filename, groups=gdict) as data:
+                if debug: print('x',time.time()-tt)
+                data.read_write_request(filename_out=filename_out,
+                                        request=request_variables,
+                                        cf_dict=cftable)
+            if debug: 
+                print(time.time()-tt)
+                print('')
 
     except Exception as e:
+    #except Exception as e:
         if debug:
             raise e
         logger.error('Exception %s occurred while reading %s', repr(e), filename)
-        return '', 'exception "{}" occurred while reading {}'.format(e, filename)
+        return '', 'Exception "{}" occurred while reading {}'.format(e, filename)
 
     return filename_out, msg
 
@@ -1829,6 +2017,7 @@ class CDMDataset:
             timestamp = self.load_variable_from_file('time', return_data=True)[0]
             timestamp, num_rec = np.unique(timestamp, return_counts=True)
             return pd.Series(data=num_rec, index=seconds_to_datetime(timestamp), name='num_obs')
+        
 
     def read_write_request(self, filename_out: str, request: dict, cf_dict: dict):
         """ This is the basic request used in the cds_eua2 script
@@ -1896,6 +2085,7 @@ class CDMDataset:
         # Make Trajectory Information (lon, lat, profile id, ...)
         #
         trajectory_index = np.zeros_like(idx, dtype=np.int32)
+        trajectory_index2 = np.zeros_like(idx, dtype=np.int32)
         if 'recordinindex' in self.groups:
             # unsorted indices in root
             recordindex = self['recordindex'][()]
@@ -1903,9 +2093,32 @@ class CDMDataset:
             # sorted indices are in recordindices group / by variable
             recordindex = self['recordindices'][str(cdmnum)][()]  # values
             
-        zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex < trange.stop))[0]
-        recordindex = recordindex[zidx]
-        zidx = calc_trajindexfast(recordindex, zidx, idx, trajectory_index)
+        zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex <= trange.stop))[0]
+        #zidx2=np.zeros_like(zidx)
+            
+        #zidx2 = recordindex[zidx]
+        #recordindex=np.unique(recordindex)
+        #zidx=np.unique(recordindex)
+        
+        #rt=self.observations_table.date_time[trange][idx-trange.start]
+        #for i in range(rt.shape[0]-1):
+            #if rt[i+1]>rt[i]:
+                #if i+1+trange.start not in recordindex:
+                    #print(i)
+        
+        
+        #rr=self.observations_table.report_id[trange][idx-trange.start]
+        #rp=self.observations_table.z_coordinate[trange][idx-trange.start]
+        #l=0
+        #for a,b,c in zip(rt,rr,rp):
+            #print(a,b.view('S11'),c)
+            #l+=1
+            #if l>100:
+                #break
+        
+        
+        #calc_trajindexfast_rt(recordindex,trajectory_index,trange.start)
+        zidx = calc_trajindexfastl(recordindex, zidx, idx, trajectory_index)
         #
         # Dimensions and Global Attributes
         #
@@ -1978,6 +2191,7 @@ class CDMDataset:
                                          'original_precision', 'reference_sensor_id', 'report_id'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                fout['time'].make_scale('time')
             #
             # Feedback Information
             #
@@ -2045,6 +2259,11 @@ class CDMDataset:
                 'Created by Copernicus Early Upper Air Service Version 0, ' + datetime.now().strftime(
                     "%d-%b-%Y %H:%M:%S"))
             fout.attrs['license'] = np.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
+            
+            for i in fout.keys():
+                if (i == 'obs' or i == 'trajectory' or 'string' in i):
+                    fout.__delitem__(i)
+                    
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
         print(tt)
@@ -2603,8 +2822,14 @@ class CDMDataset:
             # Trajectory info
             if ivar == 'trajectory_label':
                 data['trajectory_label'] = data['trajectory_label'][data['trajectory_index']]
-                del data['trajectory_index']
-                del data['trajectory']
+                try:
+                    del data['trajectory_index']
+                except:
+                    pass
+                try:
+                    del data['trajectory']
+                except: 
+                    pass
             if ivar == date_time_name and decode_datetime:
                 data[ivar] = seconds_to_datetime(data[ivar])
                 
@@ -2719,6 +2944,131 @@ class CDMDataset:
                                           dims=('time', 'plev'),
                                           name=ivar,
                                           attrs=v_attrs)
+                # data[ivar].data['time'].attrs.update(self.read_attributes(kwargs.get('date_time_name', 'time')))
+                # data[ivar].data['plev'].attrs.update(self.read_attributes(kwargs.get('z_coordinate_name', 'plev')))
+        return data
+
+    def read_data_to_3dcube(self, variables: list, dates: list = None, plevs: list = None, feedback: list = None,
+                          feedback_group: str = 'era5fb', **kwargs) -> dict:
+        """ Read standard pressure levels and return a DataCube
+
+        Args:
+            variables: list of variables, e.g. temperature
+            dates: [start, stop], str, int or datetime
+            plevs: [list] in Pa or hPa
+            feedback: list of feedback variables
+            feedback_group: group name of the feedback
+            **kwargs:
+
+        Optional Keywords:
+            date_time_name: Name of the datetime variable
+            z_coordinate_name: Name of the pressure level variable
+
+        Returns:
+            dict : {variable : xr.DataArray}
+        """
+        if len(variables) == 0:
+            raise ValueError('Need a variables', str(cdm_codes.keys()))
+
+        if isinstance(variables, str):
+            variables = [variables]
+
+        data = {}
+        if plevs is not None:
+            plevs = np.asarray(plevs)
+            if any((plevs > 110000) | (plevs < 500)):
+                raise ValueError('Pressure levels outside range [5, 1100] hPa')
+        else:
+            plevs = std_plevs * 100  # in Pa
+
+        std_plevs_indices = np.zeros(1001, dtype=np.int32)  # hPa
+        # in hPa
+        for i, j in enumerate(plevs // 100):
+            std_plevs_indices[j] = i
+
+        # todo check if variable can be replaced inside HDF5 ?
+        if self.hasgroups:
+            #
+            # check variables
+            #
+            varnum = []
+            for ivar in variables:
+                if ivar not in cdm_codes.keys():
+                    raise ValueError('Variable not found', ivar)
+                varnum.append(
+                    {'varnum': cdm_codes[ivar], 'variable': 'observation_value', 'group': 'observations_table',
+                     'bkp_var': ivar})
+                if feedback is not None:
+                    if isinstance(feedback, str):
+                        feedback = [feedback]
+                    for jvar in feedback:
+                        # jvar -> @body rename
+                        varnum.append({'varnum': cdm_codes[ivar], 'variable': jvar, 'group': feedback_group,
+                                       'bkp_var': ivar})
+            # multiprocessing of the requests?
+            for ivarnum in varnum:
+                logger.info('Reading ... %d  %s', ivarnum['varnum'], ivarnum['bkp_var'])
+                ivarnum.update(kwargs)
+                # TIME SLICE, INDEX, SECONDS ARRAY, PRESSURE LEVELS
+                trange, indices, secarray, pressure = self.read_observed_variable(dates=dates,
+                                                                                  plevs=plevs,
+                                                                                  return_coordinates=True,
+                                                                                  return_index=True,
+                                                                                  **ivarnum)
+                logger.info('[CUBE] Variable Group %d %s %s', ivarnum['varnum'], str(trange), str(secarray.shape))
+                obs = self[ivarnum['group']][ivarnum['variable']][trange][indices]
+                #
+                # to Cube
+                #
+                # requires hPa for indices
+                itime, iobs = table_to_cube(secarray,
+                                            std_plevs_indices[pressure.astype(np.int32) // 100],
+                                            obs,
+                                            nplev=plevs.size)
+                logger.info('[CUBE] %s %s', ivarnum['bkp_var'], iobs.shape)
+                v_attrs = get_attributes(cdmcode=ivarnum['varnum'],
+                                         feedback=ivarnum['variable'] if feedback is not None else None)
+                if len(v_attrs) > 0:
+                    v_attrs = v_attrs[list(v_attrs.keys())[0]]
+                # Convert to Xarray [time x plev]
+                data[ivarnum['bkp_var']] = xr.DataArray(iobs,
+                                                        coords=(seconds_to_datetime(secarray[itime]), plevs),
+                                                        dims=('time', 'plev'),
+                                                        name=ivarnum['bkp_var'],
+                                                        attrs=v_attrs,
+                                                        )
+                # todo add attributes for coordinates
+        else:
+            splevs=[1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,
+                    100000]
+            ldaysx2=False
+            for ivar in variables:
+                # Read Attributes Variable
+                v_attrs = self.read_attributes(ivar)
+                # why no trange?
+                iobs, secarray, pressure = self.read_variable(ivar,
+                                                              dates=dates,
+                                                              plevs=plevs,
+                                                              return_coordinates=True)
+                if ldaysx2:
+                    cobs=np.full(cobs.shape,np.nan,dtype=iobs.dtype)
+                    cobs[hindex,pindex,dindex]=iobs[hgood]
+                else:
+                    cobs,hindex,pindex,dindex,hgood,gdays=daysx2(secarray,
+                                                             std_plevs_indices[pressure.astype(np.int32) // 100],
+                                                             plevs.shape[0],iobs)
+                #itime, iobs = table_to_3dcube(secarray,
+                                            #std_plevs_indices[pressure.astype(np.int32) // 100],
+                                            #iobs)
+                logger.info('[CUBE] %s %s %s', ivar, iobs.shape,cobs.shape)
+                # Convert to Xarray [time x plev]
+                data[ivar] = xr.DataArray(cobs,
+                                          coords=(np.array((0,12)),plevs/100,gdays),
+                                          dims=('hours', 'press','datum'),
+                                          name=ivar,
+                                          attrs=v_attrs)
+                data[ivar]['datum'].attrs['units']='days since 1900-01-01 00:00:00'
+                data[ivar]['press'].attrs['units']='hPa'
                 # data[ivar].data['time'].attrs.update(self.read_attributes(kwargs.get('date_time_name', 'time')))
                 # data[ivar].data['plev'].attrs.update(self.read_attributes(kwargs.get('z_coordinate_name', 'plev')))
         return data

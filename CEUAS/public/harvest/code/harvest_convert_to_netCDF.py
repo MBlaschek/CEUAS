@@ -1229,11 +1229,25 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                         pass               
                     
                 #x=x.reshape(fvv.shape[0],slen)
+                """
+                try:      
+                    fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)
+                    if v in attrs.keys():
+                        fd[k][v].attrs['description']     =numpy.bytes_(attrs[v]['description'])
+                        fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])                
+                except:
+                    print(0)
+                    print("FAILED" , dfile )
+                """    
+
+                    
+                        
                 fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)
                 if v in attrs.keys():
                     fd[k][v].attrs['description']     =numpy.bytes_(attrs[v]['description'])
                     fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])                
-                    
+
+                        
             #variables_dic[v] = f[v].values.dtype
              
         for v in fd[k].keys(): #var_selection:
@@ -2017,9 +2031,13 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
         #station_configuration_retrieved = get_station_configuration_f( station_id, cdm['station_configuration'] )            
         station_configuration_retrieved = get_station_configuration_new( station_id, cdm['station_configuration'] )            
         
-        if (station_configuration_retrieved['latitude'].values[0] < 0 and fbds['lat@hdr'][0] > 0) :
-            print('*** Correcting latitude missing minus sign ') # files from era5_1759 might have missing minus sign form the WBAN inventory 
-            fbds['lat@hdr'] =- fbds['lat@hdr']
+        try: # the stat_cof_retr might be a None, so it wont work 
+            
+            if (station_configuration_retrieved['latitude'].values[0] < 0 and fbds['lat@hdr'][0] > 0) :
+                print('*** Correcting latitude missing minus sign from WBAN archive ') # files from era5_1759 might have missing minus sign form the WBAN inventory 
+                fbds['lat@hdr'] =- fbds['lat@hdr']
+        except:
+            pass
             
         try:
             #primary_id = cdm['station_configuration']['primary_id'].values[loc].decode('utf-8') # OLD
@@ -3334,7 +3352,9 @@ if __name__ == '__main__':
     
     stat_conf_path = '../data/station_configurations/'     
     stat_conf_file = stat_conf_path +   '/station_configuration_' + dataset + '.dat'    
-    tdict['prmary_id'] = np.bytes_
+    #tdict['prmary_id'] = np.bytes_
+    tdict['primary_id'] = np.bytes_
+    
     tdict['secondary_id'] = np.bytes_    
     cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
     clean_station_configuration(cdm_tab)              
@@ -3375,7 +3395,20 @@ if __name__ == '__main__':
         
         tt=time.time()                            
         if 'era5' in dataset:   
-                odb_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)
+            if '1759' in dataset:  # oading the files list to apply the WBAN latitude correction (missing minus sign)
+                lat_mismatch = stat_conf_path + '/era5_1759_WBAN_latitude_mismatch.dat'
+                wban_lat_mismatch=pd.read_csv( lat_mismatch, delimiter='\t' ) 
+                f = File.split('/')[-1].replace('.gz','') # -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.2:82405.gz -d era5_1759 -o OUTPUT
+
+                if f.replace('._','.') in wban_lat_mismatch['file'].values:
+                    print('*** Will correct the latitude missing minus sign form WBAN inventory *** ')
+                    stat_conf_file = stat_conf_path + '/station_configuration_era5_1759_wbanLatitudeMismatch.dat'                        
+                    cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
+                    cdm_tab['station_configuration']['primary_id'] = cdm_tab['station_configuration']['primary_id'].astype(np.bytes_)
+                else:
+                    pass
+            
+            odb_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)
         elif 'nasa' in dataset:   
                 ir_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)
         elif 'ubern' in dataset:   
@@ -3439,6 +3472,8 @@ _era5.conv._10090.gz
 -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._1:82930.gz -d era5_1759 -o OUTPUT
 -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._2:3136.gz  -d era5_1759 -o OUTPUT
 -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._2:50801.gz -d era5_1759 -o OUTPUT
+-f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._2:82405.gz -d era5_1759 -o OUTPUT
+
 
 # ERA5 1761
 -f /raid60/scratch/leo/scratch/era5/odbs/1761/era5.1761.conv._1:41675.gz -d era5_1761 -o OUTPUT
