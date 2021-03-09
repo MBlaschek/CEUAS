@@ -1090,7 +1090,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             data = data.drop(['pressure','ta_average'])
             print('squeeze hour')
             data = data.squeeze(dim='hour', drop=True)
-            print('write to file: 'filename_out)
+            print('write to file: ', filename_out)
             data.to_netcdf(path=filename_out)
             print('done')
 
