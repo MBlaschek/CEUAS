@@ -1045,7 +1045,9 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     if len(request['date']) == 1:
                         odate = (request['date'][0])
                         odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
-                        data = f.sel(time = odate)
+                        odate = pd.to_datetime(odate, format='%Y-%m-%d')
+                        data = f.where(f.time == odate, drop=True)
+#                         data = f.sel(time = odate)
                     else:
                         odate = (request['date'][0])
                         odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
@@ -1057,6 +1059,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 # select via pressure
                 if ('pressure_level' in request.keys()) and (len(request['pressure_level']) > 0):
                     data =  data.where(data.pressure.isin([int(a) for a in request['pressure_level']]), drop=True)
+                    
                 # select via time 
                 if ('time' in request.keys()) and (len(request['time']) == 1):
                     data =  data.where(data.hour == int(request['time'][0]), drop=True)
@@ -1069,6 +1072,10 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     data = data.where(data.lon >= bounds[1], drop=True).where(data.lon <= bounds[3], drop=True)
 #             except:
 #                 logger.error('No gridded data available')
+            
+            data = data.rename_dims({'lat':'latitude','lon':'longitude'})
+            data = data.rename_vars({'ta_anomaly':'t', 'lat':'latitude', 'lon':'longitude'})
+            data = data.drop(['pressure','ta_average'])
             data = data.squeeze(dim='hour', drop=True)
             data.to_netcdf(path=filename_out)
 
