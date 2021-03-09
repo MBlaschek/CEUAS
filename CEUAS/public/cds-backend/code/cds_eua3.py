@@ -1047,7 +1047,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 if ('date' in request.keys()) and (len(request['date']) >= 1):
                     if len(request['date']) == 1:
                         odate = (request['date'][0])
-                        odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
+                        odate = odate[:4]+'-'+odate[4:6] # +'-'+odate[6:]
 #                         odate = pd.to_datetime(odate, format='%Y-%m-%d')
 #                         data = f.where(f.time == odate, drop=True)
                         data = f.sel(time = odate)
@@ -1087,9 +1087,10 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             print('rename vars')
             data = data.rename_vars({'ta_anomaly':'t', 'lat':'latitude', 'lon':'longitude'})
             print('drop vars')
-            data = data.drop(['pressure','ta_average'])
-            print('squeeze hour')
+            data = data.drop(['ta_average'])
+            print('squeeze')
             data = data.squeeze(dim='hour', drop=True)
+            data = data.squeeze(dim='pressure', drop=True)
             print('write to file: ', filename_out)
             data.to_netcdf(path=filename_out)
             print('done')
