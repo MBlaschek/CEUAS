@@ -1,0 +1,195 @@
+mkdir: cannot create directory ‘/raid60/scratch/federico/DATABASE_MARCH2021_sensor’: File exists
+['0-20500-0-50404_CEUAS_merged_v1.nc', '0-20500-0-82607_CEUAS_merged_v1.nc', '0-20500-0-82608_CEUAS_merged_v1.nc', '0-20500-0-82606_CEUAS_merged_v1.nc', '0-20500-0-50405_CEUAS_merged_v1.nc', 'merging_summary.txt', '0-20000-0-01028_CEUAS_merged_v1.nc']
+2021-03-06 01:34:54,063 - INFO - Note: detected 160 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2021-03-06 01:34:54,063 - INFO - Note: NumExpr detected 160 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2021-03-06 01:34:54,063 - INFO - NumExpr defaulting to 8 threads.
+2021-03-06 01:34:54,064 - INFO - Note: detected 160 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2021-03-06 01:34:54,064 - INFO - Note: NumExpr detected 160 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2021-03-06 01:34:54,064 - INFO - NumExpr defaulting to 8 threads.
+2021-03-06 01:34:54,075 - INFO - Note: detected 160 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2021-03-06 01:34:54,075 - INFO - Note: NumExpr detected 160 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2021-03-06 01:34:54,075 - INFO - NumExpr defaulting to 8 threads.
+2021-03-06 01:34:54,083 - INFO - Note: detected 160 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2021-03-06 01:34:54,083 - INFO - Note: NumExpr detected 160 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2021-03-06 01:34:54,083 - INFO - NumExpr defaulting to 8 threads.
+2021-03-06 01:34:54,145 - INFO - Note: detected 160 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2021-03-06 01:34:54,145 - INFO - Note: NumExpr detected 160 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2021-03-06 01:34:54,145 - INFO - NumExpr defaulting to 8 threads.
+2021-03-06 01:34:54,192 - INFO - Note: detected 160 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2021-03-06 01:34:54,193 - INFO - Note: NumExpr detected 160 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2021-03-06 01:34:54,193 - INFO - NumExpr defaulting to 8 threads.
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/opt/anaconda3/lib/python3.7/multiprocessing/pool.py", line 121, in worker
+    result = (True, func(*args, **kwds))
+  File "/opt/anaconda3/lib/python3.7/multiprocessing/pool.py", line 44, in mapstar
+    return list(map(*args))
+  File "postprocess_pool.py", line 556, in run
+    data = MF.load()
+  File "postprocess_pool.py", line 158, in load
+    h5py_file = h5py.File(self.file, 'r+')
+  File "/opt/anaconda3/lib/python3.7/site-packages/h5py/_hl/files.py", line 408, in __init__
+    swmr=swmr)
+  File "/opt/anaconda3/lib/python3.7/site-packages/h5py/_hl/files.py", line 175, in make_fid
+    fid = h5f.open(name, h5f.ACC_RDWR, fapl=fapl)
+  File "h5py/_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py/_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "h5py/h5f.pyx", line 88, in h5py.h5f.open
+OSError: Unable to open file (file signature not found)
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "postprocess_pool.py", line 620, in <module>
+    out = p.map(func, cleaned_list)        
+  File "/opt/anaconda3/lib/python3.7/multiprocessing/pool.py", line 268, in map
+    return self._map_async(func, iterable, mapstar, chunksize).get()
+  File "/opt/anaconda3/lib/python3.7/multiprocessing/pool.py", line 657, in get
+    raise self._value
+  File "/opt/anaconda3/lib/python3.7/multiprocessing/pool.py", line 121, in worker
+    result = (True, func(*args, **kwds))
+  File "/opt/anaconda3/lib/python3.7/multiprocessing/pool.py", line 44, in mapstar
+    return list(map(*args))
+  File "postprocess_pool.py", line 556, in run
+    data = MF.load()
+  File "postprocess_pool.py", line 158, in load
+    h5py_file = h5py.File(self.file, 'r+')
+  File "/opt/anaconda3/lib/python3.7/site-packages/h5py/_hl/files.py", line 408, in __init__
+    swmr=swmr)
+  File "/opt/anaconda3/lib/python3.7/site-packages/h5py/_hl/files.py", line 175, in make_fid
+    fid = h5f.open(name, h5f.ACC_RDWR, fapl=fapl)
+  File "h5py/_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py/_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "h5py/h5f.pyx", line 88, in h5py.h5f.open
+OSError: Unable to open file (file signature not found)
+   +++ Running in normal mode +++
+ *** Replacing the sensor_id *** 
+ *** Done with the attributes of the dimension *** 
+ Analyzing  sensor_id
+*** Setting the attributes to the sensor_configuration table  sensor_id
+ Analyzing  observing_method
+*** Setting the attributes to the sensor_configuration table  observing_method
+ Analyzing  sampling_strategy
+*** Setting the attributes to the sensor_configuration table  sampling_strategy
+ Analyzing  calibration_status
+*** Setting the attributes to the sensor_configuration table  calibration_status
+ Analyzing  calibration_date
+*** Setting the attributes to the sensor_configuration table  calibration_date
+ Analyzing  comments
+*** Setting the attributes to the sensor_configuration table  comments
+ Analyzing  date_start
+*** Setting the attributes to the sensor_configuration table  date_start
+ Analyzing  date_end
+*** Setting the attributes to the sensor_configuration table  date_end
+ Analyzing  optional_data
+*** Setting the attributes to the sensor_configuration table  optional_data
+   +++ Running in normal mode +++
+ *** Replacing the sensor_id *** 
+ *** Done with the attributes of the dimension *** 
+ Analyzing  sensor_id
+*** Setting the attributes to the sensor_configuration table  sensor_id
+ Analyzing  observing_method
+*** Setting the attributes to the sensor_configuration table  observing_method
+ Analyzing  sampling_strategy
+*** Setting the attributes to the sensor_configuration table  sampling_strategy
+ Analyzing  calibration_status
+*** Setting the attributes to the sensor_configuration table  calibration_status
+ Analyzing  calibration_date
+*** Setting the attributes to the sensor_configuration table  calibration_date
+ Analyzing  comments
+*** Setting the attributes to the sensor_configuration table  comments
+ Analyzing  date_start
+*** Setting the attributes to the sensor_configuration table  date_start
+ Analyzing  date_end
+*** Setting the attributes to the sensor_configuration table  date_end
+ Analyzing  optional_data
+*** Setting the attributes to the sensor_configuration table  optional_data
+   +++ Running in normal mode +++
+ *** Replacing the sensor_id *** 
+ *** Done with the attributes of the dimension *** 
+ Analyzing  sensor_id
+*** Setting the attributes to the sensor_configuration table  sensor_id
+ Analyzing  observing_method
+*** Setting the attributes to the sensor_configuration table  observing_method
+ Analyzing  sampling_strategy
+*** Setting the attributes to the sensor_configuration table  sampling_strategy
+ Analyzing  calibration_status
+*** Setting the attributes to the sensor_configuration table  calibration_status
+ Analyzing  calibration_date
+*** Setting the attributes to the sensor_configuration table  calibration_date
+ Analyzing  comments
+*** Setting the attributes to the sensor_configuration table  comments
+ Analyzing  date_start
+*** Setting the attributes to the sensor_configuration table  date_start
+ Analyzing  date_end
+*** Setting the attributes to the sensor_configuration table  date_end
+ Analyzing  optional_data
+*** Setting the attributes to the sensor_configuration table  optional_data
+   +++ Running in normal mode +++
+ *** Replacing the sensor_id *** 
+ *** Done with the attributes of the dimension *** 
+ Analyzing  sensor_id
+*** Setting the attributes to the sensor_configuration table  sensor_id
+ Analyzing  observing_method
+*** Setting the attributes to the sensor_configuration table  observing_method
+ Analyzing  sampling_strategy
+*** Setting the attributes to the sensor_configuration table  sampling_strategy
+ Analyzing  calibration_status
+*** Setting the attributes to the sensor_configuration table  calibration_status
+ Analyzing  calibration_date
+*** Setting the attributes to the sensor_configuration table  calibration_date
+ Analyzing  comments
+*** Setting the attributes to the sensor_configuration table  comments
+ Analyzing  date_start
+*** Setting the attributes to the sensor_configuration table  date_start
+ Analyzing  date_end
+*** Setting the attributes to the sensor_configuration table  date_end
+ Analyzing  optional_data
+*** Setting the attributes to the sensor_configuration table  optional_data
+   +++ Running in normal mode +++
+ *** Replacing the sensor_id *** 
+ *** Done with the attributes of the dimension *** 
+ Analyzing  sensor_id
+*** Setting the attributes to the sensor_configuration table  sensor_id
+ Analyzing  observing_method
+*** Setting the attributes to the sensor_configuration table  observing_method
+ Analyzing  sampling_strategy
+*** Setting the attributes to the sensor_configuration table  sampling_strategy
+ Analyzing  calibration_status
+*** Setting the attributes to the sensor_configuration table  calibration_status
+ Analyzing  calibration_date
+*** Setting the attributes to the sensor_configuration table  calibration_date
+ Analyzing  comments
+*** Setting the attributes to the sensor_configuration table  comments
+ Analyzing  date_start
+*** Setting the attributes to the sensor_configuration table  date_start
+ Analyzing  date_end
+*** Setting the attributes to the sensor_configuration table  date_end
+ Analyzing  optional_data
+*** Setting the attributes to the sensor_configuration table  optional_data
+   +++ Running in normal mode +++
+ *** Replacing the sensor_id *** 
+ *** Done with the attributes of the dimension *** 
+ Analyzing  sensor_id
+*** Setting the attributes to the sensor_configuration table  sensor_id
+ Analyzing  observing_method
+*** Setting the attributes to the sensor_configuration table  observing_method
+ Analyzing  sampling_strategy
+*** Setting the attributes to the sensor_configuration table  sampling_strategy
+ Analyzing  calibration_status
+*** Setting the attributes to the sensor_configuration table  calibration_status
+ Analyzing  calibration_date
+*** Setting the attributes to the sensor_configuration table  calibration_date
+ Analyzing  comments
+*** Setting the attributes to the sensor_configuration table  comments
+ Analyzing  date_start
+*** Setting the attributes to the sensor_configuration table  date_start
+ Analyzing  date_end
+*** Setting the attributes to the sensor_configuration table  date_end
+ Analyzing  optional_data
+*** Setting the attributes to the sensor_configuration table  optional_data
++++ Written sensor_configuration 
+ --- Done writing the output file /raid60/scratch/federico/MERGED_MARCH2021_SAVE/0-20000-0-01028_CEUAS_merged_v1.nc  ! ---  
+ *** Done Writing Sensor Information for file  /raid60/scratch/federico/MERGED_MARCH2021_SAVE/0-20000-0-01028_CEUAS_merged_v1.nc

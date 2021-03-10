@@ -606,9 +606,11 @@ if __name__ == '__main__':
                 else:
                     cleaned_list.append(file)
             
-            
+
+            #print(cleaned_list)
+            #print(len(cleaned_list))
             #cleaned_list = ['0-20000-0-94463_CEUAS_merged_v0.nc', ]
-            
+            print(cleaned_list)
             #for s in cleaned_list:
             #    a = run(merged_directory, postprocessed_new, force_run, s)
                 
