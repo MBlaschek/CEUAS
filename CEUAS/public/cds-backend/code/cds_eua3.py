@@ -28,10 +28,12 @@ import os
 import time
 from datetime import datetime, timedelta
 
-import h5py
+import h5py  # most likely non standard on CDS
 import numpy as np
 import pandas as pd
 import xarray as xr
+
+# most likely non standard libraries on CDS
 from numba import njit
 import geopy
 import json
@@ -787,7 +789,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
                                 print('x')
                             fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                             
-                except MemoryError as e:
+                except Exception as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
                     hilf = np.zeros(shape=(idx.shape[0]), dtype='S10')
@@ -1041,26 +1043,57 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             
             with xr.load_dataset(reqfile) as f:
                 # select via date
-                if ('date' in request.keys()) and (len(request['date']) > 1):
-                    data = f.loc[dict(time=slice(request['date'][0], request['date'][-1]))]
+                print('selecting date: ', )
+                if ('date' in request.keys()) and (len(request['date']) >= 1):
+                    if len(request['date']) == 1:
+                        odate = (request['date'][0])
+                        odate = odate[:4]+'-'+odate[4:6] # +'-'+odate[6:]
+#                         odate = pd.to_datetime(odate, format='%Y-%m-%d')
+#                         data = f.where(f.time == odate, drop=True)
+                        data = f.sel(time = odate)
+                    else:
+                        odate = (request['date'][0])
+                        odate = odate[:4]+'-'+odate[4:6]+'-'+odate[6:]
+                        edate = (request['date'][-1])
+                        edate = edate[:4]+'-'+edate[4:6]+'-'+edate[6:]
+                        print(odate, edate)
+                        data = f.sel(time=slice(odate, edate))
+                print('done: ', odate)
+                        
                 # select via pressure
+                print('selecting date: ', )
                 if ('pressure_level' in request.keys()) and (len(request['pressure_level']) > 0):
-                    print('request[pressure_level]', request['pressure_level'])
-                    print('data.pressure', data.pressure)
                     data =  data.where(data.pressure.isin([int(a) for a in request['pressure_level']]), drop=True)
-                    print('pselect worked')
+                print('done: ', [int(a) for a in request['pressure_level']])
+                    
                 # select via time 
-                if ('time' in request.keys()) and (len(request['time']) == 1 and request['time'] in [0, 12]):
-                    data =  data.where(data.hour == request['time'], drop=True)
+                print('selectin time: ')
+                if ('time' in request.keys()) and (len(request['time']) == 1):
+                    data =  data.where(data.hour == int(request['time'][0]), drop=True)
+                else:
+                    data =  data.where(data.hour == 12, drop=True)
                 # select via coords
+                print('selecting lat/lon: ')
                 if len(request['gridded']) == 4 :
                     bounds = request['gridded']
                     data = data.where(data.lat >= bounds[0], drop=True).where(data.lat <= bounds[2], drop=True)
                     data = data.where(data.lon >= bounds[1], drop=True).where(data.lon <= bounds[3], drop=True)
 #             except:
 #                 logger.error('No gridded data available')
-            print(data)
+                print('done')
+            print('cleanup output file')
+#             print('rename dims')
+#             data = data.rename_dims({'lat':'latitude','lon':'longitude'})
+#             print('rename vars')
+#             data = data.rename_vars({'ta_anomaly':'ta',}) #  'lat':'latitude', 'lon':'longitude'})
+            print('drop vars')
+            data = data.drop(['ta_average'])
+            print('squeeze')
+            data = data.squeeze(dim='hour', drop=True)
+            data = data.squeeze(dim='pressure', drop=True)
+            print('write to file: ', filename_out)
             data.to_netcdf(path=filename_out)
+            print('done')
 
             
         else:
@@ -1127,12 +1160,12 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 print(time.time()-tt)
                 print('')
 
-    except MemoryError as e:
-    #except MemoryError as e:
+    except Exception as e:
+    #except Exception as e:
         if debug:
             raise e
-        logger.error('MemoryError %s occurred while reading %s', repr(e), filename)
-        return '', 'MemoryError "{}" occurred while reading {}'.format(e, filename)
+        logger.error('Exception %s occurred while reading %s', repr(e), filename)
+        return '', 'Exception "{}" occurred while reading {}'.format(e, filename)
 
     return filename_out, msg
 
@@ -1234,8 +1267,9 @@ def align_datetime(data: xr.DataArray, dim: str = 'time', plev: str = 'plev', ti
     #
     # Convert all dates to standard_dates -> 0, 6, 12, 18 (times +/- span (3))
     #
-    _fix_datetime = np.vectorize(to_standard_launch_time)
-    newdates = _fix_datetime(dates, span=span)  # (time: 33%)
+    #_fix_datetime = np.vectorize(to_standard_launch_time)
+    # newdates = _fix_datetime(dates, span=span)  # (time: 33%)
+    newdates = to_standard_launch_time(dates, times, span=span)
     idx_std = DatetimeIndex(newdates).hour.isin(times)
     resolution = np.zeros(newdates.size)  # same size as dates
     #
@@ -1324,6 +1358,7 @@ def align_datetime(data: xr.DataArray, dim: str = 'time', plev: str = 'plev', ti
     logger.info("Modified dates: %d, Standard %s: %d / %d / %d", nn, str(times), idx_std.sum(), nx, newdates.size)
     if not all(data[jname].values == np.sort(data[jname].values)):
         logger.warning("Values are not sorted by %s", jname)
+        pass
         # data = data.sortby(jname)
     return data
 
@@ -1357,45 +1392,29 @@ def _count_data(data: xr.DataArray, dim: str = 'time', plev: str = 'plev') -> np
         return data.groupby(dim).count().to_dataframe().max(axis=1).values
 
 
-def to_standard_launch_time(itime: np.datetime64, span: int = 3, debug: bool = False) -> np.datetime64:
-    """ Convert to standard (nominal) launch datetime with hour precision
+def to_standard_launch_time(dates: np.datetime64, std_times: list, span: int =3, debug: bool = False):
+    """ Convert datetime64 to standard launch times
 
     Args:
-        itime (np.datetime64): Datetime
-        span (int): allowed difference to standard datetime (0,6,12,18)
-        debug (bool): show debugging information
-
-    Returns:
-        np.datetime64 : standard datetime
+        dates: input datetime64
+        std_times: list of standard launch times, e.g. 0, 12
+        span: allowed time departure, e.g. 3 for 3 hours (+/-)
+        debug: debug flag
     """
-    import pandas as pd
-    itime = pd.Timestamp(itime)  # (time: 34%)
-    # span=6 -> 0, 12
-    # [18, 6[ , [6, 18[
-    # span=3 -> 0, 6, 12, 18
-    # [21, 3[, [3,9[, [9,15[, [15,21[
-    for ihour in range(0, 24, span * 2):
-        # 0 - 6 + 24 = 18
-        lower = (ihour - span + 24) % 24
-        # 0 + 6 + 24 = 6
-        upper = (ihour + span + 24) % 24
-        # 18 >= 18 or 18 < 6  > 00
-        # 0 >= 18 or 0 < 6    > 00
-        if debug:
-            print("%d [%d] %d >= %d < %d" % (ihour, span, lower, itime.hour, upper))
-
-        if (ihour - span) < 0:
-            if itime.hour >= lower or itime.hour < upper:
-                rx = itime.replace(hour=ihour, minute=0, second=0, microsecond=0)
-                if itime.hour >= (24 - span):
-                    rx = rx + pd.DateOffset(days=1)
-                return rx.to_datetime64()
-        else:
-            if lower <= itime.hour < upper:
-                rx = itime.replace(hour=ihour, minute=0, second=0, microsecond=0)
-                if itime.hour >= (24 - span):
-                    rx = rx + pd.DateOffset(days=1)
-                return rx.to_datetime64()
+    dateshour = dates.astype(np.datetime64(1, 'h'))  # truncate to hour
+    hour = pd.DatetimeIndex(dateshour).hour.astype(int) # only the hour
+    tcorr = np.zeros(hour.size, dtype=np.int)
+    for itime in std_times:
+        # +- (span) - > itime
+        diff = (hour - itime)
+        # within add the inverse, everywhere else 0
+        tcorr = np.where(np.abs(diff) <= span, -1*diff, tcorr)
+        if itime == 0:
+            # check for values before midnight?
+            tcorr = np.where(np.abs(diff -24) <= span, -1*(diff-24), tcorr)
+    newdates = dateshour + (tcorr + np.timedelta64(0,'h'))
+    newdates = np.where(tcorr == 0, dates, newdates) # fillback
+    return newdates
 
 
 def level_interpolation(idata: xr.DataArray, dim: str = 'time', method: str = 'linear', fill_value=None,
@@ -1508,7 +1527,7 @@ def cds_request_wrapper(request: dict, request_filename: str = None, cds_dataset
     import zipfile
     import cdsapi
     import urllib3
-    urllib3.disable_warnings(urllib3.MemoryErrors.InsecureRequestWarning)
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     try:
         if request_filename is None:
             request_filename = '{}.zip'.format(zlib.adler32(bytes(repr(request), 'utf-8')))
@@ -1542,7 +1561,7 @@ def cds_request_wrapper(request: dict, request_filename: str = None, cds_dataset
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except MemoryError as e:
+    except Exception as e:
         logger.error('CDSAPI Request failed %s', str(request))
         raise e
 
@@ -1607,7 +1626,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except MemoryError as e:
+    except Exception as e:
         logger.error('VM Request failed %s', str(request))
         raise e
 
@@ -1838,7 +1857,7 @@ class CDMDataset:
                         setattr(self, igroup, CDMVariable(self.file[igroup], igroup, shape=self.file[igroup].shape))
                     self[igroup].update(link=self.file[igroup])
 
-        except MemoryError as e:
+        except Exception as e:
             logger.debug(repr(e))
             self.close()
 
@@ -1888,6 +1907,43 @@ class CDMDataset:
                     raise OSError('reopen with', mode, self.filename)
         logger.debug("reopen %s [%s]", self.filename, mode)
         self.inquire()  # Need to update links
+
+    def select_variables(self, names: list, groups:list=None, fuzzy:bool = False):
+        """Generate a list of existing variables based on names and groups
+        Args:
+            names: list of variables
+            groups: list of groups
+            fuzzy: partial match
+        
+        Returns:
+            list: list of variables / groups
+              (variable, group) or (variable)
+        """
+        if isinstance(names, str):
+            names = [names]
+
+        found = []
+        if self.hasgroups:
+            if groups is None:
+                groups = self.groups
+
+            for igroup in groups:
+                for ivar in names:
+                    if ivar in self[igroup].keys():
+                        found.append((ivar, igroup))
+                    else:
+                        if fuzzy:
+                            if any([ivar in i for i in self[igroup].keys()]):
+                                found.append((ivar, igroup))
+        else:
+            for ivar in names:
+                if ivar in self.keys():
+                    found.append(ivar)
+                else:
+                    if fuzzy:
+                        if any([ivar in i for i in self.keys()]):
+                            found.append(ivar)
+        return found
 
     def read_attributes(self, name: str, group: str = None, subset: list = None):
         """ Return all attributes or a subset for a variable
@@ -1982,16 +2038,39 @@ class CDMDataset:
             if return_data:
                 return [self[iname][()] for iname in name]
 
-    def availability(self):
+    def availability(self, varnum: int = None, date_time_name: str = 'date_time'):
         """ Read datetime and check how much data is available
         Returns:
-            pd.DataFrame : counts
+            pd.DataFrame or pd.Series: counts per profile
         """
         if self.hasgroups:
-            timestamp = self.load_variable_from_file('recordtimestamp', return_data=True)[0]
-            recindex = self.load_variable_from_file('recordindex', return_data=True)[0]
-            num_rec = np.diff(recindex).tolist() + [self['observations_table']['date_time'].shape[0] - recindex[-1]]
-            return pd.Series(data=num_rec, index=seconds_to_datetime(timestamp), name='num_obs')
+            if 'recordtimestamp' in self.groups:
+                timestamp = self.load_variable_from_file('recordtimestamp', return_data=True)[0]
+            elif isinstance(self['recordindices'], CDMGroup):
+                timestamp = self.load_variable_from_file('recordtimestamp', group='recordindices', return_data=True)[0]
+            else:
+                timestamp = self.load_variable_from_file(date_time_name, return_data=True)[0]
+
+            if 'recordindex' in self.groups:
+                recindex = self.load_variable_from_file('recordindex', return_data=True)[0]
+                num_rec = np.diff(recindex).tolist() + [self['observations_table']['date_time'].shape[0] - recindex[-1]]
+                return pd.Series(data=num_rec, index=seconds_to_datetime(timestamp), name='num_obs')
+            elif 'recordindices' in self.groups:
+                num_rec = {}
+                for ikey in self['recordindices'].keys():
+                    try:
+                        ikey = int(ikey)
+                        if varnum:
+                            if ikey not in varnum:
+                                continue
+                        recindex = self.load_variable_from_file(str(ikey), group='recordindices', return_data=True)[0]
+                        num_rec[ikey] = np.diff(recindex).tolist() + [0]
+                    except:
+                        pass
+                return pd.DataFrame(data=num_rec, index=seconds_to_datetime(timestamp))
+            else:
+                num_rec = np.ones(timestamp.shape[0])
+                return pd.Series(data=num_rec, index=seconds_to_datetime(timestamp), name='num_obs')
         else:
             timestamp = self.load_variable_from_file('time', return_data=True)[0]
             timestamp, num_rec = np.unique(timestamp, return_counts=True)
@@ -2474,7 +2553,7 @@ class CDMDataset:
         else:
             xdates = self.load_variable_from_file(date_time_name, group=dimgroup, return_data=True)[0][trange]
         
-       #
+        #
         # Observed Code
         #
         if dates is None and 'recordindex' in self.groups:
@@ -2720,11 +2799,11 @@ class CDMDataset:
             return self[name][trange][logic], xdates[logic], xplevs[logic]
         return self[name][trange][logic]
 
-    def to_dataframe(self, groups=None, variables:list=None, date=None,
-                             date_time_name: str = 'date_time',
-                             date_is_index: bool = False,
-                     decode_datetime:bool=True,
-                             **kwargs):
+    def to_dataframe(self, groups=None, variables: list = None, date=None,
+                     date_time_name: str = 'date_time',
+                     date_is_index: bool = False,
+                     decode_datetime: bool = True,
+                     **kwargs):
         """ Convert variables to a DataFrame
         CDM Backend files need groups and variables
         CDM Frontend files do not
@@ -2770,6 +2849,12 @@ class CDMDataset:
 
         logger.info("Reading Profile on %s", str(date))
         data = {}
+
+        # update / need to check
+        # 
+        # for ivar,igroup in self.select_variables(variables, groups=groups):
+        #   data[ivar] = self[igroup][ivar]
+
         if groups is not None:
             # Backend file
             for igroup in groups:
@@ -2814,8 +2899,8 @@ class CDMDataset:
                 
         return pd.DataFrame(data)
 
-    def read_data_to_cube(self, variables: list, dates: list = None, plevs: list = None, feedback: list = None,
-                          feedback_group: str = 'era5fb', **kwargs) -> dict:
+    def read_data_to_cube(self, variables: list, dates: list = None, plevs: list = None, feedback = None,
+                          feedback_group = 'era5fb', **kwargs) -> dict:
         """ Read standard pressure levels and return a DataCube
 
         Args:
@@ -2823,7 +2908,7 @@ class CDMDataset:
             dates: [start, stop], str, int or datetime
             plevs: [list] in Pa or hPa
             feedback: list of feedback variables
-            feedback_group: group name of the feedback
+            feedback_group: list of feedback groups (era5fb, adjust, ...)
             **kwargs:
 
         Optional Keywords:
@@ -2861,19 +2946,25 @@ class CDMDataset:
             for ivar in variables:
                 if ivar not in cdm_codes.keys():
                     raise ValueError('Variable not found', ivar)
-                varnum.append(
-                    {'varnum': cdm_codes[ivar], 'variable': 'observation_value', 'group': 'observations_table',
-                     'bkp_var': ivar})
+
+                varnum.append({'varnum': cdm_codes[ivar], 'out_name': ivar,'variable': 'observation_value', 'group': 'observations_table', 'bkp_var': ivar})
                 if feedback is not None:
                     if isinstance(feedback, str):
                         feedback = [feedback]
-                    for jvar in feedback:
+                    if isinstance(feedback_group, str):
+                        feedback_group = [feedback_group]
+
+                    for jvar, jgroup in self.select_variables(feedback, groups=feedback_group):
                         # jvar -> @body rename
-                        varnum.append({'varnum': cdm_codes[ivar], 'variable': jvar, 'group': feedback_group,
+                        # MB Update: new output name based on ivar and jvar
+                        varnum.append({'varnum': cdm_codes[ivar],
+                                       'out_name': '{}_{}'.format(ivar, jvar.split('@')[0] if '@' in jvar else jvar),
+                                       'variable': jvar,
+                                       'group': jgroup,
                                        'bkp_var': ivar})
             # multiprocessing of the requests?
             for ivarnum in varnum:
-                logger.info('Reading ... %d  %s', ivarnum['varnum'], ivarnum['bkp_var'])
+                logger.info('Reading ... %d  %s', ivarnum['varnum'], ivarnum['variable'])
                 ivarnum.update(kwargs)
                 # TIME SLICE, INDEX, SECONDS ARRAY, PRESSURE LEVELS
                 trange, indices, secarray, pressure = self.read_observed_variable(dates=dates,
@@ -2891,13 +2982,13 @@ class CDMDataset:
                                             std_plevs_indices[pressure.astype(np.int32) // 100],
                                             obs,
                                             nplev=plevs.size)
-                logger.info('[CUBE] %s %s', ivarnum['bkp_var'], iobs.shape)
+                logger.info('[CUBE] %s %s', ivarnum['variable'], iobs.shape)
                 v_attrs = get_attributes(cdmcode=ivarnum['varnum'],
                                          feedback=ivarnum['variable'] if feedback is not None else None)
                 if len(v_attrs) > 0:
                     v_attrs = v_attrs[list(v_attrs.keys())[0]]
                 # Convert to Xarray [time x plev]
-                data[ivarnum['bkp_var']] = xr.DataArray(iobs,
+                data[ivarnum['out_name']] = xr.DataArray(iobs,
                                                         coords=(seconds_to_datetime(secarray[itime]), plevs),
                                                         dims=('time', 'plev'),
                                                         name=ivarnum['bkp_var'],
@@ -2927,6 +3018,123 @@ class CDMDataset:
                 # data[ivar].data['time'].attrs.update(self.read_attributes(kwargs.get('date_time_name', 'time')))
                 # data[ivar].data['plev'].attrs.update(self.read_attributes(kwargs.get('z_coordinate_name', 'plev')))
         return data
+
+    def convert_to_raobcore(self, variable: str, filename: str = None, dates: list = None, plevs: list = None,
+                            times=[0, 12], span=3, freq='12h', feedback: list = None, feedback_group: str = 'era5fb',
+                            source: str = 'RAOBCORE/RICH v1.7.2 + solar elevation dependency (from 197901 onward)',
+                            title: str = 'Station daily temperature series with JRA55/CERA20C/ERApreSAT background departure statistics and RISE bias estimates',
+                            attrs: dict = None,
+                            global_attrs: dict = None,
+                            **kwargs):
+        if feedback:
+            if not isinstance(feedback, list):
+                feedback = [feedback]
+        else:
+            feedback = ['biascorr@body', 'fg_depar@body', 'an_depar@body']
+
+        default_attrs = {
+            "lat":  {'axis': 'Y', 'units': 'degrees_north', 'long_name': 'station latitude'},
+            "lon": {'axis': 'X', 'units': 'degrees_east', 'long_name': 'station longitude'},
+            "alt": {'axis': 'Z', 'units': 'm', 'long_name': 'station altitude'},
+            "press": {"long_name": "pressure levels", "units": "hPa", "axis": "Z"},
+            "datum": {"long_name": "datum", "axis": "T"},
+            "hours": {"long_name": "launch time", "units": "hr", "valid_range": (0, 23)}
+        }
+        if attrs:
+            default_attrs.update(attrs)
+
+        default_global = {'Conventions': 'CF-1.1',
+                            'title': title,
+                            'institution': 'University of Vienna',
+                            'history': '2020/02/15',
+                            'source': source,
+                            'references': 'www.univie.ac.at/theoret-met/research/raobcore',
+                            'Stationnname': self.header_table.station_name[-1, :].tobytes().decode()}
+        if global_attrs:
+            default_global.update(global_attrs)
+
+        # They will all have the same time and plev shapes
+        # per variable of course (temp, hum, wind)
+        tdata = self.read_data_to_cube(
+            variable, dates=dates, plevs=plevs, feedback=feedback, feedback_group=feedback_group, **kwargs)
+        dim = 'time'
+        plev = 'plev'
+        # need standard times -> 0,12
+        tdata[variable] = align_datetime(tdata[variable], times=times, span=span, freq=freq, dim=dim, plev=plev)
+        icoord = 'standard_%s' % dim
+        # Index for only standard times
+        standard_index = np.where(
+            tdata[variable][icoord + '_flag'].values == 1)[0]
+        tdata = xr.Dataset(tdata)  # Convert to Dataset
+        # 1. Select only standard times
+        # 2. Swap dimension to new standard time
+        # 3. Convert to a cube hour x time x pressure
+        tdata = stack_cube_by_hour(tdata.isel(**{dim: standard_index}).swap_dims({'time': icoord}), dim=icoord, times=times)
+        # add hours variable
+        # variable with the correct hours inside
+        tdata['hours'] = tdata.time.dt.hour
+        # reset time to index
+        tdata['time'] = (icoord, range(tdata.standard_time.shape[0]))
+        # rename pressure
+        tdata = tdata.rename_dims({'plev': 'pressure'})
+        # swap standard time back to time
+        tdata = tdata.swap_dims({icoord: 'time'})
+        # Cube hour x pressure x time
+        tdata = tdata.transpose("hour", "pressure", "time")
+        # pressure values in hPa
+        tdata['press'] = ('pressure', tdata['plev'].values / 100)
+        # datum variable with days
+        tdata['datum'] = ('time', tdata[icoord].values)
+        tdata['datum'] = tdata['datum'].expand_dims({'numdat': 1})
+        # remove other variables and coordinates
+        tdata = tdata.drop(icoord + '_flag')
+        tdata = tdata.drop(icoord)
+        tdata = tdata.drop('plev').drop(
+            'hour', dim=None).drop('time', dim=None)
+        # Rename variables
+        if 'temperature' in tdata.variables:
+            tdata = tdata.rename_vars({'temperature': 'temperatures'})
+        if '{}_fg_depar'.format(variable) in tdata.variables:
+            tdata = tdata.rename_vars(
+                {'{}_fg_depar'.format(variable): 'fg_dep'})
+        if '{}_biascorr'.format(variable) in tdata.variables:
+            tdata = tdata.rename_vars({'{}_biascorr'.format(variable): 'bias'})
+        if '{}_an_depar'.format(variable) in tdata.variables:
+            tdata = tdata.rename_vars(
+                {'{}_an_depar'.format(variable): 'an_dep'})
+
+        # Add station information (latest)
+        tdata['lat'] = ('station', [self.header_table.latitude[-1]])
+        tdata['lon'] = ('station', [self.header_table.longitude[-1]])
+        try:
+            tdata['alt'] = (
+                'station', [self.header_table.height_of_station_above_sea_level[-1]])
+        except:
+            tdata['alt'] = ('station', [0])
+        # Add attributes
+        for ikey, ival in default_attrs.items():
+            tdata[ikey].attrs.update(ival)
+        # Global Attributes
+        tdata.attrs.update(default_global)
+        if filename is not None:
+            if os.path.isfile(filename):
+                # write only variables, no dims (assuming dims are all the same anyway)
+                with xr.open_dataset(filename) as fopen:
+                    for ivar in tdata.variables:
+                        if ivar in fopen.variables:
+                            logger.debug("Skipping {}".format(ivar))
+                        else:
+                            fopen[ivar] = tdata[ivar]
+                            logger.info("Writing {}".format(ivar))
+                    fopen.attrs.update(default_global)
+                logger.info("Appended to {}".format(filename))
+            else:
+                # write a new file
+                tdata.to_netcdf(filename)
+                logger.info("Written to {}".format(filename))
+        else:
+            return tdata
+     
 
     def read_data_to_3dcube(self, variables: list, dates: list = None, plevs: list = None, feedback: list = None,
                           feedback_group: str = 'era5fb', **kwargs) -> dict:
