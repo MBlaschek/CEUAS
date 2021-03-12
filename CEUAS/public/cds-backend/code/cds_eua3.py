@@ -1572,7 +1572,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
     import zipfile
     import requests
     import urllib3
-    urllib3.disable_warnings(urllib3.MemoryErrors.InsecureRequestWarning)
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     try:
         if request_filename is None:
             request_filename = '{}.zip'.format(zlib.adler32(bytes(repr(request), 'utf-8')))
@@ -3049,6 +3049,8 @@ class CDMDataset:
                                           attrs=v_attrs)
                 data[ivar]['datum'].attrs['units']='days since 1900-01-01 00:00:00'
                 data[ivar]['press'].attrs['units']='hPa'
+            data['lat']=xr.DataArray(np.asarray([self.lat[0]]),name='lat',dims=('station'))
+            data['lon']=xr.DataArray(np.asarray([self.lon[0]]),name='lon',dims=('station'))
                 # data[ivar].data['time'].attrs.update(self.read_attributes(kwargs.get('date_time_name', 'time')))
                 # data[ivar].data['plev'].attrs.update(self.read_attributes(kwargs.get('z_coordinate_name', 'plev')))
         return data
