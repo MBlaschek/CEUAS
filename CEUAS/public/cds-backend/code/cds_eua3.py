@@ -441,7 +441,9 @@ def read_standardnames(url: str = None) -> dict:
               'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type',
               'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 
               'station_name', 
-              'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate',]
+              'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate',
+              'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
+             ]
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
                 'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
@@ -457,6 +459,7 @@ def read_standardnames(url: str = None) -> dict:
                  'advanced_homogenization/RASE_1.8_bias_estimate', 'advanced_homogenization/RAOBCORE_1.8_bias_estimate',
 #                  'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
 #                  'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
+                 'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
                 ]
     cf = {}
     for c, cdm in zip(snames, cdmnames):
@@ -528,10 +531,14 @@ def read_standardnames(url: str = None) -> dict:
     cf['report_id']['shortname'] = 'report_id'
     cf['reference_sonde_type']['shortname'] = 'reference_sonde_type'
     cf['station_name']['shortname'] = 'station_name'
-    cf['RISE_1.8_bias_estimate']['shortname'] = 'RISE'
-    cf['RICH_1.8_bias_estimate']['shortname'] = 'RICH'
-    cf['RASE_1.8_bias_estimate']['shortname'] = 'RASE'
-    cf['RAOBCORE_1.8_bias_estimate']['shortname'] = 'RAOBCORE'
+    cf['RISE_1.8_bias_estimate']['shortname'] = 'RISE_1.8_bias_estimate'
+    cf['RICH_1.8_bias_estimate']['shortname'] = 'RICH_1.8_bias_estimate'
+    cf['RASE_1.8_bias_estimate']['shortname'] = 'RASE_1.8_bias_estimate'
+    cf['RAOBCORE_1.8_bias_estimate']['shortname'] = 'RAOBCORE_1.8_bias_estimate'
+    cf['desroziers_30']['shortname'] = 'desroziers_30'
+    cf['desroziers_60']['shortname'] = 'desroziers_60'
+    cf['desroziers_90']['shortname'] = 'desroziers_90'
+    cf['desroziers_180']['shortname'] = 'desroziers_180'
     return cf
 
 
@@ -2289,6 +2296,7 @@ class CDMDataset:
             # advanced_homogenization
             # 
             if 'advanced_homogenization' in self.groups:
+                print('advanced_homogenization in self.groups')
                 igroup = 'advanced_homogenization'
                 try:
                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
@@ -2298,13 +2306,28 @@ class CDMDataset:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
                     
             if 'advanced_homogenisation' in self.groups:
-                igroup = 'advanced_homogenization'
+                print('advanced_homogenization in self.groups')
+                igroup = 'advanced_homogenisation'
                 try:
                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                               var_selection=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+                    
+            #
+            # advanced_uncertainty
+            # 
+            if 'advanced_uncertainty' in self.groups:
+                print('advanced_uncertainty in self.groups')
+                igroup = 'advanced_uncertainty'
+                try:
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                              var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                except KeyError as e:
+                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+                    
             #
             # Header Information
             #
