@@ -2302,15 +2302,15 @@ class CDMDataset:
             #
             # advanced_homogenization
             # 
-            if 'advanced_homogenization' in self.groups:
-                print('advanced_homogenization in self.groups')
-                igroup = 'advanced_homogenization'
-                try:
-                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-                              var_selection=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate'])
-                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                except KeyError as e:
-                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+#             if 'advanced_homogenization' in self.groups:
+#                 print('advanced_homogenization in self.groups')
+            igroup = 'advanced_homogenization'
+            try:
+                do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                          var_selection=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate'])
+                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+            except KeyError as e:
+                raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
                     
             if 'advanced_homogenisation' in self.groups:
                 print('advanced_homogenization in self.groups')
@@ -2325,15 +2325,15 @@ class CDMDataset:
             #
             # advanced_uncertainty
             # 
-            if 'advanced_uncertainty' in self.groups:
-                print('advanced_uncertainty in self.groups')
-                igroup = 'advanced_uncertainty'
-                try:
-                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-                              var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
-                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                except KeyError as e:
-                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+#             if 'advanced_uncertainty' in self.groups:
+#                 print('advanced_uncertainty in self.groups')
+            igroup = 'advanced_uncertainty'
+            try:
+                do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                          var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
+                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+            except KeyError as e:
+                raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
                     
             #
             # Header Information
