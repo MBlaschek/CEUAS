@@ -1167,7 +1167,8 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             }
             if '0-20100-0' not in statid and '0-20200-0' not in statid:
                 gdict["era5fb"]=[]
-
+                gdict['advanced_uncertainty']=[]
+                gdict['advanced_homogenization']=[]
             with CDMDataset(filename=filename, groups=gdict) as data:
                 if debug: print('x',time.time()-tt)
                 data.read_write_request(filename_out=filename_out,
@@ -2302,16 +2303,16 @@ class CDMDataset:
             #
             # advanced_homogenization
             # 
-#             if 'advanced_homogenization' in self.groups:
-#                 print('advanced_homogenization in self.groups')
-            igroup = 'advanced_homogenization'
-            try:
-                do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-                          var_selection=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate'])
-                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-            except KeyError as e:
-                raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
-                    
+            if 'advanced_homogenization' in self.groups:
+                print('advanced_homogenization in self.groups')
+                igroup = 'advanced_homogenization'
+                try:
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                              var_selection=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate'])
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                except KeyError as e:
+                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+
             if 'advanced_homogenisation' in self.groups:
                 print('advanced_homogenization in self.groups')
                 igroup = 'advanced_homogenisation'
@@ -2325,15 +2326,15 @@ class CDMDataset:
             #
             # advanced_uncertainty
             # 
-#             if 'advanced_uncertainty' in self.groups:
-#                 print('advanced_uncertainty in self.groups')
-            igroup = 'advanced_uncertainty'
-            try:
-                do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-                          var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
-                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-            except KeyError as e:
-                raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+            if 'advanced_uncertainty' in self.groups:
+                print('advanced_uncertainty in self.groups')
+                igroup = 'advanced_uncertainty'
+                try:
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                              var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                except KeyError as e:
+                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
                     
             #
             # Header Information
