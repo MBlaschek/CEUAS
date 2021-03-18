@@ -699,7 +699,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         if not isinstance(optional, list):
             if optional in allowed_optionals:
                 d['optional'] = [optional]
-            else:'RICH_1.8_bias_estimate'
+            else:
                 raise KeyError('Invalid optional selected: ' + optional)
         else:
             for iopt in optional:
