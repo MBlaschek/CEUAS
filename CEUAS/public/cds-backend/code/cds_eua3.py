@@ -440,7 +440,8 @@ def read_standardnames(url: str = None) -> dict:
               'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential',
               'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type',
               'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 
-              'station_name']
+              'station_name', 
+              'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate',]
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
                 'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
@@ -451,7 +452,12 @@ def read_standardnames(url: str = None) -> dict:
                  'observations_table/sensor_id',
                  'observations_table/secondary_value', 'observations_table/original_precision',
                  'observations_table/report_id', 'observations_table/reference_sensor_id',
-                 'station_configuration/station_name']
+                 'station_configuration/station_name',
+                 'advanced_homogenization/RISE_1.8_bias_estimate', 'advanced_homogenization/RICH_1.8_bias_estimate',
+                 'advanced_homogenization/RASE_1.8_bias_estimate', 'advanced_homogenization/RAOBCORE_1.8_bias_estimate',
+#                  'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
+#                  'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
+                ]
     cf = {}
     for c, cdm in zip(snames, cdmnames):
         cf[c] = {'cdmname': cdm, 'units': 'NA', 'shortname': c}
@@ -522,6 +528,10 @@ def read_standardnames(url: str = None) -> dict:
     cf['report_id']['shortname'] = 'report_id'
     cf['reference_sonde_type']['shortname'] = 'reference_sonde_type'
     cf['station_name']['shortname'] = 'station_name'
+    cf['RISE_1.8_bias_estimate']['shortname'] = 'RISE'
+    cf['RICH_1.8_bias_estimate']['shortname'] = 'RICH'
+    cf['RASE_1.8_bias_estimate']['shortname'] = 'RASE'
+    cf['RAOBCORE_1.8_bias_estimate']['shortname'] = 'RAOBCORE'
     return cf
 
 
