@@ -2286,6 +2286,26 @@ class CDMDataset:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
             
             #
+            # advanced_homogenization
+            # 
+            if 'advanced_homogenization' in self.groups:
+                igroup = 'advanced_homogenization'
+                try:
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                              var_selection=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate'])
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                except KeyError as e:
+                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+                    
+            if 'advanced_homogenisation' in self.groups:
+                igroup = 'advanced_homogenization'
+                try:
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                              var_selection=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate'])
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                except KeyError as e:
+                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+            #
             # Header Information
             #
             if 'header_table' in self.groups:
