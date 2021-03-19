@@ -98,7 +98,8 @@ def datetime_toseconds(date_time):
     a = np.array(to_seconds).astype(np.int64)
     return a # replacing with seconds from 1900-01-01 00:00:00     
 
-def remove_outliers(data= '', min_p= 25, max_p= 75, cut= 1, skewed= False):
+ 
+def remove_outliers(data= '', min_p= 25, max_p= 75, cut= 1, skewed= False, only_clean = True):
     """ Finds outliers, and replace them with np.nan (to keep vector of same length)                                                                                                                                                                                              
 
          input ::       data = list of values 
@@ -107,7 +108,8 @@ def remove_outliers(data= '', min_p= 25, max_p= 75, cut= 1, skewed= False):
                            cut = factor to allow slight deviation from given percentiles 
          returns ::   cleaned   = list of values without outliers                                                                                                                                                                    
                            outliers   = list of outlier values                                                                                                                                                                                                               
-                           lower,upper, median = outliers delimiter and median values """
+                           lower,upper, median = outliers delimiter and median values.
+                           if only_clean == True, return only list of cleaned values. """
 
     q_min, q_max = np.nanpercentile(data, min_p), np.nanpercentile(data, max_p)
     cut_off = (q_max - q_min) * cut
@@ -128,7 +130,11 @@ def remove_outliers(data= '', min_p= 25, max_p= 75, cut= 1, skewed= False):
             if not np.isnan(d):
                 outliers.append(d)
                 
-    return cleaned, outliers, lower, upper, median
+    if only_clean:
+        return cleaned
+    else:
+        
+        return cleaned, outliers, lower, upper, median
 
 
 
@@ -146,7 +152,7 @@ class Desroziers():
         self.file = file 
         #self.summary_file =  station_id + '_' + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_summary_desrozier.txt'
         self.std_plevs    = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000]
-        self.variables = [85]
+        self.variables = [85,104,105,107] # 104,105 u and v wind, 106 wind from direction, 107 wind speed
         #self.dic_type_attributes = np.load('../merge/dic_type_attributes.npy', allow_pickle= True).item()
         #self.encodings = np.load('../merge/groups_encodings.npy' , allow_pickle = True ).item()
         
@@ -189,7 +195,7 @@ class Desroziers():
         errors_out = {}
         
         error_day_window= ['30','60','90','180']
-        #error_day_window= ['30','180']
+        #error_day_window= ['30']
                 
         """ Assuming a day window around each observation to calculate the time-average
              e.g. 30 days around 30 january = from 15 Jan to 14 Feb. """
@@ -198,7 +204,7 @@ class Desroziers():
         for d in error_day_window: #  ['30','60','90','180']
             error, num = 'desroziers_' + d , 'num_' +d
             errors_out[error]     = np.full( (len(self.data['date_time'] ) ) , np.nan ) # create place holder for uncertainties filled with nans 
-            errors_out[num]      = np.full( (len(self.data['date_time'] ) ) , np.nan ) 
+            errors_out[num]      = np.full( (len(self.data['date_time'] ) ) , -2147483647 ) 
             #errors_out[std_dev] = np.full( (len(self.data['date_time'] ) ) , np.nan ) # not in use
 
         for var in self.variables:
@@ -209,10 +215,7 @@ class Desroziers():
             for col in self.data.keys():
                 red_dic[col] = self.data[col][imin:imax]
             
-            #date_time = start_date + dt
-            #delta = np.timedelta64(2244283200, 's')
-            #n = start_date + delta 
-            
+            """ Building a data frame usin gonly data between the correct indices """
             df = pd.DataFrame(red_dic)
             
             start_date =  np.datetime64('1900-01-01T00:00') 
@@ -272,7 +275,6 @@ class Desroziers():
                     fg_depar = np.array(df_plev['fg_depar@body'])
                     an_depar = np.array(df_plev['an_depar@body'])
                     bias = np.array(df_plev['biascorr@body'])
-                    #plevel =   df['z_coordinate'][:]                                                   
                                                                           
                     for date,hour, plus, minus, fg_dep, an_dep, bias, num in zip( tqdm(timestamp), 
                                                                                   df_hour, 
@@ -283,8 +285,8 @@ class Desroziers():
                                                                                   bias, 
                                                                                   range(len(timestamp)) ) :
 
-                        if date < np.datetime64('1950-01-01'):
-                            continue 
+                        #if date < np.datetime64('1950-01-01'):
+                        #    continue 
                         
 
                         
@@ -333,13 +335,26 @@ class Desroziers():
                             product = an_depar[selected_indices] * fg_depar[selected_indices]
                             valid_data = [p for p in product if not np.isnan(p)]
                             
+                            valid_data = remove_outliers(data= valid_data, min_p= 25, max_p= 75, cut= 1, skewed= False, only_clean = True)
+                            
                             len_valid = len(valid_data)
-
+                            
+                            #if len_valid > int(d)/2:
+                            #    print(0)
+                            #    0
+                                
                             """ If not enough data available (i.e. less than 50% of the dates), will only write the number of data avilable and nan for all the other variable.
-                                 Otherwise, procede with the full error estimation """
+                                 Otherwise, procede with the full error estimation.
+                                 NB we check if the variable is temperature = 85.
+                                 In this case, if bias is not available, we skip the caculation.
+                                 For wind variables (speed and direction) we ignore the absence of the bias. """
+                            
+                            if var == 104 or var == 105 or var == 107:
+                                bias = 1 # dummy value to make the following check = False for wind speed, which has no bias
+                                
                             if len_valid < int(d)/2 or np.isnan(bias) or np.isnan(fg_dep) or np.isnan(an_dep): # require at least 50% of valid data for the error calculation 
                                 desroziers_error = np.nan 
-                                #std = np.nan
+                            
                             else:
                                 desroziers_error = np.sqrt(abs(sum(valid_data))/len_valid)
                                 #std = np.std(valid_data)
@@ -353,22 +368,38 @@ class Desroziers():
                             #num_day.append(np.nan )                        
                             #stddev.append(np.nan)
                             """ Everything is nan so nothing to do """
+                            indices_to_insert.append(num)      
+                            errors.append(np.nan)
+                            num_day.append(-2147483647  )                                    
                             pass # nothing to do since the vectors are already initialized with nans 
                         
                     # now we have a list of calculated des. error.
                     # these values will replace the values of the dummy values in the vectors  error, num, std_dev,
                     # at the position indicated by the indices selected_indices
                     
-                    error, num = 'desroziers_' + d , 'num_' +d
-                    new_indices = imin + indices_to_insert 
+                    if len(indices_to_insert) == 0:
+                        continue
+                    
+                    error, nums = 'desroziers_' + d , 'num_' +d
+                    new_indices = imin + indices_to_insert + plev_indices
                     # need to add the starting indices for this variable AND for the selected timestamp
                     np.put(errors_out[error]     , new_indices, errors      ) # replace in the errors_out vectors the values of the vector errors at indices=selected_indices
-                    np.put(errors_out[num]      , new_indices, num_day ) 
+                    np.put(errors_out[nums]      , new_indices, num_day ) 
+                    
+                    """
+                    valid = np.where( np.array(num_day) > int(d)/2 )
+                    if len (valid[0]) > 0:
+                        ind = new_indices[valid[0]]
+                        values = errors[list(valid[0])]
+                        print(0)
+                    """
+                    
+                        
                     #np.put(errors_out[std_dev] , new_indices, stddev   ) 
                     
                     print('Finished: ' , d , ' plevel: ' , plev )
                     
-            print(0)
+            #print(0)
         
         self.errors_out = errors_out 
         
@@ -387,13 +418,14 @@ class Desroziers():
             
             if 'desroziers' in var:
                 attr = 'Desroziers uncertainty - xx days window'.replace('xx', var.split('_')[-1] )
+                encodings[var] = {'dtype': np.float32 , 'compression': 'gzip'}                
             elif 'num' in var:
                 attr = 'Number of records - xx days window'.replace('xx', var.split('_')[-1] )
+                encodings[var] = {'dtype': int , 'compression': 'gzip'}
                 
                 
             errors[var] = out_data[var]
             errors[var].attrs['description']= attr
-            encodings[var] = {'dtype': np.float32 , 'compression': 'gzip'}
           
         """ Write the new group using h5py """
         group = 'advanced_uncertainty' 
@@ -440,7 +472,7 @@ class Desroziers():
         
         self.h5py_file.close()
         
-        os.system('cp  ' + self.file + '   ' + self.out_dir )
+        os.system('mv  ' + self.file + '    ' + self.out_dir )
 
         print(" *** Done writing Desroziers error to output file --->  " , self.file  )
  
@@ -497,32 +529,51 @@ if __name__ == '__main__':
 
             """ Moving postprocessed files to new directory """
             out_dir = '/raid60/scratch/federico/DESROZIERS_MARCH2021'
+            
+            #os.system('rm -r  ' + out_dir)     
             os.system('mkdir ' + out_dir)
 
-            stations_list = [ s for s in os.listdir(merged_directory) if 'TEST'  not in s ]    
-            stations_list = [ s for s in stations_list if '10'   in s ]    
             
-            processed = [ s.split('_')[0] for s in os.listdir(out_dir) ]  # skipping processed files 
-
+            stations_list = [ s for s in os.listdir(merged_directory) if 'TEST0'  in s ]   
+            for s in stations_list:
+                os.system('cp ' + merged_directory + '/'+s   + '  '  +  merged_directory + '/'+s.replace('_TEST0.nc','.nc')   )
+            
+            stations_list = [ s for s in os.listdir(merged_directory) if 'TEST.nc'  in s ]   
+            for s in stations_list:
+                    os.system('cp ' + merged_directory + '/'+s   + '  '  +  merged_directory + '/'+s.replace('_TEST.nc','.nc')   )
+                    
+            stations_list = [ s for s in os.listdir(merged_directory) if 'TEST'  not in s ]   
+            
+            
+            """
+            s = stations_list[0]
+            if '82' in stations_list[0]:
+                os.system('rm ' + out_dir + '/' + s )
+                os.system('cp ' + merged_directory + '/'+s.replace('.nc','_TEST.nc')  + '  '  +  merged_directory + '/'+s   )
+            """    
             cleaned_list = []
+            if os.path.isdir(out_dir):
+                try:
+                    
+                    processed = [ s.split('_')[0] for s in os.listdir(out_dir) ]  # skipping processed files 
+                except:
+                    processed = []
+                for file in stations_list:
+                        station_id = file.split("_CEUAS")[0]
+                        
+                        if station_id in processed:
+                            print('Already processed:::' , file )
+                        else:
+                            cleaned_list.append(file)
 
-            processed = []
-            for file in stations_list:
-                station_id = file.split("_CEUAS")[0]
                 
-                if station_id in processed:
-                    print('Already processed:::' , file )
-                else:
-                    cleaned_list.append(file)
-            
-            
             #cleaned_list = ['0-20000-0-94463_CEUAS_merged_v0.nc', ]
             
-            for s in cleaned_list:
-                a = run(merged_directory, out_dir, force_run, s)
+            #for s in cleaned_list:
+            #    a = run(merged_directory, out_dir, force_run, s)
                 
             
-            #p = Pool(30)
-            #func = partial(run, merged_directory, postprocessed_new, force_run)
-            #out = p.map(func, cleaned_list)        
+            p = Pool(10)
+            func = partial(run, merged_directory, out_dir, force_run)
+            out = p.map(func, cleaned_list)        
 
