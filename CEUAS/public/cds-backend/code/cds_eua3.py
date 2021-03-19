@@ -2238,12 +2238,6 @@ class CDMDataset:
         logger.debug('Writing: %s', filename_out)
         tt=time.time() - time0
         print(tt)
-        try:
-            logger.debug('Available Groups: (1)', self.groups())
-            print(self.groups())
-        except:
-            logger.debug('Available Groups: (2)', self.groups)
-            print(self.groups)
         
         with h5py.File(filename_out, 'w') as fout:
             # todo future -> this could be replaced by a self.write_to_frontend_file(filename_out, )
