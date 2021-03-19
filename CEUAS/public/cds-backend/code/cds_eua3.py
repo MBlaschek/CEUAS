@@ -2376,6 +2376,9 @@ class CDMDataset:
             for i in fout.keys():
                 if (i == 'obs' or i == 'trajectory' or 'string' in i):
                     fout.__delitem__(i)
+                if 'toolbox' in request.keys():
+                    if i in ['ta', 'hur']:
+                        fout.__delitem__(i)
                     
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
