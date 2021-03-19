@@ -630,7 +630,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                day: list = None, month: list = None, year: list = None, date: list = None, time: list = None, 
                bbox: list = None, country: str = None, area: list = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
-               gridded: list = None,
+               gridded: list = None, toolbox: str = None, 
                pass_unknown_keys: bool = False,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
@@ -707,6 +707,20 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                     raise KeyError('Invalid optional selected: ' + optional)
             d['optional'] = optional
             
+    #
+    # toolbox
+    #
+    if toolbox is not None:
+        if not toolbox == 'True':
+            raise KeyError("Invalid type selected at toolbox - only string 'True' is valid: " + toolbox)
+        else:
+            if d['optional'] is not None:
+                d['toolbox'] = True
+            elif len(d['optional']) > 1:
+                raise KeyError("toolbox 'True' is only valid if only one 'optional' is given.")
+            else:
+                raise KeyError("toolbox 'True' is only valid if valid 'optional' is given.")
+                
     #
     # gridded [lower left upper right]
     #
