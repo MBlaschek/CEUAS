@@ -444,7 +444,10 @@ def read_standardnames(url: str = None) -> dict:
               'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential',
               'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type',
               'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 
-              'station_name']
+              'station_name', 
+              'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate',
+              'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
+             ]
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
                 'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
@@ -455,7 +458,13 @@ def read_standardnames(url: str = None) -> dict:
                  'observations_table/sensor_id',
                  'observations_table/secondary_value', 'observations_table/original_precision',
                  'observations_table/report_id', 'observations_table/reference_sensor_id',
-                 'station_configuration/station_name']
+                 'station_configuration/station_name',
+                 'advanced_homogenization/RISE_1.8_bias_estimate', 'advanced_homogenization/RICH_1.8_bias_estimate',
+                 'advanced_homogenization/RASE_1.8_bias_estimate', 'advanced_homogenization/RAOBCORE_1.8_bias_estimate',
+#                  'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
+#                  'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
+                 'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
+                ]
     cf = {}
     for c, cdm in zip(snames, cdmnames):
         cf[c] = {'cdmname': cdm, 'units': 'NA', 'shortname': c}
@@ -526,6 +535,14 @@ def read_standardnames(url: str = None) -> dict:
     cf['report_id']['shortname'] = 'report_id'
     cf['reference_sonde_type']['shortname'] = 'reference_sonde_type'
     cf['station_name']['shortname'] = 'station_name'
+    cf['RISE_1.8_bias_estimate']['shortname'] = 'RISE_1.8_bias_estimate'
+    cf['RICH_1.8_bias_estimate']['shortname'] = 'RICH_1.8_bias_estimate'
+    cf['RASE_1.8_bias_estimate']['shortname'] = 'RASE_1.8_bias_estimate'
+    cf['RAOBCORE_1.8_bias_estimate']['shortname'] = 'RAOBCORE_1.8_bias_estimate'
+    cf['desroziers_30']['shortname'] = 'desroziers_30'
+    cf['desroziers_60']['shortname'] = 'desroziers_60'
+    cf['desroziers_90']['shortname'] = 'desroziers_90'
+    cf['desroziers_180']['shortname'] = 'desroziers_180'
     return cf
 
 
@@ -1154,7 +1171,8 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             }
             if '0-20100-0' not in statid and '0-20200-0' not in statid:
                 gdict["era5fb"]=[]
-
+                gdict['advanced_uncertainty']=[]
+                gdict['advanced_homogenization']=[]
             with CDMDataset(filename=filename, groups=gdict) as data:
                 if debug: print('x',time.time()-tt)
                 data.read_write_request(filename_out=filename_out,
@@ -2224,6 +2242,7 @@ class CDMDataset:
         logger.debug('Writing: %s', filename_out)
         tt=time.time() - time0
         print(tt)
+        
         with h5py.File(filename_out, 'w') as fout:
             # todo future -> this could be replaced by a self.write_to_frontend_file(filename_out, )
             #
@@ -2280,6 +2299,42 @@ class CDMDataset:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
             
             #
+            # advanced_homogenization
+            # 
+            if 'advanced_homogenization' in self.groups:
+                print('advanced_homogenization in self.groups')
+                igroup = 'advanced_homogenization'
+                try:
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                              var_selection=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate'])
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                except KeyError as e:
+                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+
+            if 'advanced_homogenisation' in self.groups:
+                print('advanced_homogenization in self.groups')
+                igroup = 'advanced_homogenisation'
+                try:
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                              var_selection=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate'])
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                except KeyError as e:
+                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+                    
+            #
+            # advanced_uncertainty
+            # 
+            if 'advanced_uncertainty' in self.groups:
+                print('advanced_uncertainty in self.groups')
+                igroup = 'advanced_uncertainty'
+                try:
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                              var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                except KeyError as e:
+                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+                    
+            #
             # Header Information
             #
             if 'header_table' in self.groups:
@@ -2325,6 +2380,9 @@ class CDMDataset:
             for i in fout.keys():
                 if (i == 'obs' or i == 'trajectory' or 'string' in i):
                     fout.__delitem__(i)
+                if 'toolbox' in request.keys():
+                    if i in ['ta', 'hur']:
+                        fout.__delitem__(i)
                     
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
