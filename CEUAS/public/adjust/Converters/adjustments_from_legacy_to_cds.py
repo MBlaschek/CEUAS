@@ -1,6 +1,6 @@
 # Modul Laden
 import sys,os
-sys.path.append(os.getcwd()+'/CEUAS/CEUAS/public/cds-backend/code/')
+sys.path.append(os.getcwd()+'/../../cds-backend/code/')
 import cds_eua3 as eua
 import xarray as xr
 import numpy as np
@@ -10,6 +10,7 @@ import matplotlib.pylab as plt
 import glob
 from multiprocessing import Pool
 import time
+import h5py
 
 @njit
 def add_biasestimate(xyzv,xyzt,press,atime0,adj,adjpress):
@@ -39,10 +40,21 @@ def add_biasestimate(xyzv,xyzt,press,atime0,adj,adjpress):
 def add_adj(adjfile):
     
     statid=adjfile[-8:-3]
-    adjustments={'rase':os.path.expandvars(adjfile),'rise':os.path.expandvars('corrsave_rio24_'.join(adjfile.split('corrsave')))}
+    adjustments={'raobcore':os.path.expandvars(adjfile),
+                 'rich':os.path.expandvars('corrsave_rio24_'.join(adjfile.split('corrsave'))),
+                 'rase':os.path.expandvars('ERA5bc_RAOBCORE_v1.8_'.join(adjfile.split('feedbackglobbincorrsave'))),
+                 'rise':os.path.expandvars('ERA5bc_RAOBCORE_v1.8_'.join(adjfile.split('feedbackglobbincorrsave')))}
+    adjname={'raobcore':'rasocorr',
+                 'rich':'rasocorr',
+                 'rase':'bias',
+                 'rise':'richbias'}
     try:
         
-        ifile=glob.glob('/raid60/scratch/leo/scratch/converted_v5/*'+statid+'_CEUAS_merged_v1.nc')[0]
+        merged='feedbackmerged'.join(adjfile.split('feedbackglobbincorrsave'))
+        with h5py.File(merged) as f:
+            uid=f.attrs['unique_source_identifier'].decode()
+        #ifile=glob.glob('/raid60/scratch/leo/scratch/converted_v5/*'+statid+'_CEUAS_merged_v1.nc')[0]
+        ifile=glob.glob('/raid60/scratch/leo/scratch/converted_v5/'+uid+'_CEUAS_merged_v1.nc')[0]
         data = eua.CDMDataset(ifile)
         #idx=np.where(np.logical_and(data.observations_table.z_coordinate[:]==10000,data.observations_table.observed_variable[:]==85))
         #plt.plot(data.observations_table.date_time[:][idx],data.era5fb['biascorr@body'][:][idx])        
@@ -50,7 +62,7 @@ def add_adj(adjfile):
         #plt.plot(data.observations_table.date_time[:][idx],data.adjust['RISE_1.8_bias_estimate'][:][idx])        
         if 'advanced_homogenization' in data.groups: 
             print('already has bias estimate')
-            return
+            #return
     except Exception as e:
         print(e)
         return
@@ -71,10 +83,18 @@ def add_adj(adjfile):
         try:
             
             adjustments=xr.open_dataset(v,decode_times=False)
-            atime0=(adjustments.datum[0].values.astype(int)-1)*86400.
+            if adjustments.datum.ndim==2:
+                atime0=(adjustments.datum[0].values.astype(int)-1)*86400.
+            else:
+                atime0=(adjustments.datum.values.astype(int)-1)*86400.
+           
             
-            
-            adj=add_biasestimate(xyz.values,xyzt,xyz.z_coordinate.values,atime0,adjustments.rasocorr.values,adjustments.press.values*100)
+            mask=adjustments[adjname[k]].values==-999.
+            adjustments[adjname[k]].values[mask]=np.nan
+            tt=time.time()
+            adj=add_biasestimate(xyz.values,xyzt,xyz.z_coordinate.values,atime0,
+                                 adjustments[adjname[k]].values,adjustments.press.values*100)
+            print('add:',time.time()-tt)
             xyz.values=adj
             
             #idx=np.where(xyz.z_coordinate.values==50000)
@@ -86,10 +106,11 @@ def add_adj(adjfile):
             data.write_observed_data(k.upper()+'_1.8_bias_estimate',
                                      ragged=xyz,  # input data
                                      varnum=85,  # observed_variable to be aligned with
-                                     group='advanced_homogenization',   # name of the new group
+                                     group='advanced_homogenisation',   # name of the new group
                                      data_time='date_time',  # named datetime coordinate
                                      data_plevs='z_coordinate'  # named pressure coordinate
                                     )
+            print('write:',time.time()-tt)
         except Exception as e:
             print(v,e)
             
@@ -97,6 +118,8 @@ def add_adj(adjfile):
                         
 mfiles=glob.glob(os.path.expandvars('$FSCRATCH/rise/1.0/exp06/*/feedbackglobbincorrsave??????.nc'))
 
+#with h5py.File(os.path.expandvars('$FSCRATCH/rise/1.0/exp06/108087/feedbackmerged108087.nc')) as f:
+    #print(f.attrs.keys()
 P=Pool(20)
 tt=time.time()
 list(P.map(add_adj,mfiles))
