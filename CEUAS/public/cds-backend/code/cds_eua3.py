@@ -346,11 +346,12 @@ def andisin(mask, x, v):
 # daysx2 puts a time array into an array of shape days x 2, where days is the number of days since 19000101
 # and the second index is 0 for midnight (GMT+/- 3hrs) ascents and 1 for midday (GMT +/- 3hrs ascents).
 # ascents between 3 and 9 and 15 and 21 are discarded
+@njit(cache=True,boundscheck=True)
 def daysx2(time,pindex,nplev,obs):
     dsecs=86400
     tofday=time%dsecs
     dindex=time//dsecs
-    hindex=np.zeros(time.shape[0],dtype=np.int32)-1
+    hindex=dindex-dindex #np.zeros(time.shape[0],dtype=np.int32)-1
     tevening=np.where(tofday>=6*dsecs//8)
     tmorning=np.where(tofday<2*dsecs//8)
     tmidday=np.where(np.logical_and(tofday>=2*dsecs/8,tofday<6*dsecs/8))
@@ -360,15 +361,18 @@ def daysx2(time,pindex,nplev,obs):
     hindex[tmidday]=1
     hgood=np.where(hindex>-1)
     gdays=np.unique(dindex)
+    ghours=np.zeros((2,gdays.shape[0]),dtype=np.int32)
+    
     rdays=np.zeros(np.max(gdays)+1,dtype=np.int32)-1
     for i in range(gdays.shape[0]): # reverse index
         rdays[gdays[i]]=i
         
     cobs=np.full((2,nplev,gdays.shape[0]),np.nan,dtype=obs.dtype)
-    cobs[hindex[hgood],pindex[hgood],rdays[dindex[hgood]]]=obs[hgood]
+    for i in range(time.shape[0]):
+        ghours[hindex[i],rdays[dindex[i]]]=tofday[i]//3600
+        cobs[hindex[i],pindex[i],rdays[dindex[i]]]=obs[i]
     
-    
-    return cobs,hindex[hgood],pindex[hgood],rdays[dindex[hgood]],hgood,gdays
+    return cobs,hindex,pindex,rdays[dindex],hgood,gdays,ghours
     
 
 @njit(cache=True)
@@ -3232,6 +3236,8 @@ class CDMDataset:
             ldaysx2=False
             for ivar in variables:
                 # Read Attributes Variable
+                if ivar=='hours':
+                    continue
                 v_attrs = self.read_attributes(ivar)
                 # why no trange?
                 iobs, secarray, pressure = self.read_variable(ivar,
@@ -3242,9 +3248,13 @@ class CDMDataset:
                     cobs=np.full(cobs.shape,np.nan,dtype=iobs.dtype)
                     cobs[hindex,pindex,dindex]=iobs[hgood]
                 else:
-                    cobs,hindex,pindex,dindex,hgood,gdays=daysx2(secarray,
+                    #daysx2(secarray,
+                                                             #std_plevs_indices[pressure.astype(np.int32) // 100],
+                                                             #plevs.shape[0],iobs)
+                    cobs,hindex,pindex,dindex,hgood,gdays,ghours=daysx2(secarray,
                                                              std_plevs_indices[pressure.astype(np.int32) // 100],
                                                              plevs.shape[0],iobs)
+
                 #itime, iobs = table_to_3dcube(secarray,
                                             #std_plevs_indices[pressure.astype(np.int32) // 100],
                                             #iobs)
@@ -3252,11 +3262,13 @@ class CDMDataset:
                 # Convert to Xarray [time x plev]
                 data[ivar] = xr.DataArray(cobs,
                                           coords=(np.array((0,12)),plevs/100,gdays),
-                                          dims=('hours', 'press','datum'),
+                                          dims=('hour', 'press','datum'),
                                           name=ivar,
                                           attrs=v_attrs)
                 data[ivar]['datum'].attrs['units']='days since 1900-01-01 00:00:00'
                 data[ivar]['press'].attrs['units']='hPa'
+            
+            data['hours']=xr.DataArray(ghours,name='hours',dims=('hour','datum'),coords=(np.array((0,12)),gdays))
             data['lat']=xr.DataArray(np.asarray([self.lat[0]]),name='lat',dims=('station'))
             data['lon']=xr.DataArray(np.asarray([self.lon[0]]),name='lon',dims=('station'))
                 # data[ivar].data['time'].attrs.update(self.read_attributes(kwargs.get('date_time_name', 'time')))
