@@ -447,6 +447,7 @@ def read_standardnames(url: str = None) -> dict:
               'station_name', 
               'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate',
               'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
+              'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 'wind_direction_bias_estimate',
              ]
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
@@ -464,6 +465,7 @@ def read_standardnames(url: str = None) -> dict:
 #                  'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
 #                  'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
                  'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
+                 'advanced_homogenisation/u_component_of_wind_bias_estimate', 'advanced_homogenisation/v_component_of_wind_bias_estimate', 'advanced_homogenisation/wind_direction_bias_estimate', 
                 ]
     cf = {}
     for c, cdm in zip(snames, cdmnames):
@@ -543,6 +545,9 @@ def read_standardnames(url: str = None) -> dict:
     cf['desroziers_60']['shortname'] = 'desroziers_60'
     cf['desroziers_90']['shortname'] = 'desroziers_90'
     cf['desroziers_180']['shortname'] = 'desroziers_180'
+    cf['u_component_of_wind_bias_estimate'] = 'u_component_of_wind_bias_estimate'
+    cf['v_component_of_wind_bias_estimate'] = 'v_component_of_wind_bias_estimate'
+    cf['wind_direction_bias_estimate'] = 'wind_direction_bias_estimate'
     return cf
 
 
@@ -1173,6 +1178,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 gdict["era5fb"]=[]
                 gdict['advanced_uncertainty']=[]
                 gdict['advanced_homogenization']=[]
+                gdict['advanced_homogenisation']=[]
             with CDMDataset(filename=filename, groups=gdict) as data:
                 if debug: print('x',time.time()-tt)
                 data.read_write_request(filename_out=filename_out,
@@ -2299,7 +2305,7 @@ class CDMDataset:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
             
             #
-            # advanced_homogenization
+            # advanced_homogenisation
             # 
             if 'advanced_homogenization' in self.groups:
                 print('advanced_homogenization in self.groups')
@@ -2312,11 +2318,12 @@ class CDMDataset:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
 
             if 'advanced_homogenisation' in self.groups:
-                print('advanced_homogenization in self.groups')
+                print('advanced_homogenisation in self.groups')
                 igroup = 'advanced_homogenisation'
                 try:
                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-                              var_selection=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate'])
+                              var_selection=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate',
+                                             'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 'wind_direction_bias_estimate'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
