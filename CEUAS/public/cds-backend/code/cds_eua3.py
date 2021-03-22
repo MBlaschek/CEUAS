@@ -2383,6 +2383,9 @@ class CDMDataset:
                 if 'toolbox' in request.keys():
                     if i in ['ta', 'hur']:
                         fout.__delitem__(i)
+                        oldkey=request['optional'][0]
+                        fout[i]=fout[oldkey]
+                        fout.__delitem__(oldkey)
                     
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
