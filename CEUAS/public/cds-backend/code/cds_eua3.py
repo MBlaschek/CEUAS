@@ -445,7 +445,9 @@ def read_standardnames(url: str = None) -> dict:
               'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type',
               'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 
               'station_name', 
-              'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate',
+              'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate', 
+               'u_component_of_wind_bias_estimate','v_component_of_wind_bias_estimate',
+                 'wind_direction_bias_estimate',
               'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
              ]
 
@@ -459,9 +461,11 @@ def read_standardnames(url: str = None) -> dict:
                  'observations_table/secondary_value', 'observations_table/original_precision',
                  'observations_table/report_id', 'observations_table/reference_sensor_id',
                  'station_configuration/station_name',
-                 'advanced_homogenization/RISE_1.8_bias_estimate', 'advanced_homogenization/RICH_1.8_bias_estimate',
-                 'advanced_homogenization/RASE_1.8_bias_estimate', 'advanced_homogenization/RAOBCORE_1.8_bias_estimate',
-#                  'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
+                 'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
+                 'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
+                 'advanced_homogenisation/u_component_of_wind_bias_estimate',
+                 'advanced_homogenisation/v_component_of_wind_bias_estimate',
+                 'advanced_homogenisation/wind_direction_bias_estimate',#                  'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
 #                  'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
                  'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
                 ]
@@ -539,6 +543,9 @@ def read_standardnames(url: str = None) -> dict:
     cf['RICH_1.8_bias_estimate']['shortname'] = 'RICH_1.8_bias_estimate'
     cf['RASE_1.8_bias_estimate']['shortname'] = 'RASE_1.8_bias_estimate'
     cf['RAOBCORE_1.8_bias_estimate']['shortname'] = 'RAOBCORE_1.8_bias_estimate'
+    cf['u_component_of_wind_bias_estimate']['shortname'] = 'u_component_of_wind_bias_estimate'
+    cf['v_component_of_wind_bias_estimate']['shortname'] = 'v_component_of_wind_bias_estimate'
+    cf['wind_direction_bias_estimate']['shortname'] = 'wind_direction_bias_estimate'
     cf['desroziers_30']['shortname'] = 'desroziers_30'
     cf['desroziers_60']['shortname'] = 'desroziers_60'
     cf['desroziers_90']['shortname'] = 'desroziers_90'
@@ -810,7 +817,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
                                 print('x')
                             fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                             
-                except Exception as e:
+                except MemoryError as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
                     hilf = np.zeros(shape=(idx.shape[0]), dtype='S10')
@@ -1172,7 +1179,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             if '0-20100-0' not in statid and '0-20200-0' not in statid:
                 gdict["era5fb"]=[]
                 gdict['advanced_uncertainty']=[]
-                gdict['advanced_homogenization']=[]
+                gdict['advanced_homogenisation']=[]
             with CDMDataset(filename=filename, groups=gdict) as data:
                 if debug: print('x',time.time()-tt)
                 data.read_write_request(filename_out=filename_out,
@@ -1182,12 +1189,12 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 print(time.time()-tt)
                 print('')
 
-    except Exception as e:
-    #except Exception as e:
+    except MemoryError as e:
+    #except MemoryError as e:
         if debug:
             raise e
-        logger.error('Exception %s occurred while reading %s', repr(e), filename)
-        return '', 'Exception "{}" occurred while reading {}'.format(e, filename)
+        logger.error('MemoryError %s occurred while reading %s', repr(e), filename)
+        return '', 'MemoryError "{}" occurred while reading {}'.format(e, filename)
 
     return filename_out, msg
 
@@ -1583,7 +1590,7 @@ def cds_request_wrapper(request: dict, request_filename: str = None, cds_dataset
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except Exception as e:
+    except MemoryError as e:
         logger.error('CDSAPI Request failed %s', str(request))
         raise e
 
@@ -1648,7 +1655,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except Exception as e:
+    except MemoryError as e:
         logger.error('VM Request failed %s', str(request))
         raise e
 
@@ -1879,7 +1886,7 @@ class CDMDataset:
                         setattr(self, igroup, CDMVariable(self.file[igroup], igroup, shape=self.file[igroup].shape))
                     self[igroup].update(link=self.file[igroup])
 
-        except Exception as e:
+        except MemoryError as e:
             logger.debug(repr(e))
             self.close()
 
@@ -2215,6 +2222,11 @@ class CDMDataset:
         snames = ['platform_id', 'platform_name', 'observation_value', 'latitude',
                   'longitude', 'time', 'air_pressure', 'trajectory_label', 
                   'report_id', 'station_id']
+        varseldict={}
+        varseldict['temperature']=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate']
+        varseldict['wind_direction']=['wind_direction_bias_estimate']
+        varseldict['u_component_of_wind']=['u_component_of_wind_bias_estimate']
+        varseldict['v_component_of_wind']=['v_component_of_wind_bias_estimate']
         # added report_id -> in observations_table, not to be confused with report_id from header_table -> trajectory_label
         logger.debug('Request-keys: %s', str(request.keys()))
         snames.append(cdsname)  # Add requested variable
@@ -2301,25 +2313,26 @@ class CDMDataset:
             #
             # advanced_homogenization
             # 
-            if 'advanced_homogenization' in self.groups:
-                print('advanced_homogenization in self.groups')
+            if 'advanced_homogenization' in self.groups or 'advanced_homogenisation' in self.groups :
                 igroup = 'advanced_homogenization'
+                if 'advanced_homogenisation' in self.groups:
+                    igroup = 'advanced_homogenisation'
+                varsel=[]
                 try:
-                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-                              var_selection=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate'])
-                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                except KeyError as e:
-                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+                    for o in request['optional']:
+                        if o in varseldict[request['variable']]:
+                            varsel.append(o)
+                except:
+                    pass
+                        
+                if varsel:       
+                    try:
+                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                                  var_selection=varsel)
+                        logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    except KeyError as e:
+                        raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
 
-            if 'advanced_homogenisation' in self.groups:
-                print('advanced_homogenization in self.groups')
-                igroup = 'advanced_homogenisation'
-                try:
-                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-                              var_selection=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate'])
-                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                except KeyError as e:
-                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
                     
             #
             # advanced_uncertainty
@@ -3084,7 +3097,7 @@ class CDMDataset:
     def convert_to_raobcore(self, variable: str, filename: str = None, dates: list = None, plevs: list = None,
                             times=[0, 12], span=3, freq='12h', feedback: list = None, feedback_group: str = 'era5fb',
                             source: str = 'RAOBCORE/RICH v1.7.2 + solar elevation dependency (from 197901 onward)',
-                            title: str = 'Station daily temperature series with JRA55/CERA20C/ERApreSAT background departure statistics and RISE bias estimates',
+                            title: str = 'Station daily temperature series with ERA5/NOAA_20CR background departure statistics and RISE bias estimates',
                             attrs: dict = None,
                             global_attrs: dict = None,
                             **kwargs):
