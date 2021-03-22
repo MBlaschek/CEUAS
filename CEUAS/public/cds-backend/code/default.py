@@ -693,7 +693,9 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     #
     allowed_optionals = ['sonde_type', 'bias_estimate','obs_minus_an','obs_minus_bg', 'bias_estimate_method', 
                          'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate',
-                         'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180']
+                         'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
+                         'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 'wind_direction_bias_estimate',
+                        ]
     # bias_estimate_method : raobcore, rich, ...
     if optional is not None:
         if not isinstance(optional, list):
