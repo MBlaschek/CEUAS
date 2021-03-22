@@ -446,10 +446,9 @@ def read_standardnames(url: str = None) -> dict:
               'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 
               'station_name', 
               'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate', 
-               'u_component_of_wind_bias_estimate','v_component_of_wind_bias_estimate',
-                 'wind_direction_bias_estimate',
               'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
-              'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 'wind_direction_bias_estimate',
+              'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 
+              'wind_direction_bias_estimate',
              ]
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
@@ -462,14 +461,13 @@ def read_standardnames(url: str = None) -> dict:
                  'observations_table/secondary_value', 'observations_table/original_precision',
                  'observations_table/report_id', 'observations_table/reference_sensor_id',
                  'station_configuration/station_name',
-                 'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
-                 'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
-                 'advanced_homogenisation/u_component_of_wind_bias_estimate',
-                 'advanced_homogenisation/v_component_of_wind_bias_estimate',
-                 'advanced_homogenisation/wind_direction_bias_estimate',#                  'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
+                 'advanced_homogenization/RISE_1.8_bias_estimate', 'advanced_homogenization/RICH_1.8_bias_estimate',
+                 'advanced_homogenization/RASE_1.8_bias_estimate', 'advanced_homogenization/RAOBCORE_1.8_bias_estimate',
+#                  'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
 #                  'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
                  'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
-                 'advanced_homogenisation/u_component_of_wind_bias_estimate', 'advanced_homogenisation/v_component_of_wind_bias_estimate', 'advanced_homogenisation/wind_direction_bias_estimate', 
+                 'advanced_homogenisation/u_component_of_wind_bias_estimate', 'advanced_homogenisation/v_component_of_wind_bias_estimate', 
+                 'advanced_homogenisation/wind_direction_bias_estimate', 
                 ]
     cf = {}
     for c, cdm in zip(snames, cdmnames):
@@ -552,9 +550,6 @@ def read_standardnames(url: str = None) -> dict:
     cf['desroziers_60']['shortname'] = 'desroziers_60'
     cf['desroziers_90']['shortname'] = 'desroziers_90'
     cf['desroziers_180']['shortname'] = 'desroziers_180'
-    cf['u_component_of_wind_bias_estimate'] = 'u_component_of_wind_bias_estimate'
-    cf['v_component_of_wind_bias_estimate'] = 'v_component_of_wind_bias_estimate'
-    cf['wind_direction_bias_estimate'] = 'wind_direction_bias_estimate'
     return cf
 
 
@@ -1185,6 +1180,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 gdict["era5fb"]=[]
                 gdict['advanced_uncertainty']=[]
                 gdict['advanced_homogenisation']=[]
+                gdict['advanced_homogenization']=[]
             with CDMDataset(filename=filename, groups=gdict) as data:
                 if debug: print('x',time.time()-tt)
                 data.read_write_request(filename_out=filename_out,
@@ -2399,7 +2395,7 @@ class CDMDataset:
                 if (i == 'obs' or i == 'trajectory' or 'string' in i):
                     fout.__delitem__(i)
                 if 'toolbox' in request.keys():
-                    if i in ['ta', 'hur']:
+                    if i in ['ta', 'hur', 'ua', 'va', 'wind_from_direction']:
                         fout.__delitem__(i)
                         oldkey=request['optional'][0]
                         fout[i]=fout[oldkey]
