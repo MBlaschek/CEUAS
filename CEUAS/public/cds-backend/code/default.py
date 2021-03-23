@@ -715,14 +715,15 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     if toolbox is not None:
         if not toolbox == 'True':
             raise KeyError("Invalid type selected at toolbox - only string 'True' is valid: " + toolbox)
+        try: 
+            d['optional']
+        except:
+            pass
         else:
-            if d['optional'] is not None:
-                d['toolbox'] = True
-            elif len(d['optional']) > 1:
-                raise KeyError("toolbox 'True' is only valid if only one 'optional' is given.")
-            else:
-                raise KeyError("toolbox 'True' is only valid if valid 'optional' is given.")
-                
+            if len(d['optional']) > 1:
+                raise KeyError("toolbox 'True' is only valid if only one 'optional' is given.")  
+        d['toolbox'] = True
+
     #
     # gridded [lower left upper right]
     #
