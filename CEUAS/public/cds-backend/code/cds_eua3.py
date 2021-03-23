@@ -3079,7 +3079,7 @@ class CDMDataset:
                                             nplev=plevs.size)
                 logger.info('[CUBE] %s %s', ivarnum['variable'], iobs.shape)
                 v_attrs = get_attributes(cdmcode=ivarnum['varnum'],
-                                         feedback=ivarnum['variable'] if feedback is not None else None)
+                                         feedback=ivarnum['variable'] if ivarnum['variable'] != 'observation_value' else None)
                 if len(v_attrs) > 0:
                     v_attrs = v_attrs[list(v_attrs.keys())[0]]
                 # Convert to Xarray [time x plev]

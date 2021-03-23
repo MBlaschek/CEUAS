@@ -9,13 +9,13 @@
 # https://apps.ecmwf.int/datasets/licences/copernicus/
 # email michael.blaschek (at) univie.ac.at
 # Created: Vienna, 26 August, 2019
-# Last Modifed: 15 August, 2020
-# Version: 0.1
+# Last Modifed:  9 March, 2021
+# Version: 0.2
 # -----------------------------------------------------------------------------
-__version__ = '0.1'
+__version__ = '0.2'
 __author__ = 'MB'
 __status__ = 'dev'
-__date__ = 'Di 11 Aug 2020 20:27:45 CEST'
+__date__ = 'Di 09 Mär 2021 16:18:08 CET'
 __institute__ = 'UNIVIE'
 __github__ = 'git@github.com:MBlaschek/CEUAS.git'
 __doc__ = """
@@ -31,8 +31,10 @@ import sys
 import warnings
 
 import numpy as np
+from numpy.core.fromnumeric import var
 import pandas as pd
 import xarray as xr
+from xarray.core import dataarray
 from numba import njit
 
 try:
@@ -73,48 +75,6 @@ std_plevs = np.asarray([10, 20, 30, 50, 70, 100, 150, 200, 250, 300, 400, 500, 7
 # Helper functions
 #
 # -----------------------------------------------------------------------------
-
-def now(timespec='auto'):
-    """ Datetime string
-    Returns:
-        str : datetime now
-    """
-    import datetime
-    return datetime.datetime.now().isoformat(timespec=timespec)
-
-
-def _print_string(*args, mname=None, adddate=False, **kwargs):
-    text = " ".join([str(i) for i in args])
-    if mname is not None:
-        text = "[{}] {}".format(mname, text)
-    if adddate:
-        text = "[" + now() + "] " + text
-    return text
-
-
-def message(*args, verbose=0, level=0, logfile=None, **kwargs):
-    """ Message function
-    Args:
-        *args:  text to be printed
-        verbose (int): level of verbosness
-        level (int): level of visibility (verbose > level: printed)
-        logfile (str): logfile
-        **kwargs:
-    Returns:
-        str : message
-    """
-    if logfile is not None:
-        # with open(kwargs['filename'], 'a' if not kwargs.get('force', False) else 'w') as f:
-        with open(logfile, 'a') as f:
-            f.write(_print_string(*args, **kwargs) + "\n")
-
-    elif verbose > level:
-        text = _print_string(*args, **kwargs)
-        print(text)
-    else:
-        pass
-
-
 def update_kw(name, value, **kwargs):
     """ Update keyword dictionary on the fly
     """
@@ -252,7 +212,7 @@ def table_to_dataset(data, dim='time', plev='plev', levels=None, **kwargs):
     #
     # select only valid levels
     #
-    message("Selecting only standard pressure levels", **kwargs)
+    logger.info("Selecting only standard pressure levels")
     data = data[data[plev].isin(levels)]
     #
     # convert to xarray
@@ -297,7 +257,7 @@ def fix_datetime(itime, span=6, debug=False):
         # 18 >= 18 or 18 < 6  > 00
         # 0 >= 18 or 0 < 6    > 00
         if debug:
-            print("%d [%d] %d >= %d < %d" % (ihour, span, lower, itime.hour, upper))
+            logger.debug("%d [%d] %d >= %d < %d" % (ihour, span, lower, itime.hour, upper))
 
         if (ihour - span) < 0:
             if itime.hour >= lower or itime.hour < upper:
@@ -366,7 +326,7 @@ def detector(data, axis=0, dist=365, thres=50, min_levels=3, use_slopes=False, u
 
     if len(imax) > 0:
         imax = np.asarray(imax)
-        message("Breaks: " + str(imax), **kwargs)
+        logger.info("Breaks: " + str(imax))
         for i in imax:
             breaks[idx2shp(i, axis, data.shape)] += 2  # maximum Breakpoint
 
@@ -550,10 +510,10 @@ def get_breakpoints(data, value=2, dim='time', return_startstop=False, startstop
         s += [k + m]
 
     if len(i) > 0:
-        message("Breakpoints for ", data.name, **kwargs)
-        message("[%8s] [%8s] [%8s] [%8s] [ #]" % ('idx', 'end', 'peak', 'start'), **kwargs)
+        logger.debug("Breakpoints for %s" % data.name)
+        logger.debug("[%8s] [%8s] [%8s] [%8s] [ #]" % ('idx', 'end', 'peak', 'start'))
         for j, k, l in zip(i, s, e):
-            message("[%8s] %s %s %s %4d" % (j, dates[l], dates[j], dates[k], k - l), **kwargs)
+            logger.debug("[%8s] %s %s %s %4d" % (j, dates[l], dates[j], dates[k], k - l))
 
     if return_startstop:
         return i, e, s
@@ -600,7 +560,7 @@ def adjustments(data, breaks, use_mean=True, axis=0, sample_size=130, borders=30
         sample_size = sample_size // nq
         if sample_size < 3:
             sample_size = 3
-        message('Sample size:', sample_size, 'N-Q:', nq, **kwargs)
+        logger.debug('Sample size:', sample_size, 'N-Q:', nq)
 
     dshape = data.shape  # Shape of data (date x levs)
     imax = dshape[axis]  # maximum index
@@ -847,6 +807,7 @@ def apply_percentile_adjustments(data, percentiles, adjustment, axis=0, noise=Fa
 
 
 def write_adjustments(iofile, stest, breaks, adj_depar, variable, interpolate_missing=False):
+    # todo add group where to write to
     if variable is not None:
         # SNHT Test statistics
         iofile.write_observed_data(stest.name,
@@ -890,69 +851,40 @@ def write_adjustments(iofile, stest, breaks, adj_depar, variable, interpolate_mi
                               extrapolate_plevs=interpolate_missing)
 
 # -----------------------------------------------------------------------------
-# -----------------------------------------------------------------------------
-# -----------------------------------------------------------------------------
-
-
-def _cmd_arguments(args, longs):
-    add = longs[:]  # copy
-    names = []
-    for i, iarg in enumerate(args):
-        if iarg[0] == '-':
-            if iarg[1] == '-':
-                if iarg[2:] not in longs:
-                    if len(args) > i + 1:
-                        jarg = args[i + 1]
-                        if jarg[0] != '-':
-                            add.append(iarg[2:] + '=')
-                        else:
-                            add.append(iarg[2:])
-                    else:
-                        add.append(iarg[2:])
-                    names.append(iarg[2:])
-
-    return add, names
-
-
-# -----------------------------------------------------------------------------
 #
 # Main function that does all the steps in adjusting
 #
 # -----------------------------------------------------------------------------
 
-def adjustment_procedure(obs: xr.DataArray, depar: xr.DataArray, dim: str = 'time', plev: str = 'plev',
+def adjustment_procedure(data: xr.Dataset, dim: str = 'time', plev: str = 'plev', obs_name: str = 'obs', dep_name:str = 'dep',
                          metadata: bool = False, times: list = [0, 12], span: int = 3, freq: str = '12h',
-                         return_dataset: bool = False, mean_adjustments:bool = True, quantile_adjustments:bool=False,
-                         **kwargs):
-    """
+                         mean_adjustments:bool = True, quantile_adjustments:bool=False,
+                         **kwargs) -> xr.Dataset:
+    """Main function for RASO_ADJ_CDM_v0
+    This function executes the homogenization routines and deals with input and output
 
     Args:
-        obs:
-        depar:
-        dim:
-        plev:
-        metadata:
-        times:
-        span:
-        freq:
-        return_dataset:
-        mean_adjustments:
-        quantile_adjustments:
-        **kwargs:
+        data (xr.Dataset): [description]
+        dim (str, optional): [description]. Defaults to 'time'.
+        plev (str, optional): [description]. Defaults to 'plev'.
+        obs_name (str, optional): [description]. Defaults to 'obs'.
+        dep_name (str, optional): [description]. Defaults to 'dep'.
+        metadata (bool, optional): [description]. Defaults to False.
+        times (list, optional): [description]. Defaults to [0, 12].
+        span (int, optional): [description]. Defaults to 3.
+        freq (str, optional): [description]. Defaults to '12h'.
+        mean_adjustments (bool, optional): [description]. Defaults to True.
+        quantile_adjustments (bool, optional): [description]. Defaults to False.
+
+    Raises:
+        ValueError: [description]
+        ValueError: [description]
+        ValueError: [description]
+        RuntimeError: [description]
 
     Returns:
-
+        xr.Dataset: [description]
     """
-    # Main function for RASO_ADJ_CDM_v0
-    # This function executes the homogenization routines and deals with input and output
-    #
-    # Args:
-    #     ifile (str): Filename or string pattern, e.g.: example_data/*[!_out].nc
-    #     ofile (str): Output filename or None to use default output naming: [ifile]_out.nc
-    #     ta_feature_enabled (bool): experimental flag for temperature adjustments
-    #     interpolate_missing (bool): interpolate adjustments to non standard times and pressure levels from the input file?
-    #     return_cube (bool): return data cube [hour x time x plev], that is used during the adjustment process
-    #     metadata (bool): experimental flag, should point to the metadata for breakpoint identification
     #     thres (int): Threshold value for SNHT, default: 50
     #     window (int): Moving Window for SNHT, default: 1470 (in days, 4 years)
     #     missing (int): Maximum allowed missing values in window, default: 600 (in days)
@@ -961,43 +893,39 @@ def adjustment_procedure(obs: xr.DataArray, depar: xr.DataArray, dim: str = 'tim
     #     sample_size (int): Minimum sample size for statistics, default: 130 (in days)
     #     borders (int): Breakpoint zone, default: 90 (in days)
     #     ratio (int): Use ratio instead of differences, default: 0 (not)
-    #     logfile (str): Write messages to a log file
-    #     donotwrite(bool): Returns xarray Dataset
-    #
-    # Returns:
-    #     xr.DataArray : adjusted values
 
-    if not isinstance(obs, xr.DataArray):
-        raise ValueError('Requires a xarray DataArray, not', type(obs))
-
-    if not isinstance(depar, xr.DataArray):
-        raise ValueError('Requires a xarray DataArray, not', type(depar))
-
-    # todo check coordinates of obs and depar (need to be the same)
-    assert obs.shape == depar.shape, 'Observation Array and Departures Array do not match in shape?'
+    # data [time x plev]  - > [hour x time x plev] at [times]
+    if not isinstance(data, xr.Dataset):
+        raise ValueError('Requires a xarray DataArray, not', type(data))
+    if obs_name not in data.variables:
+        raise ValueError('Required observation variable not present: ', obs_name)
+    if dep_name not in data.variables:
+        raise ValueError('Required departure variable not present: ', dep_name)
+    bkptime = data[dim].copy()
     #
     # e.g. 00Z (21Z -1 day to 3Z same day)
     # standard_time
     #
-    obs = eua.align_datetime(obs, times=times, span=span, freq=freq, dim=dim, plev=plev)
+    data[obs_name] = eua.align_datetime(data[obs_name], times=times, span=span, freq=freq, dim=dim, plev=plev)
     icoord = 'standard_%s' % dim
-    standard_index = np.where(obs[icoord + '_flag'].values == 1)[0]  # Standard datetime +  selection + times
-    # orig_datetime = obs[dim].copy()
-    obs = obs.assign_coords({dim: obs[icoord]})
-    del obs[icoord]
-    del obs[icoord + '_flag']
+    standard_index = np.where(data[obs_name][icoord + '_flag'].values == 1)[0]
+    # create a backup copy of the index/datetime/obs -> restore
+    # overwrite dim with standard_dim
+    data = data.assign_coords({dim: data[obs_name][icoord]})
+    del data[icoord]
+    del data[icoord + '_flag']
     # Check if result will be sorted
     reverse_sort = False
-    if not obs.isel(**{dim: standard_index})[dim].to_index().is_monotonic:
+    if not data.isel(**{dim: standard_index})[dim].to_index().is_monotonic:
         logger.warning('Datetime index is not monotonic %s', dim)
-        idx = np.argsort(obs.isel(**{dim: standard_index})[dim].values)
-        standard_index = standard_index[idx]
+        #idx = np.argsort(obs.isel(**{dim: standard_index})[dim].values)
+        #standard_index = standard_index[idx]
         reverse_sort = True
     #
-    # Convert to day-night Cube
+    # Convert to day-night Cube / drop duplicates by selection standard_index
     #
-    xobs = eua.stack_cube_by_hour(obs.isel(**{dim: standard_index}), dim=dim, times=times)
-    xdepar = eua.stack_cube_by_hour(depar.isel(**{dim: standard_index}), dim=dim, times=times)
+    # adds a stacking coordinate to unstack later
+    data = eua.stack_cube_by_hour(data.isel(**{dim: standard_index}), dim=dim, times=times)
     #
     # Some Variables for Breakpoint detection
     #
@@ -1009,26 +937,26 @@ def adjustment_procedure(obs: xr.DataArray, depar: xr.DataArray, dim: str = 'tim
     #
     #
     #
-    axis = xobs.dims.index(dim)
-    name = xobs.name
-    sname = xobs.attrs.get('standard_name', name)
+    axis = data[dep_name].dims.index(dim)
+    name = data[obs_name].name
+    sname = data[obs_name].attrs.get('standard_name', name)
     #
     # 3. SNHT
     #
-    stest = np.apply_along_axis(test, axis, xdepar.values, window, missing)
+    data['test'] = (data[dep_name].dims , np.apply_along_axis(test, axis, data[dep_name].values, window, missing))
+    logger.info("Updated axis")
     #
     # Attributes
     #
-    stest = xr.full_like(xdepar, stest, dtype=stest.dtype)
-    stest.name = '{}_snht'.format(name)
-    logger.info("SNHT from %s [%s]", xdepar.name, stest.name)
+    data['test'].name = '{}_snht'.format(name)
+    logger.info("SNHT from %s [%s]", data[dep_name].name, data['test'].name)
     #
     # Day-Night Departures
     #
-    stest += np.apply_along_axis(test, axis,
-                                 xobs.sel(hour=12).values - xobs.sel(hour=0),
+    data['test'] += np.apply_along_axis(test, axis - 1,
+                                 data[obs_name].sel(hour=12).values - data[obs_name].sel(hour=0),
                                  window, missing)
-    stest.attrs.update({'units': '1', 'window': window,
+    data['test'].attrs.update({'units': '1', 'window': window,
                         'missing': missing, 'standard_name': '{}_snht'.format(sname),
                         'day-night': 'added'})
     #
@@ -1043,18 +971,19 @@ def adjustment_procedure(obs: xr.DataArray, depar: xr.DataArray, dim: str = 'tim
     #
     # 4. Detect Breakpoints
     #
-    breaks = xr.full_like(xobs, 0, dtype=np.int)
-    breaks.name = '{}_breaks'.format(stest.name)
+    breaks = xr.full_like(data[obs_name], 0, dtype=np.int)
+    breaks.name = '{}_breaks'.format(data['test'].name)
     breaks.attrs.update({'units': '1', 'dist': dist, 'thres': thres,
                          'min_levels': min_levels, 'standard_name': '{}_breaks'.format(sname)})
-    attrs = xobs.attrs.copy()
+    attrs = data[obs_name].attrs.copy()
     attrs.update({'sample_size': kwargs.get('sample_size', 130),
                   'borders': kwargs.get('borders', 90),
                   'ratio': kwargs.get('ratio', 0)})
     for i, ihour in enumerate(times):
-        breaks[i, ::] = detector(xobs.values[i, ::], axis - 1, dist=dist, thres=thres, min_levels=min_levels,
-                                 **kwargs)
+        breaks[i, ::] = detector(data['test'].values[i, ::], axis - 1, dist=dist, thres=thres, min_levels=min_levels)
         logger.info("Breakpoints detected %d/%d : %s", i, ihour, breaks.name)
+    
+    data['breakpoints'] = breaks
     #
     # 5. Adjust Breakpoints
     #
@@ -1062,94 +991,97 @@ def adjustment_procedure(obs: xr.DataArray, depar: xr.DataArray, dim: str = 'tim
         #
         # Temperature -> MEAN
         #
-        adj_depar = xr.full_like(xdepar, 0)
-        adj_depar.name = '{}_m'.format(name)
+        data['adjustments'] = xr.full_like(data[dep_name], 0)
+        data['adjustments'].name = '{}_m'.format(name)
         for i in range(len(times)):
             ibreaks = get_breakpoints(breaks[i, ::], **kwargs)
             logger.info("Breakpoints: %d", len(ibreaks))
             #
-            adjv = adjustments(xdepar[i, ::].values, ibreaks,
+            adjv = adjustments(data[dep_name][i, ::].values, ibreaks,
                                axis=axis - 1,
                                **kwargs)
             # check limits [0 - 1]
             # obs + obs-an-adj - obs-an
-            vadj = (xobs[i, ::].values + adjv - xdepar[i, ::].values)
-            adjv = np.where((vadj < 0) | (vadj > 1), xdepar[i, ::].values, adjv)
+            vadj = (data[obs_name][i, ::].values + adjv - data[dep_name][i, ::].values)
+            adjv = np.where((vadj < 0) | (vadj > 1), data[dep_name][i, ::].values, adjv)
             # new = obs-an-adj + obs - (obs-an)
-            adj_depar[i, ::] = (adjv - xdepar[i, ::].values)
-        adj_depar.attrs.update(attrs)
-        adj_depar.attrs['standard_name'] += '_adjustments'
-        adj_depar.attrs['biascor'] = 'mean'
+            data['adjustments'][i, ::] = (adjv - data[dep_name][i, ::].values)
+        data['adjustments'].attrs.update(attrs)
+        data['adjustments'].attrs['standard_name'] += '_adjustments'
+        data['adjustments'].attrs['biascor'] = 'mean'
 
     elif quantile_adjustments:
         #
         # Relative Humidity -> QUANTILE
         #
-        adj_depar = xr.full_like(xdepar, 0)
-        adj_depar.name = '{}_m'.format(name)
+        data['adjustments'] = xr.full_like(data[dep_name], 0)
+        data['adjustments'].name = '{}_m'.format(name)
         for i in range(len(times)):
             breaks = get_breakpoints(breaks[i, ::], **kwargs)
             logger.info("Breakpoints: %d", len(breaks))
             #
-            adjv = adjustments(xdepar[i, ::].values, breaks,
+            adjv = adjustments(data[dep_name][i, ::].values, breaks,
                                 use_mean=False,
                                 axis=axis - 1,
                                 **kwargs)
             # check limits [0 - 1]
             # obs + obs-an-adj - obs-an
-            vadj = (xobs[i, ::].values + adjv - xdepar[i, ::].values)
-            adjv = np.where((vadj < 0) | (vadj > 1), xdepar[i, ::].values, adjv)
+            vadj = (data[obs_name][i, ::].values + adjv - data[dep_name][i, ::].values)
+            adjv = np.where((vadj < 0) | (vadj > 1), data[dep_name][i, ::].values, adjv)
             # new = obs-an-adj - (obs-an)
-            adj_depar[i, ::] = (adjv - xdepar[i, ::].values)
-        adj_depar.attrs.update(attrs)
-        adj_depar.attrs['standard_name'] += '_adjustments'
-        adj_depar.attrs['biascor'] = 'quantile'
+            data['adjustments'][i, ::] = (adjv - data[dep_name][i, ::].values)
+        data['adjustments'].attrs.update(attrs)
+        data['adjustments'].attrs['standard_name'] += '_adjustments'
+        data['adjustments'].attrs['biascor'] = 'quantile'
     else:
         raise RuntimeError('Either mean_adjustment or quantile_adjustment needs to be set')
     #
     # Convert back to time x plevs
     #
-    xadj_depar = eua.unstack_cube_by_hour(adj_depar, dim=dim)
+    # tracer = eua.unstack_cube_by_hour(data['tracer'], dim=dim)
+    # tracer = (tracer.values == 0).any(dim=plev)
+    data = eua.unstack_cube_by_hour(data, dim=dim)
     # fill back (to the original input data)
     if reverse_sort:
-        idx = idx.sort()
-        standard_index = standard_index[idx]  # undo sorting
+        # idx = idx.sort()
+        # standard_index = standard_index[idx]  # undo sorting
+        logger.warning("Reverse sorting?")
 
-    adj_depar = xr.full_like(xdepar, 0)
-    adj_depar[:] = xadj_depar
-    # use _flag for
-    #
-    # Return results
-    #
-    if return_dataset:
-        return xr.Dataset([obs, depar, stest, breaks, adj_depar])
-    return obs, depar, stest, breaks, adj_depar
+    data = data.assign_coords({dim : bkptime[standard_index]})
+    data = data.reindex({dim: bkptime})
+    # Make sure we fill it up
+    data['adjustments'] = data['adjustments'].fillna(0)
+    data['test'] = data['test'].fillna(0)
+    data['breakpoints'] = data['breakpoints'].fillna(0).astype(int)
+    return data
 
 
 def adjustment_procedure_wind(obs_ws, obs_wd, dep_ws, dep_wd, dim:str='time', plev: str = 'plev',
                          metadata: bool = False, times: list = [0, 12], span: int = 3, freq: str = '12h',
                          return_dataset: bool = False, mean_adjustments:bool = True, quantile_adjustments:bool=False,
                          **kwargs):
-    """
+    """[summary]
 
     Args:
-        obs_ws:
-        obs_wd:
-        dep_ws:
-        dep_wd:
-        dim:
-        plev:
-        metadata:
-        times:
-        span:
-        freq:
-        return_dataset:
-        mean_adjustments:
-        quantile_adjustments:
-        **kwargs:
+        obs_ws ([type]): [description]
+        obs_wd ([type]): [description]
+        dep_ws ([type]): [description]
+        dep_wd ([type]): [description]
+        dim (str, optional): [description]. Defaults to 'time'.
+        plev (str, optional): [description]. Defaults to 'plev'.
+        metadata (bool, optional): [description]. Defaults to False.
+        times (list, optional): [description]. Defaults to [0, 12].
+        span (int, optional): [description]. Defaults to 3.
+        freq (str, optional): [description]. Defaults to '12h'.
+        return_dataset (bool, optional): [description]. Defaults to False.
+        mean_adjustments (bool, optional): [description]. Defaults to True.
+        quantile_adjustments (bool, optional): [description]. Defaults to False.
 
-    Returns:
-
+    Raises:
+        ValueError: [description]
+        ValueError: [description]
+        ValueError: [description]
+        ValueError: [description]
     """
     if not isinstance(obs_ws, xr.DataArray):
         raise ValueError('Requires a xarray DataArray, not', type(obs_ws))
@@ -1246,38 +1178,169 @@ def adjustment_procedure_wind(obs_ws, obs_wd, dep_ws, dep_wd, dim:str='time', pl
                         'missing': missing, 'standard_name': '{}_snht'.format(sname),
                         'day-night': 'added'})
 
+def run_frontend_file(args, **kwargs):
+    # Check if multiple files are given?
+    if '*' in args.frontend:
+        args.frontend = glob.glob(args.frontend)
+    elif ',' in args.frontend:
+        args.frontend = args.frontend.split(',')
+    else:
+        pass
 
-__doc__ = """
-Run standardized radiosonde homogenisation software on CDM compliant file
+    if not isinstance(args.frontend, list):
+        args.frontend = [args.frontend]
 
-{} -h -f [file] -o [name] 
+    for i in args.frontend:
+        assert os.path.isfile(i), i
+        logger.info(i)
 
-Options:
-    -h              Help
-    --help      
-    -f []           Input CDM compliant file
-    --file []       
-    -o []           Output name
-    --output []
+    if args.feedback is None:
+        args.feedback = 'obs_minus_an'
+
+    if args.temperature or args.humidity:
+        iofile = eua.CDMDataset(args.frontend)
+        #
+        # Temperature or Humdity adjustment
+        #
+        variable = 'ta' if args.temperature else 'hur'
+        # 
+        data = iofile.read_data_to_cube([variable, args.feedback],
+                                        dates=args.dates,
+                                        plevs=args.plevs)
+        # should contain variables
+        # e.g. temperature, temperature_an_depar
+        variable, depar = list(data.keys()) 
+        _, _, stest, breaks, adj_depar = adjustment_procedure(data[variable],
+                                                              data[depar],
+                                                              metadata=False,
+                                                              times=[0, 12],
+                                                              dim='time',
+                                                              plev='plev',
+                                                              return_dataset=False)
+        #
+        # Write back adjusted (interpolation, extrapolation)
+        #
+        write_adjustments(iofile, stest, breaks, adj_depar, None,
+                            interpolate_missing=args.interpolate_missing)
+    else:
+        #
+        # Wind speed and wind direction adjustment
+        #
+        assert len(args.frontend) == 2, 'Inputfiles: wind_direction and wind_speed are required'
+        filepool = {}
+        for i in args.frontend:
+            tmp = eua.CDMDataset(i)
+            if 'wind_from_direction' in tmp.groups:
+                variable = 'wind_from_direction'
+                wd_data = tmp.read_data_to_cube(variable,
+                                                dates=args.dates,
+                                                plevs=args.plevs)[variable]
+                wd_departures = tmp.read_data_to_cube(variable,
+                                                        dates=args.dates,
+                                                        plevs=args.plevs,
+                                                        feedback=args.feedback)[variable]
+                filepool[variable] = tmp
+            else:
+                variable = 'wind_speed'
+                ws_data = tmp.read_data_to_cube(variable,
+                                                dates=args.dates,
+                                                plevs=args.plevs)[variable]
+                ws_departures = tmp.read_data_to_cube(variable,
+                                                        dates=args.dates,
+                                                        plevs=args.plevs,
+                                                        feedback=args.feedback)[variable]
+                filepool[variable] = tmp
+        #
+        _, _, stest, breaks, adj_depar_wd, adj_depar_ws = adjustment_procedure_wind()
+        # wind direction
+        write_adjustments(filepool['wind_from_direction'], stest, breaks, adj_depar_wd, None,
+                            interpolate_missing=interpolate_missing)
+        # wind speed
+        write_adjustments(filepool['wind_speed'], stest, breaks, adj_depar_ws, None,
+                            interpolate_missing=interpolate_missing)
+
+
+def run_backend_file(args):
+    # only one file
+    iofile = eua.CDMDataset(args.backend)
+
+    if not iofile.hasgroups:
+        raise IOError("not a CDM backend file")
     
-Optional Keyword Options:
-    --thres []          Threshold value for SNHT, default: 50
-    --window []         Moving Window for SNHT, default: 1470 (in days, 4 years)
-    --missing []        Maximum allowed missing values in window, default: 600 (in days)
-    --min_levels []     Minimum required levels for significant breakpoint, default: 3
-    --dist []           Minimum distance between breakpoints, default: 730 (in days, 2 years)
-    --sample_size []    Minimum sample size for statistics, default: 130 (in days)
-    --borders []        Breakpoint zone, default: 90 (in days)
-    --ratio []          Use ratio instead of differences, default: 0 (not)
-
-    --logfile []        Write messages to a log file
-
-Experimental Keyword Options:
-    --donotwrite          Returns xarray Dataset
-    --enable_ta_feature   Apply Temperature adjustments
-    --interpolate_missing Interpolate Adjustments to non-standard times and pressure levels
+    if not args.feedback:
+        args.feedback = 'an_depar@body'
+        args.feedback_group = 'era5fb'
     
-    """.format(__file__.split('/')[-1])
+    if args.feedback_group not in iofile.groups:
+        raise ValueError('Feedback Group', args.feedback_group, 'not found')
+    
+    if not args.feedback in iofile[args.feedback_group].keys():
+        raise ValueError('Feedback ',args.feedback,' not in Feedback Group ',args.feedback_group)
+    
+    if args.outdir is not None:
+        args.outdir = "{}/{}".format(args.outdir, os.path.basename(args.backend))
+
+    iofile.reopen(write_to_filename=args.outdir, mode='r+')
+    if args.temperature:
+        # Code: 85
+        variable = 'temperature'
+        data = iofile.read_data_to_cube(variable,
+                                        dates=args.dates,
+                                        plevs=args.plevs,
+                                        feedback=args.feedback,
+                                        feedback_group=args.feedback_group,
+                                        **kwargs)
+        
+        #
+        # Write back adjusted (interpolation, extrapolation)
+        #
+
+    if args.humidity:
+        # Code 38, relative humidity, 
+        variable = 'relative_humidity'
+        # Code 34, dew point departure
+        # variable = 'dew_point_departure'
+        data = iofile.read_data_to_cube(variable,
+                                        dates=args.dates,
+                                        plevs=args.plevs,
+                                        feedback=args.feedback,
+                                        feedback_group=args.feedback_group,
+                                        **kwargs)
+        # should contain variables
+        # e.g. temperature, temperature_an_depar
+        variable, depar = list(data.keys())
+        data = xr.Dataset(data)
+        # run adjustment procedure
+        data = adjustment_procedure(data,
+                                    obs_name=variable,
+                                    dep_name=depar,
+                                    metadata=False,
+                                    times=[0, 12],
+                                    dim='time',
+                                    plev='plev',
+                                    return_dataset=False,
+                                    )
+        # TODO Convert adjustments to other variables?
+        #
+        #
+        # Write back adjusted (interpolation, extrapolation)
+        #
+        iofile.write_observed_data('humidity_bias_estimate',
+                                   varnum=eua.cdm_codes[variable],
+                                   cube=data['adjustments'],
+                                   group='advanced_homogenisation',
+                                   interpolate=args.interpolate_missing,
+                                   interpolate_datetime=args.interpolate_missing,
+                                   extrapolate_plevs=args.interpolate_missing)
+        
+    if args.winds:
+        # Code 106 (wind_direction), 107 (wind_speed)
+        variable = 'wind_direction'
+        #
+        # Write back adjusted (interpolation, extrapolation)
+        #
+        variable = 'wind_speed'
+
 
 # -----------------------------------------------------------------------------
 #
@@ -1288,220 +1351,106 @@ Experimental Keyword Options:
 
 if __name__ == "__main__":
     import sys
-    import getopt
+    import argparse
     import glob
 
     # handle arguments
     kwargs = {'verbose': 1}
-    known = ["help", "backend", "frontend", "outdir", "temperature", "humidity", "winds", "dates", "plevs", "feedback", "fbgroup"]
-    ifile = None
-    odir = None
-    dates = None
-    plevs = None
-    feedback = None
-    feedback_group = 'era5fb'
-    interpolate_missing = False
-    do_temperature = False
-    do_humidity = False
-    do_winds = False
+    """
+Optional Keyword Options:
+    --thres []          Threshold value for SNHT, default: 50
+    --window []         Moving Window for SNHT, default: 1470 (in days, 4 years)
+    --missing []        Maximum allowed missing values in window, default: 600 (in days)
+    --min_levels []     Minimum required levels for significant breakpoint, default: 3
+    --dist []           Minimum distance between breakpoints, default: 730 (in days, 2 years)
+    --sample_size []    Minimum sample size for statistics, default: 130 (in days)
+    --borders []        Breakpoint zone, default: 90 (in days)
+    --ratio []          Use ratio instead of differences, default: 0 (not)
 
-    try:
-        known, knames = _cmd_arguments(sys.argv[1:], known)
-        opts, args = getopt.getopt(sys.argv[1:], "b:f:ho:v:d:p:", known)
+Experimental Keyword Options:
+    --interpolate_missing Interpolate Adjustments to non-standard times and pressure levels
+    
+    """
 
-    except getopt.GetoptError as err:
-        print(__doc__)
-        raise err
-
-    for opt, arg in opts:
-        if opt in ("-f", "--frontend"):
-            input_frontend = True
-            ifile = arg
-        
-        elif opt in ("-b", "--backend"):
-            input_frontend = False
-            ifile = arg
-
-        elif opt in ("-o", "--outdir"):
-            odir = arg
-
-        elif opt in ("temperature"):
-            do_temperature = True
-
-        elif opt in ("humidity"):
-            do_humidity = True
-
-        elif opt in ("winds"):    
-            do_winds = True
-
-        elif opt in ("-d", "--dates"):
-            if ',' in arg:
-                arg = arg.split(',')
-            dates = arg  # --dates date,date
-
-        elif opt in ("-p", "--plevs"):
-            if ',' in arg:
-                arg = arg.split(',')
+    parser = argparse.ArgumentParser(description="Run standardized radiosonde homogenisation software on CDM compliant file",
+                                     usage="",
+                                     epilog="Additional Keywords:")
+    parser.add_argument("-f", "--frontend", help="CDM compliant file")
+    parser.add_argument("-b", "--backend", help="CDM raw file")
+    parser.add_argument("-o", "--outdir", help="Output directory")
+    parser.add_argument("-d","--dates", help="datetime selection, e.g. 2000-01-01,2020-12-31")
+    parser.add_argument("-p","--plevs", help="pressure level selection, e.g. 100,200,300,500,700,850")
+    parser.add_argument("--temperature", help="run adjustment on temperatures", action="store_true")
+    parser.add_argument("--humidity", help="run adjustment on humidities", action="store_true")
+    parser.add_argument("--winds", help="run adjustment on winds", action="store_true")
+    parser.add_argument("--feedback", help="feedback variables")
+    parser.add_argument("--feedback_group", help="feedback group name")
+    parser.add_argument("--homogenisation", help="homogenisation group name")
+    parser.add_argument("--interpolate_missing", help="interpolate missing values", action="store_true")
+    parser.add_argument("--debug", help="debug information", action="store_true")
+    parser.add_argument("--verbose", help="show more information", action="store_true")
+    parser.add_argument("--logfile", help="Logfile", default='adjustments.log')
+    
+    kwargs = {}
+    # Parse Arguments from definition
+    args, unknown = parser.parse_known_args()
+    # Check for Unknown arguments
+    i = 0 
+    n = len(unknown)
+    for iarg in unknown:
+        if '--' in iarg:
+            if i+1 < n:
+                if '--' not in unknown[i+1]:
+                    kwargs[iarg[2:]] = eval(unknown[i+1])
+                    i+=1
+                else:
+                    kwargs[iarg[2:]] = True
             else:
-                arg = [arg]
-            plevs = arg
-
-        elif opt in ("--feedback"):
-            feedback = arg
-        
-        elif opt in ("--fbgroup"):
-            feedback_group = arg  
-
-        elif opt in ("-h", "--help"):
-            print(__doc__)
-            sys.exit(0)
-
-        elif opt == "--interpolate_missing":
-            interpolate_missing = True
-
-        elif any([opt[2:] in i for i in knames]):
-            if arg != '':
-                kwargs[opt[2:]] = eval(arg)
-            else:
-                kwargs[opt[2:]] = True
-
-        else:
-            assert False, "unhandled option"
+                kwargs[iarg[2:]] = True
+        i+=1
+    if args.dates:
+        args.dates = args.dates.split(',') if ',' in args.dates else args.dates
+    if args.plevs:
+        args.plevs = args.plevs.split(',') if ',' in args.plevs else args.plevs
     #
     # Check input
     #
-    if ifile is None:
-        print(__doc__)
-        raise RuntimeError("Missing input file (-f, -b)", ifile)
-    
-    if not (do_winds or do_temperature or do_humidity):
-        raise RuntimeError('Please specify at least one option: --temperature, --humidty or --winds')
-
-    if plevs is None:
-        plevs = std_plevs * 100
+    if not (args.backend or args.frontend):
+        parser.print_help()
+        logger.error("Missing input file (-f, -b)")
+        sys.exit(0)
+    #
+    # Check input variable
+    #
+    if not (args.temperature or args.humidity or args.winds):
+        logger.error('Please specify at least one option: --temperature, --humidty or --winds')
+        sys.exit(0)
+    #
+    # Pressure levels
+    #
+    if args.plevs:
+        args.plevs = list(map(int, args.plevs))
     else:
-        plevs = list(map(int, plevs))
+        args.plevs = std_plevs * 100
+        
+    if args.debug:
+        logging_set_level(10)
 
-    if input_frontend:
+    if not args.logfile:
+        ch3 = logging.FileHandler(args.logfile)
+        ch3.setLevel(logging.DEBUG)
+        ch3.setFormatter(formatter)
+        logger.addHandler(ch3)
+        logger.info("Logging to: ", args.logfile)
+
+    if args.frontend:
         #
         # FRONTEND File
         #
-        if '*' in ifile:
-            ifile = glob.glob(ifile)
-        elif ',' in ifile:
-            ifile = ifile.split(',')
-        else:
-            pass
-        if not isinstance(ifile, list):
-            ifile = [ifile]
-
-        for i in ifile:
-            assert os.path.isfile(i), i
-
-        if feedback is None:
-            feedback = 'obs_minus_an'
-
-        if do_temperature or do_humidity:
-            iofile = eua.CDMDataset(ifile)
-            #
-            # Temperature or Humdity adjustment
-            #
-            variable = 'ta' if do_temperature else 'hur'
-            data = iofile.read_data_to_cube(variable,
-                                            dates=dates,
-                                            plevs=plevs)[variable]
-            departures = iofile.read_data_to_cube(variable,
-                                                  dates=dates,
-                                                  plevs=plevs,
-                                                  feedback=feedback)[variable]
-            _, _, stest, breaks, adj_depar = adjustment_procedure(data, departures,
-                                                                  metadata=False,
-                                                                  times=[0, 12],
-                                                                  dim='time',
-                                                                  plev='plev',
-                                                                  return_dataset=False)
-            #
-            # Write back adjusted (interpolation, extrapolation)
-            #
-            write_adjustments(iofile, stest, breaks, adj_depar, None,
-                              interpolate_missing=interpolate_missing)
-        else:
-            #
-            # Wind speed and wind direction adjustment
-            #
-            assert len(ifile) ==2, 'Inputfiles: wind_direction and wind_speed are required'
-            filepool = {}
-            for i in ifile:
-                tmp = eua.CDMDataset(i)
-                if 'wind_from_direction' in tmp.groups:
-                    variable = 'wind_from_direction'
-                    wd_data = tmp.read_data_to_cube(variable,
-                                                    dates=dates,
-                                                    plevs=plevs)[variable]
-                    wd_departures = tmp.read_data_to_cube(variable,
-                                                          dates=dates,
-                                                          plevs=plevs,
-                                                          feedback=feedback)[variable]
-                    filepool[variable] = tmp
-                else:
-                    variable = 'wind_speed'
-                    ws_data = tmp.read_data_to_cube(variable,
-                                                    dates=dates,
-                                                    plevs=plevs)[variable]
-                    ws_departures = tmp.read_data_to_cube(variable,
-                                                          dates=dates,
-                                                          plevs=plevs,
-                                                          feedback=feedback)[variable]
-                    filepool[variable] = tmp
-            #
-            _, _, stest, breaks, adj_depar_wd, adj_depar_ws = adjustment_procedure_wind()
-            # wind direction
-            write_adjustments(filepool['wind_from_direction'], stest, breaks, adj_depar_wd, None,
-                              interpolate_missing=interpolate_missing)
-            # wind speed
-            write_adjustments(filepool['wind_speed'], stest, breaks, adj_depar_ws, None,
-                              interpolate_missing=interpolate_missing)
+        run_frontend_file(args, **kwargs)
     else:
         #
         # BACKEND File
         #
-        iofile = eua.CDMDataset(ifile)
-        if feedback is None:
-            feedback = 'an_depar@body'
-
-        if not feedback_group in iofile.groups:
-            raise ValueError('Feedback Group', feedback_group, 'not found')
-        if not feedback in iofile[feedback_group].keys():
-            raise ValueError('Feedback ',feedback,' not in Feedback Group ',feedback_group)
-        
-        if odir is not None:
-            odir = "{}/{}".format(odir,os.path.basename(ifile))
-
-        iofile.reopen(write_to_filename=odir, mode='r+')
-        if do_temperature:
-            # Code: 85
-            variable = 'temperature'
-            #
-            # Write back adjusted (interpolation, extrapolation)
-            #
-            write_adjustments(iofile, stest, breaks, adj_depar, variable, interpolate_missing=interpolate_missing)
-
-        if do_humidity:
-            # Code 38 , relative humidity
-            variable = 'relative_humidity'
-            #
-            # Write back adjusted (interpolation, extrapolation)
-            #
-            write_adjustments(iofile, stest, breaks, adj_depar, variable, interpolate_missing=interpolate_missing)
-        
-        if do_winds:
-            # Code 106 (wind_direction), 107 (wind_speed)
-            variable = 'wind_direction'
-
-            #
-            # Write back adjusted (interpolation, extrapolation)
-            #
-            write_adjustments(iofile, stest, breaks, adj_depar, variable, interpolate_missing=interpolate_missing)
-            variable = 'wind_speed'
-            write_adjustments(iofile, stest, breaks, adj_depar, variable, interpolate_missing=interpolate_missing)
+        run_backend_file(args, **kwargs)
 # FIN
