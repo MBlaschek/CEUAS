@@ -301,8 +301,8 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         #
         # find Merged Netcdf files and intercomparison files
         #
-        slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v0.nc'))
-        slist += glob.glob(os.path.expandvars(config['data_dir'] + '/0-20?00-0-*_CEUAS_merged_v0.nc'))
+        slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v1.nc'))
+        slist += glob.glob(os.path.expandvars(config['data_dir'] + '/0-20?00-0-*_CEUAS_merged_v1.nc'))
         slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
         slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
         # slnum = [i[-34:-19] for i in slist]
@@ -630,7 +630,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                day: list = None, month: list = None, year: list = None, date: list = None, time: list = None, 
                bbox: list = None, country: str = None, area: list = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
-               gridded: list = None,
+               gridded: list = None, toolbox: str = None, 
                pass_unknown_keys: bool = False,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
@@ -691,7 +691,11 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     #
     # Optional
     #
-    allowed_optionals = ['sonde_type', 'bias_estimate','obs_minus_an','obs_minus_bg', 'bias_estimate_method']
+    allowed_optionals = ['sonde_type', 'bias_estimate','obs_minus_an','obs_minus_bg', 'bias_estimate_method', 
+                         'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate',
+                         'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
+                         'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 'wind_direction_bias_estimate',
+                        ]
     # bias_estimate_method : raobcore, rich, ...
     if optional is not None:
         if not isinstance(optional, list):
@@ -705,6 +709,21 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                     raise KeyError('Invalid optional selected: ' + optional)
             d['optional'] = optional
             
+    #
+    # toolbox
+    #
+    if toolbox is not None:
+        if not toolbox == 'True':
+            raise KeyError("Invalid type selected at toolbox - only string 'True' is valid: " + toolbox)
+        try: 
+            d['optional']
+        except:
+            pass
+        else:
+            if len(d['optional']) > 1:
+                raise KeyError("toolbox 'True' is only valid if only one 'optional' is given.")  
+        d['toolbox'] = True
+
     #
     # gridded [lower left upper right]
     #

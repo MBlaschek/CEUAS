@@ -346,11 +346,12 @@ def andisin(mask, x, v):
 # daysx2 puts a time array into an array of shape days x 2, where days is the number of days since 19000101
 # and the second index is 0 for midnight (GMT+/- 3hrs) ascents and 1 for midday (GMT +/- 3hrs ascents).
 # ascents between 3 and 9 and 15 and 21 are discarded
+@njit(cache=True,boundscheck=True)
 def daysx2(time,pindex,nplev,obs):
     dsecs=86400
     tofday=time%dsecs
     dindex=time//dsecs
-    hindex=np.zeros(time.shape[0],dtype=np.int32)-1
+    hindex=dindex-dindex #np.zeros(time.shape[0],dtype=np.int32)-1
     tevening=np.where(tofday>=6*dsecs//8)
     tmorning=np.where(tofday<2*dsecs//8)
     tmidday=np.where(np.logical_and(tofday>=2*dsecs/8,tofday<6*dsecs/8))
@@ -360,15 +361,18 @@ def daysx2(time,pindex,nplev,obs):
     hindex[tmidday]=1
     hgood=np.where(hindex>-1)
     gdays=np.unique(dindex)
+    ghours=np.zeros((2,gdays.shape[0]),dtype=np.int32)
+    
     rdays=np.zeros(np.max(gdays)+1,dtype=np.int32)-1
     for i in range(gdays.shape[0]): # reverse index
         rdays[gdays[i]]=i
         
     cobs=np.full((2,nplev,gdays.shape[0]),np.nan,dtype=obs.dtype)
-    cobs[hindex[hgood],pindex[hgood],rdays[dindex[hgood]]]=obs[hgood]
+    for i in range(time.shape[0]):
+        ghours[hindex[i],rdays[dindex[i]]]=tofday[i]//3600
+        cobs[hindex[i],pindex[i],rdays[dindex[i]]]=obs[i]
     
-    
-    return cobs,hindex[hgood],pindex[hgood],rdays[dindex[hgood]],hgood,gdays
+    return cobs,hindex,pindex,rdays[dindex],hgood,gdays,ghours
     
 
 @njit(cache=True)
@@ -440,7 +444,12 @@ def read_standardnames(url: str = None) -> dict:
               'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential',
               'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type',
               'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 
-              'station_name']
+              'station_name', 
+              'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate', 
+              'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
+              'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 
+              'wind_direction_bias_estimate',
+             ]
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
                 'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
@@ -451,7 +460,15 @@ def read_standardnames(url: str = None) -> dict:
                  'observations_table/sensor_id',
                  'observations_table/secondary_value', 'observations_table/original_precision',
                  'observations_table/report_id', 'observations_table/reference_sensor_id',
-                 'station_configuration/station_name']
+                 'station_configuration/station_name',
+                 'advanced_homogenization/RISE_1.8_bias_estimate', 'advanced_homogenization/RICH_1.8_bias_estimate',
+                 'advanced_homogenization/RASE_1.8_bias_estimate', 'advanced_homogenization/RAOBCORE_1.8_bias_estimate',
+#                  'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
+#                  'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
+                 'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
+                 'advanced_homogenisation/u_component_of_wind_bias_estimate', 'advanced_homogenisation/v_component_of_wind_bias_estimate', 
+                 'advanced_homogenisation/wind_direction_bias_estimate', 
+                ]
     cf = {}
     for c, cdm in zip(snames, cdmnames):
         cf[c] = {'cdmname': cdm, 'units': 'NA', 'shortname': c}
@@ -522,6 +539,17 @@ def read_standardnames(url: str = None) -> dict:
     cf['report_id']['shortname'] = 'report_id'
     cf['reference_sonde_type']['shortname'] = 'reference_sonde_type'
     cf['station_name']['shortname'] = 'station_name'
+    cf['RISE_1.8_bias_estimate']['shortname'] = 'RISE_1.8_bias_estimate'
+    cf['RICH_1.8_bias_estimate']['shortname'] = 'RICH_1.8_bias_estimate'
+    cf['RASE_1.8_bias_estimate']['shortname'] = 'RASE_1.8_bias_estimate'
+    cf['RAOBCORE_1.8_bias_estimate']['shortname'] = 'RAOBCORE_1.8_bias_estimate'
+    cf['u_component_of_wind_bias_estimate']['shortname'] = 'u_component_of_wind_bias_estimate'
+    cf['v_component_of_wind_bias_estimate']['shortname'] = 'v_component_of_wind_bias_estimate'
+    cf['wind_direction_bias_estimate']['shortname'] = 'wind_direction_bias_estimate'
+    cf['desroziers_30']['shortname'] = 'desroziers_30'
+    cf['desroziers_60']['shortname'] = 'desroziers_60'
+    cf['desroziers_90']['shortname'] = 'desroziers_90'
+    cf['desroziers_180']['shortname'] = 'desroziers_180'
     return cf
 
 
@@ -789,7 +817,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
                                 print('x')
                             fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                             
-                except Exception as e:
+                except MemoryError as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
                     hilf = np.zeros(shape=(idx.shape[0]), dtype='S10')
@@ -1150,7 +1178,9 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             }
             if '0-20100-0' not in statid and '0-20200-0' not in statid:
                 gdict["era5fb"]=[]
-
+                gdict['advanced_uncertainty']=[]
+                gdict['advanced_homogenisation']=[]
+                gdict['advanced_homogenization']=[]
             with CDMDataset(filename=filename, groups=gdict) as data:
                 if debug: print('x',time.time()-tt)
                 data.read_write_request(filename_out=filename_out,
@@ -1160,12 +1190,12 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 print(time.time()-tt)
                 print('')
 
-    except Exception as e:
-    #except Exception as e:
+    except MemoryError as e:
+    #except MemoryError as e:
         if debug:
             raise e
-        logger.error('Exception %s occurred while reading %s', repr(e), filename)
-        return '', 'Exception "{}" occurred while reading {}'.format(e, filename)
+        logger.error('MemoryError %s occurred while reading %s', repr(e), filename)
+        return '', 'MemoryError "{}" occurred while reading {}'.format(e, filename)
 
     return filename_out, msg
 
@@ -1567,7 +1597,7 @@ def cds_request_wrapper(request: dict, request_filename: str = None, cds_dataset
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except Exception as e:
+    except MemoryError as e:
         logger.error('CDSAPI Request failed %s', str(request))
         raise e
 
@@ -1632,7 +1662,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except Exception as e:
+    except MemoryError as e:
         logger.error('VM Request failed %s', str(request))
         raise e
 
@@ -1863,7 +1893,7 @@ class CDMDataset:
                         setattr(self, igroup, CDMVariable(self.file[igroup], igroup, shape=self.file[igroup].shape))
                     self[igroup].update(link=self.file[igroup])
 
-        except Exception as e:
+        except MemoryError as e:
             logger.debug(repr(e))
             self.close()
 
@@ -2199,6 +2229,11 @@ class CDMDataset:
         snames = ['platform_id', 'platform_name', 'observation_value', 'latitude',
                   'longitude', 'time', 'air_pressure', 'trajectory_label', 
                   'report_id', 'station_id']
+        varseldict={}
+        varseldict['temperature']=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate']
+        varseldict['wind_direction']=['wind_direction_bias_estimate']
+        varseldict['u_component_of_wind']=['u_component_of_wind_bias_estimate']
+        varseldict['v_component_of_wind']=['v_component_of_wind_bias_estimate']
         # added report_id -> in observations_table, not to be confused with report_id from header_table -> trajectory_label
         logger.debug('Request-keys: %s', str(request.keys()))
         snames.append(cdsname)  # Add requested variable
@@ -2226,6 +2261,7 @@ class CDMDataset:
         logger.debug('Writing: %s', filename_out)
         tt=time.time() - time0
         print(tt)
+        
         with h5py.File(filename_out, 'w') as fout:
             # todo future -> this could be replaced by a self.write_to_frontend_file(filename_out, )
             #
@@ -2282,6 +2318,43 @@ class CDMDataset:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
             
             #
+            # advanced_homogenisation
+            # 
+            varsel=[]
+            if 'advanced_homogenization' in self.groups or 'advanced_homogenisation' in self.groups :
+                igroup = 'advanced_homogenization'
+                if 'advanced_homogenisation' in self.groups:
+                    igroup = 'advanced_homogenisation'
+                try:
+                    for o in request['optional']:
+                        if o in varseldict[request['variable']]:
+                            varsel.append(o)
+                except:
+                    pass
+                        
+                if varsel:       
+                    try:
+                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                                  var_selection=varsel)
+                        logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    except KeyError as e:
+                        raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+
+                    
+            #
+            # advanced_uncertainty
+            # 
+            if 'advanced_uncertainty' in self.groups:
+                print('advanced_uncertainty in self.groups')
+                igroup = 'advanced_uncertainty'
+                try:
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                              var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                except KeyError as e:
+                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+                    
+            #
             # Header Information
             #
             if 'header_table' in self.groups:
@@ -2327,6 +2400,22 @@ class CDMDataset:
             for i in fout.keys():
                 if (i == 'obs' or i == 'trajectory' or 'string' in i):
                     fout.__delitem__(i)
+                    
+                if 'toolbox' in request.keys() and len(varsel) < 1:
+                    if i in ['wind_from_direction']:
+                        fout['wind_direction'] = fout[i]
+                        fout.__delitem__(i)
+                elif 'toolbox' in request.keys():
+                    if i in ['ta', 'hur', 'ua', 'va']:
+                        fout.__delitem__(i)
+                        oldkey=request['optional'][0]
+                        fout[i]=fout[oldkey]
+                        fout.__delitem__(oldkey)
+                    elif i in ['wind_from_direction']:
+                        fout.__delitem__(i)
+                        oldkey=request['optional'][0]
+                        fout['wind_direction']=fout[oldkey]
+                        fout.__delitem__(oldkey)
                     
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
@@ -3028,7 +3117,7 @@ class CDMDataset:
     def convert_to_raobcore(self, variable: str, filename: str = None, dates: list = None, plevs: list = None,
                             times=[0, 12], span=3, freq='12h', feedback: list = None, feedback_group: str = 'era5fb',
                             source: str = 'RAOBCORE/RICH v1.7.2 + solar elevation dependency (from 197901 onward)',
-                            title: str = 'Station daily temperature series with JRA55/CERA20C/ERApreSAT background departure statistics and RISE bias estimates',
+                            title: str = 'Station daily temperature series with ERA5/NOAA_20CR background departure statistics and RISE bias estimates',
                             attrs: dict = None,
                             global_attrs: dict = None,
                             **kwargs):
@@ -3269,6 +3358,8 @@ class CDMDataset:
             ldaysx2=False
             for ivar in variables:
                 # Read Attributes Variable
+                if ivar=='hours':
+                    continue
                 v_attrs = self.read_attributes(ivar)
                 # why no trange?
                 iobs, secarray, pressure = self.read_variable(ivar,
@@ -3279,9 +3370,13 @@ class CDMDataset:
                     cobs=np.full(cobs.shape,np.nan,dtype=iobs.dtype)
                     cobs[hindex,pindex,dindex]=iobs[hgood]
                 else:
-                    cobs,hindex,pindex,dindex,hgood,gdays=daysx2(secarray,
+                    #daysx2(secarray,
+                                                             #std_plevs_indices[pressure.astype(np.int32) // 100],
+                                                             #plevs.shape[0],iobs)
+                    cobs,hindex,pindex,dindex,hgood,gdays,ghours=daysx2(secarray,
                                                              std_plevs_indices[pressure.astype(np.int32) // 100],
                                                              plevs.shape[0],iobs)
+
                 #itime, iobs = table_to_3dcube(secarray,
                                             #std_plevs_indices[pressure.astype(np.int32) // 100],
                                             #iobs)
@@ -3289,11 +3384,15 @@ class CDMDataset:
                 # Convert to Xarray [time x plev]
                 data[ivar] = xr.DataArray(cobs,
                                           coords=(np.array((0,12)),plevs/100,gdays),
-                                          dims=('hours', 'press','datum'),
+                                          dims=('hour', 'press','datum'),
                                           name=ivar,
                                           attrs=v_attrs)
                 data[ivar]['datum'].attrs['units']='days since 1900-01-01 00:00:00'
                 data[ivar]['press'].attrs['units']='hPa'
+            
+            data['hours']=xr.DataArray(ghours,name='hours',dims=('hour','datum'),coords=(np.array((0,12)),gdays))
+            data['lat']=xr.DataArray(np.asarray([self.lat[0]]),name='lat',dims=('station'))
+            data['lon']=xr.DataArray(np.asarray([self.lon[0]]),name='lon',dims=('station'))
                 # data[ivar].data['time'].attrs.update(self.read_attributes(kwargs.get('date_time_name', 'time')))
                 # data[ivar].data['plev'].attrs.update(self.read_attributes(kwargs.get('z_coordinate_name', 'plev')))
         return data
