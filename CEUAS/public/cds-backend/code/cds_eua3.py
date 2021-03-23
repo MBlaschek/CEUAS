@@ -1198,6 +1198,8 @@ def stack_cube_by_hour(data: xr.DataArray, dim: str = 'time', hour: str = 'hour'
         xr.DataArray : (hour x time x plev)
 
     """
+    # add a secret coordinate to undo stacking
+    data.coords['stacking'] = (dim, np.zeros(data[dim].shape))
     data = dict(data.groupby(dim + '.hour'))
     for ikey in data.keys():
         data[ikey] = data[ikey].assign_coords(
@@ -1219,13 +1221,17 @@ def unstack_cube_by_hour(data: xr.DataArray, dim: str = 'time', hour: str = 'hou
     Returns:
         xr.DataArray : (time x plev) cube
     """
+    # use secret variable to unstack
     data = dict(data.groupby(hour))
     for ikey in data.keys():
         data[ikey] = data[ikey].assign_coords({dim: data[ikey][dim].values + np.timedelta64(ikey, 'h')})
 
     data = xr.concat(data.values(), dim=dim).sortby(dim)
     del data[hour]
-    data = data.dropna(dim, how='all')
+    if 'stacking' in data.coords:
+        index = (data['stacking']==0)
+        data = data.isel({dim: index}).drop('stacking')
+
     return data
 
 
