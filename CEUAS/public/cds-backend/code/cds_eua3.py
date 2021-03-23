@@ -2403,7 +2403,7 @@ class CDMDataset:
                     
                 if 'toolbox' in request.keys() and len(varsel) < 1:
                     if i in ['wind_from_direction']:
-                        fout['wind_direction'] = fout[i]
+                        fout['wd'] = fout[i]
                         fout.__delitem__(i)
                 elif 'toolbox' in request.keys():
                     if i in ['ta', 'hur', 'ua', 'va']:
@@ -2414,7 +2414,7 @@ class CDMDataset:
                     elif i in ['wind_from_direction']:
                         fout.__delitem__(i)
                         oldkey=request['optional'][0]
-                        fout['wind_direction']=fout[oldkey]
+                        fout['wd']=fout[oldkey]
                         fout.__delitem__(oldkey)
                     
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
