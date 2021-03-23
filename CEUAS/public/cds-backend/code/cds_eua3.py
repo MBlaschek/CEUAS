@@ -2321,24 +2321,50 @@ class CDMDataset:
             # advanced_homogenisation
             # 
             varsel=[]
-            if 'advanced_homogenization' in self.groups or 'advanced_homogenisation' in self.groups :
-                igroup = 'advanced_homogenization'
-                if 'advanced_homogenisation' in self.groups:
-                    igroup = 'advanced_homogenisation'
-                try:
-                    for o in request['optional']:
-                        if o in varseldict[request['variable']]:
-                            varsel.append(o)
-                except:
-                    pass
+#             if 'advanced_homogenization' in self.groups or 'advanced_homogenisation' in self.groups :
+#                 igroup = 'advanced_homogenization'
+#                 if 'advanced_homogenisation' in self.groups:
+#                     igroup = 'advanced_homogenisation'
+#                 try:
+#                     for o in request['optional']:
+#                         if o in varseldict[request['variable']]:
+#                             varsel.append(o)
+#                 except:
+#                     pass
                         
-                if varsel:       
-                    try:
-                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-                                  var_selection=varsel)
-                        logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                    except KeyError as e:
-                        raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+#                 if varsel:       
+#                     try:
+#                         do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+#                                   var_selection=varsel)
+#                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+#                     except KeyError as e:
+#                         raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+            try:
+                for o in request['optional']:
+                    if o in varseldict[request['variable']]:
+                        varsel.append(o)
+            except:
+                pass
+
+            if 'advanced_homogenization' in self.groups:
+                print('advanced_homogenization in self.groups')
+                igroup = 'advanced_homogenization'
+                try:
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                              var_selection = varsel)
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                except KeyError as e:
+                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+
+            if 'advanced_homogenisation' in self.groups:
+                print('advanced_homogenization in self.groups')
+                igroup = 'advanced_homogenisation'
+                try:
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+                              var_selection = varsel)
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                except KeyError as e:
+                    raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
 
                     
             #
