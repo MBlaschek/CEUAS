@@ -1035,11 +1035,13 @@ def adjustment_procedure(data: xr.Dataset, dim: str = 'time', plev: str = 'plev'
         data['adjustments'].attrs['biascor'] = 'quantile'
     else:
         raise RuntimeError('Either mean_adjustment or quantile_adjustment needs to be set')
+    # 
+    # Convention (obs - bias_estimate = true_obs)
+    #
+    data['adjustments'] *= -1
     #
     # Convert back to time x plevs
     #
-    # tracer = eua.unstack_cube_by_hour(data['tracer'], dim=dim)
-    # tracer = (tracer.values == 0).any(dim=plev)
     data = eua.unstack_cube_by_hour(data, dim=dim)
     # fill back (to the original input data)
     if reverse_sort:
