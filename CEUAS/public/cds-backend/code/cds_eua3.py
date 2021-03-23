@@ -461,8 +461,10 @@ def read_standardnames(url: str = None) -> dict:
                  'observations_table/secondary_value', 'observations_table/original_precision',
                  'observations_table/report_id', 'observations_table/reference_sensor_id',
                  'station_configuration/station_name',
-                 'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
-                 'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
+                 'advanced_homogenization/RISE_1.8_bias_estimate', 'advanced_homogenization/RICH_1.8_bias_estimate',
+                 'advanced_homogenization/RASE_1.8_bias_estimate', 'advanced_homogenization/RAOBCORE_1.8_bias_estimate',
+#                  'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
+#                  'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
                  'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
                  'advanced_homogenisation/u_component_of_wind_bias_estimate', 'advanced_homogenisation/v_component_of_wind_bias_estimate', 
                  'advanced_homogenisation/wind_direction_bias_estimate', 
@@ -2312,11 +2314,11 @@ class CDMDataset:
             #
             # advanced_homogenisation
             # 
+            varsel=[]
             if 'advanced_homogenization' in self.groups or 'advanced_homogenisation' in self.groups :
                 igroup = 'advanced_homogenization'
                 if 'advanced_homogenisation' in self.groups:
                     igroup = 'advanced_homogenisation'
-                varsel=[]
                 try:
                     for o in request['optional']:
                         if o in varseldict[request['variable']]:
@@ -2392,11 +2394,21 @@ class CDMDataset:
             for i in fout.keys():
                 if (i == 'obs' or i == 'trajectory' or 'string' in i):
                     fout.__delitem__(i)
-                if 'toolbox' in request.keys():
-                    if i in ['ta', 'hur', 'ua', 'va', 'wind_from_direction']:
+                    
+                if 'toolbox' in request.keys() and len(varsel) < 1:
+                    if i in ['wind_from_direction']:
+                        fout['wind_direction'] = fout[i]
+                        fout.__delitem__(i)
+                elif 'toolbox' in request.keys():
+                    if i in ['ta', 'hur', 'ua', 'va']:
                         fout.__delitem__(i)
                         oldkey=request['optional'][0]
                         fout[i]=fout[oldkey]
+                        fout.__delitem__(oldkey)
+                    elif i in ['wind_from_direction']:
+                        fout.__delitem__(i)
+                        oldkey=request['optional'][0]
+                        fout['wind_direction']=fout[oldkey]
                         fout.__delitem__(oldkey)
                     
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
