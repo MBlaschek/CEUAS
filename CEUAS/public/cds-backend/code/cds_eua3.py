@@ -2430,7 +2430,7 @@ class CDMDataset:
 #                     #
 #                     trange = slice(int(recordindex[itx][timeindex[0]]), int(recordindex[itx][-1]))
             else:
-                trange = slice(timeindex[itx][0], timeindex[itx][-1] + 1)
+                trange = slice(timeindex[0], timeindex[-1] + 1)
 
             time_units = self.read_attributes(date_time_name, group=group).get('units', '')
             if timestamp_units != time_units:
@@ -3026,6 +3026,32 @@ class CDMDataset:
                             attrs: dict = None,
                             global_attrs: dict = None,
                             **kwargs):
+        """Convert CDM backend file to RAOBCORE/RICH data format
+
+        Args:
+            variable (str): request variable, e.g. temperature
+            filename (str, optional): output filename. Defaults to None.
+            dates (list, optional): datetime selection. Defaults to None.
+            plevs (list, optional): pressure level selection. Defaults to None.
+            times (list, optional): time selection. Defaults to [0, 12].
+            span (int, optional): allowed deviation from time. Defaults to 3.
+            freq (str, optional): should correspond to times. Defaults to '12h'.
+            feedback (list, optional): feedback variables. Defaults to None.
+            feedback_group (str, optional): feedback groups. Defaults to 'era5fb'.
+            source (str, optional): name of product. Defaults to 'RAOBCORE/RICH v1.7.2 + solar elevation dependency (from 197901 onward)'.
+            title (str, optional): title of product. Defaults to 'Station daily temperature series with JRA55/CERA20C/ERApreSAT background departure statistics and RISE bias estimates'.
+            attrs (dict, optional): attributes to variables. Defaults to None. e.g. {'temperatures' : {'units' : 'K'}}
+            global_attrs (dict, optional): global attributes. Defaults to None.
+
+        Raises:
+            RuntimeError: not a backend file
+
+        Returns:
+            xr.Dataset: data cube [hour x pressure x time]
+        """
+        if not self.hasgroups:
+            raise RuntimeError("Requires a backend file")
+        
         if feedback:
             if not isinstance(feedback, list):
                 feedback = [feedback]
@@ -3056,15 +3082,19 @@ class CDMDataset:
         # They will all have the same time and plev shapes
         # per variable of course (temp, hum, wind)
         tdata = self.read_data_to_cube(
-            variable, dates=dates, plevs=plevs, feedback=feedback, feedback_group=feedback_group, **kwargs)
+                        variable, 
+                        dates=dates, 
+                        plevs=plevs, 
+                        feedback=feedback, 
+                        feedback_group=feedback_group, 
+                        **kwargs)
         dim = 'time'
         plev = 'plev'
         # need standard times -> 0,12
         tdata[variable] = align_datetime(tdata[variable], times=times, span=span, freq=freq, dim=dim, plev=plev)
         icoord = 'standard_%s' % dim
         # Index for only standard times
-        standard_index = np.where(
-            tdata[variable][icoord + '_flag'].values == 1)[0]
+        standard_index = np.where(tdata[variable][icoord + '_flag'].values == 1)[0]
         tdata = xr.Dataset(tdata)  # Convert to Dataset
         # 1. Select only standard times
         # 2. Swap dimension to new standard time
@@ -3119,6 +3149,7 @@ class CDMDataset:
         if filename is not None:
             if os.path.isfile(filename):
                 # write only variables, no dims (assuming dims are all the same anyway)
+                # Leo: netcdf_classic needs to be as format
                 with xr.open_dataset(filename) as fopen:
                     for ivar in tdata.variables:
                         if ivar in fopen.variables:
@@ -3960,7 +3991,7 @@ class CDMDataset:
         try:
             return app.reverse(coordinates, language=language).raw
         except:
-            return get_address_by_location(latitude, longitude)
+            return self.get_address_by_location(latitude, longitude)
         
 
     def report_quality(self, filename: str = None, **kwargs):
