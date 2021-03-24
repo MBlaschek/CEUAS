@@ -449,6 +449,7 @@ def read_standardnames(url: str = None) -> dict:
               'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
               'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 
               'wind_direction_bias_estimate',
+              'humidity_bias_estimate',
              ]
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
@@ -461,13 +462,14 @@ def read_standardnames(url: str = None) -> dict:
                  'observations_table/secondary_value', 'observations_table/original_precision',
                  'observations_table/report_id', 'observations_table/reference_sensor_id',
                  'station_configuration/station_name',
-                 'advanced_homogenization/RISE_1.8_bias_estimate', 'advanced_homogenization/RICH_1.8_bias_estimate',
-                 'advanced_homogenization/RASE_1.8_bias_estimate', 'advanced_homogenization/RAOBCORE_1.8_bias_estimate',
-#                  'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
-#                  'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
+#                  'advanced_homogenization/RISE_1.8_bias_estimate', 'advanced_homogenization/RICH_1.8_bias_estimate',
+#                  'advanced_homogenization/RASE_1.8_bias_estimate', 'advanced_homogenization/RAOBCORE_1.8_bias_estimate',
+                 'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
+                 'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
                  'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
                  'advanced_homogenisation/u_component_of_wind_bias_estimate', 'advanced_homogenisation/v_component_of_wind_bias_estimate', 
                  'advanced_homogenisation/wind_direction_bias_estimate', 
+                 'advanced_homogenisation/humidity_bias_estimate',
                 ]
     cf = {}
     for c, cdm in zip(snames, cdmnames):
@@ -550,6 +552,7 @@ def read_standardnames(url: str = None) -> dict:
     cf['desroziers_60']['shortname'] = 'desroziers_60'
     cf['desroziers_90']['shortname'] = 'desroziers_90'
     cf['desroziers_180']['shortname'] = 'desroziers_180'
+    cf['humidity_bias_estimate']['shortname'] = 'humidity_bias_estimate'
     return cf
 
 
@@ -1180,7 +1183,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 gdict["era5fb"]=[]
                 gdict['advanced_uncertainty']=[]
                 gdict['advanced_homogenisation']=[]
-                gdict['advanced_homogenization']=[]
+#                 gdict['advanced_homogenization']=[]
             with CDMDataset(filename=filename, groups=gdict) as data:
                 if debug: print('x',time.time()-tt)
                 data.read_write_request(filename_out=filename_out,
@@ -2234,6 +2237,7 @@ class CDMDataset:
         varseldict['wind_direction']=['wind_direction_bias_estimate']
         varseldict['u_component_of_wind']=['u_component_of_wind_bias_estimate']
         varseldict['v_component_of_wind']=['v_component_of_wind_bias_estimate']
+        varseldict['relative_humidity']=['humidity_bias_estimate']
         # added report_id -> in observations_table, not to be confused with report_id from header_table -> trajectory_label
         logger.debug('Request-keys: %s', str(request.keys()))
         snames.append(cdsname)  # Add requested variable
