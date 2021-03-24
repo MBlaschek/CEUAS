@@ -1,6 +1,7 @@
 #!/usr/bin/env
 # coding: utf-8
 
+from numba import njit
 import numpy
 import numpy as np
 import pandas
@@ -530,6 +531,7 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
     recordtimestamp=numpy.empty(idx.shape[0],obstab['date_time'].dtype)
     
     j=-1 # augmented index
+    jsave=0
     p= obstab['z_coordinate'][0]-1 # z_coordinate[0]-1
     rts= obstab['date_time'][0] # date_time[0]
     
@@ -541,6 +543,7 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
     ri=1
     l=1
     for k in range(idx.shape[0]):  # no new levels are created, but variables per level will increase
+        jsave=j
         if k==idx.shape[0]-2:
             print('vor Schluss')
         if k==idx.shape[0]-1:
@@ -574,6 +577,13 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
                              cuwind,cvwind,cwd,cws,
                              d_cwd,d_cws,
                              fgd_cwd,fgd_cws)
+                    #lens=np.zeros(4)
+                    #for ii in range(104,108):
+                        #idy=np.where(a_obstab['observed_variable'][:j+1]==ii)[0]
+                        #lens[ii-104]=len(idy)
+                        #print(ii,lens[ii-104])
+                        #if ii>104 and lens[ii-104]!=lens[ii-105]:
+                            #print('inconsistent')
                     
         if humlist:
             for h in humvar:
@@ -591,7 +601,7 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
                     if a_obstab['observation_value'][j]!=a_obstab['observation_value'][j]:
                         j-=1
             humlist.clear()
-        if len(wlist)>1:
+        if len(wlist)>0:
             for h in wvar:
                 if h not in wlist:
                     j+=1
@@ -606,6 +616,14 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
                              fgd_cwd,fgd_cws)
                     if a_obstab['observation_value'][j]!=a_obstab['observation_value'][j]:
                         j-=1
+            #lens=np.zeros(4)
+            #for ii in range(104,108):
+                #idy=np.where(a_obstab['observed_variable'][jsave:j+1]==ii)[0]
+                #lens[ii-104]=len(idy)
+                #print(ii,lens[ii-104])
+                #if ii>104 and lens[ii-104]!=lens[ii-105]:
+                    #print('inconsistent')
+            #jsave=j
             wlist.clear()
         if idxu!=obstab['observation_value'].shape[0]:        
             if obstab['date_time'][idxu] != obstab['date_time'][idx[k]]:
@@ -1244,6 +1262,11 @@ def convert_missing(fn, destination: str = opath):
                                              fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd,
                                              d_cwd,d_ws,fgd_cwd,fgd_ws,
                                              humvar,wvar)
+    
+    for ii in range(104,108):
+        #idx=np.where(loaded_obstab['observed_variable']==ii)[0]
+        idy=np.where(a_loaded_obstab['observed_variable'][:jj]==ii)[0]    
+        print('wind check',ii,len(idy))
     
     del temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,\
                                              cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,crhsh,cdpdsh,cuwind,cvwind,cwd,cws,\
