@@ -446,10 +446,9 @@ def read_standardnames(url: str = None) -> dict:
               'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 
               'station_name', 
               'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate', 
-               'u_component_of_wind_bias_estimate','v_component_of_wind_bias_estimate',
-                 'wind_direction_bias_estimate',
               'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
-              'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 'wind_direction_bias_estimate',
+              'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 
+              'wind_direction_bias_estimate',
              ]
 
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
@@ -462,14 +461,13 @@ def read_standardnames(url: str = None) -> dict:
                  'observations_table/secondary_value', 'observations_table/original_precision',
                  'observations_table/report_id', 'observations_table/reference_sensor_id',
                  'station_configuration/station_name',
-                 'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
-                 'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
-                 'advanced_homogenisation/u_component_of_wind_bias_estimate',
-                 'advanced_homogenisation/v_component_of_wind_bias_estimate',
-                 'advanced_homogenisation/wind_direction_bias_estimate',#                  'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
+                 'advanced_homogenization/RISE_1.8_bias_estimate', 'advanced_homogenization/RICH_1.8_bias_estimate',
+                 'advanced_homogenization/RASE_1.8_bias_estimate', 'advanced_homogenization/RAOBCORE_1.8_bias_estimate',
+#                  'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
 #                  'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
                  'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
-                 'advanced_homogenisation/u_component_of_wind_bias_estimate', 'advanced_homogenisation/v_component_of_wind_bias_estimate', 'advanced_homogenisation/wind_direction_bias_estimate', 
+                 'advanced_homogenisation/u_component_of_wind_bias_estimate', 'advanced_homogenisation/v_component_of_wind_bias_estimate', 
+                 'advanced_homogenisation/wind_direction_bias_estimate', 
                 ]
     cf = {}
     for c, cdm in zip(snames, cdmnames):
@@ -1182,6 +1180,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 gdict["era5fb"]=[]
                 gdict['advanced_uncertainty']=[]
                 gdict['advanced_homogenisation']=[]
+                gdict['advanced_homogenization']=[]
             with CDMDataset(filename=filename, groups=gdict) as data:
                 if debug: print('x',time.time()-tt)
                 data.read_write_request(filename_out=filename_out,
@@ -1229,6 +1228,8 @@ def stack_cube_by_hour(data: xr.DataArray, dim: str = 'time', hour: str = 'hour'
         xr.DataArray : (hour x time x plev)
 
     """
+    # add a secret coordinate to undo stacking
+    data.coords['stacking'] = (dim, np.zeros(data[dim].shape))
     data = dict(data.groupby(dim + '.hour'))
     for ikey in data.keys():
         data[ikey] = data[ikey].assign_coords(
@@ -1250,13 +1251,17 @@ def unstack_cube_by_hour(data: xr.DataArray, dim: str = 'time', hour: str = 'hou
     Returns:
         xr.DataArray : (time x plev) cube
     """
+    # use secret variable to unstack
     data = dict(data.groupby(hour))
     for ikey in data.keys():
         data[ikey] = data[ikey].assign_coords({dim: data[ikey][dim].values + np.timedelta64(ikey, 'h')})
 
     data = xr.concat(data.values(), dim=dim).sortby(dim)
     del data[hour]
-    data = data.dropna(dim, how='all')
+    if 'stacking' in data.coords:
+        index = (data['stacking']==0)
+        data = data.isel({dim: index}).drop('stacking')
+
     return data
 
 
@@ -2315,24 +2320,56 @@ class CDMDataset:
             #
             # advanced_homogenisation
             # 
-            if 'advanced_homogenization' in self.groups :
-                igroup = 'advanced_homogenization'
-                varsel=[]
-                try:
-                    for o in request['optional']:
-                        if o in varseldict[request['variable']]:
-                            varsel.append(o)
-                except:
-                    pass
+#             varsel=[]
+#             if 'advanced_homogenization' in self.groups or 'advanced_homogenisation' in self.groups :
+#                 igroup = 'advanced_homogenization'
+#                 if 'advanced_homogenisation' in self.groups:
+#                     igroup = 'advanced_homogenisation'
+#                 try:
+#                     for o in request['optional']:
+#                         if o in varseldict[request['variable']]:
+#                             varsel.append(o)
+#                 except:
+#                     pass
                         
-                if varsel:       
-                    try:
-                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-                                  var_selection=varsel)
-                        logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                    except KeyError as e:
-                        print(e)
-                        #raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+#                 if varsel:       
+#                     try:
+#                         do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+#                                   var_selection=varsel)
+#                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+#                     except KeyError as e:
+#                         raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+                        
+                        
+                        
+                        
+                        
+#             try:
+#                 for o in request['optional']:
+#                     if o in varseldict[request['variable']]:
+#                         varsel.append(o)
+#             except:
+#                 pass
+
+#             if 'advanced_homogenization' in self.groups:
+#                 print('advanced_homogenization in self.groups')
+#                 igroup = 'advanced_homogenization'
+#                 try:
+#                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+#                               var_selection = varsel)
+#                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+#                 except KeyError as e:
+#                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+
+#             if 'advanced_homogenisation' in self.groups:
+#                 print('advanced_homogenization in self.groups')
+#                 igroup = 'advanced_homogenisation'
+#                 try:
+#                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+#                               var_selection = varsel)
+#                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+#                 except KeyError as e:
+#                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
 
                     
             if 'advanced_homogenisation' in self.groups :
@@ -2414,11 +2451,21 @@ class CDMDataset:
             for i in fout.keys():
                 if (i == 'obs' or i == 'trajectory' or 'string' in i):
                     fout.__delitem__(i)
-                if 'toolbox' in request.keys():
-                    if i in ['ta', 'hur']:
+                    
+                if 'toolbox' in request.keys() and not 'optional' in request.keys():
+                    if i in ['wind_from_direction']:
+                        fout['ta'] = fout[i]
+                        fout.__delitem__(i)
+                elif 'toolbox' in request.keys():
+                    if i in ['ta', 'hur', 'ua', 'va']:
                         fout.__delitem__(i)
                         oldkey=request['optional'][0]
                         fout[i]=fout[oldkey]
+                        fout.__delitem__(oldkey)
+                    elif i in ['wind_from_direction']:
+                        fout.__delitem__(i)
+                        oldkey=request['optional'][0]
+                        fout['ta']=fout[oldkey]
                         fout.__delitem__(oldkey)
                     
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
@@ -2529,7 +2576,7 @@ class CDMDataset:
 #                     #
 #                     trange = slice(int(recordindex[itx][timeindex[0]]), int(recordindex[itx][-1]))
             else:
-                trange = slice(timeindex[itx][0], timeindex[itx][-1] + 1)
+                trange = slice(timeindex[0], timeindex[-1] + 1)
 
             time_units = self.read_attributes(date_time_name, group=group).get('units', '')
             if timestamp_units != time_units:
@@ -3083,7 +3130,7 @@ class CDMDataset:
                                             nplev=plevs.size)
                 logger.info('[CUBE] %s %s', ivarnum['variable'], iobs.shape)
                 v_attrs = get_attributes(cdmcode=ivarnum['varnum'],
-                                         feedback=ivarnum['variable'] if feedback is not None else None)
+                                         feedback=ivarnum['variable'] if ivarnum['variable'] != 'observation_value' else None)
                 if len(v_attrs) > 0:
                     v_attrs = v_attrs[list(v_attrs.keys())[0]]
                 # Convert to Xarray [time x plev]
@@ -3125,6 +3172,32 @@ class CDMDataset:
                             attrs: dict = None,
                             global_attrs: dict = None,
                             **kwargs):
+        """Convert CDM backend file to RAOBCORE/RICH data format
+
+        Args:
+            variable (str): request variable, e.g. temperature
+            filename (str, optional): output filename. Defaults to None.
+            dates (list, optional): datetime selection. Defaults to None.
+            plevs (list, optional): pressure level selection. Defaults to None.
+            times (list, optional): time selection. Defaults to [0, 12].
+            span (int, optional): allowed deviation from time. Defaults to 3.
+            freq (str, optional): should correspond to times. Defaults to '12h'.
+            feedback (list, optional): feedback variables. Defaults to None.
+            feedback_group (str, optional): feedback groups. Defaults to 'era5fb'.
+            source (str, optional): name of product. Defaults to 'RAOBCORE/RICH v1.7.2 + solar elevation dependency (from 197901 onward)'.
+            title (str, optional): title of product. Defaults to 'Station daily temperature series with JRA55/CERA20C/ERApreSAT background departure statistics and RISE bias estimates'.
+            attrs (dict, optional): attributes to variables. Defaults to None. e.g. {'temperatures' : {'units' : 'K'}}
+            global_attrs (dict, optional): global attributes. Defaults to None.
+
+        Raises:
+            RuntimeError: not a backend file
+
+        Returns:
+            xr.Dataset: data cube [hour x pressure x time]
+        """
+        if not self.hasgroups:
+            raise RuntimeError("Requires a backend file")
+        
         if feedback:
             if not isinstance(feedback, list):
                 feedback = [feedback]
@@ -3155,15 +3228,19 @@ class CDMDataset:
         # They will all have the same time and plev shapes
         # per variable of course (temp, hum, wind)
         tdata = self.read_data_to_cube(
-            variable, dates=dates, plevs=plevs, feedback=feedback, feedback_group=feedback_group, **kwargs)
+                        variable, 
+                        dates=dates, 
+                        plevs=plevs, 
+                        feedback=feedback, 
+                        feedback_group=feedback_group, 
+                        **kwargs)
         dim = 'time'
         plev = 'plev'
         # need standard times -> 0,12
         tdata[variable] = align_datetime(tdata[variable], times=times, span=span, freq=freq, dim=dim, plev=plev)
         icoord = 'standard_%s' % dim
         # Index for only standard times
-        standard_index = np.where(
-            tdata[variable][icoord + '_flag'].values == 1)[0]
+        standard_index = np.where(tdata[variable][icoord + '_flag'].values == 1)[0]
         tdata = xr.Dataset(tdata)  # Convert to Dataset
         # 1. Select only standard times
         # 2. Swap dimension to new standard time
@@ -3218,6 +3295,7 @@ class CDMDataset:
         if filename is not None:
             if os.path.isfile(filename):
                 # write only variables, no dims (assuming dims are all the same anyway)
+                # Leo: netcdf_classic needs to be as format
                 with xr.open_dataset(filename) as fopen:
                     for ivar in tdata.variables:
                         if ivar in fopen.variables:
@@ -4069,7 +4147,7 @@ class CDMDataset:
         try:
             return app.reverse(coordinates, language=language).raw
         except:
-            return get_address_by_location(latitude, longitude)
+            return self.get_address_by_location(latitude, longitude)
         
 
     def report_quality(self, filename: str = None, **kwargs):
