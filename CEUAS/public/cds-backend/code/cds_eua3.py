@@ -1452,7 +1452,7 @@ def to_standard_launch_time(dates: np.datetime64, std_times: list, span: int =3,
             # check for values before midnight?
             tcorr = np.where(np.abs(diff -24) <= span, -1*(diff-24), tcorr)
     newdates = dateshour + (tcorr + np.timedelta64(0,'h'))
-    newdates = np.where(tcorr == 0, dates, newdates) # fillback
+    newdates = np.where(tcorr == 0, dateshour, newdates) # fillback
     return newdates
 
 

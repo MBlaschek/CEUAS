@@ -1284,6 +1284,7 @@ def run_backend_file(args):
 
     iofile.reopen(write_to_filename=args.outdir, mode='r+')
     if args.temperature:
+        raise NotImplementedError()
         # Code: 85
         variable = 'temperature'
         data = iofile.read_data_to_cube(variable,
@@ -1336,6 +1337,7 @@ def run_backend_file(args):
                                    extrapolate_plevs=args.interpolate_missing)
         
     if args.winds:
+        raise NotImplementedError()
         # Code 106 (wind_direction), 107 (wind_speed)
         variable = 'wind_direction'
         #
