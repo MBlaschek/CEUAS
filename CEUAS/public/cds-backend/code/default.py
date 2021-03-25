@@ -692,10 +692,11 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     # Optional
     #
     allowed_optionals = ['sonde_type', 'bias_estimate','obs_minus_an','obs_minus_bg', 'bias_estimate_method', 
+                         'RISE_bias_estimate', 'RICH_bias_estimate', 'RASE_bias_estimate', 'RAOBCORE_bias_estimate',
                          'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate',
                          'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
                          'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 'wind_direction_bias_estimate',
-                         'humidity_bias_estimate',
+                         'humidity_bias_estimate', 'humidity_1.0_bias_estimate',
                         ]
     # bias_estimate_method : raobcore, rich, ...
     if optional is not None:
@@ -709,7 +710,22 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 if iopt not in allowed_optionals:
                     raise KeyError('Invalid optional selected: ' + optional)
             d['optional'] = optional
-            
+        new_opts = []
+        for opts in d['optional']:
+            if opts == 'RISE_bias_estimate':
+                new_opts.append('RISE_1.8_bias_estimate')
+            elif opts == 'RICH_bias_estimate':
+                new_opts.append('RICH_1.8_bias_estimate')
+            elif opts == 'RASE_bias_estimate':
+                new_opts.append('RASE_1.8_bias_estimate')
+            elif opts == 'RAOBCORE_bias_estimate':
+                new_opts.append('RAOBCORE_1.8_bias_estimate')
+            elif opts == 'humidity_bias_estimate':
+                new_opts.append('RICH_1.0_bias_estimate')
+            else:
+                new_opts.append(opts)
+        d['optional'] = new_opts
+
     #
     # toolbox
     #
