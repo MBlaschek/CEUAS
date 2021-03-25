@@ -2452,7 +2452,26 @@ class CDMDataset:
                     "%d-%b-%Y %H:%M:%S"))
             fout.attrs['license'] = np.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
             
+
+            for i in fout.keys():    
+                if 'toolbox' in request.keys() and not 'optional' in request.keys():
+                    if i in ['wind_from_direction']:
+                        fout['ta'] = fout[i]
+                        fout.__delitem__(i)
+                elif 'toolbox' in request.keys():
+                    if i in ['ta', 'hur', 'ua', 'va']:
+                        fout.__delitem__(i)
+                        oldkey=(request['optional'][0])
+                        fout[i]=fout[oldkey]
+                        fout.__delitem__(oldkey)
+                    elif i in ['wind_from_direction']:
+                        fout.__delitem__(i)
+                        oldkey=(request['optional'][0])
+                        fout['ta']=fout[oldkey]
+                        fout.__delitem__(oldkey)
+                        
             for i in fout.keys():
+                print(i)
                 if (i == 'obs' or i == 'trajectory' or 'string' in i):
                     fout.__delitem__(i)
                 version = ''
@@ -2463,22 +2482,6 @@ class CDMDataset:
                     fout[newname] = fout[i]
                     fout.__delitem__(i)
                     fout[newname].attrs['version'] = np.string_(version[1:]) # 'x.x'
-                    
-                if 'toolbox' in request.keys() and not 'optional' in request.keys():
-                    if i in ['wind_from_direction']:
-                        fout['ta'] = fout[i]
-                        fout.__delitem__(i)
-                elif 'toolbox' in request.keys():
-                    if i in ['ta', 'hur', 'ua', 'va']:
-                        fout.__delitem__(i)
-                        oldkey=(request['optional'][0]).replace(version, '')
-                        fout[i]=fout[oldkey]
-                        fout.__delitem__(oldkey)
-                    elif i in ['wind_from_direction']:
-                        fout.__delitem__(i)
-                        oldkey=(request['optional'][0]).replace(version, '')
-                        fout['ta']=fout[oldkey]
-                        fout.__delitem__(oldkey)
                     
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
