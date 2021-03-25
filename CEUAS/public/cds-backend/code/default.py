@@ -710,21 +710,21 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 if iopt not in allowed_optionals:
                     raise KeyError('Invalid optional selected: ' + optional)
             d['optional'] = optional
-        new_opts = []
-        for opts in d['optional']:
-            if opts == 'RISE_bias_estimate':
-                new_opts.append('RISE_1.8_bias_estimate')
-            elif opts == 'RICH_bias_estimate':
-                new_opts.append('RICH_1.8_bias_estimate')
-            elif opts == 'RASE_bias_estimate':
-                new_opts.append('RASE_1.8_bias_estimate')
-            elif opts == 'RAOBCORE_bias_estimate':
-                new_opts.append('RAOBCORE_1.8_bias_estimate')
-            elif opts == 'humidity_bias_estimate':
-                new_opts.append('humidity_1.0_bias_estimate')
-            else:
-                new_opts.append(opts)
-        d['optional'] = new_opts
+#         new_opts = []
+#         for opts in d['optional']:
+#             if opts == 'RISE_bias_estimate':
+#                 new_opts.append('RISE_1.8_bias_estimate')
+#             elif opts == 'RICH_bias_estimate':
+#                 new_opts.append('RICH_1.8_bias_estimate')
+#             elif opts == 'RASE_bias_estimate':
+#                 new_opts.append('RASE_1.8_bias_estimate')
+#             elif opts == 'RAOBCORE_bias_estimate':
+#                 new_opts.append('RAOBCORE_1.8_bias_estimate')
+#             elif opts == 'humidity_bias_estimate':
+#                 new_opts.append('humidity_1.0_bias_estimate')
+#             else:
+#                 new_opts.append(opts)
+#         d['optional'] = new_opts
 
     #
     # toolbox
