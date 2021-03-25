@@ -2455,7 +2455,7 @@ class CDMDataset:
             for i in fout.keys():
                 if (i == 'obs' or i == 'trajectory' or 'string' in i):
                     fout.__delitem__(i)
-                
+                version = ''
                 if '.' in i:
                     vers = i.find('.')
                     version = i[(vers-2):(vers+2)] # '_x.x'
