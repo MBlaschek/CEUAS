@@ -721,7 +721,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             elif opts == 'RAOBCORE_bias_estimate':
                 new_opts.append('RAOBCORE_1.8_bias_estimate')
             elif opts == 'humidity_bias_estimate':
-                new_opts.append('RICH_1.0_bias_estimate')
+                new_opts.append('humidity_1.0_bias_estimate')
             else:
                 new_opts.append(opts)
         d['optional'] = new_opts
