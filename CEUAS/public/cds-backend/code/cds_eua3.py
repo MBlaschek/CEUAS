@@ -2455,6 +2455,14 @@ class CDMDataset:
             for i in fout.keys():
                 if (i == 'obs' or i == 'trajectory' or 'string' in i):
                     fout.__delitem__(i)
+                
+                if '.' in i:
+                    vers = i.find('.')
+                    version = i[(vers-2):(vers+2)] # '_x.x'
+                    newname = i.replace(version, '')
+                    fout[newname] = fout[i]
+                    fout.__delitem__(i)
+                    fout[newname].attrs['version'] = np.string_(version[1:]) # 'x.x'
                     
                 if 'toolbox' in request.keys() and not 'optional' in request.keys():
                     if i in ['wind_from_direction']:
