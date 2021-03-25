@@ -445,7 +445,7 @@ def read_standardnames(url: str = None) -> dict:
               'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type',
               'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 
               'station_name', 
-              'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate', 
+              'RISE_bias_estimate', 'RICH_bias_estimate', 'RASE_bias_estimate', 'RAOBCORE_bias_estimate', 
               'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
               'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 
               'wind_direction_bias_estimate',
@@ -462,10 +462,8 @@ def read_standardnames(url: str = None) -> dict:
                  'observations_table/secondary_value', 'observations_table/original_precision',
                  'observations_table/report_id', 'observations_table/reference_sensor_id',
                  'station_configuration/station_name',
-#                  'advanced_homogenization/RISE_1.8_bias_estimate', 'advanced_homogenization/RICH_1.8_bias_estimate',
-#                  'advanced_homogenization/RASE_1.8_bias_estimate', 'advanced_homogenization/RAOBCORE_1.8_bias_estimate',
-                 'advanced_homogenisation/RISE_1.8_bias_estimate', 'advanced_homogenisation/RICH_1.8_bias_estimate',
-                 'advanced_homogenisation/RASE_1.8_bias_estimate', 'advanced_homogenisation/RAOBCORE_1.8_bias_estimate',
+                 'advanced_homogenisation/RISE_bias_estimate', 'advanced_homogenisation/RICH_bias_estimate',
+                 'advanced_homogenisation/RASE_bias_estimate', 'advanced_homogenisation/RAOBCORE_bias_estimate',
                  'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
                  'advanced_homogenisation/u_component_of_wind_bias_estimate', 'advanced_homogenisation/v_component_of_wind_bias_estimate', 
                  'advanced_homogenisation/wind_direction_bias_estimate', 
@@ -541,10 +539,10 @@ def read_standardnames(url: str = None) -> dict:
     cf['report_id']['shortname'] = 'report_id'
     cf['reference_sonde_type']['shortname'] = 'reference_sonde_type'
     cf['station_name']['shortname'] = 'station_name'
-    cf['RISE_1.8_bias_estimate']['shortname'] = 'RISE_1.8_bias_estimate'
-    cf['RICH_1.8_bias_estimate']['shortname'] = 'RICH_1.8_bias_estimate'
-    cf['RASE_1.8_bias_estimate']['shortname'] = 'RASE_1.8_bias_estimate'
-    cf['RAOBCORE_1.8_bias_estimate']['shortname'] = 'RAOBCORE_1.8_bias_estimate'
+    cf['RISE_bias_estimate']['shortname'] = 'RISE_bias_estimate'
+    cf['RICH_bias_estimate']['shortname'] = 'RICH_bias_estimate'
+    cf['RASE_bias_estimate']['shortname'] = 'RASE_bias_estimate'
+    cf['RAOBCORE_bias_estimate']['shortname'] = 'RAOBCORE_bias_estimate'
     cf['u_component_of_wind_bias_estimate']['shortname'] = 'u_component_of_wind_bias_estimate'
     cf['v_component_of_wind_bias_estimate']['shortname'] = 'v_component_of_wind_bias_estimate'
     cf['wind_direction_bias_estimate']['shortname'] = 'wind_direction_bias_estimate'
@@ -2233,7 +2231,7 @@ class CDMDataset:
                   'longitude', 'time', 'air_pressure', 'trajectory_label', 
                   'report_id', 'station_id']
         varseldict={}
-        varseldict['temperature']=['RAOBCORE_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RISE_1.8_bias_estimate']
+        varseldict['temperature']=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate']
         varseldict['wind_direction']=['wind_direction_bias_estimate']
         varseldict['u_component_of_wind']=['u_component_of_wind_bias_estimate']
         varseldict['v_component_of_wind']=['v_component_of_wind_bias_estimate']
