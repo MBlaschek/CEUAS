@@ -2471,12 +2471,12 @@ class CDMDataset:
                 elif 'toolbox' in request.keys():
                     if i in ['ta', 'hur', 'ua', 'va']:
                         fout.__delitem__(i)
-                        oldkey=request['optional'][0]
+                        oldkey=(request['optional'][0]).replace(version, '')
                         fout[i]=fout[oldkey]
                         fout.__delitem__(oldkey)
                     elif i in ['wind_from_direction']:
                         fout.__delitem__(i)
-                        oldkey=request['optional'][0]
+                        oldkey=(request['optional'][0]).replace(version, '')
                         fout['ta']=fout[oldkey]
                         fout.__delitem__(oldkey)
                     
