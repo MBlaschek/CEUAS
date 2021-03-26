@@ -46,12 +46,7 @@ pd.set_option('display.max_rows', None)
 pd.set_option('display.width', None)
 pd.set_option('display.max_colwidth', -1)
 
-
-#from Desrozier import * 
-
-
 # nan int = -2147483648 
-
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning) # deactivates Pandas warnings 
@@ -151,7 +146,7 @@ class Desroziers():
         self.station_id = station_id
         self.file = file 
         #self.summary_file =  station_id + '_' + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_summary_desrozier.txt'
-        self.std_plevs    = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000]
+        self.std_plevs = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000]
         self.variables = [85,104,105,107] # 104,105 u and v wind, 106 wind from direction, 107 wind speed
         #self.dic_type_attributes = np.load('../merge/dic_type_attributes.npy', allow_pickle= True).item()
         #self.encodings = np.load('../merge/groups_encodings.npy' , allow_pickle = True ).item()
@@ -417,7 +412,7 @@ class Desroziers():
         for var in self.errors_out.keys():
             
             if 'desroziers' in var:
-                attr = 'Desroziers uncertainty - xx days window'.replace('xx', var.split('_')[-1] )
+                attr = 'Desroziers uncertainty v 1.0 - xx days window'.replace('xx', var.split('_')[-1] )
                 encodings[var] = {'dtype': np.float32 , 'compression': 'gzip'}                
             elif 'num' in var:
                 attr = 'Number of records - xx days window'.replace('xx', var.split('_')[-1] )
@@ -525,15 +520,15 @@ if __name__ == '__main__':
             
             """ File source direcotry """
             #merged_directory = '/raid60/scratch/uli/converted_v5/'
-            merged_directory = '/raid60/scratch/federico/desrozier_input'
+            merged_directory = '/raid60/scratch/federico/TO_PROCESS_DESROZIERS'
 
             """ Moving postprocessed files to new directory """
-            out_dir = '/raid60/scratch/federico/DESROZIERS_MARCH2021'
+            out_dir = '/raid60/scratch/federico/DESROZIERS_25MARCH2021'
             
             #os.system('rm -r  ' + out_dir)     
             os.system('mkdir ' + out_dir)
 
-            
+            """
             stations_list = [ s for s in os.listdir(merged_directory) if 'TEST0'  in s ]   
             for s in stations_list:
                 os.system('cp ' + merged_directory + '/'+s   + '  '  +  merged_directory + '/'+s.replace('_TEST0.nc','.nc')   )
@@ -541,16 +536,11 @@ if __name__ == '__main__':
             stations_list = [ s for s in os.listdir(merged_directory) if 'TEST.nc'  in s ]   
             for s in stations_list:
                     os.system('cp ' + merged_directory + '/'+s   + '  '  +  merged_directory + '/'+s.replace('_TEST.nc','.nc')   )
-                    
-            stations_list = [ s for s in os.listdir(merged_directory) if 'TEST'  not in s ]   
+            """        
+            stations_list = [ s for s in os.listdir(merged_directory)  ]   
             
             
-            """
-            s = stations_list[0]
-            if '82' in stations_list[0]:
-                os.system('rm ' + out_dir + '/' + s )
-                os.system('cp ' + merged_directory + '/'+s.replace('.nc','_TEST.nc')  + '  '  +  merged_directory + '/'+s   )
-            """    
+
             cleaned_list = []
             if os.path.isdir(out_dir):
                 try:

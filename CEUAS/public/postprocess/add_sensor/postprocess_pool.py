@@ -155,15 +155,14 @@ class MergedFile(object):
         data = {}
         data['cdm_tables'] = {}
         
-        h5py_file = h5py.File(self.file, 'r+')
         
         cdm_tables = ['crs', 'observed_variable', 'sensor_configuration', 'station_configuration_codes', 'station_type', 'units', 'z_coordinate_type']
         cdm_tables = ['crs', 'observed_variable', 'station_configuration_codes', 'station_type', 'units', 'z_coordinate_type']
         
-        for t in cdm_tables:
-            table = xr.open_dataset (self.file, engine = 'h5netcdf' , group = t)
-            data['cdm_tables'][t] = table
-        
+
+            
+        h5py_file = h5py.File(self.file, 'r+')
+
         data['h5py_file'] = h5py_file 
         data['station_id'] = self.station_id 
         
@@ -176,8 +175,14 @@ class MergedFile(object):
         #data['sensor_id'] = h5py_file['observations_table']['sensor_id']
         data['length_max'] = len(h5py_file['observations_table']['date_time'] )
 
+        h5py_file.close() # to check
+        
+        for t in cdm_tables:
+            table = xr.open_dataset (self.file, engine = 'h5netcdf' , group = t)
+            data['cdm_tables'][t] = table
+            table.close()
+            
         self.data = data 
-    
     
     def load_obstab_era5fb(self, era5fb=False, obs_tab=True):
         """ Loading era5fb and observations_table if necessary """
@@ -322,7 +327,7 @@ class Sensor(MergedFile):
         for k in groups.keys():  
             try:           
                 groups[k].to_netcdf(self.MergedFile.file, format='netCDF4', engine='h5netcdf', encoding=groupencodings[k], group=k, mode='a') #
-                print('+++ Written sensor_configuration ' )
+                print('+++ Written  group: ' , k  )
             except  KeyError:
                 print('--- Passing variable ' )
                     
@@ -337,7 +342,7 @@ class Sensor(MergedFile):
             
             station_id = int(self.data['station_id'])
         except:
-            station_id = 99999999 
+            station_id = 99999999 # dummy station id whcih does not exist in Schroeder's table
         # select the data from the Schroeder's DF for this station_id
         
         sch_df = self.cdm['metadata_schroeder']
@@ -405,6 +410,8 @@ class Sensor(MergedFile):
 
     def replace_sensor_id(self):
         
+        self.data['h5py_file'] = h5py.File(self.MergedFile.file, 'r+')
+        
         print(' *** Replacing the sensor_id *** ')
         #replace = self.data['h5py_file']['observations_table']['sensor_id'][:]
         try:    
@@ -439,34 +446,34 @@ class Sensor(MergedFile):
         
         """ Checking if index dimension variable exists, if not create it """
         if 'index' not in self.data['h5py_file']['observations_table'].keys():
-            index = np.zeros (  self.data['h5py_file']['observations_table']['date_time'] .shape[0], dtype='S1')           
-            data['observations_table'].create_dataset('index', data=index)
-            
-        data = self.data['h5py_file']
+            index = np.zeros (  self.data['h5py_file']['observations_table']['date_time'] .shape[0], dtype= int)           
+            self.data['h5py_file']['observations_table'].create_dataset('index', data=index)
             
         if temp_sensor_list: # case where I found some sensor_ids inside Schroeder's table 
             
             sensor_list = np.concatenate(temp_sensor_list)
             slen=len(sensor_list[0]) # =3
-            
-            # making an array of 1-byte elements
-            data['observations_table'].create_dataset('sensor_id', data = sensor_list.view('S1').reshape(sensor_list.shape[0], slen ), compression = 'gzip' ,  chunks=True)
+                    
+            self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = sensor_list.view('S1').reshape(sensor_list.shape[0], slen ), compression = 'gzip' ,  chunks=True)                
             
             s = 'string{}'.format(slen)
-            stringa=np.zeros(slen,dtype='S1')
+            stringa=np.zeros(slen, dtype='S1')
             
-            try: # TO DO check what this is for 
-                del  self.data['h5py_file']['observations_table'][s]
-                del self.data['observations_table']['index']
-            except:
-                pass
-
+            
+            #try: # TO DO check what this is for 
+            #    del  self.data['h5py_file']['observations_table'][s]
+            #    del self.data['observations_table']['index']
+            #except:
+            #    pass
+            
             """ Adding missing dimensions """
             try:            
-                data['observations_table']['sensor_id'].dims[0].attach_scale( data['observations_table']['index'] )
-                data['observations_table'].create_dataset( s ,  data=stringa[:slen]  )
-                data['observations_table']['sensor_id'].dims[1].attach_scale(data['observations_table']['string{}'.format(slen)])
-                data['observations_table']['string{}'.format(slen)].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')
+                self.data['h5py_file']['observations_table'].create_dataset( 'string{}'.format(slen) ,  data=stringa[:slen]  )                
+                self.data['h5py_file']['observations_table'][ 'string{}'.format(slen) ].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')         
+                
+                #self.data['h5py_file']['observations_table']['sensor_id'].dims[0].attach_scale( self.data['h5py_file']['observations_table']['index'] )
+                #self.data['h5py_file']['observations_table']['sensor_id'].dims[1].attach_scale( self.data['h5py_file']['observations_table'][ 'string{}'.format(slen)  ] )
+                
                 print(' *** Done with the attributes of the dimension *** ')
                 
             except ValueError:
@@ -478,14 +485,15 @@ class Sensor(MergedFile):
             slen = len(sensor_id)
             s = 'string{}'.format(slen)
             stringa=np.zeros(slen,dtype='S1')
-            s_id_vec = np.full( (len(data['observations_table']['index']) ), sensor_id).astype(  np.dtype('|S3')  )
+            s_id_vec = np.full( (len(self.data['h5py_file']['observations_table']['index']) ), sensor_id).astype(  np.dtype('|S3')  )
             
             try:
-                data['observations_table'].create_dataset('sensor_id', data = s_id_vec.view('S1').reshape( len(s_id_vec), 3 )  , compression = 'gzip' ,  chunks=True)                  
-                data['observations_table']['sensor_id'].dims[0].attach_scale( data['observations_table']['index'] )  
-                data['observations_table'].create_dataset( s ,  data=stringa[:slen]  )                
-                data['observations_table']['sensor_id'].dims[1].attach_scale(data['observations_table']['string{}'.format(slen)])
-                data['observations_table']['string{}'.format(slen)].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')             
+                self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = s_id_vec.view('S1').reshape( len(s_id_vec), 3 )  , compression = 'gzip' ,  chunks=True)                  
+                self.data['h5py_file']['observations_table']['sensor_id'].dims[0].attach_scale(  self.data['h5py_file']['observations_table']['index'] )  
+                self.data['h5py_file']['observations_table'].create_dataset( s ,  data=stringa[:slen]  )                
+                self.data['h5py_file']['observations_table']['string{}'.format(slen)].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')                             
+                self.data['h5py_file']['observations_table']['sensor_id'].dims[1].attach_scale( self.data['h5py_file']['observations_table'][ s ])
+                
                 print(' *** Done with the attributes of the dimension *** ')
             except ValueError:
                 print('Dimension already exist, passing ')
@@ -497,10 +505,10 @@ class Sensor(MergedFile):
         cdm_tables = self.load_cdm_tables()      
         load_Schroeder_table = self.load_Schroeder_tables()
         dummy = self.extract_sensor_id()
+        status = self.write_sensorconfig()
+        
         status = self.replace_sensor_id()
         
-        if status != 'NoSensor':
-            status = self.write_sensorconfig()
 
         #write = self.MergedFile.write_summary( what = 'sensor', done = True)
         
@@ -585,11 +593,24 @@ if __name__ == '__main__':
             #a = run(merged_directory, postprocessed_new, force_run, station)
             
             
+            os.system('cp /raid8/srvx1/federico/GitHub/CEUAS_master_FEBRUARY2021/CEUAS/CEUAS/public/merge/0-20000-0-71896_CEUAS_merged_v1.nc'
+                      + '  /raid8/srvx1/federico/GitHub/CEUAS_master_FEBRUARY2021/CEUAS/CEUAS/public/merge/PROVA/ ')
+            os.system('cp  /raid60/scratch/federico/MERGED_MARCH2021/0-20000-0-82930_CEUAS_merged_v1.nc  '
+                      + '  /raid8/srvx1/federico/GitHub/CEUAS_master_FEBRUARY2021/CEUAS/CEUAS/public/merge/PROVA/ ')
+            
+
+            
+            
             """ File source direcotry """
-            merged_directory = '/raid60/scratch/federico/MERGED_MARCH2021_SAVE'
+            #merged_directory = '/raid60/scratch/federico/MERGED_MARCH2021_SAVE'
+            merged_directory = '/raid8/srvx1/federico/GitHub/CEUAS_master_FEBRUARY2021/CEUAS/CEUAS/public/merge/PROVA/'
             
             """ Moving postprocessed files to new directory """
-            postprocessed_new = '/raid60/scratch/federico/DATABASE_MARCH2021_sensor'
+            #postprocessed_new = '/raid60/scratch/federico/DATABASE_MARCH2021_sensor'
+
+            postprocessed_new = '/raid60/scratch/federico/PROVA_sensor'
+            os.system('rm -r  /raid60/scratch/federico/PROVA_sensor/')
+
             os.system('mkdir ' + postprocessed_new)
             
         
@@ -611,11 +632,11 @@ if __name__ == '__main__':
             #print(len(cleaned_list))
             #cleaned_list = ['0-20000-0-94463_CEUAS_merged_v0.nc', ]
             print(cleaned_list)
-            #for s in cleaned_list:
-            #    a = run(merged_directory, postprocessed_new, force_run, s)
+            for s in cleaned_list:
+                a = run(merged_directory, postprocessed_new, force_run, s)
                 
             
-            p = Pool(30)
-            func = partial(run, merged_directory, postprocessed_new, force_run)
-            out = p.map(func, cleaned_list)        
+            #p = Pool(30)
+            #func = partial(run, merged_directory, postprocessed_new, force_run)
+            #out = p.map(func, cleaned_list)        
             
