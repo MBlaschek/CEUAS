@@ -1262,7 +1262,7 @@ def run_frontend_file(args, **kwargs):
                             interpolate_missing=interpolate_missing)
 
 
-def run_backend_file(args):
+def run_backend_file(args, **kwargs):
     # only one file
     iofile = eua.CDMDataset(args.backend)
 
@@ -1282,7 +1282,8 @@ def run_backend_file(args):
     if args.outdir is not None:
         args.outdir = "{}/{}".format(args.outdir, os.path.basename(args.backend))
 
-    iofile.reopen(write_to_filename=args.outdir, mode='r+')
+    # Make sure we have this file open for writing
+    iofile.reopen(write_to_filename=args.outdir, mode='r+', strict=True)
     if args.temperature:
         raise NotImplementedError()
         # Code: 85
