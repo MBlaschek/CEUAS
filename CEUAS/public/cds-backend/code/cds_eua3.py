@@ -1706,11 +1706,10 @@ class CDMVariable:
         return self._data[item]
 
     def __delitem__(self, item):
-        try:
-            self.__delattr__(item)
-            self._names.remove(item)
-        except:
-            pass
+        # used for deleting attributes?
+        if hasattr(self, item):
+            self.__delattr__(item)  # private call to remove from Class
+            self._names.remove(item)  # remove from list
 
     def __repr__(self):
         return self._name + " : " + " ".join(["{}".format(str(getattr(self, i))) for i in self._names])
@@ -1736,9 +1735,13 @@ class CDMVariable:
         if data is not None:
             self._data = data
 
+    def get_size(self):
+        if hasattr(self.link.id, 'get_storage_size'):
+            return self.link.id.get_storage_size()
 
 class CDMGroup(CDMVariable):
     """ CDMGroup(origin, name, ...)"""
+    shape = 0  # for visual representation, groups do not have a shape in h5py
 
     def __repr__(self):
         text = ''
@@ -1746,18 +1749,19 @@ class CDMGroup(CDMVariable):
             if i in ['shape']:
                 continue
             istatus = 'L' if self[i].isArray() else ' '
-            # ivar = getattr(self, i)
-            # if 'HDF5' in str(getattr(ivar, '_origin', 'HDF5')):
-            #     istatus = ' '
-            # else:
-            #     istatus = 'L'
-            # text += "\n{:_<50} :{:1}: {}".format(i, istatus, getattr(ivar, 'shape', ''))
             text += "\n{:_<50} :{:1}: {}".format(i, istatus, self[i].shape)
         return self._name + ":\n" + text
 
     def __getitem__(self, item):
         return self.__getattribute__(item)
 
+    def __delitem__(self, item):
+        # delete variable from Group
+        if hasattr(self, item):
+            delattr(self, item)  # remove from class
+            self._names.remove(item) # remove from internal list
+            del self.link[item]  # call h5py removal
+            self.shape = len(self.keys())
 
 class CDMDatasetList(dict):
     """ This is the dict subclass for CDMDataset with multiple variables
@@ -1784,12 +1788,13 @@ class CDMDataset:
     # memory efficient, no duplicates
     # __slots__ = ['filename', 'file', 'groups', 'data']
 
-    def __init__(self, filename: str = None, groups: dict = None):
+    def __init__(self, filename: str = None, groups: dict = None, mode:str = 'r'):
         """ Init Class CDMDataset with a filename, cds_request or vm_request
 
         Args:
             filename: path of NetCDF HDF5 backend of frontend file
-            groups: read only these groups in
+            groups: read only these groups
+            mode: h5py reading mode, e.g. r, w, r+, a
 
         Examples:
             Open a CDM Backend file
@@ -1801,10 +1806,7 @@ class CDMDataset:
         """
         if filename is None:
             raise ValueError('Specifiy either filename.')
-        
-        #
-        # Create an Empty Class ?
-        #
+ 
         if filename == 'empty':
             self.filename = ''
             self.name = ''
@@ -1814,7 +1816,7 @@ class CDMDataset:
         else:
             self.filename = filename
             self.name = filename.split('/')[-1]  # just the name as in rname
-            self.file = h5py.File(filename, 'r')
+            self.file = h5py.File(filename, mode)
             logger.debug("[OPEN] %s", self.filename)
             self.hasgroups = False
             self.groups = []
@@ -1824,19 +1826,17 @@ class CDMDataset:
         return self.__getattribute__(item)
 
     def __delitem__(self, item):
-        if '/' in item:
-            if self.hasgroups:
-                item = item.split('/')
-                del self[item[0]][item[1]]
-        else:
-            try:
-                delattr(self, item)
-                self.groups.remove(item)
-            except:
-                pass
+        # delete group or CDMFrontend variable
+        if hasattr(self, item):
+            delattr(self, item)  # remove it from class
+            self.groups.remove(item) # remove from groups
+            del self.file[item]  # remove from file
+            self.file.flush()  # update file
 
     def __repr__(self):
         text = "File: " + repr(self.file)
+        text += "\nPermissions: %s%s (%s)" % ('R' if os.access(self.filename, os.R_OK) else '', 'W' if os.access(self.filename, os.W_OK) else '', os.getlogin())
+        text += "\nFilesize: %.2f MB" % (self.file.fid.get_filesize()/1024/1024)
         text += "\nFilename: " + self.filename
         text += "\n(G)roups/(V)ariables: \n"
         for igroup in self.groups:
@@ -1886,7 +1886,7 @@ class CDMDataset:
                         except:
                             # can fail if variable not present
                             pass
-                    jgroup['shape'] = len(jgroup.keys())  # update never hurts
+                    jgroup.shape = len(jgroup.keys())  # update never hurts
                     setattr(self, igroup, jgroup)  # attach to class
                     self.hasgroups = True
                 else:
@@ -1904,12 +1904,27 @@ class CDMDataset:
         self.file.close()
         logger.debug("[CLOSED] %s", self.filename)
 
-    def reopen(self, mode: str = 'r', tmpdir='~/tmp', write_to_filename: str = None, **kwargs):
+    def copy(self, filename:str, force:bool = False):
+        import os
+        import shutil
+
+        if os.path.isfile(filename) and not force:
+            raise OSError("File exists", filename)
+        
+        if filename == self.filename:
+            raise RuntimeError("Filename is identical with current?")
+        
+        shutil.copy(self.filename, filename)
+        logger.info("copy [%s] to %s", self.name, filename)
+
+    def reopen(self, mode: str = 'r', tmpdir: str='~/tmp', write_to_filename: str = None, strict:bool = False, **kwargs):
         """ Reopen the HDF5 file with different mode
 
         Args:
             mode: r, r+, w, w+, a
             tmpdir: temporary directory for writing
+            write_to_filename: new filename (a copy of the object)
+            strict: raise an Error if reopening fails (might not have been closed before)
             **kwargs: other options to h5py.File( )
         """
         import os
@@ -1927,7 +1942,11 @@ class CDMDataset:
         else:
             try:
                 self.file = h5py.File(self.filename, mode=mode, **kwargs)
-            except OSError:
+            except OSError as e:
+                if strict:
+                    logger.error('reopen with', mode, self.filename)
+                    raise e
+
                 if '~' in tmpdir:
                     tmpdir = os.path.expanduser(tmpdir)
 
@@ -1944,6 +1963,41 @@ class CDMDataset:
                     raise OSError('reopen with', mode, self.filename)
         logger.debug("reopen %s [%s]", self.filename, mode)
         self.inquire()  # Need to update links
+    
+    def storage_info(self, group:str=None, variable:str=None, limit:float = 0.1):
+        # get file size and check 
+        ffree = self.file.fid.get_freespace() # space due to deleting
+        fsize = self.file.fid.get_filesize()
+        text = "File: " + repr(self.file)
+        text += "\nFilesize: %.2f MB" % (fsize/1024/1024)
+        text += "\nFile freespace: %.2f MB (might need to repack)" % (ffree/1024/1024)
+        text += "\nFilename: " + self.filename
+        text += "\n(G)roups/(V)ariables: \n"
+        if group is None:
+            group = self.groups
+
+        estimates = []
+        textmsg = []
+        for igroup in group:
+            for ivar in self[igroup].keys():
+                try:
+                    if variable:
+                        if ivar != variable:
+                            continue
+                    current = self[igroup][ivar].get_size()/1024/1024
+                    if current < limit:
+                        continue
+                    shape = self[igroup][ivar].shape
+                    estimates.append(current) 
+                    textmsg.append("{:7.2f} MB| {:_<60} {}".format(current, igroup +'/'+ str(ivar), shape))
+                except:
+                    pass
+        # sort
+        estimates = np.array(estimates)
+        textmsg = np.array(textmsg)
+        idx = np.argsort(estimates)[::-1]  # reverse
+        text += "\n".join(textmsg[idx].tolist())
+        print(text)
 
     def select_variables(self, names: list, groups:list=None, fuzzy:bool = False):
         """Generate a list of existing variables based on names and groups
@@ -2049,6 +2103,8 @@ class CDMDataset:
                 if self[group][iname].isArray():
                     continue
 
+                # TODO: use read_direct(array, source_sel=None, dest_sel=None) from h5py
+                # according to documentation, this avoids internal copies ?
                 if len(self[group][iname].shape) > 1 and decode_byte_array:
                     # concat byte-char-array
                     data = self[group][iname][()].astype(object).sum(axis=1).astype(str)
@@ -3184,6 +3240,7 @@ class CDMDataset:
                             title: str = 'Station daily temperature series with ERA5/NOAA_20CR background departure statistics and RISE bias estimates',
                             attrs: dict = None,
                             global_attrs: dict = None,
+                            force:bool = False,
                             **kwargs):
         """Convert CDM backend file to RAOBCORE/RICH data format
 
@@ -3207,6 +3264,15 @@ class CDMDataset:
 
         Returns:
             xr.Dataset: data cube [hour x pressure x time]
+
+        Examples:
+            Convert temperature to RAOBCORE FORMAT with ERA5 first guess feedback (era5fb group) and 
+            RAOBCORE bias estimates (advanced_homogenisation group):
+
+            >>> data.convert_to_raobcore('temperature', 'ERA5fc_bias_estimate_temperature.nc', 
+                                        feedback=['fg_depar@body', 'RAOBCORE_bias_estimate'], 
+                                        feedback_group=['era5fb', 'advanced_homogenisation'])
+
         """
         if not self.hasgroups:
             raise RuntimeError("Requires a backend file")
@@ -3259,6 +3325,7 @@ class CDMDataset:
         # 2. Swap dimension to new standard time
         # 3. Convert to a cube hour x time x pressure
         tdata = stack_cube_by_hour(tdata.isel(**{dim: standard_index}).swap_dims({'time': icoord}), dim=icoord, times=times)
+        tdata = tdata.drop('stacking')  # drop stacking dimension, used to revert stacking
         # add hours variable
         # variable with the correct hours inside
         tdata['hours'] = tdata.time.dt.hour
@@ -3278,38 +3345,59 @@ class CDMDataset:
         # remove other variables and coordinates
         tdata = tdata.drop(icoord + '_flag')
         tdata = tdata.drop(icoord)
-        tdata = tdata.drop('plev').drop(
-            'hour', dim=None).drop('time', dim=None)
+        tdata = tdata.drop('plev').drop('hour', dim=None).drop('time', dim=None)
+        # ends up wrong in file
+        # tdata = tdata.set_coords(['press', 'datum'])
         # Rename variables
         if 'temperature' in tdata.variables:
             tdata = tdata.rename_vars({'temperature': 'temperatures'})
+        # ERA5 variables
         if '{}_fg_depar'.format(variable) in tdata.variables:
             tdata = tdata.rename_vars(
-                {'{}_fg_depar'.format(variable): 'fg_dep'})
+                {'{}_fg_depar'.format(variable): 'era5_fgdep'})
         if '{}_biascorr'.format(variable) in tdata.variables:
             tdata = tdata.rename_vars({'{}_biascorr'.format(variable): 'bias'})
         if '{}_an_depar'.format(variable) in tdata.variables:
             tdata = tdata.rename_vars(
-                {'{}_an_depar'.format(variable): 'an_dep'})
-
+                {'{}_an_depar'.format(variable): 'era5_andep'})
+        # bias adjustment variables
+        for ivar in tdata.variables:
+            if '_bias_estimate' in ivar:
+                tdata = tdata.rename_vars({ivar:'bias'})
+                tdata['bias'].attrs['long_name'] = source
+        
         # Add station information (latest)
         tdata['lat'] = ('station', [self.header_table.latitude[-1]])
         tdata['lon'] = ('station', [self.header_table.longitude[-1]])
-        try:
-            tdata['alt'] = (
-                'station', [self.header_table.height_of_station_above_sea_level[-1]])
-        except:
-            tdata['alt'] = ('station', [0])
-        # Add attributes
+        # TODO: alt does not appear in files ?
+        #try:
+        #    tdata['alt'] = ('station', [self.header_table.height_of_station_above_sea_level[-1] ])
+        #except:
+            # tdata['alt'] = ('station', [0])
+        #    pass
+
+        # Add attributes from the default ones
         for ikey, ival in default_attrs.items():
-            tdata[ikey].attrs.update(ival)
-        # Global Attributes
+            try:
+                tdata[ikey].attrs.update(ival)
+            except:
+                pass
+
+        # Add Global Attributes
         tdata.attrs.update(default_global)
+        # Remove some Attributes:
+        for ivar in tdata:
+            # remove cdm stuff
+            for iatt in list(tdata[ivar].attrs.keys()):
+                if iatt in ['cdmcode', 'odbcode']:
+                    del tdata[ivar].attrs[iatt]
+
+        # Output to file or return as Dataset 
         if filename is not None:
             if os.path.isfile(filename):
                 # write only variables, no dims (assuming dims are all the same anyway)
                 # Leo: netcdf_classic needs to be as format
-                with xr.open_dataset(filename) as fopen:
+                with xr.open_dataset(filename, engine='netcdf4', format='NETCDF4_CLASSIC',mode = 'a' if not force else 'w') as fopen:
                     for ivar in tdata.variables:
                         if ivar in fopen.variables:
                             logger.debug("Skipping {}".format(ivar))
@@ -3583,7 +3671,7 @@ class CDMDataset:
         # Reopen file for writing
         #
         if 'r' == self.file.mode:
-            self.reopen(mode='r+', tmpdir=kwargs.get('tmpdir', '~/tmp'))
+            self.reopen(mode='r+', **kwargs)
         else:
             logger.debug('File mode: [%s] %s', self.file.mode, self.name)
         #
@@ -4447,6 +4535,94 @@ class CDMDataset:
             [date_time_name, z_coordinate_name])
         return data
 
+    def copy_group_to(self, file, group:str, variables:list=None, force:bool=False, **kwargs):
+        """Copy group to other file
+
+        Args:
+            file ([CDMDataset, str]): output CDMDataset or filename
+            group (str): group to copy
+            variables (list, optional): subset of variables. Defaults to None.
+            force (bool, optional): overwrite?. Defaults to False.
+
+        Raises:
+            RuntimeError: CDM Backend file
+            RuntimeError: CDM Backend file output
+            ValueError: Group not found
+            RuntimeError: Group exists
+        """
+        if not self.hasgroups:
+            raise RuntimeError('Only for CDM Backend files', self.name)
+        
+        close_again = False
+        if not isinstance(file, CDMDataset):
+            file = CDMDataset(file)
+            close_again = True
+        
+        if not file.hasgroups:
+            if close_again:
+                file.close()
+            raise RuntimeError('Only for CDM Backend files', file.name)
+
+        file.reopen(mode='r+', strict=True)
+        if group not in self.groups:
+            if close_again:
+                file.close()
+            raise ValueError('Group', group, 'not found in ', self.name)
+        
+        if group in file.groups and not force:
+            if close_again:
+                file.close()
+            raise RuntimeError('Group exists in ', file.name, 'Use force=True, to overwrite')
+
+        # Check if dimensions match ?
+        assert self.file['observations_table']['date_time'].shape == file.file['observations_table']['date_time'].shape, 'Error dimensions do not match between files'
+        # Finaly do something:
+        gid = self.file[group]
+        if group not in file.groups:
+            if variables is None:
+                # copy the whole group
+                logger.info("Copying whole group %s to %s", group, file.name)
+                self.file.copy(group, file.file)
+                if close_again:
+                    file.close()
+                else:
+                    file.inquire()  # update the class
+                return
+            else:
+                ogid = file.file.create_group(group)
+        else:
+            ogid = file.file[group]  # get group
+
+        # copy all ?
+        if variables is None:
+            variables = list(gid.keys())
+
+        for ivar in variables:
+            # variables exists ?
+            # TODO add merge variables here?
+            if ivar in ogid.keys():
+                del ogid[ivar] # remove in file
+                del file[group][ivar] # remove in class
+            
+            ogid.create_dataset_like(ivar,
+                                     gid[ivar],
+                                     dtype=gid[ivar].dtype,
+                                     shape=gid[ivar].shape,
+                                     chunks=True,
+                                     compression='gzip')
+            if len(gid[ivar].shape) > 1:
+                # What about string dimensions?
+                # copy these dimensions/ or is that auto done?
+                pass
+        
+        logger.info('Finsihed writing %s to %s', group, self.name)
+        if close_again:
+            file.close()
+        else:
+            file.file.flush()  # Make sure the changes are written
+            file.inquire() # update representation in class
+        # FIN function copy_group_to
+    # FIN class CDMDataset
 
 """
 Speed test of h5py fancy indexing:
