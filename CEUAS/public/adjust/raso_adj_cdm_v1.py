@@ -46,25 +46,9 @@ except Exception as e:
 
 warnings.simplefilter("ignore")
 np.seterr(invalid='ignore')
+
 logger = logging.getLogger('upperair.adjust')
-
-if not logger.hasHandlers():
-    logger.setLevel(logging.DEBUG)
-    ch = logging.StreamHandler(sys.stdout)
-    ch.setLevel(logging.DEBUG)  # respond only to Warnings and above
-    # create formatter
-    formatter = logging.Formatter('%(asctime)s - %(name)s | %(funcName)s - %(levelname)s - %(message)s')
-    # add formatter to ch
-    ch.setFormatter(formatter)
-    # add ch to logger
-    logger.addHandler(ch)
-
-
-def logging_set_level(level: int):
-    """ Set Logging Level, Default: 10 (DEBUG)"""
-    for ihandle in logger.handlers:
-        ihandle.setLevel(level)
-
+formatter = logging.Formatter('%(asctime)s - %(name)s | %(funcName)s - %(levelname)s - %(message)s')
 
 # in Pa
 std_plevs = np.asarray([10, 20, 30, 50, 70, 100, 150, 200, 250, 300, 400, 500, 700, 850, 925, 1000])
@@ -560,7 +544,7 @@ def adjustments(data, breaks, use_mean=True, axis=0, sample_size=130, borders=30
         sample_size = sample_size // nq
         if sample_size < 3:
             sample_size = 3
-        logger.debug('Sample size:', sample_size, 'N-Q:', nq)
+        logger.info('Sample size:', sample_size, 'N-Q:', nq)
 
     dshape = data.shape  # Shape of data (date x levs)
     imax = dshape[axis]  # maximum index
@@ -1256,10 +1240,10 @@ def run_frontend_file(args, **kwargs):
         _, _, stest, breaks, adj_depar_wd, adj_depar_ws = adjustment_procedure_wind()
         # wind direction
         write_adjustments(filepool['wind_from_direction'], stest, breaks, adj_depar_wd, None,
-                            interpolate_missing=interpolate_missing)
+                            interpolate_missing=args.interpolate_missing)
         # wind speed
         write_adjustments(filepool['wind_speed'], stest, breaks, adj_depar_ws, None,
-                            interpolate_missing=interpolate_missing)
+                            interpolate_missing=args.interpolate_missing)
 
 
 def run_backend_file(args, **kwargs):
@@ -1332,7 +1316,7 @@ def run_backend_file(args, **kwargs):
         iofile.write_observed_data('humidity_bias_estimate',
                                    varnum=eua.cdm_codes[variable],
                                    cube=data['adjustments'],
-                                   group='advanced_homogenisation',
+                                   group=args.homogenisation,
                                    interpolate=args.interpolate_missing,
                                    interpolate_datetime=args.interpolate_missing,
                                    extrapolate_plevs=args.interpolate_missing)
@@ -1361,8 +1345,8 @@ if __name__ == "__main__":
 
     # handle arguments
     kwargs = {'verbose': 1}
-    """
-Optional Keyword Options:
+    epilog = """
+Keyword options for Standard Normal Homogeneity Test (SNHT):
     --thres []          Threshold value for SNHT, default: 50
     --window []         Moving Window for SNHT, default: 1470 (in days, 4 years)
     --missing []        Maximum allowed missing values in window, default: 600 (in days)
@@ -1372,14 +1356,21 @@ Optional Keyword Options:
     --borders []        Breakpoint zone, default: 90 (in days)
     --ratio []          Use ratio instead of differences, default: 0 (not)
 
-Experimental Keyword Options:
-    --interpolate_missing Interpolate Adjustments to non-standard times and pressure levels
-    
-    """
+Examples:
+    This will run the humidity bias estimation routine and write back the bias estimates into a group called
+    advanced_homogenisation.
+
+    >>> raso_adj_cdm_v1.py -b 0-20000-0-67001_CEUAS_merged_v1.nc --humidity 
+
+version: {}
+author: {}
+date: {}
+---------------------------------------------
+""".format(__version__, __author__, __date__)
 
     parser = argparse.ArgumentParser(description="Run standardized radiosonde homogenisation software on CDM compliant file",
-                                     usage="",
-                                     epilog="Additional Keywords:")
+    formatter_class=argparse.RawDescriptionHelpFormatter,
+                                     epilog=epilog)
     parser.add_argument("-f", "--frontend", help="CDM compliant file")
     parser.add_argument("-b", "--backend", help="CDM raw file")
     parser.add_argument("-o", "--outdir", help="Output directory")
@@ -1389,9 +1380,10 @@ Experimental Keyword Options:
     parser.add_argument("--humidity", help="run adjustment on humidities", action="store_true")
     parser.add_argument("--winds", help="run adjustment on winds", action="store_true")
     parser.add_argument("--feedback", help="feedback variables")
-    parser.add_argument("--feedback_group", help="feedback group name")
-    parser.add_argument("--homogenisation", help="homogenisation group name")
+    parser.add_argument("--feedback_group", help="feedback group name (only backend files)", default='era5fb')
+    parser.add_argument("--homogenisation", help="homogenisation group name (only backend files)", default='advanced_homogenisation')
     parser.add_argument("--interpolate_missing", help="interpolate missing values", action="store_true")
+    parser.add_argument("--copypart", help="copy only partial backendfile", action="store_true")
     parser.add_argument("--debug", help="debug information", action="store_true")
     parser.add_argument("--verbose", help="show more information", action="store_true")
     parser.add_argument("--logfile", help="Logfile", default='adjustments.log')
@@ -1413,12 +1405,13 @@ Experimental Keyword Options:
             else:
                 kwargs[iarg[2:]] = True
         i+=1
+    # Inputs
     if args.dates:
         args.dates = args.dates.split(',') if ',' in args.dates else args.dates
     if args.plevs:
         args.plevs = args.plevs.split(',') if ',' in args.plevs else args.plevs
     #
-    # Check input
+    # Check file
     #
     if not (args.backend or args.frontend):
         parser.print_help()
@@ -1437,16 +1430,23 @@ Experimental Keyword Options:
         args.plevs = list(map(int, args.plevs))
     else:
         args.plevs = std_plevs * 100
-        
-    if args.debug:
-        logging_set_level(10)
 
-    if not args.logfile:
-        ch3 = logging.FileHandler(args.logfile)
-        ch3.setLevel(logging.DEBUG)
-        ch3.setFormatter(formatter)
-        logger.addHandler(ch3)
+    # LOGGING 
+    ch = logging.StreamHandler()
+    if args.debug:
+        ch.setLevel(logging.DEBUG)
+    else:
+        ch.setLevel(logging.WARNING if args.verbose else logging.INFO)
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    # LOG TO FILE?
+    if args.logfile:
+        ch = logging.FileHandler(args.logfile)
+        ch.setLevel(logging.DEBUG)
+        ch.setFormatter(formatter)
+        logger.addHandler(ch)
         logger.info("Logging to: ", args.logfile)
+    # END LOGGING
 
     if args.frontend:
         #

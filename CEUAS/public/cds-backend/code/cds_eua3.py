@@ -23,10 +23,10 @@ Performance
   give a slice per Variable to speed up reading performance.
 - HDF5 files could be split by variable, would improve reading performance dramatically, especially in MP
 """
-import logging
 import os
 import time
 from datetime import datetime, timedelta
+import logging
 
 import h5py  # most likely non standard on CDS
 import numpy as np
@@ -53,27 +53,11 @@ odb_codes = {'geopotential': 1, 'temperature': 2, 'u_component_of_wind': 3, 'v_c
              'specific_humidity': 7}
 
 std_plevs = np.asarray([10, 20, 30, 50, 70, 100, 150, 200, 250, 300, 400, 500, 700, 850, 925, 1000])
-logger = logging.getLogger('upperair.cdm')
 
-if not logger.hasHandlers():
-    import sys
-
-    logger.setLevel(logging.DEBUG)
-    ch = logging.StreamHandler(sys.stdout)
-    ch.setLevel(logging.DEBUG)  # respond only to Warnings and above
-    # create formatter
-    formatter = logging.Formatter('%(asctime)s - %(name)s | %(funcName)s - %(levelname)s - %(message)s')
-    # add formatter to ch
-    ch.setFormatter(formatter)
-    # add ch to logger
-    logger.addHandler(ch)
-
-
-def logging_set_level(level: int):
-    """ Set Logging Level, Default: 10 (DEBUG)"""
-    for ihandle in logger.handlers:
-        ihandle.setLevel(level)
-
+#
+# This is a libary, logging must be controlled by the caller
+#
+logger = logging.getLogger('upperair.cdm') 
 
 ###############################################################################
 #
@@ -861,6 +845,72 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
         logger.warning('slow copy: %s %f s', group, tt)
 
 
+def copy_h5py_variable(fin:h5py.File, fout:h5py.File, variable:str):
+    """Copy variable or group from one file to the other
+
+    Args:
+        fin ([type]): h5py File
+        fout ([type]): h5py File
+        variable (str): variable, e.g. /observations_table/observation_value
+
+    Raises:
+        IOError: [description]
+    """
+    # fin is open?
+    if not (fin and fout):
+        raise IOError("File status not opened. IN {} OUT {}".format(fin, fout))
+    
+    path = variable.split('/')
+    variable = path[-1]
+    current = ''
+    gid = fout
+    for ipath in path:
+        if ipath != variable:
+            # check group
+            current += '/' + ipath
+            try:
+                gid = fout[current]
+            except:
+                gid = fout.create_group(current)
+    # get variable
+    fvar = fin[current + '/' + variable]
+    if isinstance(fvar, h5py.Group):
+        # recursive loop for Groups
+        for ivar in fvar.keys():
+            copy_h5py_variable(fin, fout, '{}/{}/{}'.format(current, variable, ivar))
+        return
+    
+    # A Variable or Dimension ?
+    if 'CLASS' in fvar.attrs.keys():
+        # This is a dimension scale -> DIMENSION
+        return
+    
+    # Create in output
+    gid.create_dataset_like(variable, fvar, dtype=fvar.dtype, shape=fvar.shape, chunks=True)
+    # trasfer data
+    gid[variable][:] = fvar[:]
+    for iatt, ival in fvar.attrs.items():
+        if iatt in ['DIMENSION_LIST']:
+            continue
+        gid[variable].attrs[iatt] = ival
+    #
+    # Attach dimensions from file
+    #
+    try:
+        idim = [ jdim[0].name for jdim in fvar.dims.keys() ]
+    except:
+        idim = None # this should happen for dimensions like index, string??
+    
+    if idim:
+        for j,jdim in enumerate(idim):
+            # /observations_table/index
+            kdim = jdim.split('/')[-1]
+            if kdim not in gid.keys():
+                gid.create_dataset_like(kdim, fin[jdim])
+                gid[kdim].make_scale(kdim)
+                gid[variable].dims[j].attach_scale(gid[kdim])
+    fout.flush() # Write
+
 ###############################################################################
 #
 # DATETIME FUNCTIONS
@@ -1266,8 +1316,8 @@ def unstack_cube_by_hour(data: xr.DataArray, dim: str = 'time', hour: str = 'hou
     return data
 
 
-def align_datetime(data: xr.DataArray, dim: str = 'time', plev: str = 'plev', times: tuple = (0, 12), span: int = 3,
-                   freq: str = '12h', **kwargs) -> xr.DataArray:
+def align_datetime(data, dim: str = 'time', plev: str = 'plev', times: tuple = (0, 12), span: int = 3,
+                   freq: str = '12h', apply:bool = False, **kwargs) -> xr.DataArray:
     """ Align dates and times according to times (0,12) and within a time span (e.g. 3 hours).
     Add a coordinate (e.g. standard_time) with nominal launch times according to times and span and freq.
 
@@ -1278,6 +1328,7 @@ def align_datetime(data: xr.DataArray, dim: str = 'time', plev: str = 'plev', ti
         times (tuple): sounding times
         span (int): plus minus times (smaller than freq/2)
         freq (str): frequency of output times
+        apply (bool): apply new standard time?
 
     Returns:
         xr.DataArray : datetime standardized DataArray
@@ -1285,8 +1336,8 @@ def align_datetime(data: xr.DataArray, dim: str = 'time', plev: str = 'plev', ti
     import numpy as np
     from pandas import DatetimeIndex
 
-    if not isinstance(data, xr.DataArray):
-        raise ValueError('Requires a DataArray', type(data))
+    if not isinstance(data, (xr.DataArray, xr.Dataset)):
+        raise ValueError('Requires a DataArray/Dataset', type(data))
 
     if dim not in data.dims:
         raise ValueError('Requires a datetime dimension', dim)
@@ -1395,8 +1446,13 @@ def align_datetime(data: xr.DataArray, dim: str = 'time', plev: str = 'plev', ti
     logger.info("Modified dates: %d, Standard %s: %d / %d / %d", nn, str(times), idx_std.sum(), nx, newdates.size)
     if not all(data[jname].values == np.sort(data[jname].values)):
         logger.warning("Values are not sorted by %s", jname)
-        pass
         # data = data.sortby(jname)
+        pass
+        
+    if apply:
+        data = data.swap_dims({dim: jname}).rename({dim: '{}_reported'.format(dim)}).rename({jname : dim})
+        data[dim].attrs['info'] = jname
+        data['{}_reported'.format(dim)].attrs['info'] = dim
     return data
 
 
@@ -1836,7 +1892,7 @@ class CDMDataset:
     def __repr__(self):
         text = "File: " + repr(self.file)
         text += "\nPermissions: %s%s (%s)" % ('R' if os.access(self.filename, os.R_OK) else '', 'W' if os.access(self.filename, os.W_OK) else '', os.getlogin())
-        text += "\nFilesize: %.2f MB" % (self.file.fid.get_filesize()/1024/1024)
+        text += "\nFilesize: %.2f MB" % (self.file.id.get_filesize()/1024/1024)
         text += "\nFilename: " + self.filename
         text += "\n(G)roups/(V)ariables: \n"
         for igroup in self.groups:
@@ -1904,7 +1960,20 @@ class CDMDataset:
         self.file.close()
         logger.debug("[CLOSED] %s", self.filename)
 
-    def copy(self, filename:str, force:bool = False):
+    def copy(self, filename:str, force:bool = False, variables:list = None, groups:list = None, fuzzy:bool=False):
+        """Copy whole file (via shell) or variables or groups (via h5py)
+
+        Args:
+            filename (str): output filename
+            force (bool, optional): Overwrite output file? Defaults to False.
+            variables (list, optional): list of variables to copy. e.g. /observations_table/report_id. Defaults to None.
+            groups (list, optional): list of groups to copy. Defaults to None.
+            fuzzy (bool, optional): Search fuzzy for variable names. Defaults to False.
+
+        Raises:
+            OSError: [description]
+            RuntimeError: [description]
+        """
         import os
         import shutil
 
@@ -1914,8 +1983,23 @@ class CDMDataset:
         if filename == self.filename:
             raise RuntimeError("Filename is identical with current?")
         
-        shutil.copy(self.filename, filename)
-        logger.info("copy [%s] to %s", self.name, filename)
+        if variables is None and groups is None:
+            shutil.copy(self.filename, filename)
+            logger.info("copy complete [%s] to %s", self.name, filename)
+        else:
+            logger.warning("This is experimental. I hope you know waht you are doing.")
+            if isinstance(variables, str):
+                variables = [variables]
+            if isinstance(groups, str):
+                groups = [groups]
+            
+            with h5py.File(filename, 'w') as f:
+                for ivar in variables:
+                    copy_h5py_variable(self.file, f, ivar)
+                for igroup in groups:
+                    copy_h5py_variable(self.file, f, igroup)
+            logger.info("Copied variables [%d] to %s", len(variables), filename)
+
 
     def reopen(self, mode: str = 'r', tmpdir: str='~/tmp', write_to_filename: str = None, strict:bool = False, **kwargs):
         """ Reopen the HDF5 file with different mode
@@ -1966,8 +2050,8 @@ class CDMDataset:
     
     def storage_info(self, group:str=None, variable:str=None, limit:float = 0.1):
         # get file size and check 
-        ffree = self.file.fid.get_freespace() # space due to deleting
-        fsize = self.file.fid.get_filesize()
+        ffree = self.file.id.get_freespace() # space due to deleting
+        fsize = self.file.id.get_filesize()
         text = "File: " + repr(self.file)
         text += "\nFilesize: %.2f MB" % (fsize/1024/1024)
         text += "\nFile freespace: %.2f MB (might need to repack)" % (ffree/1024/1024)
@@ -2746,6 +2830,7 @@ class CDMDataset:
             if varnum not in cdm_codes.values():
                 raise ValueError('(varnum) Code not in CDM Codes', variable, str(cdm_codes))
 
+        # TODO for the new files this variable is not mandatory anymore !!!
         if observed_variable_name not in self[dimgroup].keys():
             raise ValueError('Observed variable not found:', observed_variable_name, self[dimgroup].keys())
 
@@ -3034,6 +3119,9 @@ class CDMDataset:
         Returns:
             DataFrame
         """
+        # TODO change to search for variables and select whole groups
+        # it is inconsistent to use variables + groups to select !!!
+        # TODO add feature to select only one variable
         if self.hasgroups:
             if isinstance(groups, str):
                 if groups == '/':
@@ -3794,14 +3882,18 @@ class CDMDataset:
                                 'This is a netCDF dimension but not a netCDF variable.')
                             gid[sname].make_scale(sname)
                             gid[name].dims[1].attach_scale(gid[sname])
-                        # todo check if old string dimension is still used or not ?
+                        # TODO check if old string dimension is still used or not ?
                         #
                         # Attach dimensions from file
                         #
                         try:
-                            idim = self.file[dimgroup][variable].dims[0].keys()[0]
+                            # TODO there might be conflict if dimensions are used from a different group
+                            # this is not accounted here (beacuse of our structure) 
+                            # e.g. [/observations_table/index, /observations_table/string11]
+                            idim = [jdim.name for jdim in self.file[dimgroup][variable].dims.keys()][0]
                         except:
                             idim = ''
+                        idim = idim.split('/')[-1] if '/' in idim else idim
                         idim = idim if idim != '' else 'index'
                         if idim not in gid.keys():
                             gid[idim] = self.file[dimgroup][idim]
@@ -4066,6 +4158,7 @@ class CDMDataset:
                 # shapes of file and input do not match?
                 if self[name].shape[1] != n:
                     if force_replace:
+                        # TODO update with copy_h5py_variable code (which is much more general)
                         #
                         # Replace existing variable
                         #
@@ -4535,93 +4628,45 @@ class CDMDataset:
             [date_time_name, z_coordinate_name])
         return data
 
-    def copy_group_to(self, file, group:str, variables:list=None, force:bool=False, **kwargs):
-        """Copy group to other file
-
-        Args:
-            file ([CDMDataset, str]): output CDMDataset or filename
-            group (str): group to copy
-            variables (list, optional): subset of variables. Defaults to None.
-            force (bool, optional): overwrite?. Defaults to False.
-
-        Raises:
-            RuntimeError: CDM Backend file
-            RuntimeError: CDM Backend file output
-            ValueError: Group not found
-            RuntimeError: Group exists
+    def check_cdm_dimensions(self):
+        """Check the CDM Backend file if it has proper dimensions attached to variables.
+    
         """
         if not self.hasgroups:
-            raise RuntimeError('Only for CDM Backend files', self.name)
-        
-        close_again = False
-        if not isinstance(file, CDMDataset):
-            file = CDMDataset(file)
-            close_again = True
-        
-        if not file.hasgroups:
-            if close_again:
-                file.close()
-            raise RuntimeError('Only for CDM Backend files', file.name)
+            raise RuntimeError('Only for CDM Backend files')
 
-        file.reopen(mode='r+', strict=True)
-        if group not in self.groups:
-            if close_again:
-                file.close()
-            raise ValueError('Group', group, 'not found in ', self.name)
-        
-        if group in file.groups and not force:
-            if close_again:
-                file.close()
-            raise RuntimeError('Group exists in ', file.name, 'Use force=True, to overwrite')
-
-        # Check if dimensions match ?
-        assert self.file['observations_table']['date_time'].shape == file.file['observations_table']['date_time'].shape, 'Error dimensions do not match between files'
-        # Finaly do something:
-        gid = self.file[group]
-        if group not in file.groups:
-            if variables is None:
-                # copy the whole group
-                logger.info("Copying whole group %s to %s", group, file.name)
-                self.file.copy(group, file.file)
-                if close_again:
-                    file.close()
+        def check_dims(fin):
+            collect = {}
+            for ivar in fin.keys():
+                if isinstance(fin[ivar], h5py.Group):
+                    collect.update(check_dims(fin[ivar]))
                 else:
-                    file.inquire()  # update the class
-                return
-            else:
-                ogid = file.file.create_group(group)
-        else:
-            ogid = file.file[group]  # get group
+                    try:
+                        # get dimension names
+                        collect[fin[ivar].name] = [ jdim[0].name for jdim in fin[ivar].dims.keys() ]
+                    except:
+                        # if error, than it is a dimension
+                        collect[fin[ivar].name] = 'dim'
+            if not isinstance(fin, h5py.File):
+                return collect
 
-        # copy all ?
-        if variables is None:
-            variables = list(gid.keys())
-
-        for ivar in variables:
-            # variables exists ?
-            # TODO add merge variables here?
-            if ivar in ogid.keys():
-                del ogid[ivar] # remove in file
-                del file[group][ivar] # remove in class
-            
-            ogid.create_dataset_like(ivar,
-                                     gid[ivar],
-                                     dtype=gid[ivar].dtype,
-                                     shape=gid[ivar].shape,
-                                     chunks=True,
-                                     compression='gzip')
-            if len(gid[ivar].shape) > 1:
-                # What about string dimensions?
-                # copy these dimensions/ or is that auto done?
-                pass
+        collect = check_dims(self.file)
+        dims = []
+        for ivar,ival in collect.items():
+            if isinstance(ival, str):
+                dims.append(ivar)
+                
+        dims = sorted(list(set(dims)))
+        found = [False]*len(dims)
+        for ivar,ival in collect.items():
+            if isinstance(ival, list):
+                for idim in ival:
+                    if idim in dims:
+                        found[dims.index(idim)] = True
+            # TODO check if variables have proper dimensions set?
         
-        logger.info('Finsihed writing %s to %s', group, self.name)
-        if close_again:
-            file.close()
-        else:
-            file.file.flush()  # Make sure the changes are written
-            file.inquire() # update representation in class
-        # FIN function copy_group_to
+        for i,j in zip(dims, found):
+            print("{:<70} : {}".format(i,j))
     # FIN class CDMDataset
 
 """
