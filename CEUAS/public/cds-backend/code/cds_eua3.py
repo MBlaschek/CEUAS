@@ -4649,8 +4649,7 @@ class CDMDataset:
                     except:
                         # if error, than it is a dimension
                         collect[fin[ivar].name] = 'dim'
-            if not isinstance(fin, h5py.File):
-                return collect
+            return collect
 
         collect = check_dims(self.file)
         dims = []
