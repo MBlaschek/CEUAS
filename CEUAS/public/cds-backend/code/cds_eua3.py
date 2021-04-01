@@ -431,8 +431,7 @@ def read_standardnames(url: str = None) -> dict:
               'station_name', 
               'RISE_bias_estimate', 'RICH_bias_estimate', 'RASE_bias_estimate', 'RAOBCORE_bias_estimate', 
               'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
-              'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 
-              'wind_direction_bias_estimate',
+              'wind_bias_estimate',
               'humidity_bias_estimate',
              ]
 
@@ -449,8 +448,7 @@ def read_standardnames(url: str = None) -> dict:
                  'advanced_homogenisation/RISE_bias_estimate', 'advanced_homogenisation/RICH_bias_estimate',
                  'advanced_homogenisation/RASE_bias_estimate', 'advanced_homogenisation/RAOBCORE_bias_estimate',
                  'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
-                 'advanced_homogenisation/u_component_of_wind_bias_estimate', 'advanced_homogenisation/v_component_of_wind_bias_estimate', 
-                 'advanced_homogenisation/wind_direction_bias_estimate', 
+                 'advanced_homogenisation/wind_bias_estimate', 
                  'advanced_homogenisation/humidity_bias_estimate',
                 ]
     cf = {}
@@ -527,9 +525,7 @@ def read_standardnames(url: str = None) -> dict:
     cf['RICH_bias_estimate']['shortname'] = 'RICH_bias_estimate'
     cf['RASE_bias_estimate']['shortname'] = 'RASE_bias_estimate'
     cf['RAOBCORE_bias_estimate']['shortname'] = 'RAOBCORE_bias_estimate'
-    cf['u_component_of_wind_bias_estimate']['shortname'] = 'u_component_of_wind_bias_estimate'
-    cf['v_component_of_wind_bias_estimate']['shortname'] = 'v_component_of_wind_bias_estimate'
-    cf['wind_direction_bias_estimate']['shortname'] = 'wind_direction_bias_estimate'
+    cf['wind_bias_estimate']['shortname'] = 'wind_bias_estimate'
     cf['desroziers_30']['shortname'] = 'desroziers_30'
     cf['desroziers_60']['shortname'] = 'desroziers_60'
     cf['desroziers_90']['shortname'] = 'desroziers_90'
@@ -802,7 +798,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
                                 print('x')
                             fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                             
-                except MemoryError as e:
+                except Exception as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
                     hilf = np.zeros(shape=(idx.shape[0]), dtype='S10')
@@ -1241,12 +1237,12 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 print(time.time()-tt)
                 print('')
 
-    except MemoryError as e:
-    #except MemoryError as e:
+    except Exception as e:
+    #except Exception as e:
         if debug:
             raise e
-        logger.error('MemoryError %s occurred while reading %s', repr(e), filename)
-        return '', 'MemoryError "{}" occurred while reading {}'.format(e, filename)
+        logger.error('Exception %s occurred while reading %s', repr(e), filename)
+        return '', 'Exception "{}" occurred while reading {}'.format(e, filename)
 
     return filename_out, msg
 
@@ -1654,7 +1650,7 @@ def cds_request_wrapper(request: dict, request_filename: str = None, cds_dataset
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except MemoryError as e:
+    except Exception as e:
         logger.error('CDSAPI Request failed %s', str(request))
         raise e
 
@@ -1719,7 +1715,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except MemoryError as e:
+    except Exception as e:
         logger.error('VM Request failed %s', str(request))
         raise e
 
@@ -1950,7 +1946,7 @@ class CDMDataset:
                         setattr(self, igroup, CDMVariable(self.file[igroup], igroup, shape=self.file[igroup].shape))
                     self[igroup].update(link=self.file[igroup])
 
-        except MemoryError as e:
+        except Exception as e:
             logger.debug(repr(e))
             self.close()
 
@@ -2372,9 +2368,9 @@ class CDMDataset:
                   'report_id', 'station_id']
         varseldict={}
         varseldict['temperature']=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate']
-        varseldict['wind_direction']=['wind_direction_bias_estimate']
-        varseldict['u_component_of_wind']=['u_component_of_wind_bias_estimate']
-        varseldict['v_component_of_wind']=['v_component_of_wind_bias_estimate']
+        varseldict['wind_direction']=['wind_bias_estimate']
+        varseldict['u_component_of_wind']=['wind_bias_estimate']
+        varseldict['v_component_of_wind']=['wind_bias_estimate']
         varseldict['relative_humidity']=['humidity_bias_estimate']
         # added report_id -> in observations_table, not to be confused with report_id from header_table -> trajectory_label
         logger.debug('Request-keys: %s', str(request.keys()))
@@ -2707,7 +2703,13 @@ class CDMDataset:
                     
             elif 'recordindices' in self.groups:
                 # update for sorted backend files
-                recordindex = self.load_variable_from_file(str(varnum), group='recordindices', return_data=True)[0]
+                try:
+                    
+                    recordindex = self.load_variable_from_file(str(varnum), group='recordindices', return_data=True)[0]
+                except:
+                    logger.warning(str(varnum)+' not found in recordindices of file ')
+                    trange = slice(0,0)
+                    return trange
                 # last time index 
                 if timeindex[-1] < (recordindex.shape[0] - 1):
                     # within datetime range

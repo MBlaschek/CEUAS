@@ -24,10 +24,12 @@ from functools import partial
 from multiprocessing import Pool
 
 #@njit
-def add_winddirbias(xyzu,xyzv,xyzt,press,atime0,adj,adjpress):
+def add_winddirbias(xyzu,xyzv,xyzd,xyzt,press,atime0,adj,adjpress):
     adjd=np.full_like(xyzv,np.nan)
     adju=np.full_like(xyzv,np.nan)
     adjv=np.full_like(xyzv,np.nan)
+    adjbu=np.full_like(xyzv,np.nan)
+    adjbv=np.full_like(xyzv,np.nan)
     ff=np.sqrt(xyzu**2+xyzv**2)
 
     idtold=0
@@ -37,8 +39,11 @@ def add_winddirbias(xyzu,xyzv,xyzt,press,atime0,adj,adjpress):
         else:
             idt=np.searchsorted(xyzt,atime0[it+1])
         adjd[idtold:idt]=np.nanmean(adj[:,:,it])
-        adju[idtold:idt]=np.cos((270-adjd[idtold:idt])*np.pi/180)*ff[idtold:idt]
-        adjv[idtold:idt]=np.sin((270-adjd[idtold:idt])*np.pi/180)*ff[idtold:idt]
+        
+        adju[idtold:idt]=np.cos((270-xyzd[idtold:idt])*np.pi/180)*ff[idtold:idt]
+        adjv[idtold:idt]=np.sin((270-xyzd[idtold:idt])*np.pi/180)*ff[idtold:idt]
+        adju[idtold:idt]=np.cos((270-xyzd[idtold:idt]+adjd[idtold:idt])*np.pi/180)*ff[idtold:idt]-adju[idtold:idt]
+        adjv[idtold:idt]=np.sin((270-xyzd[idtold:idt]+adjd[idtold:idt])*np.pi/180)*ff[idtold:idt]-adjv[idtold:idt]
 
         idtold=idt
         #print(it,idt)
@@ -104,18 +109,22 @@ def calc_dirshifts(ddeps,cdict,breakidx,tsaint,delta):
     ff=np.sqrt(cdict['u']['xrdq']['uwind'].values**2+cdict['v']['xrdq']['vwind'].values**2)
     #strongddeps=copy.deepcopy(ddeps)
     ddeps[ff<0.5]=np.nan
-    ds=cdict['d']['xrdq']['winddirection'].values
-    ds[ds>360]=np.nan
-    ds[ds<0]=np.nan
+    ds=cdict['d']['xrdq']['winddirection'].values[:]
+    #ds[ds>360]=np.nan
+    #ds[ds<0]=np.nan
     
-    ufg=-(cdict['u']['xrdq']['uwind'].values-cdict['u']['xrdq']['era5_fgdep'].values)
-    vfg=-(cdict['v']['xrdq']['vwind'].values-cdict['v']['xrdq']['era5_fgdep'].values)
+    ufg=cdict['u']['xrdq']['uwind'].values-cdict['u']['xrdq']['era5_fgdep'].values
+    vfg=cdict['v']['xrdq']['vwind'].values-cdict['v']['xrdq']['era5_fgdep'].values
     cdict['u']['xrdq']['uwindbias']=cdict['u']['xrdq']['uwind'].copy(deep=True)
     cdict['v']['xrdq']['vwindbias']=cdict['v']['xrdq']['vwind'].copy(deep=True)
+    #cdict['u']['xrdq']['uwind'].values[:]=np.cos((270-ds[:])*np.pi/180)*ff[:]
+    #cdict['v']['xrdq']['vwind'].values[:]=np.sin((270-ds[:])*np.pi/180)*ff[:]
+    #x=cdict['u']['xrdq']['uwind'].values[0,10,:]-cdict['u']['xrdq']['uwindbias'].values[0,10,:]
+
     cdict['d']['xrdq']['directionbias']=cdict['d']['xrdq']['winddirection'].copy(deep=True)
     cdict['d']['xrdq']['directionbias'].values[:]=0.
-    cdict['u']['xrdq']['uwindbias'].values[:]=0.
-    cdict['v']['xrdq']['vwindbias'].values[:]=0.
+    #cdict['u']['xrdq']['uwindbias'].values[:]=0.
+    #cdict['v']['xrdq']['vwindbias'].values[:]=0.
     for bi in range(breakidx.shape[0]-1,0,-1):
         istart=np.max((breakidx[bi-1],breakidx[bi]-tsaint))
         istop=np.min((breakidx[bi]+tsaint,ddeps.shape[2]))
@@ -137,10 +146,10 @@ def calc_dirshifts(ddeps,cdict,breakidx,tsaint,delta):
             continue
         # now calculate the increments
         cdict['d']['xrdq']['directionbias'].values[:,:,:breakidx[bi]]+=dirshifts[bi]
-        cdict['u']['xrdq']['uwindbias'].values[:,:,:breakidx[bi]]-=np.cos((270-ds[:,:,:breakidx[bi]])*np.pi/180)*ff[:,:,:breakidx[bi]]
-        cdict['v']['xrdq']['vwindbias'].values[:,:,:breakidx[bi]]-=np.sin((270-ds[:,:,:breakidx[bi]])*np.pi/180)*ff[:,:,:breakidx[bi]]
-        cdict['u']['xrdq']['uwind'].values[:,:,:breakidx[bi]]-=cdict['u']['xrdq']['uwindbias'].values[:,:,:breakidx[bi]]
-        cdict['v']['xrdq']['vwind'].values[:,:,:breakidx[bi]]-=cdict['v']['xrdq']['vwindbias'].values[:,:,:breakidx[bi]]                
+        cdict['u']['xrdq']['uwind'].values[:,:,:breakidx[bi]]=np.cos((270-ds[:,:,:breakidx[bi]])*np.pi/180)*ff[:,:,:breakidx[bi]]
+        cdict['v']['xrdq']['vwind'].values[:,:,:breakidx[bi]]=np.sin((270-ds[:,:,:breakidx[bi]])*np.pi/180)*ff[:,:,:breakidx[bi]]
+    cdict['u']['xrdq']['uwindbias'].values[:]-=cdict['u']['xrdq']['uwind'].values[:]
+    cdict['v']['xrdq']['vwindbias'].values[:]-=cdict['v']['xrdq']['vwind'].values[:]                
         
         
     cdict['u']['xrdq']['era5_fgdep'].values=cdict['u']['xrdq']['uwind'].values-ufg
@@ -469,9 +478,10 @@ def homogenize_station(opath,via_backend,fnf):
                 ranges[k]=[data['recordindices'][str(v)][0],data['recordindices'][str(v)][-1]]
             datau=data['observations_table']['observation_value'][ranges['u'][0]:ranges['u'][-1]]
             datav=data['observations_table']['observation_value'][ranges['v'][0]:ranges['v'][-1]]
+            datad=data['observations_table']['observation_value'][ranges['d'][0]:ranges['d'][-1]]
             
             adjd,adju,adjv=add_winddirbias(datau,
-                                datav,
+                                datav,datad,
                                 data['observations_table']['date_time'][ranges['u'][0]:ranges['u'][-1]],
                                 data['observations_table']['z_coordinate'][ranges['u'][0]:ranges['u'][-1]],
                                 cdict['d']['xrdq']['datum'].values[:]*86400,
