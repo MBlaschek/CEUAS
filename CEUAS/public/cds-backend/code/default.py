@@ -695,7 +695,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                          'RISE_bias_estimate', 'RICH_bias_estimate', 'RASE_bias_estimate', 'RAOBCORE_bias_estimate',
                          'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate',
                          'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
-                         'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 'wind_direction_bias_estimate',
+                         'wind_bias_estimate',
                          'humidity_bias_estimate', 'humidity_1.0_bias_estimate',
                         ]
     # bias_estimate_method : raobcore, rich, ...
@@ -1455,8 +1455,8 @@ def mapdata(date=None, enddate=None, response=None):
     active_file = config['config_dir'] + '/active.json'
     act = json.load(open(active_file,"r"))
     
-    namelist_file = config['config_dir'] + '/namelist.json'
-    namelist = json.load(open(namelist_file,"r"))
+#     namelist_file = config['config_dir'] + '/namelist.json'
+#     namelist = json.load(open(namelist_file,"r"))
     
     output_file = '/data/public/maplist_'+str(date)
     
