@@ -171,7 +171,7 @@ except:
 
 global constraints
 constraints = '/data/public/constraints.csv'
-constraints = pd.read_csv(const)
+constraints = pd.read_csv(constraints)
 logger.info("constraints.csv read and ready")
 
 
