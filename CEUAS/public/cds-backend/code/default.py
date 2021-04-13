@@ -170,10 +170,12 @@ except:
     pass
 
 global constraints
-constraints = '/data/public/constraints.csv'
-constraints = pd.read_csv(constraints)
-logger.info("constraints.csv read and ready")
-
+try:
+    constraints = '/data/public/constraints.csv'
+    constraints = pd.read_csv(constraints)
+    logger.info("constraints.csv read and ready")
+except:
+    logger.info("constraints.csv not found")
 
 ###############################################################################
 #
