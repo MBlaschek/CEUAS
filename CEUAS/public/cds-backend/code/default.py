@@ -169,6 +169,13 @@ try:
 except:
     pass
 
+global constraints
+try:
+    constraints = '/data/public/constraints.csv'
+    constraints = pd.read_csv(constraints)
+    logger.info("constraints.csv read and ready")
+except:
+    logger.info("constraints.csv not found")
 
 ###############################################################################
 #
@@ -695,7 +702,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                          'RISE_bias_estimate', 'RICH_bias_estimate', 'RASE_bias_estimate', 'RAOBCORE_bias_estimate',
                          'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate',
                          'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
-                         'u_component_of_wind_bias_estimate', 'v_component_of_wind_bias_estimate', 'wind_direction_bias_estimate',
+                         'wind_bias_estimate',
                          'humidity_bias_estimate', 'humidity_1.0_bias_estimate',
                         ]
     # bias_estimate_method : raobcore, rich, ...
@@ -1455,8 +1462,8 @@ def mapdata(date=None, enddate=None, response=None):
     active_file = config['config_dir'] + '/active.json'
     act = json.load(open(active_file,"r"))
     
-    namelist_file = config['config_dir'] + '/namelist.json'
-    namelist = json.load(open(namelist_file,"r"))
+#     namelist_file = config['config_dir'] + '/namelist.json'
+#     namelist = json.load(open(namelist_file,"r"))
     
     output_file = '/data/public/maplist_'+str(date)
     
@@ -1497,6 +1504,45 @@ def mapdata(date=None, enddate=None, response=None):
 
     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(output_file))
     return output_file
+
+@hug.get('/maplist2/', output=hug.output_format.file)
+def mapdata2(date=None, plev=None, var=None, response=None):
+    """ Main Hug Index Function on get requests
+
+    index function requests get URI and converts into dictionary.
+
+    Args:
+        request: dictionary
+        response: str
+
+    Returns:
+
+    """
+    
+    yr, mn, dy = date.split('-')
+    const = constraints[constraints.observed_variable == int(var)]
+    const = const[const.z_coordinate == int(plev)]
+    const = const[const.year == int(yr)]
+    const = const[const.month == int(mn)]
+    const = const[const.day == int(dy)]
+    const = const.drop_duplicates(subset=['lat', 'lon'], keep='last')
+    
+    output_file = '/data/public/maplist_'+str(date)
+    rows = []
+    rows.append(['station_name', 'longitude', 'latitude'])
+    for i in len(const):
+        rw = const.iloc[i]
+        rows.append([str(rw.station_name), float(rw.lon), float(rw.lat)])
+
+    with open(output_file, 'w') as csvfile:  
+        # creating a csv writer object  
+        csvwriter = csv.writer(csvfile)  
+        # writing the data rows  
+        csvwriter.writerows(rows) 
+            
+    response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(output_file))
+    return output_file
+
 
 
 @hug.get('/statlist/', output=hug.output_format.file)
