@@ -197,7 +197,9 @@ class Merger():
         self.station             = station
         self.out_name        = self.out_dir + '/' + self.station + '_CEUAS_premerged_v0.nc'
 
-        self.observations_table_vars = ['date_time', 'z_coordinate' , 'z_coordinate_type', 'observed_variable' , 'observation_value' , 'report_id' , 'observation_id' , 'latitude' , 'longitude', 'units', 'source_id']
+        self.observations_table_vars = ['date_time', 'z_coordinate' , 'z_coordinate_type', 'observed_variable' , 
+                                                           'observation_value' , 'report_id' , 'observation_id' , 'latitude' , 'longitude',
+                                                           'units', 'source_id', 'data_policy_licence' ]
 
         """ Loading the econding of the tables created from the harvester script and to be applied again """
         self.encodings = np.load('groups_encodings.npy' , allow_pickle = True ).item()
@@ -560,19 +562,36 @@ class Merger():
                     cleaned_df_container[k][F]['era5fb_tab'] = era5fb_tab     # cleaned dataframe  
 
             """ Merging the different records found in the sifferent sources """
-            if len(all_len)>0: # skipping empty container dictionary. At this point I certainyl have one valid record 
+            
+            if len(all_len)>0: # skipping empty container dictionary. At this point I certainly have one valid record 
                 best_ds, combined_obs_tab, combined_era5fb_tab, combined_head_tab, selected_file, best_file = self.combine_record(dt, container = cleaned_df_container)
 
                 #if is_same_record and  dt/(3600*24*365)  + 1900 > 1961:
                 if is_same_record:
 
-                    temporary_previous = all_combined_obs[-1] # keep the temporary previous record 
+                    remove_previous = False 
+                    
                     #print('Found a time-shifted record, current' + best_ds + '- previous ' + best_ds_list[-1] + ' = ' , float( (combined_obs_tab['date_time'][0] - temporary_previous['date_time'][0])/3600)  ) # decide what to keep in case of same record
 
+                    """ Check if the licence needs to be updated (at least one is free so we set it as free for) """
+                    current_licence = combined_obs_tab['data_policy_licence'][0] 
+                    previous_licence = all_combined_obs[-1] ['data_policy_licence'][0] 
+                    
+                    if current_licence != previous_licence: # if the policy are not the same it means that at least one is free so keep the free
+                        if current_licence != 0:
+                            combined_obs_tab['data_policy_licence'] = np.full ( len (combined_obs_tab['date_time']) , 0 , dtype = int)
+                        if previous_licence !=0:
+                            all_combined_obs[-1]['data_policy_licence'] = np.full ( len (all_combined_obs[-1]['date_time']) , 0 , dtype = int)
+                            
+                            
+                    
+                    
+                    
+                    temporary_previous = all_combined_obs[-1] # keep the temporary previous record 
+                    
                     if best_ds in ['era5_1','era5_2']:  # best_ds from era5
                         if  best_ds_list[-1] not in ['era5_1','era5_2']: # remove previous non era5_1 or era5_2 record 
-                            for lista in all_list:
-                                lista.pop()                                                   
+                            remove_previous = True
                             #removed_record.append(temporary_previous)
                             #kept_record.append(combined_obs_tab)                                                  
 
@@ -580,11 +599,11 @@ class Merger():
                             if len(combined_obs_tab['date_time']) <= len(temporary_previous['date_time'] ):
                                 #kept_record.append(temporary_previous)  
                                 #removed_record.append(combined_obs_tab)
+                                all_combined_head[-1]['duplicates'] = np.array( [ all_combined_head[-1]['duplicates'][0] + b',' + combined_head_tab['duplicates'][0] ], dtype='|S70') 
                                 continue  # nothing to do, will keep the previous records -> go to next dt 
 
-                            else: # case where both the current and previous are from era5_1 and era5_2, but the previous has smaller number of data 
-                                for lista in all_list:
-                                    lista.pop()             
+                            else: # case where both the current and previous are from era5_1 and era5_2, but the previous has fewer data 
+                                remove_previous = True
                                 #removed_record.append(temporary_previous)
                                 #kept_record.append(combined_obs_tab)                                                        
 
@@ -592,33 +611,41 @@ class Merger():
                         if best_ds_list[-1] in ['era5_1','era5_2']:
                             #print('This best ds is ' , best_ds , '  but I will keep ' ,  best_ds_list[-1] )
                             #kept_record.append(temporary_previous)  
-                            #removed_record.append(combined_obs_tab)                                          
+                            #removed_record.append(combined_obs_tab)   
+                            all_combined_head[-1]['duplicates'] = np.array( [ all_combined_head[-1]['duplicates'][0] + b',' + combined_head_tab['duplicates'][0] ], dtype='|S70') 
                             continue 
 
                         else:
                             if len(combined_obs_tab['date_time']) < len(temporary_previous['date_time'] ):
                                 #kept_record.append(temporary_previous)  
-                                #removed_record.append(combined_obs_tab)                                                        
+                                #removed_record.append(combined_obs_tab)
+                                all_combined_head[-1]['duplicates'] = np.array( [ all_combined_head[-1]['duplicates'][0] + b',' + combined_head_tab['duplicates'][0] ], dtype='|S70') 
                                 continue  # nothing to do, will keep the previous records -> go to next dt 
 
                             elif len(combined_obs_tab['date_time']) > len(temporary_previous['date_time'] ): # remove previous, keep current 
-                                for lista in all_list:
-                                    lista.pop()                                     
+                                remove_previous = True                                
                                 #kept_record.append(combined_obs_tab)  
                                 #removed_record.append(temporary_previous)
 
                             elif len(combined_obs_tab['date_time']) == len(temporary_previous['date_time'] ): # prefer igra2, otherwise
                                 if best_ds == 'igra2':
-                                    for lista in all_list:
-                                        lista.pop()                                                                           
+                                    remove_previous = True
                                     #removed_record.append(temporary_previous)
                                     #kept_record.append(combined_obs_tab)  
 
                                 else: # case where data source is not important, I keep the previous and do nothing 
                                     #kept_record.append(temporary_previous)  
-                                    #removed_record.append(combined_obs_tab)                                                      
-                                    continue          
-
+                                    #removed_record.append(combined_obs_tab)
+                                    all_combined_head[-1]['duplicates'] = np.array( [ all_combined_head[-1]['duplicates'][0] + b',' + combined_head_tab['duplicates'][0] ], dtype='|S70') 
+                                    continue    
+                                
+                    if remove_previous:
+                        # remove from lists the previous data
+                        # copy the duplicated from before into new header 
+                        combined_head_tab['duplicates'] = np.array( [ all_combined_head[-1]['duplicates'][0] + b',' + combined_head_tab['duplicates'][0] ], dtype='|S70') 
+                        for lista in all_list:
+                            lista.pop()   
+                            
                 else: # not the same record, nothing special to do, keep both previous and current 
                     pass                     
             else:
@@ -733,7 +760,7 @@ class Merger():
                 self.write_merged(content = 'era5fb', table= {k:a})
                 logging.debug('*** Written era5fb %s:  ', k)
             except:
-                print("FAILED feedback variable " , k)
+                print("Failed feedback variable " , k)
 
         del all_combined_era5fb
         print(blue + 'Memory used after deleting era5fb_tab dic: ', process.memory_info().rss/1000000000 , cend)
@@ -749,7 +776,7 @@ class Merger():
                 self.write_merged(content = 'header_table', table= {k: tab})  # { key: np.array([])}
                 logging.info('*** Written header table %s: ', k)
             except:
-                print('FFF FAILED variable in header table', k )
+                print('Failed variable in header table', k )
 
         del all_combined_head
         print(blue + 'Memory used after deleting all_merged head_tab dic: ', process.memory_info().rss/1000000000 , cend)
@@ -763,7 +790,6 @@ class Merger():
         source_conf['source_file'] = ( {'source_file' : source_files.shape } , source_files )
         self.write_merged(content = 'source_configuration', table= source_conf )
 
-        print(0)
 
 
         """ Concatenation of station_configurations """
@@ -842,9 +868,20 @@ class Merger():
         ''' If more file are available for the same best_ds, pick the first one from the list '''
         selected_obstab, selected_era5fb = container[best_ds][best_file]['obs_tab'] , container[best_ds][best_file]['era5fb_tab']
 
+        ''' Update the data policy licence '''
+        if 'ncar' in container.keys() or 'igra_2' in container.keys() or 'era5_1759' in container.keys() or 'era5_1761' in container.keys():
+            dp = 0 # free data
+        else:
+            dp = 4 # restricted data
+        licence = np.full ( len (selected_obstab['date_time']) , dp , dtype = int)
+        selected_obstab['data_policy_licence'] = licence 
+        #print('check')
+            
+        
         ''' Creating the correct observations and record ids. 
                 All the bytes variable are shrunk to a long |S1 byte variable type, otherwise 
                 writing in h5py will not work. '''
+
 
         for var in ['observation_id']:
             if type (selected_obstab[var] ) == np.ndarray and type (selected_obstab[var][0] ) == np.bytes_:
@@ -881,8 +918,11 @@ class Merger():
 
         if  'best_ds' == 'era5_1' or best_ds == 'era5_2' :
             selected_obstab['advanced_assimilation_feedback'] = np.array([1]*len(selected_obstab['date_time']) )
+            selected_obstab['advanced_uncertainty'] = np.array([1]*len(selected_obstab['date_time']) )
+            
         else:
             selected_obstab['advanced_assimilation_feedback'] = np.array([0]*len(selected_obstab['date_time']) )
+            selected_obstab['advanced_uncertainty'] = np.array([0]*len(selected_obstab['date_time']) )
 
         #best_ds_byte = np.bytes_(best_ds, ndtype = '|S10') # converting to bytes object
         best_ds_byte = np.bytes_(best_ds) # converting to bytes object            
@@ -997,11 +1037,6 @@ class Merger():
                     except:
                         print ('FAILED converting column ' , k, ' type ', type(table[k][0]) , ' to type ', var_type )
 
-                #print('*** Writing the table ', content, ' variable ',  k)
-                #if k ==   'duplicates':
-                #      table[k] = table[k].astype( bytes ) 
-
-
                 dic = {k:table[k]}  # making a 1 colum dictionary
                 shape = table[k].shape
                 #print('SHAPE IS FFF ', table[k].shape )
@@ -1010,7 +1045,7 @@ class Merger():
             if content == 'observations_table' and not self.obstab_nans_filled :
                 missing_cdm_var = [ v for v in self.dic_type_attributes[content].keys() if v not in self.observations_table_vars]  # variables to be filled with nans            
                 for k in missing_cdm_var:
-                    if k not in ['advanced_assimilation_feedback']:
+                    if k not in ['advanced_assimilation_feedback', 'advanced_uncertainty']:
                         var_type = self.dic_type_attributes[content][k]['type']
                         if var_type == np.int32 :
                             nan = np.int32(-2147483648)
@@ -1079,7 +1114,7 @@ data_directories   = { 'era5_1'       : base_dir + '/era5_1'     ,
 
 out_dir = '/raid60/scratch/federico/MERGED_MARCH2021/'
 
-#out_dir = 'PROVA'
+out_dir = 'PROVA'
 
 run_mode = 'dummy'
 
