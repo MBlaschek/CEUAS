@@ -47,7 +47,7 @@
     minst = 2
     ens = '00'
     downwards = .false.
-    switchdate = 19790101
+    switchdate = 19790102
     fgdepname = 'era5_fgdep'
     initial_adjust = 'era'
 /
