@@ -82,7 +82,7 @@ contains
     write(*,*) 'statnr ',statnr
 
     iunit=20
-    thread_num=omp_get_thread_num()
+!$    thread_num=omp_get_thread_num()
     !$ iunit=iunit+thread_num ! this should avoid clashes in parallel runs
 
     write(cstatnr,'(I6.6)') statnr

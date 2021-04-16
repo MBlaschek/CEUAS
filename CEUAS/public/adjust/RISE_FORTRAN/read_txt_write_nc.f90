@@ -2896,7 +2896,7 @@ IF(lan) numpar=numpar+1
       endif
     enddo
 !!$ call omp_set_lock(omp_lp(rcpara%statmax+1))
-    call msu_fwd_calc(profiles,bt,nprof,nlevels)
+!leo fails because of segfault    call msu_fwd_calc(profiles,bt,nprof,nlevels)
 !!$ call omp_unset_lock(omp_lp(rcpara%statmax+1))
 
 !!$if(ichan .eq. 2) then
@@ -3746,7 +3746,7 @@ status=NF90_GET_VAR(ncid,tempvarid, tanomaly)
 where (tanomaly.eq. -1.e30)
   tanomaly=-999.
 endwhere
-crut4(:,:,1:crut4stop)=tanomaly(:,:,cruoffset:crustop)
+crut4(:,:,1:crut4stop)=tanomaly(:,:,cruoffset+1:crustop)
 deallocate(tanomaly)
 
 end subroutine read_hadCRUT4
