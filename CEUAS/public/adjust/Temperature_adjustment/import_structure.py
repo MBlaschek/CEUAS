@@ -13,8 +13,16 @@ try:
 except:
     pass
 shutil.copy(ipath+'../common/TSK19582020_s.nc','../common/')
-shutil.copy(ipath+'../common/FAL_1979000000','../common/')
-shutil.copy(ipath+'../common/AAL_1979000000','../common/')
+#shutil.copy(ipath+'../common/FAL_1979000000','../common/')
+#shutil.copy(ipath+'../common/AAL_1979000000','../common/')
+shutil.copy(ipath+'../common/HadCRUT.4.6.0.0.median.nc','../common/')
+shutil.copy(ipath+'../common/LSM_2000010100_s.nc','../common/')
+shutil.copy(ipath+'../common/ELEV2000010100_s.nc','../common/')
+start='1958'
+end='2020'
+shutil.copy(ipath+'../common/TSK'+start+end+'_s.nc','../common/')
+#shutil.copy(ipath+'../common/LSP_'+start+end+'_s.nc','../common/')
+shutil.copy(ipath+'../common/CI__'+start+end+'_s.nc','../common/')
 
 # assumption is that script from_cds_to_legacy has been run so that feedbackmerged... files have already been generated..
 for f in glob.glob(ipath+'*/feedbackmerged??????.nc'):
