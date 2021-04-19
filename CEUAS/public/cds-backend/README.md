@@ -10,7 +10,7 @@ Deliverable | DC3S311c_Lot2.2.4.2 | UNIVIE | Report, Documentation | Homogeneity
 
 # Short Description
 
-The code supplied here allows to run a python web-server [(hug)](https://github.com/hugapi/hug) that will be a backend for the Copernicus Early Upper Air Service, which will be accessible via the [Copernicus Data Store (CDS)](https://cds.climate.copernicus.eu). 
+The code supplied here allows to run a python web-server [(hug)](https://github.com/hugapi/hug) that will be a backend for the Copernicus Early Upper Air Service, which will be accessible via the [Copernicus Data Store (CDS)](https://cds.climate.copernicus.eu). Note that the operational backend can only be accessed via the CDS frontend. Direct access to it is prevented by firewall settings. 
 
 The backend expects HTTP POST requests, where the query string must be in JSON format. Table 1 describes the allowed keys and values of the requests. HTTP GET requests may work as well but are accepted only for debugging.
 
