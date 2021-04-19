@@ -79,10 +79,10 @@ module tosat
   Implicit None
   !
 !#ifdef _RTTOV_EXAMPLE_FWD_PARALLEL
-#include "rttov_parallel_direct.interface"
-#define rttov_direct rttov_parallel_direct
+!#include "rttov_parallel_direct.interface"
+!#define rttov_direct rttov_parallel_direct
 !#else
-!#include "rttov_direct.interface"
+#include "rttov_direct.interface"
 !#endif
 #include "rttov_setup.interface"
 #include "rttov_copy_prof.interface"
@@ -241,6 +241,11 @@ DO jj=1,nvars
 
 END DO
 status=NF90_CLOSE(ncid)
+
+where (skin%lons>180.)
+  skin%lons=skin%lons-360.
+endwhere
+
 skin%months((starty-raobstarty)*12+1:mmax)=mhilf
 do i=1,(starty-raobstarty)*12
   skin%months(i)=(raobstarty+(i-1)/12)*100+mod(i-1,12)+1
@@ -290,6 +295,7 @@ do j=1,dimlen(3)
   endif
 
   do i=(starty-raobstarty)*12+1,mmax
+!    write(*,*) j,skin%lons(j),floor((skin%lons(j)+180.)/5)+1
     if(crut2(floor((skin%lons(j)+180.)/5)+1,floor((90.+skin%lats(j))/5)+1,i) .ne. -999.) then
       skin%tsk(i,:,j)=crut2(floor((skin%lons(j)+180.)/5)+1,floor((90.+skin%lats(j))/5)+1,i)+sum
       skin%t2(i,:,j)=skin%tsk(i,:,j)
@@ -546,9 +552,8 @@ subroutine msu_fwd_init(instrument,isurf,nwater,zenith,input_chan,input_ems,nple
   ! Call RTTOV forward model
 !!$omp critical
 !!$ call omp_set_lock(omp_lp(2885))
-!  call rttov_direct(         &
-
-  call rttov_parallel_direct(         &
+!  call rttov_parallel_direct(         &
+  call rttov_direct(         &
         & rttov_errorstatus, &! out   error flag
         & chanprof,          &! in    channel and profile index structure
         & opts,              &! in    options structure
