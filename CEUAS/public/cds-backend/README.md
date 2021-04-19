@@ -24,6 +24,9 @@ The backend returns files, which are either
 3. JSON files containing error messages, if a HTTP error occurs
 
  Both file formats can be dealt with in the CDS toolbox. 
+ 
+### Keyword Table
+
 
 | Identifier       | Request             | Frontend/Backend | All possible values                                          | Type           | Explanation                                                  |
 | ---------------- | ------------------- | ---------------- | ------------------------------------------------------------ | -------------- | ------------------------------------------------------------ |
@@ -32,7 +35,7 @@ The backend returns files, which are either
 | `bbox`           | Exclusive           | Same             | `[lower,left,upper,right]`                                   | Numbers        | Boundaries of lat/lon rectangle to select stations. Exclusive with `statid`, `bbox` |
 | `statid`         | Exclusive           | Same             | `[SSSSS,...],SSSSS, ALL`                                     | String         | WMO or WIGOS station ID, ALL                                 |
 | `date`           | Optional            | Backend          | `[YYYYMMDD, YYYYMMDD],YYYYMMDD, YYYYMMDD-YYYYMMDD`           | Integer/String | If `date` is missing, all available dates are selected. Range is possible. |
-| `optional`       | Optional            | Same             | `[obs_minus_bg, ...]`            | String         | Optional Variables. See table below. |
+| `optional`       | Optional            | Same             | `[obs_minus_bg, ...]`            | String         | For allowed values see Optional Variables table below. |
 | `format`         | Optional            | Same             | `nc` or `csv`                                                | String         | Output format, NetCDF4 (nc) or Comma Separated Values (csv)  |
 | `pressure_level` | Optional            | Same             | `[1000 - 100000]` Pa                                         | Integer        | If `pressure_level` is missing all levels (standard and significant) are selected. |
 | `time`           | Optional            | Same             | `[HH1,HH2], HH,  [0 - 23]`                                   | Integer        | Launch time, If `time` is missing, all available times are selected. If HH1>HH2 the range starts at HH1 of the preceding day. |
@@ -40,13 +43,15 @@ The backend returns files, which are either
 | `reanalysis`     | Not Implemented Yet | -                | ERA5, JRA55, 20CRv3, CERA20C                                 | String         | Reanalysis values interpolated offline to station locations  |
 | `cdm`            | Not Implemented Yet | -                | `[header_table/source_id, ...]`                                                | String         | Attach also Common Data Model tables to station files. This breaks CF compliance of netCDF files. |
 
+### Optional Variables Table
+Note: One variable must be selected above with the variables keyword. Depending on this, the optional variable then is in the same units as the main variable. 
 
 | Optional | Description |
 | --- | --- |
 | `obs_minus_bg` | ERA5 observation minus first guess as stored in ERA5 ODB feedback data base|
 | `obs_minus_an` | ERA5 observation minus analysis  as stored in ERA5 ODB feedback data base|
 | `bias_estimate` | ERA5 variational bias estimate  as stored in ERA5 ODB feedback data base|
-| `type` | Radiosonde types from S. Schroeder's VAPOR project or WMO BUFR radiosonde type codes (after 2013) as found in ERA5 ODB feedback data base|
+| `sonde_type` | Radiosonde types from S. Schroeder's VAPOR project or WMO BUFR radiosonde type codes (after 2013) as found in ERA5 ODB feedback data base|
 | --- | --- |
 | `desroziers_30` | Desroziers' (2005) observation uncertainty estimate, calculated from 30 day averages of ERA5 obs_minus_bg, obs_minus_an|
 | `desroziers_60` | Desroziers' (2005) observation uncertainty estimate, calculated from 60 day averages of ERA5 obs_minus_bg, obs_minus_an|
