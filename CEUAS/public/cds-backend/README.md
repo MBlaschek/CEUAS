@@ -6,7 +6,7 @@ Related Milestones and Deliverables:
 Type | Nr | Responsible | Nature | Title| Due | Status | File
 ---|---|---|---|---|---|---|---
 Deliverable | DC3S311c_Lot2.3.1.1 | UNIVIE | Software, Report | First access to early upper air data base via CDS | September 2019 | January 2020 | code/* 
-Deliverable | DC3S311c_Lot2.3.2.1 | UNIVIE | CDS Tools | First access to early upper air data base via CDS | March 2021 | May 2020 | code/* 
+Deliverable | DC3S311c_Lot2.2.4.2 | UNIVIE | Report, Documentation | Homogeneity adjustments for Temperature, humidity, wind | March 2021 | May 2020 | code/* 
 
 # Short Description
 
@@ -37,10 +37,8 @@ The backend returns files, which are either
 | `pressure_level` | Optional            | Same             | `[1000 - 100000]` Pa                                         | Integer        | If `pressure_level` is missing all levels (standard and significant) are selected. |
 | `time`           | Optional            | Same             | `[HH1,HH2], HH,  [0 - 23]`                                   | Integer        | Launch time, If `time` is missing, all available times are selected. If HH1>HH2 the range starts at HH1 of the preceding day. |
 | -                |                     |                  | -                                                            | -              | -                                                            |
-| `homogenization` | Not Implemented Yet | -                | ERA5, RAOBCOREv1.5.1, RICHv1.5.1                             | String         | Homogeneity adjustments                                      |
-| `uncertainty`    | Not Implemented Yet | -                | Desroziers                                                   | String         | Uncertainty estimates                                        |
 | `reanalysis`     | Not Implemented Yet | -                | ERA5, JRA55, 20CRv3, CERA20C                                 | String         | Reanalysis values interpolated offline to station locations  |
-| `cdm`            | Not Implemented Yet | -                | True or False                                                | String         | Attach also Common Data Model tables to station files. This breaks CF compliance of netCDF files. |
+| `cdm`            | Not Implemented Yet | -                | `[header_table/source_id, ...]`                                                | String         | Attach also Common Data Model tables to station files. This breaks CF compliance of netCDF files. |
 
 
 | Optional | Description |
