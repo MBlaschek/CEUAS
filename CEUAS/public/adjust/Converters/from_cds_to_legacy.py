@@ -8,8 +8,8 @@ from datetime import date
 import netCDF4
 import time
 from numba import njit
-from rasotools.utils import *
-from rasotools.anomaly import *
+# from rasotools.utils import *
+# from rasotools.anomaly import *
 import matplotlib.pylab as plt
 import scipy.stats
 import f90nml
@@ -20,6 +20,7 @@ import cdsapi
 import urllib3
 import json
 import h5py
+import zipfile, os
 
 # with open(os.path.expanduser('~leo/python/hug2/config/active.json')) as f:
 #     active=json.load(f)
@@ -57,7 +58,8 @@ r = http.request('GET', 'http://early-upper-air.copernicus-climate.eu/statlist/?
 fns=r.data.split(b'\n')
 for i in range(len(fns)):
     fns[i]=fns[i].split(b',')[0].decode()
-opath=os.path.expandvars('$FSCRATCH/rise/1.0/exp06/')
+opath=os.path.expandvars('/raid60/raid/home/srvx7/lehre/users/a1400070/adjust/Temperature_adjustment/files')
+print(opath)
 os.chdir(opath)
 #fns=glob.glob('0?????/')
 #fns=[fns[fns.index('0-20000-0-26781')]]
@@ -65,13 +67,16 @@ cdict={'ta':'temperatures','obs_minus_bg':'era5_fgdep','bias_estimate':'bias_est
 fnu=[]
 fnd=[]
 for fnf in fns:
+    if fnf == fns[0]:
+        continue
     fn=fnf[-5:]
     prefix='0'
     if fn in fnu:
         print('duplicate '+fnf+', incrementing leading zero to 1')
         prefix='1'
     fnu.append(fn)
-    fo=opath+prefix+fn+'/feedbackmerged'+prefix+fn+'.nc'
+    fo=opath+'/feedbackmerged'+prefix+fn+'.nc'
+    print(fo)
     try:
         
         mt=os.path.getmtime(fo)
@@ -93,10 +98,16 @@ for fnf in fns:
         r.download(target='download.zip')
         assert os.stat('download.zip').st_size == r.content_length, "Downloaded file is incomplete"
         z = zipfile.ZipFile('download.zip')
-        z.extractall(path='./download/')
+        z.extractall(path='./downloaded/downloaded_'+fn)
         z.close()
-        files = glob.glob('./download/*.nc')
+        files = glob.glob('./downloaded/downloaded_'+ fn +'/*.nc')
         data=eua.CDMDataset(files[0])
+        
+        try:
+            shutil.rmtree('./downloaded_files')
+        except:
+            print("could not remove download dir")
+            
 #         data=eua.vm_request_wrapper({'variable': 'temperature', 'optional':['obs_minus_bg','bias_estimate'],'statid': fn, 'pressure_level':[1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000]}, 
 #                                     overwrite=True,vm_url='http://srvx8.img.univie.ac.at:8002')
     except Exception as e:
@@ -126,14 +137,17 @@ for fnf in fns:
             ##print(len(idx[0]))
             #xrdq['era5_fgdep'].values[ih,ip,idx]=0.
 
+#     os.mkdir(opath+prefix+fn)
 
-    try:
-        os.mkdir(opath+prefix+fn)
-    except:
-        pass
+#     try:
+#         os.mkdir(opath+prefix+fn)
+#         print('dir was made')
+#     except:
+#         pass
 
     xrdq.to_netcdf(path=fo, format='NETCDF4_CLASSIC')
     print('wrote '+fo)
+
 
 plt.rcParams['lines.linewidth'] = 3
 
