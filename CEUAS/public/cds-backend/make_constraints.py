@@ -1,4 +1,5 @@
-""" Make a pandas dataframe then a csv file to create the table of constraints for the CDS interface """
+""" Make a pandas dataframe then a csv file to create the table of constraints for the CDS interface.
+    OLD version, September 2020"""
 
 
 import xarray as xr
