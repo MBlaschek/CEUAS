@@ -16,43 +16,44 @@ import f90nml
 import xarray as xr
 sys.path.append('../../cds-backend/code/')
 import cds_eua3 as eua
+import cdsapi
 import urllib3
 import json
 import h5py
 
-with open(os.path.expanduser('~leo/python/hug2/config/active.json')) as f:
-    active=json.load(f)
-ids=list(active.keys())
-lats=numpy.asarray([active[x][2] for x in active.keys()])   
-lons=numpy.asarray([active[x][3] for x in active.keys()])
-starts=numpy.asarray([active[x][0] for x in active.keys()])   
-stops=numpy.asarray([active[x][1] for x in active.keys()])
-l=0
-for i in range(lats.shape[0],lats.shape[0]):
-    idx=numpy.where(numpy.logical_and(numpy.abs(lats[i]-lats)<0.1,numpy.abs(lons[i]-lons)<0.1))[0]
-    if len(idx)>1:
-        fak=86400*365.25
-        print('duplicate {:s},{:s},{:4.0f},{:4.0f},{:4.0f},{:4.0f}'.format(ids[idx[0]],ids[idx[1]],
-                                                                           starts[idx[0]]/fak,starts[idx[1]]/fak,stops[idx[0]]/fak,stops[idx[1]]/fak))
-        try:
+# with open(os.path.expanduser('~leo/python/hug2/config/active.json')) as f:
+#     active=json.load(f)
+# ids=list(active.keys())
+# lats=numpy.asarray([active[x][2] for x in active.keys()])   
+# lons=numpy.asarray([active[x][3] for x in active.keys()])
+# starts=numpy.asarray([active[x][0] for x in active.keys()])   
+# stops=numpy.asarray([active[x][1] for x in active.keys()])
+# l=0
+# for i in range(lats.shape[0],lats.shape[0]):
+#     idx=numpy.where(numpy.logical_and(numpy.abs(lats[i]-lats)<0.1,numpy.abs(lons[i]-lons)<0.1))[0]
+#     if len(idx)>1:
+#         fak=86400*365.25
+#         print('duplicate {:s},{:s},{:4.0f},{:4.0f},{:4.0f},{:4.0f}'.format(ids[idx[0]],ids[idx[1]],
+#                                                                            starts[idx[0]]/fak,starts[idx[1]]/fak,stops[idx[0]]/fak,stops[idx[1]]/fak))
+#         try:
             
-            with h5py.File('/raid60/scratch/leo/scratch/converted_v5/'+ids[idx[0]]+'_CEUAS_merged_v1.nc','r') as f:
-                with h5py.File('/raid60/scratch/leo/scratch/converted_v5/'+ids[idx[1]]+'_CEUAS_merged_v1.nc','r') as g:
-                    try:
-                        print(f['observations_table']['latitude'][0],f['observations_table']['longitude'][0],
-                              g['observations_table']['latitude'][1],g['observations_table']['longitude'][1])
-                        l+=1
-                    except:
+#             with h5py.File('/raid60/scratch/leo/scratch/converted_v5/'+ids[idx[0]]+'_CEUAS_merged_v1.nc','r') as f:
+#                 with h5py.File('/raid60/scratch/leo/scratch/converted_v5/'+ids[idx[1]]+'_CEUAS_merged_v1.nc','r') as g:
+#                     try:
+#                         print(f['observations_table']['latitude'][0],f['observations_table']['longitude'][0],
+#                               g['observations_table']['latitude'][1],g['observations_table']['longitude'][1])
+#                         l+=1
+#                     except:
                         
-                        print('table read error')
-        except:
-            print('file open error')
+#                         print('table read error')
+#         except:
+#             print('file open error')
             
-print(l,' duplicates')
+# print(l,' duplicates')
         
 
 http = urllib3.PoolManager()
-r = http.request('GET', 'http://srvx8.img.univie.ac.at:8002/statlist/?mindate=1900-01-01&enddate=2020-12-31')
+r = http.request('GET', 'http://early-upper-air.copernicus-climate.eu/statlist/?mindate=1900-01-01&enddate=2020-12-31')
 fns=r.data.split(b'\n')
 for i in range(len(fns)):
     fns[i]=fns[i].split(b',')[0].decode()
@@ -81,10 +82,23 @@ for fnf in fns:
         pass
     
     try:        
-        #data=eua.vm_request_wrapper({'variable': 'temperature', 'statid': fn, 'date':['20100101','20100102']}, 
-                                    #overwrite=True,vm_url='http://srvx8.img.univie.ac.at:8002')
-        data=eua.vm_request_wrapper({'variable': 'temperature', 'optional':['obs_minus_bg','bias_estimate'],'statid': fn, 'pressure_level':[1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000]}, 
-                                    overwrite=True,vm_url='http://srvx8.img.univie.ac.at:8002')
+        c = cdsapi.Client()
+        r = c.retrieve('insitu-comprehensive-upper-air-observation-network',
+                       {'variable': 'temperature',
+                        'optional':['obs_minus_bg','bias_estimate'],
+                        'statid': fn,
+                        'pressure_level':[10,20,30,50,70,100,150,200,250,300,400,500,700,850,925,1000]
+                       }
+                      )
+        r.download(target='download.zip')
+        assert os.stat('download.zip').st_size == r.content_length, "Downloaded file is incomplete"
+        z = zipfile.ZipFile('download.zip')
+        z.extractall(path='./download/')
+        z.close()
+        files = glob.glob('./download/*.nc')
+        data=eua.CDMDataset(files[0])
+#         data=eua.vm_request_wrapper({'variable': 'temperature', 'optional':['obs_minus_bg','bias_estimate'],'statid': fn, 'pressure_level':[1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000]}, 
+#                                     overwrite=True,vm_url='http://srvx8.img.univie.ac.at:8002')
     except Exception as e:
         print(e)
         continue
