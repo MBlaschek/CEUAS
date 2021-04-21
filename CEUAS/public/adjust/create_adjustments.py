@@ -68,13 +68,13 @@ def compare_adj(station):
         for j in range(len(press)):
             try:
                 print(press[j])
-                d_cdsd = daydata[daydata.plev == press[j]*100][daydata.time > dates[i]][daydata.time < dates[i+1]]
+                d_cdsd = daydata[daydata.plev == press[j]*100][daydata.time >= dates[i]][daydata.time < dates[i+1]]
                 d_adjd = dayadj[j][i]
                 print('day')
                 print('cds',d_cdsd.RAOBCORE_bias_estimate.iloc[0])
                 print('calc', d_adjd)
 
-                n_cdsd = nightdata[nightdata.plev == press[j]*100][nightdata.time > dates[i]][nightdata.time < dates[i+1]]
+                n_cdsd = nightdata[nightdata.plev == press[j]*100][nightdata.time >= dates[i]][nightdata.time < dates[i+1]]
                 n_adjd = nightadj[j][i]
                 print('night')
                 print('cds', n_cdsd.RAOBCORE_bias_estimate.iloc[0])
