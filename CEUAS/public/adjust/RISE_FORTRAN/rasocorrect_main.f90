@@ -15,7 +15,6 @@ subroutine  rasocorrect_main(rcpara)
   integer,parameter :: nens=10
 
   type(rasocor_namelist) rcpara,rcpara1,rcparas(nens)
-
   type(ecskin) :: gskin,skin
 
   type(metadata) :: meta_s
@@ -68,6 +67,7 @@ subroutine  rasocorrect_main(rcpara)
   character*2 CM,HH
   character*8 :: cpar(2)
   character*20 :: NameOfRoutine='rasocorrect_main'
+#ifdef RTTOV
   Type(profile_Type), Allocatable   :: profiles(:)    
   Integer(Kind=jpim)                :: rttov_errorstatus  ! rttov error return code
   Integer(Kind=jpim)                :: nchanprof
@@ -75,7 +75,7 @@ subroutine  rasocorrect_main(rcpara)
   Integer(Kind=jpim) :: asw
   Integer(Kind=jpim) :: errorstatus
   Character (len=80) :: errMessage
-
+#endif
   logical*1, allocatable :: used(:,:,:,:)
   integer,allocatable :: needs_composite(:,:,:)
 
@@ -147,6 +147,7 @@ subroutine  rasocorrect_main(rcpara)
 
   call read_bad_intervals('bad_intervals',rcpara,bad_intervals)
 
+#ifdef RTTOV
 
   !msu setup
   nrttovid=1
@@ -163,7 +164,9 @@ subroutine  rasocorrect_main(rcpara)
   input_chan(1:nchannels)=(/2,3,4/) ! MSU 2,3,4
   !  input_chan(1:nchannels)=(/7,9/) ! AMSU 7,9
   input_ems(1:nchannels)=(/0.0,0.0,0.0/)
+  
   call msu_fwd_init(instrument,0_jpim,0_jpim,0.0_jprm,input_chan,input_ems,rcpara%pmax-5)
+#endif
 
   !  if(rcpara%innov .ne. 'RI') then
 
@@ -186,15 +189,16 @@ subroutine  rasocorrect_main(rcpara)
   allocate(ominuse40_an(rcpara%ni,rcpara%nj,rcpara%pmax,rcpara%parmax,12))
   write(*,*) rcpara%ni,rcpara%nj,rcpara%pmax,rcpara%parmax
 
+#ifdef RTTOV
   if(rcpara%startdate .eq. 19570101) then
      call ecskin_init(skin,1958,1957+(rcpara%mmax-1)/12,rcpara%startdate,rcpara%mmax,crut2,'../common/','_s',rcpara%miss_val)
   else
      call ecskin_init(skin,1958,rcpara%startdate/10000+(rcpara%mmax-1)/12,rcpara%startdate,rcpara%mmax,crut2,'../common/','_s',rcpara%miss_val)
 
   endif
-
+#endif
   ominuse40_an=0.
-  if (rcpara%switchdate .eq. 19790101 ) THEN
+  if (rcpara%switchdate .eq. 19790100 ) THEN  ! defacto disabled
 
 
 

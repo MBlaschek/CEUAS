@@ -1,3 +1,56 @@
+
+
+module calcp
+
+contains
+  
+subroutine linreg_withgaps(x,y,miss_val,m,b)
+
+  implicit none                                                                    ! no default data types
+
+
+   integer, parameter  :: dbl = kind (0.0d0)                                        ! define kind for double precision
+
+   real(dbl)           ::  b                                                        ! y-intercept of least-squares best fit line
+   real(dbl)           ::  m                                                        ! slope of least-squares best fit line
+   real(dbl)           ::  n = 0.0d0                                                ! number of data points
+   real(dbl)           ::  r                                                        ! squared correlation coefficient
+   character (len=80)  ::  str                                                      ! input string
+   real(dbl)           ::  sumx  = 0.0d0                                            ! sum of x
+   real(dbl)           ::  sumx2 = 0.0d0                                            ! sum of x**2
+   real(dbl)           ::  sumxy = 0.0d0                                            ! sum of x * y
+   real(dbl)           ::  sumy  = 0.0d0                                            ! sum of y
+   real(dbl)           ::  sumy2 = 0.0d0                                            ! sum of y**2
+   real           ::  x(:)                                                        ! input x data
+   real           ::  y(:)                                                        ! input y data
+   real           ::  miss_val                                                        ! missing value
+   integer(4)          ::  ni,i
+
+
+   ni=size(x)
+!   print*,ni
+!   print*,x,y
+                             
+   do i=1,ni                                                                              ! loop for all data points
+
+      if (x(i).ne. miss_val .and. y(i).ne. miss_val) then
+         n = n + 1.0d0                                                                 ! increment number of data points by 1
+         sumx  = sumx + x(i)                                                             ! compute sum of x
+         sumx2 = sumx2 + x(i) * x(i)                                                         ! compute sum of x**2
+         sumxy = sumxy + x(i) * y(i)                                                         ! compute sum of x * y
+         sumy  = sumy + y(i)                                                              ! compute sum of y
+         sumy2 = sumy2 + y(i) * y(i)
+      endif 
+   end do
+
+   m = (n * sumxy  -  sumx * sumy) / (n * sumx2 - sumx**2)                          ! compute slope
+   b = (sumy * sumx2  -  sumx * sumxy) / (n * sumx2  -  sumx**2)                    ! compute y-intercept
+!   r = (sumxy - sumx * sumy / n) /                                     &            ! compute correlation coefficient
+!                     sqrt((sumx2 - sumx**2/n) * (sumy2 - sumy**2/n))
+
+
+end subroutine linreg_withgaps
+
 subroutine calc_profile(rcpara,iname,breakloc,plus,minus,rplus,rminus,breakprofile,f_val,kplus1,dim3)
 
 use rfmod
@@ -114,7 +167,11 @@ do ipar=1,dim3
   
 !!    call g02ccf(goodlev,philf,bhilf,dmiss_val,dmiss_val,res,ifail)
 !!    write(*,*) i,philf(1:i),'x',bhilf(1:i)
-    call g02ccf(i,philf(1:i),bhilf(1:i),dmiss_val,dmiss_val,res,ifail)
+!avoid     call g02ccf(i,philf(1:i),bhilf(1:i),dmiss_val,dmiss_val,res,ifail)
+!     print*,dmiss_val,res(7),res(6)
+     call linreg_withgaps(philf(1:i),bhilf(1:i),dmiss_val,res(6),res(7))
+!     print*, 'g02ccf',res(7),res(6)
+!     stop
 !!    print*,'x',res(6),'+',res(7),' F= ',res(15)
     f_val(ipar)=res(15)
     lfit=res(7)+log(rcpara%plevs)*res(6)
@@ -172,7 +229,8 @@ do ipar=1,dim3
 !! break profile with smoothed polynomial
       fit=rcpara%miss_val
       ifail=1
-      call E02ADF(goodlev, polyorder, polyorder,philf(1:goodlev),bhilf(1:goodlev), W(1:goodlev), WORK1, WORK2, A, S, IFAIL)
+      stop 'E02ADF'
+!      call E02ADF(goodlev, polyorder, polyorder,philf(1:goodlev),bhilf(1:goodlev), W(1:goodlev), WORK1, WORK2, A, S, IFAIL)
       if(ifail .eq. 1) then
     !!$ call omp_set_lock(omp_lp)
         write(*,*) 'E02ADF failed: ',goodlev,polyorder,bhilf
@@ -195,7 +253,8 @@ do ipar=1,dim3
         if(lplevs(ip) .ge. philf(1) .and. lplevs(ip) .le. philf(goodlev)) then 
           XCAP=((lplevs(ip)-philf(1))-(philf(goodlev)-lplevs(ip)))/(philf(goodlev)-philf(1))
           ifail=1
-          call E02AEF(polyorder, AHILF, XCAP, fit(ip), IFAIL)
+          stop 'e02aef'
+!          call E02AEF(polyorder, AHILF, XCAP, fit(ip), IFAIL)
           if(ifail .eq. 1) then
     !!$ call omp_set_lock(omp_lp)
             write(*,*) XCAP,ip,lplevs(ip),philf(goodlev)
@@ -280,3 +339,5 @@ endif
 return
 end subroutine calc_profile
 
+
+end module calcp

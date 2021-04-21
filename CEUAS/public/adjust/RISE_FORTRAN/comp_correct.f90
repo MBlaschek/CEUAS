@@ -82,7 +82,7 @@ contains
     write(*,*) 'statnr ',statnr
 
     iunit=20
-!$    thread_num=omp_get_thread_num()
+    !$ thread_num=omp_get_thread_num()
     !$ iunit=iunit+thread_num ! this should avoid clashes in parallel runs
 
     write(cstatnr,'(I6.6)') statnr
@@ -409,11 +409,11 @@ contains
              elsewhere
                 tbcm=rcpara%miss_val
              endwhere
-
+#ifdef RTTOV
              call write_sonde_monthly_bt_nc(filename,rcpara,tbcm,istat,err,wmolons(istat),wmolats(istat),4,skin,stname=wmonames(istat))
              filename=trim(rcpara%prefix)//cstatnr//'/feedbackglobbincorrsave_'//names(j)//'bt2'//cstatnr//'.nc'
              call write_sonde_monthly_bt_nc(filename,rcpara,tbcm,istat,err,wmolons(istat),wmolats(istat),2,skin,stname=wmonames(istat))
-
+#endif
              if(ldebug) then
                 ! check adjustment quality
                 lgalert=.false.

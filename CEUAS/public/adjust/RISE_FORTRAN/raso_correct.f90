@@ -199,7 +199,7 @@ contains
 
           filename=trim(rcpara%prefix)//cstatnr//'/feedbackmerged'//cstatnr//'.nc'
           if(rcpara%innov .eq. 'NN') then
-            CALL read_odb_nc(filename,rcpara,istat,err3,tm,tfgm,tanm=tanm,stname=wmonames(istat),bad_intervals=bad_intervals,tgps=tgps,alt=alt) !subroutine in read_txt_write_nc.f90
+             CALL read_odb_nc(filename,rcpara,istat,err3,tm,tfgm,tanm=tanm,stname=wmonames(istat),bad_intervals=bad_intervals,tgps=tgps,alt=alt) !subroutine in read_txt_write_nc.f90
 !!$            where (isnan(tm) .or. abs(tfgm)>20. .or. tm>330. .or. tm<170.)
 !!$               tm=rcpara%miss_val
 !!$               tfgm=rcpara%miss_val
@@ -218,8 +218,9 @@ contains
                      endif
                   enddo
                 enddo
-            enddo
-
+             enddo
+!             print*,sum(tfgm),sum(tm)
+!             print*,count(tm(:,10,1) .ne. rcpara%miss_val),count(tfgm(:,10,1) .ne. rcpara%miss_val),count(tanm(:,10,1) .ne. rcpara%miss_val)
           else
             CALL read_odb_nc(filename,rcpara,istat,err3,tm,tfgm,e20c0=tanm,stype=stype,stname=wmonames(istat),tgps=tgps) !subroutine in read_txt_write_nc.f90
              tfgm=tanm
@@ -286,8 +287,9 @@ contains
 
       call create_meta(cardsmeta,rtype,statnr,rcpara,iter) !in file rfcorio.f90 line 891
     endif
-    
+
     call check_ini(meta_s,istat,wmonrs,rcpara,ini_correct)
+
 
     protunit=100
     !$ protunit=protunit+omp_get_thread_num()
@@ -296,9 +298,11 @@ contains
     open(protunit,file=trim(rcpara%prefix)//cstatnr//'/found_breaks'//cstatnr,form='formatted')
 !!$ call omp_unset_lock(omp_lp)
 
-!    needs_composite(:,:,istat)=.false.
+    !    needs_composite(:,:,istat)=.false.
     call detect_gaps(rcpara,statnr,tfgm,midx,lasts,gcount) !in file rfcor.f90 line 113
-!    lastsave=lasts
+    !    lastsave=lasts
+            print*,'nach detect_gaps'
+
     if (.not. any(gcount>20)) then
        needs_composite(:,:,istat)=lasts(1:20,:)
     else
@@ -317,7 +321,7 @@ contains
 !!$       if(lasts(1,ipar) .gt. 0 .and.(lasts(1,ipar) .lt. rcpara%old)) ini_correct(ipar,istat)=.true.
 !!$    enddo
 
-
+    print*,'vor print',gcount
 !!$ call omp_set_lock(omp_lp)
     write(*,'(6I6,A17,2L2,A6,I6)') wmonrs(istat),imax,lasts(1,1),lasts(1,2),count(tfgm(:,10,1) .ne. rcpara%miss_val),count(tfgm(:,10,2) .ne. rcpara%miss_val),' initial_correct:',ini_correct(:,istat),' imax: ',imax, rcpara%old
 !!$ call omp_unset_lock(omp_lp)
@@ -346,6 +350,8 @@ contains
                 write(*,*) 'gcount if',statnr,gcount
                 call make_composite(rcpara,statnr,cmax,wmonrs,wmolons,wmolats,wmostats,dists,index,ominuse40,adjust,stm,stfgm,tnumbers,&
                      tfgmcr,tmcr,icache,meta_s,lasts,gcount,needs_composite,ini_correct,composite_exists,bad_intervals) !in file rfcor.f90 line 426
+!                print*,'makecomposite',count(stm.ne. rcpara%miss_val),count(stfgm.ne. rcpara%miss_val)
+!                stop
                 if(any(composite_exists)) then
                    filename=trim(rcpara%prefix)//cstatnr//'/feedbackglobbincomp'//cstatnr
                    where(stm(:,:,2) .ne. rcpara%miss_val .and. stm(:,:,1) .ne. rcpara%miss_val)
@@ -359,7 +365,7 @@ contains
                 return !?????
              else !265
                    do ipar=1,rcpara%parmax
-                      l=0
+                      l=1
                       do  while(lasts(l,ipar)>1)
                          if(lasts(l,ipar) .lt. rcpara%old) then 
                             tfgm(l:lasts(1,ipar),:,ipar)=rcpara%miss_val
@@ -388,14 +394,17 @@ contains
 !!$ call omp_unset_lock(omp_lp)
              call make_composite(rcpara,statnr,cmax,wmonrs,wmolons,wmolats,wmostats,dists,index,ominuse40,adjust,stm,stfgm,tnumbers,&
                   tfgmcr,tmcr,icache,meta_s,lasts,gcount,needs_composite,ini_correct,composite_exists,bad_intervals)!in file rfcor.f90 line 426
+!                print*,'makecomposite',count(stm.ne. rcpara%miss_val),count(stfgm.ne. rcpara%miss_val)
+!                stop
           else
              composite_exists=.true.
           endif !302
        endif !259
     endif !257
 
+    
     if(any(gcount .gt. 0) .and. (any(.not. ini_correct(:,istat)) .and. iter .lt. 3 .or. any(composite_exists)) .or. iter .eq. rcpara%maxiter) then !315
-
+    print*,'nachifany'
 
 
        call adjust_bg_ei(cstatnr,istat,rcpara,tm,bgcorrs,densities,adjust_an,eracorrs,wmolons,wmolats,wmostats,iunit) 
@@ -462,9 +471,13 @@ iosmeta=1
        write(*,*) 'Trusted 0012 stations:',id
 
        if(rcpara%innov .NE. 'NR' .or. remerr .eq. 1) THEN
+!          print*,'vor correct_break'
+!          print*,count(tm(:,10,1) .ne. rcpara%miss_val),count(tfgm(:,10,1) .ne. rcpara%miss_val),count(stm(:,10,1) .ne. rcpara%miss_val),count(tfg(:,10,1).ne. rcpara%miss_val),count(stfgm(:,10,1) .ne. rcpara%miss_val)
           call correct_break(cstatnr,istat,wmolons(istat),wmolats(istat),rcpara,tm,tfgm,solarangles,stm,stfgm,tnumbers,tfg,tgps,rasocorrs,eracorrs,crut2,&
                dailycrut2,delemask,cardsmeta,era40meta,apriori_probs,apriori_probs_rad,iter,needs_composite(:,:,istat),ini_correct(:,istat),midx,lasts,gcount,protunit,iunit,alt) !in file correct_breaks2.f90 line 34
+!          stop
        ELSE
+          print*,'vor correct_break'
           call correct_break(cstatnr,istat,wmolons(istat),wmolats(istat),rcpara,tm,tfgm,solarangles,stm,stfgm,tnumbers,tfg,tgps,rasocorrs,eracorrs,crut2,&
                dailycrut2,delemask,cardsmeta,era40meta,apriori_probs,apriori_probs_rad,iter,needs_composite(:,:,istat),ini_correct(:,istat),midx,lasts,gcount,protunit,iunit,alt) !in file correct_breaks2.f90 line 34
        endif
@@ -635,11 +648,12 @@ iosmeta=1
              enddo
           enddo
        endif
+#ifdef RTTOV
        call write_sonde_monthly_bt_nc(filename,rcpara,tm,istat,err,wmolons(istat),wmolats(istat),4,skin,rasocorrs,tfg,tanm,stname=wmonames(istat))
        filename=filename(1:len(trim(filename))-9)//'2'//cstatnr//'.nc'
        call write_sonde_monthly_bt_nc(filename,rcpara,tm,istat,err,wmolons(istat),wmolats(istat),2,skin,rasocorrs,tfg,tanm,stname=wmonames(istat))
        !in file read_txt_write_nc.f90 line 799
-
+#endif
     endif
 
     close(protunit)

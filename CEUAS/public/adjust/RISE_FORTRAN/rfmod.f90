@@ -1,6 +1,12 @@
 module rfmod
 
-use parkind1
+#ifdef RTTOV
+  use parkind1
+#else
+  integer,parameter :: JPRM=4
+  integer,parameter :: JPRB=8
+  integer,parameter :: JPIM=4
+#endif
 
 type,public:: rasocor_namelist
   integer(kind=4) :: statmax,pmax,parmax,nmax,mmax,first,last,snht_maxlen,snht_increment,max_miss,rimax_miss,nmem,ngroup,nmeta,probmax

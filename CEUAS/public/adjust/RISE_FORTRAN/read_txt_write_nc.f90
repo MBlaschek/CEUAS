@@ -1422,6 +1422,7 @@ attribs%valid_range=rcpara%miss_val
 
 !hilfcorr in arr speichern
 arr(:,:,:,1)=hilfcorr(1:bi,:,:,1)
+vals=bi
 names(1)='rasocorr'
 attribs%long_name(1)='raso_correct'
 datum(:,1)= indexb(1:bi)
@@ -1461,7 +1462,7 @@ SUBROUTINE read_odb_nc(filename,rcpara,mstat,err3,tm,tfgm,tbcm,fflags,tanm,e20c0
   type(rasocor_namelist) rcpara
   INTEGER :: status, e20status,gpsstatus,ncid,mask(4) !ID des nc - Files, wird beim oeffnen zugewiesen
   INTEGER :: datumvarid, fg_depvarid, biascorr_varid, tempvarid, flagsvarid, timid,an_depvarid,s_typevarid,e20c0_depvarid,tgps_depvarid,hoursvarid
-  CHARACTER :: filename*80,cunits*80 !name+Pfad des nc-files
+  CHARACTER :: filename*80,cunits*80,nf_strerror*80 !name+Pfad des nc-files
   CHARACTER*30 :: timedimname
   REAL (kind=JPRM), ALLOCATABLE :: temp(:,:,:), fg_depar(:,:,:), bias_cor(:,:,:), flags(:,:,:), flags2(:,:,:,:),an_dep(:,:,:),e20c0_dep(:,:,:),tgps_dep(:,:,:),sonde_type(:)
   INTEGER, ALLOCATABLE :: datum(:),lhours(:,:)
@@ -1563,30 +1564,38 @@ SUBROUTINE read_odb_nc(filename,rcpara,mstat,err3,tm,tfgm,tbcm,fflags,tanm,e20c0
 !!!$omp critical
   status=NF90_INQ_VARID(ncid,'temperatures', tempvarid)
   status=NF90_INQ_VARID(ncid,trim(rcpara%fgdepname), fg_depvarid)
-  status=NF90_INQ_VARID(ncid,'fg_dep', ofg_depvarid)
+  if(status/=0) then
+     print*, 'no feedbackdata, returning'
+     
+     status=NF90_CLOSE(ncid)
+!$ call omp_unset_lock(omp_lp(istat))
+     return
+  endif
   e20status=0
   gpsstatus=0
-  if(present(tbcm)) status=NF90_INQ_VARID(ncid,'bias', biascorr_varid)
-  if(status /=0) WRITE(*,*) trim(filename)//'- bias correction missing'
-  if(present(fflags)) status=NF90_INQ_VARID(ncid,'flags', flagsvarid)
-  if(status /=0) WRITE(*,*) trim(filename)//'- quality control flags missing'
-  if(present(tanm)) status=NF90_INQ_VARID(ncid,'an_dep', an_depvarid)
-  if(status /=0) WRITE(*,*) trim(filename)//'- analysis departures missing'
-  if(present(e20c0)) e20status=NF90_INQ_VARID(ncid,'e20c_0', e20c0_depvarid)
-  if(e20status /=0) THEN
-     WRITE(*,*) trim(filename)//'- e20c_0 departures missing'
-  endif
-  if(index(rcpara%initial_adjust,'wet')>0) then
-     gpsstatus=NF90_INQ_VARID(ncid,'erai_fggpswetdep', tgps_depvarid)
+  status=NF90_INQ_VARID(ncid,'bias', biascorr_varid)
+  if(status /=0) then
+     WRITE(*,*) trim(filename)//'- input file presumably from CDS'
   else
-     gpsstatus=NF90_INQ_VARID(ncid,'erai_fggpsdep', tgps_depvarid)
+     if(present(fflags)) status=NF90_INQ_VARID(ncid,'flags', flagsvarid)
+     if(status /=0) WRITE(*,*) trim(filename)//'- quality control flags missing'
+     if(present(tanm)) status=NF90_INQ_VARID(ncid,'an_dep', an_depvarid)
+     if(status /=0) WRITE(*,*) trim(filename)//'- analysis departures missing'
+     if(present(e20c0)) e20status=NF90_INQ_VARID(ncid,'e20c_0', e20c0_depvarid)
+     if(e20status /=0) THEN
+        WRITE(*,*) trim(filename)//'- e20c_0 departures missing'
+     endif
+     if(index(rcpara%initial_adjust,'wet')>0) then
+        gpsstatus=NF90_INQ_VARID(ncid,'erai_fggpswetdep', tgps_depvarid)
+     else
+        gpsstatus=NF90_INQ_VARID(ncid,'erai_fggpsdep', tgps_depvarid)
+     endif
+     if(gpsstatus /=0) THEN
+        WRITE(*,*) trim(filename)//'- gps departures missing'
+     endif
+      if(present(stype)) status=NF90_INQ_VARID(ncid,'s_type', s_typevarid)
+      if(status /=0) WRITE(*,*) trim(filename)//'- sonde types missing'
   endif
-  if(present(alt)) status=NF90_INQ_VARID(ncid,'alt', altvarid)
-  if(gpsstatus /=0) THEN
-     WRITE(*,*) trim(filename)//'- gps departures missing'
-  endif
-   if(present(stype)) status=NF90_INQ_VARID(ncid,'s_type', s_typevarid)
-  if(status /=0) WRITE(*,*) trim(filename)//'- sonde types missing'
   !allocate variables with time dimension
   ALLOCATE(datum(maxtime))
   status=NF90_GET_VAR(ncid,datumvarid, datum)
@@ -1660,8 +1669,16 @@ SUBROUTINE read_odb_nc(filename,rcpara,mstat,err3,tm,tfgm,tbcm,fflags,tanm,e20c0
   !allocate variables with time dimension
   ALLOCATE(fg_depar(maxtime,rcpara%pmax,rcpara%parmax))
   status=NF90_GET_VAR(ncid,fg_depvarid,fg_depar)
+  IF (.FALSE.) THEN
   i=toindex(20170101,rcpara)
   if(rcpara%fgdepname .ne. 'fg_dep' .and. datum(maxtime)>=i) then
+     status=NF90_INQ_VARID(ncid,'fg_dep', ofg_depvarid)
+     if(status/=0) then
+     
+        status=NF90_CLOSE(ncid)
+!$ call omp_unset_lock(omp_lp(istat))
+        return
+     endif
     ALLOCATE(an_dep(maxtime,rcpara%pmax,rcpara%parmax))
     status=NF90_GET_VAR(ncid,ofg_depvarid,an_dep)
     j=maxtime
@@ -1672,6 +1689,9 @@ SUBROUTINE read_odb_nc(filename,rcpara,mstat,err3,tm,tfgm,tbcm,fflags,tanm,e20c0
     fg_depar(j:,:,:)=-an_dep(j:,:,:)
     DEALLOCATE(an_dep)
   endif
+
+  ENDIF !FALSE
+
   where (isnan(fg_depar))
      fg_depar=rcpara%miss_val
   endwhere
@@ -1682,12 +1702,13 @@ SUBROUTINE read_odb_nc(filename,rcpara,mstat,err3,tm,tfgm,tbcm,fflags,tanm,e20c0
         fg_depar= rcpara%miss_val
      ENDWHERE
   endif
-
+  
   IF (status /= NF90_NOERR) then
-     WRITE(*,*) 'Error reading fg_departures from nc'
+     WRITE(*,*) 'Error reading fg_departures from nc',filename,nf_strerror(status)
      status=NF90_CLOSE(ncid)
      IF (status /= NF90_NOERR) WRITE(*,*) 'Error closeing netcdf!', TRIM(filename)
      !$ call omp_unset_lock(omp_lp(istat))
+     print*, 'vor deallocate',size(temp),size(datum),size(fg_depar)
      DEALLOCATE(temp,datum,fg_depar)
      RETURN
   END IF
@@ -1724,8 +1745,13 @@ SUBROUTINE read_odb_nc(filename,rcpara,mstat,err3,tm,tfgm,tbcm,fflags,tanm,e20c0
      IF (status /= NF90_NOERR) WRITE(*,*) 'Error reading analysis departures from nc'
   endif
   if(present(alt)) then
-     status=NF90_GET_VAR(ncid,altvarid,alt)
-     if (status/=0) write (*,*) 'No station height'
+     status=NF90_INQ_VARID(ncid,'alt', altvarid)
+     if (status/=0) then
+        write (*,*) 'No station height'
+     else
+        status=NF90_GET_VAR(ncid,altvarid,alt)
+        if (status/=0) write (*,*) 'could not read station height'
+     endif
   endif
   if(present(tgps) .and. gpsstatus==0) then
      ALLOCATE(tgps_dep(maxtime,rcpara%pmax,rcpara%parmax))
@@ -2556,6 +2582,7 @@ END SUBROUTINE read_sonde_corr_daily_nc
 ! Calculate monthly Brightness temperatures with RTTOV and write to NetCDF
 ! Leo Haimberger, 4 July 2011
 !
+#ifdef RTTOV
 subroutine write_sonde_monthly_bt_nc(filename,rcpara,tm,istat,err,lon,lat,ichan,skin,rasocorr,eracorr,ancorr,stname) ! schreibt Files mit Monatsmittel
 USE var_def
 USE rfmod
@@ -2896,7 +2923,7 @@ IF(lan) numpar=numpar+1
       endif
     enddo
 !!$ call omp_set_lock(omp_lp(rcpara%statmax+1))
-!leo fails because of segfault    call msu_fwd_calc(profiles,bt,nprof,nlevels)
+    call msu_fwd_calc(profiles,bt,nprof,nlevels)
 !!$ call omp_unset_lock(omp_lp(rcpara%statmax+1))
 
 !!$if(ichan .eq. 2) then
@@ -3237,6 +3264,8 @@ endif
   return
 
 end subroutine write_eclim_monthly_nc
+
+#endif
 
 subroutine write_sonde_monthly_nc(filename,rcpara,tm,istat,err,lon,lat,rasocorr,eracorr,stname) ! schreibt Files mit Monatsmittel
 USE var_def

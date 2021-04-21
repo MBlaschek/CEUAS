@@ -1,0 +1,7 @@
+#!/bin/ksh
+
+for file in `ls *90 *.f` ; do
+
+diff $file $RICHDIR/$file
+
+done
