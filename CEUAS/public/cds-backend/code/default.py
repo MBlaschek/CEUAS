@@ -1441,7 +1441,7 @@ def index(request=None, response=None):
 
     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
     return rfile
-
+ocx2BRF
 def datetime_to_seconds(dates, ref='1900-01-01T00:00:00'):
     """ from datetime64 to seconds since 1900-01-01 00:00:00"""
     return ((numpy.datetime64(dates) - numpy.datetime64(ref)) / numpy.timedelta64(1, 's')).astype(numpy.int64)
@@ -1483,10 +1483,10 @@ def mapdata(date=None, enddate=None, response=None):
 #             csvwriter = csv.writer(csvfile)  
 #             # writing the data rows  
 #             csvwriter.writerows(rows) 
-        print(date)
+        logger.info(date)
         reqdate = date.split('-')
         output_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
-        print(output_file)
+        logger.info(output_file)
             
     if not enddate is None:
         date = datetime_to_seconds(date)
