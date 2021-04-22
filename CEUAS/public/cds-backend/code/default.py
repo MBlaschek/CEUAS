@@ -1567,19 +1567,21 @@ def statdata(date=None, mindate=None, enddate=None, response=None):
     output_file = '/data/public/maplist_'+str(date)
     
     if enddate is None:
-        date = datetime_to_seconds(date)
-        rows = []
-        rows.append(['station', 'longitude', 'latitude'])
-        for i in act:
-            if (date >= act[i][0]) and (date <= act[i][1]):
-#                 name = namelist[i]
-                rows.append([i, act[i][3], act[i][2]])
+#         date = datetime_to_seconds(date)
+#         rows = []
+#         rows.append(['station', 'longitude', 'latitude'])
+#         for i in act:
+#             if (date >= act[i][0]) and (date <= act[i][1]):
+# #                 name = namelist[i]
+#                 rows.append([i, act[i][3], act[i][2]])
 
-        with open(output_file, 'w') as csvfile:  
-            # creating a csv writer object  
-            csvwriter = csv.writer(csvfile)  
-            # writing the data rows  
-            csvwriter.writerows(rows) 
+#         with open(output_file, 'w') as csvfile:  
+#             # creating a csv writer object  
+#             csvwriter = csv.writer(csvfile)  
+#             # writing the data rows  
+#             csvwriter.writerows(rows) 
+        reqdate = date.split('-')
+        output_file = '/data/private/test/85/85_'+reqdate[0]+reqdate[1]+reqdate[2]+'.csv'
             
     elif ((not enddate is None) and (not mindate is None)):
         mindate = datetime_to_seconds(mindate)
