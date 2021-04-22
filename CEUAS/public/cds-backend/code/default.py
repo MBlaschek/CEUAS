@@ -1468,21 +1468,25 @@ def mapdata(date=None, enddate=None, response=None):
     output_file = '/data/public/maplist_'+str(date)
     
     if enddate is None:
-        date = datetime_to_seconds(date)
-        rows = []
-        rows.append(['station_name', 'longitude', 'latitude'])
-        for i in act:
-            if (date >= act[i][0]) and (date <= act[i][1]):
-                # renaming deactivated for now
-                # name = namelist[i]
-                name = i
-                rows.append([name, act[i][3], act[i][2]])
+#         date = datetime_to_seconds(date)
+#         rows = []
+#         rows.append(['station_name', 'longitude', 'latitude'])
+#         for i in act:
+#             if (date >= act[i][0]) and (date <= act[i][1]):
+#                 # renaming deactivated for now
+#                 # name = namelist[i]
+#                 name = i
+#                 rows.append([name, act[i][3], act[i][2]])
 
-        with open(output_file, 'w') as csvfile:  
-            # creating a csv writer object  
-            csvwriter = csv.writer(csvfile)  
-            # writing the data rows  
-            csvwriter.writerows(rows) 
+#         with open(output_file, 'w') as csvfile:  
+#             # creating a csv writer object  
+#             csvwriter = csv.writer(csvfile)  
+#             # writing the data rows  
+#             csvwriter.writerows(rows) 
+        print(date)
+        reqdate = date.split('-')
+        output_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
+        print(output_file)
             
     if not enddate is None:
         date = datetime_to_seconds(date)
