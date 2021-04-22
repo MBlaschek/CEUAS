@@ -49,6 +49,7 @@ from datetime import datetime, timedelta
 from functools import partial
 from multiprocessing import set_start_method, Pool
 from typing import Union
+from shutil import copyfile
 
 if False:
     import cds_eua2 as eua  # old version
@@ -1485,7 +1486,8 @@ def mapdata(date=None, enddate=None, response=None):
 #             csvwriter.writerows(rows) 
         logger.info(date)
         reqdate = date.split('-')
-        output_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
+        interm_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
+        copyfile(interm_file, output_file)
         logger.info(output_file)
             
     if not enddate is None:
