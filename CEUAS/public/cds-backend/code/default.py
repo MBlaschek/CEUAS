@@ -1484,11 +1484,9 @@ def mapdata(date=None, enddate=None, response=None):
 #             csvwriter = csv.writer(csvfile)  
 #             # writing the data rows  
 #             csvwriter.writerows(rows) 
-        logger.info(date)
         reqdate = date.split('-')
         interm_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
         copyfile(interm_file, output_file)
-        logger.info(output_file)
             
     if not enddate is None:
         date = datetime_to_seconds(date)
@@ -1586,10 +1584,9 @@ def statdata(date=None, mindate=None, enddate=None, response=None):
 #             csvwriter = csv.writer(csvfile)  
 #             # writing the data rows  
 #             csvwriter.writerows(rows) 
-        print(date)
         reqdate = date.split('-')
-        output_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
-        print(output_file)
+        interm_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
+        copyfile(interm_file, output_file)
             
     elif ((not enddate is None) and (not mindate is None)):
         mindate = datetime_to_seconds(mindate)
