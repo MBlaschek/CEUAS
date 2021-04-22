@@ -1580,8 +1580,10 @@ def statdata(date=None, mindate=None, enddate=None, response=None):
 #             csvwriter = csv.writer(csvfile)  
 #             # writing the data rows  
 #             csvwriter.writerows(rows) 
+        print(date)
         reqdate = date.split('-')
         output_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
+        print(output_file)
             
     elif ((not enddate is None) and (not mindate is None)):
         mindate = datetime_to_seconds(mindate)
