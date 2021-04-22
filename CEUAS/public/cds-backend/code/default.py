@@ -1471,7 +1471,12 @@ def mapdata(date=None, enddate=None, response=None):
     reqdate = date.split('-')
     interm_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
     copyfile(interm_file, output_file)
-    copyfile(interm_file, '/data/public/maplist_'+str(date)+str(enddate))
+    with open(output_file) as f:
+        lines = f.readlines()
+    lines[0] = "station_name,longitude,latitude\n"
+    with open(output_file, "w") as f:
+        f.writelines(lines)
+#     copyfile(interm_file, '/data/public/maplist_'+str(date)+str(enddate))
     
 #     if enddate is None:
 #         date = datetime_to_seconds(date)
