@@ -1448,7 +1448,7 @@ def datetime_to_seconds(dates, ref='1900-01-01T00:00:00'):
     return ((numpy.datetime64(dates) - numpy.datetime64(ref)) / numpy.timedelta64(1, 's')).astype(numpy.int64)
 
 @hug.get('/maplist/', output=hug.output_format.file)
-def mapdata(date=None, enddate=None, response=None):
+def mapdata(date=None, enddate=None, var=85, response=None,):
     """ Main Hug Index Function on get requests
 
     index function requests get URI and converts into dictionary.
@@ -1468,14 +1468,16 @@ def mapdata(date=None, enddate=None, response=None):
     
     output_file = '/data/public/maplist_'+str(date)
     
-    reqdate = date.split('-')
-    interm_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
-    copyfile(interm_file, output_file)
-    with open(output_file) as f:
-        lines = f.readlines()
-    lines[0] = "station_name,longitude,latitude\n"
-    with open(output_file, "w") as f:
-        f.writelines(lines)
+    if (enddate is None) or (date == enddate):
+        reqdate = date.split('-')
+        interm_file = '/data/private/test/'+var+'/'+var+'_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
+        copyfile(interm_file, output_file)
+        with open(output_file) as f:
+            lines = f.readlines()
+        lines[0] = "station_name,longitude,latitude\n"
+        with open(output_file, "w") as f:
+            f.writelines(lines)
+            
 #     copyfile(interm_file, '/data/public/maplist_'+str(date)+str(enddate))
     
 #     if enddate is None:
@@ -1500,22 +1502,23 @@ def mapdata(date=None, enddate=None, response=None):
 #         copyfile(interm_file, '/data/public/maplist_'+str(date)+str(enddate))
             
 #     if not enddate is None:
-#         date = datetime_to_seconds(date)
-#         enddate = datetime_to_seconds(enddate)
-#         rows = []
-#         rows.append(['station_name', 'longitude', 'latitude'])
-#         for i in act:
-#             if (date >= act[i][0]) and (enddate <= act[i][1]):
-#                 # renaming deactivated for now
-#                 # name = namelist[i]
-#                 name = i
-#                 rows.append([name, act[i][3], act[i][2]])
+    else:    
+        date = datetime_to_seconds(date)
+        enddate = datetime_to_seconds(enddate)
+        rows = []
+        rows.append(['station_name', 'longitude', 'latitude'])
+        for i in act:
+            if (date >= act[i][0]) and (enddate <= act[i][1]):
+                # renaming deactivated for now
+                # name = namelist[i]
+                name = i
+                rows.append([name, act[i][3], act[i][2]])
 
-#         with open(output_file, 'w') as csvfile:  
-#             # creating a csv writer object  
-#             csvwriter = csv.writer(csvfile)  
-#             # writing the data rows  
-#             csvwriter.writerows(rows)
+        with open(output_file, 'w') as csvfile:  
+            # creating a csv writer object  
+            csvwriter = csv.writer(csvfile)  
+            # writing the data rows  
+            csvwriter.writerows(rows)
 
     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(output_file))
     return output_file
