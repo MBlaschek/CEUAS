@@ -1467,10 +1467,11 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
 #     namelist = json.load(open(namelist_file,"r"))
     
     output_file = '/data/public/maplist_'+str(date)
-    
+#     with open('/data/public/info_'+str(date)+str(enddate, "w") as f:
+#             f.writelines([str(date), str(enddate), str(var)])
     if (enddate is None) or (date == enddate):
         reqdate = date.split('-')
-        interm_file = '/data/private/test/'+var+'/'+var+'_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
+        interm_file = '/data/private/test/'+str(var)+'/'+str(var)+'_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
         copyfile(interm_file, output_file)
         with open(output_file) as f:
             lines = f.readlines()
@@ -1585,23 +1586,19 @@ def statdata(date=None, mindate=None, enddate=None, response=None):
     output_file = '/data/public/maplist_'+str(date)
     
     if enddate is None:
-#         date = datetime_to_seconds(date)
-#         rows = []
-#         rows.append(['station', 'longitude', 'latitude'])
-#         for i in act:
-#             if (date >= act[i][0]) and (date <= act[i][1]):
-# #                 name = namelist[i]
-#                 rows.append([i, act[i][3], act[i][2]])
+        date = datetime_to_seconds(date)
+        rows = []
+        rows.append(['station', 'longitude', 'latitude'])
+        for i in act:
+            if (date >= act[i][0]) and (date <= act[i][1]):
+#                 name = namelist[i]
+                rows.append([i, act[i][3], act[i][2]])
 
-#         with open(output_file, 'w') as csvfile:  
-#             # creating a csv writer object  
-#             csvwriter = csv.writer(csvfile)  
-#             # writing the data rows  
-#             csvwriter.writerows(rows) 
-        reqdate = date.split('-')
-        interm_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
-        copyfile(interm_file, output_file)
-        copyfile(interm_file, output_file)
+        with open(output_file, 'w') as csvfile:  
+            # creating a csv writer object  
+            csvwriter = csv.writer(csvfile)  
+            # writing the data rows  
+            csvwriter.writerows(rows) 
             
     elif ((not enddate is None) and (not mindate is None)):
         mindate = datetime_to_seconds(mindate)
