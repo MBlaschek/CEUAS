@@ -16,3 +16,4 @@ __pycache__
 CEUAS/public/adjust/cds_eua3.py
 rik_kernel*.json
 CEUAS/.vscode/settings.json
+CEUAS/public/adjust/logs/*.log
