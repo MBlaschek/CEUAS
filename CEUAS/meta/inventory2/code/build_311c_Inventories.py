@@ -462,7 +462,7 @@ def lot2end(vname):
 def lot2units(vname,units):
     return vndict[vname]
 
-def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name) :
+def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name, fn='', dataset='') :
     # meta is the data source (as a pd dataframe) of the metadata e.g. vola, wban etc. 
      
     try:
@@ -488,6 +488,35 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name) :
                         print('Lat, lon' , lat, lon , '    ', meta.name , ' lat,lon' , metaz['Latitude'],metaz['Longitude'] )
                         found = False
                         
+                        # testing missing latitude; only works for era5_1759 
+                        if meta.name == 'WBAN' and dataset == '1759':
+                                print('Testing possible missing latitude sign === ')
+                                if lat > 0:
+                                        if fdist(metaz['Latitude'],metaz['Longitude'],-lat,lon)*180./math.pi < 0.5:
+                                                print('StationId ' , wmoid , 'found in the ' , meta.name , ' report as ' , '0-20400-0-{:0>5}'.format(int(iwmoid)) , ' when swapping latitude')
+                                                print('FOUND a lattude swap:  Lat, lon' , -lat, lon , '    ', meta.name , ' lat,lon' , metaz['Latitude'],metaz['Longitude'] )    
+                                                print(meta.name , ' coordinates match do_row for station: ' , wmoid, ' ' , meta['StationId'][z[0]], ' ' , meta['StationName'][z[0]])
+                                                if not os.path.isfile(home + '/era5_1759_WBAN_latitude_mismatch.dat'):
+                                                        a = open(home + '/era5_1759_WBAN_latitude_mismatch.dat', 'w')
+                                                        a.write('primary_id' + '\t' + 'file_lat' + '\t' + 'wban_lat' + '\t' + 'file_lon' + '\t' + 'wban_lon' + '\t' + 'file' + '\n')
+                                                        a.close()
+                                                        
+                                                a = open(home + '/era5_1759_WBAN_latitude_mismatch.dat', 'a+')
+                                                a.write(str(iwmoid) + '\t' + str(lat) + '\t' + str(metaz['Latitude']) + '\t' + 
+                                                        str(lon) + '\t' + str(metaz['Longitude']) + '\t' + str(lon) + '\t' + fn.split('/')[1] + '\n')
+                                                row[kdict['station name']]=metaz['StationName']
+                                                row[kdict['stationDescription']]=metaz['StationName']
+                                                row[kdict['stationPlatformUniqueIdentifier']]=metaz['StationId']
+                                                row[kdict['station name']]=metaz['StationName']
+                                                row[kdict['stationDescription']]=metaz['StationName']
+                                                return ind
+                                        else:
+                                                found = False 
+                                else:
+                                        found = False
+                                        
+                                        
+                                        
                 else: # if also coordinates match, keep the record found
 
                         print(meta.name , ' coordinates match do_row for station: ' , wmoid, ' ' , meta['StationId'][z[0]], ' ' , meta['StationName'][z[0]])
@@ -579,71 +608,7 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name) :
             
            
                         
-        '''
-        elif meta.name=='IGRA2':
-            z=numpy.where(meta['StationId']==iwmoid)[0]
-            if len(z)==0:
-                dists=fdist(lat,lon,meta['Latitude'].values,meta['Longitude'].values)*180./math.pi
-                z=numpy.nanargmin(dists)
-                if dists[z]<0.5:
-                    z=[z]
-                    print('IGRA2 coordinates match do_row  ', meta['StationId'][z[0]],meta['StationName'][z[0]])
-                else:
-                    z=[]
-                    
-        elif meta.name=='WBAN':
-            z=numpy.where(meta['StationId']==iwmoid)[0]
-            
-            if len(z)==0:
-                dists=fdist( lat,lon,meta['Latitude'].values,meta['Longitude'].values)*180./math.pi
-                z=numpy.nanargmin(dists)
-                if dists[z]<0.5:
-                    z=[z]
-                    print('WBAN coordinates match do_row  ', meta['StationId'][z[0]],meta['StationName'][z[0]] )
-                else:
-                    z=[]
-            
-        elif meta.name=='CHUAN':
-            z=numpy.where(meta['StationId']==wmoid)[0]
-            if len(z)==0:
-                dists=fdist( lat,lon,meta['Latitude'].values,meta['Longitude'].values)*180./math.pi
-                z=numpy.nanargmin(dists)
-                if dists[z]<0.5:
-                    z=[z]
-                    print('CHUAN coordinates match do_row  ', meta['StationId'][z[0]],meta['StationName'][z[0]] )
-                else:
-                    z=[]
-                  
-            
-        '''
-        '''
-        if len(z)==0:
-            return []
-    
-        else:
-            #z=z[0]
-            #metaz=meta.loc[z]
-            
-            if fdist(metaz['Latitude'],metaz['Longitude'],lat,lon)*180./math.pi< 1.0: 
-                row[kdict['station name']]=metaz['StationName']
-                row[kdict['stationDescription']]=metaz['StationName']
-                print('Found: ', wmoid ,' inside the ', meta.name+' database with id' , meta['StationId'][z] )
-                row[kdict['stationPlatformUniqueIdentifier']]=metaz['StationId']
-                row[kdict['station name']]=metaz['StationName']
-                row[kdict['stationDescription']]=metaz['StationName']
-                
-                #if meta.name=='OSCAR': 
-                #    row[kdict['regionOfOriginOfData']]=metaz['RegionName']
-                #    row[kdict['territoryOfOriginOfData_Name']]=metaz['CountryArea']
-                #    row[kdict['territoryOfOriginOfData_ISO3CountryCode']]=metaz['CountryCode']
-
-                #if meta.name=='CHUAN': 
-                #    row[kdict['descriptionDataset']]=metaz['Source']
-            else:
-                print('Position Mismatch:',name,wmoid,metaz['Latitude'],metaz['Longitude'],lat,lon)
-                # position mismatch might happen when the station id is found in the database but the location does not match for more than 1 degree
-                return []
-        '''
+     
 
     except KeyError as e:
         exc_type, exc_obj, exc_tb = sys.exc_info()
@@ -655,7 +620,8 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name) :
 
 def insert(row,vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,varno,dmin,dmax,dcount,fi,fn):
 
-    #try:
+    dataset= fn.split('/')[0]
+
 
     ids=-1
     wmoid=''
@@ -725,7 +691,8 @@ def insert(row,vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,var
                         if not mi:
                                 mi=do_row(row,kdict,igrainv,wmoid, iwmoid,nw,lat,lon,'IGRA2')
                                 if not mi:
-                                        mi=do_row(row,kdict,wbaninv,wmoid, iwmoid, nw,lat,lon,'WBAN')
+                                                
+                                        mi=do_row(row,kdict,wbaninv,wmoid, iwmoid, nw,lat,lon,'WBAN', dataset = dataset, fn = fn )
                                         if not mi:
                                                 mi=do_row(row,kdict,chuan,wmoid, iwmoid, nw,lat,lon,'CHUAN')
                                                 if not mi:
@@ -866,7 +833,6 @@ def scini(station_configuration,ids,station_id,cwmoid,vola,transunified,kdict,dm
     else:
             
         print ('CANNOT FIND ************************** ' , ids, station_id, cwmoid )
-
 
 
         '''
@@ -1505,8 +1471,9 @@ if __name__ == '__main__':
         dbs=['RI/Pangaea/COMP']
 
 
-        PARALLEL = True  
+        PARALLEL = False  
         dbs=['2', '1759', '1761', 'rda']
+        dbs=['1759']
         
         transunified = []
 
@@ -1600,7 +1567,7 @@ if __name__ == '__main__':
                 flist =  [f for f in flist if 'gz' not in f and f != '3188/era5.3188.conv.' ]
 
 
-                #flist = [f for  f in flist if '28698' in f or ':4580' in f or ':6147' in f or ':4640' in f]
+                flist =flist[200:202] + [f for  f in flist if ':80310' in f ]
                 
                 
                 if os.path.isfile(home + '/' + odir +'_correctly_processed.dat'):
