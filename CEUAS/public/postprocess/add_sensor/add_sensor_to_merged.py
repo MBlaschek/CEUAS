@@ -2,9 +2,9 @@ import os
 import sys
 import netCDF4 as nc
 import pandas as pd
-pd.set_option('display.max_rows', 50)
-pd.set_option('display.max_columns', 20)
-pd.set_option('display.width', 300)
+
+
+
 from pathlib import Path
 
 import numpy as np
@@ -98,44 +98,10 @@ def datetime_toseconds(date_time):
     a = np.array(to_seconds).astype(np.int64)
     return a # replacing with seconds from 1900-01-01 00:00:00     
 
-def remove_outliers(data= '', min_p= 25, max_p= 75, cut= 1, skewed= False):
-    """ Finds outliers, and replace them with np.nan (to keep vector of same length)                                                                                                                                                                                              
-
-         input ::       data = list of values 
-                           min_p , max_p = minimum and maximum values of the percentile to consider to determine outliers 
-                           skewed = use True to consider a skewed (not symmetricla Gaussian) distribution 
-                           cut = factor to allow slight deviation from given percentiles 
-         returns ::   cleaned   = list of values without outliers                                                                                                                                                                    
-                           outliers   = list of outlier values                                                                                                                                                                                                               
-                           lower,upper, median = outliers delimiter and median values """
-
-    q_min, q_max = np.nanpercentile(data, min_p), np.nanpercentile(data, max_p)
-    cut_off = (q_max - q_min) * cut
-    lower, upper = q_min-cut_off, q_max+cut_off
-
-    if skewed==True:
-        q50 = np.nanpercentile(data, 50)
-        lower , upper = q_min-(q50-q_min)*cut ,  q_max+(q_max-q50)*cut  # the higher the cut, the more relaxed the contition for exclusion 
-
-    median = np.nanmedian(data)
-    cleaned, outliers = [],[]
-
-    for d in np.asarray(data):
-        if d >= lower and d <= upper:
-            cleaned.append(d)
-
-        else: # only storing non nans values 
-            if not np.isnan(d):
-                outliers.append(d)
-                
-    return cleaned, outliers, lower, upper, median
-
-
-
 
 class MergedFile(object):
     
-    def __init__(self, out_dir = '' , station_id = '' , file='' ):
+    def __init__(self, out_dir = '' , station_id = '' , file='', copy = ''):
         self.out_dir = out_dir 
         
         if not os.path.isdir(out_dir):
@@ -146,8 +112,14 @@ class MergedFile(object):
         self.file = file 
         self.summary_file =  station_id + '_' + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_summary.txt'
         self.std_plevs    = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000]
-        self.dic_type_attributes = np.load('../../merge/dic_type_attributes.npy', allow_pickle= True).item()
-        self.encodings = np.load('../../merge/groups_encodings.npy' , allow_pickle = True ).item()
+        
+        #self.dic_type_attributes = np.load('../../merge/dic_type_attributes.npy', allow_pickle= True).item()
+        #self.encodings = np.load('../../merge/groups_encodings.npy' , allow_pickle = True ).item()
+        
+        self.dic_type_attributes = np.load('dic_type_attributes.npy', allow_pickle= True).item()
+        self.encodings = np.load('groups_encodings.npy' , allow_pickle = True ).item()        
+        
+        self.copy = copy 
         
     def load(self):
         
@@ -156,11 +128,9 @@ class MergedFile(object):
         data['cdm_tables'] = {}
         
         
-        cdm_tables = ['crs', 'observed_variable', 'sensor_configuration', 'station_configuration_codes', 'station_type', 'units', 'z_coordinate_type']
+        #cdm_tables = ['crs', 'observed_variable', 'sensor_configuration', 'station_configuration_codes', 'station_type', 'units', 'z_coordinate_type']
         cdm_tables = ['crs', 'observed_variable', 'station_configuration_codes', 'station_type', 'units', 'z_coordinate_type']
         
-
-            
         h5py_file = h5py.File(self.file, 'r+')
 
         data['h5py_file'] = h5py_file 
@@ -229,11 +199,12 @@ class MergedFile(object):
                 
 class Sensor(MergedFile):
     
-    def __init__(self, MF = ''  ):
+    def __init__(self, MF = '', copy = ''  ):
         
         #MF = MergedFile.__init__(self, out_dir = out_dir, station_id = station_id, file= file )
         self.MergedFile = MF
         self.data = MF.data 
+        self.copy = copy 
         
     def load_cdm_tables(self):
         """ Download the cdm tables definitions from the glamod GitHub. Taken from the harvester script. """
@@ -288,8 +259,21 @@ class Sensor(MergedFile):
             
         cdm['sensor_configuration']['comments']=cdm['sensor_configuration'].pop('comments').astype('|S200')
         
-        self.cdm = cdm # saving the tables
         
+        """ Adding the table from WMO gruan """
+        wmo = pd.read_csv('data/table_BUFR_radiosonde.csv' , sep=',' , header=1 , names = ['date', 'table_1', 'sensor_id', 'comments'] )
+        wmo = wmo[['sensor_id', 'comments']]        
+        
+        for c in [f for f in  cdm['sensor_configuration'].columns ]:
+            if c in ['sensor_id', 'comments']:
+                continue
+            col = np.full( (len(wmo)) , np.nan , dtype=type(cdm['sensor_configuration'][c][1] ) )
+            wmo[c] = col 
+            
+        sensor_conf = pd.concat( [cdm['sensor_configuration'] , wmo ]) # concatenating the two tables 
+        sensor_conf['comments'] = sensor_conf['comments'].str.encode('utf-8')
+        cdm['sensor_configuration'] = sensor_conf
+        self.cdm = cdm # saving the tables
         
     def write_sensorconfig(self):
         
@@ -427,9 +411,9 @@ class Sensor(MergedFile):
         temp_sensor_list = [] 
         for dt in lista:
             sensor_id = sensor_datetime[dt]['sensor']
-            while len(sensor_id) < 3:
+            while len(sensor_id) < 4:
                 sensor_id = sensor_id + b' ' 
-                print(sensor_id)
+                #print(sensor_id)
                 
             """ If I have only one sensor, it will be applied to the whole length of the observations_table """    
             
@@ -437,7 +421,7 @@ class Sensor(MergedFile):
                 length = self.data['length_max']
             else:
                 length = sensor_datetime[dt]['max_index'] - sensor_datetime[dt]['min_index']
-            sensor_id_array = np.full( ( length )  , sensor_id ).astype(  np.dtype('|S3')  ) 
+            sensor_id_array = np.full( ( length )  , sensor_id ).astype(  np.dtype('|S4')  ) 
             temp_sensor_list.append(sensor_id_array)
         
         #if not temp_sensor_list:
@@ -449,17 +433,38 @@ class Sensor(MergedFile):
             index = np.zeros (  self.data['h5py_file']['observations_table']['date_time'] .shape[0], dtype= int)           
             self.data['h5py_file']['observations_table'].create_dataset('index', data=index)
             
+        #temp_sensor_list = []  # TO DO CHANGE !!!!!  ONLY FOR DEVELOPMENT / TESTING 
+        
+        
+        # must replace sensor_ids starting from 2013-01-01, find the correct index in the obstable / era5fb table
+        index_replace = np.searchsorted( self.data['recordtimestampdecoded'], np.datetime64('2013-01-01') )
+        
+        add_era5 = True
+        if index_replace == len(self.data['recordtimestampdecoded'] ):
+            add_era5 = False
+            
+        index_max = self.data['recordindex'][index_replace-1]
+        
         if temp_sensor_list: # case where I found some sensor_ids inside Schroeder's table 
             
             sensor_list = np.concatenate(temp_sensor_list)
-            slen=len(sensor_list[0]) # =3
-                    
-            self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = sensor_list.view('S1').reshape(sensor_list.shape[0], slen ), compression = 'gzip' ,  chunks=True)                
+            #slen=len(sensor_list[0]) # =3
+            
+            slen= 4
+            
+            # combining the two sensor lists 
+            if add_era5:
+                sensor_list_combined = sensor_list[:index_max] # extracting sensors only before 2013 
+                era5_sensor = self.data['h5py_file']['era5fb']['sonde_type@conv'][index_max:]
+                sensor_list_combined = np.append(sensor_list_combined,era5_sensor).astype('|S4')
+            else:
+                sensor_list_combined = sensor_list
+                
+            self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = sensor_list_combined.view('S1').reshape(sensor_list_combined.shape[0], slen ), 
+                                                                        compression = 'gzip' ,  chunks=True)                
             
             s = 'string{}'.format(slen)
-            stringa=np.zeros(slen, dtype='S1')
-            
-            
+            stringa=np.zeros(slen, dtype='S1')         
             #try: # TO DO check what this is for 
             #    del  self.data['h5py_file']['observations_table'][s]
             #    del self.data['observations_table']['index']
@@ -470,25 +475,31 @@ class Sensor(MergedFile):
             try:            
                 self.data['h5py_file']['observations_table'].create_dataset( 'string{}'.format(slen) ,  data=stringa[:slen]  )                
                 self.data['h5py_file']['observations_table'][ 'string{}'.format(slen) ].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')         
-                
                 #self.data['h5py_file']['observations_table']['sensor_id'].dims[0].attach_scale( self.data['h5py_file']['observations_table']['index'] )
                 #self.data['h5py_file']['observations_table']['sensor_id'].dims[1].attach_scale( self.data['h5py_file']['observations_table'][ 'string{}'.format(slen)  ] )
-                
                 print(' *** Done with the attributes of the dimension *** ')
-                
             except ValueError:
                 print('Dimension already exist, passing ')
-    
             
         else:
             sensor_id = b'NA '
             slen = len(sensor_id)
             s = 'string{}'.format(slen)
             stringa=np.zeros(slen,dtype='S1')
-            s_id_vec = np.full( (len(self.data['h5py_file']['observations_table']['index']) ), sensor_id).astype(  np.dtype('|S3')  )
+            sensor_list = np.full( (len(self.data['h5py_file']['observations_table']['index']) ), sensor_id).astype(  np.dtype('|S4')  )
             
+            # combining the two sensor lists 
+            if add_era5:
+                sensor_list_combined = sensor_list[:index_max]
+                era5_sensor = self.data['h5py_file']['era5fb']['sonde_type@conv'][index_max:]
+                sensor_list_combined = np.append(sensor_list_combined, era5_sensor).astype('|S3')
+            else:
+                sensor_list_combined = sensor_list
+                
             try:
-                self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = s_id_vec.view('S1').reshape( len(s_id_vec), 3 )  , compression = 'gzip' ,  chunks=True)                  
+                self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = sensor_list_combined.view('S1').reshape( len(sensor_list_combined), slen ) , 
+                                                                            compression = 'gzip' ,  chunks=True)       
+                
                 self.data['h5py_file']['observations_table']['sensor_id'].dims[0].attach_scale(  self.data['h5py_file']['observations_table']['index'] )  
                 self.data['h5py_file']['observations_table'].create_dataset( s ,  data=stringa[:slen]  )                
                 self.data['h5py_file']['observations_table']['string{}'.format(slen)].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')                             
@@ -502,20 +513,31 @@ class Sensor(MergedFile):
             
     def run(self):
 
+        if self.copy: # if Ttue, then I create a copy of the file before adding the sensor id to avoid possible corruptions of the merged file
+            os.system('cp  ' + self.MergedFile.file + '   ' +  self.MergedFile.file.replace('.nc', '_beforeSensor.nc') )
+            
         cdm_tables = self.load_cdm_tables()      
         load_Schroeder_table = self.load_Schroeder_tables()
         dummy = self.extract_sensor_id()
         status = self.write_sensorconfig()
-        
         status = self.replace_sensor_id()
-        
 
-        #write = self.MergedFile.write_summary( what = 'sensor', done = True)
+        if not self.copy:
+            os.system('mv  ' + self.MergedFile.file + '   ' +  self.MergedFile.out_dir )
         
-        os.system('mv  ' + self.MergedFile.file + '   ' +  self.MergedFile.out_dir )
-        print(' --- Done writing the output file ' + self.MergedFile.file + '  ! ---  ' )
-        return 0 
+        print(' --- Done writing the output file ' + self.MergedFile.file + '  ! ---  ' )            
+            
+            
 
+
+
+def wrapper(out_dir = '' , station_id = '' , file = '', copy = copy ):
+    """ To use to run a single file, during merging """
+
+    MF = MergedFile(out_dir = out_dir , station_id = station_id , file = file, copy = copy  )
+    data_dummy = MF.load()
+    sensor = Sensor(MF = MF, copy = copy)  # loading sensor class 
+    run_dummy = sensor.run() # running module     
 
 
 
@@ -523,11 +545,6 @@ if __name__ == '__main__':
         
             parser = argparse.ArgumentParser(description="Postprocessing Utility for the addition if instrumentation metadata")
             
-        
-            parser.add_argument('--instrument' , '-i', 
-                                  help="Add Instrument Type"  ,
-                                  type = str,
-                                  default = 'False'  )
             
             parser.add_argument('--force_run' , '-f', 
                                   help="Force running the file(s)"  ,
@@ -537,7 +554,6 @@ if __name__ == '__main__':
             
             args = parser.parse_args()
             
-            get_instrument       = args.instrument
             force_run                = args.force_run
             
 
@@ -557,9 +573,8 @@ if __name__ == '__main__':
                 print (' I will process the file ::: ' , file , ' ::: station_id ::: ' , station_id )  
                 '''
 
-                
                 """ Initialize classes """
-                MF = MergedFile(out_dir = postprocessed_new , station_id = station_id , file = file  )
+                MF = MergedFile(out_dir = postprocessed_new , station_id = station_id , file = file, copy = True )
                 """ Read data """
                 data = MF.load()
             
@@ -568,9 +583,8 @@ if __name__ == '__main__':
                 
                     try:                        
                         """ Running sensor module """
-                        if get_instrument in  ['yes', 'y', 'YES', 'Y', 'True', 'true'] :                                       
-                            sensor = Sensor( MF = MF  )  # loading sensor class 
-                            run = sensor.run() # running module 
+                        sensor = Sensor( MF = MF , copy = True )  # loading sensor class 
+                        run = sensor.run() # running module 
                             
                         print(' *** Done Writing Sensor Information for file ' , file )    
                         
@@ -582,41 +596,34 @@ if __name__ == '__main__':
                 else:
                     print('   +++ Running in normal mode +++')
                     """ Running sensor module """
-                    if get_instrument in  ['yes', 'y', 'YES', 'Y', 'True', 'true']:
-                        sensor = Sensor( MF = MF )  # loading sensor class 
-                        run = sensor.run() # running module 
+                    sensor = Sensor( MF = MF )  # loading sensor class 
+                    run = sensor.run() # running module 
 
-                        print(' *** Done Writing Sensor Information for file ' , file )    
+                    print(' *** Done Writing Sensor Information for file ' , file )    
 
 
             #station = stations_list[0]
             #a = run(merged_directory, postprocessed_new, force_run, station)
             
-            
-            os.system('cp /raid8/srvx1/federico/GitHub/CEUAS_master_FEBRUARY2021/CEUAS/CEUAS/public/merge/0-20000-0-71896_CEUAS_merged_v1.nc'
-                      + '  /raid8/srvx1/federico/GitHub/CEUAS_master_FEBRUARY2021/CEUAS/CEUAS/public/merge/PROVA/ ')
-            os.system('cp  /raid60/scratch/federico/MERGED_MARCH2021/0-20000-0-82930_CEUAS_merged_v1.nc  '
-                      + '  /raid8/srvx1/federico/GitHub/CEUAS_master_FEBRUARY2021/CEUAS/CEUAS/public/merge/PROVA/ ')
-            
 
-            
-            
-            """ File source direcotry """
-            #merged_directory = '/raid60/scratch/federico/MERGED_MARCH2021_SAVE'
-            merged_directory = '/raid8/srvx1/federico/GitHub/CEUAS_master_FEBRUARY2021/CEUAS/CEUAS/public/merge/PROVA/'
+            """ File source directory """
+            merged_directory = '../../merge/PROVA/'
             
             """ Moving postprocessed files to new directory """
             #postprocessed_new = '/raid60/scratch/federico/DATABASE_MARCH2021_sensor'
 
-            postprocessed_new = '/raid60/scratch/federico/PROVA_sensor'
-            os.system('rm -r  /raid60/scratch/federico/PROVA_sensor/')
+            postprocessed_new = '/raid60/scratch/federico/PROVA_sensor_newsensors'
+            os.system('rm -r  /raid60/scratch/federico/PROVA_sensor_newsensors/')
 
             os.system('mkdir ' + postprocessed_new)
             
         
             stations_list = [ s for s in os.listdir(merged_directory) if 'empty'  not in s ]           
+            #stations_list = [ s for s in stations_list if 'Sensor'   in s ]           
+            
             processed = [ s.split('_')[0] for s in os.listdir(postprocessed_new) ]  # skipping processed files 
-
+            processed = []
+            
             cleaned_list = []
 
             for file in stations_list:
@@ -628,9 +635,7 @@ if __name__ == '__main__':
                     cleaned_list.append(file)
             
 
-            #print(cleaned_list)
-            #print(len(cleaned_list))
-            #cleaned_list = ['0-20000-0-94463_CEUAS_merged_v0.nc', ]
+
             print(cleaned_list)
             for s in cleaned_list:
                 a = run(merged_directory, postprocessed_new, force_run, s)
