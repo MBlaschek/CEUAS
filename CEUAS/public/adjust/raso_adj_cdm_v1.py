@@ -47,7 +47,8 @@ except Exception as e:
 warnings.simplefilter("ignore")
 np.seterr(invalid='ignore')
 
-logger = logging.getLogger('upperair.adjust')
+logger = logging.getLogger()
+logger.name = 'adjust'
 formatter = logging.Formatter('%(asctime)s - %(name)s | %(funcName)s - %(levelname)s - %(message)s')
 
 # in Pa
@@ -1000,7 +1001,8 @@ def adjustment_procedure(data: xr.Dataset, dim: str = 'time', plev: str = 'plev'
 
 def run_frontend_file(args, **kwargs):
     if args.feedback is None:
-        args.feedback = 'obs_minus_fg'
+        args.feedback = 'obs_minus_bg'  # Background: first guess, or 
+                                        # obs_minus_an : Analysis departures
 
     if args.temperature or args.humidity:
         iofile = eua.CDMDataset(args.frontend)
@@ -1031,7 +1033,7 @@ def run_frontend_file(args, **kwargs):
                                     dim='time',
                                     plev='plev',
                                     return_dataset=False,
-                                    quantile_adjustments=False if args.temperature else True
+                                    #quantile_adjustments=False if args.temperature else True
                                     )
         #
         # Write back adjusted (interpolation, extrapolation)
@@ -1161,7 +1163,7 @@ def run_backend_file(args, **kwargs):
                                     dim='time',
                                     plev='plev',
                                     return_dataset=False,
-                                    quantile_adjustments=True,
+                                    #quantile_adjustments=True,
                                     )
         # TODO Convert adjustments to other variables?
         #
@@ -1262,6 +1264,29 @@ date: {}
         args.dates = args.dates.split(',') if ',' in args.dates else args.dates
     if args.plevs:
         args.plevs = args.plevs.split(',') if ',' in args.plevs else args.plevs
+    # LOGGING 
+    # Clear any existing loggers
+    if (logger.hasHandlers()):
+        logger.handlers.clear()
+    
+    ch = logging.StreamHandler() # to std.err
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    if args.debug:
+        logger.setLevel(logging.DEBUG)
+        ch.setLevel(logging.DEBUG)
+    else:
+        logger.setLevel(logging.INFO if args.verbose else logging.WARNING)
+        ch.setLevel(logging.INFO if args.verbose else logging.WARNING)
+
+    # LOG TO FILE?
+    if args.logfile:
+        ch = logging.FileHandler(args.logfile)
+        ch.setLevel(logging.DEBUG)
+        ch.setFormatter(formatter)
+        logger.addHandler(ch)
+        logger.info("Logging to: %s", args.logfile)
+    # END LOGGING
     #
     # Check file
     #
@@ -1283,22 +1308,7 @@ date: {}
     else:
         args.plevs = std_plevs * 100
 
-    # LOGGING 
-    ch = logging.StreamHandler()
-    if args.debug:
-        ch.setLevel(logging.DEBUG)
-    else:
-        ch.setLevel(logging.WARNING if args.verbose else logging.INFO)
-    ch.setFormatter(formatter)
-    logger.addHandler(ch)
-    # LOG TO FILE?
-    if args.logfile:
-        ch = logging.FileHandler(args.logfile)
-        ch.setLevel(logging.DEBUG)
-        ch.setFormatter(formatter)
-        logger.addHandler(ch)
-        logger.info("Logging to: ", args.logfile)
-    # END LOGGING
+
 
     if args.frontend:
         #

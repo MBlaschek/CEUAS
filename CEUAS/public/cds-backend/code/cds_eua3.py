@@ -2026,6 +2026,7 @@ class CDMDataset:
             shutil.copy(self.filename, write_to_filename)
             logger.warning("reopen [%s] Copy file to %s", mode, write_to_filename)
             self.filename = write_to_filename
+            self.name = self.filename.split('/')[-1]
             self.file = h5py.File(self.filename, mode=mode, **kwargs)
 
         else:
@@ -2047,6 +2048,7 @@ class CDMDataset:
                     shutil.copy(self.filename, '{}/{}'.format(tmpdir, self.name))
                     logger.warning("reopen [%s] Copy file to %s/%s", mode, tmpdir, self.name)
                     self.filename = '{}/{}'.format(tmpdir, self.name)
+                    self.name = self.filename.split('/')[-1]
                     self.file = h5py.File(self.filename, mode=mode, **kwargs)
                 else:
                     raise OSError('reopen with', mode, self.filename)
@@ -2660,17 +2662,13 @@ class CDMDataset:
             date_time_name = date_time_name if date_time_name != 'date_time' else 'time'
 
         if dates is not None:
-            #
-            # loading variables allows reusing them in memory / faster for follow up requests
-            # recordtimestamp gives unique dates (smaller array)
-            # todo future update will have more dimensions / sorted by variable
-            # structure yet unclear
             if 'recordtimestamp' in self.groups:
                 timestamp = self.load_variable_from_file('recordtimestamp', return_data=True)[0]
                 timestamp_units = self.read_attributes('recordtimestamp').get('units', None)
-            elif isinstance(self['recordindices'], CDMGroup):
-                timestamp = self.load_variable_from_file('recordtimestamp', group='recordindices', return_data=True)[0]
-                timestamp_units = self.read_attributes('recordtimestamp', group='recordindices').get('units', None)
+            elif 'recordindices' in self.groups:
+                if isinstance(self['recordindices'], CDMGroup):
+                    timestamp = self.load_variable_from_file('recordtimestamp', group='recordindices', return_data=True)[0]
+                    timestamp_units = self.read_attributes('recordtimestamp', group='recordindices').get('units', None)
             else:
                 # backup if recordtimestamp not present
                 timestamp = self.load_variable_from_file(date_time_name, return_data=True)[0]
@@ -4118,12 +4116,13 @@ class CDMDataset:
         # Loop input and file dates/pressures -> Matches
         reverse_index(match_index, f_dates, f_plevs, in_dates, in_plevs)
         logic = (match_index > -1)
+        # Might give 0 missing, because all dates have been found, but not all pressure levels (e.g. from a cube)
         if logic.sum() != in_dates.shape[0]:
             missing = in_dates[~np.in1d(in_dates, in_dates[match_index[logic]])]
-            logger.warning('Not all input dates are found %s', missing.shape)
+            logger.debug('Not all input dates are found %s', missing.shape)
             logger.debug('Missing dates: %s', str(missing))
         else:
-            logger.info('All dates found')
+            logger.debug('All dates found %d', logic.sum())
 
         values = data.values
         if interpolate and not np.issubdtype(values.dtype, str):
@@ -4188,25 +4187,29 @@ class CDMDataset:
                         self.file[name] = self.file['temp123']  # overwrite
                         del self.file['temp123']  # remove temporary dataset
                         #
-                        # String dimensionwith with size (n)
+                        # Dimension names have been removed (phony_dim_x)
                         #
-                        sname = 'string{}'.format(n)
-                        if sname not in self.file.keys():
-                            self.file.create_dataset(sname, data=np.zeros(n, dtype='S1'), chunks=True)
-                            self.file[sname].attrs['NAME'] = np.string_(
-                                'This is a netCDF dimension but not a netCDF variable.')
-                            self.file[sname].make_scale(sname)
-                            self.file[name].dims[1].attach_scale(self.file[sname])
-                        # todo check if old string dimension is still used or not ?
-                        #
-                        # Attach dimensions from file
-                        #
-                        idim = self.file[name].dims[0].keys()[0]
-                        idim = idim if idim != '' else 'obs'
-                        if idim not in self.file.keys():
-                            self.file[idim] = self.file[idim]
-                            self.file[idim].make_scale()
-                        self.file[name].dims[0].attach_scale(self.file[idim])
+                        if False:
+                            #
+                            # String dimension with size (n)
+                            #
+                            sname = 'string{}'.format(n)
+                            if sname not in self.file.keys():
+                                self.file.create_dataset(sname, data=np.zeros(n, dtype='S1'), chunks=True)
+                                self.file[sname].attrs['NAME'] = np.string_(
+                                    'This is a netCDF dimension but not a netCDF variable.')
+                                self.file[sname].make_scale(sname)
+                                self.file[name].dims[1].attach_scale(self.file[sname])
+                            # todo check if old string dimension is still used or not ?
+                            #
+                            # Attach dimensions from file
+                            #
+                            idim = self.file[name].dims[0].keys()[0]
+                            idim = idim if idim != '' else 'obs'
+                            if idim not in self.file.keys():
+                                self.file[idim] = self.file[idim]
+                                self.file[idim].make_scale()
+                            self.file[name].dims[0].attach_scale(self.file[idim])
                     else:
                         assert self[name].shape[1] == n, 'Shapes do not match, force_replace=True to ' \
                                                          'overwrite '
@@ -4228,23 +4231,27 @@ class CDMDataset:
                 writeme = np.zeros((f_dates.shape[0], n), dtype='S1')
                 writeme[mask, :] = chararray[match_index[logic], :]  # fill Array
                 #
-                # String dimensionwith with size (n)
-                #
-                sname = 'string{}'.format(n)
-                if sname not in self.file.keys():
-                    self.file.create_dataset(sname, data=np.zeros(n, dtype='S1'), chunks=True)
-                    self.file[sname].attrs['NAME'] = np.string_('This is a netCDF dimension but not a netCDF variable.')
-                    self.file[sname].make_scale(sname)
-                    self.file[name].dims[1].attach_scale(self.file[sname])
-                #
-                # Attach dimensions from file
-                #
-                idim = self.file[name].dims[0].keys()[0]
-                idim = idim if idim != '' else 'obs'
-                if idim not in self.file.keys():
-                    self.file[idim] = self.file[idim]
-                    self.file[idim].make_scale()
-                self.file[name].dims[0].attach_scale(self.file[idim])
+                # Dimension names have been removed (phony_dim_x)
+                # 
+                if False:
+                    #
+                    # String dimensionwith with size (n)
+                    #
+                    sname = 'string{}'.format(n)
+                    if sname not in self.file.keys():
+                        self.file.create_dataset(sname, data=np.zeros(n, dtype='S1'), chunks=True)
+                        self.file[sname].attrs['NAME'] = np.string_('This is a netCDF dimension but not a netCDF variable.')
+                        self.file[sname].make_scale(sname)
+                        self.file[name].dims[1].attach_scale(self.file[sname])
+                    #
+                    # Attach dimensions from file
+                    #
+                    idim = self.file[name].dims[0].keys()[0]
+                    idim = idim if idim != '' else 'obs'
+                    if idim not in self.file.keys():
+                        self.file[idim] = self.file[idim]
+                        self.file[idim].make_scale()
+                    self.file[name].dims[0].attach_scale(self.file[idim])
         #
         # Just for numbers
         #
@@ -4275,17 +4282,21 @@ class CDMDataset:
                                          fillvalue=fillvalue,
                                          compression='gzip')  # Create a new dataset
                 #
-                # Attach dimensions from file
+                # Dimension names have been removed (phony_dim_x)
                 #
-                try:
-                    idim = self.file[name].dims[0].keys()[0]
-                except:
-                    idim = ''
-                idim = idim if idim != '' else 'obs'
-                if idim not in self.file.keys():
-                    self.file[idim] = self.file[idim]
-                    self.file[idim].make_scale()
-                self.file[name].dims[0].attach_scale(self.file[idim])
+                if False:
+                    #
+                    # Attach dimensions from file
+                    #
+                    try:
+                        idim = self.file[name].dims[0].keys()[0]
+                    except:
+                        idim = ''
+                    idim = idim if idim != '' else 'obs'
+                    if idim not in self.file.keys():
+                        self.file[idim] = self.file[idim]
+                        self.file[idim].make_scale()
+                    self.file[name].dims[0].attach_scale(self.file[idim])
                 writeme = np.full(f_dates.shape,
                                   fillvalue,
                                   dtype=values.dtype)
@@ -4296,14 +4307,15 @@ class CDMDataset:
         #
         self.file[name][()] = writeme  # Write the new data
         #
-        # Write Attributes
+        # Write Attributes (can cause: can't open HDF5 attribute)
         #
         if attributes is not None:
             for ikey, ival in attributes.items():
-                if isinstance(ival, str):
-                    self.file[name].attrs[ikey] = np.string_(ival)
-                else:
-                    self.file[name].attrs[ikey] = ival
+                self.file[name].attrs[ikey] = np.string_(str(ival))
+                #if isinstance(ival, str):
+                #    self.file[name].attrs[ikey] = np.string_(ival)
+                #else:
+                #    self.file[name].attrs[ikey] = ival
         self.file.flush()  # Put changes into the file
         self.inquire()  # update Groups and variable lists
         self[name].update(data=writeme)  # update class in memory
