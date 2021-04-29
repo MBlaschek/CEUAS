@@ -5,7 +5,7 @@ F90=$(F90C)
 FC=$(F90C)
 
 RTTOV= #RTTOV
-RTTOVLIB=  -L$(HOME)/projects/rttov10/lib -lrttov10.1.0_test -lrttov10.1.0_other -lrttov10.1.0_coef_io  -lrttov10.1.0_parallel -lrttov10.1.0_main
+#RTTOVLIB=  -L$(HOME)/projects/rttov10/lib -lrttov10.1.0_test -lrttov10.1.0_other -lrttov10.1.0_coef_io  -lrttov10.1.0_parallel -lrttov10.1.0_main
 RTTOVFLAGS= -I$(HOME)/projects/rttov10/include  -I$(HOME)/projects/rttov10/mod
 
 .SUFFIXES: .o .f .F90 .f90 .F 
