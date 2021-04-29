@@ -189,6 +189,7 @@ if(iter .eq. 0 ) then
   endif
 endif
 
+
 !!where(tfgmorig .ne. rcpara%miss_val)
 !!  tfg=tm+tfgm
 !!elsewhere
@@ -283,8 +284,9 @@ lim(:,1)=(/2,7/)
 lim(:,2)=(/10,13/)
 call analyze_ts(iname,tfgm,tm,stm,tfg,stfgm,dailycrut2,lim,rcpara,protunit,apriori_probs,apriori_probs_rad,tsa_of_mean,breakmean_probs)
 
-  if(iname .eq. 1001) then
-    write(*,*) 'test',count(tm .ne. rcpara%miss_val),count(tfgm .ne. rcpara%miss_val),count(stm .ne. rcpara%miss_val),count(tfg .ne. rcpara%miss_val),count(stfgm .ne. rcpara%miss_val),count(dailycrut2 .ne. rcpara%miss_val),count(tsa_of_mean .ne. rcpara%miss_val)
+  if(iname .eq. 111035) then
+     write(*,*) 'test',count(tm .ne. rcpara%miss_val),count(tfgm .ne. rcpara%miss_val),count(stm .ne. rcpara%miss_val),count(tfg .ne. rcpara%miss_val),count(stfgm .ne. rcpara%miss_val),count(dailycrut2 .ne. rcpara%miss_val),count(tsa_of_mean .ne. rcpara%miss_val),maxval(apriori_probs),maxval(apriori_probs_rad)
+     write(*,*)'tsa_of_mean)',tsa_of_mean(30000:30030,:)
   endif
 
 
@@ -323,6 +325,7 @@ if(ib .gt. 0) then
   write(ch,'(I2)') ib 
   write(*,'(A11,2F8.2,'//ch//'I9)') cname//' tsa:',maxval(tsa_of_mean(:,1:10)),maxval(breakmean_probs(:,1:10)),rcpara%year(chosenbreaks(1:ib))*10000+rcpara%month(chosenbreaks(1:ib))*100+rcpara%day(chosenbreaks(1:ib))
   write(*,'(A11,10I6,10I6)') cname//'bmp:',probbreaks(1,1:10),probbreaks(2,1:10)
+  write(*,*) 'apriori',maxval(apriori_probs)
 else
   write(*,'(A6,2F8.2,a)') cname//' tsa:',maxval(tsa_of_mean(:,1:10)),maxval(breakmean_probs(:,1:10)),'no break'
 endif
@@ -840,7 +843,7 @@ do ilayer=1,2 !259
      call calc_mean(rcpara,tfg,fgmean(:,:,ilayer),weights,rcpara%parmax,1,0) !in this file line 929
      call calc_mean(rcpara,stfgm,stfgmean(:,:,ilayer),weights,rcpara%parmax,1,0) !in this file line 929
 
-if(iname .eq. 01001) then
+if(iname .eq. 111035) then
    write(*,*) 'means',count(tfgmean .ne. rcpara%miss_val),count(tmean .ne. rcpara%miss_val),count(stmean .ne. rcpara%miss_val),count(fgmean .ne. rcpara%miss_val),count(stfgmean .ne. rcpara%miss_val)
    write(*,'(A8,16F4.1,3I8)') 'weights:',weights,ic,ilayer,count(tfgm.ne. rcpara%miss_val)
 !   do i=1,rcpara%nmax
@@ -862,6 +865,8 @@ endif
            if(mhilf(i) .gt. mcountmean(i,ipar,ilayer)) mcountmean(i,ipar,ilayer)=mhilf(i)
            if(philf(i) .gt. pcountmean(i,ipar,ilayer)) pcountmean(i,ipar,ilayer)=philf(i)
         enddo
+
+!        print*,'tsahilf',ipar,ilayer,tsahilf(30000),tfgmean(30000,ipar,ilayer),sum(tfgmean(:,ipar,ilayer)),sum(null)
 
        if(any(stfgmean(:,ipar,ilayer) .ne. rcpara%miss_val)) then 
        !Schichtmittel composit
@@ -903,6 +908,7 @@ endif
 !!           if(mhilf(i) .gt. rmcountmean(i,ipar)) rmcountmean(i,ipar)=mhilf(i)
 !!           if(philf(i) .gt. rpcountmean(i,ipar)) rpcountmean(i,ipar)=philf(i)
          enddo
+!        print*,'tsahilfrad',ipar,ilayer,tsahilf(30000)
         endif
       enddo !273
    enddo !261
@@ -947,8 +953,8 @@ call bayes_break_simple(rcpara,null+rcpara%ap_prob_default,tsa_of_mean,breakmean
   if(iname .eq. 1001) then
     write(*,'(A20,7I8)') 'test in analyze',count(tm .ne. rcpara%miss_val),count(tfgm .ne. rcpara%miss_val),count(stm .ne. rcpara%miss_val),count(tfg .ne. rcpara%miss_val),count(stfgm .ne. rcpara%miss_val),count(dailycrut2 .ne. rcpara%miss_val),count(tsa_of_mean .ne. rcpara%miss_val)
 
-  endif
-
+ endif
+!  stop
 return
 end subroutine analyze_ts
 

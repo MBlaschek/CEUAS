@@ -58,7 +58,9 @@ r = http.request('GET', 'http://early-upper-air.copernicus-climate.eu/statlist/?
 fns=r.data.split(b'\n')
 for i in range(len(fns)):
     fns[i]=fns[i].split(b',')[0].decode()
-opath=os.path.expandvars('/raid60/raid/home/srvx7/lehre/users/a1400070/adjust/Temperature_adjustment/files')
+# opath=os.path.expandvars('/raid60/raid/home/srvx7/lehre/users/a1400070/adjust/Temperature_adjustment/files')
+opath=os.path.expandvars('../Temperature_adjustment/files')
+
 print(opath)
 os.chdir(opath)
 #fns=glob.glob('0?????/')
@@ -102,11 +104,7 @@ for fnf in fns:
         z.close()
         files = glob.glob('./downloaded/downloaded_'+ fn +'/*.nc')
         data=eua.CDMDataset(files[0])
-        
-        try:
-            shutil.rmtree('./downloaded_files')
-        except:
-            print("could not remove download dir")
+
             
 #         data=eua.vm_request_wrapper({'variable': 'temperature', 'optional':['obs_minus_bg','bias_estimate'],'statid': fn, 'pressure_level':[1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000]}, 
 #                                     overwrite=True,vm_url='http://srvx8.img.univie.ac.at:8002')

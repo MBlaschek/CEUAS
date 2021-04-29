@@ -6,22 +6,23 @@ module rfcor
   use rfcorio
   use sort
   use data_setting
+  use calcp
 
-  interface
-     subroutine calc_profile(rcpara,iname,breakloc,plus,minus,rplus,rminus,breakprofile,f_val,kplus1,dim3) !
-       use rfmod
+!  interface
+!     subroutine calc_profile(rcpara,iname,breakloc,plus,minus,rplus,rminus,breakprofile,f_val,kplus1,dim3) !
+!       use rfmod
 
-       implicit none
+!       implicit none
 
-       type(rasocor_namelist),intent(in) :: rcpara
+!       type(rasocor_namelist),intent(in) :: rcpara
 
-       integer(kind=JPRM)        :: kplus1,dim3
-       integer(kind=JPRM) :: breakloc,iname
-       real(kind=JPRM),intent(in) :: plus(rcpara%nmax,rcpara%pmax,dim3),minus(rcpara%nmax,rcpara%pmax,dim3)
-       real(kind=JPRM),intent(in) :: rplus(rcpara%nmax,rcpara%pmax,dim3),rminus(rcpara%nmax,rcpara%pmax,dim3)
-       real(kind=JPRM) :: breakprofile(rcpara%pmax,dim3),f_val(dim3)
-     end subroutine calc_profile
-  end interface
+!       integer(kind=JPRM)        :: kplus1,dim3
+!       integer(kind=JPRM) :: breakloc,iname
+!       real(kind=JPRM),intent(in) :: plus(rcpara%nmax,rcpara%pmax,dim3),minus(rcpara%nmax,rcpara%pmax,dim3)
+!       real(kind=JPRM),intent(in) :: rplus(rcpara%nmax,rcpara%pmax,dim3),rminus(rcpara%nmax,rcpara%pmax,dim3)
+!       real(kind=JPRM) :: breakprofile(rcpara%pmax,dim3),f_val(dim3)
+!     end subroutine calc_profile
+!  end interface
 
 contains
 
@@ -947,6 +948,8 @@ end subroutine load_richcorr
     ldebug=.false.
     call select_composite(rcpara,statnr,cmax,wmonrs,wmolons,wmolats,wmostats,dists,index) !in file rfcor.f90 line 206
 
+!    print*,wmonrs(index(1:30)),wmolats(index(1:30)),wmolons(index(1:30))
+
     err3=0
 
     stnum=0
@@ -1025,7 +1028,7 @@ end subroutine load_richcorr
                    enddo
                 enddo
              enddo
-
+!             print*,cstatnr,count(tm(:,10,1).ne. rcpara%miss_val),count(tfgm(:,10,1).ne. rcpara%miss_val)
              call eiminuse40(rcpara,wmolats(index(istat)),wmolons(index(istat)),ominuse40,adjustlocal)
              switchindex=toindex(rcpara%switchdate,rcpara)
              !     do ipar=1,rcpara%parmax
@@ -1420,58 +1423,6 @@ end subroutine load_richcorr
     return
   end subroutine attribute_breaks
 
-  !! Bayes_prob combines a priori information from metadata with
-  !! statistical information.
-  !! The probability for a break in a particular interval is in most cases
-  !! close to 1. What remains is to find the break location within that interval.
-  !! For this purpose knowledge  from simulation experiments is used.
-  subroutine bayes_prob(rcpara,apriori_probs,tsa,tsalocs,break_probs,protunit)
-
-    implicit none
-
-    type(rasocor_namelist),intent(in) :: rcpara
-
-    integer IFAIL,ib,ip,bc,istart,istop,locint,i,protunit
-    real(kind=JPRM) :: apriori_probs(rcpara%nmax),tsa(rcpara%nmax,rcpara%probmax)
-    integer(kind=JPRM) :: tsalocs(rcpara%nmax,rcpara%probmax)
-    real(kind=JPRM) :: break_probs(rcpara%nmax,rcpara%probmax),sig
-    real xp,xm,G01EAF,prob
-
-    break_probs=0.
-    do ip=1,rcpara%probmax
-       bc=count(tsalocs(:,ip) .ne. 0)
-       do ib=1,bc
-          !!     sig=-40.+rcpara%locsig/sqrt(tsa(tsalocs(ib,ip),ip))
-          sig=rcpara%locsig/sqrt(tsa(tsalocs(ib,ip),ip))
-          if(sig .lt. 2.) sig=2. !! avoid negative sig for extreme values of tsa
-          locint=3*sig
-          istart=max(1,tsalocs(ib,ip)-locint)
-          istop=min(rcpara%nmax,tsalocs(ib,ip)+locint)
-          do i=istart,istop
-             xm=(i-tsalocs(ib,ip))/sig
-             xp=(i-tsalocs(ib,ip)+1)/sig
-             prob=G01EAF('L', xp, IFAIL)-G01EAF('L', xm, IFAIL)
-             break_probs(i,ip)=prob
-          enddo
-       enddo
-    enddo
-
-    !! P(A)=aprioriprob
-    !! P(B/A)=break_probs
-    !! P(\A)=1-aprioriprob
-    !! P(B/\A)=1-break_probs
-    !! P(A/B)=P(A)P(B/A)/(P(A)P(B/A)+P(\A)P(B/\A))
-    !!
-    !! P(B/\A)=1/maxlen (uniform distribution of break location if there is no break)
-
-    do ip=1,rcpara%probmax
-       do i=1,rcpara%nmax
-          break_probs(i,ip)=apriori_probs(i)*break_probs(i,ip)/(apriori_probs(i)*break_probs(i,ip)+(1.-apriori_probs(i))*1./rcpara%snht_maxlen)
-       enddo
-    enddo
-
-    return
-  end subroutine bayes_prob
 
   !! Bayes_prob combines a priori information from metadata with
   !! statistical information.
@@ -1522,7 +1473,10 @@ end subroutine load_richcorr
                 else
                    xp=-3.+4.6*tsahilf(i)/break_thresh
                 endif
-                prob=G01EAF('L', xp, IFAIL)
+!                prob=G01EAF('L', xp, IFAIL)
+!                print*,'g01',xp,prob
+                prob=0.5*(erf(xp/sqrt(2.0))+1.0)
+!                print*,'erf',xp,prob
                 nprob=1.d0-prob
                 break_prob=break_probs(i)*prob/(break_probs(i)*prob+(1.-apriori_probs(i))*nprob)
                 !!         if(ipstart .ne. ipend) then 
@@ -1978,7 +1932,11 @@ end subroutine load_richcorr
        enddo
     enddo
 
+!    print*,count(tm(:,10,1) .ne. rcpara%miss_val),count(tfgm(:,10,1) .ne. rcpara%miss_val),count(stm(:,10,1) .ne. rcpara%miss_val),count(stfgm(:,10,1) .ne. rcpara%miss_val)
+!    print*,'diff',iname,cib,splus(cib,:,:),sminus(cib,:,:),rplus(cib,:,:),rminus(cib,:,:)
     call calc_profile(rcpara,iname,cib,splus,sminus,rplus,rminus,breakprofile,f_val,rcpara%smooth_method,rcpara%parmax) !in this file line 9
+!    print*,'break',iname,cib,breakprofile
+
     where(breakprofile .eq. rcpara%miss_val) breakprofile=0.
 
     call calc_profile(rcpara,iname,cib,bgrplus,bgrminus,rplus,rminus,bgrbreakprofile,f_val,rcpara%smooth_method,1) !in this file line 9

@@ -25,7 +25,7 @@ description:
     Name: Trajectory_label
     Units: 1
   - 
-    Description: "WIGOS Station Identifier, only available in csv"
+    Description: "WIGOS Station Identifier"
     Name: Statid
     Units: 1
   - 
@@ -45,12 +45,24 @@ description:
     Name: Bias_estimate
     Units: "same as variable"
   - 
-    Description: "optional, Sonde Type"
+    Description: "optional, Sonde Type (from Schroeder's database (alphanumeric codes) until 2013, from TEMP or BUFR reports afterwards, numeric codes according to WMO TD 310"
     Name: Sonde_type
     Units: 1
   - 
-    Description: "optional, Observation Error (estimated with Desrozier's method)"
-    Name: Observation_error
+    Description: "optional, Observation Error estimated from 30 day departure statistics (with Desrozier's method)"
+    Name: desroziers_30
+    Units: "same as variable"
+  - 
+    Description: "optional, Observation Error estimated from 60 day departure statistics (with Desrozier's method)"
+    Name: desroziers_60
+    Units: "same as variable"
+  - 
+    Description: "optional, Observation Error estimated from 90 day departure statistics (with Desrozier's method)"
+    Name: desroziers_90
+    Units: "same as variable"
+  - 
+    Description: "optional, Observation Error estimated from 180 day departure statistics (with Desrozier's method)"
+    Name: desroziers_180
     Units: "same as variable"
   - 
     Description: "optional, Sample size of aggregated difference, only for IDs starting with 20200"
@@ -65,10 +77,28 @@ description:
     Name: Sample_error
     Units: "same as variable"
   - 
-    Description: "optional, RAOBCORE bias estimate"
+    Description: "optional, RAOBCORE bias estimate, only for temperature"
     Name: RAOBCORE_bias_estimate
     Units: "same as variable"
   - 
-    Description: "optional, RICH bias estimate"
+    Description: "optional, RICH bias estimate, only for temperature"
     Name: RICH_bias_estimate
     Units: "same as variable"
+   - 
+    Description: "optional, RASE bias estimate, only for temperature"
+    Name: RASE_bias_estimate
+    Units: "same as variable"
+  - 
+    Description: "optional, RISE bias estimate, only for temperature"
+    Name: RISE_bias_estimate
+    Units: "same as variable"
+  - 
+    Description: "optional, humidity bias estimate, only for humidity variables"
+    Name: humidity_bias_estimate
+    Units: "same as variable"
+  - 
+    Description: "optional, wind bias estimate, only for wind variables"
+    Name: wind_bias_estimate
+    Units: "same as variable"
+
+

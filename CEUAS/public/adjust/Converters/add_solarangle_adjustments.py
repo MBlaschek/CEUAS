@@ -5,11 +5,15 @@ import os.path
 
 import numpy
 from datetime import date
+import datetime
 import netCDF4
 import time
 from numba import *
-from rasotools.utils import *
-from rasotools.anomaly import *
+sys.path.append(os.getcwd()+'/../')
+from utils import *
+from anomaly import *
+import astral
+import astral.sun
 import matplotlib.pylab as plt
 import scipy.stats
 import f90nml
@@ -19,8 +23,28 @@ plt.rcParams['lines.linewidth'] = 3
 version='1.8'
 fgdepvar='era5_fgdep'
 
-def read_temperature(stats,fn,tidx,varlist=['temperatures',fgdepvar,'an_dep']):
+def calc_elevangles(bgdep,lats,lons):
 
+#    tz=pytz.timezone('Europe/London')
+    day=datetime.timedelta(days=1)
+    h12=datetime.timedelta(hours=12)
+    elev=numpy.zeros([lats.shape[0],2,45000])
+    for l in range(lats.shape[0]):
+#         loc=astral.Location(info=('London','Europe',lats[l],lons[l],'Europe/London'))
+        loc=astral.Observer(latitude=lats[l],longitude=lons[l])
+        for it in range(366):
+            ltime=datetime.datetime(1900,1,1,1,0)+it*day
+#            ltime=ltime+day
+#               loc.lat=lats[l]
+#               loc.lon=lons[l]
+            elev[l,0,it]=astral.sun.elevation(loc, ltime)
+            elev[l,1,it]=astral.sun.elevation(loc, ltime+h12)
+            
+#            print ltime,elev[l,:,it]
+
+    return elev
+
+def read_temperature(stats,fn,tidx,varlist=['temperatures',fgdepvar,'an_dep']):
     if 'mdatum' not in list(stats.keys()):
         try:
             f=netCDF4.Dataset(fn,'r')
@@ -202,10 +226,9 @@ def add_solelev(line):
 #    if len(st)==5:
 #        st='0'+st
 #    st='070361'
-    fns=['/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/feedbackmerged'+st+'.nc',
-         #'/home/srvx7/leo/scratch/stream1/RAOBCORE_RICH_v1.3_nc/feedbackmerged'+st[1:6]+'.nc',
-        '/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/'+'feedbackglobbincorrsave'+st+'.nc',
-        '/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/'+'feedbackglobbincorrsave_rio24_'+st+'.nc'
+    fns=['../Temperature_adjustment/'+st+'/feedbackmerged'+st+'.nc',
+        '../Temperature_adjustment/'+st+'/feedbackglobbincorrsave'+st+'.nc',
+        '../Temperature_adjustment/'+st+'/feedbackglobbincorrsave_rio24_'+st+'.nc'
         ]
     varlists=[['temperatures',fgdepname,'an_dep'],['rasocorr'],['rasocorr']]
 #    fns=['/home/srvx7/leo/fastscratch/ei6/'+st+'/feedbackmerged'+st+'.nc',]
@@ -525,9 +548,9 @@ def add_solelev(line):
 
     if 'mtemperatures' in list(s.keys()):
         flag=False
-        fn='/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/feedbackmerged'+st+'.nc'
+        fn='../Temperature_adjustment/'+st+'/feedbackmerged'+st+'.nc'
         f = netCDF4.Dataset(fn,"r")
-        fno='/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/ERA5bc_RAOBCORE_v'+version+'_'+st+'.nc'
+        fno='../Temperature_adjustment/'+st+'/ERA5bc_RAOBCORE_v'+version+'_'+st+'.nc'
         fo = netCDF4.Dataset(fno,"w", format='NETCDF4_CLASSIC')
 
         for i in f.ncattrs():
@@ -652,7 +675,7 @@ if __name__ == "__main__":
         exp=sys.argv[1]
 
     try:
-        nml = f90nml.read('/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+'radcorpar')
+        nml = f90nml.read('../Temperature_adjustment/radcorpar06')
     except:
         pass
     fgdepname=nml['rfpar']['fgdepname']
@@ -678,7 +701,7 @@ if __name__ == "__main__":
     plevs=numpy.asarray([10,20,30,50,70,100,150,200,250,300,400,500,700,850,925,1000])
     nlev=plevs.shape[0]
 
-    fmerged = open('/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/mergedstations.t', 'r').readlines()
+    fmerged = open('../Temperature_adjustment/mergedstations.t', 'r').readlines()
     mlist=[]
     for l in fmerged:
         mlist.append(l.split()[2])
@@ -691,7 +714,7 @@ if __name__ == "__main__":
     l=0
     t=time.time()
     #forig=os.popen('ls /home/srvx7/leo/fastscratch/ei6/*/*_t.nc').read().split()
-    forig=glob.glob('/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/*/feedbackmerged*.nc')
+    forig=glob.glob('../Temperature_adjustment/*/feedbackmerged*.nc')
     #forig=glob.glob('/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/[0-9]*/feedbackmerged010046.nc')
     ic=0
     for line in forig:
@@ -705,7 +728,9 @@ if __name__ == "__main__":
             ic+=1
 
     base = datetime.date(1900,1,1)
-
+    
+#     for i in forig:
+#         add_solelev(i)
     P=Pool(20)
     dum=list(P.map(add_solelev,forig))
 

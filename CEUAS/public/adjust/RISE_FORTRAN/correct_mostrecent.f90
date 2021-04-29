@@ -1,6 +1,7 @@
 module correct_mr
 
-use rfcor
+  use rfcor
+  use calcp
 
 contains
 

@@ -1,11 +1,23 @@
 # Access to the CDS via the cds python API
 
+Official Documentation:
+
+Document| Abbreviation | Published
+---|---|---
+Product User Guide | PUG | May 2021
+Algorithm Theoretical Basis Document | ATBD | June 2021
+
+#
+
 Related Milestones and Deliverables:
 
-
-Type | Nr | Responsible | Nature | Title| Due | Status | File
----|---|---|---|---|---|---|---
-Deliverable | DC3S311c_Lot2.3.1.1 | UNIVIE | Software, Report | First access to early upper air data base via CDS | March 2020 | July 2020 | code/* 
+Type | Nr | Title| Published | File
+---|---|---|---|---
+Deliverable | DC3S311c_Lot2.3.1.1 | First access to early upper air data base via CDS | July 2020 | doc/* 
+Deliverable | DC3S311c_Lot2.1.4.2	| C3S Upper air data source inventory +data base v2	| May 2021| doc/* 
+Deliverable | DC3S311c_Lot2.2.1.3	| C3S Upper air data uncertainty final assessment	| May 2021| doc/* 
+Deliverable | DC3S311c_Lot2.2.1.4	| C3S Upper air temperature and humidity data final bias adjustments	| May 2021| doc/* 
+Deliverable | DC3S311c_Lot2.2.2.2	| C3S Upper air wind data final bias adjustments	| May 2021 | doc/* 
 
 # Short Description
 
@@ -27,16 +39,41 @@ A typical request should contain at least a `variable` and some of the other Ide
 | `variable`       | Mandatory | `[„air_temperature“, “zonal_wind“, “meridional_wind“, “wind_speed”, ”wind_direction”, ”air_relative_humidity”, ”air_specific_humidity”, "air_dewpoint"]` | String | Meteorological variables                                     |
 | `country`        | Exclusive | `[“ALL”,…,”USA”]`| String|  Country codes of stations to be selected according to WMO, see examples below. Exclusive with `bbox` and `statid`|
 | `bbox`           | Exclusive | `[upper,left,lower,right]`| Float or String | Boundaries of lat/lon rectangle to select stations|
-| `statid`         | Exclusive | `[“SSSSS”]` | String | WMO or WIGOS station ID, “all”|
+| `statid`         | Exclusive | `[“SSSSS”]` | String | Allowed are: WMO or WIGOS station ID, “all”|
 | `date`           | Optional | `[YYYYMMDD,YYYYMMDD]`, `YYYYMMDD`| Integer or String | List of dates of launches|
 | `time`           | Optional  | `[HHMMSS,HHMMSS]` | Integer or String | List of times permitted.                                     |
 | `year`           | Optional | `[YYYY,...,YYYY]`, `YYYY`| String | Years|
 | `month`          | Optional | `[MM,..., MM]`, `MM`| String | Months|
 | `day`            | Optional | `[DD,..., DD]`, `DD`| String | Days|
 | `period`         | Optional | `[YYYYMMDD, YYYYMMDD]`| Integer or String | Start and End of a period of dates of launches|
-| `fbstats`        | Optional | `["obs_minus_bg","obs_minus_an","bias_estimate"]`| String | ERA5 feedback information|
+| `optional`       | Optional |`[obs_minus_bg, ...]`            | String         | For allowed values see Optional Variables table below. |
 | `pressure_level` | Optional |  `[MMMM,…,NNNNN]`, `MMMM` | Integer or String| Pressure levels in Pascal. 16 standard pressure levels (10-1000 hPa) or significant levels (if omitted) |
 | `format`         | Optional  | `nc` or `csv`  | String  | Output format |
+| `version`         | Optional  | `1.0` | String  | Version number (most recent version is chosen if this parameter is missing) |
+
+### Optional Variables Table
+Note: One variable must be selected above with the variables keyword. Depending on this, the optional variable then is in the same units as the main variable. 
+
+| Optional | Description |
+| --- | --- |
+| `obs_minus_bg` | ERA5 observation minus first guess as stored in ERA5 ODB feedback data base|
+| `obs_minus_an` | ERA5 observation minus analysis  as stored in ERA5 ODB feedback data base|
+| `bias_estimate` | ERA5 variational bias estimate  as stored in ERA5 ODB feedback data base|
+| `sonde_type` | Radiosonde types from S. Schroeder's VAPOR project or WMO BUFR radiosonde type codes (after 2013) as found in ERA5 ODB feedback data base|
+| --- | --- |
+| `desroziers_30` | Desroziers' (2005) observation uncertainty estimate, calculated from 30 day averages of ERA5 obs_minus_bg, obs_minus_an|
+| `desroziers_60` | Desroziers' (2005) observation uncertainty estimate, calculated from 60 day averages of ERA5 obs_minus_bg, obs_minus_an|
+| `desroziers_90` | Desroziers' (2005) observation uncertainty estimate, calculated from 90 day averages of ERA5 obs_minus_bg, obs_minus_an|
+| `desroziers_180` | Desroziers' (2005) observation uncertainty estimate, calculated from 180 day averages of ERA5 obs_minus_bg, obs_minus_an|
+| --- | --- |
+| `RICH_bias_estimate` | Temperature Bias estimated using RICH (Haimberger et al. 2012) bias estimation method. Version indicated in variable attribute|
+| `RAOBCORE_bias_estimate` | Temperature Bias estimated using RAOBCORE (Haimberger, 2007; Haimberger et al. 2012) bias estimation method. Version indicated in variable attribute|
+| `RISE_bias_estimate` | Temperature Bias estimated using RICH, taking into account annual variation of solar elevation. Version indicated in variable attribute|
+| `RASE_bias_estimate` | Temperature Bias estimated using RAOBCORE, taking into account annual variation of solar elevation. Version indicated in variable attribute|
+| `humidity_bias_estimate` | Humidity bias estimates, using quantile matching applied to relative humidity background departures. Currently available for relative humidity, but estimates in other humidity variables will follow. Version indicated in variable attribute|
+| `wind_bias_estimate` | Wind direction bias estimates using RAOBCORE (Gruber and Haimberger, 2008), available for wind_direction, u_component_of_wind and v_component_of_wind. Version indicated in variable attribute|
+| --- | --- |
+
 
 
 # Installation

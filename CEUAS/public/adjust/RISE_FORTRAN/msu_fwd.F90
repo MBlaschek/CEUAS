@@ -60,6 +60,9 @@ module tosat
   !   Software Standards: "European Standards for Writing and
   !     Documenting Exchangeable Fortran 90 Code".
   !
+
+
+#ifdef RTTOV
   Use rttov_const, Only :  &
        & errorstatus_success,&
        & errorstatus_warning,&
@@ -79,10 +82,10 @@ module tosat
   Implicit None
   !
 !#ifdef _RTTOV_EXAMPLE_FWD_PARALLEL
-!#include "rttov_parallel_direct.interface"
+#include "rttov_parallel_direct.interface"
 !#define rttov_direct rttov_parallel_direct
 !#else
-#include "rttov_direct.interface"
+!#include "rttov_direct.interface"
 !#endif
 #include "rttov_setup.interface"
 #include "rttov_copy_prof.interface"
@@ -97,7 +100,18 @@ module tosat
   Integer(Kind=jpim)  :: nrttovid          ! Number of sensor coeff files to read (we use only one sensor)
   Integer(Kind=jpim)  :: nchannels         ! Number channels (we use MSU 2-4)
 
-  ! RTTOV_errorhandling interface
+! ecskin contains surface input parameters for surface emission at RS stations
+type::ecskin
+  real(kind=4),allocatable :: stnr(:),lats(:),lons(:),months(:),hours(:)
+  real(kind=4),allocatable :: tsk(:,:,:)
+  real(kind=4),allocatable :: elev(:)
+  real(kind=4),allocatable :: lsm(:)
+  real(kind=4),allocatable :: ci(:,:,:)
+  real(kind=4),allocatable :: t2(:,:,:) 
+  real(kind=4),allocatable :: p(:,:,:) 
+end type ecskin 
+
+! RTTOV_errorhandling interface
   !====================
   Integer(Kind=jpim) :: Err_Unit        ! Logical error unit (<0 for default)
   Integer(Kind=jpim) :: verbosity_level ! (<0 for default)
@@ -109,16 +123,6 @@ module tosat
   Integer(Kind=jpim), Allocatable :: msumask(:,:)    ! pressure levels used for msu bt calculation
   Type(rttov_options)             :: opts               ! Options structure
   Type(rttov_coefs), Allocatable  :: coefs(:)           ! Coefficients structure
-! ecskin contains surface input parameters for surface emission at RS stations
-type::ecskin
-  real(kind=JPRM),allocatable :: stnr(:),lats(:),lons(:),months(:),hours(:)
-  real(kind=JPRM),allocatable :: tsk(:,:,:)
-  real(kind=JPRM),allocatable :: elev(:)
-  real(kind=JPRM),allocatable :: lsm(:)
-  real(kind=JPRM),allocatable :: ci(:,:,:)
-  real(kind=JPRM),allocatable :: t2(:,:,:) 
-  real(kind=JPRM),allocatable :: p(:,:,:) 
-end type ecskin 
     
   ! RTTOV interface
   !====================
@@ -552,8 +556,8 @@ subroutine msu_fwd_init(instrument,isurf,nwater,zenith,input_chan,input_ems,nple
   ! Call RTTOV forward model
 !!$omp critical
 !!$ call omp_set_lock(omp_lp(2885))
-!  call rttov_parallel_direct(         &
-  call rttov_direct(         &
+!  call rttov_direct(         &
+  call rttov_parallel_direct(         &
         & rttov_errorstatus, &! out   error flag
         & chanprof,          &! in    channel and profile index structure
         & opts,              &! in    options structure
@@ -741,5 +745,19 @@ subroutine msu_fwd_init(instrument,isurf,nwater,zenith,input_chan,input_ems,nple
 4445 Format(1X,I2,10F8.4)
 
 End subroutine msu_fwd_deallocate
+
+#else
+!  INTEGER, PARAMETER :: JPRM = SELECTED_REAL_KIND(6,37)
+! ecskin contains surface input parameters for surface emission at RS stations
+type::ecskin
+  real(kind=4),allocatable :: stnr(:),lats(:),lons(:),months(:),hours(:)
+  real(kind=4),allocatable :: tsk(:,:,:)
+  real(kind=4),allocatable :: elev(:)
+  real(kind=4),allocatable :: lsm(:)
+  real(kind=4),allocatable :: ci(:,:,:)
+  real(kind=4),allocatable :: t2(:,:,:) 
+  real(kind=4),allocatable :: p(:,:,:) 
+end type ecskin 
+#endif
 
 end module tosat
