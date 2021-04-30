@@ -8,8 +8,7 @@ limit stacksize unlimited
 setenv OMP_NUM_THREADS 1
 
 # download data from cds
-cd Converters
-python from_cds_to_legacy.py
+python gettemp.py
 cd ..
 # compiling fortran code
 cd RISE_FORTRAN
@@ -26,6 +25,10 @@ ls -l */*corrsave??????.nc | wc -l
 # create RISE adjustments
 ../RISE_FORTRAN/raso_correct_nc radcorpar06_24
 ls -l */*corrsave*rio24*.nc | wc -l
+cd ..
+# write adjustments to outputfiles
+cd Converters
+python from_cds_to_legacy.py
 cd ..
 # create RASO and RISO adjustments
 cd Converters
