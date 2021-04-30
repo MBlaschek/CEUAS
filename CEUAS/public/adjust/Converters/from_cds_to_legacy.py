@@ -316,12 +316,11 @@ if __name__ == "__main__":
         exp=sys.argv[1]
 
     try:
-        nml = f90nml.read('/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+'radcorpar')
+        nml = f90nml.read('../radcorpar')
     except:
         pass
     fgdepname=nml['rfpar']['fgdepname']
-    #f=netCDF4.Dataset('/home/srvx7/raobcore/v1.5.1/export/ERA5/ERA5bc_RAOBCORE_v1.5_070219.nc','r')
-    f=netCDF4.Dataset('/home/srvx7/raobcore/v1.5.1/export/ERA5/ERA5bc_RAOBCORE_v1.5_098646.nc','r')
+    f=netCDF4.Dataset('../ERA5bc_RAOBCORE_v1.5_098646.nc','r')
     f.set_auto_mask(False)
     vals=f.variables['temperatures'][1,3,:]
     offsets=f.variables['datum'][0,:]
@@ -342,7 +341,7 @@ if __name__ == "__main__":
     plevs=numpy.asarray([10,20,30,50,70,100,150,200,250,300,400,500,700,850,925,1000])
     nlev=plevs.shape[0]
 
-    fmerged = open('/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/mergedstations.t', 'r').readlines()
+    fmerged = open('../mergedstations.t', 'r').readlines()
     mlist=[]
     for l in fmerged:
         mlist.append(l.split()[2])
@@ -354,9 +353,7 @@ if __name__ == "__main__":
     tidx=calcdays(19000101,(2015-1900)*12)-1
     l=0
     t=time.time()
-    #forig=os.popen('ls /home/srvx7/leo/fastscratch/ei6/*/*_t.nc').read().split()
-    forig=glob.glob('/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/*/feedbackmerged*.nc')
-    #forig=glob.glob('/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/[0-9]*/feedbackmerged010046.nc')
+    forig=glob.glob('../Temperature_adjustment/*/feedbackmerged*.nc')
     ic=0
     for line in forig:
     #    str=line[9:31]
@@ -382,10 +379,9 @@ if __name__ == "__main__":
     #    if len(st)==5:
     #        st='0'+st
     #    st='070361'
-        fns=['/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/feedbackmerged'+st+'.nc',
-#	    '/home/srvx7/leo/scratch/stream1/RAOBCORE_RICH_v1.3_nc/feedbackmerged'+st[1:6]+'.nc',
-'/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/'+'feedbackglobbincorrsave'+st+'.nc',
-            '/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/'+'feedbackglobbincorrsave_rio24_'+st+'.nc'
+        fns=['../Temperature_adjustment/'+st+'/feedbackmerged'+st+'.nc',
+             '../Temperature_adjustment/'+st+'/feedbackglobbincorrsave'+st+'.nc',
+             '../Temperature_adjustment/'+st+'/feedbackglobbincorrsave_rio24_'+st+'.nc'
             ]
         varlists=[['temperatures',fgdepname,'an_dep'],['rasocorr'],['rasocorr']]
     #    fns=['/home/srvx7/leo/fastscratch/ei6/'+st+'/feedbackmerged'+st+'.nc',]
@@ -715,9 +711,9 @@ if __name__ == "__main__":
 
         if 'mtemperatures' in list(s.keys()):
             flag=False
-            fn='/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/feedbackmerged'+st+'.nc'
+            fn='../Temperature_adjustment/'+st+'/feedbackmerged'+st+'.nc'
             f = netCDF4.Dataset(fn,"r")
-            fno='/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/ERA5bc_RAOBCORE_v1.74_'+st+'.nc'
+            fno='../Temperature_adjustment/'+st+'/ERA5bc_RAOBCORE_v1.74_'+st+'.nc'
             fo = netCDF4.Dataset(fno,"w", format='NETCDF4_CLASSIC')
 
             for i in f.ncattrs():
