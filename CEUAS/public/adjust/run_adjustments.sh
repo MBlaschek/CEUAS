@@ -30,4 +30,4 @@ cd ..
 #create RASO and RISO adjustments
 cd Converters
 python ../Converters/add_solarangle_adjustments.py
-ls -l */*corrsave*rio24*.nc | wc -l
+ls -l */ERA5bc_*.nc | wc -l
