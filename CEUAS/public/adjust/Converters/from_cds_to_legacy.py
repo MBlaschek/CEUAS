@@ -355,7 +355,8 @@ if __name__ == "__main__":
     tidx=calcdays(19000101,(2015-1900)*12)-1
     l=0
     t=time.time()
-    forig=glob.glob('../Temperature_adjustment/*/feedbackmerged*.nc')
+#     forig=glob.glob('../Temperature_adjustment/*/feedbackmerged*.nc')
+    forig=glob.glob('../Temperature_adjustment/011035/feedbackmerged*.nc')
     ic=0
     for line in forig:
     #    str=line[9:31]
@@ -397,6 +398,7 @@ if __name__ == "__main__":
             print((st,'no data found,cycling ..'))
             continue
         s=stats[st]
+        print('st: ',st)
 
         t2=time.time()
         elev=calc_elevangles(0.,numpy.asarray([s['lat']]),numpy.asarray([s['lon']]))
@@ -407,10 +409,7 @@ if __name__ == "__main__":
         print(('t2:',time.time()-t2))
 
         bdatum=[]
-        print(s)
-        print(st)
-        print(stats)
-        print(fn)
+        print('s[mtemperatures]: ',s.keys())
         try:
             if il==0:
                 full=numpy.empty([2,s['mtemperatures'].shape[1],indexmax],dtype=numpy.float32)
