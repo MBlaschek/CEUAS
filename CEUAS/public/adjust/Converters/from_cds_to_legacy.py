@@ -165,7 +165,7 @@ def read_temperature(stats,fn,tidx,varlist=['temperatures','fg_dep','an_dep']):
             stats['lon']=f.variables['lon'][0]
             for var in varlist:
                 try:
-                    miss_val=getattr(f.variables['temperatures'],'missing_value')
+                    miss_val=getattr(f.variables['temperatures'],'_FillValue')
                     vals=f.variables[var][:]
                     vals[vals==miss_val]=numpy.nan
                     if var=='jracepre_fgdep':
@@ -174,7 +174,7 @@ def read_temperature(stats,fn,tidx,varlist=['temperatures','fg_dep','an_dep']):
                         idx=numpy.where(f.variables['datum'][0]>42735)[0]
                         if idx.shape[0]>0:
                             vals[:,:,idx]=-vals2[:,:,idx]
-                except KeyError:
+                except:# KeyError:
                     vals=f.variables['temperatures'][:]+numpy.nan
                 if var not in ['fg_dep','an_dep']:
                     stats['m'+var]=vals
@@ -234,7 +234,7 @@ def read_temperature(stats,fn,tidx,varlist=['temperatures','fg_dep','an_dep']):
 
 def mergevar(stats,fn,variables,times,mdathilf,var):
     temperatures=numpy.empty([2,stats['mtemperatures'].shape[1],indexmax],dtype=numpy.float32)
-    miss_val=getattr(variables[var],'missing_value')
+    miss_val=getattr(variables[var],'_FillValue')
     vals=variables[var][:]
 
     if 'corr' in fn:
@@ -321,14 +321,14 @@ if __name__ == "__main__":
         nml = f90nml.read('../radcorpar')
     except:
         pass
-    fgdepname=nml['rfpar']['fgdepname']
+    fgdepname='era5_fgdep' #nml['rfpar']['fgdepname']
     f=netCDF4.Dataset('../ERA5bc_RAOBCORE_v1.5_098646.nc','r')
     f.set_auto_mask(False)
     vals=f.variables['temperatures'][1,3,:]
     offsets=f.variables['datum'][0,:]
     print((vals[:4],offsets[0]))
     print((datetime.date(1900,1,1)+datetime.timedelta(days=int(offsets[0]))))
-    mask=vals!=-999.
+    mask=~numpy.isnan(vals) #vals!=-999.
     #plt.plot(f.variables['datum'][0,mask]/365.25+1900,f.variables['bias'][0,5,mask])
     #plt.show()
 
