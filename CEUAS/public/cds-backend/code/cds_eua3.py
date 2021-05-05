@@ -745,9 +745,9 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                             fout.create_dataset_like(vlist[-1], fin[group][v],
                                                      shape=idx.shape,
                                                      chunks=True)
-                            hilf = fin[group][v]
+                            hilf = fin[group][v][idx[0]:idx[-1] + 1]
                             hilf[restricted]=np.nan
-                            hilf = hilf[idx[0]:idx[-1] + 1]  # use a min:max range
+                            #hilf = hilf[idx[0]:idx[-1] + 1]  # use a min:max range
 #                             hilf = fin[group][v][idx[0]:idx[-1] + 1]  # use a min:max range
                             if 'time' in v:
                                 # convert time units
@@ -799,15 +799,15 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                                 fout[sname].attrs['NAME'] = np.string_(
                                     'This is a netCDF dimension but not a netCDF variable.')
                                 fout[sname].make_scale(sname)
-                            hilf = fin[group][v]
+                            hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
                             hilf[restricted, :] = np.nan
-                            hilf = hilf[idx[0]:idx[-1] + 1, :]
+                            #hilf = hilf[idx[0]:idx[-1] + 1, :]
 #                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
                             if hilf.shape[0] == 0:
                                 print('x')
                             fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                             
-                except Exception as e:
+                except MemoryError as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
                     hilf = np.zeros(shape=(idx.shape[0]), dtype='S10')
@@ -1246,12 +1246,12 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 print(time.time()-tt)
                 print('')
 
-    except Exception as e:
-    #except Exception as e:
+    except MemoryError as e:
+    #except MemoryError as e:
         if debug:
             raise e
-        logger.error('Exception %s occurred while reading %s', repr(e), filename)
-        return '', 'Exception "{}" occurred while reading {}'.format(e, filename)
+        logger.error('MemoryError %s occurred while reading %s', repr(e), filename)
+        return '', 'MemoryError "{}" occurred while reading {}'.format(e, filename)
 
     return filename_out, msg
 
@@ -1659,7 +1659,7 @@ def cds_request_wrapper(request: dict, request_filename: str = None, cds_dataset
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except Exception as e:
+    except MemoryError as e:
         logger.error('CDSAPI Request failed %s', str(request))
         raise e
 
@@ -1724,7 +1724,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except Exception as e:
+    except MemoryError as e:
         logger.error('VM Request failed %s', str(request))
         raise e
 
@@ -1955,7 +1955,7 @@ class CDMDataset:
                         setattr(self, igroup, CDMVariable(self.file[igroup], igroup, shape=self.file[igroup].shape))
                     self[igroup].update(link=self.file[igroup])
 
-        except Exception as e:
+        except MemoryError as e:
             logger.debug(repr(e))
             self.close()
 
@@ -2411,7 +2411,8 @@ class CDMDataset:
         tt=time.time() - time0
         print(tt)
         
-        rstcd = self.file['observations_table']['data_policy_licence'][:] == 4
+        rstcd = self.file['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
+        zrstcd=recordindex[zidx+1]-idx[0]
         
         with h5py.File(filename_out, 'w') as fout:
             # todo future -> this could be replaced by a self.write_to_frontend_file(filename_out, )
@@ -2563,7 +2564,7 @@ class CDMDataset:
                 igroup = 'header_table'
                 # only records fitting criteria (zidx) are copied
                 # todo why is lon, lat not here?
-                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', rstcd,
+                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', rstcd[zrstcd],
                           var_selection=['report_id'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 # ,'station_name','primary_station_id'])
