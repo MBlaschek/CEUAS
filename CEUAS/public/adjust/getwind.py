@@ -34,7 +34,8 @@ print(opath)
 os.chdir(opath)
 fnu=[]
 fnd=[]
-for fn in ['11035', '10393', '91413', '70219']:
+# for fn in ['11035', '10393', '91413', '70219']:
+for fn in ['35229', '68994']:
 # for fnf in fns:
 #     if fnf == fns[0]:
 #         continue

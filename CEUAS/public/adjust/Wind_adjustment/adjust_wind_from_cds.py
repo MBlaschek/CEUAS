@@ -228,7 +228,8 @@ def homogenize_winddir(via_backend=False):
     #fns=glob.glob('0?????/')
     #fns=[fns[fns.index('0-20000-0-35229')]]
     tt=time.time()
-    fns = ['0-20001-0-11035', '0-20001-0-10393', '0-20001-0-70219', '0-20000-0-91413']
+#     fns = ['0-20001-0-11035', '0-20001-0-10393', '0-20001-0-70219', '0-20000-0-91413']
+    fns = ['0-20000-0-35229', '0-20000-0-68994']
     if via_backend:
         func=partial(homogenize_station,opath,via_backend)
         adjusted=list(map(func,fns))
