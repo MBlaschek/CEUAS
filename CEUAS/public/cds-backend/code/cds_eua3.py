@@ -749,7 +749,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                                                      shape=idx.shape,
                                                      chunks=True)
                             hilf = fin[group][v][idx[0]:idx[-1] + 1]
-                            if v=='observation_value':
+                            if v in ['observation_value','obsvalue@body']:
                                 hilf[mask]=np.nan
                             #hilf = hilf[idx[0]:idx[-1] + 1]  # use a min:max range
 #                             hilf = fin[group][v][idx[0]:idx[-1] + 1]  # use a min:max range
