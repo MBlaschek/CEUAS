@@ -733,9 +733,12 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                     except:
                         pass
     vlist = []
+    mask=None
     for _, cfv in cf.items():
         logger.debug('CFCOPY Looking for: %s in %s', cfv['cdmname'], group)
         for v in var_selection:
+            if mask is None and 'data_policy_licence' in var_selection:
+                mask=fin[group]['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
             if group + '/' + v == cfv['cdmname']:
                 vlist.append(cfv['shortname'])
                 try:
@@ -746,7 +749,8 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                                                      shape=idx.shape,
                                                      chunks=True)
                             hilf = fin[group][v][idx[0]:idx[-1] + 1]
-                            hilf[restricted]=np.nan
+                            if v=='observation_value':
+                                hilf[mask]=np.nan
                             #hilf = hilf[idx[0]:idx[-1] + 1]  # use a min:max range
 #                             hilf = fin[group][v][idx[0]:idx[-1] + 1]  # use a min:max range
                             if 'time' in v:
@@ -800,7 +804,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                                     'This is a netCDF dimension but not a netCDF variable.')
                                 fout[sname].make_scale(sname)
                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
-                            hilf[restricted, :] = np.nan
+                            hilf[mask, :] = np.nan
                             #hilf = hilf[idx[0]:idx[-1] + 1, :]
 #                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
                             if hilf.shape[0] == 0:
@@ -2411,8 +2415,9 @@ class CDMDataset:
         tt=time.time() - time0
         print(tt)
         
-        rstcd = self.file['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
-        zrstcd=recordindex[zidx+1]-idx[0]
+        #rstcd = self.file['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
+        #zrstcd=recordindex[zidx+1]-idx[0]
+        rstcd=None
         
         with h5py.File(filename_out, 'w') as fout:
             # todo future -> this could be replaced by a self.write_to_frontend_file(filename_out, )
@@ -2440,7 +2445,7 @@ class CDMDataset:
                 do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                         'original_precision', 'reference_sensor_id', 'report_id'])
+                                         'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 fout['time'].make_scale('time')
@@ -2564,7 +2569,7 @@ class CDMDataset:
                 igroup = 'header_table'
                 # only records fitting criteria (zidx) are copied
                 # todo why is lon, lat not here?
-                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', rstcd[zrstcd],
+                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', None,
                           var_selection=['report_id'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 # ,'station_name','primary_station_id'])
