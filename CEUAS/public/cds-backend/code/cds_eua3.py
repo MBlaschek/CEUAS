@@ -2450,6 +2450,58 @@ class CDMDataset:
                 "index of trajectory this obs belongs to")
             fout['trajectory_index'].attrs['instance_dimension'] = np.string_("trajectory")
             fout['trajectory_index'].attrs['coordinates'] = np.string_("lat lon time plev")
+            
+            #
+            # Adding CDM
+            #
+            cdm_obstab = []
+            cdm_eratab = []
+            cdmlist = request.get('cdm', None)
+            if cdmlist != None:
+# #                 # removing variables with restricted access
+# #                 if ('era5fb/obsvalue@body' in cdmlist) or ('observations_table/observation_value' in cdmlist):
+# #                     try: cdmlist.remove('era5fb/obsvalue@body')
+# #                     except: pass
+# #                     try: cdmlist.remove('observations_table/observation_value')
+# #                     except: pass
+                for i in cdmlist:
+                    grp = i.split('/')[0]
+                    if grp == 'era5fb':
+                        cdm_eratab.append(i)
+                        cdmlist.remove(i)
+                    if grp == 'observations_table':
+                        cdm_obstab.append(i)
+                        cdmlist.remove(i)
+                        # NOW USE THOSE for the do_cfcopy below
+                logger.debug('CDM - adding groups and variables: %s', str(cdmlist))
+                for cdmstring in cdmlist:
+                    print(cdmstring)
+                    cdmsplit = cdmstring.split('/')
+#                     try:
+                    print(self.groups)
+                    if cdmsplit[0] in self.groups:
+                        print('group available')
+                        # TODO: Add attributes and descriptions?
+                        # whole group
+                        if len(cdmsplit) == 1:
+                            print('group copy')
+                            fout.create_group(cdmsplit[0])
+                            for cdmvar in self[cdmsplit[0]].keys():
+                                try:
+                                    fout[cdmsplit[0]].create_dataset(cdmvar, data=self[cdmsplit[0]][cdmvar][:])
+                                except:
+                                    pass
+                        # single var of group 
+                        if len(cdmsplit) == 2:
+                            print('single var copy')
+                            try:
+                                fout.create_group(cdmsplit[0])
+                            except:
+                                pass # group alread exists?
+                            try:
+                                fout[cdmsplit[0]].create_dataset(cdmsplit[1], data=self[cdmsplit[0]][cdmsplit[1]][:])
+                            except:
+                                pass
             #
             # Variables based on cfcopy
             #
@@ -2605,43 +2657,7 @@ class CDMDataset:
                 do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', rstcd,
                           var_selection=['station_name'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-            #
-            # Adding CDM
-            #
-            cdmlist = request.get('cdm', None)
-            print('cdmlist: ', cdmlist)
-            if cdmlist != None:
-                print('not None')
-                # TODO: take care that nothing gets copied twice
-                # MAYBE: check for the same groups, so they can be done all at once
-                for cdmstring in cdmlist:
-                    print(cdmstring)
-                    cdmsplit = cdmstring.split('/')
-#                     try:
-                    print(self.groups)
-                    if cdmsplit[0] in self.groups:
-                        print('group available')
-                        # TODO: Add attributes and descriptions?
-                        # whole group
-                        if len(cdmsplit) == 1:
-                            print('group copy')
-                            fout.create_group(cdmsplit[0])
-                            for cdmvar in self[cdmsplit[0]].keys():
-                                try:
-                                    fout[cdmsplit[0]].create_dataset(cdmvar, data=self[cdmsplit[0]][cdmvar][:])
-                                except:
-                                    pass
-                        # single var of group 
-                        if len(cdmsplit) == 2:
-                            print('single var copy')
-                            try:
-                                fout.create_group(cdmsplit[0])
-                            except:
-                                pass # group alread exists?
-                            try:
-                                fout[cdmsplit[0]].create_dataset(cdmsplit[1], data=self[cdmsplit[0]][cdmsplit[1]][:])
-                            except:
-                                pass
+            
             #
             # Fix Attributes and Globals
             #
@@ -2672,7 +2688,8 @@ class CDMDataset:
                         oldkey=(request['optional'][0])
                         fout['ta']=fout[oldkey]
                         fout.__delitem__(oldkey)
-                        
+            
+
             for i in fout.keys():
                 print(i)
                 if (i == 'obs' or i == 'trajectory' or 'string' in i):
@@ -2685,6 +2702,12 @@ class CDMDataset:
                     fout[newname] = fout[i]
                     fout.__delitem__(i)
                     fout[newname].attrs['version'] = np.string_(version[1:]) # 'x.x'
+                    
+            # removing variables with restricted access
+            try: fout['observations_table'].__delitem__('observation_value')
+            except: pass
+            try: fout['era5fb'].__delitem__('obsvalue@body')
+            except: pass
                     
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
