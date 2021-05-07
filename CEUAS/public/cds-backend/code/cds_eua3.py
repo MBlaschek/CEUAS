@@ -2631,10 +2631,10 @@ class CDMDataset:
                         # single var of group 
                         if len(cdmsplit) == 2:
                             print('single var copy')
-#                             try:
-                            fout.create_group(cdmsplit[0])
-#                             except:
-#                                 pass # group alread exists?
+                            try:
+                                fout.create_group(cdmsplit[0])
+                            except:
+                                pass # group alread exists?
                             fout[cdmsplit[0]].create_dataset(cdmsplit[1], data=self[cdmsplit[0]][cdmsplit[1]][:])
             #
             # Fix Attributes and Globals
