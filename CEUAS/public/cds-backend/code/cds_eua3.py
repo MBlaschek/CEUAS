@@ -2627,7 +2627,10 @@ class CDMDataset:
                             print('group copy')
                             fout.create_group(cdmsplit[0])
                             for cdmvar in self[cdmsplit[0]].keys():
-                                fout[cdmsplit[0]].create_dataset(cdmvar, data=self[cdmsplit[0]][cdmvar][:])
+                                try:
+                                    fout[cdmsplit[0]].create_dataset(cdmvar, data=self[cdmsplit[0]][cdmvar][:])
+                                except:
+                                    pass
                         # single var of group 
                         if len(cdmsplit) == 2:
                             print('single var copy')
@@ -2635,7 +2638,10 @@ class CDMDataset:
                                 fout.create_group(cdmsplit[0])
                             except:
                                 pass # group alread exists?
-                            fout[cdmsplit[0]].create_dataset(cdmsplit[1], data=self[cdmsplit[0]][cdmsplit[1]][:])
+                            try:
+                                fout[cdmsplit[0]].create_dataset(cdmsplit[1], data=self[cdmsplit[0]][cdmsplit[1]][:])
+                            except:
+                                pass
             #
             # Fix Attributes and Globals
             #
