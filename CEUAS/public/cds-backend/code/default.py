@@ -638,7 +638,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                day: list = None, month: list = None, year: list = None, date: list = None, time: list = None, 
                bbox: list = None, country: str = None, area: list = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
-               gridded: list = None, toolbox: str = None, 
+               gridded: list = None, toolbox: str = None, cdm: list = None, 
                pass_unknown_keys: bool = False,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
@@ -748,6 +748,18 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             if len(d['optional']) > 1:
                 raise KeyError("toolbox 'True' is only valid if only one 'optional' is given.")  
         d['toolbox'] = True
+    
+    #
+    # CDM
+    #
+    if cdm is not None:
+        if not isinstance(cdm, list):
+            if isinstance(cdm, str):
+                d['cdm'] = [cdm]
+            else:
+                raise KeyError("Invalid type selected at CDM - only string is valid: " + cdm)
+        else:
+            d['cdm'] = cdm
 
     #
     # gridded [lower left upper right]
