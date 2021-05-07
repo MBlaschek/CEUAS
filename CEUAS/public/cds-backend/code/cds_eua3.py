@@ -1104,7 +1104,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
     # mimicks process_flat from cds_eua2
     msg = ''  # Message or error
     filename = ''  # Filename
-    print(request_variables)
+    print('request_variables: ', request_variables)
     try:
         if 'gridded' in request_variables:
             filename_out = outputdir + '/dest_gridded_' + str(request_variables['variable'][0]) + '.nc'
@@ -1241,6 +1241,19 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 gdict['advanced_uncertainty']=[]
                 gdict['advanced_homogenisation']=[]
 #                 gdict['advanced_homogenization']=[]
+            if 'cdm' in request_variables:
+                gdict['era5fb']=[]
+                gdict['advanced_uncertainty']=[]
+                gdict['advanced_homogenisation']=[]
+                gdict['crs']=[]
+                gdict['observed_variable']=[]
+                gdict['sensor_configuration']=[]
+                gdict['source_configuration']=[]
+                gdict['station_configuration']=[]
+                gdict['station_configuration_codes']=[]
+                gdict['station_type']=[]
+                gdict['units']=[]
+                gdict['z_coordinate_type']=[]
             with CDMDataset(filename=filename, groups=gdict) as data:
                 if debug: print('x',time.time()-tt)
                 data.read_write_request(filename_out=filename_out,
@@ -2592,6 +2605,37 @@ class CDMDataset:
                 do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', rstcd,
                           var_selection=['station_name'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+            #
+            # Adding CDM
+            #
+            cdmlist = request.get('cdm', None)
+            print('cdmlist: ', cdmlist)
+            if cdmlist != None:
+                print('not None')
+                # TODO: take care that nothing gets copied twice
+                # MAYBE: check for the same groups, so they can be done all at once
+                for cdmstring in cdmlist:
+                    print(cdmstring)
+                    cdmsplit = cdmstring.split('/')
+#                     try:
+                    print(self.groups)
+                    if cdmsplit[0] in self.groups:
+                        print('group available')
+                        # TODO: Add attributes and descriptions?
+                        # whole group
+                        if len(cdmsplit) == 1:
+                            print('group copy')
+                            fout.create_group(cdmsplit[0])
+                            for cdmvar in self[cdmsplit[0]].keys():
+                                fout[cdmsplit[0]].create_dataset(cdmvar, data=self[cdmsplit[0]][cdmvar][:])
+                        # single var of group 
+                        if len(cdmsplit) == 2:
+                            print('single var copy')
+#                             try:
+                            fout.create_group(cdmsplit[0])
+#                             except:
+#                                 pass # group alread exists?
+                            fout[cdmsplit[0]].create_dataset(cdmsplit[1], data=self[cdmsplit[0]][cdmsplit[1]][:])
             #
             # Fix Attributes and Globals
             #
