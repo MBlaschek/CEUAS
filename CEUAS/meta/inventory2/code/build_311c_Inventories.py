@@ -485,9 +485,11 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name, fn='', dataset='') :
     # meta is the data source (as a pd dataframe) of the metadata e.g. vola, wban etc. 
 
     inventory_codes = { 'OSCAR' : '20000',
-                        'IGRA2':'20300',
+                                      'IGRA2':'20300',
                                       'WBAN': '20500',
-                                      'CHUAN':'20400' }
+                                      'CHUAN':'20400',
+                                      # unidentified: '20600',
+                                      }
 
     try_wban = False 
     if dataset == '1759': # if True, will try for a latitude mismatch inside the OSCAR dataset 
@@ -520,8 +522,7 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name, fn='', dataset='') :
             else: # if also coordinates match, keep the record found
 
                 print(meta.name , ' coordinates match do_row for station: ' , wmoid, ' ' , meta['StationId'][z[0]], ' ' , meta['StationName'][z[0]])
-                row[kdict['station name']]=metaz['StationName']
-                row[kdict['stationDescription']]=metaz['StationName']
+
                 #print('Found: ', wmoid ,' inside the ', meta.name+' database with id' , meta['StationId'][z].values[0] )
                 row[kdict['stationPlatformUniqueIdentifier']]=metaz['StationId']
                 row[kdict['station name']]=metaz['StationName']
@@ -534,7 +535,7 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name, fn='', dataset='') :
                     row[kdict['territoryOfOriginOfData_ISO3CountryCode']]=metaz['CountryCode']  
                     found = True
 
-                    if 'Upper' not in vola['ObsRems'].values[ind] : # put ind ? 
+                    if 'Upper' not in vola['ObsRems'].values[ind] : # 
                         found = False           
                     else:
                         return ind  # if found = False, will not be used anyway 
@@ -555,13 +556,22 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name, fn='', dataset='') :
                 idy=numpy.argsort(dists) # Returns the indices that would sort an array
                 i=0
                 oscar_found = False
+                standard_wigos_idx = ''
+                
                 while dists[idy[i]]<0.5:
-
+                    
                     oscar_found = True
                     idx=idy[i]
+                    
+                    # here I select, among the matching entries, the one with the normal WIGOS id 
+                    # e.g. I select Africa	Zambia	ZMB	0-20000-0-67575	67575	
+                    # instead of Africa	Zambia	ZMB	0-894-1-mks0025
+                    # that have the same lat and lon 
+                    
+                    if str(iwmoid ) in meta['StationId'][idx] and not standard_wigos_idx :
+                        standard_wigos_idx = idx
 
                     row[kdict['station name']]=meta.StationName[idx]
-                    row[kdict['stationPlatformUniqueIdentifier']]=meta.StationId[idx]
                     row[kdict['stationDescription']]=meta.StationName[idx]
                     row[kdict['regionOfOriginOfData']]=meta.RegionName[idx]
                     row[kdict['territoryOfOriginOfData_Name']]=meta.CountryArea[idx]
@@ -569,15 +579,25 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name, fn='', dataset='') :
 
                     #cc= vola['CountryCode'][idx]
                     #if 'Upper' in vola['ObsRems'].values[idx] or '0-2000' in vola['StationId'][idx]:
+                    #print(vola.iloc[idx], '   ' ,  dists[idy[i]] )
+                    
                     if 'Upper' in vola['ObsRems'].values[idx] :
-                        print('Found an OSCAR upper air station with compatible coordinates ')                                    
+                        print('Found an OSCAR upper air station with compatible coordinates ') 
+                        row[kdict['stationPlatformUniqueIdentifier']]=meta.StationId[idx]                        
                         return idx
 
                     i+=1
 
                 if oscar_found: # only reached if return idx is not executed 
-                    print('Found an OSCAR station with compatible coordinates ')                                
-                    return idy[0]
+                    print('Found an OSCAR station with compatible coordinates (but no Upper air/Radiosonde station)')                                
+                    
+                    # return the clostes entry with a regular WIGOS id, otherwise simply the closest entry 
+                    if standard_wigos_idx:
+                        row[kdict['stationPlatformUniqueIdentifier']]=meta.StationId[standard_wigos_idx]                        
+                        return standard_wigos_idx
+                    else:
+                        row[kdict['stationPlatformUniqueIdentifier']]=meta.StationId[idy[0]]                                                
+                        return idy[0]
 
                 if try_wban: # it means that the id was found inside the wban with a latitude sign swap 
                     dists = fdist(-lat, lon, meta['Latitude'],meta['Longitude'])*180./math.pi # !! DONOT invert the order of the lats and longs station / inventory !!! 
@@ -624,6 +644,7 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name, fn='', dataset='') :
 
                         return z[0]
                     else:
+                            
                         return False
 
             # testing missing latitude; only works for era5_1759 
@@ -753,8 +774,8 @@ def insert(row,vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,var
                                 mi=do_row(row,kdict,chuan,wmoid, iwmoid, nw,lat,lon,'CHUAN')
                                 if not mi:
                                     print(wmoid,'not found, not identifiable!')
-                                    a = open(out_dir + '/' + fn.split('/')[0] + '_' + 'orphans_not_identified.dat','a')
-                                    a.write(fn + '\n' )
+                                    #a = open(out_dir + '/' + fn.split('/')[0] + '_' + 'orphans_not_identified.dat','a')
+                                    #a.write(fn + '\n' )
                                     filepath = out_dir + '/' + fn.split('/')[0] + '_orphans.csv'
 
                                     with open(filepath,'a') as f:
@@ -885,6 +906,8 @@ def scini(station_configuration,ids,station_id,cwmoid,vola,transunified,kdict,dm
     else:
 
         print ('CANNOT FIND ************************** ' , ids, station_id, cwmoid )
+        station_configuration['primary_id']= '0-20600-0-' + cwmoid
+        print(0)
 
     station_configuration['station_crs']=0
     station_configuration['local_gravity']=numpy.NaN
@@ -1484,22 +1507,29 @@ if __name__ == '__main__':
         bfunc=partial(read_bufr_stn_meta,2)
         rfunc=partial(read_rda_meta) 
         tu=dict()
-        p=Pool(30)
+        p=Pool(15)
+        
         dbs=['igra2','ai_bfr','rda','3188','1759','1761','1','2']
         dbs=['RI/nasa']
         dbs=['RI/Pangaea/COMP']
 
-        dbs=['1']
 
         dbs=['RI/nasa']
         dbs=['RI/Pangaea/COMP']
-
 
         PARALLEL = True  
 
         dbs=['ai_bfr','rda','3188','1761','2']
 
-        dbs = ['1759']
+        #dbs = ['1759', 'bufr', '3188', 'ai_bfr']
+        
+        dbs = ['1761','ncar','1']
+        
+        dbs=['igra2','ai_bfr','rda','3188','1759','1761','1','2']
+        
+        #dbs=['1']
+        dbs=['1','2']
+        
         transunified = []
 
         for odir in dbs: 
@@ -1591,25 +1621,25 @@ if __name__ == '__main__':
                     #flist = [f for f in flist if '4581' in f ]
 
                 flist =  [f for f in flist if 'gz' not in f and f != '3188/era5.3188.conv.' ]
+                #flist = [f for f in flist if 'era5.conv._55248' in f ]
+                #flist =  [f for f in flist if '72405' in f or '1:74594' in f ]
 
                 #flist =[f for  f in flist if ':80310' in f ]  # to test latitude mismatch in 1759
-                #flist =[f for  f in flist if '41963' in f ]  # to test latitude mismatch in 1759
-
-
+                #flist =[f for  f in flist if '67575' in f ]  # to test latitude mismatch in 1759
+                """
                 if os.path.isfile(out_dir + '/' + odir +'_correctly_processed.dat'):
                     proc = open(out_dir + '/' + odir +'_correctly_processed.dat').readlines()
                     proc = [f.replace('\n','') for f in proc]
                 else:
                     proc = []
-
-
+                """
+                proc = []
+                
                 #lista = pd.read_csv(home + '/output_data_SAVE/era5_1759_WBAN_latitude_mismatch.dat', delimiter = '\t')
                 #list = lista['file']
                 #flist = ['1759/' + p for p in flist ]
 
                 flist = [ f for f in flist if f not in proc ]
-
-
 
                 hlist=[]
                 for f in flist:
