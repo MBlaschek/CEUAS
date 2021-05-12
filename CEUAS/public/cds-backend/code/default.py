@@ -50,12 +50,24 @@ from functools import partial
 from multiprocessing import set_start_method, Pool
 from typing import Union
 from shutil import copyfile
+import pickle
+from itertools import product
+import numpy as np
+
+try:
+#    set_start_method("spawn")  # or fork ? not sure why, pickling?
+    set_start_method("forkserver")  # fork is not threadsafe, unfortunately
+    P=Pool(10) 
+    x=P.map(np.sin,np.arange(10))
+    print(x)
+except RuntimeError:
+    pass
 
 if False:
     import cds_eua2 as eua  # old version
     CDS_EUA_VERSION = 2
 else:
-    #sys.path.append(os.path.expanduser('~leo/python/'))
+    sys.path.append(os.path.expanduser('~leo/python/CEUAS/CEUAS/public/cds-backend/code'))
     import cds_eua3 as eua  # new version with CDMDataset class
     CDS_EUA_VERSION = 3
 
@@ -65,11 +77,6 @@ import numpy
 import pandas as pd
 import xarray
 
-try:
-#    set_start_method("spawn")  # or fork ? not sure why, pickling?
-    set_start_method("forkserver")  # or fork ? not sure why, pickling?
-except RuntimeError:
-    pass
 
 ###############################################################################
 #
@@ -172,7 +179,7 @@ except:
 
 global constraints
 try:
-    constraints = '/data/public/constraints.csv'
+    constraints = '/tmp/constraints.csv'
     constraints = pd.read_csv(constraints)
     logger.info("constraints.csv read and ready")
 except:
@@ -234,7 +241,9 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
                 else:
                     # if no country code available -> reverse geo search for them 
                     coordinates = (float(f['observations_table']['latitude'][-1]), float(f['observations_table']['longitude'][-1]))
-                    cc = rg.search(coordinates)[0]['cc']
+
+                    #cc = rg.search(coordinates)[0]['cc']
+                    cc='XK'
 #                     if cc == 'XK':
 #                         active[skey].append('XXK')
 #                         logger.debug('reverse geo searche for: %s', skey)
@@ -256,6 +265,72 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
         logger.error('file open error: %s', s)
     return active
 
+def read_tstamps(fn):
+    with h5py.File(fn,'r') as f:
+    #print(f[fk]['recordindices'].keys())
+        fk=fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]
+        print(fk)
+        rts=f['recordindices']['recordtimestamp'][:]
+    return fk,rts
+
+def pkl_initialize(config):
+
+    #set_start_method('forkserver') 
+
+#    flist=glob.glob(os.path.expandvars(config['data_dir'] + 'converted_v5/0-*-0-*_CEUAS_merged_v1.nc')) 
+    config['data_dir']='/raid60/scratch/leo/scratch/converted_v5'
+    config['comp_dir']='/raid60/scratch/leo/scratch/converted_v5'
+    slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v1.nc'))
+    slist += glob.glob(os.path.expandvars(config['data_dir'] + '/0-20?00-0-*_CEUAS_merged_v1.nc'))
+    slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
+    slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
+    #flist=glob.glob(os.path.expandvars(rpath+'*.nc'))
+    fout=os.path.expandvars(config['data_dir']+'/h5link.pkl')
+    
+    tt=time.time()
+    rtsdict={}
+    i=0
+    imem=0
+    
+    try:
+            
+        with open(fout, 'rb') as f:
+            rtskeys,rtsidx,rtsarr=pickle.load(f)
+    except: 
+            
+        #with h5py.File(fout,'r') as f:
+        l=0
+        with Pool(10) as p:
+            tup=map(read_tstamps,slist)
+        rtsdict=dict(tup)
+        #for fn in flist:
+            #with h5py.File(fn,'r') as f:
+            ##print(f[fk]['recordindices'].keys())
+                #fk=fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]
+                #rtsdict[fk]=f['recordindices']['recordtimestamp'][:]
+                #print(fk,l)
+                #l+=1
+                #flinks[fk]=f[fk]
+                #imem+=sys.getsizeof(rtsdict[fk])
+                #print(i,imem,fk)
+                #i+=1
+            #with open('.pkl'.join(fout.split('.nc')), 'wb') as f:
+                #pickle.dump(rtsdict, f, pickle.HIGHEST_PROTOCOL)
+            
+        rtsarr=numpy.concatenate(list(rtsdict.values()))      ## contains the record timestamps
+        rtsidx=[0]+[len(rtsdict[v]) for v in rtsdict.keys()]  ## contains the indices where the timestamps of station i starts
+        rtsidx=numpy.cumsum(rtsidx)
+        rtskeys=list(rtsdict.keys())                          ## contains the station IDs
+        
+        with open(fout, 'wb') as f:
+            pickle.dump((rtskeys,rtsidx,rtsarr), f, pickle.HIGHEST_PROTOCOL)
+        
+        x=0
+    
+    
+    print('ready read',time.time()-tt) ; tt=time.time()
+    return rtskeys,rtsidx,rtsarr,fout
+    
 
 def init_server(force_reload: bool = False, force_download: bool = False, debug:bool = False) -> tuple:
     """ Initialize Radiosonde Archive and read CDM Informations and CF Convention
@@ -294,8 +369,12 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         try:
             with open(active_file) as f:
                 active = json.load(f)
+            rtskeys,rtsidx,rtsarr,fout=pkl_initialize(config)
+            active['rtsarr']=rtsarr
+            active['rtsidx']=rtsidx
+            active['rtskeys']=rtskeys
             logger.info('Active Stations read. [%d]', len(active))
-        except:
+        except Exception:
             active = None
     if os.path.isfile(namelist_file) and not force_reload:
         try:
@@ -309,6 +388,8 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         #
         # find Merged Netcdf files and intercomparison files
         #
+        config['data_dir']='/raid60/scratch/leo/scratch/converted_v5'
+        config['comp_dir']='/raid60/scratch/leo/scratch/converted_v5'
         slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v1.nc'))
         slist += glob.glob(os.path.expandvars(config['data_dir'] + '/0-20?00-0-*_CEUAS_merged_v1.nc'))
         slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
@@ -401,6 +482,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         tdict = {col: str for col in col_names}
         cdm[key] = pd.read_csv(f, delimiter='\t', quoting=3, dtype=tdict, na_filter=False)
 
+    
     return active, cdm, cf
 
 
@@ -418,6 +500,8 @@ active, wmo_regions, cf = init_server()
 
 # Active Station Numbers
 slnum = list(active.keys())
+for i in ['rtskeys','rtsidx','rtsarr']:
+    slnum.pop(slnum.index(i))
 
 
 # slist = [config['data_dir'] + '/0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
@@ -488,7 +572,7 @@ def status_test(command=None) -> dict:
         status_msg = {"version": __version__, "status": hproc.status(), "running": hproc.is_running(),
                       "available": str(elapsed), "memory": hproc.memory_percent(), "cpu": hproc.cpu_percent(),
                       "num_stations": len(slnum), "active": active}
-        # psutil.disk_usage('/data/public/')  # '/data/private/',
+        # psutil.disk_usage('/tmp/')  # '/data/private/',
         if command == config['reload_pwd']:
             if elapsed.total_seconds() > 120:
                 # todo run this in background and wait until a request is finished before restarting
@@ -563,7 +647,7 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
            381      1143   14480897.0  12669.2     36.4          ds = xarray.open_dataset(fn, drop_variables=['trajectory_label', 'trajectory_index', 'trajectory'])
            382      1143    7763230.0   6792.0     19.5          df = ds.to_dataframe()
            383      1143       9120.0      8.0      0.0          if 'primary_id' not in ds.attrs:
-           384                                                       # /data/public//tmp//006691463272/dest_0-20000-0-53513_relative_humidity.nc
+           384                                                       # /tmp//tmp//006691463272/dest_0-20000-0-53513_relative_humidity.nc
            385      1143    1462572.0   1279.6      3.7              df['statid'] = fn.split('/')[-1].split('_')[1]
            386                                                       # logger.warning('CSV no primary_id in %s', fn)
            387                                                       # continue
@@ -609,7 +693,7 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
         # todo fix the primary_id in the NetCDF files
         #
         if 'primary_id' not in ds.attrs:
-            # /data/public//tmp//006691463272/dest_0-20000-0-53513_relative_humidity.nc
+            # /tmp//tmp//006691463272/dest_0-20000-0-53513_relative_humidity.nc
             df['statid'] = fn.split('/')[-1].split('_')[1]
             # logger.warning('CSV no primary_id in %s', fn)
             # continue
@@ -970,7 +1054,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                     
                 statid = [] 
                 [statid.append(x) for x in new_statid if x not in statid] 
-        except MemoryError:
+        except Exception:
             raise RuntimeError(
                 'Invalid selection, specify either bbox, country or statid. Use "statid":"all" to select all ' \
                 'stations ')
@@ -1111,7 +1195,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
 ###############################################################################
 
 
-def makebodies(bodies, body, spv, bo, l):
+def makebodiesold(bodies, body, spv, bo, l):
     """ Split Request by Variable and Station ID -> MP
 
     Args:
@@ -1129,15 +1213,51 @@ def makebodies(bodies, body, spv, bo, l):
         if l < len(spv) - 1:
             makebodies(bodies, body, spv, copy.copy(bo) + [b], l + 1)
         else:
-            bodies.append(dict(body))
+            #bodies.append(dict(body))
+            bodies.append({})
             bn = copy.copy(bo) + [b]
+            for k,v in body.items():
+                if k not in spv:
+                    bodies[-1][k]=v
             for s, b in zip(spv, bn):
                 bodies[-1][s] = b
                 logger.debug('makebodies %d %s %s', l, s, b)
     return
 
+def makebodies(bodies, body, spv, bo, l):
+    """ Split Request by Variable and Station ID -> MP
 
-def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = False) -> str:
+    Args:
+        bodies: list of requests
+        body: request dictionary
+        spv: variables to split by
+        bo: tmp var ?
+        l: 0
+
+    Returns:
+        bodies
+    """
+    
+    sbody={}
+    for k,v in body.items():
+        if k not in spv:
+            sbody[k]=v
+    
+    tt=time.time()
+    p=product(*[body[s] for s in spv])
+    print(time.time()-tt)
+    l=0
+    for x in p:
+        bodies.append(dict(sbody))
+        for k,v in zip(spv,x):
+            bodies[-1][k]=v
+            #logger.debug('makebodies %d %s %s', l, k, v)
+            l+=1
+    print(time.time()-tt)
+    return
+
+
+def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool = False) -> str:
     """ Main function of the hug server
 
     Args:
@@ -1174,41 +1294,64 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
     spv = ['statid', 'variable']  # potential split up variables
     bo = []
     refdate = datetime(year=1900, month=1, day=1)
+    print(' vor makebodies',time.time()-tt)
+    if 'date' in body.keys():      
+        start = (to_valid_datetime(body['date'][0]) - refdate).days * 86400
+        ende = (to_valid_datetime(body['date'][-1]) - refdate).days * 86400+86399
+    else:
+        start=1
+        ende=5000000000
+    gdict2,lidx=eua.searchdate(active['rtsidx'], active['rtsarr'], start,ende)    
+    gdict2=dict(zip([active['rtskeys'][l] for l in lidx],list(gdict2)))
+    body['statid']=list(gdict2.keys())
+
     makebodies(bodies, body, spv, bo, 0)  # List of split requests
-    #
+    for k in range(len(bodies)):
+        key=bodies[k]['statid']
+        bodies[k]['filename']=active[key][5]
+        bodies[k]['rtsidx']=gdict2[key]    #
     # Check all requests if dates are within active station limits
     #
-    for k in range(len(bodies) - 1, -1, -1):
-        # date selection ? do all the stations have data in this period?
-        if 'date' in bodies[k].keys():
-            #
-            # seconds since Reference date
-            #
-            start = (to_valid_datetime(bodies[k]['date'][0]) - refdate).days * 86400
-            ende = (to_valid_datetime(bodies[k]['date'][-1]) - refdate).days * 86400
-            #
-            # Station Active ?
-            #
-            if bodies[k]['statid'] in active.keys():
-                if start > active[bodies[k]['statid']][1] or ende + 86399 < active[bodies[k]['statid']][0]:
-                    logger.debug('%s outside Index range', bodies[k]['statid'])
-                    del bodies[k]
+    #activekeys=list(active.keys())
+    #
+    # seconds since Reference date
+    #
+    print('makebodies',time.time()-tt)
+    
+    #for k in range(len(bodies) - 1, -1, -1):
+        ## date selection ? do all the stations have data in this period?
+        #if 'date' in bodies[k].keys():
+            ##
+            ## Station Active ?
+            ##
+            
+            #try: #if bodies[k]['statid'] in activekeys:
+                #i=activekeys.index(bodies[k]['statid'])
+                #idx=numpy.searchsorted(active['rtsarr'][active['rtsidx'][i]:active['rtsidx'][i+1]],(start,ende))
+                #if idx[0]>=idx[1]: #rtsidx[i+1]-rtsidx[i]:
+                ##if start > active[bodies[k]['statid']][1] or ende + 86399 < active[bodies[k]['statid']][0]:
+                    #logger.debug('%s outside Index range', bodies[k]['statid'])
+                    #del bodies[k]
 
-                else:
-                    logger.debug('%s Index[%d (%d / %d) %d]', bodies[k]['statid'],
-                                 active[bodies[k]['statid']][0],
-                                 start, ende,
-                                 active[bodies[k]['statid']][1])
-                    # add data path to request
-                    # input_dirs.append(active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
-                    # file_paths.insert(0, active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
-                    bodies[k]['filename'] = active[bodies[k]['statid']][5]
-            else:
-                del bodies[k]
-        else:
-            # input_dirs.append(active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
-            bodies[k]['filename'] = active[bodies[k]['statid']][5]
-            # file_paths.insert(0, active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
+                #else:
+                    #logger.debug('%s Index[%d (%d / %d) %d]', bodies[k]['statid'],
+                                 #active[bodies[k]['statid']][0],
+                                 #start, ende,
+                                 #active[bodies[k]['statid']][1])
+                    ## add data path to request
+                    ## input_dirs.append(active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
+                    ## file_paths.insert(0, active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
+                    #bodies[k]['filename'] = active[bodies[k]['statid']][5]
+                    #bodies[k]['rtsidx']=idx[:]#(active['rtsidx'][i]+idx[0],active['rtsidx'][i]+idx[1])
+            #except:
+                #del bodies[k]
+        #else:
+            ## input_dirs.append(active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
+            #bodies[k]['filename'] = active[bodies[k]['statid']][5]
+            #i=activekeys.index(bodies[k]['statid'])
+            #idx=numpy.searchsorted(active['rtsarr'][active['rtsidx'][i]:active['rtsidx'][i+1]],(1,5000000000))
+            #bodies[k]['rtsidx']=idx[:]#(active['rtsidx'][i]+idx[0],active['rtsidx'][i]+idx[1])
+            ## file_paths.insert(0, active[bodies[k]['statid']][5])  # path from makedaterange (init_server)
 
     logger.debug('# requests %d', len(bodies))
     if len(bodies) == 0:
@@ -1219,7 +1362,8 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
     # process_flat(outputdir: str, cftable: dict, debug:bool=False, request_variables: dict) -> tuple:
     # func = partial(eua.process_flat, output_dir, cf, input_dirs[0], debug)
     func = partial(eua.process_flat, output_dir, cf, debug)
-    print('body', body)
+    #print('body', body)
+    print('body', time.time()-tt)
     if 'gridded' in body:
         body['statid']=''
         print('body', body)
@@ -1236,15 +1380,16 @@ def process_request(body: dict, output_dir: str, wmotable: dict, debug: bool = F
         #
         # Multi Threading
         #
-        with Pool(10) as p:
+        print(time.time()-tt); tt=time.time()
+        #with Pool(10) as p:
             # error with chunksize (from p.map to p.starmap)
-            results = p.map(func, bodies)
+        results = list(P.map(func, bodies))
             # results = list(p.starmap(func, zip(input_dirs, [debug]*len(bodies), bodies), chunksize=1))
     #
     # Process the output 
     # todo catch Error Messages and store in a log file?
     #
-    print(results)
+    print(time.time()-tt,results)
     wpath = ''  # same as output_dir ?
     for r in results:
         if r[0] != '':
@@ -1399,7 +1544,7 @@ def index(request=None, body=None, response=None):
     tmpdir = config['tmp_dir'] + '/' + randdir
     try:
         #rfile='/fio/srvx7/leo/x'
-        rfile = process_request(body, tmpdir, wmo_regions, debug=config['debug'])
+        rfile = process_request(body, tmpdir, wmo_regions, P, debug=config['debug'])
     except Exception as e:
         logger.error("%s POST FAILED, %s", randdir, e)
         with open(config['logger_dir'] + '/failed_requests.log', 'a+') as ff:
@@ -1421,16 +1566,16 @@ def index(request=None, body=None, response=None):
 # @hug.get('/dataset')
 # def dataset():
 #     from pydap.wsgi.app import DapServer
-#     return DapServer('/data/public/tmp/100000000000')  # maybe ??
+#     return DapServer('/tmp/tmp/100000000000')  # maybe ??
 
 # @hug.get('/dataset', output=hug.output_format.file)
 # def opendap(request=None, response=None):
 #     # todo does not work with pydap
 #     #  it seems that
 #     # from pydap.wsgi.app import DapServer
-#     # application = DapServer('/data/public/tmp/100000000000')  # maybe ??
+#     # application = DapServer('/tmp/tmp/100000000000')  # maybe ??
 #     # should we return the DapServer ?
-#     rfile = '/data/public/tmp/100000000000/dest_0-20000-0-70398_air_temperature.nc'
+#     rfile = '/tmp/tmp/100000000000/dest_0-20000-0-70398_air_temperature.nc'
 #     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
 #     return rfile
 
@@ -1450,7 +1595,7 @@ def index(request=None, response=None):
     logger.debug("GET %s", request.query_string)
 
 
-    rfile='/data/public/constraints.csv'
+    rfile='/tmp/constraints.csv'
 
     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
     return rfile
@@ -1478,8 +1623,8 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
 #     namelist_file = config['config_dir'] + '/namelist.json'
 #     namelist = json.load(open(namelist_file,"r"))
     
-    output_file = '/data/public/maplist_'+str(date)
-#     with open('/data/public/info_'+str(date)+str(enddate, "w") as f:
+    output_file = '/tmp/maplist_'+str(date)
+#     with open('/tmp/info_'+str(date)+str(enddate, "w") as f:
 #             f.writelines([str(date), str(enddate), str(var)])
     if (enddate is None) or (date == enddate):
         reqdate = date.split('-')
@@ -1491,7 +1636,7 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
         with open(output_file, "w") as f:
             f.writelines(lines)
             
-#     copyfile(interm_file, '/data/public/maplist_'+str(date)+str(enddate))
+#     copyfile(interm_file, '/tmp/maplist_'+str(date)+str(enddate))
     
 #     if enddate is None:
 #         date = datetime_to_seconds(date)
@@ -1512,7 +1657,7 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
 #         reqdate = date.split('-')
 #         interm_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
 #         copyfile(interm_file, output_file)
-#         copyfile(interm_file, '/data/public/maplist_'+str(date)+str(enddate))
+#         copyfile(interm_file, '/tmp/maplist_'+str(date)+str(enddate))
             
 #     if not enddate is None:
     else:    
@@ -1558,7 +1703,7 @@ def mapdata2(date=None, plev=None, var=None, response=None):
     const = const[const.day == int(dy)]
     const = const.drop_duplicates(subset=['lat', 'lon'], keep='last')
     
-    output_file = '/data/public/maplist_'+str(date)
+    output_file = '/tmp/maplist_'+str(date)
     rows = []
     rows.append(['station_name', 'longitude', 'latitude'])
     for i in len(const):
@@ -1595,7 +1740,7 @@ def statdata(date=None, mindate=None, enddate=None, response=None):
 #     namelist_file = config['config_dir'] + '/namelist.json'
 #     namelist = json.load(open(namelist_file,"r"))
     
-    output_file = '/data/public/maplist_'+str(date)
+    output_file = '/tmp/maplist_'+str(date)
     
     if enddate is None:
         date = datetime_to_seconds(date)
@@ -1687,5 +1832,5 @@ if __name__ == '__main__':
     # Run the request
     #
     tmpdir = config['tmp_dir'] + '/' + randdir
-    ret = process_request(body, tmpdir, wmo_regions, debug=debug)
+    ret = process_request(body, tmpdir, wmo_regions, P, debug=debug)
     logger.debug(str(ret))
