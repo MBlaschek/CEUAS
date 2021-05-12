@@ -1260,6 +1260,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 gdict['advanced_homogenisation']=[]
 #                 gdict['advanced_homogenization']=[]
             if 'cdm' in request_variables:
+                gdict['observations_table']=[]
                 gdict['era5fb']=[]
                 gdict['advanced_uncertainty']=[]
                 gdict['advanced_homogenisation']=[]
@@ -2483,19 +2484,60 @@ class CDMDataset:
             cdm_eratab = []
             cdmlist = request.get('cdm', None)
             if cdmlist != None:
-# #                 # removing variables with restricted access
-# #                 if ('era5fb/obsvalue@body' in cdmlist) or ('observations_table/observation_value' in cdmlist):
-# #                     try: cdmlist.remove('era5fb/obsvalue@body')
-# #                     except: pass
-# #                     try: cdmlist.remove('observations_table/observation_value')
-# #                     except: pass
+                # removing variables with restricted access
+                if ('era5fb/obsvalue@body' in cdmlist) or ('observations_table/observation_value' in cdmlist):
+                    try: cdmlist.remove('era5fb/obsvalue@body')
+                    except: pass
+                    try: cdmlist.remove('observations_table/observation_value')
+                    except: pass
                 for i in cdmlist:
                     grp = i.split('/')[0]
-                    if grp == 'era5fb':
-                        cdm_eratab.append(i)
+                    if i == 'era5fb':
+                        logger.debug('Full observations_table CDM-request disabled.')
+#                         eralist = ['albedo@modsurf', 'an_depar@body', 'an_depar@surfbody_feedback', 'an_sens_obs@body', 'andate', 
+#                                    'antime', 'biascorr@body', 'biascorr_fg@body', 'bufrtype@hdr', 'class', 'codetype@hdr',
+#                                    'collection_identifier@conv', 'date@hdr', 'datum_anflag@body', 'datum_event1@body', 'datum_rdbflag@body',
+#                                    'datum_sfc_event@surfbody_feedback', 'datum_status@body', 'datum_status@surfbody_feedback', 
+#                                    'eda_spread@errstat', 'entryno@body', 'expver', 'fg_depar@body', 'fg_depar@surfbody_feedback', 
+#                                    'fg_error@errstat', 'final_obs_error@errstat', 'groupid@hdr', 'index', 'lat@hdr', 'lon@hdr', 'lsm@modsurf',
+#                                    'lsm@surfbody_feedback', 'numtsl@desc', 'obs_error@errstat', 'obstype@hdr', 'orography@modsurf',
+#                                    'ppcode@conv_body', 'qc_pge@body', 'report_event1@hdr', 'report_rdbflag@hdr', 'report_status@hdr', 'reportype',
+#                                    'seaice@modsurf', 'sensor@hdr', 'seqno@hdr', 'snow_density@surfbody_feedback', 'snow_depth@modsurf', 
+#                                    'snow_depth@surfbody_feedback', 'sonde_type@conv', 'source@hdr', 'source_id', 'stalt@hdr', 'statid@hdr',
+#                                    'station_type@conv', 'stream', 'subtype@hdr', 'time@hdr', 'timeseries_index@conv', 'timeslot@timeslot_index',
+#                                    'tsfc@modsurf', 'type', 'unique_identifier@conv', 'varbc_ix@body', 'varno@body', 'vertco_reference_1@body', 
+#                                    'vertco_reference_2@body', 'vertco_type@body', 'windspeed10m@modsurf']
+#                         for j in eralist:
+#                             cdm_eratab.append(j)
+#                             cfcopy[j]={'cdmname': i, 'units': '', 'shortname': j, 'coordinates': 'lat lon time plev', 'standard_name': j, 'cdsname': j,}
+                    elif grp == 'era5fb':
+                        try: 
+                            var = i.split('/')[1]
+                            cdm_eratab.append(var)
+                            cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
+                        except: pass
                         cdmlist.remove(i)
-                    if grp == 'observations_table':
-                        cdm_obstab.append(i)
+                        
+                    if i == 'observations_table':
+                        logger.debug('Full observations_table CDM-request disabled.')
+#                         obslist = ['adjustment_id', 'advanced_assimilation_feedback', 'advanced_homogenisation', 'advanced_qc',
+#                                    'advanced_uncertainty', 'bbox_max_latitude', 'bbox_max_longitude', 'bbox_min_latitude', 
+#                                    'bbox_min_longitude', 'code_table', 'conversion_flag', 'conversion_method', 'crs', 'data_policy_licence',
+#                                    'date_time', 'date_time_meaning', 'exposure_of_sensor', 'latitude', 'location_method', 'location_precision',
+#                                    'longitude', 'numerical_precision', 'observation_duration', 'observation_height_above_station_surface', 
+#                                    'observation_id', 'observed_variable', 'original_code_table', 'original_precision', 'original_units', 'original_value',
+#                                    'processing_level', 'quality_flag', 'report_id', 'secondary_value', 'secondary_variable', 'sensor_automation_status',
+#                                    'sensor_id', 'source_id', 'spatial_representativeness', 'traceability', 'units', 'value_significance', 'z_coordinate',
+#                                    'z_coordinate_method', 'z_coordinate_type',]
+#                         for j in obslist:
+#                             cdm_obstab.append(j)
+#                             cfcopy[j]={'cdmname': i, 'units': '', 'shortname': j, 'coordinates': 'lat lon time plev', 'standard_name': j, 'cdsname': j,}
+                    elif grp == 'observations_table':
+                        try: 
+                            var = i.split('/')[1]
+                            cdm_obstab.append(var)
+                            cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
+                        except: pass
                         cdmlist.remove(i)
                         # NOW USE THOSE for the do_cfcopy below
                 logger.debug('CDM - adding groups and variables: %s', str(cdmlist))
@@ -2530,12 +2572,13 @@ class CDMDataset:
             #
             # Variables based on cfcopy
             #
+            print(cfcopy)
             if 'observations_table' in self.groups:
                 igroup = 'observations_table'
                 do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                         'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence'])
+                                         'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']+cdm_obstab)
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 fout['time'].make_scale('time')
@@ -2547,7 +2590,7 @@ class CDMDataset:
                 try:
                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
                               var_selection=['fg_depar@body', 'an_depar@body',
-                                             'biascorr@body'])
+                                             'biascorr@body']+cdm_eratab)
                     # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:

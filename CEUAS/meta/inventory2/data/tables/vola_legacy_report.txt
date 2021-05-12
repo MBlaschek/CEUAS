@@ -119,7 +119,7 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 1	Africa	Angola	AGO	0-20000-0-66152	66152	0	DUNDO	07 24 00S	020 49 00E	776.00		775.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, GSN, GOS, RBSN(S)
 1	Africa	Angola	AGO	0-20000-0-66318	66318	0	HUAMBO (NOVA LISBOA)	12 48 00S	015 45 00E	1701.00		1710.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBCN, RBSN(S), GOS, CLIMAT(C)
 1	Africa	Angola	AGO	0-20000-0-66305	66305	0	LOBITO	12 22 00S	013 32 00E	3.00		3.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-1	Africa	Angola	AGO	0-20000-0-66160	66160	0	LUANDA	08 51 00S	013 14 00E	70.00		74.00		mean sea level														Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), RBCN, CLIMAT(C), GOS, GSN, RBSN(ST)
+1	Africa	Angola	AGO	0-20000-0-66160	66160	0	LUANDA	08 51 00S	013 14 00E	74.00		74.00		mean sea level														Automatic weather station (AWS), Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), RBCN, CLIMAT(C), GOS, GSN, RBSN(ST)
 1	Africa	Angola	AGO	0-20000-0-66390	66390	0	LUBANGO (SA DA BANDEIRA)	14 56 00S	013 34 00E	1758.00		1760.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GSN, RBCN, CLIMAT(C), RBSN(ST), GOS
 1	Africa	Angola	AGO	0-20000-0-66285	66285	0	LUENA (LUSO)	11 47 00S	019 55 00E	1357.00		1357.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), GOS, RBCN
 1	Africa	Angola	AGO	0-20000-0-66215	66215	0	MALANGE	09 33 00S	016 22 00E	1142.00		1139.00		850 HPA														Surface land meteorological station (SYNOP), CLIMAT(C), GOS
@@ -504,9 +504,9 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 1	Africa	Guinea-Bissau	GNB	0-20000-0-61781	61781	0	BAFATA	12 10 00N	014 40 00W	43.00		42.00		mean sea level														Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBSN(S)
 1	Africa	Guinea-Bissau	GNB	0-20000-0-61766	61766	0	BISSAU AEROPORTO	11 53 00N	015 39 00W	36.00		39.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, CLIMAT(C), RBSN(S), GOS
 1	Africa	Guinea-Bissau	GNB	0-20000-0-61769	61769	0	BOLAMA	11 35 00N	015 29 00W	20.00		18.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), CLIMAT(C), GOS
-1	Africa	Kenya	KEN	0-20000-0-63741	63741	0	DAGORETTI CORNER	01 18 05S	036 45 35E			1811.14																Climatological station, Upper-air / Radiosonde station, CLIMAT(C), GOS Surface networks, RBCN, GOS, GUAN
 1	Africa	Kenya	KEN	0-404-300-472781389CO63741			DAGORETTI CORNER	01 18 05S	036 45 35E			1811.14																Climatological station, Upper-air / Radiosonde station, CLIMAT(C), GOS Surface networks, RBCN, GOS, GUAN
-1	Africa	Kenya	KEN	0-20000-0-63688	63688	0	ELDORET INTERNATIONAL AIRPORT	00 24 18N	035 13 38E	2103.44		2103.44		850 HPA														Surface land meteorological station (SYNOP), GOS
+1	Africa	Kenya	KEN	0-20000-0-63741	63741	0	DAGORETTI CORNER	01 18 05S	036 45 35E			1811.14																Climatological station, Upper-air / Radiosonde station, CLIMAT(C), GOS Surface networks, RBCN, GOS, GUAN
+1	Africa	Kenya	KEN	0-20000-0-63688	63688	0	ELDORET INTERNATIONAL AIRPORT	00 24 18N	035 13 38E	2120.00		2120.00		850 HPA														Surface land meteorological station (SYNOP), GOS
 1	Africa	Kenya	KEN	0-20000-0-63720	63720	0	EMBU	00 30 02S	037 29 45E	1508.51		1508.51		850 HPA														Surface land meteorological station (SYNOP), GOS
 1	Africa	Kenya	KEN	0-20000-0-63723	63723	0	GARISSA	00 28 35S	039 38 51E			143.00																GOS
 1	Africa	Kenya	KEN	0-20000-0-63740	63740	0	JOMO KENYATTA NTERNATIONAL AIRPORT	01 19 40S	036 54 52E	1639.26		1639.26		850 HPA														Surface land meteorological station (SYNOP), GOS
@@ -515,11 +515,11 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 1	Africa	Kenya	KEN	0-20000-0-63772	63772	0	LAMU	02 13 36S	040 50 53E			9.01																GOS
 1	Africa	Kenya	KEN	0-20000-0-63612	63612	0	LODWAR	03 07 07N	035 35 25E			502.00																Upper-air / Radiosonde station, CLIMAT(C), GOS
 1	Africa	Kenya	KEN	0-20000-0-63612	63612	0	LODWAR	03 07 07N	035 35 25E			502.00																Upper-air / Radiosonde station, CLIMAT(C), GOS
-1	Africa	Kenya	KEN	0-20000-0-63695	63695	0	MERU	00 03 06N	037 39 03E	1680.50		1680.50		850 HPA														Surface land meteorological station (SYNOP), GOS
+1	Africa	Kenya	KEN	0-20000-0-63695	63695	0	MERU	00 03 06N	037 39 03E	1626.45		1626.45		850 HPA														Surface land meteorological station (SYNOP), GOS
 1	Africa	Kenya	KEN	0-20000-0-63820	63820	0	MOMBASA INTERNATIONAL AIRPORT	04 02 47S	039 33 47E	5.49		5.00		1000 HPA														Surface land meteorological station (SYNOP), GOS
 1	Africa	Kenya	KEN	0-20000-0-63714	63714	0	NAKURU	00 16 15S	036 06 15E	1914.57		1914.57		850 HPA														Surface land meteorological station (SYNOP), GOS
 1	Africa	Kenya	KEN	0-404-300-341830914AS63738			NGONG AUTOMATIC WEATHER STATION	01 20 27S	036 38 44E	2001.82		2001.82																Surface land meteorological station (SYNOP), GOS
-1	Africa	Kenya	KEN	0-20000-0-63717	63717	0	NYERI	00 26 34S	036 58 50E	1785.57		1785.57		850 HPA														Surface land meteorological station (SYNOP), GOS
+1	Africa	Kenya	KEN	0-20000-0-63717	63717	0	NYERI	00 26 34S	036 58 50E	1794.23		1794.23		850 HPA														Surface land meteorological station (SYNOP), GOS
 1	Africa	Kenya	KEN	0-20000-0-63793	63793	0	VOI	03 22 53S	038 34 31E	559.92		574.00		850 HPA														Surface land meteorological station (SYNOP), GOS
 1	Africa	Kenya	KEN	0-20000-0-63671	63671	0	WAJIR	01 44 51N	040 03 33E			257.00																Surface land meteorological station (SYNOP), GOS
 1	Africa	Lesotho	LSO	0-20000-0-68454	68454	0	MASERU-MIA	29 27 00S	027 33 00E	1628.00		1631.00		STATION														Climatological station, Surface land meteorological station (SYNOP), GOS, RBCN, RBSN(S)
@@ -988,8 +988,8 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 1	Africa	Norway	NOR	0-20000-0-68992	68992	0	BOUVET ISLAND	54 24 00S	003 17 00E	42.00		42.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, CLIMAT(C), GOS, RBSN(S), ANTON
 1	Africa	Portugal	PRT	0-20000-0-08522	08522	0	FUNCHAL	32 38 51N	016 53 33W	58.80		58.00		mean sea level														Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS, RBCN, RBSN(ST), CLIMAT(C), GSN
 1	Africa	Portugal	PRT	0-620-2001-08522			FUNCHAL	32 38 51N	016 53 33W	58.80		58.00		mean sea level														Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS, RBCN, RBSN(ST), CLIMAT(C), GSN
-1	Africa	Portugal	PRT	0-620-2001-08521			FUNCHAL/S.CATARINA	32 41 35N	016 46 34W	58.30		58.00		mean sea level														Automatic weather station (AWS), Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), RBCN
 1	Africa	Portugal	PRT	0-20000-0-08521	08521	0	FUNCHAL/S.CATARINA	32 41 35N	016 46 34W	58.30		58.00		mean sea level														Automatic weather station (AWS), Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), RBCN
+1	Africa	Portugal	PRT	0-620-2001-08521			FUNCHAL/S.CATARINA	32 41 35N	016 46 34W	58.30		58.00		mean sea level														Automatic weather station (AWS), Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), RBCN
 1	Africa	Portugal	PRT	0-20000-0-08524	08524	0	PORTO SANTO	33 04 17N	016 20 55W	82.80		82.00		mean sea level														Automatic weather station (AWS), Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, CLIMAT(C), RBSN(S)
 1	Africa	Portugal	PRT	0-620-2001-08524			PORTO SANTO	33 04 17N	016 20 55W	82.80		82.00		mean sea level														Automatic weather station (AWS), Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, CLIMAT(C), RBSN(S)
 1	Africa	Portugal	PRT	0-620-2001-0520			SELVAGEM GRANDE	30 08 43N	015 52 16W	150.80		150.00																Automatic weather station (AWS), Radiation station, Surface land meteorological station (SYNOP), GOS
@@ -1375,28 +1375,28 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 1	Africa	United Kingdom (the)	GBR	0-20000-0-61903	61903	0	ST. HELENA	15 56 23S	005 40 11W	438.00				STATION														Surface land meteorological station (SYNOP), GOS
 1	Africa	United Kingdom (the)	GBR	0-20000-0-61901	61901	0	ST. HELENA IS.	15 56 31S	005 40 02W	436.00		435.00		mean sea level														Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GUAN, GSN, CLIMAT(C), GOS, RBSN(ST), RBCN
 1	Africa	United Kingdom (the)	GBR	0-20000-0-61902	61902	0	WIDE AWAKE FIELD (ASCENSION IS.)	07 58 12S	014 24 20W	79.00		86.00		mean sea level														Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), RBCN, GSN, RBSN(S), GOS, CLIMAT(C)
-1	Africa	Zambia	ZMB	0-894-1-cht0002			CHIPATA	13 33 00S	032 35 00E	1032.00		1028.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), CLIMAT(C), RBCN, GOS, GSN
 1	Africa	Zambia	ZMB	0-894-1-CPTA002			CHIPATA	13 33 00S	032 35 00E	1032.00		1028.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), CLIMAT(C), RBCN, GOS, GSN
+1	Africa	Zambia	ZMB	0-894-1-cht0002			CHIPATA	13 33 00S	032 35 00E	1032.00		1028.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), CLIMAT(C), RBCN, GOS, GSN
 1	Africa	Zambia	ZMB	0-20000-0-67581	67581	0	CHIPATA	13 33 00S	032 35 00E	1032.00		1028.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), CLIMAT(C), RBCN, GOS, GSN
 1	Africa	Zambia	ZMB	0-894-1-cho0004			CHOMA	16 50 00S	027 04 00E	1278.00		1213.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBSN(S), RBCN, GOS
-1	Africa	Zambia	ZMB	0-20000-0-67753	67753	0	CHOMA	16 50 00S	027 04 00E	1278.00		1213.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBSN(S), RBCN, GOS
 1	Africa	Zambia	ZMB	0-894-1-CHMA004			CHOMA	16 50 00S	027 04 00E	1278.00		1213.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBSN(S), RBCN, GOS
-1	Africa	Zambia	ZMB	0-894-1-isk0006			ISOKA	10 07 00S	032 38 00E	1360.00		1360.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
+1	Africa	Zambia	ZMB	0-20000-0-67753	67753	0	CHOMA	16 50 00S	027 04 00E	1278.00		1213.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBSN(S), RBCN, GOS
 1	Africa	Zambia	ZMB	0-894-1-ISKA006			ISOKA	10 07 00S	032 38 00E	1360.00		1360.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
+1	Africa	Zambia	ZMB	0-894-1-isk0006			ISOKA	10 07 00S	032 38 00E	1360.00		1360.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 1	Africa	Zambia	ZMB	0-20000-0-67481	67481	0	ISOKA	10 07 00S	032 38 00E	1360.00		1360.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 1	Africa	Zambia	ZMB	0-20000-0-67543	67543	0	KABOMPO	13 36 00S	024 12 00E	1075.00		1075.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 1	Africa	Zambia	ZMB	0-894-1-KBPO010			KABOMPO	13 36 00S	024 12 00E	1075.00		1075.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+1	Africa	Zambia	ZMB	0-894-1-kbw0008			KABWE	14 27 00S	028 28 00E	1207.00		1206.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN, RBSN(S)
 1	Africa	Zambia	ZMB	0-894-1-KBWE008			KABWE	14 27 00S	028 28 00E	1207.00		1206.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN, RBSN(S)
 1	Africa	Zambia	ZMB	0-20000-0-67663	67663	0	KABWE	14 27 00S	028 28 00E	1207.00		1206.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN, RBSN(S)
-1	Africa	Zambia	ZMB	0-894-1-kbw0008			KABWE	14 27 00S	028 28 00E	1207.00		1206.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN, RBSN(S)
 1	Africa	Zambia	ZMB	0-20000-0-67662	67662	0	KABWE AGRIC	14 24 00S	028 30 00E	1165.00		1165.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBCN, RBSN(S)
-1	Africa	Zambia	ZMB	0-20000-0-67563	67563	0	KAFIRONDA	12 36 00S	028 07 00E	1243.00		1243.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), RBCN
 1	Africa	Zambia	ZMB	0-894-1-KFDA0111			KAFIRONDA	12 36 00S	028 07 00E	1243.00		1243.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), RBCN
+1	Africa	Zambia	ZMB	0-20000-0-67563	67563	0	KAFIRONDA	12 36 00S	028 07 00E	1243.00		1243.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), RBCN
 1	Africa	Zambia	ZMB	0-20000-0-67659	67659	0	KAFUE POLDER	15 46 00S	027 55 00E	978.00		978.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBCN, RBSN(S)
-1	Africa	Zambia	ZMB	0-894-1-KFUE012			KAFUE POLDER	15 46 00S	027 55 00E	978.00		978.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBCN, RBSN(S)
 1	Africa	Zambia	ZMB	0-894-1-kfu0012			KAFUE POLDER	15 46 00S	027 55 00E	978.00		978.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBCN, RBSN(S)
-1	Africa	Zambia	ZMB	0-894-1-KLBO013			KALABO	14 51 00S	022 42 00E					850 HPA														Surface land meteorological station (SYNOP), CLIMAT(C), GOS, RBSN(S)
+1	Africa	Zambia	ZMB	0-894-1-KFUE012			KAFUE POLDER	15 46 00S	027 55 00E	978.00		978.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBCN, RBSN(S)
 1	Africa	Zambia	ZMB	0-894-1-klb0011			KALABO	14 51 00S	022 42 00E					850 HPA														Surface land meteorological station (SYNOP), CLIMAT(C), GOS, RBSN(S)
+1	Africa	Zambia	ZMB	0-894-1-KLBO013			KALABO	14 51 00S	022 42 00E					850 HPA														Surface land meteorological station (SYNOP), CLIMAT(C), GOS, RBSN(S)
 1	Africa	Zambia	ZMB	0-20000-0-67625	67625	0	KALABO	14 51 00S	022 42 00E					850 HPA														Surface land meteorological station (SYNOP), CLIMAT(C), GOS, RBSN(S)
 1	Africa	Zambia	ZMB	0-20000-0-67641	67641	0	KAOMA	14 48 00S	024 48 00E	1213.00		1213.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, CLIMAT(C), RBSN(S)
 1	Africa	Zambia	ZMB	0-894-1-KOMA014			KAOMA	14 48 00S	024 48 00E	1213.00		1213.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, CLIMAT(C), RBSN(S)
@@ -1404,53 +1404,53 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 1	Africa	Zambia	ZMB	0-894-1-ksm0014			KASAMA	10 13 00S	031 08 00E	1384.00		1382.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), GSN, RBCN, RBSN(S)
 1	Africa	Zambia	ZMB	0-894-1-KSMA015			KASAMA	10 13 00S	031 08 00E	1384.00		1382.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), GSN, RBCN, RBSN(S)
 1	Africa	Zambia	ZMB	0-20000-0-67475	67475	0	KASAMA	10 13 00S	031 08 00E	1384.00		1382.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), GSN, RBCN, RBSN(S)
-1	Africa	Zambia	ZMB	0-894-1-KSPA016			KASEMPA	13 32 00S	025 51 00E	1234.00		1234.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), GOS, RBCN, CLIMAT(C)
 1	Africa	Zambia	ZMB	0-20000-0-67541	67541	0	KASEMPA	13 32 00S	025 51 00E	1234.00		1234.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), GOS, RBCN, CLIMAT(C)
+1	Africa	Zambia	ZMB	0-894-1-KSPA016			KASEMPA	13 32 00S	025 51 00E	1234.00		1234.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), GOS, RBCN, CLIMAT(C)
 1	Africa	Zambia	ZMB	0-20000-0-67403	67403	0	KAWAMBWA	09 48 00S	029 05 00E	1324.00		1323.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), CLIMAT(C), RBCN, GOS
-1	Africa	Zambia	ZMB	0-894-1-LVNG018			LIVINGSTONE	17 49 00S	025 49 00E	986.00		985.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), RBCN, RBSN(S), GOS
 1	Africa	Zambia	ZMB	0-894-1-liv0017			LIVINGSTONE	17 49 00S	025 49 00E	986.00		985.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), RBCN, RBSN(S), GOS
+1	Africa	Zambia	ZMB	0-894-1-LVNG018			LIVINGSTONE	17 49 00S	025 49 00E	986.00		985.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), RBCN, RBSN(S), GOS
 1	Africa	Zambia	ZMB	0-20000-0-67743	67743	0	LIVINGSTONE	17 49 00S	025 49 00E	986.00		985.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), RBCN, RBSN(S), GOS
 1	Africa	Zambia	ZMB	0-20000-0-67583	67583	0	LUNDAZI	12 17 00S	033 12 00E	1143.00		1143.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, RBSN(S)
 1	Africa	Zambia	ZMB	0-894-1-lud0018			LUNDAZI	12 17 00S	033 12 00E	1143.00		1143.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, RBSN(S)
 1	Africa	Zambia	ZMB	0-894-1-LDZI019			LUNDAZI	12 17 00S	033 12 00E	1143.00		1143.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, RBSN(S)
-1	Africa	Zambia	ZMB	0-894-1-CITY005			LUSAKA CITY AIRPORT	15 25 00S	028 28 00E			1280.00																Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), RBSN(T), GOS, GSN, RBCN
 1	Africa	Zambia	ZMB	0-894-1-cty0005			LUSAKA CITY AIRPORT	15 25 00S	028 28 00E			1280.00																Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), RBSN(T), GOS, GSN, RBCN
+1	Africa	Zambia	ZMB	0-894-1-CITY005			LUSAKA CITY AIRPORT	15 25 00S	028 28 00E			1280.00																Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), RBSN(T), GOS, GSN, RBCN
 1	Africa	Zambia	ZMB	0-20000-0-67666	67666	0	LUSAKA CITY AIRPORT	15 25 00S	028 28 00E			1280.00																Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), RBSN(T), GOS, GSN, RBCN
 1	Africa	Zambia	ZMB	0-20000-0-67665	67665	0	LUSAKA INTERNATIONAL AIRPORT	15 19 00S	028 27 00E	1154.00		1152.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), RBCN, CLIMAT(C), GOS
-1	Africa	Zambia	ZMB	0-894-1-MGYE022			MAGOYE	16 00 00S	027 36 00E	1018.00		1018.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBCN, RBSN(S)
 1	Africa	Zambia	ZMB	0-20000-0-67751	67751	0	MAGOYE	16 00 00S	027 36 00E	1018.00		1018.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBCN, RBSN(S)
+1	Africa	Zambia	ZMB	0-894-1-MGYE022			MAGOYE	16 00 00S	027 36 00E	1018.00		1018.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBCN, RBSN(S)
 1	Africa	Zambia	ZMB	0-894-1-mag0019			MAGOYE	16 00 00S	027 36 00E	1018.00		1018.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBCN, RBSN(S)
+1	Africa	Zambia	ZMB	0-894-1-MNSA020			MANSA	11 06 00S	028 51 00E	1384.00		1382.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, RBSN(S), GOS
 1	Africa	Zambia	ZMB	0-20000-0-67461	67461	0	MANSA	11 06 00S	028 51 00E	1384.00		1382.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, RBSN(S), GOS
 1	Africa	Zambia	ZMB	0-894-1-msa0020			MANSA	11 06 00S	028 51 00E	1384.00		1382.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, RBSN(S), GOS
-1	Africa	Zambia	ZMB	0-894-1-MNSA020			MANSA	11 06 00S	028 51 00E	1384.00		1382.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, RBSN(S), GOS
+1	Africa	Zambia	ZMB	0-20000-0-67413	67413	0	MBALA	08 51 00S	031 20 00E	1673.00		1673.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), CLIMAT(C), RBCN, GOS
 1	Africa	Zambia	ZMB	0-894-1-mbl0022			MBALA	08 51 00S	031 20 00E	1673.00		1673.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), CLIMAT(C), RBCN, GOS
 1	Africa	Zambia	ZMB	0-894-1-MBLA023			MBALA	08 51 00S	031 20 00E	1673.00		1673.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), CLIMAT(C), RBCN, GOS
-1	Africa	Zambia	ZMB	0-20000-0-67413	67413	0	MBALA	08 51 00S	031 20 00E	1673.00		1673.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), CLIMAT(C), RBCN, GOS
 1	Africa	Zambia	ZMB	0-894-1-MFWE024			MFUWE	13 16 00S	031 56 00E	570.00		568.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), GOS, RBCN, CLIMAT(C)
-1	Africa	Zambia	ZMB	0-20000-0-67599	67599	0	MFUWE	13 16 00S	031 56 00E	570.00		568.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), GOS, RBCN, CLIMAT(C)
 1	Africa	Zambia	ZMB	0-894-1-mfw0023			MFUWE	13 16 00S	031 56 00E	570.00		568.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), GOS, RBCN, CLIMAT(C)
+1	Africa	Zambia	ZMB	0-20000-0-67599	67599	0	MFUWE	13 16 00S	031 56 00E	570.00		568.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), GOS, RBCN, CLIMAT(C)
 1	Africa	Zambia	ZMB	0-20000-0-67476	67476	0	MISAMFU	10 06 00S	031 15 00E	1536.00		1536.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, RBSN(S)
-1	Africa	Zambia	ZMB	0-894-1-MSFU25			MISAMFU	10 06 00S	031 15 00E	1536.00		1536.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, RBSN(S)
-1	Africa	Zambia	ZMB	0-894-1-msf0024			MISAMFU	10 06 00S	031 15 00E	1536.00		1536.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, RBSN(S)
 1	Africa	Zambia	ZMB	0-894-1-MSFU026			MISAMFU	10 06 00S	031 15 00E	1536.00		1536.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, RBSN(S)
-1	Africa	Zambia	ZMB	0-894-1-MKSH025			MKUSHI	13 38 00S	029 26 00E	1237.00		1237.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+1	Africa	Zambia	ZMB	0-894-1-msf0024			MISAMFU	10 06 00S	031 15 00E	1536.00		1536.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, RBSN(S)
+1	Africa	Zambia	ZMB	0-894-1-MSFU25			MISAMFU	10 06 00S	031 15 00E	1536.00		1536.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, RBSN(S)
 1	Africa	Zambia	ZMB	0-20000-0-67575	67575	0	MKUSHI	13 38 00S	029 26 00E	1237.00		1237.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 1	Africa	Zambia	ZMB	0-894-1-mks0025			MKUSHI	13 38 00S	029 26 00E	1237.00		1237.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+1	Africa	Zambia	ZMB	0-894-1-MKSH025			MKUSHI	13 38 00S	029 26 00E	1237.00		1237.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 1	Africa	Zambia	ZMB	0-894-1-mgu0026			MONGU	15 15 00S	023 09 00E	1053.00		1052.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBCN, RBSN(S), GOS, GSN, CLIMAT(C)
-1	Africa	Zambia	ZMB	0-20000-0-67633	67633	0	MONGU	15 15 00S	023 09 00E	1053.00		1052.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBCN, RBSN(S), GOS, GSN, CLIMAT(C)
 1	Africa	Zambia	ZMB	0-894-1-MNGU027			MONGU	15 15 00S	023 09 00E	1053.00		1052.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBCN, RBSN(S), GOS, GSN, CLIMAT(C)
+1	Africa	Zambia	ZMB	0-20000-0-67633	67633	0	MONGU	15 15 00S	023 09 00E	1053.00		1052.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBCN, RBSN(S), GOS, GSN, CLIMAT(C)
 1	Africa	Zambia	ZMB	0-894-1-mak0030			MOUNT MAKULU	15 33 00S	028 15 00E	1213.00		1213.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, RBSN(S), GOS
-1	Africa	Zambia	ZMB	0-894-1-MKLU031			MOUNT MAKULU	15 33 00S	028 15 00E	1213.00		1213.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, RBSN(S), GOS
 1	Africa	Zambia	ZMB	0-20000-0-67667	67667	0	MOUNT MAKULU	15 33 00S	028 15 00E	1213.00		1213.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, RBSN(S), GOS
-1	Africa	Zambia	ZMB	0-20000-0-67477	67477	0	MPIKA	11 54 00S	031 26 00E	1402.00		1400.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBSN(S), GOS, RBCN
+1	Africa	Zambia	ZMB	0-894-1-MKLU031			MOUNT MAKULU	15 33 00S	028 15 00E	1213.00		1213.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, RBSN(S), GOS
 1	Africa	Zambia	ZMB	0-894-1-MPKA028			MPIKA	11 54 00S	031 26 00E	1402.00		1400.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBSN(S), GOS, RBCN
+1	Africa	Zambia	ZMB	0-20000-0-67477	67477	0	MPIKA	11 54 00S	031 26 00E	1402.00		1400.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBSN(S), GOS, RBCN
 1	Africa	Zambia	ZMB	0-894-1-mpk0027			MPIKA	11 54 00S	031 26 00E	1402.00		1400.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBSN(S), GOS, RBCN
-1	Africa	Zambia	ZMB	0-894-1-MKRA030			MSEKERA	13 39 00S	032 34 00E	1025.00		1025.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
-1	Africa	Zambia	ZMB	0-894-1-msk0029			MSEKERA	13 39 00S	032 34 00E	1025.00		1025.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 1	Africa	Zambia	ZMB	0-20000-0-67580	67580	0	MSEKERA	13 39 00S	032 34 00E	1025.00		1025.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
+1	Africa	Zambia	ZMB	0-894-1-msk0029			MSEKERA	13 39 00S	032 34 00E	1025.00		1025.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
+1	Africa	Zambia	ZMB	0-894-1-MKRA030			MSEKERA	13 39 00S	032 34 00E	1025.00		1025.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 1	Africa	Zambia	ZMB	0-20000-0-67655	67655	0	MUMBWA	15 04 00S	027 11 00E	1218.00		1216.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), RBCN
-1	Africa	Zambia	ZMB	0-894-1-MNLG033			MWINILUNGA	11 45 00S	024 26 00E	1363.00		1361.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), RBCN, RBSN(S), GOS
 1	Africa	Zambia	ZMB	0-20000-0-67441	67441	0	MWINILUNGA	11 45 00S	024 26 00E	1363.00		1361.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), RBCN, RBSN(S), GOS
+1	Africa	Zambia	ZMB	0-894-1-MNLG033			MWINILUNGA	11 45 00S	024 26 00E	1363.00		1361.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), RBCN, RBSN(S), GOS
 1	Africa	Zambia	ZMB	0-894-1-mng0032			MWINILUNGA	11 45 00S	024 26 00E	1363.00		1361.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), RBCN, RBSN(S), GOS
 1	Africa	Zambia	ZMB	0-20000-0-67561	67561	0	NDOLA	13 00 00S	028 39 00E	1270.00		1269.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBSN(S), RBCN, GOS
 1	Africa	Zambia	ZMB	0-894-1-ptk0034			PETAUKE	14 15 00S	031 17 00E	1036.00		1035.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, RBSN(S)
@@ -1832,8 +1832,8 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 2	Asia	China	CHN	0-20000-0-54027	54027	0	LINDONG	43 57 00N	119 19 00E			587.80																Surface land meteorological station (SYNOP), RBSN(S), GOS
 2	Asia	China	CHN	0-20000-0-57866	57866	0	LINGLING	26 14 00N	111 37 00E	174.00		174.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 2	Asia	China	CHN	0-20000-0-54715	54715	0	LINGXIAN	37 20 00N	116 34 00E	19.00				mean sea level														Surface land meteorological station (SYNOP), GOS
-2	Asia	China	CHN	0-20000-0-58660	58660	0	LINHAI	28 52 00N	120 43 00E	84.00		83.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 2	Asia	China	CHN	0-20000-0-58652	58652	0	LINHAI	28 52 00N	120 43 00E	84.00		83.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+2	Asia	China	CHN	0-20000-0-58660	58660	0	LINHAI	28 52 00N	120 43 00E	84.00		83.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 2	Asia	China	CHN	0-20000-0-53513	53513	0	LINHE	40 44 00N	107 22 00E	1042.00		1041.00		mean sea level														Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS, RBSN(ST)
 2	Asia	China	CHN	0-20000-0-54374	54374	0	LINJIANG	41 48 00N	126 53 00E	381.00		385.00		mean sea level														Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS, RBSN(ST)
 2	Asia	China	CHN	0-20000-0-54115	54115	0	LINXI	43 38 00N	118 02 00E	825.40				mean sea level														Surface land meteorological station (SYNOP), GOS
@@ -2532,7 +2532,6 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 2	Asia	Iran, Islamic Republic of	IRN	0-20000-0-40782	40782	0	KHORRAM ABAD	33 26 20N	048 17 01E	1148.00		1147.80		850 HPA														Surface land meteorological station (SYNOP), RBSN(S), GOS
 2	Asia	Iran, Islamic Republic of	IRN	0-20000-0-40703	40703	0	KHOY	38 33 29N	044 59 43E	1103.00		1103.40		850 HPA														Surface land meteorological station (SYNOP), RBSN(S), GOS
 2	Asia	Iran, Islamic Republic of	IRN	0-20000-0-40882	40882	0	KISH ISLAND	26 31 20N	053 58 56E	30.00		30.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
-2	Asia	Iran, Islamic Republic of	IRN	0-20000-0-40897	40897	0	KONARAK	25 26 11N	060 22 29E			30.00																Surface land meteorological station (SYNOP), GOS, RBSN(S)
 2	Asia	Iran, Islamic Republic of	IRN	0-20000-0-40701	40701	0	MAKKO	39 22 46N	044 23 30E	1411.00		1411.20		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 2	Asia	Iran, Islamic Republic of	IRN	0-20000-0-40713	40713	0	MARAGHEH	37 20 51N	046 08 45E	1478.00		1344.00		850 HPA														Surface land meteorological station (SYNOP), RBSN(S), GOS
 2	Asia	Iran, Islamic Republic of	IRN	0-20000-0-40721	40721	0	MARAVEH-TAPPEH	37 48 06N	055 56 36E	460.00		460.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
@@ -2555,7 +2554,6 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 2	Asia	Iran, Islamic Republic of	IRN	0-20000-0-40741	40741	0	SARAKHS (40741-0)	36 32 14N	061 08 56E	235.00		278.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 2	Asia	Iran, Islamic Republic of	IRN	0-20000-0-40878	40878	0	SARAVAN	27 23 25N	062 19 08E	1195.00		1182.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 2	Asia	Iran, Islamic Republic of	IRN	0-20000-0-40757	40757	0	SEMNAN	35 35 18N	053 25 17E	1127.00		1127.00		850 HPA														Surface land meteorological station (SYNOP), GOS, RBSN(S)
-2	Asia	Iran, Islamic Republic of	IRN	0-364-0-40849			shahrebabak	30 06 00N	055 08 00E			1834.10																Automatic weather station (AWS), Cryosphere station, Precipitation station, Surface land meteorological station (SYNOP), GOS, RBSN(S)
 2	Asia	Iran, Islamic Republic of	IRN	0-20000-0-40798	40798	0	SHAHRE-KORD	32 17 32N	050 50 22E	2049.00		2048.90		850 HPA														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 2	Asia	Iran, Islamic Republic of	IRN	0-20000-0-40739	40739	0	SHAHRUD	36 22 50N	054 55 47E	1349.00		1325.20		850 HPA														Surface land meteorological station (SYNOP), RBSN(S), GOS
 2	Asia	Iran, Islamic Republic of	IRN	0-20000-0-40848	40848	0	SHIRAZ	29 33 41N	052 36 09E	1484.00		1488.00		850 HPA														Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GSN, RBSN(ST), RBCN, GOS, CLIMAT(C)
@@ -4924,8 +4922,8 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 3	South America	Brazil	BRA	0-76-0-3507605000000569			Bragança Paulista	23 57 07S	046 31 50W			891.00																Automatic weather station (AWS), Precipitation station, Radiation station, Surface land meteorological station (SYNOP), GOS
 3	South America	Brazil	BRA	0-20000-0-83010	83010	0	BRASILEIA	11 01 00S	068 44 00W			261.00																Surface land meteorological station (SYNOP), GOS
 3	South America	Brazil	BRA	0-20000-0-83377	83377	0	BRASILIA (83377-0)	15 47 00S	047 56 00W	1159.00		1159.00		850 HPA														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN
-3	South America	Brazil	BRA	0-20000-0-86715	86715	0	BRASILIA (86715-0)	15 47 22S	047 55 32W	1161.04		1159.54		mean sea level														Surface land meteorological station (SYNOP), GOS
 3	South America	Brazil	BRA	0-76-0-5300108000000001			BRASILIA (86715-0)	15 47 22S	047 55 32W	1161.04		1159.54		mean sea level														Surface land meteorological station (SYNOP), GOS
+3	South America	Brazil	BRA	0-20000-0-86715	86715	0	BRASILIA (86715-0)	15 47 22S	047 55 32W	1161.04		1159.54		mean sea level														Surface land meteorological station (SYNOP), GOS
 3	South America	Brazil	BRA	0-20000-0-83378	83378	0	BRASILIA (AERO)	15 52 00S	047 56 00W	1061.00		1061.00		mean sea level														Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GUAN, RBSN(ST), GOS
 3	South America	Brazil	BRA	0-76-0-5300108000000551			Brazlândia	15 35 59S	048 07 52W			1143.00																Automatic weather station (AWS), Precipitation station, Radiation station, Surface land meteorological station (SYNOP), GOS
 3	South America	Brazil	BRA	0-20000-0-86618	86618	0	BREJO GRANDE	10 28 24S	036 28 55W	11.50		10.00		mean sea level														Surface land meteorological station (SYNOP), GOS
@@ -5841,8 +5839,8 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 3	South America	Brazil	BRA	0-20000-0-86830	86830	0	VITORIA (86830-0)	20 18 56S	040 19 02W	10.50		9.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 3	South America	Brazil	BRA	0-20000-0-83649	83649	0	VITORIA (AERO)	20 16 00S	040 17 00W	4.00		4.00		mean sea level														Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS, RBSN(S)
 3	South America	Brazil	BRA	0-20000-0-83344	83344	0	VITORIA DA CONQUISTA (83344-0)	14 57 00S	040 53 00W	874.00		874.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), RBCN, CLIMAT(C), GOS
-3	South America	Brazil	BRA	0-20000-0-86697	86697	0	VITORIA DA CONQUISTA (86697-0)	14 53 10S	040 48 04W	874.00		876.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 3	South America	Brazil	BRA	0-76-0-2933307000000204			VITORIA DA CONQUISTA (86697-0)	14 53 10S	040 48 04W	874.00		876.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+3	South America	Brazil	BRA	0-20000-0-86697	86697	0	VITORIA DA CONQUISTA (86697-0)	14 53 10S	040 48 04W	874.00		876.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 3	South America	Brazil	BRA	0-20000-0-83623	83623	0	VOTUPORANGA (83623-0)	20 25 00S	049 59 00W	503.00		503.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, RBSN(S), GOS, CLIMAT(C)
 3	South America	Brazil	BRA	0-20000-0-86815	86815	0	VOTUPORANGA (86815-0)	20 25 25S	049 57 55W	487.50		486.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 3	South America	Brazil	BRA	0-20000-0-86940	86940	0	XANXERE	26 56 20S	052 23 54W	890.50		889.00		mean sea level														Surface land meteorological station (SYNOP), GOS
@@ -5861,8 +5859,8 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 3	South America	Chile	CHL	0-20000-0-85886	85886	0	CHILE CHICO	46 34 51S	071 41 34W	305.00		306.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 3	South America	Chile	CHL	0-20000-0-85672	85672	0	CHILLAN	36 35 14S	072 02 24W	156.00		151.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), GOS, CLIMAT(C), RBCN
 3	South America	Chile	CHL	0-152-0-85673			Chillán Mayulermo	36 49 41S	071 52 01W			397.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
-3	South America	Chile	CHL	0-152-0-330076			Chorombo Hacienda	33 31 46S	071 13 45W			145.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-152-0-85566			Chorombo Hacienda	33 31 46S	071 13 45W			145.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
+3	South America	Chile	CHL	0-152-0-330076			Chorombo Hacienda	33 31 46S	071 13 45W			145.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-20000-0-85892	85892	0	COCHRANE	47 14 38S	072 35 11W			204.00																Surface land meteorological station (SYNOP), GOS, RBSN(S)
 3	South America	Chile	CHL	0-20000-0-85682	85682	0	CONCEPCION (85682-0)	36 46 42S	073 03 45W	17.00		17.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN, RBSN(S)
 3	South America	Chile	CHL	0-152-0-85471			Copiapó Universidad de Atacama	27 21 32S	070 21 12W			362.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
@@ -5885,9 +5883,10 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 3	South America	Chile	CHL	0-20000-0-85834	85834	0	ISLA HUAFO	43 34 00S	074 49 39W	45.00		105.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 3	South America	Chile	CHL	0-20000-0-85585	85585	0	JUAN FERNANDEZ	33 38 09S	078 49 59W	29.00		40.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBSN(S), GSN, Centennial Observing Stations, GOS, RBCN
 3	South America	Chile	CHL	0-20000-0-85488	85488	0	LA SERENA	29 55 03S	071 12 04W	142.00		142.00																Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), GSN, RBCN, RBSN(S), GOS
+3	South America	Chile	CHL	0-152-0-310024			Liceo Samuel Román Rojas (Combarbalá)	31 11 17S	070 59 56W			936.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-152-0-85538			Llay Llay, Las Peñas	32 52 53S	070 54 47W			436.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
-3	South America	Chile	CHL	0-152-0-330118			Lo Pinto	33 16 05S	070 43 56W			512.00																Automatic weather station (AWS), Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-152-0-85570			Lo Pinto	33 16 05S	070 43 56W			512.00																Automatic weather station (AWS), Surface land meteorological station (SYNOP), RBON-Pilot Project
+3	South America	Chile	CHL	0-152-0-330118			Lo Pinto	33 16 05S	070 43 56W			512.00																Automatic weather station (AWS), Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-152-0-85539			Los Libertadores	32 50 44S	070 07 09W			2955.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-152-0-85926			Magallanes Villa Tehuelche	52 25 44S	071 24 58W			176.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-152-0-85745			Maquehue-UFRO	38 50 16S	072 41 40W			74.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
@@ -5895,23 +5894,27 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 3	South America	Chile	CHL	0-20000-0-85782	85782	0	OSORNO	40 36 18S	073 03 39W	61.00		61.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN
 3	South America	Chile	CHL	0-152-0-85504			Ovalle Escuela Agrícola	30 34 48S	071 11 12W			310.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-152-0-85631			Panguilemo	35 22 40S	071 36 04W			119.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
+3	South America	Chile	CHL	0-152-0-85764			Panguipulli	39 38 04S	072 20 38W			229.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-20000-0-85574	85574	0	PUDAHUEL	33 23 31S	070 47 40W	481.00		482.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, CLIMAT(C), RBSN(S)
+3	South America	Chile	CHL	0-152-0-85862			Puerto Aysén Ad.	45 23 58S	072 40 38W			11.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-20000-0-85799	85799	0	PUERTO MONTT	41 26 06S	073 05 52W	84.00		85.00		mean sea level														Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), RBCN, GOS, CLIMAT(C), RBSN(ST), GSN, GUAN
 3	South America	Chile	CHL	0-20000-0-85921	85921	0	PUERTO NATALES	51 40 02S	072 31 44W			69.00																Surface land meteorological station (SYNOP), GOS, RBSN(S)
 3	South America	Chile	CHL	0-20000-0-85968	85968	0	PUERTO WILLIAMS	54 55 54S	067 36 56W	26.82		15.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 3	South America	Chile	CHL	0-20000-0-85934	85934	0	PUNTA ARENAS	53 00 12S	070 50 42W	38.00		38.00		STATION														Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), CLIMAT(C), GOS, GSN, GUAN, RBSN(ST), RBCN
 3	South America	Chile	CHL	0-152-0-85933			Punta Arenas Unidad Aeropolicial	53 09 10S	070 55 35W			53.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-152-0-85405			Putre	18 12 00S	069 33 45W			3532.00																Precipitation station, Surface land meteorological station (SYNOP), RBON-Pilot Project
-3	South America	Chile	CHL	0-20000-0-85577	85577	0	QUINTA NORMAL	33 26 42S	070 40 58W	520.00		520.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), RBCN, RBSN(S), GOS
 3	South America	Chile	CHL	0-152-0-330020			QUINTA NORMAL	33 26 42S	070 40 58W	520.00		520.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), RBCN, RBSN(S), GOS
-3	South America	Chile	CHL	0-152-0-330007			Rodelillo, Ad.	33 03 55S	071 33 23W			330.00																Automatic weather station (AWS), Precipitation station, Surface land meteorological station (SYNOP), RBON-Pilot Project
+3	South America	Chile	CHL	0-20000-0-85577	85577	0	QUINTA NORMAL	33 26 42S	070 40 58W	520.00		520.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), RBCN, RBSN(S), GOS
+3	South America	Chile	CHL	0-152-0-330007			Rodelillo, Ad.	33 03 55S	071 33 23W			330.00																Automatic weather station (AWS), Precipitation station, RBON-Pilot Project
 3	South America	Chile	CHL	0-152-0-85593			San José Guayacán	33 36 55S	070 21 02W			928.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-152-0-330112			San José Guayacán	33 36 55S	070 21 02W			928.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
+3	South America	Chile	CHL	0-152-0-85779			San Juan de la Costa, Bahía Mansa	40 35 12S	073 44 07W			102.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
+3	South America	Chile	CHL	0-152-0-400033			San Juan de la Costa, Bahía Mansa	40 35 12S	073 44 07W			102.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-20000-0-85586	85586	0	SANTO DOMINGO (85586-0)	33 39 18S	071 36 51W	73.00		75.00		mean sea level														Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS, GUAN, RBSN(ST)
 3	South America	Chile	CHL	0-152-0-330071			Talagante	33 40 13S	070 50 58W			390.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-152-0-85568			Talagante	33 40 13S	070 50 58W			390.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
-3	South America	Chile	CHL	0-152-0-250005			Taltal	25 24 40S	070 29 03W			37.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-152-0-85455			Taltal	25 24 40S	070 29 03W			37.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
+3	South America	Chile	CHL	0-152-0-250005			Taltal	25 24 40S	070 29 03W			37.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-20000-0-85743	85743	0	TEMUCO	38 46 04S	072 37 55W	92.00		86.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBCN, CLIMAT(C), RBSN(S), GSN
 3	South America	Chile	CHL	0-152-0-85671			Termas de Chillán	36 54 13S	071 24 36W			1708.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
 3	South America	Chile	CHL	0-152-0-85439			Toconao	23 11 10S	068 00 20W			2495.00																Surface land meteorological station (SYNOP), RBON-Pilot Project
@@ -9025,8 +9028,8 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 5	South-West Pacific	New Zealand	NZL	0-20000-0-93838	93838	0	BIRCHWOOD AWS	45 56 38S	167 54 02E	149.20		142.20		mean sea level														Surface land meteorological station (SYNOP), GOS
 5	South-West Pacific	New Zealand	NZL	0-20000-0-93586	93586	0	BROTHERS ISLAND AWS	41 06 11S	174 26 30E	68.33		66.65		mean sea level														Surface land meteorological station (SYNOP), GOS
 5	South-West Pacific	New Zealand	NZL	0-554-0-93946			CAMPBELL ISLAND AWS	52 33 02S	169 08 59E	16.14		14.84																Automatic weather station (AWS), Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), GOS, ANTON, RBSN(S), RBCN
-5	South-West Pacific	New Zealand	NZL	0-554-0-93945			CAMPBELL ISLAND AWS	52 33 02S	169 08 59E	16.14		14.84																Automatic weather station (AWS), Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), GOS, ANTON, RBSN(S), RBCN
 5	South-West Pacific	New Zealand	NZL	0-20000-0-93947	93947	0	CAMPBELL ISLAND AWS	52 33 02S	169 08 59E	16.14		14.84																Automatic weather station (AWS), Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), GOS, ANTON, RBSN(S), RBCN
+5	South-West Pacific	New Zealand	NZL	0-554-0-93945			CAMPBELL ISLAND AWS	52 33 02S	169 08 59E	16.14		14.84																Automatic weather station (AWS), Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), GOS, ANTON, RBSN(S), RBCN
 5	South-West Pacific	New Zealand	NZL	0-20000-0-93597	93597	0	CAPE CAMPBELL AWS	41 43 35S	174 16 34E	6.10		4.90		mean sea level														Surface land meteorological station (SYNOP), GOS
 5	South-West Pacific	New Zealand	NZL	0-20000-0-93376	93376	0	CAPE KIDNAPPERS AWS	39 38 42S	177 05 29E	113.30		109.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 5	South-West Pacific	New Zealand	NZL	0-20000-0-93004	93004	0	CAPE REINGA AWS	34 25 46S	172 40 54E	212.50		214.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
@@ -9560,8 +9563,8 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Austria	AUT	0-20000-0-11387	11387	0	SEIBERSDORF	47 58 35N	016 30 18E	185.00		185.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Austria	AUT	0-20000-0-11383	11383	0	SEMMERING	47 38 00N	015 49 42E	990.70		987.60		850 HPA														Surface land meteorological station (SYNOP), GOS
 6	Europe	Austria	AUT	0-20000-0-11201	11201	0	SILLIAN	46 44 47N	012 25 25E	1084.40		1081.40		850 HPA														Surface land meteorological station (SYNOP), GOS
-6	Europe	Austria	AUT	0-20000-0-11343	11343	0	SONNBLICK Observatory	47 03 14N	012 57 32E	3113.80		3106.00		700 HPA														Climatological station, Cryosphere station, Radiation station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), EMEP, GSN, BSRN, NDACC, Centennial Observing Stations, RBCN, GAW Global, GCW CryoNet station
 6	Europe	Austria	AUT	0-20008-0-SNB			SONNBLICK Observatory	47 03 14N	012 57 32E	3113.80		3106.00		700 HPA														Climatological station, Cryosphere station, Radiation station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), EMEP, GSN, BSRN, NDACC, Centennial Observing Stations, RBCN, GAW Global, GCW CryoNet station
+6	Europe	Austria	AUT	0-20000-0-11343	11343	0	SONNBLICK Observatory	47 03 14N	012 57 32E	3113.80		3106.00		700 HPA														Climatological station, Cryosphere station, Radiation station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), EMEP, GSN, BSRN, NDACC, Centennial Observing Stations, RBCN, GAW Global, GCW CryoNet station
 6	Europe	Austria	AUT	0-20000-0-11272	11272	0	SPITTAL/DRAU	46 47 26N	013 29 14E	543.50		541.70		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Austria	AUT	0-20000-0-11229	11229	0	ST. ANDRAE I.L.	46 45 51N	014 49 41E	403.70		402.70		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Austria	AUT	0-20000-0-11109	11109	0	ST. ANTON AM ARLBERG	47 07 54N	010 16 12E	1300.40		1289.00		mean sea level														Automatic weather station (AWS), Surface land meteorological station (SYNOP), GOS
@@ -10072,14 +10075,14 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Estonia	EST	0-20000-0-26249	26249	0	VORU	57 50 47N	027 01 10E	83.50		82.15		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02924	02924	0	AHTARI MYLLYMAKI	62 33 17N	024 08 33E	159.70		161.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-246-0-101520			AHTARI MYLLYMAKI	62 33 17N	024 08 33E	159.70		161.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
-6	Europe	Finland	FIN	0-246-0-101533			ALAJARVI MOKSY	63 05 20N	024 15 39E	171.40		171.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02787	02787	0	ALAJARVI MOKSY	63 05 20N	024 15 39E	171.40		171.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101533			ALAJARVI MOKSY	63 05 20N	024 15 39E	171.40		171.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101185			ASIKKALA PULKKILANHARJU	61 15 55N	025 31 13E	76.00		79.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02727	02727	0	ASIKKALA PULKKILANHARJU	61 15 55N	025 31 13E	76.00		79.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-102016			ENONTEKIO KILPISJARVI	69 02 58N	020 47 28E	482.70		480.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN, RBSN(S)
 6	Europe	Finland	FIN	0-20000-0-02801	02801	0	ENONTEKIO KILPISJARVI	69 02 58N	020 47 28E	482.70		480.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN, RBSN(S)
-6	Europe	Finland	FIN	0-246-0-102019			ENONTEKIO NAKKALA	68 36 11N	023 34 33E	370.50		374.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02726	02726	0	ENONTEKIO NAKKALA	68 36 11N	023 34 33E	370.50		374.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-102019			ENONTEKIO NAKKALA	68 36 11N	023 34 33E	370.50		374.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02986	02986	0	ESPOO NUUKSIO	60 17 29N	024 34 04E	91.50		90.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-852678			ESPOO NUUKSIO	60 17 29N	024 34 04E	91.50		90.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02985	02985	0	ESPOO TAPIOLA	60 10 41N	024 47 14E	7.50		6.00		mean sea level														Surface land meteorological station (SYNOP), GOS
@@ -10090,12 +10093,12 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Finland	FIN	0-246-0-101776			HAILUOTO KESKIKYLA	65 01 11N	024 43 39E	7.20		6.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02873	02873	0	HAILUOTO MARJANIEMI	65 02 23N	024 33 40E	7.30		7.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101784			HAILUOTO MARJANIEMI	65 02 23N	024 33 40E	7.30		7.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02725	02725	0	HALSUA KANALA PUROLA	63 26 44N	024 26 39E	153.00		153.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101528			HALSUA KANALA PUROLA	63 26 44N	024 26 39E	153.00		153.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02725	02725	0	HALSUA KANALA PUROLA	63 26 44N	024 26 39E	153.00		153.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101150			HAMEENLINNA KATINEN	60 59 57N	024 29 30E	85.00		87.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-20000-0-02754	02754	0	HAMEENLINNA KATINEN	60 59 57N	024 29 30E	85.00		87.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
-6	Europe	Finland	FIN	0-246-0-101189			HAMEENLINNA LAMMI EVO	61 13 00N	025 07 58E	135.50		134.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02713	02713	0	HAMEENLINNA LAMMI EVO	61 13 00N	025 07 58E	135.50		134.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101189			HAMEENLINNA LAMMI EVO	61 13 00N	025 07 58E	135.50		134.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101154			HAMEENLINNA LAMMI PAPPILA	61 03 15N	025 02 18E	125.00		125.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02767	02767	0	HAMEENLINNA LAMMI PAPPILA	61 03 15N	025 02 18E	125.00		125.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-100919			HAMMARLAND MARKET	60 18 04N	019 07 53E	15.10		3.00		mean sea level														Surface land meteorological station (SYNOP), GOS
@@ -10116,18 +10119,18 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Finland	FIN	0-20000-0-02978	02978	0	HELSINKI KAISANIEMI	60 10 31N	024 56 41E	4.00		3.00		mean sea level														Climatological station, Cryosphere station, Surface land meteorological station (SYNOP), Centennial Observing Stations, CLIMAT(C), GCW, GOS, RBCN, RBSN(S)
 6	Europe	Finland	FIN	0-20000-0-02998	02998	0	HELSINKI KUMPULA	60 12 11N	024 57 41E	25.30		24.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101004			HELSINKI KUMPULA	60 12 11N	024 57 41E	25.30		24.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101003			HELSINKI LIGHTHOUSE	59 56 56N	024 55 35E	20.20		0.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02989	02989	0	HELSINKI LIGHTHOUSE	59 56 56N	024 55 35E	20.20		0.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02829	02829	0	HYVINKAA HYVINKAANKYLA	60 35 45N	024 48 11E	87.50		86.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), GOS, RBCN
+6	Europe	Finland	FIN	0-246-0-101003			HELSINKI LIGHTHOUSE	59 56 56N	024 55 35E	20.20		0.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101130			HYVINKAA HYVINKAANKYLA	60 35 45N	024 48 11E	87.50		86.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), GOS, RBCN
+6	Europe	Finland	FIN	0-20000-0-02829	02829	0	HYVINKAA HYVINKAANKYLA	60 35 45N	024 48 11E	87.50		86.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), GOS, RBCN
 6	Europe	Finland	FIN	0-20000-0-02939	02939	0	ILOMANTSI MEKRIJARVI	62 46 11N	030 58 31E	156.50		155.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-246-0-101651			ILOMANTSI MEKRIJARVI	62 46 11N	030 58 31E	156.50		155.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-20000-0-02766	02766	0	ILOMANTSI POTSONVAARA	63 08 30N	031 02 40E	236.50		233.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101649			ILOMANTSI POTSONVAARA	63 08 30N	031 02 40E	236.50		233.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02857	02857	0	INARI ANGELI LINTUPUOLISELKA	68 54 11N	025 44 11E	285.00		285.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-102026			INARI ANGELI LINTUPUOLISELKA	68 54 11N	025 44 11E	285.00		285.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02807	02807	0	INARI IVALO AIRPORT	68 36 48N	027 25 08E	144.90		140.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02857	02857	0	INARI ANGELI LINTUPUOLISELKA	68 54 11N	025 44 11E	285.00		285.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-102033			INARI IVALO AIRPORT	68 36 48N	027 25 08E	144.90		140.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02807	02807	0	INARI IVALO AIRPORT	68 36 48N	027 25 08E	144.90		140.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02702	02702	0	INARI KAAMANEN	69 08 27N	027 15 56E	156.00		156.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-102047			INARI KAAMANEN	69 08 27N	027 15 56E	156.00		156.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-102055			INARI KIRAKKAJARVI	69 34 57N	028 53 39E	106.00		106.00		mean sea level														Surface land meteorological station (SYNOP), GOS
@@ -10140,28 +10143,28 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Finland	FIN	0-20000-0-02722	02722	0	INARI SAARISELKA	68 24 54N	027 24 48E	302.00		302.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-129963			INARI SEITALAASSA	69 02 55N	027 45 24E	121.50		120.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02888	02888	0	INARI SEITALAASSA	69 02 55N	027 45 24E	121.50		120.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02827	02827	0	INARI VAYLA	69 04 20N	027 29 33E	123.50		123.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-102042			INARI VAYLA	69 04 20N	027 29 33E	123.50		123.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02984	02984	0	INKOO BAGASKAR	59 55 52N	024 00 51E	12.00		13.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02827	02827	0	INARI VAYLA	69 04 20N	027 29 33E	123.50		123.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-100969			INKOO BAGASKAR	59 55 52N	024 00 51E	12.00		13.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02984	02984	0	INKOO BAGASKAR	59 55 52N	024 00 51E	12.00		13.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02945	02945	0	JAMSA HALLI AIRFIELD	61 51 20N	024 48 17E	144.70		144.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101315			JAMSA HALLI AIRFIELD	61 51 20N	024 48 17E	144.70		144.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101338			JAMSA HALLI LENTOASEMANTIE	61 51 35N	024 48 53E	144.00		144.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02946	02946	0	JAMSA HALLI LENTOASEMANTIE	61 51 35N	024 48 53E	144.00		144.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101632			JOENSUU LINNUNLAHTI	62 36 06N	029 43 26E	82.20		81.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02928	02928	0	JOENSUU LINNUNLAHTI	62 36 06N	029 43 26E	82.20		81.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02963	02963	0	JOKIOINEN OBSERVATORY	60 48 50N	023 29 51E	103.00		104.00		mean sea level														Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, GOS, GSN
 6	Europe	Finland	FIN	0-246-0-101104			JOKIOINEN OBSERVATORY	60 48 50N	023 29 51E	103.00		104.00		mean sea level														Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, GOS, GSN
-6	Europe	Finland	FIN	0-246-0-100917			JOMALA JOMALABY	60 10 42N	019 59 13E	12.70		11.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
+6	Europe	Finland	FIN	0-20000-0-02963	02963	0	JOKIOINEN OBSERVATORY	60 48 50N	023 29 51E	103.00		104.00		mean sea level														Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, GOS, GSN
 6	Europe	Finland	FIN	0-20000-0-02741	02741	0	JOMALA JOMALABY	60 10 42N	019 59 13E	12.70		11.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
+6	Europe	Finland	FIN	0-246-0-100917			JOMALA JOMALABY	60 10 42N	019 59 13E	12.70		11.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-246-0-100907			JOMALA MARIEHAMN AIRPORT	60 07 38N	019 54 01E	6.10		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02970	02970	0	JOMALA MARIEHAMN AIRPORT	60 07 38N	019 54 01E	6.10		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02771	02771	0	JOUTSA LEIVONMAKI SAVENAHO	61 52 46N	026 05 41E	146.00		145.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101367			JOUTSA LEIVONMAKI SAVENAHO	61 52 46N	026 05 41E	146.00		145.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101609			JUUKA NIEMELA	63 13 56N	029 14 02E	115.00		115.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN
+6	Europe	Finland	FIN	0-20000-0-02771	02771	0	JOUTSA LEIVONMAKI SAVENAHO	61 52 46N	026 05 41E	146.00		145.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02791	02791	0	JUUKA NIEMELA	63 13 56N	029 14 02E	115.00		115.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN
-6	Europe	Finland	FIN	0-246-0-101317			JUUPAJOKI HYYTIALA	61 50 45N	024 17 13E	153.00		154.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101609			JUUKA NIEMELA	63 13 56N	029 14 02E	115.00		115.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN
 6	Europe	Finland	FIN	0-20000-0-02770	02770	0	JUUPAJOKI HYYTIALA	61 50 45N	024 17 13E	153.00		154.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101317			JUUPAJOKI HYYTIALA	61 50 45N	024 17 13E	153.00		154.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101418			JUVA PARTALA	61 53 32N	027 53 07E	111.50		110.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02736	02736	0	JUVA PARTALA	61 53 32N	027 53 07E	111.50		110.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02935	02935	0	JYVASKYLA AIRPORT	62 23 51N	025 40 15E			139.00																Climatological station, GOS, CLIMAT(C), GSN, RBCN, RBSN(ST)
@@ -10170,47 +10173,47 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Finland	FIN	0-246-0-100934			KAARINA YLTOINEN	60 23 13N	022 33 07E	5.20		6.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN
 6	Europe	Finland	FIN	0-20000-0-02897	02897	0	KAJAANI AIRPORT	64 16 58N	027 40 16E	134.00		132.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101725			KAJAANI AIRPORT	64 16 58N	027 40 16E	134.00		132.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-126736			KAJAANI PETAISENNISKA	64 13 00N	027 45 07E	161.50		160.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-20000-0-02883	02883	0	KAJAANI PETAISENNISKA	64 13 00N	027 45 07E	161.50		160.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
+6	Europe	Finland	FIN	0-246-0-126736			KAJAANI PETAISENNISKA	64 13 00N	027 45 07E	161.50		160.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-20000-0-02907	02907	0	KALAJOKI ULKOKALLA	64 19 51N	023 26 47E	5.00		3.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101673			KALAJOKI ULKOKALLA	64 19 51N	023 26 47E	5.00		3.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101291			KANKAANPAA NIINISALO AIRFIELD	61 50 19N	022 27 49E	122.50		123.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02753	02753	0	KANKAANPAA NIINISALO AIRFIELD	61 50 19N	022 27 49E	122.50		123.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02942	02942	0	KANKAANPAA NIINISALO PUOLVOIM	61 50 14N	022 28 01E	124.80		120.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN
+6	Europe	Finland	FIN	0-246-0-101291			KANKAANPAA NIINISALO AIRFIELD	61 50 19N	022 27 49E	122.50		123.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101270			KANKAANPAA NIINISALO PUOLVOIM	61 50 14N	022 28 01E	124.80		120.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN
+6	Europe	Finland	FIN	0-20000-0-02942	02942	0	KANKAANPAA NIINISALO PUOLVOIM	61 50 14N	022 28 01E	124.80		120.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN
 6	Europe	Finland	FIN	0-246-0-101272			KARVIA ALKKIA	62 11 00N	022 47 59E	161.00		162.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02708	02708	0	KARVIA ALKKIA	62 11 00N	022 47 59E	161.00		162.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101256			KASKINEN SALGRUND	62 20 02N	021 11 27E	5.00		5.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02931	02931	0	KASKINEN SALGRUND	62 20 02N	021 11 27E	5.00		5.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02769	02769	0	KAUHAJOKI KUJA-KOKKO	62 24 48N	022 11 01E	94.50		93.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
+6	Europe	Finland	FIN	0-246-0-101256			KASKINEN SALGRUND	62 20 02N	021 11 27E	5.00		5.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101289			KAUHAJOKI KUJA-KOKKO	62 24 48N	022 11 01E	94.50		93.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
+6	Europe	Finland	FIN	0-20000-0-02769	02769	0	KAUHAJOKI KUJA-KOKKO	62 24 48N	022 11 01E	94.50		93.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-20000-0-02913	02913	0	KAUHAVA AIRFIELD	63 07 13N	023 02 37E	45.50		42.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101503			KAUHAVA AIRFIELD	63 07 13N	023 02 37E	45.50		42.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101846			KEMI AJOS	65 40 24N	024 30 55E	3.10		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02862	02862	0	KEMI AJOS	65 40 24N	024 30 55E	3.10		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02863	02863	0	KEMI I LIGHTHOUSE	65 23 06N	024 05 44E	19.00		0.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101846			KEMI AJOS	65 40 24N	024 30 55E	3.10		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101783			KEMI I LIGHTHOUSE	65 23 06N	024 05 44E	19.00		0.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02814	02814	0	KEMIJARVI AIRFIELD	66 42 56N	027 09 33E	209.00		208.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
+6	Europe	Finland	FIN	0-20000-0-02863	02863	0	KEMI I LIGHTHOUSE	65 23 06N	024 05 44E	19.00		0.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101950			KEMIJARVI AIRFIELD	66 42 56N	027 09 33E	209.00		208.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
-6	Europe	Finland	FIN	0-20000-0-02906	02906	0	KEMIONSAARI KEMIO	60 10 16N	022 45 28E	12.00		12.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02814	02814	0	KEMIJARVI AIRFIELD	66 42 56N	027 09 33E	209.00		208.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-246-0-100951			KEMIONSAARI KEMIO	60 10 16N	022 45 28E	12.00		12.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02906	02906	0	KEMIONSAARI KEMIO	60 10 16N	022 45 28E	12.00		12.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02743	02743	0	KEMIONSAARI VANO	59 52 10N	022 11 36E	8.00		10.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-100945			KEMIONSAARI VANO	59 52 10N	022 11 36E	8.00		10.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02864	02864	0	KEMI-TORNIO AIRPORT	65 47 22N	024 34 58E	14.50		11.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101840			KEMI-TORNIO AIRPORT	65 47 22N	024 34 58E	14.50		11.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02864	02864	0	KEMI-TORNIO AIRPORT	65 47 22N	024 34 58E	14.50		11.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02701	02701	0	KILPISJARVI SAANA	69 02 34N	020 51 03E	1009.00		1002.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-102017			KILPISJARVI SAANA	69 02 34N	020 51 03E	1009.00		1002.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-100997			KIRKKONUMMI MAKILUOTO	59 55 11N	024 21 01E	2.00		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02794	02794	0	KIRKKONUMMI MAKILUOTO	59 55 11N	024 21 01E	2.00		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101986			KITTILA AIRPORT	67 41 30N	024 51 19E	191.40		195.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-100997			KIRKKONUMMI MAKILUOTO	59 55 11N	024 21 01E	2.00		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02720	02720	0	KITTILA AIRPORT	67 41 30N	024 51 19E	191.40		195.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101986			KITTILA AIRPORT	67 41 30N	024 51 19E	191.40		195.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101987			KITTILA KENTTAROVA	67 59 14N	024 14 35E	349.50		347.00		mean sea level														Cryosphere station, Precipitation station, Radiation station, Surface land meteorological station (SYNOP), GOS, GCW CryoNet station
 6	Europe	Finland	FIN	0-20000-0-02824	02824	0	KITTILA KENTTAROVA	67 59 14N	024 14 35E	349.50		347.00		mean sea level														Cryosphere station, Precipitation station, Radiation station, Surface land meteorological station (SYNOP), GOS, GCW CryoNet station
-6	Europe	Finland	FIN	0-246-0-101990			KITTILA KK	67 39 07N	024 54 06E	181.00		181.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02860	02860	0	KITTILA KK	67 39 07N	024 54 06E	181.00		181.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101990			KITTILA KK	67 39 07N	024 54 06E	181.00		181.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02723	02723	0	KITTILA LEVITUNTURI	67 47 05N	024 51 11E	200.00		522.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02764	02764	0	KITTILA LOMPOLONVUOMA	67 59 51N	024 12 34E	270.00		270.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-778135			KITTILA LOMPOLONVUOMA	67 59 51N	024 12 34E	270.00		270.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02764	02764	0	KITTILA LOMPOLONVUOMA	67 59 51N	024 12 34E	270.00		270.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02882	02882	0	KITTILA MATOROVA	68 00 00N	024 14 24E	341.70		340.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101985			KITTILA MATOROVA	68 00 00N	024 14 24E	341.70		340.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101994			KITTILA POKKA	68 10 11N	025 46 59E	275.00		276.00		mean sea level														Surface land meteorological station (SYNOP), GOS
@@ -10219,44 +10222,44 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Finland	FIN	0-20000-0-02979	02979	0	KOKAR BOGSKAR	59 30 16N	020 20 51E	16.00		4.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101103			KOKEMAKI TULKKILA	61 15 11N	022 20 46E	39.00		38.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, GOS
 6	Europe	Finland	FIN	0-20000-0-02937	02937	0	KOKEMAKI TULKKILA	61 15 11N	022 20 46E	39.00		38.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, GOS
-6	Europe	Finland	FIN	0-246-0-101675			KOKKOLA HOLLIHAKA	63 50 20N	023 05 50E	8.10		5.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-20000-0-02852	02852	0	KOKKOLA HOLLIHAKA	63 50 20N	023 05 50E	8.10		5.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
-6	Europe	Finland	FIN	0-20000-0-02721	02721	0	KOKKOLA TANKAR	63 57 04N	022 50 43E	6.30		5.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101675			KOKKOLA HOLLIHAKA	63 50 20N	023 05 50E	8.10		5.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-246-0-101661			KOKKOLA TANKAR	63 57 04N	022 50 43E	6.30		5.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101479			KORSNAS BREDSKARET	62 56 04N	021 11 07E	2.80		1.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02721	02721	0	KOKKOLA TANKAR	63 57 04N	022 50 43E	6.30		5.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02780	02780	0	KORSNAS BREDSKARET	62 56 04N	021 11 07E	2.80		1.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101479			KORSNAS BREDSKARET	62 56 04N	021 11 07E	2.80		1.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02967	02967	0	KOTKA HAAPASAARI	60 17 12N	027 11 05E	5.50		4.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101042			KOTKA HAAPASAARI	60 17 12N	027 11 05E	5.50		4.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101030			KOTKA RANKKI	60 22 31N	026 57 32E	13.10		11.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02976	02976	0	KOTKA RANKKI	60 22 31N	026 57 32E	13.10		11.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101194			KOUVOLA ANJALA	60 41 47N	026 48 40E	33.00		31.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02830	02830	0	KOUVOLA ANJALA	60 41 47N	026 48 40E	33.00		31.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02966	02966	0	KOUVOLA UTTI AIRFIELD	60 53 54N	026 56 56E	99.50		102.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101194			KOUVOLA ANJALA	60 41 47N	026 48 40E	33.00		31.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101191			KOUVOLA UTTI AIRFIELD	60 53 54N	026 56 56E	99.50		102.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02966	02966	0	KOUVOLA UTTI AIRFIELD	60 53 54N	026 56 56E	99.50		102.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02956	02956	0	KOUVOLA UTTI LENTOPORTINTIE	60 53 27N	026 55 45E	99.90		99.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101219			KOUVOLA UTTI LENTOPORTINTIE	60 53 27N	026 55 45E	99.90		99.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101268			KRISTIINANKAUPUNKI LIGHTHOUSE	62 12 12N	021 10 11E	21.70		0.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02752	02752	0	KRISTIINANKAUPUNKI LIGHTHOUSE	62 12 12N	021 10 11E	21.70		0.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101268			KRISTIINANKAUPUNKI LIGHTHOUSE	62 12 12N	021 10 11E	21.70		0.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02903	02903	0	KRUUNUPYY AIRPORT	63 43 36N	023 08 37E	25.00		25.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101662			KRUUNUPYY AIRPORT	63 43 36N	023 08 37E	25.00		25.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02799	02799	0	KUHMO KALLIOJOKI	64 17 51N	030 10 14E	198.40		196.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101773			KUHMO KALLIOJOKI	64 17 51N	030 10 14E	198.40		196.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02790	02790	0	KUMLINGE KK	60 15 30N	020 44 49E	22.50		23.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02799	02799	0	KUHMO KALLIOJOKI	64 17 51N	030 10 14E	198.40		196.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-100928			KUMLINGE KK	60 15 30N	020 44 49E	22.50		23.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02790	02790	0	KUMLINGE KK	60 15 30N	020 44 49E	22.50		23.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101572			KUOPIO MAANINKA	63 08 36N	027 18 47E	91.30		91.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, GOS
 6	Europe	Finland	FIN	0-20000-0-02788	02788	0	KUOPIO MAANINKA	63 08 36N	027 18 47E	91.30		91.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, GOS
-6	Europe	Finland	FIN	0-246-0-101580			KUOPIO RITONIEMI	62 47 56N	027 54 18E	87.00		86.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02732	02732	0	KUOPIO RITONIEMI	62 47 56N	027 54 18E	87.00		86.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101580			KUOPIO RITONIEMI	62 47 56N	027 54 18E	87.00		86.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101586			KUOPIO SAVILAHTI	62 53 33N	027 38 00E	88.30		87.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-20000-0-02955	02955	0	KUOPIO SAVILAHTI	62 53 33N	027 38 00E	88.30		87.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
-6	Europe	Finland	FIN	0-246-0-101059			KUSTAVI ISOKARI	60 43 20N	021 01 37E	3.90		5.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-20000-0-02964	02964	0	KUSTAVI ISOKARI	60 43 20N	021 01 37E	3.90		5.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
-6	Europe	Finland	FIN	0-246-0-101886			KUUSAMO AIRPORT	65 59 36N	029 13 38E	265.80		265.00		mean sea level														Surface land meteorological station (SYNOP), GOS, Centennial Observing Stations
+6	Europe	Finland	FIN	0-246-0-101059			KUSTAVI ISOKARI	60 43 20N	021 01 37E	3.90		5.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-20000-0-02869	02869	0	KUUSAMO AIRPORT	65 59 36N	029 13 38E	265.80		265.00		mean sea level														Surface land meteorological station (SYNOP), GOS, Centennial Observing Stations
+6	Europe	Finland	FIN	0-246-0-101886			KUUSAMO AIRPORT	65 59 36N	029 13 38E	265.80		265.00		mean sea level														Surface land meteorological station (SYNOP), GOS, Centennial Observing Stations
 6	Europe	Finland	FIN	0-20000-0-02811	02811	0	KUUSAMO KIUTAKONGAS	66 22 12N	029 18 43E	165.00		164.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101887			KUUSAMO KIUTAKONGAS	66 22 12N	029 18 43E	165.00		164.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02749	02749	0	KUUSAMO OULANKA	66 19 13N	029 23 59E	298.00		298.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101899			KUUSAMO OULANKA	66 19 13N	029 23 59E	298.00		298.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02749	02749	0	KUUSAMO OULANKA	66 19 13N	029 23 59E	298.00		298.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-806428			KUUSAMO RUKA TALVIJARVI	66 10 18N	029 08 11E	306.50		306.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02760	02760	0	KUUSAMO RUKA TALVIJARVI	66 10 18N	029 08 11E	306.50		306.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101897			KUUSAMO RUKATUNTURI	66 09 58N	029 09 06E	362.80		500.00		mean sea level														Surface land meteorological station (SYNOP), GOS
@@ -10272,14 +10275,14 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Finland	FIN	0-20000-0-02959	02959	0	LAPPEENRANTA LEPOLA	61 03 27N	028 12 31E	114.40		103.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-100909			LEMLAND NYHAMN	59 57 33N	019 57 13E	10.00		9.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02980	02980	0	LEMLAND NYHAMN	59 57 33N	019 57 13E	10.00		9.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101636			LIEKSA LAMPELA	63 19 16N	030 02 45E	98.00		98.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02796	02796	0	LIEKSA LAMPELA	63 19 16N	030 02 45E	98.00		98.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101636			LIEKSA LAMPELA	63 19 16N	030 02 45E	98.00		98.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02929	02929	0	LIPERI JOENSUU AIRPORT	62 39 25N	029 38 10E	119.30		112.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101608			LIPERI JOENSUU AIRPORT	62 39 25N	029 38 10E	119.30		112.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02793	02793	0	LIPERI TUISKAVANLUOTO	62 32 46N	029 40 05E	79.50		78.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101628			LIPERI TUISKAVANLUOTO	62 32 46N	029 40 05E	79.50		78.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02706	02706	0	LOHJA PORLA	60 14 40N	024 02 58E	37.00		36.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02793	02793	0	LIPERI TUISKAVANLUOTO	62 32 46N	029 40 05E	79.50		78.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-100974			LOHJA PORLA	60 14 40N	024 02 58E	37.00		36.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02706	02706	0	LOHJA PORLA	60 14 40N	024 02 58E	37.00		36.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101039			LOVIISA ORRENGRUND	60 16 29N	026 26 51E	3.50		1.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02992	02992	0	LOVIISA ORRENGRUND	60 16 29N	026 26 51E	3.50		1.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101362			LUHANKA JUDINSALO	61 42 16N	025 30 19E	83.20		80.00		mean sea level														Surface land meteorological station (SYNOP), GOS
@@ -10290,8 +10293,8 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Finland	FIN	0-20000-0-02774	02774	0	MANTSALA HIRVIHAARA	60 37 40N	025 11 36E	84.50		83.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-151029			MARIEHAMN WEST HARBOUR	60 05 29N	019 55 45E	3.00		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02997	02997	0	MARIEHAMN WEST HARBOUR	60 05 29N	019 55 45E	3.00		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02947	02947	0	MIKKELI AIRPORT	61 41 19N	027 12 08E	100.00		99.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101398			MIKKELI AIRPORT	61 41 19N	027 12 08E	100.00		99.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02947	02947	0	MIKKELI AIRPORT	61 41 19N	027 12 08E	100.00		99.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101536			MULTIA KARHILA	62 30 38N	024 48 28E	228.40		227.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02927	02927	0	MULTIA KARHILA	62 30 38N	024 48 28E	228.40		227.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-106435			MUONIO ALAMUONIO	67 57 30N	023 41 04E	252.60		236.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, CLIMAT(C)
@@ -10300,28 +10303,28 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Finland	FIN	0-246-0-101982			MUONIO LAUKUKERO	68 03 46N	024 02 00E	762.00		760.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101983			MUONIO SAMMALTUNTURI	67 58 24N	024 06 56E	565.50		555.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02821	02821	0	MUONIO SAMMALTUNTURI	67 58 24N	024 06 56E	565.50		555.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02910	02910	0	MUSTASAARI VALASSAARET	63 26 06N	021 04 07E	11.00		4.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101464			MUSTASAARI VALASSAARET	63 26 06N	021 04 07E	11.00		4.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02910	02910	0	MUSTASAARI VALASSAARET	63 26 06N	021 04 07E	11.00		4.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02983	02983	0	NURMIJARVI GEOPHYSICAL OBSERVATORY	60 30 31N	024 39 13E	113.00		110.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101149			NURMIJARVI GEOPHYSICAL OBSERVATORY	60 30 31N	024 39 13E	113.00		110.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02875	02875	0	OULU AIRPORT	64 56 06N	025 20 21E	12.80		13.00		mean sea level														Surface land meteorological station (SYNOP), GOS, CLIMAT(C)
 6	Europe	Finland	FIN	0-246-0-101786			OULU AIRPORT	64 56 06N	025 20 21E	12.80		13.00		mean sea level														Surface land meteorological station (SYNOP), GOS, CLIMAT(C)
-6	Europe	Finland	FIN	0-20000-0-02851	02851	0	OULU OULUNSALO PELLONPAA	64 56 13N	025 22 23E	12.00		11.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-246-0-101799			OULU OULUNSALO PELLONPAA	64 56 13N	025 22 23E	12.00		11.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
+6	Europe	Finland	FIN	0-20000-0-02851	02851	0	OULU OULUNSALO PELLONPAA	64 56 13N	025 22 23E	12.00		11.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-20000-0-02876	02876	0	OULU VIHREASAARI HARBOUR	65 00 23N	025 23 36E	3.80		3.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101794			OULU VIHREASAARI HARBOUR	65 00 23N	025 23 36E	3.80		3.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-100924			PARAINEN FAGERHOLM	60 06 42N	021 41 54E	4.50		3.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02950	02950	0	PARAINEN FAGERHOLM	60 06 42N	021 41 54E	4.50		3.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-100908			PARAINEN UTO	59 46 45N	021 22 29E	6.80		6.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, CLIMAT(C), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-20000-0-02981	02981	0	PARAINEN UTO	59 46 45N	021 22 29E	6.80		6.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, CLIMAT(C), GOS, RBSN(S)
-6	Europe	Finland	FIN	0-246-0-101254			PARIKKALA KOITSANLAHTI	61 26 41N	029 27 40E	75.00		74.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02734	02734	0	PARIKKALA KOITSANLAHTI	61 26 41N	029 27 40E	75.00		74.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101254			PARIKKALA KOITSANLAHTI	61 26 41N	029 27 40E	75.00		74.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02705	02705	0	PELKOSENNIEMI PYHATUNTURI	67 01 19N	027 13 06E	487.50		491.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101958			PELKOSENNIEMI PYHATUNTURI	67 01 19N	027 13 06E	487.50		491.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02844	02844	0	PELLO CENTRE	66 46 22N	023 57 47E	85.90		85.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-246-0-101914			PELLO CENTRE	66 46 22N	023 57 47E	85.90		85.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
-6	Europe	Finland	FIN	0-246-0-101660			PIETARSAARI KALLAN	63 45 05N	022 31 22E	19.20		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02844	02844	0	PELLO CENTRE	66 46 22N	023 57 47E	85.90		85.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-20000-0-02920	02920	0	PIETARSAARI KALLAN	63 45 05N	022 31 22E	19.20		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101660			PIETARSAARI KALLAN	63 45 05N	022 31 22E	19.20		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101044			PORI AIRPORT	61 27 36N	021 48 30E	13.80		11.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02952	02952	0	PORI AIRPORT	61 27 36N	021 48 30E	13.80		11.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02926	02926	0	PORI RAILWAY STATION	61 28 44N	021 47 00E	10.10		9.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
@@ -10330,12 +10333,12 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Finland	FIN	0-246-0-101267			PORI TAHKOLUOTO HARBOUR	61 37 50N	021 22 34E	4.60		3.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02991	02991	0	PORVOO EMASALO	60 12 14N	025 37 32E	27.10		19.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101023			PORVOO EMASALO	60 12 14N	025 37 32E	27.10		19.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101028			PORVOO HARABACKA	60 23 30N	025 36 26E	23.50		22.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02759	02759	0	PORVOO HARABACKA	60 23 30N	025 36 26E	23.50		22.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101028			PORVOO HARABACKA	60 23 30N	025 36 26E	23.50		22.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02987	02987	0	PORVOO KALLBADAGRUND	59 59 08N	025 35 56E	23.30		0.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101022			PORVOO KALLBADAGRUND	59 59 08N	025 35 56E	23.30		0.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02994	02994	0	PORVOO KILPILAHTI	60 18 13N	025 32 57E	2.00		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-100683			PORVOO KILPILAHTI	60 18 13N	025 32 57E	2.00		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02994	02994	0	PORVOO KILPILAHTI	60 18 13N	025 32 57E	2.00		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101805			PUDASJARVI AIRFIELD	65 24 01N	026 57 47E	120.40		120.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-20000-0-02866	02866	0	PUDASJARVI AIRFIELD	65 24 01N	026 57 47E	120.40		120.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-246-0-101831			PUOLANKA PALJAKKA	64 39 51N	028 03 24E	341.00		341.00		mean sea level														Surface land meteorological station (SYNOP), GOS
@@ -10344,62 +10347,62 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Finland	FIN	0-20000-0-02718	02718	0	PUUMALA KK URHEILUKENTTA	61 31 21N	028 11 06E	98.00		98.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101705			PYHAJARVI OJAKYLA	63 44 09N	025 42 21E	153.30		152.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02738	02738	0	PYHAJARVI OJAKYLA	63 44 09N	025 42 21E	153.30		152.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02872	02872	0	RAAHE LAPALUOTO HARBOUR	64 39 57N	024 24 25E	1.90		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101785			RAAHE LAPALUOTO HARBOUR	64 39 57N	024 24 25E	1.90		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101775			RAAHE NAHKIAINEN	64 36 42N	023 53 48E	23.80		0.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02872	02872	0	RAAHE LAPALUOTO HARBOUR	64 39 57N	024 24 25E	1.90		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02800	02800	0	RAAHE NAHKIAINEN	64 36 42N	023 53 48E	23.80		0.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101775			RAAHE NAHKIAINEN	64 36 42N	023 53 48E	23.80		0.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02757	02757	0	RAASEPORI JUSSARO	59 49 15N	023 34 23E	22.80		17.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-100965			RAASEPORI JUSSARO	59 49 15N	023 34 23E	22.80		17.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101436			RANTASALMI RUKKASLUOTO	62 03 47N	028 33 58E	80.00		79.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02772	02772	0	RANTASALMI RUKKASLUOTO	62 03 47N	028 33 58E	80.00		79.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101873			RANUA AIRFIELD	65 58 38N	026 22 03E	163.00		161.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02881	02881	0	RANUA AIRFIELD	65 58 38N	026 22 03E	163.00		161.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101061			RAUMA KYLMAPIHLAJA	61 08 41N	021 18 10E	29.00		4.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101873			RANUA AIRFIELD	65 58 38N	026 22 03E	163.00		161.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02761	02761	0	RAUMA KYLMAPIHLAJA	61 08 41N	021 18 10E	29.00		4.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101061			RAUMA KYLMAPIHLAJA	61 08 41N	021 18 10E	29.00		4.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101603			RAUTAVAARA YLA-LUOSTA	63 22 41N	028 39 42E	165.50		166.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-20000-0-02789	02789	0	RAUTAVAARA YLA-LUOSTA	63 22 41N	028 39 42E	165.50		166.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-246-0-101920			ROVANIEMI AIRPORT	66 33 44N	025 50 17E	194.30		189.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-20000-0-02845	02845	0	ROVANIEMI AIRPORT	66 33 44N	025 50 17E	194.30		189.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-246-0-101933			ROVANIEMI APUKKA	66 34 46N	026 00 39E	107.40		106.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02813	02813	0	ROVANIEMI APUKKA	66 34 46N	026 00 39E	107.40		106.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101928			ROVANIEMI RAUTATIEASEMA	66 29 54N	025 42 32E	82.30		85.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02847	02847	0	ROVANIEMI RAUTATIEASEMA	66 29 54N	025 42 32E	82.30		85.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02817	02817	0	SAARISELKA KAUNISPAA	68 26 02N	027 26 39E	438.00		437.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101928			ROVANIEMI RAUTATIEASEMA	66 29 54N	025 42 32E	82.30		85.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-102006			SAARISELKA KAUNISPAA	68 26 02N	027 26 39E	438.00		437.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02817	02817	0	SAARISELKA KAUNISPAA	68 26 02N	027 26 39E	438.00		437.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02849	02849	0	SALLA KK MYLLYTIE	66 49 00N	028 41 18E	221.70		218.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), CLIMAT(C), RBCN
 6	Europe	Finland	FIN	0-246-0-101959			SALLA KK MYLLYTIE	66 49 00N	028 41 18E	221.70		218.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), CLIMAT(C), RBCN
-6	Europe	Finland	FIN	0-246-0-101966			SALLA NARUSKA	67 09 44N	029 10 40E	214.70		213.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02745	02745	0	SALLA NARUSKA	67 09 44N	029 10 40E	214.70		213.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101966			SALLA NARUSKA	67 09 44N	029 10 40E	214.70		213.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02819	02819	0	SALLA VARRIOTUNTURI	67 44 55N	029 36 41E	360.00		360.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-102012			SALLA VARRIOTUNTURI	67 44 55N	029 36 41E	360.00		360.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02756	02756	0	SALO KARKKA	60 22 26N	023 06 47E	2.00		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-100955			SALO KARKKA	60 22 26N	023 06 47E	2.00		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-100967			SALO KIIKALA AIRFIELD	60 27 51N	023 38 59E	120.50		117.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02777	02777	0	SALO KIIKALA AIRFIELD	60 27 51N	023 38 59E	120.50		117.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-100967			SALO KIIKALA AIRFIELD	60 27 51N	023 38 59E	120.50		117.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101430			SAVONLINNA AIRPORT	61 56 47N	028 55 57E	95.30		92.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02948	02948	0	SAVONLINNA AIRPORT	61 56 47N	028 55 57E	95.30		92.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02778	02778	0	SAVONLINNA PUNKAHARJU	61 48 07N	029 18 54E	79.50		79.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, CLIMAT(C)
 6	Europe	Finland	FIN	0-246-0-101441			SAVONLINNA PUNKAHARJU	61 48 07N	029 18 54E	79.50		79.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, CLIMAT(C)
+6	Europe	Finland	FIN	0-20000-0-02778	02778	0	SAVONLINNA PUNKAHARJU	61 48 07N	029 18 54E	79.50		79.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, CLIMAT(C)
 6	Europe	Finland	FIN	0-246-0-101952			SAVUKOSKI KK	67 17 10N	028 10 37E	180.00		180.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02815	02815	0	SAVUKOSKI KK	67 17 10N	028 10 37E	180.00		180.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02833	02833	0	SEINAJOKI PELMAA	62 56 17N	022 29 20E	31.70		26.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), GOS, RBCN
 6	Europe	Finland	FIN	0-246-0-101486			SEINAJOKI PELMAA	62 56 17N	022 29 20E	31.70		26.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), GOS, RBCN
-6	Europe	Finland	FIN	0-246-0-101787			SIIKAJOKI REVONLAHTI	64 41 03N	025 05 21E	49.50		48.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, GOS
 6	Europe	Finland	FIN	0-20000-0-02803	02803	0	SIIKAJOKI REVONLAHTI	64 41 03N	025 05 21E	49.50		48.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, GOS
+6	Europe	Finland	FIN	0-246-0-101787			SIIKAJOKI REVONLAHTI	64 41 03N	025 05 21E	49.50		48.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, GOS
 6	Europe	Finland	FIN	0-246-0-101570			SIILINJARVI KUOPIO AIRPORT	62 59 54N	027 48 29E	96.90		94.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02917	02917	0	SIILINJARVI KUOPIO AIRPORT	62 59 54N	027 48 29E	96.90		94.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101029			SIPOO EESTILUOTO	60 07 28N	025 13 22E	13.00		13.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02930	02930	0	SIPOO EESTILUOTO	60 07 28N	025 13 22E	13.00		13.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101932			SODANKYLA ARCTIC RESEARCH CENTRE	67 22 00N	026 37 44E	179.30		179.00		mean sea level														Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), GUAN, RBCN, GCW CryoNet station, GRUAN, GSN, RBSN(ST)
 6	Europe	Finland	FIN	0-20000-0-02836	02836	0	SODANKYLA ARCTIC RESEARCH CENTRE	67 22 00N	026 37 44E	179.30		179.00		mean sea level														Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), GUAN, RBCN, GCW CryoNet station, GRUAN, GSN, RBSN(ST)
-6	Europe	Finland	FIN	0-246-0-102000			SODANKYLA LOKKA	67 49 17N	027 44 45E	240.00		240.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101932			SODANKYLA ARCTIC RESEARCH CENTRE	67 22 00N	026 37 44E	179.30		179.00		mean sea level														Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), GUAN, RBCN, GCW CryoNet station, GRUAN, GSN, RBSN(ST)
 6	Europe	Finland	FIN	0-20000-0-02719	02719	0	SODANKYLA LOKKA	67 49 17N	027 44 45E	240.00		240.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-102000			SODANKYLA LOKKA	67 49 17N	027 44 45E	240.00		240.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-102001			SODANKYLA VUOTSO	68 05 03N	027 11 06E	248.80		247.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02816	02816	0	SODANKYLA VUOTSO	68 05 03N	027 11 06E	248.80		247.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02949	02949	0	SOMERO SALKOLA	60 38 48N	023 48 20E	143.00		142.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101128			SOMERO SALKOLA	60 38 48N	023 48 20E	143.00		142.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02739	02739	0	SOTKAMO KUOLANIEMI	64 06 43N	028 20 11E	162.50		161.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101756			SOTKAMO KUOLANIEMI	64 06 43N	028 20 11E	162.50		161.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02739	02739	0	SOTKAMO KUOLANIEMI	64 06 43N	028 20 11E	162.50		161.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02781	02781	0	STROMMINGSBADAN	62 58 42N	020 44 24E	3.70		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101481			STROMMINGSBADAN	62 58 42N	020 44 24E	3.70		2.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02889	02889	0	SUOMUSSALMI PESIO	64 55 53N	028 44 48E	225.20		222.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
@@ -10412,16 +10415,16 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Finland	FIN	0-20000-0-02944	02944	0	TAMPERE-PIRKKALA AIRPORT	61 25 10N	023 37 21E	109.10		112.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-151049			TAMPERE SATAKUNNANKATU	61 30 04N	023 45 53E	92.00		91.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02744	02744	0	TAMPERE SATAKUNNANKATU	61 30 04N	023 45 53E	92.00		91.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101311			TAMPERE SIILINKARI	61 31 03N	023 45 14E	98.00		96.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02943	02943	0	TAMPERE SIILINKARI	61 31 03N	023 45 14E	98.00		96.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101311			TAMPERE SIILINKARI	61 31 03N	023 45 14E	98.00		96.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02832	02832	0	TOHMAJARVI KEMIE	62 14 07N	030 20 48E	90.00		91.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101459			TOHMAJARVI KEMIE	62 14 07N	030 20 48E	90.00		91.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101689			TOHOLAMPI LAITALA	63 49 17N	024 09 48E	84.50		84.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02737	02737	0	TOHOLAMPI LAITALA	63 49 17N	024 09 48E	84.50		84.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02880	02880	0	TORNIO TORPPI	65 50 50N	024 10 25E	9.00		8.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-246-0-101851			TORNIO TORPPI	65 50 50N	024 10 25E	9.00		8.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
-6	Europe	Finland	FIN	0-246-0-101065			TURKU AIRPORT	60 30 56N	022 16 45E	58.50		45.00		mean sea level														Surface land meteorological station (SYNOP), GOS, CLIMAT(C)
 6	Europe	Finland	FIN	0-20000-0-02972	02972	0	TURKU AIRPORT	60 30 56N	022 16 45E	58.50		45.00		mean sea level														Surface land meteorological station (SYNOP), GOS, CLIMAT(C)
+6	Europe	Finland	FIN	0-246-0-101065			TURKU AIRPORT	60 30 56N	022 16 45E	58.50		45.00		mean sea level														Surface land meteorological station (SYNOP), GOS, CLIMAT(C)
 6	Europe	Finland	FIN	0-20000-0-02773	02773	0	TURKU ARTUKAINEN	60 27 16N	022 10 43E	9.10		8.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-246-0-100949			TURKU ARTUKAINEN	60 27 16N	022 10 43E	9.10		8.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-20000-0-02747	02747	0	TURKU RAJAKARI	60 22 40N	022 05 47E	5.50		3.00		mean sea level														Surface land meteorological station (SYNOP), GOS
@@ -10434,30 +10437,30 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Finland	FIN	0-20000-0-02825	02825	0	UTSJOKI NUORGAM	70 04 55N	027 53 47E	22.00		22.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02714	02714	0	VAALA PELSO	64 30 05N	026 25 26E	115.00		113.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101800			VAALA PELSO	64 30 05N	026 25 26E	115.00		113.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-246-0-101462			VAASA AIRPORT	63 03 31N	021 45 17E	7.80		4.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02911	02911	0	VAASA AIRPORT	63 03 31N	021 45 17E	7.80		4.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-246-0-101462			VAASA AIRPORT	63 03 31N	021 45 17E	7.80		4.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101485			VAASA KLEMETTILA	63 05 55N	021 38 22E	9.00		7.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-20000-0-02957	02957	0	VAASA KLEMETTILA	63 05 55N	021 38 22E	9.00		7.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Finland	FIN	0-20000-0-02798	02798	0	VALTIMO KK	63 40 02N	028 49 45E	115.00		114.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101743			VALTIMO KK	63 40 02N	028 49 45E	115.00		114.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-100968			VANTAA HELSINKI-VANTAA AIRPORT	60 19 36N	024 57 24E	53.50		51.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02974	02974	0	VANTAA HELSINKI-VANTAA AIRPORT	60 19 36N	024 57 24E	53.50		51.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02850	02850	0	VARKAUS KOLSUANNIEMI	62 19 20N	027 54 28E	84.30		83.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101421			VARKAUS KOLSUANNIEMI	62 19 20N	027 54 28E	84.30		83.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02850	02850	0	VARKAUS KOLSUANNIEMI	62 19 20N	027 54 28E	84.30		83.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02710	02710	0	VESANTO SONKARI	62 55 18N	026 25 29E	120.00		121.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101555			VESANTO SONKARI	62 55 18N	026 25 29E	120.00		121.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101726			VIEREMA KAARAKKALA	63 50 27N	027 13 14E	207.60		206.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02834	02834	0	VIEREMA KAARAKKALA	63 50 27N	027 13 14E	207.60		206.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02758	02758	0	VIHTI MAASOJA	60 25 08N	024 23 55E	44.20		39.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-100976			VIHTI MAASOJA	60 25 08N	024 23 55E	44.20		39.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02758	02758	0	VIHTI MAASOJA	60 25 08N	024 23 55E	44.20		39.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02915	02915	0	VIITASAARI HAAPANIEMI	63 04 56N	025 51 31E	131.80		130.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-246-0-101537			VIITASAARI HAAPANIEMI	63 04 56N	025 51 31E	131.80		130.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
-6	Europe	Finland	FIN	0-20000-0-02831	02831	0	VIROLAHTI KOIVUNIEMI	60 31 38N	027 40 22E	5.00		5.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101231			VIROLAHTI KOIVUNIEMI	60 31 38N	027 40 22E	5.00		5.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Finland	FIN	0-20000-0-02831	02831	0	VIROLAHTI KOIVUNIEMI	60 31 38N	027 40 22E	5.00		5.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-20000-0-02735	02735	0	VIRRAT AIJANNEVA	62 19 40N	023 32 32E	139.50		138.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Finland	FIN	0-246-0-101310			VIRRAT AIJANNEVA	62 19 40N	023 32 32E	139.50		138.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Finland	FIN	0-20000-0-02812	02812	0	YLITORNIO MELTOSJARVI	66 31 46N	024 38 59E	93.00		93.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, CLIMAT(C)
 6	Europe	Finland	FIN	0-246-0-101908			YLITORNIO MELTOSJARVI	66 31 46N	024 38 59E	93.00		93.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, CLIMAT(C)
+6	Europe	Finland	FIN	0-20000-0-02812	02812	0	YLITORNIO MELTOSJARVI	66 31 46N	024 38 59E	93.00		93.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, CLIMAT(C)
 6	Europe	Finland	FIN	0-246-0-101690			YLIVIESKA AIRFIELD	64 03 01N	024 43 29E	75.90		76.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Finland	FIN	0-20000-0-02755	02755	0	YLIVIESKA AIRFIELD	64 03 01N	024 43 29E	75.90		76.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	France	FRA	0-20000-0-07005	07005	0	ABBEVILLE	50 08 10N	001 50 02E	72.00		69.00		mean sea level														Climatological station, Precipitation station, Surface land meteorological station (SYNOP), Weather radar, GOS, WRO, RBSN(S), CLIMAT(C), RBCN
@@ -10747,8 +10750,8 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Germany	DEU	0-20000-0-10850	10850	0	HARBURG	48 47 31N	010 42 22E	502.56		501.26		mean sea level														Agricultural meteorological station, Automatic weather station (AWS), Cryosphere station, Precipitation station, Radiation station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), GCW
 6	Europe	Germany	DEU	0-20000-0-10458	10458	0	HARZGERODE	51 39 07N	011 08 12E	405.30		404.00		mean sea level														Agricultural meteorological station, Automatic weather station (AWS), Cryosphere station, Precipitation station, Radiation station, Surface land meteorological station (SYNOP), CLIMAT(C), GCW, GOS
 6	Europe	Germany	DEU	0-20000-0-10015	10015	0	HELGOLAND	54 10 30N	007 53 31E	3.35		4.36		mean sea level														Automatic weather station (AWS), Climatological station, Cryosphere station, Precipitation station, Radiation station, Surface land meteorological station (SYNOP), GOS, RBSN(S), CLIMAT(C), GCW, RBCN
-6	Europe	Germany	DEU	0-20000-0-10685	10685	0	HOF	50 18 44N	011 52 34E	566.80		565.10		mean sea level														Agricultural meteorological station, Automatic weather station (AWS), Climatological station, Cryosphere station, Precipitation station, Radiation station, Surface land meteorological station (SYNOP), CLIMAT(C), GCW, GOS, RBCN, RBSN(S)
-6	Europe	Germany	DEU	0-20000-0-10962	10962	0	HOHENPEISSENBERG	47 48 03N	011 00 39E	985.72		977.00		850 HPA														Agricultural meteorological station, Automatic weather station (AWS), Climatological station, Cryosphere station, Precipitation station, Radiation station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GSN, Centennial Observing Stations, GOS, RBCN, GCW, CLIMAT(C), RBSN(S)
+6	Europe	Germany	DEU	0-20000-0-10685	10685	0	HOF	50 18 44N	011 52 34E	566.80		565.20		mean sea level														Agricultural meteorological station, Automatic weather station (AWS), Climatological station, Cryosphere station, Precipitation station, Radiation station, Surface land meteorological station (SYNOP), CLIMAT(C), GCW, GOS, RBCN, RBSN(S)
+6	Europe	Germany	DEU	0-20000-0-10962	10962	0	HOHENPEISSENBERG	47 48 03N	011 00 39E	985.72		977.00		850 HPA														Agricultural meteorological station, Automatic weather station (AWS), Climatological station, Cryosphere station, Precipitation station, Radiation station, Surface land meteorological station (SYNOP), GSN, Centennial Observing Stations, GOS, RBCN, GCW, CLIMAT(C), RBSN(S)
 6	Europe	Germany	DEU	0-20000-0-10534	10534	0	HOHERODSKOPF-VOGELSBERG	50 30 30N	009 13 29E	744.10		743.30		mean sea level														Agricultural meteorological station, Automatic weather station (AWS), Cryosphere station, Precipitation station, Surface land meteorological station (SYNOP), GOS, GCW, CLIMAT(C)
 6	Europe	Germany	DEU	0-20000-0-10038	10038	0	HOHN	54 18 53N	009 32 20E	17.84		10.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Germany	DEU	0-20000-0-10476	10476	0	HOLZDORF (FLUGPLATZ)	51 45 57N	013 10 00E	101.64		81.00		mean sea level														Surface land meteorological station (SYNOP), GOS
@@ -11489,8 +11492,8 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	North Macedonia, Republic of	MKD	0-807-0-AMS1042			GEVGELIJA	41 09 00N	022 30 09E	59.00		61.00		mean sea level														Automatic weather station (AWS), Surface land meteorological station (SYNOP), GOS
 6	Europe	North Macedonia, Republic of	MKD	0-807-0-Gostivar			GOSTIVAR	41 47 32N	020 54 02E			534.00																Agricultural meteorological station, Automatic weather station (AWS), Climatological station, Cryosphere station, Precipitation station, Radiation station, Surface land meteorological station (SYNOP), GOS
 6	Europe	North Macedonia, Republic of	MKD	0-807-0-Gradsko			GRADSKO	41 34 20N	021 56 43E			197.00																Agricultural meteorological station, Automatic weather station (AWS), Climatological station, Precipitation station, Radiation station, Surface land meteorological station (SYNOP), GOS
-6	Europe	North Macedonia, Republic of	MKD	0-20000-0-13590	13590	0	GURISTE	41 53 56N	021 50 10E	856.00		854.00		mean sea level														Agricultural meteorological station, Precipitation station, Surface land meteorological station (SYNOP), Weather radar, WRO, GOS
 6	Europe	North Macedonia, Republic of	MKD	0-807-0-RAD001			GURISTE	41 53 56N	021 50 10E	856.00		854.00		mean sea level														Agricultural meteorological station, Precipitation station, Surface land meteorological station (SYNOP), Weather radar, WRO, GOS
+6	Europe	North Macedonia, Republic of	MKD	0-20000-0-13590	13590	0	GURISTE	41 53 56N	021 50 10E	856.00		854.00		mean sea level														Agricultural meteorological station, Precipitation station, Surface land meteorological station (SYNOP), Weather radar, WRO, GOS
 6	Europe	North Macedonia, Republic of	MKD	0-807-0-Kargo			KARGO	41 49 21N	022 05 09E			272.00																Agricultural meteorological station, Automatic weather station (AWS), Climatological station, Precipitation station, Radiation station, Surface land meteorological station (SYNOP), GOS
 6	Europe	North Macedonia, Republic of	MKD	0-807-0-Kochani			KOCHANI	41 54 34N	022 24 43E			338.00																Agricultural meteorological station, Automatic weather station (AWS), Climatological station, Precipitation station, Radiation station, Surface land meteorological station (SYNOP), GOS
 6	Europe	North Macedonia, Republic of	MKD	0-20000-0-13493	13493	0	KRIVA PALANKA	42 12 13N	022 19 52E	696.00		690.00		mean sea level														Surface land meteorological station (SYNOP), GOS
@@ -11875,23 +11878,23 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Poland	POL	0-20000-0-12595	12595	0	ZAMOSC	50 41 52N	023 12 23E	213.19		222.17		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Poland	POL	0-20000-0-12400	12400	0	ZIELONA GORA	51 55 49N	015 31 28E	192.45		191.55		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Poland	POL	0-20000-0-12312	12312	0	ZIELONA GORA-BABIMOST	52 08 24N	015 47 46E	63.26		57.04		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Portugal	PRT	0-20000-0-08537	08537	0	ALVERCA	38 53 12N	009 01 48W	3.00		3.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-1003-08537			ALVERCA	38 53 12N	009 01 48W	3.00		3.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Portugal	PRT	0-20000-0-08537	08537	0	ALVERCA	38 53 12N	009 01 48W	3.00		3.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-2001-08511			ANGRA DO HEROISMO (ACORES)	38 39 36N	027 13 27W	90.80		90.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-20000-0-08511	08511	0	ANGRA DO HEROISMO (ACORES)	38 39 36N	027 13 27W	90.80		90.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-20000-0-08562	08562	0	BEJA (8562-0)	38 01 33N	007 52 02W	246.80		246.00		mean sea level														Precipitation station, Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-2001-08562			BEJA (8562-0)	38 01 33N	007 52 02W	246.80		246.00		mean sea level														Precipitation station, Surface land meteorological station (SYNOP), GOS
-6	Europe	Portugal	PRT	0-620-1003-08561			BEJA/B. AEREA	38 04 43N	007 55 36W	203.00		194.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-20000-0-08561	08561	0	BEJA/B. AEREA	38 04 43N	007 55 36W	203.00		194.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Portugal	PRT	0-620-1003-08561			BEJA/B. AEREA	38 04 43N	007 55 36W	203.00		194.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-20000-0-08575	08575	0	BRAGANCA (8575-0)	41 48 14N	006 44 34W	691.80		691.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, RBSN(S), GOS, CLIMAT(C)
 6	Europe	Portugal	PRT	0-620-2001-08575			BRAGANCA (8575-0)	41 48 14N	006 44 34W	691.80		691.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, RBSN(S), GOS, CLIMAT(C)
 6	Europe	Portugal	PRT	0-20000-0-08531	08531	0	CABO CARVOEIRO/FAROL	39 21 41N	009 24 25W			32.00																Automatic weather station (AWS), Radiation station, Surface land meteorological station (SYNOP), GOS
-6	Europe	Portugal	PRT	0-620-2001-08570			CASTELO BRANCO	39 50 22N	007 28 43W	386.80		386.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN, RBSN(S)
 6	Europe	Portugal	PRT	0-20000-0-08570	08570	0	CASTELO BRANCO	39 50 22N	007 28 43W	386.80		386.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN, RBSN(S)
+6	Europe	Portugal	PRT	0-620-2001-08570			CASTELO BRANCO	39 50 22N	007 28 43W	386.80		386.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN, RBSN(S)
 6	Europe	Portugal	PRT	0-620-2001-08548			COIMBRA/CERNACHE	40 09 27N	008 28 07W	171.80		171.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), CLIMAT(C), RBCN
 6	Europe	Portugal	PRT	0-20000-0-08548	08548	0	COIMBRA/CERNACHE	40 09 27N	008 28 07W	171.80		171.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), CLIMAT(C), RBCN
-6	Europe	Portugal	PRT	0-20000-0-08550	08550	0	CORUCHE, CRUZ DO LEAO	39 04 00N	008 24 00W			167.00																Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-3401-08550			CORUCHE, CRUZ DO LEAO	39 04 00N	008 24 00W			167.00																Surface land meteorological station (SYNOP), GOS
+6	Europe	Portugal	PRT	0-20000-0-08550	08550	0	CORUCHE, CRUZ DO LEAO	39 04 00N	008 24 00W			167.00																Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-2001-08502			CORVO (ACORES)	39 40 15N	031 06 46W	18.80		18.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-20000-0-08502	08502	0	CORVO (ACORES)	39 40 15N	031 06 46W	18.80		18.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-2001-08558			EVORA / C.C.	38 32 12N	007 53 17W	245.80		245.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, GOS, RBSN(S)
@@ -11902,8 +11905,8 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Portugal	PRT	0-20000-0-08501	08501	0	FLORES (ACORES)	39 27 26N	031 07 51W	28.80		28.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBCN, CLIMAT(C), RBSN(S)
 6	Europe	Portugal	PRT	0-620-2001-08507			GRACIOSA/AERODROMO	39 05 28N	028 01 45W	25.80		25.00																Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-2001-0507			GRACIOSA/AERODROMO	39 05 28N	028 01 45W	25.80		25.00																Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS
-6	Europe	Portugal	PRT	0-20000-0-08506	08506	0	HORTA (ACORES)	38 31 47N	028 37 43W	60.80		60.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, GSN
 6	Europe	Portugal	PRT	0-620-2001-08506			HORTA (ACORES)	38 31 47N	028 37 43W	60.80		60.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, GSN
+6	Europe	Portugal	PRT	0-20000-0-08506	08506	0	HORTA (ACORES)	38 31 47N	028 37 43W	60.80		60.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, GSN
 6	Europe	Portugal	PRT	0-20000-0-08505	08505	0	HORTA/CASTELO BRANCO (ACORES)	38 31 16N	028 42 50W	41.00		40.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Portugal	PRT	0-620-1001-08505			HORTA/CASTELO BRANCO (ACORES)	38 31 16N	028 42 50W	41.00		40.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Portugal	PRT	0-20000-0-08508	08508	0	LAJES (ACORES) (8508-0)	38 46 04N	027 05 14W			72.00																Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GUAN, RBSN(T), GOS
@@ -11912,10 +11915,10 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Portugal	PRT	0-620-1003-08509			LAJES (ACORES) (8509-0)	38 46 11N	027 05 45W	54.00		52.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), CLIMAT(C), RBCN
 6	Europe	Portugal	PRT	0-20000-0-08579	08579	0	LISBOA/GAGO COUTINHO	38 45 58N	009 07 39W	104.80		104.00		mean sea level														Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), RBSN(ST), GOS
 6	Europe	Portugal	PRT	0-620-2001-08579			LISBOA/GAGO COUTINHO	38 45 58N	009 07 39W	104.80		104.00		mean sea level														Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), RBSN(ST), GOS
-6	Europe	Portugal	PRT	0-20000-0-08535	08535	0	LISBOA/GEOFISICO	38 43 09N	009 08 59W	77.80		77.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), GOS, RBCN
 6	Europe	Portugal	PRT	0-620-2001-08535			LISBOA/GEOFISICO	38 43 09N	009 08 59W	77.80		77.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), GOS, RBCN
-6	Europe	Portugal	PRT	0-620-2001-08536			LISBOA/PORTELA	38 46 27N	009 08 03W	123.00		114.00		mean sea level														Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS
+6	Europe	Portugal	PRT	0-20000-0-08535	08535	0	LISBOA/GEOFISICO	38 43 09N	009 08 59W	77.80		77.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GSN, CLIMAT(C), GOS, RBCN
 6	Europe	Portugal	PRT	0-20000-0-08536	08536	0	LISBOA/PORTELA	38 46 27N	009 08 03W	123.00		114.00		mean sea level														Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS
+6	Europe	Portugal	PRT	0-620-2001-08536			LISBOA/PORTELA	38 46 27N	009 08 03W	123.00		114.00		mean sea level														Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-3001-08536			LISBOA/PORTELA RS	38 46 34N	009 07 32W			121.15																GOS
 6	Europe	Portugal	PRT	0-20000-0-08553	08553	0	LOULE, CAVALOS DO CALDEIRAO	37 18 00N	007 57 00W			616.00																Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-20000-0-08578	08578	0	LPCS (CASCAIS AERODROME)	38 43 32N	009 21 19W			99.00																Surface land meteorological station (SYNOP), GOS
@@ -11927,15 +11930,15 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Portugal	PRT	0-20000-0-08539	08539	0	OTA	39 07 00N	008 59 00W	49.00		41.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-20000-0-08544	08544	0	OVAR/MACEDA	40 54 57N	008 38 28W	22.00		17.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-1003-08544			OVAR/MACEDA	40 54 57N	008 38 28W	22.00		17.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Portugal	PRT	0-20000-0-08568	08568	0	PENHAS DOURADAS	40 24 41N	007 33 31W	1381.00		1380.00		850 HPA														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-2001-08568			PENHAS DOURADAS	40 24 41N	007 33 31W	1381.00		1380.00		850 HPA														Surface land meteorological station (SYNOP), GOS
+6	Europe	Portugal	PRT	0-20000-0-08568	08568	0	PENHAS DOURADAS	40 24 41N	007 33 31W	1381.00		1380.00		850 HPA														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-2001-0504			PICO/AERODROMO	38 33 12N	028 26 41W			33.00																Automatic weather station (AWS), Radiation station, Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-2001-08504			PICO/AERODROMO	38 33 12N	028 26 41W			33.00																Automatic weather station (AWS), Radiation station, Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-20000-0-08514	08514	0	PONTA DELGADA	37 44 25N	025 41 54W	61.00				mean sea level														Surface land meteorological station (SYNOP), GOS, CTBTO
-6	Europe	Portugal	PRT	0-20000-0-08512	08512	0	PONTA DELGADA/NORDELA (ACORES)	37 44 40N	025 41 49W	77.80		77.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), RBCN, GSN, CLIMAT(C)
 6	Europe	Portugal	PRT	0-620-2001-08512			PONTA DELGADA/NORDELA (ACORES)	37 44 40N	025 41 49W	77.80		77.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), RBCN, GSN, CLIMAT(C)
-6	Europe	Portugal	PRT	0-620-2101-08513			PONTA DELGADA/OBS. (ACORES)	37 44 48N	025 39 46W	36.00		35.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Portugal	PRT	0-20000-0-08512	08512	0	PONTA DELGADA/NORDELA (ACORES)	37 44 40N	025 41 49W	77.80		77.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), GOS, RBSN(S), RBCN, GSN, CLIMAT(C)
 6	Europe	Portugal	PRT	0-20000-0-08513	08513	0	PONTA DELGADA/OBS. (ACORES)	37 44 48N	025 39 46W	36.00		35.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Portugal	PRT	0-620-2101-08513			PONTA DELGADA/OBS. (ACORES)	37 44 48N	025 39 46W	36.00		35.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-2001-08571			PORTALEGRE	39 17 39N	007 25 17W	597.80		597.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-20000-0-08571	08571	0	PORTALEGRE	39 17 39N	007 25 17W	597.80		597.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-2001-08454			PORTO/PEDRAS RUBRAS	41 13 56N	008 40 45W	69.80		69.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
@@ -11945,22 +11948,22 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 6	Europe	Portugal	PRT	0-20000-0-08533	08533	0	SAGRES (8533-0)	37 00 46N	008 56 57W	25.80		25.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Portugal	PRT	0-620-2001-08533			SAGRES (8533-0)	37 00 46N	008 56 57W	25.80		25.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Portugal	PRT	0-20000-0-08538	08538	0	SAGRES (8538-0)	37 00 00N	008 57 00W			25.00																Surface land meteorological station (SYNOP), GOS
-6	Europe	Portugal	PRT	0-620-2001-08515			SANTA MARIA (ACORES)	36 58 23N	025 10 22W	96.80		96.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), CLIMAT(C), RBCN, GOS
 6	Europe	Portugal	PRT	0-20000-0-08515	08515	0	SANTA MARIA (ACORES)	36 58 23N	025 10 22W	96.80		96.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), CLIMAT(C), RBCN, GOS
+6	Europe	Portugal	PRT	0-620-2001-08515			SANTA MARIA (ACORES)	36 58 23N	025 10 22W	96.80		96.00		mean sea level														Climatological station, Surface land meteorological station (SYNOP), RBSN(S), CLIMAT(C), RBCN, GOS
 6	Europe	Portugal	PRT	0-620-2001-0510			SAO JORGE/AERODROMO	38 39 51N	028 10 15W			99.00																Automatic weather station (AWS), Radiation station, GOS
 6	Europe	Portugal	PRT	0-620-2001-08510			SAO JORGE/AERODROMO	38 39 51N	028 10 15W			99.00																Automatic weather station (AWS), Radiation station, GOS
-6	Europe	Portugal	PRT	0-620-2001-08541			SINES/MONTES CHAOS	37 57 16N	008 50 18W	98.80		98.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Portugal	PRT	0-20000-0-08541	08541	0	SINES/MONTES CHAOS	37 57 16N	008 50 18W	98.80		98.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
-6	Europe	Portugal	PRT	0-20000-0-08532	08532	0	SINTRA/GRANJA	38 50 03N	009 20 19W	130.00		134.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Portugal	PRT	0-620-2001-08541			SINES/MONTES CHAOS	37 57 16N	008 50 18W	98.80		98.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Portugal	PRT	0-620-1003-08532			SINTRA/GRANJA	38 50 03N	009 20 19W	130.00		134.00		mean sea level														Surface land meteorological station (SYNOP), GOS
+6	Europe	Portugal	PRT	0-20000-0-08532	08532	0	SINTRA/GRANJA	38 50 03N	009 20 19W	130.00		134.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-20000-0-08552	08552	0	TANCOS	39 28 33N	008 22 30W	80.00		83.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-1003-08552			TANCOS	39 28 33N	008 22 30W	80.00		83.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Portugal	PRT	0-620-2001-08551			VIANA DO CASTELO / C.C.	41 38 56N	008 48 17W	48.80		48.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-20000-0-08551	08551	0	VIANA DO CASTELO / C.C.	41 38 56N	008 48 17W	48.80		48.00		mean sea level														Surface land meteorological station (SYNOP), GOS
-6	Europe	Portugal	PRT	0-20000-0-08567	08567	0	VILA REAL / C.C.	41 16 27N	007 43 02W	561.80		561.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
+6	Europe	Portugal	PRT	0-620-2001-08551			VIANA DO CASTELO / C.C.	41 38 56N	008 48 17W	48.80		48.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 6	Europe	Portugal	PRT	0-620-2001-08567			VILA REAL / C.C.	41 16 27N	007 43 02W	561.80		561.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
-6	Europe	Portugal	PRT	0-620-2001-08560			VISEU / C.C.	40 42 54N	007 53 45W	644.80		644.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
+6	Europe	Portugal	PRT	0-20000-0-08567	08567	0	VILA REAL / C.C.	41 16 27N	007 43 02W	561.80		561.00		mean sea level														Surface land meteorological station (SYNOP), RBSN(S), GOS
 6	Europe	Portugal	PRT	0-20000-0-08560	08560	0	VISEU / C.C.	40 42 54N	007 53 45W	644.80		644.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
+6	Europe	Portugal	PRT	0-620-2001-08560			VISEU / C.C.	40 42 54N	007 53 45W	644.80		644.00		mean sea level														Surface land meteorological station (SYNOP), GOS, RBSN(S)
 6	Europe	Romania	ROU	0-20000-0-15479	15479	0	ADAMCLISI	44 05 18N	027 57 56E	159.20		158.00		STATION														Precipitation station, Surface land meteorological station (SYNOP), GOS
 6	Europe	Romania	ROU	0-20000-0-15219	15219	0	ADJUD	46 06 17N	027 10 13E	102.40		101.00		STATION														Automatic weather station (AWS), Surface land meteorological station (SYNOP), GOS
 6	Europe	Romania	ROU	0-20000-0-15208	15208	0	ALBA IULIA	46 03 50N	023 33 48E	247.52		246.00		STATION														Surface land meteorological station (SYNOP), GOS
@@ -13975,10 +13978,10 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 7	Antarctica	Netherlands	NLD	0-20000-0-89536	89536	0	PLATEAU STATION B EP12	78 38 46S	035 38 26E	3620.00				mean sea level														Surface land meteorological station (SYNOP), GOS, CLIMAT(C), ANTON
 7	Antarctica	Netherlands	NLD	0-20000-0-89558	89558	0	POLE OF INACCESSIBILITY EP 13	82 06 41S	055 02 04E	3730.00				mean sea level														Surface land meteorological station (SYNOP), GOS, ANTON, CLIMAT(C)
 7	Antarctica	Netherlands	NLD	0-20000-0-89016	89016	0	WASA EP5	73 06 00S	013 09 00W	363.00				mean sea level														Surface land meteorological station (SYNOP), CLIMAT(C), GOS
-7	Antarctica	New Zealand	NZL	0-554-0-89668			Arrival Heights	77 49 55S	166 39 36E			184.00																GAW Regional, NDACC, GOS
 7	Antarctica	New Zealand	NZL	0-20008-0-ARH			Arrival Heights	77 49 55S	166 39 36E			184.00																GAW Regional, NDACC, GOS
-7	Antarctica	New Zealand	NZL	0-554-0-89665			Scott Base	77 51 00S	166 45 58E			16.00																Surface land meteorological station (SYNOP), GAW Regional, NDACC, GOS
+7	Antarctica	New Zealand	NZL	0-554-0-89668			Arrival Heights	77 49 55S	166 39 36E			184.00																GAW Regional, NDACC, GOS
 7	Antarctica	New Zealand	NZL	0-20008-0-SBS			Scott Base	77 51 00S	166 45 58E			16.00																Surface land meteorological station (SYNOP), GAW Regional, NDACC, GOS
+7	Antarctica	New Zealand	NZL	0-554-0-89665			Scott Base	77 51 00S	166 45 58E			16.00																Surface land meteorological station (SYNOP), GAW Regional, NDACC, GOS
 7	Antarctica	Norway	NOR	0-20000-0-89504	89504	0	TROLL	72 00 43S	002 32 27E	1277.00		1310.00		mean sea level														Surface land meteorological station (SYNOP), GOS, CLIMAT(C), ANTON
 7	Antarctica	Poland	POL	0-20000-0-89052	89052	0	ARCTOWSKI	62 10 00S	058 28 00W	2.00		3.00		mean sea level														Surface land meteorological station (SYNOP), GOS
 7	Antarctica	Russian Federation	RUS	0-20000-0-89050	89050	0	BELLINGSHAUSEN	62 11 59S	058 53 37W	15.40		14.30		mean sea level														Surface land meteorological station (SYNOP), CLIMAT(C), GOS, GSN, ANTON
@@ -14037,8 +14040,8 @@ RegionId	RegionName	CountryArea	CountryCode	StationId	IndexNbr	IndexSubNbr	Stati
 7	Antarctica	United States (the)	USA	0-20000-0-89327	89327	0	MOUNT SIPLE	73 11 53S	127 03 07W	230.00		230.00		mean sea level														Surface land meteorological station (SYNOP), GOS, ANTON, GSN, CLIMAT(C)
 7	Antarctica	United States (the)	USA	0-20000-0-89799	89799	0	NICO	89 00 00S	089 40 08E	2935.00		2935.00		mean sea level														Surface land meteorological station (SYNOP), CLIMAT(C), GOS, ANTON
 7	Antarctica	United States (the)	USA	0-20000-0-89061	89061	0	PALMER STATION	64 46 00S	064 05 00W																			Surface land meteorological station (SYNOP), GOS, ANTON, CTBTO, CLIMAT(C)
-7	Antarctica	United States (the)	USA	0-20000-0-89667	89667	0	PEGASUS NORTH	77 57 07S	166 30 00E	10.00		8.00		mean sea level														Automatic weather station (AWS), Climatological station, GOS, ANTON, CLIMAT(C)
 7	Antarctica	United States (the)	USA	0-840-11502-PegasusNorth			PEGASUS NORTH	77 57 07S	166 30 00E	10.00		8.00		mean sea level														Automatic weather station (AWS), Climatological station, GOS, ANTON, CLIMAT(C)
+7	Antarctica	United States (the)	USA	0-20000-0-89667	89667	0	PEGASUS NORTH	77 57 07S	166 30 00E	10.00		8.00		mean sea level														Automatic weather station (AWS), Climatological station, GOS, ANTON, CLIMAT(C)
 7	Antarctica	United States (the)	USA	0-20000-0-89643	89643	0	PORT MARTIN	66 49 12S	141 23 24E	39.00		39.00		mean sea level														Surface land meteorological station (SYNOP), ANTON, GOS, CLIMAT(C)
 7	Antarctica	United States (the)	USA	0-20000-0-89879	89879	0	POSSESSION IS.	71 53 28S	171 12 36E	30.00		30.00		mean sea level														Surface land meteorological station (SYNOP), CLIMAT(C), GOS, GSN, ANTON
 7	Antarctica	United States (the)	USA	0-20000-0-89744	89744	0	RELAY STAT	74 01 01S	043 03 43E	3353.00		3353.00		mean sea level														Surface land meteorological station (SYNOP), GOS, ANTON, CLIMAT(C), GSN

@@ -44,17 +44,17 @@ def chunk_it(seq, num):
    
        return out
 
+# deifne output directory "out_dir"
+#out_dir = '/raid60/scratch/federico/MAY2021_HARVEST/'
 
-out_dir = '/raid60/scratch/federico/MARCH2021_WBAN_latswap_era5_1759/'
-
-processes = 20 # number of process PER DATASET 
+processes = 5 # number of process PER DATASET 
 
 
 
 """ Select the dataset to be processed """ 
 datasets = ['era5_1', 'era5_2', 'era5_3188', 'era5_1759', 'era5_1761', 'ncar', 'igra2', 'bufr' ]
 
-datasets = ['era5_1759']
+datasets = ['era5_1']
 
 
 
@@ -63,8 +63,12 @@ check_missing = True
 REDO = False
 
 def rerun_list(f_list, processed_dir = '', split = '' , input_dir = ''):
-       
-       processed = [ f.split('harvested_')[1].replace('.nc','') for f in os.listdir(processed_dir)  ]
+       try:
+              processed = [ f.split('harvested_')[1].replace('.nc','') for f in os.listdir(processed_dir)  ]
+
+       except:
+              processed = []
+              
        f_list          = [ f.split(input_dir)[1] for f in f_list ]
        
        to_be_processed = []
@@ -98,8 +102,6 @@ for d in datasets:
               Dir = '/raid60/scratch/leo/scratch/era5/odbs/1/era5_1'
               # era5.conv.??????.82930.txt.gz
               stat =  [ f.split('era5.conv.')[1].split('.txt')[0] for f in os.listdir(Dir) if 'harvested' in f ]
-              already_proc = [f.split('??????.')[1].split('.txt')[0] for f in os.listdir('/raid60/scratch/federico/TEST_MAY_ERA5/era5_1') ]
-              stat = [s for s in stat if s not in already_proc ]
               f_list = ['"/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.' + s + '.txt.gz' + '"' for s in stat]
        #f_list = f_list[:100]
 
@@ -113,11 +115,11 @@ for d in datasets:
               c = str(','.join(c)).replace('#','')
         
               if d != 'era5_1':
-                     print(1)
+                     print(d)
                      os.system('/opt/anaconda3/bin/python3  harvest_convert_to_netCDF.py  -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')  
               else:
-                     print(0)
-                     #os.system('python  harvest_convert_to_netCDF.py  -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')
+                     print(d)
+                     os.system('python  harvest_convert_to_netCDF.py  -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')
               
 
 print('*** Finished with the parallel running ***')

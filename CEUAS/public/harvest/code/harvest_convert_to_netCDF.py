@@ -612,10 +612,15 @@ def uadb_ascii_to_dataframe(file=''):
     
     df = pd.DataFrame(data= read_data, columns= column_names)       
     
+    
     df['observation_id']  = np.chararray.zfill( (df['observation_id'].astype(int)) .astype('S'+str(id_string_length ) ), id_string_length  )  #converting to fixed length bite objects 
     df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
     
-    df = df.replace([-999.9, -9999, -999, -999.0, -99999.0, -99999.9, 99999.0,  -99999.00 ], np.nan)
+    col = [c for c in df.columns if '_id' not in c]
+    df_new = df[col].replace([-999.9, -9999, -999, -999.0, -99999.0, -99999.9, 99999.0,  -99999.00 ], np.nan)    
+    for c in ['observation_id', 'report_id']:
+        df_new[c] = df[c]
+        
     
     #df['observations_id'] =numpy.char.zfill(numpy.arange(ivar.shape[0]).astype('S10'), 10)
     df['report_timestamp'] = np.nan 
@@ -797,11 +802,15 @@ def igra2_ascii_to_dataframe(file=''):
 
     df = pd.DataFrame(data= read_data, columns= column_names_igra2)
         
+    
     df['observation_id']  = np.chararray.zfill( (df['observation_id'].astype(int)) .astype('S'+str(id_string_length ) ), id_string_length  )  #converting to fixed length bite objects 
     df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
-    
-    df = df.replace([-999.9, -9999, -999, -999.0, -99999.0, -99999.9, 99999.0,  -99999.00 ], np.nan)
-           
+               
+    col = [c for c in df.columns if '_id' not in c]
+    df_new = df[col].replace([-999.9, -9999, -999, -999.0, -99999.0, -99999.9, 99999.0,  -99999.00 ], np.nan)    
+    for c in ['observation_id', 'report_id']:
+        df_new[c] = df[c]
+        
     df = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    # FF check here !!!! 
     
     return df, stations_id
