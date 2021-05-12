@@ -72,6 +72,24 @@ logger = logging.getLogger('upperair.cdm')
 ###############################################################################
 
 
+@njit(cache=True)
+def searchdate(rtsidx,rtsarr,istart,istop=0):
+    if istop==0:
+        istop=istart
+    gdict=np.zeros((rtsidx.shape[0],np.int(2)),dtype='int')
+    lidx=np.zeros_like(rtsidx)
+    l=0
+    for i in range(len(rtsidx)-1):
+        
+        idx=np.searchsorted(rtsarr[rtsidx[i]:rtsidx[i+1]],(istart,istop))
+        if idx[0]<idx[1]: #rtsidx[i+1]-rtsidx[i]:
+#            if rtsarr[rtsidx[i]+idx]-istart<86400: 
+            gdict[l]=idx
+            lidx[l]=i
+            l+=1
+                
+    return gdict[:l],lidx[:l]
+
 #@njit
 def calc_trajindexfast_rt(zidx,trajectory_index,tstart):
 
@@ -1104,7 +1122,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
     # mimicks process_flat from cds_eua2
     msg = ''  # Message or error
     filename = ''  # Filename
-    print('request_variables: ', request_variables)
+    #print('request_variables: ', request_variables)
     try:
         if 'gridded' in request_variables:
             filename_out = outputdir + '/dest_gridded_' + str(request_variables['variable'][0]) + '.nc'
@@ -1254,7 +1272,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 gdict['station_type']=[]
                 gdict['units']=[]
                 gdict['z_coordinate_type']=[]
-            with CDMDataset(filename=filename, groups=gdict) as data:
+            with CDMDataset(filename=filename, groups=gdict,da=True) as data:
                 if debug: print('x',time.time()-tt)
                 data.read_write_request(filename_out=filename_out,
                                         request=request_variables,
@@ -1866,7 +1884,7 @@ class CDMDataset:
     # memory efficient, no duplicates
     # __slots__ = ['filename', 'file', 'groups', 'data']
 
-    def __init__(self, filename: str = None, groups: dict = None, mode:str = 'r'):
+    def __init__(self, filename: str = None, groups: dict = None, mode:str = 'r',da=False):
         """ Init Class CDMDataset with a filename, cds_request or vm_request
 
         Args:
@@ -1885,6 +1903,7 @@ class CDMDataset:
         if filename is None:
             raise ValueError('Specifiy either filename.')
  
+        self.da=da
         if filename == 'empty':
             self.filename = ''
             self.name = ''
@@ -1898,7 +1917,10 @@ class CDMDataset:
             logger.debug("[OPEN] %s", self.filename)
             self.hasgroups = False
             self.groups = []
-            self.inquire(groupdict=groups)  # Get variables and Groups
+            if not da:
+                self.inquire(groupdict=groups)  # Get variables and Groups
+            else:
+                self.groups=list(self.file.keys())
 
     def __getitem__(self, item):
         return self.__getattribute__(item)
@@ -1935,7 +1957,6 @@ class CDMDataset:
         groups = list(self.file.keys())
         if groupdict is not None:
             groups = [igroup for igroup in groups if igroup in groupdict.keys()]
-        
         try:
             for igroup in groups:
                 # Group or Variable
@@ -1952,8 +1973,9 @@ class CDMDataset:
 
                     jgroup.update(link=self.file[igroup])  # reconnect to Group, e.g. if reopened
                     varkeys=list(self.file[igroup].keys())
+
                     if groupdict is not None:
-                        varkeys = groupdict[igroup] if len(groupdict[igroup]) > 0 else varkeys
+                        varkeys = groupdict[igroup] if len(groupdict[igroup]) > 0 else [] #varkeys
                     
                     for ivar in varkeys:
                         try:
@@ -1971,6 +1993,7 @@ class CDMDataset:
                     if new:
                         setattr(self, igroup, CDMVariable(self.file[igroup], igroup, shape=self.file[igroup].shape))
                     self[igroup].update(link=self.file[igroup])
+                
 
         except Exception as e:
             logger.debug(repr(e))
@@ -2328,7 +2351,8 @@ class CDMDataset:
                                                    z_coordinate_name='z_coordinate',
                                                    group='observations_table',
                                                    dimgroup='observations_table',
-                                                   return_index=True
+                                                   return_index=True,
+                                                   rtsindex=request.get('rtsidx',None)
                                                    )
         logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange.start,
                      trange.stop, time.time() - time0, self.name)
@@ -2338,6 +2362,7 @@ class CDMDataset:
         if len(idx) == 0:
             logger.warning('No matching data found %s', self.name)
             raise ValueError('No matching data found')  # add CDMname for logging
+            #return
 
         logger.debug('Data found: %d %s', len(idx), self.name)
         #
@@ -2347,10 +2372,10 @@ class CDMDataset:
         trajectory_index2 = np.zeros_like(idx, dtype=np.int32)
         if 'recordinindex' in self.groups:
             # unsorted indices in root
-            recordindex = self['recordindex'][()]
+            recordindex = self.file['recordindex'][()]
         else:
             # sorted indices are in recordindices group / by variable
-            recordindex = self['recordindices'][str(cdmnum)][()]  # values
+            recordindex = self.file['recordindices'][str(cdmnum)][()]  # values
             
         zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex <= trange.stop))[0]
         #zidx2=np.zeros_like(zidx)
@@ -2691,7 +2716,7 @@ class CDMDataset:
             
 
             for i in fout.keys():
-                print(i)
+                #print(i)
                 if (i == 'obs' or i == 'trajectory' or 'string' in i):
                     fout.__delitem__(i)
                 version = ''
@@ -2898,32 +2923,34 @@ class CDMDataset:
             mixed, as they are available, like records. Hence to retrieve one variable the observed_variable needs
             to be used to subset the array in memory (faster)
         """
-        if not self.hasgroups:
-            raise RuntimeError('This function only works with CDM Backend files')
-
-        if dimgroup not in self.groups:
-            raise ValueError('Missing group?', dimgroup)
-
-        if group not in self.groups:
-            raise ValueError('Missing group?', group)
-
-        if not isinstance(variable, str):
-            raise ValueError('(variable) Requires a string name, not ', str(variable))
-
-        if not isinstance(varnum, int):
-            raise ValueError('(varnum) Requires a integer number, not', str(varnum))
-
-        if use_odb_codes:
-            if varnum not in odb_codes.values():
-                raise ValueError('(varnum) Code not in ODB Codes', variable, str(odb_codes))
-        else:
-            if varnum not in cdm_codes.values():
-                raise ValueError('(varnum) Code not in CDM Codes', variable, str(cdm_codes))
-
-        # TODO for the new files this variable is not mandatory anymore !!!
-        if observed_variable_name not in self[dimgroup].keys():
-            raise ValueError('Observed variable not found:', observed_variable_name, self[dimgroup].keys())
-
+        
+        if not self.da:        
+            if not self.hasgroups:
+                raise RuntimeError('This function only works with CDM Backend files')
+    
+            if dimgroup not in self.groups:
+                raise ValueError('Missing group?', dimgroup)
+    
+            if group not in self.groups:
+                raise ValueError('Missing group?', group)
+    
+            if not isinstance(variable, str):
+                raise ValueError('(variable) Requires a string name, not ', str(variable))
+    
+            if not isinstance(varnum, int):
+                raise ValueError('(varnum) Requires a integer number, not', str(varnum))
+    
+            if use_odb_codes:
+                if varnum not in odb_codes.values():
+                    raise ValueError('(varnum) Code not in ODB Codes', variable, str(odb_codes))
+            else:
+                if varnum not in cdm_codes.values():
+                    raise ValueError('(varnum) Code not in CDM Codes', variable, str(cdm_codes))
+    
+            # TODO for the new files this variable is not mandatory anymore !!!
+            if observed_variable_name not in self[dimgroup].keys():
+                raise ValueError('Observed variable not found:', observed_variable_name, self[dimgroup].keys())
+    
         if dates is not None:
             if not isinstance(dates, list):
                 dates = [dates]
@@ -2932,14 +2959,21 @@ class CDMDataset:
             if not isinstance(plevs, (list, np.ndarray)):
                 plevs = [plevs]
             plevs=np.asarray(plevs,dtype=np.float32)
+            
         
-        
-        trange = self.make_datetime_slice(dates=dates, varnum=varnum, date_time_name=date_time_name,
+        if self.da and 'rtsindex' in kwargs.keys():
+            svarnum=str(varnum)
+            trange=slice(self.file['recordindices'][svarnum][kwargs['rtsindex'][0]],
+                         self.file['recordindices'][svarnum][kwargs['rtsindex'][1]],None)
+        else:
+            
+            trange = self.make_datetime_slice(dates=dates, varnum=varnum, date_time_name=date_time_name,
                                           date_time_in_seconds=date_time_in_seconds,
                                           add_day_before=True if times is not None else False)
         
         if dates is not None:
-            xdates = self[dimgroup][date_time_name][trange]
+            if not self.da:
+                xdates = self[dimgroup][date_time_name][trange]
         else:
             xdates = self.load_variable_from_file(date_time_name, group=dimgroup, return_data=True)[0][trange]
         
@@ -2956,7 +2990,7 @@ class CDMDataset:
         elif 'recordindex' in self.groups:
             logic = (self[dimgroup][observed_variable_name][trange] == varnum)
         else:
-            logic = np.ones(xdates.shape, dtype=np.bool)
+            logic = np.ones(trange.stop-trange.start, dtype=np.bool)
             # todo apply trange before, to make a subset 
         logger.info('[READ] Observed variable %s', varnum)
         #
@@ -2964,17 +2998,20 @@ class CDMDataset:
         #
         xplevs = None
         if plevs is not None:
-            if z_coordinate_name not in self[dimgroup].keys():
-                raise ValueError('Pressure variable not found:', z_coordinate_name, self[dimgroup].keys())
-            p_attrs = self.read_attributes(z_coordinate_name, group=dimgroup)
-            p_units = p_attrs.get('units', 'Pa')
-            if p_units != 'Pa':
-                RuntimeWarning('Pressure variable wrong unit [Pa], but', p_units)
-
-            if dates is None:
-                xplevs = self.load_variable_from_file(z_coordinate_name, group=dimgroup, return_data=True)[0][trange]
+            if self.da:
+                xplevs=self.file[dimgroup][z_coordinate_name][trange]
             else:
-                xplevs = self[dimgroup][z_coordinate_name][trange]
+                if z_coordinate_name not in self[dimgroup].keys():
+                    raise ValueError('Pressure variable not found:', z_coordinate_name, self[dimgroup].keys())
+                p_attrs = self.read_attributes(z_coordinate_name, group=dimgroup)
+                p_units = p_attrs.get('units', 'Pa')
+                if p_units != 'Pa':
+                    RuntimeWarning('Pressure variable wrong unit [Pa], but', p_units)
+    
+                if dates is None:
+                    xplevs = self.load_variable_from_file(z_coordinate_name, group=dimgroup, return_data=True)[0][trange]
+                else:
+                    xplevs = self[dimgroup][z_coordinate_name][trange]
             if len(plevs) == 1:
                 logic = logic & (xplevs == plevs[0])
             else:
