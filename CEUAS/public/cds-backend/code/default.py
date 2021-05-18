@@ -323,6 +323,7 @@ def pkl_initialize(config):
         rtskeys=list(rtsdict.keys())                          ## contains the station IDs
         
         with open(fout, 'wb') as f:
+            print('writing h5link')
             pickle.dump((rtskeys,rtsidx,rtsarr), f, pickle.HIGHEST_PROTOCOL)
         
         x=0
