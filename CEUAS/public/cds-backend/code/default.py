@@ -305,6 +305,7 @@ def pkl_initialize(config):
         with Pool(10) as p:
             tup=map(read_tstamps,slist)
         print(2)
+        print(tup)
         rtsdict=dict(tup)
         print(3)
         #for fn in flist:
