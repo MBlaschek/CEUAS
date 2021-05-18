@@ -72,7 +72,7 @@ logger = logging.getLogger('upperair.cdm')
 ###############################################################################
 
 
-@njit(cache=True)
+#@njit(cache=True)
 def searchdate(rtsidx,rtsarr,istart,istop=0):
     if istop==0:
         istop=istart
