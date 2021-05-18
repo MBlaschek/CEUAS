@@ -1306,18 +1306,17 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         start=1
         ende=5000000000
     tt=time.time()
-    if len(body['statid'])>1 or body['statid'][0]=='all':     
-        gdict2,lidx=eua.searchdate(active['rtsidx'], active['rtsarr'], start,ende)    
+    if len(body['statid'])>1:
+        gdict2,lidx=eua.searchdate(active['rtsidx'], active['rtsarr'], start,ende)
         gdict2=dict(zip([active['rtskeys'][l] for l in lidx],list(gdict2)))
-        if body['statid'][0]=='all':   
-            body['statid']=list(gdict2.keys())
-        else:
-            gd={}
-            for b in body['statid']:
+        gd={}
+        for b in body['statid']:
+            try:
+
                 gd[b]=gdict2[b]
-            gdict2=gd
-                
-            
+            except:
+                pass
+        gdict2=gd
     else:
         idx=active['rtskeys'].index(body['statid'][0])
         gdict2,lidx=eua.searchdate(active['rtsidx'][idx:idx+2], active['rtsarr'], start,ende)    
