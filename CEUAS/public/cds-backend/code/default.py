@@ -302,11 +302,15 @@ def pkl_initialize(config):
         #with h5py.File(fout,'r') as f:
         l=0
         print(1)
-        with Pool(10) as p:
-            tup=map(read_tstamps,slist)
-        print(2)
-        print(tup)
-        rtsdict=dict(tup)
+#         with Pool(10) as p:
+#             tup=map(read_tstamps,slist)
+#         print(2)
+#         print(tup)
+#         rtsdict=dict(tup)
+        rtsdict = {}
+        for i in slist:
+            a,b = read_tstamps(i)
+            rtsdict[a]=b
         print(3)
         #for fn in flist:
             #with h5py.File(fn,'r') as f:
