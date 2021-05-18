@@ -301,17 +301,15 @@ def pkl_initialize(config):
         print('failed - now creating')
         #with h5py.File(fout,'r') as f:
         l=0
-        print(1)
-#         with Pool(10) as p:
-#             tup=map(read_tstamps,slist)
-#         print(2)
-#         print(tup)
-#         rtsdict=dict(tup)
-        rtsdict = {}
-        for i in slist:
-            a,b = read_tstamps(i)
-            rtsdict[a]=b
-        print(3)
+        with Pool(10) as p:
+            tup=map(read_tstamps,slist)
+        rtsdict=dict(tup)
+        
+#         rtsdict = {}
+#         for i in slist:
+#             a,b = read_tstamps(i)
+#             rtsdict[a]=b
+
         #for fn in flist:
             #with h5py.File(fn,'r') as f:
             ##print(f[fk]['recordindices'].keys())
@@ -327,15 +325,10 @@ def pkl_initialize(config):
                 #pickle.dump(rtsdict, f, pickle.HIGHEST_PROTOCOL)
             
         rtsarr=numpy.concatenate(list(rtsdict.values()))      ## contains the record timestamps
-        print(4)
         rtsidx=[0]+[len(rtsdict[v]) for v in rtsdict.keys()]  ## contains the indices where the timestamps of station i starts
-        print(5)
         rtsidx=numpy.cumsum(rtsidx)
-        print(6)
         rtskeys=list(rtsdict.keys())                          ## contains the station IDs
-        print('created')
         with open(fout, 'wb') as f:
-            print('writing h5link')
             pickle.dump((rtskeys,rtsidx,rtsarr), f, pickle.HIGHEST_PROTOCOL)
         
         x=0
