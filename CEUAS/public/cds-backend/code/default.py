@@ -285,7 +285,7 @@ def pkl_initialize(config):
     slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
     slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
     #flist=glob.glob(os.path.expandvars(rpath+'*.nc'))
-    fout=os.path.expandvars(config['data_dir']+'/h5link.pkl')
+    fout=os.path.expandvars(config['config_dir'] + '/h5link.pkl')
     
     tt=time.time()
     rtsdict={}
@@ -502,7 +502,10 @@ active, wmo_regions, cf = init_server()
 slnum = list(active.keys())
 print(slnum)
 for i in ['rtskeys','rtsidx','rtsarr']:
-    slnum.pop(slnum.index(i))
+    try:
+        slnum.pop(slnum.index(i))
+    except:
+        pass
 
 
 # slist = [config['data_dir'] + '/0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
