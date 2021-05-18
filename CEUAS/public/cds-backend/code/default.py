@@ -501,7 +501,10 @@ active, wmo_regions, cf = init_server()
 # Active Station Numbers
 slnum = list(active.keys())
 for i in ['rtskeys','rtsidx','rtsarr']:
-    slnum.pop(slnum.index(i))
+    try:
+        slnum.pop(slnum.index(i))
+    except:
+        pass
 
 
 # slist = [config['data_dir'] + '/0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
