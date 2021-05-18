@@ -293,9 +293,8 @@ def pkl_initialize(config):
     imem=0
     
     try:
-            
+        print('open h5link')    
         with open(fout, 'rb') as f:
-            print('open h5link')
             rtskeys,rtsidx,rtsarr=pickle.load(f)
             print('done')
     except: 
