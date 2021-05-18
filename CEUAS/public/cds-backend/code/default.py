@@ -67,7 +67,7 @@ if False:
     import cds_eua2 as eua  # old version
     CDS_EUA_VERSION = 2
 else:
-    sys.path.append(os.path.expanduser('~leo/python/CEUAS/CEUAS/public/cds-backend/code'))
+#     sys.path.append(os.path.expanduser('~leo/python/CEUAS/CEUAS/public/cds-backend/code'))
     import cds_eua3 as eua  # new version with CDMDataset class
     CDS_EUA_VERSION = 3
 
@@ -169,13 +169,13 @@ for i, j in config.items():
 ###############################################################################
 host = socket.gethostname()
 logger.info("HUG started on %s", host)
-try:
-    # todo this part is deprecated / LEO delete?
-    if 'srvx' in host:
-        sys.path.append(os.path.expanduser('~leo/python/'))
-        config['data_dir'] = os.environ["RSCRATCH"]  # ?
-except:
-    pass
+# try:
+#     # todo this part is deprecated / LEO delete?
+#     if 'srvx' in host:
+#         sys.path.append(os.path.expanduser('~leo/python/'))
+#         config['data_dir'] = os.environ["RSCRATCH"]  # ?
+# except:
+#     pass
 
 global constraints
 try:
@@ -278,8 +278,8 @@ def pkl_initialize(config):
     #set_start_method('forkserver') 
 
 #    flist=glob.glob(os.path.expandvars(config['data_dir'] + 'converted_v5/0-*-0-*_CEUAS_merged_v1.nc')) 
-    config['data_dir']='/raid60/scratch/leo/scratch/converted_v5'
-    config['comp_dir']='/raid60/scratch/leo/scratch/converted_v5'
+#     config['data_dir']='/raid60/scratch/leo/scratch/converted_v5'
+#     config['comp_dir']='/raid60/scratch/leo/scratch/converted_v5'
     slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v1.nc'))
     slist += glob.glob(os.path.expandvars(config['data_dir'] + '/0-20?00-0-*_CEUAS_merged_v1.nc'))
     slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
@@ -388,8 +388,8 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         #
         # find Merged Netcdf files and intercomparison files
         #
-        config['data_dir']='/raid60/scratch/leo/scratch/converted_v5'
-        config['comp_dir']='/raid60/scratch/leo/scratch/converted_v5'
+#         config['data_dir']='/raid60/scratch/leo/scratch/converted_v5'
+#         config['comp_dir']='/raid60/scratch/leo/scratch/converted_v5'
         slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v1.nc'))
         slist += glob.glob(os.path.expandvars(config['data_dir'] + '/0-20?00-0-*_CEUAS_merged_v1.nc'))
         slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
