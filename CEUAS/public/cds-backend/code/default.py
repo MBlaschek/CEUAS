@@ -301,9 +301,12 @@ def pkl_initialize(config):
         print('failed - now creating')
         #with h5py.File(fout,'r') as f:
         l=0
+        print(1)
         with Pool(10) as p:
             tup=map(read_tstamps,slist)
+        print(2)
         rtsdict=dict(tup)
+        print(3)
         #for fn in flist:
             #with h5py.File(fn,'r') as f:
             ##print(f[fk]['recordindices'].keys())
@@ -319,8 +322,11 @@ def pkl_initialize(config):
                 #pickle.dump(rtsdict, f, pickle.HIGHEST_PROTOCOL)
             
         rtsarr=numpy.concatenate(list(rtsdict.values()))      ## contains the record timestamps
+        print(4)
         rtsidx=[0]+[len(rtsdict[v]) for v in rtsdict.keys()]  ## contains the indices where the timestamps of station i starts
+        print(5)
         rtsidx=numpy.cumsum(rtsidx)
+        print(6)
         rtskeys=list(rtsdict.keys())                          ## contains the station IDs
         print('created')
         with open(fout, 'wb') as f:
@@ -502,7 +508,7 @@ active, wmo_regions, cf = init_server()
 
 # Active Station Numbers
 slnum = list(active.keys())
-print(slnum)
+# print(slnum)
 for i in ['rtskeys','rtsidx','rtsarr']:
     try:
         slnum.pop(slnum.index(i))
