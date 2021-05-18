@@ -1218,7 +1218,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     suffix = ['0-20000-0-', '0-20300-0-', '0-20001-0-']
 
                 for ss in suffix:
-                    filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  
+                    filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v1.nc')  
                     # version as a variable
                     #filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
                     #if len(filename) > 0:
