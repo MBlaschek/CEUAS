@@ -295,9 +295,11 @@ def pkl_initialize(config):
     try:
             
         with open(fout, 'rb') as f:
+            print('open h5link')
             rtskeys,rtsidx,rtsarr=pickle.load(f)
+            print('done')
     except: 
-            
+        print('failed - now creating')
         #with h5py.File(fout,'r') as f:
         l=0
         with Pool(10) as p:
@@ -321,7 +323,7 @@ def pkl_initialize(config):
         rtsidx=[0]+[len(rtsdict[v]) for v in rtsdict.keys()]  ## contains the indices where the timestamps of station i starts
         rtsidx=numpy.cumsum(rtsidx)
         rtskeys=list(rtsdict.keys())                          ## contains the station IDs
-        
+        print('created')
         with open(fout, 'wb') as f:
             print('writing h5link')
             pickle.dump((rtskeys,rtsidx,rtsarr), f, pickle.HIGHEST_PROTOCOL)
