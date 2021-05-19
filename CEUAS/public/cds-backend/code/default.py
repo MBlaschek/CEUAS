@@ -974,7 +974,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         try:
             if statid == 'all' or statid == None:
                 statid = slnum  # <- list of all station ids from init_server
-                
+
             elif isinstance(statid, (str, int)):
                 valid_id = None
                 if('*' in statid):
@@ -994,10 +994,10 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                                 if pat in l: 
                                     stats.append(l)
                             valid_id = stats
-                            
+
                 else:
-#                     if not ((len(statid) == 15) or (len(statid) == 5)):
-#                         raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
+    #                     if not ((len(statid) == 15) or (len(statid) == 5)):
+    #                         raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
 
                     if statid[:3] == '0-2' and statid in slnum:
                         valid_id = statid
@@ -1007,7 +1007,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                             if l in slnum:
                                 valid_id = l
                                 break
-                
+
                 if valid_id == None:
                     raise ValueError('statid not available - please select an area, country or check your statid')
 
@@ -1021,7 +1021,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 valid_id = None
                 new_statid = []
                 for k in statid:
-                    
+
                     if('*' in k):
                         if k[:3] == '0-2':
                             stats = []
@@ -1039,10 +1039,10 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                                     if pat in l: 
                                         stats.append(l)
                                 valid_id = stats
-                            
+
                     else:
-#                         if not ((len(k) == 15) or (len(k) == 5)):
-#                             raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
+    #                         if not ((len(k) == 15) or (len(k) == 5)):
+    #                             raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
 
                         if k[:3] == '0-2' and k in slnum:
                             valid_id = k
@@ -1058,10 +1058,10 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                             new_statid = new_statid.extend(valid_id)
                         else:
                             new_statid.append(valid_id)
-                            
+
                 if valid_id == None:
                     raise ValueError('statid not available - please select an area, country or check your statid')
-                    
+
                 statid = [] 
                 [statid.append(x) for x in new_statid if x not in statid] 
         except Exception:
@@ -1323,6 +1323,9 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
             except:
                 pass
         gdict2=gd
+        body['statid']=gd
+        print(body['statid'])
+        
     else:
         idx=active['rtskeys'].index(body['statid'][0])
         gdict2,lidx=eua.searchdate(active['rtsidx'][idx:idx+2], active['rtsarr'], start,ende)    
