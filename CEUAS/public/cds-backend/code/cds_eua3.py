@@ -1275,9 +1275,12 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 gdict['z_coordinate_type']=[]
             with CDMDataset(filename=filename, groups=gdict,da=True) as data:
                 if debug: print('x',time.time()-tt)
-                data.read_write_request(filename_out=filename_out,
-                                        request=request_variables,
-                                        cf_dict=cftable)
+                try:
+                    data.read_write_request(filename_out=filename_out,
+                                            request=request_variables,
+                                            cf_dict=cftable)
+                except:
+                    pass
             if debug: 
                 print(time.time()-tt)
                 print('')
