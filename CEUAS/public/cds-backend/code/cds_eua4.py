@@ -23,10 +23,10 @@ Performance
   give a slice per Variable to speed up reading performance.
 - HDF5 files could be split by variable, would improve reading performance dramatically, especially in MP
 """
+import logging
 import os
 import time
 from datetime import datetime, timedelta
-import logging
 
 import h5py  # most likely non standard on CDS
 import numpy as np
@@ -53,11 +53,27 @@ odb_codes = {'geopotential': 1, 'temperature': 2, 'u_component_of_wind': 3, 'v_c
              'specific_humidity': 7}
 
 std_plevs = np.asarray([10, 20, 30, 50, 70, 100, 150, 200, 250, 300, 400, 500, 700, 850, 925, 1000])
+logger = logging.getLogger('upperair.cdm')
 
-#
-# This is a libary, logging must be controlled by the caller
-#
-logger = logging.getLogger('upperair.cdm') 
+if not logger.hasHandlers():
+    import sys
+
+    logger.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(logging.DEBUG)  # respond only to Warnings and above
+    # create formatter
+    formatter = logging.Formatter('%(asctime)s - %(name)s | %(funcName)s - %(levelname)s - %(message)s')
+    # add formatter to ch
+    ch.setFormatter(formatter)
+    # add ch to logger
+    logger.addHandler(ch)
+
+
+def logging_set_level(level: int):
+    """ Set Logging Level, Default: 10 (DEBUG)"""
+    for ihandle in logger.handlers:
+        ihandle.setLevel(level)
+
 
 ###############################################################################
 #
@@ -71,24 +87,6 @@ logger = logging.getLogger('upperair.cdm')
 #
 ###############################################################################
 
-
-#@njit(cache=True)
-def searchdate(rtsidx,rtsarr,istart,istop=0):
-    if istop==0:
-        istop=istart
-    gdict=np.zeros((rtsidx.shape[0],np.int(2)),dtype='int')
-    lidx=np.zeros_like(rtsidx)
-    l=0
-    for i in range(len(rtsidx)-1):
-        
-        idx=np.searchsorted(rtsarr[rtsidx[i]:rtsidx[i+1]],(istart,istop))
-        if idx[0]<idx[1]: #rtsidx[i+1]-rtsidx[i]:
-#            if rtsarr[rtsidx[i]+idx]-istart<86400: 
-            gdict[l]=idx
-            lidx[l]=i
-            l+=1
-                
-    return gdict[:l],lidx[:l]
 
 #@njit
 def calc_trajindexfast_rt(zidx,trajectory_index,tstart):
@@ -186,8 +184,8 @@ Args:
         if j > jold:
             zidx[l] = z0 + i
             l += 1
-    zidx = zidx[:l]
-    return zidx
+    #zidx = zidx[:l]
+    return zidx[:l]
 
 # @njit(cache=True)
 # def calc_trajindexfast(z, zidx, idx, trajectory_index):
@@ -715,7 +713,7 @@ def get_global_attributes(cf=None, url=None):
 #
 ###############################################################################
 
-def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
+def do_cfcopy(fout, fin, group, idx, cf, dim0, var_selection=None):
     """ Copy H5PY variables and apply subsetting (idx)
 
     Args:
@@ -728,9 +726,6 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
         var_selection: variables
 
     """
-    
-    
-    
     # cuts vars and copies attributes of observation, feedback and header tables
     tt = time.time()
     if not var_selection:
@@ -751,12 +746,9 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                     except:
                         pass
     vlist = []
-    mask=None
     for _, cfv in cf.items():
-        logger.debug('CFCOPY Looking for: %s in %s', cfv['cdmname'], group)
+        #logger.debug('CFCOPY Looking for: %s in %s', cfv['cdmname'], group)
         for v in var_selection:
-            if mask is None and 'data_policy_licence' in var_selection:
-                mask=fin[group]['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
             if group + '/' + v == cfv['cdmname']:
                 vlist.append(cfv['shortname'])
                 try:
@@ -766,11 +758,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                             fout.create_dataset_like(vlist[-1], fin[group][v],
                                                      shape=idx.shape,
                                                      chunks=True)
-                            hilf = fin[group][v][idx[0]:idx[-1] + 1]
-                            if v in ['observation_value','obsvalue@body']:
-                                hilf[mask]=np.nan
-                            #hilf = hilf[idx[0]:idx[-1] + 1]  # use a min:max range
-#                             hilf = fin[group][v][idx[0]:idx[-1] + 1]  # use a min:max range
+                            hilf = fin[group][v][idx[0]:idx[-1] + 1]  # use a min:max range
                             if 'time' in v:
                                 # convert time units
                                 us = fin[group][v].attrs['units']
@@ -791,9 +779,10 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                     else:                        
                         if v == 'station_name':
                             s1 = fin[group][v].shape[1]
+                            cshape=(max([min([1000,idx.shape[0]]),np.int(np.sqrt(idx.shape[0]/10))]),s1)
                             fout.create_dataset_like(vlist[-1], fin[group][v],
                                                      shape=(idx.shape[0], s1),
-                                                     chunks=True)
+                                                     chunks=cshape)
                             sname = 'string{}'.format(s1)
                             if sname not in fout.keys():
                                 fout.create_dataset(sname,
@@ -810,9 +799,10 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                         
                         else: 
                             s1 = fin[group][v].shape[1]
+                            cshape=(max([min([1000,idx.shape[0]]),np.int(np.sqrt(idx.shape[0]/10))]),s1)
                             fout.create_dataset_like(vlist[-1], fin[group][v],
                                                      shape=(idx.shape[0], s1),
-                                                     chunks=True)
+                                                     chunks=cshape,compression='gzip',compression_opts=1)
                             sname = 'string{}'.format(s1)
                             if sname not in fout.keys():
                                 fout.create_dataset(sname,
@@ -822,14 +812,11 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                                     'This is a netCDF dimension but not a netCDF variable.')
                                 fout[sname].make_scale(sname)
                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
-                            hilf[mask, :] = np.nan
-                            #hilf = hilf[idx[0]:idx[-1] + 1, :]
-#                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
-                            if hilf.shape[0] == 0:
-                                print('x')
+                            #if hilf.shape[0] == 0:
+                                #print('x')
                             fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                             
-                except MemoryError as e:
+                except Exception as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
                     hilf = np.zeros(shape=(idx.shape[0]), dtype='S10')
@@ -871,72 +858,6 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
     if tt > 0.4:
         logger.warning('slow copy: %s %f s', group, tt)
 
-
-def copy_h5py_variable(fin:h5py.File, fout:h5py.File, variable:str):
-    """Copy variable or group from one file to the other
-
-    Args:
-        fin ([type]): h5py File
-        fout ([type]): h5py File
-        variable (str): variable, e.g. /observations_table/observation_value
-
-    Raises:
-        IOError: [description]
-    """
-    # fin is open?
-    if not (fin and fout):
-        raise IOError("File status not opened. IN {} OUT {}".format(fin, fout))
-    
-    path = variable.split('/')
-    variable = path[-1]
-    current = ''
-    gid = fout
-    for ipath in path:
-        if ipath != variable:
-            # check group
-            current += '/' + ipath
-            try:
-                gid = fout[current]
-            except:
-                gid = fout.create_group(current)
-    # get variable
-    fvar = fin[current + '/' + variable]
-    if isinstance(fvar, h5py.Group):
-        # recursive loop for Groups
-        for ivar in fvar.keys():
-            copy_h5py_variable(fin, fout, '{}/{}/{}'.format(current, variable, ivar))
-        return
-    
-    # A Variable or Dimension ?
-    if 'CLASS' in fvar.attrs.keys():
-        # This is a dimension scale -> DIMENSION
-        return
-    
-    # Create in output
-    gid.create_dataset_like(variable, fvar, dtype=fvar.dtype, shape=fvar.shape, chunks=True)
-    # trasfer data
-    gid[variable][:] = fvar[:]
-    for iatt, ival in fvar.attrs.items():
-        if iatt in ['DIMENSION_LIST']:
-            continue
-        gid[variable].attrs[iatt] = ival
-    #
-    # Attach dimensions from file
-    #
-    try:
-        idim = [ jdim[0].name for jdim in fvar.dims.keys() ]
-    except:
-        idim = None # this should happen for dimensions like index, string??
-    
-    if idim:
-        for j,jdim in enumerate(idim):
-            # /observations_table/index
-            kdim = jdim.split('/')[-1]
-            if kdim not in gid.keys():
-                gid.create_dataset_like(kdim, fin[jdim])
-                gid[kdim].make_scale(kdim)
-                gid[variable].dims[j].attach_scale(gid[kdim])
-    fout.flush() # Write
 
 ###############################################################################
 #
@@ -1122,7 +1043,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
     # mimicks process_flat from cds_eua2
     msg = ''  # Message or error
     filename = ''  # Filename
-    #print('request_variables: ', request_variables)
+    print(request_variables)
     try:
         if 'gridded' in request_variables:
             filename_out = outputdir + '/dest_gridded_' + str(request_variables['variable'][0]) + '.nc'
@@ -1218,7 +1139,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     suffix = ['0-20000-0-', '0-20300-0-', '0-20001-0-']
 
                 for ss in suffix:
-                    filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v1.nc')  
+                    filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  
                     # version as a variable
                     #filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
                     #if len(filename) > 0:
@@ -1248,10 +1169,6 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             # Make a subset of groups/variables to read (speed up)
             # Need to add station_configuration (required later) in read_write_request
             #
-            if 'da' in request_variables:
-                da=request_variables['da']
-            else:
-                da=True
             gdict = {
                 'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
                 'observations_table':['date_time','z_coordinate','observation_value','observed_variable','report_id'],
@@ -1263,39 +1180,21 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 gdict['advanced_uncertainty']=[]
                 gdict['advanced_homogenisation']=[]
 #                 gdict['advanced_homogenization']=[]
-            if 'cdm' in request_variables:
-                gdict['observations_table']=[]
-                gdict['era5fb']=[]
-                gdict['advanced_uncertainty']=[]
-                gdict['advanced_homogenisation']=[]
-                gdict['crs']=[]
-                gdict['observed_variable']=[]
-                gdict['sensor_configuration']=[]
-                gdict['source_configuration']=[]
-                gdict['station_configuration']=[]
-                gdict['station_configuration_codes']=[]
-                gdict['station_type']=[]
-                gdict['units']=[]
-                gdict['z_coordinate_type']=[]
-                da=False
-            with CDMDataset(filename=filename, groups=gdict,da=da) as data:
+            with CDMDataset(filename=filename, groups=gdict) as data:
                 if debug: print('x',time.time()-tt)
-#                 try:
                 data.read_write_request(filename_out=filename_out,
                                         request=request_variables,
                                         cf_dict=cftable)
-#                 except:
-#                     pass
             if debug: 
                 print(time.time()-tt)
                 print('')
 
-    except MemoryError as e:
-    #except MemoryError as e:
+    except Exception as e:
+    #except Exception as e:
         if debug:
             raise e
-        logger.error('MemoryError %s occurred while reading %s', repr(e), filename)
-        return '', 'MemoryError "{}" occurred while reading {}'.format(e, filename)
+        logger.error('Exception %s occurred while reading %s', repr(e), filename)
+        return '', 'Exception "{}" occurred while reading {}'.format(e, filename)
 
     return filename_out, msg
 
@@ -1365,8 +1264,8 @@ def unstack_cube_by_hour(data: xr.DataArray, dim: str = 'time', hour: str = 'hou
     return data
 
 
-def align_datetime(data, dim: str = 'time', plev: str = 'plev', times: tuple = (0, 12), span: int = 3,
-                   freq: str = '12h', apply:bool = False, **kwargs) -> xr.DataArray:
+def align_datetime(data: xr.DataArray, dim: str = 'time', plev: str = 'plev', times: tuple = (0, 12), span: int = 3,
+                   freq: str = '12h', **kwargs) -> xr.DataArray:
     """ Align dates and times according to times (0,12) and within a time span (e.g. 3 hours).
     Add a coordinate (e.g. standard_time) with nominal launch times according to times and span and freq.
 
@@ -1377,7 +1276,6 @@ def align_datetime(data, dim: str = 'time', plev: str = 'plev', times: tuple = (
         times (tuple): sounding times
         span (int): plus minus times (smaller than freq/2)
         freq (str): frequency of output times
-        apply (bool): apply new standard time?
 
     Returns:
         xr.DataArray : datetime standardized DataArray
@@ -1385,8 +1283,8 @@ def align_datetime(data, dim: str = 'time', plev: str = 'plev', times: tuple = (
     import numpy as np
     from pandas import DatetimeIndex
 
-    if not isinstance(data, (xr.DataArray, xr.Dataset)):
-        raise ValueError('Requires a DataArray/Dataset', type(data))
+    if not isinstance(data, xr.DataArray):
+        raise ValueError('Requires a DataArray', type(data))
 
     if dim not in data.dims:
         raise ValueError('Requires a datetime dimension', dim)
@@ -1495,13 +1393,8 @@ def align_datetime(data, dim: str = 'time', plev: str = 'plev', times: tuple = (
     logger.info("Modified dates: %d, Standard %s: %d / %d / %d", nn, str(times), idx_std.sum(), nx, newdates.size)
     if not all(data[jname].values == np.sort(data[jname].values)):
         logger.warning("Values are not sorted by %s", jname)
-        # data = data.sortby(jname)
         pass
-        
-    if apply:
-        data = data.swap_dims({dim: jname}).rename({dim: '{}_reported'.format(dim)}).rename({jname : dim})
-        data[dim].attrs['info'] = jname
-        data['{}_reported'.format(dim)].attrs['info'] = dim
+        # data = data.sortby(jname)
     return data
 
 
@@ -1703,7 +1596,7 @@ def cds_request_wrapper(request: dict, request_filename: str = None, cds_dataset
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except MemoryError as e:
+    except Exception as e:
         logger.error('CDSAPI Request failed %s', str(request))
         raise e
 
@@ -1768,7 +1661,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except MemoryError as e:
+    except Exception as e:
         logger.error('VM Request failed %s', str(request))
         raise e
 
@@ -1893,7 +1786,7 @@ class CDMDataset:
     # memory efficient, no duplicates
     # __slots__ = ['filename', 'file', 'groups', 'data']
 
-    def __init__(self, filename: str = None, groups: dict = None, mode:str = 'r',da=False):
+    def __init__(self, filename: str = None, groups: dict = None, mode:str = 'r'):
         """ Init Class CDMDataset with a filename, cds_request or vm_request
 
         Args:
@@ -1912,7 +1805,6 @@ class CDMDataset:
         if filename is None:
             raise ValueError('Specifiy either filename.')
  
-        self.da=da
         if filename == 'empty':
             self.filename = ''
             self.name = ''
@@ -1926,10 +1818,7 @@ class CDMDataset:
             logger.debug("[OPEN] %s", self.filename)
             self.hasgroups = False
             self.groups = []
-            if not da:
-                self.inquire(groupdict=groups)  # Get variables and Groups
-            else:
-                self.groups=list(self.file.keys())
+            self.inquire(groupdict=groups)  # Get variables and Groups
 
     def __getitem__(self, item):
         return self.__getattribute__(item)
@@ -1945,7 +1834,7 @@ class CDMDataset:
     def __repr__(self):
         text = "File: " + repr(self.file)
         text += "\nPermissions: %s%s (%s)" % ('R' if os.access(self.filename, os.R_OK) else '', 'W' if os.access(self.filename, os.W_OK) else '', os.getlogin())
-        text += "\nFilesize: %.2f MB" % (self.file.id.get_filesize()/1024/1024)
+        text += "\nFilesize: %.2f MB" % (self.file.fid.get_filesize()/1024/1024)
         text += "\nFilename: " + self.filename
         text += "\n(G)roups/(V)ariables: \n"
         for igroup in self.groups:
@@ -1966,6 +1855,7 @@ class CDMDataset:
         groups = list(self.file.keys())
         if groupdict is not None:
             groups = [igroup for igroup in groups if igroup in groupdict.keys()]
+        
         try:
             for igroup in groups:
                 # Group or Variable
@@ -1981,10 +1871,9 @@ class CDMDataset:
                         jgroup = getattr(self, igroup)  # Get CDMGroup
 
                     jgroup.update(link=self.file[igroup])  # reconnect to Group, e.g. if reopened
-                    #varkeys=list(self.file[igroup].keys())
-
+                    varkeys=list(self.file[igroup].keys())
                     if groupdict is not None:
-                        varkeys = groupdict[igroup] if len(groupdict[igroup]) > 0 else list(self.file[igroup].keys()) #varkeys
+                        varkeys = groupdict[igroup] if len(groupdict[igroup]) > 0 else varkeys
                     
                     for ivar in varkeys:
                         try:
@@ -2002,9 +1891,8 @@ class CDMDataset:
                     if new:
                         setattr(self, igroup, CDMVariable(self.file[igroup], igroup, shape=self.file[igroup].shape))
                     self[igroup].update(link=self.file[igroup])
-                
 
-        except MemoryError as e:
+        except Exception as e:
             logger.debug(repr(e))
             self.close()
 
@@ -2014,20 +1902,7 @@ class CDMDataset:
         self.file.close()
         logger.debug("[CLOSED] %s", self.filename)
 
-    def copy(self, filename:str, force:bool = False, variables:list = None, groups:list = None, fuzzy:bool=False):
-        """Copy whole file (via shell) or variables or groups (via h5py)
-
-        Args:
-            filename (str): output filename
-            force (bool, optional): Overwrite output file? Defaults to False.
-            variables (list, optional): list of variables to copy. e.g. /observations_table/report_id. Defaults to None.
-            groups (list, optional): list of groups to copy. Defaults to None.
-            fuzzy (bool, optional): Search fuzzy for variable names. Defaults to False.
-
-        Raises:
-            OSError: [description]
-            RuntimeError: [description]
-        """
+    def copy(self, filename:str, force:bool = False):
         import os
         import shutil
 
@@ -2037,23 +1912,8 @@ class CDMDataset:
         if filename == self.filename:
             raise RuntimeError("Filename is identical with current?")
         
-        if variables is None and groups is None:
-            shutil.copy(self.filename, filename)
-            logger.info("copy complete [%s] to %s", self.name, filename)
-        else:
-            logger.warning("This is experimental. I hope you know waht you are doing.")
-            if isinstance(variables, str):
-                variables = [variables]
-            if isinstance(groups, str):
-                groups = [groups]
-            
-            with h5py.File(filename, 'w') as f:
-                for ivar in variables:
-                    copy_h5py_variable(self.file, f, ivar)
-                for igroup in groups:
-                    copy_h5py_variable(self.file, f, igroup)
-            logger.info("Copied variables [%d] to %s", len(variables), filename)
-
+        shutil.copy(self.filename, filename)
+        logger.info("copy [%s] to %s", self.name, filename)
 
     def reopen(self, mode: str = 'r', tmpdir: str='~/tmp', write_to_filename: str = None, strict:bool = False, **kwargs):
         """ Reopen the HDF5 file with different mode
@@ -2075,7 +1935,6 @@ class CDMDataset:
             shutil.copy(self.filename, write_to_filename)
             logger.warning("reopen [%s] Copy file to %s", mode, write_to_filename)
             self.filename = write_to_filename
-            self.name = self.filename.split('/')[-1]
             self.file = h5py.File(self.filename, mode=mode, **kwargs)
 
         else:
@@ -2097,7 +1956,6 @@ class CDMDataset:
                     shutil.copy(self.filename, '{}/{}'.format(tmpdir, self.name))
                     logger.warning("reopen [%s] Copy file to %s/%s", mode, tmpdir, self.name)
                     self.filename = '{}/{}'.format(tmpdir, self.name)
-                    self.name = self.filename.split('/')[-1]
                     self.file = h5py.File(self.filename, mode=mode, **kwargs)
                 else:
                     raise OSError('reopen with', mode, self.filename)
@@ -2106,8 +1964,8 @@ class CDMDataset:
     
     def storage_info(self, group:str=None, variable:str=None, limit:float = 0.1):
         # get file size and check 
-        ffree = self.file.id.get_freespace() # space due to deleting
-        fsize = self.file.id.get_filesize()
+        ffree = self.file.fid.get_freespace() # space due to deleting
+        fsize = self.file.fid.get_filesize()
         text = "File: " + repr(self.file)
         text += "\nFilesize: %.2f MB" % (fsize/1024/1024)
         text += "\nFile freespace: %.2f MB (might need to repack)" % (ffree/1024/1024)
@@ -2360,18 +2218,17 @@ class CDMDataset:
                                                    z_coordinate_name='z_coordinate',
                                                    group='observations_table',
                                                    dimgroup='observations_table',
-                                                   return_index=True,
-                                                   rtsindex=request.get('rtsidx',None)
+                                                   return_index=True
                                                    )
         logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange.start,
                      trange.stop, time.time() - time0, self.name)
         tt=time.time() - time0
         print(tt)
         idx = np.where(mask)[0] + trange.start  # absolute integer index
+        print(time.time() - time0)
         if len(idx) == 0:
             logger.warning('No matching data found %s', self.name)
             raise ValueError('No matching data found')  # add CDMname for logging
-            #return
 
         logger.debug('Data found: %d %s', len(idx), self.name)
         #
@@ -2381,42 +2238,21 @@ class CDMDataset:
         trajectory_index2 = np.zeros_like(idx, dtype=np.int32)
         if 'recordinindex' in self.groups:
             # unsorted indices in root
-            recordindex = self.file['recordindex'][()]
+            recordindex = self['recordindex'][()]
         else:
             # sorted indices are in recordindices group / by variable
-            recordindex = self.file['recordindices'][str(cdmnum)][()]  # values
+            recordindex = self['recordindices'][str(cdmnum)][()]  # values
+        
+        for jj in range(1):
             
-        zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex <= trange.stop))[0]
-        #zidx2=np.zeros_like(zidx)
-            
-        #zidx2 = recordindex[zidx]
-        #recordindex=np.unique(recordindex)
-        #zidx=np.unique(recordindex)
-        
-        #rt=self.observations_table.date_time[trange][idx-trange.start]
-        #for i in range(rt.shape[0]-1):
-            #if rt[i+1]>rt[i]:
-                #if i+1+trange.start not in recordindex:
-                    #print(i)
-        
-        
-        #rr=self.observations_table.report_id[trange][idx-trange.start]
-        #rp=self.observations_table.z_coordinate[trange][idx-trange.start]
-        #l=0
-        #for a,b,c in zip(rt,rr,rp):
-            #print(a,b.view('S11'),c)
-            #l+=1
-            #if l>100:
-                #break
-        
-        
-        #calc_trajindexfast_rt(recordindex,trajectory_index,trange.start)
-        zidx = calc_trajindexfastl(recordindex, zidx, idx, trajectory_index)
-        #
-        # Dimensions and Global Attributes
-        #
-        tt=time.time() - time0
-        print(tt)
+            zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex <= trange.stop))[0]
+            print(time.time() - time0)
+            zidx = calc_trajindexfastl(recordindex, zidx, idx, trajectory_index)
+            #
+            # Dimensions and Global Attributes
+            #
+            tt=time.time() - time0
+            print(tt)
         dims = {'obs': np.zeros(idx.shape[0], dtype=np.int32),
                 'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
         globatts = get_global_attributes()  # could put more infors there ?
@@ -2462,10 +2298,6 @@ class CDMDataset:
         tt=time.time() - time0
         print(tt)
         
-        #rstcd = self.file['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
-        #zrstcd=recordindex[zidx+1]-idx[0]
-        rstcd=None
-        
         with h5py.File(filename_out, 'w') as fout:
             # todo future -> this could be replaced by a self.write_to_frontend_file(filename_out, )
             #
@@ -2484,109 +2316,15 @@ class CDMDataset:
                 "index of trajectory this obs belongs to")
             fout['trajectory_index'].attrs['instance_dimension'] = np.string_("trajectory")
             fout['trajectory_index'].attrs['coordinates'] = np.string_("lat lon time plev")
-            
-            #
-            # Adding CDM
-            #
-            cdm_obstab = []
-            cdm_eratab = []
-            cdmlist = request.get('cdm', None)
-            if cdmlist != None:
-                # removing variables with restricted access
-                if ('era5fb/obsvalue@body' in cdmlist) or ('observations_table/observation_value' in cdmlist):
-                    try: cdmlist.remove('era5fb/obsvalue@body')
-                    except: pass
-                    try: cdmlist.remove('observations_table/observation_value')
-                    except: pass
-                for i in cdmlist:
-                    grp = i.split('/')[0]
-                    if i == 'era5fb':
-                        logger.debug('Full observations_table CDM-request disabled.')
-#                         eralist = ['albedo@modsurf', 'an_depar@body', 'an_depar@surfbody_feedback', 'an_sens_obs@body', 'andate', 
-#                                    'antime', 'biascorr@body', 'biascorr_fg@body', 'bufrtype@hdr', 'class', 'codetype@hdr',
-#                                    'collection_identifier@conv', 'date@hdr', 'datum_anflag@body', 'datum_event1@body', 'datum_rdbflag@body',
-#                                    'datum_sfc_event@surfbody_feedback', 'datum_status@body', 'datum_status@surfbody_feedback', 
-#                                    'eda_spread@errstat', 'entryno@body', 'expver', 'fg_depar@body', 'fg_depar@surfbody_feedback', 
-#                                    'fg_error@errstat', 'final_obs_error@errstat', 'groupid@hdr', 'index', 'lat@hdr', 'lon@hdr', 'lsm@modsurf',
-#                                    'lsm@surfbody_feedback', 'numtsl@desc', 'obs_error@errstat', 'obstype@hdr', 'orography@modsurf',
-#                                    'ppcode@conv_body', 'qc_pge@body', 'report_event1@hdr', 'report_rdbflag@hdr', 'report_status@hdr', 'reportype',
-#                                    'seaice@modsurf', 'sensor@hdr', 'seqno@hdr', 'snow_density@surfbody_feedback', 'snow_depth@modsurf', 
-#                                    'snow_depth@surfbody_feedback', 'sonde_type@conv', 'source@hdr', 'source_id', 'stalt@hdr', 'statid@hdr',
-#                                    'station_type@conv', 'stream', 'subtype@hdr', 'time@hdr', 'timeseries_index@conv', 'timeslot@timeslot_index',
-#                                    'tsfc@modsurf', 'type', 'unique_identifier@conv', 'varbc_ix@body', 'varno@body', 'vertco_reference_1@body', 
-#                                    'vertco_reference_2@body', 'vertco_type@body', 'windspeed10m@modsurf']
-#                         for j in eralist:
-#                             cdm_eratab.append(j)
-#                             cfcopy[j]={'cdmname': i, 'units': '', 'shortname': j, 'coordinates': 'lat lon time plev', 'standard_name': j, 'cdsname': j,}
-                    elif grp == 'era5fb':
-                        try: 
-                            var = i.split('/')[1]
-                            cdm_eratab.append(var)
-                            cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
-                        except: pass
-                        cdmlist.remove(i)
-                        
-                    if i == 'observations_table':
-                        logger.debug('Full observations_table CDM-request disabled.')
-#                         obslist = ['adjustment_id', 'advanced_assimilation_feedback', 'advanced_homogenisation', 'advanced_qc',
-#                                    'advanced_uncertainty', 'bbox_max_latitude', 'bbox_max_longitude', 'bbox_min_latitude', 
-#                                    'bbox_min_longitude', 'code_table', 'conversion_flag', 'conversion_method', 'crs', 'data_policy_licence',
-#                                    'date_time', 'date_time_meaning', 'exposure_of_sensor', 'latitude', 'location_method', 'location_precision',
-#                                    'longitude', 'numerical_precision', 'observation_duration', 'observation_height_above_station_surface', 
-#                                    'observation_id', 'observed_variable', 'original_code_table', 'original_precision', 'original_units', 'original_value',
-#                                    'processing_level', 'quality_flag', 'report_id', 'secondary_value', 'secondary_variable', 'sensor_automation_status',
-#                                    'sensor_id', 'source_id', 'spatial_representativeness', 'traceability', 'units', 'value_significance', 'z_coordinate',
-#                                    'z_coordinate_method', 'z_coordinate_type',]
-#                         for j in obslist:
-#                             cdm_obstab.append(j)
-#                             cfcopy[j]={'cdmname': i, 'units': '', 'shortname': j, 'coordinates': 'lat lon time plev', 'standard_name': j, 'cdsname': j,}
-                    elif grp == 'observations_table':
-                        try: 
-                            var = i.split('/')[1]
-                            cdm_obstab.append(var)
-                            cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
-                        except: pass
-                        cdmlist.remove(i)
-                        # NOW USE THOSE for the do_cfcopy below
-                logger.debug('CDM - adding groups and variables: %s', str(cdmlist))
-                for cdmstring in cdmlist:
-                    print(cdmstring)
-                    cdmsplit = cdmstring.split('/')
-#                     try:
-                    print(self.groups)
-                    if cdmsplit[0] in self.groups:
-                        print('group available')
-                        # TODO: Add attributes and descriptions?
-                        # whole group
-                        if len(cdmsplit) == 1:
-                            print('group copy')
-                            fout.create_group(cdmsplit[0])
-                            for cdmvar in self[cdmsplit[0]].keys():
-                                try:
-                                    fout[cdmsplit[0]].create_dataset(cdmvar, data=self[cdmsplit[0]][cdmvar][:])
-                                except:
-                                    pass
-                        # single var of group 
-                        if len(cdmsplit) == 2:
-                            print('single var copy')
-                            try:
-                                fout.create_group(cdmsplit[0])
-                            except:
-                                pass # group alread exists?
-                            try:
-                                fout[cdmsplit[0]].create_dataset(cdmsplit[1], data=self[cdmsplit[0]][cdmsplit[1]][:])
-                            except:
-                                pass
             #
             # Variables based on cfcopy
             #
-            print(cfcopy)
             if 'observations_table' in self.groups:
                 igroup = 'observations_table'
-                do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
+                do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                         'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']+cdm_obstab)
+                                         'original_precision', 'reference_sensor_id', 'report_id'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 fout['time'].make_scale('time')
@@ -2596,9 +2334,9 @@ class CDMDataset:
             if 'era5fb' in self.groups:
                 igroup = 'era5fb'
                 try:
-                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                               var_selection=['fg_depar@body', 'an_depar@body',
-                                             'biascorr@body']+cdm_eratab)
+                                             'biascorr@body'])
                     # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:
@@ -2609,7 +2347,7 @@ class CDMDataset:
             if 'adjera5' in self.groups:
                 igroup = 'adjera5'
                 try:
-                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                               var_selection=['bias_estimate', 'bias_estimation_method'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:
@@ -2618,56 +2356,6 @@ class CDMDataset:
             #
             # advanced_homogenisation
             # 
-#             varsel=[]
-#             if 'advanced_homogenization' in self.groups or 'advanced_homogenisation' in self.groups :
-#                 igroup = 'advanced_homogenization'
-#                 if 'advanced_homogenisation' in self.groups:
-#                     igroup = 'advanced_homogenisation'
-#                 try:
-#                     for o in request['optional']:
-#                         if o in varseldict[request['variable']]:
-#                             varsel.append(o)
-#                 except:
-#                     pass
-                        
-#                 if varsel:       
-#                     try:
-#                         do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-#                                   var_selection=varsel)
-#                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-#                     except KeyError as e:
-#                         raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
-                        
-                        
-                        
-                        
-                        
-#             try:
-#                 for o in request['optional']:
-#                     if o in varseldict[request['variable']]:
-#                         varsel.append(o)
-#             except:
-#                 pass
-
-#             if 'advanced_homogenization' in self.groups:
-#                 print('advanced_homogenization in self.groups')
-#                 igroup = 'advanced_homogenization'
-#                 try:
-#                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-#                               var_selection = varsel)
-#                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-#                 except KeyError as e:
-#                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
-
-#             if 'advanced_homogenisation' in self.groups:
-#                 print('advanced_homogenization in self.groups')
-#                 igroup = 'advanced_homogenisation'
-#                 try:
-#                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-#                               var_selection = varsel)
-#                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-#                 except KeyError as e:
-#                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
 
                     
             if 'advanced_homogenisation' in self.groups :
@@ -2682,7 +2370,7 @@ class CDMDataset:
                         
                 if varsel:       
                     try:
-                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
+                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                                   var_selection=varsel)
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     except KeyError as e:
@@ -2697,7 +2385,7 @@ class CDMDataset:
                 print('advanced_uncertainty in self.groups')
                 igroup = 'advanced_uncertainty'
                 try:
-                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
                               var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:
@@ -2710,7 +2398,7 @@ class CDMDataset:
                 igroup = 'header_table'
                 # only records fitting criteria (zidx) are copied
                 # todo why is lon, lat not here?
-                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', None,
+                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory',
                           var_selection=['report_id'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 # ,'station_name','primary_station_id'])
@@ -2730,10 +2418,9 @@ class CDMDataset:
                                      'standard_name': 'station_name'
                                  }
                                 } 
-                do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', rstcd,
+                do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs',
                           var_selection=['station_name'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-            
             #
             # Fix Attributes and Globals
             #
@@ -2764,8 +2451,7 @@ class CDMDataset:
                         oldkey=(request['optional'][0])
                         fout['ta']=fout[oldkey]
                         fout.__delitem__(oldkey)
-            
-
+                        
             for i in fout.keys():
                 #print(i)
                 if (i == 'obs' or i == 'trajectory' or 'string' in i):
@@ -2778,12 +2464,6 @@ class CDMDataset:
                     fout[newname] = fout[i]
                     fout.__delitem__(i)
                     fout[newname].attrs['version'] = np.string_(version[1:]) # 'x.x'
-                    
-            # removing variables with restricted access
-            try: fout['observations_table'].__delitem__('observation_value')
-            except: pass
-            try: fout['era5fb'].__delitem__('obsvalue@body')
-            except: pass
                     
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
@@ -2817,13 +2497,17 @@ class CDMDataset:
             date_time_name = date_time_name if date_time_name != 'date_time' else 'time'
 
         if dates is not None:
+            #
+            # loading variables allows reusing them in memory / faster for follow up requests
+            # recordtimestamp gives unique dates (smaller array)
+            # todo future update will have more dimensions / sorted by variable
+            # structure yet unclear
             if 'recordtimestamp' in self.groups:
                 timestamp = self.load_variable_from_file('recordtimestamp', return_data=True)[0]
                 timestamp_units = self.read_attributes('recordtimestamp').get('units', None)
-            elif 'recordindices' in self.groups:
-                if isinstance(self['recordindices'], CDMGroup):
-                    timestamp = self.load_variable_from_file('recordtimestamp', group='recordindices', return_data=True)[0]
-                    timestamp_units = self.read_attributes('recordtimestamp', group='recordindices').get('units', None)
+            elif isinstance(self['recordindices'], CDMGroup):
+                timestamp = self.load_variable_from_file('recordtimestamp', group='recordindices', return_data=True)[0]
+                timestamp_units = None #self.read_attributes('recordtimestamp', group='recordindices').get('units', None)
             else:
                 # backup if recordtimestamp not present
                 timestamp = self.load_variable_from_file(date_time_name, return_data=True)[0]
@@ -2897,7 +2581,7 @@ class CDMDataset:
             else:
                 trange = slice(timeindex[0], timeindex[-1] + 1)
 
-            time_units = self.read_attributes(date_time_name, group=group).get('units', '')
+            time_units = timestamp_units #self.read_attributes(date_time_name, group=group).get('units', '')
             if timestamp_units != time_units:
                 logger.warning('Timeunits missmatch? %s <> %s', timestamp_units, time_units)
                 raise ValueError('Timeunits missmatch?', timestamp_units, time_units)
@@ -2974,34 +2658,31 @@ class CDMDataset:
             mixed, as they are available, like records. Hence to retrieve one variable the observed_variable needs
             to be used to subset the array in memory (faster)
         """
-        
-        if not self.da:        
-            if not self.hasgroups:
-                raise RuntimeError('This function only works with CDM Backend files')
-    
-            if dimgroup not in self.groups:
-                raise ValueError('Missing group?', dimgroup)
-    
-            if group not in self.groups:
-                raise ValueError('Missing group?', group)
-    
-            if not isinstance(variable, str):
-                raise ValueError('(variable) Requires a string name, not ', str(variable))
-    
-            if not isinstance(varnum, int):
-                raise ValueError('(varnum) Requires a integer number, not', str(varnum))
-    
-            if use_odb_codes:
-                if varnum not in odb_codes.values():
-                    raise ValueError('(varnum) Code not in ODB Codes', variable, str(odb_codes))
-            else:
-                if varnum not in cdm_codes.values():
-                    raise ValueError('(varnum) Code not in CDM Codes', variable, str(cdm_codes))
-    
-            # TODO for the new files this variable is not mandatory anymore !!!
-            if observed_variable_name not in self[dimgroup].keys():
-                raise ValueError('Observed variable not found:', observed_variable_name, self[dimgroup].keys())
-    
+        if not self.hasgroups:
+            raise RuntimeError('This function only works with CDM Backend files')
+
+        if dimgroup not in self.groups:
+            raise ValueError('Missing group?', dimgroup)
+
+        if group not in self.groups:
+            raise ValueError('Missing group?', group)
+
+        if not isinstance(variable, str):
+            raise ValueError('(variable) Requires a string name, not ', str(variable))
+
+        if not isinstance(varnum, int):
+            raise ValueError('(varnum) Requires a integer number, not', str(varnum))
+
+        if use_odb_codes:
+            if varnum not in odb_codes.values():
+                raise ValueError('(varnum) Code not in ODB Codes', variable, str(odb_codes))
+        else:
+            if varnum not in cdm_codes.values():
+                raise ValueError('(varnum) Code not in CDM Codes', variable, str(cdm_codes))
+
+        if observed_variable_name not in self[dimgroup].keys():
+            raise ValueError('Observed variable not found:', observed_variable_name, self[dimgroup].keys())
+
         if dates is not None:
             if not isinstance(dates, list):
                 dates = [dates]
@@ -3010,29 +2691,15 @@ class CDMDataset:
             if not isinstance(plevs, (list, np.ndarray)):
                 plevs = [plevs]
             plevs=np.asarray(plevs,dtype=np.float32)
-            
         
-        if self.da and 'rtsindex' in kwargs.keys():
-            svarnum=str(varnum)
-            ssvar=self.file['recordindices'][svarnum]
-            if kwargs['rtsindex'][1]<ssvar.shape[0]:
-                trange=slice(ssvar[kwargs['rtsindex'][0]],ssvar[kwargs['rtsindex'][1]],None)
-            else:
-                trange=slice(ssvar[kwargs['rtsindex'][0]],ssvar[-1],None)
-                
-        else:
-            
-            trange = self.make_datetime_slice(dates=dates, varnum=varnum, date_time_name=date_time_name,
+        
+        trange = self.make_datetime_slice(dates=dates, varnum=varnum, date_time_name=date_time_name,
                                           date_time_in_seconds=date_time_in_seconds,
                                           add_day_before=True if times is not None else False)
         
         if dates is not None:
-            print('dates not None')
-            if not self.da:
-                print('da False')
-                xdates = self[dimgroup][date_time_name][trange]
+            xdates = self[dimgroup][date_time_name][trange]
         else:
-            print('dates None')
             xdates = self.load_variable_from_file(date_time_name, group=dimgroup, return_data=True)[0][trange]
         
         #
@@ -3048,7 +2715,7 @@ class CDMDataset:
         elif 'recordindex' in self.groups:
             logic = (self[dimgroup][observed_variable_name][trange] == varnum)
         else:
-            logic = np.ones(trange.stop-trange.start, dtype=np.bool)
+            logic = np.ones(xdates.shape, dtype=np.bool)
             # todo apply trange before, to make a subset 
         logger.info('[READ] Observed variable %s', varnum)
         #
@@ -3056,20 +2723,17 @@ class CDMDataset:
         #
         xplevs = None
         if plevs is not None:
-            if self.da:
-                xplevs=self.file[dimgroup][z_coordinate_name][trange]
+            if z_coordinate_name not in self[dimgroup].keys():
+                raise ValueError('Pressure variable not found:', z_coordinate_name, self[dimgroup].keys())
+            p_attrs = self.read_attributes(z_coordinate_name, group=dimgroup)
+            p_units = p_attrs.get('units', 'Pa')
+            if p_units != 'Pa':
+                RuntimeWarning('Pressure variable wrong unit [Pa], but', p_units)
+
+            if dates is None:
+                xplevs = self.load_variable_from_file(z_coordinate_name, group=dimgroup, return_data=True)[0][trange]
             else:
-                if z_coordinate_name not in self[dimgroup].keys():
-                    raise ValueError('Pressure variable not found:', z_coordinate_name, self[dimgroup].keys())
-                p_attrs = self.read_attributes(z_coordinate_name, group=dimgroup)
-                p_units = p_attrs.get('units', 'Pa')
-                if p_units != 'Pa':
-                    RuntimeWarning('Pressure variable wrong unit [Pa], but', p_units)
-    
-                if dates is None:
-                    xplevs = self.load_variable_from_file(z_coordinate_name, group=dimgroup, return_data=True)[0][trange]
-                else:
-                    xplevs = self[dimgroup][z_coordinate_name][trange]
+                xplevs = self[dimgroup][z_coordinate_name][trange]
             if len(plevs) == 1:
                 logic = logic & (xplevs == plevs[0])
             else:
@@ -3304,9 +2968,6 @@ class CDMDataset:
         Returns:
             DataFrame
         """
-        # TODO change to search for variables and select whole groups
-        # it is inconsistent to use variables + groups to select !!!
-        # TODO add feature to select only one variable
         if self.hasgroups:
             if isinstance(groups, str):
                 if groups == '/':
@@ -4067,18 +3728,14 @@ class CDMDataset:
                                 'This is a netCDF dimension but not a netCDF variable.')
                             gid[sname].make_scale(sname)
                             gid[name].dims[1].attach_scale(gid[sname])
-                        # TODO check if old string dimension is still used or not ?
+                        # todo check if old string dimension is still used or not ?
                         #
                         # Attach dimensions from file
                         #
                         try:
-                            # TODO there might be conflict if dimensions are used from a different group
-                            # this is not accounted here (beacuse of our structure) 
-                            # e.g. [/observations_table/index, /observations_table/string11]
-                            idim = [jdim.name for jdim in self.file[dimgroup][variable].dims.keys()][0]
+                            idim = self.file[dimgroup][variable].dims[0].keys()[0]
                         except:
                             idim = ''
-                        idim = idim.split('/')[-1] if '/' in idim else idim
                         idim = idim if idim != '' else 'index'
                         if idim not in gid.keys():
                             gid[idim] = self.file[dimgroup][idim]
@@ -4290,13 +3947,12 @@ class CDMDataset:
         # Loop input and file dates/pressures -> Matches
         reverse_index(match_index, f_dates, f_plevs, in_dates, in_plevs)
         logic = (match_index > -1)
-        # Might give 0 missing, because all dates have been found, but not all pressure levels (e.g. from a cube)
         if logic.sum() != in_dates.shape[0]:
             missing = in_dates[~np.in1d(in_dates, in_dates[match_index[logic]])]
-            logger.debug('Not all input dates are found %s', missing.shape)
+            logger.warning('Not all input dates are found %s', missing.shape)
             logger.debug('Missing dates: %s', str(missing))
         else:
-            logger.debug('All dates found %d', logic.sum())
+            logger.info('All dates found')
 
         values = data.values
         if interpolate and not np.issubdtype(values.dtype, str):
@@ -4344,7 +4000,6 @@ class CDMDataset:
                 # shapes of file and input do not match?
                 if self[name].shape[1] != n:
                     if force_replace:
-                        # TODO update with copy_h5py_variable code (which is much more general)
                         #
                         # Replace existing variable
                         #
@@ -4361,29 +4016,25 @@ class CDMDataset:
                         self.file[name] = self.file['temp123']  # overwrite
                         del self.file['temp123']  # remove temporary dataset
                         #
-                        # Dimension names have been removed (phony_dim_x)
+                        # String dimensionwith with size (n)
                         #
-                        if False:
-                            #
-                            # String dimension with size (n)
-                            #
-                            sname = 'string{}'.format(n)
-                            if sname not in self.file.keys():
-                                self.file.create_dataset(sname, data=np.zeros(n, dtype='S1'), chunks=True)
-                                self.file[sname].attrs['NAME'] = np.string_(
-                                    'This is a netCDF dimension but not a netCDF variable.')
-                                self.file[sname].make_scale(sname)
-                                self.file[name].dims[1].attach_scale(self.file[sname])
-                            # todo check if old string dimension is still used or not ?
-                            #
-                            # Attach dimensions from file
-                            #
-                            idim = self.file[name].dims[0].keys()[0]
-                            idim = idim if idim != '' else 'obs'
-                            if idim not in self.file.keys():
-                                self.file[idim] = self.file[idim]
-                                self.file[idim].make_scale()
-                            self.file[name].dims[0].attach_scale(self.file[idim])
+                        sname = 'string{}'.format(n)
+                        if sname not in self.file.keys():
+                            self.file.create_dataset(sname, data=np.zeros(n, dtype='S1'), chunks=True)
+                            self.file[sname].attrs['NAME'] = np.string_(
+                                'This is a netCDF dimension but not a netCDF variable.')
+                            self.file[sname].make_scale(sname)
+                            self.file[name].dims[1].attach_scale(self.file[sname])
+                        # todo check if old string dimension is still used or not ?
+                        #
+                        # Attach dimensions from file
+                        #
+                        idim = self.file[name].dims[0].keys()[0]
+                        idim = idim if idim != '' else 'obs'
+                        if idim not in self.file.keys():
+                            self.file[idim] = self.file[idim]
+                            self.file[idim].make_scale()
+                        self.file[name].dims[0].attach_scale(self.file[idim])
                     else:
                         assert self[name].shape[1] == n, 'Shapes do not match, force_replace=True to ' \
                                                          'overwrite '
@@ -4405,27 +4056,23 @@ class CDMDataset:
                 writeme = np.zeros((f_dates.shape[0], n), dtype='S1')
                 writeme[mask, :] = chararray[match_index[logic], :]  # fill Array
                 #
-                # Dimension names have been removed (phony_dim_x)
-                # 
-                if False:
-                    #
-                    # String dimensionwith with size (n)
-                    #
-                    sname = 'string{}'.format(n)
-                    if sname not in self.file.keys():
-                        self.file.create_dataset(sname, data=np.zeros(n, dtype='S1'), chunks=True)
-                        self.file[sname].attrs['NAME'] = np.string_('This is a netCDF dimension but not a netCDF variable.')
-                        self.file[sname].make_scale(sname)
-                        self.file[name].dims[1].attach_scale(self.file[sname])
-                    #
-                    # Attach dimensions from file
-                    #
-                    idim = self.file[name].dims[0].keys()[0]
-                    idim = idim if idim != '' else 'obs'
-                    if idim not in self.file.keys():
-                        self.file[idim] = self.file[idim]
-                        self.file[idim].make_scale()
-                    self.file[name].dims[0].attach_scale(self.file[idim])
+                # String dimensionwith with size (n)
+                #
+                sname = 'string{}'.format(n)
+                if sname not in self.file.keys():
+                    self.file.create_dataset(sname, data=np.zeros(n, dtype='S1'), chunks=True)
+                    self.file[sname].attrs['NAME'] = np.string_('This is a netCDF dimension but not a netCDF variable.')
+                    self.file[sname].make_scale(sname)
+                    self.file[name].dims[1].attach_scale(self.file[sname])
+                #
+                # Attach dimensions from file
+                #
+                idim = self.file[name].dims[0].keys()[0]
+                idim = idim if idim != '' else 'obs'
+                if idim not in self.file.keys():
+                    self.file[idim] = self.file[idim]
+                    self.file[idim].make_scale()
+                self.file[name].dims[0].attach_scale(self.file[idim])
         #
         # Just for numbers
         #
@@ -4456,21 +4103,17 @@ class CDMDataset:
                                          fillvalue=fillvalue,
                                          compression='gzip')  # Create a new dataset
                 #
-                # Dimension names have been removed (phony_dim_x)
+                # Attach dimensions from file
                 #
-                if False:
-                    #
-                    # Attach dimensions from file
-                    #
-                    try:
-                        idim = self.file[name].dims[0].keys()[0]
-                    except:
-                        idim = ''
-                    idim = idim if idim != '' else 'obs'
-                    if idim not in self.file.keys():
-                        self.file[idim] = self.file[idim]
-                        self.file[idim].make_scale()
-                    self.file[name].dims[0].attach_scale(self.file[idim])
+                try:
+                    idim = self.file[name].dims[0].keys()[0]
+                except:
+                    idim = ''
+                idim = idim if idim != '' else 'obs'
+                if idim not in self.file.keys():
+                    self.file[idim] = self.file[idim]
+                    self.file[idim].make_scale()
+                self.file[name].dims[0].attach_scale(self.file[idim])
                 writeme = np.full(f_dates.shape,
                                   fillvalue,
                                   dtype=values.dtype)
@@ -4481,15 +4124,14 @@ class CDMDataset:
         #
         self.file[name][()] = writeme  # Write the new data
         #
-        # Write Attributes (can cause: can't open HDF5 attribute)
+        # Write Attributes
         #
         if attributes is not None:
             for ikey, ival in attributes.items():
-                self.file[name].attrs[ikey] = np.string_(str(ival))
-                #if isinstance(ival, str):
-                #    self.file[name].attrs[ikey] = np.string_(ival)
-                #else:
-                #    self.file[name].attrs[ikey] = ival
+                if isinstance(ival, str):
+                    self.file[name].attrs[ikey] = np.string_(ival)
+                else:
+                    self.file[name].attrs[ikey] = ival
         self.file.flush()  # Put changes into the file
         self.inquire()  # update Groups and variable lists
         self[name].update(data=writeme)  # update class in memory
@@ -4827,44 +4469,93 @@ class CDMDataset:
             [date_time_name, z_coordinate_name])
         return data
 
-    def check_cdm_dimensions(self):
-        """Check the CDM Backend file if it has proper dimensions attached to variables.
-    
+    def copy_group_to(self, file, group:str, variables:list=None, force:bool=False, **kwargs):
+        """Copy group to other file
+
+        Args:
+            file ([CDMDataset, str]): output CDMDataset or filename
+            group (str): group to copy
+            variables (list, optional): subset of variables. Defaults to None.
+            force (bool, optional): overwrite?. Defaults to False.
+
+        Raises:
+            RuntimeError: CDM Backend file
+            RuntimeError: CDM Backend file output
+            ValueError: Group not found
+            RuntimeError: Group exists
         """
         if not self.hasgroups:
-            raise RuntimeError('Only for CDM Backend files')
-
-        def check_dims(fin):
-            collect = {}
-            for ivar in fin.keys():
-                if isinstance(fin[ivar], h5py.Group):
-                    collect.update(check_dims(fin[ivar]))
-                else:
-                    try:
-                        # get dimension names
-                        collect[fin[ivar].name] = [ jdim[0].name for jdim in fin[ivar].dims.keys() ]
-                    except:
-                        # if error, than it is a dimension
-                        collect[fin[ivar].name] = 'dim'
-            return collect
-
-        collect = check_dims(self.file)
-        dims = []
-        for ivar,ival in collect.items():
-            if isinstance(ival, str):
-                dims.append(ivar)
-                
-        dims = sorted(list(set(dims)))
-        found = [False]*len(dims)
-        for ivar,ival in collect.items():
-            if isinstance(ival, list):
-                for idim in ival:
-                    if idim in dims:
-                        found[dims.index(idim)] = True
-            # TODO check if variables have proper dimensions set?
+            raise RuntimeError('Only for CDM Backend files', self.name)
         
-        for i,j in zip(dims, found):
-            print("{:<70} : {}".format(i,j))
+        close_again = False
+        if not isinstance(file, CDMDataset):
+            file = CDMDataset(file)
+            close_again = True
+        
+        if not file.hasgroups:
+            if close_again:
+                file.close()
+            raise RuntimeError('Only for CDM Backend files', file.name)
+
+        file.reopen(mode='r+', strict=True)
+        if group not in self.groups:
+            if close_again:
+                file.close()
+            raise ValueError('Group', group, 'not found in ', self.name)
+        
+        if group in file.groups and not force:
+            if close_again:
+                file.close()
+            raise RuntimeError('Group exists in ', file.name, 'Use force=True, to overwrite')
+
+        # Check if dimensions match ?
+        assert self.file['observations_table']['date_time'].shape == file.file['observations_table']['date_time'].shape, 'Error dimensions do not match between files'
+        # Finaly do something:
+        gid = self.file[group]
+        if group not in file.groups:
+            if variables is None:
+                # copy the whole group
+                logger.info("Copying whole group %s to %s", group, file.name)
+                self.file.copy(group, file.file)
+                if close_again:
+                    file.close()
+                else:
+                    file.inquire()  # update the class
+                return
+            else:
+                ogid = file.file.create_group(group)
+        else:
+            ogid = file.file[group]  # get group
+
+        # copy all ?
+        if variables is None:
+            variables = list(gid.keys())
+
+        for ivar in variables:
+            # variables exists ?
+            # TODO add merge variables here?
+            if ivar in ogid.keys():
+                del ogid[ivar] # remove in file
+                del file[group][ivar] # remove in class
+            
+            ogid.create_dataset_like(ivar,
+                                     gid[ivar],
+                                     dtype=gid[ivar].dtype,
+                                     shape=gid[ivar].shape,
+                                     chunks=True,
+                                     compression='gzip')
+            if len(gid[ivar].shape) > 1:
+                # What about string dimensions?
+                # copy these dimensions/ or is that auto done?
+                pass
+        
+        logger.info('Finsihed writing %s to %s', group, self.name)
+        if close_again:
+            file.close()
+        else:
+            file.file.flush()  # Make sure the changes are written
+            file.inquire() # update representation in class
+        # FIN function copy_group_to
     # FIN class CDMDataset
 
 """
