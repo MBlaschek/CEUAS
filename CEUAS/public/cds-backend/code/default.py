@@ -781,6 +781,10 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     # Direct Access
     #
     if da is not None:
+        if da == 'False':
+            da = False
+        if da == 'True':
+            da = True
         if not isinstance(da, bool):
             raise KeyError("Invalid type selected at da - only bool is valid: " + da)
         else:
