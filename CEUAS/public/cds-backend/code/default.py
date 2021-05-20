@@ -732,7 +732,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                day: list = None, month: list = None, year: list = None, date: list = None, time: list = None, 
                bbox: list = None, country: str = None, area: list = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
-               gridded: list = None, toolbox: str = None, cdm: list = None, 
+               gridded: list = None, toolbox: str = None, cdm: list = None, da: bool = True,
                pass_unknown_keys: bool = False,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
@@ -776,7 +776,18 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     # possible values: [sounding, monthly, gridded]
     if product_type is not None:
         logger.warning('Not yet implemented: product_type : %s' % product_type)
+    
+    #
+    # Direct Access
+    #
+    if da is not None:
+        if not isinstance(da, bool):
+            raise KeyError("Invalid type selected at da - only bool is valid: " + da)
+        else:
+            d['da'] = da
 
+    
+    
     #
     # Variable
     #
