@@ -54,20 +54,12 @@ import pickle
 from itertools import product
 import numpy as np
 
-try:
-#    set_start_method("spawn")  # or fork ? not sure why, pickling?
-    set_start_method("forkserver")  # fork is not threadsafe, unfortunately
-    P=Pool(10) 
-    x=P.map(np.sin,np.arange(10))
-    print(x)
-except RuntimeError:
-    pass
 
 if False:
     import cds_eua2 as eua  # old version
     CDS_EUA_VERSION = 2
 else:
-#     sys.path.append(os.path.expanduser('~leo/python/CEUAS/CEUAS/public/cds-backend/code'))
+    sys.path.append(os.path.expanduser('~leo/python/CEUAS/CEUAS/public/cds-backend/code'))
     import cds_eua3 as eua  # new version with CDMDataset class
     CDS_EUA_VERSION = 3
 
@@ -169,13 +161,13 @@ for i, j in config.items():
 ###############################################################################
 host = socket.gethostname()
 logger.info("HUG started on %s", host)
-# try:
-#     # todo this part is deprecated / LEO delete?
-#     if 'srvx' in host:
-#         sys.path.append(os.path.expanduser('~leo/python/'))
-#         config['data_dir'] = os.environ["RSCRATCH"]  # ?
-# except:
-#     pass
+try:
+    # todo this part is deprecated / LEO delete?
+    if 'srvx' in host:
+        sys.path.append(os.path.expanduser('~leo/python/'))
+        config['data_dir'] = os.environ["RSCRATCH"]  # ?
+except:
+    pass
 
 global constraints
 try:
@@ -266,42 +258,47 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
     return active
 
 def read_tstamps(fn):
+    if '0-20100-0-01802' in fn:
+        print(fn)
     with h5py.File(fn,'r') as f:
     #print(f[fk]['recordindices'].keys())
-        fk=fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]
+        fk=fn.split('/')[-1].split('_CEUAS_merged')[0]
         print(fk)
         rts=f['recordindices']['recordtimestamp'][:]
     return fk,rts
 
-def pkl_initialize(config):
+def pkl_initialize(config,slist=[]):
 
     #set_start_method('forkserver') 
 
-#    flist=glob.glob(os.path.expandvars(config['data_dir'] + 'converted_v5/0-*-0-*_CEUAS_merged_v1.nc')) 
-#     config['data_dir']='/raid60/scratch/leo/scratch/converted_v5'
-#     config['comp_dir']='/raid60/scratch/leo/scratch/converted_v5'
-    slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v1.nc'))
-    slist += glob.glob(os.path.expandvars(config['data_dir'] + '/0-20?00-0-*_CEUAS_merged_v1.nc'))
-    slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
-    slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
+##    flist=glob.glob(os.path.expandvars(config['data_dir'] + 'converted_v5/0-*-0-*_CEUAS_merged_v1.nc')) 
+    #config['data_dir']='/raid60/scratch/leo/scratch/converted_v5'
+    #config['comp_dir']='/raid60/scratch/leo/scratch/converted_v5'
+    #slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v1.nc'))
+    #slist += glob.glob(os.path.expandvars(config['data_dir'] + '/0-20?00-0-*_CEUAS_merged_v1.nc'))
+    #slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
+    #slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
     #flist=glob.glob(os.path.expandvars(rpath+'*.nc'))
-    fout=os.path.expandvars(config['config_dir'] + '/h5link.pkl')
+    fout=os.path.expandvars(config['data_dir']+'/h5link.pkl')
     
     tt=time.time()
     rtsdict={}
     i=0
     imem=0
     
-    try:
-            
-        with open(fout, 'rb') as f:
-            rtskeys,rtsidx,rtsarr=pickle.load(f)
-    except: 
-            
+    if not slist:
+        
+        try:
+                
+            with open(fout, 'rb') as f:
+                rtskeys,rtsidx,rtsarr=pickle.load(f)
+        except: 
+            raise ValueError('cannot read '+fout)
+    else:         
         #with h5py.File(fout,'r') as f:
         l=0
-        with Pool(10) as p:
-            tup=map(read_tstamps,slist)
+        #with Pool(10) as p:
+        tup=map(read_tstamps,slist)
         rtsdict=dict(tup)
         #for fn in flist:
             #with h5py.File(fn,'r') as f:
@@ -323,7 +320,6 @@ def pkl_initialize(config):
         rtskeys=list(rtsdict.keys())                          ## contains the station IDs
         
         with open(fout, 'wb') as f:
-            print('writing h5link')
             pickle.dump((rtskeys,rtsidx,rtsarr), f, pickle.HIGHEST_PROTOCOL)
         
         x=0
@@ -364,18 +360,24 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
     #
     active_file = config['config_dir'] + '/active.json'
     namelist_file  = config['config_dir'] + '/namelist.json'
+    
+    config['data_dir']='/raid60/scratch/leo/scratch/converted_v5'
+    config['comp_dir']='/raid60/scratch/leo/scratch/comp'
+    
     namelist = None
     active = None
     if os.path.isfile(active_file) and not force_reload:
         try:
             with open(active_file) as f:
                 active = json.load(f)
+            logger.info('Active Stations read. [%d]', len(active))
+            
             rtskeys,rtsidx,rtsarr,fout=pkl_initialize(config)
             active['rtsarr']=rtsarr
             active['rtsidx']=rtsidx
             active['rtskeys']=rtskeys
-            logger.info('Active Stations read. [%d]', len(active))
-        except Exception:
+        except Exception as e:
+            logger.info('Active Stations will be created.')
             active = None
     if os.path.isfile(namelist_file) and not force_reload:
         try:
@@ -389,8 +391,6 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         #
         # find Merged Netcdf files and intercomparison files
         #
-#         config['data_dir']='/raid60/scratch/leo/scratch/converted_v5'
-#         config['comp_dir']='/raid60/scratch/leo/scratch/converted_v5'
         slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v1.nc'))
         slist += glob.glob(os.path.expandvars(config['data_dir'] + '/0-20?00-0-*_CEUAS_merged_v1.nc'))
         slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
@@ -420,11 +420,24 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
                 k = next(iter(s))
                 active[k] = s[k]
         logger.info('Active Stations created. [%d]', len(active))
+        
         try:
             with open(active_file, 'w') as f:
                 json.dump(active, f)
-        except Exception as e:
+        except MemoryError as e:
             logger.warning('Cannot write %s: %s', active_file, e)
+
+        try:
+            
+            rtskeys,rtsidx,rtsarr,fout=pkl_initialize(config,slist=slist)
+            active['rtsarr']=rtsarr
+            active['rtsidx']=rtsidx
+            active['rtskeys']=rtskeys
+            
+        except MemoryError as e:
+            logger.warning('Cannot write %s: %s', 'timestamp file h5link.pkl', e)
+        
+    
             
     if namelist is None:
         volapath = 'https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
@@ -454,7 +467,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         try:
             with open(namelist_file, 'w') as f:
                 json.dump(namelist, f)
-        except Exception as e:
+        except MemoryError as e:
             logger.warning('Cannot write %s: %s', namelist_file, e)
     #
     # Read CDM Definitions
@@ -468,7 +481,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         try:
             with open(cdm_file, 'w') as f:
                 json.dump(cf, f)
-        except Exception as e:
+        except MemoryError as e:
             logger.warning('Cannot write %s: %s', cdm_file, e)
     #
     # list of country codes -> used for country selection in check_body
@@ -501,17 +514,21 @@ active, wmo_regions, cf = init_server()
 
 # Active Station Numbers
 slnum = list(active.keys())
-print(slnum)
-for i in ['rtskeys','rtsidx','rtsarr']:
-    try:
-        slnum.pop(slnum.index(i))
-    except:
-        pass
+#for i in ['rtskeys','rtsidx','rtsarr']:
+    #slnum.pop(slnum.index(i))
 
 
 # slist = [config['data_dir'] + '/0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
 # slist = [s[5] for _,s in active.items()]
 
+try:
+#    set_start_method("spawn")  # or fork ? not sure why, pickling?
+    set_start_method("forkserver")  # fork is not threadsafe, unfortunately
+    P=Pool(10) 
+    x=P.map(np.sin,np.arange(10))
+    print(x)
+except RuntimeError:
+    pass
 
 ###############################################################################
 #
@@ -1059,7 +1076,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                     
                 statid = [] 
                 [statid.append(x) for x in new_statid if x not in statid] 
-        except Exception:
+        except MemoryError:
             raise RuntimeError(
                 'Invalid selection, specify either bbox, country or statid. Use "statid":"all" to select all ' \
                 'stations ')
@@ -1287,7 +1304,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                ((int(body['date'][-1][:4])-int(body['date'][0][:4]))*12 # years in months
                 + (int(body['date'][-1][4:6])-int(body['date'][0][4:6])))) # months
 #     if len(body['variable']) == 1 and ((int(body['date'][-1][:4])-int(body['date'][0][:4]))*12 + (int(body['date'][-1][4:6])-int(body['date'][0][4:6]))) == 1:
-#         logger.warning('Requesting more than 500 elements - Exception: 1 variable and 1 month of every station')
+#         logger.warning('Requesting more than 500 elements - MemoryError: 1 variable and 1 month of every station')
 #     if lenprod > 30000:
 #         # lenght restriction deactivated as long following line is out commented.
 #         raise RuntimeError('Request too large - please split')
@@ -1306,18 +1323,22 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     else:
         start=1
         ende=5000000000
+
     tt=time.time()
-    if len(body['statid'])>1:
-        gdict2,lidx=eua.searchdate(active['rtsidx'], active['rtsarr'], start,ende)
+    if len(body['statid'])>1:     
+        gdict2,lidx=eua.searchdate(active['rtsidx'], active['rtsarr'], start,ende)    
         gdict2=dict(zip([active['rtskeys'][l] for l in lidx],list(gdict2)))
         gd={}
         for b in body['statid']:
             try:
-
+                
                 gd[b]=gdict2[b]
             except:
                 pass
         gdict2=gd
+        body['statid']=gd
+                
+            
     else:
         idx=active['rtskeys'].index(body['statid'][0])
         gdict2,lidx=eua.searchdate(active['rtsidx'][idx:idx+2], active['rtsarr'], start,ende)    
@@ -1475,7 +1496,7 @@ def index(request=None, response=None):
     logger.debug("GET %s", request.query_string)
     if '=' not in request.query_string:
         response.status = hug.HTTP_422
-        raise Exception('A query string must be supplied')
+        raise MemoryError('A query string must be supplied')
 
     try:
         rs = request.query_string.split('&')
@@ -1493,7 +1514,7 @@ def index(request=None, response=None):
 
     except:
         response.status = hug.HTTP_422
-        raise Exception(request.query_string)
+        raise MemoryError(request.query_string)
 
     randdir = '{:012d}'.format(numpy.random.randint(100000000000))
     logger.info("%s GET %s", randdir, str(body))
@@ -1501,7 +1522,7 @@ def index(request=None, response=None):
     try:
         # rfile = process_request(body, tmpdir, config['data_dir'], wmo_regions)
         rfile = process_request(body, tmpdir, wmo_regions, debug=config['debug'])
-    except Exception as e:
+    except MemoryError as e:
         logger.error("%s GET FAILED, %s", randdir, e)
         with open(config['logger_dir'] + '/failed_requests.log', 'a+') as ff:
             ff.write('%s - %s [%s] Message: %s \n' % (str(datetime.now()), randdir, str(body), e))
@@ -1519,12 +1540,12 @@ def index(request=None, response=None):
     return rfile
 
 
-@hug.exception(Exception)
+@hug.exception(MemoryError)
 def base_exception_handler(exception, response=None):
-    """ This captures any Exception from the Server
+    """ This captures any MemoryError from the Server
 
     Args:
-        exception: hug.exceptions.Exception class
+        exception: hug.exceptions.MemoryError class
         response: HTTP Response
 
     Returns:
@@ -1566,7 +1587,7 @@ def index(request=None, body=None, response=None):
     try:
         #rfile='/fio/srvx7/leo/x'
         rfile = process_request(body, tmpdir, wmo_regions, P, debug=config['debug'])
-    except Exception as e:
+    except MemoryError as e:
         logger.error("%s POST FAILED, %s", randdir, e)
         with open(config['logger_dir'] + '/failed_requests.log', 'a+') as ff:
             ff.write('%s - %s [%s] Message: %s \n' % (str(datetime.now()), randdir, str(body), e))
@@ -1820,7 +1841,7 @@ def statdata(date=None, mindate=None, enddate=None, response=None):
 
 
 if __name__ == '__main__':
-    active, wmo_regions, cf = init_server()
+    #active, wmo_regions, cf = init_server()
     #
     # Parse command line arguments for testing the server API
     #
