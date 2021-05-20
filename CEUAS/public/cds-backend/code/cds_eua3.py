@@ -1273,7 +1273,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 gdict['station_type']=[]
                 gdict['units']=[]
                 gdict['z_coordinate_type']=[]
-            with CDMDataset(filename=filename, groups=gdict,da=True) as data:
+            with CDMDataset(filename=filename, groups=gdict,da=request_variables['da']) as data:
                 if debug: print('x',time.time()-tt)
 #                 try:
                 data.read_write_request(filename_out=filename_out,
@@ -3018,9 +3018,12 @@ class CDMDataset:
                                           add_day_before=True if times is not None else False)
         
         if dates is not None:
+            print('dates not None')
             if not self.da:
+                print('da False')
                 xdates = self[dimgroup][date_time_name][trange]
         else:
+            print('dates None')
             xdates = self.load_variable_from_file(date_time_name, group=dimgroup, return_data=True)[0][trange]
         
         #
