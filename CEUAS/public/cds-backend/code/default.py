@@ -519,17 +519,6 @@ active, wmo_regions, cf = init_server()
 
 # Active Station Numbers
 slnum = list(active.keys())
-<<<<<<< HEAD
-#for i in ['rtskeys','rtsidx','rtsarr']:
-    #slnum.pop(slnum.index(i))
-=======
-# print(slnum)
-for i in ['rtskeys','rtsidx','rtsarr']:
-    try:
-        slnum.pop(slnum.index(i))
-    except:
-        pass
->>>>>>> d4656967880c9fe2dfe07fba8762945c72ab55fd
 
 
 # slist = [config['data_dir'] + '/0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
@@ -1371,13 +1360,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                 pass
         gdict2=gd
         body['statid']=gd
-<<<<<<< HEAD
-                
-            
-=======
-        print(body['statid'])
-        
->>>>>>> d4656967880c9fe2dfe07fba8762945c72ab55fd
+
     else:
         idx=active['rtskeys'].index(body['statid'][0])
         gdict2,lidx=eua.searchdate(active['rtsidx'][idx:idx+2], active['rtsarr'], start,ende)    
