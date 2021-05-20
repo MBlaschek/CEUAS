@@ -869,6 +869,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 raise KeyError("Invalid type selected at CDM - only string is valid: " + cdm)
         else:
             d['cdm'] = cdm
+            d['da'] = False
 
     #
     # gridded [lower left upper right]
@@ -1215,6 +1216,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                     raise ValueError('invalid selection, time out of range [0-24 h]: %d' % int(time[i]))
             except:
                 raise ValueError('invalid selection, time allows only integer, ' + time[i])
+        d['da'] = False
         d['time']=time
 
     return d
