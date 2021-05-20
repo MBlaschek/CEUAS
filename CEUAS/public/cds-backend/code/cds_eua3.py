@@ -829,7 +829,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                                 print('x')
                             fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                             
-                except Exception as e:
+                except MemoryError as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
                     hilf = np.zeros(shape=(idx.shape[0]), dtype='S10')
@@ -1248,6 +1248,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             # Make a subset of groups/variables to read (speed up)
             # Need to add station_configuration (required later) in read_write_request
             #
+            da=True
             gdict = {
                 'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
                 'observations_table':['date_time','z_coordinate','observation_value','observed_variable','report_id'],
@@ -1273,7 +1274,8 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 gdict['station_type']=[]
                 gdict['units']=[]
                 gdict['z_coordinate_type']=[]
-            with CDMDataset(filename=filename, groups=gdict,da=True) as data:
+                da=False
+            with CDMDataset(filename=filename, groups=gdict,da=da) as data:
                 if debug: print('x',time.time()-tt)
                 data.read_write_request(filename_out=filename_out,
                                         request=request_variables,
@@ -1282,12 +1284,12 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 print(time.time()-tt)
                 print('')
 
-    except Exception as e:
-    #except Exception as e:
+    except MemoryError as e:
+    #except MemoryError as e:
         if debug:
             raise e
-        logger.error('Exception %s occurred while reading %s', repr(e), filename)
-        return '', 'Exception "{}" occurred while reading {}'.format(e, filename)
+        logger.error('MemoryError %s occurred while reading %s', repr(e), filename)
+        return '', 'MemoryError "{}" occurred while reading {}'.format(e, filename)
 
     return filename_out, msg
 
@@ -1695,7 +1697,7 @@ def cds_request_wrapper(request: dict, request_filename: str = None, cds_dataset
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except Exception as e:
+    except MemoryError as e:
         logger.error('CDSAPI Request failed %s', str(request))
         raise e
 
@@ -1760,7 +1762,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except Exception as e:
+    except MemoryError as e:
         logger.error('VM Request failed %s', str(request))
         raise e
 
@@ -1973,10 +1975,10 @@ class CDMDataset:
                         jgroup = getattr(self, igroup)  # Get CDMGroup
 
                     jgroup.update(link=self.file[igroup])  # reconnect to Group, e.g. if reopened
-                    varkeys=list(self.file[igroup].keys())
+                    #varkeys=list(self.file[igroup].keys())
 
                     if groupdict is not None:
-                        varkeys = groupdict[igroup] if len(groupdict[igroup]) > 0 else [] #varkeys
+                        varkeys = groupdict[igroup] if len(groupdict[igroup]) > 0 else list(self.file[igroup].keys()) #varkeys
                     
                     for ivar in varkeys:
                         try:
@@ -1996,7 +1998,7 @@ class CDMDataset:
                     self[igroup].update(link=self.file[igroup])
                 
 
-        except Exception as e:
+        except MemoryError as e:
             logger.debug(repr(e))
             self.close()
 
@@ -3006,8 +3008,12 @@ class CDMDataset:
         
         if self.da and 'rtsindex' in kwargs.keys():
             svarnum=str(varnum)
-            trange=slice(self.file['recordindices'][svarnum][kwargs['rtsindex'][0]],
-                         self.file['recordindices'][svarnum][kwargs['rtsindex'][1]],None)
+            ssvar=self.file['recordindices'][svarnum]
+            if kwargs['rtsindex'][1]<ssvar.shape[0]:
+                trange=slice(ssvar[kwargs['rtsindex'][0]],ssvar[kwargs['rtsindex'][1]],None)
+            else:
+                trange=slice(ssvar[kwargs['rtsindex'][0]],ssvar[-1],None)
+                
         else:
             
             trange = self.make_datetime_slice(dates=dates, varnum=varnum, date_time_name=date_time_name,
