@@ -934,6 +934,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     elif bbox is not None:
         # converting from BBOX [lower left upper right] to BBOX [upper left lower right]:
         bbox = [float(bbox[2]), float(bbox[1]), float(bbox[0]), float(bbox[3])]
+        print(bbox)
         if not isinstance(bbox, (list, tuple)) or len(bbox) != 4:
             raise ValueError('Invalid selection, bounding box: [upper left lower right]')
 
@@ -951,18 +952,20 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 or bbox[3] - bbox[1] > 360:
             raise ValueError('Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]')
         statid = []
-        for k, v in active.items():
-            if bbox[0] <= v[2] <= bbox[2]:
+        active_file = config['config_dir'] + '/active.json'
+        bbact = json.load(open(active_file,"r"))
+        for k, v in bbact.items():
+            if bbox[0] <= float(v[2]) <= bbox[2]:
                 if bbox[3] <= 180:
-                    if bbox[1] <= v[3] <= bbox[3]:
+                    if bbox[1] <= float(v[3]) <= bbox[3]:
                         statid.append(k)
                 else:
                     # rectangle crossing date line
-                    if v[3] < 0:
-                        if v[3] >= bbox[1] - 360 and v[3] + 360 <= bbox[3]:
+                    if float(v[3]) < 0:
+                        if float(v[3]) >= bbox[1] - 360 and float(v[3]) + 360 <= bbox[3]:
                             statid.append(k)
                     else:
-                        if bbox[1] <= v[3] <= bbox[3]:
+                        if bbox[1] <= float(v[3]) <= bbox[3]:
                             statid.append(k)
         if len(statid) == 0:
             raise RuntimeError('Invalid selection, bounding box %s contains no radiosonde stations' % str(bbox))
