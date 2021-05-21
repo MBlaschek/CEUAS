@@ -59,7 +59,7 @@ if False:
     import cds_eua2 as eua  # old version
     CDS_EUA_VERSION = 2
 else:
-    sys.path.append(os.path.expanduser('~leo/python/CEUAS/CEUAS/public/cds-backend/code'))
+#     sys.path.append(os.path.expanduser('~leo/python/CEUAS/CEUAS/public/cds-backend/code'))
     import cds_eua3 as eua  # new version with CDMDataset class
     CDS_EUA_VERSION = 3
 
@@ -161,13 +161,13 @@ for i, j in config.items():
 ###############################################################################
 host = socket.gethostname()
 logger.info("HUG started on %s", host)
-try:
-    # todo this part is deprecated / LEO delete?
-    if 'srvx' in host:
-        sys.path.append(os.path.expanduser('~leo/python/'))
-        config['data_dir'] = os.environ["RSCRATCH"]  # ?
-except:
-    pass
+# try:
+#     # todo this part is deprecated / LEO delete?
+#     if 'srvx' in host:
+#         sys.path.append(os.path.expanduser('~leo/python/'))
+#         config['data_dir'] = os.environ["RSCRATCH"]  # ?
+# except:
+#     pass
 
 global constraints
 try:
@@ -279,7 +279,7 @@ def pkl_initialize(config,slist=[]):
     #slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
     #slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
     #flist=glob.glob(os.path.expandvars(rpath+'*.nc'))
-    fout=os.path.expandvars(config['data_dir']+'/h5link.pkl')
+    fout=os.path.expandvars(config['config_dir']+'/h5link.pkl')
     
     tt=time.time()
     rtsdict={}
@@ -366,8 +366,8 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
     active_file = config['config_dir'] + '/active.json'
     namelist_file  = config['config_dir'] + '/namelist.json'
     
-    config['data_dir']='/raid60/scratch/leo/scratch/converted_v5'
-    config['comp_dir']='/raid60/scratch/leo/scratch/comp'
+#     config['data_dir']='/raid60/scratch/leo/scratch/converted_v5'
+#     config['comp_dir']='/raid60/scratch/leo/scratch/comp'
     
     namelist = None
     active = None
