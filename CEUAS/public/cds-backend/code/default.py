@@ -978,9 +978,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         if bbox[0] >= bbox[2] or bbox[1] >= bbox[3]:
             raise ValueError('Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]')
 
-        if bbox[0] < -90 or bbox[0] > 90 or bbox[2] < -90 or bbox[2] > 90 or \
-                bbox[1] < -180 or bbox[1] > 360 or bbox[3] < -180 or bbox[3] > 360 \
-                or bbox[3] - bbox[1] > 360:
+        if bbox[0] < -90 or bbox[0] > 90 or bbox[2] < -90 or bbox[2] > 90 or bbox[1] < -180 or bbox[1] > 360 or bbox[3] < -180 or bbox[3] > 360 or bbox[3] - bbox[1] > 360:
             raise ValueError('Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]')
         statid = []
         active_file = config['config_dir'] + '/active.json'
