@@ -646,7 +646,7 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
     """ Convert every file in flist to CSV
 
     Args:
-        flist: list fo files
+        flist: list of files
         ofile: output filename
         name: variable filename inside zip file
 
@@ -696,23 +696,23 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
         logger.debug('Converting %s', fn)
         ds = xarray.open_dataset(fn)            
         
-        to_be_removed = ['trajectory_index', 'trajectory']
-        for ivar in list(ds.variables):
-            if 'string' in ivar:
-                to_be_removed.append(ivar)
+#         to_be_removed = ['trajectory_index', 'trajectory']
+#         for ivar in list(ds.variables):
+#             if 'string' in ivar:
+#                 to_be_removed.append(ivar)
             
-            if 'trajectory' in ds[ivar].dims and ivar not in list(ds.coords):
-                report_id = ds[ivar].astype(object).sum(axis=1).astype(str)
-                ds = ds.drop_vars(ivar)
-                ds[ivar] = ('obs', report_id.values[ds.trajectory_index.values])  # todo obs ???
+#             if 'trajectory' in ds[ivar].dims and ivar not in list(ds.coords):
+#                 report_id = ds[ivar].astype(object).sum(axis=1).astype(str)
+#                 ds = ds.drop_vars(ivar)
+#                 ds[ivar] = ('obs', report_id.values[ds.trajectory_index.values])  # todo obs ???
                 
-            if ds[ivar].ndim > 1:
-                tmp= ds[ivar].astype(object).sum(axis=1).astype(str)
-                ds = ds.drop_vars(ivar)
-                idim = tmp.dims[0]
-                ds[ivar] = (idim, tmp)
+#             if ds[ivar].ndim > 1:
+#                 tmp= ds[ivar].astype(object).sum(axis=1).astype(str)
+#                 ds = ds.drop_vars(ivar)
+#                 idim = tmp.dims[0]
+#                 ds[ivar] = (idim, tmp)
         
-        ds = ds.drop_vars(to_be_removed)
+#         ds = ds.drop_vars(to_be_removed)
         df = ds.to_dataframe()
         #
         # todo fix the primary_id in the NetCDF files
