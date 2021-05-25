@@ -963,9 +963,9 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     # BBOX [lower left upper right]
     #
     elif bbox is not None:
-        # converting from BBOX [lower left upper right] to BBOX [upper left lower right]:
-        bbox = [float(bbox[2]), float(bbox[1]), float(bbox[0]), float(bbox[3])]
-        print(bbox)
+#         # converting from BBOX [lower left upper right] to BBOX [upper left lower right]:
+#         bbox = [float(bbox[2]), float(bbox[1]), float(bbox[0]), float(bbox[3])]
+#         print(bbox)
         if not isinstance(bbox, (list, tuple)) or len(bbox) != 4:
             raise ValueError('Invalid selection, bounding box: [upper left lower right]')
 
@@ -977,7 +977,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
 
         if bbox[0] >= bbox[2] or bbox[1] >= bbox[3]:
             raise ValueError('Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]')
-
+        print(bbox)
         if bbox[0] < -90 or bbox[0] > 90 or bbox[2] < -90 or bbox[2] > 90 or bbox[1] < -180 or bbox[1] > 360 or bbox[3] < -180 or bbox[3] > 360 or bbox[3] - bbox[1] > 360:
             raise ValueError('Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]')
         statid = []
