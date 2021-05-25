@@ -7,6 +7,7 @@ import math
 import os, sys, inspect
 import pytz
 import astral
+import astral.sun
 import datetime
 
     # realpath() will make your script run, even if you symlink it :)
@@ -1023,14 +1024,15 @@ def calc_elevangles(bgdep,lats,lons):
     h12=datetime.timedelta(hours=12)
     elev=numpy.zeros([lats.shape[0],2,45000])
     for l in range(lats.shape[0]):
-        loc=astral.Location(info=('London','Europe',lats[l],lons[l],'Europe/London'))
+#         loc=astral.Location(info=('London','Europe',lats[l],lons[l],'Europe/London'))
+        loc=astral.Observer(latitude=lats[l],longitude=lons[l])
         for it in range(366):
             ltime=datetime.datetime(1900,1,1,1,0)+it*day
 #            ltime=ltime+day
 #               loc.lat=lats[l]
 #               loc.lon=lons[l]
-            elev[l,0,it]=loc.solar_elevation(ltime)
-            elev[l,1,it]=loc.solar_elevation(ltime+h12)
+            elev[l,0,it]=astral.sun.elevation(loc, ltime)
+            elev[l,1,it]=astral.sun.elevation(loc, ltime+h12)
             
 #            print ltime,elev[l,:,it]
 

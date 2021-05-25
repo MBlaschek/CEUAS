@@ -38,7 +38,7 @@ from xarray.core import dataarray
 from numba import njit
 
 try:
-    sys.path.append('../../cds-backend/code/')
+    sys.path.append('../cds-backend/code/')
     import cds_eua3 as eua
 except Exception as e:
     print('CDS_EUA3 Module is required. Add to path')

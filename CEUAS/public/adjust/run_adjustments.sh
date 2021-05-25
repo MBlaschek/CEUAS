@@ -8,8 +8,7 @@ limit stacksize unlimited
 setenv OMP_NUM_THREADS 1
 
 # download data from cds
-cd Converters
-python from_cds_to_legacy.py
+python gettemp.py
 cd ..
 # compiling fortran code
 cd RISE_FORTRAN
@@ -27,7 +26,17 @@ ls -l */*corrsave??????.nc | wc -l
 ../RISE_FORTRAN/raso_correct_nc radcorpar06_24
 ls -l */*corrsave*rio24*.nc | wc -l
 cd ..
-#create RASO and RISO adjustments
+# write adjustments to outputfiles
+cd Converters
+python from_cds_to_legacy.py
+cd ..
+# create RASO and RISO adjustments
 cd Converters
 python ../Converters/add_solarangle_adjustments.py
-ls -l */*corrsave*rio24*.nc | wc -l
+ls -l */ERA5bc_*.nc | wc -l
+cd ..
+
+# download humidity data
+python gethum.py 
+# create humidity adjustments
+./raso_adj_cdm_v1.py -f ./Humidity_adjustments/files/downloaded/downloaded_11035/dest_0-20001-0-11035_relative_humidity.nc --humidity --verbose

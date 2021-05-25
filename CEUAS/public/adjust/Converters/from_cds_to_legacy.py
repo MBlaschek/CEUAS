@@ -4,12 +4,14 @@ import sys,glob
 import os.path
 
 import numpy
+import datetime
 from datetime import date
 import netCDF4
 import time
 from numba import njit
-# from rasotools.utils import *
-# from rasotools.anomaly import *
+sys.path.append('../')
+from utils import *
+from anomaly import *
 import matplotlib.pylab as plt
 import scipy.stats
 import f90nml
@@ -53,98 +55,98 @@ import zipfile, os
 # print(l,' duplicates')
         
 
-http = urllib3.PoolManager()
-r = http.request('GET', 'http://early-upper-air.copernicus-climate.eu/statlist/?mindate=1900-01-01&enddate=2020-12-31')
-fns=r.data.split(b'\n')
-for i in range(len(fns)):
-    fns[i]=fns[i].split(b',')[0].decode()
-# opath=os.path.expandvars('/raid60/raid/home/srvx7/lehre/users/a1400070/adjust/Temperature_adjustment/files')
-opath=os.path.expandvars('../Temperature_adjustment/files')
+# http = urllib3.PoolManager()
+# r = http.request('GET', 'http://early-upper-air.copernicus-climate.eu/statlist/?mindate=1900-01-01&enddate=2020-12-31')
+# fns=r.data.split(b'\n')
+# for i in range(len(fns)):
+#     fns[i]=fns[i].split(b',')[0].decode()
+# # opath=os.path.expandvars('/raid60/raid/home/srvx7/lehre/users/a1400070/adjust/Temperature_adjustment/files')
+# opath=os.path.expandvars('../Temperature_adjustment/files')
 
-print(opath)
-os.chdir(opath)
-#fns=glob.glob('0?????/')
-#fns=[fns[fns.index('0-20000-0-26781')]]
-cdict={'ta':'temperatures','obs_minus_bg':'era5_fgdep','bias_estimate':'bias_estimate','lat':'lat','lon':'lon','hours':'hours'}
-fnu=[]
-fnd=[]
-for fnf in fns:
-    if fnf == fns[0]:
-        continue
-    fn=fnf[-5:]
-    prefix='0'
-    if fn in fnu:
-        print('duplicate '+fnf+', incrementing leading zero to 1')
-        prefix='1'
-    fnu.append(fn)
-    fo=opath+'/feedbackmerged'+prefix+fn+'.nc'
-    print(fo)
-    try:
-        
-        mt=os.path.getmtime(fo)
-        ts=time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(mt))
-        #if ts.split(' ')[0][-2:]=='11':
-            #continue
-    except:
-        pass
-    
-    try:        
-        c = cdsapi.Client()
-        r = c.retrieve('insitu-comprehensive-upper-air-observation-network',
-                       {'variable': 'temperature',
-                        'optional':['obs_minus_bg','bias_estimate'],
-                        'statid': fn,
-                        'pressure_level':[10,20,30,50,70,100,150,200,250,300,400,500,700,850,925,1000]
-                       }
-                      )
-        r.download(target='download.zip')
-        assert os.stat('download.zip').st_size == r.content_length, "Downloaded file is incomplete"
-        z = zipfile.ZipFile('download.zip')
-        z.extractall(path='./downloaded/downloaded_'+fn)
-        z.close()
-        files = glob.glob('./downloaded/downloaded_'+ fn +'/*.nc')
-        data=eua.CDMDataset(files[0])
-
-            
-#         data=eua.vm_request_wrapper({'variable': 'temperature', 'optional':['obs_minus_bg','bias_estimate'],'statid': fn, 'pressure_level':[1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000]}, 
-#                                     overwrite=True,vm_url='http://srvx8.img.univie.ac.at:8002')
-    except Exception as e:
-        print(e)
-        continue
-    dq=data.read_data_to_3dcube(list(cdict.keys()))
-    dql={}
-    for k in dq.keys():
-    ###dq[k].rename_dims({'plev':'pressure'})
-        dql[cdict[k]]=dq[k].rename(cdict[k])
-    xrdq=xr.Dataset(dql).rename_dims({'press':'pressure','datum':'time'})
-    xrdq.attrs['unique_source_identifier']=fnf
-    for ih in range(xrdq['era5_fgdep'].shape[0]):
-        for ip in range(xrdq['era5_fgdep'].shape[1]):
-            v=xrdq['era5_fgdep'].values[ih,ip,:]
-            o=xrdq['temperatures'].values[ih,ip,:]
-            qs=numpy.nanquantile(v,[0.005,0.995])
-            idx=numpy.where(numpy.logical_or(v<qs[0],v>qs[1]))
-            #print(qs,idx)
-            v[idx]=numpy.nan
-            o[idx]=numpy.nan
-            hilf=xrdq['bias_estimate'].values[ih,ip,:]
-            hilf[numpy.isnan(hilf)]=0.
-            xrdq['era5_fgdep'].values[ih,ip,:]=-v-hilf
-            # ignore missing fgdep, bias_estimate
-            #idx=numpy.where(numpy.logical_and(numpy.isnan(v),~numpy.isnan(o)))
-            ##print(len(idx[0]))
-            #xrdq['era5_fgdep'].values[ih,ip,idx]=0.
-
-#     os.mkdir(opath+prefix+fn)
-
+# print(opath)
+# os.chdir(opath)
+# #fns=glob.glob('0?????/')
+# #fns=[fns[fns.index('0-20000-0-26781')]]
+# cdict={'ta':'temperatures','obs_minus_bg':'era5_fgdep','bias_estimate':'bias_estimate','lat':'lat','lon':'lon','hours':'hours'}
+# fnu=[]
+# fnd=[]
+# for fnf in fns:
+#     if fnf == fns[0]:
+#         continue
+#     fn=fnf[-5:]
+#     prefix='0'
+#     if fn in fnu:
+#         print('duplicate '+fnf+', incrementing leading zero to 1')
+#         prefix='1'
+#     fnu.append(fn)
+#     fo=opath+'/feedbackmerged'+prefix+fn+'.nc'
+#     print(fo)
 #     try:
-#         os.mkdir(opath+prefix+fn)
-#         print('dir was made')
+        
+#         mt=os.path.getmtime(fo)
+#         ts=time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(mt))
+#         #if ts.split(' ')[0][-2:]=='11':
+#             #continue
 #     except:
 #         pass
+    
+#     try:        
+#         c = cdsapi.Client()
+#         r = c.retrieve('insitu-comprehensive-upper-air-observation-network',
+#                        {'variable': 'temperature',
+#                         'optional':['obs_minus_bg','bias_estimate'],
+#                         'statid': fn,
+#                         'pressure_level':[10,20,30,50,70,100,150,200,250,300,400,500,700,850,925,1000]
+#                        }
+#                       )
+#         r.download(target='download.zip')
+#         assert os.stat('download.zip').st_size == r.content_length, "Downloaded file is incomplete"
+#         z = zipfile.ZipFile('download.zip')
+#         z.extractall(path='./downloaded/downloaded_'+fn)
+#         z.close()
+#         files = glob.glob('./downloaded/downloaded_'+ fn +'/*.nc')
+#         data=eua.CDMDataset(files[0])
 
-    xrdq.to_netcdf(path=fo, format='NETCDF4_CLASSIC')
-    print('wrote '+fo)
+            
+# #         data=eua.vm_request_wrapper({'variable': 'temperature', 'optional':['obs_minus_bg','bias_estimate'],'statid': fn, 'pressure_level':[1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000]}, 
+# #                                     overwrite=True,vm_url='http://srvx8.img.univie.ac.at:8002')
+#     except Exception as e:
+#         print(e)
+#         continue
+#     dq=data.read_data_to_3dcube(list(cdict.keys()))
+#     dql={}
+#     for k in dq.keys():
+#     ###dq[k].rename_dims({'plev':'pressure'})
+#         dql[cdict[k]]=dq[k].rename(cdict[k])
+#     xrdq=xr.Dataset(dql).rename_dims({'press':'pressure','datum':'time'})
+#     xrdq.attrs['unique_source_identifier']=fnf
+#     for ih in range(xrdq['era5_fgdep'].shape[0]):
+#         for ip in range(xrdq['era5_fgdep'].shape[1]):
+#             v=xrdq['era5_fgdep'].values[ih,ip,:]
+#             o=xrdq['temperatures'].values[ih,ip,:]
+#             qs=numpy.nanquantile(v,[0.005,0.995])
+#             idx=numpy.where(numpy.logical_or(v<qs[0],v>qs[1]))
+#             #print(qs,idx)
+#             v[idx]=numpy.nan
+#             o[idx]=numpy.nan
+#             hilf=xrdq['bias_estimate'].values[ih,ip,:]
+#             hilf[numpy.isnan(hilf)]=0.
+#             xrdq['era5_fgdep'].values[ih,ip,:]=-v-hilf
+#             # ignore missing fgdep, bias_estimate
+#             #idx=numpy.where(numpy.logical_and(numpy.isnan(v),~numpy.isnan(o)))
+#             ##print(len(idx[0]))
+#             #xrdq['era5_fgdep'].values[ih,ip,idx]=0.
+
+# #     os.mkdir(opath+prefix+fn)
+
+# #     try:
+# #         os.mkdir(opath+prefix+fn)
+# #         print('dir was made')
+# #     except:
+# #         pass
+
+#     xrdq.to_netcdf(path=fo, format='NETCDF4_CLASSIC')
+#     print('wrote '+fo)
 
 
 plt.rcParams['lines.linewidth'] = 3
@@ -163,7 +165,7 @@ def read_temperature(stats,fn,tidx,varlist=['temperatures','fg_dep','an_dep']):
             stats['lon']=f.variables['lon'][0]
             for var in varlist:
                 try:
-                    miss_val=getattr(f.variables['temperatures'],'missing_value')
+                    miss_val=getattr(f.variables['temperatures'],'_FillValue')
                     vals=f.variables[var][:]
                     vals[vals==miss_val]=numpy.nan
                     if var=='jracepre_fgdep':
@@ -172,7 +174,7 @@ def read_temperature(stats,fn,tidx,varlist=['temperatures','fg_dep','an_dep']):
                         idx=numpy.where(f.variables['datum'][0]>42735)[0]
                         if idx.shape[0]>0:
                             vals[:,:,idx]=-vals2[:,:,idx]
-                except KeyError:
+                except:# KeyError:
                     vals=f.variables['temperatures'][:]+numpy.nan
                 if var not in ['fg_dep','an_dep']:
                     stats['m'+var]=vals
@@ -232,7 +234,7 @@ def read_temperature(stats,fn,tidx,varlist=['temperatures','fg_dep','an_dep']):
 
 def mergevar(stats,fn,variables,times,mdathilf,var):
     temperatures=numpy.empty([2,stats['mtemperatures'].shape[1],indexmax],dtype=numpy.float32)
-    miss_val=getattr(variables[var],'missing_value')
+    miss_val=getattr(variables[var],'_FillValue')
     vals=variables[var][:]
 
     if 'corr' in fn:
@@ -316,18 +318,17 @@ if __name__ == "__main__":
         exp=sys.argv[1]
 
     try:
-        nml = f90nml.read('/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+'radcorpar')
+        nml = f90nml.read('../radcorpar')
     except:
         pass
-    fgdepname=nml['rfpar']['fgdepname']
-    #f=netCDF4.Dataset('/home/srvx7/raobcore/v1.5.1/export/ERA5/ERA5bc_RAOBCORE_v1.5_070219.nc','r')
-    f=netCDF4.Dataset('/home/srvx7/raobcore/v1.5.1/export/ERA5/ERA5bc_RAOBCORE_v1.5_098646.nc','r')
+    fgdepname='era5_fgdep' #nml['rfpar']['fgdepname']
+    f=netCDF4.Dataset('../ERA5bc_RAOBCORE_v1.5_098646.nc','r')
     f.set_auto_mask(False)
     vals=f.variables['temperatures'][1,3,:]
     offsets=f.variables['datum'][0,:]
     print((vals[:4],offsets[0]))
     print((datetime.date(1900,1,1)+datetime.timedelta(days=int(offsets[0]))))
-    mask=vals!=-999.
+    mask=~numpy.isnan(vals) #vals!=-999.
     #plt.plot(f.variables['datum'][0,mask]/365.25+1900,f.variables['bias'][0,5,mask])
     #plt.show()
 
@@ -342,7 +343,7 @@ if __name__ == "__main__":
     plevs=numpy.asarray([10,20,30,50,70,100,150,200,250,300,400,500,700,850,925,1000])
     nlev=plevs.shape[0]
 
-    fmerged = open('/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/mergedstations.t', 'r').readlines()
+    fmerged = open('../mergedstations.t', 'r').readlines()
     mlist=[]
     for l in fmerged:
         mlist.append(l.split()[2])
@@ -354,9 +355,8 @@ if __name__ == "__main__":
     tidx=calcdays(19000101,(2015-1900)*12)-1
     l=0
     t=time.time()
-    #forig=os.popen('ls /home/srvx7/leo/fastscratch/ei6/*/*_t.nc').read().split()
-    forig=glob.glob('/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/*/feedbackmerged*.nc')
-    #forig=glob.glob('/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/[0-9]*/feedbackmerged010046.nc')
+#     forig=glob.glob('../Temperature_adjustment/*/feedbackmerged*.nc')
+    forig=glob.glob('../Temperature_adjustment/011035/feedbackmerged*.nc')
     ic=0
     for line in forig:
     #    str=line[9:31]
@@ -382,10 +382,9 @@ if __name__ == "__main__":
     #    if len(st)==5:
     #        st='0'+st
     #    st='070361'
-        fns=['/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/feedbackmerged'+st+'.nc',
-#	    '/home/srvx7/leo/scratch/stream1/RAOBCORE_RICH_v1.3_nc/feedbackmerged'+st[1:6]+'.nc',
-'/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/'+'feedbackglobbincorrsave'+st+'.nc',
-            '/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/'+'feedbackglobbincorrsave_rio24_'+st+'.nc'
+        fns=['../Temperature_adjustment/'+st+'/feedbackmerged'+st[0:]+'.nc',
+             '../Temperature_adjustment/'+st+'/feedbackglobbincorrsave'+st[0:]+'.nc',
+             '../Temperature_adjustment/'+st+'/feedbackglobbincorrsave_rio24_'+st[0:]+'.nc'
             ]
         varlists=[['temperatures',fgdepname,'an_dep'],['rasocorr'],['rasocorr']]
     #    fns=['/home/srvx7/leo/fastscratch/ei6/'+st+'/feedbackmerged'+st+'.nc',]
@@ -399,6 +398,7 @@ if __name__ == "__main__":
             print((st,'no data found,cycling ..'))
             continue
         s=stats[st]
+        print('st: ',st)
 
         t2=time.time()
         elev=calc_elevangles(0.,numpy.asarray([s['lat']]),numpy.asarray([s['lon']]))
@@ -409,6 +409,7 @@ if __name__ == "__main__":
         print(('t2:',time.time()-t2))
 
         bdatum=[]
+        print('s[mtemperatures]: ',s.keys())
         try:
             if il==0:
                 full=numpy.empty([2,s['mtemperatures'].shape[1],indexmax],dtype=numpy.float32)
@@ -422,7 +423,6 @@ if __name__ == "__main__":
             print((st,' could not be read'))
             continue
         full.fill(numpy.nan)
-
         if numpy.sum(smask)>0:
             print((st, numpy.sum(smask), ' values found'))
         smask=numpy.abs(s['m'+fgdepname])>20.
@@ -715,9 +715,9 @@ if __name__ == "__main__":
 
         if 'mtemperatures' in list(s.keys()):
             flag=False
-            fn='/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/feedbackmerged'+st+'.nc'
+            fn='../Temperature_adjustment/'+st+'/feedbackmerged'+st+'.nc'
             f = netCDF4.Dataset(fn,"r")
-            fno='/home/srvx7/leo/fastscratch/rise/1.0/'+exp+'/'+st+'/ERA5bc_RAOBCORE_v1.74_'+st+'.nc'
+            fno='../Temperature_adjustment/'+st+'/ERA5bc_RAOBCORE_v1.74_'+st+'.nc'
             fo = netCDF4.Dataset(fno,"w", format='NETCDF4_CLASSIC')
 
             for i in f.ncattrs():

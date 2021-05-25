@@ -72,6 +72,24 @@ logger = logging.getLogger('upperair.cdm')
 ###############################################################################
 
 
+#@njit(cache=True)
+def searchdate(rtsidx,rtsarr,istart,istop=0):
+    if istop==0:
+        istop=istart
+    gdict=np.zeros((rtsidx.shape[0],np.int(2)),dtype='int')
+    lidx=np.zeros_like(rtsidx)
+    l=0
+    for i in range(len(rtsidx)-1):
+        
+        idx=np.searchsorted(rtsarr[rtsidx[i]:rtsidx[i+1]],(istart,istop))
+        if idx[0]<idx[1]: #rtsidx[i+1]-rtsidx[i]:
+#            if rtsarr[rtsidx[i]+idx]-istart<86400: 
+            gdict[l]=idx
+            lidx[l]=i
+            l+=1
+                
+    return gdict[:l],lidx[:l]
+
 #@njit
 def calc_trajindexfast_rt(zidx,trajectory_index,tstart):
 
@@ -733,9 +751,12 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                     except:
                         pass
     vlist = []
+    mask=None
     for _, cfv in cf.items():
         logger.debug('CFCOPY Looking for: %s in %s', cfv['cdmname'], group)
         for v in var_selection:
+            if mask is None and 'data_policy_licence' in var_selection:
+                mask=fin[group]['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
             if group + '/' + v == cfv['cdmname']:
                 vlist.append(cfv['shortname'])
                 try:
@@ -745,9 +766,10 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                             fout.create_dataset_like(vlist[-1], fin[group][v],
                                                      shape=idx.shape,
                                                      chunks=True)
-                            hilf = fin[group][v]
-                            hilf[restricted]=np.nan
-                            hilf = hilf[idx[0]:idx[-1] + 1]  # use a min:max range
+                            hilf = fin[group][v][idx[0]:idx[-1] + 1]
+                            if v in ['observation_value','obsvalue@body']:
+                                hilf[mask]=np.nan
+                            #hilf = hilf[idx[0]:idx[-1] + 1]  # use a min:max range
 #                             hilf = fin[group][v][idx[0]:idx[-1] + 1]  # use a min:max range
                             if 'time' in v:
                                 # convert time units
@@ -799,9 +821,9 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                                 fout[sname].attrs['NAME'] = np.string_(
                                     'This is a netCDF dimension but not a netCDF variable.')
                                 fout[sname].make_scale(sname)
-                            hilf = fin[group][v]
-                            hilf[restricted, :] = np.nan
-                            hilf = hilf[idx[0]:idx[-1] + 1, :]
+                            hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+                            hilf[mask, :] = np.nan
+                            #hilf = hilf[idx[0]:idx[-1] + 1, :]
 #                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
                             if hilf.shape[0] == 0:
                                 print('x')
@@ -1100,7 +1122,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
     # mimicks process_flat from cds_eua2
     msg = ''  # Message or error
     filename = ''  # Filename
-    print(request_variables)
+    #print('request_variables: ', request_variables)
     try:
         if 'gridded' in request_variables:
             filename_out = outputdir + '/dest_gridded_' + str(request_variables['variable'][0]) + '.nc'
@@ -1196,7 +1218,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                     suffix = ['0-20000-0-', '0-20300-0-', '0-20001-0-']
 
                 for ss in suffix:
-                    filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v0.nc')  
+                    filename = os.path.expandvars(datadir + '/' + ss + statid + '_CEUAS_merged_v1.nc')  
                     # version as a variable
                     #filename = glob.glob(os.path.expandvars(datadir + '/' + ss + statid + '*.nc'))
                     #if len(filename) > 0:
@@ -1226,6 +1248,10 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             # Make a subset of groups/variables to read (speed up)
             # Need to add station_configuration (required later) in read_write_request
             #
+            if 'da' in request_variables:
+                da=request_variables['da']
+            else:
+                da=True
             gdict = {
                 'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
                 'observations_table':['date_time','z_coordinate','observation_value','observed_variable','report_id'],
@@ -1237,11 +1263,29 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 gdict['advanced_uncertainty']=[]
                 gdict['advanced_homogenisation']=[]
 #                 gdict['advanced_homogenization']=[]
-            with CDMDataset(filename=filename, groups=gdict) as data:
+            if 'cdm' in request_variables:
+                gdict['observations_table']=[]
+                gdict['era5fb']=[]
+                gdict['advanced_uncertainty']=[]
+                gdict['advanced_homogenisation']=[]
+                gdict['crs']=[]
+                gdict['observed_variable']=[]
+                gdict['sensor_configuration']=[]
+                gdict['source_configuration']=[]
+                gdict['station_configuration']=[]
+                gdict['station_configuration_codes']=[]
+                gdict['station_type']=[]
+                gdict['units']=[]
+                gdict['z_coordinate_type']=[]
+                da=False
+            with CDMDataset(filename=filename, groups=gdict,da=da) as data:
                 if debug: print('x',time.time()-tt)
+#                 try:
                 data.read_write_request(filename_out=filename_out,
                                         request=request_variables,
                                         cf_dict=cftable)
+#                 except:
+#                     pass
             if debug: 
                 print(time.time()-tt)
                 print('')
@@ -1849,7 +1893,7 @@ class CDMDataset:
     # memory efficient, no duplicates
     # __slots__ = ['filename', 'file', 'groups', 'data']
 
-    def __init__(self, filename: str = None, groups: dict = None, mode:str = 'r'):
+    def __init__(self, filename: str = None, groups: dict = None, mode:str = 'r',da=False):
         """ Init Class CDMDataset with a filename, cds_request or vm_request
 
         Args:
@@ -1868,6 +1912,7 @@ class CDMDataset:
         if filename is None:
             raise ValueError('Specifiy either filename.')
  
+        self.da=da
         if filename == 'empty':
             self.filename = ''
             self.name = ''
@@ -1881,7 +1926,10 @@ class CDMDataset:
             logger.debug("[OPEN] %s", self.filename)
             self.hasgroups = False
             self.groups = []
-            self.inquire(groupdict=groups)  # Get variables and Groups
+            if not da:
+                self.inquire(groupdict=groups)  # Get variables and Groups
+            else:
+                self.groups=list(self.file.keys())
 
     def __getitem__(self, item):
         return self.__getattribute__(item)
@@ -1918,7 +1966,6 @@ class CDMDataset:
         groups = list(self.file.keys())
         if groupdict is not None:
             groups = [igroup for igroup in groups if igroup in groupdict.keys()]
-        
         try:
             for igroup in groups:
                 # Group or Variable
@@ -1934,9 +1981,10 @@ class CDMDataset:
                         jgroup = getattr(self, igroup)  # Get CDMGroup
 
                     jgroup.update(link=self.file[igroup])  # reconnect to Group, e.g. if reopened
-                    varkeys=list(self.file[igroup].keys())
+                    #varkeys=list(self.file[igroup].keys())
+
                     if groupdict is not None:
-                        varkeys = groupdict[igroup] if len(groupdict[igroup]) > 0 else varkeys
+                        varkeys = groupdict[igroup] if len(groupdict[igroup]) > 0 else list(self.file[igroup].keys()) #varkeys
                     
                     for ivar in varkeys:
                         try:
@@ -1954,6 +2002,7 @@ class CDMDataset:
                     if new:
                         setattr(self, igroup, CDMVariable(self.file[igroup], igroup, shape=self.file[igroup].shape))
                     self[igroup].update(link=self.file[igroup])
+                
 
         except Exception as e:
             logger.debug(repr(e))
@@ -2311,7 +2360,8 @@ class CDMDataset:
                                                    z_coordinate_name='z_coordinate',
                                                    group='observations_table',
                                                    dimgroup='observations_table',
-                                                   return_index=True
+                                                   return_index=True,
+                                                   rtsindex=request.get('rtsidx',None)
                                                    )
         logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange.start,
                      trange.stop, time.time() - time0, self.name)
@@ -2321,6 +2371,7 @@ class CDMDataset:
         if len(idx) == 0:
             logger.warning('No matching data found %s', self.name)
             raise ValueError('No matching data found')  # add CDMname for logging
+            #return
 
         logger.debug('Data found: %d %s', len(idx), self.name)
         #
@@ -2330,10 +2381,10 @@ class CDMDataset:
         trajectory_index2 = np.zeros_like(idx, dtype=np.int32)
         if 'recordinindex' in self.groups:
             # unsorted indices in root
-            recordindex = self['recordindex'][()]
+            recordindex = self.file['recordindex'][()]
         else:
             # sorted indices are in recordindices group / by variable
-            recordindex = self['recordindices'][str(cdmnum)][()]  # values
+            recordindex = self.file['recordindices'][str(cdmnum)][()]  # values
             
         zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex <= trange.stop))[0]
         #zidx2=np.zeros_like(zidx)
@@ -2411,7 +2462,9 @@ class CDMDataset:
         tt=time.time() - time0
         print(tt)
         
-        rstcd = self.file['observations_table']['data_policy_licence'][:] == 4
+        #rstcd = self.file['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
+        #zrstcd=recordindex[zidx+1]-idx[0]
+        rstcd=None
         
         with h5py.File(filename_out, 'w') as fout:
             # todo future -> this could be replaced by a self.write_to_frontend_file(filename_out, )
@@ -2431,15 +2484,109 @@ class CDMDataset:
                 "index of trajectory this obs belongs to")
             fout['trajectory_index'].attrs['instance_dimension'] = np.string_("trajectory")
             fout['trajectory_index'].attrs['coordinates'] = np.string_("lat lon time plev")
+            
+            #
+            # Adding CDM
+            #
+            cdm_obstab = []
+            cdm_eratab = []
+            cdmlist = request.get('cdm', None)
+            if cdmlist != None:
+                # removing variables with restricted access
+                if ('era5fb/obsvalue@body' in cdmlist) or ('observations_table/observation_value' in cdmlist):
+                    try: cdmlist.remove('era5fb/obsvalue@body')
+                    except: pass
+                    try: cdmlist.remove('observations_table/observation_value')
+                    except: pass
+                for i in cdmlist:
+                    grp = i.split('/')[0]
+                    if i == 'era5fb':
+                        logger.debug('Full observations_table CDM-request disabled.')
+#                         eralist = ['albedo@modsurf', 'an_depar@body', 'an_depar@surfbody_feedback', 'an_sens_obs@body', 'andate', 
+#                                    'antime', 'biascorr@body', 'biascorr_fg@body', 'bufrtype@hdr', 'class', 'codetype@hdr',
+#                                    'collection_identifier@conv', 'date@hdr', 'datum_anflag@body', 'datum_event1@body', 'datum_rdbflag@body',
+#                                    'datum_sfc_event@surfbody_feedback', 'datum_status@body', 'datum_status@surfbody_feedback', 
+#                                    'eda_spread@errstat', 'entryno@body', 'expver', 'fg_depar@body', 'fg_depar@surfbody_feedback', 
+#                                    'fg_error@errstat', 'final_obs_error@errstat', 'groupid@hdr', 'index', 'lat@hdr', 'lon@hdr', 'lsm@modsurf',
+#                                    'lsm@surfbody_feedback', 'numtsl@desc', 'obs_error@errstat', 'obstype@hdr', 'orography@modsurf',
+#                                    'ppcode@conv_body', 'qc_pge@body', 'report_event1@hdr', 'report_rdbflag@hdr', 'report_status@hdr', 'reportype',
+#                                    'seaice@modsurf', 'sensor@hdr', 'seqno@hdr', 'snow_density@surfbody_feedback', 'snow_depth@modsurf', 
+#                                    'snow_depth@surfbody_feedback', 'sonde_type@conv', 'source@hdr', 'source_id', 'stalt@hdr', 'statid@hdr',
+#                                    'station_type@conv', 'stream', 'subtype@hdr', 'time@hdr', 'timeseries_index@conv', 'timeslot@timeslot_index',
+#                                    'tsfc@modsurf', 'type', 'unique_identifier@conv', 'varbc_ix@body', 'varno@body', 'vertco_reference_1@body', 
+#                                    'vertco_reference_2@body', 'vertco_type@body', 'windspeed10m@modsurf']
+#                         for j in eralist:
+#                             cdm_eratab.append(j)
+#                             cfcopy[j]={'cdmname': i, 'units': '', 'shortname': j, 'coordinates': 'lat lon time plev', 'standard_name': j, 'cdsname': j,}
+                    elif grp == 'era5fb':
+                        try: 
+                            var = i.split('/')[1]
+                            cdm_eratab.append(var)
+                            cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
+                        except: pass
+                        cdmlist.remove(i)
+                        
+                    if i == 'observations_table':
+                        logger.debug('Full observations_table CDM-request disabled.')
+#                         obslist = ['adjustment_id', 'advanced_assimilation_feedback', 'advanced_homogenisation', 'advanced_qc',
+#                                    'advanced_uncertainty', 'bbox_max_latitude', 'bbox_max_longitude', 'bbox_min_latitude', 
+#                                    'bbox_min_longitude', 'code_table', 'conversion_flag', 'conversion_method', 'crs', 'data_policy_licence',
+#                                    'date_time', 'date_time_meaning', 'exposure_of_sensor', 'latitude', 'location_method', 'location_precision',
+#                                    'longitude', 'numerical_precision', 'observation_duration', 'observation_height_above_station_surface', 
+#                                    'observation_id', 'observed_variable', 'original_code_table', 'original_precision', 'original_units', 'original_value',
+#                                    'processing_level', 'quality_flag', 'report_id', 'secondary_value', 'secondary_variable', 'sensor_automation_status',
+#                                    'sensor_id', 'source_id', 'spatial_representativeness', 'traceability', 'units', 'value_significance', 'z_coordinate',
+#                                    'z_coordinate_method', 'z_coordinate_type',]
+#                         for j in obslist:
+#                             cdm_obstab.append(j)
+#                             cfcopy[j]={'cdmname': i, 'units': '', 'shortname': j, 'coordinates': 'lat lon time plev', 'standard_name': j, 'cdsname': j,}
+                    elif grp == 'observations_table':
+                        try: 
+                            var = i.split('/')[1]
+                            cdm_obstab.append(var)
+                            cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
+                        except: pass
+                        cdmlist.remove(i)
+                        # NOW USE THOSE for the do_cfcopy below
+                logger.debug('CDM - adding groups and variables: %s', str(cdmlist))
+                for cdmstring in cdmlist:
+                    print(cdmstring)
+                    cdmsplit = cdmstring.split('/')
+#                     try:
+                    print(self.groups)
+                    if cdmsplit[0] in self.groups:
+                        print('group available')
+                        # TODO: Add attributes and descriptions?
+                        # whole group
+                        if len(cdmsplit) == 1:
+                            print('group copy')
+                            fout.create_group(cdmsplit[0])
+                            for cdmvar in self[cdmsplit[0]].keys():
+                                try:
+                                    fout[cdmsplit[0]].create_dataset(cdmvar, data=self[cdmsplit[0]][cdmvar][:])
+                                except:
+                                    pass
+                        # single var of group 
+                        if len(cdmsplit) == 2:
+                            print('single var copy')
+                            try:
+                                fout.create_group(cdmsplit[0])
+                            except:
+                                pass # group alread exists?
+                            try:
+                                fout[cdmsplit[0]].create_dataset(cdmsplit[1], data=self[cdmsplit[0]][cdmsplit[1]][:])
+                            except:
+                                pass
             #
             # Variables based on cfcopy
             #
+            print(cfcopy)
             if 'observations_table' in self.groups:
                 igroup = 'observations_table'
                 do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                         'original_precision', 'reference_sensor_id', 'report_id'])
+                                         'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']+cdm_obstab)
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 fout['time'].make_scale('time')
@@ -2451,7 +2598,7 @@ class CDMDataset:
                 try:
                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
                               var_selection=['fg_depar@body', 'an_depar@body',
-                                             'biascorr@body'])
+                                             'biascorr@body']+cdm_eratab)
                     # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:
@@ -2563,7 +2710,7 @@ class CDMDataset:
                 igroup = 'header_table'
                 # only records fitting criteria (zidx) are copied
                 # todo why is lon, lat not here?
-                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', rstcd,
+                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', None,
                           var_selection=['report_id'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 # ,'station_name','primary_station_id'])
@@ -2586,6 +2733,7 @@ class CDMDataset:
                 do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', rstcd,
                           var_selection=['station_name'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+            
             #
             # Fix Attributes and Globals
             #
@@ -2616,9 +2764,10 @@ class CDMDataset:
                         oldkey=(request['optional'][0])
                         fout['ta']=fout[oldkey]
                         fout.__delitem__(oldkey)
-                        
+            
+
             for i in fout.keys():
-                print(i)
+                #print(i)
                 if (i == 'obs' or i == 'trajectory' or 'string' in i):
                     fout.__delitem__(i)
                 version = ''
@@ -2629,6 +2778,12 @@ class CDMDataset:
                     fout[newname] = fout[i]
                     fout.__delitem__(i)
                     fout[newname].attrs['version'] = np.string_(version[1:]) # 'x.x'
+                    
+            # removing variables with restricted access
+            try: fout['observations_table'].__delitem__('observation_value')
+            except: pass
+            try: fout['era5fb'].__delitem__('obsvalue@body')
+            except: pass
                     
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
@@ -2819,32 +2974,34 @@ class CDMDataset:
             mixed, as they are available, like records. Hence to retrieve one variable the observed_variable needs
             to be used to subset the array in memory (faster)
         """
-        if not self.hasgroups:
-            raise RuntimeError('This function only works with CDM Backend files')
-
-        if dimgroup not in self.groups:
-            raise ValueError('Missing group?', dimgroup)
-
-        if group not in self.groups:
-            raise ValueError('Missing group?', group)
-
-        if not isinstance(variable, str):
-            raise ValueError('(variable) Requires a string name, not ', str(variable))
-
-        if not isinstance(varnum, int):
-            raise ValueError('(varnum) Requires a integer number, not', str(varnum))
-
-        if use_odb_codes:
-            if varnum not in odb_codes.values():
-                raise ValueError('(varnum) Code not in ODB Codes', variable, str(odb_codes))
-        else:
-            if varnum not in cdm_codes.values():
-                raise ValueError('(varnum) Code not in CDM Codes', variable, str(cdm_codes))
-
-        # TODO for the new files this variable is not mandatory anymore !!!
-        if observed_variable_name not in self[dimgroup].keys():
-            raise ValueError('Observed variable not found:', observed_variable_name, self[dimgroup].keys())
-
+        
+        if not self.da:        
+            if not self.hasgroups:
+                raise RuntimeError('This function only works with CDM Backend files')
+    
+            if dimgroup not in self.groups:
+                raise ValueError('Missing group?', dimgroup)
+    
+            if group not in self.groups:
+                raise ValueError('Missing group?', group)
+    
+            if not isinstance(variable, str):
+                raise ValueError('(variable) Requires a string name, not ', str(variable))
+    
+            if not isinstance(varnum, int):
+                raise ValueError('(varnum) Requires a integer number, not', str(varnum))
+    
+            if use_odb_codes:
+                if varnum not in odb_codes.values():
+                    raise ValueError('(varnum) Code not in ODB Codes', variable, str(odb_codes))
+            else:
+                if varnum not in cdm_codes.values():
+                    raise ValueError('(varnum) Code not in CDM Codes', variable, str(cdm_codes))
+    
+            # TODO for the new files this variable is not mandatory anymore !!!
+            if observed_variable_name not in self[dimgroup].keys():
+                raise ValueError('Observed variable not found:', observed_variable_name, self[dimgroup].keys())
+    
         if dates is not None:
             if not isinstance(dates, list):
                 dates = [dates]
@@ -2853,15 +3010,29 @@ class CDMDataset:
             if not isinstance(plevs, (list, np.ndarray)):
                 plevs = [plevs]
             plevs=np.asarray(plevs,dtype=np.float32)
+            
         
-        
-        trange = self.make_datetime_slice(dates=dates, varnum=varnum, date_time_name=date_time_name,
+        if self.da and 'rtsindex' in kwargs.keys():
+            svarnum=str(varnum)
+            ssvar=self.file['recordindices'][svarnum]
+            if kwargs['rtsindex'][1]<ssvar.shape[0]:
+                trange=slice(ssvar[kwargs['rtsindex'][0]],ssvar[kwargs['rtsindex'][1]],None)
+            else:
+                trange=slice(ssvar[kwargs['rtsindex'][0]],ssvar[-1],None)
+                
+        else:
+            
+            trange = self.make_datetime_slice(dates=dates, varnum=varnum, date_time_name=date_time_name,
                                           date_time_in_seconds=date_time_in_seconds,
                                           add_day_before=True if times is not None else False)
         
         if dates is not None:
-            xdates = self[dimgroup][date_time_name][trange]
+            print('dates not None')
+            if not self.da:
+                print('da False')
+                xdates = self[dimgroup][date_time_name][trange]
         else:
+            print('dates None')
             xdates = self.load_variable_from_file(date_time_name, group=dimgroup, return_data=True)[0][trange]
         
         #
@@ -2877,7 +3048,7 @@ class CDMDataset:
         elif 'recordindex' in self.groups:
             logic = (self[dimgroup][observed_variable_name][trange] == varnum)
         else:
-            logic = np.ones(xdates.shape, dtype=np.bool)
+            logic = np.ones(trange.stop-trange.start, dtype=np.bool)
             # todo apply trange before, to make a subset 
         logger.info('[READ] Observed variable %s', varnum)
         #
@@ -2885,17 +3056,20 @@ class CDMDataset:
         #
         xplevs = None
         if plevs is not None:
-            if z_coordinate_name not in self[dimgroup].keys():
-                raise ValueError('Pressure variable not found:', z_coordinate_name, self[dimgroup].keys())
-            p_attrs = self.read_attributes(z_coordinate_name, group=dimgroup)
-            p_units = p_attrs.get('units', 'Pa')
-            if p_units != 'Pa':
-                RuntimeWarning('Pressure variable wrong unit [Pa], but', p_units)
-
-            if dates is None:
-                xplevs = self.load_variable_from_file(z_coordinate_name, group=dimgroup, return_data=True)[0][trange]
+            if self.da:
+                xplevs=self.file[dimgroup][z_coordinate_name][trange]
             else:
-                xplevs = self[dimgroup][z_coordinate_name][trange]
+                if z_coordinate_name not in self[dimgroup].keys():
+                    raise ValueError('Pressure variable not found:', z_coordinate_name, self[dimgroup].keys())
+                p_attrs = self.read_attributes(z_coordinate_name, group=dimgroup)
+                p_units = p_attrs.get('units', 'Pa')
+                if p_units != 'Pa':
+                    RuntimeWarning('Pressure variable wrong unit [Pa], but', p_units)
+    
+                if dates is None:
+                    xplevs = self.load_variable_from_file(z_coordinate_name, group=dimgroup, return_data=True)[0][trange]
+                else:
+                    xplevs = self[dimgroup][z_coordinate_name][trange]
             if len(plevs) == 1:
                 logic = logic & (xplevs == plevs[0])
             else:
