@@ -1981,7 +1981,7 @@ class CDMDataset:
                         jgroup = getattr(self, igroup)  # Get CDMGroup
 
                     jgroup.update(link=self.file[igroup])  # reconnect to Group, e.g. if reopened
-                    #varkeys=list(self.file[igroup].keys())
+                    varkeys=list(self.file[igroup].keys())
 
                     if groupdict is not None:
                         varkeys = groupdict[igroup] if len(groupdict[igroup]) > 0 else list(self.file[igroup].keys()) #varkeys
@@ -2501,7 +2501,7 @@ class CDMDataset:
                 for i in cdmlist:
                     grp = i.split('/')[0]
                     if i == 'era5fb':
-                        logger.debug('Full observations_table CDM-request disabled.')
+                        logger.debug('Full er5fb CDM-request disabled.')
 #                         eralist = ['albedo@modsurf', 'an_depar@body', 'an_depar@surfbody_feedback', 'an_sens_obs@body', 'andate', 
 #                                    'antime', 'biascorr@body', 'biascorr_fg@body', 'bufrtype@hdr', 'class', 'codetype@hdr',
 #                                    'collection_identifier@conv', 'date@hdr', 'datum_anflag@body', 'datum_event1@body', 'datum_rdbflag@body',
