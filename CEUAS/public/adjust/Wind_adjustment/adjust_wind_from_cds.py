@@ -8,7 +8,7 @@ from datetime import date
 import netCDF4
 import time
 from numba import njit
-sys.path.append('../')
+sys.path.append('../rasotools/')
 from utils import *
 from anomaly import *
 import matplotlib.pylab as plt
@@ -183,7 +183,7 @@ def getpindex(press,plist):
     return oindex[:l],pindex[:l]
     
 
-def homogenize_winddir(via_backend=False):
+def homogenize_winddir(via_backend=False, fns=[]):
     
     lplot=False
 #     with open(os.path.expanduser('~leo/python/hug2/config/active.json')) as f:
@@ -217,19 +217,18 @@ def homogenize_winddir(via_backend=False):
 #     print(l,' duplicates')
             
     
-    http = urllib3.PoolManager()
-    r = http.request('GET', 'http://early-upper-air.copernicus-climate.eu/statlist/?mindate=1900-01-01&enddate=2020-12-31')
-#     r = http.request('GET', 'http://srvx8.img.univie.ac.at:8002/statlist/?mindate=1900-01-01&enddate=2020-12-31')
-    fns=r.data.split(b'\n')
-    for i in range(len(fns)):
-        fns[i]=fns[i].split(b',')[0].decode()
+#     http = urllib3.PoolManager()
+#     r = http.request('GET', 'http://early-upper-air.copernicus-climate.eu/statlist/?mindate=1900-01-01&enddate=2020-12-31')
+# #     r = http.request('GET', 'http://srvx8.img.univie.ac.at:8002/statlist/?mindate=1900-01-01&enddate=2020-12-31')
+#     fns=r.data.split(b'\n')
+#     for i in range(len(fns)):
+#         fns[i]=fns[i].split(b',')[0].decode()
     opath=os.path.expandvars('./')
     os.chdir(opath)
-    #fns=glob.glob('0?????/')
-    #fns=[fns[fns.index('0-20000-0-35229')]]
+#     #fns=glob.glob('0?????/')
+#     #fns=[fns[fns.index('0-20000-0-35229')]]
     tt=time.time()
-#     fns = ['0-20001-0-11035', '0-20001-0-10393', '0-20001-0-70219', '0-20000-0-91413']
-    fns = ['0-20000-0-35229', '0-20000-0-68994']
+    print(os.getcwd())
     if via_backend:
         func=partial(homogenize_station,opath,via_backend)
         adjusted=list(map(func,fns))
@@ -531,8 +530,8 @@ if __name__ == "__main__":
     plt.rcParams['lines.linewidth'] = 3
     tt=time.time()
     version='1.0'
-    via_backend=True
-    homogenize_winddir(via_backend)
+#     via_backend=True
+#     homogenize_winddir(via_backend, fns=['0-20001-0-11035', '0-20001-0-10393', '0-20001-0-70219', '0-20000-0-91413', '0-20000-0-35229', '0-20000-0-68994'])
     
 
     print((time.time()-tt))
