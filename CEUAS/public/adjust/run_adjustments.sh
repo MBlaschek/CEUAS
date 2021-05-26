@@ -30,13 +30,8 @@ cd ..
 cd Converters
 python from_cds_to_legacy.py
 cd ..
-# create RASO and RISO adjustments
+# create RICH and RASE adjustments
 cd Converters
 python ../Converters/add_solarangle_adjustments.py
 ls -l */ERA5bc_*.nc | wc -l
 cd ..
-
-# download humidity data
-python gethum.py 
-# create humidity adjustments
-./raso_adj_cdm_v1.py -f ./Humidity_adjustments/files/downloaded/downloaded_11035/dest_0-20001-0-11035_relative_humidity.nc --humidity --verbose
