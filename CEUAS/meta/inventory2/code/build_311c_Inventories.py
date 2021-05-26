@@ -527,6 +527,8 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name, fn='', dataset='') :
                 row[kdict['stationPlatformUniqueIdentifier']]=metaz['StationId']
                 row[kdict['station name']]=metaz['StationName']
                 row[kdict['stationDescription']]=metaz['StationName']
+                # will use the file lat/lon and not the coords from the inventory item
+
 
                 if meta.name == 'OSCAR':
 
@@ -559,6 +561,8 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name, fn='', dataset='') :
                 standard_wigos_idx = ''
                 
                 while dists[idy[i]]<0.5:
+                    
+
                     
                     oscar_found = True
                     idx=idy[i]
@@ -628,10 +632,12 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name, fn='', dataset='') :
 
                 z=numpy.nanargmin(dists)
                 if dists[z]<0.5:
+                    
                     z=[z]
                     metaz=meta.loc[z]
                     print(meta.name , ' coordinates match do_row  ' , wmoid, ' ' , metaz['StationId'].values[0], ' ' , metaz['StationName'].values[0])
                     if len(z) > 0:
+                                          
                         row[kdict['station name']]=metaz['StationName'].values[0]
                         row[kdict['stationDescription']]=metaz['StationName'].values[0]
                         #print('Found: ', wmoid ,' inside the ', meta.name+' database with id' , meta['StationId'][z] )
@@ -681,6 +687,7 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name, fn='', dataset='') :
                             row[kdict['station name']]=metaz['StationName']
                             row[kdict['stationDescription']]=metaz['StationName']
                             row[kdict['lat']] = -lat
+                            row[kdict['lon']] = lon                            
                             #row[kdict['latitude']]= -lat  # writing correct sign latitude
 
                             return ind
@@ -854,7 +861,7 @@ def odb_process(ci,unified,vola,chuan,igrainv,wbaninv,trans,fn):
 
     return transunified[0]
 
-def scini(station_configuration,ids,station_id,cwmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc, mi):
+def scini(station_configuration,ids,station_id,cwmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc, mi, fn=''):
 
     try:
         station_configuration['longitude']=float(transunified[-1][kdict['lon']])
@@ -907,7 +914,11 @@ def scini(station_configuration,ids,station_id,cwmoid,vola,transunified,kdict,dm
 
         print ('CANNOT FIND ************************** ' , ids, station_id, cwmoid )
         station_configuration['primary_id']= '0-20600-0-' + cwmoid
-        print(0)
+        b = open( out_dir + '/' + fn.split('/')[0] + '_20600.csv', 'a')
+        b.write(fn + '\t' +  '0-20600-0-' + cwmoid + '\n')
+        b.close()
+        
+
 
     station_configuration['station_crs']=0
     station_configuration['local_gravity']=numpy.NaN
@@ -1029,20 +1040,8 @@ def odb_cdm(ci,cdm,cdmd,unified,vola,chuan,igrainv,wbaninv,trans,fn):
                     else:
                         cwmoid=wmoid
 
-                    # do not understand why I need cwmoid, wmoid when I need actually station_id 
-                    scini(station_configuration,ids,primary_id,cwmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc,z)
-                    #if '.3188.' in fn:
-                        #idx=numpy.where(chuan['WMO ID']==wmoid)[0]
-                        #if len(idx)>0:
-                        #station_configuration['secondary_id']=chuan['StationId'].values[idx]
-                        #station_configuration['secondary_id_scheme']=4
-                        #else:
-                        #idy=numpy.where(chuan['StationId']==wmoid)[0]
-                        #if len(idy)==0:
-                            #print('CHUANstation not identified')
-                        #else:
-                            #station_configuration['secondary_id']=wmoid
-                            #station_configuration['secondary_id_scheme']=4
+                    scini(station_configuration,ids,primary_id,cwmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc,z, fn=fn)
+                    
 
 
                     fi=True
@@ -1173,7 +1172,7 @@ def read_bufr_stn_meta(varno,bufrfile):
                 transunified.append(row[:])
             ids,wmoid,cc, primary_id, z =insert(transunified[-1],vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,varno,dmin,dmax,dcount,fi,bufrfile)
             if not fi:
-                scini(station_configuration,ids,primary_id,wmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc, z)
+                scini(station_configuration,ids,primary_id,wmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc, z, fn = bufrfile)
                 fi=True
             station_configuration['observed_variables'].append(int(varno)) 
 
@@ -1235,7 +1234,7 @@ def read_rda_meta(ncfile):
             ids,wmoid,cc,primary_id, z=insert(transunified[-1],vola,chuan,igrainv,wbaninv,transodb,trans,
                                               kdict,unified,rdata,varno,dmin,dmax,dcount,fi,ncfile)
             if not fi:
-                scini(station_conf,ids,primary_id,wmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc,z)
+                scini(station_conf,ids,primary_id,wmoid,vola,transunified,kdict,dmax,dmin,cdm,cities,cc,z, fn = ncfile)
                 fi=True
             station_conf['observed_variables'].append(int(varno)) 
 
@@ -1507,28 +1506,19 @@ if __name__ == '__main__':
         bfunc=partial(read_bufr_stn_meta,2)
         rfunc=partial(read_rda_meta) 
         tu=dict()
-        p=Pool(15)
+        p=Pool(30)
         
         dbs=['igra2','ai_bfr','rda','3188','1759','1761','1','2']
         dbs=['RI/nasa']
         dbs=['RI/Pangaea/COMP']
 
-
-        dbs=['RI/nasa']
-        dbs=['RI/Pangaea/COMP']
 
         PARALLEL = True  
 
-        dbs=['ai_bfr','rda','3188','1761','2']
+        dbs=['ai_bfr','rda','3188','1761','2','1','igra2','1759']
 
-        #dbs = ['1759', 'bufr', '3188', 'ai_bfr']
-        
-        dbs = ['1761','ncar','1']
-        
-        dbs=['igra2','ai_bfr','rda','3188','1759','1761','1','2']
-        
-        #dbs=['1']
-        dbs=['1','2']
+    
+        dbs=['igra2']
         
         transunified = []
 
@@ -1621,11 +1611,9 @@ if __name__ == '__main__':
                     #flist = [f for f in flist if '4581' in f ]
 
                 flist =  [f for f in flist if 'gz' not in f and f != '3188/era5.3188.conv.' ]
-                #flist = [f for f in flist if 'era5.conv._55248' in f ]
-                #flist =  [f for f in flist if '72405' in f or '1:74594' in f ]
+                #flist =[f for  f in flist if '_10401' in f ]  # to test latitude mismatch in 1759
 
                 #flist =[f for  f in flist if ':80310' in f ]  # to test latitude mismatch in 1759
-                #flist =[f for  f in flist if '67575' in f ]  # to test latitude mismatch in 1759
                 """
                 if os.path.isfile(out_dir + '/' + odir +'_correctly_processed.dat'):
                     proc = open(out_dir + '/' + odir +'_correctly_processed.dat').readlines()
@@ -1636,8 +1624,6 @@ if __name__ == '__main__':
                 proc = []
                 
                 #lista = pd.read_csv(home + '/output_data_SAVE/era5_1759_WBAN_latitude_mismatch.dat', delimiter = '\t')
-                #list = lista['file']
-                #flist = ['1759/' + p for p in flist ]
 
                 flist = [ f for f in flist if f not in proc ]
 
