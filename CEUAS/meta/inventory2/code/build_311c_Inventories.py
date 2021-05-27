@@ -623,9 +623,16 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name, fn='', dataset='') :
 
                         row[kdict['lat']] = -lat
 
-                        a = open(home + '/1759_WBAN_mismatch_OSCAR_found.txt', 'a')
-                        a.write(fn + '\n')
-
+                        if not os.path.isfile(out_dir + '/1759_WBAN_mismatch_OSCAR_found.dat'):
+                            a = open(out_dir + '/1759_WBAN_mismatch_OSCAR_found.dat', 'w')
+                            a.write('primary_id' + '\t' + 'file_lat' + '\t' + 'wban_lat' + '\t' + 'file_lon' + '\t' + 'wban_lon' + '\t' + 'file' + '\n')
+                            a.close()
+                            
+                        a = open(out_dir + '/1759_WBAN_mismatch_OSCAR_found.dat', 'a+')
+                        #a.write(fn + '\n')
+                        a.write(meta.StationId[idx] + '\t' + str(lat) + '\t' + str(meta['Latitude'][idx]) + '\t' + 
+                                                    str(lon) + '\t' + str(meta['Longitude'][idx]) + '\t' + fn.split('/')[1] + '\n')                        
+                        a.close()
                         return idx
 
             else:
@@ -679,7 +686,7 @@ def do_row(row,kdict,meta,wmoid,iwmoid, nw,lat,lon,name, fn='', dataset='') :
 
                             a = open(out_dir + '/era5_1759_WBAN_latitude_mismatch.dat', 'a+')
                             a.write(str(iwmoid) + '\t' + str(lat) + '\t' + str(metaz['Latitude']) + '\t' + 
-                                                        str(lon) + '\t' + str(metaz['Longitude']) + '\t' + str(lon) + '\t' + fn.split('/')[1] + '\n')
+                                                        str(lon) + '\t' + str(metaz['Longitude']) + '\t' + fn.split('/')[1] + '\n')
 
                             row[kdict['station name']]=metaz['StationName']
                             row[kdict['stationDescription']]=metaz['StationName']
@@ -771,14 +778,14 @@ def insert(row,vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,var
                             iwmoid = int(re.sub('\D', '', wmoid ))
 
                 if iwmoid>1000 and iwmoid<100000:
-                    mi=do_row(row,kdict,vola,wmoid, iwmoid, nw,lat,lon,'OSCAR', dataset = dataset) # mi is the number of the row inside the OSCAR database for the station
+                    mi=do_row(row,kdict,vola,wmoid, iwmoid, nw,lat,lon,'OSCAR', dataset = dataset, fn = fn) # mi is the number of the row inside the OSCAR database for the station
                     if not mi:
                         mi=do_row(row,kdict,igrainv,wmoid, iwmoid,nw,lat,lon,'IGRA2')
                         if not mi:
 
                             mi=do_row(row,kdict,wbaninv,wmoid, iwmoid, nw,lat,lon,'WBAN', dataset = dataset, fn = fn )
                             if not mi:
-                                mi=do_row(row,kdict,chuan,wmoid, iwmoid, nw,lat,lon,'CHUAN')
+                                mi=do_row(row,kdict,chuan,wmoid, iwmoid, nw,lat,lon,'CHUAN', fn = fn)
                                 if not mi:
                                     print(wmoid,'not found, not identifiable!')
                                     #a = open(out_dir + '/' + fn.split('/')[0] + '_' + 'orphans_not_identified.dat','a')
@@ -1518,7 +1525,7 @@ if __name__ == '__main__':
         dbs=['ai_bfr','rda','3188','1761','2','1','igra2','1759']
 
     
-        dbs=['igra2']
+        dbs=['1759']
         
         transunified = []
 
@@ -1556,6 +1563,7 @@ if __name__ == '__main__':
             elif 'rda' in odir:
                 flist=glob.glob(odir+'/'+'UADB_[tw]*.nc')
                 flist.sort()
+                flist = [f for f in flist if '82599' in f ]
                 glist=[]
                 for i in range(len(flist)-1,-1,-1):
                     s=flist[i][-9:-3]
@@ -1613,7 +1621,10 @@ if __name__ == '__main__':
                 flist =  [f for f in flist if 'gz' not in f and f != '3188/era5.3188.conv.' ]
                 #flist =[f for  f in flist if '_10401' in f ]  # to test latitude mismatch in 1759
 
-                #flist =[f for  f in flist if ':80310' in f ]  # to test latitude mismatch in 1759
+                flist =[f for  f in flist if ':80310' in f ]  # to test latitude mismatch in 1759
+                f = pd.read_csv(home + '/era5_1759_WBAN_latitude_mismatch_git.dat', delimiter = '\t')
+                flist = [ '1759/' + f for f in f['file'].values ]
+                print(0)
                 """
                 if os.path.isfile(out_dir + '/' + odir +'_correctly_processed.dat'):
                     proc = open(out_dir + '/' + odir +'_correctly_processed.dat').readlines()
