@@ -22,11 +22,11 @@
 set userid = $1
 set pswd = $2
 
-if(x$pswd == x && `env | grep RDAPSWD` != '') then
+if (x$pswd == x && `env | grep RDAPSWD` != '') then
  set pswd = $RDAPSWD
 endif
 
-if (x$pswd == x) | (x$userid == x) then
+if (x$pswd == x || x$userid == x) then
  echo
  echo Usage: $0 YourUsername YourPassword
  echo
@@ -36,7 +36,7 @@ endif
 set v = `wget -V |grep 'GNU Wget ' | cut -d ' ' -f 3`
 set a = `echo $v | cut -d '.' -f 1`
 set b = `echo $v | cut -d '.' -f 2`
-if(100 * $a + $b > 109) then
+if (100 * $a + $b > 109) then
  set opt = 'wget --no-check-certificate'
 else
  set opt = 'wget'
