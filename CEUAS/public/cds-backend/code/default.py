@@ -1229,7 +1229,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                     raise ValueError('invalid selection, time out of range [0-24 h]: %d' % int(time[i]))
             except:
                 raise ValueError('invalid selection, time allows only integer, ' + time[i])
-        d['da'] = False
+        #d['da'] = False #leo
         d['time']=time
 
     return d

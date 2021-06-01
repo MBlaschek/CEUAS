@@ -344,6 +344,7 @@ def andisin(mask, x, v):
                     found = True
                     break
             mask[i] = found
+    return
 
 # daysx2 puts a time array into an array of shape days x 2, where days is the number of days since 19000101
 # and the second index is 0 for midnight (GMT+/- 3hrs) ascents and 1 for midday (GMT +/- 3hrs ascents).
@@ -3015,10 +3016,15 @@ class CDMDataset:
         if self.da and 'rtsindex' in kwargs.keys():
             svarnum=str(varnum)
             ssvar=self.file['recordindices'][svarnum]
+            minday=0
+            if times is not None:
+                if int(times[0])>int(times[-1]):
+                    if kwargs['rtsindex'][0]>0:
+                        minday=-1
             if kwargs['rtsindex'][1]<ssvar.shape[0]:
-                trange=slice(ssvar[kwargs['rtsindex'][0]],ssvar[kwargs['rtsindex'][1]],None)
+                trange=slice(ssvar[kwargs['rtsindex'][0]+minday],ssvar[kwargs['rtsindex'][1]],None)
             else:
-                trange=slice(ssvar[kwargs['rtsindex'][0]],ssvar[-1],None)
+                trange=slice(ssvar[kwargs['rtsindex'][0]+minday],ssvar[-1],None)
                 
         else:
             
@@ -3031,6 +3037,10 @@ class CDMDataset:
             if not self.da:
                 print('da False')
                 xdates = self[dimgroup][date_time_name][trange]
+            else:
+                if times is not None:
+                    xdates = self.file[dimgroup][date_time_name][trange]
+                
         else:
             print('dates None')
             xdates = self.load_variable_from_file(date_time_name, group=dimgroup, return_data=True)[0][trange]
@@ -3081,7 +3091,8 @@ class CDMDataset:
         #
         if times is not None:
             # standard times [0-23], day before has been added
-            times = np.sort(totimes(times))  # not sure why this does notsort ?
+            times = totimes(times)  # not sure why this does notsort ?
+            #times = np.sort(totimes(times))  # not sure why this does notsort ?
             hours = np.empty_like(xdates)
             date_shift = np.zeros_like(xdates, dtype=np.int32)  # earlier date, but would be
             days = np.empty_like(xdates)
@@ -3089,13 +3100,17 @@ class CDMDataset:
             # all previous day profiles should be included due to day before flag
             # match all times in hours (logical and)
             andisin(logic, hours, times)
-            if any(times >= 21):
+            if times[0]>times[-1]:
                 # use only late hours for the first day
-                first_day = days[logic][0]  # first day
+                first_day = days[0]  # first day days[logic][0]
                 first_day_logic = logic[days == first_day]
+                last_day = days[-1]  # first day days[logic][0]
+                last_day_logic = logic[days == last_day]
                 # only true if lat times
-                andisin(first_day_logic, hours[days == first_day], times[times >= 21])
+                andisin(first_day_logic, hours[days == first_day], times[times >= times[0]])
+                andisin(last_day_logic, hours[days == last_day], times[times < times[0]])
                 logic[days == first_day] = first_day_logic  # modify logic
+                logic[days == last_day] = last_day_logic  # modify logic
                 logger.info('[READ] first day (%s) times %d/%d', seconds_to_datetime([first_day * 86400]),
                             first_day_logic.sum(), first_day_logic.size)
 
