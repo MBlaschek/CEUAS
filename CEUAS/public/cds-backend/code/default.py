@@ -646,7 +646,7 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
     """ Convert every file in flist to CSV
 
     Args:
-        flist: list fo files
+        flist: list of files
         ofile: output filename
         name: variable filename inside zip file
 
@@ -696,21 +696,21 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
         logger.debug('Converting %s', fn)
         ds = xarray.open_dataset(fn)            
         
-        to_be_removed = ['trajectory_index', 'trajectory']
-        for ivar in list(ds.variables):
-            if 'string' in ivar:
-                to_be_removed.append(ivar)
+#         to_be_removed = ['trajectory_index', 'trajectory']
+#         for ivar in list(ds.variables):
+#             if 'string' in ivar:
+#                 to_be_removed.append(ivar)
             
-            if 'trajectory' in ds[ivar].dims and ivar not in list(ds.coords):
-                report_id = ds[ivar].astype(object).sum(axis=1).astype(str)
-                ds = ds.drop_vars(ivar)
-                ds[ivar] = ('obs', report_id.values[ds.trajectory_index.values])  # todo obs ???
+#             if 'trajectory' in ds[ivar].dims and ivar not in list(ds.coords):
+#                 report_id = ds[ivar].astype(object).sum(axis=1).astype(str)
+#                 ds = ds.drop_vars(ivar)
+#                 ds[ivar] = ('obs', report_id.values[ds.trajectory_index.values])  # todo obs ???
                 
-            if ds[ivar].ndim > 1:
-                tmp= ds[ivar].astype(object).sum(axis=1).astype(str)
-                ds = ds.drop_vars(ivar)
-                idim = tmp.dims[0]
-                ds[ivar] = (idim, tmp)
+#             if ds[ivar].ndim > 1:
+#                 tmp= ds[ivar].astype(object).sum(axis=1).astype(str)
+#                 ds = ds.drop_vars(ivar)
+#                 idim = tmp.dims[0]
+#                 ds[ivar] = (idim, tmp)
         
         ds = ds.drop_vars(to_be_removed, errors='ignore')  # do not raise an error.
         df = ds.to_dataframe()
@@ -963,9 +963,9 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     # BBOX [lower left upper right]
     #
     elif bbox is not None:
-        # converting from BBOX [lower left upper right] to BBOX [upper left lower right]:
+        # converting from BBOX [upper left lower right] to [lower left upper right] :
         bbox = [float(bbox[2]), float(bbox[1]), float(bbox[0]), float(bbox[3])]
-        print(bbox)
+#         print(bbox)
         if not isinstance(bbox, (list, tuple)) or len(bbox) != 4:
             raise ValueError('Invalid selection, bounding box: [upper left lower right]')
 
@@ -977,10 +977,8 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
 
         if bbox[0] >= bbox[2] or bbox[1] >= bbox[3]:
             raise ValueError('Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]')
-
-        if bbox[0] < -90 or bbox[0] > 90 or bbox[2] < -90 or bbox[2] > 90 or \
-                bbox[1] < -180 or bbox[1] > 360 or bbox[3] < -180 or bbox[3] > 360 \
-                or bbox[3] - bbox[1] > 360:
+        print(bbox)
+        if bbox[0] < -90 or bbox[0] > 90 or bbox[2] < -90 or bbox[2] > 90 or bbox[1] < -180 or bbox[1] > 360 or bbox[3] < -180 or bbox[3] > 360 or bbox[3] - bbox[1] > 360:
             raise ValueError('Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]')
         statid = []
         active_file = config['config_dir'] + '/active.json'
@@ -1231,7 +1229,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                     raise ValueError('invalid selection, time out of range [0-24 h]: %d' % int(time[i]))
             except:
                 raise ValueError('invalid selection, time allows only integer, ' + time[i])
-        d['da'] = False
+        #d['da'] = False #leo
         d['time']=time
 
     return d

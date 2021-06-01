@@ -35,16 +35,18 @@ print(opath)
 os.chdir(opath)
 fnu=[]
 fnd=[]
-for fnf in fns:
-    if fnf == fns[0]:
-        continue
-    fn=fnf[-5:]
+# for fnf in fns:
+for fn in ['35229', '68994', '11035', '10393', '91413', '70219']:
+#     if fnf == fns[0]:
+#         continue
+#     fn=fnf[-5:]
     try:        
         c = cdsapi.Client()
         r = c.retrieve('insitu-comprehensive-upper-air-observation-network',
                        {'variable': 'relative_humidity',
                         'optional':['obs_minus_bg','bias_estimate'],
                         'statid': fn,
+                        'skip':'55584pp',
                         'pressure_level':[10,20,30,50,70,100,150,200,250,300,400,500,700,850,925,1000]
                        }
                       )

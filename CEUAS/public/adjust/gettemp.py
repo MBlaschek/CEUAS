@@ -61,7 +61,7 @@ fns=r.data.split(b'\n')
 for i in range(len(fns)):
     fns[i]=fns[i].split(b',')[0].decode()
 # opath=os.path.expandvars('/raid60/raid/home/srvx7/lehre/users/a1400070/adjust/Temperature_adjustment/files')
-opath=os.path.expandvars('Temperature_adjustment/files')
+opath=os.path.expandvars('Temperature_adjustment/files2')
 
 print(opath)
 os.chdir(opath)
@@ -79,7 +79,7 @@ for fnf in fns:
         print('duplicate '+fnf+', incrementing leading zero to 1')
         prefix='1'
     fnu.append(fn)
-    fo=opath+'/feedbackmerged'+prefix+fn+'.nc'
+    fo='feedbackmerged'+prefix+fn+'.nc'
     print(fo)
     try:
         
@@ -96,6 +96,7 @@ for fnf in fns:
                        {'variable': 'temperature',
                         'optional':['obs_minus_bg','bias_estimate'],
                         'statid': fn,
+                        'newdl':'000111000',
                         'pressure_level':[10,20,30,50,70,100,150,200,250,300,400,500,700,850,925,1000]
                        }
                       )
