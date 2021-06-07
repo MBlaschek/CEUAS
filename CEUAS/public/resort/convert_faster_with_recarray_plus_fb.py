@@ -18,7 +18,7 @@ sys.path.append(os.getcwd()+'/../harvest/code/')
 from harvest_convert_to_netCDF_newfixes import write_dict_h5
 import gc
 import cds_eua3 as eua
-eua.logging_set_level(30)
+#eua.logging_set_level(30)
 import xarray as xr
 import cdsapi, zipfile, os, time
 import copy
@@ -26,6 +26,7 @@ from shutil import copyfile
 import multiprocessing
 sys.path.insert(0,os.getcwd()+'/../resort/rasotools-master/')
 import rasotools
+dir(rasotools)
 import warnings
 from functools import partial
 import matplotlib.pylab as plt
@@ -33,7 +34,7 @@ warnings.filterwarnings('ignore')
 import pickle
 
 #opath='/raid60/scratch/uli/converted_v5/'
-opath='/raid60/scratch/leo/scratch/converted_v5/'
+#opath='/raid60/scratch/leo/scratch/converted_v5/'
 # if there are nan values in the pressure level - we will just sort without any converting!
 def do_resort(fn):
     targetfile = opath+fn.split('/')[-1] 
@@ -844,7 +845,7 @@ def interp(reatab,obstype,z,ts,press,iobstype,times,values):
         print('no reanalysis data for',noval,'obsvalues' )
     return
 
-def retrieve_anfg(fn,path_to_gridded):
+def retrieve_anfg(fn,out_name,path_to_gridded):
 
 
     #era5=refdiff('/raid60/scratch/leo/scratch/ERA5/gridded/','era5fc.{0}{1:02}.'+par['gid'],1979,1983,tidx,fieldsperday=2,
@@ -858,11 +859,11 @@ def retrieve_anfg(fn,path_to_gridded):
                           #'path':os.path.expandvars('$RSCRATCH/CERA20C/'),'prefix':'CERA20C','suffix':'','glue':'.'},
                #'JRA55':{'ftype':('fcst_mdl',),'param':{'t':'011_tmp','u':'033_ugrd','v':'034_vgrd','q':'051_spfh'},
                         #'path':os.path.expandvars('$RSCRATCH/JRA55/split/'),'prefix':'test.','suffix':'grb','glue':'.'},
-               '20CRv3':{'ftype':('',),'param':{'t':'TMP','u':'UGRD','v':'VGRD'},#'q':'SPFH','z':'HGT'},
+               '20CRv3':{'ftype':('',),'param':{'t':'TMP','u':'UGRD','v':'VGRD'},#,'q':'SPFH'},#,'z':'HGT'},
                          'path':os.path.expandvars('$RSCRATCH/20CRv3/'),'prefix':'anl_meant','suffix':'_pres','glue':'_'},
                }
     try:
-        with open(os.path.expandvars('$RSCRATCH/converted_v5/rea/refs.pkl'),'rb') as f:
+        with open(os.path.expandvars(wpath+'/rea/refs.pkl'),'rb') as f:
             refs=pickle.load(f)
     except:
         
@@ -903,7 +904,7 @@ def retrieve_anfg(fn,path_to_gridded):
                                     ilon=f['longitude'][:]
                                     ilat=f['latitude'][:]
                                     iplev=f['level'][:]
-                                    
+
                                 fpattern20=v20['path']+v20['prefix']+v20['glue']+'{}{:0>2}'+v20['glue']+v20['param'][p]+v20['suffix']+'.nc'
                                 with h5py.File(fpattern20.format(iy,im),'r') as f:
                                     print(f.keys())
@@ -930,8 +931,12 @@ def retrieve_anfg(fn,path_to_gridded):
             refs[r]/=l
             raw_20CR[r]/=l
             refs[r]-=raw_20CR[r]
-            
-        with open(os.path.expandvars('$RSCRATCH/converted_v5/rea/refs.pkl'),'wb') as f:
+        
+        try:
+            os.mkdir(wpath+'/rea')
+        except:
+            pass
+        with open(os.path.expandvars(wpath+'/rea/refs.pkl'),'wb') as f:
             pickle.dump(refs,f)
             
     #P=multiprocessing.Pool(12)
@@ -942,8 +947,13 @@ def retrieve_anfg(fn,path_to_gridded):
         obs=f['observations_table']['observation_value'][:]
         z=f['observations_table']['z_coordinate'][:]
         ts=f['observations_table']['date_time'][:]
-        o_minus_bg=f['era5fb']['fg_depar@body'][:]
-        o_minus_an=f['era5fb']['an_depar@body'][:]
+        ofb=True
+        try:
+            
+            o_minus_bg=f['era5fb']['fg_depar@body'][:]
+            o_minus_an=f['era5fb']['an_depar@body'][:]
+        except:
+            ofb=False
     tsu=np.unique(ts)
 
     ref=datetime(1900,1,1)
@@ -1035,12 +1045,15 @@ def retrieve_anfg(fn,path_to_gridded):
                 print('writing',k)
                 try:
 
-                    write_dict_h5(fn, df, k, {dtype: {'compression': 'gzip'}}, 
+                    write_dict_h5(out_name, df, k, {dtype: {'compression': 'gzip'}}, 
                                             var_selection=[], mode='a', attrs = {dtype:readict[k][dtype]['t']['attribs']} )  
-                except:
-                    print('no values from ',k,'for station ',os.path.basename(fn))
+                except Exception as e:
+                    print(e, 'no values from ',k,'for station ',os.path.basename(fn))
 
 
+    if not ofb:
+        return readict
+    
     readict['era5fb']={'ftype':['an','fc']}                  
     readict['era5fb']['an']={'refvalues':obs-o_minus_an }                  
     readict['era5fb']['fc']={'refvalues':obs-o_minus_bg }                  
@@ -1090,37 +1103,45 @@ def retrieve_anfg(fn,path_to_gridded):
     #func=partial(offline_fb,fpattern,lat,lon)
     #tfgs=list(map(func,yms))
 
-def convert_missing(fn, destination: str = opath):
+def convert_missing(wpath,fn):
     tt=time.time()
     nanlist = [float('nan'), np.nan, 0, -2147483648]
     
     
     try:
         
-        with open(os.path.expandvars('$RSCRATCH/converted_v5/rea/'+fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]+'pkl'),'rb') as f:
+        with open(os.path.expandvars(wpath+'/rea/'+fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]+'pkl'),'rb') as f:
             readict=pickle.load(f)
     except:
         
-        out_name = fn  
+        out_name = wpath+fn.split('/')[-1]  
         path_to_gridded=os.path.expandvars('$RSCRATCH/era5/gridded/')
-        readict=retrieve_anfg(out_name,path_to_gridded)
-        with open(os.path.expandvars('$RSCRATCH/converted_v5/rea/'+fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]+'pkl'),'wb') as f:
+        readict=retrieve_anfg(fn,out_name,path_to_gridded)
+        with open(os.path.expandvars(wpath+'/rea/'+fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]+'pkl'),'wb') as f:
             pickle.dump(readict,f)
     print (time.time()-tt)
     with eua.CDMDataset(fn) as data:
         keys = data.observations_table.keys()
         keys = [x for x in keys if not x.startswith('string')]
         #keys = [x for x in keys if x in ['conversion_flag','conversion_method','report_id','date_time','observation_value','observed_variable','observation_id','z_coordinate','z_coordinate_type']]
-        keys.remove('index')
-        keys.remove('shape')
+        if 'index' in keys: 
+            keys.remove('index')
+        if 'shape' in keys:
+            keys.remove('shape')
         obskeys = keys
 
-        keys = data.era5fb.keys()
-        #keys = [x for x in keys if x in ['fg_depar@body','an_depar@body','biascorr@body','biascorr_fg@body']]
-        keys = [x for x in keys if not x.startswith('string')]
-        keys.remove('index')
-        keys.remove('shape')
-        fbkeys = keys
+        ofb=True
+        try:           
+            keys = data.era5fb.keys()
+            #keys = [x for x in keys if x in ['fg_depar@body','an_depar@body','biascorr@body','biascorr_fg@body']]
+            keys = [x for x in keys if not x.startswith('string')]
+            keys.remove('index')
+            if 'shape' in keys:
+                keys.remove('shape')
+            fbkeys = keys
+        except Exception as e:
+            print(e)
+            ofb=False
 
 
         # loading data:
@@ -1147,21 +1168,22 @@ def convert_missing(fn, destination: str = opath):
         a_loaded_obstab = numpy.rec.fromarrays(a_loaded_data, dtype=ld)
         del a_loaded_data
 
-        loaded_fb=[]
-        a_loaded_fb=[]
-        loaded_type = {'names':[],'formats':[]}
-        lf=[]
-        for o in fbkeys:
-            if o in ['fg_depar@body','an_depar@body','biascorr@body','biascorr_fg@body']:  
-                loaded_fb.append((data.era5fb[o][:]))
-                a_loaded_fb.append(numpy.empty_like(loaded_fb[-1],shape=2*len(loaded_fb[-1])+addmem))
-                loaded_type['names'].append(o)
-                loaded_type['formats'].append(loaded_fb[-1].dtype)
-                lf.append((o,loaded_fb[-1].dtype))
-        loaded_feedback = numpy.rec.fromarrays(loaded_fb, dtype=lf)
-        del loaded_fb
-        a_loaded_feedback = numpy.rec.fromarrays(a_loaded_fb, dtype=lf)
-        del a_loaded_fb
+        if ofb:
+            loaded_fb=[]
+            a_loaded_fb=[]
+            loaded_type = {'names':[],'formats':[]}
+            lf=[]
+            for o in fbkeys:
+                if o in ['fg_depar@body','an_depar@body','biascorr@body','biascorr_fg@body']:  
+                    loaded_fb.append((data.era5fb[o][:]))
+                    a_loaded_fb.append(numpy.empty_like(loaded_fb[-1],shape=2*len(loaded_fb[-1])+addmem))
+                    loaded_type['names'].append(o)
+                    loaded_type['formats'].append(loaded_fb[-1].dtype)
+                    lf.append((o,loaded_fb[-1].dtype))
+            loaded_feedback = numpy.rec.fromarrays(loaded_fb, dtype=lf)
+            del loaded_fb
+            a_loaded_feedback = numpy.rec.fromarrays(a_loaded_fb, dtype=lf)
+            del a_loaded_fb
 
         @njit
         def add_fb(loaded_obstab,loaded_feedback,ref20CR,refera5an,refera5fc):
@@ -1182,9 +1204,9 @@ def convert_missing(fn, destination: str = opath):
                             i20+=1
                 if i%1000000==0:
                     print(i,i20,iera)
-            
-        add_fb(loaded_obstab,loaded_feedback,readict['20CRv3']['an']['refvalues'],
-               readict['era5']['an']['refvalues'],readict['era5']['fc']['refvalues'])
+        if(ofb):      
+            add_fb(loaded_obstab,loaded_feedback,readict['20CRv3']['an']['refvalues'],
+                   readict['era5']['an']['refvalues'],readict['era5']['fc']['refvalues'])
         
         del readict    
         recordindex = data.recordindex[:]
@@ -1238,8 +1260,8 @@ def convert_missing(fn, destination: str = opath):
     for c in cdpdrh,cshrh,cshdpd,crhdpd:
         c[idy]=numpy.nan
 
-    cuwind = ws * np.cos(np.radians(wd))
-    cvwind = ws * np.sin(np.radians(wd))
+    cuwind = ws * np.cos(np.radians(270.-wd))
+    cvwind = ws * np.sin(np.radians(270.-wd))
     cws = np.sqrt(uwind ** 2 + vwind ** 2)
     d_ws = np.sqrt(d_uwind ** 2 + d_vwind ** 2)
     fgd_ws = np.sqrt(fgd_uwind ** 2 + fgd_vwind ** 2)
@@ -1288,7 +1310,7 @@ def convert_missing(fn, destination: str = opath):
 
     # sorting:
     print('start sorting')
-    targetfile = destination+fn.split('/')[-1]
+    targetfile = wpath+fn.split('/')[-1]
     if os.path.isfile(targetfile):
         try:
             os.remove(targetfile)
@@ -1553,7 +1575,8 @@ if __name__ == '__main__':
                  '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-38696_CEUAS_merged_v0.nc',
                  '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-04085_CEUAS_merged_v0.nc',]    
 
-    wpath='/raid60/scratch/leo/scratch/converted_v5/'
+    wpath='/raid60/scratch/leo/scratch/converted_v6/'
+    opath=wpath
     wlpath=wpath+'log/'
     try:
         os.mkdir(wpath)
@@ -1567,7 +1590,7 @@ if __name__ == '__main__':
         #f.write("done") 
         #f.close()
 
-    files = glob.glob('/raid60/scratch/federico/DATABASE_MARCH2021_sensor/*CEUAS*.nc')
+    files = glob.glob('/raid60/scratch/federico/MERGED_JUNE2021/*v1.nc')
     already_done = glob.glob(wlpath+'*.txt')
 
     files_to_convert = []
@@ -1581,7 +1604,8 @@ if __name__ == '__main__':
 #         convert_missing(i)
 
     pool = multiprocessing.Pool(processes=20)
-    result_list = pool.map(convert_missing, files_to_convert)
-    #result_list = list(map(convert_missing, files_to_convert))
+    #result_list = pool.map(convert_missing, files_to_convert)
+    func=partial(convert_missing,wpath)
+    result_list = list(pool.map(func, files_to_convert))
     print(result_list)
 
