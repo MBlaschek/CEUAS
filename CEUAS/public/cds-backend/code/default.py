@@ -429,7 +429,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         try:
             with open(active_file, 'w') as f:
                 json.dump(active, f)
-        except MemoryError as e:
+        except Exception as e:
             logger.warning('Cannot write %s: %s', active_file, e)
 
         try:
@@ -439,7 +439,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
             active['rtsidx']=rtsidx
             active['rtskeys']=rtskeys
             
-        except MemoryError as e:
+        except Exception as e:
             logger.warning('Cannot write %s: %s', 'timestamp file h5link.pkl', e)
         
     
@@ -472,7 +472,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         try:
             with open(namelist_file, 'w') as f:
                 json.dump(namelist, f)
-        except MemoryError as e:
+        except Exception as e:
             logger.warning('Cannot write %s: %s', namelist_file, e)
     #
     # Read CDM Definitions
@@ -486,7 +486,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         try:
             with open(cdm_file, 'w') as f:
                 json.dump(cf, f)
-        except MemoryError as e:
+        except Exception as e:
             logger.warning('Cannot write %s: %s', cdm_file, e)
     #
     # list of country codes -> used for country selection in check_body
@@ -1096,7 +1096,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
 
                 statid = [] 
                 [statid.append(x) for x in new_statid if x not in statid] 
-        except MemoryError:
+        except Exception:
             raise RuntimeError(
                 'Invalid selection, specify either bbox, country or statid. Use "statid":"all" to select all ' \
                 'stations ')
@@ -1325,7 +1325,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                ((int(body['date'][-1][:4])-int(body['date'][0][:4]))*12 # years in months
                 + (int(body['date'][-1][4:6])-int(body['date'][0][4:6])))) # months
 #     if len(body['variable']) == 1 and ((int(body['date'][-1][:4])-int(body['date'][0][:4]))*12 + (int(body['date'][-1][4:6])-int(body['date'][0][4:6]))) == 1:
-#         logger.warning('Requesting more than 500 elements - MemoryError: 1 variable and 1 month of every station')
+#         logger.warning('Requesting more than 500 elements - Exception: 1 variable and 1 month of every station')
 #     if lenprod > 30000:
 #         # lenght restriction deactivated as long following line is out commented.
 #         raise RuntimeError('Request too large - please split')
@@ -1516,7 +1516,7 @@ def index(request=None, response=None):
     logger.debug("GET %s", request.query_string)
     if '=' not in request.query_string:
         response.status = hug.HTTP_422
-        raise MemoryError('A query string must be supplied')
+        raise Exception('A query string must be supplied')
 
     try:
         rs = request.query_string.split('&')
@@ -1534,7 +1534,7 @@ def index(request=None, response=None):
 
     except:
         response.status = hug.HTTP_422
-        raise MemoryError(request.query_string)
+        raise Exception(request.query_string)
 
     randdir = '{:012d}'.format(numpy.random.randint(100000000000))
     logger.info("%s GET %s", randdir, str(body))
@@ -1542,7 +1542,7 @@ def index(request=None, response=None):
     try:
         # rfile = process_request(body, tmpdir, config['data_dir'], wmo_regions)
         rfile = process_request(body, tmpdir, wmo_regions, debug=config['debug'])
-    except MemoryError as e:
+    except Exception as e:
         logger.error("%s GET FAILED, %s", randdir, e)
         with open(config['logger_dir'] + '/failed_requests.log', 'a+') as ff:
             ff.write('%s - %s [%s] Message: %s \n' % (str(datetime.now()), randdir, str(body), e))
@@ -1560,12 +1560,12 @@ def index(request=None, response=None):
     return rfile
 
 
-@hug.exception(MemoryError)
+@hug.exception(Exception)
 def base_exception_handler(exception, response=None):
-    """ This captures any MemoryError from the Server
+    """ This captures any Exception from the Server
 
     Args:
-        exception: hug.exceptions.MemoryError class
+        exception: hug.exceptions.Exception class
         response: HTTP Response
 
     Returns:
@@ -1607,7 +1607,7 @@ def index(request=None, body=None, response=None):
     try:
         #rfile='/fio/srvx7/leo/x'
         rfile = process_request(body, tmpdir, wmo_regions, P, debug=config['debug'])
-    except MemoryError as e:
+    except Exception as e:
         logger.error("%s POST FAILED, %s", randdir, e)
         with open(config['logger_dir'] + '/failed_requests.log', 'a+') as ff:
             ff.write('%s - %s [%s] Message: %s \n' % (str(datetime.now()), randdir, str(body), e))
