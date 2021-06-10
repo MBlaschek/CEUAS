@@ -15,10 +15,6 @@ import numpy.ma as ma
 import h5py as h5py
 import xarray as xr 
 import psutil
-import copy
-from numba import njit
-import code
-import urllib.request
 from functools import reduce
 from tqdm import tqdm
 
@@ -144,7 +140,8 @@ class Desroziers():
             os.mkdir(out_dir)
             
         self.station_id = station_id
-        self.file = file 
+        self.file = file
+        self.file_name = file.split('/')[-1]
         #self.summary_file =  station_id + '_' + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_summary_desrozier.txt'
         self.std_plevs = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000]
         self.variables = [85,104,105,107] # 104,105 u and v wind, 106 wind from direction, 107 wind speed
@@ -163,7 +160,7 @@ class Desroziers():
         era5fb_var = ['an_depar@body' , 'fg_depar@body', 'biascorr@body']
         
         
-        h5py_file = h5py.File(self.file, 'r+')
+        h5py_file = h5py.File(self.file, 'r')
         
         self.h5py_file = h5py_file 
         
@@ -199,13 +196,17 @@ class Desroziers():
         for d in error_day_window: #  ['30','60','90','180']
             error, num = 'desroziers_' + d , 'num_' +d
             errors_out[error]     = np.full( (len(self.data['date_time'] ) ) , np.nan ) # create place holder for uncertainties filled with nans 
-            errors_out[num]      = np.full( (len(self.data['date_time'] ) ) , -2147483647 ) 
+            errors_out[num]      = np.full( (len(self.data['date_time'] ) ) , -2147483647 )  # integer nan
             #errors_out[std_dev] = np.full( (len(self.data['date_time'] ) ) , np.nan ) # not in use
 
         for var in self.variables:
+            if str(var) not in self.recordindices.keys():
+                continue
+            
             ind = self.recordindices[str(var)][:]
-            imin, imax = min(ind) , max(ind) + 1000 # I do not know the maximum, so I take max+1000
+            imin, imax = min(ind) , max(ind) 
                        
+            
             red_dic = {}
             for col in self.data.keys():
                 red_dic[col] = self.data[col][imin:imax]
@@ -215,7 +216,7 @@ class Desroziers():
             
             start_date =  np.datetime64('1900-01-01T00:00') 
             
-            df = df.loc[df['observed_variable'] == var ] # since I do not know a priori when the indices of the next variable start, check the observed_var number
+            #df = df.loc[df['observed_variable'] == var ] # since I do not know a priori when the indices of the next variable start, check the observed_var number
             
             delta = pd.to_timedelta(df['date_time'] , unit = 's')   
             stamps = start_date + delta 
@@ -237,7 +238,6 @@ class Desroziers():
             for plev in self.std_plevs : 
                 
                 plev_indices = np.where ( (df['z_coordinate'] == plev ))[0] # first indices relative to pressure level 
-                
                 
                 #index_offest_m = min(plev_indices)
                 df_plev = df.iloc[ plev_indices ]
@@ -271,7 +271,7 @@ class Desroziers():
                     an_depar = np.array(df_plev['an_depar@body'])
                     bias = np.array(df_plev['biascorr@body'])
                                                                           
-                    for date,hour, plus, minus, fg_dep, an_dep, bias, num in zip( tqdm(timestamp), 
+                    for date,hour, plus, minus, fg_dep, an_dep, b, num in zip( tqdm(timestamp), 
                                                                                   df_hour, 
                                                                                   day_delta_plus, 
                                                                                   day_delta_minus, 
@@ -280,19 +280,9 @@ class Desroziers():
                                                                                   bias, 
                                                                                   range(len(timestamp)) ) :
 
-                        #if date < np.datetime64('1950-01-01'):
-                        #    continue 
-                        
 
-                        
-                        #selected_indices_t = np.where( (timestamp[num-1000:num+1000] >= minus) &  (timestamp[num-1000:num+1000] <= plus) )[0]
-                        #selected_indices_h = np.where ( df_hour[num-1000:num+1000] == hour ) [0] 
-                        #selected_indices =  np.intersect1d(selected_indices_t, selected_indices_h)
-                        
-                        #selected_indices_t = np.where( (timestamp[num-lim:num+lim] >= minus) &  (timestamp[num-lim:num+lim] <= plus) )[0]
-                        #selected_indices_h = np.where ( df_hour[num-lim:num+lim] == hour ) [0] 
-                        #selected_indices =  np.intersect1d(selected_indices_t, selected_indices_h)      
-                        
+
+                        # indices of the elements to use for the calculation of the errors 
                         selected_indices_t = np.where( (timestamp>= minus) &  (timestamp <= plus) )[0]
                         selected_indices_h = np.where ( df_hour == hour ) [0] 
                         selected_indices =  np.intersect1d(selected_indices_t, selected_indices_h)                         
@@ -310,10 +300,7 @@ class Desroziers():
                         total_index_offest += hour_index_offest
                         """ 
                         
-                        
-                        #selected_indices_t = np.searchsorted( (timestamp[num-1000:num+1000] >= minus) &  (timestamp[num-1000:num+1000] <= plus) )[0]
-                        #0
-                                                
+
                         # indices correpsonding to selected hour, plevel, aorund a window of days 
                         # at these indices the desrozier values will replace the dummy values in the output array
                         #window_df = df.loc[ selected_indices ]
@@ -345,9 +332,9 @@ class Desroziers():
                                  For wind variables (speed and direction) we ignore the absence of the bias. """
                             
                             if var == 104 or var == 105 or var == 107:
-                                bias = 1 # dummy value to make the following check = False for wind speed, which has no bias
+                                b = 1 # dummy value to make the following check = False for wind speed, which has no bias
                                 
-                            if len_valid < int(d)/2 or np.isnan(bias) or np.isnan(fg_dep) or np.isnan(an_dep): # require at least 50% of valid data for the error calculation 
+                            if len_valid < int(d)/2 or np.isnan(b) or np.isnan(fg_dep) or np.isnan(an_dep): # require at least 50% of valid data for the error calculation 
                                 desroziers_error = np.nan 
                             
                             else:
@@ -366,7 +353,6 @@ class Desroziers():
                             indices_to_insert.append(num)      
                             errors.append(np.nan)
                             num_day.append(-2147483647  )                                    
-                            pass # nothing to do since the vectors are already initialized with nans 
                         
                     # now we have a list of calculated des. error.
                     # these values will replace the values of the dummy values in the vectors  error, num, std_dev,
@@ -376,10 +362,11 @@ class Desroziers():
                         continue
                     
                     error, nums = 'desroziers_' + d , 'num_' +d
-                    new_indices = imin + indices_to_insert + plev_indices
+                    #new_indices = imin + indices_to_insert + plev_indices # OLD, wrong
+                    new_indices_n = imin + plev_indices 
                     # need to add the starting indices for this variable AND for the selected timestamp
-                    np.put(errors_out[error]     , new_indices, errors      ) # replace in the errors_out vectors the values of the vector errors at indices=selected_indices
-                    np.put(errors_out[nums]      , new_indices, num_day ) 
+                    np.put(errors_out[error]     , new_indices_n, errors      ) # replace in the errors_out vectors the values of the vector errors at indices=selected_indices
+                    np.put(errors_out[nums]    , new_indices_n, num_day ) 
                     
                     """
                     valid = np.where( np.array(num_day) > int(d)/2 )
@@ -388,7 +375,6 @@ class Desroziers():
                         values = errors[list(valid[0])]
                         print(0)
                     """
-                    
                         
                     #np.put(errors_out[std_dev] , new_indices, stddev   ) 
                     
@@ -416,7 +402,7 @@ class Desroziers():
                 encodings[var] = {'dtype': np.float32 , 'compression': 'gzip'}                
             elif 'num' in var:
                 attr = 'Number of records - xx days window'.replace('xx', var.split('_')[-1] )
-                encodings[var] = {'dtype': int , 'compression': 'gzip'}
+                encodings[var] = {'dtype': 'int32' , 'compression': 'gzip'}
                 
                 
             errors[var] = out_data[var]
@@ -424,13 +410,20 @@ class Desroziers():
           
         """ Write the new group using h5py """
         group = 'advanced_uncertainty' 
-        self.h5py_file.create_group(group)
+        
+        out_file = self.out_dir + '/' + self.file_name.replace('.nc', '_uncertainty.nc')
+        self.output_file_name = out_file 
+        
+        self.output_file = h5py.File( out_file , 'w')
+        
+        self.output_file.create_group(group)
         #index = np.array( range(len(data['date_time'] ) )  )
         
         
         """ Writing  the uncertainties in the advanced_uncertainty group """
         index = self.h5py_file['observations_table']['index']        
-        self.h5py_file[group].create_dataset('index', data=index, compression = 'gzip')
+        self.output_file[group].create_dataset('index', data=index, compression = 'gzip')
+        self.file = '' # set as empty for safety 
         
         for v in out_data.keys():
             print('*** Writing to output file: ***' , v )
@@ -440,15 +433,16 @@ class Desroziers():
             else:
                 data = data.astype(float)
                 
-                
-            self.h5py_file[group].create_dataset(v, self.h5py_file['observations_table']['date_time'].shape , encodings[v]['dtype'] , 
+            self.output_file[group].create_dataset(v, self.h5py_file['observations_table']['date_time'].shape , encodings[v]['dtype'] , 
                                                  compression= encodings[v]['compression'] , chunks = True , data = data  )
             
+            
             #self.h5py_file[group][v][:] = out_data[v]
-            self.h5py_file[group][v].attrs['description'] = errors[v].attrs['description']
-            self.h5py_file[group][v].dims[0].attach_scale( self.h5py_file['advanced_uncertainty']['index'] )  
+            self.output_file[group][v].attrs['description'] = errors[v].attrs['description']
+            self.output_file[group][v].dims[0].attach_scale( self.output_file['advanced_uncertainty']['index'] )  
             
-            
+        self.h5py_file.close()
+   
         """ Adding some extra variables  """    
         
         """
@@ -465,12 +459,33 @@ class Desroziers():
         self.h5py_file[group]['biascorr@body'].dims[0].attach_scale( self.h5py_file['advanced_uncertainty']['index'] )          
         """
         
-        self.h5py_file.close()
+        self.output_file.close()
         
-        os.system('mv  ' + self.file + '    ' + self.out_dir )
+        #os.system('mv  ' + self.file + '    ' + self.out_dir )
 
         print(" *** Done writing Desroziers error to output file --->  " , self.file  )
  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+""" File source directory """
+#merged_directory = '/raid60/scratch/uli/converted_v5/'
+merged_directory = '/raid60/scratch/federico/COPY_scratch_leo_converted_v5'
+merged_directory = '/raid60/scratch/leo/scratch/converted_v5'
+    
+""" Moving postprocessed files to new directory """
+out_dir = '/raid60/scratch/federico/DESROZIERS_01APRIL_onlygroup'
+
+if not os.path.isdir(out_dir):
+    os.mkdir( out_dir)
+
+        
 if __name__ == '__main__':
         
             parser = argparse.ArgumentParser(description="Utility for Desroziers statistics")
@@ -518,15 +533,7 @@ if __name__ == '__main__':
                     DS.calculate_Desroziers_errors()
                     DS.write_output()
             
-            """ File source direcotry """
-            #merged_directory = '/raid60/scratch/uli/converted_v5/'
-            merged_directory = '/raid60/scratch/federico/TO_PROCESS_DESROZIERS'
 
-            """ Moving postprocessed files to new directory """
-            out_dir = '/raid60/scratch/federico/DESROZIERS_25MARCH2021'
-            
-            #os.system('rm -r  ' + out_dir)     
-            os.system('mkdir ' + out_dir)
 
             """
             stations_list = [ s for s in os.listdir(merged_directory) if 'TEST0'  in s ]   
@@ -537,7 +544,7 @@ if __name__ == '__main__':
             for s in stations_list:
                     os.system('cp ' + merged_directory + '/'+s   + '  '  +  merged_directory + '/'+s.replace('_TEST.nc','.nc')   )
             """        
-            stations_list = [ s for s in os.listdir(merged_directory)  ]   
+            stations_list = [ s for s in os.listdir(merged_directory) ]   
             
             
 
@@ -556,14 +563,22 @@ if __name__ == '__main__':
                         else:
                             cleaned_list.append(file)
 
+                            
+            #cleaned_list = ['0-20000-0-02173_CEUAS_merged_v1.nc']
+            cleaned_list = [f for f in cleaned_list if '.nc' in f ]
+            #cleaned_list = [f for f in cleaned_list if f not in os.listdir('/raid60/scratch/federico/DESROZIERS_26MARCH2021_ALL') ]
+
+            #cleaned_list = cleaned_list[:20]
+            print("*** Processing: " , len(cleaned_list) , "   files ")
+
+            if multiproc in ['yes', 'y', 'YES', 'Y', 'True', 'true']:
+                p = Pool(30)
+                #func = partial(run, merged_directory, out_dir, force_run)
+                #out = p.map(func, cleaned_list)  
+                        
+            else:
+                for s in cleaned_list:
+                    a = run(merged_directory, out_dir, force_run, s)
                 
-            #cleaned_list = ['0-20000-0-94463_CEUAS_merged_v0.nc', ]
-            
-            #for s in cleaned_list:
-            #    a = run(merged_directory, out_dir, force_run, s)
-                
-            
-            p = Pool(10)
-            func = partial(run, merged_directory, out_dir, force_run)
-            out = p.map(func, cleaned_list)        
+      
 
