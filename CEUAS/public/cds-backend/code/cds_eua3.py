@@ -2757,16 +2757,18 @@ class CDMDataset:
                         fout.__delitem__(i)
                 elif 'toolbox' in request.keys():
                     if i in ['ta', 'hur', 'ua', 'va']:
+                        oldunits = fout[i].attrs['units']
                         fout.__delitem__(i)
                         oldkey=(request['optional'][0])
                         fout[i]=fout[oldkey]
-                        fout[i].attrs['units'] = fout[oldkey].attrs['units']
+                        fout[i].attrs['units'] = oldunits
                         fout.__delitem__(oldkey)
                     elif i in ['wind_from_direction']:
+                        oldunits = fout[i].attrs['units']
                         fout.__delitem__(i)
                         oldkey=(request['optional'][0])
                         fout['ta']=fout[oldkey]
-                        fout[i].attrs['units'] = fout[oldkey].attrs['units']
+                        fout[i].attrs['units'] = oldunits
                         fout.__delitem__(oldkey)
             
 
