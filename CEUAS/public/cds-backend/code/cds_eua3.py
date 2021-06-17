@@ -2753,17 +2753,20 @@ class CDMDataset:
                 if 'toolbox' in request.keys() and not 'optional' in request.keys():
                     if i in ['wind_from_direction']:
                         fout['ta'] = fout[i]
+                        fout['ta'].attrs['units'] = fout[i].attrs['units']
                         fout.__delitem__(i)
                 elif 'toolbox' in request.keys():
                     if i in ['ta', 'hur', 'ua', 'va']:
                         fout.__delitem__(i)
                         oldkey=(request['optional'][0])
                         fout[i]=fout[oldkey]
+                        fout[i].attrs['units'] = fout[oldkey].attrs['units']
                         fout.__delitem__(oldkey)
                     elif i in ['wind_from_direction']:
                         fout.__delitem__(i)
                         oldkey=(request['optional'][0])
                         fout['ta']=fout[oldkey]
+                        fout[i].attrs['units'] = fout[oldkey].attrs['units']
                         fout.__delitem__(oldkey)
             
 
