@@ -41,7 +41,7 @@ The backend returns files, which are either
 | `time`           | Optional            | Same             | `[HH1,HH2], HH,  [0 - 23]`                                   | Integer        | Launch time, If `time` is missing, all available times are selected. If HH1>HH2 the range starts at HH1 of the preceding day. |
 | -                |                     |                  | -                                                            | -              | -                                                            |
 | `reanalysis`     | Not Implemented Yet | -                | ERA5, JRA55, 20CRv3, CERA20C                                 | String         | Reanalysis values interpolated offline to station locations  |
-| `cdm`            | Not Implemented Yet | -                | `[header_table/source_id, ...]`                                                | String         | Attach also Common Data Model tables to station files. This breaks CF compliance of netCDF files. |
+| `cdm`            | Optional | -                | `[header_table/source_id, ...]`                                                | String         | Attach also Common Data Model tables to station files. This breaks CF compliance of netCDF files, but netCDF files are still accessible with common netCDF tools such as ncdump. |
 
 ### Optional Variables Table
 Note: One variable must be selected above with the variables keyword. Depending on this, the optional variable then is in the same units as the main variable. 
