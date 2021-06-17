@@ -2753,7 +2753,6 @@ class CDMDataset:
                 if 'toolbox' in request.keys() and not 'optional' in request.keys():
                     if i in ['wind_from_direction']:
                         fout['ta'] = fout[i]
-                        fout['ta'].attrs['units'] = fout[i].attrs['units']
                         fout.__delitem__(i)
                 elif 'toolbox' in request.keys():
                     if i in ['ta', 'hur', 'ua', 'va']:
