@@ -712,7 +712,7 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
 #                 idim = tmp.dims[0]
 #                 ds[ivar] = (idim, tmp)
         
-        ds = ds.drop_vars(to_be_removed, errors='ignore')  # do not raise an error.
+#         ds = ds.drop_vars(to_be_removed, errors='ignore')  # do not raise an error.
         df = ds.to_dataframe()
         #
         # todo fix the primary_id in the NetCDF files
