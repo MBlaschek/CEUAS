@@ -694,7 +694,8 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
         # open_dataset (~20 s faster) than load_dataset
         # ds = xarray.open_dataset(fn, drop_variables=['trajectory_label', 'trajectory_index', 'trajectory'])
         logger.debug('Converting %s', fn)
-        ds = eua.CDMDataset(fn)            
+        with eua.CDMDataset(fn) as ds:
+            df = ds.to_dataframe()
         
 #         to_be_removed = ['trajectory_index', 'trajectory']
 #         for ivar in list(ds.variables):
@@ -713,7 +714,7 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
 #                 ds[ivar] = (idim, tmp)
         
     #         ds = ds.drop_vars(to_be_removed, errors='ignore')  # do not raise an error.
-        df = ds.to_dataframe()
+        
 #         print(df)
 #         timevar = df['time']
 #         df.drop('time', axis=1)
@@ -758,8 +759,6 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
         statindex += 1
         dfs.append(df)
         
-        print(df)
-
     df = pd.concat(dfs, ignore_index=True)
     df.index.name = 'obs_id'
     #if '.zip' in ofile:
