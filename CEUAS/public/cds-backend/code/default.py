@@ -694,7 +694,7 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
         # open_dataset (~20 s faster) than load_dataset
         # ds = xarray.open_dataset(fn, drop_variables=['trajectory_label', 'trajectory_index', 'trajectory'])
         logger.debug('Converting %s', fn)
-        ds = xarray.open_dataset(fn)            
+        ds = eua.CDMDataset(fn)            
         
 #         to_be_removed = ['trajectory_index', 'trajectory']
 #         for ivar in list(ds.variables):
@@ -712,24 +712,53 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
 #                 idim = tmp.dims[0]
 #                 ds[ivar] = (idim, tmp)
         
-#         ds = ds.drop_vars(to_be_removed, errors='ignore')  # do not raise an error.
+    #         ds = ds.drop_vars(to_be_removed, errors='ignore')  # do not raise an error.
         df = ds.to_dataframe()
+#         print(df)
+#         timevar = df['time']
+#         df.drop('time', axis=1)
+#         df['time'] = timevar
+
         #
         # todo fix the primary_id in the NetCDF files
         #
-        if 'primary_id' not in ds.attrs:
-            # /tmp//tmp//006691463272/dest_0-20000-0-53513_relative_humidity.nc
-            df['statid'] = fn.split('/')[-1].split('_')[1]
-            # logger.warning('CSV no primary_id in %s', fn)
-            # continue
-        else:
-            df['statid'] = ds.attrs['primary_id']
+#         if 'primary_id' not in ds.attrs:
+#             # /tmp//tmp//006691463272/dest_0-20000-0-53513_relative_humidity.nc
+#             df['statid'] = fn.split('/')[-1].split('_')[1]
+#             # logger.warning('CSV no primary_id in %s', fn)
+#             # continue
+#         else:
+#             df['statid'] = ds.attrs['primary_id']
         #
         #
         #
+        
+        
+        att_ds = xarray.open_dataset(fn)   
+        if 'ta' in df.keys():
+            df['ta_units'] = att_ds['ta'].attrs['units']
+        if 'va' in df.keys():
+            df['va_units'] = att_ds['va'].attrs['units']
+        if 'ua' in df.keys():
+            df['ua_units'] = att_ds['ua'].attrs['units']
+        if 'wind_speed' in df.keys():
+            df['wind_speed_units'] = att_ds['wind_speed'].attrs['units']
+        if 'wind_from_direction' in df.keys():
+            df['wind_from_direction_units'] = att_ds['wind_from_direction'].attrs['units']
+        if 'hur' in df.keys():
+            df['hur_units'] = att_ds['hur'].attrs['units']
+        if 'hus' in df.keys():
+            df['hus_units'] = att_ds['hus'].attrs['units']
+        if 'dew_point_temperature' in df.keys():
+            df['dew_point_temperature_units'] = att_ds['dew_point_temperature'].attrs['units']
+        if 'geopotential' in df.keys():
+            df['geopotential_units'] = att_ds['geopotential'].attrs['units']
+        df['plev_units'] = att_ds['plev'].attrs['units']
         df['statindex'] = statindex
-        dfs.append(df)
         statindex += 1
+        dfs.append(df)
+        
+        print(df)
 
     df = pd.concat(dfs, ignore_index=True)
     df.index.name = 'obs_id'
