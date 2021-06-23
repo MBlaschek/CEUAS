@@ -2751,20 +2751,25 @@ class CDMDataset:
 
             for i in fout.keys():    
                 if 'toolbox' in request.keys() and not 'optional' in request.keys():
-                    if i in ['wind_from_direction']:
-                        fout['ta'] = fout[i]
-                        fout.__delitem__(i)
+#                     if i in ['wind_from_direction']:
+#                         fout['ta'] = fout[i]
+#                         fout.__delitem__(i)
+                    print('no optionals')
                 elif 'toolbox' in request.keys():
-                    if i in ['ta', 'hur', 'ua', 'va']:
+                    if i in ['ta', 'hur', 'ua', 'va', 'wind_from_direction']:
+                        oldunits = fout[i].attrs['units']
                         fout.__delitem__(i)
                         oldkey=(request['optional'][0])
                         fout[i]=fout[oldkey]
+                        fout[i].attrs['units'] = oldunits
                         fout.__delitem__(oldkey)
-                    elif i in ['wind_from_direction']:
-                        fout.__delitem__(i)
-                        oldkey=(request['optional'][0])
-                        fout['ta']=fout[oldkey]
-                        fout.__delitem__(oldkey)
+#                     elif i in ['wind_from_direction']:
+#                         oldunits = fout[i].attrs['units']
+#                         fout.__delitem__(i)
+#                         oldkey=(request['optional'][0])
+#                         fout['ta']=fout[oldkey]
+#                         fout[i].attrs['units'] = oldunits
+#                         fout.__delitem__(oldkey)
             
 
             for i in fout.keys():
