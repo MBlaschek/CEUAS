@@ -138,7 +138,8 @@ class Merger():
         rts, ri = data[k][F]["recordtimestamp"][:] , data[k][F]["recordindex"][:]
 
         index_min  = self.unique_dates[k][F]['indices'][dt]['low']  # here no offset since I am reading the original data 
-        ind             = np.where(rts==dt)[0][0]                               # index of specific dt , I need the extremes indices of the next date_time after slicing 
+#leo        ind             = np.where(rts==dt)[0][0]                               # index of specific dt , I need the extremes indices of the next date_time after slicing 
+        ind             = np.searchsorted(rts,dt)                               # index of specific dt , I need the extremes indices of the next date_time after slicing 
 
         try:            
             up_to_dt_slice = rts[ind + slice_size  ]  # 
@@ -172,8 +173,11 @@ class Merger():
             fb_dic = {} 
             for ov in self.era5fb_columns:
                 try:
-                    v = copy.deepcopy( era5fb_tab[ov][index_min:index_max ] )
-                    fb_dic[ov] = v 
+                    #leo v = copy.deepcopy( era5fb_tab[ov][index_min:index_max ] )
+                    if index_max==1000000000000000:
+                        fb_dic[ov] = [era5fb_tab[ov],index_min,era5fb_tab[ov].shape[0]] 
+                    else:
+                        fb_dic[ov] = [era5fb_tab[ov],index_min,index_max] 
                 except:
                     continue
                     #print("CANNOT FIND  ", ov ) 
@@ -449,17 +453,25 @@ class Merger():
 
         #print('making the era5fb  ', date_time, ' ' , dataset)
         red_era5fb_dic = {}
+        l=0
         for v in self.era5fb_columns:
+            if l>0:
+                continue
             tipo = self.dic_type_attributes['era5fb'][v]['type']                   
             if dataset == 'era5_1' or dataset == 'era5_2':
                 if v in data[dataset][File]['era5fb_tab'].keys():                            
-                    red_era5fb_dic[v] = data[dataset][File]['era5fb_tab'][v][index:index_up][indices]
+                    #leo red_era5fb_dic[v] = data[dataset][File]['era5fb_tab'][v][index:index_up][indices]
+                    vl=data[dataset][File]['era5fb_tab'][v]
+                    red_era5fb_dic[v] = [vl[0],np.arange(vl[1],vl[2])[index:index_up][indices]]
+                    l+=1
                 else:
                     void = get_null(tipo = tipo)
                     red_era5fb_dic[v]= np.full(len(indices), void)                              
+                    l+=1
             else:       # no feedback for non era%-1 or era5_2 datasets 
                 void = get_null(tipo = tipo)
                 red_era5fb_dic[v]= np.full(len(indices), void)
+                l+=1
 
         #print('done making_obstab_era5fb')
         """
@@ -518,13 +530,15 @@ class Merger():
         #early_datasets = True
 
         self.processed_dt = [] 
+        #for dt, c in zip(date_times, range(tot) ): # loop over all the possible date_times 
 
         for dt, c in zip(date_times, range(tot) ): # loop over all the possible date_times 
 
             if (c+1)%1000==0:
                 print('Analize : ', str(c+1) , '/',  str(tot)  , ' ', str(dt/(365.25*3600*24)) , ' ',
                               now(time.time()),'{:5.3f}'.format(time.time()-tt ))
-
+            #if c>60000:
+                #break
             delete = self.delete_ds(dt) # check if there is a dataset to delete 
 
             """ Finding if this record is the same as the previous one analyzed, according to the given time_shift """
@@ -756,17 +770,97 @@ class Merger():
 
         combined_era5fb = {}
         ####  Writing combined era5fb_table dic                                                                                                                      
-        for k in all_combined_era5fb[0].keys():
-            try:
-                #combined_era5fb[k]=np.concatenate([all_combined_era5fb[i][k][:] for i in range(len(all_combined_era5fb))])
-                #self.write_merged(content = 'era5fb', table= {k:combined_era5fb[k]})
-                """ try replacing , remove combined_era5fb = {} """
-                a = np.concatenate([all_combined_era5fb[i][k][:] for i in range(len(all_combined_era5fb))])
-                self.write_merged(content = 'era5fb', table= {k:a})
-                logging.debug('*** Written era5fb %s:  ', k)
-            except:
-                print("Failed feedback variable " , k)
+        #leofor k in all_combined_era5fb[0].keys():
+            #try:
+                ##combined_era5fb[k]=np.concatenate([all_combined_era5fb[i][k][:] for i in range(len(all_combined_era5fb))])
+                ##self.write_merged(content = 'era5fb', table= {k:combined_era5fb[k]})
+                #""" try replacing , remove combined_era5fb = {} """
+                #a = np.concatenate([all_combined_era5fb[i][k][:] for i in range(len(all_combined_era5fb))])
+                ##leo self.write_merged(content = 'era5fb', table= {k:a})
+                #logging.debug('*** Written era5fb %s:  ', k)
+            #except:
+                #endleo print("Failed feedback variable " , k)
 
+        x=[]
+        xi=[]
+        for yy in all_combined_era5fb:
+            y=yy['albedo@modsurf'][0]
+            if y==y:
+                if len(x)==0:
+                    era5cols=list(y.parent.keys())
+                if y not in x:
+                    x.append(y)
+                    xi.append(len(x)-1)
+                else:
+                    xi.append(x.index(y))
+            else:
+                xi.append(-1)
+        print('fb sources: ',x)
+        #import matplotlib.pylab as plt
+        #for ids in range(len(x)):
+            #idx=[0,-1]
+            #xx=x[ids].parent['date@hdr'][:]
+            #print(xx[idx])    
+            #idy=np.where(xx//10000<1957)
+            #print(x[ids].parent['fg_depar@body'][:][idy])
+        
+            #plt.plot(x[0].parent['date@hdr'][:][idy]/10000,x[0].parent['fg_depar@body'][:][idy])       
+        #plt.show()
+        
+        for k in era5cols:
+            if 'string' in k or k=='index':
+                continue
+            print(k)
+            fbcontents=[]
+            for ids in range(len(x)):
+                try:
+                    shap=list(x[ids].parent[k].shape)
+                    shap[0]+=1
+                    htype=x[ids].parent[k][0].dtype
+                    if htype==np.dtype('S1'):
+                        slens=[]
+                        for h in range(len(x)):
+                            slens.append(x[h].parent[k].shape[1])
+                        slen=np.max(slens)
+                        shap[1]=slen
+                        fbcontents.append(np.zeros_like(x[ids].parent[k][:],shape=shap))
+                        fbcontents[-1][:-1,:x[ids].parent[k].shape[1]]=x[ids].parent[k][:]
+                    else:
+                        fbcontents.append(np.zeros_like(x[ids].parent[k][:],shape=shap))
+                        fbcontents[-1][:-1]=x[ids].parent[k][:]
+                    #print(fbcontents[-1][:-1])
+                    if type(fbcontents[-1][0]) == np.int32 :
+                        nan = np.int32(-2147483648)
+                    else:
+                        nan = np.float32(np.nan)       
+                        
+                    fbcontents[-1][-1]=nan  # nan value for given type is added as last element (referenced in else branch below)
+                except:
+                    print(k,'could not be found in ',x[ids].parent.file.filename)
+                    for h in range(len(x)):
+                        if k in x[h].parent.keys():
+                            htype=x[h].parent[k][0].dtype
+                    shap=list(x[ids].shape)
+                    shap[0]+=1
+                    fbcontents.append(np.zeros_like(x[ids],shape=shap,dtype=htype))
+                    if type(fbcontents[-1][0]) == np.int32 :
+                        nan = np.int32(-2147483648)
+                    else:
+                        nan = np.float32(np.nan)       
+                        
+                    fbcontents[-1].fill(nan)
+                        
+            a=[]
+            for i in range(len(all_combined_era5fb)):
+                ac=all_combined_era5fb[i]['albedo@modsurf']
+                if ac[0]==ac[0]:  # era5fb was found for this record
+                    a.append(fbcontents[xi[i]][ac[1]])
+                else:           # no era5fb was found for this record
+                    a.append([fbcontents[xi[i]][-1]]*len(ac))
+                #indices=np.concatenate([all_combined_era5fb[i]['albedo@modsurf'][1] for i in range(len(all_combined_era5fb))])
+            a=np.concatenate(a)
+            self.write_merged(content = 'era5fb', table= {k:a})
+            
         del all_combined_era5fb
         print(blue + 'Memory used after deleting era5fb_tab dic: ', process.memory_info().rss/1000000000 , cend)
 
@@ -1132,7 +1226,7 @@ data_directories   = { 'era5_1'       : base_dir + '/era5_1'     ,
 
 out_dir = '/raid60/scratch/federico/MERGED_MARCH2021/'
 
-out_dir = 'PROVA'
+out_dir = '/raid60/scratch/leo/scratch/CHECK'
 
 run_mode = 'dummy'
 
