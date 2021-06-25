@@ -777,7 +777,9 @@ def insert(row,vola,chuan,igrainv,wbaninv,transodb,trans,kdict,unified,rdata,var
                             import re
                             iwmoid = int(re.sub('\D', '', wmoid ))
 
-                if iwmoid>1000 and iwmoid<100000:
+                #if iwmoid>=1 and iwmoid<1000000:
+                if True:
+                
                     mi=do_row(row,kdict,vola,wmoid, iwmoid, nw,lat,lon,'OSCAR', dataset = dataset, fn = fn) # mi is the number of the row inside the OSCAR database for the station
                     if not mi:
                         mi=do_row(row,kdict,igrainv,wmoid, iwmoid,nw,lat,lon,'IGRA2')
@@ -1255,6 +1257,9 @@ def read_rda_meta(ncfile):
     return station_conf,transunified[0]
 
 def read_igra_meta(line):
+    if line["igraId"] == "GMXUAC00001":
+        print(0)
+        
 
     tx=time.time()
     vdict={'windd':'111','winds':'112','gph':'1',
@@ -1520,12 +1525,12 @@ if __name__ == '__main__':
         dbs=['RI/Pangaea/COMP']
 
 
-        PARALLEL = True  
+        PARALLEL = False  
 
         dbs=['ai_bfr','rda','3188','1761','2','1','igra2','1759']
 
     
-        dbs=['1759']
+        dbs=['igra2']
         
         transunified = []
 
@@ -1621,9 +1626,9 @@ if __name__ == '__main__':
                 flist =  [f for f in flist if 'gz' not in f and f != '3188/era5.3188.conv.' ]
                 #flist =[f for  f in flist if '_10401' in f ]  # to test latitude mismatch in 1759
 
-                flist =[f for  f in flist if ':80310' in f ]  # to test latitude mismatch in 1759
-                f = pd.read_csv(home + '/era5_1759_WBAN_latitude_mismatch_git.dat', delimiter = '\t')
-                flist = [ '1759/' + f for f in f['file'].values ]
+                #flist =[f for  f in flist if '2:61701' in f ]  # to test latitude mismatch in 1759
+                #f = pd.read_csv(home + '/era5_1759_WBAN_latitude_mismatch_git.dat', delimiter = '\t')
+                #flist = [ '1759/' + f for f in f['file'].values ]
                 print(0)
                 """
                 if os.path.isfile(out_dir + '/' + odir +'_correctly_processed.dat'):

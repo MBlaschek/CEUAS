@@ -138,8 +138,7 @@ class Merger():
         rts, ri = data[k][F]["recordtimestamp"][:] , data[k][F]["recordindex"][:]
 
         index_min  = self.unique_dates[k][F]['indices'][dt]['low']  # here no offset since I am reading the original data 
-#leo        ind             = np.where(rts==dt)[0][0]                               # index of specific dt , I need the extremes indices of the next date_time after slicing 
-        ind             = np.searchsorted(rts,dt)                               # index of specific dt , I need the extremes indices of the next date_time after slicing 
+        ind             = np.where(rts==dt)[0][0]                               # index of specific dt , I need the extremes indices of the next date_time after slicing 
 
         try:            
             up_to_dt_slice = rts[ind + slice_size  ]  # 
@@ -173,11 +172,8 @@ class Merger():
             fb_dic = {} 
             for ov in self.era5fb_columns:
                 try:
-                    #leo v = copy.deepcopy( era5fb_tab[ov][index_min:index_max ] )
-                    if index_max==1000000000000000:
-                        fb_dic[ov] = [era5fb_tab[ov],index_min,era5fb_tab[ov].shape[0]] 
-                    else:
-                        fb_dic[ov] = [era5fb_tab[ov],index_min,index_max] 
+                    v = copy.deepcopy( era5fb_tab[ov][index_min:index_max ] )
+                    fb_dic[ov] = v 
                 except:
                     continue
                     #print("CANNOT FIND  ", ov ) 
@@ -453,25 +449,17 @@ class Merger():
 
         #print('making the era5fb  ', date_time, ' ' , dataset)
         red_era5fb_dic = {}
-        l=0
         for v in self.era5fb_columns:
-            if l>0:
-                continue
             tipo = self.dic_type_attributes['era5fb'][v]['type']                   
             if dataset == 'era5_1' or dataset == 'era5_2':
                 if v in data[dataset][File]['era5fb_tab'].keys():                            
-                    #leo red_era5fb_dic[v] = data[dataset][File]['era5fb_tab'][v][index:index_up][indices]
-                    vl=data[dataset][File]['era5fb_tab'][v]
-                    red_era5fb_dic[v] = [vl[0],np.arange(vl[1],vl[2])[index:index_up][indices]]
-                    l+=1
+                    red_era5fb_dic[v] = data[dataset][File]['era5fb_tab'][v][index:index_up][indices]
                 else:
                     void = get_null(tipo = tipo)
                     red_era5fb_dic[v]= np.full(len(indices), void)                              
-                    l+=1
             else:       # no feedback for non era%-1 or era5_2 datasets 
                 void = get_null(tipo = tipo)
                 red_era5fb_dic[v]= np.full(len(indices), void)
-                l+=1
 
         #print('done making_obstab_era5fb')
         """
@@ -530,15 +518,13 @@ class Merger():
         #early_datasets = True
 
         self.processed_dt = [] 
-        #for dt, c in zip(date_times, range(tot) ): # loop over all the possible date_times 
 
         for dt, c in zip(date_times, range(tot) ): # loop over all the possible date_times 
 
             if (c+1)%1000==0:
                 print('Analize : ', str(c+1) , '/',  str(tot)  , ' ', str(dt/(365.25*3600*24)) , ' ',
                               now(time.time()),'{:5.3f}'.format(time.time()-tt ))
-            #if c>60000:
-                #break
+
             delete = self.delete_ds(dt) # check if there is a dataset to delete 
 
             """ Finding if this record is the same as the previous one analyzed, according to the given time_shift """
@@ -592,7 +578,7 @@ class Merger():
                     
                     #print('Found a time-shifted record, current' + best_ds + '- previous ' + best_ds_list[-1] + ' = ' , float( (combined_obs_tab['date_time'][0] - temporary_previous['date_time'][0])/3600)  ) # decide what to keep in case of same record
 
-                    """ Check if the licence needs to be updated (at least one is free so we set it as free for) """
+                    """ Check if the licence needs to be updated (at least one is free so we set it as free for all) """
                     current_licence = combined_obs_tab['data_policy_licence'][0] 
                     previous_licence = all_combined_obs[-1] ['data_policy_licence'][0] 
                     
@@ -770,104 +756,24 @@ class Merger():
 
         combined_era5fb = {}
         ####  Writing combined era5fb_table dic                                                                                                                      
-        #leofor k in all_combined_era5fb[0].keys():
-            #try:
-                ##combined_era5fb[k]=np.concatenate([all_combined_era5fb[i][k][:] for i in range(len(all_combined_era5fb))])
-                ##self.write_merged(content = 'era5fb', table= {k:combined_era5fb[k]})
-                #""" try replacing , remove combined_era5fb = {} """
-                #a = np.concatenate([all_combined_era5fb[i][k][:] for i in range(len(all_combined_era5fb))])
-                ##leo self.write_merged(content = 'era5fb', table= {k:a})
-                #logging.debug('*** Written era5fb %s:  ', k)
-            #except:
-                #endleo print("Failed feedback variable " , k)
-
-        x=[]
-        xi=[]
-        for yy in all_combined_era5fb:
-            y=yy['albedo@modsurf'][0]
-            if y==y:
-                if len(x)==0:
-                    era5cols=list(y.parent.keys())
-                if y not in x:
-                    x.append(y)
-                    xi.append(len(x)-1)
-                else:
-                    xi.append(x.index(y))
-            else:
-                xi.append(-1)
-        print('fb sources: ',x)
-        #import matplotlib.pylab as plt
-        #for ids in range(len(x)):
-            #idx=[0,-1]
-            #xx=x[ids].parent['date@hdr'][:]
-            #print(xx[idx])    
-            #idy=np.where(xx//10000<1957)
-            #print(x[ids].parent['fg_depar@body'][:][idy])
-        
-            #plt.plot(x[0].parent['date@hdr'][:][idy]/10000,x[0].parent['fg_depar@body'][:][idy])       
-        #plt.show()
-        
-        for k in era5cols:
-            if 'string' in k or k=='index':
-                continue
-            print(k)
-            fbcontents=[]
-            for ids in range(len(x)):
-                try:
-                    shap=list(x[ids].parent[k].shape)
-                    shap[0]+=1
-                    htype=x[ids].parent[k][0].dtype
-                    if htype==np.dtype('S1'):
-                        slens=[]
-                        for h in range(len(x)):
-                            slens.append(x[h].parent[k].shape[1])
-                        slen=np.max(slens)
-                        shap[1]=slen
-                        fbcontents.append(np.zeros_like(x[ids].parent[k][:],shape=shap))
-                        fbcontents[-1][:-1,:x[ids].parent[k].shape[1]]=x[ids].parent[k][:]
-                    else:
-                        fbcontents.append(np.zeros_like(x[ids].parent[k][:],shape=shap))
-                        fbcontents[-1][:-1]=x[ids].parent[k][:]
-                    #print(fbcontents[-1][:-1])
-                    if type(fbcontents[-1][0]) == np.int32 :
-                        nan = np.int32(-2147483648)
-                    else:
-                        nan = np.float32(np.nan)       
-                        
-                    fbcontents[-1][-1]=nan  # nan value for given type is added as last element (referenced in else branch below)
-                except:
-                    print(k,'could not be found in ',x[ids].parent.file.filename)
-                    for h in range(len(x)):
-                        if k in x[h].parent.keys():
-                            htype=x[h].parent[k][0].dtype
-                    shap=list(x[ids].shape)
-                    shap[0]+=1
-                    fbcontents.append(np.zeros_like(x[ids],shape=shap,dtype=htype))
-                    if type(fbcontents[-1][0]) == np.int32 :
-                        nan = np.int32(-2147483648)
-                    else:
-                        nan = np.float32(np.nan)       
-                        
-                    fbcontents[-1].fill(nan)
-                        
-            a=[]
-            for i in range(len(all_combined_era5fb)):
-                ac=all_combined_era5fb[i]['albedo@modsurf']
-                if ac[0]==ac[0]:  # era5fb was found for this record
-                    a.append(fbcontents[xi[i]][ac[1]])
-                else:           # no era5fb was found for this record
-                    a.append([fbcontents[xi[i]][-1]]*len(ac))
-                #indices=np.concatenate([all_combined_era5fb[i]['albedo@modsurf'][1] for i in range(len(all_combined_era5fb))])
-            a=np.concatenate(a)
-            self.write_merged(content = 'era5fb', table= {k:a})
-            
+        for k in all_combined_era5fb[0].keys():
+            try:
+                #combined_era5fb[k]=np.concatenate([all_combined_era5fb[i][k][:] for i in range(len(all_combined_era5fb))])
+                #self.write_merged(content = 'era5fb', table= {k:combined_era5fb[k]})
+                """ try replacing , remove combined_era5fb = {} """
+                a = np.concatenate([all_combined_era5fb[i][k][:] for i in range(len(all_combined_era5fb))])
+                self.write_merged(content = 'era5fb', table= {k:a})
+                logging.debug('*** Written era5fb %s:  ', k)
+            except:
+                #print("Failed feedback variable " , k)
+                pass
         del all_combined_era5fb
         print(blue + 'Memory used after deleting era5fb_tab dic: ', process.memory_info().rss/1000000000 , cend)
 
 
         ####  Writing combined header_table dic                                                                                   
         for k in all_combined_head[0].keys():
-            print('head variable is', k )
+            #print('head variable is', k )
             if ( k == 'comments' or k == 'history'):
                 continue
             try:
@@ -875,8 +781,8 @@ class Merger():
                 self.write_merged(content = 'header_table', table= {k: tab})  # { key: np.array([])}
                 logging.info('*** Written header table %s: ', k)
             except:
-                print('Failed variable in header table', k )
-
+                #print('Failed variable in header table', k )
+                pass
         del all_combined_head
         print(blue + 'Memory used after deleting all_merged head_tab dic: ', process.memory_info().rss/1000000000 , cend)
 
@@ -977,7 +883,7 @@ class Merger():
         selected_obstab, selected_era5fb = container[best_ds][best_file]['obs_tab'] , container[best_ds][best_file]['era5fb_tab']
 
         ''' Update the data policy licence '''
-        if 'ncar' in container.keys() or 'igra_2' in container.keys() or 'era5_1759' in container.keys() or 'era5_1761' in container.keys():
+        if 'ncar' in container.keys() or 'igra2' in container.keys() or 'era5_1759' in container.keys() or 'era5_1761' in container.keys():
             dp = 0 # free data
         else:
             dp = 4 # restricted data
@@ -1051,6 +957,23 @@ class Merger():
         return  best_ds, selected_obstab, selected_era5fb, selected_head, selected_file, best_file
 
 
+    def retrieve_attr_dic(self, content, var):
+        attrs_dic = {}
+        attrs_dic[var]= {}
+        
+        try:
+            attrs_dic[var]['description']    = bytes( self.dic_type_attributes[content][var]['description']    , 'utf-8' )
+        except:
+            attrs_dic[var]['description']    = bytes( 'missing'    , 'utf-8' )
+            print(' FFF FAILING WITH DESCRIPTION: ', var , ' ' ,  self.dic_type_attributes[content][var]['description']) # todo CHECK WHY SOME ARE FAILING
+
+        try:
+            attrs_dic[var]['external_table'] = bytes( self.dic_type_attributes[content][var]['external_table'] , 'utf-8' )
+        except:
+            attrs_dic[var]['external_table'] = bytes( 'missing' , 'utf-8' )
+        
+        return attrs_dic
+    
     def write_merged(self, content = '', table=''):
         """ Module to write the output file as netCDF """
 
@@ -1066,8 +989,19 @@ class Merger():
             else:
                   attrs_dic = {}
             '''
-        attrs_dic = {}
+        #attrs_dic = {}
 
+
+        
+                
+        if content in ['observations_table','header_table','era5fb', 'station_configuration']:
+            for var in table.keys():
+                if var == 'comments':
+                    continue 
+                
+                attrs_dic = self.retrieve_attr_dic(content, var)
+                
+        '''  
         """ Retrieving the attributes """
         if content in ['observations_table','header_table','era5fb', 'station_configuration']:
             for var in table.keys():
@@ -1079,14 +1013,14 @@ class Merger():
                     attrs_dic[var]['description']    = bytes( self.dic_type_attributes[content][var]['description']    , 'utf-8' )
                 except:
                     attrs_dic[var]['description']    = bytes( 'missing'    , 'utf-8' )
-                    #print(' FFF FAILING WITH DESCRIPTION: ', var , ' ' ,  self.dic_type_attributes[content][var]['description']) # FFF CHECK WHY SOME ARE FAILING
+                    print(' FFF FAILING WITH DESCRIPTION: ', var , ' ' ,  self.dic_type_attributes[content][var]['description']) # todo CHECK WHY SOME ARE FAILING
 
                 try:
                     attrs_dic[var]['external_table'] = bytes( self.dic_type_attributes[content][var]['external_table'] , 'utf-8' )
                 except:
                     attrs_dic[var]['external_table'] = bytes( 'missing' , 'utf-8' )
                     #print(' FFF FAILING WITH EXTERNAL TABLE : ', var ) # FFF CHECK WHY SOME ARE FAILING                                                          
-
+        '''
 
         if content == 'recordindex':  # writing the recordindex, recordtimestamp, dateindex
             #logging.info('Writing the merged record indices to the netCDF output ')
@@ -1104,20 +1038,20 @@ class Merger():
 
         elif content == 'station_configuration':
             for k in table.keys(): 
-                if k == 'station_name':
-                    print(0)
+
+                    
                 var_type = self.dic_type_attributes[content][k]['type']
 
                 ''' trying to convert the variable types to the correct types stored as attribute, read from the numpy dic file '''
                 if type(table[k][0]) != var_type:
                     try:
                         table[k] = table[k].astype( var_type ) 
-                        print('Done station_conf' , k )
+                        #print('Done station_conf' , k )
                     except:
                         if k == 'secondary_id':
                             table[k] = table[k].astype( bytes ) 
 
-                        print ('FAILED converting column ' , k, ' type ', type(table[k][0]) , ' to type ', var_type )
+                        #print ('FAILED converting column ' , k, ' type ', type(table[k][0]) , ' to type ', var_type )
 
                 dic = {k:table[k]}  
                 write_dict_h5(out_name, dic , content, self.encodings[content], var_selection=[], mode='a', attrs = attrs_dic  )
@@ -1130,8 +1064,7 @@ class Merger():
             for k in table.keys(): 
                 if k == 'index' or k == 'hdrlen' or 'string' in k :
                     continue
-                if k == 'station_name':
-                    print(0)
+
 
                 var_type = self.dic_type_attributes[content][k]['type']
 
@@ -1145,11 +1078,12 @@ class Merger():
                         table[k] = table[k].astype( var_type ) 
 
                     except:
-                        print ('FAILED converting column ' , k, ' type ', type(table[k][0]) , ' to type ', var_type )
-
+                        #print ('FAILED converting column ' , k, ' type ', type(table[k][0]) , ' to type ', var_type )
+                        pass
                 dic = {k:table[k]}  # making a 1 colum dictionary
                 shape = table[k].shape
                 #print('SHAPE IS FFF ', table[k].shape )
+            
                 write_dict_h5(out_name, dic , content, self.encodings[content], var_selection=[], mode='a', attrs = attrs_dic  )
 
             if content == 'observations_table' and not self.obstab_nans_filled :
@@ -1164,7 +1098,9 @@ class Merger():
                         logging.debug('Adding missing cdm colum with empty values: %s ' , k )
                         dic={k:np.empty(shape,dtype=np.dtype(nan))}
                         dic[k].fill(nan)
-                        write_dict_h5(out_name, dic, 'observations_table', self.encodings['observations_table'], var_selection=[], mode='a', attrs = attrs_dic  ) ### TO DO
+                        d = self.retrieve_attr_dic(content, k)
+                        write_dict_h5(out_name, dic, 'observations_table', self.encodings['observations_table'], var_selection=[], 
+                                      mode='a', attrs = d  ) ### TO DO
                 self.obstab_nans_filled = True
 
             elif content == 'observations_table' and self.obstab_nans_filled:
@@ -1211,8 +1147,7 @@ class Merger():
 
        
 
-base_dir = '/raid60/scratch/federico/HARVESTED_JAN2021'
-
+base_dir = '/raid60/scratch/federico/MAY2021_HARVEST_secondary/'
 
 data_directories   = { 'era5_1'       : base_dir + '/era5_1'     ,
                        'era5_2'       : base_dir + '/era5_2'     ,
@@ -1224,9 +1159,9 @@ data_directories   = { 'era5_1'       : base_dir + '/era5_1'     ,
                                    'bufr'            : base_dir + '/bufr'       ,                
                                    }
 
-out_dir = '/raid60/scratch/federico/MERGED_MARCH2021/'
+out_dir = '/raid60/scratch/federico/MERGED_JUNE2021/'
 
-out_dir = '/raid60/scratch/leo/scratch/CHECK'
+out_dir = 'PROVA'
 
 run_mode = 'dummy'
 
@@ -1258,6 +1193,7 @@ def create_stat_dic(stat_id, data_directories):
                         station_dic[d] = []                            
                     station_dic[d].append(i + '/' + f)
                     found_20001 = True
+                    total_dim. append( os.path.getsize (i + '/' + f) )
 
     size = sum(total_dim)        
     if found_20001:
@@ -1304,7 +1240,7 @@ if __name__ == '__main__':
     out.write('# Failed stations \n')
     for station in stations.split(','):
         print(station)
-        if '-20001-' in station:
+        if '-20600-' in station or '-20999-' in station:
             continue 
         station_dic, size, station = create_stat_dic(station, data_directories)
 
@@ -1335,3 +1271,4 @@ if __name__ == '__main__':
 # run: -s 0-20000-0-82930 -l 100 -m 1000000000000 
 # 0-20000-0-82930,0-20000-0-03976 
 # -s 0-20000-0-97760 -l 100 -m 1000000000000 
+# -s 0-20000-0-72274 -l 100 -m 1000000000000 
