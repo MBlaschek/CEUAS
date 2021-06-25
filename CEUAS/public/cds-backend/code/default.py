@@ -776,7 +776,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                bbox: list = None, country: str = None, area: list = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                gridded: list = None, toolbox: str = None, cdm: list = None, da: bool = True,
-               pass_unknown_keys: bool = False,
+               pass_unknown_keys: bool = False, nodims: str = None,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
 
@@ -900,6 +900,21 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             if len(d['optional']) > 1:
                 raise KeyError("toolbox 'True' is only valid if only one 'optional' is given.")  
         d['toolbox'] = True
+        
+    #
+    # nodims
+    #
+    if nodims is not None:
+        if not nodims == 'True':
+            raise KeyError("Invalid type selected at nodims - only string 'True' is valid: " + nodims)
+        try: 
+            d['optional']
+        except:
+            pass
+        else:
+            if len(d['optional']) > 1:
+                raise KeyError("nodims 'True' is only valid if only one 'optional' is given.")  
+        d['nodims'] = True
     
     #
     # CDM
