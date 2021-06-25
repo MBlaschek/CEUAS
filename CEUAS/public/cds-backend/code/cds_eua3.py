@@ -2590,7 +2590,8 @@ class CDMDataset:
                                          'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']+cdm_obstab)
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                fout['time'].make_scale('time')
+                if 'nodims' in request.keys():
+                    fout['time'].make_scale('time')
             #
             # Feedback Information
             #
@@ -2774,8 +2775,9 @@ class CDMDataset:
 
             for i in fout.keys():
                 #print(i)
-                if (i == 'obs' or i == 'trajectory' or 'string' in i):
-                    fout.__delitem__(i)
+                if 'nodims' in request.keys():
+                    if (i == 'obs' or i == 'trajectory' or 'string' in i):
+                        fout.__delitem__(i)
                 version = ''
                 if '.' in i:
                     vers = i.find('.')
