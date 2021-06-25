@@ -2590,7 +2590,7 @@ class CDMDataset:
                                          'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']+cdm_obstab)
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                fout['time'].make_scale('time')
+#                 fout['time'].make_scale('time')
             #
             # Feedback Information
             #
