@@ -1633,8 +1633,8 @@ def level_interpolation(idata: xr.DataArray, dim: str = 'time', method: str = 'l
     # revert to initial dimension
     #
     idata[idim] = (dim, obs)  # add coordinate / dimension
-    # todo figure out if drop(obs) is required
-    return idata.swap_dims({dim: idim}).drop_vars('obs')  # swap dimension back, remove obs coordinate
+    # todo figure out if drop(obs) is requiredx
+    return idata.swap_dims({dim: idim}).drop_vars('obs', errors = 'ignore')  # swap dimension back, remove obs coordinate
 
 
 ###############################################################################

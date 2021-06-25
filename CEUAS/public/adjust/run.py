@@ -11,6 +11,7 @@ import logging
 #     time.sleep(1)
 #     return ifile.split('/')[-1]
 
+
 def job(ifile):
     """Run adjustment procedure and save into backend file + raobcore format to ftp
     """
@@ -21,32 +22,35 @@ def job(ifile):
     # Activate logging
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(name)s | %(funcName)s - %(levelname)s - %(message)s')
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s | %(funcName)s - %(levelname)s - %(message)s')
     # logger.handlers = [] # reset remove all handlers
     ch = logging.FileHandler('logs/{}.log'.format(ifile.split('/')[-1]))
     ch.setLevel(logging.DEBUG)
     ch.setFormatter(formatter)
     logger.addHandler(ch)
     logger.info("Logging %s", ifile)
-    # needs to be before 
+    # needs to be before
     status = ""
     try:
         if False:
             # DEBUG
             iofile = eua.CDMDataset(ifile)
-            iofile.reopen(write_to_filename='monkey.nc', mode='r+', strict=True)
+            iofile.reopen(write_to_filename='monkey.nc',
+                          mode='r+', strict=True)
         else:
             iofile = eua.CDMDataset(ifile)
-            newfilename = '/raid60/scratch/mblaschek/CEUAS_db/' + ifile.split('/')[-1]
+            newfilename = '/raid60/scratch/mblaschek/CEUAS_db/' + \
+                ifile.split('/')[-1]
             # copy only parts
-            iofile.copy(newfilename, force=True, 
+            iofile.copy(newfilename, force=True,
                         variables=['/observations_table/observation_value',
                                    '/observations_table/date_time',
-                                   '/observations_table/z_coordinate', 
+                                   '/observations_table/z_coordinate',
                                    '/observations_table/observed_variable',
-                                   '/era5fb/fg_depar@body'], 
+                                   '/era5fb/fg_depar@body'],
                         groups=['advanced_homogenisation', 'recordindices', 'header_table'])
-            #iofile.reopen(write_to_filename='/raid60/scratch/mblaschek/CEUAS_db/' + ifile.split('/')[-1], mode='r+', strict=True)  # is that ok? or copy first?
+            # iofile.reopen(write_to_filename='/raid60/scratch/mblaschek/CEUAS_db/' + ifile.split('/')[-1], mode='r+', strict=True)  # is that ok? or copy first?
             iofile.close()
             iofile = eua.CDMDataset(newfilename, mode='r+')
         status += "R+"
@@ -64,14 +68,16 @@ def job(ifile):
         data = xr.Dataset(data)
         # run adjustment procedure
         data = adj.adjustment_procedure(data,
-                                    obs_name=variable,
-                                    dep_name=depar,
-                                    metadata=False,
-                                    times=[0, 12],
-                                    dim='time',
-                                    plev='plev',
-                                    return_dataset=False,
-                                    )
+                                        obs_name=variable,
+                                        dep_name=depar,
+                                        metadata=False,
+                                        times=[0, 12],
+                                        dim='time',
+                                        plev='plev',
+                                        return_dataset=False,
+                                        quantile_adjustments=True,
+                                        mean_adjustments=False
+                                        )
         status += "A"
         # TODO Convert adjustments to other variables?
         #
@@ -82,7 +88,7 @@ def job(ifile):
                                    varnum=eua.cdm_codes[variable],
                                    cube=data['adjustments'],
                                    group='advanced_homogenisation',
-                                   attributes={'version':'1.0'}
+                                   attributes={'version': '1.0'}
                                    )
         status += "WB"
         #
@@ -93,41 +99,48 @@ def job(ifile):
             os.remove(ftppath + 'pub/RAOBCOREv1.8/humidity/' + iofile.name)
         except:
             pass
-        iofile.convert_to_raobcore(variable, 
-                                   ftppath + 'pub/RAOBCOREv1.8/humidity/' + iofile.name, 
-                                   feedback=['humidity_bias_estimate', 'fg_depar@body'],
-                                   feedback_group=['era5fb', 'advanced_homogenisation'],
-                                   source='RAOBCORE v1.8, relative humidity', 
+        iofile.convert_to_raobcore(variable,
+                                   ftppath + 'pub/RAOBCOREv1.8/humidity/' + iofile.name,
+                                   feedback=[
+                                       'humidity_bias_estimate', 'fg_depar@body'],
+                                   feedback_group=[
+                                       'era5fb', 'advanced_homogenisation'],
+                                   source='RAOBCORE v1.8, relative humidity',
                                    title='Station daily relative humidity series with ERA5 background departure statistics and bias estimates')
         status += "CR"
     except Exception as e:
         logger.error(e)
     return status
-    
+
+
 if __name__ == "__main__":
     import argparse
     from tqdm.contrib.concurrent import process_map  # or thread_map
-    
-    parser = argparse.ArgumentParser(description="Run standardized radiosonde homogenisation software")
-    parser.add_argument("-n", "--nprocs", type=int, help="Number of processes")
+
+    parser = argparse.ArgumentParser(
+        description="Run standardized radiosonde homogenisation software")
+    parser.add_argument("-n", "--nprocs", type=int, help="Number of processes", default=1)
     parser.add_argument("files", nargs='*', help="Input files")
     args, unknown = parser.parse_known_args()
     if args.files is None:
         print("Missing files")
         parser.print_help()
         sys.exit(1)
-    
+
     n = len(args.files)
     print(n, args.nprocs)
-    
+
     if True:
         r = process_map(job, args.files, max_workers=args.nprocs, chunksize=1)
     else:
         print(job(args.files[0]))
-    
+
     with open('adjustments.results.list', 'w') as f:
-        for i,j in zip(r, args.files):
-            f.write("{} : {}\n".format(i,j))
-    #with Pool(args.nprocs) as p:
-    #    r = list(tqdm.tqdm(p.imap(job, range(n)), total=n))    
-    
+        for i, j in zip(r, args.files):
+            f.write("{} : {}\n".format(i, j))
+    # with Pool(args.nprocs) as p:
+    #    r = list(tqdm.tqdm(p.imap(job, range(n)), total=n))
+
+
+#   ./run.py -n 30 /raid60/scratch/leo/scratch/converted_v5/*CEUAS_merged_v1.nc
+# ./run.py -n 30 /raid60/scratch/leo/scratch/converted_v6/*CEUAS_merged_v1.nc

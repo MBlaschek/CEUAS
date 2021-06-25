@@ -7,18 +7,6 @@ Document| Abbreviation | Published
 Product User Guide | PUG | May 2021
 Algorithm Theoretical Basis Document | ATBD | June 2021
 
-#
-
-Related Milestones and Deliverables:
-
-Type | Nr | Title| Published | File
----|---|---|---|---
-Deliverable | DC3S311c_Lot2.3.1.1 | First access to early upper air data base via CDS | July 2020 | doc/* 
-Deliverable | DC3S311c_Lot2.1.4.2	| C3S Upper air data source inventory +data base v2	| May 2021| doc/* 
-Deliverable | DC3S311c_Lot2.2.1.3	| C3S Upper air data uncertainty final assessment	| May 2021| doc/* 
-Deliverable | DC3S311c_Lot2.2.1.4	| C3S Upper air temperature and humidity data final bias adjustments	| May 2021| doc/* 
-Deliverable | DC3S311c_Lot2.2.2.2	| C3S Upper air wind data final bias adjustments	| May 2021 | doc/* 
-
 # Short Description
 
 This directory contains a collection of Python scripts and an IPython notebook that access the Copernicus Climate Change Service (C3S) - Upper Air Service using the CDSAPI in Python.

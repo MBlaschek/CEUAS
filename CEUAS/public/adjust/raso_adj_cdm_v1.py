@@ -545,7 +545,7 @@ def adjustments(data, breaks, use_mean=True, axis=0, sample_size=130, borders=30
         sample_size = sample_size // nq
         if sample_size < 3:
             sample_size = 3
-        logger.info('Sample size:', sample_size, 'N-Q:', nq)
+        logger.info('Sample size: %d N-Q: %d', sample_size, nq)
 
     dshape = data.shape  # Shape of data (date x levs)
     imax = dshape[axis]  # maximum index
@@ -956,16 +956,16 @@ def adjustment_procedure(data: xr.Dataset, dim: str = 'time', plev: str = 'plev'
         # Relative Humidity -> QUANTILE
         #
         data['adjustments'] = xr.full_like(data[dep_name], 0)
-        data['adjustments'].name = '{}_m'.format(name)
+        data['adjustments'].name = '{}_q'.format(name)
         for i in range(len(times)):
-            breaks = get_breakpoints(breaks[i, ::], **kwargs)
-            logger.info("Breakpoints: %d", len(breaks))
+            ibreaks = get_breakpoints(breaks[i, ::], **kwargs)
+            logger.info("Breakpoints: %d", len(ibreaks))
             #
-            adjv = adjustments(data[dep_name][i, ::].values, breaks,
+            adjv = adjustments(data[dep_name][i, ::].values, ibreaks,
                                 use_mean=False,
                                 axis=axis - 1,
                                 **kwargs)
-            # check limits [0 - 1]
+            # check limits [0 - 1] of relative humidity
             # obs + obs-an-adj - obs-an
             vadj = (data[obs_name][i, ::].values + adjv - data[dep_name][i, ::].values)
             adjv = np.where((vadj < 0) | (vadj > 1), data[dep_name][i, ::].values, adjv)
