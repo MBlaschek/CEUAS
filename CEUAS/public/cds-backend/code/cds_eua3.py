@@ -41,14 +41,14 @@ import netCDF4
 
 # check codes from there
 # https://github.com/glamod/common_data_model/blob/master/tables/observed_variable.dat
-cdm_codes = {'temperature': 85, 'relative_humidity': 38, 'dew_point_temperature': 36, 'dew_point_departure': 34,
+cdm_codes = {'temperature': 85, 'relative_humidity': 38, 'dew_point_temperature': 36, 'dew_point_depression': 34,
              'geopotential': 117, 'wind_direction': 106, 'wind_speed': 107, 'u_component_of_wind': 104,
              'v_component_of_wind': 105,
              'specific_humidity': 39}
 # get codes from there
 # https://apps.ecmwf.int/odbgov/varno/
 odb_codes = {'geopotential': 1, 'temperature': 2, 'u_component_of_wind': 3, 'v_component_of_wind': 4,
-             'wind_direction': 111, 'wind_speed': 112, 'dew_point_temperature': 59, 'dew_point_departure': 299,
+             'wind_direction': 111, 'wind_speed': 112, 'dew_point_temperature': 59, 'dew_point_depression': 299,
              'relative_humidity': 29, 'p': 999,
              'specific_humidity': 7}
 
@@ -443,7 +443,7 @@ def read_standardnames(url: str = None) -> dict:
     # add all additional intercomparions variables
     #
     snames = ['platform_id', 'platform_name', 'latitude', 'longitude', 'time', 'air_pressure',
-              'air_temperature', 'dew_point_temperature','dew_point_depression' 'relative_humidity', 'specific_humidity',
+              'air_temperature', 'dew_point_temperature','dew_point_depression', 'relative_humidity', 'specific_humidity',
               'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential',
               'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type',
               'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 
@@ -527,9 +527,9 @@ def read_standardnames(url: str = None) -> dict:
     cf['specific_humidity']['cdsname'] = 'specific_humidity'
     cf['specific_humidity']['cdmcode'] = 39
     cf['specific_humidity']['odbcode'] = 7
-    cf['dew_point_departure']['cdsname'] = 'dew_point_departure'
-    cf['dew_point_departure']['cdmcode'] = 34
-    cf['dew_point_departure']['odbcode'] = 299
+    cf['dew_point_depression']['cdsname'] = 'dew_point_depression'
+    cf['dew_point_depression']['cdmcode'] = 34
+    cf['dew_point_depression']['odbcode'] = 299
     cf['dew_point_temperature']['cdsname'] = 'dew_point_temperature'
     cf['dew_point_temperature']['cdmcode'] = 36
     cf['dew_point_temperature']['odbcode'] = 59
@@ -581,7 +581,7 @@ def get_attributes(cdmname: str = None, cdsname: str = None, cdmcode: int = None
             wind_direction : 111
             wind_speed : 112
             dew_point_temperature : 59
-            dew_point_departure : 299
+            dew_point_depression : 299
             relative_humidity : 29
             p : 999
             specific_humidity : 7
@@ -590,7 +590,7 @@ def get_attributes(cdmname: str = None, cdsname: str = None, cdmcode: int = None
             temperature : 85
             relative_humidity : 38
             dew_point_temperature : 36
-            dew_point_departure : 34
+            dew_point_depression : 34
             geopotential : 117
             wind_direction : 106
             wind_speed : 107
@@ -745,7 +745,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
 
     for i in cf.keys():
         if i not in ['platform_id', 'platform_name']:
-            if i in ['air_temperature', 'dew_point_temperature','dew_point_departure', 'relative_humidity', 'specific_humidity',
+            if i in ['air_temperature', 'dew_point_temperature','dew_point_depression', 'relative_humidity', 'specific_humidity',
                      'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential']:
                 for fb in ['obs_minus_bg', 'obs_minus_an', 'bias_estimate']:
                     try:
@@ -833,7 +833,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                                 print('x')
                             fout[vlist[-1]][:] = hilf[idx - idx[0], :]
                             
-                except Exception as e:
+                except MemoryError as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
                     hilf = np.zeros(shape=(idx.shape[0]), dtype='S10')
@@ -1294,12 +1294,12 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 print(time.time()-tt)
                 print('')
 
-    except Exception as e:
-    #except Exception as e:
+    except MemoryError as e:
+    #except MemoryError as e:
         if debug:
             raise e
-        logger.error('Exception %s occurred while reading %s', repr(e), filename)
-        return '', 'Exception "{}" occurred while reading {}'.format(e, filename)
+        logger.error('MemoryError %s occurred while reading %s', repr(e), filename)
+        return '', 'MemoryError "{}" occurred while reading {}'.format(e, filename)
 
     return filename_out, msg
 
@@ -1707,7 +1707,7 @@ def cds_request_wrapper(request: dict, request_filename: str = None, cds_dataset
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except Exception as e:
+    except MemoryError as e:
         logger.error('CDSAPI Request failed %s', str(request))
         raise e
 
@@ -1772,7 +1772,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except Exception as e:
+    except MemoryError as e:
         logger.error('VM Request failed %s', str(request))
         raise e
 
@@ -2008,7 +2008,7 @@ class CDMDataset:
                     self[igroup].update(link=self.file[igroup])
                 
 
-        except Exception as e:
+        except MemoryError as e:
             logger.debug(repr(e))
             self.close()
 
