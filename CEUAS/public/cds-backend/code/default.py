@@ -849,8 +849,8 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             if ivar not in allowed_variables:
                 raise KeyError('Invalid variable selected: ' + ivar)
         for i in range(len(variable)):
-            if variable[i] in ['dewpoint_departure', 'dew_point_departure']:
-                variable[i] = 'dew_point_depression'
+            if variable[i] in ['dewpoint_departure', 'dew_point_depression']:
+                variable[i] = 'dew_point_departure'
             if variable[i] in ['geopotential_height']:
                 variable[i] = 'geopotential'
         d['variable'] = variable
