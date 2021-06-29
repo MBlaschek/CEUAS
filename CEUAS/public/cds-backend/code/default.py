@@ -1700,9 +1700,9 @@ def index(request=None, response=None):
     logger.debug("GET %s", request.query_string)
 
 
-    rfile='/tmp/constraints.csv'
+    rfile='/data/public/tmp/constraints.csv'
 
-    response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
+    response.set_header('Content-Disposition', 'attachment; filename=' + rfile)
     return rfile
 
 def datetime_to_seconds(dates, ref='1900-01-01T00:00:00'):
