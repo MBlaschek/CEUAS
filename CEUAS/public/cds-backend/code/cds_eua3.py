@@ -443,7 +443,7 @@ def read_standardnames(url: str = None) -> dict:
     # add all additional intercomparions variables
     #
     snames = ['platform_id', 'platform_name', 'latitude', 'longitude', 'time', 'air_pressure',
-              'air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
+              'air_temperature', 'dew_point_temperature','dew_point_depression' 'relative_humidity', 'specific_humidity',
               'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential',
               'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type',
               'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 
@@ -457,7 +457,7 @@ def read_standardnames(url: str = None) -> dict:
     cdmnames = ['header_table/primary_station_id', 'header_table/station_name', 'observations_table/latitude',
                 'observations_table/longitude', 'observations_table/date_time', 'observations_table/z_coordinate']
 
-    cdmnames += 9 * ['observations_table/observation_value']
+    cdmnames += 10 * ['observations_table/observation_value']
     # todo at the moment this is hard coded here, what if JRA55 is requested?
     cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body',
                  'observations_table/sensor_id',
@@ -527,6 +527,9 @@ def read_standardnames(url: str = None) -> dict:
     cf['specific_humidity']['cdsname'] = 'specific_humidity'
     cf['specific_humidity']['cdmcode'] = 39
     cf['specific_humidity']['odbcode'] = 7
+    cf['dew_point_depression']['cdsname'] = 'dew_point_depression'
+    cf['dew_point_depression']['cdmcode'] = 34
+    cf['dew_point_depression']['odbcode'] = 299
     cf['dew_point_temperature']['cdsname'] = 'dew_point_temperature'
     cf['dew_point_temperature']['cdmcode'] = 36
     cf['dew_point_temperature']['odbcode'] = 59
