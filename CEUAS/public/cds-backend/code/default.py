@@ -805,7 +805,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     allowed_variables = ['temperature', 'u_component_of_wind', 'v_component_of_wind',
                          'wind_speed', 'wind_direction', 'relative_humidity',
                          'specific_humidity', 'dew_point_temperature', 'geopotential', 'geopotential_height',
-                         'dew_point_depression', 'dewpoint_departure', 'dew_point_departure']
+                         'dew_point_depression', 'dewpoint_departure','dewpoint_depression', 'dew_point_departure']
     #
     # Unknown keys ?
     #
@@ -849,8 +849,8 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             if ivar not in allowed_variables:
                 raise KeyError('Invalid variable selected: ' + ivar)
         for i in range(len(variable)):
-            if variable[i] in ['dewpoint_departure', 'dew_point_depression']:
-                variable[i] = 'dew_point_departure'
+            if variable[i] in ['dewpoint_departure', 'dew_point_departure','dewpoint_depression']:
+                variable[i] = 'dew_point_depression'
             if variable[i] in ['geopotential_height']:
                 variable[i] = 'geopotential'
         d['variable'] = variable
