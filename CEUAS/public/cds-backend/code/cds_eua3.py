@@ -745,7 +745,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
 
     for i in cf.keys():
         if i not in ['platform_id', 'platform_name']:
-            if i in ['air_temperature', 'dew_point_temperature', 'relative_humidity', 'specific_humidity',
+            if i in ['air_temperature', 'dew_point_temperature','dew_point_departure', 'relative_humidity', 'specific_humidity',
                      'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential']:
                 for fb in ['obs_minus_bg', 'obs_minus_an', 'bias_estimate']:
                     try:
