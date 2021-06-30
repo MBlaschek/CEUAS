@@ -24,7 +24,7 @@ A typical request should contain at least a `variable` and some of the other Ide
 
 | Identifier       | Request    | All possible values                                    | Type     | Explanation                                                  |
 | ---------------- | ---------- | -------------------------------------------------------|--------- | ------------------------------------------------------------ |
-| `variable`       | Mandatory | `[„air_temperature“, “zonal_wind“, “meridional_wind“, “wind_speed”, ”wind_direction”, ”air_relative_humidity”, ”air_specific_humidity”, "air_dewpoint"]` | String | Meteorological variables                                     |
+| `variable`       | Mandatory | `[„air_temperature“, “zonal_wind“, “meridional_wind“, “wind_speed”, ”wind_direction”, "geopotential", ”air_relative_humidity”, ”air_specific_humidity”, "air_dewpoint", "dewpoint_depression"]` | String | Meteorological variables                                     |
 | `country`        | Exclusive | `[“ALL”,…,”USA”]`| String|  Country codes of stations to be selected according to WMO, see examples below. Exclusive with `bbox` and `statid`|
 | `bbox`           | Exclusive | `[upper,left,lower,right]`| Float or String | Boundaries of lat/lon rectangle to select stations|
 | `statid`         | Exclusive | `[“SSSSS”]` | String | Allowed are: WMO or WIGOS station ID, “all”|
@@ -33,7 +33,7 @@ A typical request should contain at least a `variable` and some of the other Ide
 | `year`           | Optional | `[YYYY,...,YYYY]`, `YYYY`| String | Years|
 | `month`          | Optional | `[MM,..., MM]`, `MM`| String | Months|
 | `day`            | Optional | `[DD,..., DD]`, `DD`| String | Days|
-| `period`         | Optional | `[YYYYMMDD, YYYYMMDD]`| Integer or String | Start and End of a period of dates of launches|
+| `period`         | Optional | `[YYYYMMDD/YYYYMMDD]`| String | Start and End of a period of dates of launches|
 | `optional`       | Optional |`[obs_minus_bg, ...]`            | String         | For allowed values see Optional Variables table below. |
 | `pressure_level` | Optional |  `[MMMM,…,NNNNN]`, `MMMM` | Integer or String| Pressure levels in Pascal. 16 standard pressure levels (10-1000 hPa) or significant levels (if omitted) |
 | `format`         | Optional  | `nc` or `csv`  | String  | Output format |
