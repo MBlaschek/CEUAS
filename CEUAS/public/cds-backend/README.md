@@ -30,7 +30,7 @@ The backend returns files, which are either
 
 | Identifier       | Request             | Frontend/Backend | All possible values                                          | Type           | Explanation                                                  |
 | ---------------- | ------------------- | ---------------- | ------------------------------------------------------------ | -------------- | ------------------------------------------------------------ |
-| `variable`       | Mandatory           | Same             | `[temperature, u_component_of_wind, v_component_of_wind, wind_speed, wind_direction, relative_humidity, specific_humidity,geopotential]` | String         | Meteorological variables                                     |
+| `variable`       | Mandatory           | Same             | `[temperature, u_component_of_wind, v_component_of_wind, wind_speed, wind_direction, relative_humidity, specific_humidity,geopotential,dew_point_depression,dew_point_temperature]` | String         | Meteorological variables                                     |
 | `country`        | Exclusive           | Same             | `[ALL, ..., USA]`                                            | String         | Country codes of stations to be selected. Exclusive with `statid`, `bbox` |
 | `bbox`           | Exclusive           | Same             | `[lower,left,upper,right]`                                   | Numbers        | Boundaries of lat/lon rectangle to select stations. Exclusive with `statid`, `bbox` |
 | `statid`         | Exclusive           | Same             | `[SSSSS,...],SSSSS, ALL`                                     | String         | WMO or WIGOS station ID, ALL                                 |
