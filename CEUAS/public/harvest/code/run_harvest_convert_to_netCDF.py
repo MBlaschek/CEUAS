@@ -3,7 +3,7 @@ import argparse
 from harvest_convert_to_netCDF import db
 import numpy as np
 import subprocess
-
+import glob
 #from check_correct import *
 '''
 tcsh
@@ -22,7 +22,7 @@ def filelist_cleaner(lista, d=''):
        if d in ['era5_1759', 'era5_1761']:
               cleaned = [ l for l in lista if '.nc' not in l and '.conv.' in l and 'py' not in l and '.gz' in l and '.g.' not in l ] 
        if d =='igra2':
-              cleaned = [ l for l in lista if '-data' in l ]
+              cleaned = [ l for l in lista if '-data' in l and '.zip' not in l ]
        if d == 'era5_3188': #  era5.3188.conv._C:4687.gz
               cleaned = [ l for l in lista if '3188.conv' in l and '.nc' not in l and '.gz' in l]
        if d == 'era5_1':
@@ -45,17 +45,17 @@ def chunk_it(seq, num):
        return out
 
 # deifne output directory "out_dir"
-#out_dir = '/raid60/scratch/federico/MAY2021_HARVEST/'
+out_dir = '/raid60/scratch/federico/MAY2021_HARVEST_secondary/'
 
-processes = 5 # number of process PER DATASET 
+processes = 25 # number of process PER DATASET 
 
 
 
 """ Select the dataset to be processed """ 
 datasets = ['era5_1', 'era5_2', 'era5_3188', 'era5_1759', 'era5_1761', 'ncar', 'igra2', 'bufr' ]
-
-datasets = ['era5_1']
-
+datasets = ['era5_1', 'era5_2', 'era5_3188', 'era5_1759', 'era5_1761', 'ncar', 'bufr' ]
+datasets = ['igra2']
+datasets = [ 'igra2']
 
 
 """ Check processed files """
@@ -64,7 +64,7 @@ REDO = False
 
 def rerun_list(f_list, processed_dir = '', split = '' , input_dir = ''):
        try:
-              processed = [ f.split('harvested_')[1].replace('.nc','') for f in os.listdir(processed_dir)  ]
+              processed = [ f.split('harvested_')[1].replace('.nc','') for f in os.listdir(processed_dir)  if 'harvested' in f ]
 
        except:
               processed = []
@@ -75,7 +75,7 @@ def rerun_list(f_list, processed_dir = '', split = '' , input_dir = ''):
        for file in f_list:
               file = file.replace('/','')
               if file in processed:
-                     #print('skipping ' , file)
+                     print('skipping ' , file)
                      continue
               else:
                      to_be_processed.append(input_dir + '/' + file )
@@ -98,11 +98,20 @@ for d in datasets:
                      f_list = rerun_list(f_list, processed_dir = processed_dir , split = 'ai_bfr' , input_dir =  db[d]['dbpath']  )              
                      #print(' Removed already processed #### ')
        else:
-              processes = 5 # !!! there is already the pool splitting in the harvester !!!
-              Dir = '/raid60/scratch/leo/scratch/era5/odbs/1/era5_1'
+              processes = 3 # !!! there is already the pool splitting in the harvester !!!
+              Dir = '/raid60/scratch/leo/scratch/era5/odbs/1/'
               # era5.conv.??????.82930.txt.gz
-              stat =  [ f.split('era5.conv.')[1].split('.txt')[0] for f in os.listdir(Dir) if 'harvested' in f ]
+              odbs = glob.glob(Dir + '/' + 'era5.conv._*')
+              
+              stat =  [f.split('._')[1] for f in odbs ]
+              
               f_list = ['"/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.' + s + '.txt.gz' + '"' for s in stat]
+              if check_missing:
+                     processed = [s.split('_harvested_')[1] for s in os.listdir(processed_dir) if 'harvested' in s]
+                     print(processed[:10])
+                     f_list = [f for f in f_list if f.split('/1/')[1].replace('"','')+'.nc' not in processed ]
+                     print(f_list[:10])
+                     #print(f_list[0].split('/1/')[1]+'.nc' , '*******************************************' )
        #f_list = f_list[:100]
 
      
@@ -119,7 +128,8 @@ for d in datasets:
                      os.system('/opt/anaconda3/bin/python3  harvest_convert_to_netCDF.py  -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')  
               else:
                      print(d)
-                     os.system('python  harvest_convert_to_netCDF.py  -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')
+                     #print(f_list[:10])
+                     #os.system('python  harvest_convert_to_netCDF.py  -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')
               
 
 print('*** Finished with the parallel running ***')
