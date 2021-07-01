@@ -1739,7 +1739,7 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
 #             f.writelines([str(date), str(enddate), str(var)])
     if (enddate is None) or (date == enddate):
         reqdate = date.split('-')
-        interm_file = '/data/private/test/'+str(var)+'/'+str(var)+'_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
+        interm_file = '/data/public/constraints_by_date/'+str(var)+'/'+str(var)+'_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
         copyfile(interm_file, output_file)
         with open(output_file) as f:
             lines = f.readlines()
