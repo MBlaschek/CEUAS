@@ -511,7 +511,7 @@ def get_breakpoints(data, value=2, dim='time', return_startstop=False, startstop
 #
 # -----------------------------------------------------------------------------
 
-def adjustments(data, breaks, use_mean=True, axis=0, sample_size=130, borders=30, max_sample=1460, recent=False,
+def adjustments(data, breaks, use_mean=False, axis=0, sample_size=130, borders=30, max_sample=1460, recent=False,
                 ratio=False, **kwargs):
     """ Adjustment of breakpoints
 
@@ -799,7 +799,7 @@ def apply_percentile_adjustments(data, percentiles, adjustment, axis=0, noise=Fa
 
 def adjustment_procedure(data: xr.Dataset, dim: str = 'time', plev: str = 'plev', obs_name: str = 'obs', dep_name:str = 'dep',
                          metadata: bool = False, times: list = [0, 12], span: int = 3, freq: str = '12h',
-                         mean_adjustments:bool = True, quantile_adjustments:bool=False,
+                         mean_adjustments:bool = False, quantile_adjustments:bool=True,
                          **kwargs) -> xr.Dataset:
     """Main function for RASO_ADJ_CDM_v0
     This function executes the homogenization routines and deals with input and output
