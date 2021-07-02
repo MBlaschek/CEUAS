@@ -42,8 +42,8 @@ def add_adj(adjfile):
     statid=adjfile[-8:-3]
     adjustments={'raobcore':os.path.expandvars(adjfile),
                  'rich':os.path.expandvars('corrsave_rio24_'.join(adjfile.split('corrsave'))),
-                 'rase':os.path.expandvars('ERA5bc_RAOBCORE_v1.8_'.join(adjfile.split('feedbackglobbincorrsave'))),
-                 'rise':os.path.expandvars('ERA5bc_RAOBCORE_v1.8_'.join(adjfile.split('feedbackglobbincorrsave')))}
+                 'rase':os.path.expandvars(('ERA5bc_RAOBCORE_v'+version+'_').join(adjfile.split('feedbackglobbincorrsave'))),
+                 'rise':os.path.expandvars(('ERA5bc_RAOBCORE_v'+version+'_').join(adjfile.split('feedbackglobbincorrsave')))}
     adjname={'raobcore':'rasocorr',
                  'rich':'rasocorr',
                  'rase':'bias',
@@ -54,13 +54,19 @@ def add_adj(adjfile):
         with h5py.File(merged) as f:
             uid=f.attrs['unique_source_identifier'].decode()
         #ifile=glob.glob('/raid60/scratch/leo/scratch/converted_v5/*'+statid+'_CEUAS_merged_v1.nc')[0]
-        ifile=glob.glob('/raid60/scratch/leo/scratch/converted_v5/'+uid+'_CEUAS_merged_v1.nc')[0]
+        try:
+            
+            ifile=glob.glob('/raid60/scratch/leo/scratch/converted_v7/'+uid+'_CEUAS_merged_v1.nc')[0]
+        except:
+            uid='2000?-?-'.join(uid.split(uid[2:10]))
+            print(uid, 'chose more liberal uid pattern, should not be necessary')
+            ifile=glob.glob('/raid60/scratch/leo/scratch/converted_v7/'+uid+'_CEUAS_merged_v1.nc')[0]
         data = eua.CDMDataset(ifile)
         #idx=np.where(np.logical_and(data.observations_table.z_coordinate[:]==10000,data.observations_table.observed_variable[:]==85))
         #plt.plot(data.observations_table.date_time[:][idx],data.era5fb['biascorr@body'][:][idx])        
-        #plt.plot(data.observations_table.date_time[:][idx],data.adjust['RASE_1.8_bias_estimate'][:][idx])        
-        #plt.plot(data.observations_table.date_time[:][idx],data.adjust['RISE_1.8_bias_estimate'][:][idx])        
-        if 'advanced_homogenization' in data.groups: 
+        #plt.plot(data.observations_table.date_time[:][idx],data.adjust['RASE_bias_estimate'][:][idx])        
+        #plt.plot(data.observations_table.date_time[:][idx],data.adjust['RISE_bias_estimate'][:][idx])        
+        if 'advanced_homogenisation' in data.groups: 
             print('already has bias estimate')
             #return
     except Exception as e:
@@ -103,24 +109,25 @@ def add_adj(adjfile):
             #plt.plot(atime0/86400/365.25,adjustments.rasocorr.values[1,11,:])
             #plt.show()
             # Daten schreiben neue Variable monkey in neuer gruppe adjust
-            data.write_observed_data(k.upper()+'_1.8_bias_estimate',
+            data.write_observed_data(k.upper()+'_bias_estimate',
                                      ragged=xyz,  # input data
                                      varnum=85,  # observed_variable to be aligned with
                                      group='advanced_homogenisation',   # name of the new group
                                      data_time='date_time',  # named datetime coordinate
-                                     data_plevs='z_coordinate'  # named pressure coordinate
+                                     data_plevs='z_coordinate',  # named pressure coordinate
+                                     attributes={'version':version}
                                     )
             print('write:',time.time()-tt)
         except Exception as e:
             print(v,e)
             
                         
-                        
-mfiles=glob.glob(os.path.expandvars('$FSCRATCH/rise/1.0/exp06/*/feedbackglobbincorrsave??????.nc'))
-
+version='1.8'                        
+#mfiles=glob.glob(os.path.expandvars('$FSCRATCH/rise/1.0/exp06/*/feedbackglobbincorrsave*.nc'))
+mfiles=glob.glob('/raid60/raid/home/srvx7/lehre/users/a1400070/CEUAS/CEUAS/public/adjust/Temperature_adjustment/*/feedbackglobbincorrsave*.nc')
 #with h5py.File(os.path.expandvars('$FSCRATCH/rise/1.0/exp06/108087/feedbackmerged108087.nc')) as f:
     #print(f.attrs.keys()
-P=Pool(20)
+P=Pool(40)
 tt=time.time()
 list(P.map(add_adj,mfiles))
 print(time.time()-tt)
