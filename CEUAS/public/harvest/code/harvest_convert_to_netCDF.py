@@ -460,13 +460,16 @@ def bufr_to_dataframe(file=''):
     df['observation_id']  = np.chararray.zfill( (df['observation_id'].astype(int)) .astype('S'+str(id_string_length ) ), id_string_length  )  #converting to fixed length bite objects 
     df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
     
-    df = df.replace([-999.9, -9999, -999, -999.0, -99999.0, -99999.9, 99999.0,  -99999.00 ], np.nan)
-      
-    df['report_timestamp'] = np.nan 
+    col = [c for c in df.columns if '_id' not in c]
+    df_new = df[col].replace([-999.9, -9999, -999, -999.0, -99999.0, -99999.9, 99999.0,  -99999.00 ], np.nan)    
+    for c in ['observation_id', 'report_id']:
+        df_new[c] = df[c]
+              
+    df_new['report_timestamp'] = np.nan 
          
-    df = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
+    df_new = df_new.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
         
-    return df, stations_id
+    return df_new, stations_id
     
     
 
@@ -623,15 +626,11 @@ def uadb_ascii_to_dataframe(file=''):
         
     
     #df['observations_id'] =numpy.char.zfill(numpy.arange(ivar.shape[0]).astype('S10'), 10)
-    df['report_timestamp'] = np.nan 
-        
-    df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
-    #df['report_id'] = numpy.int64 (df['report_id'] ) 
-    #df['observation_id'] = numpy.int64 (df['observation_id'] ) 
-    df = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] ) 
+    df_new['report_timestamp'] = np.nan 
+    df_new = df_new.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] ) 
     
     print('Done reading DF')
-    return df , stations_id 
+    return df_new , stations_id 
 
 
 def igra2_ascii_to_dataframe(file=''):
@@ -811,9 +810,9 @@ def igra2_ascii_to_dataframe(file=''):
     for c in ['observation_id', 'report_id']:
         df_new[c] = df[c]
         
-    df = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    # FF check here !!!! 
+    df_new = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    # FF check here !!!! 
     
-    return df, stations_id
+    return df_new, stations_id
 
 
 
@@ -1565,7 +1564,10 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
                 #print('Unidentified file is: ', fn)
                 raise ValueError('Cannot identify the type of file to be analized!!! ')
             
-            station_configuration_retrieved = get_station_configuration_new( stations_id, cdm['station_configuration'] )    
+            # save = ['correct', 'wrong']                                                                                                                                                                              
+            correct_data, df = check_lat_lon(df, fn, save='correct')
+
+            station_configuration_retrieved = get_station_configuration_new( stations_id, cdm['station_configuration'], float(df['lat@hdr'][0]), float(df['lon@hdr'][0]) )    
             #primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')      
             try:
                 primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')
@@ -1576,7 +1578,23 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
                 
                 primary_id = '-1'
           
+            if not correct_data:
+                    primary_id = primary_id.replace('-1_', '0-20999-').replace('-20000-','-20999-').replace('-20300-','-20999-') .replace("-20001-","-20999-")
+                    primary_id = primary_id.replace('-20400-', '0-20999-').replace('-20500-','-20999-').replace('-20600-','-20999-')  
+                    
             fno,  source_file = initialize_output(fn, output_dir, primary_id, dataset)   
+            
+
+                
+            # save = ['correct', 'wrong']                                                                                                                                                                         
+            #correct_data, fbds = check_lat_lon(fbds, fn, save='correct')
+
+            # check if lat and lon are consistent through the file
+            #lats, lons = np.unique(df['lat@hdr']), np.unique(df['lon@hdr'])
+            #if abs(max(lats) - min(lats)) > 0.5 or abs(max(lons) - min(lons)) >0.5 :
+            #    fno = fno.replace('-1_', '0-20999-')
+                
+            
             #if primary_id == 'uknown_primary':
             #    return                
               
@@ -1754,7 +1772,7 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
           
           
           
-def get_station_configuration_new(stations_id, station_configuration):
+def get_station_configuration_new(stations_id, station_configuration, lat, lon, fn = '', change_lat=False):
     """ Previous working version. Works wirh ncar, bufr, igra2.
           The version below, changed by Leo, does not work anymore with the above files 
     """
@@ -1786,11 +1804,14 @@ def get_station_configuration_new(stations_id, station_configuration):
                 station_id_primary = prefix + code + '-0-' + prim
                 #station_id_primary                    = numpy.string_( '0-20000-0-' + si )   # remove the prefix to the station id 
                 station_id_primary = np.bytes_(station_id_primary)
-                matching_primary       = station_configuration.loc[station_configuration['primary_id'] == station_id_primary ]
+                matching_primary  = station_configuration.loc[station_configuration['primary_id'] == station_id_primary ]
         
-                # returning a primary id if found 
+                # returning a primary id if found, check lat and lon are compatible
                 if len(matching_primary) > 0:
-                    return matching_primary 
+                    for index, row in matching_primary.iterrows():
+                        lat_sc, lon_sc = float(row.latitude), float(row.longitude)
+                        if abs(lat_sc- lat)<0.1 and (lon_sc-lon)<0.1 :
+                            return matching_primary 
 
      
         # checking for secondary ids      
@@ -1811,14 +1832,28 @@ def get_station_configuration_new(stations_id, station_configuration):
                     
                     if ss == f:
                         index = np.where ( secondary == second )
-                        sc = station_configuration.loc[index]
-                        return sc
+                        matching_secondary = station_configuration.loc[index]
+                        if len(matching_secondary) > 0:
+                            for index, row in matching_secondary.iterrows():
+                                lat_sc, lon_sc = row.latitude, row.longitude
+                                if lat_sc == b'NA':
+                                    return None 
+                                try:
+                                    lat_sc = float(lat_sc.decode('utf-8'))
+                                    lon_sc = float(lon_sc.decode('utf-8'))
+                                except:
+                                    pass
+                                
+                                if abs(lat_sc- lat)<1.0 and (lon_sc-lon)<1.0 :
+                                    return matching_secondary 
+                                #if lat >0 and abs(lat_sc+lat)<1 and (lon_sc-lon)<1.0 : # swapping lat sign for WBAN mismatch 
+                                #    print(0)
+                                
                             
         
     return None
 
-
-
+'''
 def get_station_configuration_f(stations_id, station_configuration):
     """ Previous working version. Works wirh ncar, bufr, igra2.
           The version below, changed by Leo, does not work anymore with the above files 
@@ -1974,10 +2009,72 @@ def get_station_configuration(station_id, station_configuration):
             return 0
         loc=loc+1
     return 0        
+'''
+
+def check_lat_lon(fbds, fn, save= 'correct'):
+    """ Check if the data frame contains consisten latitude and longitude.
+          If more than 99% of the data has incosnistent values for lat/lon,
+          the entire file will be flagged wih '-20999-' code. 
+          
+          If less than 1%, the majority of the df with conisstent lat/lon will be kept,
+          while the rest will be discarded and flagged with  '-20999-' """
+    
+    import operator
+    
+    df_lat_lon = fbds[['lat@hdr', 'lon@hdr']]
+    df_lat_lon = df_lat_lon.drop_duplicates()
+    
+    lats, lats_indices, lats_counts = np.unique(fbds['lat@hdr']  , return_index=True, return_counts=True )
+    lons, lons_indices, lons_counts  = np.unique(fbds['lon@hdr'] , return_index=True, return_counts=True )
+    
+    
+    
+    lat_to_counts_dic = dict(zip(lats, lats_counts))
+    lon_to_counts_dic = dict(zip(lons, lons_counts))
+    
+    most_freq_lat = max(lat_to_counts_dic.items(), key=operator.itemgetter(1))[0]
+    most_freq_lon = max(lon_to_counts_dic.items(), key=operator.itemgetter(1))[0]
+    
+    len_data = len(fbds)
+    
+    # find the rows with lat and lon compatible with the most frequent value
+    good_lats = np.where ( abs(fbds['lat@hdr'] - most_freq_lat) < 0.5 ) [0]
+    good_lons = np.where ( abs(fbds['lon@hdr'] - most_freq_lon) < 0.5 ) [0]
+    
+    # indices of the majority of the 
+    combined_indices = np.intersect1d(good_lats, good_lons)
+    
+    # case where I have > 99% consistent data
+    # will save either the good data or the bad one
+    tot_good_data = len(combined_indices)/len_data
+    if tot_good_data  >= 0.99:
+        if save=='correct':
+            good_df = fbds.iloc[combined_indices]
+            a = open('log_lat-lon_checks.log', 'a')
+            a.write(fn+'_good_'+ str(tot_good_data) + '_bad_' + str(1-tot_good_data) + '\n' )
+
+            return True, good_df
+        else:
+            all_ind = list(range(len_data))
+            wrong_ind = [ f for f in all_ind if f not in combined_indices ]
+            bad_df = fbds.loc[wrong_ind]
+            return False, bad_df
+    
+    # will save the bad data
+    else:
+        return False, fbds
+        
+            
+            
+
+        
+    #primary_id = primary_id.replace('-1_', '0-20999-').replace('-20000-','-20999-').replace('-20300-','-20999-')  
+    #primary_id = primary_id.replace('-20400-', '0-20999-').replace('-20500-','-20999-').replace('-20600-','-20999-')  
+    
+    return 0
 
 
-
-def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
+def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn, change_lat):
     """ Convert the  file into cdm compliant netCDF files. 
         According to each file type, it will use the appropriate reading function to extract a Pandas DataFrame
         input:
@@ -2036,9 +2133,20 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
         station_id =  [ fbds['statid@hdr'][0][1:-1].decode('utf-8') ]
         #station_id = [ s.split(':')[1] if ':' in s else s for s in station_id ]
         
+        # checking for missing minus sign from era5 1759
+        if change_lat:
+            print('Changing latitude - WBAN missing sign ')
+            fbds['lat@hdr'] = - fbds['lat@hdr']
+            
+        # check consistent lat and long throughout the file
+        
+        # save = ['correct', 'wrong']
+        correct_data, fbds = check_lat_lon(fbds, fn, save='correct')
+        
         # TO DO verify it still works with igra, ncar etc. 
         #station_configuration_retrieved = get_station_configuration_f( station_id, cdm['station_configuration'] )            
-        station_configuration_retrieved = get_station_configuration_new( station_id, cdm['station_configuration'] )            
+        station_configuration_retrieved = get_station_configuration_new( station_id, cdm['station_configuration'],
+                                                                          fbds['lat@hdr'][0],  fbds['lon@hdr'][0], fn=fn, change_lat=change_lat)            
         
         try: # the stat_cof_retr might be a None, so it wont work 
             
@@ -2059,12 +2167,20 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
         except:
             primary_id = '-1' 
             
-        fno,  source_file = initialize_output(fn, output_dir, primary_id, dataset)        
-        
+
+        if not correct_data:
+            primary_id = primary_id.replace('-1_', '0-20999-').replace('-20000-','-20999-').replace('-20300-','-20999-').replace("-20001-","-20999-")
+            primary_id = primary_id.replace('-20400-', '0-20999-').replace('-20500-','-20999-').replace('-20600-','-20999-')  
+                
+                
+        fno,  source_file = initialize_output(fn, output_dir, primary_id, dataset)          
+            
         #fbds['source_file'] = source_file
         if fbds is None:
             return
 
+
+            
         fbencodings={}
         
         for d,v in fbds.items():
@@ -3389,7 +3505,6 @@ if __name__ == '__main__':
     """
     
     
-    """ Federico run """
     Files = Files.split(',')
     for File in Files:
              
@@ -3404,27 +3519,34 @@ if __name__ == '__main__':
         
         tt=time.time()                            
         if 'era5' in dataset:   
+            change_lat = False
             if '1759' in dataset:  # oading the files list to apply the WBAN latitude correction (missing minus sign)
                 lat_mismatch = stat_conf_path + '/era5_1759_WBAN_latitude_mismatch.dat'
+                lat_mismatch_2 = stat_conf_path + '/1759_WBAN_mismatch_OSCAR_found.dat'
+                
                 wban_lat_mismatch=pd.read_csv( lat_mismatch, delimiter='\t' ) 
-                f = File.split('/')[-1].replace('.gz','') # -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.2:82405.gz -d era5_1759 -o OUTPUT
+                wban_lat_mismatch_2=pd.read_csv( lat_mismatch_2, delimiter='\t' ) 
+                
+                files_mismatch = list(wban_lat_mismatch['file'].values) + list(wban_lat_mismatch_2['file'].values)
+                
+                f = File.split('/')[-1].replace('.gz','').replace('._','.') # -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.2:82405.gz -d era5_1759 -o OUTPUT
 
-                if f.replace('._','.') in wban_lat_mismatch['file'].values:
-                    print('*** Will correct the latitude missing minus sign form WBAN inventory *** ')
-                    stat_conf_file = stat_conf_path + '/station_configuration_era5_1759_wbanLatitudeMismatch.dat'                        
-                    cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
-                    cdm_tab['station_configuration']['primary_id'] = cdm_tab['station_configuration']['primary_id'].astype(np.bytes_)
+                if f in files_mismatch:
+                    change_lat = True
                 else:
                     pass
             
-            odb_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)
+            odb_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File, change_lat)
+            
+            
         elif 'nasa' in dataset:   
                 ir_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)
         elif 'ubern' in dataset:   
                 ubern_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)                
         else:
-                df_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)
-          
+            #try:
+            df_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)
+            #except:
         print(' ***** Convertion of  ' , File ,  '  completed after {:5.2f} seconds! ***** '.format(time.time()-tt))   
 
     
@@ -3450,6 +3572,8 @@ small file
 
 -f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.04692.txt.gz'  -d era5_1 -o OUTPUT
 
+-f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.42701.txt.gz'  -d era5_1 -o OUTPUT
+-f '/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.01006.txt.gz'  -d era5_1 -o OUTPUT
 
 BUFR
 -f /raid60/scratch/leo/scratch/era5/odbs/ai_bfr/era5.10106.bfr -d bufr -o OUTPUT
@@ -3464,7 +3588,7 @@ biggest file
 
 
 
-REMEBER:
+REMEMBER:
 for the largest file you need python3.8 which is not from the /opt/anaconda3/bin/python
 but you have source the .tcshrc  file,
 use a tcsh shell
@@ -3473,7 +3597,10 @@ use a tcsh shell
 # ERA5_2
 -f /raid60/scratch/leo/scratch/era5/odbs/2/era5.conv._C:4701.gz  -d era5_2 -o OUTPUT
 -f /raid60/scratch/leo/scratch/era5/odbs/2/era5.conv._10090.gz  -d era5_2 -o OUTPUT
+-f /raid60/scratch/leo/scratch/era5/odbs/2/era5.conv._12201.gz  -d era5_2 -o OUTPUT
 
+
+-f /raid60/scratch/leo/scratch/era5/odbs/2/era5.conv._12103.gz  -d era5_2 -o OUTPUT 
 
 _era5.conv._10090.gz
 
@@ -3481,7 +3608,7 @@ _era5.conv._10090.gz
 -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._1:82930.gz -d era5_1759 -o OUTPUT
 -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._2:3136.gz  -d era5_1759 -o OUTPUT
 -f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._2:50801.gz -d era5_1759 -o OUTPUT
--f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._2:82405.gz -d era5_1759 -o OUTPUT
+-f /raid60/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv._2:82404.gz -d era5_1759 -o OUTPUT
 
 
 # ERA5 1761
@@ -3493,12 +3620,24 @@ _era5.conv._10090.gz
 #NCAR
 -f /raid60/scratch/federico/databases/UADB/uadb_windc_82930.txt -d ncar -o OUTPUT 
 -f /raid60/scratch/federico/databases/UADB/uadb_trhc_10184.txt -d ncar -o OUTPUT 
+-f /raid60/scratch/federico/databases/UADB/uadb_trhc_6235.txt -d ncar -o OUTPUT 
+-f /raid60/scratch/federico/databases/UADB/uadb_trhc_82599.txt -d ncar -o OUTPUT 
+
+-f /raid60/scratch/federico/databases/UADB/uadb_windc_25400.txt  -d ncar -o OUTPUT
+
+
 
 #IGRA2
 -f /raid60/scratch/federico/databases/IGRAv2/BRM00082930-data.txt -d igra2 -o OUTPUT 
 -f /raid60/scratch/federico/databases/IGRAv2/UKM00003023-data.txt -d igra2 -o OUTPUT 
+-f/raid60/scratch/federico/databases/IGRAv2/USM00070270-data.txt -d igra2 -o OUTPUT 
 
--f /raid60/scratch/federico/databases/IGRAv2/USW00023103-data.txt -d igra2 -o OUTPUT 
+
+-f /raid60/scratch/federico/databases/IGRAv2/RSXUAC00073-data.txt -d igra2 -o OUTPUT 
+
+
+-f /raid60/scratch/federico/databases/IGRAv2/BRM00082965-data.txt -o OUTPUT
+
 ### file containing a secondary id to test
 -f /raid60/scratch/federico/databases/UADB/ uadb_trhc_2225.txt -o OUTPUT -d ncar 
 0-20000-0-02225 2062,2225       OSTERSUND FROSON        63.18   14.5    rda/UADB_windc_002225.nc
