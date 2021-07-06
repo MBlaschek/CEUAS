@@ -766,42 +766,46 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                 try:
                     logger.debug('CFCOPY %s %s', v, vlist[-1])
                     if fin[group][v].ndim == 1:
-                        try:
-                            fout.create_dataset_like(vlist[-1], fin[group][v],
-                                                     shape=idx.shape,
-                                                     chunks=True)
-                            hilf = fin[group][v][idx[0]:idx[-1] + 1]
-                            if v in ['observation_value','obsvalue@body']:
-                                hilf[mask]=np.nan
-                            #hilf = hilf[idx[0]:idx[-1] + 1]  # use a min:max range
+#                         try:
+                        fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                 compression="lzf",
+                                                 compression_opts = None,
+                                                 shape=idx.shape,
+                                                 chunks=True)
+                        hilf = fin[group][v][idx[0]:idx[-1] + 1]
+                        if v in ['observation_value','obsvalue@body']:
+                            hilf[mask]=np.nan
+                        #hilf = hilf[idx[0]:idx[-1] + 1]  # use a min:max range
 #                             hilf = fin[group][v][idx[0]:idx[-1] + 1]  # use a min:max range
-                            if 'time' in v:
-                                # convert time units
-                                us = fin[group][v].attrs['units']
-                                if b'hours' in us:
-                                    hilf = hilf * 3600  # hilf+=int(dh[0])
-                                elif b'minutes' in us:
-                                    hilf = hilf * 60  # +int(dh[0])
-                                elif b'seconds' in us:
-                                    hilf = hilf  # //60//60+int(dh[0])
-                                elif b'days' in us:
-                                    hilf *= 24 * 3600
-
-                            fout[vlist[-1]][:] = hilf[
-                                idx - idx[0]]  # but write just the subset corresponding to the variable
-                        except:
-                            logger.warning('not found: %s %s', group, v)
-                            pass
+                        if 'time' in v:
+                            # convert time units
+                            us = fin[group][v].attrs['units']
+                            if b'hours' in us:
+                                hilf = hilf * 3600  # hilf+=int(dh[0])
+                            elif b'minutes' in us:
+                                hilf = hilf * 60  # +int(dh[0])
+                            elif b'seconds' in us:
+                                hilf = hilf  # //60//60+int(dh[0])
+                            elif b'days' in us:
+                                hilf *= 24 * 3600
+                        fout[vlist[-1]][:] = hilf[idx - idx[0]]  # but write just the subset corresponding to the variable
+#                         except:
+#                             logger.warning('not found: %s %s', group, v)
+#                             pass
                     else:                        
                         if v == 'station_name':
                             s1 = fin[group][v].shape[1]
                             fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                     compression="lzf",
+                                                     compression_opts = None,
                                                      shape=(idx.shape[0], s1),
                                                      chunks=True)
                             sname = 'string{}'.format(s1)
                             if sname not in fout.keys():
                                 fout.create_dataset(sname,
                                                     data=np.zeros(s1, dtype='S1'),
+                                                    compression="lzf",
+                                                    compression_opts = None,
                                                     chunks=True)
                                 fout[sname].attrs['NAME'] = np.string_(
                                     'This is a netCDF dimension but not a netCDF variable.')
@@ -815,12 +819,16 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                         else: 
                             s1 = fin[group][v].shape[1]
                             fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                     compression="lzf",
+                                                     compression_opts = None,
                                                      shape=(idx.shape[0], s1),
                                                      chunks=True)
                             sname = 'string{}'.format(s1)
                             if sname not in fout.keys():
                                 fout.create_dataset(sname,
                                                     data=np.zeros(s1, dtype='S1'),
+                                                    compression="lzf",
+                                                    compression_opts = None,
                                                     chunks=True)
                                 fout[sname].attrs['NAME'] = np.string_(
                                     'This is a netCDF dimension but not a netCDF variable.')
