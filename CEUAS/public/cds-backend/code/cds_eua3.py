@@ -719,7 +719,7 @@ def get_global_attributes(cf=None, url=None):
 #
 ###############################################################################
 
-def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
+def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
     """ Copy H5PY variables and apply subsetting (idx)
 
     Args:
@@ -767,11 +767,16 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                     logger.debug('CFCOPY %s %s', v, vlist[-1])
                     if fin[group][v].ndim == 1:
 #                         try:
-                        fout.create_dataset_like(vlist[-1], fin[group][v],
-                                                 compression="lzf",
-                                                 compression_opts = None,
-                                                 shape=idx.shape,
-                                                 chunks=True)
+                        if compression == 'lzf':
+                            fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                     compression="lzf",
+                                                     compression_opts = None,
+                                                     shape=idx.shape,
+                                                     chunks=True)
+                        elif compression == 'gzip':
+                            fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                     shape=idx.shape,
+                                                     chunks=True)
                         hilf = fin[group][v][idx[0]:idx[-1] + 1]
                         if v in ['observation_value','obsvalue@body']:
                             hilf[mask]=np.nan
@@ -795,18 +800,28 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                     else:                        
                         if v == 'station_name':
                             s1 = fin[group][v].shape[1]
-                            fout.create_dataset_like(vlist[-1], fin[group][v],
-                                                     compression="lzf",
-                                                     compression_opts = None,
-                                                     shape=(idx.shape[0], s1),
-                                                     chunks=True)
+                            if compression == 'lzf':
+                                fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                         compression="lzf",
+                                                         compression_opts = None,
+                                                         shape=(idx.shape[0], s1),
+                                                         chunks=True)
+                            elif compression == 'gzip':
+                                fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                         shape=(idx.shape[0], s1),
+                                                         chunks=True)
                             sname = 'string{}'.format(s1)
                             if sname not in fout.keys():
-                                fout.create_dataset(sname,
-                                                    data=np.zeros(s1, dtype='S1'),
-                                                    compression="lzf",
-                                                    compression_opts = None,
-                                                    chunks=True)
+                                if compression == 'lzf':
+                                    fout.create_dataset(sname,
+                                                        data=np.zeros(s1, dtype='S1'),
+                                                        compression="lzf",
+                                                        compression_opts = None,
+                                                        chunks=True)
+                                elif compression == 'gzip':
+                                    fout.create_dataset(sname,
+                                                        data=np.zeros(s1, dtype='S1'),
+                                                        chunks=True)
                                 fout[sname].attrs['NAME'] = np.string_(
                                     'This is a netCDF dimension but not a netCDF variable.')
                                 fout[sname].make_scale(sname)
@@ -818,18 +833,28 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, restricted, var_selection=None):
                         
                         else: 
                             s1 = fin[group][v].shape[1]
-                            fout.create_dataset_like(vlist[-1], fin[group][v],
-                                                     compression="lzf",
-                                                     compression_opts = None,
-                                                     shape=(idx.shape[0], s1),
-                                                     chunks=True)
+                            if compression == 'lzf':
+                                fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                         compression="lzf",
+                                                         compression_opts = None,
+                                                         shape=(idx.shape[0], s1),
+                                                         chunks=True)
+                            elif compression == 'gzip':
+                                fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                         shape=(idx.shape[0], s1),
+                                                         chunks=True)
                             sname = 'string{}'.format(s1)
                             if sname not in fout.keys():
-                                fout.create_dataset(sname,
-                                                    data=np.zeros(s1, dtype='S1'),
-                                                    compression="lzf",
-                                                    compression_opts = None,
-                                                    chunks=True)
+                                if compression == 'lzf':
+                                    fout.create_dataset(sname,
+                                                        data=np.zeros(s1, dtype='S1'),
+                                                        compression="lzf",
+                                                        compression_opts = None,
+                                                        chunks=True)
+                                elif compression == 'gzip':
+                                    fout.create_dataset(sname,
+                                                        data=np.zeros(s1, dtype='S1'),
+                                                        chunks=True)
                                 fout[sname].attrs['NAME'] = np.string_(
                                     'This is a netCDF dimension but not a netCDF variable.')
                                 fout[sname].make_scale(sname)
@@ -2341,6 +2366,7 @@ class CDMDataset:
             raise ValueError('No variable specified')
 
         variable = request['variable']
+        compression = request['compression']
         if isinstance(variable, list):
             if len(variable) > 1:
                 # todo potentially launch here recursive ?
@@ -2474,9 +2500,9 @@ class CDMDataset:
         tt=time.time() - time0
         print(tt)
         
-        #rstcd = self.file['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
-        #zrstcd=recordindex[zidx+1]-idx[0]
-        rstcd=None
+#         rstcd = self.file['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
+#         zrstcd=recordindex[zidx+1]-idx[0]
+#         rstcd=None
         
         with h5py.File(filename_out, 'w') as fout:
             # todo future -> this could be replaced by a self.write_to_frontend_file(filename_out, )
@@ -2595,7 +2621,7 @@ class CDMDataset:
             print(cfcopy)
             if 'observations_table' in self.groups:
                 igroup = 'observations_table'
-                do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
+                do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value',
                                          'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']+cdm_obstab)
@@ -2609,7 +2635,7 @@ class CDMDataset:
             if 'era5fb' in self.groups:
                 igroup = 'era5fb'
                 try:
-                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                               var_selection=['fg_depar@body', 'an_depar@body',
                                              'biascorr@body']+cdm_eratab)
                     # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
@@ -2622,7 +2648,7 @@ class CDMDataset:
             if 'adjera5' in self.groups:
                 igroup = 'adjera5'
                 try:
-                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                               var_selection=['bias_estimate', 'bias_estimation_method'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:
@@ -2695,7 +2721,7 @@ class CDMDataset:
                         
                 if varsel:       
                     try:
-                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
+                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                                   var_selection=varsel)
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     except KeyError as e:
@@ -2710,7 +2736,7 @@ class CDMDataset:
                 print('advanced_uncertainty in self.groups')
                 igroup = 'advanced_uncertainty'
                 try:
-                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', rstcd,
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                               var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:
@@ -2723,7 +2749,7 @@ class CDMDataset:
                 igroup = 'header_table'
                 # only records fitting criteria (zidx) are copied
                 # todo why is lon, lat not here?
-                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', None,
+                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', compression,
                           var_selection=['report_id'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 # ,'station_name','primary_station_id'])
@@ -2743,7 +2769,7 @@ class CDMDataset:
                                      'standard_name': 'station_name'
                                  }
                                 } 
-                do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', rstcd,
+                do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', compression,
                           var_selection=['station_name'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             
