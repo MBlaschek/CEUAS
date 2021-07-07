@@ -775,7 +775,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                day: list = None, month: list = None, year: list = None, date: list = None, time: list = None, 
                bbox: list = None, country: str = None, area: list = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
-               gridded: list = None, toolbox: str = None, cdm: list = None, da: bool = True,
+               gridded: list = None, toolbox: str = None, cdm: list = None, da: bool = True, compression: str = None,
                pass_unknown_keys: bool = False, nodims: str = None,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
@@ -834,7 +834,15 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         else:
             d['da'] = da
 
-    
+    #
+    # Compression
+    #
+    if compression is not None:
+        if compression in ['gzip','lzf']:
+            d['compression'] = compression
+    else:
+        d['compression'] = 'gzip'
+            
     
     #
     # Variable
