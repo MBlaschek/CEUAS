@@ -15,7 +15,7 @@ import glob
 import h5py
 sys.path.append(os.getcwd()+'/../cds-backend/code/')
 sys.path.append(os.getcwd()+'/../harvest/code/')
-from harvest_convert_to_netCDF_newfixes import write_dict_h5
+from harvest_convert_to_netCDF import write_dict_h5
 import gc
 import cds_eua3 as eua
 #eua.logging_set_level(30)
@@ -1110,14 +1110,14 @@ def convert_missing(wpath,fn):
     
     try:
         
-        with open(os.path.expandvars(wpath+'/rea/'+fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]+'pkl'),'rb') as f:
+        with open(os.path.expandvars('/raid60/scratch/leo/scratch/converted_v7/rea/'+fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]+'pkl'),'rb') as f:
             readict=pickle.load(f)
     except:
         
         out_name = wpath+fn.split('/')[-1]  
-        path_to_gridded=os.path.expandvars('$RSCRATCH/era5/gridded/')
+        path_to_gridded=os.path.expandvars('/raid60/scratch/leo/scratch/era5/gridded/')
         readict=retrieve_anfg(fn,out_name,path_to_gridded)
-        with open(os.path.expandvars(wpath+'/rea/'+fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]+'pkl'),'wb') as f:
+        with open(os.path.expandvars('/raid60/scratch/leo/scratch/converted_v7/rea/'+fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]+'pkl'),'wb') as f:
             pickle.dump(readict,f)
     print (time.time()-tt)
     with eua.CDMDataset(fn) as data:
@@ -1310,7 +1310,7 @@ def convert_missing(wpath,fn):
 
     # sorting:
     print('start sorting')
-    targetfile = wpath+fn.split('/')[-1]
+    targetfile = '/raid60/scratch/uli/'+fn.split('/')[-1] # wpath+fn.split('/')[-1]
     if os.path.isfile(targetfile):
         try:
             os.remove(targetfile)
@@ -1575,7 +1575,7 @@ if __name__ == '__main__':
                  '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-38696_CEUAS_merged_v0.nc',
                  '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-04085_CEUAS_merged_v0.nc',]    
 
-    wpath='/raid60/scratch/leo/scratch/converted_v6/'
+    wpath= './'
     opath=wpath
     wlpath=wpath+'log/'
     try:
@@ -1591,21 +1591,26 @@ if __name__ == '__main__':
         #f.close()
 
     files = glob.glob('/raid60/scratch/federico/MERGED_JUNE2021/*v1.nc')
+    files_to_convert = glob.glob('/raid60/scratch/federico/MERGED_JUNE2021/*72357*v1.nc')
+    print(files)
     already_done = glob.glob(wlpath+'*.txt')
 
-    files_to_convert = []
-    for i in files:
-        if not wlpath+i.split('/')[-1]+'.txt' in already_done:
-            files_to_convert.append(i)
-    files_to_convert.sort()
+#     files_to_convert = []
+#     for i in files:
+#         if not wlpath+i.split('/')[-1]+'.txt' in already_done:
+#             files_to_convert.append(i)
+#     files_to_convert.sort()
+    tt=time.time()
     
-#     for i in files_to_convert:
-#         print(i)
-#         convert_missing(i)
+    for i in files_to_convert:
+        print(i)
+        convert_missing(wpath, i)
+        
+    print('total:',time.time()-tt)
 
-    pool = multiprocessing.Pool(processes=20)
-    #result_list = pool.map(convert_missing, files_to_convert)
-    func=partial(convert_missing,wpath)
-    result_list = list(pool.map(func, files_to_convert))
-    print(result_list)
+#     pool = multiprocessing.Pool(processes=20)
+#     #result_list = pool.map(convert_missing, files_to_convert)
+#     func=partial(convert_missing,wpath)
+#     result_list = list(pool.map(func, files_to_convert))
+#     print(result_list)
 
