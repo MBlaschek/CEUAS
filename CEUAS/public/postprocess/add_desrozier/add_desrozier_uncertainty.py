@@ -17,6 +17,7 @@ import xarray as xr
 import psutil
 from functools import reduce
 from tqdm import tqdm
+import time
 
 from multiprocessing import Pool
 from functools  import partial
@@ -89,8 +90,7 @@ def datetime_toseconds(date_time):
     a = np.array(to_seconds).astype(np.int64)
     return a # replacing with seconds from 1900-01-01 00:00:00     
 
- 
-def remove_outliers(data= '', min_p= 25, max_p= 75, cut= 1, skewed= False, only_clean = True):
+def remove_outliers2(data= '', min_p= 25, max_p= 75, cut= 1, skewed= False, only_clean = True):
     """ Finds outliers, and replace them with np.nan (to keep vector of same length)                                                                                                                                                                                              
 
          input ::       data = list of values 
@@ -127,6 +127,49 @@ def remove_outliers(data= '', min_p= 25, max_p= 75, cut= 1, skewed= False, only_
         
         return cleaned, outliers, lower, upper, median
 
+def remove_outliers(data= '', min_p= 25, max_p= 75, cut= 1, skewed= False, only_clean = True):
+    """ Finds outliers, and replace them with np.nan (to keep vector of same length)                                                                                                                                                                                              
+
+         input ::       data = list of values 
+                           min_p , max_p = minimum and maximum values of the percentile to consider to determine outliers 
+                           skewed = use True to consider a skewed (not symmetricla Gaussian) distribution 
+                           cut = factor to allow slight deviation from given percentiles 
+         returns ::   cleaned   = list of values without outliers                                                                                                                                                                    
+                           outliers   = list of outlier values                                                                                                                                                                                                               
+                           lower,upper, median = outliers delimiter and median values.
+                           if only_clean == True, return only list of cleaned values. """
+
+    #q_min, q_max = np.nanpercentile(data, min_p), np.nanpercentile(data, max_p)
+    data.sort()
+    q_min,q_max=data[min_p*data.shape[0]//100],data[max_p*data.shape[0]//100]
+    cut_off = (q_max - q_min) * cut
+    lower, upper = q_min-cut_off, q_max+cut_off
+
+    if skewed==True:
+        q50 = np.nanpercentile(data, 50)
+        lower , upper = q_min-(q50-q_min)*cut ,  q_max+(q_max-q50)*cut  # the higher the cut, the more relaxed the contition for exclusion 
+
+    median = data[data.shape[0]//2]
+    cleaned, outliers = [],[]
+    
+    icleaned=np.searchsorted(data,(lower,upper))
+    cleaned=data[icleaned[0]:icleaned[1]]
+    
+    #cleaned=data[data]
+    #for d in np.asarray(data):
+        #if d >= lower and d <= upper:
+            #cleaned.append(d)
+
+        #else: # only storing non nans values 
+            #if not np.isnan(d):
+                #outliers.append(d)
+                
+    if only_clean:
+        return cleaned
+    else:
+        
+        outliers=np.concatenate(data[:icleaned[0]],data[icleaned[1]:])
+        return cleaned, outliers, lower, upper, median
 
 
 
@@ -144,8 +187,8 @@ class Desroziers():
         self.file_name = file.split('/')[-1]
         #self.summary_file =  station_id + '_' + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_summary_desrozier.txt'
         self.std_plevs = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000]
-        self.variables = [85,104,105,107] # 104,105 u and v wind, 106 wind from direction, 107 wind speed
-        #self.dic_type_attributes = np.load('../merge/dic_type_attributes.npy', allow_pickle= True).item()
+        self.variables = [38,34,36,85,104,105,107] # 104,105 u and v wind, 106 wind from direction, 107 wind speed
+        #self.dic_type_attribute] s = np.load('../merge/dic_type_attributes.npy', allow_pickle= True).item()
         #self.encodings = np.load('../merge/groups_encodings.npy' , allow_pickle = True ).item()
         
     def load_data(self):
@@ -247,6 +290,7 @@ class Desroziers():
                 #for d in error_day_window: #  ['30','60','90','180']
                 for d in error_day_window: #  ['30','60','90','180']
                 
+                    tt=time.time()
                     indices_to_insert = []
                     errors = []
                     num_day = []
@@ -282,10 +326,14 @@ class Desroziers():
 
 
 
-                        # indices of the elements to use for the calculation of the errors 
-                        selected_indices_t = np.where( (timestamp>= minus) &  (timestamp <= plus) )[0]
-                        selected_indices_h = np.where ( df_hour == hour ) [0] 
-                        selected_indices =  np.intersect1d(selected_indices_t, selected_indices_h)                         
+                        # indices of the elements to use for the calculation of the errors
+                        
+                        irange=np.searchsorted(timestamp,(minus,plus))
+                        selected_indices=irange[0]+np.where ( df_hour[irange[0]:irange[1]+1] == hour ) [0]
+                        #selected_indices_t = np.where( (timestamp>= minus) &  (timestamp <= plus) )[0]
+                        #selected_indices_h = np.where ( df_hour == hour ) [0] 
+                        #selected_indices2 =  np.intersect1d(selected_indices_t, selected_indices_h)   
+                        #print(selected_indices2,selected_indices)
                         
                         
                         """ to try 
@@ -305,7 +353,8 @@ class Desroziers():
                         # at these indices the desrozier values will replace the dummy values in the output array
                         #window_df = df.loc[ selected_indices ]
                         
-                        if len(selected_indices)>0:
+                        intd=int(d)
+                        if len(selected_indices)>intd//2:
                             """ Here is the core of the Desroziers error.
                                   Extract the data around a time window,
                                   get the analysis and background departures,
@@ -315,9 +364,12 @@ class Desroziers():
                             indices_to_insert.append(num)
                             
                             product = an_depar[selected_indices] * fg_depar[selected_indices]
-                            valid_data = [p for p in product if not np.isnan(p)]
+#                            valid_data = [p for p in product if not np.isnan(p)]
+                            valid_data = product[~np.isnan(product)]
                             
-                            valid_data = remove_outliers(data= valid_data, min_p= 25, max_p= 75, cut= 1, skewed= False, only_clean = True)
+                            if len(valid_data)>intd//2:
+                                
+                                valid_data = remove_outliers(data= valid_data, min_p= 25, max_p= 75, cut= 1, skewed= False, only_clean = True)
                             
                             len_valid = len(valid_data)
                             
@@ -331,14 +383,16 @@ class Desroziers():
                                  In this case, if bias is not available, we skip the caculation.
                                  For wind variables (speed and direction) we ignore the absence of the bias. """
                             
-                            if var == 104 or var == 105 or var == 107:
+                            if var !=85:
                                 b = 1 # dummy value to make the following check = False for wind speed, which has no bias
                                 
-                            if len_valid < int(d)/2 or np.isnan(b) or np.isnan(fg_dep) or np.isnan(an_dep): # require at least 50% of valid data for the error calculation 
+                            if len_valid < intd/2 or np.isnan(b) or np.isnan(fg_dep) or np.isnan(an_dep): # require at least 50% of valid data for the error calculation 
                                 desroziers_error = np.nan 
                             
                             else:
                                 desroziers_error = np.sqrt(abs(sum(valid_data))/len_valid)
+                                #print(desroziers_error)
+                                #print('')
                                 #std = np.std(valid_data)
                                 
                             errors.append(desroziers_error)
@@ -378,7 +432,9 @@ class Desroziers():
                         
                     #np.put(errors_out[std_dev] , new_indices, stddev   ) 
                     
-                    print('Finished: ' , d , ' plevel: ' , plev )
+                    print('Finished: ' , d , ' plevel: ' , plev ,'time:',time.time()-tt)
+                    print('')
+
                     
             #print(0)
         
@@ -478,9 +534,10 @@ class Desroziers():
 #merged_directory = '/raid60/scratch/uli/converted_v5/'
 merged_directory = '/raid60/scratch/federico/COPY_scratch_leo_converted_v5'
 merged_directory = '/raid60/scratch/leo/scratch/converted_v5'
+merged_directory = '/raid60/scratch/leo/scratch/converted_v7'
     
 """ Moving postprocessed files to new directory """
-out_dir = '/raid60/scratch/federico/DESROZIERS_01APRIL_onlygroup'
+out_dir = '/raid60/scratch/leo/CHECK/'
 
 if not os.path.isdir(out_dir):
     os.mkdir( out_dir)
@@ -577,7 +634,7 @@ if __name__ == '__main__':
                 #out = p.map(func, cleaned_list)  
                         
             else:
-                for s in cleaned_list:
+                for s in [cleaned_list[cleaned_list.index('0-20001-0-11035_CEUAS_merged_v1.nc')]]:
                     a = run(merged_directory, out_dir, force_run, s)
                 
       
