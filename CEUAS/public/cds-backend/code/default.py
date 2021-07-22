@@ -776,7 +776,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                bbox: list = None, country: str = None, area: list = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                gridded: list = None, toolbox: str = None, cdm: list = None, da: bool = True, compression: str = None,
-               pass_unknown_keys: bool = False, nodims: str = None,
+               pass_unknown_keys: bool = False, nodims: str = None, hdf: str = None, 
                **kwargs) -> dict:
     """ Check Request for valid values and keys
 
@@ -973,6 +973,18 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         d['format'] = format
     else:
         d['format'] = 'nc'
+        
+    #
+    # hdf
+    #
+    if hdf is not None:
+        if hdf == 'True':
+            d['hdf'] = True
+        else:
+            d['hdf'] = False
+    else:
+        d['hdf'] = False
+        
     #
     # only one of [statid, bbox, country]
     #
@@ -1527,17 +1539,28 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         return rfile
 
     if body['format'] == 'nc':
-        with zipfile.ZipFile(rfile, 'w') as f:
-            for r in results:
-                try:
-                    if len(r[0]) > 0:
-                        f.write(r[0], os.path.basename(r[0]))
-                    if debug:
-                        continue  # do not remove
-                    os.remove(r[0])  # remove NetCDF file
-                except:
-                    pass
-        logger.debug('netcdfs compressed [%d] to %s', len(results), rfile)
+        if body['hdf']:
+            rfile = os.path.dirname(wpath) + '/download.nc'
+            with h5py.File(rfile, 'w') as merge:
+                for r in results:
+                    name = r[0].split('dest_')[-1].split('_')[0]
+                    merge.create_group(name)
+                    with h5py.File(r[0], 'r') as filetocopy:
+                        for i in filetocopy.keys():
+                            filetocopy.copy(i, merge[name], name=i)
+            logger.debug('netcdfs merged [%d] to %s', len(results), rfile)
+        else: 
+            with zipfile.ZipFile(rfile, 'w') as f:
+                for r in results:
+                    try:
+                        if len(r[0]) > 0:
+                            f.write(r[0], os.path.basename(r[0]))
+                        if debug:
+                            continue  # do not remove
+                        os.remove(r[0])  # remove NetCDF file
+                    except:
+                        pass
+            logger.debug('netcdfs compressed [%d] to %s', len(results), rfile)
 
     else:
         with zipfile.ZipFile(rfile, 'w', compression=zipfile.ZIP_DEFLATED) as f:
