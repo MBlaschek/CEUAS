@@ -1773,7 +1773,10 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     try:
         if request_filename is None:
-            request_filename = '{}.zip'.format(zlib.adler32(bytes(repr(request), 'utf-8')))
+            if not 'hdf' in request:
+                request_filename = '{}.zip'.format(zlib.adler32(bytes(repr(request), 'utf-8')))
+            else:
+                request_filename = 'out.nc'
 
         if not os.path.isfile(request_filename) or overwrite:
             r = requests.post('http://early-upper-air.copernicus-climate.eu' if vm_url is None else vm_url,
@@ -1789,21 +1792,24 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
 
         idir = os.path.dirname(request_filename) if '/' in request_filename else '.'
         os.makedirs(idir, exist_ok=True)
-        with zipfile.ZipFile(request_filename, 'r') as f:
-            files = f.namelist()
-            f.extractall(idir + '/')
-            for ifile in files:
-                logger.debug('Extracting %s/%s', idir, ifile)
-        
-        if 'format' in request:
-            if request['format'] == 'csv':
-                # todo read multiple csv files and return a DataFrame
-                raise NotImplementedError()
-                
-        files = ["{}/{}".format(idir, ifile) for ifile in files]
-        if len(files) > 1:
-            return CDMDatasetList(*files)
-        return CDMDataset(filename=files[0])
+        if not 'hdf' in request:
+            with zipfile.ZipFile(request_filename, 'r') as f:
+                files = f.namelist()
+                f.extractall(idir + '/')
+                for ifile in files:
+                    logger.debug('Extracting %s/%s', idir, ifile)
+
+            if 'format' in request:
+                if request['format'] == 'csv':
+                    # todo read multiple csv files and return a DataFrame
+                    raise NotImplementedError()
+
+            files = ["{}/{}".format(idir, ifile) for ifile in files]
+            if len(files) > 1:
+                return CDMDatasetList(*files)
+            return CDMDataset(filename=files[0])
+        else:
+            return request_filename
 
     except Exception as e:
         logger.error('VM Request failed %s', str(request))
@@ -4680,19 +4686,19 @@ class CDMDataset:
             report['Latitude'] = lat
             writerep.append('longitude: '+ str(lon))
             report['Longitude'] = lon
-            location = self.get_address_by_location(lat, lon)
-            report['Country'] = location['address']['country']
-            writerep.append('Country: '+ report['Country'])
-            report['State'] = location['address']['state']
-            writerep.append('State: '+ report['State'])
+#             location = self.get_address_by_location(lat, lon)
+#             report['Country'] = location['address']['country']
+#             writerep.append('Country: '+ report['Country'])
+#             report['State'] = location['address']['state']
+#             writerep.append('State: '+ report['State'])
         else:
             writerep.append('header_table: not readable')
         #
         # time:
         #
         try:
-            startt = datetime.utcfromtimestamp(self.recordtimestamp[()][0]-2208988800)
-            endt = datetime.utcfromtimestamp(self.recordtimestamp[()][-1]-2208988800)
+            startt = datetime.utcfromtimestamp(self.recordindices.recordtimestamp[()][0]-2208988800)
+            endt = datetime.utcfromtimestamp(self.recordindices.recordtimestamp[()][-1]-2208988800)
             if endt >= startt:
                 report['Temporal_Coverage'] = (str(startt.year) + '-' + str(startt.month) + '-' + str(startt.day) + ' - ' + str(endt.year) + '-' + str(endt.month) + '-' + 
                                                str(endt.day))
