@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Nanum+Myeongjo&display=swap');
+
+:root {
+    --blue: #0014c7;
+    --dark-blue: #051166;
+    --red: #e50620;
+}
+
+.title {
+    color: var(--blue);
+    font-family: 'Nanum Myeongjo', serif;
+    padding: 24px;
+    font-size: 32pt;
+}
+
+.author {
+    color: var(--blue);
+    font-family: Montserrat, sans-serif;
+    font-size: 13pt;
+    margin-bottom: 5px;
+    margin-top: -5px;
+    padding-left: 24px;
+}
+
+.dash-container {
+    padding-top: 20pt;
+    display: grid;
+    grid-column-gap: -10px;
+    grid-row-gap: -10px;
+    grid-template-columns: 40% 55%;
+}
+
+
+.dash-subcontainer1 {
+    min-width: 45%;
+    min-height: 45%;
+}
+
+.dash-subcontainer2 {
+    min-width: 45%;
+    min-height: 45%;
+}
+
+.dash-container-series {
+    padding-top: 10pt;
+    display: grid;
+    grid-column-gap: -10px;
+    grid-row-gap: -10px;
+    grid-template-columns: 10% 20%;
+}
+
+.dash-container-selection1 {
+    min-width: 45%;
+    min-height: 45%;
+}
+
+
+
+
+.slider {
+    width: 98%;
+    font-size: 14pt;
+    padding-left: 20px;
+    /* display: block; */
+    float: top;
+    padding-right: 10px;
+}
+
+#info-box {
+    margin-left: 50px;
+    margin-top: 30px;
+}
+
+#info-list > p {
+    font-size: 12pt;
+    font-family: Montserrat, sans-serif;
+    color: var(--blue);
+}
+
+#info-list > p span {
+    font-size: 13pt;
+    font-family: 'Nanum Myeongjo', serif;
+    color: var(--red);
+}
+
+#country-header {
+    font-size: 18pt;
+    font-family: 'Nanum Myeongjo', serif;
+    color: var(--red);
+}
+
+.rc-slider-mark {
+    font-size: 10pt;
+}
+
+.rc-slider-track {
+  background-color: var(--blue);
+}
+.rc-slider-dot {
+    border-color: #808080;
+}
+.rc-slider-dot-active {
+    border-color: var(--blue);
+}
+.rc-slider-handle {
+    border: 2px solid var(--blue);
+}
+.rc-slider-handle-click-focused:focus,
+.rc-slider-handle:active,
+.rc-slider-handle:hover {
+    border-color: var(--red );
+}
+© 2021 GitHub, Inc.
