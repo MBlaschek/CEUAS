@@ -342,9 +342,14 @@ def calc_station(statid):
     print(statid)
     try:
         statlist = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*' + statid + '*_CEUAS_merged_v1.nc')
-        df = eua.CDMDataset(filename = statlist[0]).to_dataframe(groups=['observations_table'], variables=['observed_variable', 'observation_value', 'date_time', 'z_coordinate', 'latitude', 'longitude'])
+
+        ###
+    #         df = eua.CDMDataset(filename = statlist[0]).to_dataframe(groups=['observations_table'], variables=['observed_variable', 'observation_value', 'date_time', 'z_coordinate', 'latitude', 'longitude'])
+        df = eua.CDMDataset(filename = statlist[0]).to_dataframe(groups=['observations_table', 'advanced_homogenisation'], variables=['observed_variable', 'observation_value', 'date_time', 'z_coordinate', 'latitude', 'longitude', 'RISE_bias_estimate'])
+        ###
+
         df = df[df.z_coordinate.isin([1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000])]
-        df = df[df.date_time > '1979']
+        df = df[df.date_time > '1950']
         df = df.rename({'latitude':'lat','longitude':'lon', 'date_time':'time', 'z_coordinate':'plev'}, axis='columns')
 
         all_dfsh = df[df.observed_variable == 39]
@@ -353,6 +358,10 @@ def calc_station(statid):
 
         all_dfta = df[df.observed_variable == 85]
         all_dfta = all_dfta.rename({'observation_value':'ta'}, axis='columns')
+
+        ###
+        all_dfta.ta = all_dfta.ta #- all_dfta.RISE_bias_estimate
+        ###
 
         for day in [True,False]:
             if day:
@@ -385,24 +394,24 @@ def calc_station(statid):
                             refl.append(np.nan)
                             dates.append(mon)
                         else:
-                            era = xarray.open_dataset('./era/era_'+str(yr)+'.nc')
-                            era_input = era.sel(time = str(yr)+'-'+str(mon)[-2:]+'-01T00:00:00.000000000', latitude = dfta.lat.iloc[0], longitude = dfta.lon.iloc[0], method='nearest')
+                            with xarray.open_dataset('./era/era_'+str(yr)+'.nc') as era:
+                                era_input = era.sel(time = str(yr)+'-'+str(mon)[-2:]+'-01T00:00:00.000000000', latitude = dfta.lat.iloc[0], longitude = dfta.lon.iloc[0], method='nearest')
                             date = pd.to_datetime(float(era_input.time))
                             a, b = rttov_calc(mon_mean,reduced_sh, era_input, date)
                             chan_list.append(a)
 
-        #                         plevs_to_check = mon_mean.index
-        #                         if(not (5000 in plevs_to_check and 7000 in plevs_to_check and 10000 in plevs_to_check and 
-        #                            15000 in plevs_to_check and 20000 in plevs_to_check and 25000 in plevs_to_check and 
-        #                            30000 in plevs_to_check and 40000 in plevs_to_check and 50000 in plevs_to_check and 
-        #                            70000 in plevs_to_check and 85000 in plevs_to_check)):
-        #                             b = [np.nan, b[0][1], b[0][2]]
+                            plevs_to_check = mon_mean.index
+                            if(not (5000 in plevs_to_check and 7000 in plevs_to_check and 10000 in plevs_to_check and 
+                               15000 in plevs_to_check and 20000 in plevs_to_check and 25000 in plevs_to_check and 
+                               30000 in plevs_to_check and 40000 in plevs_to_check and 50000 in plevs_to_check and 
+                               70000 in plevs_to_check and 85000 in plevs_to_check)):
+                                b = [np.nan, b[0][1], b[0][2]]
 
-        #                         if(not (3000 in plevs_to_check and 5000 in plevs_to_check and 7000 in plevs_to_check and 
-        #                            10000 in plevs_to_check and 15000 in plevs_to_check and 20000 in plevs_to_check and 
-        #                            25000 in plevs_to_check and 30000 in plevs_to_check and 40000 in plevs_to_check and 
-        #                            50000 in plevs_to_check and 70000 in plevs_to_check)):
-        #                             b = [b[0][0], np.nan, np.nan]
+                            if(not (3000 in plevs_to_check and 5000 in plevs_to_check and 7000 in plevs_to_check and 
+                               10000 in plevs_to_check and 15000 in plevs_to_check and 20000 in plevs_to_check and 
+                               25000 in plevs_to_check and 30000 in plevs_to_check and 40000 in plevs_to_check and 
+                               50000 in plevs_to_check and 70000 in plevs_to_check)):
+                                b = [b[0][0], np.nan, np.nan]
 
                             print(b)
                             refl.append(b)
@@ -422,24 +431,23 @@ def calc_station(statid):
                 pickle.dump( chan_list, open( "rttov_out/"+statid+"/"+statid+"_day_chan_list.p", "wb" ) )
                 print('done: '+statid)
             else:
-                pickle.dump( refl, open( "rttov_out/"+statid+"/"+statid+"_night_refl.p", "wb" ) )
-                pickle.dump( dates, open( "rttov_out/"+statid+"/"+statid+"_night_dates.p", "wb" ) )
-                pickle.dump( chan_list, open( "rttov_out/"+statid+"/"+statid+"_night_chan_list.p", "wb" ) )
+                pickle.dump( refl, open( "rttov_out/"+statid+"/RISE_"+statid+"_night_refl.p", "wb" ) )
+                pickle.dump( dates, open( "rttov_out/"+statid+"/RISE_"+statid+"_night_dates.p", "wb" ) )
+                pickle.dump( chan_list, open( "rttov_out/"+statid+"/RISE_"+statid+"_night_chan_list.p", "wb" ) )
                 print('done: '+statid)
     except:
         print('error: '+statid)
     
 
-if __name__ == '__main__':
-    
+if __name__ == '__main__': 
+#     multiprocessing.set_start_method('spawn', force=True)
     statlist = []
-    stats = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*_CEUAS_merged_v1.nc')
-#     stats = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*11035*_CEUAS_merged_v1.nc')
-
+#     stats = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*_CEUAS_merged_v1.nc')
+    stats = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*11035*_CEUAS_merged_v1.nc')
     for i in stats:
         statlist.append(i.split('-')[-1][:5])
 #     calc_station(statlist[0])
-    pool = multiprocessing.Pool(processes=20)
+    pool = multiprocessing.Pool(processes=30)
     func=partial(calc_station)
     result_list = list(pool.map(func, statlist))
     print(result_list)
