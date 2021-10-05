@@ -483,27 +483,24 @@ def calc_station(statid, chum, adj = None):
                                 mondata.append(mon)
 
         a2,b2 = rttov_calc(np.array(tadata)[np.array(chandata) == 2], np.array(humdata)[np.array(chandata) == 2], np.array(pressdata)[np.array(chandata) == 2], [x for x, y in zip(eradata, chandata) if y == 2], np.array(datedata)[np.array(chandata) == 2], [2])
-        a34,b34 = rttov_calc(np.array(tadata)[np.array(chandata) == 2], np.array(humdata)[np.array(chandata) == 2], np.array(pressdata)[np.array(chandata) == 2], [x for x, y in zip(eradata, chandata) if y == 2], np.array(datedata)[np.array(chandata) == 2], [3,4])
+        a34,b34 = rttov_calc(np.array(tadata)[np.array(chandata) == 34], np.array(humdata)[np.array(chandata) == 34], np.array(pressdata)[np.array(chandata) == 34], [x for x, y in zip(eradata, chandata) if y == 34], np.array(datedata)[np.array(chandata) == 34], [3,4])
 
         middle_index = len(wholemon)//2    
 
-
         testb2 =b2[np.array(daydata)[np.array(chandata) == 2] == True]
         testb34 = b34[np.array(daydata)[np.array(chandata) == 34] == True]
-        date_out = np.array(mondata)[np.array(chandata) == 34][np.array(daydata)[np.array(chandata) == 34] == True]
-
-        b_out = []
-        for i in range(len(testb2)):
-            b_out.append([[testb2[i][0], testb34[i][0], testb34[i][1]]])
+        date_out2 = np.array(mondata)[np.array(chandata) == 2][np.array(daydata)[np.array(chandata) == 2] == True]
+        date_out34 = np.array(mondata)[np.array(chandata) == 34][np.array(daydata)[np.array(chandata) == 34] == True]
 
         b_final = []
-        counter = 0
         for i in wholemon[:middle_index]:
-            if i in date_out:
-                b_final.append(b_out[counter])
-                counter += 1
-            else:
-                b_final.append([[np.nan, np.nan, np.nan]])
+            b = [[np.nan, np.nan, np.nan]]
+            if i in date_out2:
+                b[0][0] = testb2[date_out2 == i][0][0]
+            if i in date_out34:
+                b[0][1] = testb34[date_out34 == i][0][0]
+                b[0][2] = testb34[date_out34 == i][0][1]
+            b_final.append(b)
                 
         if adj == None:
             pickle.dump( b_final, open( "rttov_out/"+statid+"/"+statid+"_day_refl.p", "wb" ) )
@@ -516,20 +513,18 @@ def calc_station(statid, chum, adj = None):
 
         testb2 =b2[np.array(daydata)[np.array(chandata) == 2] == False]
         testb34 = b34[np.array(daydata)[np.array(chandata) == 34] == False]
-        date_out = np.array(mondata)[np.array(chandata) == 34][np.array(daydata)[np.array(chandata) == 34] == False]
-
-        b_out = []
-        for i in range(len(testb2)):
-            b_out.append([[testb2[i][0], testb34[i][0], testb34[i][1]]])
+        date_out2 = np.array(mondata)[np.array(chandata) == 2][np.array(daydata)[np.array(chandata) == 2] == False]
+        date_out34 = np.array(mondata)[np.array(chandata) == 34][np.array(daydata)[np.array(chandata) == 34] == False]
 
         b_final = []
-        counter = 0
         for i in wholemon[middle_index:]:
-            if i in date_out:
-                b_final.append(b_out[counter])
-                counter += 1
-            else:
-                b_final.append([[np.nan, np.nan, np.nan]])
+            b = [[np.nan, np.nan, np.nan]]
+            if i in date_out2:
+                b[0][0] = testb2[date_out2 == i][0][0]
+            if i in date_out34:
+                b[0][1] = testb34[date_out34 == i][0][0]
+                b[0][2] = testb34[date_out34 == i][0][1]
+            b_final.append(b)
         
         if adj == None:
             pickle.dump( b_final, open( "rttov_out/"+statid+"/"+statid+"_night_refl.p", "wb" ) )
