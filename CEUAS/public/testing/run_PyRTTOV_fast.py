@@ -198,7 +198,7 @@ def rttov_calc(tadata, humdata, pressdata, eradata, datedata, chan):
 #             if dfsh.index[j] == pl[i]:
 #                 dfsh.ta.iloc[j] = consthum[i]
     
-    myProfiles.GasUnits = 1
+    myProfiles.GasUnits = 0
     myProfiles.P = pressdata/100. # expand2nprofiles(pressdata/100., nprofiles) 
 #     print(myProfiles.P)
     myProfiles.T = tadata # expand2nprofiles(tadata, nprofiles) 
@@ -553,11 +553,40 @@ def calc_station(statid, chum, adj = None):
 
 if __name__ == '__main__': 
     
-#     multiprocessing.set_start_method('spawn', force=True)
-    consthum =  pickle.load( open( "dfsh.p", "rb" ) )
+    
+#     statlist = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*' + '11035' + '*_CEUAS_merged_v1.nc')
+#     df = eua.CDMDataset(filename = stats[0]).to_dataframe(groups=['observations_table'], variables=['observed_variable', 'observation_value', 'date_time', 'z_coordinate', 'latitude', 'longitude'])
+#     df = df[df.z_coordinate.isin([1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000])]
+#     df = df[df.date_time > '1950']
+#     df = df.rename({'latitude':'lat','longitude':'lon', 'date_time':'time', 'z_coordinate':'plev'}, axis='columns')
+#     all_dfsh = df[df.observed_variable == 39]
+#     all_dfsh = all_dfsh.rename({'observation_value':'hus'}, axis='columns')
+#     dfsh = all_dfsh.groupby(['plev']).aggregate({"hus":np.mean})
+
+    
+# #     [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000]
+#     consthum = np.array([7.8159077e-03, 2.2735198e-04, 1.0142817e-05, 7.8557190e-05,
+#                          2.1447852e-04, 1.6423521e-03, 5.6619983e-04, 1.1192377e-03,
+#                          1.8490475e-04, 2.4349842e-04, 5.4645562e-04, 1.1017181e-03,
+#                          3.6501088e-03, 1.0858819e-02, 1.3525248e-02, 1.6088629e-02]
+#                        )
+
+#     [3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000]
+#     consthum = np.array([1.0142817e-05, 7.8557190e-05, 2.1447852e-04, 1.6423521e-03,
+#                          5.6619983e-04, 1.1192377e-03, 1.8490475e-04, 2.4349842e-04,
+#                          5.4645562e-04, 1.1017181e-03, 3.6501088e-03, 1.0858819e-02]
+#                        )
+#     consthum = np.array([0.00005, 0.00001, 0.00001, 0.00005,
+#                          0.00005, 0.0001, 0.0001, 0.001,
+#                          0.003, 0.005, 0.01, 0.015]
+#                        )
+    consthum = np.array([6.46, 5.90, 9.17, 20.30,
+                         285.00, 1464.00 , 2475.60, 6631.20,
+                         15468.00, 21684.00, 35328.00 , 44220.00]
+                   )/2.
     statlist = []
     stats = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*_CEUAS_merged_v1.nc')
-#     stats = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*10393*_CEUAS_merged_v1.nc')
+#     stats = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*11035*_CEUAS_merged_v1.nc')
     for i in stats:
         statlist.append(i.split('-')[-1][:5])
 #     calc_station(statlist[0])
