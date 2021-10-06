@@ -329,7 +329,7 @@ else:
         
             
         plt.grid( ls=':' , color = 'lightgray')
-        plt.legend(fontsize = fs-1, loc = 'lower right')    
+        plt.legend(fontsize = fs-2, loc = 'lower right')    
         
         if h=='0':
             h = '00'
@@ -344,7 +344,7 @@ else:
         
 
         plt.savefig('Plots/merging_total_monthly_temperature_' + str(p) +'_' + h + '_' + label + '.png', dpi = 200)
-        #plt.show()        
+        plt.show()        
         
         
     for p in  [70000,50000]: #10000,50000,70000,85000
