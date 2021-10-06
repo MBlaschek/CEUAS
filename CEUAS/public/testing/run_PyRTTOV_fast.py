@@ -369,7 +369,7 @@ def calc_station(statid, chum, adj = None):
     print(statid)
     statlist = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*' + statid + '*_CEUAS_merged_v1.nc')
     try:
-        ###
+    ###
         if adj == None:
             df = eua.CDMDataset(filename = statlist[0]).to_dataframe(groups=['observations_table'], variables=['observed_variable', 'observation_value', 'date_time', 'z_coordinate', 'latitude', 'longitude'])
         else:
@@ -417,6 +417,7 @@ def calc_station(statid, chum, adj = None):
 
             for yr in range(1979,2022,1):
                 for mon in range(int(str(yr)+'01'), int(str(yr)+'13'), 1):
+                    wholemon.append(mon)
                     dfta = dn_dfta.loc[(dn_dfta['time'].dt.year==int(str(mon)[:4])) & (dn_dfta['time'].dt.month==int(str(mon)[-2:]))]
                     df = dfta
                     mon_mean = df.groupby(['plev']).aggregate({"ta":np.mean})
@@ -430,7 +431,6 @@ def calc_station(statid, chum, adj = None):
                         with xarray.open_dataset('./era/era_'+str(yr)+'.nc') as era:
                             era_input = era.sel(time = str(yr)+'-'+str(mon)[-2:]+'-01T00:00:00.000000000', latitude = dfta.lat.iloc[0], longitude = dfta.lon.iloc[0], method='nearest')
                         date = pd.to_datetime(float(era_input.time))
-                        wholemon.append(mon)
                         plevs_to_check = mon_mean.index
 
                         high_mon_mean = mon_mean[mon_mean.index.isin([3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000])]
@@ -501,7 +501,7 @@ def calc_station(statid, chum, adj = None):
                 b[0][1] = testb34[date_out34 == i][0][0]
                 b[0][2] = testb34[date_out34 == i][0][1]
             b_final.append(b)
-                
+
         if adj == None:
             pickle.dump( b_final, open( "rttov_out/"+statid+"/"+statid+"_day_refl.p", "wb" ) )
             pickle.dump( wholemon[:middle_index], open( "rttov_out/"+statid+"/"+statid+"_day_dates.p", "wb" ) )
@@ -525,7 +525,7 @@ def calc_station(statid, chum, adj = None):
                 b[0][1] = testb34[date_out34 == i][0][0]
                 b[0][2] = testb34[date_out34 == i][0][1]
             b_final.append(b)
-        
+
         if adj == None:
             pickle.dump( b_final, open( "rttov_out/"+statid+"/"+statid+"_night_refl.p", "wb" ) )
             pickle.dump( wholemon[middle_index:], open( "rttov_out/"+statid+"/"+statid+"_night_dates.p", "wb" ) )
