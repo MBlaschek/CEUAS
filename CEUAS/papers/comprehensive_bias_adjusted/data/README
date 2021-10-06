@@ -1,0 +1,10 @@
+###
+Files produced using a cutoff of
+10 observation/month/hour
+as in the function get_monthly_counts
+in merging_dataset_comparison_UTILS.py
+
+Also the number are calculated excluded NANS values.
+
+This should give an appropriate comparison with the SUNY dataset
+

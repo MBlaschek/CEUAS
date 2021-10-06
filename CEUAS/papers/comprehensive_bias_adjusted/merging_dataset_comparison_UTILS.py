@@ -22,8 +22,9 @@ so that 752 = 61*12 + (12+8)
 Raw temperature shape
 f_HOMO["rawT"].shape
 (1184, 752, 15, 2)
-
 """
+
+
 
 def get_SUNY_data(var, hour, plevel, file):
     '''
@@ -86,10 +87,11 @@ def get_SUNY_data(var, hour, plevel, file):
 
 
 
-def get_monthly_counts_dic(dic):
+def get_monthly_counts_dic(dic, limit = 10):
     ''' Extract the monthly counts 
                 Parameters:
                     dic (dict): dictionary of numpy arrays
+                    limit(int): minimum number of observations PER MONTH PER PLEVEL 
     '''
     years, months, times, counts = [],[],[],[]
     
@@ -102,7 +104,7 @@ def get_monthly_counts_dic(dic):
                                 
                 c = len (  np.where(dic['month'][ind_y] == m )[0] )
         
-                if c > 0:
+                if c > limit :
                     
                     years.append(y)
                     months.append(m)
@@ -150,15 +152,18 @@ def get_CUON_data(var, plev, hour , merged, file_data):
     elif hour == 12:
         ind_h = np.where( (hours[:]  >= 9) & ( hours[:]  <= 15 ) ) [0]                 
 
+    obs_val_ind =  np.isfinite( f["observations_table"]["observation_value"][:][ind_v][ind_p][ind_h] )
+    
+    
+    
+    dic = { 'z': f["observations_table"]["z_coordinate"][:][ind_v][ind_p][ind_h][obs_val_ind], 
+                                                            'observed_variable':  f["observations_table"]["observed_variable"][:][ind_v][ind_p][ind_h][obs_val_ind],
 
-    dic = { 'z': f["observations_table"]["z_coordinate"][:][ind_v][ind_p][ind_h], 
-                                                            'observed_variable':  f["observations_table"]["observed_variable"][:][ind_v][ind_p][ind_h],
-                                                            
-                                                            'time': dt[:][ind_h],
-                                                            'month': months[:][ind_h],
-                                                            'hour': hours[:][ind_h],
-                                                            'year': years[:][ind_h],
-                                                            'day': days[:][ind_h],
+                                                            'time': dt[:][ind_h][obs_val_ind],
+                                                            'month': months[:][ind_h][obs_val_ind],
+                                                            'hour': hours[:][ind_h][obs_val_ind],
+                                                            'year': years[:][ind_h][obs_val_ind],
+                                                            'day': days[:][ind_h][obs_val_ind],
                                                             
                                                             }
         
@@ -167,7 +172,47 @@ def get_CUON_data(var, plev, hour , merged, file_data):
     return dic 
 
 
-
+def get_HARM_data(plev, h, file):
+    
+    
+    g = nc.Dataset(file)
+    press= g['press']
+    p_ind = np.where( press[:].data == plev)[0]
+    
+    if h==0:
+        h_ind = 0
+    else:
+        h_ind = 1
+    
+    data = g['ta'][h_ind, p_ind, :].data[0]
+    time = g['datum'][0,:].data
+    dt = pd.to_datetime(time, unit='s', origin=pd.Timestamp('1900-01-01'))
+    
+    
+    ind_finite = np.isfinite(data)
+    
+    dt = dt[ind_finite] 
+    
+    dic = {'time':  dt , 
+                'month':dt.month,
+                'year':dt.year,
+                'day':dt.day,
+                'obs' : data[ind_finite] }
+    
+    
+    
+    """
+    df = pd.DataFrame( {'time':  dt , 
+                                       'month':dt.month,
+                                       'year':dt.year,
+                                       'day':dt.day,
+                                      'obs' : data } )
+    
+    df['hour'] = int(h)
+    df = df.dropna()
+    """
+    
+    return dic
 
 
 

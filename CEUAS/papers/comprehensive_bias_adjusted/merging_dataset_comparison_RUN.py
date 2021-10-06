@@ -8,18 +8,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import ticker
 
+# containing utilities for data reading and counting
 from merging_dataset_comparison_UTILS import *
-
 
 from multiprocessing import Pool
 from functools  import partial
-
-
-# to be imported:
-#  get_SUNY_data(file_sub, hour, plevel)
-#  get_monthly_counts(df)
-#  get_CUON_data(file, var=85, merged=True, plev='', hour='' )
-
 
 
 """
@@ -35,6 +28,7 @@ igra_vienna = '/scratch/das/federico/MAY2021_HARVEST_secondary/igra2/0-20001-0-1
 """
 
 
+# /users/staff/a1400070/CEUAS/CEUAS/public/testing/igra_h_single_stats_new
 
 # Some wrapping functions for multiprocesses and combination of output 
 
@@ -44,6 +38,8 @@ def wrapper( ds, var, plevel, hour, file):
         
         if 'SUNY' in ds:
             data_dic = get_SUNY_data(var, hour, plevel, file)
+        elif "HARM" in ds:
+            data_dic = get_HARM_data(plevel, hour, file)
         else:
             data_dic = get_CUON_data(var, plevel, hour , False, file)        
             
@@ -98,10 +94,12 @@ def sum_counts(dic_df, dataset = "", var="", plevel="", hour=""):
 
 
 
-dbs = { 
-                  'IGRA2': "/scratch/das/federico/MAY2021_HARVEST_secondary/igra2/" ,
-            }
 
+#harm_dir = '/users/staff/a1400070/CEUAS/CEUAS/public/testing/igra_h_single_stats_new'
+#files = os.listdir( harm_dir )
+#f = harm_dir + '/' + files[3]
+#dummy = get_HARM_data(f, plev = 50000, h=0)
+    
 # Location of datasets 
 dbs = { 'SUNY': "/users/staff/leo/fastscratch/SUNY/homo-raw-subdaily-station/" ,
         
@@ -112,9 +110,14 @@ dbs = { 'SUNY': "/users/staff/leo/fastscratch/SUNY/homo-raw-subdaily-station/" ,
               'ERA5_1': "/scratch/das/federico/MAY2021_HARVEST_secondary/era5_1/" ,
               'ERA5_2': "/scratch/das/federico/MAY2021_HARVEST_secondary/era5_2/" ,
               
+              'HARM': "/users/staff/a1400070/CEUAS/CEUAS/public/testing/igra_h_single_stats_new",
+              
               'IGRA2_merg':          "/scratch/das/federico/MERGED_ONLY_IGRA_SEPT2021/" ,
               'IGRA2_merg_suny': "/scratch/das/federico/MERGED_ONLY_IGRA_SEPT2021/",
-              'missing_suny':        "/scratch/das/federico/MERGED_ONLY_IGRA_SEPT2021/"
+              'missing_suny':        "/scratch/das/federico/MERGED_ONLY_IGRA_SEPT2021/",
+
+              'NCAR_merg':          "/scratch/das/federico/MERGED_ONLY_NCAR_SEPT2021/" ,
+
               
         }
 
@@ -128,19 +131,14 @@ POOL = True
 #POOL = False
 
 
-
-    
-    
-
-
 if WHAT == 'run':
     pool = Pool(30)
 
     # Loop over datasets 
-    for db in ['IGRA2_merg' , 'IGRA2_merg_suny' , "SUNY" , "IGRA2" , "CUON" , "missing_suny" ] :  #  'SUNY', 'IGRA2', 'IGRA2_merg' , 'IGRA2_merg_suny' , 'CUON', 'ERA5_1', 'ERA5_2'        
+    for db in ['IGRA2_merg', 'CUON' ] :  #  'SUNY', 'IGRA2', 'IGRA2_merg' , 'IGRA2_merg_suny' , 'CUON', 'ERA5_1', 'ERA5_2' , 'HARM', "missing_suny" 
         
         if db == 'NCAR':
-            files  = [f for f in files if 'wind' not in f ]
+            files  = [dbs[db] + '/' + f  for f in os.listdir(dbs['NCAR'])  if 'wind' not in f ]
 
         elif db == 'IGRA2_merg_suny':
             
@@ -179,9 +177,9 @@ if WHAT == 'run':
         else:
             files =  [dbs[db] + '/' + f  for f in os.listdir( dbs[db] ) if '.nc' in f  ]
             
-        h = 12
+        h = 0
         
-        #files = files[:500] # TODO to make it smaller for tests 
+        #files = files[:100] # TODO to make it smaller for tests 
         
         #files =  [ f for f in files if '10393' in f ]
 
@@ -226,8 +224,11 @@ else:
                         "SUNY"  : 'data/SUNY__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',
                         "IGRA"                    : 'data/IGRA2__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',
                         "IGRA_merg"          : 'data/IGRA2_merg__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',
+                        "NCAR_merg"          : 'data/NCAR_merg__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',
+                        
                         "IGRA_merg_suny" : 'data/IGRA2_merg_suny__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',
                         "missing_suny"       : 'data/missing_suny__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',
+                        "HARM"  : 'data/HARM__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',
                         
                         #"ERA5_1" : 'data/ERA5_1__85_' + str(p)+ '_'  +  h + '_monthly_counts.csv',
                         #"ERA5_2" : 'data/ERA5_2__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',
@@ -268,13 +269,16 @@ else:
         plt.show()
         
     def plot_pretty(p, h, test_igra=True, label = ''):
-        
-        fs = 14  
+        print("*** I am pretty-plotting ::: " , p , h  )
+        fs = 14   
         
         dic = { 
                         "CUON (this work)" : 'data/CUON__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',
-                        "IGRA2"        : 'data/IGRA2_merg__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',                        
+                        "IGRA2"        : 'data/IGRA2_merg__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',    
+                        "NCAR"          : 'data/NCAR_merg__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',
+                        
                         "Zhou et al. 2021"  : 'data/SUNY__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',
+                        "Madonna et al. 2021"  : 'data/HARM__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',
                         
                         #"ERA5_1" : 'data/ERA5_1__85_' + str(p)+ '_'  +  h + '_monthly_counts.csv',
                         #"ERA5_2" : 'data/ERA5_2__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',
@@ -282,7 +286,9 @@ else:
                         #"NCAR" : 'data/NCAR__85_' + str(p)+ '_'  + h + '_monthly_counts.csv',
                 }
 
-        colors = ['black','slateblue', 'orange', 'green', 'grey', 'gold', 'magenta']
+        colors = ['black','slateblue', 'lightgreen', 'red', 'grey', 'gold', 'magenta']
+        colors = ['royalblue','gold', 'lightgreen', 'salmon', 'lightblue']
+        colors = ['royalblue','salmon', 'lightgreen', 'gold', 'lightblue']
         
         plt.subplots(figsize=(10,5) )
         
@@ -293,34 +299,57 @@ else:
         #    df[k+"_mean"] = mean.rolling(30, center=True).mean()   
             
             
+        #
+        # Smoothing procedure: using a rolling mean and then appling a cubic interpolation
+        # 
+        
         for db,c in zip( dic.keys(), colors) :    
             df = pd.read_csv( dic[db] , sep = '\t')
-            df["mean"] = df['counts'].rolling(100, center=True).mean() 
+            time = pd.to_datetime(df['date'], format= "%Y%m")
             
-            time, counts = df['date'] , df['mean']
-            time = pd.to_datetime(time, format= "%Y%m")
+            df["counts"] = df['counts'].rolling(50, center=False).mean() 
+            
+            df_r = df.set_index(time)
+            
+            # smoothing procedure, interpolating 
+            # first setting the index to a datetime type
+            # then interpolating with a certain frequency e.g. freq='15d' 
+            
+            index_hourly = pd.date_range(pd.Timestamp('1940-01-01'), pd.Timestamp('2020-12-31'), freq='20d')
+            index_hourly = pd.to_datetime(index_hourly)
+            df_smooth =  df_r.reindex(index=index_hourly).interpolate('cubic')
+            
+            # other option: using ONLY a rolling mean 
+            #df["mean"] = df['counts'].rolling(30, center=False).mean() 
+            #time, counts = df['date'] , df['mean']
+            #time = pd.to_datetime(time, format= "%Y%m")
+            
+            time, counts = df_smooth.index , df_smooth['counts']
             plt.plot(time, counts, label = db, color = c , lw = 2)
         
             
         plt.grid( ls=':' , color = 'lightgray')
-        plt.legend(fontsize = fs-1)    
+        plt.legend(fontsize = fs-1, loc = 'lower right')    
+        
+        if h=='0':
+            h = '00'
+            
         plt.title("Global Monthly Temperature Records - " + str(p) + " Pa, h:" + h , fontsize=fs , y=1.02 )
         plt.ylabel("Record counts / month "  , fontsize=fs )
         
-        plt.xlim(pd.Timestamp('1940-01-01'),pd.Timestamp('2020-01-01') )
+        plt.xlim(pd.Timestamp('1940-01-01'),pd.Timestamp('2020-12-31') )
         
         #plt.yscale('log')
         plt.tight_layout()
         
-        
+
         plt.savefig('Plots/merging_total_monthly_temperature_' + str(p) +'_' + h + '_' + label + '.png', dpi = 200)
-        plt.show()        
-    
-    for p in  [10000,50000,70000,85000]: #10000,50000,70000,85000
+        #plt.show()        
+        
+        
+    for p in  [70000,50000]: #10000,50000,70000,85000
         for h in [0,12]:    # [0,12]
             h, p = str(h), str(p)
-            plot(p, h)
+            #plot(p, h)
             plot_pretty(p, h,  label = 'pretty')            
-            #plot(p, h, test_suny = False)
-    
     
