@@ -776,7 +776,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                bbox: list = None, country: str = None, area: list = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                gridded: list = None, toolbox: str = None, cdm: list = None, da: bool = True, compression: str = None,
-               pass_unknown_keys: bool = False, nodims: str = None, hdf: str = None, 
+               pass_unknown_keys: bool = False, nodims: str = None, hdf: str = None, fast_csv: str = None, speed_test: str = None, 
                **kwargs) -> dict:
     """ Check Request for valid values and keys
 
@@ -984,6 +984,19 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
             d['hdf'] = False
     else:
         d['hdf'] = False
+        
+    #
+    # fast_csv
+    #
+    if fast_csv is not None:
+        if fast_csv == 'True':
+            d['fast_csv'] = True
+            
+    #
+    # speed_test
+    #
+    if speed_test is not None:
+        d['speed_test'] = True
         
     #
     # only one of [statid, bbox, country]
