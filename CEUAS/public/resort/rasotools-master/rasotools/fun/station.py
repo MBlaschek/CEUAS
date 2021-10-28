@@ -235,7 +235,7 @@ def read_igrav2_stationlist(stationfile, **kwargs):
     try:
         infile = open(stationfile)
         tmp = infile.read()
-        data = tmp.splitlines()
+        data = tmp.splitlines()[0:1]
 
     except IOError as e:
         message("File not found: " + stationfile, **kwargs)

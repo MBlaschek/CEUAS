@@ -1077,7 +1077,7 @@ if __name__ == '__main__':
         #f.write("done") 
         #f.close()
 
-    files = glob.glob('/raid60/scratch/federico/MERGED_MARCH2021/*.nc')
+    files = glob.glob('/raid60/scratch/federico/DATABASE_MARCH2021_sensor/*.nc')
     already_done = glob.glob(wlpath+'*.txt')
 
     files_to_convert = []

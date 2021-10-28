@@ -1310,7 +1310,7 @@ def convert_missing(wpath,fn):
 
     # sorting:
     print('start sorting')
-    targetfile = '/raid60/scratch/uli/'+fn.split('/')[-1] # wpath+fn.split('/')[-1]
+    targetfile = '/raid60/scratch/leo/scratch/converted_v8/'+fn.split('/')[-1] # wpath+fn.split('/')[-1]
     if os.path.isfile(targetfile):
         try:
             os.remove(targetfile)

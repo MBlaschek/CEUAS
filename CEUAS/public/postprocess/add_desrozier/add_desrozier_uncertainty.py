@@ -615,7 +615,7 @@ if __name__ == '__main__':
                 for file in stations_list:
                         station_id = file.split("_CEUAS")[0]
                         
-                        if station_id in processed:
+                        if station_id in processed and '11035' not in station_id:
                             print('Already processed:::' , file )
                         else:
                             cleaned_list.append(file)
@@ -629,12 +629,12 @@ if __name__ == '__main__':
             print("*** Processing: " , len(cleaned_list) , "   files ")
 
             if multiproc in ['yes', 'y', 'YES', 'Y', 'True', 'true']:
-                p = Pool(30)
-                #func = partial(run, merged_directory, out_dir, force_run)
-                #out = p.map(func, cleaned_list)  
+                p = Pool(60)
+                func = partial(run, merged_directory, out_dir, force_run)
+                out = p.map(func, cleaned_list)  
                         
             else:
-                for s in [cleaned_list[cleaned_list.index('0-20001-0-11035_CEUAS_merged_v1.nc')]]:
+                for s in cleaned_list: #[cleaned_list[cleaned_list.index('0-20001-0-10393_CEUAS_merged_v1.nc')]]:
                     a = run(merged_directory, out_dir, force_run, s)
                 
       

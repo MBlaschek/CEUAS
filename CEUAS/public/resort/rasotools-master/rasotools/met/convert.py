@@ -205,7 +205,7 @@ def to_dpd(temp, rel_humi=None, vp=None, spec_humi=None, press=None, svp_method=
     Returns:
         DataArray: dewpoint depression [K]
     """
-    from numpy import around, errstate
+    from numpy import around, errstate, NaN
     from xarray import DataArray
     from .esat import svp
     from .humidity import sh2vap, dewpoint
@@ -279,11 +279,9 @@ def to_dpd(temp, rel_humi=None, vp=None, spec_humi=None, press=None, svp_method=
 
     with errstate(invalid='ignore'):
         if (dpdvar.values < 0).any():
-            if (dpdvar.values < -0.1).any():
                 # message("dew point depression outside range",dpdvar.values, **leveldown(**kwargs))
-                dpdvar.values = [float('nan')]
-            else: 
-                dpdvar.values = [0.0]
+            dpdvar.values[dpdvar.values < -0.1] = NaN
+            dpdvar.values[dpdvar.values < 0.0] = 0.0
 
     r_att['precision'] = precision
     dpdvar.values = around(dpdvar.values, decimals=precision)

@@ -3,6 +3,8 @@ import numpy
 import math
 #import matplotlib.pyplot as plt
 from datetime import date
+import sys,os
+sys.path.insert(0,os.path.expanduser('~/python/Rasotools/'))
 from rasotools.anomaly import *
 import datetime
 import time

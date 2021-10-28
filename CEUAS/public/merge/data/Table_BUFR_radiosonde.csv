@@ -1,5 +1,4 @@
 Date of assignment of number (necessary after 30/06/2007),Code figure for rara (Code table 3685),Code figure for BUFR (Code table 0 02 011),Description
-Not applicable,00,0,Reserved
 Before,01,1,iMet-1-BB (United States)
 Not applicable,02,2, No radiosonde – passive target (e.g. reflector)                 
 Not applicable,03,3, No radiosonde – active target (e.g. transponder)           
@@ -100,10 +99,7 @@ Before,97,97,iMet-2/iMet-1500 RDF radiosonde with pressure sensor chip (South Af
 Before,98,98,iMet-2/iMet-1500 GPS radiosonde with derived pressure from GPS height (South Africa)        
 Before,99,99,iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
 ,Not available,100,Reserved for BUFR only
-,01,101,Not vacant  
-,Not available,102–106,Reserved for BUFR only
 ,07,107,Not vacant  
-,Not available,108–109,Reserved for BUFR only
 01/01/08,10,110,"Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               "
 01/01/08,11,111,"Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          "
 06/05/15,12,112,Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
@@ -132,7 +128,6 @@ Needed,34,134,Vacant
 07/05/14,35,135,"Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            "
 02/05/18,36,136,"Meisei iMDS-17 GPS dropsonde w/thermistor sensor, capacitance relative humidity   sensor, and capacitance pressure sensor (Japan)              "
 ,37,137,Not vacant                             
-Needed,38–40,138–140,Vacant                              
 03/11/11,41,141,Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
 03/11/11,42,142,Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
 07/05/14,43,143,NanJing Daqiao XGP-3G (China)*                           
@@ -146,27 +141,18 @@ Needed,38–40,138–140,Vacant
 03/11/11,52,152,Vaisala RS92-NGP/Intermet IMS-2000 (United States)                          
 06/05/15,53,153,AVK – I-2012 (Russian Federation)                          
 15/05/2019,54,154,Graw DFM-17 (Germany)                            
-,55–59,155–159,Not vacant                             
 06/05/15,60,160,MARL-A or Vektor-M – I-2012 (Russian Federation)                        
 ,61,161,Not vacant                             
 06/05/15,62,162,MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
 07/11/18,63,163,"Modem M20 radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (France)             "
 07/11/18,64,164,Modem PilotSonde GPS radiosonde (France)                          
-Needed,65–66,165–166,Vacant                              
-,67–72,167–172,Not vacant                             
 02/11/16,73,173,МАRL-A (Russian Federation) – ASPAN-15 (Kazakhstan)                         
-,74–76,174–176,Not vacant                             
 15/03/2010,77,177,Modem GPSonde M10 (France)                           
-,78–81,178–181,Not vacant                             
 07/11/12,82,182,Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
 07/11/12,83,183,"Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind"
 Needed,84,184,Vacant                              
-,85-89,185-189,Not vacant                             
 ,Not available,190,NCAR research dropsonde NRD94 with GPS and Vaisala RS92-based sensor   module (United States)                
 ,Not available,191,NCAR research dropsonde NRD41 with GPS and Vaisala RS41-based sensor   module (United States)                
 ,Not available,192,Vaisala/NCAR dropsonde RD94 with GPS and Vaisala RS92-based sensor module   (Finland/United States)                 
 ,Not available,193,Vaisala/NCAR dropsonde RD41 with GPS and Vaisala RS41-based sensor module   (Finland/United States)                 
-,Not available,194–196,Reserved for BUFR only                           
-,97–99,197–199,Not vacant                             
-,Not available,200–254,Reserved for BUFR only                           
 ,,255,Missing value

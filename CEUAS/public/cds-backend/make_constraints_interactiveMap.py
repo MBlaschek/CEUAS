@@ -5,7 +5,7 @@ import xarray as xr
 import pandas as pd
 import numpy as np
 import os,sys
-import path
+#import path
 import h5py
 
 from multiprocessing import Pool
@@ -160,14 +160,15 @@ def make_constraints(merged_files):
 """ Main run """
 
 
-out_dir = '/raid60/scratch/federico/PROVAAAAAA/' 
+out_dir = '/raid60/scratch/leo/scratch/constraints' 
 
-merged_directory = '/raid60/scratch/leo/scratch/converted_v5/' 
+merged_directory = '/raid60/scratch/leo/scratch/converted_v7/' 
 merged_files = [ merged_directory + f for f in os.listdir(merged_directory) if '.nc' in f ][:30]
+os.chdir(merged_directory)
 
 
-make_pickles = False 
-single = False
+make_pickles = True 
+single = True
 
 
     

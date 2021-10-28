@@ -8,9 +8,9 @@ from datetime import date
 import netCDF4
 import time
 from numba import njit
-sys.path.append('../rasotools/')
-from utils import *
-from anomaly import *
+sys.path=[os.path.expanduser('~leo/python/Rasotools')]+sys.path
+from rasotools.utils import *
+from rasotools.anomaly import *
 import matplotlib.pylab as plt
 import scipy.stats
 import f90nml
@@ -24,7 +24,7 @@ import copy
 from functools import partial
 from multiprocessing import Pool
 
-#@njit
+@njit
 def add_winddirbias(xyzu,xyzv,xyzd,xyzt,press,atime0,adj,adjpress):
     adjd=np.full_like(xyzv,np.nan)
     adju=np.full_like(xyzv,np.nan)
@@ -87,7 +87,7 @@ def select_breaks(tsa,tsaint,thresh):
     argabsmax=nanargmax(tsamax)
     #absmax=np.nanargmax(tsamax)
     j=0
-    i0=np.int64(0)
+    i0=np.int32(0)
     while(tsamax[argabsmax]>thresh) and j<breakidx.shape[0]:
         breakidx[j]=argabsmax
         istart=argabsmax-tsaint//3
@@ -273,12 +273,12 @@ def homogenize_station(opath,via_backend,fnf):
     
     variables=dict(zip(['d','u','v'],['wind_direction','u_component_of_wind','v_component_of_wind']))
     shortvariables=dict(zip(['d','u','v'],['winddirection','uwind','vwind']))
-    
+    data={}
     if via_backend:
         print('cds data')
         
         try:        
-            #data=eua.vm_request_wrapper({'variable': 'temperature', 'statid': fn, 'date':['20100101','20100102']}, 
+            #data=eua.vm_request_wrapper({'variable': ['temperature', 'statid': fn, 'date':['20100101','20100102']}, 
                                         #overwrite=True,vm_url='http://srvx8.img.univie.ac.at:8002')
 #             ifile=glob.glob('/raid60/scratch/leo/scratch/converted_v5/'+fnf+'_CEUAS_merged_v1.nc')[0]
             #try:
@@ -288,10 +288,16 @@ def homogenize_station(opath,via_backend,fnf):
                         #continue
             #except:
                 #pass
-            dir_file = glob.glob('downloaded/wind_downloaded_*/*'+fn+'*direction*')[0]
-            u_file = glob.glob('downloaded/wind_downloaded_*/*'+fn+'*eastw*')[0]
-            v_file = glob.glob('downloaded/wind_downloaded_*/*'+fn+'*north*')[0]
-            data=dict(zip(['d','u','v'],[eua.CDMDataset(dir_file), eua.CDMDataset(u_file), eua.CDMDataset(v_file)]))
+            for k,v in variables.items():
+                data[k]=eua.vm_request_wrapper({'variable': [v], 'statid': fn,
+                                            'pressure_level':[1000,2000,3000,5000,7000,10000,15000,20000,25000,
+                                                              30000,40000,50000,70000,85000,92500,100000],
+                                            'optional':['obs_minus_bg','bias_estimate']}, 
+                                           vm_url='http://srvx8.img.univie.ac.at:8002')
+            #dir_file = glob.glob('downloaded/wind_downloaded_*/*'+fn+'*direction*')[0]
+            #u_file = glob.glob('downloaded/wind_downloaded_*/*'+fn+'*eastw*')[0]
+            #v_file = glob.glob('downloaded/wind_downloaded_*/*'+fn+'*north*')[0]
+            #data=dict(zip(['d','u','v'],[eua.CDMDataset(dir_file), eua.CDMDataset(u_file), eua.CDMDataset(v_file)]))
 
         except Exception as e:
             print(e)
@@ -316,74 +322,75 @@ def homogenize_station(opath,via_backend,fnf):
             print(e)
             return
     
-#     else:
-#         try:
+    else:
+        try:
             
-#             ifile=glob.glob('downloaded/wind_downloaded_*/'+fnf+'_CEUAS_merged_v1.nc')[0]
+#            ifile=glob.glob('downloaded/wind_downloaded_*/'+fnf+'_CEUAS_merged_v1.nc')[0]
+            ifile=glob.glob('../converted_v7/'+fnf+'_CEUAS_merged_v1.nc')[0]
         
-#             data=eua.CDMDataset(ifile)
-#         except:
-#             return
+            data=eua.CDMDataset(ifile)
+        except:
+            return
     
-#         ndata=copy.deepcopy(cdict)
-#         for para in ['d','u','v']:
-#             #xyz = data.read_observed_variable(varnos[para], 
-#                                                #pressure_level=[1000,2000,3000,5000,7000,10000,15000,20000,25000,
-#                                                                  #30000,40000,50000,70000,85000,92500,100000],
-#                                                #return_xarray=True,date_time_in_seconds=True)
-#             try:
+        ndata=copy.deepcopy(cdict)
+        for para in ['d','u','v']:
+            #xyz = data.read_observed_variable(varnos[para], 
+                                               #pressure_level=[1000,2000,3000,5000,7000,10000,15000,20000,25000,
+                                                                 #30000,40000,50000,70000,85000,92500,100000],
+                                               #return_xarray=True,date_time_in_seconds=True)
+            try:
                 
-#                 istart=data['recordindices'][str(varnos[para])][0]
-#                 istop=data['recordindices'][str(varnos[para])][-1]
-#                 #ndata[para]={}
-#                 ndata[para]['z_coordinate']=data['observations_table']['z_coordinate'][istart:istop].astype(np.int)
-#                 ndata[para]['istart']=istart
-#                 ndata[para]['istop']=istop
+                istart=data['recordindices'][str(varnos[para])][0]
+                istop=data['recordindices'][str(varnos[para])][-1]
+                #ndata[para]={}
+                ndata[para]['z_coordinate']=data['observations_table']['z_coordinate'][istart:istop].astype(np.int32)
+                ndata[para]['istart']=istart
+                ndata[para]['istop']=istop
                 
-#             except:
-#                 print(fnf,'no wind direction data')
-#                 return
+            except:
+                print(fnf,'no wind direction data')
+                return
             
             
-#             oindex,pindex=getpindex(ndata[para]['z_coordinate'],np.array(plist,dtype=np.int))
-#             if len(pindex)==0:
-#                 print(fnf,'no pressure on standard levels')
-#                 return
+            oindex,pindex=getpindex(ndata[para]['z_coordinate'],np.array(plist,dtype=np.int32))
+            if len(pindex)==0:
+                print(fnf,'no pressure on standard levels')
+                return
             
-#             ndata[para]['observation_value']=data['observations_table']['observation_value'][istart:istop][oindex]
-#             ndata[para]['obs_minus_bg']=data['era5fb']['fg_depar@body'][istart:istop][oindex]
-#             ndata[para]['date_time']=data['observations_table']['date_time'][istart:istop][oindex]
+            ndata[para]['observation_value']=data['observations_table']['observation_value'][istart:istop][oindex]
+            ndata[para]['obs_minus_bg']=data['era5fb']['fg_depar@body'][istart:istop][oindex]
+            ndata[para]['date_time']=data['observations_table']['date_time'][istart:istop][oindex]
             
-#             out=eua.daysx2(ndata[para]['date_time'],pindex,len(plist),ndata[para]['observation_value'])
+            out=eua.daysx2(ndata[para]['date_time'],pindex,len(plist),ndata[para]['observation_value'])
     
-#             ndata[para]['xrdq']=xr.Dataset()
-#             ndims={'hour':2,'press':len(plist),'datum':len(out[5])}
-#             ncoords={'hour':np.asarray([0,12]),'press':np.array(plist)/100.,'datum':out[5]}
-#             ndata[para]['xrdq'][shortvariables[para]]=xr.DataArray(out[0],dims=ndims,coords=ncoords)
+            ndata[para]['xrdq']=xr.Dataset()
+            ndims={'hour':2,'press':len(plist),'datum':len(out[5])}
+            ncoords={'hour':np.asarray([0,12]),'press':np.array(plist)/100.,'datum':out[5]}
+            ndata[para]['xrdq'][shortvariables[para]]=xr.DataArray(out[0],dims=ndims,coords=ncoords)
             
-#             out=eua.daysx2(ndata[para]['date_time'],pindex,len(plist),ndata[para]['obs_minus_bg'])
-#             ndata[para]['xrdq']['era5_fgdep']=xr.DataArray(out[0],dims=ndims)
-#             ndata[para]['xrdq']['bias_estimate']=xr.DataArray(np.zeros_like(out[0]),dims=ndims)
+            out=eua.daysx2(ndata[para]['date_time'],pindex,len(plist),ndata[para]['obs_minus_bg'])
+            ndata[para]['xrdq']['era5_fgdep']=xr.DataArray(out[0],dims=ndims)
+            ndata[para]['xrdq']['bias_estimate']=xr.DataArray(np.zeros_like(out[0]),dims=ndims)
             
-#             ndata[para]['xrdq']['datum'].attrs['units']='days since 1900-01-01 00:00:00'
-#             ndata[para]['xrdq']['press'].attrs['units']='hPa'
+            ndata[para]['xrdq']['datum'].attrs['units']='days since 1900-01-01 00:00:00'
+            ndata[para]['xrdq']['press'].attrs['units']='hPa'
             
-#             ndata[para]['xrdq']['lat']=xr.DataArray(np.asarray([data['observations_table']['latitude'][istop]]),name='lat',dims=('station'))
-#             ndata[para]['xrdq']['lon']=xr.DataArray(np.asarray([data['observations_table']['latitude'][istop]]),name='lon',dims=('station'))
-#             ndata[para]['xrdq']['hours']=xr.DataArray(out[6],name='hours',dims=('hour','datum'))
-#             ndata[para]['xrdq']=ndata[para]['xrdq'].rename_dims({'press':'pressure','datum':'time'})
-#             ndata[para]['xrdq'].attrs['unique_source_identifier']=fnf
-#             #print(ndata[para]['xrdq'][shortvariables[para]])
+            ndata[para]['xrdq']['lat']=xr.DataArray(np.asarray([data['observations_table']['latitude'][istop]]),name='lat',dims=('station'))
+            ndata[para]['xrdq']['lon']=xr.DataArray(np.asarray([data['observations_table']['latitude'][istop]]),name='lon',dims=('station'))
+            ndata[para]['xrdq']['hours']=xr.DataArray(out[6],name='hours',dims=('hour','datum'))
+            ndata[para]['xrdq']=ndata[para]['xrdq'].rename_dims({'press':'pressure','datum':'time'})
+            ndata[para]['xrdq'].attrs['unique_source_identifier']=fnf
+            #print(ndata[para]['xrdq'][shortvariables[para]])
         
-#         cdict=ndata    
+        cdict=ndata    
     try:
         
         tsa=np.full(cdict['d']['xrdq']['era5_fgdep'].shape,np.nan,dtype=np.float32)
         ddeps=np.full(cdict['d']['xrdq']['era5_fgdep'].shape,np.nan,dtype=np.float32)
         #ds=np.full_like(ddeps,np.nan)
         snhtparas=np.asarray([1460,650,30])
-        index=np.zeros(tsa.shape[-1],dtype=np.int)
-        count=np.zeros(tsa.shape[-1],dtype=np.int)
+        index=np.zeros(tsa.shape[-1],dtype=np.int32)
+        count=np.zeros(tsa.shape[-1],dtype=np.int32)
         tmean=np.zeros(tsa.shape[-1],dtype=np.float32)
         tsquare=np.zeros(tsa.shape[-1],dtype=np.float32)
         for i in range(1):
@@ -510,7 +517,7 @@ def homogenize_station(opath,via_backend,fnf):
                 else:
                     with h5py.File(ifile,'r+') as data:
                         
-                        data.file['advanced_homogenisation']['wind_bias_estimate'][cdict[k]['istart']:cdict[k]['istop']]=raggedd[k]
+                        data.file['advanced_homogenisation']['wind_bias_estimate'][cdict[k]['istart']:cdict[k]['istop']]=-raggedd[k]
                     
             print('write:',time.time()-tt)
             
@@ -530,8 +537,15 @@ if __name__ == "__main__":
     plt.rcParams['lines.linewidth'] = 3
     tt=time.time()
     version='1.0'
-#     via_backend=True
-#     homogenize_winddir(via_backend, fns=['0-20001-0-11035', '0-20001-0-10393', '0-20001-0-70219', '0-20000-0-91413', '0-20000-0-35229', '0-20000-0-68994'])
+    os.chdir(os.path.expandvars('$RSCRATCH/tmp'))
+    via_backend=False
+    fns=glob.glob(os.path.expandvars('$RSCRATCH/converted_v7/*v1.nc'))
+    fns.sort(key=os.path.getmtime)
+    fstart=fns.index('/raid60/scratch/leo/scratch//converted_v7/0-20000-0-41517_CEUAS_merged_v1.nc')
+    for i in range(len(fns[:fstart])):
+        fns[i]=fns[i].split('/')[-1].split('_CEUAS_merged_v1.nc')[0]
+    #fns=['0-20000-0-35229']
+    homogenize_winddir(via_backend,fns=fns)
     
 
     print((time.time()-tt))
