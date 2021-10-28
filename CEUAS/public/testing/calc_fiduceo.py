@@ -69,6 +69,7 @@ def calc_station(date, search_lat, search_lon, channel, stat):
                 times[k].append(selection.Time.values)
                 dists[k].append(mindist)
                 counter[k] = counter[k] + 1
+            
         except: pass
     for k in range(len(stat)):
         try:
@@ -81,10 +82,12 @@ def calc_station(date, search_lat, search_lon, channel, stat):
             out_dists = [np.nan]
             
         try:
-            os.makedirs("./fiduceo/out/all_noaa19/"+stat)
+            os.makedirs("./fiduceo/out/all_noaa19/"+stat[k])
         except:
             pass
-        pickle.dump( [out_mean, out_times, out_dists], open( "./fiduceo/out/all_noaa19/"+stat+"/fiduceo_mhs_noaa19_"+str(chan)+"_"+str(yr)+"_"+"%02d" % (mn)+"_"+str(lat)+"_"+str(lon)+"_brightness_temperature.p", "wb" ) )
+        
+        pickle.dump( [out_mean, out_times, out_dists], open( "./fiduceo/out/all_noaa19/"+stat[k]+"/fiduceo_mhs_noaa19_"+str(channel)+"_"+str(yr)+"_"+"%02d" % (mn)+"_"+str(search_lat[k])+"_"+str(search_lon[k])+"_brightness_temperature.p", "wb" ) )
+        
     
     
 #     pickle.dump( mean, open( "./fiduceo/fiduceo_amsub_noaa15_"+str(chan)+"_"+str(yr)+"_"+"%02d" % (mn)+"_"+str(lat)+"_"+str(lon)+"_brightness_temperature.p", "wb" ) )
@@ -116,11 +119,10 @@ if __name__ == '__main__':
     for yr in range(2009, 2018, 1):
         for mn in range(1, 13, 1):
             dates.append([yr, mn])
-    print(dates[20])
 
     lats, lons, names = pickle.load(open("./stationlist.p", "rb" ))
     chan = 'Ch3_BT'
-    pool = multiprocessing.Pool(processes=10)
+    pool = multiprocessing.Pool(processes=40)
     func=partial(calc_station, search_lat = lats, search_lon = lons, channel = chan, stat = names)
-    result_list = list(pool.map(func, dates[20:21]))
+    result_list = list(pool.map(func, dates))
     print(result_list)
