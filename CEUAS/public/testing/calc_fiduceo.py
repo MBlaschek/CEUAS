@@ -44,7 +44,9 @@ def calc_station(date, search_lat, search_lon, channel, stat):
 #     folder = glob.glob('/users/staff/a1400070/CEUAS/CEUAS/public/testing/fiduceo/dap.ceda.ac.uk/neodc/fiduceo/data/fcdr/microwave/v4.1/amsub/noaa15/'+str(yr)+'/'+"%02d" % (mn)+'/*/')
 #     folder = glob.glob('/users/staff/a1400070/CEUAS/CEUAS/public/testing/fiduceo/n16/dap.ceda.ac.uk/neodc/fiduceo/data/fcdr/microwave/v4.1/amsub/noaa16/'+str(yr)+'/'+"%02d" % (mn)+'/*/')
     counter = [0]*len(stat)
-    mean = [0]*len(stat)
+    mean3 = [0]*len(stat)
+    mean4 = [0]*len(stat)
+    mean5 = [0]*len(stat)
     times = [[]]*len(stat)
     dists = [[]]*len(stat)
     for i in folder: # for each day of selected month
@@ -58,14 +60,16 @@ def calc_station(date, search_lat, search_lon, channel, stat):
 
             for j in files:
                 ds = xarray.open_dataset(j)
-                df = ds[[channel,'Time']].to_dataframe().dropna()
+                df = ds[['Ch3_BT', 'Ch4_BT', 'Ch5_BT', 'Time']].to_dataframe().dropna()
                 df_day = df.append(df_day)
                 
             for k in range(len(stat)):
                 dist_day = haversine_np(len(df_day)*[search_lon[k]], len(df_day)*[search_lat[k]], df_day.longitude, df_day.latitude)
                 mindist = dist_day.min()
                 selection = df_day[dist_day == mindist]
-                mean[k] = mean[k] + selection[channel].values
+                mean3[k] = mean3[k] + selection['Ch3_BT'].values
+                mean4[k] = mean4[k] + selection['Ch4_BT'].values
+                mean5[k] = mean5[k] + selection['Ch5_BT'].values
                 times[k].append(selection.Time.values)
                 dists[k].append(mindist)
                 counter[k] = counter[k] + 1
@@ -73,11 +77,11 @@ def calc_station(date, search_lat, search_lon, channel, stat):
         except: pass
     for k in range(len(stat)):
         try:
-            out_mean = (mean[k]/counter[k])
+            out_mean = [mean3[k]/counter[k], mean4[k]/counter[k], mean5[k]/counter[k]]
             out_times = times[k]
             out_dists = dists[k]
         except:
-            out_mean = np.nan
+            out_mean = [np.nan, np.nan, np.nan]
             out_times = [np.nan]
             out_dists = [np.nan]
             
@@ -86,7 +90,7 @@ def calc_station(date, search_lat, search_lon, channel, stat):
         except:
             pass
         
-        pickle.dump( [out_mean, out_times, out_dists], open( "./fiduceo/out/all_noaa19/"+stat[k]+"/fiduceo_mhs_noaa19_"+str(channel)+"_"+str(yr)+"_"+"%02d" % (mn)+"_"+str(search_lat[k])+"_"+str(search_lon[k])+"_brightness_temperature.p", "wb" ) )
+        pickle.dump( [out_mean, out_times, out_dists], open( "./fiduceo/out/all_noaa19/"+stat[k]+"/fiduceo_mhs_noaa19_"+str(yr)+"_"+"%02d" % (mn)+"_"+str(search_lat[k])+"_"+str(search_lon[k])+"_brightness_temperature.p", "wb" ) )
         
     
     
@@ -122,7 +126,7 @@ if __name__ == '__main__':
 
     lats, lons, names = pickle.load(open("./stationlist.p", "rb" ))
     chan = 'Ch3_BT'
-    pool = multiprocessing.Pool(processes=40)
+    pool = multiprocessing.Pool(processes=20)
     func=partial(calc_station, search_lat = lats, search_lon = lons, channel = chan, stat = names)
     result_list = list(pool.map(func, dates))
     print(result_list)
