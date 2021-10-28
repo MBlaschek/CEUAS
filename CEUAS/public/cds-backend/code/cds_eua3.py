@@ -907,6 +907,95 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
     tt = time.time() - tt
     if tt > 0.4:
         logger.warning('slow copy: %s %f s', group, tt)
+        
+def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
+    """ Copy H5PY variables and apply subsetting (idx)
+
+    Args:
+        fout: output file
+        fin: input file
+        group: group
+        idx: selection (mask)
+        cf: cdm mapping of names
+        dim0: record dimension name
+        var_selection: variables
+
+    """
+        
+    # cuts vars and copies attributes of observation, feedback and header tables
+    tt = time.time()
+    if not var_selection:
+        var_selection = fin[group].keys()
+
+    if not isinstance(var_selection, list):
+        var_selection = [var_selection]
+
+    for i in cf.keys():
+        if i not in ['platform_id', 'platform_name']:
+            if i in ['air_temperature', 'dew_point_temperature','dew_point_depression', 'relative_humidity', 'specific_humidity',
+                     'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential']:
+                for fb in ['obs_minus_bg', 'obs_minus_an', 'bias_estimate']:
+                    try:
+                        cf[fb]['units'] = cf[i]['units']
+                        cf[fb]['standard_name'] = i
+                        cf[fb]['long_name'] = group.split('fb')[0].upper() + ' reanalysis ' + fb
+                    except:
+                        pass
+    vlist = []
+    mask=None
+    for _, cfv in cf.items():
+        logger.debug('CFCOPY Looking for: %s in %s', cfv['cdmname'], group)
+        for v in var_selection:
+            if mask is None and 'data_policy_licence' in var_selection:
+                mask=fin[group]['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
+            if group + '/' + v == cfv['cdmname']:
+                vlist.append(cfv['shortname'])
+                try:
+                    logger.debug('CFCOPY %s %s', v, vlist[-1])
+                    if fin[group][v].ndim == 1:
+                        hilf = fin[group][v][idx[0]:idx[-1] + 1]
+                        if v in ['observation_value','obsvalue@body']:
+                            hilf[mask]=np.nan
+                        if 'time' in v:
+                            # convert time units
+                            us = fin[group][v].attrs['units']
+                            if b'hours' in us:
+                                hilf = hilf * 3600  # hilf+=int(dh[0])
+                            elif b'minutes' in us:
+                                hilf = hilf * 60  # +int(dh[0])
+                            elif b'seconds' in us:
+                                hilf = hilf  # //60//60+int(dh[0])
+                            elif b'days' in us:
+                                hilf *= 24 * 3600
+                        fout[v] = hilf[idx - idx[0]]  # but write just the subset corresponding to the variable
+                    else:                        
+                        if v == 'station_name':
+                            s1 = fin[group][v].shape[1]
+                            sname = 'string{}'.format(s1)
+                            hilf = fin[group][v][0]
+                            if hilf.shape[0] == 0:
+                                print('x')
+                            hilf = np.array([hilf]*idx.shape[0])
+                            fout[v] = hilf
+                        
+                        else: 
+                            s1 = fin[group][v].shape[1]
+                            sname = 'string{}'.format(s1)
+                            hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+                            hilf[mask, :] = np.nan
+                            #hilf = hilf[idx[0]:idx[-1] + 1, :]
+#                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+                            if hilf.shape[0] == 0:
+                                print('x')
+                            fout[v] = hilf[idx - idx[0], :]
+                            
+                except Exception as e:
+                    # todo fix for missing report_id SHOULD BE REMOVED
+                    print(e)
+                    
+    tt = time.time() - tt
+    if tt > 0.4:
+        logger.warning('slow copy: %s %f s', group, tt)
 
 
 def copy_h5py_variable(fin:h5py.File, fout:h5py.File, variable:str):
@@ -1279,8 +1368,12 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
 
             # todo this could be changed to the cf.keys() -> cdm names of the variables
             # request_variables['variable'] is a list
-            filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
-                request_variables['variable']] + '.nc'
+            if 'fast_csv' in request_variables.keys():
+                filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
+                    request_variables['variable']] + '.csv'
+            else:
+                filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
+                    request_variables['variable']] + '.nc'
             if debug: tt=time.time()
             # Make a subset of groups/variables to read (speed up)
             # Need to add station_configuration (required later) in read_write_request
@@ -1777,13 +1870,12 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
                 request_filename = '{}.zip'.format(zlib.adler32(bytes(repr(request), 'utf-8')))
             else:
                 request_filename = 'out.nc'
-
+        
         if not os.path.isfile(request_filename) or overwrite:
             r = requests.post('http://early-upper-air.copernicus-climate.eu' if vm_url is None else vm_url,
                               headers={'content-type': 'application/json'},
                               json=request,
                               stream=True)
-            
             if r.status_code != requests.codes.ok:
                 raise RuntimeError(r.text)
 
@@ -1807,7 +1899,13 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
             files = ["{}/{}".format(idir, ifile) for ifile in files]
             if len(files) > 1:
                 return CDMDatasetList(*files)
-            return CDMDataset(filename=files[0])
+            if 'speed_test' in request:
+                    return files[0]
+            else:
+                if 'fast_csv' in request:
+                    return pd.read_csv(files[0])
+                else:
+                    return CDMDataset(filename=files[0])
         else:
             return request_filename
 
@@ -1987,7 +2085,7 @@ class CDMDataset:
 
     def __repr__(self):
         text = "File: " + repr(self.file)
-        text += "\nPermissions: %s%s (%s)" % ('R' if os.access(self.filename, os.R_OK) else '', 'W' if os.access(self.filename, os.W_OK) else '', os.getlogin())
+#         text += "\nPermissions: %s%s (%s)" % ('R' if os.access(self.filename, os.R_OK) else '', 'W' if os.access(self.filename, os.W_OK) else '', os.getlogin())
         text += "\nFilesize: %.2f MB" % (self.file.id.get_filesize()/1024/1024)
         text += "\nFilename: " + self.filename
         text += "\n(G)roups/(V)ariables: \n"
@@ -2509,141 +2607,26 @@ class CDMDataset:
 #         rstcd = self.file['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
 #         zrstcd=recordindex[zidx+1]-idx[0]
 #         rstcd=None
-        
-        with h5py.File(filename_out, 'w') as fout:
-            # todo future -> this could be replaced by a self.write_to_frontend_file(filename_out, )
-            #
-            # chose wich variable will be selected and copied into the outputfile 
-            # from all the sources: observations_table, era5fb, header_table,...
-            #
-            # Dimensions (obs, trajectory)
-            #
-            for d, v in dims.items():
-                fout.create_dataset(d, data=v)
-                fout[d].attrs['NAME'] = np.string_('This is a netCDF dimension but not a netCDF variable.')
-                fout[d].make_scale(d)  # resolves phony_dim problem
-
-            fout.create_dataset('trajectory_index', data=trajectory_index)
-            fout['trajectory_index'].attrs['long_name'] = np.string_(
-                "index of trajectory this obs belongs to")
-            fout['trajectory_index'].attrs['instance_dimension'] = np.string_("trajectory")
-            fout['trajectory_index'].attrs['coordinates'] = np.string_("lat lon time plev")
-            
-            #
-            # Adding CDM
-            #
-            cdm_obstab = []
-            cdm_eratab = []
-            cdmlist = request.get('cdm', None)
-            if cdmlist != None:
-                # removing variables with restricted access
-                if ('era5fb/obsvalue@body' in cdmlist) or ('observations_table/observation_value' in cdmlist):
-                    try: cdmlist.remove('era5fb/obsvalue@body')
-                    except: pass
-                    try: cdmlist.remove('observations_table/observation_value')
-                    except: pass
-                for i in cdmlist:
-                    grp = i.split('/')[0]
-                    if i == 'era5fb':
-                        logger.debug('Full er5fb CDM-request disabled.')
-#                         eralist = ['albedo@modsurf', 'an_depar@body', 'an_depar@surfbody_feedback', 'an_sens_obs@body', 'andate', 
-#                                    'antime', 'biascorr@body', 'biascorr_fg@body', 'bufrtype@hdr', 'class', 'codetype@hdr',
-#                                    'collection_identifier@conv', 'date@hdr', 'datum_anflag@body', 'datum_event1@body', 'datum_rdbflag@body',
-#                                    'datum_sfc_event@surfbody_feedback', 'datum_status@body', 'datum_status@surfbody_feedback', 
-#                                    'eda_spread@errstat', 'entryno@body', 'expver', 'fg_depar@body', 'fg_depar@surfbody_feedback', 
-#                                    'fg_error@errstat', 'final_obs_error@errstat', 'groupid@hdr', 'index', 'lat@hdr', 'lon@hdr', 'lsm@modsurf',
-#                                    'lsm@surfbody_feedback', 'numtsl@desc', 'obs_error@errstat', 'obstype@hdr', 'orography@modsurf',
-#                                    'ppcode@conv_body', 'qc_pge@body', 'report_event1@hdr', 'report_rdbflag@hdr', 'report_status@hdr', 'reportype',
-#                                    'seaice@modsurf', 'sensor@hdr', 'seqno@hdr', 'snow_density@surfbody_feedback', 'snow_depth@modsurf', 
-#                                    'snow_depth@surfbody_feedback', 'sonde_type@conv', 'source@hdr', 'source_id', 'stalt@hdr', 'statid@hdr',
-#                                    'station_type@conv', 'stream', 'subtype@hdr', 'time@hdr', 'timeseries_index@conv', 'timeslot@timeslot_index',
-#                                    'tsfc@modsurf', 'type', 'unique_identifier@conv', 'varbc_ix@body', 'varno@body', 'vertco_reference_1@body', 
-#                                    'vertco_reference_2@body', 'vertco_type@body', 'windspeed10m@modsurf']
-#                         for j in eralist:
-#                             cdm_eratab.append(j)
-#                             cfcopy[j]={'cdmname': i, 'units': '', 'shortname': j, 'coordinates': 'lat lon time plev', 'standard_name': j, 'cdsname': j,}
-                    elif grp == 'era5fb':
-                        try: 
-                            var = i.split('/')[1]
-                            cdm_eratab.append(var)
-                            cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
-                        except: pass
-                        cdmlist.remove(i)
-                        
-                    if i == 'observations_table':
-                        logger.debug('Full observations_table CDM-request disabled.')
-#                         obslist = ['adjustment_id', 'advanced_assimilation_feedback', 'advanced_homogenisation', 'advanced_qc',
-#                                    'advanced_uncertainty', 'bbox_max_latitude', 'bbox_max_longitude', 'bbox_min_latitude', 
-#                                    'bbox_min_longitude', 'code_table', 'conversion_flag', 'conversion_method', 'crs', 'data_policy_licence',
-#                                    'date_time', 'date_time_meaning', 'exposure_of_sensor', 'latitude', 'location_method', 'location_precision',
-#                                    'longitude', 'numerical_precision', 'observation_duration', 'observation_height_above_station_surface', 
-#                                    'observation_id', 'observed_variable', 'original_code_table', 'original_precision', 'original_units', 'original_value',
-#                                    'processing_level', 'quality_flag', 'report_id', 'secondary_value', 'secondary_variable', 'sensor_automation_status',
-#                                    'sensor_id', 'source_id', 'spatial_representativeness', 'traceability', 'units', 'value_significance', 'z_coordinate',
-#                                    'z_coordinate_method', 'z_coordinate_type',]
-#                         for j in obslist:
-#                             cdm_obstab.append(j)
-#                             cfcopy[j]={'cdmname': i, 'units': '', 'shortname': j, 'coordinates': 'lat lon time plev', 'standard_name': j, 'cdsname': j,}
-                    elif grp == 'observations_table':
-                        try: 
-                            var = i.split('/')[1]
-                            cdm_obstab.append(var)
-                            cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
-                        except: pass
-                        cdmlist.remove(i)
-                        # NOW USE THOSE for the do_cfcopy below
-                logger.debug('CDM - adding groups and variables: %s', str(cdmlist))
-                for cdmstring in cdmlist:
-                    print(cdmstring)
-                    cdmsplit = cdmstring.split('/')
-#                     try:
-                    print(self.groups)
-                    if cdmsplit[0] in self.groups:
-                        print('group available')
-                        # TODO: Add attributes and descriptions?
-                        # whole group
-                        if len(cdmsplit) == 1:
-                            print('group copy')
-                            fout.create_group(cdmsplit[0])
-                            for cdmvar in self[cdmsplit[0]].keys():
-                                try:
-                                    fout[cdmsplit[0]].create_dataset(cdmvar, data=self[cdmsplit[0]][cdmvar][:])
-                                except:
-                                    pass
-                        # single var of group 
-                        if len(cdmsplit) == 2:
-                            print('single var copy')
-                            try:
-                                fout.create_group(cdmsplit[0])
-                            except:
-                                pass # group alread exists?
-                            try:
-                                fout[cdmsplit[0]].create_dataset(cdmsplit[1], data=self[cdmsplit[0]][cdmsplit[1]][:])
-                            except:
-                                pass
-            #
-            # Variables based on cfcopy
-            #
-            print(cfcopy)
+        if 'fast_csv' in request.keys():
+            print("fast_csv active")
+            fout={}
             if 'observations_table' in self.groups:
                 igroup = 'observations_table'
-                do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
+                do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                          'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                         'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']+cdm_obstab)
+                                         'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                if 'nodims' in request.keys():
-                    fout['time'].make_scale('time')
             #
             # Feedback Information
             #
             if 'era5fb' in self.groups:
                 igroup = 'era5fb'
                 try:
-                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
+                    do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                               var_selection=['fg_depar@body', 'an_depar@body',
-                                             'biascorr@body']+cdm_eratab)
+                                             'biascorr@body'])
                     # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:
@@ -2654,67 +2637,12 @@ class CDMDataset:
             if 'adjera5' in self.groups:
                 igroup = 'adjera5'
                 try:
-                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
+                    do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                               var_selection=['bias_estimate', 'bias_estimation_method'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
-            
-            #
-            # advanced_homogenisation
-            # 
-#             varsel=[]
-#             if 'advanced_homogenization' in self.groups or 'advanced_homogenisation' in self.groups :
-#                 igroup = 'advanced_homogenization'
-#                 if 'advanced_homogenisation' in self.groups:
-#                     igroup = 'advanced_homogenisation'
-#                 try:
-#                     for o in request['optional']:
-#                         if o in varseldict[request['variable']]:
-#                             varsel.append(o)
-#                 except:
-#                     pass
-                        
-#                 if varsel:       
-#                     try:
-#                         do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-#                                   var_selection=varsel)
-#                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-#                     except KeyError as e:
-#                         raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
-                        
-                        
-                        
-                        
-                        
-#             try:
-#                 for o in request['optional']:
-#                     if o in varseldict[request['variable']]:
-#                         varsel.append(o)
-#             except:
-#                 pass
 
-#             if 'advanced_homogenization' in self.groups:
-#                 print('advanced_homogenization in self.groups')
-#                 igroup = 'advanced_homogenization'
-#                 try:
-#                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-#                               var_selection = varsel)
-#                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-#                 except KeyError as e:
-#                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
-
-#             if 'advanced_homogenisation' in self.groups:
-#                 print('advanced_homogenization in self.groups')
-#                 igroup = 'advanced_homogenisation'
-#                 try:
-#                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
-#                               var_selection = varsel)
-#                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-#                 except KeyError as e:
-#                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
-
-                    
             if 'advanced_homogenisation' in self.groups :
                 igroup = 'advanced_homogenisation'
                 varsel=[]
@@ -2724,17 +2652,15 @@ class CDMDataset:
                             varsel.append(o)
                 except:
                     pass
-                        
+
                 if varsel:       
                     try:
-                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
+                        do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                                   var_selection=varsel)
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     except KeyError as e:
                         print(e)
                         #raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
-        
-                            
             #
             # advanced_uncertainty
             # 
@@ -2742,12 +2668,12 @@ class CDMDataset:
                 print('advanced_uncertainty in self.groups')
                 igroup = 'advanced_uncertainty'
                 try:
-                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
+                    do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                               var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 except KeyError as e:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
-                    
+
             #
             # Header Information
             #
@@ -2755,7 +2681,7 @@ class CDMDataset:
                 igroup = 'header_table'
                 # only records fitting criteria (zidx) are copied
                 # todo why is lon, lat not here?
-                do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', compression,
+                do_csvcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', compression,
                           var_selection=['report_id'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 # ,'station_name','primary_station_id'])
@@ -2775,66 +2701,344 @@ class CDMDataset:
                                      'standard_name': 'station_name'
                                  }
                                 } 
-                do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', compression,
+                do_csvcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', compression,
                           var_selection=['station_name'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-            
-            #
-            # Fix Attributes and Globals
-            #
-            fout['trajectory_label'].attrs['cf_role'] = np.string_('trajectory_id')
-            fout['trajectory_label'].attrs['long_name'] = np.string_('Label of trajectory')
-            for a, v in globatts.items():
-                fout.attrs[a] = np.string_(v)
+            dellist = []
+            for i in fout:
+                if(len(np.shape(fout[i])) > 1):
+                    dellist.append(i)
+            for i in dellist:
+                del fout[i]
+            df = pd.DataFrame(data=fout)
+            df.to_csv(filename_out, index=False)
 
-            fout.attrs['history'] = np.string_(
-                'Created by Copernicus Early Upper Air Service Version 0, ' + datetime.now().strftime(
-                    "%d-%b-%Y %H:%M:%S"))
-            fout.attrs['license'] = np.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
-            
+        else:
+            with h5py.File(filename_out, 'w') as fout:
+                # todo future -> this could be replaced by a self.write_to_frontend_file(filename_out, )
+                #
+                # chose wich variable will be selected and copied into the outputfile 
+                # from all the sources: observations_table, era5fb, header_table,...
+                #
+                # Dimensions (obs, trajectory)
+                #
+                for d, v in dims.items():
+                    fout.create_dataset(d, data=v)
+                    fout[d].attrs['NAME'] = np.string_('This is a netCDF dimension but not a netCDF variable.')
+                    fout[d].make_scale(d)  # resolves phony_dim problem
 
-            for i in fout.keys():    
-                if 'toolbox' in request.keys() and not 'optional' in request.keys():
-#                     if i in ['wind_from_direction']:
-#                         fout['ta'] = fout[i]
-#                         fout.__delitem__(i)
-                    print('no optionals')
-                elif 'toolbox' in request.keys():
-                    if i in ['ta', 'hur', 'ua', 'va', 'wind_from_direction']:
-                        oldunits = fout[i].attrs['units']
+                fout.create_dataset('trajectory_index', data=trajectory_index)
+                fout['trajectory_index'].attrs['long_name'] = np.string_(
+                    "index of trajectory this obs belongs to")
+                fout['trajectory_index'].attrs['instance_dimension'] = np.string_("trajectory")
+                fout['trajectory_index'].attrs['coordinates'] = np.string_("lat lon time plev")
+
+                #
+                # Adding CDM
+                #
+                cdm_obstab = []
+                cdm_eratab = []
+                cdmlist = request.get('cdm', None)
+                if cdmlist != None:
+                    # removing variables with restricted access
+                    if ('era5fb/obsvalue@body' in cdmlist) or ('observations_table/observation_value' in cdmlist):
+                        try: cdmlist.remove('era5fb/obsvalue@body')
+                        except: pass
+                        try: cdmlist.remove('observations_table/observation_value')
+                        except: pass
+                    for i in cdmlist:
+                        grp = i.split('/')[0]
+                        if i == 'era5fb':
+                            logger.debug('Full er5fb CDM-request disabled.')
+    #                         eralist = ['albedo@modsurf', 'an_depar@body', 'an_depar@surfbody_feedback', 'an_sens_obs@body', 'andate', 
+    #                                    'antime', 'biascorr@body', 'biascorr_fg@body', 'bufrtype@hdr', 'class', 'codetype@hdr',
+    #                                    'collection_identifier@conv', 'date@hdr', 'datum_anflag@body', 'datum_event1@body', 'datum_rdbflag@body',
+    #                                    'datum_sfc_event@surfbody_feedback', 'datum_status@body', 'datum_status@surfbody_feedback', 
+    #                                    'eda_spread@errstat', 'entryno@body', 'expver', 'fg_depar@body', 'fg_depar@surfbody_feedback', 
+    #                                    'fg_error@errstat', 'final_obs_error@errstat', 'groupid@hdr', 'index', 'lat@hdr', 'lon@hdr', 'lsm@modsurf',
+    #                                    'lsm@surfbody_feedback', 'numtsl@desc', 'obs_error@errstat', 'obstype@hdr', 'orography@modsurf',
+    #                                    'ppcode@conv_body', 'qc_pge@body', 'report_event1@hdr', 'report_rdbflag@hdr', 'report_status@hdr', 'reportype',
+    #                                    'seaice@modsurf', 'sensor@hdr', 'seqno@hdr', 'snow_density@surfbody_feedback', 'snow_depth@modsurf', 
+    #                                    'snow_depth@surfbody_feedback', 'sonde_type@conv', 'source@hdr', 'source_id', 'stalt@hdr', 'statid@hdr',
+    #                                    'station_type@conv', 'stream', 'subtype@hdr', 'time@hdr', 'timeseries_index@conv', 'timeslot@timeslot_index',
+    #                                    'tsfc@modsurf', 'type', 'unique_identifier@conv', 'varbc_ix@body', 'varno@body', 'vertco_reference_1@body', 
+    #                                    'vertco_reference_2@body', 'vertco_type@body', 'windspeed10m@modsurf']
+    #                         for j in eralist:
+    #                             cdm_eratab.append(j)
+    #                             cfcopy[j]={'cdmname': i, 'units': '', 'shortname': j, 'coordinates': 'lat lon time plev', 'standard_name': j, 'cdsname': j,}
+                        elif grp == 'era5fb':
+                            try: 
+                                var = i.split('/')[1]
+                                cdm_eratab.append(var)
+                                cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
+                            except: pass
+                            cdmlist.remove(i)
+
+                        if i == 'observations_table':
+                            logger.debug('Full observations_table CDM-request disabled.')
+    #                         obslist = ['adjustment_id', 'advanced_assimilation_feedback', 'advanced_homogenisation', 'advanced_qc',
+    #                                    'advanced_uncertainty', 'bbox_max_latitude', 'bbox_max_longitude', 'bbox_min_latitude', 
+    #                                    'bbox_min_longitude', 'code_table', 'conversion_flag', 'conversion_method', 'crs', 'data_policy_licence',
+    #                                    'date_time', 'date_time_meaning', 'exposure_of_sensor', 'latitude', 'location_method', 'location_precision',
+    #                                    'longitude', 'numerical_precision', 'observation_duration', 'observation_height_above_station_surface', 
+    #                                    'observation_id', 'observed_variable', 'original_code_table', 'original_precision', 'original_units', 'original_value',
+    #                                    'processing_level', 'quality_flag', 'report_id', 'secondary_value', 'secondary_variable', 'sensor_automation_status',
+    #                                    'sensor_id', 'source_id', 'spatial_representativeness', 'traceability', 'units', 'value_significance', 'z_coordinate',
+    #                                    'z_coordinate_method', 'z_coordinate_type',]
+    #                         for j in obslist:
+    #                             cdm_obstab.append(j)
+    #                             cfcopy[j]={'cdmname': i, 'units': '', 'shortname': j, 'coordinates': 'lat lon time plev', 'standard_name': j, 'cdsname': j,}
+                        elif grp == 'observations_table':
+                            try: 
+                                var = i.split('/')[1]
+                                cdm_obstab.append(var)
+                                cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
+                            except: pass
+                            cdmlist.remove(i)
+                            # NOW USE THOSE for the do_cfcopy below
+                    logger.debug('CDM - adding groups and variables: %s', str(cdmlist))
+                    for cdmstring in cdmlist:
+                        print(cdmstring)
+                        cdmsplit = cdmstring.split('/')
+    #                     try:
+                        print(self.groups)
+                        if cdmsplit[0] in self.groups:
+                            print('group available')
+                            # TODO: Add attributes and descriptions?
+                            # whole group
+                            if len(cdmsplit) == 1:
+                                print('group copy')
+                                fout.create_group(cdmsplit[0])
+                                for cdmvar in self[cdmsplit[0]].keys():
+                                    try:
+                                        fout[cdmsplit[0]].create_dataset(cdmvar, data=self[cdmsplit[0]][cdmvar][:])
+                                    except:
+                                        pass
+                            # single var of group 
+                            if len(cdmsplit) == 2:
+                                print('single var copy')
+                                try:
+                                    fout.create_group(cdmsplit[0])
+                                except:
+                                    pass # group alread exists?
+                                try:
+                                    fout[cdmsplit[0]].create_dataset(cdmsplit[1], data=self[cdmsplit[0]][cdmsplit[1]][:])
+                                except:
+                                    pass
+            
+                #
+                # Variables based on cfcopy
+                #
+                if 'observations_table' in self.groups:
+                    igroup = 'observations_table'
+                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
+                              var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
+                                             'observation_value', 'date_time', 'sensor_id', 'secondary_value',
+                                             'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']+cdm_obstab)
+                    # 'observed_variable','units'
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    if 'nodims' in request.keys():
+                        fout['time'].make_scale('time')
+                #
+                # Feedback Information
+                #
+                if 'era5fb' in self.groups:
+                    igroup = 'era5fb'
+                    try:
+                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
+                                  var_selection=['fg_depar@body', 'an_depar@body',
+                                                 'biascorr@body']+cdm_eratab)
+                        # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
+                        logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    except KeyError as e:
+                        raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+                #
+                # Adjusted Values with ERA5
+                # TODO: Names not set, group missing
+                if 'adjera5' in self.groups:
+                    igroup = 'adjera5'
+                    try:
+                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
+                                  var_selection=['bias_estimate', 'bias_estimation_method'])
+                        logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    except KeyError as e:
+                        raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+
+                #
+                # advanced_homogenisation
+                # 
+    #             varsel=[]
+    #             if 'advanced_homogenization' in self.groups or 'advanced_homogenisation' in self.groups :
+    #                 igroup = 'advanced_homogenization'
+    #                 if 'advanced_homogenisation' in self.groups:
+    #                     igroup = 'advanced_homogenisation'
+    #                 try:
+    #                     for o in request['optional']:
+    #                         if o in varseldict[request['variable']]:
+    #                             varsel.append(o)
+    #                 except:
+    #                     pass
+
+    #                 if varsel:       
+    #                     try:
+    #                         do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+    #                                   var_selection=varsel)
+    #                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+    #                     except KeyError as e:
+    #                         raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+
+
+
+
+
+    #             try:
+    #                 for o in request['optional']:
+    #                     if o in varseldict[request['variable']]:
+    #                         varsel.append(o)
+    #             except:
+    #                 pass
+
+    #             if 'advanced_homogenization' in self.groups:
+    #                 print('advanced_homogenization in self.groups')
+    #                 igroup = 'advanced_homogenization'
+    #                 try:
+    #                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+    #                               var_selection = varsel)
+    #                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+    #                 except KeyError as e:
+    #                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+
+    #             if 'advanced_homogenisation' in self.groups:
+    #                 print('advanced_homogenization in self.groups')
+    #                 igroup = 'advanced_homogenisation'
+    #                 try:
+    #                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs',
+    #                               var_selection = varsel)
+    #                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+    #                 except KeyError as e:
+    #                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+
+
+                if 'advanced_homogenisation' in self.groups :
+                    igroup = 'advanced_homogenisation'
+                    varsel=[]
+                    try:
+                        for o in request['optional']:
+                            if o in varseldict[request['variable']]:
+                                varsel.append(o)
+                    except:
+                        pass
+
+                    if varsel:       
+                        try:
+                            do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
+                                      var_selection=varsel)
+                            logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                        except KeyError as e:
+                            print(e)
+                            #raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+
+
+                #
+                # advanced_uncertainty
+                # 
+                if 'advanced_uncertainty' in self.groups:
+                    print('advanced_uncertainty in self.groups')
+                    igroup = 'advanced_uncertainty'
+                    try:
+                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
+                                  var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
+                        logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    except KeyError as e:
+                        raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+
+                #
+                # Header Information
+                #
+                if 'header_table' in self.groups:
+                    igroup = 'header_table'
+                    # only records fitting criteria (zidx) are copied
+                    # todo why is lon, lat not here?
+                    do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', compression,
+                              var_selection=['report_id'])
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    # ,'station_name','primary_station_id'])
+                    # todo could be read from the observations_table
+                #
+                # Station Configuration
+                #
+                # station_configuration
+                if 'station_configuration' in self.groups:
+                    igroup = 'station_configuration'
+                    cfcstationcon = {'station_name': 
+                                     {
+                                         'cdmname': 'station_configuration/station_name',
+                                         'units': 'NA',
+                                         'shortname': 'station_id',
+                                         'coordinates': 'lat lon time plev',
+                                         'standard_name': 'station_name'
+                                     }
+                                    } 
+                    do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', compression,
+                              var_selection=['station_name'])
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+
+                #
+                # Fix Attributes and Globals
+                #
+                fout['trajectory_label'].attrs['cf_role'] = np.string_('trajectory_id')
+                fout['trajectory_label'].attrs['long_name'] = np.string_('Label of trajectory')
+                for a, v in globatts.items():
+                    fout.attrs[a] = np.string_(v)
+
+                fout.attrs['history'] = np.string_(
+                    'Created by Copernicus Early Upper Air Service Version 0, ' + datetime.now().strftime(
+                        "%d-%b-%Y %H:%M:%S"))
+                fout.attrs['license'] = np.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
+
+
+                for i in fout.keys():    
+                    if 'toolbox' in request.keys() and not 'optional' in request.keys():
+    #                     if i in ['wind_from_direction']:
+    #                         fout['ta'] = fout[i]
+    #                         fout.__delitem__(i)
+                        print('no optionals')
+                    elif 'toolbox' in request.keys():
+                        if i in ['ta', 'hur', 'ua', 'va', 'wind_from_direction']:
+                            oldunits = fout[i].attrs['units']
+                            fout.__delitem__(i)
+                            oldkey=(request['optional'][0])
+                            fout[i]=fout[oldkey]
+                            fout[i].attrs['units'] = oldunits
+                            fout.__delitem__(oldkey)
+    #                     elif i in ['wind_from_direction']:
+    #                         oldunits = fout[i].attrs['units']
+    #                         fout.__delitem__(i)
+    #                         oldkey=(request['optional'][0])
+    #                         fout['ta']=fout[oldkey]
+    #                         fout[i].attrs['units'] = oldunits
+    #                         fout.__delitem__(oldkey)
+
+
+                for i in fout.keys():
+                    #print(i)
+                    if 'nodims' in request.keys():
+                        if (i == 'obs' or i == 'trajectory' or 'string' in i):
+                            fout.__delitem__(i)
+                    version = ''
+                    if '.' in i:
+                        vers = i.find('.')
+                        version = i[(vers-2):(vers+2)] # '_x.x'
+                        newname = i.replace(version, '')
+                        fout[newname] = fout[i]
                         fout.__delitem__(i)
-                        oldkey=(request['optional'][0])
-                        fout[i]=fout[oldkey]
-                        fout[i].attrs['units'] = oldunits
-                        fout.__delitem__(oldkey)
-#                     elif i in ['wind_from_direction']:
-#                         oldunits = fout[i].attrs['units']
-#                         fout.__delitem__(i)
-#                         oldkey=(request['optional'][0])
-#                         fout['ta']=fout[oldkey]
-#                         fout[i].attrs['units'] = oldunits
-#                         fout.__delitem__(oldkey)
-            
+                        fout[newname].attrs['version'] = np.string_(version[1:]) # 'x.x'
 
-            for i in fout.keys():
-                #print(i)
-                if 'nodims' in request.keys():
-                    if (i == 'obs' or i == 'trajectory' or 'string' in i):
-                        fout.__delitem__(i)
-                version = ''
-                if '.' in i:
-                    vers = i.find('.')
-                    version = i[(vers-2):(vers+2)] # '_x.x'
-                    newname = i.replace(version, '')
-                    fout[newname] = fout[i]
-                    fout.__delitem__(i)
-                    fout[newname].attrs['version'] = np.string_(version[1:]) # 'x.x'
-                    
-            # removing variables with restricted access
-            try: fout['observations_table'].__delitem__('observation_value')
-            except: pass
-            try: fout['era5fb'].__delitem__('obsvalue@body')
-            except: pass
+                # removing variables with restricted access
+                try: fout['observations_table'].__delitem__('observation_value')
+                except: pass
+                try: fout['era5fb'].__delitem__('obsvalue@body')
+                except: pass
                     
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
