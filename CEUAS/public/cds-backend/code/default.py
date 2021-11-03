@@ -1563,6 +1563,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                             filetocopy.copy(i, merge[name], name=i)
             logger.debug('netcdfs merged [%d] to %s', len(results), rfile)
         else: 
+            tt=time.time()
             with zipfile.ZipFile(rfile, 'w') as f:
                 for r in results:
                     try:
@@ -1574,6 +1575,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                     except:
                         pass
             logger.debug('netcdfs compressed [%d] to %s', len(results), rfile)
+            print('ZIPPING: ', tt - time.time())
 
     else:
         with zipfile.ZipFile(rfile, 'w', compression=zipfile.ZIP_DEFLATED) as f:
