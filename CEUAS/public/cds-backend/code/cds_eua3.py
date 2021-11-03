@@ -1897,11 +1897,12 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
                     raise NotImplementedError()
 
             files = ["{}/{}".format(idir, ifile) for ifile in files]
-            if len(files) > 1:
-                return CDMDatasetList(*files)
             if 'speed_test' in request:
                     return files[0]
             else:
+                if len(files) > 1:
+                    return CDMDatasetList(*files)
+            
                 if 'fast_csv' in request:
                     return pd.read_csv(files[0])
                 else:
@@ -2674,44 +2675,55 @@ class CDMDataset:
                 except KeyError as e:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
 
-            #
-            # Header Information
-            #
-            if 'header_table' in self.groups:
-                igroup = 'header_table'
-                # only records fitting criteria (zidx) are copied
-                # todo why is lon, lat not here?
-                do_csvcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', compression,
-                          var_selection=['report_id'])
-                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                # ,'station_name','primary_station_id'])
-                # todo could be read from the observations_table
-            #
-            # Station Configuration
-            #
-            # station_configuration
-            if 'station_configuration' in self.groups:
-                igroup = 'station_configuration'
-                cfcstationcon = {'station_name': 
-                                 {
-                                     'cdmname': 'station_configuration/station_name',
-                                     'units': 'NA',
-                                     'shortname': 'station_id',
-                                     'coordinates': 'lat lon time plev',
-                                     'standard_name': 'station_name'
-                                 }
-                                } 
-                do_csvcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', compression,
-                          var_selection=['station_name'])
-                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+#             #
+#             # Header Information
+#             #
+#             if 'header_table' in self.groups:
+#                 igroup = 'header_table'
+#                 # only records fitting criteria (zidx) are copied
+#                 # todo why is lon, lat not here?
+#                 do_csvcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', compression,
+#                           var_selection=['report_id'])
+#                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+#                 # ,'station_name','primary_station_id'])
+#                 # todo could be read from the observations_table
+#             #
+#             # Station Configuration
+#             #
+#             # station_configuration
+#             if 'station_configuration' in self.groups:
+#                 igroup = 'station_configuration'
+#                 cfcstationcon = {'station_name': 
+#                                  {
+#                                      'cdmname': 'station_configuration/station_name',
+#                                      'units': 'NA',
+#                                      'shortname': 'station_id',
+#                                      'coordinates': 'lat lon time plev',
+#                                      'standard_name': 'station_name'
+#                                  }
+#                                 } 
+#                 do_csvcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', compression,
+#                           var_selection=['station_name'])
+#                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
             dellist = []
+            print(fout.keys())
             for i in fout:
                 if(len(np.shape(fout[i])) > 1):
                     dellist.append(i)
             for i in dellist:
                 del fout[i]
-            df = pd.DataFrame(data=fout)
-            df.to_csv(filename_out, index=False)
+            
+            X = []
+            headstr = ''
+            formatstr = ''
+            for i in fout:
+                X.append(fout[i])
+                headstr = headstr+i+','
+                if i in ['date_time', 'z_coordinate']:
+                    formatstr = formatstr+'%.0f,'
+                else:
+                    formatstr = formatstr+'%.6f,'
+            np.savetxt(filename_out, np.transpose(X), delimiter=',', newline='\n', header=headstr[:-1], fmt=formatstr[:-1])
 
         else:
             with h5py.File(filename_out, 'w') as fout:
