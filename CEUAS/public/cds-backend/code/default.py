@@ -776,7 +776,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                bbox: list = None, country: str = None, area: list = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                gridded: list = None, toolbox: str = None, cdm: list = None, da: bool = True, compression: str = None,
-               pass_unknown_keys: bool = False, nodims: str = None, hdf: str = None, fast_csv: str = None, speed_test: str = None, 
+               pass_unknown_keys: bool = False, nodims: str = None, hdf: str = None, speed_test: str = None, 
                **kwargs) -> dict:
     """ Check Request for valid values and keys
 
@@ -967,7 +967,10 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     #
     # Format
     #
-    if format is not None:
+    if format in ['fast_csv']:
+        d['format'] = 'nc'
+        d['fast_csv'] = True
+    elif format is not None:
         if format not in ['nc', 'csv']:
             raise ValueError('Invalid format selected [nc, csv]: ' + format)
         d['format'] = format
@@ -985,12 +988,12 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     else:
         d['hdf'] = False
         
-    #
-    # fast_csv
-    #
-    if fast_csv is not None:
-        if fast_csv == 'True':
-            d['fast_csv'] = True
+#     #
+#     # fast_csv
+#     #
+#     if fast_csv is not None:
+#         if fast_csv == 'True':
+#             d['fast_csv'] = True
             
     #
     # speed_test
