@@ -1567,7 +1567,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
             logger.debug('netcdfs merged [%d] to %s', len(results), rfile)
         else: 
             tt=time.time()
-            with zipfile.ZipFile(rfile, 'w') as f:
+            with zipfile.ZipFile(rfile, 'w',compression=zipfile.ZIP_DEFLATED,compresslevel=4) as f:
                 for r in results:
                     try:
                         if len(r[0]) > 0:
