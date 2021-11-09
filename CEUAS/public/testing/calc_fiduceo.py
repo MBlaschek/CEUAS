@@ -15,6 +15,7 @@ import cds_eua3 as eua
 import pickle
 import multiprocessing
 from functools import partial
+import time
 
 def haversine_np(lon1, lat1, lon2, lat2):
     """
@@ -37,6 +38,7 @@ def haversine_np(lon1, lat1, lon2, lat2):
 
 
 def calc_station(date, search_lat, search_lon, channel, stat):
+    tt=time.time()
     yr = date[0]
     mn = date[1]
     print(yr, mn)
@@ -73,6 +75,8 @@ def calc_station(date, search_lat, search_lon, channel, stat):
                 times[k].append(selection.Time.values)
                 dists[k].append(mindist)
                 counter[k] = counter[k] + 1
+            print(time.time()-tt)
+            print('x')
             
         except: pass
     for k in range(len(stat)):
@@ -128,5 +132,5 @@ if __name__ == '__main__':
     chan = 'Ch3_BT'
     pool = multiprocessing.Pool(processes=20)
     func=partial(calc_station, search_lat = lats, search_lon = lons, channel = chan, stat = names)
-    result_list = list(pool.map(func, dates))
+    result_list = list(map(func, dates))
     print(result_list)

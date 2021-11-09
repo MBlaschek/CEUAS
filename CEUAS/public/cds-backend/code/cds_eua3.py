@@ -1368,7 +1368,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
 
             # todo this could be changed to the cf.keys() -> cdm names of the variables
             # request_variables['variable'] is a list
-            if 'fast_csv' in request_variables.keys():
+            if request_variables['format'] in ['csv','fast_csv']: # in request_variables.keys():
                 filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
                     request_variables['variable']] + '.csv'
             else:
@@ -1902,14 +1902,10 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
             else:
                 if len(files) > 1:
                     return CDMDatasetList(*files)
-            
-                if 'fast_csv' in request:
+                if files[0][-4:] == '.csv':
                     return pd.read_csv(files[0])
                 else:
-                    try:
-                        return CDMDataset(filename=files[0])
-                    except:
-                        return pd.read_csv(files[0])
+                    return CDMDataset(filename=files[0])
         else:
             return request_filename
 
@@ -2626,7 +2622,8 @@ class CDMDataset:
 #         rstcd = self.file['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
 #         zrstcd=recordindex[zidx+1]-idx[0]
 #         rstcd=None
-        if 'fast_csv' in request.keys():
+
+        if request['format'] in ['csv', 'fast_csv']:
             print("fast_csv active")
             fout={}
             if 'observations_table' in self.groups:
@@ -2705,25 +2702,7 @@ class CDMDataset:
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 # ,'station_name','primary_station_id'])
                 # todo could be read from the observations_table
-            #
-            # Station Configuration
-            #
-            # station_configuration
-            if 'station_configuration' in self.groups:
-                igroup = 'station_configuration'
-                cfcstationcon = {'station_name': 
-                                 {
-                                     'cdmname': 'station_configuration/station_name',
-                                     'units': 'NA',
-                                     'shortname': 'station_id',
-                                     'coordinates': 'lat lon time plev',
-                                     'standard_name': 'station_name'
-                                 }
-                                } 
-                do_csvcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', compression,
-                          var_selection=['station_name'])
-                logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                
+
             dellist = []
             print(fout.keys())
             dtype = dict(names = list(fout.keys()), formats=[])
@@ -2799,6 +2778,58 @@ class CDMDataset:
             #np.savetxt(filename_out, np.transpose(X), delimiter=',', newline='\n', header=headstr[:-1], fmt=formatstr[:-1])
             print(time.time()-time0)
             print('')
+#=======
+#             dellist = []
+#             print(fout.keys())
+#             for i in fout:
+#                 if(len(np.shape(fout[i])) > 1):
+#                     fout[i] = [fout[i].astype(object).sum(axis=1).astype(str)[0]]*len(fout['date_time'])
+                
+#             out = np.rec.fromarrays([fout[i] for i in fout])
+#             headstr = ''
+#             formatstr = ''
+#             for i in fout:
+#                 headstr = headstr+i+','
+#                 if isinstance(fout[i][0], int):
+#                     formatstr = formatstr+'%.0i,'
+#                 elif isinstance(fout[i][0], float):
+#                     formatstr = formatstr+'%.6f,'
+#                 else:
+#                     formatstr = formatstr+'%.16s,'
+
+#             np.savetxt(filename_out, out, delimiter=',', newline='\n', header=headstr[:-1], fmt = formatstr[:-1])
+            #if request['format'] in ['fast_csv']:
+                #dellist = []
+                #for i in fout:
+                    #if(len(np.shape(fout[i])) > 1):
+                        #dellist.append(i)
+
+                #for i in dellist:
+                    #del fout[i]
+
+                #X = []
+                #headstr = ''
+                #formatstr = ''
+                #for i in fout:
+                    #X.append(fout[i])
+                    #headstr = headstr+i+','
+                    #if i in ['date_time', 'z_coordinate']:
+                        #formatstr = formatstr+'%.0f,'
+                    #else:
+                        #formatstr = formatstr+'%.6f,'
+                #np.savetxt(filename_out, np.transpose(X), delimiter=',', newline='\n', header=headstr[:-1], fmt=formatstr[:-1])
+            #else:
+                #for i in fout:
+                    #if(len(np.shape(fout[i])) > 1):
+                        #fout[i] = fout[i].astype(object).sum(axis=1).astype(str)
+##                         fout[i] = [fout[i].astype(object).sum(axis=1).astype(str)[0]]*len(fout['date_time'])
+                    #print(i, len(fout[i]))
+                        
+                        
+                #df = pd.DataFrame(fout)
+                #df.to_csv(filename_out)
+                
+#>>>>>>> f71dcf05faa4939bd7c454e29861ed003060f9ce
 
         else:
             with h5py.File(filename_out, 'w') as fout:
