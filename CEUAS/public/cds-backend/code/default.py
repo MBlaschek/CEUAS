@@ -1547,68 +1547,31 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     if 'local_execution' in body.keys():
         return rfile
 
-#<<<<<<< HEAD
-    if body['format'] == 'nc':
-        if body['hdf']:
-            rfile = os.path.dirname(wpath) + '/download.nc'
-            with h5py.File(rfile, 'w') as merge:
-                for r in results:
-                    name = r[0].split('dest_')[-1].split('_')[0]
-                    merge.create_group(name)
-                    with h5py.File(r[0], 'r') as filetocopy:
-                        for i in filetocopy.keys():
-                            filetocopy.copy(i, merge[name], name=i)
-            logger.debug('netcdfs merged [%d] to %s', len(results), rfile)
-    elif body['format'] == 'fast_csv' or body['format'] =='csv': 
-            tt=time.time()
-            with zipfile.ZipFile(rfile, 'w',compression=zipfile.ZIP_DEFLATED,compresslevel=4) as f:
-                for r in results:
-                    try:
-                        if len(r[0]) > 0:
-                            f.write(r[0], os.path.basename(r[0]))
-                        if debug:
-                            continue  # do not remove
-                        os.remove(r[0])  # remove NetCDF file
-                    except:
-                        pass
-            logger.debug('netcdfs compressed [%d] to %s', len(results), rfile)
-            print('ZIPPING: ', tt - time.time())
-
-    else:
-        with zipfile.ZipFile(rfile, 'w', compression=zipfile.ZIP_DEFLATED) as f:
-            for v in body['variable']:
-                ilist = glob.glob(output_dir + '/*' + v + '.nc')
-                if len(ilist) > 0:
-                    ifile = to_csv(ilist, ofile=output_dir + '/' + v + '.csv')  # todo add correct name into zip
-                    f.write(ifile, os.path.basename(ifile))
-                    logger.debug('writing csv %s [%d] to %s', v, len(ilist), rfile)
-#=======
-##     if body['format'] == 'nc':
-    #if body['hdf']:
-        #rfile = os.path.dirname(wpath) + '/download.nc'
-        #with h5py.File(rfile, 'w') as merge:
-            #for r in results:
-                #name = r[0].split('dest_')[-1].split('_')[0]
-                #merge.create_group(name)
-                #with h5py.File(r[0], 'r') as filetocopy:
-                    #for i in filetocopy.keys():
-                        #filetocopy.copy(i, merge[name], name=i)
-        #logger.debug('netcdfs merged [%d] to %s', len(results), rfile)
-    #else: 
-        #tt=time.time()
-        #with zipfile.ZipFile(rfile, 'w') as f:
-            #for r in results:
-                #try:
-                    #if len(r[0]) > 0:
-                        #f.write(r[0], os.path.basename(r[0]))
-#>>>>>>> f71dcf05faa4939bd7c454e29861ed003060f9ce
-                    #if debug:
-                        #continue  # do not remove
-                    #os.remove(r[0])  # remove NetCDF file
-                #except:
-                    #pass
-        #logger.debug('netcdfs compressed [%d] to %s', len(results), rfile)
-        #print('ZIPPING: ', tt - time.time())
+#     if body['format'] == 'nc':
+    if body['hdf']:
+        rfile = os.path.dirname(wpath) + '/download.nc'
+        with h5py.File(rfile, 'w') as merge:
+            for r in results:
+                name = r[0].split('dest_')[-1].split('_')[0]
+                merge.create_group(name)
+                with h5py.File(r[0], 'r') as filetocopy:
+                    for i in filetocopy.keys():
+                        filetocopy.copy(i, merge[name], name=i)
+        logger.debug('netcdfs merged [%d] to %s', len(results), rfile)
+    else: 
+        tt=time.time()
+        with zipfile.ZipFile(rfile, 'w') as f:
+            for r in results:
+                try:
+                    if len(r[0]) > 0:
+                        f.write(r[0], os.path.basename(r[0]))
+                    if debug:
+                        continue  # do not remove
+                    os.remove(r[0])  # remove NetCDF file
+                except:
+                    pass
+        logger.debug('netcdfs compressed [%d] to %s', len(results), rfile)
+        print('ZIPPING: ', tt - time.time())
 
 #     else:
 #         with zipfile.ZipFile(rfile, 'w', compression=zipfile.ZIP_DEFLATED) as f:
