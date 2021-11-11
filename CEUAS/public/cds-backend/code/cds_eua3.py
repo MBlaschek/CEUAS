@@ -809,6 +809,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
                                                          chunks=True)
                             elif compression == 'gzip':
                                 fout.create_dataset_like(vlist[-1], fin[group][v],
+                                                         compression=compression,
                                                          shape=(idx.shape[0], s1),
                                                          chunks=True)
                             sname = 'string{}'.format(s1)

@@ -1523,7 +1523,15 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         print(time.time()-tt); tt=time.time()
         #with Pool(10) as p:
             # error with chunksize (from p.map to p.starmap)
-        results = list(P.map(func, bodies))
+        #bdist=active['rtsidx'][1:]-active['rtsidx'][:-1]
+        #bidx=np.argsort(bdist)
+        #for i in range(10):
+            #print(np.sum(bdist[bidx][i::10]))
+        
+        #b2=[]
+        #for b in reversed(bidx):
+            #b2.append(bodies[b])
+        results = list(P.map(func, bodies,chunksize=3))
             # results = list(p.starmap(func, zip(input_dirs, [debug]*len(bodies), bodies), chunksize=1))
     #
     # Process the output 
@@ -1552,11 +1560,12 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         rfile = os.path.dirname(wpath) + '/download.nc'
         with h5py.File(rfile, 'w') as merge:
             for r in results:
-                name = r[0].split('dest_')[-1].split('_')[0]
-                merge.create_group(name)
-                with h5py.File(r[0], 'r') as filetocopy:
-                    for i in filetocopy.keys():
-                        filetocopy.copy(i, merge[name], name=i)
+                if(r[0]):                    
+                    name = r[0].split('dest_')[-1].split('_')[0]
+                    merge.create_group(name)
+                    with h5py.File(r[0], 'r') as filetocopy:
+                        for i in filetocopy.keys():
+                            filetocopy.copy(i, merge[name], name=i)
         logger.debug('netcdfs merged [%d] to %s', len(results), rfile)
     else: 
         tt=time.time()
