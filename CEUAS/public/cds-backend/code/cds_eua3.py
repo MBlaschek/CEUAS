@@ -27,6 +27,7 @@ import os
 import time
 from datetime import datetime, timedelta
 import logging
+import gzip
 
 import h5py  # most likely non standard on CDS
 import numpy as np
@@ -2520,23 +2521,15 @@ class CDMDataset:
         # Make Trajectory Information (lon, lat, profile id, ...)
         #
         trajectory_index = np.zeros_like(idx, dtype=np.int32)
-        zidx = np.zeros_like(idx, dtype=np.int32)
+        trajectory_index2 = np.zeros_like(idx, dtype=np.int32)
         if 'recordinindex' in self.groups:
             # unsorted indices in root
             recordindex = self.file['recordindex'][()]
         else:
             # sorted indices are in recordindices group / by variable
             recordindex = self.file['recordindices'][str(cdmnum)][()]  # values
-        
-        #tt=time.time()    
-        #zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex <= trange.stop))[0]
-        #print(time.time()-tt,len(zidx))
-        #zidx = np.searchsorted(recordindex,(trange.start,trange.stop))
-        #zidx=np.empty(trange.stop-trange.start+1,dtype=np.int)
-        #print(time.time()-tt,zidx)
-        #print('')
-        
-        
+            
+        zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex <= trange.stop))[0]
         #zidx2=np.zeros_like(zidx)
             
         #zidx2 = recordindex[zidx]
@@ -2565,15 +2558,8 @@ class CDMDataset:
         #
         # Dimensions and Global Attributes
         #
-
-        #print(time.time()-tt)
-        #zidx = calc_trajindexfastl(recordindex, zidx, idx, trajectory_index)
-        #
-        # Dimensions and Global Attributes
-        #
-
-        #print(time.time()-tt)
         tt=time.time() - time0
+        print(tt)
         dims = {'obs': np.zeros(idx.shape[0], dtype=np.int32),
                 'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
         globatts = get_global_attributes()  # could put more infors there ?
@@ -2690,95 +2676,37 @@ class CDMDataset:
                 except KeyError as e:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
 
+#             #
+#             # Header Information
+#             #
+#             if 'header_table' in self.groups:
+#                 igroup = 'header_table'
+#                 # only records fitting criteria (zidx) are copied
+#                 # todo why is lon, lat not here?
+#                 do_csvcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', compression,
+#                           var_selection=['report_id'])
+#                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+#                 # ,'station_name','primary_station_id'])
+#                 # todo could be read from the observations_table
             #
-            # Header Information
+            # Station Configuration
             #
-            if False and 'header_table' in self.groups:
-                igroup = 'header_table'
-                # only records fitting criteria (zidx) are copied
-                # todo why is lon, lat not here?
-                do_csvcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', compression,
-                          var_selection=['report_id'])
+            # station_configuration
+            if 'station_configuration' in self.groups:
+                igroup = 'station_configuration'
+                cfcstationcon = {'station_name': 
+                                 {
+                                     'cdmname': 'station_configuration/station_name',
+                                     'units': 'NA',
+                                     'shortname': 'station_id',
+                                     'coordinates': 'lat lon time plev',
+                                     'standard_name': 'station_name'
+                                 }
+                                } 
+                do_csvcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', compression,
+                          var_selection=['station_name'])
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                # ,'station_name','primary_station_id'])
-                # todo could be read from the observations_table
-
-            dellist = []
-            print(fout.keys())
-            dtype = dict(names = list(fout.keys()), formats=[])
-            lfout=[]
-            for k in dtype['names']:
-                if len(fout[k].shape)==1:
-                    lfout.append(fout[k])
-                else:
-                    lfout.append(fout[k].view('|S{}'.format(fout[k].shape[1])).flatten().astype(str))
-                dtype['formats'].append(lfout[-1].dtype)
-            #out = np.rec.fromarrays(lfout, dtype=dtype)
-            #for i in fout:
-                #if(len(np.shape(fout[i])) > 1):
-                    #fout[i] = [fout[i].astype(object).sum(axis=1).astype(str)[0]]*len(fout['date_time'])
                 
-            #out = np.rec.fromarrays([fout[i] for i in fout])
-
-            headstr = ''
-            formatstr = ''
-            for n,d in zip(dtype['names'],dtype['formats']):
-                headstr = headstr+n+','
-                sd=str(d)
-                if 'int' in sd:
-                    formatstr = formatstr+'%.0i,'
-                elif 'float' in sd:
-                    formatstr = formatstr+'%.6f,'
-                else:
-                    formatstr = formatstr+'"%.'+sd[2:]+'s",'
-                    #formatstr = formatstr+'%.'+''+'s,'
-
-            print(time.time()-time0)
-            formatstrn=formatstr[:-1]+'\n'
-            formatall=formatstrn*lfout[0].shape[0]
-            with open(filename_out,'w') as f:
-                f.write(headstr[:-1]+'\n')
-                b=[item for sublist in zip(*lfout) for item in sublist]
-                data=formatall%tuple(b)
-                f.write(data)
-            #np.savetxt(filename_out, out, delimiter=',', newline='\n', header=headstr[:-1], fmt = formatstr[:-1])
-            #with open(filename_out,'w') as f:
-                #f.write(headstr[:-1]+'\n')
-                #b=[item for sublist in out for item in sublist]
-                #data=formatall%tuple(b)
-                #f.write(data)
-            
-            #import io
-            #with io.BytesIO() as f:
-                #np.savetxt(f, out, delimiter=',', newline='\n', header=headstr[:-1], fmt = formatstr[:-1])
-                #out.tobytes(f, sep=',',format='%s\n')#format=formatstr)#, newline='\n', header=headstr[:-1], fmt = formatstr[:-1])
-                #print('')
-            
-            #print(len(f))
-            #dellist = []
-            #print(fout.keys())
-            #for i in fout:
-                #if(len(np.shape(fout[i])) > 1):
-                    #dellist.append(i)
-
-            #for i in dellist:
-                #del fout[i]
-                            
-            #X = []
-            #headstr = ''
-            #formatstr = ''
-            #for i in fout:
-                #X.append(fout[i])
-                #headstr = headstr+i+','
-                #if i in ['date_time', 'z_coordinate']:
-                    #formatstr = formatstr+'%.0f,'
-                #else:
-                    #formatstr = formatstr+'%.6f,'
-            #print(time.time()-time0)
-            #np.savetxt(filename_out, np.transpose(X), delimiter=',', newline='\n', header=headstr[:-1], fmt=formatstr[:-1])
-            print(time.time()-time0)
-            print('')
-#=======
 #             dellist = []
 #             print(fout.keys())
 #             for i in fout:
@@ -2798,38 +2726,68 @@ class CDMDataset:
 #                     formatstr = formatstr+'%.16s,'
 
 #             np.savetxt(filename_out, out, delimiter=',', newline='\n', header=headstr[:-1], fmt = formatstr[:-1])
-            #if request['format'] in ['fast_csv']:
-                #dellist = []
-                #for i in fout:
-                    #if(len(np.shape(fout[i])) > 1):
-                        #dellist.append(i)
+            if request['format'] in ['fast_csv']:
+                dellist = []
+                for i in fout:
+                    if(len(np.shape(fout[i])) > 1):
+                        dellist.append(i)
 
-                #for i in dellist:
-                    #del fout[i]
+                for i in dellist:
+                    del fout[i]
 
-                #X = []
-                #headstr = ''
-                #formatstr = ''
-                #for i in fout:
-                    #X.append(fout[i])
-                    #headstr = headstr+i+','
-                    #if i in ['date_time', 'z_coordinate']:
-                        #formatstr = formatstr+'%.0f,'
-                    #else:
-                        #formatstr = formatstr+'%.6f,'
-                #np.savetxt(filename_out, np.transpose(X), delimiter=',', newline='\n', header=headstr[:-1], fmt=formatstr[:-1])
-            #else:
-                #for i in fout:
-                    #if(len(np.shape(fout[i])) > 1):
-                        #fout[i] = fout[i].astype(object).sum(axis=1).astype(str)
-##                         fout[i] = [fout[i].astype(object).sum(axis=1).astype(str)[0]]*len(fout['date_time'])
-                    #print(i, len(fout[i]))
-                        
-                        
-                #df = pd.DataFrame(fout)
-                #df.to_csv(filename_out)
-                
-#>>>>>>> f71dcf05faa4939bd7c454e29861ed003060f9ce
+                X = []
+                headstr = ''
+                formatstr = ''
+                for i in fout:
+                    X.append(fout[i])
+                    headstr = headstr+i+','
+                    if i in ['date_time', 'z_coordinate']:
+                        formatstr = formatstr+'%.0f,'
+                    else:
+                        formatstr = formatstr+'%.6f,'
+                np.savetxt(filename_out, np.transpose(X), delimiter=',', newline='\n', header=headstr[:-1], fmt=formatstr[:-1])
+            else:
+                '''
+                for i in fout:
+                    if(len(np.shape(fout[i])) > 1):
+                        fout[i] = fout[i].astype(object).sum(axis=1).astype(str)
+                #                         fout[i] = [fout[i].astype(object).sum(axis=1).astype(str)[0]]*len(fout['date_time'])
+                print(i, len(fout[i]))
+                df = pd.DataFrame(fout)
+                df.to_csv(filename_out)
+                '''
+                dellist = []
+                print(fout.keys())
+                dtype = dict(names = list(fout.keys()), formats=[])
+                lfout=[]
+                for k in dtype['names']:
+                    if len(fout[k].shape)==1:
+                        lfout.append(fout[k])
+                    else:
+                        lfout.append(fout[k].view('|S{}'.format(fout[k].shape[1])).flatten().astype(str))
+                    dtype['formats'].append(lfout[-1].dtype)
+                headstr = ''
+                formatstr = ''
+                for n,d in zip(dtype['names'],dtype['formats']):
+                    headstr = headstr+n+','
+                    sd=str(d)
+                    if 'int' in sd:
+                        formatstr = formatstr+'%.0i,'
+                    elif 'float' in sd:
+                        formatstr = formatstr+'%.6f,'
+                    else:
+                        formatstr = formatstr+'"%.'+sd[2:]+'s",'
+                        #formatstr = formatstr+'%.'+''+'s,'
+
+                print(time.time()-time0)
+                formatstrn=formatstr[:-1]+'\n'
+                formatall=formatstrn*lfout[0].shape[0]
+#                 with open(filename_out,'w') as f:
+#                 with zipfile.ZipFile(filename_out,'w') as f:
+                with open(filename_out,'w') as f:
+                    f.write(headstr[:-1]+'\n')
+                    b=[item for sublist in zip(*lfout) for item in sublist]
+                    f.write(formatall%tuple(b))
 
         else:
             with h5py.File(filename_out, 'w') as fout:
