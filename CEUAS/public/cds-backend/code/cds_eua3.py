@@ -28,6 +28,7 @@ import time
 from datetime import datetime, timedelta
 import logging
 import gzip
+import lz4.frame
 
 import h5py  # most likely non standard on CDS
 import numpy as np
@@ -2784,8 +2785,9 @@ class CDMDataset:
                 formatstrn=formatstr[:-1]+'\n'
                 formatall=formatstrn*lfout[0].shape[0]
 #                 with open(filename_out,'w') as f:
-#                 with zipfile.ZipFile(filename_out,'w') as f:
-                with open(filename_out,'w') as f:
+                with lz4.frame.open(filename_out,'wt') as f:
+                #with gzip.open(filename_out,'wt',compresslevel=1) as f:
+                #with open(filename_out,'w') as f:
                     f.write(headstr[:-1]+'\n')
                     b=[item for sublist in zip(*lfout) for item in sublist]
                     f.write(formatall%tuple(b))

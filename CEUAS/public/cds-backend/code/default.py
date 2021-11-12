@@ -1531,7 +1531,8 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         #b2=[]
         #for b in reversed(bidx):
             #b2.append(bodies[b])
-        results = list(P.map(func, bodies,chunksize=3))
+        #results = list(P.map(func, bodies,chunksize=3))
+        results = list(map(func, bodies))
             # results = list(p.starmap(func, zip(input_dirs, [debug]*len(bodies), bodies), chunksize=1))
     #
     # Process the output 
@@ -1556,7 +1557,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         return rfile
 
 #     if body['format'] == 'nc':
-    if body['hdf']:
+    if body['hdf'] and 'csv' not in body['format']:
         rfile = os.path.dirname(wpath) + '/download.nc'
         with h5py.File(rfile, 'w') as merge:
             for r in results:
@@ -1569,7 +1570,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         logger.debug('netcdfs merged [%d] to %s', len(results), rfile)
     else: 
         tt=time.time()
-        with zipfile.ZipFile(rfile, 'w') as f:
+        with zipfile.ZipFile(rfile, 'w' ) as f:
             for r in results:
                 try:
                     if len(r[0]) > 0:
@@ -1579,7 +1580,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                     os.remove(r[0])  # remove NetCDF file
                 except:
                     pass
-        logger.debug('netcdfs compressed [%d] to %s', len(results), rfile)
+        logger.debug('files compressed [%d] to %s', len(results), rfile)
         print('ZIPPING: ', tt - time.time())
 
 #     else:
