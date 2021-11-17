@@ -1568,6 +1568,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                         for i in filetocopy.keys():
                             filetocopy.copy(i, merge[name], name=i)
         logger.debug('netcdfs merged [%d] to %s', len(results), rfile)
+
     else: 
         tt=time.time()
         with zipfile.ZipFile(rfile, 'w' ) as f:
