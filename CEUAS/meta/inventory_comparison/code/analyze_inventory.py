@@ -1381,7 +1381,7 @@ if __name__ == '__main__':
             elif 'rda' in odir:
                 flist=glob.glob(odir+'/'+'UADB_[tw]*.nc')
                 flist.sort()
-                flist = [f for f in flist if '82599' in f ]
+                #f4list = [f for f in flist if '82599' in f ]
                 glist=[]
                 for i in range(len(flist)-1,-1,-1):
                     s=flist[i][-9:-3]

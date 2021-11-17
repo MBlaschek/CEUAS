@@ -1,0 +1,10 @@
+def AddDistance(self):
+
+Latitude and longitude consistency in time is checked in the following way.
+A list is created extracting all the possible distinct pairs [lat,lon] from the input file.
+This list consists in just one entry if the values are constant in time, while it can be longer if the station was
+relocated or there the coordinates were recorded in different format/precision.
+In this case, we check if the absolute difference between the minimum and maximum value of the latitude or longitude is below
+0.2 degrees. If so, there is no need to consider different location, but the coordinate pair of the most recend data is used.
+
+
