@@ -73,7 +73,7 @@ class Utils():
     
 class Analyze():
     
-    def __init__(self, dist_limit = 30, inv = '', data = '', utils=''):
+    def __init__(self, dist_limit = 30, inv = '', data = '', utils='', cities = ''):
         """ parameters ::
                      dist_limit : maximum distance allowed for station matching
                      inv :: dataframe of a single the inventory
@@ -90,6 +90,7 @@ class Analyze():
                                 'CHUAN':'0-20400-0-'  }
         
         self.best_match = ''
+        self.cities = cities 
         
     def Make_WIGOS(self, df):
         """ Creates a WIGOS id for the file given the best matching inventory data """
@@ -122,6 +123,31 @@ class Analyze():
         d = geopy.distance.geodesic( (lat1,lon1), (lat2,lon2) ).km
         return d 
         
+    def FindCity(self):
+        """ Find the closest city within a 100 km radius """
+        
+        lat, lon = self.data.lats_list[0] , self.data.lons_list[0]
+        cities = self.cities
+        cities = cities.loc [  (abs(cities['Latitude'] - lat) < 5 ) & (abs(cities['Longitude'] - lon) < 5) ] 
+        if not cities.empty:
+            cities = cities.reset_index()
+            distances = [ round( self.Distance( lat, lon , cities['Latitude'][i] , cities['Longitude'][i] ), 1 ) for i in range(len(cities['Latitude']) ) ]
+            ind_min = distances.index(min(distances)) # index of the closest city 
+            
+            city, distance = cities.iloc[ind_min] , distances[ind_min]
+            self.best_match['city'] = city.City
+            self.best_match['city_dist_km'] = distance
+            self.best_match['city_lat'] = city.Latitude
+            self.best_match['city_lon'] = city.Longitude
+        
+        else:
+            self.best_match['city'] = 'None'
+            self.best_match['city_dist_km'] = 'None'
+            self.best_match['city_lat'] = 'None'
+            self.best_match['city_lon'] = 'None'            
+               
+         
+    
     
     def AddDistance(self):
         """ Calculates the distances between the point and the stations in the inventory """
@@ -136,18 +162,18 @@ class Analyze():
         self.data.lats_list = lats
         self.data.lons_list = lons 
         
-        check = self.utils.coord_consistency(self, lats=lats, lons=lons, threshold=0.2)        
+        check = self.utils.coord_consistency(self, lats=lats, lons=lons, threshold=0.2)       
         
-        if check:
-            # filter far off stations 
+        check = True # TODOchange and fix 
+        
+        if check :
+            # filter far off stations i.e. with lat,lon distance > 2 degrees
             df = self.inv
             red_inv = df.loc [  (abs(df['latitude'] - lats[-1]) < 2 ) & (abs(df['longitude'] - lons[-1]) < 2) ] 
             red_inv = red_inv.reset_index()
             
             distances = [ round( self.Distance( lats[-1], lons[-1] , red_inv['latitude'][i] , red_inv['longitude'][i] ), 1 ) for i in range(len(red_inv['latitude']) ) ]
-            
-            #remove unecessary list of lats and los, only keep largest and smallest
-            
+                   
             
         else:
             print("Incosistent Latitude and Longitude values !!!")
@@ -215,7 +241,7 @@ class Analyze():
                
                
     def Combine(self):
-        """ Concatenating the found df for each inventory and removing duplicated entries """
+        """ Concatenating the df for each inventory and removing duplicated entries """
         id_match = self.found_inv[self.inv.name ]['matching_id']
         dist_match = self.found_inv[self.inv.name ]['matching_dist']
         
@@ -230,17 +256,16 @@ class Analyze():
         else:
             res = id_match # empty case
             for c in res.columns:
-                res[c] = ['nan']            
-            res['WIGOS_calc'] = ['nan'] 
+                res[c] = [np.nan]            
+            res['WIGOS_calc'] = ['None'] 
             res['inventory'] = self.inv.name 
             self.best_match = res 
-            return
+            #return
                     
         wigos = self.Make_WIGOS(res)
         res['inventory'] = self.inv.name         
         res['WIGOS_calc'] = wigos 
         self.best_match = res 
-        
         
         print(0)
            
@@ -273,6 +298,19 @@ class Data():
 
                                    }    
         """
+        self.odb_to_cdm = { 1    : 117    , # geopotential
+                                   2    : 85        , # temperature K
+                                   3    : 104    , # uwind m/s , upper air u component 
+                                   4    : 105    ,  # vwind m/s
+                                   7    : 39    ,  # specific humidity
+                                   
+                                  111 : 106    , # degree (angle) , wind from direction 
+                                  112 : 107    , # m/s , wind force 
+                                  29   : 38      , # relative humidity in %
+                                  59    : 36      , # dew point (available in ODB files )
+                                 
+                          }
+        
         
     def read_file(self, file):
         """ Wrapper for the functions to read input file from the datasets. 
@@ -335,6 +373,14 @@ class Data():
         b = proc.stdout.read().decode('utf-8').split('\n')
         statids = [ eval(c) for c in np.unique( b[1:-1] ) ] 
         
+        # extract distinct variables
+        comm = "odb sql 'select distinct varno'  -i FILE --no_alignment ".replace('FILE', file)   
+        proc = subprocess.Popen(comm, stdout=subprocess.PIPE , shell=True)
+        b = proc.stdout.read().decode('utf-8').split('\n')
+        variables = [ eval(c) for c in np.unique( b[1:-1] ) ]         
+        variables = [self.odb_to_cdm[v] for v in variables]
+        variables.sort()
+        
         # extract min date, max date 
         comm = "odb sql 'select distinct MIN(date) '  -i FILE --no_alignment ".replace('FILE', file)   
         proc = subprocess.Popen(comm, stdout=subprocess.PIPE , shell=True)
@@ -354,14 +400,15 @@ class Data():
                 'lons': [lons], 
                 'file': file , 
                 'file_path': self.file , 
-                'db': self.dataset  }
+                'db': self.dataset,
+                'variables': str(variables)}
         
         # storing the 
         pd.DataFrame(dic).to_csv( self.out_dir  + '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
         self.statid = statids
         self.lats = lats
         self.lons = lons 
-        self.min_date = min_date
+        self.min_date = min_date 
         self.max_date = max_date
         
     def read_bufr(self, file =''):
@@ -383,14 +430,21 @@ class Inventory():
     the OSCAR, IGRA2, WBAN and CHUAN inventories.
     For OSCAR and WBAN will convert lat and lon to decimal format. """
     
-    def __init__(self, datadir ='', oscar ="", igra2= "", wban = '', chuan = '' , utils='' ):
+    def __init__(self, datadir ='', tablesdir = '../data/tables/', oscar ="", igra2= "", wban = '', chuan = '' , utils='' ):
         self.datadir = datadir + '/' + datadir
         self.oscar  = datadir + '/' + oscar
         self.igra2  = datadir + '/' + igra2
         self.wban  = datadir + '/' + wban
         self.chuan = datadir + '/' + chuan
         self.utils = utils 
+        self.tables_dir = tablesdir
         self.inv = {}
+        
+    def readCities(self):
+        """ Read the cities from the file worldcitiespop.csv to 
+        Used to map the station to the closest city """
+        df = pd.read_csv(self.tables_dir + '/worldcitiespop.csv')
+        self.cities = df
         
     def readInventory(self):
         """ Read the source inventories (OSCAR,IGRA2,WBAN,CHUAN)
@@ -401,16 +455,17 @@ class Inventory():
         #############################################        
         igra2 = pd.read_fwf(self.igra2, widths=(11, 9, 10, 7, 4, 30, 5, 5, 7),
                         names=( 'station_id_igra', 'latitude', 'longitude', 'elevation', 'dummy',
-                                      'station_name', 'start', 'end', 'records') )
+                                      'station_name', 'start_date', 'end_date', 'records') )
         
         # extracting standard 5 digits station id 
         stat_id = [ s[6:] for s in igra2['station_id_igra'] ]
         igra2['station_id'] = stat_id
-        igra2 = igra2[['station_id_igra', 'station_name','latitude','longitude', 'station_id']]
+        igra2 = igra2[['station_id_igra', 'station_name','latitude','longitude', 'station_id', 'start_date', 'end_date']]
         
         # clean for missing values in lat and lon (i.e. values < 0)
         igra2 = igra2.loc[ (igra2['latitude'] >= -180) & (igra2['longitude'] >= -180) ]
         igra2 = igra2.reset_index(drop=True)
+        igra2['isRadio'] = 'True'
         igra2.name = 'IGRA2'
         
         
@@ -418,11 +473,11 @@ class Inventory():
         ### Reading WBAN data
         #############################################        
         wban =pd.read_fwf(self.wban,widths=(10,5,6,17,22,39,31,31,8,10,10,10,8,7),
-                        names=('dum1','station_id','WMO_id','dum0','Country','dum2','station_name','dum3','From','To',
+                        names=('dum1','station_id','WMO_id','dum0','Country','dum2','station_name','dum3','start_date','end_date',
                                       'latitude','longitude','dum4','Elev'),
                         skiprows=1 )
         
-        wban = wban[ [ 'station_id', 'WMO_id' , 'station_name', 'latitude', 'longitude' ] ]
+        wban = wban[ [ 'station_id', 'WMO_id' , 'station_name', 'latitude', 'longitude', 'start_date', 'end_date'] ]
         wban = wban.dropna(subset = ['latitude', "longitude"])
         #wban = wban.replace( {'00 00 00': 0 , '0  0  0':0} )
         
@@ -434,7 +489,7 @@ class Inventory():
         wban['longitude'] = lon_dec
 
         wban['station_id'] = wban['station_id'].astype('int')
-        
+        wban['isRadio'] = None
         wban = wban.reset_index(drop=True)
         wban.name = 'WBAN'
         
@@ -457,10 +512,12 @@ class Inventory():
     
         oscar['original_lon'] = oscar['longitude']
         oscar['longitude'] = lon_dec        
-        
+        radioFlag = oscar['ObsRems'].str.contains('Radio').astype(str)
         statids = [f.split('-')[-1] for f in oscar['WIGOS'] ]  # assume that th estation id is the last piece of the WIGOS id 
         oscar['station_id'] = statids
-        
+        oscar['start_date'] = 999
+        oscar['end_date'] = 999
+        oscar['isRadio'] = radioFlag 
         oscar.name = 'OSCAR'
         
         
@@ -484,13 +541,22 @@ class Inventory():
             chuan=pd.DataFrame(chuan)
             chuan=chuan.rename(columns = {'unique_record_ID':'station_id','WMO#':'WMO_id','Stationname':'station_name',
                                           'Lon_DegE':'longitude', 'Lat_DegN':'latitude', 'Alt_masl':'Elev'})
-            chuan = chuan[['station_id', 'WMO_id' , 'station_name' , 'latitude' , 'longitude' ]]
+            
+            
             
             # filtering missing values for coordinates
             chuan = chuan.loc[ (chuan['latitude'] > -90) & (chuan['longitude'] > -90)]
             chuan = chuan.reset_index(drop=True)
             chuan['station_id']= chuan['station_id'].astype('int')
 
+            d = dict( zip( [ str(m) for m in range(1,10)] , [ '0'+ str(d) for d in range (1,10)   ] )  )
+            chuan = chuan.replace( {'StartStationMonth': d} )
+            chuan = chuan.replace( {'EndStationMonth': d} )
+            chuan['start_date'] = chuan['StartStationYear'] + chuan['StartStationMonth']
+            chuan['end_date'] = chuan['EndStationYear'] + chuan['EndStationMonth']
+            
+            chuan = chuan[['station_id', 'WMO_id' , 'station_name' , 'latitude' , 'longitude', 'start_date', 'end_date' ]]
+            chuan['isRadio'] = None
             chuan.name = 'CHUAN'
         
         # saving csv files
@@ -524,6 +590,7 @@ inventory = Inventory( datadir ='../data/tables',
                  utils = utils )
 
 inventory.readInventory()
+inventory.readCities()
 
 ################
 ### Analysis part 
@@ -533,49 +600,86 @@ inventory.readInventory()
 def wrapper(data, file):
     """ Wrapper function to run all the analysis steps for a single file """
     
+    dataset = file.split('/')[-2]
+    
     print("Doing file: " , file )
-    d = data.read_file(file=file)
-    matching_inv = {}
-    
-    # checking and creating output directory 
-    out_dir = 'inventories/' + data.dataset
-    if not os.path.isdir(out_dir):
-        os.mkdir(out_dir)
+    try:
         
-    for i in inventories :
-        print(' *** Analizing the inventory: ', i )
-        analyze = Analyze( data = data, inv = inventory.inv[i], utils = utils)
-        analyze.AddDistance()
-        analyze.MatchingId()
-        analyze.Closest()
-        #matching_inv.append(analyze.found_inv)
-        analyze.Combine()
-        matching_inv[i] = analyze.best_match    
+        d = data.read_file(file=file)
+      
+        matching_inv = {}
+        
+        # checking and creating output directory 
+        out_dir = 'inventories/' + data.dataset
+        if not os.path.isdir(out_dir):
+            os.mkdir(out_dir)
+            
+        for i in inventories :
+            print(' *** Analizing the inventory: ', i )
+            analyze = Analyze( data = data, inv = inventory.inv[i], 
+                               cities= inventory.cities, utils = utils)
+            
+            analyze.AddDistance()
+            analyze.MatchingId()
+            analyze.Closest()
+            #matching_inv.append(analyze.found_inv)
+            analyze.Combine()
+            analyze.FindCity()
+            matching_inv[i] = analyze.best_match    
+        
+        l = [matching_inv[f] for f in  matching_inv.keys() ]
+        
+        all_inventories = pd.concat(l)
+        all_inventories = all_inventories.reset_index()
+        
+        # Extracting the best WIGOS
+        #valid = np.where(all_inventories['latitude'].isfinite() )
+        #df_red = all_inventories.drop_na(by=['latitude'])
+        
+        # removing non-matched files and inventories 
+        df_red = all_inventories.dropna(subset=['latitude'])
+        
+        if df_red.empty:
+            print("+++ No matching inventory for the file")
+            out = open('inventories/' + dataset + '_unidentified.txt', 'a+')
+            out.write(file + '\n')
+            return
+        
+        else:
+            if 'OSCAR' in list(df_red['inventory']):
+                df = df_red.loc[df_red['inventory'] == 'OSCAR']
+                best_wigos = df.iloc[0]['WIGOS_calc']
+                
+            
+        
+        # Add file information     
+        all_inventories['lat_file'] = str( [max(data.lats_list), min(data.lats_list)] )
+        all_inventories['lon_file'] = str( [max(data.lons_list), min(data.lons_list)]  )
+        all_inventories['file'] = data.file.split('/')[-1]
+        all_inventories['file_dataset'] = data.dataset
+        all_inventories['file_min_date'] = data.min_date[0]
+        all_inventories['file_max_date'] = data.max_date[0]
+        all_inventories['file_max_date'] = data.max_date[0]
+        all_inventories['file_statid'] = data.statid[0]
+        all_inventories['WIGOS_best'] = best_wigos # TODO to fix 
+        
+        name = out_dir + '/' + data.file.split('/')[-1] + '_inventories.csv'
+        
+        all_inventories.to_csv( name, sep = '\t', index = False)
+        
+        all_inventories_red = all_inventories[ ['file_statid', 'station_id', 'station_name', 'latitude', 'longitude', 
+                                                'original_lat', 'original_lon', 'distance_km', 'lat_file',
+                                                'lon_file',  'inventory', 'WIGOS', 'WMO_id', 'WIGOS_calc', 'file_min_date', 
+                                                'file_max_date', 'start_date', 'end_date', 'isRadio', 'WIGOS_best'] ]
+        
+        all_inventories_red.to_csv( name.replace('.csv','_reduced.csv'), sep = '\t' , index = False )
+        
+        print("Done :::" , data.file )
     
-    l = [matching_inv[f] for f in  matching_inv.keys() ]
-    
-    all_inventories = pd.concat(l)
-    
-    # Add file information     
-    all_inventories['lat_file'] = str( [max(data.lats_list), min(data.lats_list)] )
-    all_inventories['lon_file'] = str( [max(data.lons_list), min(data.lons_list)]  )
-    all_inventories['file'] = data.file.split('/')[-1]
-    all_inventories['file_dataset'] = data.dataset
-    all_inventories['file_min_date'] = data.min_date[0]
-    all_inventories['file_max_date'] = data.max_date[0]
-    all_inventories['file_max_date'] = data.max_date[0]
-    all_inventories['file_statid'] = data.statid[0]
-    
-    name = out_dir + '/' + data.file.split('/')[-1] + '_inventories.csv'
-    
-    all_inventories.to_csv( name, sep = '\t', index = False)
-    
-    all_inventories_red = all_inventories[ [ 'station_id', 'station_name', 'latitude', 'longitude', 'original_lat', 'original_lon', 'distance_km', 'lat_file',
-       'lon_file',  'inventory', 'WIGOS', 'WMO_id', 'WIGOS_calc' ] ]
-    
-    all_inventories_red.to_csv( name.replace('.csv','_reduced.csv'), sep = '\t' , index = False )
-    
-    print("Done :::" , data.file )
+    except:
+        print("*** Cannot read file! ***")
+        a = open('inventories/' + dataset +"_failed_files.txt", "a+")
+        a.write(file + '\n')       
     
     
     
@@ -596,12 +700,16 @@ datasets = { 'era5_1': '/mnt/users/scratch/leo/scratch/era5/odbs/1' ,
 
 
 if __name__ == '__main__':
+    """ Parameters:
+          - POOL: runs multiprocesses (default=30)
+          - CHECK_MISSING: only runs missing files, otherwise will rerun and replace existing files """
 
-    databases = ['era5_2']
+    databases = ['era5_1']
     inventories  = [ 'oscar', 'igra2', 'wban', 'chuan']
     
-    POOL = True
-    CHECK_MISSING = True
+    
+    POOL = False
+    CHECK_MISSING = False  
     
     # loop through each of the databases
     for db in databases:
@@ -609,9 +717,14 @@ if __name__ == '__main__':
         # getting only missing files, option CHECK_MISSING 
         if db == 'era5_1':
             flist=glob.glob(datasets[db] + "/era5.conv._*")
+            #flist =[f for f in flist if '11035' in f ]
         elif db == 'era5_2':
             flist=glob.glob("/mnt/users/scratch/leo/scratch/era5/odbs/2/era5.conv._*")
-            flist=[f for f in flist if '.gz' not in f]
+            flist=[f for f in flist if '.gz' not in f and '.nc' not in f ]
+        elif db == 'era5_1759':
+            flist=glob.glob("/mnt/users/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.*")
+            
+        flist=[f for f in flist if '.gz' not in f and '.nc' not in f ]
             
         if CHECK_MISSING:
             flist_c = [f.split('/')[-1] for f in flist ]
@@ -625,7 +738,7 @@ if __name__ == '__main__':
             
         # sort files from smallest 
         pairs = []
-        for f in flist:
+        for f in flist[500:]:
             # Get size and add to list of tuples.
             size = os.path.getsize(f)
             pairs.append((size, f))
