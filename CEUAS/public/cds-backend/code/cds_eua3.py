@@ -2714,14 +2714,16 @@ class CDMDataset:
 #                         formatstr = formatstr+'%.6f,'
 #                 np.savetxt(filename_out, np.transpose(X), delimiter=',', newline='\n', header=headstr[:-1], fmt=formatstr[:-1])
                 
+    
                 dtype = dict(names = list(fout.keys()), formats=[])
                 lfout=[]
                 for k in dtype['names']:
                     if len(fout[k].shape)==1:
-                        lfout.append(fout[k])
+                        pass #lfout.append(fout[k])
                     else:
-                        lfout.append(fout[k].view('|S{}'.format(fout[k].shape[1])).flatten().astype(str))
-                    dtype['formats'].append(lfout[-1].dtype)
+                        fout[k]=fout[k].view('|S{}'.format(fout[k].shape[1])).flatten().astype(str) #lfout.append(fout[k].view('|S{}'.format(fout[k].shape[1])).flatten().astype(str))
+                    #dtype['formats'].append(lfout[-1].dtype)
+                    dtype['formats'].append(fout[k].dtype)
                 headstr = ''
                 formatstr = ''
                 for n,d in zip(dtype['names'],dtype['formats']):
@@ -2737,13 +2739,49 @@ class CDMDataset:
 
                 print(time.time()-time0)
                 formatstrn=formatstr[:-1]+'\n'
-                formatall=formatstrn*lfout[0].shape[0]
+                formatall=formatstrn*fout[dtype['names'][0]].shape[0]
+#                formatall=formatstrn*lfout[0].shape[0]
 #                 with open(filename_out,'w') as f:
 #                 with lz4.frame.open(filename_out,'wt') as f:
-                with gzip.open(filename_out,'wt',compresslevel=1) as f:
-                    f.write(headstr[:-1]+'\n')
-                    b=[item for sublist in zip(*lfout) for item in sublist]
-                    f.write(formatall%tuple(b))
+                if filename_out is not None:
+                    with gzip.open(filename_out,'wt',compresslevel=1) as f:
+                        f.write(headstr[:-1]+'\n')
+                        b=[item for sublist in zip(*fout.values()) for item in sublist]
+                        f.write(formatall%tuple(b))
+                else:
+                    #b=[item for sublist in zip(*fout.values()) for item in sublist]
+                    return headstr[:-1]+'\n'#+formatall%tuple(item for sublist in zip(*fout.values()) for item in sublist)
+    
+#                 dtype = dict(names = list(fout.keys()), formats=[])
+#                 lfout=[]
+#                 for k in dtype['names']:
+#                     if len(fout[k].shape)==1:
+#                         lfout.append(fout[k])
+#                     else:
+#                         lfout.append(fout[k].view('|S{}'.format(fout[k].shape[1])).flatten().astype(str))
+#                     dtype['formats'].append(lfout[-1].dtype)
+#                 headstr = ''
+#                 formatstr = ''
+#                 for n,d in zip(dtype['names'],dtype['formats']):
+#                     headstr = headstr+n+','
+#                     sd=str(d)
+#                     if 'int' in sd:
+#                         formatstr = formatstr+'%.0i,'
+#                     elif 'float' in sd:
+#                         formatstr = formatstr+'%.6f,'
+#                     else:
+#                         formatstr = formatstr+'"%.'+sd[2:]+'s",'
+#                         #formatstr = formatstr+'%.'+''+'s,'
+
+#                 print(time.time()-time0)
+#                 formatstrn=formatstr[:-1]+'\n'
+#                 formatall=formatstrn*lfout[0].shape[0]
+# #                 with open(filename_out,'w') as f:
+# #                 with lz4.frame.open(filename_out,'wt') as f:
+#                 with gzip.open(filename_out,'wt',compresslevel=1) as f:
+#                     f.write(headstr[:-1]+'\n')
+#                     b=[item for sublist in zip(*lfout) for item in sublist]
+#                     f.write(formatall%tuple(b))
 
             else:
                 #
