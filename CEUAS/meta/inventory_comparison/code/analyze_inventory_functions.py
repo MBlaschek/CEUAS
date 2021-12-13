@@ -28,8 +28,15 @@ from functools  import partial
 
 class Utils():
     """ Class holding a series of calculation utilites """
-    def __init__(self):
-        return 0
+    def __init__(self, treshold = 10):
+        """ threshold: maximum allowed distance in Km for points to be considered compatible """
+        self.treshold = treshold
+        return None
+    
+    def distance(self, lat1,lon1,lat2,lon2):
+        """ Return the Harvesine distance between two points """
+        d = geopy.distance.geodesic( (lat1,lon1), (lat2,lon2) ).km
+        return d     
 
     def degMinSec_to_decimal(self, coord):
         """ Converts lat and lon [lists] from degrees-minute-seconds to decimal """
@@ -60,14 +67,10 @@ class Utils():
                 
         return coord_dec
     
-    def coord_consistency(self, lats='',lons='', threshold=''):
-        """ Check if the absolute variation in time of the coordinates is below a certain threshold """
-        try:
-            lats, lons =  eval(self.data.lats[0]) ,  eval(self.data.lons[0])
-        except:
-            lats, lons =  [self.data.lats[0]] ,  [self.data.lons[0] ]
+    def coord_consistency(self, lats='',lons='', threshold= 10 ):
+        """ Check if the absolute variation in time of the coordinates is below a certain threshold in Km """
             
-        check = abs( min(lons) - max(lons)  ) < 0.2 and abs( min(lats) - max(lats) ) < 0.2    
+        check = self.distance( min(lats) , min(lons), max(lats), max(lons)  ) < threshold 
         return check
     
     
@@ -118,20 +121,20 @@ class Analyze():
         return wigos
         
         
-    def Distance(self, lat1,lon1,lat2,lon2):
-        """ Return the Harvesine distance between two points """
-        d = geopy.distance.geodesic( (lat1,lon1), (lat2,lon2) ).km
-        return d 
+    #def Distance(self, lat1,lon1,lat2,lon2):
+    #  """ Return the Harvesine distance between two points """
+    #    d = geopy.distance.geodesic( (lat1,lon1), (lat2,lon2) ).km
+    #    return d 
         
     def FindCity(self):
         """ Find the closest city within a 100 km radius """
         
-        lat, lon = self.data.lats_list[0] , self.data.lons_list[0]
+        lat, lon = self.data.lats[0] , self.data.lons[0]
         cities = self.cities
         cities = cities.loc [  (abs(cities['Latitude'] - lat) < 5 ) & (abs(cities['Longitude'] - lon) < 5) ] 
         if not cities.empty:
             cities = cities.reset_index()
-            distances = [ round( self.Distance( lat, lon , cities['Latitude'][i] , cities['Longitude'][i] ), 1 ) for i in range(len(cities['Latitude']) ) ]
+            distances = [ round( self.utils.distance( lat, lon , cities['Latitude'][i] , cities['Longitude'][i] ), 1 ) for i in range(len(cities['Latitude']) ) ]
             ind_min = distances.index(min(distances)) # index of the closest city 
             
             city, distance = cities.iloc[ind_min] , distances[ind_min]
@@ -147,38 +150,18 @@ class Analyze():
             self.best_match['city_lon'] = 'None'            
                
          
-    
-    
+
     def AddDistance(self):
         """ Calculates the distances between the point and the stations in the inventory """
         print("*** Adding distance ***")
-        # checking if the values of lat and lons do not change significantly over time 
         
-        try:
-            lats, lons = eval(self.data.lats[0]),  eval(self.data.lons[0])
-        except:
-            lats, lons = [self.data.lats[0]] ,  [self.data.lons[0]]
+        # skimming the inventory with close by stations only, to avoid useless calculation of distances
+        df = self.inv
+        red_inv = df.loc [  (abs(df['latitude'] - self.data.lats[-1]) < 1 ) & (abs(df['longitude'] - self.data.lons[-1]) < 1) ] 
+        red_inv = red_inv.reset_index()
         
-        self.data.lats_list = lats
-        self.data.lons_list = lons 
-        
-        check = self.utils.coord_consistency(self, lats=lats, lons=lons, threshold=0.2)       
-        
-        check = True # TODOchange and fix 
-        
-        if check :
-            # filter far off stations i.e. with lat,lon distance > 2 degrees
-            df = self.inv
-            red_inv = df.loc [  (abs(df['latitude'] - lats[-1]) < 2 ) & (abs(df['longitude'] - lons[-1]) < 2) ] 
-            red_inv = red_inv.reset_index()
-            
-            distances = [ round( self.Distance( lats[-1], lons[-1] , red_inv['latitude'][i] , red_inv['longitude'][i] ), 1 ) for i in range(len(red_inv['latitude']) ) ]
-                   
-            
-        else:
-            print("Incosistent Latitude and Longitude values !!!")
-            raise NotImplementedError()
-            # TODO implement checking for coordinates check as in the harvester 
+        distances = [ round( self.utils.distance( self.data.lats[-1], self.data.lons[-1] , red_inv['latitude'][i] , red_inv['longitude'][i] ), 1 ) for i in range(len(red_inv['latitude']) ) ]
+
             
         red_inv['distance_km'] = distances
         red_inv = red_inv.sort_values(by =['distance_km'])
@@ -221,25 +204,35 @@ class Analyze():
         inv_matchingId.name = self.inv.name 
         inv_matchingId = inv_matchingId.reset_index(drop=True)        
         
-        lats = self.data.lats_list
-        lons = self.data.lons_list
+        lats = self.data.lats
+        lons = self.data.lons
         
-        '''
-        try:   
-            lats, lons = eval(self.data.lats[0]),  eval(self.data.lons[0])
-        except:
-            lats, lons = [self.data.lats[0]],  [self.data.lons[0]]
-            
-        self.data.lats_list = lats
-        self.data.lons_list = lons
-        '''
-        
-        distances = [ round( self.Distance( lats[-1], lons[-1] , inv_matchingId['latitude'][i] , inv_matchingId['longitude'][i] ), 1 ) for i in range(len(inv_matchingId['latitude']) ) ]
+        distances = [ round( self.utils.distance( lats[-1], lons[-1] , inv_matchingId['latitude'][i] , inv_matchingId['longitude'][i] ), 1 ) for i in range(len(inv_matchingId['latitude']) ) ]
         inv_matchingId['distance_km'] = distances
         
         self.found_inv[self.inv.name ]['matching_id'] = inv_matchingId
                
                
+    def MakeIgra(self):
+        """ Special case: for IGRA2 inventory only need to convert the inventory entries to the format of the other inventories """
+        igra2 = self.inv
+        df = pd.DataFrame()
+        
+        
+        dic = { 'max_date': max_date , 
+                'min_date':min_date, 
+                'statid':statids, 
+                'lats': [lats] , 
+                'lons': [lons], 
+                'file': file , 
+                'file_path': self.file , 
+                'db': self.dataset,
+                'variables': str(variables)}
+        
+        
+        
+        
+        
     def Combine(self):
         """ Concatenating the df for each inventory and removing duplicated entries """
         id_match = self.found_inv[self.inv.name ]['matching_id']
@@ -280,10 +273,10 @@ class Data():
          - BUFR 
          """
     
-    def __init__(self, dataset=''):
+    def __init__(self, dataset='', utils = ''):
         
         self.dataset = dataset
-        
+        self.utils = utils 
         """
         self.datasets = { 'era5_1': '/mnt/users/scratch/leo/scratch/era5/odbs/1' ,
                                    'era5_2': '/mnt/users/scratch/leo/scratch/era5/odbs/2',
@@ -332,10 +325,11 @@ class Data():
             df = pd.read_csv(f,  sep='\t', converters={'statid': str}  )
             
             self.statid = df['statid'].astype('str')
-            self.lats = df['lats']
-            self.lons = df['lons'] 
+            self.lats = eval(df['lats'].values[0])
+            self.lons = eval(df['lons'].values[0]) 
             self.min_date = df['min_date']
             self.max_date = df['max_date']
+            self.consistent_coord = df['consistent_coord']
         
         else: # read from original files
             if 'era5_' in self.dataset :
@@ -359,7 +353,6 @@ class Data():
         b = proc.stdout.read().decode('utf-8').split('\n')
         
         lats, lons  = [],[]
-        
         for i in range (1,len(b)):
             if not b[i]:
                 continue
@@ -367,6 +360,46 @@ class Data():
             lons.append( round(float(b[i].split('\t')[1]) , 3 ) )
             print(b[i])
             
+        self.consistent_coord = True
+            
+        if len(lats) >1 or  len(lons) >1  :
+        
+            #Extract all lat and lon if I have more than one value   
+            # This is necessary to quantify inconsistent lat/lon 
+            comm = "odb sql 'select lat,lon'  -i FILE --no_alignment ".replace('FILE', file)  # ODB command in sql syntax 
+            proc = subprocess.Popen(comm, stdout=subprocess.PIPE , shell=True)
+            b = proc.stdout.read().decode('utf-8').split('\n')
+
+            lats_all, lons_all  = [],[]
+            for i in range (1,len(b)):
+                if not b[i]:
+                    continue
+                lats_all.append(  round(float(b[i].split('\t')[0])  , 3 ) )
+                lons_all.append( round(float(b[i].split('\t')[1]) , 3 ) )
+                print(b[i])
+                    
+            # group by equal lat/lon values 
+            df = pd.DataFrame( {'lat': lats_all , 'lon' : lons_all } )
+            grouped = df.groupby(df.columns.tolist(),as_index=False).size()
+            # add distance column
+            distances = [ round(self.utils.distance( grouped['lat'].values[i], grouped['lon'].values[i] , 
+                                             grouped['lat'].values[0], grouped['lon'].values[0] ), 1 ) for i in range(len(grouped['lat'].values) ) ] 
+    
+            grouped['distance_km'] = distances
+            compatible_coord = grouped.loc[grouped['distance_km'] <= self.utils.treshold ]
+            frac = len(compatible_coord) / len(lats_all)
+            if frac >= 0.99:
+                self.consistent_coord = True
+                pass
+            else:
+                self.consistent_coord = False
+                
+            grouped.to_csv( self.out_dir  + '/' + self.file.split('/')[-1] + '_coordinates.csv', sep = '\t' )        
+        
+                
+        self.lats = lats
+        self.lons = lons
+
         # extract statid 
         comm = "odb sql 'select distinct statid'  -i FILE --no_alignment ".replace('FILE', file)   
         proc = subprocess.Popen(comm, stdout=subprocess.PIPE , shell=True)
@@ -377,7 +410,8 @@ class Data():
         comm = "odb sql 'select distinct varno'  -i FILE --no_alignment ".replace('FILE', file)   
         proc = subprocess.Popen(comm, stdout=subprocess.PIPE , shell=True)
         b = proc.stdout.read().decode('utf-8').split('\n')
-        variables = [ eval(c) for c in np.unique( b[1:-1] ) ]         
+        variables = [ eval(c) for c in np.unique( b[1:-1] ) ] 
+        variables = [v for v in variables if v in self.odb_to_cdm.keys() ]
         variables = [self.odb_to_cdm[v] for v in variables]
         variables.sort()
         
@@ -401,7 +435,8 @@ class Data():
                 'file': file , 
                 'file_path': self.file , 
                 'db': self.dataset,
-                'variables': str(variables)}
+                'variables': str(variables),
+                'consistent_coord': str(self.consistent_coord) }
         
         # storing the 
         pd.DataFrame(dic).to_csv( self.out_dir  + '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
@@ -415,9 +450,9 @@ class Data():
         """ Extract data from a single BUFR file """
         return 0    
     
-    def read_igra2(self, file ='' ):
-        """ Extract data from a single IGRA2 file (txt format)"""
-        return 0
+    def read_igra2(self, row):
+        """ Take each single line in the igra station list as a separate file """
+        return 
     
     def read_ncar(self, file=''):
         """ Extract data from a single ODB file """
@@ -468,7 +503,6 @@ class Inventory():
         igra2['isRadio'] = 'True'
         igra2.name = 'IGRA2'
         
-        
         #############################################
         ### Reading WBAN data
         #############################################        
@@ -482,8 +516,8 @@ class Inventory():
         #wban = wban.replace( {'00 00 00': 0 , '0  0  0':0} )
         
         # converting lat, lon to decimal format 
-        lat_dec = list(self.utils.degMinSec_to_decimal(self, wban['latitude'] ))
-        lon_dec = list(self.utils.degMinSec_to_decimal(self, wban['longitude'] ))
+        lat_dec = list(self.utils.degMinSec_to_decimal(wban['latitude'] ))
+        lon_dec = list(self.utils.degMinSec_to_decimal(wban['longitude'] ))
         
         wban['latitude'] = lat_dec
         wban['longitude'] = lon_dec
@@ -492,7 +526,6 @@ class Inventory():
         wban['isRadio'] = None
         wban = wban.reset_index(drop=True)
         wban.name = 'WBAN'
-        
         
         #############################################
         ### Reading OSCAR data
@@ -504,8 +537,8 @@ class Inventory():
         oscar = oscar [['WIGOS', 'station_name', 'latitude', 'longitude', 'ObsRems']]
         
         # converting lat, lon to decimal format 
-        lat_dec = list(self.utils.degMinSec_to_decimal(self, oscar['latitude'] ))
-        lon_dec = list(self.utils.degMinSec_to_decimal(self, oscar['longitude'] ))
+        lat_dec = list(self.utils.degMinSec_to_decimal(oscar['latitude'] ))
+        lon_dec = list(self.utils.degMinSec_to_decimal(oscar['longitude'] ))
         
         oscar['original_lat'] = oscar['latitude']
         oscar['latitude'] = lat_dec
@@ -519,7 +552,6 @@ class Inventory():
         oscar['end_date'] = 999
         oscar['isRadio'] = radioFlag 
         oscar.name = 'OSCAR'
-        
         
         #############################################
         ### Reading CHUAN data
@@ -541,9 +573,7 @@ class Inventory():
             chuan=pd.DataFrame(chuan)
             chuan=chuan.rename(columns = {'unique_record_ID':'station_id','WMO#':'WMO_id','Stationname':'station_name',
                                           'Lon_DegE':'longitude', 'Lat_DegN':'latitude', 'Alt_masl':'Elev'})
-            
-            
-            
+
             # filtering missing values for coordinates
             chuan = chuan.loc[ (chuan['latitude'] > -90) & (chuan['longitude'] > -90)]
             chuan = chuan.reset_index(drop=True)
@@ -575,11 +605,9 @@ class Inventory():
         
         
     
-    
-
 
 # initialize Utils
-utils = Utils
+utils = Utils()
 
 # Initialize inventory
 inventory = Inventory( datadir ='../data/tables',  
@@ -649,18 +677,21 @@ def wrapper(data, file):
             if 'OSCAR' in list(df_red['inventory']):
                 df = df_red.loc[df_red['inventory'] == 'OSCAR']
                 best_wigos = df.iloc[0]['WIGOS_calc']
+                if not data.consistent_coord.values:
+                    best_wigos = '0-20999-0-' + best_wigos.split('-')[-1]
                 
             
         
         # Add file information     
-        all_inventories['lat_file'] = str( [max(data.lats_list), min(data.lats_list)] )
-        all_inventories['lon_file'] = str( [max(data.lons_list), min(data.lons_list)]  )
+        all_inventories['lat_file'] = str( [max(data.lats), min(data.lats)] )
+        all_inventories['lon_file'] = str( [max(data.lons), min(data.lons)]  )
         all_inventories['file'] = data.file.split('/')[-1]
         all_inventories['file_dataset'] = data.dataset
         all_inventories['file_min_date'] = data.min_date[0]
         all_inventories['file_max_date'] = data.max_date[0]
         all_inventories['file_max_date'] = data.max_date[0]
         all_inventories['file_statid'] = data.statid[0]
+        
         all_inventories['WIGOS_best'] = best_wigos # TODO to fix 
         
         name = out_dir + '/' + data.file.split('/')[-1] + '_inventories.csv'
@@ -693,7 +724,7 @@ datasets = { 'era5_1': '/mnt/users/scratch/leo/scratch/era5/odbs/1' ,
                                'bufr': 'mnt/users/scratch/leo/scratch/era5/odbs/',                                   
                                
                                'ncar': '',
-                               'igra2': '',
+                               'igra2': '', # dummy, use the igra2 station list file 
 
                                } 
     
@@ -705,6 +736,8 @@ if __name__ == '__main__':
           - CHECK_MISSING: only runs missing files, otherwise will rerun and replace existing files """
 
     databases = ['era5_1']
+    databases = ['era5_1759']
+    
     inventories  = [ 'oscar', 'igra2', 'wban', 'chuan']
     
     
@@ -723,9 +756,18 @@ if __name__ == '__main__':
             flist=[f for f in flist if '.gz' not in f and '.nc' not in f ]
         elif db == 'era5_1759':
             flist=glob.glob("/mnt/users/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.*")
+        
+        elif db== 'igra2': # special case: read data from igra2 station list 
+            #inventory 
+            analyze = Analyze( data = '', inv = inventory.inv['igra2'], 
+                               cities= inventory.cities, utils = utils)
             
+            analyze.MakeIgra()
+            print(0)
+            
+        # general cleaning of file lists    
         flist=[f for f in flist if '.gz' not in f and '.nc' not in f ]
-            
+        flist = [f for f in flist if '57606' in f ]
         if CHECK_MISSING:
             flist_c = [f.split('/')[-1] for f in flist ]
             try: 
@@ -738,7 +780,7 @@ if __name__ == '__main__':
             
         # sort files from smallest 
         pairs = []
-        for f in flist[500:]:
+        for f in flist:
             # Get size and add to list of tuples.
             size = os.path.getsize(f)
             pairs.append((size, f))
@@ -747,7 +789,7 @@ if __name__ == '__main__':
         pairs.sort(key=lambda s: s[0])
         flist = [ s[1] for s in pairs ]
         
-        data = Data(dataset=db)
+        data = Data(dataset=db, utils = utils )
     
         if POOL: # running multiprocessing or single 
             p = Pool(30)
@@ -758,3 +800,8 @@ if __name__ == '__main__':
             for f in flist:
                 w = wrapper(data, f)
 
+
+
+# example: bad coordinates '/mnt/users/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.1:57606'
+ 
+ 
