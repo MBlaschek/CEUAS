@@ -97,7 +97,7 @@ if os.path.isfile(config_file):
         if 'dir' in ikey:
             new[ikey] = os.path.expandvars(ival)
             if '$' in new[ikey]:
-                raise RuntimeError('configuration path expansion failed %' % new[ikey])
+                raise RuntimeError('configuration path expansion failed %s' %new[ikey])
     config.update(new)
 else:
     print("Writing new config file:", config_file, "Adjust accordingly!")
@@ -527,8 +527,8 @@ slnum = list(active.keys())
 try:
 #    set_start_method("spawn")  # or fork ? not sure why, pickling?
     set_start_method("forkserver")  # fork is not threadsafe, unfortunately
-    P=Pool(10) 
-    x=P.map(np.sin,np.arange(10))
+    P=Pool(16) 
+    x=P.map(np.sin,np.arange(16))
     print(x)
 except RuntimeError:
     pass
@@ -1501,8 +1501,29 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     #
     # process_flat(outputdir: str, cftable: dict, debug:bool=False, request_variables: dict) -> tuple:
     # func = partial(eua.process_flat, output_dir, cf, input_dirs[0], debug)
+#     if body['hdf']:
+#         randdir = '{:012d}'.format(numpy.random.randint(100000000000))
+#         rfile = os.path.dirname(output_dir) + '/request_'+randdir+'.nc'
+#         with h5py.File(rfile, 'a') as merge:
+#             for k in range(len(bodies)):
+#                 name=bodies[k]['statid']
+#                 merge.create_group(name.split('-')[-1])
+
+# #         global OPEN_FILE
+# #         OPEN_FILE =  h5py.File(rfile, 'a')
+# #         for k in range(len(bodies)):
+# #             name=bodies[k]['statid']
+# #             OPEN_FILE.create_group(name.split('-')[-1])
+
+#         func = partial(eua.process_flat, rfile, cf, debug)
+# #         OPEN_FILE.close()
+#     else:
+#         func = partial(eua.process_flat, output_dir, cf, debug)
+
+## DONT FORGET TO CHANGE IN PROCESS_FLAT AND READ_WRITE too!
+
     func = partial(eua.process_flat, output_dir, cf, debug)
-    #print('body', body)
+
     print('body', time.time()-tt)
     if 'gridded' in body:
         body['statid']=''
@@ -1517,6 +1538,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         #
         results = list(map(func, bodies))
     else:
+        
         #
         # Multi Threading
         #
@@ -1544,21 +1566,13 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         if r[0] != '':
             wpath = r[0]
             break
-
-    if wpath == '':
-        raise RuntimeError('Error: %s (%s)' % (results[0][1], str(body)))
-    else:
-        rfile = os.path.dirname(wpath) + '/download.zip'
+            
+    if body['hdf']:
+        
+        randdir = '{:012d}'.format(numpy.random.randint(100000000000))
+        rfile = os.path.dirname(output_dir) + '/request_'+randdir+'.nc'
         print(rfile)
-
-    logger.debug('wpath: %s; format %s Time %f', wpath, body['format'],time.time()-tt)
-
-    if 'local_execution' in body.keys():
-        return rfile
-
-#     if body['format'] == 'nc':
-    if body['hdf'] and 'csv' not in body['format']:
-        rfile = os.path.dirname(wpath) + '/download.nc'
+#         rfile = os.path.dirname(wpath) + '/download.nc'
         with h5py.File(rfile, 'w') as merge:
             for r in results:
                 if(r[0]):                    
@@ -1568,8 +1582,31 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                         for i in filetocopy.keys():
                             filetocopy.copy(i, merge[name], name=i)
         logger.debug('netcdfs merged [%d] to %s', len(results), rfile)
+        
+#         rfile = os.path.dirname(wpath) + '/download.nc'
+#         with h5py.File(rfile, 'w') as merge:
+#             for r in results:
+#                 if(r[0]):                    
+#                     name = r[0].split('dest_')[-1].split('_')[0]
+#                     merge.create_group(name)
+#                     with h5py.File(r[0], 'r') as filetocopy:
+#                         for i in filetocopy.keys():
+#                             filetocopy.copy(i, merge[name], name=i)
+#         logger.debug('netcdfs merged [%d] to %s', len(results), rfile)
+        
+    else:
+#     if not body['hdf']: 
+        if wpath == '':
+            raise RuntimeError('Error: %s (%s)' % (results[0][1], str(body)))
+        else:
+            rfile = os.path.dirname(wpath) + '/download.zip'
+            print(rfile)
 
-    else: 
+        logger.debug('wpath: %s; format %s Time %f', wpath, body['format'],time.time()-tt)
+
+        if 'local_execution' in body.keys():
+            return rfile
+        
         tt=time.time()
         with zipfile.ZipFile(rfile, 'w' ) as f:
             for r in results:
