@@ -1,0 +1,83 @@
+	primary_id	primary_id_scheme	record_number	secondary_id	secondary_id_scheme	station_name	station_abbreviation	alternative_name	station_crs	longitude	latitude	local_gravity	start_date	end_date	station_type	platform_type	platform_sub_type	operating_institute	operating_territory	city	contact	role	observing_frequency	reporting_time	telecommunication_method	station_automation	measuring_system_model	measuring_system_id	observed_variables	comment	optional_data	bbox_min_longitude	bbox_max_longitude	bbox_min_latitude	bbox_max_latitude	metadata_contact	metadata_contact_role
+0	0-20000-0-61666	0	1	[666]	1	DIOURBEL			0	-16.23	14.65				1	0	63			Diourbel																L.Haimberger	0
+1	0-20000-0-63682	0	2	[682]	1	JINJA			0	33.18	0.45				1	0	63			Bugembe																L.Haimberger	0
+2	0-20000-0-64456	0	3	[456]	1	MAKOUA			0	15.65	-0.02				1	0	63			Owando																L.Haimberger	0
+3	0-20000-0-65401	0	4	[401]	1	NAVRONGO			0	-1.1	10.9				1	0	63			Navrongo																L.Haimberger	0
+4	0-20000-0-65501	0	5	[501]	1	DORI			0	-0.03	14.03				1	0	63			Dori																L.Haimberger	0
+5	0-20000-0-61297	0	6	[297]	1	SIKASSO			0	-5.68	11.35				1	0	63			Sikasso																L.Haimberger	0
+6	0-20000-0-65064	0	7	[64]	1	NGURU			0	10.47	12.88				1	0	63			Nguru																L.Haimberger	0
+7	0-20000-0-81001	0	8	[1]	1	GEORGETOWN (81001-0)			0	-58.15	6.8				1	0	63			Georgetown																L.Haimberger	0
+8	0-20000-0-62733	0	9	[733]	1	HALFA EL GAIDIDA			0	35.6	15.32				1	0	63			Kassala																L.Haimberger	0
+9	0-20000-0-64405	0	10	[405]	1	SIBITI			0	13.35	-3.68				1	0	63			Sibiti																L.Haimberger	0
+10	0-20000-0-81250	0	11	[250]	1	TAFELBERG			0	-56.15	3.78				1	0	63			Lelydorp																L.Haimberger	0
+11	0-404-300-472781389CO63741	0	12	[739]	1	DAGORETTI CORNER			0	36.76	-1.3				1	0	63			Nairobi																L.Haimberger	0
+12	0-20000-0-64452	0	13	[452]	1	M'POUYA			0	16.22	-2.62				1	0	63			Bolobo																L.Haimberger	0
+13	0-508-0-67202	0	14	[231]	1	CUAMBA_AUTO			0	36.53	-14.82				1	0	63			Cuamba																L.Haimberger	0
+14	0-20000-0-34737	0	15	[737]	1	KUSHCHEVSKAJA			0	39.62	46.53				1	0	63			Kushchevskaya																L.Haimberger	0
+15	0-20000-0-36091	0	16	[91]	1	NIZHNEUSINSKOE			0	93.01	52.26				1	0	63			Shagonar																L.Haimberger	0
+16	0-20000-0-61698	0	17	[698]	1	KOLDA			0	-14.97	12.88				1	0	63			Kolda																L.Haimberger	0
+17	0-20000-0-67403	0	18	[403]	1	KAWAMBWA			0	29.08	-9.8				1	0	63			Kawambwa																L.Haimberger	0
+18	0-20000-0-62615	0	19	[615]	1	HALIB			0	36.65	22.22				1	0	63			Jiddah																L.Haimberger	0
+19	0-20000-0-64507	0	20	[507]	1	TCHIBANGA			0	11.02	-2.85				1	0	63			Tchibanga																L.Haimberger	0
+20	0-20000-0-41256	0	21	[462]	1	MUSCAT INT'L AIRPORT			0	58.26	23.61				1	0	63			Ruwi																L.Haimberger	0
+21	0-20000-0-80044	0	22	[44]	1	COROZAL/LAS BRUJAS			0	-75.28	9.33				1	0	63			Corozal																L.Haimberger	0
+22	0-20000-0-61230	0	23	[230]	1	NIORO DU SAHEL			0	-9.35	15.23				1	0	63			Nioro																L.Haimberger	0
+23	0-20000-0-62762	0	24	[762]	1	SENNAR			0	33.62	13.55				1	0	63			Sinnar																L.Haimberger	0
+24	0-20000-0-64156	0	25	[156]	1	KALIMA			0	26.55	-2.6				1	0	63			Kindu																L.Haimberger	0
+25	0-20000-0-64911	0	26	[911]	1	NKONGSAMBA			0	9.93	4.95				1	0	63			Nkongsamba																L.Haimberger	0
+26	0-20000-0-80214	0	27	[214]	1	IBAGUE/PERALES			0	-75.15	4.43				1	0	63			Ibague																L.Haimberger	0
+27	0-20000-0-12935	0	28	[935]	1	SIOFOK			0	18.05	46.92				1	0	63			Siofok																L.Haimberger	0
+28	0-20000-0-65507	0	29	[507]	1	FADA N'GOURMA			0	0.35	12.07				1	0	63			Ouargaye																L.Haimberger	0
+29	0-20000-0-61721	0	30	[721]	1	JANJANGBUREH (GEORGETOWN)			0	-14.77	13.54				1	0	63			Kuntaur																L.Haimberger	0
+30	0-20000-0-65404	0	31	[404]	1	WA			0	-2.5	10.05				1	0	63			Wa																L.Haimberger	0
+31	0-20000-0-30683	0	32	[683]	1	EROFEJ PAVLOVIC			0	121.93	53.97				1	0	63			Skovorodino																L.Haimberger	0
+32	0-20000-0-30385	0	33	[385]	1	UST'-NJUKZHA			0	121.5	56.58				1	0	63			Neryungri																L.Haimberger	0
+33	0-20000-0-63210	0	34	[210]	1	BOSASO			0	49.18	11.28				1	0	63			Bosaso																L.Haimberger	0
+34		0	35	[48]	1				0						1	0	63			Sheridan																L.Haimberger	0
+35	0-20000-0-43150	0	36	[150]	1	VISHAKHAPATNAM/WALTAIR			0	83.3	17.68				1	0	63			Visakhapatnam																L.Haimberger	0
+36		0	37	[168]	1				0						1	0	63			Brigantine																L.Haimberger	0
+37	0-20000-0-61612	0	38	[612]	1	PODOR			0	-14.93	16.65				1	0	63			Dagana																L.Haimberger	0
+38	0-20000-0-30957	0	39	[954]	1	AKSA			0	113.27	50.27				1	0	63			Aginskoye																L.Haimberger	0
+39	0-20000-0-84018	0	40	[27]	1	ESMERALDAS (TACHINA) AEROPUERTO			0	-79.63	0.98				1	0	63			Esmeraldas																L.Haimberger	0
+40	0-20000-0-16597	0	41	[597]	1	LUQA			0	14.48	35.85				1	0	63			Qormi																L.Haimberger	0
+41	0-20000-0-31532	0	42	[532]	1	CEKUNDA			0	132.25	50.87				1	0	63			Chegdomyn																L.Haimberger	0
+42	0-20000-0-38527	0	43	[527]	1	DAVALY			0	57.38	40.07				1	0	63			Baherden																L.Haimberger	0
+43		0	44	[120]	1				0						1	0	63			Molde																L.Haimberger	0
+44	0-20000-0-62671	0	45	[671]	1	TOKAR			0	37.73	18.43				1	0	63			Tawkar																L.Haimberger	0
+45	0-20000-0-64655	0	46	[655]	1	BRIA			0	21.98	6.53				1	0	63			Bria																L.Haimberger	0
+46	0-20000-0-82240	0	47	[240]	1	PARINTINS (82240-0)			0	-56.73	-2.63				1	0	63			Parintins																L.Haimberger	0
+47	0-20000-0-32071	0	48	[71]	1	TYMOVSKOE			0	142.72	50.73				1	0	63			Aleksandrovsk-Sakhalinskiy																L.Haimberger	0
+48		0	49	[106]	1				0						1	0	63			None																L.Haimberger	0
+49	0-20000-0-81955	0	50	[893]	1	GARANHUS			0	-36.49	-8.91				1	0	63			Garanhuns																L.Haimberger	0
+50	0-20000-0-61934	0	51	[934]	1	PRINCIPE			0	7.42	1.65				1	0	63			Bata																L.Haimberger	0
+51	0-20000-0-78365	0	52	[361]	1	PUNTA LUCRECIA,  HOLGUIN			0	-75.62	21.07				1	0	63			Banes																L.Haimberger	0
+52		0	53	[956]	1				0						1	0	63			None																L.Haimberger	0
+53		0	54	[167]	1				0						1	0	63			Brigantine																L.Haimberger	0
+54		0	55	[134]	1				0						1	0	63			None																L.Haimberger	0
+55	0-20000-0-48455	0	56	[456]	1	BANGNA AGROMET			0	100.61	13.67				1	0	63			Pak Kret																L.Haimberger	0
+56	0-20000-0-59985	0	57	[985]	1	SANHU DAO			0	111.62	16.53				1	0	63			Wanning																L.Haimberger	0
+57	0-20000-0-29594	0	58	[594]	1	TAJSHET			0	98.0	55.95				1	0	63			Tayshet																L.Haimberger	0
+58		0	59	[139]	1				0						1	0	63			None																L.Haimberger	0
+59	0-20000-0-78347	0	60	[347]	1	CAMILO CIENFUEGOS,  CIEGO DE AVILA			0	-78.75	22.15				1	0	63			Moron																L.Haimberger	0
+60	0-20000-0-40373	0	61	[373, 373]	1	AL-QAISUMAH			0	46.13	28.32				1	0	63			Doha																L.Haimberger	0
+61	0-20000-0-16182	0	62	[181]	1	PERUGIA S. EGIDIO (16182-0)			0	12.5	43.09				1	0	63			Assisi																L.Haimberger	0
+62	0-20000-0-94393	0	63	[80]	1	FREDERICK REEF			0	154.4	-20.94				1	0	63			Yeppoon																L.Haimberger	0
+63	0-20000-0-65028	0	64	[28, 28]	1	KATSINA			0	7.68	13.02				1	0	63			Katsina																L.Haimberger	0
+64	0-20000-0-64056	0	65	[56, 56]	1	BAFWASENDE			0	27.13	1.08				1	0	63			Wamba																L.Haimberger	0
+65		0	66	[930]	1				0						1	0	63			None																L.Haimberger	0
+66	0-20000-0-78663	0	67	[663, 663]	1	SAN SALVADOR/ILOPANGO			0	-89.12	13.7				1	0	63			Ilopango																L.Haimberger	0
+67	0-20000-0-64810	0	68	[810, 810]	1	MALABO			0	8.77	3.75				1	0	63			Malabo																L.Haimberger	0
+68	0-20000-0-64659	0	69	[659, 659]	1	OBO			0	26.5	5.4				1	0	63			Obo																L.Haimberger	0
+69	0-20000-0-47055	0	70	[243, 243]	1	WONSAN			0	127.43	39.18				1	0	63			Seoul																L.Haimberger	0
+70	0-20000-0-40430	0	71	[430, 430]	1	AL-MADINAH			0	39.7	24.55				1	0	63			Umm Lajj																L.Haimberger	0
+71	0-20000-0-40439	0	72	[439, 439]	1	YENBO			0	38.07	24.13				1	0	63			Umm Lajj																L.Haimberger	0
+72	0-20000-0-78016	0	73	[602]	1	L F WADE INTERNATIONAL AIRPORT			0	-64.68	32.37				1	0	63			None																L.Haimberger	0
+73		0	74	[55]	1				0						1	0	63			None																L.Haimberger	0
+74	0-20000-0-91801	0	75	[801]	1	PENRHYN			0	-158.05	-9.03				1	0	63			None																L.Haimberger	0
+75	0-20000-0-65010	0	76	[10, 10]	1	SOKOTO			0	5.25	13.02				1	0	63			Sokoto																L.Haimberger	0
+76	0-20000-0-28711	0	77	[711, 711]	1	BUGUL'MA			0	52.8	54.63				1	0	63			Bugulma																L.Haimberger	0
+77	0-20000-0-70265	0	78	[407]	1	FAIRBANKS/EIELSON AFB			0	-147.07	64.65				1	0	63			Fairbanks																L.Haimberger	0
+78		0	79	[24]	1				0						1	0	63			Townsville																L.Haimberger	0
+79	0-20000-0-65557	0	80	[557, 557]	1	GAGNOA			0	-5.95	6.13				1	0	63			Gagnoa																L.Haimberger	0
+80	0-20000-0-64550	0	81	[550, 550]	1	MOUILA			0	11.02	-1.87				1	0	63			Mouila																L.Haimberger	0
+81	0-20000-0-10135	0	82	10135	1	Nordholz (WP)			0	8.67	53.78				1	0	63			None																L.Haimberger	0
