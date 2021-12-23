@@ -229,7 +229,31 @@ class Analyze():
         else:
             stats = 'station_id'
             
-        df = self.inv.loc[ self.inv[stats].isin( self.data.statid ) ] 
+        if isinstance(self.data.statid, pd.Series):
+            if self.data.dataset == 'igra2':
+                try:
+                    s = [eval(self.data.statid[0])]
+                except:
+                    s = [self.data.statid[0]]
+                    
+                    
+            else:
+                s = eval(self.data.statid[0])
+            
+            s = [str(s) for s in s ]
+            stat_ids = [ f.split(':')[1]  if ':' in f else f for f in s ]
+                
+        df = self.inv.loc[ self.inv[stats].isin( stat_ids ) ] 
+        
+        # test the missing latitude sign for ERA5 1759 inventory 
+        if len(df) ==0 and self.inv.name=='WBAN' and self.data.dataset:
+            df_alt = self.inv.loc[ self.inv['station_id'].isin( stat_ids ) ]
+            if len(df_alt) >0:      
+                df = df_alt
+                print(0)
+            
+            
+            
         inv_matchingId = df
         inv_matchingId.name = self.inv.name 
         inv_matchingId = inv_matchingId.reset_index(drop=True)        
@@ -238,10 +262,19 @@ class Analyze():
         lons = self.data.lons
         
         distances = [ round( self.utils.distance( lats[-1], lons[-1] , inv_matchingId['latitude'][i] , inv_matchingId['longitude'][i] ), 1 ) for i in range(len(inv_matchingId['latitude']) ) ]
+
         inv_matchingId['distance_km'] = distances
+        inv_matchingId['distance_km_minusLat'] = ['' for i in range(len(inv_matchingId))]  # must add to keep dataframes compatible in all cases
         
+        if len(df) >0 and self.inv.name=='WBAN' and self.data.dataset:
+            
+            distances_swap = [ round( self.utils.distance( -lats[-1], lons[-1] , inv_matchingId['latitude'][i] , inv_matchingId['longitude'][i] ), 1 ) for i in range(len(inv_matchingId['latitude']) ) ]   
+            inv_matchingId['distance_km_minusLat'] = distances_swap
+            
         self.found_inv[self.inv.name ]['matching_id'] = inv_matchingId
-               
+        
+        #if not inv_matchingId.empty:
+        #    print('check')
                
     def MakeIgraInventory(self):
         """ Special case: for IGRA2 inventory only need to convert the inventory entries to the format of the other inventories """
@@ -289,8 +322,9 @@ class Analyze():
         wigos = self.Make_WIGOS(res)
         res['inventory'] = self.inv.name         
         res['WIGOS_calc'] = wigos 
-        self.best_match = res 
         
+        self.best_match = res 
+                
         print(0)
            
         
@@ -374,6 +408,7 @@ class Data():
             self.min_date = df['min_date'].values[0]
             self.max_date = df['max_date'].values[0]
             self.consistent_coord = df['consistent_coord'].values[0]
+            self.variables = df['variables'].values[0]
         
         else: # read from original files
             if 'era5_' in self.dataset :
@@ -495,6 +530,8 @@ class Data():
         self.lons = lons 
         self.min_date = min_date 
         self.max_date = max_date
+        self.variables = dic['variables']
+
         
     def check_consistent_coords(self, lats, lons):
         """ Given the entire list of lats and lons check if the values are consistent.
@@ -650,6 +687,7 @@ class Data():
         self.min_date = data['start_date'] 
         self.max_date = data['end_date']
 
+        self.variables = dic['variables']
          
 
         
@@ -725,7 +763,7 @@ class Data():
         self.lons = lons 
         self.min_date = min(dates)
         self.max_date = max(dates)
-
+        self.variables = dic['variables']
         return 0    
     
     
@@ -784,7 +822,7 @@ class Inventory():
                                       'station_name', 'start_date', 'end_date', 'records') )
         
         # extracting standard 5 digits station id 
-        stat_id = [ s[6:] for s in igra2['station_id_igra'] ]
+        stat_id = [ str(s[6:]) for s in igra2['station_id_igra'] ]
         igra2['station_id'] = stat_id
         igra2 = igra2[['station_id_igra', 'station_name','latitude','longitude', 'station_id', 'start_date', 'end_date']]
         
@@ -974,8 +1012,10 @@ def wrapper(data, file):
             #if 'OSCAR' in list(df_red['inventory']):
             #    df_red = df_red.loc[df_red['inventory'] == 'OSCAR']
             best_wigos = df_red.iloc[0]['WIGOS_calc']
-            if not data.consistent_coord:
-                best_wigos = '0-20999-0-' + best_wigos.split('-')[-1]
+            if not data.consistent_coord:  # coordinates are inconsistent, skipping 
+                best_wigos  = '0-20999-0-' + str(eval(data.statid[0])[0])
+                a = open('inventories/' + dataset + '_inconsistent_coordinates.txt', 'a+')
+                a.write(file + '\n')
                 
             
         
@@ -989,6 +1029,7 @@ def wrapper(data, file):
         all_inventories['file_statid'] = data.statid[0]
         
         all_inventories['WIGOS_best'] = best_wigos # TODO to fix 
+        all_inventories['variables'] = str(data.variables)  
         
         name = out_dir + '/' + data.file.split('/')[-1] + '_inventories.csv'
         
@@ -997,11 +1038,14 @@ def wrapper(data, file):
         all_inventories_red = all_inventories[ ['file_statid', 'station_id', 'station_name', 'latitude', 'longitude', 
                                                 'original_lat', 'original_lon', 'distance_km', 'lat_file',
                                                 'lon_file',  'inventory', 'WIGOS', 'WMO_id', 'WIGOS_calc', 'file_min_date', 
-                                                'file_max_date', 'start_date', 'end_date', 'isRadio', 'WIGOS_best', 'city'] ]
+                                                'file_max_date', 'start_date', 'end_date', 'isRadio', 'WIGOS_best', 'city', 'variables'] ]
         
         all_inventories_red.to_csv( name.replace('.csv','_reduced.csv'), sep = '\t' , index = False )
         
         print("Done :::" , data.file )
+        a = open('inventories/' + dataset + '_processed_all.txt', 'a+')
+        a.write(name_s + '\n')       
+        
     
     except:
         print("*** Cannot read file! ***")
@@ -1031,23 +1075,29 @@ if __name__ == '__main__':
           - CHECK_MISSING: only runs missing files, otherwise will rerun and replace existing files """
 
     databases = ['era5_2']
+        
+    databases = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1']
     
-    # list of datasets to process
-    databases = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar']
-    
-    
-    databases = ['era5_2']
+    #databases = [ 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1']
 
     # list of inventories to consult  
     inventories  = [ 'oscar', 'igra2', 'wban', 'chuan']
+    alldb = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1']
+    
+    era5_block = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188']
+    
+    databases = [ 'igra2', 'ncar', 'bufr']
+    
+    databases = era5_block
 
+    databases = alldb
     
     # enable multiprocesing
     POOL = True
-    n_pool = 25
+    n_pool = 40
     # only process missing files 
-    CHECK_MISSING = True  
-    
+    CHECK_MISSING = False  
+    CHECK_FAILED = False
     # loop through each of the databases
     for db in databases:
         
@@ -1065,13 +1115,18 @@ if __name__ == '__main__':
         elif db == 'era5_1761':
             flist=glob.glob("/mnt/users/scratch/leo/scratch/era5/odbs/1761/era5.1761.conv.*")
             
+        elif db == 'era5_3188':
+            flist=glob.glob("/mnt/users/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.*")
+            
         elif db == 'ncar':
             flist=glob.glob( datasets[db] + '/uadb*')
             
         elif db== 'igra2':
             f = inventory.inv['igra2']
             flist = [ f.iloc[n] for n in range(len(f)) ]
-            #flist = [f for f in flist if f.station_id_igra == 'AGM00060625']
+            
+            # TODO special filterfor IGRA stations 
+            #flist = [f for f in flist if f.station_id_igra == 'BLXUAE04838']
             #print(0)
 
         elif 'bufr' in db:
@@ -1079,7 +1134,12 @@ if __name__ == '__main__':
             print(0)
         # general cleaning of file lists    
         
-        flist = [f for f in flist if '.gz' not in f ]
+        flist = [f for f in flist if '.gz' not in f and '.nc' not in f ]
+        
+        if CHECK_FAILED:
+            failed = open(db.replace('era5_','') + '_failed_files.txt','r').readlines()
+            flist = a
+        #flist = [f  for f in flist if  'era5.1759.conv.2:81605' in f ]
         if db != 'igra2':   
             if CHECK_MISSING:
                 flist_c = [f.split('/')[-1] for f in flist ]
@@ -1103,7 +1163,16 @@ if __name__ == '__main__':
         
             
         data = Data(dataset=db, utils = utils )
-    
+        
+        
+        #failed = open('inventories/' + db.replace('era5_','').replace('ncar','UADB') + '_failed_files.txt','r').readlines()
+        #failed = [f.replace('\n','') for f in failed]
+        #flist = failed
+
+        #unidentified = open('inventories/' + db.replace('era5_','') + '_unidentified.txt','r').readlines()
+        #unidentified = [f.replace('\n','') for f in unidentified]
+        
+        #flist = [f for f in flist if f not in unidentified ]
         # TODO edit here to possibly filter file list
     
         if POOL: # running multiprocessing or single 
