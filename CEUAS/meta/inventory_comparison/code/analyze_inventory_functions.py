@@ -120,8 +120,14 @@ class Analyze():
             if len(df) == 1: # only one matching, keep this 
                 wigos = df['WIGOS'][0]
             else:
-                # TO DO handle special case?                 
-                wigos = df['WIGOS'][0]
+                # TO DO handle special case?        
+                for i,text in enumerate(df['ObsRems'][:]) :
+                    if ('Radiosonde' in text or 'Upper' in text):
+                        wigos = df['WIGOS'][i]
+                        break
+                    wigos = df['WIGOS'][0]
+                
+                    
 
                 
         else:
@@ -383,7 +389,6 @@ class Data():
         else:
             self.file = file  
 
-  
         # setting output directory holding csv files 
         out_dir = 'temp_data/' + self.dataset
         self.out_dir = out_dir 
@@ -979,6 +984,7 @@ def wrapper(data, file):
             
         for i in inventories :
             print(' *** Analizing the inventory: ', i )
+            
             analyze = Analyze( data = data, inv = inventory.inv[i], 
                                cities= inventory.cities, utils = utils)
             
@@ -1087,9 +1093,14 @@ if __name__ == '__main__':
     era5_block = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188']
     
     databases = [ 'igra2', 'ncar', 'bufr']
+    databases = [ 'era5_1759']
     
     databases = era5_block
 
+    databases = alldb
+        
+        
+    databases = [ 'era5_1759']
     databases = alldb
     
     # enable multiprocesing
@@ -1101,6 +1112,9 @@ if __name__ == '__main__':
     # loop through each of the databases
     for db in databases:
         
+        if not os.path.isdir( 'inventories/' + db ):
+            os.makedirs( 'inventories/' + db )
+                                         
         # getting only missing files, option CHECK_MISSING 
         if db == 'era5_1':
             flist=glob.glob(datasets[db] + "/era5.conv._*")
@@ -1134,7 +1148,12 @@ if __name__ == '__main__':
             print(0)
         # general cleaning of file lists    
         
+        comb = glob.glob(datasets[db] + '/'+'*.conv.19*') # removing wrong cobined files per year
+        flist = [f for f in flist if f not in comb ]
         flist = [f for f in flist if '.gz' not in f and '.nc' not in f ]
+        ### TODO remove these files  *.conv.19*_*  , these are the files that combine all the stations per year 
+        
+        
         
         if CHECK_FAILED:
             failed = open(db.replace('era5_','') + '_failed_files.txt','r').readlines()
@@ -1162,6 +1181,7 @@ if __name__ == '__main__':
             flist = [ s[1] for s in pairs ]
         
             
+        #flist = [f for f in flist if '1:2057' in f ]
         data = Data(dataset=db, utils = utils )
         
         
