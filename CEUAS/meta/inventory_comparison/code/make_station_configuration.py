@@ -50,7 +50,7 @@ metadata_contact_role = '0'
 
 # to decide 
 primary_id_scheme = 0  # see Fabios list 
-secondary_id_scheme = 1 # see Fabios list 
+secondary_id_scheme = 3 # see Fabios list 
 station_crs = 0
 station_type = 1
 
@@ -198,7 +198,7 @@ def make_CUON():
     
     inv = []
     for s in glob.glob('station_configuration/*_station_configuration*'):
-        if 'CUON' in s:
+        if 'CUON' in s or 'xl' in s :
             continue
         df = pd.read_csv(s, sep='\t')
         print(s , ' ' , len(df))
@@ -304,7 +304,11 @@ def merge_inventories():
     gruan_f = pd.read_excel('Station_configuration_HARM.xlsx', sheet_name='GRUAN')
     gruan_f = gruan_f[ [ c for c in gruan_f.columns if c != 'record_number'  ] ]
 
-    ids_igra_f = igra_f['primary_id']
+    # fix a bug in gruan inventory, one station has a blank space in its ids so it is not located
+    g_clean = [ s.replace(' ','') for s in gruan_f.primary_id ]
+    gruan_f['primary_id'] = g_clean 
+    
+    #ids_igra_f = igra_f['primary_id']
     
     # combining all the inventories
     combining_all = {}
@@ -433,13 +437,15 @@ def merge_inventories():
             else:
                 s = df[c].values[0]
             
+            if c == 'primary_id':
+                s = s.replace(' ','')
             combining_all[c].append(s)
         
     # Saving the complete dataframe 
     df = pd.DataFrame(combining_all)
     df.insert(2, 'record_number', list(range(len(df))) )
     df.to_csv('station_configuration/all_combined_station_configuration.csv' , sep='\t')
-    df.to_csv('station_configuration/all_combined_station_configuration' )
+    df.to_excel('station_configuration/all_combined_station_configuration.xlsx' )
     
     
     print('--- Finished with the global inventory --- ')
@@ -452,28 +458,30 @@ WHAT = 'MERGE'
 POOL = True
 n_pool = 40
 
-if WHAT == 'inventory':
-    # inventories to process
-    inventories_all = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1']
-    #inventories = ['era5_1761', 'era5_3188', 'bufr',]
-    
-    inventories = inventories_all
-    
-    if not POOL:
-        for v in inventories:
-            dummy = make_inventory(v)
-    else:
-        p = Pool(n_pool)                
-        func = partial(make_inventory)
-        out = p.map(func, inventories)       
-    
-    print(0)
-    
-elif WHAT == 'CUON':
-    dummy = make_CUON()
+for WHAT in [ 'CUON', 'MERGE']:
 
-elif WHAT== 'MERGE':
-    dummy = merge_inventories()
+    if WHAT == 'INVENTORY':
+        # inventories to process
+        inventories_all = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1']
+        #inventories = ['era5_1761', 'era5_3188', 'bufr',]
+        
+        inventories = inventories_all
+        
+        if not POOL:
+            for v in inventories:
+                dummy = make_inventory(v)
+        else:
+            p = Pool(n_pool)                
+            func = partial(make_inventory)
+            out = p.map(func, inventories)       
+        
+        print(0)
+        
+    elif WHAT == 'CUON':
+        dummy = make_CUON()
+    
+    elif WHAT== 'MERGE':
+        dummy = merge_inventories()
 
 
 
