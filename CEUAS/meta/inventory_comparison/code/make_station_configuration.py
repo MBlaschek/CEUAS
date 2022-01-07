@@ -127,6 +127,7 @@ def make_inventory(v):
     inv_path = 'inventories/' 
 
     files = glob.glob(inv_path + '/' + v + '/' + '*inventories.csv*')
+    files = [f for f in files if 'all' not in f ]
     
     # initialize each inventory dic
     stat_conf_dic = {}
@@ -198,7 +199,7 @@ def make_CUON():
     
     inv = []
     for s in glob.glob('station_configuration/*_station_configuration*'):
-        if 'CUON' in s or 'xl' in s :
+        if 'CUON' in s or 'xl' in s or 'all' in s :
             continue
         df = pd.read_csv(s, sep='\t')
         print(s , ' ' , len(df))
@@ -305,7 +306,9 @@ def merge_inventories():
     gruan_f = gruan_f[ [ c for c in gruan_f.columns if c != 'record_number'  ] ]
 
     # fix a bug in gruan inventory, one station has a blank space in its ids so it is not located
-    g_clean = [ s.replace(' ','') for s in gruan_f.primary_id ]
+    g_clean = [ s.replace(' ','').replace('1-620-2001-0507','1-620-2001-08507') for s in gruan_f.primary_id ]
+    # GRACIOSA has two entries in the OSCAR both valid for upper-air but different WIGOS
+    
     gruan_f['primary_id'] = g_clean 
     
     #ids_igra_f = igra_f['primary_id']
