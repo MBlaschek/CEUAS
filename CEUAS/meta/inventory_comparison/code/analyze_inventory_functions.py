@@ -28,6 +28,8 @@ from functools  import partial
 from eccodes import *
 
 
+
+
 class Utils():
     """ Class holding a series of calculation utilites """
     def __init__(self, treshold = 10):
@@ -88,13 +90,16 @@ class Utils():
         check = self.distance( min(lats) , min(lons), max(lats), max(lons)  ) < threshold 
         return check
     
-    
+
+        
+        
+        
     
 class Analyze():
     
     def __init__(self, dist_limit = 30, inv = '', data = '', utils='', cities = ''):
         """ parameters ::
-                     dist_limit : maximum distance allowed for station matching
+                     dist_limit : maximum distance allowed for station matching, default = 30km
                      inv :: dataframe of a single the inventory
                      data :: data extracted from a single file from one of the data sets """
         
@@ -143,10 +148,7 @@ class Analyze():
         return wigos
         
         
-    #def Distance(self, lat1,lon1,lat2,lon2):
-    #  """ Return the Harvesine distance between two points """
-    #    d = geopy.distance.geodesic( (lat1,lon1), (lat2,lon2) ).km
-    #    return d 
+
         
     def FindCity(self):
         """ Find the closest city within a 100 km radius """
@@ -868,7 +870,7 @@ class Inventory():
         oscar = oscar.rename(columns = {'StationId':'WIGOS', 'Longitude':'longitude', 
                                         'Latitude':'latitude' , 'StationName':'station_name',} )
         
-        oscar = oscar [['WIGOS', 'station_name', 'latitude', 'longitude', 'ObsRems']]
+        oscar = oscar [['WIGOS', 'station_name', 'latitude', 'longitude', 'ObsRems', 'CountryAerea', 'CountryCode']]
         
         # converting lat, lon to decimal format 
         lat_dec = list(self.utils.degMinSec_to_decimal(oscar['latitude'] ))
@@ -880,10 +882,10 @@ class Inventory():
         oscar['original_lon'] = oscar['longitude']
         oscar['longitude'] = lon_dec        
         radioFlag = oscar['ObsRems'].str.contains('Radio').astype(str)
-        statids = [f.split('-')[-1] for f in oscar['WIGOS'] ]  # assume that th estation id is the last piece of the WIGOS id 
+        statids = [f.split('-')[-1] for f in oscar['WIGOS'] ]  # assume that the station id is the last piece of the WIGOS id 
         oscar['station_id'] = statids
-        oscar['start_date'] = 999
-        oscar['end_date'] = 999
+        oscar['start_date'] = 999  # not available in OSCAR 
+        oscar['end_date'] = 999 # not available in OSCAR
         oscar['isRadio'] = radioFlag 
         oscar.name = 'OSCAR'
         
@@ -900,6 +902,7 @@ class Inventory():
                     for l in range(66): #len(li)):
                         z[l].append(li[l])
 
+            ## try with Stationname  field or use lat and lon to get country 
             chuan=dict(zip(rdata[0].split('\t'),z))
             chuan['Lat_DegN']  = [float(l.replace(',','.')) for l in chuan['Lat_DegN'] ]
             chuan['Lon_DegE'] = [float(l.replace(',','.')) for l in chuan['Lon_DegE']]

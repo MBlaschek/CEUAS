@@ -15,6 +15,15 @@ pd.set_option('display.width', None)
 pd.set_option('display.max_colwidth', -1)
 
 
+# the following are used to find the country given lat and lon (to fill territory information)
+import requests
+from shapely.geometry import mapping, shape
+from shapely.prepared import prep
+from shapely.geometry import Point
+import pycountry 
+import json
+
+
 # urls of the CDM station_configuration
 # We need to use the table definition (not the table, which does not exist)
 path='https://raw.githubusercontent.com/glamod/common_data_model/master/table_definitions/station_configuration.csv'
@@ -58,8 +67,7 @@ platform_type = 0
 platform_sub_type = 63
 
 # to be copied when available from GRUAN stations 
-operating_institute = ''
-operating_territory = '' 
+operating_institute = 'NMS'
 telecommunication_method = '' 
 station_automation = '' 
 measuring_system_model = '' 
@@ -73,7 +81,7 @@ special_columns = {'primary_id_scheme':primary_id_scheme,
                    'platform_type':platform_type,
                    'platform_sub_type':platform_sub_type, 
                    'operating_institute':operating_institute,
-                   'operating_territory':operating_territory,
+                   #'operating_territory':operating_territory,
                    'telecommunication_method':telecommunication_method,
                    'station_automation':station_automation,
                    'measuring_system_model':measuring_system_model,
@@ -84,14 +92,65 @@ special_columns = {'primary_id_scheme':primary_id_scheme,
 
 
 
-print(stat_conf)
-
-
-
-
-
 # initialize empty dic as the stat_conf table 
 
+def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_regions = ''):
+    """ Extract the iso code / country from given lat and lon.
+    Taken from: https://stackoverflow.com/questions/20169467/how-to-convert-from-longitude-and-latitude-to-country-or-city.
+    
+    Converts then the code to the CDM table convention """
+    
+
+        
+    countries = {}
+    for feature in json_data["features"]:
+        geom = feature["geometry"]
+        country = feature["properties"]["ADMIN"]
+        countries[country] = prep(shape(geom))
+    
+    #print(len(countries))
+    def get_country(lon, lat):
+        point = Point(lon, lat)
+        for country, geom in countries.items():
+            if geom.contains(point):
+                return country
+    
+        return "unknown"
+    
+    retrieve_country = get_country(lat, lon)
+    if retrieve_country == 'unknown':
+        territory = ''
+    else:
+        if retrieve_country == 'Russia':
+            retrieve_country = "Russian Federation"
+        if retrieve_country == 'Iran':
+            retrieve_country = 'Iran, Islamic Republic of'
+        if retrieve_country == 'United Republic of Tanzania':            
+            retrieve_country = 'Tanzania, United Republic of'
+        if retrieve_country in  ['Somaliland']: # countries with geopolitical uncertainties 
+            return ''
+        if retrieve_country in ['Democratic Republic of Congo', 'Republic of Congo', 'Democratic Republic of the Congo']: # countries with geopolitical uncertainties 
+            retrieve_country = 'Congo, The Democratic Republic of the'
+        if retrieve_country == 'Syria':            
+            retrieve_country = 'Syrian Arab Republic'        
+        if retrieve_country == "Moldova":
+            retrieve_country = "Moldova, Republic of"
+        if retrieve_country == 'Guinea Bissau':            
+            retrieve_country = 'Guinea-Bissau'      
+        if retrieve_country == 'Macedonia':            
+            retrieve_country = 'North Macedonia'                  
+        if retrieve_country == 'Czech Republic':            
+            retrieve_country = 'Czechia'    
+        if retrieve_country == 'Republic of Serbia':            
+            retrieve_country = 'Serbia'    
+                
+        alpha_3 = pycountry.countries.get(name=retrieve_country).alpha_3
+        
+        if alpha_3 == "UZB":
+            alpha_3 = "USB"
+        territory = cdm_sub_regions[cdm_sub_regions.alpha_3_code == alpha_3 ].sub_region.values[0]
+    
+    return territory
     
 def get_best_inventory(df):
     """ Select best inventory among the ones available.
@@ -100,8 +159,7 @@ def get_best_inventory(df):
     
     for i in ['OSCAR', 'IGRA2', 'WBAN' , 'CHUAN']:
         dfr = df[ df.inventory == i ]
-        dfr = dfr.dropna( subset = ['latitude','longitude'])
-        
+        #dfr = dfr.dropna( subset = ['latitude','longitude'])        
         if not dfr.empty:
             if i == 'OSCAR':
                 dfr_radio = dfr[dfr.isRadio == True ] # check if upperAir/radiosonde station flag 
@@ -113,7 +171,7 @@ def get_best_inventory(df):
                 return dfr[0:1]  
             
     return dfr 
-            
+        
             
             
 # directory containing each single inventory file for each station 
@@ -134,21 +192,55 @@ def make_inventory(v):
     for c in stat_conf_columns:
         stat_conf_dic[c] = []
     
+    
+    
+    cdm_sub_regions = pd.read_csv("../data/sub_region.dat", sep = '\t')
+    # Retrieve or read jason files with country borders
+    if not os.path.isfile("../data/countries.geojson"):
+        json_data = requests.get("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson").json()
+    else:
+        a = open('../data/countries.geojson')
+        json_data = json.load(a)
+    
+    
+    # holding extra varuables that do not appear in the stat_conf but can be very useful
+    # will be saved in extra station_conf file 
+    
+    extra_vars = { 'distance_km': [],
+                            'distance_km_minusLat': [],
+                            'city_dist_km': [] ,
+                            'file': [] }
+    
+    
     for file in tqdm(files):    
         
         df = pd.read_csv(file, sep = '\t', header = 0)
         
+        df = df.dropna( subset = ['latitude','longitude'])
+
+        
         # select best inventory available        
         best_inv = get_best_inventory(df)
-        
+
         if best_inv.empty:
             continue
         
+        for e in extra_vars.keys():
+            extra_vars[e].append(best_inv[e].values[0])
+            
         for c in stat_conf_columns:
             
             if c in special_columns.keys():
                 stat_conf_dic[c].append(special_columns[c])            
 
+            elif c == "operating_territory":
+                terr = iso_from_country_from_coordinates(lat=best_inv.latitude.values[0], lon=best_inv.longitude.values[0] , 
+                                                      cdm_sub_regions=cdm_sub_regions,
+                                                      json_data = json_data)
+                
+                stat_conf_dic[c].append(terr) 
+                
+                
             elif c in statConf_to_inventory.keys():
                 if c == 'secondary_id':
                     a = best_inv[ statConf_to_inventory[c] ].values[0]
@@ -185,6 +277,11 @@ def make_inventory(v):
     df['record_number'] = list(range(1,len(df)+1))
     df.to_csv('station_configuration/' + v + '_station_configuration.csv' , sep= '\t' )           
         
+    for e in extra_vars.keys():
+        df[e] = extra_vars[e]
+    df.to_csv('station_configuration/' + v + '_station_configuration_extended.csv' , sep= '\t' )           
+
+    
     print('*** Done with the inventory ',  v )
 
 
@@ -199,7 +296,7 @@ def make_CUON():
     
     inv = []
     for s in glob.glob('station_configuration/*_station_configuration*'):
-        if 'CUON' in s or 'xl' in s or 'all' in s :
+        if 'CUON' in s or 'xl' in s or 'all' in s or 'extended' in s:
             continue
         df = pd.read_csv(s, sep='\t')
         print(s , ' ' , len(df))
@@ -217,7 +314,7 @@ def make_CUON():
     combined_cuon= {}
     for c in inventory_cuon.columns:
         if c in  'index' or 'Unnamed' in c :
-             continue     
+            continue     
         combined_cuon[c] = []
     
     # looping through all the unique ids and combining data
@@ -227,7 +324,7 @@ def make_CUON():
     
         for c in list(inventory_cuon.columns):
             if c in  'index' or 'Unnamed' in c :
-                 continue 
+                continue 
 
             values = [f.replace('[','').replace(']','') for f in df_i[c].astype(str).values if isinstance(f,str) ]
             #if c == 'observed_variables':
@@ -258,11 +355,18 @@ def make_CUON():
                         except:
                             vv =  str(val)          
                             
-                        if vv == '38':
+                        # converting old numberinf scheme for observed variables to new ones form the CDM (i.e. using profile observations)
+                        if vv == '38': # relative humidity
                             vv = '138'
-                        if vv == '85':
-                            vv = '126'                    
-                            
+                        if vv == '85': # temperature
+                            vv = '126'          
+                        if vv == '104':  # eastward wind
+                            vv = '139'  
+                        if vv == '105': # northward wind
+                                vv = '140'  
+                        if vv == '36': # dew point
+                            vv = '137'  
+                                        
                         if vv not in cleaned:
                             cleaned.append( vv )
                             
@@ -336,6 +440,9 @@ def merge_inventories():
             if c in ['index', 'Unnamed: 0', 'record_index']:
                 continue
                 
+            # renumbering and adding observed variables common to all datasets 
+
+                            
             #if c == 'primary_id' and row[c] == '0-20000-0-63740':
             #    print(0)
             if len(igra) ==0 and len(gruan) ==0:
@@ -371,10 +478,7 @@ def merge_inventories():
                 #    except:
                 #        s = ''
                         
-                elif c in ['observed_variables']: 
-                    if len(gruan) >0:
-                        
-                        s = s + ',57'
+
                     
                 elif (c in special_columns.keys() or c in ['operating_territory']):
                     if len(gruan) >0:
@@ -418,6 +522,13 @@ def merge_inventories():
                 else:
                     s =lista[0]
                     
+            if c in ['observed_variables']: 
+                s = s + ',57' # add pressure as variable, see CDM table observed_variables
+                if len(gruan) >0:                        
+                    for o in ['137','138']:
+                        if o not in s.split(','):
+                            s = s + ',' + o            
+                            
             if s == 'nan':
                 s = ''      
                     
@@ -446,6 +557,8 @@ def merge_inventories():
         
     # Saving the complete dataframe 
     df = pd.DataFrame(combining_all)
+    df = df.sort_values( by = 'primary_id' )  # sorting by primary_id
+    
     df.insert(2, 'record_number', list(range(len(df))) )
     df.to_csv('station_configuration/all_combined_station_configuration.csv' , sep='\t')
     df.to_excel('station_configuration/all_combined_station_configuration.xlsx' )
@@ -456,19 +569,21 @@ def merge_inventories():
     
     
     
-
-WHAT = 'MERGE'
-POOL = True
+# define a list of operation to perform between  [ 'INVENTORY', CUON', 'MERGE']
+TODO = ['MERGE']
+POOL = False
 n_pool = 40
 
-for WHAT in [ 'CUON', 'MERGE']:
+for WHAT in TODO:
 
     if WHAT == 'INVENTORY':
         # inventories to process
         inventories_all = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1']
         #inventories = ['era5_1761', 'era5_3188', 'bufr',]
         
+        #inventories = ['era5_1']
         inventories = inventories_all
+        inventories = ['era5_1']
         
         if not POOL:
             for v in inventories:
