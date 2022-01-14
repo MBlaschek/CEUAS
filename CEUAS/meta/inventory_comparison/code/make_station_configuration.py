@@ -99,9 +99,7 @@ def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_re
     Taken from: https://stackoverflow.com/questions/20169467/how-to-convert-from-longitude-and-latitude-to-country-or-city.
     
     Converts then the code to the CDM table convention """
-    
 
-        
     countries = {}
     for feature in json_data["features"]:
         geom = feature["geometry"]
@@ -117,7 +115,7 @@ def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_re
     
         return "unknown"
     
-    retrieve_country = get_country(lat, lon)
+    retrieve_country = get_country(lon, lat)
     if retrieve_country == 'unknown':
         territory = ''
     else:
@@ -143,13 +141,78 @@ def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_re
             retrieve_country = 'Czechia'    
         if retrieve_country == 'Republic of Serbia':            
             retrieve_country = 'Serbia'    
+        if retrieve_country == 'Venezuela':            
+            retrieve_country = 'Venezuela, Bolivarian Republic of'
+        if retrieve_country == 'United States of America':
+            retrieve_country = 'United States'
+        if retrieve_country == 'Vietnam':
+            retrieve_country = 'Viet Nam'              
+        if retrieve_country == 'Ivory Coast':
+            retrieve_country = "Côte d'Ivoire"        
+        if retrieve_country == 'Bolivia':
+            retrieve_country = "Bolivia, Plurinational State of"            
+            
+        if retrieve_country ==    "French Southern and Antarctic Lands":
+            retrieve_country = "France"      
+            
+        if retrieve_country ==    "North Korea":
+                retrieve_country = "Korea, Democratic People's Republic of"                   
+          
+        if retrieve_country ==  "Taiwan":
+            retrieve_country = "Taiwan, Province of China"                 
+            
+        if "US " in retrieve_country:
+            retrieve_country = "United States"         
+            
+        if retrieve_country == "Brunei":
+            retrieve_country = "Brunei Darussalam"      
+            
+        if retrieve_country == "United States Virgin Islands":
+            retrieve_country = "Virgin Islands, U.S."   
                 
-        alpha_3 = pycountry.countries.get(name=retrieve_country).alpha_3
+        if retrieve_country == "Laos":
+            retrieve_country = "Lao People's Democratic Republic"     
+        # ------------   
+        # TODO replace if statements above with the dictionary below, to keep same form 
+        terr_names = { "Aland": "Åland Islands",
+                 "South Korea":"Korea, Republic of" ,
+                 "Falkland Islands":"Falkland Islands (Malvinas)",
+                 "Macao S.A.R": "Macao",
+                 "Federated States of Micronesia":"Micronesia, Federated States of",
+                 "East Timor": "Timor-Leste",
+                 "Indian Ocean Territories":"British Indian Ocean Territory",
+                 "Akrotiri Sovereign Base Area":"United Kingdom",
+                 "Hong Kong S.A.R.": "Hong Kong",
+                 "Saint Barthelemy":"Saint Barthélemy",
+                 "Saint Helena": "Saint Helena, Ascension and Tristan da Cunha",
+                 "Cape Verde": "Cabo Verde",
+                 "The Bahamas": "Bahamas",
+        }
+        
+        if retrieve_country in terr_names.keys():
+            retrieve_country = terr_names[retrieve_country]
+            
+            
+        # Aland, South Korea, Falkland Islands, Macao S.A.R, Federated States of Micronesia, East Timor, Indian Ocean Territories, Akrotiri Sovereign Base Area
+        # Palestine, Hong Kong S.A.R. , Saint Barthelemy,  Saint Helena, Cape Verde, The Bahamas, 
+        if retrieve_country == "Palestine":
+            alpha_3 = "PSE" # taken directly from the CDM codes     
+        elif retrieve_country == "Kosovo":
+            return ''
+        else:
+            alpha_3 = pycountry.countries.get(name=retrieve_country).alpha_3
         
         if alpha_3 == "UZB":
             alpha_3 = "USB"
-        territory = cdm_sub_regions[cdm_sub_regions.alpha_3_code == alpha_3 ].sub_region.values[0]
-    
+            
+        try:
+            territory = cdm_sub_regions[cdm_sub_regions.alpha_3_code == alpha_3 ].sub_region.values[0]
+        except:
+            territory = ''
+
+            
+
+        
     return territory
     
 def get_best_inventory(df):
@@ -195,7 +258,7 @@ def make_inventory(v):
     
     
     cdm_sub_regions = pd.read_csv("../data/sub_region.dat", sep = '\t')
-    # Retrieve or read jason files with country borders
+    # Retrieve or read json files with country borders
     if not os.path.isfile("../data/countries.geojson"):
         json_data = requests.get("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson").json()
     else:
@@ -477,8 +540,6 @@ def merge_inventories():
                 #        s = row[c][:4]
                 #    except:
                 #        s = ''
-                        
-
                     
                 elif (c in special_columns.keys() or c in ['operating_territory']):
                     if len(gruan) >0:
@@ -570,8 +631,8 @@ def merge_inventories():
     
     
 # define a list of operation to perform between  [ 'INVENTORY', CUON', 'MERGE']
-TODO = ['MERGE']
-POOL = False
+TODO = ['INVENTORY', 'CUON', "MERGE"]
+POOL = True
 n_pool = 40
 
 for WHAT in TODO:
@@ -583,7 +644,6 @@ for WHAT in TODO:
         
         #inventories = ['era5_1']
         inventories = inventories_all
-        inventories = ['era5_1']
         
         if not POOL:
             for v in inventories:
@@ -592,9 +652,7 @@ for WHAT in TODO:
             p = Pool(n_pool)                
             func = partial(make_inventory)
             out = p.map(func, inventories)       
-        
-        print(0)
-        
+                
     elif WHAT == 'CUON':
         dummy = make_CUON()
     
