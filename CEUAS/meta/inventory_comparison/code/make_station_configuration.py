@@ -8,11 +8,14 @@ from ast import literal_eval
 
 from multiprocessing import Pool
 from functools  import partial
+import reverse_geocoder as reverse_geocoder 
 
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', None)
 pd.set_option('display.max_colwidth', -1)
+
+import argparse
 
 
 # the following are used to find the country given lat and lon (to fill territory information)
@@ -94,7 +97,7 @@ special_columns = {'primary_id_scheme':primary_id_scheme,
 
 # initialize empty dic as the stat_conf table 
 
-def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_regions = ''):
+def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_regions = '', file = ''):
     """ Extract the iso code / country from given lat and lon.
     Taken from: https://stackoverflow.com/questions/20169467/how-to-convert-from-longitude-and-latitude-to-country-or-city.
     
@@ -116,8 +119,16 @@ def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_re
         return "unknown"
     
     retrieve_country = get_country(lon, lat)
+    
     if retrieve_country == 'unknown':
-        territory = ''
+            g = reverse_geocoder.search( (lat, lon) )
+            alpha_3 = pycountry.countries.get(alpha_2= g[0]['cc']).alpha_3
+            if alpha_3 == "WLF":
+                alpha_3 = "WSM" # Wallis and Futuna  
+            territory = cdm_sub_regions[cdm_sub_regions.alpha_3_code == alpha_3 ].sub_region.values[0]
+            
+            return territory
+        
     else:
         if retrieve_country == 'Russia':
             retrieve_country = "Russian Federation"
@@ -212,7 +223,7 @@ def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_re
 
             
 
-        
+    #print(territory, file )
     return territory
     
 def get_best_inventory(df):
@@ -299,8 +310,8 @@ def make_inventory(v):
             elif c == "operating_territory":
                 terr = iso_from_country_from_coordinates(lat=best_inv.latitude.values[0], lon=best_inv.longitude.values[0] , 
                                                       cdm_sub_regions=cdm_sub_regions,
-                                                      json_data = json_data)
-                
+                                                      json_data = json_data, file = file)
+                print(file, '   ', terr)
                 stat_conf_dic[c].append(terr) 
                 
                 
@@ -339,10 +350,12 @@ def make_inventory(v):
     # adding record number
     df['record_number'] = list(range(1,len(df)+1))
     df.to_csv('station_configuration/' + v + '_station_configuration.csv' , sep= '\t' )           
+    df.to_excel('station_configuration/' + v + '_station_configuration.xlsx' )
         
     for e in extra_vars.keys():
         df[e] = extra_vars[e]
     df.to_csv('station_configuration/' + v + '_station_configuration_extended.csv' , sep= '\t' )           
+    df.to_excel('station_configuration/' + v + '_station_configuration_extended.xlsx' )
 
     
     print('*** Done with the inventory ',  v )
@@ -458,6 +471,7 @@ def make_CUON():
         
     d = pd.DataFrame(combined_cuon)
     d.to_csv('station_configuration/CUON_station_configuration.csv', sep='\t')
+    df.to_excel('station_configuration/CUON_station_configuration.xlsx' )
 
 
 def merge_inventories():
@@ -632,18 +646,35 @@ def merge_inventories():
     
 # define a list of operation to perform between  [ 'INVENTORY', CUON', 'MERGE']
 TODO = ['INVENTORY', 'CUON', "MERGE"]
-POOL = True
+POOL = False
 n_pool = 40
 
-for WHAT in TODO:
 
-    if WHAT == 'INVENTORY':
+parser = argparse.ArgumentParser(description="Crete station configuration table")
+
+
+parser.add_argument('--dataset' , '-d', 
+                      help="Select the dataset"  ,
+                      type = str,
+                      default = 'era5_1' )
+
+
+args = parser.parse_args()
+v                = args.dataset
+
+
+if v in  [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1']:
+    WHAT = 'INVENTORY'
+elif v in ['CUON', 'MERGE']:
+    WHAT = v
+
+
+if WHAT == 'INVENTORY':
         # inventories to process
-        inventories_all = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1']
-        #inventories = ['era5_1761', 'era5_3188', 'bufr',]
-        
+        #inventories_all = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1']
         #inventories = ['era5_1']
-        inventories = inventories_all
+
+        inventories =  [v]
         
         if not POOL:
             for v in inventories:
@@ -653,310 +684,10 @@ for WHAT in TODO:
             func = partial(make_inventory)
             out = p.map(func, inventories)       
                 
-    elif WHAT == 'CUON':
+elif WHAT == 'CUON':
         dummy = make_CUON()
     
-    elif WHAT== 'MERGE':
+elif WHAT== 'MERGE':
         dummy = merge_inventories()
-
-
-
-"""
-# crate one single inventory out of the CUON datasets
-inv = []
-for s in glob.glob('station_configuration/*_station_configuration*'):
-    if 'CUON' in s:
-        continue
-    df = pd.read_csv(s, sep='\t')
-    print(s , ' ' , len(df))
-    inv.append(df)
-    
-inventory_cuon = pd.concat(inv)
-inventory_cuon = inventory_cuon[ [ c for c in inventory_cuon.columns if c != 'record_number'  ] ]
-inventory_cuon = inventory_cuon.dropna(subset = ['primary_id'])
-inventory_cuon = inventory_cuon.reset_index()
-
-all_ids = np.unique(inventory_cuon['primary_id'].astype(str))
-
-# storing combined cun dictionary 
-combined_cuon= {}
-for c in inventory_cuon.columns:
-    if c in  'index' or 'Unnamed' in c :
-         continue     
-    combined_cuon[c] = []
-
-
-all_ids = all_ids
-
- 
-for i in tqdm(all_ids):
-    indices = np.where( inventory_cuon['primary_id'].astype(str) == i )[0]
-    df_i = inventory_cuon.iloc[indices]
-
-    for c in list(inventory_cuon.columns):
-        if c in  'index' or 'Unnamed' in c :
-             continue 
-
-        values = [f.replace('[','').replace(']','') for f in df_i[c].astype(str).values if isinstance(f,str) ]
-        #if c == 'observed_variables':
-        #   values = np.unique( [f.split(',') for f in values ] ) 
-        cleaned = []
-        if c == 'observed_variables':
-            print(0)
-        for v in values:
-            if c in ['observed_variables']:
-                lista = v.split(',')
-                for val in lista:
-                    val = val.replace(' ', '')
-                    try:
-                        vv = str(literal_eval(val))
-                    except:
-                        vv =  str(val)          
-                        
-                    if vv == '38':
-                        vv = '138'
-                    if vv == '85':
-                        vv = '126'                    
-                        
-                    if vv not in cleaned:
-                        cleaned.append( vv )
-                        
-            else:
-                try:
-                    v =  str(literal_eval(v))
-                except:
-                    pass
-                
-                if v is not None and v not in cleaned:
-                    cleaned.append(str(v))
-                
-        cleaned.sort()
-       
-        values = [f for f in cleaned if f is not None ]
-
-        if isinstance(values, list):
-            values = ','.join(values)
-        elif isinstance(values, str):
-            pass
-        if values == 'nan':
-            values = ''
-            
-        combined_cuon[c].append(values)
-        #print(0)
-    
-    
-
-d = pd.DataFrame(combined_cuon)
-d.to_csv('station_configuration/CUON_station_configuration.csv', sep='\t')
-"""
-
-
-
-'''
-inventory_cuon = pd.read_csv('station_configuration/CUON_station_configuration.csv', sep='\t')
-ids_cuon = np.unique(inventory_cuon['primary_id'].astype(str))
-
-print(0)
-
-# merge IGRA, GRUAN
-igra_f = pd.read_excel('Station_configuration_HARM.xlsx', sheet_name='IGRA')
-igra_f = igra_f[ [ c for c in igra_f.columns if c != 'record_number'  ] ]
- 
-gruan_f = pd.read_excel('Station_configuration_HARM.xlsx', sheet_name='GRUAN')
-gruan_f = gruan_f[ [ c for c in gruan_f.columns if c != 'record_number'  ] ]
-
-
-ids_igra_f = igra_f['primary_id']
-
-
-# combining all the inventories
-combining_all = {}
-for c in inventory_cuon.columns:
-    if c in  'index' or 'Unnamed' in c or c in 'record_index':
-        continue     
-    combining_all[c] = []
-    
-
-for index, row in tqdm( inventory_cuon.iterrows() ):     
-    pi = row.primary_id 
-    
-    #pi = '0-20001-0-10393'
-    if index > 8500:
-        
-        break
-    
-    igra = igra_f.loc[igra_f['primary_id'] == pi ]
-    igra = igra.reset_index()
-    gruan = gruan_f.loc[gruan_f['primary_id'] == pi ]
-    gruan = gruan.reset_index()
-    
-    for c in inventory_cuon.columns:
-        if c in ['index', 'Unnamed: 0', 'record_index']:
-            continue
-            
-        #if c == 'primary_id' and row[c] == '0-20000-0-63740':
-        #    print(0)
-        if len(igra) ==0 and len(gruan) ==0:
-            s = row[c]
-            if s == 'None':
-                s = ''
-         
-        else:
-            s = row[c] 
-            if s == 'None':
-                s = ''
-
-            if c in ['secondary_id', 'metadata_contact', 'station_name', 'city']: # summing alls
-                #if c == 'station_name':
-                #    print(0)
-
-                if len(igra) >0:
-                    try:
-                        if s !=  igra[c].values[0] and s != 'None':
-                            s = s + ',' +  igra[c].values[0]
-                    except:
-                        s = s 
-                if len(gruan) >0:
-                    try:
-                        if s != gruan[c].values[0]:
-                            s = s + ',' +  gruan[c].values[0]  # city is missing in GRUAN
-                    except:
-                        pass
-
-            elif c in ['start_date','end_date']: # CUON is most comprehensive
-                try:
-                    s = row[c][:4]
-                except:
-                    s = ''
-                    
-            elif c in ['observed_variables']: 
-                s = row[c][:4]
-                
-            elif (c in special_columns.keys() or c in ['operating_territory']):
-                if len(gruan) >0:
-                    s =  gruan[c].values[0]
-                elif len(igra) >0:
-                    s =  igra[c].values[0]
-                else:
-                    s = row[c]
-            else:
-                s = s
-                
-        s = str(s)
-        if s != '' and s.split(',')[0] == '':
-            s = s.split(',')[1]
-        if s == 'nan':
-            s = ''
-        if c in ['secondary_id', 'station_name', 'city']:
-            lista =  s.split(',') 
-            lista = [l for l in lista if l != 'None' ]
-            s = ','.join( list( np.unique( lista ) ) )
-        if c == 'start_date':
-            lista =  s.split(',') 
-            lista = [l for l in lista if l != 'nan' ]        
-            s = min(lista)
-        if c == 'end_date':
-            lista =  s.split(',') 
-            lista = [l for l in lista if l != 'nan' ]        
-            s = max(lista)
-        if c in ['latitude', 'longitude']:
-            if len(s) >8:
-                f = s.split(',')
-                s = f[-1]
-        if c in ['metadata_contact']:
-            lista = s.split(',')
-            lista = list( np.unique( lista ) )
-                          
-            if len(lista) >1:
-                s = ','.join( list( np.unique( lista ) ) )
-            else:
-                s =lista[0]
-                
-        if s == 'nan':
-            s = ''      
-                
-            #print(0)
-        combining_all[c].append(s)     
-
-
-""" Add station only found in GRUAN """
-ids_gruan = gruan_f['primary_id'].values
-ids_cuon = inventory_cuon['primary_id'].values
-only_gruan = [s for s in ids_gruan if s not in ids_cuon]
-
-
-for station in only_gruan:     
-    df = gruan_f.loc[gruan_f['primary_id'] == station ]
-    for c in combining_all.keys():
-        if c in ['index', 'Unnamed: 0', 'record_index']:
-            continue
-        s = df[c].values[0]
-        combining_all[c].append(s)
-    
-
-# Saving the complete dataframe 
-df = pd.DataFrame(combining_all)
-df.insert(2, 'record_number', list(range(len(df))) )
-df.to_csv('station_configuration/all_combined_station_configuration.csv' , sep='\t')
-
-
-print('--- Finished with the global inventory --- ')
-
-'''
-
-
-
-
-
-"""
-# old loop for inventories wthout function 
-for v in inventories:
-    files = glob.glob(inv_path + '/' + v + '/' + '*inventories.csv*')
-    
-    # initialize each inventory dic
-    stat_conf_dic = {}
-    for c in stat_conf_columns:
-        stat_conf_dic[c] = []
-    
-    for file in tqdm(files):    
-        
-        df = pd.read_csv(file, sep = '\t', header = 0)
-        
-        # select best inventory available        
-        best_inv = get_best_inventory(df)
-        
-        for c in stat_conf_columns:
-            
-            if c in special_columns.keys():
-                stat_conf_dic[c].append(special_columns[c])            
-            
-            elif c in statConf_to_inventory.keys():
-                if c == 'secondary_id':
-                    a = best_inv[ statConf_to_inventory[c] ].values[0]
-                    print(0)
-                try:
-                    value = best_inv[ statConf_to_inventory[c] ].values[0]
-                    if ('999' in str(value) or value==999 ):
-                        stat_conf_dic[c].append('')
-                    else:
-                        if 'city' in c:
-                            stat_conf_dic[c].append( value.title() )
-                        else:
-                            stat_conf_dic[c].append(value)
-                except:
-                    print('wrong')
-                    stat_conf_dic[c].append('')
-            else:
-                stat_conf_dic[c].append('')
-                
-    df = pd.DataFrame(stat_conf_dic)
-    ind = df.index
-    # adding record number
-    df['record_number'] = list(range(1,len(df)+1))
-    df.to_csv('station_configuration/' + v + '_station_configuration.csv' , sep= '\t' )           
-            
-print(0)
-"""
-
 
 
