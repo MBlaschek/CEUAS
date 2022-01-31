@@ -62,7 +62,7 @@ class Utils():
             """ Split strings like -75 14 00N into degree, minute and seconds,
             convert into decimal with properly assigned sign """
             
-            sign = -1 if re.search('[swSW]', dms) else 1
+            sign = -1 if re.search('[-swSW]', dms) else 1
             
             dms = re.sub ( '[wWsSnNeE]', '', dms  )
             
@@ -75,8 +75,7 @@ class Utils():
             m = dms[1]
             s = dms[2]
 
-            dec = float(d) + float(m)/60 + float(s)/3600
-            
+            dec = abs(float(d)) + float(m)/60 + float(s)/3600
             return sign*round(dec, 2)
         
         coord_dec = map(dms2dec, coord)        
@@ -254,14 +253,16 @@ class Analyze():
         df = self.inv.loc[ self.inv[stats].isin( stat_ids ) ] 
         
         # test the missing latitude sign for ERA5 1759 inventory 
-        if len(df) ==0 and self.inv.name=='WBAN' and self.data.dataset:
+        # The HP is that the station id must match the id in the WBAN inventory, AND by adding a minus sing to the latitude the distance becomes small
+        # Here I select the WBAN entry with the same station id only if all the other stations do not have compatible distance calculated
+        # using original lat and lon 
+        if len(df) ==0 and self.inv.name=='WBAN' and self.data.dataset=="era5_1759":
             df_alt = self.inv.loc[ self.inv['station_id'].isin( stat_ids ) ]
             if len(df_alt) >0:      
                 df = df_alt
+            else:
                 print(0)
-            
-            
-            
+
         inv_matchingId = df
         inv_matchingId.name = self.inv.name 
         inv_matchingId = inv_matchingId.reset_index(drop=True)        
@@ -274,11 +275,20 @@ class Analyze():
         inv_matchingId['distance_km'] = distances
         inv_matchingId['distance_km_minusLat'] = ['' for i in range(len(inv_matchingId))]  # must add to keep dataframes compatible in all cases
         
-        if len(df) >0 and self.inv.name=='WBAN' and self.data.dataset:
+        # if the lat in the WBAN inventory is positive, nothing to be done
+        if len(df) >0 and self.inv.name=='WBAN' and self.data.dataset=="era5_1759":
             
-            distances_swap = [ round( self.utils.distance( -lats[-1], lons[-1] , inv_matchingId['latitude'][i] , inv_matchingId['longitude'][i] ), 1 ) for i in range(len(inv_matchingId['latitude']) ) ]   
-            inv_matchingId['distance_km_minusLat'] = distances_swap
+            if inv_matchingId.latitude.values[0] >0:
+                pass
+            else: # try to add minus sign in latitude 
             
+                    lat_pos_ind = np.where( np.array(lats) >0 )[0][0]
+                    lat_pos = lats[lat_pos_ind]
+                    lon_pos = lons[lat_pos_ind]
+                    
+                    distances_swap = [ round( self.utils.distance( -lat_pos , lon_pos, inv_matchingId['latitude'][i] , inv_matchingId['longitude'][i] ), 1 ) for i in range(len(inv_matchingId['latitude']) ) ]   
+                    inv_matchingId['distance_km_minusLat'] = distances_swap
+                    
         self.found_inv[self.inv.name ]['matching_id'] = inv_matchingId
         
         #if not inv_matchingId.empty:
@@ -377,6 +387,15 @@ class Data():
                                  
                           }
         
+        # to be filled afterwards
+        # self.file = ''
+        # self.dataset = ''
+        # self.min_date = ''
+        # self.max_date = ''
+        # self.consistent_coord = ''
+        # self.variables = ''
+        #self.lats = ''
+        #self.lons = ''
         
     def read_file(self, file):
         """ Wrapper for the functions to read input file from the datasets. 
@@ -562,10 +581,7 @@ class Data():
             pass
         else:
             self.consistent_coord = False
-            
-        print(0)
-        #grouped.to_csv( self.out_dir  + '/' + self.file.split('/')[-1] + '_coordinates.csv', sep = '\t' )  
-        
+                    
         
     def read_bufr(self):
         """ Extract data from a single BUFR file """
@@ -732,7 +748,7 @@ class Data():
                 lats.append( float(line[57:67]) )
                 lons.append( float(line[68:78]) )
                 
-                stype    = int(line[86:88])
+                stype    = int(line[86:88]) # TODO might be unecessary
                 
                 #idate = datetime.strptime(year + month + day + hour + minutes, '%Y%m%d%H%M')
                 
@@ -852,6 +868,9 @@ class Inventory():
         #wban = wban.replace( {'00 00 00': 0 , '0  0  0':0} )
         
         # converting lat, lon to decimal format 
+        
+        l = list(self.utils.degMinSec_to_decimal(["-10 56 00"]) )
+        
         lat_dec = list(self.utils.degMinSec_to_decimal(wban['latitude'] ))
         lon_dec = list(self.utils.degMinSec_to_decimal(wban['longitude'] ))
         
@@ -870,7 +889,7 @@ class Inventory():
         oscar = oscar.rename(columns = {'StationId':'WIGOS', 'Longitude':'longitude', 
                                         'Latitude':'latitude' , 'StationName':'station_name',} )
         
-        oscar = oscar [['WIGOS', 'station_name', 'latitude', 'longitude', 'ObsRems', 'CountryAerea', 'CountryCode']]
+        oscar = oscar [['WIGOS', 'station_name', 'latitude', 'longitude', 'ObsRems']]
         
         # converting lat, lon to decimal format 
         lat_dec = list(self.utils.degMinSec_to_decimal(oscar['latitude'] ))
@@ -985,14 +1004,17 @@ def wrapper(data, file):
         if not os.path.isdir(out_dir):
             os.mkdir(out_dir)
             
-        for i in inventories :
+        for i in ["oscar","igra2","wban","chuan"] :
             print(' *** Analizing the inventory: ', i )
             
             analyze = Analyze( data = data, inv = inventory.inv[i], 
                                cities= inventory.cities, utils = utils)
             
             analyze.AddDistance()
+            
+            # Find stations with matching ids from the inventory
             analyze.MatchingId()
+            # Find closest station in the inventory 
             analyze.Closest()
             #matching_inv.append(analyze.found_inv)
             analyze.Combine()
@@ -1026,8 +1048,28 @@ def wrapper(data, file):
                 a = open('inventories/' + dataset + '_inconsistent_coordinates.txt', 'a+')
                 a.write(file + '\n')
                 
-            
-        
+            # Here I finally check that the distance between coordinates with positive lat are too large, 
+            # while by adding the minus sing they become comaptible,
+            # only valid for stations in the WBAN inventory with same station_id 
+            if df_red.distance_km.values[0] > 30:
+                try: 
+                    df = df_red.loc[df_red["inventory"] == "WBAN"]
+                    d = float(df.distance_km_minusLat.values[0]) 
+                    if d <= 30:
+                        if not os.path.isfile('inventories/' + dataset + '_minusSignLatMismatch.txt'):
+                            w = open( 'inventories/' + dataset + '_minusSignLatMismatch.txt', 'w' )
+                            header = "\t".join( ["#station_id","wban_id","file_lat" , "wban_lat" , "file_lon" , "wban_lon" , "file", '\n'] ) 
+                            w.write(header)                            
+                            w.close()
+                            
+                        a = open( 'inventories/' + dataset + '_minusSignLatMismatch.txt', 'a+' )
+                        
+                        st = "\t". join( [ str(eval(data.statid[0])[0]) , str( int(df.station_id.values[0])) , str(data.lats[0]) ,  str(df['latitude'].values[0])  ,  str(data.lons[0]) , str(df['longitude'].values[0]) ,  file.split("/")[-1] , '\n'] ) 
+                        a.write(st)
+                except:
+                    print("PROBLEM====================================================")
+                    pass
+                
         # Add file information     
         all_inventories['lat_file'] = str( [max(data.lats), min(data.lats)] )
         all_inventories['lon_file'] = str( [max(data.lons), min(data.lons)]  )
@@ -1063,6 +1105,37 @@ def wrapper(data, file):
     
     
     
+# missing files in the mismatch 
+test_era5_1759_lat_mismatch_miss = ['era5.1759.conv.2:81410', 'era5.1759.conv.2:50302', 'era5.1759.conv.2:51301', 'era5.1759.conv.2:51302', 'era5.1759.conv.2:51304', 
+                               'era5.1759.conv.2:52401', 'era5.1759.conv.2:60701', 'era5.1759.conv.2:60702', 'era5.1759.conv.2:50304', 'era5.1759.conv.2:50305', 'era5.1759.conv.2:50306', 
+                               'era5.1759.conv.2:50307', 'era5.1759.conv.2:50309', 'era5.1759.conv.2:50310', 'era5.1759.conv.2:50402', 'era5.1759.conv.2:61501', 
+                               'era5.1759.conv.2:80301', 'era5.1759.conv.2:80302', 'era5.1759.conv.2:80305']
+
+test_era5_1759_lat_mismatch_all = ['era5.1759.conv.2:82606', 'era5.1759.conv.2:82607', 'era5.1759.conv.2:80430', 'era5.1759.conv.2:82608', 'era5.1759.conv.2:80431', 'era5.1759.conv.2:80433', 
+                                   'era5.1759.conv.2:80505', 'era5.1759.conv.2:80506', 'era5.1759.conv.2:80509', 'era5.1759.conv.2:80510', 'era5.1759.conv.2:80704', 
+                                   'era5.1759.conv.2:81302', 'era5.1759.conv.2:81404', 'era5.1759.conv.2:81408', 'era5.1759.conv.2:81410', 'era5.1759.conv.2:81502', 
+                                   'era5.1759.conv.2:81605', 'era5.1759.conv.2:50302', 'era5.1759.conv.2:51301', 'era5.1759.conv.2:51302', 'era5.1759.conv.2:51304', 
+                                   'era5.1759.conv.2:50801', 'era5.1759.conv.2:52401', 'era5.1759.conv.2:50802', 'era5.1759.conv.2:60501', 'era5.1759.conv.2:60701', 
+                                   'era5.1759.conv.2:61503', 'era5.1759.conv.2:60702', 'era5.1759.conv.2:61703', 'era5.1759.conv.2:61502', 'era5.1759.conv.2:62702', 
+                                   'era5.1759.conv.2:50304', 'era5.1759.conv.2:61701', 'era5.1759.conv.2:50305', 'era5.1759.conv.2:80402', 'era5.1759.conv.2:62701', 
+                                   'era5.1759.conv.2:50306', 'era5.1759.conv.2:80604', 'era5.1759.conv.2:80405', 'era5.1759.conv.2:81306', 'era5.1759.conv.2:50307', 
+                                   'era5.1759.conv.2:80406', 'era5.1759.conv.2:81403', 'era5.1759.conv.2:50309', 'era5.1759.conv.2:80408', 'era5.1759.conv.2:50310', 
+                                   'era5.1759.conv.2:81405', 'era5.1759.conv.2:80409', 'era5.1759.conv.2:50402', 'era5.1759.conv.2:81406', 'era5.1759.conv.2:80412', 
+                                   'era5.1759.conv.2:81407', 'era5.1759.conv.2:50403', 'era5.1759.conv.2:81501', 'era5.1759.conv.2:50405', 'era5.1759.conv.2:80419', 
+                                   'era5.1759.conv.2:81608', 'era5.1759.conv.2:50406', 'era5.1759.conv.2:80502', 'era5.1759.conv.2:81702', 'era5.1759.conv.2:51303', 
+                                   'era5.1759.conv.2:80504', 'era5.1759.conv.2:61501', 'era5.1759.conv.2:80511', 'era5.1759.conv.2:82401', 'era5.1759.conv.2:80301', 
+                                   'era5.1759.conv.2:80512', 'era5.1759.conv.2:82404', 'era5.1759.conv.2:80302', 'era5.1759.conv.2:80513', 'era5.1759.conv.2:82408', 
+                                   'era5.1759.conv.2:83405', 'era5.1759.conv.2:80303', 'era5.1759.conv.2:83504', 'era5.1759.conv.2:80304', 'era5.1759.conv.2:80602', 
+                                   'era5.1759.conv.2:83508', 'era5.1759.conv.2:80306', 'era5.1759.conv.2:80310', 'era5.1759.conv.2:80702', 'era5.1759.conv.2:80311', 
+                                   'era5.1759.conv.2:81301', 'era5.1759.conv.2:80413', 'era5.1759.conv.2:81304', 'era5.1759.conv.2:80415', 'era5.1759.conv.2:81409', 
+                                   'era5.1759.conv.2:80421', 'era5.1759.conv.2:81601', 'era5.1759.conv.2:80422', 'era5.1759.conv.2:81603', 'era5.1759.conv.2:80424', 
+                                   'era5.1759.conv.2:81606', 'era5.1759.conv.2:80425', 'era5.1759.conv.2:81609', 'era5.1759.conv.2:80426', 'era5.1759.conv.2:80427', 
+                                   'era5.1759.conv.2:82403', 'era5.1759.conv.2:80429', 'era5.1759.conv.2:82405', 'era5.1759.conv.2:82501', 'era5.1759.conv.2:82503', 
+                                   'era5.1759.conv.2:82507', 'era5.1759.conv.2:80432', 'era5.1759.conv.2:50404', 'era5.1759.conv.2:80305', 'era5.1759.conv.2:80309', 
+                                   'era5.1759.conv.2:80705', 'era5.1759.conv.2:81604']
+
+
+
 
 datasets = { 'era5_1': '/mnt/users/scratch/leo/scratch/era5/odbs/1' ,
                                'era5_2': '/mnt/users/scratch/leo/scratch/era5/odbs/2',
@@ -1083,20 +1156,8 @@ if __name__ == '__main__':
           - POOL: runs multiprocesses (default=30)
           - CHECK_MISSING: only runs missing files, otherwise will rerun and replace existing files """
 
-    databases = ['era5_2']
-        
-    databases = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1']
-    
-    #databases = [ 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1']
-
-    # list of inventories to consult  
-    inventories  = [ 'oscar', 'igra2', 'wban', 'chuan']
     alldb = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1']
-    
     era5_block = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188']
-    
-    databases = [ 'igra2', 'ncar', 'bufr']
-    databases = [ 'era5_1759']
     
     databases = era5_block
 
@@ -1104,10 +1165,9 @@ if __name__ == '__main__':
         
         
     databases = [ 'era5_1759']
-    databases = alldb
     
     # enable multiprocesing
-    POOL = True
+    POOL = False
     n_pool = 40
     # only process missing files 
     CHECK_MISSING = False  
@@ -1141,17 +1201,12 @@ if __name__ == '__main__':
         elif db== 'igra2':
             f = inventory.inv['igra2']
             flist = [ f.iloc[n] for n in range(len(f)) ]
-            
-            # TODO special filterfor IGRA stations 
-            #flist = [f for f in flist if f.station_id_igra == 'BLXUAE04838']
-            #print(0)
 
         elif 'bufr' in db:
             flist=glob.glob(datasets[db] + '/'+'era5.*.bfr')
             print(0)
-        # general cleaning of file lists    
         
-        comb = glob.glob(datasets[db] + '/'+'*.conv.19*') # removing wrong cobined files per year
+        comb = glob.glob(datasets[db] + '/'+'*.conv.19*') # removing wrong combined files per year
         flist = [f for f in flist if f not in comb ]
         flist = [f for f in flist if '.gz' not in f and '.nc' not in f ]
         ### TODO remove these files  *.conv.19*_*  , these are the files that combine all the stations per year 
@@ -1184,10 +1239,10 @@ if __name__ == '__main__':
             flist = [ s[1] for s in pairs ]
         
             
-        #flist = [f for f in flist if '1:2057' in f ]
         data = Data(dataset=db, utils = utils )
         
-        
+        flist = ["mnt/users/scratch/leo/scratch/era5/odbs/1759/" +f for f in  test_era5_1759_lat_mismatch_all ]
+        #flist = [f for f in flist if "era5.1759.conv.2:80426" in f ] # latitude mismatch era5_1759
         #failed = open('inventories/' + db.replace('era5_','').replace('ncar','UADB') + '_failed_files.txt','r').readlines()
         #failed = [f.replace('\n','') for f in failed]
         #flist = failed
@@ -1220,3 +1275,9 @@ if __name__ == '__main__':
 /mnt/users/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.6:102317
 /mnt/users/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.1:67194q
 """
+
+
+# lat mismatch era5_1759
+# '/mnt/users/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.2:21502'
+
+
