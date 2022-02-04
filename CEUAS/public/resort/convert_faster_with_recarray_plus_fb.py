@@ -231,14 +231,14 @@ def ipl(observed_variable,observation_value,z_coordinate,z_coordinate_type,recor
             if j==2446:
                 print(j)
 
-        if observed_variable[i]==38 and observation_value[i]==observation_value[i]:
+        if observed_variable[i]==ipar[38] and observation_value[i]==observation_value[i]:
             relhum[j-1]=observation_value[i]
-        if observed_variable[i]==39 and observation_value[i]==observation_value[i]:
+        if observed_variable[i]==ipar[39] and observation_value[i]==observation_value[i]:
             if j<=spechum.shape[0]:
                 spechum[j-1]=observation_value[i]
-        if observed_variable[i]==34 and observation_value[i]==observation_value[i]:
+        if observed_variable[i]==ipar[34] and observation_value[i]==observation_value[i]:
             dpd[j-1]=observation_value[i]
-        if observed_variable[i]==36 and observation_value[i]==observation_value[i] and z_coordinate[i]==z_coordinate[i]:
+        if observed_variable[i]==ipar[36] and observation_value[i]==observation_value[i] and z_coordinate[i]==z_coordinate[i]:
             dewpoint[j-1]=observation_value[i]
         if observed_variable[i]==85 and observation_value[i]==observation_value[i]:
             temp[j-1]=observation_value[i]
@@ -315,19 +315,19 @@ def ipl2(lobs, fb):
             press[j]=p
             idx[j]=i
     
-        if observed_variable[i]==38:
+        if observed_variable[i]==ipar[38]:
             relhum[j]=observation_value[i]
             d_relhum[j]=observation_value[i]-departure[i]
             fgd_relhum[j]=observation_value[i]-fg_departure[i]
-        elif observed_variable[i]==39:
+        elif observed_variable[i]==ipar[39]:
             spechum[j]=observation_value[i]
             d_spechum[j]=observation_value[i]-departure[i]
             fgd_spechum[j]=observation_value[i]-fg_departure[i]
-        elif observed_variable[i]==34:
+        elif observed_variable[i]==ipar[34]:
             dpd[j]=observation_value[i]
             d_dpd[j]=observation_value[i]-departure[i]
             fgd_dpd[j]=observation_value[i]-fg_departure[i]
-        elif observed_variable[i]==36:
+        elif observed_variable[i]==ipar[36]:
             dewpoint[j]=observation_value[i]
             d_dewpoint[j]=observation_value[i]-departure[i]
             fgd_dewpoint[j]=observation_value[i]-fg_departure[i]
@@ -335,19 +335,19 @@ def ipl2(lobs, fb):
             temp[j]=observation_value[i]
             d_temp[j]=observation_value[i]-departure[i]
             fgd_temp[j]=observation_value[i]-fg_departure[i]
-        elif observed_variable[i]==104:
+        elif observed_variable[i]==ipar[104]:
             uwind[j]=observation_value[i]
             d_uwind[j]=observation_value[i]-departure[i]
             fgd_uwind[j]=observation_value[i]-fg_departure[i]
-        elif observed_variable[i]==105:
+        elif observed_variable[i]==ipar[105]:
             vwind[j]=observation_value[i]
             d_vwind[j]=observation_value[i]-departure[i]
             fgd_vwind[j]=observation_value[i]-fg_departure[i]
-        elif observed_variable[i]==106:
+        elif observed_variable[i]==ipar[106]:
             wd[j]=observation_value[i]
             d_wd[j]=observation_value[i]-departure[i]
             fgd_wd[j]=observation_value[i]-fg_departure[i]
-        elif observed_variable[i]==107:
+        elif observed_variable[i]==ipar[107]:
             ws[j]=observation_value[i]
             d_ws[j]=observation_value[i]-departure[i]
             fgd_ws[j]=observation_value[i]-fg_departure[i]
@@ -364,7 +364,7 @@ def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,
              temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd,crhsh,cdpdsh,
              d_cdpddp,d_cdpdrh,d_cdpdsh,d_cshrh,d_cshdpd,d_crhsh,d_crhdpd,
              fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd):
-    if h==34:
+    if h==ipar[34]:
         if cdpddp[k]==cdpddp[k]:
             a_observation_value[j]=cdpddp[k]
             a_an_depar[j]=cdpddp[k]-d_cdpddp[k]
@@ -390,7 +390,7 @@ def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,
             a_conversion_flag[j]=0
             a_conversion_method[j]=4
             
-    elif h==36:
+    elif h==ipar[36]:
         if cdpdrh[k]==cdpdrh[k]:
             a_observation_value[j]=temp[k]-cdpdrh[k]
             a_an_depar[j]=(temp[k]-cdpdrh[k])-(temp[k]-d_cdpdrh[k])
@@ -416,7 +416,7 @@ def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,
             a_conversion_flag[j]=0
             a_conversion_method[j]=4
         
-    elif h==38:
+    elif h==ipar[38]:
         if crhdpd[k]==crhdpd[k]:
             a_observation_value[j]=crhdpd[k]
             a_an_depar[j]=crhdpd[k]-d_crhdpd[k]
@@ -434,7 +434,7 @@ def qconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,
             a_conversion_flag[j]=0
             a_conversion_method[j]=4
             
-    elif h==39:
+    elif h==ipar[39]:
         if cshrh[k]==cshrh[k]:
             a_observation_value[j]=cshrh[k]
             a_an_depar[j]=cshrh[k]-d_cshrh[k]
@@ -462,21 +462,21 @@ def wconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,
              cuwind,cvwind,cwd,cws,
              d_cwd,d_cws,
              fgd_cwd,fgd_cws):
-    if h==104:
+    if h==ipar[104]:
         if cuwind[k]==cuwind[k]:
             a_observation_value[j]=cuwind[k]
             a_an_depar[j]=numpy.nan
             a_fg_depar[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=1
-    elif h==105:
+    elif h==ipar[105]:
         if cvwind[k]==cvwind[k]:
             a_observation_value[j]=cvwind[k]
             a_an_depar[j]=numpy.nan
             a_fg_depar[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=1
-    elif h==106:
+    elif h==ipar[106]:
         if cwd[k]==cwd[k]:
             a_observation_value[j]=cwd[k]
             a_an_depar[j]=d_cwd[k]
@@ -485,7 +485,7 @@ def wconvert(j,k,h,a_observation_value,a_conversion_flag,a_conversion_method,
                 a_observation_value[j]=numpy.nan
             a_conversion_flag[j]=0
             a_conversion_method[j]=2
-    elif h==107:
+    elif h==ipar[107]:
         if cws[k]==cws[k]:
             a_observation_value[j]=cws[k]
             a_an_depar[j]=d_cws[k]
@@ -1006,7 +1006,7 @@ def retrieve_anfg(fn,out_name,path_to_gridded):
                     readict[k][dtype][p]['time']=np.concatenate([ntups[i][1] for i in range(len(ntups))])
                     readict[k][dtype][p]['values']=np.concatenate([ntups[i][0] for i in range(len(ntups))])
                     readict[k][dtype][p]['attribs']=ntups[0][3]
-            obstypes={'t':85,'u':104,'v':105,'q':39,'z':0}    
+            obstypes={'t':ipar[85],'u':ipar[104],'v':ipar[105],'q':ipar[39],'z':ipar[0]}    
             #tr[1]=117  # should change
             #tr[2]=85
             #tr[3]=104
@@ -1108,16 +1108,18 @@ def convert_missing(wpath,fn):
     nanlist = [float('nan'), np.nan, 0, -2147483648]
     
     
+    rscratch='/mnt/users/scratch/leo/scratch/'
     try:
         
-        with open(os.path.expandvars('/raid60/scratch/leo/scratch/converted_v7/rea/'+fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]+'pkl'),'rb') as f:
+        with open(os.path.expandvars(wpath+'/rea/'+fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]+'pkl'),'rb') as f:
             readict=pickle.load(f)
     except:
         
         out_name = wpath+fn.split('/')[-1]  
-        path_to_gridded=os.path.expandvars('/raid60/scratch/leo/scratch/era5/gridded/')
+        
+        path_to_gridded=os.path.expandvars(rscratch+'/era5/gridded/')
         readict=retrieve_anfg(fn,out_name,path_to_gridded)
-        with open(os.path.expandvars('/raid60/scratch/leo/scratch/converted_v7/rea/'+fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]+'pkl'),'wb') as f:
+        with open(os.path.expandvars(wpath+'/rea/'+fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]+'pkl'),'wb') as f:
             pickle.dump(readict,f)
     print (time.time()-tt)
     with eua.CDMDataset(fn) as data:
@@ -1272,8 +1274,8 @@ def convert_missing(wpath,fn):
     fgd_cwd = 90 - np.arctan2(-fgd_vwind, -fgd_uwind) * 180 / np.pi - 180.
     fgd_cwd = np.where(cwd > 0., cwd, 360.+cwd)
 
-    humvar=numpy.array((34,36,38,39)) #dpd,dp,rh,sh
-    wvar=numpy.array((104,105,106,107)) #dpd,dp,rh,sh
+    humvar=numpy.array((ipar[34],ipar[36],ipar[38],ipar[39])) #dpd,dp,rh,sh
+    wvar=numpy.array((ipar[104],ipar[105],ipar[106],ipar[107])) #dpd,dp,rh,sh
 
     reduced_obskeys=List(loaded_obstab.dtype.fields.keys())
     reduced_fbkeys=List(loaded_feedback.dtype.fields.keys())
@@ -1287,8 +1289,8 @@ def convert_missing(wpath,fn):
     
     for ii in range(104,108):
         #idx=np.where(loaded_obstab['observed_variable']==ii)[0]
-        idy=np.where(a_loaded_obstab['observed_variable'][:jj]==ii)[0]    
-        print('wind check',ii,len(idy))
+        idy=np.where(a_loaded_obstab['observed_variable'][:jj]==ipar[ii])[0]    
+        print('wind check',ipar[ii],len(idy))
     
     del temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,\
                                              cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,crhsh,cdpdsh,cuwind,cvwind,cwd,cws,\
@@ -1310,7 +1312,7 @@ def convert_missing(wpath,fn):
 
     # sorting:
     print('start sorting')
-    targetfile = '/raid60/scratch/leo/scratch/converted_v8/'+fn.split('/')[-1] # wpath+fn.split('/')[-1]
+    targetfile = rscratch+'converted_v8/'+fn.split('/')[-1] # wpath+fn.split('/')[-1]
     if os.path.isfile(targetfile):
         try:
             os.remove(targetfile)
@@ -1575,14 +1577,14 @@ if __name__ == '__main__':
                  '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-38696_CEUAS_merged_v0.nc',
                  '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-04085_CEUAS_merged_v0.nc',]    
 
-    wpath= './'
+    wpath= os.path.expandvars('$RSCRATCH/converted_v8/') #'./'
     opath=wpath
     wlpath=wpath+'log/'
-    try:
-        os.mkdir(wpath)
-        os.mkdir(wlpath)
-    except:
-        pass
+    for p in wpath,wlpath:      
+        try:
+            os.mkdir(p)
+        except:
+            pass
     
     #for i in no_height:
         #do_resort(i)
@@ -1592,7 +1594,51 @@ if __name__ == '__main__':
 
     files = glob.glob('/raid60/scratch/federico/MERGED_JUNE2021/*v1.nc')
     files_to_convert = glob.glob('/raid60/scratch/federico/MERGED_JUNE2021/*72357*v1.nc')
+    files = glob.glob('/scratch/das/federico/TRY_MERGED_FEB2022/*89564*v1.nc')
+    files_to_convert = files #glob.glob('/scratch/das/federico/TRY_MERGED_JAN2022/*72357*v1.nc')
+    
+    ipar=np.zeros(140,dtype=np.int32)-2100000000 # 
+    ipar[0]=0
+    ipar[34]=34
+    ipar[39]=39
+    ipar[85]=126
+    ipar[106]=106
+    ipar[107]=107
+    ipar[117]=117
+    #ipar[]=136
+    ipar[36]=137 #dp
+    ipar[38]=138 #rh
+    ipar[104]=139
+    ipar[105]=140
+
     print(files)
+    nfiles=glob.glob(wpath+'*v1.nc')
+    nfile=os.path.dirname(nfiles[0])+'/'+files[0].split('/')[-1]
+    ofiles=['/mnt/users/scratch/leo/scratch/converted_v7/0-20000-0-89564_CEUAS_merged_v1.nc']
+    nfiles=['/mnt/users/scratch/leo/scratch/converted_v8/0-20000-0-89564_CEUAS_merged_v1.nc']
+    with h5py.File(ofiles[0],'r') as f:
+        vcode=f['observations_table']['observed_variable'][:]
+        vcodes=np.unique(vcode)
+        print(vcodes)
+        print(ofiles[0])
+        for v in vcodes:
+            print(v,np.sum(v==vcode))
+        with h5py.File(nfiles[0],'r') as g:
+            vcode=g['observations_table']['observed_variable'][:]
+            vcodes=np.unique(vcode)
+            print(vcodes)
+            print(nfiles[0])
+            for v in vcodes:
+                print(v,np.sum(v==vcode))
+            
+            nstart=g['recordindices']['126'][0]
+            nstop=g['recordindices']['126'][-1]
+            plt.plot(g['observations_table']['date_time'][nstart:nstop]/86400/365.25,g['observations_table']['observation_value'][nstart:nstop])
+            ostart=f['recordindices']['85'][0]
+            ostop=f['recordindices']['85'][-1]
+            plt.plot(f['observations_table']['date_time'][ostart:ostop]/86400/365.25,f['observations_table']['observation_value'][ostart:ostop])
+            print(nstop-nstart,ostop-ostart)
+    
     already_done = glob.glob(wlpath+'*.txt')
 
 #     files_to_convert = []
@@ -1602,15 +1648,15 @@ if __name__ == '__main__':
 #     files_to_convert.sort()
     tt=time.time()
     
-    for i in files_to_convert:
-        print(i)
-        convert_missing(wpath, i)
+    #for i in files_to_convert:
+        #print(i)
+        #convert_missing(wpath, i)
         
-    print('total:',time.time()-tt)
 
-#     pool = multiprocessing.Pool(processes=20)
+    pool = multiprocessing.Pool(processes=20)
 #     #result_list = pool.map(convert_missing, files_to_convert)
-#     func=partial(convert_missing,wpath)
-#     result_list = list(pool.map(func, files_to_convert))
+    func=partial(convert_missing,wpath)
+    result_list = list(p.map(func, files_to_convert))
 #     print(result_list)
+    print('total:',time.time()-tt)
 
