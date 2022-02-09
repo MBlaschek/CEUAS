@@ -162,27 +162,26 @@ def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_re
             retrieve_country = "Côte d'Ivoire"        
         if retrieve_country == 'Bolivia':
             retrieve_country = "Bolivia, Plurinational State of"            
-            
+        """
         if retrieve_country ==    "French Southern and Antarctic Lands":
             retrieve_country = "France"      
-            
         if retrieve_country ==    "North Korea":
                 retrieve_country = "Korea, Democratic People's Republic of"                   
-          
         if retrieve_country ==  "Taiwan":
             retrieve_country = "Taiwan, Province of China"                 
-            
         if "US " in retrieve_country:
             retrieve_country = "United States"         
-            
         if retrieve_country == "Brunei":
             retrieve_country = "Brunei Darussalam"      
-            
         if retrieve_country == "United States Virgin Islands":
             retrieve_country = "Virgin Islands, U.S."   
-                
         if retrieve_country == "Laos":
             retrieve_country = "Lao People's Democratic Republic"     
+        """
+        
+        if "US " in retrieve_country:
+            retrieve_country = "United States"      
+            
         # ------------   
         # TODO replace if statements above with the dictionary below, to keep same form 
         terr_names = { "Aland": "Åland Islands",
@@ -198,6 +197,13 @@ def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_re
                  "Saint Helena": "Saint Helena, Ascension and Tristan da Cunha",
                  "Cape Verde": "Cabo Verde",
                  "The Bahamas": "Bahamas",
+                 "Laos": "Lao People's Democratic Republic",
+                 "United States Virgin Islands":"Virgin Islands, U.S.",
+                 "Brunei":"Brunei Darussalam",
+                 "Taiwan":"Taiwan, Province of China"    ,
+                 "North Korea":"Korea, Democratic People's Republic of" ,
+                 "French Southern and Antarctic Lands":"France"  ,
+                 
         }
         
         if retrieve_country in terr_names.keys():
@@ -277,7 +283,7 @@ def make_inventory(v):
         json_data = json.load(a)
     
     
-    # holding extra varuables that do not appear in the stat_conf but can be very useful
+    # holding extra variables that do not appear in the stat_conf but can be very useful
     # will be saved in extra station_conf file 
     
     extra_vars = { 'distance_km': [],
@@ -289,10 +295,8 @@ def make_inventory(v):
     for file in tqdm(files):    
         
         df = pd.read_csv(file, sep = '\t', header = 0)
-        
         df = df.dropna( subset = ['latitude','longitude'])
 
-        
         # select best inventory available        
         best_inv = get_best_inventory(df)
 
@@ -313,7 +317,6 @@ def make_inventory(v):
                                                       json_data = json_data, file = file)
                 print(file, '   ', terr)
                 stat_conf_dic[c].append(terr) 
-                
                 
             elif c in statConf_to_inventory.keys():
                 if c == 'secondary_id':
@@ -505,9 +508,6 @@ def merge_inventories():
     for index, row in tqdm( inventory_cuon.iterrows() ):     
         pi = row.primary_id 
         
-        #if index > 8500:
-        #    break
-        
         igra = igra_f.loc[igra_f['primary_id'] == pi ]
         igra = igra.reset_index()
         gruan = gruan_f.loc[gruan_f['primary_id'] == pi ]
@@ -518,7 +518,6 @@ def merge_inventories():
                 continue
                 
             # renumbering and adding observed variables common to all datasets 
-
                             
             #if c == 'primary_id' and row[c] == '0-20000-0-63740':
             #    print(0)
@@ -533,9 +532,7 @@ def merge_inventories():
                     s = ''
     
                 if c in ['secondary_id', 'metadata_contact', 'station_name', 'city']: # summing alls
-                    #if c == 'station_name':
-                    #    print(0)
-    
+                    
                     if len(igra) >0:
                         try:
                             if s !=  igra[c].values[0] and s != 'None':
@@ -549,12 +546,6 @@ def merge_inventories():
                         except:
                             pass
     
-                #elif c in ['start_date','end_date']: # CUON is most comprehensive
-                #    try:
-                #        s = row[c][:4]
-                #    except:
-                #        s = ''
-                    
                 elif (c in special_columns.keys() or c in ['operating_territory']):
                     if len(gruan) >0:
                         s =  gruan[c].values[0]
@@ -615,7 +606,6 @@ def merge_inventories():
     ids_cuon = inventory_cuon['primary_id'].values
     only_gruan = [s for s in ids_gruan if s not in ids_cuon]
     
-    
     for station in only_gruan:     
         df = gruan_f.loc[gruan_f['primary_id'] == station ]
         for c in combining_all.keys():
@@ -641,9 +631,7 @@ def merge_inventories():
     
     print('--- Finished with the global inventory --- ')
     
-    
-    
-    
+
 # define a list of operation to perform between  [ 'INVENTORY', CUON', 'MERGE']
 TODO = ['INVENTORY', 'CUON', "MERGE"]
 POOL = False
@@ -652,12 +640,10 @@ n_pool = 40
 
 parser = argparse.ArgumentParser(description="Crete station configuration table")
 
-
 parser.add_argument('--dataset' , '-d', 
                       help="Select the dataset"  ,
                       type = str,
                       default = 'era5_1' )
-
 
 args = parser.parse_args()
 v                = args.dataset
