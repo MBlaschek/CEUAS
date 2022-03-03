@@ -524,14 +524,14 @@ slnum = list(active.keys())
 # slist = [config['data_dir'] + '/0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
 # slist = [s[5] for _,s in active.items()]
 
-try:
+# try:
 #    set_start_method("spawn")  # or fork ? not sure why, pickling?
-    set_start_method("forkserver")  # fork is not threadsafe, unfortunately
-    P=Pool(16) 
-    x=P.map(np.sin,np.arange(16))
-    print(x)
-except RuntimeError:
-    pass
+# set_start_method("forkserver")  # fork is not threadsafe, unfortunately
+P=Pool(16) 
+x=P.map(np.sin,np.arange(16))
+print(x)
+# except RuntimeError:
+#     pass
 
 ###############################################################################
 #
@@ -777,6 +777,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                gridded: list = None, toolbox: str = None, cdm: list = None, da: bool = True, compression: str = None,
                pass_unknown_keys: bool = False, nodims: str = None, hdf: str = None, speed_test: str = None, 
+               single_parallel: bool = False,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
 
@@ -988,6 +989,14 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         d['hdf'] = False
         
             
+    #
+    # single_parallel
+    #
+    if single_parallel:
+        d['single_parallel'] = True
+    else:
+        d['single_parallel'] = False
+        
     #
     # speed_test
     #
