@@ -54,15 +54,6 @@ import pickle
 from itertools import product
 import numpy as np
 
-
-if False:
-    import cds_eua2 as eua  # old version
-    CDS_EUA_VERSION = 2
-else:
-#     sys.path.append(os.path.expanduser('~leo/python/CEUAS/CEUAS/public/cds-backend/code'))
-    import cds_eua3 as eua  # new version with CDMDataset class
-    CDS_EUA_VERSION = 3
-
 import h5py
 import hug
 import numpy
@@ -87,6 +78,7 @@ config = {'logger_name': 'upperair',
           'grid_dir': '.',
           'tmp_dir': '.',
           'config_dir': './config',
+          'cds_eua_version': 4,
           'debug': False,
           'reload_pwd': 'reload'}
 
@@ -102,7 +94,17 @@ if os.path.isfile(config_file):
 else:
     print("Writing new config file:", config_file, "Adjust accordingly!")
     json.dump(config, open(config_file, 'w'))
-
+    
+if config['cds_eua_version'] == 3:
+    import cds_eua3 as eua 
+    # old variable codes
+    CDS_EUA_VERSION = 3
+elif config['cds_eua_version'] == 4:
+    import cds_eua4 as eua
+    CDS_EUA_VERSION = 4
+    
+print('CDS_EUA_VERSION: ', CDS_EUA_VERSION)
+    
 os.makedirs(config['logger_dir'], exist_ok=True)
 os.makedirs(config['config_dir'], exist_ok=True)
 
@@ -215,7 +217,7 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
                                     int(eua.secsince(f['recordtimestamp'][-1], funits)),
                                     float(f['observations_table']['latitude'][-1]),
                                     float(f['observations_table']['longitude'][-1])]
-                if CDS_EUA_VERSION == 3:
+                if CDS_EUA_VERSION >= 3:
                     #if isinstance(f['recordindices'], h5py._hl.group.Group):
                     if 'recordindices' in f.keys():
                         active[skey] = [int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][0], funits)),
