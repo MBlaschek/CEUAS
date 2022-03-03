@@ -53,20 +53,20 @@ cdm_codes = {'temperature': 85, 'relative_humidity': 38, 'dew_point_temperature'
              'geopotential': 117, 'wind_direction': 106, 'wind_speed': 107, 'u_component_of_wind': 104,
              'v_component_of_wind': 105,
              'specific_humidity': 39}
-#new codes
+#codes, to be used with old converted and harvested files (<=converted_v7)
 ipar=[0]*140
 ipar[0]=0
 ipar[34]=34
 ipar[39]=39
-ipar[85]=126
+ipar[85]=85
 ipar[106]=106
 ipar[107]=107
 ipar[117]=117
 #ipar[]=136
-ipar[36]=137 #dp
-ipar[38]=138 #rh
-ipar[104]=139
-ipar[105]=140
+ipar[36]=36 #dp
+ipar[38]=38 #rh
+ipar[104]=104
+ipar[105]=105
 
 cdm_codes = {'temperature': ipar[85], 'relative_humidity': ipar[38], 'dew_point_temperature': ipar[36], 
              'dew_point_depression': ipar[34],             
