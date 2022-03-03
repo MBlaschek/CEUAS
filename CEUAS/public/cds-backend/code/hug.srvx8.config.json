@@ -2,12 +2,13 @@
   "logger_name": "upperair",
   "logger_level": 10,
   "logger_debug": "hug.debug.log",
-  "logger_dir": "$SCRATCH/hug/logs",
+  "logger_dir": "/users/staff/a1400070/scratch/hug/logs",
   "src_path": ".",
-  "data_dir": "/raid60/scratch/uli/resorted_files_correct",
-  "tmp_dir": "$SCRATCH/hug/tmp",
-  "comp_dir": "/raid60/scratch/leo/scratch/RI/Pangaea/nc",
-  "config_dir": "$SCRATCH/hug/config",
+  "data_dir": "/mnt/users/scratch/leo/scratch/converted_v7",
+  "tmp_dir": "/users/staff/a1400070/scratch/hug/tmp",
+  "comp_dir": "~~~/mnt/users/scratch/leo/scratch/RI/Pangaea/nc",
+  "config_dir": "/users/staff/a1400070/scratch/hug/config",
   "reload_pwd": "reload",
-    "debug": true
+  "cds_eua_version": 3,
+  "debug": false
 }
