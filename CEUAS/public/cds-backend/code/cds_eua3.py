@@ -24,6 +24,7 @@ Performance
 - HDF5 files could be split by variable, would improve reading performance dramatically, especially in MP
 """
 import os
+import glob
 import time
 from datetime import datetime, timedelta
 import logging
@@ -40,6 +41,11 @@ from numba import njit
 import geopy
 import json
 import netCDF4
+
+from functools import partial
+from itertools import islice
+from multiprocessing import set_start_method, Pool
+
 
 # check codes from there
 # https://github.com/glamod/common_data_model/blob/master/tables/observed_variable.dat
@@ -1419,9 +1425,19 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             with CDMDataset(filename=filename, groups=gdict,da=da) as data:
                 if debug: print('x',time.time()-tt)
 #                 try:
-                data.read_write_request(filename_out=filename_out,
-                                        request=request_variables,
-                                        cf_dict=cftable)
+                #
+                # parallel processing a single station file
+                #
+                if request_variables['single_parallel']:                
+                    data.read_write_request_parallel(filename_out=filename_out,
+                                            request=request_variables,
+                                            cf_dict=cftable)
+                else:
+                    data.read_write_request(filename_out=filename_out,
+                                            request=request_variables,
+                                            cf_dict=cftable)
+    
+                
 #                 except:
 #                     pass
             if debug: 
@@ -2036,6 +2052,188 @@ class CDMDatasetList(dict):
             
         return text
 
+
+def parallel_writing(filename, dims, trajectory_index, idx, zidx, compression, filename_out, request, globatts, cfcopy):
+    time0 = time.time()
+#     cfcopy, add_aux_vars = parallel_input
+    key, value = list(cfcopy.items())[0]
+    filename_out = filename_out[:-3] + '_' + key + '.nc'
+    with CDMDataset(filename) as infile:
+        with h5py.File(filename_out, 'w') as fout:
+            #
+            # Dimensions (obs, trajectory)
+            #
+#             if add_aux_vars == 0:
+#                 for d, v in dims.items():
+#                     fout.create_dataset(d, data=v)
+#                     fout[d].attrs['NAME'] = np.string_('This is a netCDF dimension but not a netCDF variable.')
+#                     fout[d].make_scale(d)  # resolves phony_dim problem
+            
+            if value == 0:
+#                 for d, v in dims.items()[:1]:
+                for d, v in islice(dims.items(), 0, 1):
+                    fout.create_dataset(d, data=v)
+                    fout[d].attrs['NAME'] = np.string_('This is a netCDF dimension but not a netCDF variable.')
+                    fout[d].make_scale(d)  # resolves phony_dim problem
+            elif value == 1:
+#                 for d, v in dims.items()[1:]:
+                for d, v in islice(dims.items(), 1, None):
+                    fout.create_dataset(d, data=v)
+                    fout[d].attrs['NAME'] = np.string_('This is a netCDF dimension but not a netCDF variable.')
+                    fout[d].make_scale(d)  # resolves phony_dim problem
+
+            elif value == 2:
+                fout.create_dataset('trajectory_index', data=trajectory_index)
+                fout['trajectory_index'].attrs['long_name'] = np.string_(
+                    "index of trajectory this obs belongs to")
+                fout['trajectory_index'].attrs['instance_dimension'] = np.string_("trajectory")
+                fout['trajectory_index'].attrs['coordinates'] = np.string_("lat lon time plev")
+
+                print('attrs written')
+                
+            elif value == 3:
+                #
+                # Station Configuration
+                #
+                # station_configuration
+                if 'station_configuration' in infile.groups:
+                    igroup = 'station_configuration'
+                    cfcstationcon = {'station_name': 
+                                     {
+                                         'cdmname': 'station_configuration/station_name',
+                                         'units': 'NA',
+                                         'shortname': 'station_id',
+                                         'coordinates': 'lat lon time plev',
+                                         'standard_name': 'station_name'
+                                     }
+                                    } 
+                    do_cfcopy(fout, infile.file, igroup, idx, cfcstationcon, 'obs', compression,
+                              var_selection=['station_name'])
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+
+            else:           
+
+                #
+                # Variables based on cfcopy
+                #
+                if 'observations_table' in infile.groups:
+                    igroup = 'observations_table'
+                    do_cfcopy(fout, infile.file, igroup, idx, cfcopy, 'obs', compression,
+                              var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
+                                             'observation_value', 'date_time', 'sensor_id', 'secondary_value',
+                                             'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']) #+cdm_obstab)
+                    # 'observed_variable','units'
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    if 'nodims' in request.keys():
+                        fout['time'].make_scale('time')
+                #
+                # Feedback Information
+                #
+                if 'era5fb' in infile.groups:
+                    igroup = 'era5fb'
+                    try:
+                        do_cfcopy(fout, infile.file, igroup, idx, cfcopy, 'obs', compression,
+                                  var_selection=['fg_depar@body', 'an_depar@body',
+                                                 'biascorr@body']) #+cdm_eratab)
+                        # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
+                        logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    except KeyError as e:
+                        print(e)
+    #                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), infile.name))
+                #
+                # Adjusted Values with ERA5
+                # TODO: Names not set, group missing
+                if 'adjera5' in infile.groups:
+                    igroup = 'adjera5'
+                    try:
+                        do_cfcopy(fout, infile.file, igroup, idx, cfcopy, 'obs', compression,
+                                  var_selection=['bias_estimate', 'bias_estimation_method'])
+                        logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    except KeyError as e:
+                        print(e)
+    #                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), infile.name))
+
+                if 'advanced_homogenisation' in infile.groups :
+                    igroup = 'advanced_homogenisation'
+                    varsel=[]
+                    try:
+                        for o in request['optional']:
+                            if o in varseldict[request['variable']]:
+                                varsel.append(o)
+                    except:
+                        pass
+
+                    if varsel:       
+                        try:
+                            do_cfcopy(fout, infile.file, igroup, idx, cfcopy, 'obs', compression,
+                                      var_selection=varsel)
+                            logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                        except KeyError as e:
+                            print(e)
+                            #raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), infile.name))
+
+
+                #
+                # advanced_uncertainty
+                # 
+                if 'advanced_uncertainty' in infile.groups:
+                    print('advanced_uncertainty in infile.groups')
+                    igroup = 'advanced_uncertainty'
+                    try:
+                        do_cfcopy(fout, infile.file, igroup, idx, cfcopy, 'obs', compression,
+                                  var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
+                        logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    except KeyError as e:
+                        print(e)
+    #                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), infile.name))
+
+                #
+                # Header Information
+                #
+                if 'header_table' in infile.groups:
+                    igroup = 'header_table'
+                    # only records fitting criteria (zidx) are copied
+                    # todo why is lon, lat not here?
+                    do_cfcopy(fout, infile.file, igroup, zidx, cfcopy, 'trajectory', compression,
+                              var_selection=['report_id'])
+                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    # ,'station_name','primary_station_id'])
+                    # todo could be read from the observations_table
+
+
+                #
+                # Fix Attributes and Globals
+                #
+                if key == 'trajectory_label':
+                    fout['trajectory_label'].attrs['cf_role'] = np.string_('trajectory_id')
+                    fout['trajectory_label'].attrs['long_name'] = np.string_('Label of trajectory')
+                for a, v in globatts.items():
+                    fout.attrs[a] = np.string_(v)
+
+                fout.attrs['history'] = np.string_(
+                    'Created by Copernicus Early Upper Air Service Version 0, ' + datetime.now().strftime(
+                        "%d-%b-%Y %H:%M:%S"))
+                fout.attrs['license'] = np.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
+
+                for i in fout.keys():
+                    #print(i)
+                    if 'nodims' in request.keys():
+                        if (i == 'obs' or i == 'trajectory' or 'string' in i):
+                            fout.__delitem__(i)
+                    version = ''
+                    if '.' in i:
+                        vers = i.find('.')
+                        version = i[(vers-2):(vers+2)] # '_x.x'
+                        newname = i.replace(version, '')
+                        fout[newname] = fout[i]
+                        fout.__delitem__(i)
+                        fout[newname].attrs['version'] = np.string_(version[1:]) # 'x.x'
+
+                # removing variables with restricted access
+                try: fout['observations_table'].__delitem__('observation_value')
+                except: pass
+                try: fout['era5fb'].__delitem__('obsvalue@body')
+                except: pass
 
 class CDMDataset:
     """ This is the main CDM Class for handling CDM files, both frontend and backend
@@ -3272,6 +3470,175 @@ class CDMDataset:
 #                     continue
 #                 break
                     
+        logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
+        tt=time.time() - time0
+        print(tt)
+    
+        # FIN
+                   
+    def read_write_request_parallel(self, filename_out: str, request: dict, cf_dict: dict):
+        """ This is the basic request used in the cds_eua2 script
+
+        Args:
+            filename_out: request output filename, e.g. : /data/public//tmp//049532808458/dest_0-20000-0-10393_air_temperature.nc
+            request: Request dictionary, minimum: {'variable' : 'temperature'}
+            cf_dict: CF Convention for Names (results from read_standardnames() Function)
+
+        Examples:
+            >>> data = CDMDataset(filename)
+            >>> data.read_write_request('test_cdm_frontend.nc', {'statid': '01001', 'variable': ['temperature']})
+            Write all temperature data to a CDM frontend file
+        """
+        # version of process_flat with Leo's optimizations
+        if 'variable' not in request.keys():
+            logger.error('No variable specified %s %s', str(request.keys()), self.name)
+            raise ValueError('No variable specified')
+
+        variable = request['variable']
+        compression = request['compression']
+        if isinstance(variable, list):
+            if len(variable) > 1:
+                # todo potentially launch here recursive ?
+                raise RuntimeError('Requests need to be split up by variable')
+            variable = variable[0]  # assumes a list ?
+
+        if cf_dict is None:
+            cf_dict = read_standardnames()
+
+        cdsname = cdm_to_cds(variable, cf=cf_dict)
+        cdmattrs = cf_dict[cdsname]  #
+        cdmnum = cdmattrs['cdmcode']  # 85 for air_temperature
+        time0 = time.time()
+
+        trange, mask = self.read_observed_variable(cdmnum,
+                                                   variable='observation_value',
+                                                   dates=request.get('date', None),
+                                                   plevs=request.get('pressure_level', None),
+                                                   times=request.get('time', None),
+                                                   observed_variable_name='observed_variable',
+                                                   date_time_name='date_time',
+                                                   date_time_in_seconds=False,
+                                                   z_coordinate_name='z_coordinate',
+                                                   group='observations_table',
+                                                   dimgroup='observations_table',
+                                                   return_index=True,
+                                                   rtsindex=request.get('rtsidx',None)
+                                                   )
+        logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange.start,
+                     trange.stop, time.time() - time0, self.name)
+        tt=time.time() - time0
+        print(tt)
+        idx = np.where(mask)[0] + trange.start  # absolute integer index
+        if len(idx) == 0:
+            logger.warning('No matching data found %s', self.name)
+            raise ValueError('No matching data found')  # add CDMname for logging
+            #return
+
+        logger.debug('Data found: %d %s', len(idx), self.name)
+        #
+        # Make Trajectory Information (lon, lat, profile id, ...)
+        #
+        trajectory_index = np.zeros_like(idx, dtype=np.int32)
+        trajectory_index2 = np.zeros_like(idx, dtype=np.int32)
+        if 'recordinindex' in self.groups:
+            # unsorted indices in root
+            recordindex = self.file['recordindex'][()]
+        else:
+            # sorted indices are in recordindices group / by variable
+            recordindex = self.file['recordindices'][str(cdmnum)][()]  # values
+            
+        zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex <= trange.stop))[0]
+        zidx = calc_trajindexfastl(recordindex, zidx, idx, trajectory_index)
+        #
+        # Dimensions and Global Attributes
+        #
+        tt=time.time() - time0
+        print(tt)
+        dims = {'obs': np.zeros(idx.shape[0], dtype=np.int32),
+                'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
+        globatts = get_global_attributes()  # could put more infors there ?
+        #
+        # Definition of Variables to write
+        #
+        # Common Variables needed for a requested file
+        #
+        snames = ['platform_id', 'platform_name', 'observation_value', 'latitude',
+                  'longitude', 'time', 'air_pressure', 'trajectory_label', 
+                  'report_id', 'station_id']
+        varseldict={}
+        varseldict['temperature']=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate']
+        varseldict['wind_direction']=['wind_bias_estimate']
+        varseldict['u_component_of_wind']=['wind_bias_estimate']
+        varseldict['v_component_of_wind']=['wind_bias_estimate']
+        varseldict['relative_humidity']=['humidity_bias_estimate']
+        # added report_id -> in observations_table, not to be confused with report_id from header_table -> trajectory_label
+        logger.debug('Request-keys: %s', str(request.keys()))
+        snames.append(cdsname)  # Add requested variable
+        #
+        # Add Optional Variables
+        # Check read_standard_names for correct names otherwise it will be rejected
+        #
+        if 'optional' in request.keys():
+            snames.extend(request['optional'])
+            
+        if 'bias_estimate_method' in request.keys():
+            # use era5adj group
+            pass
+        
+        # Copy Metadata -> used by do_cfcopy
+        cfcopy = {}  # Copy of CDM Info Dictionary (read_standard_names())
+        for ss in snames:
+            try:
+                cfcopy[ss] = cf_dict[ss]
+            except:
+                pass
+        #
+        # End Definition of Variables to write
+        #
+        logger.debug('Writing: %s', filename_out)
+        tt=time.time() - time0
+        print(tt)
+        
+        ###
+        # start splitting and parallel work here:
+        ###
+        
+        # outputfiles:
+        del cfcopy['platform_id']
+        del cfcopy['platform_name']
+
+        list_cfcopy = []
+        for chunks in cfcopy:
+            list_cfcopy.append({chunks:cfcopy[chunks]})
+        list_cfcopy.append({'0':0})
+        list_cfcopy.append({'1':1})
+        list_cfcopy.append({'2':2})
+        list_cfcopy.append({'3':3})
+#         for o in range(len(list_cfcopy)):
+#             list_cfcopy[o]=[list_cfcopy[o], o]
+        
+        ###pool###
+        fname = str(self.filename)
+        P = Pool(10)
+        func = partial(parallel_writing, fname, dims, trajectory_index, idx, zidx, compression, filename_out, request, globatts)
+        pool_out = list(P.map(func, list_cfcopy, chunksize=3))
+        print(pool_out)
+        filelist = glob.glob(filename_out[:-3]+'_*')
+        
+        ###
+        # Concatination of single files
+        ###
+        
+        with h5py.File(filename_out, 'w') as merge:
+            print(filename_out)
+            for r in filelist:
+                print(r)
+                with h5py.File(r, 'r') as filetocopy:
+                    for i in filetocopy.keys():
+                        if not i in merge.keys():
+                            print(i)
+                            filetocopy.copy(i, merge, name=i)
+        logger.debug('netcdfs merged [%d] to %s', len(filelist), filename_out)
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
         print(tt)
