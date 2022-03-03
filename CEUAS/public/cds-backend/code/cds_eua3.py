@@ -47,6 +47,26 @@ cdm_codes = {'temperature': 85, 'relative_humidity': 38, 'dew_point_temperature'
              'geopotential': 117, 'wind_direction': 106, 'wind_speed': 107, 'u_component_of_wind': 104,
              'v_component_of_wind': 105,
              'specific_humidity': 39}
+#new codes
+ipar=[0]*140
+ipar[0]=0
+ipar[34]=34
+ipar[39]=39
+ipar[85]=126
+ipar[106]=106
+ipar[107]=107
+ipar[117]=117
+#ipar[]=136
+ipar[36]=137 #dp
+ipar[38]=138 #rh
+ipar[104]=139
+ipar[105]=140
+
+cdm_codes = {'temperature': ipar[85], 'relative_humidity': ipar[38], 'dew_point_temperature': ipar[36], 
+             'dew_point_depression': ipar[34],             
+             'geopotential': ipar[117], 'wind_direction': ipar[106], 'wind_speed': ipar[107], 
+             'u_component_of_wind': ipar[104],'v_component_of_wind': ipar[105],
+             'specific_humidity': ipar[39]}
 # get codes from there
 # https://apps.ecmwf.int/odbgov/varno/
 odb_codes = {'geopotential': 1, 'temperature': 2, 'u_component_of_wind': 3, 'v_component_of_wind': 4,
@@ -409,6 +429,13 @@ def tohourday(hours, days, datetimes, day_shift):
             # x=0
     return
 
+@njit
+def csvwrite(formatall,a,b,c,d,e,f,g):
+    
+    h=[item for sublist in zip(a,b,c,d,e,f,g) for item in sublist]
+    s=formatall%tuple(h)
+    
+    return s
 
 ###############################################################################
 #
@@ -509,34 +536,34 @@ def read_standardnames(url: str = None) -> dict:
     cf['obs_minus_an']['cdmcode'] = 0
     cf['obs_minus_an']['odbcode'] = 0
     cf['air_temperature']['cdsname'] = 'temperature'
-    cf['air_temperature']['cdmcode'] = 85
+    cf['air_temperature']['cdmcode'] = cdm_codes['temperature']
     cf['air_temperature']['odbcode'] = 2
     cf['eastward_wind']['cdsname'] = 'u_component_of_wind'
-    cf['eastward_wind']['cdmcode'] = 104
+    cf['eastward_wind']['cdmcode'] = cdm_codes['u_component_of_wind']
     cf['eastward_wind']['odbcode'] = 3
     cf['northward_wind']['cdsname'] = 'v_component_of_wind'
-    cf['northward_wind']['cdmcode'] = 105
+    cf['northward_wind']['cdmcode'] = cdm_codes['v_component_of_wind']
     cf['northward_wind']['odbcode'] = 4
     cf['wind_speed']['cdsname'] = 'wind_speed'
-    cf['wind_speed']['cdmcode'] = 107
+    cf['wind_speed']['cdmcode'] = cdm_codes['wind_speed']
     cf['wind_speed']['odbcode'] = 112
     cf['wind_from_direction']['cdsname'] = 'wind_direction'
-    cf['wind_from_direction']['cdmcode'] = 106
+    cf['wind_from_direction']['cdmcode'] = cdm_codes['wind_direction']
     cf['wind_from_direction']['odbcode'] = 111
     cf['relative_humidity']['cdsname'] = 'relative_humidity'
-    cf['relative_humidity']['cdmcode'] = 38
+    cf['relative_humidity']['cdmcode'] = cdm_codes['relative_humidity']
     cf['relative_humidity']['odbcode'] = 29
     cf['specific_humidity']['cdsname'] = 'specific_humidity'
-    cf['specific_humidity']['cdmcode'] = 39
+    cf['specific_humidity']['cdmcode'] = cdm_codes['specific_humidity']
     cf['specific_humidity']['odbcode'] = 7
     cf['dew_point_depression']['cdsname'] = 'dew_point_depression'
-    cf['dew_point_depression']['cdmcode'] = 34
+    cf['dew_point_depression']['cdmcode'] = cdm_codes['dew_point_depression']
     cf['dew_point_depression']['odbcode'] = 299
     cf['dew_point_temperature']['cdsname'] = 'dew_point_temperature'
-    cf['dew_point_temperature']['cdmcode'] = 36
+    cf['dew_point_temperature']['cdmcode'] = cdm_codes['dew_point_temperature']
     cf['dew_point_temperature']['odbcode'] = 59
     cf['geopotential']['cdsname'] = 'geopotential'
-    cf['geopotential']['cdmcode'] = 117
+    cf['geopotential']['cdmcode'] = cdm_codes['geopotential']
     cf['geopotential']['odbcode'] = 1
     cf['trajectory_label']['shortname'] = 'trajectory_label'
     cf['sonde_type']['shortname'] = 'sonde_type'
@@ -2459,7 +2486,7 @@ class CDMDataset:
             timestamp = self.load_variable_from_file('time', return_data=True)[0]
             timestamp, num_rec = np.unique(timestamp, return_counts=True)
             return pd.Series(data=num_rec, index=seconds_to_datetime(timestamp), name='num_obs')
-        
+ 
 
     def read_write_request(self, filename_out: str, request: dict, cf_dict: dict):
         """ This is the basic request used in the cds_eua2 script
@@ -2776,6 +2803,21 @@ class CDMDataset:
 #                formatall=formatstrn*lfout[0].shape[0]
 #                 with open(filename_out,'w') as f:
 #                 with lz4.frame.open(filename_out,'wt') as f:
+
+                tt=time.time()
+                ss=[]
+                for v in fout.values():
+                    ss.append(f"{tuple(v)}".split(','))
+                x=[','.join(t) for t in zip(*ss)]
+                sss='\n'.join(x)
+                print(len(sss),time.time()-tt)
+                tt=time.time()
+                b=[item for sublist in zip(*fout.values()) for item in sublist]
+                s=formatall%tuple(b)
+                print(len(sss),time.time()-tt)
+                
+#                s=csvwrite(formatall,*fout.values())
+
                 if filename_out is not None:
                     with gzip.open(filename_out,'wt',compresslevel=1) as f:
                         f.write(headstr[:-1]+'\n')
