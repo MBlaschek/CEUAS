@@ -27,6 +27,8 @@ import pycountry
 import json
 
 
+os.system('mkdir station_configuration')
+    
 # urls of the CDM station_configuration
 # We need to use the table definition (not the table, which does not exist)
 path='https://raw.githubusercontent.com/glamod/common_data_model/master/table_definitions/station_configuration.csv'
@@ -42,7 +44,7 @@ stat_conf=pd.read_csv(f, delimiter='\t', quoting=3, dtype=columns_type_dic ,na_f
 stat_conf_columns = stat_conf['element_name']
 
 # mapping the column names from each inveotry csv file, to the column names in the CDM
-inventory_to_statConf = { 'WIGOS_calc' : 'primary_id' ,
+inventory_to_statConf = { 'WIGOS_best' : 'primary_id' ,
                 'file_statid' : 'secondary_id',
                 'station_name' : 'station_name',
                 'latitude':'latitude',
@@ -237,43 +239,48 @@ def get_best_inventory(df):
     Give preference to upper-air / radiosonde station from OSCAR, then generic OSCAR,
     then IGRA2, then WBAN and finaly CHUAN inventory """
     
-    for i in ['OSCAR', 'IGRA2', 'WBAN' , 'CHUAN']:
-        dfr = df[ df.inventory == i ]
-        #dfr = dfr.dropna( subset = ['latitude','longitude'])        
-        if not dfr.empty:
-            if i == 'OSCAR':
+    best_w = df.WIGOS_best.values[0]
+    
+    df_best = df.loc[df.WIGOS_best == df.WIGOS_calc]
+    if not df_best.empty:
+        return df_best[:1]
+    
+    else: 
+        for i in ['OSCAR', 'IGRA2', 'WBAN' , 'CHUAN']:
+            dfr = df[ df.inventory == i ]        
+            #dfr = dfr.dropna( subset = ['latitude','longitude'])  
+            if i=="OSCAR":         
                 dfr_radio = dfr[dfr.isRadio == True ] # check if upperAir/radiosonde station flag 
                 if not dfr_radio.empty:
                     return dfr_radio
                 else:
                     return dfr[0:1]
+                
             else:
+                dfr = dfr.sort_values(by=['distance_km'] )     
                 return dfr[0:1]  
             
     return dfr 
-        
-            
-            
-# directory containing each single inventory file for each station 
-        
 
+# directory containing each single inventory file for each station 
+    
 def make_inventory(v):
     """ Creates the inventory for the given database """
     
     print(' *** Creating the inventory for ' , v )
-    
+    if not os.path.isdir('station_configuration/logs'):
+        os.system('mkdir station_configuration/logs')
+        
     inv_path = 'inventories/' 
 
-    files = glob.glob(inv_path + '/' + v + '/' + '*inventories.csv*')
-    files = [f for f in files if 'all' not in f ]
+    files = glob.glob(inv_path + '/' + v + '/' + '*inventories_iden*')
+    files = [f for f in files if 'all' not in f and 'Ids' not in f  ]
     
     # initialize each inventory dic
     stat_conf_dic = {}
     for c in stat_conf_columns:
         stat_conf_dic[c] = []
-    
-    
-    
+
     cdm_sub_regions = pd.read_csv("../data/sub_region.dat", sep = '\t')
     # Retrieve or read json files with country borders
     if not os.path.isfile("../data/countries.geojson"):
@@ -282,8 +289,7 @@ def make_inventory(v):
         a = open('../data/countries.geojson')
         json_data = json.load(a)
     
-    
-    # holding extra variables that do not appear in the stat_conf but can be very useful
+    # holding extra variables that do not appear in the stat_conf but can be useful
     # will be saved in extra station_conf file 
     
     extra_vars = { 'distance_km': [],
@@ -291,17 +297,24 @@ def make_inventory(v):
                             'city_dist_km': [] ,
                             'file': [] }
     
-    
+    #files = [f for f in files if '72805' in f ]
     for file in tqdm(files):    
         
+
         df = pd.read_csv(file, sep = '\t', header = 0)
         df = df.dropna( subset = ['latitude','longitude'])
-
+        df = df.loc[df['distance_km'] < 30 ]
+        
+        if df.empty:
+            a = open('station_configuration/logs/unidentified_' + v + '.txt' , 'a+' )
+            a.write(file + '\n')
+            continue
+        
         # select best inventory available        
         best_inv = get_best_inventory(df)
 
-        if best_inv.empty:
-            continue
+        #if best_inv.empty:
+        #    continue
         
         for e in extra_vars.keys():
             extra_vars[e].append(best_inv[e].values[0])
@@ -312,10 +325,14 @@ def make_inventory(v):
                 stat_conf_dic[c].append(special_columns[c])            
 
             elif c == "operating_territory":
+                
+                ### TO DO !!! remove comment 
+                
+                
                 terr = iso_from_country_from_coordinates(lat=best_inv.latitude.values[0], lon=best_inv.longitude.values[0] , 
                                                       cdm_sub_regions=cdm_sub_regions,
-                                                      json_data = json_data, file = file)
-                print(file, '   ', terr)
+                                                      json_data = json_data, file = file)      
+                
                 stat_conf_dic[c].append(terr) 
                 
             elif c in statConf_to_inventory.keys():
