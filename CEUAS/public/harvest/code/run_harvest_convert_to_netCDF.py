@@ -1,22 +1,37 @@
 import os,sys
 import argparse
-from harvest_convert_to_netCDF import db
 import numpy as np
 import subprocess
 import glob
 #from check_correct import *
+
 '''
+# old run for large files without python3.8
 tcsh
 conda env list
 conda activate py38
 '''
+
+
+# on srvx1, srvx8 
+db = { 'era5_1': '/mnt/users/scratch/leo/scratch/era5/odbs/1' ,
+       'era5_2': '/mnt/users/scratch/leo/scratch/era5/odbs/2',
+                               'era5_3188': '/mnt/users/scratch/leo/scratch/era5/odbs/3188',
+                               'era5_1759': '/mnt/users/scratch/leo/scratch/era5/odbs/1759',
+                               'era5_1761': '/mnt/users/scratch/leo/scratch/era5/odbs/1761',
+
+                               'bufr': '/mnt/users/scratch/leo/scratch/era5/odbs/ai_bfr/',                                   
+                               'ncar': '/scratch/das/federico/databases_service2/UADB_25012022/',
+                               'igra2': '/scratch/das/federico/databases_service2/IGRA2_20211231/', 
+                               } 
+
 
 """ Select the databases, split the files into the number of wanted processes and run in parallel """
 def filelist_cleaner(lista, d=''):
        """ Removes unwanted files that might be present in the database directories """
        print('Cleaning the list of files to be converted')
        if d == 'ncar':
-              cleaned = [ l for l in lista if '.nc' not in l ]
+              cleaned = [ l for l in lista if '.nc' not in l and '.py' not in l ]
        if d == 'bufr':
               cleaned = [ l for l in lista if '.bfr' in l and 'era5.' in l and '+100-' not in l and 'undef' not in l]
        if d in ['era5_1759', 'era5_1761']:
@@ -45,17 +60,19 @@ def chunk_it(seq, num):
        return out
 
 # deifne output directory "out_dir"
-out_dir = '/raid60/scratch/federico/MAY2021_HARVEST_secondary/'
+out_dir = '/scratch/das/federico/COP2_HARVEST_FEB2022/'
 
-processes = 25 # number of process PER DATASET 
 
+processes = 5 # number of process PER DATASET 
 
 
 """ Select the dataset to be processed """ 
 datasets = ['era5_1', 'era5_2', 'era5_3188', 'era5_1759', 'era5_1761', 'ncar', 'igra2', 'bufr' ]
-datasets = ['era5_1', 'era5_2', 'era5_3188', 'era5_1759', 'era5_1761', 'ncar', 'bufr' ]
-datasets = ['igra2']
-datasets = [ 'igra2']
+
+#datasets = ['era5_1759', 'era5_1761']
+#datasets = ['ncar', ]
+
+datasets = ['era5_1', 'era5_2', 'era5_3188', 'era5_1759', 'era5_1761', 'igra2', 'bufr', 'ncar' ]
 
 
 """ Check processed files """
@@ -75,7 +92,6 @@ def rerun_list(f_list, processed_dir = '', split = '' , input_dir = ''):
        for file in f_list:
               file = file.replace('/','')
               if file in processed:
-                     print('skipping ' , file)
                      continue
               else:
                      to_be_processed.append(input_dir + '/' + file )
@@ -83,53 +99,53 @@ def rerun_list(f_list, processed_dir = '', split = '' , input_dir = ''):
        return to_be_processed
 
 
-
 for d in datasets:
        processed_dir = out_dir + '/' + d 
        print ('DATASET IS', d )
-       #files_list = [ db[d]['dbpath'] + '/' + f for f in os.listdir(db[d]['dbpath']) if os.path.isfile( db[d]['dbpath']+'/'+f ) ] # extracting the files list stores in the database path                   
        if d != 'era5_1':
-              files_list = [ db[d]['dbpath'] + '/' + f for f in os.listdir(db[d]['dbpath']) if os.path.isfile( db[d]['dbpath']+'/'+f ) ] # extracting the \
+              files_list = [ db[d]+ '/' + f for f in os.listdir(db[d]) if os.path.isfile( db[d]+'/'+f ) ] # extracting the \
               f_list = [ f for f in files_list if os.path.getsize(f) > 1 ] # cleaning the list of files in the original database directories                                                               
               f_list = filelist_cleaner(f_list, d = d)
               f_list = [ f.replace('\n','')  for f in f_list ]
-              print("#### Number of files in the original directory::: " , len(f_list) , '      ', d)
+              #print("#### Number of files in the original directory::: " , len(f_list) , '      ', d)
               if check_missing :
-                     f_list = rerun_list(f_list, processed_dir = processed_dir , split = 'ai_bfr' , input_dir =  db[d]['dbpath']  )              
+                     f_list = rerun_list(f_list, processed_dir = processed_dir , split = 'ai_bfr' , input_dir =  db[d]  )              
                      #print(' Removed already processed #### ')
        else:
-              processes = 3 # !!! there is already the pool splitting in the harvester !!!
-              Dir = '/raid60/scratch/leo/scratch/era5/odbs/1/'
+              processes = 10 # !!! there is already the pool splitting in the harvester, cannot be higher due to memory issues 
               # era5.conv.??????.82930.txt.gz
-              odbs = glob.glob(Dir + '/' + 'era5.conv._*')
+              odbs = glob.glob(db[d] + '/' + 'era5.conv._*')
               
               stat =  [f.split('._')[1] for f in odbs ]
               
-              f_list = ['"/raid60/scratch/leo/scratch/era5/odbs/1/era5.conv.??????.' + s + '.txt.gz' + '"' for s in stat]
+              f_list = ['"' + db[d] + '/era5.conv.??????.' + s + '.txt.gz' + '"' for s in stat]
               if check_missing:
                      processed = [s.split('_harvested_')[1] for s in os.listdir(processed_dir) if 'harvested' in s]
-                     print(processed[:10])
                      f_list = [f for f in f_list if f.split('/1/')[1].replace('"','')+'.nc' not in processed ]
-                     print(f_list[:10])
-                     #print(f_list[0].split('/1/')[1]+'.nc' , '*******************************************' )
-       #f_list = f_list[:100]
 
-     
-            
+       # filter failed 
+       # filt = [ f.replace('\n','') for f in open('logs/' + d + '_failed.txt').readlines() ]
+       # f_list = [f for f in f_list if f not in filt ]
+       
        chunks = chunk_it(f_list, processes)
        
        print('+++++++++ TOTAL NUMBER OF FILES to be reprocessed ::: ', len(f_list) )
        for c in chunks:
               #print ('*** I am running CHUNK: ', chunks.index(c) , ' *** with: ' ,  len(c), ' files'  )
               c = str(','.join(c)).replace('#','')
-        
+
+              os.system('python3.8  harvest_convert_to_netCDF.py  -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')                                                                              
+
+              
+              """
               if d != 'era5_1':
-                     print(d)
-                     os.system('/opt/anaconda3/bin/python3  harvest_convert_to_netCDF.py  -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')  
+                     print(" ")
+                     #os.system('python3.8  harvest_convert_to_netCDF.py  -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')  
               else:
-                     print(d)
+                     print(" ")
                      #print(f_list[:10])
-                     #os.system('python  harvest_convert_to_netCDF.py  -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')
+                     #os.system('python3.8  harvest_convert_to_netCDF.py  -d ' + d + ' -o ' + out_dir + ' -f ' + c + ' & ')
+              """
               
 
 print('*** Finished with the parallel running ***')
