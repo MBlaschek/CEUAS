@@ -308,7 +308,16 @@ class Merger():
         """ Making all date_times  """
         self.make_all_datetime()
 
-
+    def get_null(self, tipo = ''):
+        ''' Simply returns the proper format for ''null' value '''        
+        if tipo == np.int32 :
+            void = -2147483648
+        elif tipo == np.float32 :
+            void = np.nan
+        elif tipo == np.bytes_ :
+            void = b'nan'
+        return void
+        
     def delete_ds(self, dt):
         """ Delete the dataset from the memory once the maximum date of data availability has been reached;
              load the era5_1 once the date_time is in the valid range """
@@ -753,7 +762,8 @@ class Merger():
         logging.debug('*** Concatenating the observations_table ' )      
         combined_obs = {}
         ####  Writing combined observations_table dic
-        logging.info(' ***** Writing the observations_table to the netCDF output ***** ' )             
+        logging.info(' ***** Writing the observations_table to the netCDF output ***** ' )            
+        
         for k in all_combined_obs[0].keys():        
             a = np.concatenate([all_combined_obs[i][k][:] for i in range(len(all_combined_obs))])
             if k == 'date_time':
@@ -776,6 +786,9 @@ class Merger():
 
 
         #self.tot_records = len(combined_obs['date_time'])
+        tot_length = len(a) # total length of obs_tab, must be the sam for ear5fb table 
+        self.tot_length = tot_length
+        
         del all_combined_obs
         print(blue + 'Memory used after deleting all_combined_obs dic: ', process.memory_info().rss/1000000000 , cend )
 
@@ -800,6 +813,7 @@ class Merger():
         x=[]
         xi=[]
         era5cols = []
+    
         for yy in all_combined_era5fb:
             y=yy['albedo@modsurf'][0]
             if y==y:
@@ -812,9 +826,9 @@ class Merger():
                     xi.append(x.index(y))
             else:
                 xi.append(-1)
-        print('fb sources: ',x)
+        #print('fb sources: ',x)
 
-        
+        # case when I have era5 fb from files
         if era5cols:
             for k in era5cols:
                 if 'string' in k or k=='index':
@@ -869,6 +883,18 @@ class Merger():
                     #indices=np.concatenate([all_combined_era5fb[i]['albedo@modsurf'][1] for i in range(len(all_combined_era5fb))])
                 a=np.concatenate(a)
                 self.write_merged(content = 'era5fb', table= {k:a})
+                
+        else: # case when I do not have any era5 fb files, need to create dummy vectors
+            era5cols = list( self.encodings['era5fb'] )
+            for c in era5cols:
+                try:
+                    n = self.get_null( self.encodings['era5fb'][c]['type']  )
+                except:
+                    n = np.nan 
+                a = np.full( (tot_length), n) 
+                self.write_merged(content = 'era5fb', table= {c:a})
+                
+
             
         del all_combined_era5fb
         print(blue + 'Memory used after deleting era5fb_tab dic: ', process.memory_info().rss/1000000000 , cend)
@@ -1241,9 +1267,12 @@ data_directories   = { 'era5_1'       : base_dir + '/era5_1'     ,
 
 
 
-out_dir = 'PROVA'
+out_dir = 'PROVA_10393_MEMORY'
 
-#out_dir = '/scratch/das/federico/MERGED_25FEB2022'
+out_dir = '/scratch/das/federico/MERGED_25FEB2022'
+
+os.system('rm  -r prova_82930' )
+out_dir = 'prova_82930'
 
 run_mode = 'dummy'
 
