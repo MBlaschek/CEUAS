@@ -41,8 +41,7 @@ t=T.time()
 
 
 sys.path.append('../../harvest/code')
-from harvest_convert_to_netCDF import load_cdm_tables , write_dict_h5 
-
+#from harvest_convert_to_netCDF import load_cdm_tables , write_dict_h5 
 #from Desrozier import * 
 
 
@@ -226,10 +225,8 @@ class Sensor(MergedFile):
     def load_Schroeder_tables(self):
         """ Load the Schroeder's tables """
         
-        sch_file = 'data/vapor.library.2' 
-        
+        sch_file = 'data/vapor.library.2'
         cdm = {} # dictionary holding the CDM tables and Schr. table (that will become the sensor_configuration table)
-        
         dtypes={ 'station_id': np.int32, 'latitude':str, 'longitude':str, 'altitude':str,
                         'rstype':'S4','datetime':np.int,'date_flag':'S2','Station Name':'S60'}
         
@@ -258,22 +255,57 @@ class Sensor(MergedFile):
         cdm['sensor_configuration']['sensor_id']=cdm['sensor_configuration'].pop('sensor_id').astype('|S4')
             
         cdm['sensor_configuration']['comments']=cdm['sensor_configuration'].pop('comments').astype('|S200')
-        
+
         
         """ Adding the table from WMO gruan """
         wmo = pd.read_csv('data/table_BUFR_radiosonde.csv' , sep=',' , header=1 , names = ['date', 'table_1', 'sensor_id', 'comments'] )
-        wmo = wmo[['sensor_id', 'comments']]        
+        
+        def make_wmo_dates(wmo):
+            """ Build dates for the wmo df.
+            Correpsonds to the starting date of the validity of the sensor id from era5 fb. """
+            
+            dates_n = []
+            for d in wmo.date.values:
+                if type(d) == str and '/' in d :
+                    print(d)
+                    s = d.split('/')
+                    d,m,y = s[0] , s[1], s[2]
+                    
+                    if len(y) <3:
+                        y = '20' + y 
+                    
+                    dt = pd.Timestamp( '-'.join([y,m,d]) ).date()
+                    dates_n.append(dt)
+                        
+                else:
+                    dates_n.append(np.nan)
+            
+            wmo["date"] = dates_n
+            return wmo 
+                
+                
+        wmo = make_wmo_dates(wmo)
+        w = wmo.dropna(subset = ['date'])
+        self.wmo_sensor_update = w 
+        
+        #df = pd.DataFrame( {'date':dates_n , 'old_id': old_sensor , 'new_id': new_sensor}  )        
+        
+        wmo['date_start'] = wmo['date']
+        wmo = wmo[['sensor_id', 'comments', 'date_start']]        
         
         for c in [f for f in  cdm['sensor_configuration'].columns ]:
-            if c in ['sensor_id', 'comments']:
+            if c in ['sensor_id', 'comments' , 'date_end']:
                 continue
             col = np.full( (len(wmo)) , np.nan , dtype=type(cdm['sensor_configuration'][c][1] ) )
             wmo[c] = col 
             
         sensor_conf = pd.concat( [cdm['sensor_configuration'] , wmo ]) # concatenating the two tables 
-        sensor_conf['comments'] = sensor_conf['comments'].str.encode('utf-8')
-        cdm['sensor_configuration'] = sensor_conf
+        #sensor_conf['comments'] = sensor_conf['comments'].str.encode('utf-8') TODO, this was needed in old srvx2 / srvx8
+        sensor_conf['comments'] = sensor_conf['comments']      
+        sensor_conf.to_csv('sensor_configuration_all.csv', sep = '\t')
         self.cdm = cdm # saving the tables
+        self.wmo = wmo # (converted to CDM convention )
+
         
     def write_sensorconfig(self):
         
@@ -308,12 +340,13 @@ class Sensor(MergedFile):
 
         # self.data['crs'].to_netcdf(self.file, format='netCDF4', engine='h5netcdf',group='ciao', mode='a') #
                 
-        for k in groups.keys():  
+        for k in groups.keys():
             try:           
                 groups[k].to_netcdf(self.MergedFile.file, format='netCDF4', engine='h5netcdf', encoding=groupencodings[k], group=k, mode='a') #
+                
                 print('+++ Written  group: ' , k  )
             except  KeyError:
-                print('--- Passing variable ' )
+                print('--- Passing group ' )
                     
         return 'done'           
                     
@@ -323,7 +356,6 @@ class Sensor(MergedFile):
               map the sensor id to the datetime list from the station data """
         
         try:
-            
             station_id = int(self.data['station_id'])
         except:
             station_id = 99999999 # dummy station id whcih does not exist in Schroeder's table
@@ -437,77 +469,151 @@ class Sensor(MergedFile):
         
         
         # must replace sensor_ids starting from 2013-01-01, find the correct index in the obstable / era5fb table
-        index_replace = np.searchsorted( self.data['recordtimestampdecoded'], np.datetime64('2013-01-01') )
+        # index_add_era5 == index from which one must use ERA5 
+        index_timestamp = np.searchsorted( self.data['recordtimestampdecoded'], np.datetime64('2013-01-01') )
+        index_add_era5 = self.data['recordindex'][index_timestamp]
+        # if index_replace == 0, the file has only ERA5 data after 2013
+        # if index_replace == len(self.data['recordtimestampdecoded'] ), the file has no ERA5 data after 2013
+        # if in between, part of sensor from Schroeder, part from ERA5 
         
+        slen= 4 # define strings length for the sensor id
+        stringa=np.zeros(slen,dtype='S1')
+        
+        """
         add_era5 = True
-        if index_replace == len(self.data['recordtimestampdecoded'] ):
+        if index_add_era5 == len(self.data['recordtimestampdecoded'] ): 
             add_era5 = False
-            
-        index_max = self.data['recordindex'][index_replace-1]
+            # no ERA5 data available i.e. 2013 is outside data range
+        """
         
-        if temp_sensor_list: # case where I found some sensor_ids inside Schroeder's table 
-            
-            sensor_list = np.concatenate(temp_sensor_list)
-            #slen=len(sensor_list[0]) # =3
-            
-            slen= 4
-            
-            # combining the two sensor lists 
-            if add_era5:
-                sensor_list_combined = sensor_list[:index_max] # extracting sensors only before 2013 
-                era5_sensor = self.data['h5py_file']['era5fb']['sonde_type@conv'][index_max:]
-                sensor_list_combined = np.append(sensor_list_combined,era5_sensor).astype('|S4')
-            else:
-                sensor_list_combined = sensor_list
-                
-            self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = sensor_list_combined.view('S1').reshape(sensor_list_combined.shape[0], slen ), 
-                                                                        compression = 'gzip' ,  chunks=True)                
-            
-            s = 'string{}'.format(slen)
-            stringa=np.zeros(slen, dtype='S1')         
-            #try: # TO DO check what this is for 
-            #    del  self.data['h5py_file']['observations_table'][s]
-            #    del self.data['observations_table']['index']
-            #except:
-            #    pass
-            
-            """ Adding missing dimensions """
-            try:            
-                self.data['h5py_file']['observations_table'].create_dataset( 'string{}'.format(slen) ,  data=stringa[:slen]  )                
-                self.data['h5py_file']['observations_table'][ 'string{}'.format(slen) ].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')         
-                #self.data['h5py_file']['observations_table']['sensor_id'].dims[0].attach_scale( self.data['h5py_file']['observations_table']['index'] )
-                #self.data['h5py_file']['observations_table']['sensor_id'].dims[1].attach_scale( self.data['h5py_file']['observations_table'][ 'string{}'.format(slen)  ] )
-                print(' *** Done with the attributes of the dimension *** ')
-            except ValueError:
-                print('Dimension already exist, passing ')
-            
-        else:
+        def make_emtpy_vec(l, slen= 4):
+            """ Creates an empty vectotr i.e. filled with b'NA ' of given length """
             sensor_id = b'NA '
             slen = len(sensor_id)
             s = 'string{}'.format(slen)
-            stringa=np.zeros(slen,dtype='S1')
-            sensor_list = np.full( (len(self.data['h5py_file']['observations_table']['index']) ), sensor_id).astype(  np.dtype('|S4')  )
+            lista = np.full( (l) , sensor_id).astype(  np.dtype('|S4')  )
+            return lista 
             
-            # combining the two sensor lists 
-            if add_era5:
-                sensor_list_combined = sensor_list[:index_max]
-                era5_sensor = self.data['h5py_file']['era5fb']['sonde_type@conv'][index_max:]
-                sensor_list_combined = np.append(sensor_list_combined, era5_sensor).astype('|S3')
-            else:
-                sensor_list_combined = sensor_list
+        ### only use ERA5:
+        # dump the whole content as sensor_id from ERA5 
+        if index_add_era5 == 0:
+            sensor_list_combined = self.data['h5py_file']['era5fb']['sonde_type@conv'][:].astype(int).astype('|S4')   
+
+        else:
+            
+            def update_wmo(updated_wmo, era5_sensors, file):
+                """ Must update the sensor id due to incosistent notation in the WMO guideline.
+                    See table page A-398
+                    https://library.wmo.int/doc_num.php?explnum_id=10235"""
                 
-            try:
-                self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = sensor_list_combined.view('S1').reshape( len(sensor_list_combined), slen ) , 
-                                                                            compression = 'gzip' ,  chunks=True)       
+                limit_date_era5 =  np.datetime64('2013-01-01')
                 
-                self.data['h5py_file']['observations_table']['sensor_id'].dims[0].attach_scale(  self.data['h5py_file']['observations_table']['index'] )  
-                self.data['h5py_file']['observations_table'].create_dataset( s ,  data=stringa[:slen]  )                
-                self.data['h5py_file']['observations_table']['string{}'.format(slen)].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')                             
-                self.data['h5py_file']['observations_table']['sensor_id'].dims[1].attach_scale( self.data['h5py_file']['observations_table'][ s ])
+                updated_wmo = updated_wmo[['date', 'table_1', 'sensor_id']]
+                # if date in updated_wmo is < 2013: automatically convert old entries to new one
+                updated_wmo_after2013    = updated_wmo.loc[updated_wmo['date'] >= limit_date_era5 ]
+                updated_wmo_after2013['table_1'] = updated_wmo_after2013['table_1'].astype(int)
                 
-                print(' *** Done with the attributes of the dimension *** ')
-            except ValueError:
-                print('Dimension already exist, passing ')
+                updated_wmo_before2013 = updated_wmo.loc[updated_wmo['date'] < limit_date_era5 ]
+                updated_wmo_before2013['table_1'] = updated_wmo_before2013['table_1'].astype(int)
+                
+                ids = list(np.unique( era5_sensors ) )
+                to_replace_after = [ i for i in  ids if i in updated_wmo_after2013.table_1.astype(int).values ] 
+                to_replace_before = [ i for i in  ids if i in updated_wmo_before2013.table_1.astype(int).values ] 
+                
+                
+                conv_dic = dict(zip(updated_wmo.table_1.values , updated_wmo.sensor_id.values ))
+                
+                if len(to_replace_after) + len(to_replace_before)==0:
+                    return  era5_sensors
+                
+                if len(to_replace_before):
+                        era5_sensors = [ conv_dic[i] if i in conv_dic.keys() else  i for i in era5_sensors   ]
+                
+                if len(to_replace_after):
+                    dt = pd.to_datetime( h5py.File(self.MergedFile.file, 'r')['observations_table']['date_time'], unit='s',  origin=pd.Timestamp('1900-01-01') )
+                    for v in to_replace_after:
+                        # here I need to check the exact datetime of the sensor before replacing,
+                        # and compare with the exact time of the change in the id numbers.
+                        date = pd.to_datetime (updated_wmo_after2013.loc[updated_wmo_after2013.table_1 == v ].date.values[0] )
+                        try:
+                            index = np.where(dt >  date)[0][0]
+                        except:
+                            continue 
+                        # only replacing the value for the chunk after the index 
+                        to_update = era5_sensors[index:]                        
+                        to_update = [ conv_dic[i] if i in conv_dic.keys() else  i for i in to_update   ] 
+                        
+                        era5_sensors = list(era5_sensors[:index]) + to_update 
+                        
+                        a = 0
+                    
+                    updated_wmo = 0
+                    
+                return era5_sensors
+            
+            # here, need to check if Schroeder data available and the dates 
+
+            if index_add_era5 == len(self.data['recordtimestampdecoded'] ):  # case I only use Schroeder data if available
+                if temp_sensor_list: # case where I found some sensor_ids inside Schroeder's table 
+                    sensor_list_sch = np.concatenate(temp_sensor_list)
+                    sensor_list_combined = sensor_list_sch[:(index_add_era5-1)] 
+                else: # empty Schroeder and no ERA5 
+                    sensor_list_combined = make_emtpy_vec(len(self.data['h5py_file']['observations_table']['index']),  slen= 4)
+
+            else: # here I have to check the dates and see if Schr is available. There is for sure data both before and after 2013 
+                if temp_sensor_list:
+                    sensor_list_sch = np.concatenate(temp_sensor_list)
+                    sensor_list_sch = sensor_list_sch[:(index_add_era5-1)]                 
+                    sensor_list_era5 = self.data['h5py_file']['era5fb']['sonde_type@conv'][index_add_era5:].astype(int)
+                    
+                    sensor_list_era5 = update_wmo(self.wmo_sensor_update, sensor_list_era5, self.MergedFile.file)
+                    
+                    sensor_list_combined = np.append(sensor_list_sch,sensor_list_era5).astype('|S4')                    
+                else:
+                    sensor_list_combined = make_emtpy_vec( index_add_era5-1,  slen= 4) # until 2013 here empty Schroeder
+                    sensor_list_era5 = self.data['h5py_file']['era5fb']['sonde_type@conv'][index_add_era5-1:].astype(int)
+                    sensor_list_combined = np.append(sensor_list_sch,sensor_list_era5).astype('|S4')                    
+
+        slen= 4 # define strings length for the sensor id
+        stringa=np.zeros(slen,dtype='S1')                    
+        self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = sensor_list_combined.view('S1').reshape(sensor_list_combined.shape[0], slen ), 
+                                                                            compression = 'gzip' ,  chunks=True)                
+                
+  
+                
+        """ Adding missing dimensions ??? """
+        try:            
+            self.data['h5py_file']['observations_table'].create_dataset( 'string{}'.format(slen) ,  data=stringa[:slen]  )                
+            self.data['h5py_file']['observations_table'][ 'string{}'.format(slen) ].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')         
+            #self.data['h5py_file']['observations_table']['sensor_id'].dims[0].attach_scale( self.data['h5py_file']['observations_table']['index'] )
+            #self.data['h5py_file']['observations_table']['sensor_id'].dims[1].attach_scale( self.data['h5py_file']['observations_table'][ 'string{}'.format(slen)  ] )
+            print(' *** Done with the attributes of the dimension *** ')
+        except ValueError:
+            print('WRONG ')
+                
+        #sensor_id = b'NA '
+        #slen = len(sensor_id)
+        #s = 'string{}'.format(slen)
+        #stringa=np.zeros(slen,dtype='S1')
+        #sensor_list = np.full( (len(self.data['h5py_file']['observations_table']['index']) ), sensor_id).astype(  np.dtype('|S4')  )
+                
+
+                    
+                    
+        """ 
+        self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = sensor_list_combined.view('S1').reshape( len(sensor_list_combined), slen ) , 
+                                                                    compression = 'gzip' ,  chunks=True)       
+        
+        self.data['h5py_file']['observations_table']['sensor_id'].dims[0].attach_scale(  self.data['h5py_file']['observations_table']['index'] )  
+        self.data['h5py_file']['observations_table'].create_dataset( s ,  data=stringa[:slen]  )                
+        self.data['h5py_file']['observations_table']['string{}'.format(slen)].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')                             
+        self.data['h5py_file']['observations_table']['sensor_id'].dims[1].attach_scale( self.data['h5py_file']['observations_table'][ s ])
+        """
+                
+                
+                
+                
+                
                 
         self.data['h5py_file'].close()
             
@@ -541,11 +647,12 @@ def wrapper(out_dir = '' , station_id = '' , file = '', copy = copy ):
 
 
 
+os.system( ' cp ../../merge/PROVA/0-20001-0-27594_CEUAS_merged_v1.nc   PROVA_s')
+
 if __name__ == '__main__':
         
             parser = argparse.ArgumentParser(description="Postprocessing Utility for the addition if instrumentation metadata")
-            
-            
+
             parser.add_argument('--force_run' , '-f', 
                                   help="Force running the file(s)"  ,
                                   type = str,
@@ -553,25 +660,14 @@ if __name__ == '__main__':
  
             
             args = parser.parse_args()
-            
             force_run                = args.force_run
-            
 
-            
             def run(merged_directory, postprocessed_new, force_run, station):
                 
                 file = merged_directory + '/' + station
-              
+    
                 #station_id = file.split("_CEUAS")[0].split(merged_directory)[1].replace('/','').split('-')[-1]
                 station_id = file.split("_CEUAS")[0].split(merged_directory)[1].replace('/','').split('-')[-1]
-                '''
-                processed = [ s.split('_')[0] for s in os.listdir(postprocessed_new) ]  # skipping processed files 
-
-                if station_id in processed:
-                    print('Already processed:::' , file )
-                    return
-                print (' I will process the file ::: ' , file , ' ::: station_id ::: ' , station_id )  
-                '''
 
                 """ Initialize classes """
                 MF = MergedFile(out_dir = postprocessed_new , station_id = station_id , file = file, copy = True )
@@ -607,41 +703,48 @@ if __name__ == '__main__':
             
 
             """ File source directory """
-            merged_directory = '../../merge/PROVA/'
+            merged_directory = 'PROVA_s/'
             
             """ Moving postprocessed files to new directory """
-            #postprocessed_new = '/raid60/scratch/federico/DATABASE_MARCH2021_sensor'
-
-            postprocessed_new = '/raid60/scratch/federico/PROVA_sensor_newsensors'
-            os.system('rm -r  /raid60/scratch/federico/PROVA_sensor_newsensors/')
-
-            os.system('mkdir ' + postprocessed_new)
             
+            #os.system( ' cp ../../merge/PROVA/0-20001-0-27594_CEUAS_merged_v1.nc   PROVA_s')            
+            os.system( ' cp /scratch/das/federico/MERGED_25FEB2022/0-20000-0-06610_CEUAS_merged_v1_beforeSensor.nc   PROVA_s')            
+            
+            
+            #os.system( ' cp ../../merge/PROVA_s/0-20000-0-82930_CEUAS_merged_v1_beforeSensor.nc   PROVA_s')            
+
+
+            
+            postprocessed_new = '/raid60/scratch/federico/PROVA_sensor_newsensors'
+            postprocessed_new = 'PROVA_newsensors_21MARCH2022'
+            
+            os.system('rm -r  /raid60/scratch/federico/PROVA_sensor_newsensors/')
+            os.system('mkdir ' + postprocessed_new)
         
             stations_list = [ s for s in os.listdir(merged_directory) if 'empty'  not in s ]           
             #stations_list = [ s for s in stations_list if 'Sensor'   in s ]           
-            
-            processed = [ s.split('_')[0] for s in os.listdir(postprocessed_new) ]  # skipping processed files 
+            #processed = [ s.split('_')[0] for s in os.listdir(postprocessed_new) ]  # skipping processed files 
             processed = []
             
             cleaned_list = []
 
             for file in stations_list:
                 station_id = file.split("_CEUAS")[0]
-                
                 if station_id in processed:
                     print('Already processed:::' , file )
                 else:
                     cleaned_list.append(file)
             
-
-
-            print(cleaned_list)
-            for s in cleaned_list:
-                a = run(merged_directory, postprocessed_new, force_run, s)
+            POOL = False
+            
+            if POOL:
+                p = Pool(30)
+                func = partial(run, merged_directory, postprocessed_new, force_run)
+                out = p.map(func, cleaned_list)     
+            else:
+                for s in cleaned_list:
+                    a = run(merged_directory, postprocessed_new, force_run, s)
                 
             
-            #p = Pool(30)
-            #func = partial(run, merged_directory, postprocessed_new, force_run)
-            #out = p.map(func, cleaned_list)        
+   
             
