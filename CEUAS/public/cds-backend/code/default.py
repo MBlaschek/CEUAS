@@ -225,10 +225,15 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
                                     float(f['observations_table']['latitude'][-1]),
                                     float(f['observations_table']['longitude'][-1])]
                     else:
-                        active[skey] = [int(eua.to_seconds_since(f['recordtimestamp'][0], funits)),
+                        try:
+                            
+                            active[skey] = [int(eua.to_seconds_since(f['recordtimestamp'][0], funits)),
                                         int(eua.to_seconds_since(f['recordtimestamp'][-1], funits)),
                                         float(f['observations_table']['latitude'][-1]),
                                         float(f['observations_table']['longitude'][-1])]
+                        except:
+                            print('makedaterange: ',s.split('/')[-1],' recordtimestamp does not exist')
+                            return active
                 idx = numpy.where(vola.StationId.values == skey)[0]
                 if len(idx) > 0:
                     active[skey].append(vola.CountryCode[idx[0]])
@@ -300,7 +305,7 @@ def pkl_initialize(config,slist=[]):
         #with h5py.File(fout,'r') as f:
         l=0
         #with Pool(10) as p:
-        tup=map(read_tstamps,slist)
+        tup=map(read_tstamps,list(slist))
         rtsdict=dict(tup)
         
 #         rtsdict = {}
@@ -398,8 +403,9 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         #
         # find Merged Netcdf files and intercomparison files
         #
-        slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v1.nc'))
-        slist += glob.glob(os.path.expandvars(config['data_dir'] + '/0-20?00-0-*_CEUAS_merged_v1.nc'))
+#        slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v1.nc'))
+#        slist += glob.glob(os.path.expandvars(config['data_dir'] + '/0-20?00-0-*_CEUAS_merged_v1.nc'))
+        slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-*_CEUAS_merged_v1.nc'))
         slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
         slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
         # slnum = [i[-34:-19] for i in slist]
@@ -416,16 +422,24 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         # exit()
         active = {}
         func = partial(makedaterange, vola, debug=debug)
+        #slist=[slist[3380]]
+        #slnum=[slnum[3380]]
         if False:
             with Pool(10) as p:
                 sklist=list(p.map(func,zip(slist,slnum)))
         else:
             sklist = list(map(func, zip(slist, slnum)))
         
-        for s in sklist:
+        short_slist=[]
+        for s,sl in zip(sklist,slist):
             if s:
                 k = next(iter(s))
-                active[k] = s[k]
+                if k in active.keys():
+                    if active[k]!=s[k]:
+                        print(active[k],'\n',s[k])
+                else:
+                    active[k] = s[k]
+                    short_slist.append(active[k][-1])
         logger.info('Active Stations created. [%d]', len(active))
         
         try:
@@ -436,7 +450,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
 
         try:
             
-            rtskeys,rtsidx,rtsarr,fout=pkl_initialize(config,slist=slist)
+            rtskeys,rtsidx,rtsarr,fout=pkl_initialize(config,slist=short_slist) # slist
             active['rtsarr']=rtsarr
             active['rtsidx']=rtsidx
             active['rtskeys']=rtskeys
@@ -1120,7 +1134,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     #                     if not ((len(statid) == 15) or (len(statid) == 5)):
     #                         raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
 
-                    if statid[:3] == '0-2' and statid in slnum:
+                    if statid[:2] == '0-' and statid in slnum:
                         valid_id = statid
                     else:
                         for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
