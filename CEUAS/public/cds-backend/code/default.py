@@ -793,7 +793,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                gridded: list = None, toolbox: str = None, cdm: list = None, da: bool = True, compression: str = None,
                pass_unknown_keys: bool = False, nodims: str = None, hdf: str = None, speed_test: str = None, 
-               single_parallel: bool = False,
+               single_parallel: bool = True,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
 
@@ -1004,14 +1004,6 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     else:
         d['hdf'] = False
         
-            
-    #
-    # single_parallel
-    #
-    if single_parallel:
-        d['single_parallel'] = True
-    else:
-        d['single_parallel'] = False
         
     #
     # speed_test
@@ -1204,9 +1196,26 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 'Invalid selection, specify either bbox, country or statid. Use "statid":"all" to select all ' \
                 'stations ')
     d['statid'] = statid
+    print(len(d['statid']), d['statid'])
+    if len(d['statid']) == 1:
+        d['single_parallel'] = True
     #
     #
     # remove statids i
+    
+#     #
+#     # single_parallel
+#     #
+    if single_parallel == False:
+        d['single_parallel'] = False
+
+#     if single_parallel:
+#         if len(d['statid']) > 1:
+#             raise RuntimeError('Invalid selection, Specify only one statid! Invalid statid%s, bbox: %s and country: %s' % (statid, bbox, country))
+#         else:
+#             d['single_parallel'] = True
+#     else:
+#         d['single_parallel'] = False
     
     
     

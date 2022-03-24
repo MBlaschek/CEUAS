@@ -22,16 +22,11 @@ from numba import njit
 import code
 
 sys.path.append('../harvest/code')
+
 sys.path.append('../postprocess/add_sensor')
 
 from add_sensor_to_merged import Sensor, datetime_toseconds, wrapper, MergedFile
-
-
 from harvest_convert_to_netCDF import write_dict_h5 
-
-# nan int = -2147483648 
-#from harvest_convert_to_netCDF import datetime_toseconds   # importing the function to write files with h5py 
-
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning) # deactivates Pandas warnings 
@@ -59,7 +54,6 @@ green = '\33[92m'
 
 data = {}
 
-print(cend)
 
 def now(time):
     """ For easily print a readable current time stamp """
@@ -96,7 +90,7 @@ class Merger():
         self.out_dir = out_dir 
         self.variable_types = {}
         self.observation_ids_merged  = {  'igra2':b'3' , 
-                                              'ncar':b'4', 
+                                                               'ncar':b'4', 
                                                                    'bufr':b'5',  
                                                                    'era5_1':b'1' , 
                                                                    'era5_2':b'2', 
@@ -107,15 +101,16 @@ class Merger():
         logging.info('*** Initialising the Merging procedure ***' )   
         #self.era5b_columns = []  # stores the columns of the era5fb 
         self.standard_cdm = [ 'crs' , 'observed_variable', 'units' , 'z_coordinate_type' , 'station_type', 'station_configuration_codes'] 
-        self.slice_size = 3000
+        self.slice_size = 3000 # size of the chunk of the subset of data 
         self.index_offset = 0 # will be replaced when running 
-        self.hour_time_delta = 60 * 60 * 2 # decide up to which time shift records are considered identical  
+        self.hour_time_delta = 60 * 60 * 2 # decide up to which time shift records are considered identical  [unit = seconds]
 
         self.only_std_plevels = False  # set to True to store only standard pressure level data 
         self.std_plevs    = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000]
 
         self.add_sensor = True
         self.copy = True # make a copy of the merged file before adding the sensor. Argument for the add_sensor wrapper function  
+        
     def load_obstab_feedback_sliced(self, dataset='' , file ='' , datetime='' ):
         """ Specific function to load the observations_table and feedback_table for the selected dataset. 
              If index==True, it will check the self.slice_size and look for the correpsonding recordtimestamp and recordinidex in the era5_1 data.
@@ -198,6 +193,7 @@ class Merger():
                                    e.g. tateno = { 'ncar'    : 'example_stations/ncar/chuadb_trhc_47646.txt.nc'   ,
                                                            'igra2'   : 'example_stations/igra2/chJAM00047646-data.txt.nc'  } 
         """       
+        
         self.datasets          = datasets
         self.datasets_keys = datasets.keys()
         self.station             = station
@@ -219,7 +215,18 @@ class Merger():
 
         """ Loop over all the datasets                                                                                                                                     
                 k: name of the dataset                                                                                                                    
-                v: list of file paths,    eg 'era5_1':[filepath_1, filepath_2 ] """            
+                v: list of file paths,    eg 'era5_1':[filepath_1, filepath_2 ] """    
+        
+        # preliminary loop, quick check for consistency of station_configuration
+
+        stat_conf = pd.read_csv("CUON_station_configuration.csv", sep = '\t')
+        s = stat_conf.loc[ stat_conf.primary_id == self.station ]
+        if s.empty:
+            a = open('logs/failed_stat_conf.txt' , 'a+')
+            a.write(self.station + '\n')
+
+        data['station_configuration'] = s
+
         for k,v in self.datasets.items() :
             data[k] = {}
             for F in v:
@@ -254,17 +261,7 @@ class Merger():
                         data[k][F]['header_table'][var] = (np.array(head_tab[var][:])).astype(self.dic_type_attributes['header_table'][var]['type'] )
                     except:
                         print('failed convertion type header' , k , ' ' , F , ' ' ,  var )
-
-                #######                                           
-                # STATION CONFIGURATION
-                #######
-                try:
-                    d = xr.open_dataset(F , engine = 'h5netcdf' , group = 'station_configuration' , decode_times = False )
-                    data[k][F]['station_configuration'] = d.to_dataframe()
-                    logging.debug('Done with %s station_configuration' , str(k) )
-                    d.close()
-                except:
-                    pass
+        
                 #######                                                                                    
                 # SOURCE CONFIGURATION                                             
                 #######      
@@ -288,6 +285,8 @@ class Merger():
 
         """ Making all date_times  """
         self.make_all_datetime()
+        
+        return True 
 
 
     def delete_ds(self, dt):
@@ -499,10 +498,9 @@ class Merger():
         all_combined_obs ,  all_combined_head, all_combined_era5fb , combined_indices , combined_date_time,  = [] , [] , [] , [] , []
         best_ds_list = [] 
         source_files = []
-        station_configurations = []
 
         """ The items contained in the lists in the list below can be removed from the list when the record that was previously stored is removed. """
-        all_list = [all_combined_obs ,  all_combined_head, all_combined_era5fb , combined_indices , combined_date_time,  best_ds_list, source_files , station_configurations ]  
+        all_list = [all_combined_obs ,  all_combined_head, all_combined_era5fb , combined_indices , combined_date_time,  best_ds_list, source_files ]  
         # list holder of all the above lists
 
         #all_list_name = ['all_combined_obs' ,  'all_combined_head', 'all_combined_era5fb' , 'combined_indices' , 'combined_date_time'  , 'best_ds_list', 'source_files' ] 
@@ -555,7 +553,6 @@ class Merger():
                     obs_tab, era5fb_tab = self.make_obstab_era5fb_dic(dataset = k , date_time = dt, File = F )
 
                     if len(obs_tab['date_time'][:])==0: # go to next file if obs_tab is empty 
-                        #print('ZERO length')
                         continue                              
 
                     all_len.append( len(obs_tab['date_time'][:] ) )
@@ -567,7 +564,7 @@ class Merger():
                     cleaned_df_container[k][F]['obs_tab']      = obs_tab         # cleaned dataframe 
                     cleaned_df_container[k][F]['era5fb_tab'] = era5fb_tab     # cleaned dataframe  
 
-            """ Merging the different records found in the sifferent sources """
+            """ Merging the different records found in the different sources """
             
             if len(all_len)>0: # skipping empty container dictionary. At this point I certainly have one valid record 
                 best_ds, combined_obs_tab, combined_era5fb_tab, combined_head_tab, selected_file, best_file = self.combine_record(dt, container = cleaned_df_container)
@@ -589,9 +586,7 @@ class Merger():
                         if previous_licence !=0:
                             all_combined_obs[-1]['data_policy_licence'] = np.full ( len (all_combined_obs[-1]['date_time']) , 0 , dtype = int)
                             
-
                     temporary_previous = all_combined_obs[-1] # keep the temporary previous record 
-                    
                     
                     if best_ds in ['era5_1','era5_2']:  # best_ds from era5
                         if  best_ds_list[-1] not in ['era5_1','era5_2']: # remove previous non era5_1 or era5_2 record 
@@ -662,16 +657,12 @@ class Merger():
 
             """ Storing the selected file for the source_configuration """
             source_files.append(selected_file)
-            """ Selecting the station_configuration """
-            station_configurations.append(self.data[best_ds][best_file]['station_configuration'] )
 
             """ Storing the combined era5fb, header and observations tables"""
             all_combined_era5fb.append(combined_era5fb_tab)
             all_combined_obs   .append(combined_obs_tab)
 
-            primary, name = self.data[best_ds][best_file]['station_configuration']['primary_id'][0] , self.data[best_ds][best_file]['station_configuration']['station_name'][0] 
-            #combined_head_tab['primary_station_id'] = [ primary ] * len( combined_head_tab ) 
-            #combined_head_tab['station_name']         = [ name ]    * len( combined_head_tab ) 
+            primary, name = self.data['station_configuration']['primary_id'].values[0] , self.data['station_configuration']['station_name'].values[0]
 
             combined_head_tab['primary_station_id'] = np.array( [primary] )
             combined_head_tab['station_name']         = np.array( [name] )
@@ -689,9 +680,6 @@ class Merger():
 
             del cleaned_df_container 
 
-
-
-        #print(blue + 'Memory used after deleting the cleaned_df_container: ', process.memory_info().rss/1000000000 , cend)
 
         """ Removing remaining loaded df """
         for k in self.datasets_keys:
@@ -740,6 +728,18 @@ class Merger():
             if k == 'date_time':
                 combined_obs[k]= a  
                 self.tot_records = len(combined_obs[k])
+            if k =='observed_variable':
+                # check if new numberidng convention is really satisfied 
+                old_to_new_cdm = { 
+                                   85:126, 
+                                   104:139,
+                                   105:140,
+                                   38:138,
+                                   36:137
+                                   }
+                
+                a = np.array( [  old_to_new_cdm[v]  if v in old_to_new_cdm.keys() else v for v in list(a) ] )
+                
             self.write_merged(content = 'observations_table', table= {k:a})
             #logging.info('*** Written observations table %s: ', k)
 
@@ -795,18 +795,16 @@ class Merger():
         self.write_merged(content = 'source_configuration', table= source_conf )
 
 
+        ### STATION CONFIGURATION                                                                                                                                                                                                                                                         
 
-        """ Concatenation of station_configurations """
-        station_conf = pd.concat( station_configurations ) 
-        for k in station_conf.columns:
-            try:
-                a =np.array( station_conf[k])
-                self.write_merged(content = 'station_configuration', table= {k:a})
-                logging.debug('*** Written station_configuration %s:  ', k)
-            except:
-                print(" Failed station_configuration " , k )
+        for k in self.data['station_configuration'].columns: # try writing only one entry                                                                                                                                                                                                 
+            if "Unnamed" in k:
+                continue
+            a =np.array( self.data['station_configuration'][k])
+            self.write_merged(content = 'station_configuration', table= {k:a})
+            logging.info('*** Written station_configuration %s:  ', k)
 
-
+        
         """ Adding sensor_id to observations_table """
         if self.add_sensor:
             add_sensor = wrapper(out_dir = self.out_dir , station_id = self.station.split('-')[-1] , file = self.out_name , copy = self.copy )
@@ -840,7 +838,7 @@ class Merger():
             for f in container[k]: # loop over the file per dataset
                 num_rec = len(container[k][f]['obs_tab']["date_time"])
 
-                """ Storing all the reports id with the proper prefix (for each different dataset) """
+                """ Storing all the reports id with the proper prefix (different for each different dataset) """
                 rep_id = b''.join(container[k][f]["obs_tab"]['report_id'][0]) 
                 rep_id = self.observation_ids_merged[k] + rep_id 
                 duplicates.append( rep_id )  
@@ -852,8 +850,7 @@ class Merger():
 
                 record_dataset_legth[num_rec]['best_ds'].append(k)
                 record_dataset_legth[num_rec]['file'].append(f)
-
-
+                
         entries = list(record_dataset_legth.keys())
         entries.sort(reverse= True)
 
@@ -894,7 +891,6 @@ class Merger():
         ''' Creating the correct observations and record ids. 
                 All the bytes variable are shrunk to a long |S1 byte variable type, otherwise 
                 writing in h5py will not work. '''
-
 
         for var in ['observation_id']:
             if type (selected_obstab[var] ) == np.ndarray and type (selected_obstab[var][0] ) == np.bytes_:
@@ -951,10 +947,8 @@ class Merger():
 
         selected_file = np.bytes_(best_file.split('/')[-1])
 
-        if selected_head['source_id'][0].decode("utf-8") != best_ds:
-            print(0)
-            
-        print (best_ds , best_file.split("/")[-1], selected_head['source_id'][0].decode("utf-8")  ,  selected_obstab['date_time'][0] )
+             
+        #print (best_ds , best_file.split("/")[-1], selected_head['source_id'][0].decode("utf-8")  ,  selected_obstab['date_time'][0] )
         return  best_ds, selected_obstab, selected_era5fb, selected_head, selected_file, best_file
 
 
@@ -1113,6 +1107,10 @@ class Merger():
 
         if mode == "test":      
             a = self.initialize_data( station = station, datasets = datasets ) # reading the input files 
+            if not a:
+                print("Quitting - nothing I can do")
+                return False
+            
             dummy = self.merge_all_data()            
             #logging.info('*** Finished merging, now writing the output netCDF file ***' )         
             #a = self.write_merged_file()
@@ -1125,6 +1123,10 @@ class Merger():
             o = open("FAILED_MERGING_LIST.txt", 'a+')          
             try:
                 a = self.initialize_data( station = station, datasets = datasets ) # reading the input files 
+                if not a:
+                    print("Quitting - nothing I can do")
+                    return False
+                
                 dummy = self.merge_all_data()            
                 #logging.info('*** Finished merging, now writing the output netCDF file ***' )         
                 #a = self.write_merged_file()
@@ -1148,10 +1150,11 @@ class Merger():
 
        
 
-base_dir = '/raid60/scratch/federico/MAY2021_HARVEST_secondary/'
+
+base_dir = "/scratch/das/federico/COP2_HARVEST_FEB2022/"
 
 data_directories   = { 'era5_1'       : base_dir + '/era5_1'     ,
-                       'era5_2'       : base_dir + '/era5_2'     ,
+                                   'era5_2'       : base_dir + '/era5_2'     ,
                                    'era5_3188' : base_dir + '/era5_3188'  ,
                                    'era5_1759' : base_dir + '/era5_1759'  ,
                                    'era5_1761' : base_dir + '/era5_1761'  ,
@@ -1163,12 +1166,14 @@ data_directories   = { 'era5_1'       : base_dir + '/era5_1'     ,
 
 
 
-out_dir = '/raid60/scratch/federico/MERGED_JUNE2021/'
+out_dir = '/scratch/das/federico/MERGED_25FEB2022/'
 
-out_dir = 'PROVA'
+#out_dir = 'PROVA'
 
 run_mode = 'dummy'
 
+#os.system('rm  ' + out_dir +  '/0-20000-0-82930_CEUAS_merged_v1_beforeSensor.nc' )
+#os.system('rm  ' + out_dir +  '/0-20000-0-82930_CEUAS_merged_v1.nc' )
 
 
 def create_stat_dic(stat_id, data_directories):
@@ -1176,6 +1181,7 @@ def create_stat_dic(stat_id, data_directories):
     Returns a dictionary with the files per dataset,
     the total size of the files t be processed,
     the station_id to be used for the output file. """
+    
     station_dic = {}
     total_dim = []
     found_20001 = False
@@ -1183,6 +1189,8 @@ def create_stat_dic(stat_id, data_directories):
         files = os.listdir(i)
         for f in files: # normal check for any file
             Id = f.split('_'+d)[0]
+            if 'igra' in Id:
+                Id = Id.split('-igra2')[0]
             if Id == stat_id:
                 if d not in station_dic.keys():
                     station_dic[d] = []                            
@@ -1243,12 +1251,14 @@ if __name__ == '__main__':
     out = open('Failed_merged.txt' , 'a+')
     out.write('# Failed stations \n')
     for station in stations.split(','):
-        print(station)
         if '-20600-' in station or '-20999-' in station:
             continue 
         station_dic, size, station = create_stat_dic(station, data_directories)
 
-        if size < max_size and size > min_size:
+        if size < 1:
+            print("No station found, please check the station ID !!!")
+            
+        elif size < max_size and size > min_size:
             if run_exception:
                 try:
                     a = Merging.merge(station,  datasets = station_dic , mode = run_mode ) # single station dictionary
