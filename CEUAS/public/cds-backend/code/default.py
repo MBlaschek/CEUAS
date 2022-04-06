@@ -819,9 +819,38 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
         date and period are currently not really separated due to CDS filtering
     """
     d = {}
-    allowed_variables = ['temperature', 'u_component_of_wind', 'v_component_of_wind',
-                         'wind_speed', 'wind_direction', 'relative_humidity',
-                         'specific_humidity', 'dew_point_temperature', 'geopotential', 'geopotential_height',
+    '''
+            FORMS:
+            'air_temperature', 'dew_point_depression', 'dew_point_temperature',
+            'eastward_wind_speed', 'geopotential', 'northward_wind_speed',
+            'relative_humidity', 'specific_humidity', 'wind_from_direction',
+            'wind_speed
+            
+            PUG:
+            ["air_temperature", "zonal_wind", "meridional_wind",
+            "wind_speed", "wind_direction", "air_relative_humidity", 
+            "air_specific_humidity", "air_dewpoint"]
+            
+            PREVIEW:
+            'air_temperature',
+            'dew_point_temperature',
+            'eastward_wind_speed',
+            'northward_wind_speed',
+            'relative_humidity',
+            'specific_humidity',
+            'wind_from_direction',
+            'wind_speed'
+            
+    '''
+    allowed_variables = ['temperature', 'air_temperature',
+                         'u_component_of_wind', 'eastward_wind_speed',
+                         'v_component_of_wind', 'northward_wind_speed',
+                         'wind_speed',
+                         'wind_direction', 'wind_from_direction',
+                         'relative_humidity',
+                         'specific_humidity',
+                         'dew_point_temperature',
+                         'geopotential', 'geopotential_height',
                          'dew_point_depression', 'dewpoint_departure','dewpoint_depression', 'dew_point_departure']
     #
     # Unknown keys ?
@@ -878,6 +907,15 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 variable[i] = 'dew_point_depression'
             if variable[i] in ['geopotential_height']:
                 variable[i] = 'geopotential'
+            if variable[i] in ['air_temperature']:
+                variable[i] = 'temperature'
+            if variable[i] in ['eastward_wind_speed']:
+                variable[i] = 'u_component_of_wind'
+            if variable[i] in ['northward_wind_speed']:
+                variable[i] = 'v_component_of_wind'
+            if variable[i] in ['wind_from_direction']:
+                variable[i] = 'wind_direction'
+                
         d['variable'] = variable
     #
     # Optional
