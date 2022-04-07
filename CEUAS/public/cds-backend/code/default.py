@@ -1235,8 +1235,8 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                 'stations ')
     d['statid'] = statid
     print(len(d['statid']), d['statid'])
-    if len(d['statid']) == 1:
-        d['single_parallel'] = True
+#     if len(d['statid']) == 1:
+#         d['single_parallel'] = True
     #
     #
     # remove statids i
@@ -1244,18 +1244,12 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
 #     #
 #     # single_parallel
 #     #
-    if (single_parallel == False) or (single_parallel == 'False'):
-        d['single_parallel'] = False
-
-#     if single_parallel:
-#         if len(d['statid']) > 1:
-#             raise RuntimeError('Invalid selection, Specify only one statid! Invalid statid%s, bbox: %s and country: %s' % (statid, bbox, country))
-#         else:
-#             d['single_parallel'] = True
-#     else:
+#     if (single_parallel == False) or (single_parallel == 'False'):
 #         d['single_parallel'] = False
-    
-    
+    if (single_parallel == True) or (single_parallel == 'True'):
+        d['single_parallel'] = True
+    else:
+        d['single_parallel'] = False
     
     #
     #
