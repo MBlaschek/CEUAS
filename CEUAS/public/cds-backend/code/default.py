@@ -1244,7 +1244,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
 #     #
 #     # single_parallel
 #     #
-    if single_parallel == False:
+    if (single_parallel == False) or (single_parallel == 'False'):
         d['single_parallel'] = False
 
 #     if single_parallel:
