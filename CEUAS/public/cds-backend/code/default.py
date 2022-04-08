@@ -45,6 +45,7 @@ import sys
 import time
 import zipfile
 import urllib
+import multiprocessing
 from datetime import datetime, timedelta
 from functools import partial
 from multiprocessing import set_start_method, Pool
@@ -425,6 +426,9 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         #slist=[slist[3380]]
         #slnum=[slnum[3380]]
         if False:
+#             with Pool(10) as p:
+#                 sklist=list(p.map(func,zip(slist,slnum)))
+#             with multiprocessing.get_context('spawn').Pool(10) as p:
             with Pool(10) as p:
                 sklist=list(p.map(func,zip(slist,slnum)))
         else:
@@ -541,10 +545,14 @@ slnum = list(active.keys())
 # slist = [s[5] for _,s in active.items()]
 
 # try:
-#    set_start_method("spawn")  # or fork ? not sure why, pickling?
+# set_start_method("spawn")  # or fork ? not sure why, pickling?
 # set_start_method("forkserver")  # fork is not threadsafe, unfortunately
-P=Pool(16) 
-x=P.map(np.sin,np.arange(16))
+# with multiprocessing.get_context('spawn').Pool(16) as P:
+with Pool(16) as P:
+    x=P.map(np.sin,np.arange(16))
+
+# P=Pool(16) 
+# x=P.map(np.sin,np.arange(16))
 print(x)
 # except RuntimeError:
 #     pass
@@ -793,7 +801,7 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                gridded: list = None, toolbox: str = None, cdm: list = None, da: bool = True, compression: str = None,
                pass_unknown_keys: bool = False, nodims: str = None, hdf: str = None, speed_test: str = None, 
-               single_parallel: bool = True,
+               single_parallel: bool = False,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
 
@@ -1244,18 +1252,12 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
 #     #
 #     # single_parallel
 #     #
-    if (single_parallel == False) or (single_parallel == 'False'):
+    if (single_parallel == False) or (single_parallel == 'False') or (len(d['statid']) > 1):
         d['single_parallel'] = False
-
-#     if single_parallel:
-#         if len(d['statid']) > 1:
-#             raise RuntimeError('Invalid selection, Specify only one statid! Invalid statid%s, bbox: %s and country: %s' % (statid, bbox, country))
-#         else:
-#             d['single_parallel'] = True
+#     if (single_parallel == True) or (single_parallel == 'True'):
+#         d['single_parallel'] = True
 #     else:
 #         d['single_parallel'] = False
-    
-    
     
     #
     #
