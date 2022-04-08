@@ -3663,8 +3663,8 @@ class CDMDataset:
         ###pool###
         fname = str(self.filename)
         func = partial(parallel_writing, fname, dims, trajectory_index, idx, zidx, compression, filename_out, request, globatts)
-        with multiprocessing.get_context('spawn').Pool(10) as P:
-#             P = Pool(10)
+#         with multiprocessing.get_context('spawn').Pool(10) as P:
+        with Pool(10) as P:
             pool_out = list(P.map(func, list_cfcopy, chunksize=3))
             print(pool_out)
         filelist = glob.glob(filename_out[:-3]+'_*')
