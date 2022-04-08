@@ -428,7 +428,8 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         if False:
 #             with Pool(10) as p:
 #                 sklist=list(p.map(func,zip(slist,slnum)))
-            with multiprocessing.get_context('spawn').Pool(10) as p:
+#             with multiprocessing.get_context('spawn').Pool(10) as p:
+            with Pool(10) as p:
                 sklist=list(p.map(func,zip(slist,slnum)))
         else:
             sklist = list(map(func, zip(slist, slnum)))
@@ -546,7 +547,8 @@ slnum = list(active.keys())
 # try:
 # set_start_method("spawn")  # or fork ? not sure why, pickling?
 # set_start_method("forkserver")  # fork is not threadsafe, unfortunately
-with multiprocessing.get_context('spawn').Pool(16) as P:
+# with multiprocessing.get_context('spawn').Pool(16) as P:
+with Pool(16) as P:
     x=P.map(np.sin,np.arange(16))
 
 # P=Pool(16) 
