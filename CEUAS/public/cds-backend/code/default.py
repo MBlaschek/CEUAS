@@ -256,9 +256,9 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
                 # add filepath
                 active[skey].append(s)
             except KeyError as e:
-                if debug:
-                    raise e
-                logger.error('%s : a table is missing', skey)
+#                 if debug:
+#                     raise e
+                logger.debug('%s : a table is missing', skey)
     except:
         if debug:
             raise 
@@ -548,11 +548,11 @@ slnum = list(active.keys())
 # set_start_method("spawn")  # or fork ? not sure why, pickling?
 # set_start_method("forkserver")  # fork is not threadsafe, unfortunately
 # with multiprocessing.get_context('spawn').Pool(16) as P:
-with Pool(16) as P:
-    x=P.map(np.sin,np.arange(16))
+# with Pool(16) as P:
+#     x=P.map(np.sin,np.arange(16))
 
-# P=Pool(16) 
-# x=P.map(np.sin,np.arange(16))
+P=Pool(16) 
+x=P.map(np.sin,np.arange(16))
 print(x)
 # except RuntimeError:
 #     pass
@@ -1610,6 +1610,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         #
         # Single Threading
         #
+        print('single threading')
         results = list(map(func, bodies))
     else:
         
@@ -2185,5 +2186,6 @@ if __name__ == '__main__':
     # Run the request
     #
     tmpdir = config['tmp_dir'] + '/' + randdir
+#     with Pool(16) as P:
     ret = process_request(body, tmpdir, wmo_regions, P, debug=debug)
     logger.debug(str(ret))
