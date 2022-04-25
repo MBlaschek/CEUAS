@@ -256,9 +256,9 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
                 # add filepath
                 active[skey].append(s)
             except KeyError as e:
-                if debug:
-                    raise e
-                logger.error('%s : a table is missing', skey)
+#                 if debug:
+#                     raise e
+                logger.debug('%s : a table is missing', skey)
     except:
         if debug:
             raise 
@@ -1610,6 +1610,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         #
         # Single Threading
         #
+        print('single threading')
         results = list(map(func, bodies))
     else:
         
@@ -1627,7 +1628,8 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         #b2=[]
         #for b in reversed(bidx):
             #b2.append(bodies[b])
-        results = list(P.map(func, bodies,chunksize=3))
+        with Pool(16) as Pl:
+            results = list(Pl.map(func, bodies,chunksize=3))
         #results = list(map(func, bodies))
             # results = list(p.starmap(func, zip(input_dirs, [debug]*len(bodies), bodies), chunksize=1))
     #
@@ -2185,5 +2187,6 @@ if __name__ == '__main__':
     # Run the request
     #
     tmpdir = config['tmp_dir'] + '/' + randdir
+#     with Pool(16) as P:
     ret = process_request(body, tmpdir, wmo_regions, P, debug=debug)
     logger.debug(str(ret))
