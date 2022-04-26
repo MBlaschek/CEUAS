@@ -197,6 +197,8 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
 
             if wind == 'mean':
                 new_lat, new_lon = transport(new_lat, new_lon, (np.mean([u[i],u[i-1]]) * rising_time)/1000. * u_factor, (np.mean([v[i],v[i-1]]) * rising_time)/1000. * v_factor)
+#                 print('u disp:', (np.mean([u[i],u[i-1]]) * rising_time)/1000.)
+#                 print('v disp:', (np.mean([v[i],v[i-1]]) * rising_time)/1000.)
             elif wind == 'upper':
                 new_lat, new_lon = transport(new_lat, new_lon, (u[i] * rising_time)/1000. * u_factor, (v[i] * rising_time)/1000. * v_factor)
             elif wind == 'lower':
