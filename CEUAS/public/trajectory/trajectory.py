@@ -129,10 +129,10 @@ def inverse_haversine(lat, lon, distance, direction):
     lon = numpy.radians(lon)
     d = numpy.array(distance)
     r = 6371 #[km]
-    if direction == "NORTH":
-        brng = 0.
-    elif direction == "EAST":
-        brng = 1.5707963267948966
+    if direction == "SOUTH":
+        brng = numpy.radians(180)
+    elif direction == "WEST":
+        brng = numpy.radians(270)
     else:
         return "error - not a valid direction"
     return_lat = numpy.arcsin(numpy.sin(lat) * numpy.cos(d / r) + numpy.cos(lat) * numpy.sin(d / r) * numpy.cos(brng))
@@ -146,8 +146,8 @@ def transport(lat, lon, u_dist, v_dist):
     '''
     dist: [km]
     '''
-    new_lat, new_lon = inverse_haversine(lat, lon, u_dist, "EAST")
-    new_lat, new_lon = inverse_haversine(new_lat, new_lon, v_dist, "NORTH")
+    new_lat, new_lon = inverse_haversine(lat, lon, u_dist, "WEST")
+    new_lat, new_lon = inverse_haversine(new_lat, new_lon, v_dist, "SOUTH")
     return new_lat, new_lon
 
 
@@ -208,8 +208,8 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
 
 
             
-            lat_displacement.append(lon - new_lon)
-            lon_displacement.append(lat - new_lat)
+            lat_displacement.append(lat - new_lat)
+            lon_displacement.append(lon - new_lon)
 #         lat_displacement.append(new_lat)
 #         lon_displacement.append(new_lon)
 
