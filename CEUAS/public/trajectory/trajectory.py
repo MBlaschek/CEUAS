@@ -155,6 +155,9 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
     '''
     w_rs -> radio sonde rising speed
     '''
+    if pressure[0] < pressure[-1]:
+        print("Please resort the input data - ascending order is necessary!")
+        return 0,0,0,0
     if ((u_factor == None) and (v_factor == None)):
         u_factor = factor
         v_factor = factor
