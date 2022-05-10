@@ -176,12 +176,15 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
     u_shear=[0.]
     v_shear=[0.]
     
+    rts = [0]
+    
     for i in range(len(z)):
         if i == 0:
             new_lat = lat
             new_lon = lon
         else:
             rising_time = (z[i]-z[i-1]) / w_rs
+            rts.apppend(rising_time)
 #             print(z[i], z[i-1], z[i]-z[i-1], rising_time)
 #             match wind:
 #                 case 'mean':
@@ -216,6 +219,6 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
 #         lat_displacement.append(new_lat)
 #         lon_displacement.append(new_lon)
 
-    return lat_displacement, lon_displacement, np.array(u_shear), np.array(v_shear)
+    return lat_displacement, lon_displacement, np.array(u_shear), np.array(v_shear), rts
 
 
