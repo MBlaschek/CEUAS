@@ -184,7 +184,7 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
             new_lon = lon
         else:
             rising_time = (z[i]-z[i-1]) / w_rs
-            rts.apppend(rising_time)
+            rts.append(rising_time)
 #             print(z[i], z[i-1], z[i]-z[i-1], rising_time)
 #             match wind:
 #                 case 'mean':
