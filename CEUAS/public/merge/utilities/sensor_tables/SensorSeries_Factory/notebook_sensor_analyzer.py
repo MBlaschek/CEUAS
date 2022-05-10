@@ -42,7 +42,7 @@ from functools  import partial
 
 
 class IgraMetaData():
-    """ Class holfing the basic functionality to produce extract IGRA2 metadata information """
+    """ Class holding the basic functionality to produce extract IGRA2 metadata information """
     
     def __init__(self):
 
@@ -79,7 +79,7 @@ class IgraMetaData():
         """
         
         # obtain the metadata file 
-        if not os.path.isdir('data/igra2-metadata.txt'):
+        if not os.path.isfile('data/igra2-metadata.txt'):
             url = 'https://www.ncei.noaa.gov/pub/data/igra/history/igra2-metadata.txt'
             urllib.request.urlretrieve(url, 'data/igra2-metadata.txt')
 
@@ -99,6 +99,7 @@ class IgraMetaData():
         """ Extract the metadata from the igra df for the given station """ 
         df = self.igra2_meta_df
         
+        station = station.split('-')[-1]
         # extracting all WMO ids
         wmos = [i if len(i) == 5 else '0'+i for i in df.WMOID]
 
@@ -136,8 +137,9 @@ class IgraMetaData():
         updates = list(stat_igra2.comment.values)
         ind = [ updates.index(i) for i in updates if 'SONDE' in i ]
         stat_igra2_sonde = stat_igra2.iloc[ind]
-
-        return stat, stat_igra2_sonde 
+        
+        return stat_igra2, stat_igra2_sonde 
+        #return stat, stat_igra2_sonde 
     
 
 
@@ -214,13 +216,13 @@ class Analyze():
         """ Load the data if existing or tries to read it from merged files """
         station = self.station
         
-        lista = [f for f in os.listdir('data/') if station in f ]
-        print('LISTA ::: ' , lista)
+        lista = [f for f in os.listdir('data/') if station in f]
+        #print('LISTA ::: ' , lista)
         if not (len(lista)>0):
             
             print("Retrieving data from merged file")
             merged = self.merged
-            file = [f for f in os.listdir(merged) if station in f][0]
+            file = [f for f in os.listdir(merged) if station in f  and 'before' not in f ][0]
 
             station = file.split('/')[-1].split('_')[0]
             file = merged + '/' + file 
@@ -358,7 +360,6 @@ class Analyze():
         
 
 
-
         return data_sch, data_wmo, data_df, data_wmo_clean, data_df_clean 
 
     
@@ -377,8 +378,6 @@ class Analyze():
 
         
 
-
-# In[29]:
 
 
 class Plot():
@@ -509,39 +508,40 @@ class Plot():
 
 
 def run_wrapper(merged, save_fig, station):
-   """ Wrapper to full run of a station file """
-
-   #station_name = 'Vienna'
-
-   # IGRA2 
-   ig = IgraMetaData()
-   igra2_metadata = ig.igra2_meta_df
-   stat_igra2, stat_igra2_sonde = ig.get_igra_metadata(station)
-
-   # sensor configuration
-   sensor = Sensor()
-   
-   # Analyze data
-   print(" --- ANALYZING --- data file: ")
-   analyze = Analyze(sensor,merged,station)
-   data_sch, data_wmo, data_df, data_wmo_clean, data_df_clean = analyze.analyze()
-
-   data_df_clean_all = pd.concat([data_df_clean, stat_igra2_sonde])
-   data_df = pd.concat([data_df, stat_igra2])
-
-   # extract unique sensor id table for the station
-   all_sensor_station_df = analyze.get_all_sensors(data_df_clean_all)
-
-   # Plotting
-   # Analyze data
-
-   plot = Plot(station.split('_')[-1], save=save_fig)
-
-   series = plot.time_series( data_df_clean_all, label='')
-   table = plot.sensor_table( all_sensor_station_df)
-
-   print("*** COMPLETED ***" , station )
-   return series, table
+    """ Wrapper to full run of a station file """
+  
+    # IGRA2 
+    ig = IgraMetaData()
+    igra2_metadata = ig.igra2_meta_df
+    stat_igra2, stat_igra2_sonde = ig.get_igra_metadata(station)
+ 
+    # sensor configuration
+    sensor = Sensor()
+    
+    # Analyze data
+    print(" --- ANALYZING --- data file: ")
+    analyze = Analyze(sensor,merged,station)
+    data_sch, data_wmo, data_df, data_wmo_clean, data_df_clean = analyze.analyze()
+ 
+    data_df_clean_all = pd.concat([data_df_clean, stat_igra2_sonde])
+    
+    data_df = pd.concat([data_df, stat_igra2])
+ 
+    data_df.to_csv( 'data/' + station + '_all_sensors.csv' , index=False, sep='\t')
+ 
+    # extract unique sensor id table for the station
+    all_sensor_station_df = analyze.get_all_sensors(data_df_clean_all)
+ 
+    # Plotting
+    # Analyze data
+ 
+    plot = Plot(station.split('_')[-1], save=save_fig)
+ 
+    series = plot.time_series( data_df_clean_all, label='')
+    table = plot.sensor_table( all_sensor_station_df)
+ 
+    print("*** COMPLETED ***" , station )
+    return series, table
 
 
 
@@ -552,12 +552,11 @@ def run_wrapper(merged, save_fig, station):
 
 merged = '/scratch/das/federico/MERGED_APRIL2022'
     
-stations = [s.split('_')[0].split('-')[-1] for s in os.listdir(merged) ]
+stations = [s.split('_')[0] for s in os.listdir(merged) ]
 
-#stations = ['70414']
-#stations = ['37985']
+stations = [s for s in stations if '10393' in s ]
 
-POOL = True
+POOL = False
 save_fig = True
 
 if POOL:
@@ -567,7 +566,7 @@ if POOL:
     
 else:
     for stat in stations:
-        #s,t = run_wrapper(merged, False, stat)  ### to debug
+        s,t = run_wrapper(merged, False, stat)  ### to debug
             
         try:
             s,t = run_wrapper(merged, save_fig, stat)
