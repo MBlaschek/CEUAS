@@ -1,0 +1,26 @@
+	sensor_id	source	comment	date_time	value
+2018	-922	SCH	NA		
+2010	0	SCH	NA		
+12210	1	SCH	NA		
+3365	111	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          		
+31790	112	SCH	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 		
+30245	114	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           		
+39807	121	SCH	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        		
+51371	123	SCH	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+46430	128	SCH	AVK - AK2-02 (Russian Federation)                          		
+51346	129	SCH	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+49570	152	SCH	Vaisala RS92-NGP/Intermet IMS-2000 (United States)                          		
+2022	160	WMO	MARL-A or Vektor-M – I-2012 (Russian Federation)                        		
+3911	162	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        		
+40105	20	SCH	Indian Meteorological Service MK3 (India)              		
+49472	27	SCH	AVK-MRZ (Russian Federation)                		
+46069	4	SCH	 No radiosonde – passive temperature-humidity profiler            		
+56850	68	SCH	AVK-RZM-2 (Russian Federation)                		
+55918	69	SCH	MARL-A or Vektor-M-RZM-2 (Russian Federation)              		
+55522	79	SCH	Vaisala RS92/Digicora I, II or Marwin (Finland)            		
+55944	88	SCH	MARL-A or Vektor-M-MRZ (Russian Federation)              		
+56253	89	SCH	MARL-A or Vektor-M-BAR (Russian Federation)              		
+2859	90	WMO	Radiosonde not specified or unknown             		
+39782	95	SCH	No pressure radiosonde plus radar reflector            		
+7914	99	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        		
+0	NA 	SCH	NA		

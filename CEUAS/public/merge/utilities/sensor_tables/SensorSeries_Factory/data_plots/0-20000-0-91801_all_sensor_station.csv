@@ -1,0 +1,10 @@
+	sensor_id	source	comment	date_time	value
+12297	AA8 	SCH	  AA8 Australia Astor MK I transistorized radiosonde {197608} WMO instr=13^ (T=089,W3=13) <F=T402FB,P=A,T=TR,U=L>		
+24238	VCG 	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
+24012	VCR 	SCH	  VCR Vaisala RS80 DigiCORA I, II, or Marwin auto corr, RDF wind 31313=46102^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>		
+24375	VNG 	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
+24368	VNK 	SCH	  VNK Vaisala RS92-K analog special interface radiosonde {2003} 31313=47902^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=0>		
+0	W_R 	SCH	  W_R exact type insufficiently documented		
+22073	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+4347	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1989-01-01	3.0
+4348	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED , to , VAISALA RS92-SGP UNSPECIFIED 	2006-03-01	3.0

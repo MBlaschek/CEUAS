@@ -1,0 +1,38 @@
+	date_time	sensor_id	value	source	comment
+0	1943-04-01 12:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+10338	1973-04-01 00:00:00	ZF1c	1	SCH	  ZF1c VIZ model 1192 NWS 1680 MHz, new hygristor duct, censoring  {1973}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+15962	1980-10-24 00:00:00	ZJ1c	1	SCH	  ZJ1c VIZ model 1392-410 NWS 1680 MHz baseline, new hygristor, censoring {1980}^ (W1=19 calls this VIZ 1392-401, T=441) NWS stock no. J030 <F=T1680AB,
+18594	1984-06-02 00:00:00	US1c	1	SCH	  US1c USA Space Data 690-6100, Meteorological Sounding System (MSS) or AN/GMD-5 {1982} 31313=04503^ (W2=27 starting 198607,W3=45,T=008) <F=T1680/400AB,P=A,T=TB,
+25916	1994-05-03 00:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^
+25948	1994-05-19 12:00:00	ZMWc	1	SCH	  ZMWc VIZ model 1799-610 USAF 1680/403 MHz MSS transponder radiosonde, censoring {~1986}^ (T=005) <F=T1680DL,P=Ac,T=TB,U=C,W=T403a(MSS)>
+27035	1995-11-18 00:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^
+27041	1995-11-21 00:00:00	ZMWc	1	SCH	  ZMWc VIZ model 1799-610 USAF 1680/403 MHz MSS transponder radiosonde, censoring {~1986}^ (T=005) <F=T1680DL,P=Ac,T=TB,U=C,W=T403a(MSS)>
+27386	1996-05-12 00:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^
+27390	1996-05-14 00:00:00	ZMWc	1	SCH	  ZMWc VIZ model 1799-610 USAF 1680/403 MHz MSS transponder radiosonde, censoring {~1986}^ (T=005) <F=T1680DL,P=Ac,T=TB,U=C,W=T403a(MSS)>
+27416	1996-05-27 12:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^
+27419	1996-05-29 00:00:00	ZMWc	1	SCH	  ZMWc VIZ model 1799-610 USAF 1680/403 MHz MSS transponder radiosonde, censoring {~1986}^ (T=005) <F=T1680DL,P=Ac,T=TB,U=C,W=T403a(MSS)>
+27462	1996-06-19 12:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^
+27463	1996-06-20 00:00:00	ZMWc	1	SCH	  ZMWc VIZ model 1799-610 USAF 1680/403 MHz MSS transponder radiosonde, censoring {~1986}^ (T=005) <F=T1680DL,P=Ac,T=TB,U=C,W=T403a(MSS)>
+27464	1996-06-20 12:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^
+27465	1996-06-21 00:00:00	ZMWc	1	SCH	  ZMWc VIZ model 1799-610 USAF 1680/403 MHz MSS transponder radiosonde, censoring {~1986}^ (T=005) <F=T1680DL,P=Ac,T=TB,U=C,W=T403a(MSS)>
+27471	1996-06-24 00:00:00	Zmv 	1	SCH	  Zmv VIZ/Sippican MK II Microsonde no rad corr, Omega wind 31313=04905^
+27658	1996-09-23 20:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^
+32871	2003-09-24 19:00:00	Zql 	1	SCH	  Zql Sippican 1543-611 MK II Microsonde 403 MHz LoRAN-C chip thermistor, no corr {~ 2003} 31313=08606^ (W3=86) <F=T403DL,P=Ac,T=TC,U=C,N=L>
+32872	2003-09-25 00:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^
+32884	2003-10-01 00:00:00	ZQl 	1	SCH	  ZQl Sippican 1543-611 MK II Microsonde 403 MHz NWS J032-1 LoRAN chip T, auto solar corr {~ 2003} 31313=58606^ (W3=86) NWS part J032-1, NSN=NWS0-10-
+33452	2004-07-09 18:00:00	Zql 	1	SCH	  Zql Sippican 1543-611 MK II Microsonde 403 MHz LoRAN-C chip thermistor, no corr {~ 2003} 31313=08606^ (W3=86) <F=T403DL,P=Ac,T=TC,U=C,N=L>
+33453	2004-07-10 00:00:00	ZQl 	1	SCH	  ZQl Sippican 1543-611 MK II Microsonde 403 MHz NWS J032-1 LoRAN chip T, auto solar corr {~ 2003} 31313=58606^ (W3=86) NWS part J032-1, NSN=NWS0-10-
+33463	2004-07-14 18:00:00	Zql 	1	SCH	  Zql Sippican 1543-611 MK II Microsonde 403 MHz LoRAN-C chip thermistor, no corr {~ 2003} 31313=08606^ (W3=86) <F=T403DL,P=Ac,T=TC,U=C,N=L>
+33464	2004-07-15 00:00:00	ZQl 	1	SCH	  ZQl Sippican 1543-611 MK II Microsonde 403 MHz NWS J032-1 LoRAN chip T, auto solar corr {~ 2003} 31313=58606^ (W3=86) NWS part J032-1, NSN=NWS0-10-
+33623	2004-09-25 18:00:00	ZRL 	1	SCH	  ZRL Sippican model 1648-___ MK IIA Microsonde 403 MHz LoRAN chip T {~2005} (WMO instr=87)^ (W3=87) <F=T403DL,P=Ac,T=TC,U=C,N=L>
+33624	2004-09-26 00:00:00	ZQl 	1	SCH	  ZQl Sippican 1543-611 MK II Microsonde 403 MHz NWS J032-1 LoRAN chip T, auto solar corr {~ 2003} 31313=58606^ (W3=86) NWS part J032-1, NSN=NWS0-10-
+33679	2004-10-20 16:00:00	Zql 	1	SCH	  Zql Sippican 1543-611 MK II Microsonde 403 MHz LoRAN-C chip thermistor, no corr {~ 2003} 31313=08606^ (W3=86) <F=T403DL,P=Ac,T=TC,U=C,N=L>
+33681	2004-10-21 00:00:00	ZQl 	1	SCH	  ZQl Sippican 1543-611 MK II Microsonde 403 MHz NWS J032-1 LoRAN chip T, auto solar corr {~ 2003} 31313=58606^ (W3=86) NWS part J032-1, NSN=NWS0-10-
+0	2013-01-01 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+16669	1963-10-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VIZ HYPSOMETER UNSPECIFIED 
+16675	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
+16675	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
+16679	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+16679	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+16681	1996-07-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VIZ/SIPICCAN MKII W/ROD TEMP. SENSOR 
+16682	2003-10-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ/SIPICCAN MKII W/ROD TEMP. SENSOR , to , VIZ/SIPICCAN MKII W/CHIP TEMP. SENSOR 

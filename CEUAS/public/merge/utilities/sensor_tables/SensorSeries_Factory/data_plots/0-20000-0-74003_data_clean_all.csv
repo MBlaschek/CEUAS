@@ -1,0 +1,4 @@
+	date_time	sensor_id	value	source	comment
+0	1943-07-06 23:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+3869	1957-07-30 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+3871	1992-08-05 12:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^

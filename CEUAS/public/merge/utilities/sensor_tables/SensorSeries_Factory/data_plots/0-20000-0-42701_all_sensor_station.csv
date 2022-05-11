@@ -1,0 +1,8 @@
+	sensor_id	source	comment	date_time	value
+1603	0	WMO	NA		
+731	21	WMO	VIZ/Jin Yang MARK I MICROSONDE (Republic of Korea)           		
+0	I31 	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>		
+12195	I41 	SCH	  I41 India 401 MHz Mark 4 carbon hygristor radiosonde {2003}, sometimes 31313=02002^ <F=T401FL,P=B,T=TR,U=C>		
+12262	MI1 	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate		
+13885	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+6554	IGRA2	IGRA2	USING GROUND EQUIP. , G1 , RADIOSONDE GROUND EQUIP (RSGE) 401 MHZ 	2006-02-01	3.0

@@ -1,0 +1,16 @@
+	sensor_id	source	comment	date_time	value
+3389	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
+3388	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+5785	124	WMO	Vaisala RS41/AUTOSONDE (Finland)                            		
+3376	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+0	V18 	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>		
+26190	V9- 	SCH	  V9- Vaisala RS90 DigiCORA I, II, or Marwin base case {1995} 31313=97199^ (W3=71) <F=T403DL,P=Sc,T=Wc,U=2Ah>		
+24262	VB_ 	SCH	  VB_ Vaisala RS80 MicroCora radiosonde base case 31313=96099^ (W3=60) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
+24750	VC_ 	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
+9483	ZH_ 	SCH	  ZH_ VIZ 1292 series, unspecified model {1973}^		
+14129	ZJ_ 	SCH	  ZJ_ VIZ 1392 series new hygristor, unspecified model {1980}^		
+14051	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 	1982-01-01	3.0
+14053	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 	1986-01-01	3.0
+14055	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0
+14055	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0

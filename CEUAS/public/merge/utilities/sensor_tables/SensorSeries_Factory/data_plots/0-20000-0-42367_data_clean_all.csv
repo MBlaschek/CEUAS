@@ -1,0 +1,14 @@
+	date_time	sensor_id	value	source	comment
+0	1973-11-03 00:00:00	NA 	1	SCH	NA
+10	1973-12-08 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+49	1976-09-10 00:00:00	-922	1	SCH	NA
+69	1979-05-01 00:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+176	1980-07-03 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+196	1984-04-02 01:00:00	-922	1	SCH	NA
+197	1984-08-26 11:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+226	1990-11-26 05:00:00	-922	1	SCH	NA
+227	1990-12-01 11:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+228	1991-04-30 12:00:00	-922	1	SCH	NA
+229	1991-07-29 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+234	1992-03-09 12:00:00	9	1	SCH	 No radiosonde – system unknown or not specified          
+249	1995-03-11 00:00:00	-922	1	SCH	NA

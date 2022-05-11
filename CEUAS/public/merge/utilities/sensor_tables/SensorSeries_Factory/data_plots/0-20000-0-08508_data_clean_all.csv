@@ -1,0 +1,17 @@
+	date_time	sensor_id	value	source	comment
+0	1923-01-04 10:58:00	ZKBc	1	SCH	"  ZKBc VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok, censoring {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060 <F=T1680AL,P=Ab,"
+46211	1991-08-14 11:00:00	VC_ 	1	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+55302	2006-09-22 12:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+55338	2006-11-15 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+55340	2007-02-02 12:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+55481	2007-07-09 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+55482	2007-10-05 12:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+55694	2008-05-31 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+55695	2008-09-17 12:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+55819	2009-01-17 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+55820	2009-03-07 12:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+0	2013-01-01 12:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+1679	2017-09-28 11:52:32	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1805	2018-02-03 11:19:36	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+10454	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+10456	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

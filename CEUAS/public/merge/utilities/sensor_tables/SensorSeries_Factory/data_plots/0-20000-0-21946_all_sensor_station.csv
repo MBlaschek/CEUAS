@@ -1,0 +1,21 @@
+	sensor_id	source	comment	date_time	value
+247	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+2455	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+2357	20	WMO	Indian Meteorological Service MK3 (India)              		
+0	27	WMO	AVK-MRZ (Russian Federation)                		
+545	58	WMO	AVK-BAR (Russian Federation)                		
+3697	59	WMO	Modem M2K2-R 1680 MHz RDF radiosonde with pressure sensor chip (France)        		
+5829	69	WMO	MARL-A or Vektor-M-RZM-2 (Russian Federation)              		
+3088	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+2539	90	WMO	Radiosonde not specified or unknown             		
+21621	RA4 	SCH	  RA4 USSR A-22-IV transponder radiosonde {1961}^ (W2=12, T=074) <F=V403ME,P=2A,T=BC,U=G,W=T216m>		
+21626	RZ3 	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+0	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+11037	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 	1960-01-01	3.0
+11038	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 	1976-01-01	3.0
+11039	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+11040	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , RUSSIA/USSR MRZ UNSPECIFIED 	1989-11-01	3.0
+11039	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+11044	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ UNSPECIFIED 	1992-12-01	3.0
+11046	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 	1996-04-01	3.0
+11046	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 	1996-04-01	3.0

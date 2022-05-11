@@ -1,0 +1,21 @@
+	date_time	sensor_id	value	source	comment
+0	1954-07-13 03:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
+1673	1991-02-11 11:00:00	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+2958	1999-03-03 22:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+3653	2006-10-27 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+3654	2007-05-22 12:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+3900	2008-07-11 12:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+4046	2008-12-20 11:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+4083	2009-02-27 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+4084	2009-05-08 12:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+4098	2009-05-21 18:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+4102	2009-05-25 12:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+4104	2009-05-27 11:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+4106	2009-05-29 12:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+4129	2009-06-22 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+4130	2009-08-13 11:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+4204	2009-11-18 16:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+4437	2010-09-15 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+0	2013-07-11 12:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+4405	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 
+4407	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

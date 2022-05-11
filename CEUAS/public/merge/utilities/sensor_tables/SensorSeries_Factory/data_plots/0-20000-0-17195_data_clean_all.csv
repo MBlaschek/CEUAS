@@ -1,0 +1,45 @@
+	date_time	sensor_id	value	source	comment
+0	1967-05-13 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+2914	1983-11-26 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+2	2016-01-05 11:34:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+643	2016-11-22 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+644	2016-11-22 12:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+810	2017-02-13 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+811	2017-02-14 00:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+812	2017-02-14 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+838	2017-02-27 12:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+839	2017-02-27 23:41:00	117	2	WMO	Graw DFM-09 (Germany)                            
+880	2017-03-20 12:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+900	2017-03-30 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+902	2017-03-31 12:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+903	2017-04-01 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+1986	2018-09-25 12:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+1987	2018-09-25 23:34:00	117	2	WMO	Graw DFM-09 (Germany)                            
+1988	2018-09-27 00:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+2701	2019-09-21 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+2763	2019-10-22 12:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+2837	2019-11-28 12:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+2842	2019-12-01 00:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+2843	2019-12-01 12:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+2845	2019-12-02 12:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+2847	2019-12-03 12:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+2856	2019-12-08 11:32:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+3012	2020-02-24 12:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+3014	2020-02-25 12:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+3140	2020-04-28 12:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+3150	2020-05-03 12:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+3151	2020-05-04 00:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+3269	2020-07-02 00:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+3270	2020-07-02 12:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+3318	2020-07-26 12:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+3319	2020-07-27 00:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+3973	2021-06-18 11:30:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+3974	2021-06-18 23:36:00	154	2	WMO	Graw DFM-17 (Germany)                            
+3979	2021-06-21 11:30:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+3987	2021-06-25 11:38:00	154	2	WMO	Graw DFM-17 (Germany)                            
+14786	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 
+14787	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , VAISALA RS21 
+14790	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 
+14791	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , VAISALA RS80 
+14792	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I3 , VIZ (Generic) 
+14796	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 

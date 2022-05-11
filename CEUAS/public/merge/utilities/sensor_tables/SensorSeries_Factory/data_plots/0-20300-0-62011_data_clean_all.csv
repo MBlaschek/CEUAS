@@ -1,0 +1,7 @@
+	date_time	sensor_id	value	source	comment
+0	1942-12-01 03:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+24987	1970-03-04 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+8887	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , KEW MK II 
+8888	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 
+8888	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 
+8891	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 

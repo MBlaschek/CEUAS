@@ -1,0 +1,18 @@
+	sensor_id	source	comment	date_time	value
+240	152	WMO	Vaisala RS92-NGP/Intermet IMS-2000 (United States)                          		
+356	70	WMO	Vaisala RS92/Star (Finland)                		
+0	87	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         		
+29252	??? 	SCH	  ??? Unknown instrument category because data is not available for checking^		
+54757	VU3 	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)		
+0	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
+45228	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+40240	ZCH 	SCH	  ZCH VIZ model 1063 USWB 1680 MHz hypsometer {1961}^ (T=379) <F=V1680AB,P=A+H,T=TR(ML-405/AM),U=L,W=Da(WBRT or GMD-1)>		
+42427	ZDH 	SCH	  ZDH VIZ model 1073 USWB 1680 MHz hypsometer {1963}^ (T=389) <F=V1680AB,P=A+H(hypsometer fluid CFC-11),T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+54038	ZK2 	SCH	  ZK2 VIZ or Sippican model 1492-540 NWS B2 J031-1 1680 MHz RDF {1997} 31313=05102^ (W3=51,T=489) <F=T1680DL,P=Ac,T=TR (ML-405?),U=C,W=Da(ART-2)> NWS part		
+52321	ZKB 	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"		
+61168	ZRg 	SCH	  ZRg Sippican 1649-540 NWS J031-2 MK IIA Microsonde 1680 MHz GPS chip T, with P {2003} 31313=58708^ (W3=87) <F=T1680DL,P=Ac,T=TC,U=C,N=G> NWS part no.		
+15856	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ HYPSOMETER UNSPECIFIED , to , VIZ TRANSPONDER UNSPECIFIED 	1966-01-01	3.0
+15859	IGRA2	IGRA2	USING SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ 	1995-01-01	3.0
+15860	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VIZ/SIPPICAN B2 1492-540 NWS 1680 MHZ 	1997-06-01	3.0
+15861	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ/SIPPICAN B2 1492-540 NWS 1680 MHZ , to , VAISALA RS80-56H NWS SOLAR/IR CORR 	1998-06-01	3.0
+15862	IGRA2	IGRA2	CHANGE SONDE MODEL , VAISALA RS80-56H NWS SOLAR/IR CORR , to , VIZ/SIPPICAN MICROSONDE MKIIA GPS 	2007-01-01	3.0

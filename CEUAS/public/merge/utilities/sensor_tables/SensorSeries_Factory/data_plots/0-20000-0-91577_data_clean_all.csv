@@ -1,0 +1,4 @@
+	date_time	sensor_id	value	source	comment
+0	1950-01-03 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+9719	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL FMO 1950A , ? 
+9719	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL FMO 1950A , ? 

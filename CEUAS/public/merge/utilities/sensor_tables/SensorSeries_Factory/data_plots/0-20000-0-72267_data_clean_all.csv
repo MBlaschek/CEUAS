@@ -1,0 +1,7 @@
+	date_time	sensor_id	value	source	comment
+0	1942-06-03 22:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+2362	1950-06-12 21:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+4482	1952-02-14 21:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+4991	1952-06-24 21:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+9486	1960-03-15 00:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+10043	1964-05-17 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

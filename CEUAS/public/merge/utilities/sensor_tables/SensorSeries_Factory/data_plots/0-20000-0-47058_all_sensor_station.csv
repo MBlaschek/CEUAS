@@ -1,0 +1,4 @@
+	sensor_id	source	comment	date_time	value
+0	H2G 	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"		
+8410	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ AN/AMT-4B UNSPECIFIED 	1986-01-01	3.0
+8411	IGRA2	IGRA2	USING SONDE MODEL , I1 , UNKNOWN 	1993-01-01	3.0

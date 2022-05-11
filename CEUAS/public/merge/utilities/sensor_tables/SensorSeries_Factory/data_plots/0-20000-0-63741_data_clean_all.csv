@@ -1,0 +1,37 @@
+	date_time	sensor_id	value	source	comment
+0	1948-04-02 15:00:00	U0  	1	SCH	  U0 exact type insufficiently documented
+9183	1965-09-08 00:00:00	V1R 	1	SCH	  V1R Vaisala RS11 rolled hair radiosonde {1954}^ (I=V, T=024) <F=T25FR,P=Ac,T=BSc,U=Hrc>
+27770	1994-06-04 00:00:00	VC_ 	1	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+0	2013-01-01 23:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+490	2015-02-04 23:00:00	6	2	WMO	 No radiosonde – radio-acoustic sounder             
+491	2015-02-06 23:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+540	2015-04-05 23:00:00	74	2	WMO	Vaisala RS90/Star (Finland)                
+541	2015-04-06 23:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+561	2015-04-25 23:00:00	131	2	WMO	Taiyuan GTS1-1/GFE(L) (China )                           
+562	2015-04-30 23:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+710	2016-01-27 23:00:00	69	2	WMO	MARL-A or Vektor-M-RZM-2 (Russian Federation)              
+711	2016-01-28 23:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+851	2016-07-06 11:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+852	2016-07-07 22:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+899	2016-08-15 10:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+910	2016-08-23 10:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+913	2016-08-24 23:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+914	2016-08-26 11:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+917	2016-08-31 23:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+920	2016-09-02 10:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+923	2016-09-03 10:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+929	2016-09-06 11:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+931	2016-09-07 23:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+939	2016-09-11 22:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+942	2016-09-13 21:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+944	2016-09-15 22:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+1138	2017-04-12 08:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+1141	2017-04-23 23:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+1142	2017-04-27 23:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+8319	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK IIB UNSPECIFIED 
+8322	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 
+8325	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL MH73A 
+8326	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , VAISALA RS18 
+8325	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL MH73A 
+8329	1993-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+8332	2004-07-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VAISALA RS80-15G OR 15GA GPS, DRIFT FIX 

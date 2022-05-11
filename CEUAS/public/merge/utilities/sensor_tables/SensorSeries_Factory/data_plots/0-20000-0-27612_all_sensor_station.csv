@@ -1,0 +1,46 @@
+	sensor_id	source	comment	date_time	value
+1220	125	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           		
+2641	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+2643	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+4123	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+1718	153	WMO	AVK – I-2012 (Russian Federation)                          		
+1731	160	WMO	MARL-A or Vektor-M – I-2012 (Russian Federation)                        		
+1491	162	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        		
+1584	20	WMO	Indian Meteorological Service MK3 (India)              		
+127	27	WMO	AVK-MRZ (Russian Federation)                		
+2127	56	WMO	M2K2 (France)                 		
+1095	57	WMO	Modem M2K2-DC (France)                		
+0	58	WMO	AVK-BAR (Russian Federation)                		
+2477	68	WMO	AVK-RZM-2 (Russian Federation)                		
+2473	69	WMO	MARL-A or Vektor-M-RZM-2 (Russian Federation)              		
+2955	86	WMO	Sippican MARK II with chip thermistor, pressure and carbon element         		
+1355	88	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              		
+26	89	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              		
+560	90	WMO	Radiosonde not specified or unknown             		
+43143	MR5 	SCH	  MR5 Mixed Russia RKZ-5 (RK5, DP to or near top) and MARS-2-2 (RRB, DP to T around -40), both using Meteorit-2 radar^		
+57747	MR8 	SCH	  MR8 Mixed Russia MRZ-3A moist (RZ3, 31313=52703) and RF95 (RV5, 31313=55303 or 52703, dry, min RH usually 4 to 6%)^		
+45252	MRB 	SCH	  MRB Mixed Russia MARS-2-2 (RRB, DP to T around -40) and MRZ-3A (RZ3, DP to or near top)^		
+39511	MRu 	SCH	  MRu Mixed Russia A-22 (RA4) and RKZ-5 (RK5), not distinguishable^		
+0	NRK 	SCH	  NRK Russia Kufnetzof kite anemometer meteorograph {~ 1904}^		
+38315	RK5 	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>		
+46133	RRB 	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>		
+60652	RV5 	SCH	  RV5 Russia AVK-RF95 or RF95-L74 1780 MHz Vaisala sensors radiosonde {1997} 31313=55303^ (W3=53) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>		
+45646	RZ3 	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+1037	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+12257	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR MOLCHANOV KAMMGERAET NO HUMID 1934 	1934-01-01	3.0
+12258	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , USSR MOLCHANOV KAMMGERAET NO HUMID 1934 , to , USSR MOLCHANOV KAMMGERAET NO HUMID 1936 	1936-01-01	3.0
+12260	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 	1960-01-01	3.0
+12261	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 	1976-01-01	3.0
+12262	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+12262	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+12266	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ UNSPECIFIED 	1992-12-01	3.0
+12268	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 	1997-08-01	3.0
+12271	IGRA2	IGRA2	CHANGE SONDE MODEL , I2 , NONE , to , RUSSIA AVK-RF95 VAISALA SENSORS 	2000-06-01	3.0
+12273	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , MIXED , to , RUSSIA/USSR MRZ-3A 	2000-08-01	3.0
+12271	IGRA2	IGRA2	CHANGE SONDE MODEL , I2 , NONE , to , RUSSIA AVK-RF95 VAISALA SENSORS 	2000-06-01	3.0
+12273	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , MIXED , to , RUSSIA/USSR MRZ-3A 	2000-08-01	3.0
+12271	IGRA2	IGRA2	CHANGE SONDE MODEL , I2 , NONE , to , RUSSIA AVK-RF95 VAISALA SENSORS 	2000-06-01	3.0
+12273	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , MIXED , to , RUSSIA/USSR MRZ-3A 	2000-08-01	3.0
+12271	IGRA2	IGRA2	CHANGE SONDE MODEL , I2 , NONE , to , RUSSIA AVK-RF95 VAISALA SENSORS 	2000-06-01	3.0
+12286	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , MIXED , to , RUSSIA AVK-RF95 VAISALA SENSORS 	2006-10-01	3.0
+12288	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA AVK-RF95 VAISALA SENSORS 	2007-01-01	3.0

@@ -1,0 +1,7 @@
+	sensor_id	source	comment	date_time	value
+3	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+0	C2  	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"		
+4328	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+17911	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ AN/AMT-2C UNSPECIFIED 	1960-01-01	3.0
+17912	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0
+17913	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1992-12-01	3.0

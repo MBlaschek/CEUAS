@@ -1,0 +1,6 @@
+	sensor_id	source	comment	date_time	value
+3369	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+4522	124	WMO	Vaisala RS41/AUTOSONDE (Finland)                            		
+3367	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+0	81	WMO	Vaisala RS92/Autosonde (Finland)                		
+0	VN8 	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		

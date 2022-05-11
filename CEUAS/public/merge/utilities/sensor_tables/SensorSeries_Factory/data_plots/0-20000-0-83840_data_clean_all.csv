@@ -1,0 +1,18 @@
+	date_time	sensor_id	value	source	comment
+0	1923-10-17 10:30:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+5665	1974-06-19 23:00:00	VU_ 	1	SCH	  VU_ Vaisala unspecified model before RS80^ (W1=01, T=023)
+14652	1991-06-16 12:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
+23043	2006-10-01 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+0	2013-01-01 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+4992	2019-12-19 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+4993	2019-12-19 12:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+4994	2019-12-20 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+5116	2020-02-19 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+6180	2021-08-24 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+6182	2021-08-25 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+2263	1974-06-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VAISALA RS21 UNSPECIFIED 
+2266	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+2268	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+2269	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+2270	1991-06-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS80 UNSPECIFIED , to , VIZ MK II SERIES MICROSONDE UNSPECIFIED 
+2271	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ B 1492-520 NWS 1680 MHZ 

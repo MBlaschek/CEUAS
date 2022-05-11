@@ -1,0 +1,7 @@
+	date_time	sensor_id	value	source	comment
+0	1941-12-01 22:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+2237	1947-01-01 03:00:00	U__ 	1	SCH	  U__ exact type insufficiently documented
+28714	1975-01-07 12:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
+9391	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+9391	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+9391	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 

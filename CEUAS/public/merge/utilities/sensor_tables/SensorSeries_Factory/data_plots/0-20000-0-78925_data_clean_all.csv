@@ -1,0 +1,5 @@
+	date_time	sensor_id	value	source	comment
+0	1936-04-30 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+36092	2001-11-08 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+9105	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR , ? 
+9106	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ AN/AMT-4B UNSPECIFIED , ? 

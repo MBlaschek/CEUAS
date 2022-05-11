@@ -1,0 +1,14 @@
+	sensor_id	source	comment	date_time	value
+5598	132	WMO	Shanghai GTS1/GFE(L) (China)                            		
+2814	133	WMO	Nanjing GTS1-2/GFE(L) (China)                            		
+5777	200	WMO	NA		
+5599	201	WMO	NA		
+5576	202	WMO	NA		
+0	H1G 	SCH	  H1G China International Telecommunication Equipment Factory GZZ-1 Comb like Molchanov RZ-049 radiosonde {1955}^ (T=047) <F=V260(?)MB,P=A,T=B,U=H,W=O or Dm>		
+11811	H2G 	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"		
+34497	H9G 	SCH	"  H9G China Shanghai Radio Factory #23 GZZ-9, GZZ9, GTS1 1675 MHz, or ""Shang/E, L band radar"" (electronic) radiosonde {2002} 31313=63203 (132)^ <F=T1675DL,"		
+3361	IGRA2	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 	1976-01-01	3.0
+3361	IGRA2	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 	1976-01-01	3.0
+3361	IGRA2	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 	1976-01-01	3.0
+3361	IGRA2	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 	1976-01-01	3.0
+3361	IGRA2	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 	1976-01-01	3.0

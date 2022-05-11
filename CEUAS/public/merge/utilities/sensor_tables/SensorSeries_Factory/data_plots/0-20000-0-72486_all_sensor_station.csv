@@ -1,0 +1,15 @@
+	sensor_id	source	comment	date_time	value
+0	??? 	SCH	  ??? Unknown instrument category because data is not available for checking^		
+44521	C2  	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"		
+53075	USHc	SCH	  USHc USA Space Data ARTsonde 909-10-01, erroneous humidity software {1990} 31313=01202^ <F=T1680AL,P=A,T=TC,U=C(VIZ B)>		
+57018	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+38939	ZF1 	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+46999	ZJ1 	SCH	  ZJ1 VIZ model 1392-410 NWS 1680 MHz baseline, new hygristor {1980}^ (W1=19 calls this VIZ 1392-401, T=441) NWS stock no. J030 <F=T1680AB,P=A,		
+52077	ZKB 	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"		
+16908	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 	1982-01-01	3.0
+16908	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 	1982-01-01	3.0
+16912	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ TRANSPONDER UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 	1988-10-01	3.0
+16913	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , USA SPACE DATA UNSPECIFIED 	1989-07-01	3.0
+16914	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1989-01-01	3.0
+16916	IGRA2	IGRA2	USING SONDE MODEL , I1 , USA SPACE DATA UNSPECIFIED 	1992-12-01	3.0
+16917	IGRA2	IGRA2	CHANGE SONDE MODEL , USA SPACE DATA UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 	1994-06-01	3.0

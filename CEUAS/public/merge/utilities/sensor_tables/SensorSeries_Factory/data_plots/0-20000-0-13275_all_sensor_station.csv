@@ -1,0 +1,12 @@
+	sensor_id	source	comment	date_time	value
+862	177	WMO	Modem GPSonde M10 (France)                           		
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+27243	V8A 	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
+29339	VCL 	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>		
+31647	VNg 	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
+27298	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+0	Z46 	SCH	  Z46 VIZ model 1090 US Army AN/AMT-4D {1964}^ (T=399) <F=V1680PB,P=A,T=TR(ML-419/AM),U=C(ML-476),W=Da(AN/GMD-1>		
+17703	ZiY 	SCH	  ZiY VIZ model 1390 Yugoslavia {late 1970s}^		
+10525	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1986-01-01	3.0
+10527	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0
+10527	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0

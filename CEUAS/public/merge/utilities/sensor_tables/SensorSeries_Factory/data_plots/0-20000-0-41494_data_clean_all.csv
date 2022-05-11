@@ -1,0 +1,2 @@
+	date_time	sensor_id	value	source	comment
+0	1990-04-27	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>

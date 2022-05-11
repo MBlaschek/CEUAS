@@ -1,0 +1,7 @@
+	sensor_id	source	comment	date_time	value
+0	132	WMO	Shanghai GTS1/GFE(L) (China)                            		
+5600	2	WMO	 No radiosonde – passive target (e.g. reflector)                 		
+5707	200	WMO	NA		
+5618	201	WMO	NA		
+5576	202	WMO	NA		
+0	H9G 	SCH	"  H9G China Shanghai Radio Factory #23 GZZ-9, GZZ9, GTS1 1675 MHz, or ""Shang/E, L band radar"" (electronic) radiosonde {2002} 31313=63203 (132)^ <F=T1675DL,"		

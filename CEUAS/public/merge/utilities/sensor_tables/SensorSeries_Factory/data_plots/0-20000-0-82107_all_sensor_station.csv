@@ -1,0 +1,5 @@
+	sensor_id	source	comment	date_time	value
+4079	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
+4197	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+0	VNG 	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		

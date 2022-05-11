@@ -1,0 +1,18 @@
+	sensor_id	source	comment	date_time	value
+3736	110	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               		
+936	117	WMO	Graw DFM-09 (Germany)                            		
+2373	132	WMO	Shanghai GTS1/GFE(L) (China)                            		
+8061	154	WMO	Graw DFM-17 (Germany)                            		
+0	57	WMO	Modem M2K2-DC (France)                		
+0	V18 	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>		
+24484	V21 	SCH	  V21 Vaisala RS21 early capacitive hygrometer radiosonde {1974} WMO instr=36^ <F=T25,400,1680FU,P=2Ac,T=BRc,U=A>		
+44731	V8A 	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
+54554	VCG 	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
+52266	VCV 	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>		
+67429	VNG 	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
+9565	IGRA2	IGRA2	USING SONDE MODEL , VAISALA RS18 	1965-01-01	3.0
+9567	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1982-01-01	3.0
+9567	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1982-01-01	3.0
+9570	IGRA2	IGRA2	CHANGE SONDE MODEL , VAISALA RS18 , to , VAISALA RS80 UNSPECIFIED 	1987-01-01	3.0
+9571	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0
+9571	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0

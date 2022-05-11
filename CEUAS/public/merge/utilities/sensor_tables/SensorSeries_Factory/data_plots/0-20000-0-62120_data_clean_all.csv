@@ -1,0 +1,7 @@
+	date_time	sensor_id	value	source	comment
+0	1970-02-03 16:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+1852	1986-11-13 10:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+8964	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK II 
+8965	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 
+8967	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 , ? 
+8969	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED , ? 

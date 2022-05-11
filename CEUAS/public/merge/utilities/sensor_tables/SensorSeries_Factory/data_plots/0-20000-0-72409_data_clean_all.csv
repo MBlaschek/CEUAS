@@ -1,0 +1,3 @@
+	date_time	sensor_id	value	source	comment
+0	1921-02-01 13:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+19612	1955-07-15 02:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

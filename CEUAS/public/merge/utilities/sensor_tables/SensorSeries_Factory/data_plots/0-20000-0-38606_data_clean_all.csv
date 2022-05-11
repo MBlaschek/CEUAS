@@ -1,0 +1,14 @@
+	date_time	sensor_id	value	source	comment
+0	1976-12-01 00:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+4904	1985-04-23 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+4963	1985-05-17 00:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+9278	1990-05-02 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+10388	1993-06-24 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+10389	1995-10-15 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+10543	1996-06-12 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+17876	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RZ 049 
+17877	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , A22 SERIES 
+17878	1985-04-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , RKZ 5 , to , MARS 
+17879	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , MARS 
+17879	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , MARS 
+17881	1990-03-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , MARS , to , MRZ 

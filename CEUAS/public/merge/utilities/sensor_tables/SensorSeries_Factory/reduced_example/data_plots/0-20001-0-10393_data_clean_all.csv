@@ -1,0 +1,93 @@
+	Unnamed: 0	date_time	sensor_id	value	source	comment
+0	0.0	1905-04-04 06:00:00	N?? 	1	SCH	  N?? exact type insufficiently documented
+14552	14552.0	1930-05-21 13:00:00	DDD 	1	SCH	  DDD Germany Duckert PT radiosonde {1930}^ <F=V5-10FB,P=D,T=BC>
+20110	20110.0	1950-01-01 03:00:00	DF1 	1	SCH	  DF1 East Germany Freiberg radiosonde {1948}^ <F=V26.75HB,P=A,T=B,U=H>
+23102	23102.0	1952-07-09 15:00:00	MDF 	1	SCH	  MDF Mixed Germany Freiberg (DF1) and Freiberg double radiation shield (DF2)^ Station 10393 in 1951 and 1952 and possibly other East German stations
+23414	23414.0	1952-10-05 03:00:00	DF2 	1	SCH	  DF2 East Germany Freiberg double radiation shield radiosonde {1951}^ (I=F, W1=04, W2=10 ends 198607 but may have been reassigned
+42511	42511.0	1971-02-22 00:00:00	RK2 	1	SCH	  RK2 USSR RKZ-2 radiosonde {1967}^ (W2=20, T=304) <F=V1780PB,P=B,T=TR,U=G>
+48731	48731.0	1975-09-12 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+72183	72183.0	1991-10-31 23:00:00	RR2 	1	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+72764	72764.0	1992-03-25 11:00:00	RRn 	1	SCH	  RRn USSR MARS-2-2 radiosonde no correction 31313=02903^
+72766	72766.0	1992-03-25 23:00:00	RR2 	1	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+72768	72768.0	1992-03-26 11:00:00	RRn 	1	SCH	  RRn USSR MARS-2-2 radiosonde no correction 31313=02903^
+72770	72770.0	1992-03-26 23:00:00	RR2 	1	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+72772	72772.0	1992-03-27 11:00:00	RRn 	1	SCH	  RRn USSR MARS-2-2 radiosonde no correction 31313=02903^
+72774	72774.0	1992-03-27 23:00:00	RR2 	1	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+72776	72776.0	1992-03-28 11:00:00	RRn 	1	SCH	  RRn USSR MARS-2-2 radiosonde no correction 31313=02903^
+72778	72778.0	1992-03-28 23:00:00	RR2 	1	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+72780	72780.0	1992-03-29 11:00:00	RRn 	1	SCH	  RRn USSR MARS-2-2 radiosonde no correction 31313=02903^
+72782	72782.0	1992-03-29 23:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+72783	72783.0	1992-03-30 05:00:00	RR2 	1	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+72784	72784.0	1992-03-30 11:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+72787	72787.0	1992-03-31 05:00:00	RR2 	1	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+72788	72788.0	1992-03-31 11:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+72930	72930.0	1992-05-06 10:00:00	RR2 	1	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+72931	72931.0	1992-05-06 17:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+73409	73409.0	1992-09-04 05:00:00	RR2 	1	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+73410	73410.0	1992-09-04 11:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+74117	74117.0	1993-02-28 23:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+74157	74157.0	1993-03-11 05:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+74158	74158.0	1993-03-11 11:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+74175	74175.0	1993-03-15 17:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+74177	74177.0	1993-03-16 05:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+74202	74202.0	1993-03-23 11:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+74203	74203.0	1993-03-23 17:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+74932	74932.0	1993-09-21 18:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+75035	75035.0	1993-10-17 11:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+75037	75037.0	1993-10-17 23:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+75048	75048.0	1993-10-20 17:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+75511	75511.0	1994-02-14 12:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+75512	75512.0	1994-02-14 23:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+75633	75633.0	1994-03-17 05:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+75635	75635.0	1994-03-17 17:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+75643	75643.0	1994-03-19 18:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+75658	75658.0	1994-03-23 11:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+75846	75846.0	1994-05-09 11:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+75847	75847.0	1994-05-09 18:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+75848	75848.0	1994-05-09 23:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+75849	75849.0	1994-05-10 05:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+75850	75850.0	1994-05-10 11:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+75851	75851.0	1994-05-10 17:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+75853	75853.0	1994-05-11 05:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+75854	75854.0	1994-05-11 11:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+75906	75906.0	1994-05-24 11:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+75958	75958.0	1994-06-06 11:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+75965	75965.0	1994-06-08 05:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+75966	75966.0	1994-06-08 11:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+75967	75967.0	1994-06-08 17:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+75971	75971.0	1994-06-09 18:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+75972	75972.0	1994-06-09 23:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+75991	75991.0	1994-06-14 17:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+76017	76017.0	1994-06-21 05:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+76018	76018.0	1994-06-21 11:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+76334	76334.0	1994-09-08 11:00:00	VDV 	1	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+76339	76339.0	1994-09-09 17:00:00	VDT 	1	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+90626	90626.0	2004-06-30 23:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+90762	90762.0	2004-08-04 11:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+90763	90763.0	2004-08-04 17:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+93085	93085.0	2006-03-10 23:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+93086	93086.0	2006-03-11 06:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+0	0.0	2013-01-01 05:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+435	435.0	2013-04-19 23:00:00	-922	2	WMO	NA
+436	436.0	2013-04-20 05:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+1441	1441.0	2013-12-28 00:00:00	-922	2	WMO	NA
+1442	1442.0	2013-12-28 04:47:30	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+6159	6159.0	2017-03-21 16:50:04	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+9147	9147.0	2019-04-08 22:00:00	-922	2	WMO	NA
+9148	9148.0	2019-04-09 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+9149	9149.0	2019-04-09 04:00:00	-922	2	WMO	NA
+9150	9150.0	2019-04-09 06:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+9151	9151.0	2019-04-09 10:00:00	-922	2	WMO	NA
+9152	9152.0	2019-04-09 12:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+9153	9153.0	2019-04-09 16:00:00	-922	2	WMO	NA
+9154	9154.0	2019-04-09 18:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+9155	9155.0	2019-04-09 22:00:00	-922	2	WMO	NA
+9156	9156.0	2019-04-10 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+9157	9157.0	2019-04-10 04:00:00	-922	2	WMO	NA
+9158	9158.0	2019-04-10 06:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+9269	9269.0	2019-05-07 23:00:36	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+9270	9270.0	2019-05-08 04:50:55	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+13140	13140.0	2022-01-01 00:00:00	-922	2	WMO	NA
+5359		1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , E GERMANY FREIBERG UNSPECIFIED 
+5360		1971-02-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , E GERMANY FREIBERG UNSPECIFIED , to , USSR RKZ-2 1780 MHZ 
+5363		1993-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

@@ -1,0 +1,5 @@
+	date_time	sensor_id	value	source	comment
+0	1937-01-01 12:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+728	1945-01-01 07:30:00	UB4 	1	SCH	  UB4 USWB Bendix-Friez Type 400,000 radiosonde {1944}^ <F=V403AB,P=2A,T=T,U=L,W=O>
+15822	1974-12-19 12:00:00	RK2 	1	SCH	  RK2 USSR RKZ-2 radiosonde {1967}^ (W2=20, T=304) <F=V1780PB,P=B,T=TR,U=G>
+15849	1993-02-01 12:00:00	RR2 	1	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>

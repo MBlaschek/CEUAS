@@ -1,0 +1,8 @@
+	sensor_id	source	comment	date_time	value
+14635	??? 	SCH	  ??? Unknown instrument category because data is not available for checking^		
+2088	NUF 	SCH	  NUF USA S. P. Fergusson PTU Friez kite/balloon meteorograph {1919}^ <F=C,P=D,T=B,U=H>		
+38303	W02 	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)		
+43102	W?? 	SCH	  W?? exact type insufficiently documented		
+1733	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
+0	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+42663	ZF1 	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		

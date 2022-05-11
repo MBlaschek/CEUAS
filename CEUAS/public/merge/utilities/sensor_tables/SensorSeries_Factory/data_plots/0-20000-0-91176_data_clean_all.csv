@@ -1,0 +1,8 @@
+	date_time	sensor_id	value	source	comment
+0	1941-10-01 13:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+4198	1983-04-20 18:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+4547	2001-09-05 21:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+4667	2005-10-22 01:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+4668	2006-02-10 00:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+4673	2006-07-15 21:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+17828	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 

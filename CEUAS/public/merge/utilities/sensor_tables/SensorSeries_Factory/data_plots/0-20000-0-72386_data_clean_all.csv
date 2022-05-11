@@ -1,0 +1,7 @@
+	date_time	sensor_id	value	source	comment
+0	1935-08-15 22:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+13839	1945-09-24 03:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+36969	1965-12-15 00:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+37569	1966-10-10 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+37627	1969-12-31 06:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+2413	2016-04-26 12:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      

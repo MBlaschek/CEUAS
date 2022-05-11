@@ -1,0 +1,6 @@
+	date_time	sensor_id	value	source	comment
+0	1929-10-19 11:30:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+34589	1962-04-22 23:00:00	W02 	1	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)
+34660	1962-06-07 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+35042	1963-04-14 23:00:00	W02 	1	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)
+35120	1963-06-14 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

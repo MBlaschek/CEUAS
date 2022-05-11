@@ -1,0 +1,5 @@
+	date_time	sensor_id	value	source	comment
+0	1963-09-02 11:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+5456	1995-01-14 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+4305	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE METOX CT UNSPECIFIED 
+4307	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL UNSPECIFIED 

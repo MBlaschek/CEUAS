@@ -1,0 +1,11 @@
+	sensor_id	source	comment	date_time	value
+0	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+305	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+5552	162	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        		
+86	27	WMO	AVK-MRZ (Russian Federation)                		
+414	58	WMO	AVK-BAR (Russian Federation)                		
+4148	59	WMO	Modem M2K2-R 1680 MHz RDF radiosonde with pressure sensor chip (France)        		
+5540	69	WMO	MARL-A or Vektor-M-RZM-2 (Russian Federation)              		
+1286	90	WMO	Radiosonde not specified or unknown             		
+0	RZ3 	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+35584	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		

@@ -1,0 +1,191 @@
+	date_time	sensor_id	value	source	comment
+0	1941-05-01 08:30:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+13503	1963-05-12 00:00:00	IF2 	1	SCH	  IF2 India fan drive 2-transmitter 75 and 397 MHz radiosonde {1957}^ (I=N2) <F=V75+397HR(paper fan),P=A,T=BC,U=W>
+18467	1971-03-03 00:00:00	IA1 	1	SCH	  IA1 India 401 MHz Audiomodulated radiosonde {1967}^ (W1=18, T=181) <F=V401AB,P=A,T=TR,U=L>
+39691	1991-12-28 11:00:00	IA7 	1	SCH	  IA7 India 401 MHz Audiomodulated or Mark 3 new humidity duct radiosonde {1988} WMO instr=20^ (W1=18, W3=20, T=181) <F=T401AB,P=A,T=TR,U=L>
+47159	1998-04-14 05:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+47248	1998-05-31 00:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+51850	2003-09-28 05:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+51882	2003-11-04 11:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+52186	2004-04-28 05:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+52219	2004-06-09 23:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+52827	2005-02-02 11:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+53020	2005-04-10 23:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+53119	2005-05-27 11:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+53283	2005-07-31 11:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+53391	2005-09-16 05:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+53411	2005-10-06 11:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+53415	2005-10-08 05:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+53495	2006-01-16 11:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+53974	2006-08-23 11:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+54033	2006-09-07 11:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+54071	2006-09-21 17:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+55754	2009-04-23 12:00:00	FGC 	1	SCH	  FGC France Geolink-Modem M2K2-DC 1680 MHz improved radiation protection {2006} 31313=45708^ <F=T1680DL,P=0,T=TC,U=A,N=GC>
+1456	2015-09-18 00:00:00	34	2	WMO	Vinohrady (Czechia)                 
+1459	2015-09-19 00:00:00	9	2	WMO	 No radiosonde – system unknown or not specified          
+1469	2015-09-24 00:00:00	6	2	WMO	 No radiosonde – radio-acoustic sounder             
+1472	2015-09-25 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1482	2015-10-01 00:00:00	119	2	WMO	Polus-MRZ-N1 (Russian Federation)                            
+1493	2015-10-04 00:00:00	8	2	WMO	 No radiosonde –... (reserved)              
+1508	2015-10-11 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1512	2015-10-12 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+1517	2015-10-14 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+1531	2015-10-20 00:00:00	0	2	WMO	NA
+1541	2015-10-24 00:00:00	5	2	WMO	 No radiosonde – active temperature-humidity profiler            
+1545	2015-10-27 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1546	2015-10-28 00:00:00	113	2	WMO	Vaisala RS92/MARWIN MW32 (Finland)                           
+1549	2015-10-29 00:00:00	9	2	WMO	 No radiosonde – system unknown or not specified          
+1559	2015-11-04 00:00:00	122	2	WMO	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+1572	2015-11-11 00:00:00	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+1574	2015-11-12 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+1577	2015-11-14 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+1582	2015-11-16 00:00:00	125	2	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           
+1586	2015-11-17 00:00:00	130	2	WMO	Meisei RS-06G (Japan)                            
+1593	2015-11-19 00:00:00	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+1596	2015-11-20 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+1607	2015-11-23 00:00:00	110	2	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               
+1626	2015-11-29 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1632	2015-12-02 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+1634	2015-12-03 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+1640	2015-12-05 00:00:00	113	2	WMO	Vaisala RS92/MARWIN MW32 (Finland)                           
+1838	2016-02-07 00:00:00	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+1840	2016-02-08 00:00:00	4	2	WMO	 No radiosonde – passive temperature-humidity profiler            
+1863	2016-02-16 00:00:00	8	2	WMO	 No radiosonde –... (reserved)              
+1865	2016-02-17 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+1880	2016-02-22 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+1905	2016-02-29 00:00:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
+1909	2016-03-01 00:00:00	133	2	WMO	Nanjing GTS1-2/GFE(L) (China)                            
+1930	2016-03-07 00:00:00	4	2	WMO	 No radiosonde – passive temperature-humidity profiler            
+1937	2016-03-09 00:00:00	9	2	WMO	 No radiosonde – system unknown or not specified          
+1940	2016-03-10 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+1943	2016-03-11 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+1964	2016-03-17 00:00:00	18	2	WMO	Graw DFM-06 (Germany)                
+1975	2016-03-21 00:00:00	131	2	WMO	Taiyuan GTS1-1/GFE(L) (China )                           
+1979	2016-03-22 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+1983	2016-03-23 00:00:00	136	2	WMO	Meisei iMDS-17 GPS dropsonde w/thermistor sensor, capacitance relative humidity   sensor, and capacitance pressure sensor (Japan)              
+1987	2016-03-24 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1996	2016-03-27 00:00:00	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+2000	2016-03-28 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+2008	2016-03-31 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+2016	2016-04-03 00:00:00	34	2	WMO	Vinohrady (Czechia)                 
+2020	2016-04-04 00:00:00	5	2	WMO	 No radiosonde – active temperature-humidity profiler            
+2024	2016-04-05 00:00:00	8	2	WMO	 No radiosonde –... (reserved)              
+2045	2016-04-11 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+2052	2016-04-13 00:00:00	9	2	WMO	 No radiosonde – system unknown or not specified          
+2054	2016-04-14 00:00:00	113	2	WMO	Vaisala RS92/MARWIN MW32 (Finland)                           
+2069	2016-04-19 00:00:00	27	2	WMO	AVK-MRZ (Russian Federation)                
+2084	2016-04-24 00:00:00	9	2	WMO	 No radiosonde – system unknown or not specified          
+2087	2016-04-25 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+2096	2016-04-28 00:00:00	125	2	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           
+2102	2016-04-30 00:00:00	27	2	WMO	AVK-MRZ (Russian Federation)                
+2109	2016-05-03 00:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            
+2112	2016-05-04 00:00:00	20	2	WMO	Indian Meteorological Service MK3 (India)              
+2117	2016-05-06 00:00:00	119	2	WMO	Polus-MRZ-N1 (Russian Federation)                            
+2121	2016-05-07 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+2126	2016-05-09 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+2134	2016-05-12 00:00:00	6	2	WMO	 No radiosonde – radio-acoustic sounder             
+2149	2016-05-19 00:00:00	8	2	WMO	 No radiosonde –... (reserved)              
+2186	2016-06-11 00:00:00	9	2	WMO	 No radiosonde – system unknown or not specified          
+2286	2016-08-06 00:00:00	110	2	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               
+2290	2016-08-07 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+2296	2016-08-09 00:00:00	9	2	WMO	 No radiosonde – system unknown or not specified          
+2316	2016-08-17 00:00:00	110	2	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               
+2324	2016-08-21 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2328	2016-08-24 00:00:00	9	2	WMO	 No radiosonde – system unknown or not specified          
+2329	2016-08-25 00:00:00	5	2	WMO	 No radiosonde – active temperature-humidity profiler            
+2331	2016-08-27 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+2364	2016-09-12 00:00:00	9	2	WMO	 No radiosonde – system unknown or not specified          
+2370	2016-09-14 00:00:00	131	2	WMO	Taiyuan GTS1-1/GFE(L) (China )                           
+2381	2016-09-17 00:00:00	8	2	WMO	 No radiosonde –... (reserved)              
+2382	2016-09-18 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+2385	2017-02-09 00:00:00	130	2	WMO	Meisei RS-06G (Japan)                            
+2387	2017-02-11 00:00:00	136	2	WMO	Meisei iMDS-17 GPS dropsonde w/thermistor sensor, capacitance relative humidity   sensor, and capacitance pressure sensor (Japan)              
+2400	2017-02-17 00:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            
+2403	2017-02-18 00:00:00	4	2	WMO	 No radiosonde – passive temperature-humidity profiler            
+2411	2017-02-21 00:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+2415	2017-02-22 00:00:00	136	2	WMO	Meisei iMDS-17 GPS dropsonde w/thermistor sensor, capacitance relative humidity   sensor, and capacitance pressure sensor (Japan)              
+2447	2017-03-06 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2451	2017-03-09 00:00:00	110	2	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               
+2455	2017-03-11 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+2457	2017-03-12 00:00:00	18	2	WMO	Graw DFM-06 (Germany)                
+2462	2017-03-14 00:00:00	5	2	WMO	 No radiosonde – active temperature-humidity profiler            
+2466	2017-03-15 00:00:00	125	2	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           
+2469	2017-03-17 00:00:00	136	2	WMO	Meisei iMDS-17 GPS dropsonde w/thermistor sensor, capacitance relative humidity   sensor, and capacitance pressure sensor (Japan)              
+2472	2017-03-18 00:00:00	6	2	WMO	 No radiosonde – radio-acoustic sounder             
+2479	2017-03-20 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+2486	2017-03-22 00:00:00	6	2	WMO	 No radiosonde – radio-acoustic sounder             
+2490	2017-03-23 00:00:00	136	2	WMO	Meisei iMDS-17 GPS dropsonde w/thermistor sensor, capacitance relative humidity   sensor, and capacitance pressure sensor (Japan)              
+2492	2017-03-24 00:00:00	131	2	WMO	Taiyuan GTS1-1/GFE(L) (China )                           
+2497	2017-03-26 00:00:00	0	2	WMO	NA
+2505	2017-03-29 00:00:00	3	2	WMO	 No radiosonde – active target (e.g. transponder)           
+2508	2017-03-30 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+2513	2017-04-02 00:00:00	5	2	WMO	 No radiosonde – active temperature-humidity profiler            
+2515	2017-04-03 00:00:00	8	2	WMO	 No radiosonde –... (reserved)              
+2525	2017-04-08 00:00:00	9	2	WMO	 No radiosonde – system unknown or not specified          
+2533	2017-04-12 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+2535	2017-04-13 00:00:00	6	2	WMO	 No radiosonde – radio-acoustic sounder             
+2541	2017-04-18 00:00:00	125	2	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           
+2544	2017-04-20 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+2545	2017-04-21 00:00:00	8	2	WMO	 No radiosonde –... (reserved)              
+2546	2017-04-22 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+2548	2017-04-24 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+2551	2017-04-26 00:00:00	20	2	WMO	Indian Meteorological Service MK3 (India)              
+2569	2017-08-14 00:00:00	8	2	WMO	 No radiosonde –... (reserved)              
+2571	2017-08-16 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+2579	2017-08-25 00:00:00	1	2	WMO	NA
+2580	2017-08-26 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2595	2017-09-10 00:00:00	8	2	WMO	 No radiosonde –... (reserved)              
+2608	2017-09-23 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+2609	2017-09-24 00:00:00	5	2	WMO	 No radiosonde – active temperature-humidity profiler            
+2610	2017-09-25 00:00:00	8	2	WMO	 No radiosonde –... (reserved)              
+2612	2017-09-27 00:00:00	110	2	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               
+2619	2017-10-04 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2625	2017-10-10 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2627	2017-10-12 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2634	2017-10-19 00:00:00	110	2	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               
+2635	2017-10-20 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+2638	2017-10-23 00:00:00	6	2	WMO	 No radiosonde – radio-acoustic sounder             
+2639	2017-10-24 00:00:00	8	2	WMO	 No radiosonde –... (reserved)              
+2640	2017-10-25 00:00:00	6	2	WMO	 No radiosonde – radio-acoustic sounder             
+2641	2017-10-26 00:00:00	5	2	WMO	 No radiosonde – active temperature-humidity profiler            
+2642	2017-10-27 00:00:00	110	2	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               
+2643	2017-10-28 00:00:00	136	2	WMO	Meisei iMDS-17 GPS dropsonde w/thermistor sensor, capacitance relative humidity   sensor, and capacitance pressure sensor (Japan)              
+2646	2017-10-31 00:00:00	130	2	WMO	Meisei RS-06G (Japan)                            
+2647	2017-11-02 00:00:00	4	2	WMO	 No radiosonde – passive temperature-humidity profiler            
+2650	2017-11-05 00:00:00	9	2	WMO	 No radiosonde – system unknown or not specified          
+2654	2017-12-26 00:00:00	119	2	WMO	Polus-MRZ-N1 (Russian Federation)                            
+2658	2017-12-27 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+2667	2017-12-31 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2670	2018-01-01 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+2682	2018-01-04 00:00:00	110	2	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               
+2686	2018-01-05 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+2736	2018-01-23 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+2765	2018-02-02 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+2769	2018-02-03 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2783	2018-02-08 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2816	2018-02-19 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+2817	2018-02-20 00:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+2821	2018-02-21 00:00:00	18	2	WMO	Graw DFM-06 (Germany)                
+2824	2018-02-22 00:00:00	8	2	WMO	 No radiosonde –... (reserved)              
+2828	2018-02-23 00:00:00	131	2	WMO	Taiyuan GTS1-1/GFE(L) (China )                           
+2832	2018-02-24 00:00:00	5	2	WMO	 No radiosonde – active temperature-humidity profiler            
+2883	2018-03-22 23:03:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+2924	2018-04-16 00:00:00	3	2	WMO	 No radiosonde – active target (e.g. transponder)           
+2925	2018-04-16 12:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+3294	2018-10-09 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+3295	2018-10-10 00:00:00	113	2	WMO	Vaisala RS92/MARWIN MW32 (Finland)                           
+3296	2018-10-10 12:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+3572	2019-01-15 00:00:00	125	2	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           
+3573	2019-01-15 12:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4378	2020-05-22 00:00:00	119	2	WMO	Polus-MRZ-N1 (Russian Federation)                            
+4380	2020-05-23 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+7192	1963-05-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , INDIA FAN TYPE 
+7194	1971-03-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , INDIA FAN TYPE , to , INDIA AUDIOMODULATED 
+7195	1975-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMODULATED 401 MHZ , to , INDIA AUDIOMODULATED 401 MHZ TRANSISTOR 
+7196	1980-02-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMODULATED 401 MHZ TRANSISTOR , to , INDIA AUDIOMOD 401 MHZ NEW THERMISTOR 
+7198	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+7198	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+7201	1987-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE GROUND EQUIP , G1 , UNKNOWN , to , RADIOSONDE GROUND EQUIP (RSGE) 401 MHZ 
+7198	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+7198	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+7208	1992-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMOD 401 MHZ NEW HUMIDITY DUC , to , INDIA MARK 3 401 MHZ 1992 VERSION 

@@ -1,0 +1,25 @@
+	sensor_id	source	comment	date_time	value
+6484	124	WMO	Vaisala RS41/AUTOSONDE (Finland)                            		
+6492	142	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     		
+0	152	WMO	Vaisala RS92-NGP/Intermet IMS-2000 (United States)                          		
+4603	81	WMO	Vaisala RS92/Autosonde (Finland)                		
+19361	??? 	SCH	  ??? Unknown instrument category because data is not available for checking^		
+8374	U?? 	SCH	  U?? exact type insufficiently documented		
+570	UDW 	SCH	  UDW USWB Washington Inst of Tech Sonde Track 72 MHz electrolytic T, hair U {1940}^ <F=V72.2AB,P=A,T=E,U=H>		
+59173	VNW 	SCH	  VNW Vaisala RS92-NGP with InterMet IMS 2000 for NWS {2011} 31313=45208 with BUFR code 152^ <F=T1676-1682DL,P=Sc,T=Wc,U=2Ah,N=Gc>		
+0	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
+569	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+21293	ZCH 	SCH	  ZCH VIZ model 1063 USWB 1680 MHz hypsometer {1961}^ (T=379) <F=V1680AB,P=A+H,T=TR(ML-405/AM),U=L,W=Da(WBRT or GMD-1)>		
+21993	ZDH 	SCH	  ZDH VIZ model 1073 USWB 1680 MHz hypsometer {1963}^ (T=389) <F=V1680AB,P=A+H(hypsometer fluid CFC-11),T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+28331	ZFH 	SCH	  ZFH VIZ model 1193 NWS 1680 MHz hypsometer, new hygristor duct {1970}^ (T=412) <F=Vt1680AB,P=A+H(hypsometer fluid CFC-11),T=TR(ML-405),U=C,		
+31777	ZHHc	SCH	  ZHHc VIZ model 1293 NWS 1680 MHz hypsometer, censoring {1973}^ (T=429) NWS stock no. J005B <F=V1680AB,P=A+H,T=TR(ML-405),U=C,W=Ra(WBRT or GMD-1)>		
+34136	ZJIc	SCH	  ZJIc VIZ model 1393-510 NWS 1680 MHz Accu-Lok, hypso, new hygristor, censoring {1980}^ (T=443) NWS stock no. J037 <F=T1680AB,P=A+H,T=TR(ML-405),U=C,		
+46943	ZK2 	SCH	  ZK2 VIZ or Sippican model 1492-540 NWS B2 J031-1 1680 MHz RDF {1997} 31313=05102^ (W3=51,T=489) <F=T1680DL,P=Ac,T=TR (ML-405?),U=C,W=Da(ART-2)> NWS part		
+38284	ZKAc	SCH	"   ZKAc VIZ model 1492-510 NWS 1680 MHz ART ""A"" Accu-Lok, censoring {1986} 31313=01002^ (T=003,W3=10) <F=T1680AL,P=Ab,T=TR(ML-405),U=C,W=Ra(WBRT/GMD-1)>"		
+46944	ZKB 	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"		
+39785	ZKBc	SCH	"  ZKBc VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok, censoring {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060 <F=T1680AL,P=Ab,"		
+56680	ZKN 	SCH	  ZKN Sippican model 1492-540 NWS B2 J031-1 1680 MHz RDF, new RH coefficients {1999} 31313=05102^ (W3=51,T=489) <F=T1680DL,P=Ac,T=TR,U=C,W=Da(ART-2)>		
+15598	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ ACCU-LOK UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 	1988-10-01	3.0
+15604	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VIZ/SIPPICAN B2 1492-540 NWS 1680 MHZ 	1998-08-01	3.0
+15605	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ/SIPPICAN B2 1492-540 NWS 1680 MHZ , to , VIZ B1492-520 NWS 1680 MHZ 	1998-10-01	3.0
+15604	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VIZ/SIPPICAN B2 1492-540 NWS 1680 MHZ 	1998-08-01	3.0

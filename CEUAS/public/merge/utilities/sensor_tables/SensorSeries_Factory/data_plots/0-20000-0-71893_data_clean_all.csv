@@ -1,0 +1,4 @@
+	date_time	sensor_id	value	source	comment
+0	1955-07-01 09:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+5829	2009-02-21 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+5830	2010-02-09 12:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>

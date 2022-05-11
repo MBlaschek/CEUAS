@@ -1,0 +1,68 @@
+	date_time	sensor_id	value	source	comment
+0	1937-07-31 23:00:00	NA 	1	SCH	NA
+55	1937-10-07 00:00:00	-922	1	SCH	NA
+2858	1959-04-01 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+2888	1994-08-07 00:00:00	-922	1	SCH	NA
+0	2016-08-16 12:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+154	2016-11-01 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+156	2016-11-02 12:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+158	2016-11-03 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+171	2016-11-10 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+172	2016-11-10 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+221	2016-12-05 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+222	2016-12-05 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+229	2016-12-09 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+230	2016-12-09 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+257	2016-12-23 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+258	2016-12-23 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+317	2017-01-22 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+318	2017-01-22 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+343	2017-02-04 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+344	2017-02-04 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+364	2017-02-14 12:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+365	2017-02-15 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+461	2017-04-04 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+462	2017-04-04 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+501	2017-04-24 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+502	2017-04-24 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+534	2017-05-10 05:39:36	177	2	WMO	Modem GPSonde M10 (France)                           
+535	2017-05-10 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+558	2017-05-22 00:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+1050	2018-01-22 06:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+1051	2018-01-22 11:28:03	177	2	WMO	Modem GPSonde M10 (France)                           
+1054	2018-01-23 03:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+1055	2018-01-23 11:16:29	177	2	WMO	Modem GPSonde M10 (France)                           
+1057	2018-01-24 03:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+1058	2018-01-24 05:32:00	177	2	WMO	Modem GPSonde M10 (France)                           
+1472	2018-08-20 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+1476	2018-08-22 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+1572	2018-10-09 12:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+1573	2018-10-10 03:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+1600	2018-10-23 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+1601	2018-10-23 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+1621	2018-11-02 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+1623	2018-11-02 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+1707	2018-12-11 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+1708	2018-12-11 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+1902	2019-03-18 06:31:37	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1903	2019-03-18 12:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+1904	2019-03-18 23:27:24	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2007	2019-05-09 00:00:00	145	2	WMO	Beijing Changfeng CF-06 (China)*                           
+2008	2019-05-09 11:17:16	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2017	2019-05-14 00:00:00	145	2	WMO	Beijing Changfeng CF-06 (China)*                           
+2123	2019-07-05 02:06:05	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2124	2019-07-05 11:32:54	145	2	WMO	Beijing Changfeng CF-06 (China)*                           
+2161	2019-07-22 00:53:41	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2163	2019-07-22 11:33:45	145	2	WMO	Beijing Changfeng CF-06 (China)*                           
+2215	2019-08-16 03:58:26	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2216	2019-08-16 11:31:42	145	2	WMO	Beijing Changfeng CF-06 (China)*                           
+2316	2019-10-01 18:03:44	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2317	2019-10-01 23:18:26	145	2	WMO	Beijing Changfeng CF-06 (China)*                           
+2361	2019-10-23 01:17:04	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2363	2019-10-23 11:32:03	145	2	WMO	Beijing Changfeng CF-06 (China)*                           
+2727	2020-04-22 02:01:29	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2728	2020-04-22 11:38:03	145	2	WMO	Beijing Changfeng CF-06 (China)*                           
+2737	2020-04-26 23:29:03	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+3714	2021-07-23 02:04:39	145	2	WMO	Beijing Changfeng CF-06 (China)*                           
+3716	2021-07-23 11:31:14	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+3878	2021-10-07 12:00:00	145	2	WMO	Beijing Changfeng CF-06 (China)*                           

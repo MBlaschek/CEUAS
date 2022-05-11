@@ -1,0 +1,16 @@
+	sensor_id	source	comment	date_time	value
+0	117	WMO	Graw DFM-09 (Germany)                            		
+12438	135	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            		
+3712	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+191	154	WMO	Graw DFM-17 (Germany)                            		
+35015	APA 	SCH	  APA Australia Philips Mk II LiCl hygristor radiosonde {1978}^ (T=282) <F=T403FB,P=A,T=TR,U=L>		
+34706	MAD 	SCH	  MAD Mixed Australia Philips MK II LiCl hygristor (APA) and Vaisala RS21-12C very dry (V2D)^ Singapore (48694) from 19831019 1100 to 19840108 1100, V2D at or near 0000Z (DP almost		
+0	V2C 	SCH	  V2C Vaisala RS21-12C 403 MHz radiosonde {1977} WMO instr=36^ <F=T403FU,P=2Ac,T=BRc,U=A,N=VO>		
+32274	V2D 	SCH	  V2D Vaisala RS21 extremely dry radiosonde {1978} W3=36^ <F=T403FU,P=2Ac,T=BRc,U=A,N=VO>		
+36426	V8A 	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
+52177	VCG 	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
+52021	VCV 	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>		
+14044	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 	1982-01-01	3.0
+14045	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0
+14046	IGRA2	IGRA2	USING SONDE MODEL , VAISALA RS80 UNSPECIFIED 	1990-12-01	3.0
+14049	IGRA2	IGRA2	CHANGE SONDE MODEL , VAISALA RS80 UNSPECIFIED , to , VAISALA RS80-15G GPS UNSPECIFIED 	1995-06-01	3.0

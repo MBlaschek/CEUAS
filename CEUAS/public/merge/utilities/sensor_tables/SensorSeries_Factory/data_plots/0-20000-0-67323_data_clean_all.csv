@@ -1,0 +1,5 @@
+	date_time	sensor_id	value	source	comment
+0	1908-10-28 12:54:00	NDX 	1	SCH	  NDX Germany Assmann-Hergesell tubular bimetal and Teisserenc de Bort bimetal spring thermometer PTU meteorograph {1905}^ <F=C,P=A,T=2B,U=H>
+2	1908-10-30 12:03:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+9705	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+9707	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED , ? 

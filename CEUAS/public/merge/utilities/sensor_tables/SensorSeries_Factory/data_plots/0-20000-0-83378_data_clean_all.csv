@@ -1,0 +1,30 @@
+	date_time	sensor_id	value	source	comment
+0	1966-05-10 13:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+3535	1974-10-03 23:00:00	VU_ 	1	SCH	  VU_ Vaisala unspecified model before RS80^ (W1=01, T=023)
+4412	1976-02-05 11:00:00	V2_ 	1	SCH	  V2_ Vaisala RS21 unspecified model {1974} WMO instr=36^ (W3=36, T=037)
+10579	1987-01-08 12:00:00	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+15230	1998-05-14 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+15231	1998-11-01 12:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+17663	2004-04-14 12:00:00	V9g 	1	SCH	  V9g Vaisala RS90 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47108^ <F=T403DL,P=Sc,T=Wc,U=2Ah,N=G>
+17664	2004-04-15 12:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+18439	2005-05-25 00:00:00	VGG 	1	SCH	  VGG Vaisala RS80G or RS80-GH DigiCORA III auto corr, GPS wind 31313=46708^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+18568	2005-09-27 12:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+18569	2005-09-28 12:00:00	VGG 	1	SCH	  VGG Vaisala RS80G or RS80-GH DigiCORA III auto corr, GPS wind 31313=46708^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+18570	2005-09-29 12:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+19204	2006-10-01 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+19205	2007-03-10 00:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+1	2013-01-01 12:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+4924	2019-10-23 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+4926	2019-10-24 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+5202	2020-03-10 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+5205	2020-03-11 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+5206	2020-03-12 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+5920	2021-09-20 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+5925	2021-09-22 12:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+2183	1966-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VIZ UNSPECIFIED 
+2184	1974-10-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , VAISALA RS21 UNSPECIFIED 
+2186	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+2188	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+2189	1987-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS21 UNSPECIFIED , to , VAISALA RS80 UNSPECIFIED 
+2190	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+2190	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

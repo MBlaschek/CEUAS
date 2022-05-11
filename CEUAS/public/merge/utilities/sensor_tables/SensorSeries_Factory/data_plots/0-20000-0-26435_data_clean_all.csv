@@ -1,0 +1,4 @@
+	date_time	sensor_id	value	source	comment
+0	2005-11-08 12:00:00	VNl 	1	SCH	  VNl Vaisala RS92 DigiCORA III auto corr, LoRAN wind 31313=48006^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>
+0	2013-01-02 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+993	2018-08-02 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  

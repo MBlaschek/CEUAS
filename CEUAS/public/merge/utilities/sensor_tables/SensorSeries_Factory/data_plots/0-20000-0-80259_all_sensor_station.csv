@@ -1,0 +1,7 @@
+	sensor_id	source	comment	date_time	value
+0	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
+229	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+950	51	WMO	VIZ-B2 (United States)                		
+964	71	WMO	Vaisala RS90/Loran/Digicora I, II or Marwin (Finland)            		
+1	99	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        		
+0	NA 	SCH	NA		

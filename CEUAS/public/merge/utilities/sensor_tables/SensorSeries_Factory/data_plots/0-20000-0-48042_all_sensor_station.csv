@@ -1,0 +1,9 @@
+	sensor_id	source	comment	date_time	value
+0	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+8821	VCV 	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>		
+0	W__ 	SCH	  W__ Wind only, method unspecified^		
+8843	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+1793	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK IIB UNSPECIFIED 	1960-01-01	3.0
+1795	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1982-01-01	3.0
+1795	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1982-01-01	3.0
+1799	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1993-01-01	3.0

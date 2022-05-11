@@ -1,0 +1,12 @@
+	date_time	sensor_id	value	source	comment
+0	1962-03-04 03:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+214	2011-03-16 00:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+109	2014-04-23 11:20:00	117	2	WMO	Graw DFM-09 (Germany)                            
+274	2017-03-10 23:11:23	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+477	2018-08-23 11:07:04	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+480	2018-08-30 23:00:24	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+532	2019-06-26 23:04:53	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1156	2021-11-14 17:57:55	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+1158	2021-11-17 23:31:18	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1167	2021-12-01 17:52:33	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+1170	2021-12-03 11:41:13	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  

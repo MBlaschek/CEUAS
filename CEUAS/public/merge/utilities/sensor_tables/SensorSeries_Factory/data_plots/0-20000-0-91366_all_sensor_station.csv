@@ -1,0 +1,11 @@
+	sensor_id	source	comment	date_time	value
+2777	3	WMO	 No radiosonde – active target (e.g. transponder)           		
+2780	34	WMO	Vinohrady (Czechia)                 		
+2554	5	WMO	 No radiosonde – active temperature-humidity profiler            		
+2337	7	WMO	iMet-1-AB (United States)                		
+1175	90	WMO	Radiosonde not specified or unknown             		
+45197	C1  	SCH	  General VIZ type		
+0	ZF1 	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+10541	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1986-01-01	3.0
+10541	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1986-01-01	3.0
+10543	IGRA2	IGRA2	USING SONDE MODEL , I1 , USA SPACE DATA UNSPECIFIED 	1993-01-01	3.0

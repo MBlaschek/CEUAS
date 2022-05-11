@@ -1,0 +1,3 @@
+	sensor_id	source	comment	date_time	value
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+0	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		

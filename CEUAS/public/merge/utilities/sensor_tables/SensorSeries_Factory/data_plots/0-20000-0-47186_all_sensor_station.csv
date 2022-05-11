@@ -1,0 +1,9 @@
+	sensor_id	source	comment	date_time	value
+55	-922	SCH	NA		
+154	112	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 		
+0	121	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        		
+1902	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+2007	145	WMO	Beijing Changfeng CF-06 (China)*                           		
+534	177	WMO	Modem GPSonde M10 (France)                           		
+2858	99	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        		
+0	NA 	SCH	NA		

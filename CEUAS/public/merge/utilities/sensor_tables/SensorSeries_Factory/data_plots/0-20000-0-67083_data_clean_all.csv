@@ -1,0 +1,12 @@
+	date_time	sensor_id	value	source	comment
+0	1952-07-07 05:00:00	G4  	1	SCH	  [23,24,25|05,15] French Mesural or Metox (There may be some radiation heating at 300 mb through 1976 as in stations 65578 and 91925)
+3	2013-01-01 23:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+2416	2015-04-14 23:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+6575	2020-01-23 11:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+6702	2020-08-24 11:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+6703	2020-08-27 23:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+9051	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL UNSPECIFIED 
+9053	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL FMO 1950A 
+9051	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL UNSPECIFIED 
+9055	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+9055	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

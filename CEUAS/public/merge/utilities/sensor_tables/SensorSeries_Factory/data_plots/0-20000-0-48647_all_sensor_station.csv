@@ -1,0 +1,8 @@
+	sensor_id	source	comment	date_time	value
+0	AA7 	SCH	  AA7 Australia Astor RS4 radiosonde {~ 1971} WMO instr=13^ (C=785,W3=13) <F=V403FB,P=A,T=TR,U=L>		
+23049	AP1 	SCH	  AP1 Australia Philips RS4 Model I radiosonde {~ 1977}^ (T=285)		
+26025	AP3 	SCH	  AP3 Australia Philips RS4 Model III radiosonde {~ 1984}^ (T=287) <F=T403FB,P=A,T=TR(VIZ),U=C(VIZ),W=Ra>		
+27698	W__ 	SCH	  W__ Wind only, method unspecified^		
+42463	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+9591	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 	1982-01-01	3.0
+9592	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0

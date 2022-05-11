@@ -1,0 +1,3 @@
+	date_time	sensor_id	value	source	comment
+0	1939-08-03 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+10116	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ AN/AMT 4B 

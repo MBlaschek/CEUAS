@@ -1,0 +1,41 @@
+	date_time	sensor_id	value	source	comment
+0	1930-08-26 17:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+3160	1936-09-16 16:00:00	NUV 	1	SCH	  NUV USWB Friez PTU 1935 aircraft meteorograph {1935}^ <F=C,P=7A(bellows),T=B,U=H>
+3290	1937-03-15 16:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+3438	1937-09-10 16:00:00	NUV 	1	SCH	  NUV USWB Friez PTU 1935 aircraft meteorograph {1935}^ <F=C,P=7A(bellows),T=B,U=H>
+3464	1937-10-15 16:00:00	UD1 	1	SCH	  UD1 US Navy Diamond Hinman radiosonde {1936}^ <F=V65AB,P=A,T=E(sulfuric acid),U=H(2 hair units in series)>
+3476	1937-10-30 16:00:00	NUV 	1	SCH	  NUV USWB Friez PTU 1935 aircraft meteorograph {1935}^ <F=C,P=7A(bellows),T=B,U=H>
+3483	1937-11-08 16:00:00	UD1 	1	SCH	  UD1 US Navy Diamond Hinman radiosonde {1936}^ <F=V65AB,P=A,T=E(sulfuric acid),U=H(2 hair units in series)>
+3548	1938-01-23 16:00:00	NUV 	1	SCH	  NUV USWB Friez PTU 1935 aircraft meteorograph {1935}^ <F=C,P=7A(bellows),T=B,U=H>
+3550	1938-01-25 16:00:00	UD1 	1	SCH	  UD1 US Navy Diamond Hinman radiosonde {1936}^ <F=V65AB,P=A,T=E(sulfuric acid),U=H(2 hair units in series)>
+3555	1938-01-30 16:00:00	NUV 	1	SCH	  NUV USWB Friez PTU 1935 aircraft meteorograph {1935}^ <F=C,P=7A(bellows),T=B,U=H>
+3562	1938-02-12 16:00:00	UD1 	1	SCH	  UD1 US Navy Diamond Hinman radiosonde {1936}^ <F=V65AB,P=A,T=E(sulfuric acid),U=H(2 hair units in series)>
+3574	1938-03-02 16:00:00	NUV 	1	SCH	  NUV USWB Friez PTU 1935 aircraft meteorograph {1935}^ <F=C,P=7A(bellows),T=B,U=H>
+3577	1938-03-05 16:00:00	UD1 	1	SCH	  UD1 US Navy Diamond Hinman radiosonde {1936}^ <F=V65AB,P=A,T=E(sulfuric acid),U=H(2 hair units in series)>
+3584	1938-03-12 16:00:00	NUV 	1	SCH	  NUV USWB Friez PTU 1935 aircraft meteorograph {1935}^ <F=C,P=7A(bellows),T=B,U=H>
+31509	1962-07-01 00:00:00	ZCH 	1	SCH	  ZCH VIZ model 1063 USWB 1680 MHz hypsometer {1961}^ (T=379) <F=V1680AB,P=A+H,T=TR(ML-405/AM),U=L,W=Da(WBRT or GMD-1)>
+32109	1963-04-26 00:00:00	ZDH 	1	SCH	  ZDH VIZ model 1073 USWB 1680 MHz hypsometer {1963}^ (T=389) <F=V1680AB,P=A+H(hypsometer fluid CFC-11),T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+38719	1972-05-16 00:00:00	ZFH 	1	SCH	  ZFH VIZ model 1193 NWS 1680 MHz hypsometer, new hygristor duct {1970}^ (T=412) <F=Vt1680AB,P=A+H(hypsometer fluid CFC-11),T=TR(ML-405),U=C,
+44790	1980-10-24 00:00:00	ZJI 	1	SCH	  ZJI VIZ model 1393-510 NWS 1680 MHz Accu-Lok, hypso, new hygristor {1980}^ (T=443) NWS stock no. J037 <F=T1680AB,P=A+H,T=TR(ML-405),U=C,
+48615	1986-02-06 00:00:00	ZKA 	1	SCH	"  ZKA VIZ model 1492-510 NWS 1680 MHz ART ""A"" Accu-Lok time sequenced {1986} 31313=01002^ (T=003,W3=10) 0.25 sec time sequenced <F=T1680AL,P=Ab,"
+50574	1988-10-04 00:00:00	ZKB 	1	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"
+51580	1990-03-01 00:00:00	USHc	1	SCH	  USHc USA Space Data ARTsonde 909-10-01, erroneous humidity software {1990} 31313=01202^ <F=T1680AL,P=A,T=TC,U=C(VIZ B)>
+54986	1994-11-01 00:00:00	ZKB 	1	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"
+55713	1995-11-01 00:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+57586	1998-06-01 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+0	2013-01-01 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+487	2013-09-03 14:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+488	2013-09-04 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+500	2013-09-10 00:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+3863	2018-04-19 05:00:00	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+3864	2018-04-19 11:02:30	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+3865	2018-04-19 20:00:00	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+3866	2018-04-19 23:02:47	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+3867	2018-04-20 12:00:00	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+15675	1980-10-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ HYPSOMETER UNSPECIFIED , to , VIZ ACCU-LOK UNSPECIFIED 
+15677	1988-10-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ ACCU-LOK UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 
+15678	1989-07-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , USA SPACE DATA UNSPECIFIED 
+15679	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USA SPACE DATA UNSPECIFIED 
+15679	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USA SPACE DATA UNSPECIFIED 
+15682	1994-11-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USA SPACE DATA UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 
+15683	1995-11-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VAISALA RS80-56H NWS SOLAR/IR CORR 

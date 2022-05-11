@@ -1,0 +1,8 @@
+	sensor_id	source	comment	date_time	value
+0	177	WMO	Modem GPSonde M10 (France)                           		
+36266	FG2 	SCH	  FG2 France Geolink GPSonde M2K2 {2003} 31313=55608^ (W3=56) <F=T400-406DL,P=0,T=TC,U=A,W=D or N=GC>		
+36274	FGC 	SCH	  FGC France Geolink-Modem M2K2-DC 1680 MHz improved radiation protection {2006} 31313=45708^ <F=T1680DL,P=0,T=TC,U=A,N=GC>		
+36435	W?? 	SCH	  W?? exact type insufficiently documented		
+0	W__ 	SCH	  W__ Wind only, method unspecified^		
+36847	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+10520	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1982-01-01	3.0

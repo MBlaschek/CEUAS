@@ -1,0 +1,72 @@
+	date_time	sensor_id	value	source	comment
+0	1970-06-01 00:00:00	RA4 	1	SCH	  RA4 USSR A-22-IV transponder radiosonde {1961}^ (W2=12, T=074) <F=V403ME,P=2A,T=BC,U=G,W=T216m>
+10107	1986-09-15 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+10122	1986-10-25 12:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+12970	1991-07-31 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12974	1992-06-01 12:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+14002	1996-07-01 12:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+14714	1999-04-21 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+14715	1999-11-04 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+14995	2000-10-21 01:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+14999	2000-10-28 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15003	2000-11-01 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15004	2000-11-02 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15005	2000-11-03 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15007	2000-11-07 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15030	2000-12-04 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15032	2000-12-07 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15033	2000-12-08 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15038	2000-12-13 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15043	2000-12-18 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15048	2000-12-24 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15049	2000-12-25 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15056	2001-01-01 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15057	2001-01-03 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15060	2001-01-07 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15061	2001-01-08 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15063	2001-01-10 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15064	2001-01-11 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15067	2001-01-14 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15068	2001-01-15 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15073	2001-01-20 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15074	2001-01-21 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15075	2001-01-22 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15076	2001-01-23 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15077	2001-01-24 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15078	2001-01-25 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15086	2001-02-02 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15087	2001-02-03 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15088	2001-02-04 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15089	2001-02-05 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15094	2001-02-10 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15095	2001-02-11 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15098	2001-02-14 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15099	2001-02-15 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15102	2001-02-18 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15105	2001-02-21 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15106	2001-02-22 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15109	2001-02-25 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15110	2001-02-26 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15111	2001-02-27 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15202	2001-06-01 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15321	2001-10-03 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15323	2001-10-05 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15324	2001-10-06 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15334	2001-10-16 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15339	2001-10-21 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15340	2001-10-22 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+15342	2001-10-24 00:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+15910	2003-08-26 12:00:00	VGG 	1	SCH	  VGG Vaisala RS80G or RS80-GH DigiCORA III auto corr, GPS wind 31313=46708^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+16160	2004-05-04 11:00:00	VDG 	1	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+16621	2005-12-12 12:00:00	VGG 	1	SCH	  VGG Vaisala RS80G or RS80-GH DigiCORA III auto corr, GPS wind 31313=46708^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+16644	2006-01-05 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+0	2013-01-01 12:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+912	2015-07-29 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+917	2015-08-03 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+944	2015-08-30 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+966	2015-09-22 05:58:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+967	2015-09-22 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1583	2017-05-31 12:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+9125	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+9125	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+9127	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS OR MRZ UNSPECIFIED 

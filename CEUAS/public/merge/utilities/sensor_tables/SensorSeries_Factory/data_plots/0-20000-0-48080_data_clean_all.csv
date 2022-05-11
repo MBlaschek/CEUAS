@@ -1,0 +1,35 @@
+	date_time	sensor_id	value	source	comment
+0	1932-06-22 09:30:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+9215	1974-06-30 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+9218	1974-09-05 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+9226	1974-09-18 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+9228	1974-11-26 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+9229	1974-11-27 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+9230	1975-01-08 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+9231	1975-01-09 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+9233	1975-12-15 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+9426	1976-03-18 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+9427	1976-04-22 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+9443	1976-06-27 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+9445	1976-07-29 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+9706	1977-03-24 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+9711	1977-05-14 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+12572	1985-12-20 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12574	1986-02-08 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+12593	1986-09-12 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12598	1989-10-14 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+12601	1989-11-15 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12602	1990-09-17 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+12603	1990-10-30 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12607	1991-07-07 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+12628	1991-10-19 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12630	1992-05-21 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+12633	1992-05-26 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12634	1993-05-02 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+12652	1993-06-27 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12654	1993-09-01 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+12673	1993-10-31 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12682	1998-05-25 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+1821	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK IIB UNSPECIFIED 
+1823	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 
+1823	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 

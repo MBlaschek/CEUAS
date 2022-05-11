@@ -1,0 +1,13 @@
+	sensor_id	source	comment	date_time	value
+3196	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+5798	124	WMO	Vaisala RS41/AUTOSONDE (Finland)                            		
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+55568	RR2 	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>		
+63997	VDT 	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>		
+55937	VD_ 	SCH	  VD_ Vaisala RS80 PC Cora base case 31313=96299^ (W3=62) <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=none>		
+74673	VNg 	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
+0	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+5297	IGRA2	IGRA2	USING SONDE MODEL , I1 , E GERMANY FREIBERG UNSPECIFIED 	1960-01-01	3.0
+5298	IGRA2	IGRA2	CHANGE SONDE MODEL , E GERMANY FREIBERG UNSPECIFIED , to , USSR RKZ-2 1780 MHZ 	1972-08-01	3.0
+5299	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR RKZ-2 1780 MHZ , to , USSR RKZ-5 1780 MHZ 	1974-04-01	3.0
+5302	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1993-01-01	3.0

@@ -1,0 +1,11 @@
+	date_time	sensor_id	value	source	comment
+0	1950-01-01 06:00:00	G4  	1	SCH	  [23,24,25|05,15] French Mesural or Metox (There may be some radiation heating at 300 mb through 1976 as in stations 65578 and 91925)
+36772	2003-04-15 11:00:00	VE_ 	1	SCH	  VE_ Vaisala RS80 Star radiosonde base case 31313=96399^ (W3=63) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+3	2014-07-31 11:00:00	57	2	WMO	Modem M2K2-DC (France)                
+167	2014-10-08 11:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+1404	2016-04-02 11:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1408	2016-04-03 11:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+4295	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE METOX CT UNSPECIFIED 
+4297	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL UNSPECIFIED 
+4298	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+4298	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

@@ -1,0 +1,7 @@
+	date_time	sensor_id	value	source	comment
+0	1957-07-04 00:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
+0	2013-05-23 10:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+975	2015-09-22 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1155	2016-02-24 12:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+1157	2016-02-25 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+4409	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 

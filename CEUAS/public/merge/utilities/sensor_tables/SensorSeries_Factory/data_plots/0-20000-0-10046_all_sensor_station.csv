@@ -1,0 +1,10 @@
+	sensor_id	source	comment	date_time	value
+11687	DA1 	SCH	  DA1 Germany Sprenger E071 Temperatursonde {1968}^  <F=V?,P=? (not visible even with apparent detailed pictures),T=TB,U=none>		
+3325	DG4 	SCH	"  DG4 Germany Graw M60 ""Registration"" radiosonde 27 MHz {1960}^ (W2=07 from 197909 to 198505, W3=19, T=051) <F=T28ME,P=2A,T=BS,U=Hr>"		
+19718	VD_ 	SCH	  VD_ Vaisala RS80 PC Cora base case 31313=96299^ (W3=62) <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=none>		
+0	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+5291	IGRA2	IGRA2	USING SONDE MODEL , I1 , GERMANY GRAW H50 	1960-01-01	3.0
+5292	IGRA2	IGRA2	USING SONDE MODEL , I1 , GERMANY GRAW M60 UNSPECIFIED 	1976-01-01	3.0
+5292	IGRA2	IGRA2	USING SONDE MODEL , I1 , GERMANY GRAW M60 UNSPECIFIED 	1976-01-01	3.0
+5295	IGRA2	IGRA2	USING SONDE MODEL , I1 , GERMANY SPRENGER UNSPECIFIED 	1989-01-01	3.0
+5296	IGRA2	IGRA2	USING SONDE MODEL , I1 , UNKNOWN 	1993-01-01	3.0

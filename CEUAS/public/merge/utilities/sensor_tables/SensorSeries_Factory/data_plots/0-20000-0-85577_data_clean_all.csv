@@ -1,0 +1,3 @@
+	date_time	sensor_id	value	source	comment
+0	1939-11-07 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+0	2021-06-09 14:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  

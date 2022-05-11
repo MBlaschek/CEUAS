@@ -1,0 +1,40 @@
+	date_time	sensor_id	value	source	comment
+0	1949-01-04 03:00:00	V18 	1	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>
+23751	1982-10-13 00:00:00	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+28737	1989-09-22 12:00:00	VB_ 	1	SCH	  VB_ Vaisala RS80 MicroCora radiosonde base case 31313=96099^ (W3=60) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+30899	1992-11-02 11:00:00	VC_ 	1	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+36236	2000-01-17 11:00:00	M__ 	1	SCH	  M__ Multiple instruments, use 31313 info^  If 31313 is not present, apply no corrections.  (This instrument type should be assigned only when all or almost all observations
+42045	2008-01-19 23:00:00	VNn 	1	SCH	  VNn Vaisala RS92 DigiCORA III auto corr, no wind 31313=48000^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=0>
+42094	2008-02-13 23:00:00	VNl 	1	SCH	  VNl Vaisala RS92 DigiCORA III auto corr, LoRAN wind 31313=48006^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>
+42102	2008-02-17 23:00:00	VNn 	1	SCH	  VNn Vaisala RS92 DigiCORA III auto corr, no wind 31313=48000^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=0>
+42124	2008-03-02 23:00:00	VNl 	1	SCH	  VNl Vaisala RS92 DigiCORA III auto corr, LoRAN wind 31313=48006^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>
+42125	2008-03-03 11:00:00	VNn 	1	SCH	  VNn Vaisala RS92 DigiCORA III auto corr, no wind 31313=48000^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=0>
+42129	2008-03-05 11:00:00	VNl 	1	SCH	  VNl Vaisala RS92 DigiCORA III auto corr, LoRAN wind 31313=48006^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>
+42146	2008-03-14 11:00:00	VNn 	1	SCH	  VNn Vaisala RS92 DigiCORA III auto corr, no wind 31313=48000^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=0>
+42147	2008-03-14 23:00:00	VNl 	1	SCH	  VNl Vaisala RS92 DigiCORA III auto corr, LoRAN wind 31313=48006^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>
+43395	2009-12-02 11:00:00	BFa 	1	SCH	  BFa South Africa InterMet Africa iMet-2-AA 403 MHz no pres GPS sonde, automatic solar and IR corr {~2009} 31313=49908^ <F=T403FL,P=none,T=TB,U=A,N=G>
+43398	2009-12-03 23:00:00	VNl 	1	SCH	  VNl Vaisala RS92 DigiCORA III auto corr, LoRAN wind 31313=48006^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>
+43400	2009-12-04 23:00:00	BFa 	1	SCH	  BFa South Africa InterMet Africa iMet-2-AA 403 MHz no pres GPS sonde, automatic solar and IR corr {~2009} 31313=49908^ <F=T403FL,P=none,T=TB,U=A,N=G>
+0	2013-01-01 11:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+372	2013-07-08 11:00:00	133	2	WMO	Nanjing GTS1-2/GFE(L) (China)                            
+373	2013-07-08 23:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+382	2013-07-13 23:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+383	2013-07-14 11:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+726	2014-01-07 11:00:00	61	2	WMO	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+727	2014-01-07 23:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+1254	2014-10-02 11:00:00	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
+1255	2014-10-02 23:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+1260	2014-10-05 11:00:00	27	2	WMO	AVK-MRZ (Russian Federation)                
+1261	2014-10-05 23:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3167	2017-06-27 11:02:43	7	2	WMO	iMet-1-AB (United States)                
+3171	2017-06-29 11:01:53	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3629	2018-02-15 11:02:28	7	2	WMO	iMet-1-AB (United States)                
+3631	2018-02-16 11:01:53	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3707	2018-03-26 11:00:56	7	2	WMO	iMet-1-AB (United States)                
+4711	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+4712	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 
+4713	1982-10-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA UNSPECIFIED , to , VAISALA RS80 UNSPECIFIED 
+4715	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+4717	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+4717	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+4717	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

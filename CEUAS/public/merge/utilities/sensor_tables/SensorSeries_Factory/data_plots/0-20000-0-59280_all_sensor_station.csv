@@ -1,0 +1,10 @@
+	sensor_id	source	comment	date_time	value
+0	131	WMO	Taiyuan GTS1-1/GFE(L) (China )                           		
+5771	2	WMO	 No radiosonde – passive target (e.g. reflector)                 		
+6453	200	WMO	NA		
+5792	201	WMO	NA		
+5747	202	WMO	NA		
+0	H2G 	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"		
+8254	H9G 	SCH	"  H9G China Shanghai Radio Factory #23 GZZ-9, GZZ9, GTS1 1675 MHz, or ""Shang/E, L band radar"" (electronic) radiosonde {2002} 31313=63203 (132)^ <F=T1675DL,"		
+190	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+3989	IGRA2	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 	2006-03-01	3.0

@@ -1,0 +1,7 @@
+	date_time	sensor_id	value	source	comment
+0	1941-07-02 10:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+21727	1962-07-01 00:00:00	ZCH 	1	SCH	  ZCH VIZ model 1063 USWB 1680 MHz hypsometer {1961}^ (T=379) <F=V1680AB,P=A+H,T=TR(ML-405/AM),U=L,W=Da(WBRT or GMD-1)>
+23797	1965-05-12 00:00:00	UBt 	1	SCH	  UBt USWB Bendix radiosonde with thermistor {~1960}^
+23844	1965-06-05 00:00:00	ZDB 	1	SCH	  ZDB VIZ model 1079 USWB 1680/403 MHz hypsometer transponder {1963}^ (T=395) <F=V1680AB,P=A+H,T=TR(ML-405),U=C,W=T403a(AN/GMD-2,6CW4 Nuvistor)>
+16961	1965-06-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , TRANSPONDER TYPE , to , HYPSOMETER 
+16963	1968-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , HYPSOMETER 

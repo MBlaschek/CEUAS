@@ -1,0 +1,4 @@
+	sensor_id	source	comment	date_time	value
+0	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+16961	IGRA2	IGRA2	CHANGE SONDE MODEL , TRANSPONDER TYPE , to , HYPSOMETER 	1965-06-01	3.0
+16963	IGRA2	IGRA2	USING SONDE MODEL , HYPSOMETER 	1968-01-01	3.0

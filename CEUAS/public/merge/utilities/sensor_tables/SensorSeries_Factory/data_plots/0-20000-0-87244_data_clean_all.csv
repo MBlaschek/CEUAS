@@ -1,0 +1,4 @@
+	date_time	sensor_id	value	source	comment
+0	1983-09-05 00:00:00	NA 	1	SCH	NA
+1	1984-09-07 12:00:00	-922	1	SCH	NA
+0	2018-10-31 23:10:52	177	2	WMO	Modem GPSonde M10 (France)                           

@@ -1,0 +1,16 @@
+	sensor_id	source	comment	date_time	value
+0	111	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          		
+2418	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+248	38	WMO	VIZ LOCATE Loran-C (United States)              		
+257	4	WMO	 No radiosonde – passive temperature-humidity profiler            		
+260	59	WMO	Modem M2K2-R 1680 MHz RDF radiosonde with pressure sensor chip (France)        		
+258	9	WMO	 No radiosonde – system unknown or not specified          		
+43500	C2  	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"		
+2013	U1? 	SCH	  U1? exact type insufficiently documented		
+0	U?? 	SCH	  U?? exact type insufficiently documented		
+52956	VCL 	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>		
+58785	ZSg 	SCH	  ZSg Sippican LMS6 model 1848-___ radiosonde 400-406 MHz GPS {2005}^ <F=T400-406DL,P=0,T=TC,U=A,N=G> (W3=111 or 11 reused, should be 31313=51108 starting 20080101		
+58496	Zpg 	SCH	  Zpg Sippican model 1648-611 MK IIA/LMS5 Microsonde 403 MHz DGPS Line of Sight (LOS), no pressure, carbon U {2003} 31313=08508^ (W3=85) <F=T403DL,P=0,		
+1686	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1986-01-01	3.0
+1686	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1986-01-01	3.0
+1686	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1986-01-01	3.0

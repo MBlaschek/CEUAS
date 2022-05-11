@@ -1,0 +1,16 @@
+	sensor_id	source	comment	date_time	value
+667	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
+666	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+13861	MVD 	SCH	  MVD Mixed Vaisala RS80 (31313=46108) and RS92 (31313=47908)^ station 78762 in 2006		
+13607	MVE 	SCH	  MVE Mixed Vaisala RS80 (31313=46108), RS90 (31313=47108), and RS92 (31313=47908)^ station 78762 in 2006		
+13446	VCG 	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
+13524	VNG 	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
+14538	VNg 	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
+14097	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+0	ZF1 	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+4273	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 	1982-01-01	3.0
+4273	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 	1982-01-01	3.0
+4276	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1989-01-01	3.0
+4276	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1989-01-01	3.0
+4281	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80-15GH GPS H HUMICAP 	2004-08-01	3.0

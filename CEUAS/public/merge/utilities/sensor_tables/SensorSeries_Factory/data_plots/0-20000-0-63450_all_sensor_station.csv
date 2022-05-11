@@ -1,0 +1,12 @@
+	sensor_id	source	comment	date_time	value
+1423	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+0	61	WMO	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            		
+163	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+593	95	WMO	No pressure radiosonde plus radar reflector            		
+0	V18 	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>		
+7705	VC_ 	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
+4949	VU_ 	SCH	  VU_ Vaisala unspecified model before RS80^ (W1=01, T=023)		
+4533	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1982-01-01	3.0
+4535	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1986-01-01	3.0
+4535	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1986-01-01	3.0
+4535	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1986-01-01	3.0

@@ -1,0 +1,5 @@
+	sensor_id	source	comment	date_time	value
+0	115	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             		
+129	RPA 	SCH	  RPA Ukraine PAZA-12M with UL radiotheodolite {~2010} 31313=01503^ (W3=115)		
+0	RuN 	SCH	  RuN Ukraine MARS-2-1 radiosonde no correction, 31313=02803^		
+146	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		

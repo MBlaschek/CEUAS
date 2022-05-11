@@ -1,0 +1,32 @@
+	date_time	sensor_id	value	source	comment
+0	1922-12-26 20:00:00	NUF 	1	SCH	  NUF USA S. P. Fergusson PTU Friez kite/balloon meteorograph {1919}^ <F=C,P=D,T=B,U=H>
+10024	1938-06-29 22:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+10076	1938-07-23 22:00:00	UBa 	1	SCH	  UBa USWB Friez Diamond Hinman initial operational radiosonde, hair hygrometer, too cold {1938}^ <F=V65AB,P=A,T=E(hydrochloric acid, ethyl alcohol, and
+10108	1938-08-02 22:00:00	UBA 	1	SCH	  UBA USWB Friez Diamond Hinman initial operational radiosonde, hair hygrometer, temperature corr {19380803}^ <F=V65AB,P=A,T=E(hydrochloric acid, ethyl
+20781	1946-12-05 21:00:00	U?? 	1	SCH	  U?? exact type insufficiently documented
+22578	1948-03-31 22:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+39169	1962-07-01 00:00:00	ZCH 	1	SCH	  ZCH VIZ model 1063 USWB 1680 MHz hypsometer {1961}^ (T=379) <F=V1680AB,P=A+H,T=TR(ML-405/AM),U=L,W=Da(WBRT or GMD-1)>
+39721	1963-04-03 00:00:00	ZDH 	1	SCH	  ZDH VIZ model 1073 USWB 1680 MHz hypsometer {1963}^ (T=389) <F=V1680AB,P=A+H(hypsometer fluid CFC-11),T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+42468	1966-12-21 00:00:00	ZEH 	1	SCH	  ZEH VIZ model 1093 USWB 1680 MHz hypsometer {1965}^ (T=402) <F=V1680AB(RCA 6562),P=A+H(hypsometer fluid CFC-11),T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+44246	1969-05-29 00:00:00	ZEB 	1	SCH	  ZEB VIZ model 1096 USWB 1680/403 MHz hypsometer transponder {1965}^ (T=404) NWS stock no. J006A <F=V1680AB,P=A+H(CFC-11 hypsometer fluid),
+46288	1972-03-12 00:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+47061	1973-04-01 00:00:00	ZF1c	1	SCH	  ZF1c VIZ model 1192 NWS 1680 MHz, new hygristor duct, censoring  {1973}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+52591	1980-10-24 00:00:00	ZJ1 	1	SCH	  ZJ1 VIZ model 1392-410 NWS 1680 MHz baseline, new hygristor {1980}^ (W1=19 calls this VIZ 1392-401, T=441) NWS stock no. J030 <F=T1680AB,P=A,
+58369	1988-10-01 00:00:00	ZKB 	1	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"
+64678	1997-06-01 00:00:00	ZK2 	1	SCH	  ZK2 VIZ or Sippican model 1492-540 NWS B2 J031-1 1680 MHz RDF {1997} 31313=05102^ (W3=51,T=489) <F=T1680DL,P=Ac,T=TR (ML-405?),U=C,W=Da(ART-2)> NWS part
+73247	2009-01-30 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+73248	2009-02-09 12:00:00	ZRg 	1	SCH	  ZRg Sippican 1649-540 NWS J031-2 MK IIA Microsonde 1680 MHz GPS chip T, with P {2003} 31313=58708^ (W3=87) <F=T1680DL,P=Ac,T=TC,U=C,N=G> NWS part no.
+0	2013-01-01 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+573	2013-10-16 00:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+5535	2020-08-07 19:01:00	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+5536	2020-08-07 23:00:40	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+5541	2020-08-10 11:02:23	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+16928	1969-05-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ HYPSOMETER UNSPECIFIED , to , VIZ TRANSPONDER UNSPECIFIED 
+16933	1981-02-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ TRANSPONDER UNSPECIFIED , to , VIZ ACCU-LOK UNSPECIFIED 
+16935	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
+16935	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
+16939	1988-10-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ ACCU-LOK UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 
+16940	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+16940	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+16947	1997-06-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VIZ/SIPPICAN B2 1492-540 NWS 1680 MHZ 
+16948	2009-02-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ/SIPPICAN B2 1492-540 NWS 1680 MHZ , to , VIZ/SIPPICAN MICROSONDE MKIIA GPS 

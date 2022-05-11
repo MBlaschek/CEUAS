@@ -1,0 +1,158 @@
+	date_time	sensor_id	value	source	comment
+0	1941-12-07 22:00:00	U?? 	1	SCH	  U?? exact type insufficiently documented
+2013	1946-01-27 16:00:00	U1? 	1	SCH	  U1? exact type insufficiently documented
+34576	1969-10-31 12:00:00	U?? 	1	SCH	  U?? exact type insufficiently documented
+43500	1982-04-30 22:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
+52956	1997-09-28 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+58496	2006-08-17 00:00:00	Zpg 	1	SCH	  Zpg Sippican model 1648-611 MK IIA/LMS5 Microsonde 403 MHz DGPS Line of Sight (LOS), no pressure, carbon U {2003} 31313=08508^ (W3=85) <F=T403DL,P=0,
+58497	2006-08-17 11:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+58513	2006-08-25 12:00:00	Zpg 	1	SCH	  Zpg Sippican model 1648-611 MK IIA/LMS5 Microsonde 403 MHz DGPS Line of Sight (LOS), no pressure, carbon U {2003} 31313=08508^ (W3=85) <F=T403DL,P=0,
+58514	2006-08-25 23:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+58521	2006-08-29 12:00:00	Zpg 	1	SCH	  Zpg Sippican model 1648-611 MK IIA/LMS5 Microsonde 403 MHz DGPS Line of Sight (LOS), no pressure, carbon U {2003} 31313=08508^ (W3=85) <F=T403DL,P=0,
+58522	2006-08-29 23:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+58523	2006-08-30 12:00:00	Zpg 	1	SCH	  Zpg Sippican model 1648-611 MK IIA/LMS5 Microsonde 403 MHz DGPS Line of Sight (LOS), no pressure, carbon U {2003} 31313=08508^ (W3=85) <F=T403DL,P=0,
+58527	2006-09-01 11:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+58539	2006-09-06 12:00:00	Zpg 	1	SCH	  Zpg Sippican model 1648-611 MK IIA/LMS5 Microsonde 403 MHz DGPS Line of Sight (LOS), no pressure, carbon U {2003} 31313=08508^ (W3=85) <F=T403DL,P=0,
+58540	2006-09-06 23:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+58541	2006-09-07 12:00:00	Zpg 	1	SCH	  Zpg Sippican model 1648-611 MK IIA/LMS5 Microsonde 403 MHz DGPS Line of Sight (LOS), no pressure, carbon U {2003} 31313=08508^ (W3=85) <F=T403DL,P=0,
+58548	2006-09-10 23:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+58552	2006-09-12 23:00:00	Zpg 	1	SCH	  Zpg Sippican model 1648-611 MK IIA/LMS5 Microsonde 403 MHz DGPS Line of Sight (LOS), no pressure, carbon U {2003} 31313=08508^ (W3=85) <F=T403DL,P=0,
+58589	2006-10-01 11:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+58590	2006-10-01 23:00:00	Zpg 	1	SCH	  Zpg Sippican model 1648-611 MK IIA/LMS5 Microsonde 403 MHz DGPS Line of Sight (LOS), no pressure, carbon U {2003} 31313=08508^ (W3=85) <F=T403DL,P=0,
+58785	2007-01-12 00:00:00	ZSg 	1	SCH	  ZSg Sippican LMS6 model 1848-___ radiosonde 400-406 MHz GPS {2005}^ <F=T400-406DL,P=0,T=TC,U=A,N=G> (W3=111 or 11 reused, should be 31313=51108 starting 20080101
+0	2013-01-01 12:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+248	2013-08-05 12:00:00	38	2	WMO	VIZ LOCATE Loran-C (United States)              
+249	2013-08-06 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+257	2013-08-13 00:00:00	4	2	WMO	 No radiosonde – passive temperature-humidity profiler            
+258	2013-08-13 12:00:00	9	2	WMO	 No radiosonde – system unknown or not specified          
+259	2013-08-14 12:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+260	2013-08-15 12:00:00	59	2	WMO	Modem M2K2-R 1680 MHz RDF radiosonde with pressure sensor chip (France)        
+261	2013-08-16 12:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2418	2017-09-14 11:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2420	2017-09-15 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2423	2017-09-15 18:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2424	2017-09-16 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2425	2017-09-16 06:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2430	2017-09-17 12:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2432	2017-09-18 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2434	2017-09-18 12:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2435	2017-09-18 18:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2499	2017-10-19 23:20:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2500	2017-10-20 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2501	2017-10-21 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2502	2017-10-21 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2503	2017-10-22 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2506	2017-10-23 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2507	2017-10-24 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2508	2017-10-24 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2509	2017-10-25 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2510	2017-10-25 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2511	2017-10-26 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2512	2017-10-26 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2513	2017-10-27 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2514	2017-10-27 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2515	2017-10-28 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2516	2017-10-28 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2517	2017-10-29 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2518	2017-10-29 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2519	2017-10-30 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2520	2017-10-30 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2521	2017-10-30 23:15:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2522	2017-10-31 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2523	2017-11-01 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2524	2017-11-01 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2525	2017-11-02 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2526	2017-11-02 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2527	2017-11-03 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2530	2017-11-04 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2531	2017-11-05 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2532	2017-11-05 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2533	2017-11-06 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2534	2017-11-06 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2535	2017-11-07 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2536	2017-11-07 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2537	2017-11-08 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2538	2017-11-08 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2539	2017-11-09 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2540	2017-11-09 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2541	2017-11-10 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2542	2017-11-10 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2543	2017-11-11 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2544	2017-11-11 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2545	2017-11-12 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2546	2017-11-12 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2547	2017-11-13 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2548	2017-11-13 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2549	2017-11-14 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2550	2017-11-14 11:15:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2551	2017-11-15 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2552	2017-11-15 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2553	2017-11-16 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2554	2017-11-16 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2557	2017-11-17 23:17:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2558	2017-11-18 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2559	2017-11-19 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2560	2017-11-19 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2561	2017-11-20 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2562	2017-11-20 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2563	2017-11-21 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2564	2017-11-21 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2565	2017-11-22 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2566	2017-11-22 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2567	2017-11-23 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2568	2017-11-23 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2569	2017-11-24 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2570	2017-11-24 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2571	2017-11-25 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2572	2017-11-25 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2573	2017-11-26 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2574	2017-11-26 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2575	2017-11-27 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2576	2017-11-27 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2577	2017-11-28 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2578	2017-11-28 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2579	2017-11-29 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2580	2017-11-29 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2581	2017-11-30 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2582	2017-11-30 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2583	2017-11-30 23:15:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2584	2017-12-01 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2585	2017-12-02 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2586	2017-12-02 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2587	2017-12-03 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2588	2017-12-03 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2589	2017-12-04 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2590	2017-12-04 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2591	2017-12-05 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2592	2017-12-05 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2593	2017-12-06 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2594	2017-12-06 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2595	2017-12-07 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2596	2017-12-07 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2597	2017-12-08 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2598	2017-12-08 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2599	2017-12-09 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2600	2017-12-09 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2601	2017-12-10 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2602	2017-12-10 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2603	2017-12-11 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2604	2017-12-11 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2605	2017-12-12 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2606	2017-12-12 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2608	2017-12-13 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2609	2017-12-13 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2610	2017-12-14 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2611	2017-12-14 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2612	2017-12-15 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2613	2017-12-15 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2614	2017-12-16 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2615	2017-12-16 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2616	2017-12-17 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2617	2017-12-17 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2618	2017-12-18 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+2619	2017-12-18 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+3334	2018-12-20 18:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+3340	2018-12-25 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1686	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+1686	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+1686	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 

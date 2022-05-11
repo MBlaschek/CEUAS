@@ -1,0 +1,5 @@
+	sensor_id	source	comment	date_time	value
+1742	VCL 	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>		
+0	VCV 	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>		
+6394	VGL 	SCH	  VGL Vaisala RS80 DigiCORA III auto corr, LoRAN wind 31313=46706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>		
+7281	VNl 	SCH	  VNl Vaisala RS92 DigiCORA III auto corr, LoRAN wind 31313=48006^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>		

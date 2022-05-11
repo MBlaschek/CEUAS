@@ -1,0 +1,5 @@
+	date_time	sensor_id	value	source	comment
+0	1957-06-01 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+6311	1982-02-23 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+6324	1989-12-31 23:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+356	2014-10-10 11:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            

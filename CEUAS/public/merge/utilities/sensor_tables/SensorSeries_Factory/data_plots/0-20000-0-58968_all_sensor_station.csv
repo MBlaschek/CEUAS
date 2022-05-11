@@ -1,0 +1,13 @@
+	sensor_id	source	comment	date_time	value
+3546	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+2175	40	WMO	Sprenger E084 (Germany)                		
+0	J80 	SCH	  J80 Japan Meisei RSII-80 or RS2-80 radiosonde {1981} 31313=72202^ (W2=09, W3=22, 31313=72202) <F=T1680FB,P=A,T=TR,U=C>		
+18591	J8t 	SCH	  J8t Japan Meisei RSII-80 or RS2-80 radiosonde, Taiwan 31313=52202^		
+31519	J99 	SCH	  J99 Japan Meisei RSII-91 new hygrometer radiosonde {199907} 31313=74702^ (W3=47) <F=T1680FL,P=Ac,T=TR,U=A>		
+28203	VCL 	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>		
+28204	VCV 	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>		
+18250	ZJ42	SCH	  ZJ42 exact type insufficiently documented		
+14881	IGRA2	IGRA2	USING SONDE MODEL , I1 , GZZ-2 	1976-01-01	3.0
+14881	IGRA2	IGRA2	USING SONDE MODEL , I1 , GZZ-2 	1976-01-01	3.0
+14881	IGRA2	IGRA2	USING SONDE MODEL , I1 , GZZ-2 	1976-01-01	3.0
+14887	IGRA2	IGRA2	USING SONDE MODEL , I1 , UNKNOWN SONDE 	1993-01-01	3.0

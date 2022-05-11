@@ -1,0 +1,331 @@
+	date_time	sensor_id	value	source	comment
+0	1925-04-14 14:07:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+123	1946-10-01 15:00:00	RS3 	1	SCH	  RS3 USSR RZ-043 radiosonde {1944}^ <F=V7.5MR,P=D,T=B,U=H>
+27127	1974-03-02 00:00:00	RK2 	1	SCH	  RK2 USSR RKZ-2 radiosonde {1967}^ (W2=20, T=304) <F=V1780PB,P=B,T=TR,U=G>
+31623	1977-07-26 18:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+40402	1984-04-15 18:00:00	MR5 	1	SCH	  MR5 Mixed Russia RKZ-5 (RK5, DP to or near top) and MARS-2-2 (RRB, DP to T around -40), both using Meteorit-2 radar^
+40409	1984-04-17 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+41114	1984-11-06 12:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+41137	1984-11-15 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+41662	1985-03-28 06:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+41682	1985-04-04 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+41735	1985-04-19 12:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+41757	1985-04-29 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+41777	1985-05-04 18:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+41784	1985-05-06 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+42047	1985-07-13 06:00:00	MR5 	1	SCH	  MR5 Mixed Russia RKZ-5 (RK5, DP to or near top) and MARS-2-2 (RRB, DP to T around -40), both using Meteorit-2 radar^
+42081	1985-07-21 18:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+42607	1985-12-04 00:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+42616	1985-12-06 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+43202	1986-05-12 12:00:00	MR5 	1	SCH	  MR5 Mixed Russia RKZ-5 (RK5, DP to or near top) and MARS-2-2 (RRB, DP to T around -40), both using Meteorit-2 radar^
+43263	1986-05-27 18:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+43826	1986-10-20 12:00:00	MR5 	1	SCH	  MR5 Mixed Russia RKZ-5 (RK5, DP to or near top) and MARS-2-2 (RRB, DP to T around -40), both using Meteorit-2 radar^
+43838	1986-10-23 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+44702	1987-05-31 12:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+44704	1987-06-01 06:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+45394	1987-11-23 12:00:00	MRB 	1	SCH	  MRB Mixed Russia MARS-2-2 (RRB, DP to T around -40) and MRZ-3A (RZ3, DP to or near top)^
+45666	1988-01-31 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+45710	1988-02-11 12:00:00	MRB 	1	SCH	  MRB Mixed Russia MARS-2-2 (RRB, DP to T around -40) and MRZ-3A (RZ3, DP to or near top)^
+45713	1988-02-12 06:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+45835	1988-03-14 00:00:00	MRB 	1	SCH	  MRB Mixed Russia MARS-2-2 (RRB, DP to T around -40) and MRZ-3A (RZ3, DP to or near top)^
+45979	1988-04-19 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+46110	1988-05-23 06:00:00	MRB 	1	SCH	  MRB Mixed Russia MARS-2-2 (RRB, DP to T around -40) and MRZ-3A (RZ3, DP to or near top)^
+46197	1988-06-14 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+46911	1988-12-11 06:00:00	MRB 	1	SCH	  MRB Mixed Russia MARS-2-2 (RRB, DP to T around -40) and MRZ-3A (RZ3, DP to or near top)^
+46918	1988-12-13 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+47002	1989-01-03 06:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+47003	1989-01-03 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+47371	1989-04-13 06:00:00	MRz 	1	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^
+47546	1989-05-27 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+48338	1989-12-11 18:00:00	MRz 	1	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^
+48508	1990-01-23 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+48654	1990-03-13 06:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+48655	1990-03-13 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+48778	1990-04-24 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+48779	1990-04-24 06:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+49040	1990-08-22 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+49041	1990-08-22 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+49301	1991-01-03 06:00:00	MRz 	1	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^
+49422	1991-02-12 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+50799	1992-05-23 06:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+50800	1992-05-23 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+51213	1992-10-08 06:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+51214	1992-10-08 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+51582	1993-02-09 06:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+51584	1993-02-10 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+51628	1993-02-24 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+51631	1993-02-25 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+52184	1993-12-17 12:00:00	MRz 	1	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^
+52521	1994-06-09 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+52976	1995-02-11 12:00:00	MRz 	1	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^
+53155	1995-05-12 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+53539	1995-11-29 12:00:00	MRz 	1	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^
+53742	1996-03-21 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+53774	1996-04-10 12:00:00	MRz 	1	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^
+53784	1996-04-15 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+53927	1996-07-01 12:00:00	MRz 	1	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^
+54031	1996-08-26 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+54665	1997-08-30 12:00:00	MRz 	1	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^
+57941	2002-04-22 12:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+58095	2002-07-15 12:00:00	Mrz 	1	SCH	  Mrz Mixed Ukraine MRZ no RH above surface and MRZ-3A (Run, 31313=02703)^
+58767	2003-06-20 00:00:00	RuCn	1	SCH	  RuCn Ukraine MRZ-3A 1780 MHz radiosonde CIMO solar corr 31313=32703 day, no radiation corr 31313=02703 night^ <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+63614	2011-07-12 00:00:00	RPD 	1	SCH	  RPD Ukraine PAZA-22 with AVK-1 ground station {~2009} 31313=01603^ (W3=116)
+63615	2011-07-12 12:00:00	RuCn	1	SCH	  RuCn Ukraine MRZ-3A 1780 MHz radiosonde CIMO solar corr 31313=32703 day, no radiation corr 31313=02703 night^ <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+63623	2011-07-16 12:00:00	RuC 	1	SCH	  RuC Ukraine MRZ-3A 1780 MHz radiosonde CIMO solar corr 31313=32703^
+63624	2011-07-17 00:00:00	RPDE	1	SCH	  RPDE exact type insufficiently documented
+63677	2011-08-14 12:00:00	RuC 	1	SCH	  RuC Ukraine MRZ-3A 1780 MHz radiosonde CIMO solar corr 31313=32703^
+63678	2011-08-15 00:00:00	RPDE	1	SCH	  RPDE exact type insufficiently documented
+63782	2011-10-06 00:00:00	RuCn	1	SCH	  RuCn Ukraine MRZ-3A 1780 MHz radiosonde CIMO solar corr 31313=32703 day, no radiation corr 31313=02703 night^ <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+63785	2011-10-07 12:00:00	RPDE	1	SCH	  RPDE exact type insufficiently documented
+0	2013-01-01 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+322	2013-06-15 00:00:00	1	2	WMO	NA
+323	2013-06-15 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+367	2013-07-07 12:00:00	6	2	WMO	 No radiosonde – radio-acoustic sounder             
+368	2013-07-08 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+728	2014-01-09 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+729	2014-01-10 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+942	2014-06-06 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+943	2014-06-06 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+954	2014-06-12 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+955	2014-06-12 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+1609	2015-09-17 00:00:00	160	2	WMO	MARL-A or Vektor-M – I-2012 (Russian Federation)                        
+1610	2015-09-18 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+1777	2016-03-09 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1778	2016-03-10 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+1879	2016-05-11 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1880	2016-05-12 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+2474	2017-03-09 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+2475	2017-03-10 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+2785	2017-08-14 00:00:00	160	2	WMO	MARL-A or Vektor-M – I-2012 (Russian Federation)                        
+2786	2017-08-14 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+2925	2017-10-25 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+2927	2017-10-26 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+3047	2017-12-25 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+3048	2017-12-26 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+3218	2018-03-22 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+3219	2018-03-23 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+3411	2018-06-29 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+3412	2018-06-29 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+3451	2018-07-19 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+3452	2018-07-20 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+3711	2018-11-26 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+3712	2018-11-26 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+3896	2019-02-28 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+3897	2019-02-28 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+3952	2019-03-28 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3953	2019-03-29 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4004	2019-04-24 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4005	2019-04-25 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4008	2019-04-26 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4010	2019-04-27 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4031	2019-05-07 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4032	2019-05-08 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4058	2019-05-21 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+4059	2019-05-22 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4089	2019-06-06 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4090	2019-06-07 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4091	2019-06-07 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4092	2019-06-08 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4097	2019-06-10 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4098	2019-06-11 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4099	2019-06-11 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4100	2019-06-12 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4101	2019-06-12 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4102	2019-06-13 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4104	2019-06-14 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4105	2019-06-15 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4113	2019-06-19 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4114	2019-06-20 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4116	2019-06-21 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4117	2019-06-21 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4126	2019-06-26 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4128	2019-06-27 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4135	2019-07-01 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4146	2019-07-07 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4147	2019-07-07 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4150	2019-07-09 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4159	2019-07-13 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4162	2019-07-15 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4163	2019-07-15 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4164	2019-07-16 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4165	2019-07-16 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4169	2019-07-18 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4171	2019-07-19 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4173	2019-07-20 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4177	2019-07-22 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4181	2019-07-25 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4182	2019-07-26 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4184	2019-07-27 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4187	2019-07-29 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4188	2019-07-29 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4190	2019-07-30 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4194	2019-08-02 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4195	2019-08-02 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4198	2019-08-04 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4199	2019-08-04 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4208	2019-08-09 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4209	2019-08-10 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4211	2019-08-11 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4212	2019-08-11 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4214	2019-08-12 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4215	2019-08-13 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4216	2019-08-13 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4218	2019-08-15 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4227	2019-08-19 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4229	2019-08-20 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4244	2019-08-28 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4245	2019-08-29 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4253	2019-09-02 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4254	2019-09-03 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4255	2019-09-03 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4257	2019-09-04 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+4259	2019-09-06 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4267	2019-09-10 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4284	2019-09-19 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4287	2019-09-20 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4288	2019-09-21 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4343	2019-10-19 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+4344	2019-10-19 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4370	2019-11-01 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+4371	2019-11-02 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4380	2019-11-06 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4389	2019-11-11 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4424	2019-11-29 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4428	2019-12-01 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4430	2019-12-02 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4454	2019-12-16 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4455	2019-12-16 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4473	2019-12-26 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4474	2019-12-26 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4480	2019-12-30 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4481	2019-12-30 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4490	2020-01-04 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4557	2020-02-07 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4559	2020-02-09 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4562	2020-02-10 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4563	2020-02-11 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4564	2020-02-11 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4569	2020-02-14 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4570	2020-02-14 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4573	2020-02-16 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4575	2020-02-17 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4576	2020-02-18 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4577	2020-02-18 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4579	2020-02-19 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4581	2020-02-20 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4583	2020-02-21 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4589	2020-02-24 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4590	2020-02-25 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4591	2020-02-25 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4596	2020-02-28 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4598	2020-02-29 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4601	2020-03-02 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4604	2020-03-03 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4608	2020-03-07 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4609	2020-03-08 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4611	2020-03-10 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4612	2020-03-11 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4650	2020-04-19 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4655	2020-04-24 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+4657	2020-04-26 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4666	2020-05-05 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4669	2020-05-08 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4673	2020-05-12 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4675	2020-05-14 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4694	2020-06-03 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4696	2020-06-05 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4698	2020-06-07 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4702	2020-06-11 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4706	2020-06-16 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4709	2020-06-19 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4714	2020-06-24 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4724	2020-07-04 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4726	2020-07-06 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4731	2020-07-11 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4733	2020-07-13 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4738	2020-07-18 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4740	2020-07-20 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4744	2020-07-25 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4745	2020-07-26 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4756	2020-08-07 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4768	2020-08-19 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4770	2020-08-22 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4780	2020-09-01 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4782	2020-09-03 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4793	2020-09-15 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4794	2020-09-16 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4810	2020-10-04 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4811	2020-10-06 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4813	2020-10-08 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4814	2020-10-08 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4817	2020-10-11 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4818	2020-10-12 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4821	2020-10-15 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4822	2020-10-16 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4827	2020-10-23 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4829	2020-10-25 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4882	2020-12-17 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4887	2020-12-21 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4889	2020-12-23 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4892	2020-12-26 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4893	2020-12-27 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4896	2020-12-30 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4897	2020-12-31 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4900	2021-01-03 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4901	2021-01-05 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4904	2021-01-08 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4909	2021-01-13 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4913	2021-01-17 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4914	2021-01-18 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4915	2021-01-19 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4925	2021-01-28 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4928	2021-01-31 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4929	2021-02-01 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4944	2021-02-16 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4946	2021-02-18 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4948	2021-02-20 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4951	2021-02-23 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4952	2021-02-24 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4953	2021-02-25 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4954	2021-02-27 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4966	2021-03-11 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4970	2021-03-15 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4972	2021-03-17 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+4994	2021-04-10 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+4995	2021-04-11 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+5015	2021-05-01 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+5018	2021-05-03 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+5061	2021-05-24 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+5062	2021-05-25 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+5103	2021-06-14 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+5104	2021-06-15 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+5105	2021-06-15 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+5106	2021-06-16 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+5163	2021-07-15 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+5164	2021-07-15 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+5241	2021-08-25 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+5254	2021-09-02 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+5255	2021-09-02 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+5257	2021-09-03 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+5261	2021-09-05 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+5275	2021-09-12 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+5277	2021-09-13 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+5289	2021-09-19 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+5291	2021-09-20 12:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+5293	2021-09-23 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+15426	1935-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR MOLCHANOV KAMMGERAET NO HUMID 1934 
+15427	1937-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , USSR MOLCHANOV KAMMGERAET NO HUMID 1934 , to , USSR MOLCHANOV KAMMGERAET NO HUMID 1936 
+15428	1939-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , UNKNOWN , to , USSR RZ-049 UNSPECIFIED 
+15432	1960-02-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RZ-049 UNSPECIFIED , to , USSR A-22 UNSPECIFIED 
+15433	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 
+15434	1962-03-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , USSR RKZ-1A 1780 MHZ 
+15435	1968-06-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RKZ-1A 1780 MHZ , to , USSR RKZ-2 1780 MHZ 
+15436	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 
+15437	1977-07-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RKZ-2 1780 MHZ , to , USSR RKZ-5 1780 MHZ 
+15438	1984-04-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RKZ-5 1780 MHZ , to , RUSSIA/USSR MARS UNSPECIFIED 
+15439	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+15440	1988-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , RUSSIA/USSR MARS UNSPECIFIED , to , RUSSIA/USSR MRZ UNSPECIFIED 
+15439	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+15444	1993-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ UNSPECIFIED 
+15447	1996-03-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 
+15447	1996-03-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 

@@ -1,0 +1,36 @@
+	date_time	sensor_id	value	source	comment
+0	1957-07-01 00:00:00	RS6 	1	SCH	  RS6 USSR RZ-049 radiosonde, radiation and lag corrections {1957}^ (I=S1, T=274,337) <F=V403MB,P=2A,T=B,U=H,W=O or Dm>
+4750	1975-05-21 12:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+10430	1987-02-11 12:00:00	MR5 	1	SCH	  MR5 Mixed Russia RKZ-5 (RK5, DP to or near top) and MARS-2-2 (RRB, DP to T around -40), both using Meteorit-2 radar^
+10438	1987-02-16 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+10509	1987-04-15 00:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+10510	1987-04-16 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+10792	1987-12-20 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+10796	1987-12-24 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+10797	1987-12-25 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+10996	1988-06-03 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+10997	1988-06-04 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+12448	1991-10-22 00:00:00	RRb 	1	SCH	  RRb USSR MARS-2-2 radiosonde, automated processing, dew point to or near top {~1987} 31313=72903^
+14231	1996-08-27 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+14232	1997-02-19 00:00:00	RRb 	1	SCH	  RRb USSR MARS-2-2 radiosonde, automated processing, dew point to or near top {~1987} 31313=72903^
+0	2013-01-01 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+4	2013-01-05 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+184	2013-06-09 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+194	2013-06-20 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+195	2013-06-21 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+203	2013-06-29 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+204	2013-06-30 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+213	2013-07-09 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+214	2013-07-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+253	2013-08-16 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1850	2017-07-01 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2537	2019-02-07 23:31:00	58	2	WMO	AVK-BAR (Russian Federation)                
+3026	2021-03-01 00:00:00	119	2	WMO	Polus-MRZ-N1 (Russian Federation)                            
+1570	1962-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR A-22-III 
+1572	1965-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , USSR A-22-III , to , USSR A-22-IV 403 MHZ TRANSPONDER 
+1573	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+1574	1987-03-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS-2-2 
+1573	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+1577	1993-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS OR MRZ UNSPECIFIED 
+1579	1996-05-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS-2-2 AUTOMATED PROCESSN 
+1582	2007-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 

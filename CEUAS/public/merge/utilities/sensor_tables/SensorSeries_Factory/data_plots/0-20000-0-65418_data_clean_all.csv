@@ -1,0 +1,5 @@
+	date_time	sensor_id	value	source	comment
+0	1973-01-26 12:00:00	G4  	1	SCH	  [23,24,25|05,15] French Mesural or Metox (There may be some radiation heating at 300 mb through 1976 as in stations 65578 and 91925)
+1633	1992-04-01 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+1644	2006-05-29 12:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+5167	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL FMO 1950A 

@@ -1,0 +1,10 @@
+	date_time	sensor_id	value	source	comment
+0	1955-01-04 16:00:00	U4b 	1	SCH	  U4b USA Bendix AN/AMT-4B LiCl hygristor radiosonde {~ 1954}^ (I=E7) <F=V1680PB,P=A,T=TR,U=L(ML-418/AMT-4),W=Da(AN/GMD-1)>
+3954	1961-02-02 18:00:00	U4B 	1	SCH	  U4B USA Bendix AN/AMT-4B carbon hygristor radiosonde {~ 1955}^ <F=V1680PB,P=A,T=TR(ML-419/AM,FSN=6660-752-7528),U=C(ML-476),W=Da(AN/GMD-1)>
+7812	1973-05-19 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+7815	1985-09-09 14:00:00	Z5C 	1	SCH	  Z5C VIZ model 1560-510 US Army ML-659(V)3 1680 MHz MDS RDF {~1986}^ (T=485) <F=T1680DL,P=Ac,T=TR,U=C,W=Ra>
+8434	1988-06-06 23:00:00	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+10384	1995-02-28 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+16265	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED , ? 
+16265	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED , ? 
+16268	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED , ? 

@@ -1,0 +1,7 @@
+	Unnamed: 0	date_time	sensor_id	value	source	comment
+0	0	1958-05-25 11:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+2703	2703	1978-10-12 11:00:00	V2_ 	1	SCH	  V2_ Vaisala RS21 unspecified model {1974} WMO instr=36^ (W3=36, T=037)
+5139	5139	1986-12-08 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+2107		1978-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VAISALA RS21 UNSPECIFIED 
+2109		1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+2111		1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 

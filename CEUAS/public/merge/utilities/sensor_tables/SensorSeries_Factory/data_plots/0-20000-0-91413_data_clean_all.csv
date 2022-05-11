@@ -1,0 +1,77 @@
+	date_time	sensor_id	value	source	comment
+0	1948-11-09 03:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+2243	1951-06-21 03:00:00	--- 	1	SCH	  --- exact type insufficiently documented
+25577	1988-10-01 00:00:00	ZKB 	1	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"
+31111	1995-12-01 00:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+31839	1996-11-27 12:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+31850	1996-12-02 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+31851	1996-12-03 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+31866	1996-12-10 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+31867	1996-12-11 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+31901	1996-12-25 00:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+31902	1996-12-25 06:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+31966	1997-01-25 00:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+31967	1997-01-25 12:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+31969	1997-01-26 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+31970	1997-01-27 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+31980	1997-02-01 00:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+31981	1997-02-01 12:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+31993	1997-02-07 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+31996	1997-02-09 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+31999	1997-02-10 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32000	1997-02-11 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32010	1997-02-16 00:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32011	1997-02-16 12:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32022	1997-02-22 00:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32023	1997-02-22 12:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32045	1997-03-05 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32046	1997-03-06 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32053	1997-03-09 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32054	1997-03-10 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32061	1997-03-13 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32062	1997-03-14 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32086	1997-03-26 00:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32087	1997-03-26 12:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32105	1997-04-04 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32107	1997-04-05 12:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32122	1997-04-13 00:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32123	1997-04-13 12:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32131	1997-04-17 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32132	1997-04-18 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32149	1997-04-26 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32150	1997-04-27 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32151	1997-04-27 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32152	1997-04-28 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32163	1997-05-03 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32164	1997-05-04 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32176	1997-05-10 00:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32178	1997-05-11 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32183	1997-05-13 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32184	1997-05-14 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+32197	1997-05-20 12:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+32198	1997-05-21 00:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+36981	2004-01-22 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+36982	2004-02-11 12:00:00	VU3 	1	SCH	  VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+0	2013-01-01 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+383	2013-07-06 12:00:00	75	2	WMO	AVK-MRZ-ARMA (Russian Federation)                
+384	2013-07-06 18:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+522	2013-09-06 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+523	2013-09-07 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+605	2013-10-19 12:00:00	113	2	WMO	Vaisala RS92/MARWIN MW32 (Finland)                           
+606	2013-10-20 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+742	2013-12-25 00:00:00	67	2	WMO	Vaisala RS80/Digicora III (Finland)               
+743	2013-12-25 12:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+752	2013-12-30 00:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+753	2013-12-30 12:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+761	2014-01-03 12:00:00	125	2	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           
+762	2014-01-04 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+941	2014-04-15 12:00:00	72	2	WMO	Vaisala RS90/PC-Cora (Finland)                
+942	2014-04-16 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+945	2014-04-17 12:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+946	2014-04-17 23:02:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+1646	2015-04-14 12:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+1690	2015-05-05 11:24:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1691	2015-05-06 00:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+4700	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+4701	1988-10-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 
+4707	1995-12-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VAISALA RS80-56H NWS SOLAR/IR CORR 

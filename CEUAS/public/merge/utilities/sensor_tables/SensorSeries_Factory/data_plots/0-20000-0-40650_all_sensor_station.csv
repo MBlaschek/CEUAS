@@ -1,0 +1,11 @@
+	sensor_id	source	comment	date_time	value
+520	85	WMO	Sippican MARK IIA with chip thermistor, carbon element and derived pressure   from GPS height   		
+0	V18 	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>		
+15430	V8A 	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
+16680	VCG 	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
+16708	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+16727	ZPg 	SCH	  ZPg Sippican model 1648-611 MK IIA/LMS5 Microsonde 403 MHz DGPS Line of Sight (LOS), no pressure, carbon U {2003} 31313=58508^ (W3=85) <F=T403DL,P=0,		
+7446	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 	1982-01-01	3.0
+7448	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1986-01-01	3.0
+7448	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1986-01-01	3.0
+7448	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1986-01-01	3.0

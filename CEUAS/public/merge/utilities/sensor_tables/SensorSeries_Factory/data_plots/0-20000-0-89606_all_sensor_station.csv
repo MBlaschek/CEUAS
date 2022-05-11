@@ -1,0 +1,9 @@
+	sensor_id	source	comment	date_time	value
+6899	MRr 	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^		
+0	RA4 	SCH	  RA4 USSR A-22-IV transponder radiosonde {1961}^ (W2=12, T=074) <F=V403ME,P=2A,T=BC,U=G,W=T216m>		
+3783	RK5 	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>		
+7257	RZ3 	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+5336	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+1584	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR A-22-IV 403 MHZ TRANSPONDER 	1965-01-01	3.0
+1586	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+1586	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0

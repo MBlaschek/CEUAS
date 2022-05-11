@@ -1,0 +1,15 @@
+	sensor_id	source	comment	date_time	value
+402	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
+7326	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+8280	125	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           		
+5332	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+0	BCK 	SCH	  BCK Czech MARS 1 K radiosonde, assumed similar to RKZ-2 {~ 1970}^		
+41200	MB1 	SCH	  MB1 Mixed Czech Vinohrady (BCV) and Vaisala RS80 DigiCORA (VC_)^ Station 11520 in early 1992, mixed WMO=61 (VC_, Vaisala RS80 DigiCORA, reported by 31313 or with complete DP) and		
+51125	M__ 	SCH	  M__ Multiple instruments, use 31313 info^  If 31313 is not present, apply no corrections.  (This instrument type should be assigned only when all or almost all observations		
+41534	VC_ 	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
+4565	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1976-01-01	3.0
+4565	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1976-01-01	3.0
+4565	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1976-01-01	3.0
+4565	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1976-01-01	3.0
+4576	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1992-12-01	3.0

@@ -1,0 +1,8 @@
+	sensor_id	source	comment	date_time	value
+5	117	WMO	Graw DFM-09 (Germany)                            		
+7053	DGM 	SCH	  DGM Germany Graw DFM06-TU-GPS radiosonde {2006} 31313=51808 or 51708^ <F=T402-406DL,P=0,T=TB,U=A,N=GC>		
+0	GKB 	SCH	  GKB Britain Kew Mark IIB radiosonde with lag and radiation corrections {1956}^		
+7046	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+9811	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK IIB UNSPECIFIED 	1960-01-01	3.0
+9813	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1986-01-01	3.0
+9815	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1989-01-01	3.0

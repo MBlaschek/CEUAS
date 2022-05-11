@@ -1,0 +1,15 @@
+	date_time	sensor_id	value	source	comment
+0	1956-12-28 15:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+10261	1976-01-20 12:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+36436	2010-03-20 12:00:00	H9G 	1	SCH	"  H9G China Shanghai Radio Factory #23 GZZ-9, GZZ9, GTS1 1675 MHz, or ""Shang/E, L band radar"" (electronic) radiosonde {2002} 31313=63203 (132)^ <F=T1675DL,"
+36437	2010-03-21 00:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+36438	2010-03-21 12:00:00	H9G 	1	SCH	"  H9G China Shanghai Radio Factory #23 GZZ-9, GZZ9, GTS1 1675 MHz, or ""Shang/E, L band radar"" (electronic) radiosonde {2002} 31313=63203 (132)^ <F=T1675DL,"
+36439	2010-03-22 00:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+36459	2010-04-01 00:00:00	H9G 	1	SCH	"  H9G China Shanghai Radio Factory #23 GZZ-9, GZZ9, GTS1 1675 MHz, or ""Shang/E, L band radar"" (electronic) radiosonde {2002} 31313=63203 (132)^ <F=T1675DL,"
+3582	1957-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , USSR RZ-049 UNSPECIFIED 
+3585	1966-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RZ-049 UNSPECIFIED , to , CHINA GZZ-2 403 MHZ 
+3586	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 
+3586	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 
+3586	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 
+3586	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 
+3586	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 

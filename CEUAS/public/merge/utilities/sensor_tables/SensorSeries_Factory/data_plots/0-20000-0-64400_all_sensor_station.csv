@@ -1,0 +1,8 @@
+	sensor_id	source	comment	date_time	value
+2713	117	WMO	Graw DFM-09 (Germany)                            		
+2968	150	WMO	Meteolabor SRS-C50/Argus (Switzerland)                            		
+2703	154	WMO	Graw DFM-17 (Germany)                            		
+489	177	WMO	Modem GPSonde M10 (France)                           		
+1262	57	WMO	Modem M2K2-DC (France)                		
+450	79	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            		
+0	W__ 	SCH	  W__ Wind only, method unspecified^		

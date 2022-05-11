@@ -1,0 +1,9 @@
+	sensor_id	source	comment	date_time	value
+0	V18 	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>		
+14453	W00 	SCH	  W00 exact type insufficiently documented		
+14821	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+14155	IGRA2	IGRA2	USING SONDE MODEL , I1 , USWB BENDIX UNSPECIFIED 	1960-01-01	3.0
+14157	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1976-01-01	3.0
+14157	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1976-01-01	3.0
+14157	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1976-01-01	3.0
+14163	IGRA2	IGRA2	USING SONDE MODEL , VAISALA UNSPECIFIED 	1990-12-01	3.0

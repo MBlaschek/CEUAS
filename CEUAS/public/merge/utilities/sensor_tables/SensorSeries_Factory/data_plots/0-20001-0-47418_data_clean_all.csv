@@ -1,0 +1,5 @@
+	date_time	sensor_id	value	source	comment
+0	2010-03-15 00:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+0	2013-01-01 00:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+3764	2018-02-27 11:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+3778	2018-03-07 13:00:00	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     

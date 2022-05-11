@@ -1,0 +1,52 @@
+	date_time	sensor_id	value	source	comment
+0	1956-02-04 09:00:00	ICA 	1	SCH	  ICA India clock drive single 397 MHz transmitter radiosonde {1958}^ <F=V397HC,P=A,T=BC,U=W>
+4865	1968-10-16 00:00:00	IA1 	1	SCH	  IA1 India 401 MHz Audiomodulated radiosonde {1967}^ (W1=18, T=181) <F=V401AB,P=A,T=TR,U=L>
+6959	1970-11-15 00:00:00	IA2 	1	SCH	  IA2 India 1680 MHz Audiomodulated radiosonde {1967}^ (W1=18, T=182)
+13554	1976-06-06 12:00:00	IA4 	1	SCH	  IA4 India 1680 MHz Audiomodulated transistorized radiosonde {1975} WMO instr=20^ (W1=18, W3=20, T=182) <F=T1680AB,P=A,T=TR,U=L>
+17189	1979-03-02 17:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+17464	1979-05-12 13:00:00	IA4 	1	SCH	  IA4 India 1680 MHz Audiomodulated transistorized radiosonde {1975} WMO instr=20^ (W1=18, W3=20, T=182) <F=T1680AB,P=A,T=TR,U=L>
+20680	1981-10-07 12:00:00	IA6 	1	SCH	  IA6 India 1680 MHz Audiomodulated or Mark 3 new thermistor radiosonde {198002} WMO instr=20^ (W1=18, W3=20, T=182) <F=T1680AB,P=A,T=TR,U=L>
+28758	1988-05-31 12:00:00	IA8 	1	SCH	  IA8 India 1680 MHz Audiomodulated or Mark 3 new humidity duct radiosonde {1988} WMO instr=20^ (W1=18, W3=20, T=182) <F=T1680AB,P=A,T=TR,U=L>
+35415	1994-02-03 11:00:00	I32 	1	SCH	  I32 India 1680 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=184, W2=22, W3=20) <F=T1680FB,P=A,T=TR,U=L>
+46251	2003-10-16 12:00:00	MI2 	1	SCH	  MI2 Mixed India 1680 MHz Mark 3 (I32) and Mark 4 (I42)^ Mixed 1680 MHz India Mark 3 (I32, DP usually ends with T around -10 C but very irregular,
+46275	2003-10-24 11:00:00	I32 	1	SCH	  I32 India 1680 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=184, W2=22, W3=20) <F=T1680FB,P=A,T=TR,U=L>
+46303	2003-11-03 12:00:00	MI2 	1	SCH	  MI2 Mixed India 1680 MHz Mark 3 (I32) and Mark 4 (I42)^ Mixed 1680 MHz India Mark 3 (I32, DP usually ends with T around -10 C but very irregular,
+46429	2003-12-18 12:00:00	I32 	1	SCH	  I32 India 1680 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=184, W2=22, W3=20) <F=T1680FB,P=A,T=TR,U=L>
+46443	2003-12-22 12:00:00	I42 	1	SCH	  I42 India 1680 MHz Mark 4 carbon hygristor radiosonde {2003}, sometimes 31313=02002^ <F=T1680FL,P=A,T=TR,U=C>
+48253	2006-01-03 02:00:00	MI2 	1	SCH	  MI2 Mixed India 1680 MHz Mark 3 (I32) and Mark 4 (I42)^ Mixed 1680 MHz India Mark 3 (I32, DP usually ends with T around -10 C but very irregular,
+48383	2006-02-17 12:00:00	I42 	1	SCH	  I42 India 1680 MHz Mark 4 carbon hygristor radiosonde {2003}, sometimes 31313=02002^ <F=T1680FL,P=A,T=TR,U=C>
+48480	2006-03-29 12:00:00	I46 	1	SCH	  I46 India 1680 MHz Mark 4 modified radiosonde {2006} 31313=59002^  <F=T1680FL,P=S,T=TR,U=C>
+48500	2006-04-04 00:00:00	I42 	1	SCH	  I42 India 1680 MHz Mark 4 carbon hygristor radiosonde {2003}, sometimes 31313=02002^ <F=T1680FL,P=A,T=TR,U=C>
+48502	2006-04-04 12:00:00	I46 	1	SCH	  I46 India 1680 MHz Mark 4 modified radiosonde {2006} 31313=59002^  <F=T1680FL,P=S,T=TR,U=C>
+48783	2006-07-13 12:00:00	I42 	1	SCH	  I42 India 1680 MHz Mark 4 carbon hygristor radiosonde {2003}, sometimes 31313=02002^ <F=T1680FL,P=A,T=TR,U=C>
+48784	2006-07-14 01:00:00	I46 	1	SCH	  I46 India 1680 MHz Mark 4 modified radiosonde {2006} 31313=59002^  <F=T1680FL,P=S,T=TR,U=C>
+179	2013-12-31 01:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+1238	2015-10-16 12:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+2092	2016-10-25 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+2093	2016-10-25 11:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+2392	2017-03-20 00:00:00	145	2	WMO	Beijing Changfeng CF-06 (China)*                           
+2395	2017-03-20 23:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+2546	2017-05-29 00:00:00	66	2	WMO	Vaisala RS80 /Autosonde (Finland)               
+2547	2017-05-30 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+2887	2018-02-07 00:00:00	163	2	WMO	Modem M20 radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (France)             
+2888	2018-02-08 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4672	2019-12-05 23:00:00	76	2	WMO	AVK-RF95-ARMA (Russian Federation)                
+4673	2019-12-07 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4987	2020-06-21 23:00:00	49	2	WMO	VIZ MARK II (United States)              
+4988	2020-06-22 23:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+5541	2021-12-08 12:00:00	145	2	WMO	Beijing Changfeng CF-06 (China)*                           
+6339	1966-08-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , INDIA CLOCK TYPE 
+6341	1968-10-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , INDIA CLOCK TYPE , to , INDIA AUDIOMODULATED 
+6342	1970-11-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMODULATED 401 MHZ , to , INDIA AUDIOMODULATED 1680 MHZ 
+6344	1975-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMODULATED 1680 MHZ , to , INDIA AUDIOMODULATED 1680 MHZ TRANSISTO 
+6345	1980-02-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMODULATED 1680 MHZ TRANSISTO , to , INDIA AUDIOMOD 1680 MHZ NEW THERMISTOR 
+6347	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6348	1986-09-01 00:00:00	IGRA2	3	IGRA2	CHANGE GROUND EQUIP , G2 , NONE , to , RADIOSONDE GROUND EQUIP (RSGE) 401 MHZ 
+6349	1986-09-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I2 , NONE , to , INDIA AUDIOMOD 401 MHZ NEW THERMISTOR 
+6347	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6353	1988-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I2 , INDIA AUDIOMOD 401 MHZ NEW THERMISTOR , to , INDIA AUDIOMOD 401 MHZ NEW HUMIDITY DUC 
+6347	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6347	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6360	1992-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMOD 1680 MHZ NEW HUMIDTY DUC , to , INDIA MARK 3 1680 MHZ 1992 VERSION 
+6362	2003-10-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA MARK 3 1680 MHZ 1992 VERSION , to , INDIA MARK 4 1680 MHZ CARBON HYGRISTOR 
+6365	2006-03-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA MARK 4 1680 MHZ CARBON HYGRISTOR , to , INDIA MARK 4 1680 MHZ MODIFIED 

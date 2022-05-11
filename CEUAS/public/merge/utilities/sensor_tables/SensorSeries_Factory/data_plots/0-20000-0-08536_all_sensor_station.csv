@@ -1,0 +1,7 @@
+	sensor_id	source	comment	date_time	value
+2509	124	WMO	Vaisala RS41/AUTOSONDE (Finland)                            		
+2512	142	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     		
+0	CPC 	SCH	  CPC Canada/Portugal VIZ type Model IV radiosonde {1966}^ with carbon hygristor (W1=06 called Portugal, W2=06 ending 198607, many reports 1989-1991)		
+22109	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+19435	ZH_ 	SCH	  ZH_ VIZ 1292 series, unspecified model {1973}^		
+10475	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1976-01-01	3.0

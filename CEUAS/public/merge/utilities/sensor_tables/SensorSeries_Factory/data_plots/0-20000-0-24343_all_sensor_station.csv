@@ -1,0 +1,32 @@
+	sensor_id	source	comment	date_time	value
+1602	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+192	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+181	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+3248	160	WMO	MARL-A or Vektor-M – I-2012 (Russian Federation)                        		
+1520	162	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        		
+1372	182	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      		
+248	20	WMO	Indian Meteorological Service MK3 (India)              		
+8	27	WMO	AVK-MRZ (Russian Federation)                		
+3886	58	WMO	AVK-BAR (Russian Federation)                		
+2145	59	WMO	Modem M2K2-R 1680 MHz RDF radiosonde with pressure sensor chip (France)        		
+17	88	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              		
+0	89	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              		
+2314	90	WMO	Radiosonde not specified or unknown             		
+728	99	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        		
+29597	MR5 	SCH	  MR5 Mixed Russia RKZ-5 (RK5, DP to or near top) and MARS-2-2 (RRB, DP to T around -40), both using Meteorit-2 radar^		
+24319	MRu 	SCH	  MRu Mixed Russia A-22 (RA4) and RKZ-5 (RK5), not distinguishable^		
+20310	RK5 	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>		
+29620	RRB 	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>		
+0	RS3 	SCH	  RS3 USSR RZ-043 radiosonde {1944}^ <F=V7.5MR,P=D,T=B,U=H>		
+35423	RZ3 	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+39426	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+11639	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 	1960-01-01	3.0
+11640	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR RZ-049 UNSPECIFIED , to , USSR A-22 UNSPECIFIED 	1962-12-01	3.0
+11641	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 	1976-01-01	3.0
+11642	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , USSR RKZ-5 1780 MHZ 	1979-05-01	3.0
+11643	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR RKZ-5 1780 MHZ , to , RUSSIA/USSR MARS UNSPECIFIED 	1986-07-01	3.0
+11644	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+11644	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+11648	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ UNSPECIFIED 	1992-12-01	3.0
+11650	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 	1996-05-01	3.0
+11650	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 	1996-05-01	3.0

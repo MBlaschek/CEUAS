@@ -1,0 +1,125 @@
+	date_time	sensor_id	value	source	comment
+0	1956-09-04 03:00:00	ZF12	1	SCH	  ZF12 exact type insufficiently documented
+14823	1973-05-06 00:00:00	ZF1c	1	SCH	  ZF1c VIZ model 1192 NWS 1680 MHz, new hygristor duct, censoring  {1973}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+18157	1976-01-21 12:00:00	ZH1c	1	SCH	  ZH1c VIZ model 1292-410 NWS 1680 MHz baseline, censoring {1973}^ (W1=19 calls this VIZ 1292, T=427) NWS stock no. J005 <F=V1680AB,P=A,T=TR(ML-405),U=C,
+18875	1976-09-08 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+19145	1976-12-01 00:00:00	ZH1c	1	SCH	  ZH1c VIZ model 1292-410 NWS 1680 MHz baseline, censoring {1973}^ (W1=19 calls this VIZ 1292, T=427) NWS stock no. J005 <F=V1680AB,P=A,T=TR(ML-405),U=C,
+19874	1977-06-17 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+20119	1977-12-08 00:00:00	AA74	1	SCH	  AA74 exact type insufficiently documented
+22253	1980-01-01 00:00:00	AP13	1	SCH	  AP13 exact type insufficiently documented
+22431	1980-03-30 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+22478	1980-05-05 00:00:00	AP13	1	SCH	  AP13 exact type insufficiently documented
+22756	1980-08-13 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+22856	1980-09-15 00:00:00	AP13	1	SCH	  AP13 exact type insufficiently documented
+26833	1984-10-13 12:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+27379	1985-03-01 00:00:00	AP13	1	SCH	  AP13 exact type insufficiently documented
+27606	1985-04-28 12:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+35318	1990-10-22 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+35400	1990-11-12 12:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+36388	1991-10-04 18:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+36594	1991-11-26 12:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+39137	1993-11-20 18:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+39341	1994-01-11 12:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+40758	1995-01-21 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+40895	1995-02-25 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+41777	1995-10-20 00:00:00	MZd 	1	SCH	  MZd Mixed VIZ 1392-521 Thailand (ZJt) and AIR IS-4A-403 Thailand (UA4), no 31313, not always distinguishable^ Station 48407 in late 1990s, obs not reliably distinguishable because DP
+41834	1995-11-04 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+42065	1996-01-02 00:00:00	MZd 	1	SCH	  MZd Mixed VIZ 1392-521 Thailand (ZJt) and AIR IS-4A-403 Thailand (UA4), no 31313, not always distinguishable^ Station 48407 in late 1990s, obs not reliably distinguishable because DP
+43124	1996-10-01 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+43355	1996-11-28 12:00:00	MZd 	1	SCH	  MZd Mixed VIZ 1392-521 Thailand (ZJt) and AIR IS-4A-403 Thailand (UA4), no 31313, not always distinguishable^ Station 48407 in late 1990s, obs not reliably distinguishable because DP
+44614	1997-10-23 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+44776	1997-12-03 00:00:00	MZd 	1	SCH	  MZd Mixed VIZ 1392-521 Thailand (ZJt) and AIR IS-4A-403 Thailand (UA4), no 31313, not always distinguishable^ Station 48407 in late 1990s, obs not reliably distinguishable because DP
+44789	1997-12-06 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+44931	1998-01-11 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+44947	1998-01-15 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+45014	1998-02-01 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+45026	1998-02-04 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+45030	1998-02-05 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+45074	1998-02-16 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+45129	1998-03-02 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+45137	1998-03-04 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+45276	1998-04-08 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+45442	1998-05-20 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+45456	1998-05-23 12:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+45687	1998-07-22 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+45689	1998-07-22 12:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+46952	1999-06-19 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+46956	1999-06-20 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+47521	1999-11-17 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+47795	2000-01-27 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+47875	2000-02-16 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+47891	2000-02-20 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+47899	2000-02-22 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+47931	2000-03-01 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+47991	2000-03-16 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+47995	2000-03-17 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48259	2000-05-29 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+48262	2000-05-30 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48371	2000-06-29 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+48390	2000-07-04 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48400	2000-07-07 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+48414	2000-07-11 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48464	2000-07-24 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+48524	2000-08-08 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48556	2000-08-16 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+48581	2000-08-23 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48670	2000-09-17 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+48733	2000-10-03 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48817	2000-10-24 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+48849	2000-11-01 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48853	2000-11-02 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+48877	2000-11-08 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48921	2000-11-19 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+49045	2000-12-20 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49095	2001-01-02 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+49135	2001-01-12 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49231	2001-02-05 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+49267	2001-02-14 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49279	2001-02-17 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+49315	2001-02-26 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49391	2001-03-17 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+49431	2001-03-27 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49435	2001-03-28 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+49463	2001-04-04 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49522	2001-04-19 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+49550	2001-04-26 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49570	2001-05-01 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+49582	2001-05-04 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49586	2001-05-05 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+49610	2001-05-11 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49614	2001-05-12 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+49642	2001-05-19 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49693	2001-06-01 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+49723	2001-06-09 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49808	2001-07-01 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+49812	2001-07-02 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49851	2001-07-12 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+49871	2001-07-17 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49930	2001-08-01 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+49950	2001-08-06 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+50008	2001-08-21 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+50016	2001-08-23 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+51045	2002-05-14 00:00:00	ZJt 	1	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>
+51049	2002-05-15 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+51676	2002-10-27 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+51861	2002-12-12 12:00:00	Vhr 	1	SCH	  Vhr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702, assumed H-Humicap^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+54747	2004-12-18 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+54829	2005-01-08 00:00:00	Vhr 	1	SCH	  Vhr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702, assumed H-Humicap^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+54914	2005-01-29 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+55010	2005-02-23 00:00:00	Vhr 	1	SCH	  Vhr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702, assumed H-Humicap^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+55641	2005-08-07 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+55834	2005-09-28 00:00:00	Vhr 	1	SCH	  Vhr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702, assumed H-Humicap^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+61595	2009-11-27 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+63846	2011-08-23 00:00:00	BFI 	1	SCH	  BFI South Africa InterMet Africa iMet-2-BI 1680 MHz RDF radiosonde, automatic solar and IR corr {~2012}^ <F=T1680FL,P=Sp,T=TB,U=A,W=Ra
+63944	2011-10-08 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+3179	2016-06-03 00:00:00	97	2	WMO	iMet-2/iMet-1500 RDF radiosonde with pressure sensor chip (South Africa)          
+14491	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USWB BENDIX UNSPECIFIED 
+14492	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , VIZ UNSPECIFIED 
+14495	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 
+14496	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , AUSTRALIA PHILIPS RS4 UNSPECIFIED 
+14498	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+14492	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , VIZ UNSPECIFIED 
+14501	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+14504	1991-03-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , USA ATMOS INSTR RESEARCH UNSPECIFIED 
+14501	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+14506	1993-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , USA ATMOS INSTR RESEARCH UNSPECIFIED 

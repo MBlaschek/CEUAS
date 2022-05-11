@@ -1,0 +1,11 @@
+	date_time	sensor_id	value	source	comment
+0	1931-01-01 11:30:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+42829	1995-08-05 00:00:00	ZKB 	1	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"
+44128	1997-06-01 00:00:00	ZK2 	1	SCH	  ZK2 VIZ or Sippican model 1492-540 NWS B2 J031-1 1680 MHz RDF {1997} 31313=05102^ (W3=51,T=489) <F=T1680DL,P=Ac,T=TR (ML-405?),U=C,W=Da(ART-2)> NWS part
+51430	2007-06-07 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+51431	2007-06-18 12:00:00	ZRg 	1	SCH	  ZRg Sippican 1649-540 NWS J031-2 MK IIA Microsonde 1680 MHz GPS chip T, with P {2003} 31313=58708^ (W3=87) <F=T1680DL,P=Ac,T=TC,U=C,N=G> NWS part no.
+0	2013-01-01 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+604	2013-11-02 00:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+17176	1995-08-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ 
+17177	1997-06-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VIZ/SIPPICAN B2 1492-540 NWS 1680 MHZ 
+17178	2007-06-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ/SIPPICAN B2 1492-540 NWS 1680 MHZ , to , VIZ/SIPPICAN MICROSONDE MKIIA GPS 

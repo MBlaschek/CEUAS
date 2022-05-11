@@ -1,0 +1,33 @@
+	date_time	sensor_id	value	source	comment
+0	1926-01-11 15:00:00	BII 	1	SCH	  BII Italy Autovox IA/AMT-1680B carbon hygristor radiosonde {late 1960s}^ (W1=25 called Autovox 1680 IP and TR)
+28316	1985-06-10 00:00:00	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+0	2013-01-01 11:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+1213	2014-09-04 11:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2214	2016-01-20 11:01:06	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2217	2016-01-21 23:01:59	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2611	2016-08-11 00:44:37	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2612	2016-08-11 10:57:47	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2907	2017-01-06 10:56:31	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2910	2017-01-07 22:54:50	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2911	2017-01-08 10:55:52	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2913	2017-01-09 11:30:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2914	2017-01-09 23:46:46	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2918	2017-01-11 22:59:50	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2919	2017-01-12 10:52:45	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2920	2017-01-12 22:52:36	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2922	2017-01-13 22:55:55	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2925	2017-01-15 10:52:55	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2932	2017-01-18 23:04:04	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2935	2017-01-20 11:02:28	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2937	2017-01-21 10:57:22	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2938	2017-01-21 22:55:45	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2944	2017-01-24 22:53:22	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2945	2017-01-25 11:24:34	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2960	2017-02-01 22:56:57	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2962	2017-02-02 23:04:12	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2964	2017-02-03 23:01:38	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+7391	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ AN/AMT-12 UNSPECIFIED 
+7393	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+7393	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+7397	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+7397	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

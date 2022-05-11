@@ -1,0 +1,13 @@
+	date_time	sensor_id	value	source	comment
+0	1939-09-04 10:00:00	ZI_ 	1	SCH	  ZI_ VIZ 1392 series, unspecified model {late 1970s}^
+29826	1981-09-05 12:00:00	V21 	1	SCH	  V21 Vaisala RS21 early capacitive hygrometer radiosonde {1974} WMO instr=36^ <F=T25,400,1680FU,P=2Ac,T=BRc,U=A>
+36726	1991-05-16 11:00:00	ZKB 	1	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"
+38189	1994-01-02 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+38190	1996-07-08 00:00:00	VD_ 	1	SCH	  VD_ Vaisala RS80 PC Cora base case 31313=96299^ (W3=62) <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=none>
+38897	1998-08-14 12:00:00	VC_ 	1	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+0	2013-01-01 12:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+2383	2019-04-24 11:24:58	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+10478	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+10479	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+10480	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+10482	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

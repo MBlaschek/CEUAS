@@ -1,0 +1,3 @@
+	date_time	sensor_id	value	source	comment
+0	1944-07-18 01:00:00	VHN 	1	SCH	  VHN Vaisala RS80-15N or RS80-15NA radiosonde^ (T=020) <F=T403AL,P=Ac,T=CB,U=A,N=O>
+4270	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ (Generic) 

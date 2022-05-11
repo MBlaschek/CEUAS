@@ -1,0 +1,23 @@
+	date_time	sensor_id	value	source	comment
+0	1945-03-07 03:00:00	H1G 	1	SCH	  H1G China International Telecommunication Equipment Factory GZZ-1 Comb like Molchanov RZ-049 radiosonde {1955}^ (T=047) <F=V260(?)MB,P=A,T=B,U=H,W=O or Dm>
+9767	1974-04-01 12:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+32353	2005-01-31 23:00:00	H9G 	1	SCH	"  H9G China Shanghai Radio Factory #23 GZZ-9, GZZ9, GTS1 1675 MHz, or ""Shang/E, L band radar"" (electronic) radiosonde {2002} 31313=63203 (132)^ <F=T1675DL,"
+0	2013-01-01 11:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            
+5576	2020-08-20 11:15:20	202	2	WMO	NA
+5600	2020-09-01 12:00:00	2	2	WMO	 No radiosonde – passive target (e.g. reflector)                 
+5601	2020-09-01 23:15:12	202	2	WMO	NA
+5608	2020-09-05 12:00:00	2	2	WMO	 No radiosonde – passive target (e.g. reflector)                 
+5609	2020-09-05 23:15:11	202	2	WMO	NA
+5612	2020-09-07 12:00:00	2	2	WMO	 No radiosonde – passive target (e.g. reflector)                 
+5613	2020-09-07 23:15:15	202	2	WMO	NA
+5614	2020-09-08 12:00:00	2	2	WMO	 No radiosonde – passive target (e.g. reflector)                 
+5615	2020-09-08 23:15:52	202	2	WMO	NA
+5650	2020-09-26 11:15:47	201	2	WMO	NA
+5987	2021-03-13 23:15:24	202	2	WMO	NA
+6219	2021-07-07 23:15:16	201	2	WMO	NA
+6436	2021-10-24 11:15:10	200	2	WMO	NA
+3636	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 
+3636	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 
+3636	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 
+3636	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 
+3644	2006-03-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GTS1 1680 MHZ 

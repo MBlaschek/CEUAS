@@ -1,0 +1,14 @@
+	sensor_id	source	comment	date_time	value
+2909	112	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 		
+0	121	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        		
+4889	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+4823	145	WMO	Beijing Changfeng CF-06 (China)*                           		
+3312	177	WMO	Modem GPSonde M10 (France)                           		
+2721	5	WMO	 No radiosonde – active temperature-humidity profiler            		
+29	57	WMO	Modem M2K2-DC (France)                		
+0	C9  	SCH	  [21|24] VIZ Jinyang (Korea)		
+8491	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ AN/AMT-4B UNSPECIFIED 	1976-01-01	3.0
+8491	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ AN/AMT-4B UNSPECIFIED 	1976-01-01	3.0
+8495	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR , to , S KOREA JINYANG VIZ 1524-511 OMEGA WIND 	1987-01-01	3.0
+8496	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1989-01-01	3.0
+8497	IGRA2	IGRA2	USING SONDE MODEL , I1 , S KOREA JINYANG VIZ 1524-511 OMEGA WIND 	1992-12-01	3.0

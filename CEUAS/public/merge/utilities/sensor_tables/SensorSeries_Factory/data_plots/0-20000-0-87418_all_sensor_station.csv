@@ -1,0 +1,18 @@
+	sensor_id	source	comment	date_time	value
+3177	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+345	177	WMO	Modem GPSonde M10 (France)                           		
+0	79	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            		
+189	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+0	V18 	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>		
+17784	VCG 	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
+15932	VCV 	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>		
+18818	VNG 	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
+15731	W__ 	SCH	  W__ Wind only, method unspecified^		
+17783	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+279	IGRA2	IGRA2	CHANGE SONDE MODEL , VAISALA RS18 , to , VAISALA RS21 UNSPECIFIED 	1976-01-01	3.0
+280	IGRA2	IGRA2	CHANGE SONDE MODEL , VAISALA RS21 UNSPECIFIED , to , VAISALA RS80 UNSPECIFIED 	1984-01-01	3.0
+282	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 	1986-01-01	3.0
+283	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0
+284	IGRA2	IGRA2	CHANGE SONDE MODEL , VAISALA RS80 UNSPECIFIED , to , VIZ MK II SERIES MICROSONDE UNSPECIFIED 	1991-01-01	3.0
+283	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0
+286	IGRA2	IGRA2	USING SONDE MODEL , I2 , VIZ UNSPECIFIED 	1992-12-01	3.0

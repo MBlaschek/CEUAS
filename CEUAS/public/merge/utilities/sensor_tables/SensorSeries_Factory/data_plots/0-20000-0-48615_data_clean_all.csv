@@ -1,0 +1,62 @@
+	date_time	sensor_id	value	source	comment
+0	1954-07-04 10:00:00	V18 	1	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>
+17623	1977-01-07 00:00:00	V21 	1	SCH	  V21 Vaisala RS21 early capacitive hygrometer radiosonde {1974} WMO instr=36^ <F=T25,400,1680FU,P=2Ac,T=BRc,U=A>
+17792	1977-02-24 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+18008	1977-04-22 12:00:00	V21 	1	SCH	  V21 Vaisala RS21 early capacitive hygrometer radiosonde {1974} WMO instr=36^ <F=T25,400,1680FU,P=2Ac,T=BRc,U=A>
+27677	1984-05-02 00:00:00	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+33393	1988-08-01 00:00:00	VHN 	1	SCH	  VHN Vaisala RS80-15N or RS80-15NA radiosonde^ (T=020) <F=T403AL,P=Ac,T=CB,U=A,N=O>
+38968	1992-11-09 12:00:00	VC5 	1	SCH	  VC5 Vaisala RS80 DigiCORA I, II, or Marwin no corr, Omega wind 31313=06105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+44963	1997-10-01 00:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+45427	1998-02-12 00:00:00	VCN 	1	SCH	  VCN Vaisala RS80 DigiCORA I, II, or Marwin auto corr, no wind 31313=46100^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=none>
+46325	1998-10-12 00:00:00	MVC 	1	SCH	  MVC Mixed Vaisala RS80 DigiCORA no wind (VCN, 31313=46100) and RS80 DigiCORA GPS wind (VCG, 31313=46108)^ Station 48615 in 1999 after Omega is discontinued, 31313=46100 reported as
+46783	1999-03-01 00:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+49734	2001-12-30 00:00:00	VHg 	1	SCH	  VHg Vaisala RS80-15GH H-Humicap GPS radiosonde^ <F=T403FL,P=Ac,T=CB,U=A,N=G>
+54945	2005-10-20 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+54946	2005-10-20 12:00:00	VHg 	1	SCH	  VHg Vaisala RS80-15GH H-Humicap GPS radiosonde^ <F=T403FL,P=Ac,T=CB,U=A,N=G>
+54948	2005-10-21 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+54950	2005-10-21 12:00:00	VHg 	1	SCH	  VHg Vaisala RS80-15GH H-Humicap GPS radiosonde^ <F=T403FL,P=Ac,T=CB,U=A,N=G>
+54951	2005-10-22 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+54953	2005-10-22 12:00:00	VHg 	1	SCH	  VHg Vaisala RS80-15GH H-Humicap GPS radiosonde^ <F=T403FL,P=Ac,T=CB,U=A,N=G>
+54954	2005-10-23 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+54956	2005-10-23 12:00:00	VHg 	1	SCH	  VHg Vaisala RS80-15GH H-Humicap GPS radiosonde^ <F=T403FL,P=Ac,T=CB,U=A,N=G>
+55025	2005-11-12 12:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+0	2013-01-01 12:00:00	57	2	WMO	Modem M2K2-DC (France)                
+77	2013-01-24 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+89	2013-01-27 00:00:00	57	2	WMO	Modem M2K2-DC (France)                
+405	2013-04-22 12:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+413	2013-04-24 12:00:00	57	2	WMO	Modem M2K2-DC (France)                
+663	2013-07-02 01:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+672	2013-07-04 12:00:00	57	2	WMO	Modem M2K2-DC (France)                
+742	2013-07-22 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+746	2013-07-23 12:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+789	2013-08-04 12:00:00	57	2	WMO	Modem M2K2-DC (France)                
+793	2013-08-05 12:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+933	2013-09-16 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+2342	2014-10-01 00:00:00	57	2	WMO	Modem M2K2-DC (France)                
+2386	2014-10-14 00:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            
+2408	2014-10-21 00:00:00	57	2	WMO	Modem M2K2-DC (France)                
+2458	2014-11-04 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+2460	2014-11-04 12:00:00	57	2	WMO	Modem M2K2-DC (France)                
+2461	2014-11-05 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+2463	2014-11-05 12:00:00	57	2	WMO	Modem M2K2-DC (France)                
+2467	2014-11-06 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+2521	2014-11-27 12:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            
+2544	2014-12-04 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+2638	2015-01-04 12:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            
+3678	2015-10-11 12:00:00	1	2	WMO	NA
+3680	2015-10-12 00:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            
+5210	2016-12-21 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+8403	2020-02-24 12:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+9623	2021-11-23 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+9631	2021-11-27 12:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+9632	2021-11-28 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+9659	2021-12-11 12:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+9660	2021-12-12 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+9681	2021-12-22 12:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+9683	2021-12-23 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+9578	1972-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VAISALA RS21 UNSPECIFIED 
+9580	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+9581	1983-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS21 UNSPECIFIED , to , VAISALA RS80 UNSPECIFIED 
+9583	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+9583	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+9586	1993-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 

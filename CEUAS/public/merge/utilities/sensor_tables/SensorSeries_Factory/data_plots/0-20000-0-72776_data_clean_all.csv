@@ -1,0 +1,7 @@
+	date_time	sensor_id	value	source	comment
+0	1940-05-27 22:00:00	ZKB 	1	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"
+57081	1997-06-01 00:00:00	ZK2 	1	SCH	  ZK2 VIZ or Sippican model 1492-540 NWS B2 J031-1 1680 MHz RDF {1997} 31313=05102^ (W3=51,T=489) <F=T1680DL,P=Ac,T=TR (ML-405?),U=C,W=Da(ART-2)> NWS part
+0	2013-01-01 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+169	2013-04-01 19:00:00	152	2	WMO	Vaisala RS92-NGP/Intermet IMS-2000 (United States)                          
+17535	1994-09-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ 
+17536	1997-06-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VIZ/SIPPICAN B2 1492-540 NWS 1680 MHZ 

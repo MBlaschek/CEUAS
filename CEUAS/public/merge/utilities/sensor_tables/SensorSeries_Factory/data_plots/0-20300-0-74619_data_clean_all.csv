@@ -1,0 +1,5 @@
+	date_time	sensor_id	value	source	comment
+0	1982-08-03	W__ 	1	SCH	  W__ Wind only, method unspecified^
+17714	1982-01-01	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ OMEGA 
+17714	1982-01-01	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ OMEGA 
+17718	1989-01-01	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ (Generic) 

@@ -1,0 +1,10 @@
+	date_time	sensor_id	value	source	comment
+0	1963-07-01 11:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+18182	2001-12-19 10:00:00	VC_ 	1	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+18184	2001-12-22 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+19360	2010-01-26 11:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+3	2013-01-08 11:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+365	2014-08-06 11:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+386	2014-09-16 11:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+4194	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE METOX CT UNSPECIFIED 
+4196	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

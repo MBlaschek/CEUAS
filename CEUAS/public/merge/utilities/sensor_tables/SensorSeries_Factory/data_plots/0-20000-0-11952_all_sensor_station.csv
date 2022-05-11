@@ -1,0 +1,11 @@
+	sensor_id	source	comment	date_time	value
+1342	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
+5731	117	WMO	Graw DFM-09 (Germany)                            		
+2781	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+1559	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+0	BCK 	SCH	  BCK Czech MARS 1 K radiosonde, assumed similar to RKZ-2 {~ 1970}^		
+8851	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1982-01-01	3.0
+8851	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1982-01-01	3.0
+8851	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1982-01-01	3.0
+8858	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1994-06-01	3.0

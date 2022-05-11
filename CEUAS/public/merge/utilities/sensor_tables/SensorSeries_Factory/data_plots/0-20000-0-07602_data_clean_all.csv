@@ -1,0 +1,8 @@
+	date_time	sensor_id	value	source	comment
+0	1920-12-28 13:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+3853	1983-07-28 06:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+5016	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , MESURAL 
+5016	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , MESURAL 
+5018	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , MESURAL FMO 1950A 
+5016	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , MESURAL 
+5016	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , MESURAL 

@@ -1,0 +1,28 @@
+	date_time	sensor_id	value	source	comment
+0	1949-01-01 03:00:00	ZH1c	1	SCH	  ZH1c VIZ model 1292-410 NWS 1680 MHz baseline, censoring {1973}^ (W1=19 calls this VIZ 1292, T=427) NWS stock no. J005 <F=V1680AB,P=A,T=TR(ML-405),U=C,
+9971	1980-12-24 12:00:00	ZJAc	1	SCH	  ZJAc VIZ model 1392-510 NWS 1680 MHz Accu-Lok, new hygristor, censoring {1980}^ (T=001) NWS stock no. J031 <F=T1680AB,P=A,T=TR(ML-405),U=C,
+11836	1986-05-19 12:00:00	ZKAc	1	SCH	"   ZKAc VIZ model 1492-510 NWS 1680 MHz ART ""A"" Accu-Lok, censoring {1986} 31313=01002^ (T=003,W3=10) <F=T1680AL,P=Ab,T=TR(ML-405),U=C,W=Ra(WBRT/GMD-1)>"
+15179	1996-01-02 12:00:00	ZKBc	1	SCH	"  ZKBc VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok, censoring {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060 <F=T1680AL,P=Ab,"
+15316	1996-05-24 12:00:00	Zmr 	1	SCH	  Zmr VIZ/Sippican MK II Microsonde no rad corr, RDF wind 31313=04902 not NWS^
+15835	1997-09-22 12:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^
+17695	2003-06-05 11:00:00	ZKN 	1	SCH	  ZKN Sippican model 1492-540 NWS B2 J031-1 1680 MHz RDF, new RH coefficients {1999} 31313=05102^ (W3=51,T=489) <F=T1680DL,P=Ac,T=TR,U=C,W=Da(ART-2)>
+19681	2010-01-12 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+19682	2010-03-04 12:00:00	ZKN 	1	SCH	  ZKN Sippican model 1492-540 NWS B2 J031-1 1680 MHz RDF, new RH coefficients {1999} 31313=05102^ (W3=51,T=489) <F=T1680DL,P=Ac,T=TR,U=C,W=Da(ART-2)>
+19687	2010-03-25 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+19688	2010-06-14 12:00:00	ZKN 	1	SCH	  ZKN Sippican model 1492-540 NWS B2 J031-1 1680 MHz RDF, new RH coefficients {1999} 31313=05102^ (W3=51,T=489) <F=T1680DL,P=Ac,T=TR,U=C,W=Da(ART-2)>
+0	2013-02-14 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+145	2014-03-03 15:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+229	2014-05-31 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+230	2014-06-02 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+301	2014-08-13 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+302	2014-08-14 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+486	2015-02-21 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+487	2015-02-22 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+507	2015-03-31 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+508	2015-04-01 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+660	2015-12-11 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+1743	1980-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VIZ ACCU-LOK UNSPECIFIED 
+1746	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
+1748	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 
+1750	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+1750	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 

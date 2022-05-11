@@ -1,0 +1,36 @@
+	date_time	sensor_id	value	source	comment
+0	1944-03-03 00:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+45197	1992-10-28 12:00:00	C1  	1	SCH	  General VIZ type
+1175	2017-01-26 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2337	2020-05-06 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2403	2020-07-29 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2405	2020-08-02 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2407	2020-08-04 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2409	2020-08-05 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2428	2020-08-27 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2429	2020-08-28 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2433	2020-09-01 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2436	2020-09-03 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2442	2020-09-10 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2445	2020-09-14 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2451	2020-09-20 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2452	2020-09-21 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2459	2020-09-28 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2462	2020-10-01 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2481	2020-10-22 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2549	2021-01-12 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2554	2021-01-17 00:00:00	5	2	WMO	 No radiosonde – active temperature-humidity profiler            
+2555	2021-01-18 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2605	2021-03-13 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2622	2021-04-22 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2662	2021-06-03 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2663	2021-06-04 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2669	2021-06-10 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2670	2021-06-11 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2777	2021-10-05 00:00:00	3	2	WMO	 No radiosonde – active target (e.g. transponder)           
+2778	2021-10-06 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+2780	2021-10-08 00:00:00	34	2	WMO	Vinohrady (Czechia)                 
+2781	2021-10-09 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+10541	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+10541	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+10543	1993-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USA SPACE DATA UNSPECIFIED 

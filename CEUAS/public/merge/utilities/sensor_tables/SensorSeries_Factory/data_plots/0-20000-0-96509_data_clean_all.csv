@@ -1,0 +1,5 @@
+	date_time	sensor_id	value	source	comment
+0	1954-07-01 05:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+1525	2015-11-24 00:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+5820	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+5821	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , JAPAN MEISEI UNSPECIFIED 

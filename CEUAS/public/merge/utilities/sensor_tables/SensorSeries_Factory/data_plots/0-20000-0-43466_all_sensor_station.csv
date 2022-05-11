@@ -1,0 +1,21 @@
+	sensor_id	source	comment	date_time	value
+5101	113	WMO	Vaisala RS92/MARWIN MW32 (Finland)                           		
+5134	119	WMO	Polus-MRZ-N1 (Russian Federation)                            		
+2994	122	WMO	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         		
+5107	130	WMO	Meisei RS-06G (Japan)                            		
+3437	135	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            		
+4	55	WMO	Meisei RS-01G (Japan)                		
+2120	7	WMO	iMet-1-AB (United States)                		
+3218	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+0	GKB 	SCH	  GKB Britain Kew Mark IIB radiosonde with lag and radiation corrections {1956}^		
+32101	I31 	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>		
+21086	IA3 	SCH	  IA3 India 401 MHz Audiomodulated transistorized radiosonde {1975} WMO instr=20^ (W1=18, W3=20, T=181) <F=T401AB,P=A,T=TR,U=L>		
+22421	IA5 	SCH	  IA5 India 401 MHz Audiomodulated or Mark 3 new thermistor radiosonde {198002} WMO instr=20^ (W1=18, W3=20, T=181) <F=T401AB,P=A,T=TR,U=L>		
+28260	IA7 	SCH	  IA7 India 401 MHz Audiomodulated or Mark 3 new humidity duct radiosonde {1988} WMO instr=20^ (W1=18, W3=20, T=181) <F=T401AB,P=A,T=TR,U=L>		
+19085	WI4 	SCH	  WI4 India wind only 401-MHz transmitter {1970}^ <F=V401F->		
+19102	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
+2872	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN WHITELEY KEW MARK II 	1960-01-01	3.0
+2873	IGRA2	IGRA2	USING SONDE MODEL , I1 , AUSTRALIA PHILIPS UNSPECIFIED 	1986-01-01	3.0
+2874	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1989-01-01	3.0
+2875	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , WIND: INDIA 401 MHZ TRANSMITTER , to , INDIA MARK 3 401 MHZ 1992 VERSION 	1992-01-01	3.0
+2877	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 401 MHZ 1992 VERSION 	2004-04-01	3.0

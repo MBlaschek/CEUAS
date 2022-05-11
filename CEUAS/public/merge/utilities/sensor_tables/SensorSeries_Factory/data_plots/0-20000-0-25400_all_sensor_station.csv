@@ -1,0 +1,27 @@
+	sensor_id	source	comment	date_time	value
+2404	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+166	125	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           		
+131	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+2345	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+2548	153	WMO	AVK – I-2012 (Russian Federation)                          		
+3139	160	WMO	MARL-A or Vektor-M – I-2012 (Russian Federation)                        		
+4546	162	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        		
+0	27	WMO	AVK-MRZ (Russian Federation)                		
+485	58	WMO	AVK-BAR (Russian Federation)                		
+3740	69	WMO	MARL-A or Vektor-M-RZM-2 (Russian Federation)              		
+3142	89	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              		
+1101	9	WMO	 No radiosonde – system unknown or not specified          		
+2600	90	WMO	Radiosonde not specified or unknown             		
+13108	RA4 	SCH	  RA4 USSR A-22-IV transponder radiosonde {1961}^ (W2=12, T=074) <F=V403ME,P=2A,T=BC,U=G,W=T216m>		
+0	RSN 	SCH	  RSN USSR RZ-049 radiosonde, nontrackable transmitter {<= 1951}^ (I=S2) also known as RS-049, R-049, or Molchanov RS-049 (written P3-049 in Cyrillic),		
+20317	RZ3 	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+20063	WRA 	SCH	  WRA USSR A22 wind only {~ 1957}^ winds only <F=V403ME,P=2A,T=0,U=0,W=T216m>		
+13107	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+11858	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 	1960-01-01	3.0
+11859	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 	1976-01-01	3.0
+11860	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+11861	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , RUSSIA/USSR MRZ UNSPECIFIED 	1989-09-01	3.0
+11860	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+11865	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ UNSPECIFIED 	1992-12-01	3.0
+11867	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 	1996-05-01	3.0
+11867	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 	1996-05-01	3.0

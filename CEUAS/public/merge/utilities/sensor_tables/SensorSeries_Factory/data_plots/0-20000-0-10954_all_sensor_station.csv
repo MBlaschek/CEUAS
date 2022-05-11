@@ -1,0 +1,10 @@
+	sensor_id	source	comment	date_time	value
+4626	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
+1579	117	WMO	Graw DFM-09 (Germany)                            		
+4624	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+3458	18	WMO	Graw DFM-06 (Germany)                		
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+0	??? 	SCH	  ??? Unknown instrument category because data is not available for checking^		
+5487	IGRA2	IGRA2	USING SONDE MODEL , I1 , GERMANY GRAW H50 	1960-01-01	3.0
+5488	IGRA2	IGRA2	USING SONDE MODEL , I1 , GERMANY GRAW M60 UNSPECIFIED 	1976-01-01	3.0
+5488	IGRA2	IGRA2	USING SONDE MODEL , I1 , GERMANY GRAW M60 UNSPECIFIED 	1976-01-01	3.0

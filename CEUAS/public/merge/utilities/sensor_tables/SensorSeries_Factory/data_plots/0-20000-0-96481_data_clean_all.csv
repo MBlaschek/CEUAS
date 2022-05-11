@@ -1,0 +1,32 @@
+	date_time	sensor_id	value	source	comment
+0	1978-12-11 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+501	1984-08-24 00:00:00	V2_ 	1	SCH	  V2_ Vaisala RS21 unspecified model {1974} WMO instr=36^ (W3=36, T=037)
+1523	1987-08-12 00:00:00	CR  	1	SCH	  [13|16] Australian Astor RS4
+2359	1989-12-02 00:00:00	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+0	2013-01-01 00:00:00	57	2	WMO	Modem M2K2-DC (France)                
+263	2013-07-01 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+270	2013-07-09 00:00:00	57	2	WMO	Modem M2K2-DC (France)                
+271	2013-07-10 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+273	2013-07-13 00:00:00	57	2	WMO	Modem M2K2-DC (France)                
+274	2013-07-16 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+275	2013-07-17 00:00:00	57	2	WMO	Modem M2K2-DC (France)                
+298	2013-08-19 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+316	2013-09-16 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+1039	2014-10-14 00:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            
+1051	2014-10-21 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+1124	2014-11-27 00:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            
+1130	2014-12-04 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+1209	2015-01-16 00:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            
+1421	2015-05-14 12:00:00	7	2	WMO	iMet-1-AB (United States)                
+1422	2015-05-15 00:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            
+1856	2016-01-07 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1857	2016-01-07 12:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            
+2497	2016-12-21 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+4616	2020-04-02 12:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+9653	1978-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VAISALA RS21 UNSPECIFIED 
+9655	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+9658	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+9659	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , JAPAN MEISEI UNSPECIFIED 
+9660	1987-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS21 UNSPECIFIED , to , VAISALA RS80 UNSPECIFIED 
+9661	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+9661	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

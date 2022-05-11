@@ -1,0 +1,34 @@
+	date_time	sensor_id	value	source	comment
+0	1932-04-25 23:15:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+10668	1940-03-15 22:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+25096	1952-02-14 21:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+49063	1972-01-19 00:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+55651	1980-12-19 00:00:00	ZJ1 	1	SCH	  ZJ1 VIZ model 1392-410 NWS 1680 MHz baseline, new hygristor {1980}^ (W1=19 calls this VIZ 1392-401, T=441) NWS stock no. J030 <F=T1680AB,P=A,
+61363	1988-10-01 00:00:00	ZKB 	1	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"
+61664	1989-03-01 00:00:00	C4  	1	SCH	  [12,45,64|27,29] Space Data Systems (Space, SDS, MSS, SDC [Space Data Corp.], SDD [Space Data Division], or OSC [from SDD of Orbital
+62394	1990-03-01 00:00:00	USHc	1	SCH	  USHc USA Space Data ARTsonde 909-10-01, erroneous humidity software {1990} 31313=01202^ <F=T1680AL,P=A,T=TC,U=C(VIZ B)>
+66624	1995-11-01 00:00:00	VU1 	1	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>
+74285	2006-04-28 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+74289	2006-05-08 12:00:00	ZRg 	1	SCH	  ZRg Sippican 1649-540 NWS J031-2 MK IIA Microsonde 1680 MHz GPS chip T, with P {2003} 31313=58708^ (W3=87) <F=T1680DL,P=Ac,T=TC,U=C,N=G> NWS part no.
+0	2013-01-01 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+674	2013-12-03 20:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+682	2013-12-07 12:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+683	2013-12-08 00:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+688	2013-12-10 12:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+689	2013-12-11 00:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+690	2013-12-11 12:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+693	2013-12-13 00:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+6493	2021-10-08 15:30:37	154	2	WMO	Graw DFM-17 (Germany)                            
+6494	2021-10-08 23:03:21	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+6531	2021-10-26 15:27:42	154	2	WMO	Graw DFM-17 (Germany)                            
+6532	2021-10-26 23:11:05	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+6552	2021-11-05 15:41:55	154	2	WMO	Graw DFM-17 (Germany)                            
+16531	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
+16531	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
+16535	1988-10-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ ACCU-LOK UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 
+16536	1989-03-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , USA SPACE DATA UNSPECIFIED 
+16537	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+16539	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USA SPACE DATA UNSPECIFIED 
+16540	1995-06-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USA SPACE DATA UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 
+16541	1995-11-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VAISALA RS80-56H NWS SOLAR/IR CORR 
+16542	2006-05-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS80-56H NWS SOLAR/IR CORR , to , VIZ/SIPPICAN MICROSONDE MKIIA GPS 

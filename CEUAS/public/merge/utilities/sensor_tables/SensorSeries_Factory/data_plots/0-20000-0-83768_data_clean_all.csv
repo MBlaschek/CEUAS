@@ -1,0 +1,13 @@
+	date_time	sensor_id	value	source	comment
+0	1966-11-22 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+2156	1980-02-04 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+2158	2007-03-10 12:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+0	2013-01-01 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+4047	2018-09-01 12:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+4470	2019-04-03 11:30:21	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+4586	2019-06-01 12:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+4592	2019-06-04 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+4596	2019-06-06 12:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+2245	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 
+2247	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA (Generic) 
+2249	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 

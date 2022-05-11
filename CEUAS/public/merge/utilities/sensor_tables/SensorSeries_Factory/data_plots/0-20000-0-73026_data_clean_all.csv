@@ -1,0 +1,2 @@
+	date_time	sensor_id	value	source	comment
+0	1994-03-08	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

@@ -1,0 +1,204 @@
+	date_time	sensor_id	value	source	comment
+0	1950-01-26 16:01:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+37290	1982-07-21 12:00:00	MRu 	1	SCH	  MRu Mixed Russia A-22 (RA4) and RKZ-5 (RK5), not distinguishable^
+37832	1982-12-08 00:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+42313	1986-02-14 06:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+42485	1986-03-29 00:00:00	WRR 	1	SCH	  WRR USSR/Russia MARS-0 windsonde {1984}^ (T=221) <F=T1780PL,P=0,W=Ta>
+42559	1986-04-16 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+42808	1986-07-03 00:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+42809	1986-07-03 06:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+42817	1986-07-05 06:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+42818	1986-08-12 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+46367	1989-05-21 12:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+46618	1989-08-02 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+46845	1989-09-28 06:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+47338	1990-01-31 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+47898	1990-10-23 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+47899	1990-10-24 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+47900	1990-10-24 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+47901	1990-10-25 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+47910	1990-10-29 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+47911	1990-10-30 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+47920	1990-11-03 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+47921	1990-11-04 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+47924	1990-11-05 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+47925	1990-11-06 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+47934	1990-11-10 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+47936	1990-11-11 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+48687	1991-11-22 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+49109	1992-06-19 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+49115	1992-07-01 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+49948	1993-08-26 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+49949	1993-10-28 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+53129	1999-09-10 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+53130	1999-11-16 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+53301	2000-02-26 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+53302	2000-04-01 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+55881	2004-05-16 12:00:00	RZD 	1	SCH	  RZD exact type insufficiently documented
+55988	2004-07-11 00:00:00	RZL 	1	SCH	  RZL exact type insufficiently documented
+55989	2004-07-11 12:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+55991	2004-07-12 12:00:00	RZL 	1	SCH	  RZL exact type insufficiently documented
+55996	2004-07-15 00:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+55997	2004-07-15 12:00:00	RZL 	1	SCH	  RZL exact type insufficiently documented
+55998	2004-07-16 00:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+55999	2004-07-16 12:00:00	RZL 	1	SCH	  RZL exact type insufficiently documented
+56002	2004-07-18 00:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56003	2004-07-18 12:00:00	RZL 	1	SCH	  RZL exact type insufficiently documented
+56117	2004-09-13 12:00:00	RZD 	1	SCH	  RZD exact type insufficiently documented
+56118	2004-09-14 00:00:00	RZL 	1	SCH	  RZL exact type insufficiently documented
+56174	2004-10-12 12:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56177	2004-10-14 00:00:00	RZL 	1	SCH	  RZL exact type insufficiently documented
+56178	2004-10-14 12:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56179	2004-10-15 00:00:00	RZL 	1	SCH	  RZL exact type insufficiently documented
+56180	2004-10-15 12:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56181	2004-10-16 00:00:00	RZL 	1	SCH	  RZL exact type insufficiently documented
+56182	2004-10-16 12:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56183	2004-10-17 00:00:00	RZL 	1	SCH	  RZL exact type insufficiently documented
+56184	2004-10-17 12:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56185	2004-10-18 00:00:00	RZL 	1	SCH	  RZL exact type insufficiently documented
+56186	2004-10-18 12:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56187	2004-10-19 00:00:00	RZL 	1	SCH	  RZL exact type insufficiently documented
+56188	2004-10-19 12:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56191	2004-10-21 00:00:00	RZL 	1	SCH	  RZL exact type insufficiently documented
+56192	2004-10-21 12:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56210	2004-10-30 12:00:00	RZK 	1	SCH	  RZK Russia MRZ-3A 1780 MHz radiosonde with AVK-ARMA ground station {1997} 31313=57503 (moist)^ (W3=75) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+56239	2004-11-14 00:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56241	2004-11-15 00:00:00	RZK 	1	SCH	  RZK Russia MRZ-3A 1780 MHz radiosonde with AVK-ARMA ground station {1997} 31313=57503 (moist)^ (W3=75) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+56243	2004-11-16 00:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56244	2004-11-16 12:00:00	RZK 	1	SCH	  RZK Russia MRZ-3A 1780 MHz radiosonde with AVK-ARMA ground station {1997} 31313=57503 (moist)^ (W3=75) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+56247	2004-11-18 00:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56248	2004-11-18 12:00:00	RZK 	1	SCH	  RZK Russia MRZ-3A 1780 MHz radiosonde with AVK-ARMA ground station {1997} 31313=57503 (moist)^ (W3=75) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+56249	2004-11-19 00:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56260	2004-11-24 12:00:00	RZK 	1	SCH	  RZK Russia MRZ-3A 1780 MHz radiosonde with AVK-ARMA ground station {1997} 31313=57503 (moist)^ (W3=75) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+56261	2004-11-25 00:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56270	2004-11-29 12:00:00	RZK 	1	SCH	  RZK Russia MRZ-3A 1780 MHz radiosonde with AVK-ARMA ground station {1997} 31313=57503 (moist)^ (W3=75) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+56271	2004-11-30 00:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56286	2004-12-08 00:00:00	RZK 	1	SCH	  RZK Russia MRZ-3A 1780 MHz radiosonde with AVK-ARMA ground station {1997} 31313=57503 (moist)^ (W3=75) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+56287	2004-12-08 12:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56331	2004-12-30 12:00:00	RZK 	1	SCH	  RZK Russia MRZ-3A 1780 MHz radiosonde with AVK-ARMA ground station {1997} 31313=57503 (moist)^ (W3=75) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+56332	2004-12-31 00:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56333	2004-12-31 12:00:00	RZK 	1	SCH	  RZK Russia MRZ-3A 1780 MHz radiosonde with AVK-ARMA ground station {1997} 31313=57503 (moist)^ (W3=75) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+56516	2005-04-05 12:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+56518	2005-04-06 12:00:00	RZK 	1	SCH	  RZK Russia MRZ-3A 1780 MHz radiosonde with AVK-ARMA ground station {1997} 31313=57503 (moist)^ (W3=75) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+57568	2006-10-08 12:00:00	RV7 	1	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>
+57627	2006-11-07 00:00:00	RZK 	1	SCH	  RZK Russia MRZ-3A 1780 MHz radiosonde with AVK-ARMA ground station {1997} 31313=57503 (moist)^ (W3=75) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+0	2013-01-01 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1	2013-01-01 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2	2013-01-02 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+3	2013-01-02 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4	2013-01-03 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+5	2013-01-03 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+6	2013-01-04 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+7	2013-01-04 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+8	2013-01-05 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+9	2013-01-05 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+10	2013-01-06 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+11	2013-01-06 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+12	2013-01-07 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+13	2013-01-07 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+14	2013-01-08 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+15	2013-01-08 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+16	2013-01-09 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+17	2013-01-09 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+18	2013-01-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+19	2013-01-10 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+20	2013-01-11 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+21	2013-01-11 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+22	2013-01-12 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+23	2013-01-12 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+24	2013-01-13 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+25	2013-01-13 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+26	2013-01-14 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+27	2013-01-14 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+28	2013-01-15 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+29	2013-01-15 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+30	2013-01-16 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+31	2013-01-16 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+32	2013-01-17 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+33	2013-01-17 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+34	2013-01-18 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+35	2013-01-18 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+72	2013-02-06 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+73	2013-02-06 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+79	2013-02-09 12:00:00	75	2	WMO	AVK-MRZ-ARMA (Russian Federation)                
+80	2013-02-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+141	2013-03-12 12:00:00	75	2	WMO	AVK-MRZ-ARMA (Russian Federation)                
+142	2013-03-13 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+152	2013-03-18 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+153	2013-03-18 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+206	2013-04-14 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+207	2013-04-14 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+321	2013-06-10 12:00:00	75	2	WMO	AVK-MRZ-ARMA (Russian Federation)                
+322	2013-06-11 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1270	2014-10-13 12:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1302	2014-10-29 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1303	2014-10-30 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1307	2014-11-01 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1376	2014-12-05 12:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1463	2015-01-21 00:00:00	75	2	WMO	AVK-MRZ-ARMA (Russian Federation)                
+1464	2015-01-22 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1695	2015-06-27 00:00:00	153	2	WMO	AVK – I-2012 (Russian Federation)                          
+1709	2015-07-04 00:00:00	75	2	WMO	AVK-MRZ-ARMA (Russian Federation)                
+1710	2015-07-04 12:00:00	153	2	WMO	AVK – I-2012 (Russian Federation)                          
+1725	2015-07-12 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1782	2015-08-09 12:00:00	153	2	WMO	AVK – I-2012 (Russian Federation)                          
+1868	2015-09-21 12:00:00	75	2	WMO	AVK-MRZ-ARMA (Russian Federation)                
+1869	2015-09-22 00:00:00	153	2	WMO	AVK – I-2012 (Russian Federation)                          
+2036	2015-12-15 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+2042	2015-12-18 00:00:00	153	2	WMO	AVK – I-2012 (Russian Federation)                          
+2044	2015-12-19 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+2298	2016-04-24 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2345	2016-05-17 12:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+2346	2016-05-18 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2707	2016-11-18 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2708	2016-11-18 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2747	2016-12-08 00:00:00	75	2	WMO	AVK-MRZ-ARMA (Russian Federation)                
+2748	2016-12-08 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2822	2017-01-16 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2832	2017-01-21 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2985	2017-04-07 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3021	2017-04-25 12:00:00	75	2	WMO	AVK-MRZ-ARMA (Russian Federation)                
+3022	2017-04-26 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3029	2017-04-29 12:00:00	75	2	WMO	AVK-MRZ-ARMA (Russian Federation)                
+3030	2017-04-30 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3058	2017-05-14 00:00:00	69	2	WMO	MARL-A or Vektor-M-RZM-2 (Russian Federation)              
+3061	2017-05-15 12:00:00	68	2	WMO	AVK-RZM-2 (Russian Federation)                
+3140	2017-06-24 00:00:00	153	2	WMO	AVK – I-2012 (Russian Federation)                          
+3194	2017-07-23 12:00:00	75	2	WMO	AVK-MRZ-ARMA (Russian Federation)                
+3195	2017-07-24 00:00:00	153	2	WMO	AVK – I-2012 (Russian Federation)                          
+3309	2017-09-19 00:00:00	75	2	WMO	AVK-MRZ-ARMA (Russian Federation)                
+3310	2017-09-19 12:00:00	153	2	WMO	AVK – I-2012 (Russian Federation)                          
+3313	2017-09-21 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+3377	2017-10-23 12:00:00	153	2	WMO	AVK – I-2012 (Russian Federation)                          
+3379	2017-10-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+3399	2017-11-04 00:00:00	75	2	WMO	AVK-MRZ-ARMA (Russian Federation)                
+3400	2017-11-04 12:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+3454	2017-12-01 12:00:00	153	2	WMO	AVK – I-2012 (Russian Federation)                          
+3455	2017-12-02 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+3499	2017-12-24 00:00:00	75	2	WMO	AVK-MRZ-ARMA (Russian Federation)                
+3500	2017-12-24 12:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+3558	2018-01-22 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3559	2018-01-23 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+3590	2018-02-16 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3611	2018-02-27 00:00:00	131	2	WMO	Taiyuan GTS1-1/GFE(L) (China )                           
+3612	2018-02-27 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4655	2019-08-03 00:00:00	119	2	WMO	Polus-MRZ-N1 (Russian Federation)                            
+4656	2019-08-03 11:31:05	90	2	WMO	Radiosonde not specified or unknown             
+4674	2019-08-12 12:00:00	119	2	WMO	Polus-MRZ-N1 (Russian Federation)                            
+4692	2019-08-21 12:00:00	6	2	WMO	 No radiosonde – radio-acoustic sounder             
+4693	2019-08-22 00:00:00	119	2	WMO	Polus-MRZ-N1 (Russian Federation)                            
+11426	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 
+11427	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 
+11428	1978-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , USSR RKZ-5 1780 MHZ 
+11429	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+11430	1987-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RKZ-5 1780 MHZ , to , RUSSIA/USSR MARS UNSPECIFIED 
+11429	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+11432	1990-10-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , RUSSIA/USSR MARS UNSPECIFIED , to , RUSSIA/USSR MRZ UNSPECIFIED 
+11435	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ UNSPECIFIED 
+11437	1996-05-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 
+11441	2004-07-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A , to , RUSSIA MRZ-3A ARMA 
+11445	2004-07-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I2 , NONE , to , RUSSIA AVK-RF95-ARMA 
+11445	2004-07-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I2 , NONE , to , RUSSIA AVK-RF95-ARMA 
+11449	2006-10-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , RUSSIA MRZ-3A ARMA , to , RUSSIA AVK-RF95-ARMA 
+11451	2006-11-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , RUSSIA AVK-RF95-ARMA , to , RUSSIA MRZ-3A ARMA 
+11454	2007-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA MRZ-3A ARMA 

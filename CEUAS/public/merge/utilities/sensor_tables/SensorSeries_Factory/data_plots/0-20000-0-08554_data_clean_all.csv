@@ -1,0 +1,7 @@
+	date_time	sensor_id	value	source	comment
+0	1952-04-16 09:00:00	Lbi 	1	SCH	  Lbi Italy SMA Company turbulence radiosonde with pressure and temperature {1974}^ <F=?137?B,P=B,T=W>
+3614	1974-08-26 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+5237	1983-10-09 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+10472	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED , ? 
+10473	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED , ? 
+10472	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED , ? 

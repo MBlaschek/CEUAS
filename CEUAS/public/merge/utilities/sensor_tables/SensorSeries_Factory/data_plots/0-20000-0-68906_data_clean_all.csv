@@ -1,0 +1,47 @@
+	date_time	sensor_id	value	source	comment
+0	1957-07-01 06:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
+32499	2007-10-02 23:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+32500	2007-10-04 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+32501	2007-11-20 23:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+32506	2007-12-03 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+32507	2008-01-08 23:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+33380	2009-04-28 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+33381	2009-07-13 23:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+33926	2010-04-19 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+33927	2010-06-04 11:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+0	2013-03-06 23:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+711	2014-09-23 12:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+2354	2017-01-31 11:00:00	20	2	WMO	Indian Meteorological Service MK3 (India)              
+2355	2017-01-31 23:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+2721	2017-08-24 11:00:00	34	2	WMO	Vinohrady (Czechia)                 
+2722	2017-08-24 23:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+2860	2017-11-05 23:00:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
+2861	2017-11-06 11:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4134	2020-11-30 12:00:00	119	2	WMO	Polus-MRZ-N1 (Russian Federation)                            
+4135	2020-12-01 00:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4216	2021-01-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+4217	2021-01-11 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4218	2021-01-11 12:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4669	2021-09-14 12:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+4670	2021-09-15 00:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4696	2021-09-28 12:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+4697	2021-09-29 12:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4698	2021-09-30 12:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+4699	2021-10-01 00:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4720	2021-10-16 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+4721	2021-10-16 12:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4744	2021-11-05 12:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+4745	2021-11-06 12:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4765	2021-11-24 12:00:00	2	2	WMO	 No radiosonde – passive target (e.g. reflector)                 
+4766	2021-11-25 00:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+14020	1959-02-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS13 25 MHZ 
+14021	1959-02-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , VAISALA RS12 WATER INSULATED 
+14022	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+14023	1970-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA UNSPECIFIED , to , USA WEATHERMEASURE RD 1680 ERRONEOUS (? 
+14024	1972-11-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS13 25 MHZ , to , VIZ UNSPECIFIED 
+14024	1972-11-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS13 25 MHZ , to , VIZ UNSPECIFIED 
+14026	1985-11-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , VAISALA RS80 UNSPECIFIED 
+14027	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+14028	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+14029	1990-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VAISALA RS80 UNSPECIFIED 
+14028	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

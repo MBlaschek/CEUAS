@@ -1,0 +1,6 @@
+	sensor_id	source	comment	date_time	value
+21906	??? 	SCH	  ??? Unknown instrument category because data is not available for checking^		
+0	NUF 	SCH	  NUF USA S. P. Fergusson PTU Friez kite/balloon meteorograph {1919}^ <F=C,P=D,T=B,U=H>		
+858	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
+25734	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+31365	ZDH 	SCH	  ZDH VIZ model 1073 USWB 1680 MHz hypsometer {1963}^ (T=389) <F=V1680AB,P=A+H(hypsometer fluid CFC-11),T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		

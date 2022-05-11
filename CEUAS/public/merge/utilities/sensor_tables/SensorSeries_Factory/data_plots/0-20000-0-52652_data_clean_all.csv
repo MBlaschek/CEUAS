@@ -1,0 +1,3 @@
+	date_time	sensor_id	value	source	comment
+0	1959-07-01 00:00:00	H1G 	1	SCH	  H1G China International Telecommunication Equipment Factory GZZ-1 Comb like Molchanov RZ-049 radiosonde {1955}^ (T=047) <F=V260(?)MB,P=A,T=B,U=H,W=O or Dm>
+7681	1975-10-21 12:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"

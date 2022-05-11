@@ -1,0 +1,676 @@
+	date_time	sensor_id	value	source	comment
+0	1940-07-25 02:02:00	RS5 	1	SCH	  RS5 USSR RZ-049M radiosonde, trackable transmitter for Malakhite {1955}^ (I=S1, T=274, T=337) also known as RS-049, R-049, or Molchanov RS-049 (written 
+21358	1973-07-22 00:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+25709	1977-02-02 18:00:00	MRu 	1	SCH	  MRu Mixed Russia A-22 (RA4) and RKZ-5 (RK5), not distinguishable^
+25978	1977-04-15 18:00:00	RA4 	1	SCH	  RA4 USSR A-22-IV transponder radiosonde {1961}^ (W2=12, T=074) <F=V403ME,P=2A,T=BC,U=G,W=T216m>
+27651	1978-08-02 00:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+32770	1982-07-21 00:00:00	MRu 	1	SCH	  MRu Mixed Russia A-22 (RA4) and RKZ-5 (RK5), not distinguishable^
+33296	1982-12-07 00:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+38061	1986-04-18 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+38113	1986-05-01 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+38322	1986-06-22 12:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+38323	1986-06-22 18:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+38324	1986-06-23 00:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+38326	1986-06-23 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+43409	1990-05-10 12:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+43417	1990-05-13 00:00:00	RR1 	1	SCH	  RR1 USSR MARS-1 temperature only radiosonde {1983}^ (T=222) temperature and winds <F=T1780PL,P=0,T=TR,W=Ta>
+43551	1990-07-17 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+44457	1991-11-18 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+45675	1993-08-04 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+45676	1993-12-02 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+47624	1996-12-27 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+47625	1997-07-09 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+48372	1998-10-31 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+48373	1999-04-21 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+48457	1999-07-15 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+48458	1999-11-01 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+48487	1999-11-30 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+48488	2000-04-01 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+48955	2001-07-14 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+48957	2001-08-17 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+49813	2003-12-31 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+50017	2004-07-28 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+0	2013-01-01 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+18	2013-01-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+19	2013-01-10 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+54	2013-01-28 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+55	2013-01-28 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+80	2013-02-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+81	2013-02-10 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+110	2013-02-25 00:00:00	27	2	WMO	AVK-MRZ (Russian Federation)                
+111	2013-02-25 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+136	2013-03-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+137	2013-03-10 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+142	2013-03-13 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+143	2013-03-13 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+144	2013-03-14 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+145	2013-03-14 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+146	2013-03-15 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+147	2013-03-15 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+148	2013-03-16 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+149	2013-03-16 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+150	2013-03-17 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+151	2013-03-17 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+152	2013-03-18 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+154	2013-03-19 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+155	2013-03-19 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+166	2013-03-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+167	2013-03-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+198	2013-04-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+199	2013-04-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+228	2013-04-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+229	2013-04-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+258	2013-05-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+259	2013-05-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+283	2013-05-22 12:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+285	2013-05-23 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+320	2013-06-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+321	2013-06-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+356	2013-06-28 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+357	2013-06-28 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+376	2013-07-08 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+377	2013-07-08 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+380	2013-07-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+381	2013-07-10 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+382	2013-07-11 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+410	2013-07-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+411	2013-07-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+442	2013-08-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+443	2013-08-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+472	2013-08-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+473	2013-08-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+504	2013-09-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+505	2013-09-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+529	2013-09-22 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+530	2013-09-23 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+534	2013-09-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+535	2013-09-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+538	2013-09-27 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+545	2013-09-30 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+564	2013-10-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+565	2013-10-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+594	2013-10-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+595	2013-10-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+626	2013-11-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+627	2013-11-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+656	2013-11-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+657	2013-11-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+673	2013-12-03 12:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+678	2013-12-06 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+748	2014-01-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+749	2014-01-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+810	2014-02-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+811	2014-02-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+840	2014-02-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+841	2014-02-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+858	2014-03-06 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+859	2014-03-06 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+866	2014-03-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+867	2014-03-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+884	2014-03-19 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+885	2014-03-19 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+887	2014-03-20 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+888	2014-03-21 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+896	2014-03-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+897	2014-03-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+928	2014-04-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+929	2014-04-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+949	2014-04-20 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+950	2014-04-21 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+958	2014-04-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+959	2014-04-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1003	2014-05-17 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+1004	2014-05-18 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1018	2014-05-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1019	2014-05-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1031	2014-05-31 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+1032	2014-06-01 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1050	2014-06-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1051	2014-06-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1080	2014-06-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1081	2014-06-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1110	2014-07-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1111	2014-07-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1140	2014-07-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1141	2014-07-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1199	2014-08-24 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+1200	2014-08-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1201	2014-08-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1232	2014-09-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1233	2014-09-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1262	2014-09-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1263	2014-09-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1292	2014-10-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1293	2014-10-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1322	2014-10-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1323	2014-10-25 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1354	2014-11-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1355	2014-11-10 12:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1357	2014-11-11 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1384	2014-11-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1385	2014-11-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1414	2014-12-10 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1415	2014-12-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1444	2014-12-25 00:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1445	2014-12-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1463	2015-01-06 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+1464	2015-01-07 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1467	2015-01-10 12:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1468	2015-01-11 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1483	2015-01-26 12:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1484	2015-01-27 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1503	2015-02-15 12:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1504	2015-02-16 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1511	2015-02-23 12:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+1512	2015-02-24 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1532	2015-03-16 12:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+1533	2015-03-17 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1566	2015-04-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1567	2015-04-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1596	2015-04-25 00:00:00	27	2	WMO	AVK-MRZ (Russian Federation)                
+1597	2015-04-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1626	2015-05-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1627	2015-05-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1656	2015-05-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1657	2015-05-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1688	2015-06-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1689	2015-06-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1718	2015-06-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1719	2015-06-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1752	2015-07-12 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1753	2015-07-12 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1759	2015-07-16 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1762	2015-07-17 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1765	2015-07-19 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+1766	2015-07-19 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1809	2015-08-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1810	2015-08-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1839	2015-08-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1840	2015-08-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1871	2015-09-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1872	2015-09-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1901	2015-09-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1902	2015-09-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1931	2015-10-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1932	2015-10-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1961	2015-10-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1962	2015-10-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+1993	2015-11-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1994	2015-11-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2023	2015-11-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2024	2015-11-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2053	2015-12-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2054	2015-12-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2083	2015-12-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2084	2015-12-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2115	2016-01-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2116	2016-01-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2145	2016-01-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2146	2016-01-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2177	2016-02-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2178	2016-02-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2207	2016-02-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2208	2016-02-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2235	2016-03-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2236	2016-03-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2263	2016-03-24 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+2264	2016-03-24 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2265	2016-03-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2266	2016-03-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2297	2016-04-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2298	2016-04-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2327	2016-04-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2328	2016-04-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2357	2016-05-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2358	2016-05-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2367	2016-05-15 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+2368	2016-05-15 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2387	2016-05-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2388	2016-05-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2395	2016-05-29 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+2396	2016-05-29 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2419	2016-06-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2420	2016-06-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2449	2016-06-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2450	2016-06-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2479	2016-07-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2480	2016-07-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2509	2016-07-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2510	2016-07-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2541	2016-08-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2542	2016-08-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2571	2016-08-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2572	2016-08-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2603	2016-09-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2604	2016-09-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2633	2016-09-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2634	2016-09-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2663	2016-10-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2664	2016-10-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2693	2016-10-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2694	2016-10-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2725	2016-11-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2726	2016-11-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2743	2016-11-19 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2744	2016-11-19 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2785	2016-12-10 01:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2786	2016-12-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2815	2016-12-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2816	2016-12-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2844	2017-01-09 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2845	2017-01-09 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2876	2017-01-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2877	2017-01-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2908	2017-02-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2909	2017-02-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2938	2017-02-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2939	2017-02-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2964	2017-03-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2965	2017-03-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+2994	2017-03-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+2995	2017-03-25 13:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3026	2017-04-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3027	2017-04-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3056	2017-04-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3057	2017-04-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3086	2017-05-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3087	2017-05-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3116	2017-05-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3117	2017-05-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3178	2017-06-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3179	2017-06-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3206	2017-07-09 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+3207	2017-07-09 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3208	2017-07-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3209	2017-07-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3215	2017-07-13 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+3216	2017-07-14 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3238	2017-07-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3239	2017-07-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3270	2017-08-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3271	2017-08-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3302	2017-08-26 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3303	2017-08-26 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3332	2017-09-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3333	2017-09-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3362	2017-09-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3363	2017-09-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3392	2017-10-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3393	2017-10-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3401	2017-10-14 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3402	2017-10-15 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3406	2017-10-17 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3407	2017-10-17 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3454	2017-11-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3455	2017-11-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3486	2017-11-26 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3487	2017-11-26 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3514	2017-12-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3515	2017-12-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3594	2018-01-19 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+3595	2018-01-19 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3668	2018-02-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3670	2018-02-26 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3694	2018-03-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3695	2018-03-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3784	2018-04-24 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+3785	2018-04-24 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3786	2018-04-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3787	2018-04-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3816	2018-05-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3817	2018-05-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3846	2018-05-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3847	2018-05-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3878	2018-06-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3879	2018-06-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3908	2018-06-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3909	2018-06-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3938	2018-07-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3939	2018-07-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3968	2018-07-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3969	2018-07-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3982	2018-08-01 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+3983	2018-08-01 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3984	2018-08-02 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+3985	2018-08-02 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3986	2018-08-03 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+3987	2018-08-03 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3994	2018-08-07 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+3995	2018-08-07 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3996	2018-08-08 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+3997	2018-08-08 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+3998	2018-08-09 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4000	2018-08-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4001	2018-08-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4002	2018-08-11 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4003	2018-08-11 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4006	2018-08-13 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4007	2018-08-13 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4008	2018-08-14 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4009	2018-08-14 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4010	2018-08-15 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4011	2018-08-15 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4012	2018-08-16 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4013	2018-08-16 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4014	2018-08-17 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4015	2018-08-17 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4018	2018-08-19 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4019	2018-08-19 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4020	2018-08-20 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4021	2018-08-20 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4022	2018-08-21 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4023	2018-08-21 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4024	2018-08-22 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4025	2018-08-22 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4026	2018-08-23 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4027	2018-08-23 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4028	2018-08-24 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4029	2018-08-24 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4030	2018-08-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4031	2018-08-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4032	2018-08-26 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4033	2018-08-26 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4034	2018-08-27 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4035	2018-08-27 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4036	2018-08-28 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4037	2018-08-28 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4038	2018-08-29 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4039	2018-08-29 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4040	2018-08-30 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4041	2018-08-30 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4042	2018-08-31 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4043	2018-08-31 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4044	2018-09-01 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4045	2018-09-01 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4046	2018-09-02 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4047	2018-09-02 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4048	2018-09-03 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4049	2018-09-03 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4050	2018-09-04 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4051	2018-09-04 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4052	2018-09-05 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4053	2018-09-05 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4054	2018-09-06 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4055	2018-09-06 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4056	2018-09-07 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4057	2018-09-07 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4058	2018-09-08 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4059	2018-09-08 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4060	2018-09-09 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4061	2018-09-09 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4062	2018-09-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4063	2018-09-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4064	2018-09-11 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4065	2018-09-11 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4066	2018-09-12 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4067	2018-09-12 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4068	2018-09-13 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4069	2018-09-13 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4070	2018-09-14 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4071	2018-09-14 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4072	2018-09-15 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4073	2018-09-15 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4076	2018-09-17 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4077	2018-09-17 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4078	2018-09-18 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4079	2018-09-18 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4080	2018-09-19 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4081	2018-09-19 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4084	2018-09-21 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4085	2018-09-21 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4086	2018-09-22 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4087	2018-09-22 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4088	2018-09-23 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4089	2018-09-23 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4090	2018-09-24 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4091	2018-09-24 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4092	2018-09-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4093	2018-09-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4094	2018-09-26 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4095	2018-09-26 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4096	2018-09-27 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4097	2018-09-27 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4098	2018-09-28 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4099	2018-09-28 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4100	2018-09-29 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4101	2018-09-29 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4104	2018-10-01 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4107	2018-10-02 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4108	2018-10-03 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4109	2018-10-03 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4110	2018-10-04 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4111	2018-10-04 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4112	2018-10-05 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4113	2018-10-05 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4114	2018-10-06 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4115	2018-10-06 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4116	2018-10-07 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4117	2018-10-07 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4118	2018-10-08 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4119	2018-10-08 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4120	2018-10-09 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4121	2018-10-09 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4122	2018-10-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4123	2018-10-10 12:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4125	2018-10-11 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4126	2018-10-12 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4127	2018-10-12 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4128	2018-10-13 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4129	2018-10-13 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4130	2018-10-14 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4131	2018-10-14 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4132	2018-10-15 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4133	2018-10-15 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4134	2018-10-16 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4135	2018-10-16 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4136	2018-10-17 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4137	2018-10-17 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4138	2018-10-18 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4139	2018-10-18 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4140	2018-10-19 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4141	2018-10-19 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4142	2018-10-20 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4143	2018-10-20 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4144	2018-10-21 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4145	2018-10-21 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4146	2018-10-22 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4147	2018-10-22 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4148	2018-10-23 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4149	2018-10-23 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4150	2018-10-24 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4151	2018-10-24 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4152	2018-10-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4153	2018-10-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4154	2018-10-26 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4156	2018-10-26 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4157	2018-10-27 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4158	2018-10-27 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4159	2018-10-28 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4160	2018-10-28 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4161	2018-10-29 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4162	2018-10-29 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4163	2018-10-30 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4164	2018-10-30 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4165	2018-10-31 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4166	2018-10-31 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4167	2018-11-01 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4168	2018-11-01 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4169	2018-11-02 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4170	2018-11-02 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4171	2018-11-03 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4172	2018-11-03 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4173	2018-11-04 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4174	2018-11-04 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4175	2018-11-05 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4176	2018-11-05 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4177	2018-11-06 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4178	2018-11-06 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4179	2018-11-07 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4180	2018-11-07 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4181	2018-11-08 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4182	2018-11-08 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4183	2018-11-09 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4184	2018-11-09 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4185	2018-11-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4186	2018-11-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4187	2018-11-11 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4188	2018-11-11 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4189	2018-11-12 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4190	2018-11-12 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4191	2018-11-13 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4192	2018-11-13 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4193	2018-11-14 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4194	2018-11-14 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4195	2018-11-15 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4196	2018-11-15 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4197	2018-11-16 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4198	2018-11-16 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4201	2018-11-18 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4202	2018-11-18 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4203	2018-11-19 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4204	2018-11-19 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4205	2018-11-20 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4206	2018-11-20 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4207	2018-11-21 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4208	2018-11-21 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4209	2018-11-22 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4210	2018-11-22 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4211	2018-11-23 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4212	2018-11-23 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4215	2018-11-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4216	2018-11-25 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4217	2018-11-26 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4218	2018-11-26 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4219	2018-11-27 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4220	2018-11-27 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4221	2018-11-28 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4222	2018-11-28 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4223	2018-11-29 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4224	2018-11-29 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4225	2018-11-30 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4226	2018-11-30 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4227	2018-12-01 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4228	2018-12-01 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4231	2018-12-03 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4232	2018-12-03 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4233	2018-12-04 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4234	2018-12-04 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4235	2018-12-05 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4236	2018-12-05 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4237	2018-12-06 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4238	2018-12-06 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4239	2018-12-07 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4240	2018-12-07 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4241	2018-12-08 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4242	2018-12-08 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4243	2018-12-09 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4245	2018-12-10 00:00:00	27	2	WMO	AVK-MRZ (Russian Federation)                
+4246	2018-12-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4247	2018-12-11 00:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4275	2018-12-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4276	2018-12-25 12:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4307	2019-01-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4308	2019-01-10 12:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4337	2019-01-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4338	2019-01-25 12:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4369	2019-02-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4370	2019-02-10 12:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4399	2019-02-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4400	2019-02-25 12:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4425	2019-03-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4426	2019-03-10 12:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4455	2019-03-25 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4456	2019-03-25 12:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4485	2019-04-09 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4487	2019-04-10 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4488	2019-04-10 12:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4491	2019-04-12 00:00:00	9	2	WMO	 No radiosonde – system unknown or not specified          
+4493	2019-04-13 00:00:00	90	2	WMO	Radiosonde not specified or unknown             
+4516	2019-04-24 12:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+4518	2019-04-25 11:31:00	90	2	WMO	Radiosonde not specified or unknown             
+4793	2019-09-11 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4819	2019-09-24 23:33:00	90	2	WMO	Radiosonde not specified or unknown             
+4820	2019-09-25 11:31:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4849	2019-10-09 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+4850	2019-10-10 11:31:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4866	2019-10-18 11:32:00	90	2	WMO	Radiosonde not specified or unknown             
+4924	2019-11-16 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4928	2019-11-18 11:30:00	90	2	WMO	Radiosonde not specified or unknown             
+4929	2019-11-18 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+4933	2019-11-20 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+4934	2019-11-21 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5035	2020-01-10 23:31:00	90	2	WMO	Radiosonde not specified or unknown             
+5036	2020-01-11 11:31:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5105	2020-02-14 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+5106	2020-02-15 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5121	2020-02-22 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+5122	2020-02-23 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5123	2020-02-23 23:31:00	90	2	WMO	Radiosonde not specified or unknown             
+5124	2020-02-24 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5244	2020-04-24 11:30:00	90	2	WMO	Radiosonde not specified or unknown             
+5246	2020-04-25 11:31:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5256	2020-04-30 11:30:00	90	2	WMO	Radiosonde not specified or unknown             
+5257	2020-04-30 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5275	2020-05-09 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+5276	2020-05-10 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5305	2020-05-24 23:31:00	58	2	WMO	AVK-BAR (Russian Federation)                
+5306	2020-05-25 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5337	2020-06-09 23:30:00	58	2	WMO	AVK-BAR (Russian Federation)                
+5338	2020-06-10 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5368	2020-06-25 11:30:00	58	2	WMO	AVK-BAR (Russian Federation)                
+5369	2020-06-25 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5381	2020-07-01 23:31:00	90	2	WMO	Radiosonde not specified or unknown             
+5382	2020-07-02 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5387	2020-07-04 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+5388	2020-07-05 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5390	2020-07-06 11:30:00	90	2	WMO	Radiosonde not specified or unknown             
+5391	2020-07-06 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5409	2020-07-15 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+5410	2020-07-16 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5428	2020-07-25 11:30:00	58	2	WMO	AVK-BAR (Russian Federation)                
+5429	2020-07-25 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5459	2020-08-09 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+5460	2020-08-10 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5489	2020-08-24 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+5490	2020-08-25 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5521	2020-09-09 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+5522	2020-09-10 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5551	2020-09-24 23:30:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+5552	2020-09-25 11:31:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5581	2020-10-09 23:31:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+5583	2020-10-10 23:32:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5621	2020-11-09 23:30:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+5623	2020-11-10 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5628	2020-11-13 11:30:00	160	2	WMO	MARL-A or Vektor-M – I-2012 (Russian Federation)                        
+5629	2020-11-13 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5651	2020-11-25 00:25:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+5653	2020-11-25 23:31:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+5654	2020-11-26 11:32:00	90	2	WMO	Radiosonde not specified or unknown             
+6421	2021-12-14 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+6423	2021-12-15 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+6425	2021-12-16 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+6427	2021-12-17 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+6429	2021-12-18 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+6431	2021-12-19 23:31:00	90	2	WMO	Radiosonde not specified or unknown             
+6433	2021-12-20 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+6435	2021-12-21 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+6437	2021-12-22 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+6439	2021-12-23 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+6442	2021-12-25 11:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+6443	2021-12-25 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+6445	2021-12-26 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+6447	2021-12-27 23:30:00	90	2	WMO	Radiosonde not specified or unknown             
+6449	2021-12-28 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+6452	2021-12-30 11:30:00	90	2	WMO	Radiosonde not specified or unknown             
+6453	2021-12-30 23:30:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+11925	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 
+11926	1973-07-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , USSR RKZ-5 1780 MHZ 
+11927	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 
+11928	1977-03-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RKZ-5 1780 MHZ , to , USSR A-22 UNSPECIFIED 
+11926	1973-07-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , USSR RKZ-5 1780 MHZ 
+11930	1985-06-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RKZ-5 1780 MHZ , to , RUSSIA/USSR MARS UNSPECIFIED 
+11931	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+11931	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+11935	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ UNSPECIFIED 
+11937	1999-05-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 
+11937	1999-05-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 

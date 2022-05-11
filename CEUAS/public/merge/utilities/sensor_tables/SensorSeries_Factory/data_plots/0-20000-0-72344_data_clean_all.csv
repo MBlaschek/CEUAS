@@ -1,0 +1,11 @@
+	date_time	sensor_id	value	source	comment
+0	1953-03-17 04:00:00	U2l 	1	SCH	  U2l USA AN/AMT-2 T-69F transmitter 390-410 MHz FM radiosonde {1945}^ <F=V390-410FB,P=A,T=TR,U=L,W=Da(SCR-658)>
+143	1953-04-22 21:00:00	U4b 	1	SCH	  U4b USA Bendix AN/AMT-4B LiCl hygristor radiosonde {~ 1954}^ (I=E7) <F=V1680PB,P=A,T=TR,U=L(ML-418/AMT-4),W=Da(AN/GMD-1)>
+2480	1955-09-11 21:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+2481	1956-02-15 09:00:00	U4b 	1	SCH	  U4b USA Bendix AN/AMT-4B LiCl hygristor radiosonde {~ 1954}^ (I=E7) <F=V1680PB,P=A,T=TR,U=L(ML-418/AMT-4),W=Da(AN/GMD-1)>
+2881	1956-06-28 15:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+2882	1957-02-15 09:00:00	U4b 	1	SCH	  U4b USA Bendix AN/AMT-4B LiCl hygristor radiosonde {~ 1954}^ (I=E7) <F=V1680PB,P=A,T=TR,U=L(ML-418/AMT-4),W=Da(AN/GMD-1)>
+3421	1957-08-15 06:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+3422	1958-02-15 00:00:00	U4b 	1	SCH	  U4b USA Bendix AN/AMT-4B LiCl hygristor radiosonde {~ 1954}^ (I=E7) <F=V1680PB,P=A,T=TR,U=L(ML-418/AMT-4),W=Da(AN/GMD-1)>
+3959	1958-10-15 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+3960	1959-02-15 00:00:00	U4b 	1	SCH	  U4b USA Bendix AN/AMT-4B LiCl hygristor radiosonde {~ 1954}^ (I=E7) <F=V1680PB,P=A,T=TR,U=L(ML-418/AMT-4),W=Da(AN/GMD-1)>

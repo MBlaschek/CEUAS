@@ -1,0 +1,14 @@
+	date_time	sensor_id	value	source	comment
+0	1944-06-05 03:00:00	L3  	1	SCH	  [|16] Philips Astor or RS4 before 1984 (Malaysia) (dry due to suspected VIZ-type radiation problem)
+4395	1976-06-10 00:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
+7985	1984-05-11 00:00:00	CR  	1	SCH	  [13|16] Australian Astor RS4
+10614	1991-09-22 00:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
+0	2013-01-01 12:00:00	55	2	WMO	Meisei RS-01G (Japan)                
+3456	2016-04-13 12:00:00	122	2	WMO	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+3457	2016-04-14 00:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+3459	2016-04-14 12:00:00	122	2	WMO	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+3519	2016-05-03 12:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+6068	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+6069	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , JAPAN MEISEI UNSPECIFIED 
+6070	1991-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 
+6071	1993-02-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ B 1492-520 NWS 1680 MHZ 

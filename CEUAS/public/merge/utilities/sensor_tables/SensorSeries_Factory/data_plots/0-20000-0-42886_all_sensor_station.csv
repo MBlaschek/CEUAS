@@ -1,0 +1,8 @@
+	sensor_id	source	comment	date_time	value
+2499	111	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          		
+2698	121	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        		
+0	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
+9197	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+6713	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
+6713	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
+6713	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0

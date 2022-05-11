@@ -1,0 +1,7 @@
+	date_time	sensor_id	value	source	comment
+0	1918-12-03 14:00:00	NUF 	1	SCH	  NUF USA S. P. Fergusson PTU Friez kite/balloon meteorograph {1919}^ <F=C,P=D,T=B,U=H>
+5015	1938-12-04 21:03:00	W1P 	1	SCH	  W1P Wind only, 1-theodolite tracking of pilot balloon (pibal)^
+5518	1939-07-08 02:00:00	U?? 	1	SCH	  U?? exact type insufficiently documented
+7903	1941-03-31 22:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+36418	1966-01-13 00:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+36736	1966-06-20 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

@@ -1,0 +1,26 @@
+	date_time	sensor_id	value	source	comment
+0	1967-05-11 12:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
+1982	1988-12-24 12:00:00	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+0	2013-01-01 12:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+113	2013-04-26 12:00:00	61	2	WMO	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+131	2013-05-14 12:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+163	2013-06-15 12:00:00	61	2	WMO	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+167	2013-07-11 12:00:00	18	2	WMO	Graw DFM-06 (Germany)                
+407	2014-03-20 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+708	2016-02-09 12:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+931	2016-10-30 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+934	2016-11-01 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+965	2016-12-02 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1210	2017-08-08 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1237	2017-09-08 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1240	2017-09-11 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1248	2017-09-19 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1282	2017-10-23 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1308	2017-11-19 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1436	2018-04-12 12:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+2258	2020-09-30 00:00:00	163	2	WMO	Modem M20 radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (France)             
+2492	2021-05-23 00:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+7253	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 
+7255	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+7256	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+7256	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

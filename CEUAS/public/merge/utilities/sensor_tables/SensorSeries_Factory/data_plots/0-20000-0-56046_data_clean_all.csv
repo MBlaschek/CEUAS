@@ -1,0 +1,25 @@
+	date_time	sensor_id	value	source	comment
+0	1958-07-01 00:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+1037	1968-03-15 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+2958	1973-01-01 00:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+4267	1974-11-03 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+4510	1975-03-05 12:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+5699	1976-10-30 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+5818	1977-01-11 00:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+5851	1977-01-30 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+6004	1977-05-09 12:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+6180	1977-08-19 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+6448	1978-01-16 00:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+22956	2002-09-29 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+0	2014-06-15 23:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            
+2656	2020-08-20 11:16:06	201	2	WMO	NA
+2692	2020-09-08 23:15:34	202	2	WMO	NA
+2746	2020-10-05 23:16:57	201	2	WMO	NA
+2747	2020-10-06 11:15:45	202	2	WMO	NA
+2775	2020-10-20 11:15:22	201	2	WMO	NA
+2777	2020-10-21 11:16:30	202	2	WMO	NA
+2797	2020-10-31 11:16:37	201	2	WMO	NA
+2862	2020-12-02 23:15:45	202	2	WMO	NA
+2958	2021-01-19 23:15:38	201	2	WMO	NA
+3332	2021-07-28 11:15:28	202	2	WMO	NA
+3485	2021-10-12 23:15:38	201	2	WMO	NA

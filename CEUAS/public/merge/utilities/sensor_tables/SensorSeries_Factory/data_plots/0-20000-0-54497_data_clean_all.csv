@@ -1,0 +1,10 @@
+	date_time	sensor_id	value	source	comment
+0	1956-08-20 03:00:00	H1G 	1	SCH	  H1G China International Telecommunication Equipment Factory GZZ-1 Comb like Molchanov RZ-049 radiosonde {1955}^ (T=047) <F=V260(?)MB,P=A,T=B,U=H,W=O or Dm>
+8553	1975-08-06 00:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+27016	2002-09-30 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+27017	2004-12-10 11:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+3372	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 
+3372	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 
+3372	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 
+3372	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 
+3372	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CHINA GZZ-2 403 MHZ 

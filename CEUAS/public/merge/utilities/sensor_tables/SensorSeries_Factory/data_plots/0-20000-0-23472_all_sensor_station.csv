@@ -1,0 +1,37 @@
+	sensor_id	source	comment	date_time	value
+4655	119	WMO	Polus-MRZ-N1 (Russian Federation)                            		
+1	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+3611	131	WMO	Taiyuan GTS1-1/GFE(L) (China )                           		
+1695	153	WMO	AVK – I-2012 (Russian Federation)                          		
+0	58	WMO	AVK-BAR (Russian Federation)                		
+4692	6	WMO	 No radiosonde – radio-acoustic sounder             		
+3061	68	WMO	AVK-RZM-2 (Russian Federation)                		
+3058	69	WMO	MARL-A or Vektor-M-RZM-2 (Russian Federation)              		
+79	75	WMO	AVK-MRZ-ARMA (Russian Federation)                		
+2707	90	WMO	Radiosonde not specified or unknown             		
+46367	MRr 	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^		
+37290	MRu 	SCH	  MRu Mixed Russia A-22 (RA4) and RKZ-5 (RK5), not distinguishable^		
+0	RK5 	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>		
+42313	RRB 	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>		
+55989	RV7 	SCH	  RV7 Russia AVK-RF95-ARMA 1780 MHz Vaisala sensors radiosonde {1997} 31313=47603 auto corr^ (W3=76) <F=T1780PL,P=0,T=Tc(Thermocap),U=A(A-Humicap),W=Ta>		
+47898	RZ3 	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+55881	RZD 	SCH	  RZD exact type insufficiently documented		
+56210	RZK 	SCH	  RZK Russia MRZ-3A 1780 MHz radiosonde with AVK-ARMA ground station {1997} 31313=57503 (moist)^ (W3=75) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+55988	RZL 	SCH	  RZL exact type insufficiently documented		
+42485	WRR 	SCH	  WRR USSR/Russia MARS-0 windsonde {1984}^ (T=221) <F=T1780PL,P=0,W=Ta>		
+42817	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+11426	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 	1960-01-01	3.0
+11427	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 	1976-01-01	3.0
+11428	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , USSR RKZ-5 1780 MHZ 	1978-01-01	3.0
+11429	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+11430	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR RKZ-5 1780 MHZ , to , RUSSIA/USSR MARS UNSPECIFIED 	1987-01-01	3.0
+11429	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+11432	IGRA2	IGRA2	CHANGE SONDE MODEL , RUSSIA/USSR MARS UNSPECIFIED , to , RUSSIA/USSR MRZ UNSPECIFIED 	1990-10-01	3.0
+11435	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ UNSPECIFIED 	1992-12-01	3.0
+11437	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 	1996-05-01	3.0
+11441	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A , to , RUSSIA MRZ-3A ARMA 	2004-07-01	3.0
+11445	IGRA2	IGRA2	CHANGE SONDE MODEL , I2 , NONE , to , RUSSIA AVK-RF95-ARMA 	2004-07-01	3.0
+11445	IGRA2	IGRA2	CHANGE SONDE MODEL , I2 , NONE , to , RUSSIA AVK-RF95-ARMA 	2004-07-01	3.0
+11449	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , RUSSIA MRZ-3A ARMA , to , RUSSIA AVK-RF95-ARMA 	2006-10-01	3.0
+11451	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , RUSSIA AVK-RF95-ARMA , to , RUSSIA MRZ-3A ARMA 	2006-11-01	3.0
+11454	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA MRZ-3A ARMA 	2007-01-01	3.0

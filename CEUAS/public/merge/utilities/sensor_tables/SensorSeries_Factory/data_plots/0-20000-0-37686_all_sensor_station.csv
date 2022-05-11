@@ -1,0 +1,4 @@
+	sensor_id	source	comment	date_time	value
+0	WR_ 	SCH	  WR_ USSR/Russia wind only unspecified model or method^ may be pibal, reflector, transponder, or wind-only sonde		
+187	IGRA2	IGRA2	USING SONDE MODEL , I1 , RZ 049 	1960-01-01	3.0
+188	IGRA2	IGRA2	USING SONDE MODEL , I1 , A22 SERIES 	1976-01-01	3.0

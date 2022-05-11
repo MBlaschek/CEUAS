@@ -1,0 +1,59 @@
+	date_time	sensor_id	value	source	comment
+0	1925-08-17 02:54:00	RK2 	1	SCH	  RK2 USSR RKZ-2 radiosonde {1967}^ (W2=20, T=304) <F=V1780PB,P=B,T=TR,U=G>
+35576	1984-04-06 12:00:00	MR4 	1	SCH	  MR4 Mixed Russia RKZ-2 (RK2, DP to or near top) and MARS-2-1 (RRA, DP to T around -40), both using Meteor or Meteorit-1 radar^
+36835	1985-04-01 06:00:00	MRk 	1	SCH	  MRk exact type insufficiently documented
+37131	1985-06-20 00:00:00	MR4 	1	SCH	  MR4 Mixed Russia RKZ-2 (RK2, DP to or near top) and MARS-2-1 (RRA, DP to T around -40), both using Meteor or Meteorit-1 radar^
+39139	1987-01-06 00:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+42663	1989-07-20 06:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+43239	1989-12-17 12:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+43423	1990-02-08 06:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+44212	1991-01-27 06:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+44482	1991-05-01 06:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+44577	1991-06-04 12:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+46078	1993-09-11 00:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+46152	1993-10-21 00:00:00	RR1 	1	SCH	  RR1 USSR MARS-1 temperature only radiosonde {1983}^ (T=222) temperature and winds <F=T1780PL,P=0,T=TR,W=Ta>
+46172	1993-10-31 12:00:00	WRR 	1	SCH	  WRR USSR/Russia MARS-0 windsonde {1984}^ (T=221) <F=T1780PL,P=0,W=Ta>
+46200	1993-12-03 00:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+46319	1994-03-13 00:00:00	WRR 	1	SCH	  WRR USSR/Russia MARS-0 windsonde {1984}^ (T=221) <F=T1780PL,P=0,W=Ta>
+46356	1994-04-21 12:00:00	RR1 	1	SCH	  RR1 USSR MARS-1 temperature only radiosonde {1983}^ (T=222) temperature and winds <F=T1780PL,P=0,T=TR,W=Ta>
+46357	1994-04-22 00:00:00	WRR 	1	SCH	  WRR USSR/Russia MARS-0 windsonde {1984}^ (T=221) <F=T1780PL,P=0,W=Ta>
+46365	1994-04-30 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+46366	1994-06-01 00:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+46392	1994-07-01 00:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+46447	1994-11-16 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+46454	1994-11-30 00:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+46602	1995-10-31 00:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+46606	1995-11-07 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+46607	1996-03-01 00:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+46681	1996-06-24 00:00:00	RR1 	1	SCH	  RR1 USSR MARS-1 temperature only radiosonde {1983}^ (T=222) temperature and winds <F=T1780PL,P=0,T=TR,W=Ta>
+46735	1996-08-28 00:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+47476	1999-06-19 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+47632	1999-12-15 00:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+47930	2000-10-22 00:00:00	RRN 	1	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^
+48034	2001-02-21 00:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+48053	2001-03-12 00:00:00	RuN 	1	SCH	  RuN Ukraine MARS-2-1 radiosonde no correction, 31313=02803^
+49753	2008-07-05 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+49754	2008-09-16 00:00:00	RuN 	1	SCH	  RuN Ukraine MARS-2-1 radiosonde no correction, 31313=02803^
+50070	2010-01-02 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+50071	2010-04-05 00:00:00	RuN 	1	SCH	  RuN Ukraine MARS-2-1 radiosonde no correction, 31313=02803^
+50100	2010-05-15 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+50101	2010-06-25 00:00:00	RuN 	1	SCH	  RuN Ukraine MARS-2-1 radiosonde no correction, 31313=02803^
+50392	2011-07-15 00:00:00	RPA 	1	SCH	  RPA Ukraine PAZA-12M with UL radiotheodolite {~2010} 31313=01503^ (W3=115)
+50451	2011-09-22 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+50452	2011-11-15 00:00:00	RPA 	1	SCH	  RPA Ukraine PAZA-12M with UL radiotheodolite {~2010} 31313=01503^ (W3=115)
+0	2013-01-01 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+932	2016-04-27 00:00:00	150	2	WMO	Meteolabor SRS-C50/Argus (Switzerland)                            
+933	2016-04-28 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+15530	1935-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR MOLCHANOV KAMMGERAET NO HUMID 1934 
+15531	1937-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , USSR MOLCHANOV KAMMGERAET NO HUMID 1934 , to , USSR MOLCHANOV KAMMGERAET NO HUMID 1936 
+15533	1951-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , UNKNOWN , to , USSR RZ-049 UNSPECIFIED 
+15534	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 
+15535	1961-06-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RZ-049 UNSPECIFIED , to , USSR A-22 UNSPECIFIED 
+15536	1969-04-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , USSR RKZ-2 1780 MHZ 
+15537	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 
+15538	1984-04-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RKZ-2 1780 MHZ , to , RUSSIA/USSR MARS UNSPECIFIED 
+15539	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+15539	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+15543	1993-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS OR MRZ UNSPECIFIED 
+15545	1996-03-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS-2-1 
+15545	1996-03-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS-2-1 

@@ -1,0 +1,10 @@
+	sensor_id	source	comment	date_time	value
+5019	VNg 	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
+5141	VNz 	SCH	  VNz Vaisala RS92 DigiCORA III no corr, NCAR Integrated Sounding System (reported 31313=09608 or 09019, should be 31313=08008)^ <F=T400-406DL,P=Sc,T=Wc,		
+0	W02 	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)		
+1700	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
+3233	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+9437	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 , ? 	1982-01-01	3.0
+9437	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 , ? 	1982-01-01	3.0
+9437	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 , ? 	1982-01-01	3.0
+9444	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , WIND: WIND ONLY PIBAL , to , VAISALA RS92 DIGICORA III GPS WIND 	2006-11-01	3.0

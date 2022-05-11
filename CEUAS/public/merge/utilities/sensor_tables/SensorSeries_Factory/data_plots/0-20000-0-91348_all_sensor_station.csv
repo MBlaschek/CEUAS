@@ -1,0 +1,16 @@
+	sensor_id	source	comment	date_time	value
+502	121	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        		
+382	126	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           		
+696	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+580	136	WMO	Meisei iMDS-17 GPS dropsonde w/thermistor sensor, capacitance relative humidity   sensor, and capacitance pressure sensor (Japan)              		
+583	18	WMO	Graw DFM-06 (Germany)                		
+1512	182	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      		
+500	58	WMO	AVK-BAR (Russian Federation)                		
+660	79	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            		
+0	87	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         		
+40961	AH  	SCH	  [52,66,67|--] Vaisala RS80 H-Humicap with dry bias from contamination from packaging (WC+2002  TOGA COARE in late 1992 was first large use of		
+0	ZF1 	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+30712	ZKB 	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"		
+4689	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1986-01-01	3.0
+4690	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 	1988-10-01	3.0
+4696	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VAISALA RS80-56H NWS SOLAR/IR CORR 	1995-12-01	3.0

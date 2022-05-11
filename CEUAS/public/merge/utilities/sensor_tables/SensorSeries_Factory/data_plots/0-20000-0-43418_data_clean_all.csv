@@ -1,0 +1,14 @@
+	date_time	sensor_id	value	source	comment
+0	1944-01-01 01:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+12944	1974-06-02 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12947	1975-10-09 12:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+13052	1976-12-13 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+13055	1978-01-06 02:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+17893	1985-08-21 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+18035	1987-02-17 12:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+18082	1987-09-25 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+18085	1988-05-02 12:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+21229	1996-12-08 05:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+21230	1997-11-20 12:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+2868	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , BRITAIN WHITELEY KEW MARK II 
+2869	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , AUSTRALIA PHILIPS UNSPECIFIED 

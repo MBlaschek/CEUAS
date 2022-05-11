@@ -1,0 +1,7 @@
+	sensor_id	source	comment	date_time	value
+0	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+50	61	WMO	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            		
+116	71	WMO	Vaisala RS90/Loran/Digicora I, II or Marwin (Finland)            		
+1	9	SCH	 No radiosonde – system unknown or not specified          		
+64	91	WMO	Pressure only radiosonde               		
+0	NA 	SCH	NA		

@@ -1,0 +1,19 @@
+	date_time	sensor_id	value	source	comment
+0	1938-11-01 13:30:00	U4_ 	1	SCH	  U4_ USA AN/AMT-4 radiosonde, unspecified variety^
+36956	1973-07-19 00:00:00	U4_m	1	SCH	  U4_m USA AN/AMT-4 carbon hygristor with modified military censoring {1973}^ <F=V1680PB,P=A,T=TR(ML-419/AM),U=C(ML-476),W=Da(AN/GMD-1)>
+39463	1976-12-13 18:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+40490	1978-04-21 14:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+47395	1985-12-13 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+47400	1986-01-14 22:00:00	ZJAc	1	SCH	  ZJAc VIZ model 1392-510 NWS 1680 MHz Accu-Lok, new hygristor, censoring {1980}^ (T=001) NWS stock no. J031 <F=T1680AB,P=A,T=TR(ML-405),U=C,
+50185	1991-03-07 14:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+0	2013-01-04 18:00:00	90	2	WMO	Radiosonde not specified or unknown             
+135	2015-12-01 12:55:00	7	2	WMO	iMet-1-AB (United States)                
+317	2018-03-08 16:48:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+319	2018-03-12 12:00:00	7	2	WMO	iMet-1-AB (United States)                
+334	2018-04-16 19:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+335	2018-04-24 16:00:00	7	2	WMO	iMet-1-AB (United States)                
+344	2018-05-22 17:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+15945	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
+15945	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
+15948	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+15950	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

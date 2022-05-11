@@ -1,0 +1,12 @@
+	sensor_id	source	comment	date_time	value
+2678	110	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               		
+4009	112	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 		
+3414	121	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        		
+3520	125	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           		
+3442	27	WMO	AVK-MRZ (Russian Federation)                		
+3623	6	WMO	 No radiosonde – radio-acoustic sounder             		
+0	I32 	SCH	  I32 India 1680 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=184, W2=22, W3=20) <F=T1680FB,P=A,T=TR,U=L>		
+29316	I42 	SCH	  I42 India 1680 MHz Mark 4 carbon hygristor radiosonde {2003}, sometimes 31313=02002^ <F=T1680FL,P=A,T=TR,U=C>		
+29995	MI2 	SCH	  MI2 Mixed India 1680 MHz Mark 3 (I32) and Mark 4 (I42)^ Mixed 1680 MHz India Mark 3 (I32, DP usually ends with T around -10 C but very irregular,		
+27981	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+6708	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 1680 MHZ 1992 VERSION 	1996-01-01	3.0

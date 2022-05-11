@@ -1,0 +1,14 @@
+	date_time	sensor_id	value	source	comment
+0	1950-01-01 12:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+0	2013-11-15 12:00:00	162	2	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        
+262	2015-05-29 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+263	2015-06-01 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+267	2015-06-05 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+268	2015-06-06 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+271	2015-06-09 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+272	2015-06-10 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+322	2015-08-05 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+325	2015-11-11 12:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+327	2015-11-13 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+329	2015-11-15 12:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+10112	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 

@@ -1,0 +1,12 @@
+	date_time	sensor_id	value	source	comment
+0	1944-01-01 01:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+42207	2007-11-08 12:00:00	UIa 	1	SCH	  UIa USA InterMet iMet-1-AA no pressure C/A GPS 403-MHz radiosonde {2004} 31313=50708(?)^ <F=T400.15-406DL,P=0,T=TB,U=A(made by Humeriel, France),N=G>
+46175	2011-04-24 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+144	2013-02-11 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+2217	2015-08-04 00:00:00	0	2	WMO	NA
+2252	2015-08-24 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+2306	2015-09-18 00:00:00	0	2	WMO	NA
+2328	2015-09-28 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+2460	2015-11-04 00:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+5383	2018-10-13 00:00:00	49	2	WMO	VIZ MARK II (United States)              
+6613	2020-06-25 23:31:00	7	2	WMO	iMet-1-AB (United States)                

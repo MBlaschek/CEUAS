@@ -1,0 +1,81 @@
+	date_time	sensor_id	value	source	comment
+0	1950-02-08 14:00:00	RS3 	1	SCH	  RS3 USSR RZ-043 radiosonde {1944}^ <F=V7.5MR,P=D,T=B,U=H>
+38181	1984-07-02 12:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+38236	1984-07-16 12:00:00	RK2 	1	SCH	  RK2 USSR RKZ-2 radiosonde {1967}^ (W2=20, T=304) <F=V1780PB,P=B,T=TR,U=G>
+38337	1984-08-27 12:00:00	MR4 	1	SCH	  MR4 Mixed Russia RKZ-2 (RK2, DP to or near top) and MARS-2-1 (RRA, DP to T around -40), both using Meteor or Meteorit-1 radar^
+38361	1984-09-02 18:00:00	RK2 	1	SCH	  RK2 USSR RKZ-2 radiosonde {1967}^ (W2=20, T=304) <F=V1780PB,P=B,T=TR,U=G>
+38418	1984-09-18 18:00:00	MR4 	1	SCH	  MR4 Mixed Russia RKZ-2 (RK2, DP to or near top) and MARS-2-1 (RRA, DP to T around -40), both using Meteor or Meteorit-1 radar^
+38430	1984-09-23 00:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+39122	1985-04-04 12:00:00	MR4 	1	SCH	  MR4 Mixed Russia RKZ-2 (RK2, DP to or near top) and MARS-2-1 (RRA, DP to T around -40), both using Meteor or Meteorit-1 radar^
+39320	1985-06-04 12:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+39701	1985-09-27 12:00:00	MR4 	1	SCH	  MR4 Mixed Russia RKZ-2 (RK2, DP to or near top) and MARS-2-1 (RRA, DP to T around -40), both using Meteor or Meteorit-1 radar^
+39774	1985-10-15 18:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+44810	1989-06-08 00:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+45050	1989-08-19 18:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+45102	1989-09-01 18:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+45700	1990-04-16 00:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+46288	1991-02-17 00:00:00	RR1 	1	SCH	  RR1 USSR MARS-1 temperature only radiosonde {1983}^ (T=222) temperature and winds <F=T1780PL,P=0,T=TR,W=Ta>
+46327	1991-03-08 12:00:00	RRA 	1	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+46351	1991-03-20 00:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+46576	1991-07-25 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+49883	1998-02-13 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+49884	1998-10-03 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+51184	2003-09-16 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+51185	2005-01-12 00:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+51499	2005-11-09 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+51500	2006-05-25 12:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+54052	2010-01-22 00:00:00	RPK 	1	SCH	  RPK Ukraine PAZA-22M with MARL-A radar {~2009} 31313=58803 or 31313=52716 or *48**^
+54053	2010-01-22 12:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+54054	2010-01-23 00:00:00	RHM 	1	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),
+54104	2010-02-17 00:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+54105	2010-02-17 12:00:00	RHM 	1	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),
+54173	2010-03-23 12:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+54174	2010-03-24 00:00:00	RHM 	1	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),
+54213	2010-04-12 12:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+54214	2010-04-13 00:00:00	RHM 	1	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),
+54251	2010-05-01 12:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+54252	2010-05-02 00:00:00	RHM 	1	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),
+54301	2010-05-26 12:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+54302	2010-05-27 00:00:00	RHM 	1	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),
+54397	2010-07-13 12:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+54398	2010-07-14 12:00:00	RHM 	1	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),
+54663	2010-11-26 00:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+54664	2010-11-26 12:00:00	RHM 	1	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),
+54694	2010-12-12 12:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+54695	2010-12-13 00:00:00	RHM 	1	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),
+54706	2010-12-18 12:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+54707	2010-12-19 00:00:00	RHM 	1	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),
+54747	2011-01-08 00:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+54748	2011-01-09 00:00:00	RHM 	1	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),
+54759	2011-01-14 12:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+54760	2011-01-15 00:00:00	RHM 	1	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),
+55350	2011-11-07 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+0	2013-01-01 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+697	2014-02-25 12:00:00	27	2	WMO	AVK-MRZ (Russian Federation)                
+698	2014-02-26 00:00:00	89	2	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              
+3762	2018-05-31 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+4686	2019-09-06 12:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+4696	2019-09-11 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+4725	2019-09-26 12:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+4726	2019-09-27 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+4843	2019-12-25 12:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+5626	2021-01-25 12:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+5627	2021-01-26 00:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+5640	2021-02-01 12:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+5705	2021-03-06 00:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+5706	2021-03-06 12:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+6150	2021-10-14 12:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+6242	2021-11-30 00:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+6243	2021-11-30 12:00:00	154	2	WMO	Graw DFM-17 (Germany)                            
+6247	2021-12-02 12:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+8550	1957-08-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RZ-049 UNSPECIFIED , to , USSR A-22 UNSPECIFIED 
+8551	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 
+8552	1969-09-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , USSR RKZ-2 1780 MHZ 
+8553	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 
+8554	1984-07-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RKZ-2 1780 MHZ , to , RUSSIA/USSR MARS UNSPECIFIED 
+8555	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+8555	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+8559	1993-02-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ UNSPECIFIED 
+8559	1993-02-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ UNSPECIFIED 
+8564	2006-05-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 
+8564	2006-05-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 

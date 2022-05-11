@@ -1,0 +1,18 @@
+	sensor_id	source	comment	date_time	value
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+20070	???c	SCH	  ???c exact type insufficiently documented		
+0	U?? 	SCH	  U?? exact type insufficiently documented		
+15060	U??c	SCH	  U??c exact type insufficiently documented		
+20568	USHc	SCH	  USHc USA Space Data ARTsonde 909-10-01, erroneous humidity software {1990} 31313=01202^ <F=T1680AL,P=A,T=TC,U=C(VIZ B)>		
+20335	VC5 	SCH	  VC5 Vaisala RS80 DigiCORA I, II, or Marwin no corr, Omega wind 31313=06105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>		
+21224	VC6 	SCH	  VC6 Vaisala RS80 DigiCORA I, II, or Marwin no corr, LoRAN wind 31313=06106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>		
+21309	VHG 	SCH	  VHG Vaisala RS80-15G or RS80-15GA codeless GPS radiosonde, pre-199905, Intermediate Frequency (IF) drift problem {1995}^ <F=T403FL,P=Ac,T=CB,U=A,N=G>		
+21820	VNg 	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
+21307	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+19086	ZF1c	SCH	  ZF1c VIZ model 1192 NWS 1680 MHz, new hygristor duct, censoring  {1973}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+20071	ZK9c	SCH	"  ZK9c VIZ model 1499-510 NWS ART ""B"" 1680 MHz J050, censoring {~ 1990} 31313=01102^ NWS stock no. J050 <F=T1680AL,P=Ab,T=TR(ML-405),U=C,W=Ra(WBRT or GMD-1)>"		
+20603	ZKAc	SCH	"   ZKAc VIZ model 1492-510 NWS 1680 MHz ART ""A"" Accu-Lok, censoring {1986} 31313=01002^ (T=003,W3=10) <F=T1680AL,P=Ab,T=TR(ML-405),U=C,W=Ra(WBRT/GMD-1)>"		
+16302	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 	1982-01-01	3.0
+16302	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 	1982-01-01	3.0
+16305	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1989-01-01	3.0
+16307	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1992-12-01	3.0

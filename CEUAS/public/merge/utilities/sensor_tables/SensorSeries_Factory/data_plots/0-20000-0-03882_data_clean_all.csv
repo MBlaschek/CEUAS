@@ -1,0 +1,85 @@
+	date_time	sensor_id	value	source	comment
+0	1985-09-01 06:00:00	VHL 	1	SCH	  VHL Vaisala RS80-15L or RS80-15LA LoRAN radiosonde^ (T=022) <F=T403FL,P=Ac,T=CB,U=A,N=L>
+1067	1993-09-01 12:00:00	VDL 	1	SCH	  VDL Vaisala RS80 PC Cora auto corr, LoRAN wind 31313=46206^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+5364	1996-08-01 09:00:00	MX4 	1	SCH	  MX4 Mixed Vaisala RS80 PC CORA and VIZ Mark II^ Station 03005, based on 31313, Vaisala RS80 PCCora (62=VD_), VIZ Mark II Microsonde (49=ZN4), missing 31313 assumed to be VD_
+11933	2001-11-27 23:00:00	VFL 	1	SCH	  VFL Vaisala RS80 Autosonde auto corr, LoRAN wind 31313=46606^ <F=T403FL,P=Ac,T=CB,U=A,N=L>
+15244	2006-01-26 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+0	2013-01-01 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+395	2013-10-11 11:00:00	3	2	WMO	 No radiosonde – active target (e.g. transponder)           
+396	2013-10-11 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+426	2013-10-27 23:00:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
+427	2013-10-28 08:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+509	2013-12-30 05:00:00	125	2	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           
+510	2013-12-30 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+726	2014-06-04 23:00:00	119	2	WMO	Polus-MRZ-N1 (Russian Federation)                            
+727	2014-06-05 11:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+937	2014-10-12 17:00:00	125	2	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           
+938	2014-10-13 05:00:00	122	2	WMO	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+939	2014-10-13 11:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+962	2014-10-30 11:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+963	2014-10-30 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+972	2014-11-05 11:00:00	133	2	WMO	Nanjing GTS1-2/GFE(L) (China)                            
+973	2014-11-05 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+979	2014-11-09 11:00:00	125	2	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           
+980	2014-11-09 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+986	2014-11-12 23:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+987	2014-11-13 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+988	2014-11-14 11:00:00	20	2	WMO	Indian Meteorological Service MK3 (India)              
+989	2014-11-14 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+992	2014-11-16 11:00:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
+993	2014-11-16 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+995	2014-11-17 23:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+996	2014-11-18 11:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+997	2014-11-18 23:00:00	133	2	WMO	Nanjing GTS1-2/GFE(L) (China)                            
+998	2014-11-19 11:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1011	2014-11-24 23:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+1012	2014-11-25 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1019	2014-11-28 11:00:00	20	2	WMO	Indian Meteorological Service MK3 (India)              
+1020	2014-11-29 00:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1051	2014-12-22 00:00:00	129	2	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        
+1052	2014-12-22 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1063	2014-12-30 23:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+1064	2014-12-31 11:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1076	2015-01-07 23:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+1077	2015-01-08 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1085	2015-01-16 23:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+1086	2015-01-17 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1111	2015-02-07 23:00:00	34	2	WMO	Vinohrady (Czechia)                 
+1112	2015-02-08 23:00:00	0	2	WMO	NA
+1113	2015-02-09 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1155	2015-03-23 23:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+1156	2015-03-24 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1175	2015-04-07 23:00:00	133	2	WMO	Nanjing GTS1-2/GFE(L) (China)                            
+1176	2015-04-08 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1184	2015-04-14 05:00:00	34	2	WMO	Vinohrady (Czechia)                 
+1185	2015-04-14 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1186	2015-04-15 05:00:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
+1187	2015-04-15 11:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1192	2015-04-17 11:00:00	133	2	WMO	Nanjing GTS1-2/GFE(L) (China)                            
+1193	2015-04-17 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1195	2015-04-19 23:00:00	5	2	WMO	 No radiosonde – active temperature-humidity profiler            
+1196	2015-04-20 05:00:00	7	2	WMO	iMet-1-AB (United States)                
+1197	2015-04-20 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1199	2015-04-21 23:00:00	6	2	WMO	 No radiosonde – radio-acoustic sounder             
+1200	2015-04-22 11:00:00	3	2	WMO	 No radiosonde – active target (e.g. transponder)           
+1201	2015-04-22 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1204	2015-04-24 23:00:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
+1205	2015-04-25 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1216	2015-05-04 17:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+1217	2015-05-04 23:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1245	2015-05-24 23:00:00	34	2	WMO	Vinohrady (Czechia)                 
+1246	2015-05-25 11:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1706	2016-04-03 17:00:00	20	2	WMO	Indian Meteorological Service MK3 (India)              
+1707	2016-04-03 23:15:03	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+2130	2016-12-12 17:22:26	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2331	2017-04-20 15:36:55	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
+3893	2020-09-08 11:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+3894	2020-09-08 23:15:07	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
+15362	1946-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , BRITAIN KEW MARK I , to , BRITAIN KEW MARK II 
+15363	1952-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , BRITAIN KEW MARK II , to , BRITAIN KEW MARK IIB UNSPECIFIED 
+15366	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK II 
+15370	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK IIB UNSPECIFIED 
+15372	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , BRITAIN UNSPECIFIED 
+15373	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK III 
+15373	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK III 
+15377	1993-09-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

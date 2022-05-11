@@ -1,0 +1,9 @@
+	sensor_id	source	comment	date_time	value
+9598	MUN 	SCH	  MUN Mixed USA Blue Hill-Harvard Lange radiosonde (ULb) and US Army airplane meteorograph (NU4) {1937}^		
+3510	NDC 	SCH	  NDC Germany Bosch PTU airplane meteorograph {~1930?}^ <F=C,P=A,T=B,U=H>		
+9943	ULb 	SCH	  ULb USA Blue Hill Lange Type F radiosonde {late 1936}^ <F=V68AC,P=A,T=B,U=H>		
+0	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
+39123	ZF1 	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+16965	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ OMEGA 	1982-01-01	3.0
+16965	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ OMEGA 	1982-01-01	3.0
+16969	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ (Generic) 	1989-01-01	3.0

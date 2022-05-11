@@ -1,0 +1,12 @@
+	date_time	sensor_id	value	source	comment
+0	1942-10-26 22:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+68	1943-02-07 22:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+69	1951-09-13 04:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+15974	1963-07-21 23:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
+30918	1973-11-04 00:00:00	AA63	1	SCH	  AA63 exact type insufficiently documented
+31002	1973-11-20 22:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
+67240	1996-12-23 23:00:00	VDR 	1	SCH	  VDR Vaisala RS80 PC Cora auto corr, RDF wind 31313=46202^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+70286	1999-07-06 23:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
+1112	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , AUSTRALIA PHILIPS RS4 UNSPECIFIED 
+1114	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , AUSTRALIA PHILIPS UNSPECIFIED 
+1115	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

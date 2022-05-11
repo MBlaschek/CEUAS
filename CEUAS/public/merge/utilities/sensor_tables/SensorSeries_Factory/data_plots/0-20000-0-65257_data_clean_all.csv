@@ -1,0 +1,3 @@
+	date_time	sensor_id	value	source	comment
+0	1978-08-01 12:00:00	FGC 	1	SCH	  FGC France Geolink-Modem M2K2-DC 1680 MHz improved radiation protection {2006} 31313=45708^ <F=T1680DL,P=0,T=TC,U=A,N=GC>
+632	2011-10-19 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

@@ -1,0 +1,6 @@
+	sensor_id	source	comment	date_time	value
+18373	IA5 	SCH	  IA5 India 401 MHz Audiomodulated or Mark 3 new thermistor radiosonde {198002} WMO instr=20^ (W1=18, W3=20, T=181) <F=T401AB,P=A,T=TR,U=L>		
+12266	WI4 	SCH	  WI4 India wind only 401-MHz transmitter {1970}^ <F=V401F->		
+0	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
+19849	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+6920	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0

@@ -1,0 +1,21 @@
+	sensor_id	source	comment	date_time	value
+1287	148	WMO	PAZA-22M/MARL-A                              		
+5161	173	WMO	МАRL-A (Russian Federation) – ASPAN-15 (Kazakhstan)                         		
+0	88	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              		
+26280	MRk 	SCH	  MRk exact type insufficiently documented		
+27803	MRz 	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^		
+35142	RDM 	SCH	  RDM Russia RZM-2 radiosonde with 1680 MHz MARL-A or Vektor-M tracking {2004} 31313=56903^ (W3=69) <F=T1680PL,P=0,T=TR(MMT-1),U=A(HS-03M),W=Ta>		
+11015	RK5 	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>		
+34528	RPK 	SCH	  RPK Ukraine PAZA-22M with MARL-A radar {~2009} 31313=58803 or 31313=52716 or *48**^		
+22051	RRB 	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>		
+0	RS6 	SCH	  RS6 USSR RZ-049 radiosonde, radiation and lag corrections {1957}^ (I=S1, T=274,337) <F=V403MB,P=2A,T=B,U=H,W=O or Dm>		
+27688	RZ3 	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+32957	Ru3 	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)		
+27687	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+8680	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR RZ-049 UNSPECIFIED , to , USSR A-22 UNSPECIFIED 	1960-12-01	3.0
+8681	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 	1960-01-01	3.0
+8682	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , USSR RKZ-5 1780 MHZ 	1973-02-01	3.0
+8683	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 	1976-01-01	3.0
+8684	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR RKZ-5 1780 MHZ , to , RUSSIA/USSR MARS UNSPECIFIED 	1984-09-01	3.0
+8685	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+8685	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0

@@ -1,0 +1,9 @@
+	sensor_id	source	comment	date_time	value
+5305	117	WMO	Graw DFM-09 (Germany)                            		
+2066	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+5405	154	WMO	Graw DFM-17 (Germany)                            		
+33	79	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            		
+48719	VC_ 	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
+0	W__ 	SCH	  W__ Wind only, method unspecified^		
+9776	IGRA2	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL FMO 1950A 	1982-01-01	3.0
+9779	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1992-12-01	3.0

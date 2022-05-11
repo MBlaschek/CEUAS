@@ -1,0 +1,5 @@
+	date_time	sensor_id	value	source	comment
+0	1967-01-13 12:00:00	WR_ 	1	SCH	  WR_ USSR/Russia wind only unspecified model or method^ may be pibal, reflector, transponder, or wind-only sonde
+1477	1985-07-30 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+154	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RZ 049 
+155	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , A22 SERIES 

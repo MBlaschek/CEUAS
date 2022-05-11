@@ -1,0 +1,27 @@
+	date_time	sensor_id	value	source	comment
+0	1950-08-01 03:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+30712	1988-10-01 00:00:00	ZKB 	1	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"
+40961	1995-12-01 00:00:00	AH  	1	SCH	  [52,66,67|--] Vaisala RS80 H-Humicap with dry bias from contamination from packaging (WC+2002  TOGA COARE in late 1992 was first large use of
+0	2013-01-01 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+382	2013-07-12 12:00:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
+383	2013-07-13 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+500	2013-09-09 12:00:00	58	2	WMO	AVK-BAR (Russian Federation)                
+501	2013-09-10 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+502	2013-09-10 12:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+503	2013-09-11 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+580	2013-10-20 00:00:00	136	2	WMO	Meisei iMDS-17 GPS dropsonde w/thermistor sensor, capacitance relative humidity   sensor, and capacitance pressure sensor (Japan)              
+581	2013-10-20 12:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+583	2013-10-21 12:00:00	18	2	WMO	Graw DFM-06 (Germany)                
+584	2013-10-22 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+660	2013-11-29 00:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+661	2013-11-29 12:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+696	2013-12-17 00:00:00	128	2	WMO	AVK - AK2-02 (Russian Federation)                          
+697	2013-12-17 12:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+780	2014-01-28 00:00:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
+781	2014-01-28 11:04:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+1512	2015-03-16 11:35:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+1513	2015-03-17 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+1551	2015-04-25 11:10:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+4689	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+4690	1988-10-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 
+4696	1995-12-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VAISALA RS80-56H NWS SOLAR/IR CORR 

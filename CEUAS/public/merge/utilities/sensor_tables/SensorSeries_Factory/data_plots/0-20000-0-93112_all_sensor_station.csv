@@ -1,0 +1,15 @@
+	sensor_id	source	comment	date_time	value
+1502	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+1	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+19429	AA5 	SCH	  AA5 Australia Astor 403 MHz thermistor in duct radiosonde {<= 1953}^ (I=K including 72 and 403 MHz, T=090) <F=V403FB,P=A,T=TRd,U=L>		
+0	ABN 	SCH	  ABN Australia Bendix-Friez license AN/AMQ-1 radiosonde, no Bendix radiation corrections {194810}^		
+59586	VCG 	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
+58418	VCL 	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>		
+57622	VCN 	SCH	  VCN Vaisala RS80 DigiCORA I, II, or Marwin auto corr, no wind 31313=46100^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=none>		
+67215	VNg 	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
+24820	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+9933	IGRA2	IGRA2	CHANGE SONDE MODEL , UNKNOWN , to , UNKNOWN 	1960-10-01	3.0
+9935	IGRA2	IGRA2	USING SONDE MODEL , I1 , AUSTRALIA ECLIPSE RADIO 	1960-01-01	3.0
+9939	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ 1395-410 NWS 403 MHZ BASELINE 	1982-01-01	3.0
+9939	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ 1395-410 NWS 403 MHZ BASELINE 	1982-01-01	3.0
+9941	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , VAISALA RS80-15 BROADBAND XMTR , to , VAISALA RS92-SGP UNSPECIFIED 	2006-01-01	3.0

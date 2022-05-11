@@ -1,0 +1,4 @@
+	date_time	sensor_id	value	source	comment
+0	2008-02-04 18:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+1231	2015-12-09 03:31:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+2232	2018-06-20 18:32:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  

@@ -1,0 +1,41 @@
+	sensor_id	source	comment	date_time	value
+3531	110	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               		
+506	113	WMO	Vaisala RS92/MARWIN MW32 (Finland)                           		
+536	115	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             		
+3527	117	WMO	Graw DFM-09 (Germany)                            		
+3988	119	WMO	Polus-MRZ-N1 (Russian Federation)                            		
+2974	121	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        		
+4330	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+3521	124	WMO	Vaisala RS41/AUTOSONDE (Finland)                            		
+3525	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+3523	18	WMO	Graw DFM-06 (Germany)                		
+3901	27	WMO	AVK-MRZ (Russian Federation)                		
+524	3	WMO	 No radiosonde – active target (e.g. transponder)           		
+6793	7	WMO	iMet-1-AB (United States)                		
+522	8	WMO	 No radiosonde –... (reserved)              		
+280	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+3899	9	WMO	 No radiosonde – system unknown or not specified          		
+55442	I31 	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>		
+67637	I41 	SCH	  I41 India 401 MHz Mark 4 carbon hygristor radiosonde {2003}, sometimes 31313=02002^ <F=T401FL,P=B,T=TR,U=C>		
+25317	IA1 	SCH	  IA1 India 401 MHz Audiomodulated radiosonde {1967}^ (W1=18, T=181) <F=V401AB,P=A,T=TR,U=L>		
+39427	IA5 	SCH	  IA5 India 401 MHz Audiomodulated or Mark 3 new thermistor radiosonde {198002} WMO instr=20^ (W1=18, W3=20, T=181) <F=T401AB,P=A,T=TR,U=L>		
+51982	IA7 	SCH	  IA7 India 401 MHz Audiomodulated or Mark 3 new humidity duct radiosonde {1988} WMO instr=20^ (W1=18, W3=20, T=181) <F=T401AB,P=A,T=TR,U=L>		
+0	IC2 	SCH	  IC2 India chronometric or clock drive 2-transmitter 75 and 397 MHz radiosonde {1957}^ (I=N1) <F=V75+397HC,P=A,T=BC,U=W,W=397 mhz>		
+67760	MI1 	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate		
+55352	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+6505	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA CLOCK 2 TRANSMITTERS 75/397 MHZ 	1961-07-01	3.0
+6507	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , NONE , to , SPECIAL: USA KUHN IMPRVD RADIOMETERSOND 	1963-04-01	3.0
+6508	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , NONE , to , OZONE: INDIA IMD BREWER 72 MHZ 	1965-01-01	3.0
+6509	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , INDIA CLOCK 2 TRANSMITTERS 75/397 MHZ , to , INDIA AUDIOMODULATED 401 MHZ 	1968-12-01	3.0
+6510	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMODULATED 401 MHZ , to , INDIA AUDIOMODULATED 401 MHZ TRANSISTOR 	1975-01-01	3.0
+6511	IGRA2	IGRA2	CHANGE GROUND EQUIP , G1 , UNKNOWN , to , RADIOSONDE GROUND EQUIP (RSGE) 401 MHZ 	1979-05-01	3.0
+6513	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMODULATED 401 MHZ TRANSISTOR , to , INDIA AUDIOMOD 401 MHZ NEW THERMISTOR 	1980-02-01	3.0
+6515	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
+6515	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
+6518	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMOD 401 MHZ NEW THERMISTOR , to , INDIA AUDIOMOD 401 MHZ NEW HUMIDITY DUC 	1988-01-01	3.0
+6515	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
+6521	IGRA2	IGRA2	USING GROUND EQUIP. , G1 , RADIOSONDE GROUND EQUIP (RSGE) 401 MHZ 	1992-12-01	3.0
+6515	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
+6525	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMOD 401 MHZ NEW HUMIDITY DUC , to , INDIA MARK 3 401 MHZ 1992 VERSION 	1992-01-01	3.0
+6521	IGRA2	IGRA2	USING GROUND EQUIP. , G1 , RADIOSONDE GROUND EQUIP (RSGE) 401 MHZ 	1992-12-01	3.0
+6521	IGRA2	IGRA2	USING GROUND EQUIP. , G1 , RADIOSONDE GROUND EQUIP (RSGE) 401 MHZ 	1992-12-01	3.0

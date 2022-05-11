@@ -1,0 +1,4 @@
+	sensor_id	source	comment	date_time	value
+0	W__ 	SCH	  W__ Wind only, method unspecified^		
+5949	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ (Generic) 	1986-01-01	3.0
+5950	IGRA2	IGRA2	USING SONDE MODEL , I2 , MEISEI-JAPAN (G) 	1986-01-01	3.0

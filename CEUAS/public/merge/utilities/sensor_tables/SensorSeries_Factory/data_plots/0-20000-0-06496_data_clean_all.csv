@@ -1,0 +1,6 @@
+	date_time	sensor_id	value	source	comment
+0	1921-12-06 10:00:00	ZP9 	1	SCH	  ZP9 exact type insufficiently documented
+0	2014-05-14 06:00:00	90	2	WMO	Radiosonde not specified or unknown             
+11	2021-03-22 15:08:11	134	2	WMO	Vacant                              
+1732	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK II , ? 
+1733	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , UNKNOWN 

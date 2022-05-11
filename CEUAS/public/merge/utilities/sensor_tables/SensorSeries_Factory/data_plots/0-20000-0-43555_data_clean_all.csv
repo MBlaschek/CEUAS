@@ -1,0 +1,23 @@
+	date_time	sensor_id	value	source	comment
+0	1954-07-03 09:00:00	W02 	1	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)
+1700	1981-09-07 12:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+1858	1982-04-20 11:00:00	W02 	1	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)
+3233	1987-04-29 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+3234	1987-09-24 12:00:00	W02 	1	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)
+3236	1987-10-19 00:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+3243	1987-11-08 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+3244	1988-03-20 00:00:00	W02 	1	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)
+3500	1989-06-05 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+3508	1992-11-21 06:00:00	W02 	1	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)
+4209	1995-03-11 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+4211	1995-11-20 06:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+5017	1999-07-22 06:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+5019	2006-11-01 12:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+5074	2006-11-26 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+5075	2007-04-09 11:57:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+5140	2007-06-04 23:13:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+5141	2011-10-02 00:00:00	VNz 	1	SCH	  VNz Vaisala RS92 DigiCORA III no corr, NCAR Integrated Sounding System (reported 31313=09608 or 09019, should be 31313=08008)^ <F=T400-406DL,P=Sc,T=Wc,
+9437	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 , ? 
+9437	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 , ? 
+9437	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 , ? 
+9444	2006-11-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , WIND: WIND ONLY PIBAL , to , VAISALA RS92 DIGICORA III GPS WIND 

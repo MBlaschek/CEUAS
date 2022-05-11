@@ -1,0 +1,174 @@
+	date_time	sensor_id	value	source	comment
+0	1949-01-13 13:00:00	DG4 	1	SCH	"  DG4 Germany Graw M60 ""Registration"" radiosonde 27 MHz {1960}^ (W2=07 from 197909 to 198505, W3=19, T=051) <F=T28ME,P=2A,T=BS,U=Hr>"
+8903	1976-01-20 12:00:00	ZH_ 	1	SCH	  ZH_ VIZ 1292 series, unspecified model {1973}^
+14473	1983-10-10 12:00:00	ZJ_ 	1	SCH	  ZJ_ VIZ 1392 series new hygristor, unspecified model {1980}^
+19727	1990-12-25 11:00:00	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+20501	1992-01-21 23:00:00	VD_ 	1	SCH	  VD_ Vaisala RS80 PC Cora base case 31313=96299^ (W3=62) <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=none>
+22931	1995-06-15 18:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23082	1995-08-30 16:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23175	1995-10-19 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23176	1995-10-19 17:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23315	1996-01-01 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23316	1996-01-01 18:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23327	1996-01-07 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23328	1996-01-08 06:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23365	1996-01-30 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23368	1996-01-31 17:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23373	1996-02-03 05:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23374	1996-02-03 17:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23453	1996-03-14 18:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23454	1996-03-15 05:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23486	1996-03-31 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23487	1996-03-31 16:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23488	1996-04-01 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23493	1996-04-03 16:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23515	1996-04-14 18:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23516	1996-04-15 05:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23545	1996-04-30 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23546	1996-04-30 16:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23547	1996-05-01 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23548	1996-05-01 16:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23630	1996-06-13 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23631	1996-06-13 16:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23632	1996-06-14 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23633	1996-06-14 16:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23672	1996-07-03 18:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23673	1996-07-04 05:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23677	1996-07-06 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23678	1996-07-06 16:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23689	1996-07-12 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23690	1996-07-12 16:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23713	1996-07-25 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23723	1996-07-31 04:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23726	1996-07-31 18:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23729	1996-08-02 16:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23790	1996-09-02 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23793	1996-09-04 16:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23918	1996-11-08 06:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+23919	1996-11-08 17:00:00	VAV 	1	SCH	  VAV Vaisala RS80 MicroCora radiosonde auto corr, Omega wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+24561	1997-09-30 17:00:00	VAA 	1	SCH	  VAA Vaisala RS80 MicroCora radiosonde auto corr, Russia VLF wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)>
+24883	1998-03-11 17:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+24884	1998-03-12 05:00:00	VAA 	1	SCH	  VAA Vaisala RS80 MicroCora radiosonde auto corr, Russia VLF wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)>
+24903	1998-03-21 17:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+24904	1998-03-22 05:00:00	VAA 	1	SCH	  VAA Vaisala RS80 MicroCora radiosonde auto corr, Russia VLF wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)>
+24947	1998-04-12 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+24948	1998-04-13 05:00:00	VAA 	1	SCH	  VAA Vaisala RS80 MicroCora radiosonde auto corr, Russia VLF wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)>
+24964	1998-04-21 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+24965	1998-04-21 17:00:00	VAA 	1	SCH	  VAA Vaisala RS80 MicroCora radiosonde auto corr, Russia VLF wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)>
+25093	1998-06-23 17:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25094	1998-06-24 05:00:00	VAA 	1	SCH	  VAA Vaisala RS80 MicroCora radiosonde auto corr, Russia VLF wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)>
+25274	1998-09-23 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25275	1998-09-23 16:00:00	VAA 	1	SCH	  VAA Vaisala RS80 MicroCora radiosonde auto corr, Russia VLF wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)>
+25380	1998-11-16 17:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25382	1998-11-17 17:00:00	VAA 	1	SCH	  VAA Vaisala RS80 MicroCora radiosonde auto corr, Russia VLF wind 31313=43705^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)>
+25414	1998-12-02 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+25488	1999-01-08 17:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25489	1999-01-09 06:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+25561	1999-02-14 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25564	1999-02-15 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+25722	1999-05-05 18:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25723	1999-05-06 05:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+25724	1999-05-06 18:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25725	1999-05-07 04:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+25732	1999-05-10 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25733	1999-05-11 05:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+25734	1999-05-11 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25736	1999-05-12 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+25737	1999-05-13 06:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25738	1999-05-13 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+25760	1999-05-24 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25762	1999-05-25 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+25900	1999-08-03 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25901	1999-08-04 04:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+25902	1999-08-04 17:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25903	1999-08-05 04:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+25917	1999-08-11 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25918	1999-08-12 05:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+25929	1999-08-17 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25930	1999-08-18 04:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+25964	1999-09-04 06:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+25965	1999-09-04 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26002	1999-09-24 04:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26003	1999-09-24 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26009	1999-09-27 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26010	1999-09-28 04:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26022	1999-10-04 04:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26023	1999-10-04 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26024	1999-10-05 04:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26027	1999-10-06 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26030	1999-10-08 04:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26031	1999-10-08 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26032	1999-10-09 04:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26033	1999-10-09 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26036	1999-10-11 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26037	1999-10-11 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26042	1999-10-14 04:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26043	1999-10-14 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26053	1999-10-19 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26056	1999-10-21 04:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26060	1999-10-23 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26061	1999-10-23 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26062	1999-10-24 04:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26063	1999-10-24 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26070	1999-10-28 04:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26071	1999-10-28 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26078	1999-11-01 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26079	1999-11-01 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26082	1999-11-03 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26083	1999-11-03 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26084	1999-11-04 06:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26086	1999-11-05 06:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26089	1999-11-06 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26091	1999-11-07 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26094	1999-11-09 06:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26095	1999-11-09 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26101	1999-11-12 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26102	1999-11-13 05:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26104	1999-11-14 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26105	1999-11-14 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26106	1999-11-15 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26107	1999-11-15 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26109	1999-11-16 17:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26113	1999-11-19 05:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26120	1999-11-22 17:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26121	1999-11-23 05:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26127	1999-11-26 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26128	1999-11-26 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26129	1999-11-27 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26130	1999-11-27 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26131	1999-11-28 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26132	1999-11-28 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26135	1999-11-30 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26136	1999-11-30 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26137	1999-12-01 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26138	1999-12-01 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26140	1999-12-02 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26142	1999-12-03 16:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26143	1999-12-04 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26144	1999-12-04 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26150	1999-12-07 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26151	1999-12-08 06:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26155	1999-12-10 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26156	1999-12-10 17:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26158	1999-12-11 17:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26159	1999-12-12 05:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26164	1999-12-14 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26165	1999-12-15 05:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26168	1999-12-16 17:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26169	1999-12-17 06:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26174	1999-12-19 16:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+26175	1999-12-20 05:00:00	VAL 	1	SCH	  VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26181	1999-12-23 05:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+1712	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK II 
+1713	1961-05-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , BRITAIN KEW MARK II , to , GERMANY GRAW H50 
+1713	1961-05-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , BRITAIN KEW MARK II , to , GERMANY GRAW H50 
+1715	1964-02-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , GERMANY GRAW H50 , to , GERMANY GRAW M60 UNSPECIFIED 
+1715	1964-02-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , GERMANY GRAW H50 , to , GERMANY GRAW M60 UNSPECIFIED 
+1717	1980-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , GERMANY GRAW M60 UNSPECIFIED , to , VIZ UNSPECIFIED 
+1717	1980-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , GERMANY GRAW M60 UNSPECIFIED , to , VIZ UNSPECIFIED 
+1720	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+1723	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+1724	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , VIZ UNSPECIFIED 
+1726	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+1728	1990-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , VAISALA RS80 UNSPECIFIED 
+1726	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

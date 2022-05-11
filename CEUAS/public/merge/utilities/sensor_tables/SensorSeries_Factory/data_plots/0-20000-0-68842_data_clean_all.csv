@@ -1,0 +1,59 @@
+	date_time	sensor_id	value	source	comment
+0	1966-05-01 13:30:00	V18 	1	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>
+16358	1990-05-01 00:00:00	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+1121	2014-02-21 12:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+5954	2020-03-12 11:34:32	184	2	WMO	Vacant                              
+5959	2020-03-14 23:42:29	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+6204	2020-07-20 12:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6205	2020-07-20 23:32:44	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+6284	2020-08-29 23:30:35	184	2	WMO	Vacant                              
+6288	2020-08-31 23:54:08	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+6289	2020-09-01 12:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6290	2020-09-01 23:38:26	184	2	WMO	Vacant                              
+6297	2020-09-05 12:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6298	2020-09-05 23:31:55	184	2	WMO	Vacant                              
+6301	2020-09-07 12:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+6302	2020-09-07 23:31:40	184	2	WMO	Vacant                              
+6303	2020-09-10 11:28:48	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+6306	2020-09-11 23:52:33	184	2	WMO	Vacant                              
+6311	2020-09-14 11:35:43	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+6361	2020-10-15 23:33:00	184	2	WMO	Vacant                              
+6371	2020-10-21 00:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6372	2020-10-21 11:37:33	184	2	WMO	Vacant                              
+6571	2021-02-01 00:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6572	2021-02-01 11:32:18	184	2	WMO	Vacant                              
+6607	2021-02-19 00:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6608	2021-02-19 11:39:52	184	2	WMO	Vacant                              
+6616	2021-02-23 11:30:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6617	2021-02-23 23:34:39	184	2	WMO	Vacant                              
+6635	2021-03-05 00:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6636	2021-03-05 11:38:59	184	2	WMO	Vacant                              
+6668	2021-03-23 00:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6669	2021-03-23 11:39:38	184	2	WMO	Vacant                              
+6688	2021-04-02 00:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6689	2021-04-02 11:35:57	184	2	WMO	Vacant                              
+6691	2021-04-04 00:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6693	2021-04-04 23:30:05	184	2	WMO	Vacant                              
+6723	2021-04-19 23:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6724	2021-04-20 11:41:06	184	2	WMO	Vacant                              
+6747	2021-05-11 00:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6748	2021-05-11 11:36:17	184	2	WMO	Vacant                              
+6752	2021-05-13 11:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6753	2021-05-13 23:37:13	184	2	WMO	Vacant                              
+6759	2021-05-17 00:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6760	2021-05-17 11:37:19	184	2	WMO	Vacant                              
+6865	2021-11-15 12:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6866	2021-11-16 11:44:03	184	2	WMO	Vacant                              
+6897	2021-12-21 12:00:00	84	2	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   
+6898	2021-12-22 11:58:52	184	2	WMO	Vacant                              
+13967	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+13968	1966-05-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS13 25 MHZ 
+13969	1966-05-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , VAISALA RS12 WATER INSULATED 
+13970	1970-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA UNSPECIFIED , to , USA WEATHERMEASURE RD 1680 ERRONEOUS (? 
+13971	1973-11-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS13 25 MHZ , to , VIZ UNSPECIFIED 
+13972	1974-05-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , VAISALA RS21 UNSPECIFIED 
+13973	1985-05-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS21 UNSPECIFIED , to , VAISALA RS80 UNSPECIFIED 
+13974	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+13975	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+13976	1990-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VAISALA RS80 UNSPECIFIED 
+13975	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

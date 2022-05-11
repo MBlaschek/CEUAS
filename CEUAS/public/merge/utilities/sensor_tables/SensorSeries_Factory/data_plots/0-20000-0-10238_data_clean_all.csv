@@ -1,0 +1,23 @@
+	date_time	sensor_id	value	source	comment
+0	1967-05-12 12:00:00	DG4 	1	SCH	"  DG4 Germany Graw M60 ""Registration"" radiosonde 27 MHz {1960}^ (W2=07 from 197909 to 198505, W3=19, T=051) <F=T28ME,P=2A,T=BS,U=Hr>"
+19913	1995-01-17 11:00:00	DA1 	1	SCH	  DA1 Germany Sprenger E071 Temperatursonde {1968}^  <F=V?,P=? (not visible even with apparent detailed pictures),T=TB,U=none>
+19921	1995-01-18 17:00:00	DG4 	1	SCH	"  DG4 Germany Graw M60 ""Registration"" radiosonde 27 MHz {1960}^ (W2=07 from 197909 to 198505, W3=19, T=051) <F=T28ME,P=2A,T=BS,U=Hr>"
+21203	1996-01-22 11:00:00	DGA 	1	SCH	  DGA Germany Graw DFM90 radiosonde auto rad corr, RDF wind {1990} 31313=45002^ (DFM = Digital, Flexible, Modular) (W3=50) <F=T402-406DL,P=Ac,T=TB,U=A,W=Ra(or W=Da)>
+22970	1997-05-29 16:00:00	VD_ 	1	SCH	  VD_ Vaisala RS80 PC Cora base case 31313=96299^ (W3=62) <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=none>
+23840	1998-01-07 23:00:00	DGA 	1	SCH	  DGA Germany Graw DFM90 radiosonde auto rad corr, RDF wind {1990} 31313=45002^ (DFM = Digital, Flexible, Modular) (W3=50) <F=T402-406DL,P=Ac,T=TB,U=A,W=Ra(or W=Da)>
+0	2013-01-01 17:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+4141	2015-11-09 18:00:00	18	2	WMO	Graw DFM-06 (Germany)                
+4144	2015-11-10 10:45:34	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+4506	2016-02-10 17:00:00	18	2	WMO	Graw DFM-06 (Germany)                
+4507	2016-02-10 22:46:32	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+4784	2016-04-20 23:00:00	18	2	WMO	Graw DFM-06 (Germany)                
+4785	2016-04-21 10:45:19	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+6684	2017-08-15 10:48:02	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+6963	2017-11-03 05:00:00	18	2	WMO	Graw DFM-06 (Germany)                
+6964	2017-11-03 10:45:44	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+7582	2018-04-19 10:46:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+5317	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , GERMANY GRAW H50 
+5318	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , GERMANY GRAW M60 UNSPECIFIED 
+5318	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , GERMANY GRAW M60 UNSPECIFIED 
+5321	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , GERMANY SPRENGER UNSPECIFIED 
+5322	1993-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , UNKNOWN 

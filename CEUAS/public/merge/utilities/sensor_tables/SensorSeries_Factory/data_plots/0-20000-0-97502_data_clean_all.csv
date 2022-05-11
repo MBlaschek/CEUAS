@@ -1,0 +1,11 @@
+	date_time	sensor_id	value	source	comment
+0	1957-07-03 06:00:00	C1  	1	SCH	  General VIZ type
+1519	1989-07-01 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+2547	2001-12-15 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+2548	2003-06-06 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+2551	2003-07-24 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+2552	2004-01-05 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+2705	2005-04-07 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+1018	2014-12-11 00:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+6063	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED , ? 
+6064	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , JAPAN MEISEI UNSPECIFIED , ? 

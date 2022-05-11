@@ -1,0 +1,34 @@
+	sensor_id	source	comment	date_time	value
+1112	0	WMO	NA		
+726	119	WMO	Polus-MRZ-N1 (Russian Federation)                            		
+1011	121	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        		
+938	122	WMO	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         		
+986	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+509	125	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           		
+426	126	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           		
+1076	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+962	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+972	133	WMO	Nanjing GTS1-2/GFE(L) (China)                            		
+995	135	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            		
+2130	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+2331	142	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     		
+988	20	WMO	Indian Meteorological Service MK3 (India)              		
+395	3	WMO	 No radiosonde – active target (e.g. transponder)           		
+1111	34	WMO	Vinohrady (Czechia)                 		
+1195	5	WMO	 No radiosonde – active temperature-humidity profiler            		
+1199	6	WMO	 No radiosonde – radio-acoustic sounder             		
+1196	7	WMO	iMet-1-AB (United States)                		
+0	81	WMO	Vaisala RS92/Autosonde (Finland)                		
+5364	MX4 	SCH	  MX4 Mixed Vaisala RS80 PC CORA and VIZ Mark II^ Station 03005, based on 31313, Vaisala RS80 PCCora (62=VD_), VIZ Mark II Microsonde (49=ZN4), missing 31313 assumed to be VD_		
+1067	VDL 	SCH	  VDL Vaisala RS80 PC Cora auto corr, LoRAN wind 31313=46206^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>		
+11933	VFL 	SCH	  VFL Vaisala RS80 Autosonde auto corr, LoRAN wind 31313=46606^ <F=T403FL,P=Ac,T=CB,U=A,N=L>		
+0	VHL 	SCH	  VHL Vaisala RS80-15L or RS80-15LA LoRAN radiosonde^ (T=022) <F=T403FL,P=Ac,T=CB,U=A,N=L>		
+15244	VN8 	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
+15362	IGRA2	IGRA2	CHANGE SONDE MODEL , BRITAIN KEW MARK I , to , BRITAIN KEW MARK II 	1946-01-01	3.0
+15363	IGRA2	IGRA2	CHANGE SONDE MODEL , BRITAIN KEW MARK II , to , BRITAIN KEW MARK IIB UNSPECIFIED 	1952-01-01	3.0
+15366	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK II 	1960-01-01	3.0
+15370	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK IIB UNSPECIFIED 	1976-01-01	3.0
+15372	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN UNSPECIFIED 	1982-01-01	3.0
+15373	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK III 	1986-01-01	3.0
+15373	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK III 	1986-01-01	3.0
+15377	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1993-09-01	3.0

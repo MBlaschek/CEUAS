@@ -1,0 +1,41 @@
+	sensor_id	source	comment	date_time	value
+18715	BIT 	SCH	  BIT Italy Autovox AN/AMT-4B transponder radiosonde {early 1960s}^ <F=V1680FB,P=A,T=TR,U=L,W=Ta>		
+13754	DG2 	SCH	  DG2 Germany Graw H50 radiosonde {1950}^ (I=D, W1=02, W2=07 through 197909, T=053) <F=V90-93ME,P=A,T=BS,U=H>		
+18571	DGP 	SCH	  DGP Germany Graw P54 Peilsender (transponder) radiosonde {1962}^ <F=V95ME,P=A,T=B,U=Ha(?),W=Ta)>		
+0	DGh 	SCH	  DGh Germany Graw H38 radiosonde {1938}^ <P=A,T=B,U=H>		
+47433	MX1 	SCH	  MX1 Mixed Vaisala RS80-16 (V8J) and VIZ 1393 (ZIH)^ at station 10384 in 198401 and 198402; VIZ 1393 (ZIH) on odd days in January and even days in February, Vaisala RS80-16 (V8J) on		
+23076	U15 	SCH	  U15 exact type insufficiently documented		
+19192	U4B 	SCH	  U4B USA Bendix AN/AMT-4B carbon hygristor radiosonde {~ 1955}^ <F=V1680PB,P=A,T=TR(ML-419/AM,FSN=6660-752-7528),U=C(ML-476),W=Da(AN/GMD-1)>		
+35668	U4c 	SCH	  U4c exact type insufficiently documented		
+23016	U9B 	SCH	  U9B USA Bendix AN/AMQ-9 transponder no P carbon U radiosonde {1960}^ <F=T1680AC,P=none,T=TR(ML-419/AM),U=C(ML-476),N=T403>		
+18811	U9H 	SCH	  U9H USA Gen Instr Corp AN/AMQ-9 transponder hypsometer radiosonde {<= 1960}^ <F=V1680AC,P=none,T=TR(ML-419/AM),U=C(ML-476),N=T403>		
+17119	UB5 	SCH	  UB5 USWB Bendix-Friez Type 500,000 radiosonde {1944}^ <F=V403AB,P=2A,T=T,U=L,W=Rd(SCR-658)>		
+14847	UBD 	SCH	  UBD USWB Bendix 403 MHz Model 288-1 double duct radiosonde {1954}^ (I=E2 USWB 403 MHz double duct;T=129) <F=V403FB,P=A,T=TR,U=L,W=Dm(SCR-658)>		
+22108	UBT 	SCH	  UBT USA NASA Bendix 3002 lightweight transponder radiosonde {1964}^ <F=V1680AC,P=0,T=TR(ML-419/AM),U=C(ML-476),N=T403a(AN/GMD-2)>		
+22514	UcB 	SCH	  UcB USA Bendix AN/AMT-12B 1660-1700 MHz radiosonde {~ 1964}^ <F=V1680PB,P=A+H,T=TR(ML-419/AM),U=C(ML-476),W=Da>		
+40406	V2S 	SCH	  V2S Vaisala RS21-13C 1680 MHz radiosonde {1976} WMO instr=36^ <F=T1680FU,P=2Ac,T=BRc,U=A>		
+47067	V8J 	SCH	  V8J exact type insufficiently documented		
+2500	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+19326	Z45 	SCH	  Z45 VIZ model 1089 US Army AN/AMT-4B {1963}^ (T=398) <F=V1680PB,P=A),T=TR(ML-419/AM),U=C,W=Da(AN/GMD-1>		
+19839	ZC4 	SCH	  ZC4 VIZ model 1065 USWB 403 MHz {1961}^ (T=381) <F=V403FB,P=A,T=TR(ML-405/AM),U=L,W=Dm(SCR-658)>		
+20575	ZCH 	SCH	  ZCH VIZ model 1063 USWB 1680 MHz hypsometer {1961}^ (T=379) <F=V1680AB,P=A+H,T=TR(ML-405/AM),U=L,W=Da(WBRT or GMD-1)>		
+20679	ZDH 	SCH	  ZDH VIZ model 1073 USWB 1680 MHz hypsometer {1963}^ (T=389) <F=V1680AB,P=A+H(hypsometer fluid CFC-11),T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+21463	ZDT 	SCH	  ZDT VIZ model 1076 USWB 1680/403 MHz transponder {1963}^ (T=392) <F=V1680AB,P=A,T=TR(ML-405),U=C,W=T403a(AN/GMD-2)>		
+24851	ZEH 	SCH	  ZEH VIZ model 1093 USWB 1680 MHz hypsometer {1965}^ (T=402) <F=V1680AB(RCA 6562),P=A+H(hypsometer fluid CFC-11),T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+35464	ZF1 	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+32111	ZFH 	SCH	  ZFH VIZ model 1193 NWS 1680 MHz hypsometer, new hygristor duct {1970}^ (T=412) <F=Vt1680AB,P=A+H(hypsometer fluid CFC-11),T=TR(ML-405),U=C,		
+40643	ZH1 	SCH	  ZH1 VIZ model 1292-410 NWS 1680 MHz baseline {1973}^ (W1=19 calls this VIZ 1292, T=427) NWS stock #J005 <F=V1680AB,P=A,T=TR(ML-405),U=C,W=Ra(WBRT or GMD-1)>		
+34260	ZHH 	SCH	  ZHH VIZ model 1293 NWS 1680 MHz hypsometer {1973}^ (T=429) NWS stock no. J005B <F=V1680AB,P=A+H,T=TR(ML-405),U=C,W=Ra(WBRT or GMD-1)>		
+42753	ZI1 	SCH	  ZI1 VIZ model 1392-410 NWS 1680 MHz baseline {late 1970s}^ (W1=19 calls this VIZ 1392-401, T=441) NWS stock no. J030 <F=T1680AB,P=A,T=TR(ML-405),U=C,		
+41856	ZIH 	SCH	  ZIH VIZ model 1393-410 NWS 1680 MHz baseline hypsometer {late 1970s}^ (W1=19 calls this VIZ 1393, T=442) NWS stock no. J036, field baselined <F=T1680AB,		
+45098	ZJ4 	SCH	  ZJ4 VIZ model 1395-410 NWS 403 MHz baseline, new hygristor {1980}^ (T=445) <F=T403FB,P=A,T=TR(ML-405),U=C,W=Rm(SCR-658)>		
+44529	ZJH 	SCH	  ZJH VIZ model 1393-410 NWS 1680 MHz baseline hypsometer, new hygristor {1980}^ (W1=19 calls this VIZ 1393, T=442) NWS stock no. J036, field baselined		
+19322	Zb2 	SCH	  Zb2 USA VIZ AN/AMT-12 1660-1700 MHz radiosonde {1962}^ <F=V1680PB,P=A+H,T=TR(ML-419/AM),U=C(ML-476),W=T403>		
+30071	ZfH 	SCH	  ZfH VIZ model 1183 or 1183/93 Germany 1680 MHz hypsometer, new hygristor duct {1970}^ <F=Vt1680AB,P=A+H(hypsometer fluid CFC-11),T=TR(ML-405),U=C,		
+5347	IGRA2	IGRA2	USING SONDE MODEL , I1 , GERMANY GRAW H50 	1960-01-01	3.0
+5348	IGRA2	IGRA2	USING SONDE MODEL , I1 , GERMANY GRAW M60 UNSPECIFIED 	1976-01-01	3.0
+5350	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 	1982-01-01	3.0
+5351	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , VAISALA RS80 UNSPECIFIED 	1983-12-01	3.0
+5348	IGRA2	IGRA2	USING SONDE MODEL , I1 , GERMANY GRAW M60 UNSPECIFIED 	1976-01-01	3.0
+5355	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0
+5356	IGRA2	IGRA2	USING SONDE MODEL , I1 , UNKNOWN 	1993-01-01	3.0

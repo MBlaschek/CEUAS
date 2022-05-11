@@ -1,0 +1,12 @@
+	date_time	sensor_id	value	source	comment
+0	1938-12-31 08:30:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+28261	1998-07-20 17:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+28906	2000-04-13 11:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+28915	2000-04-24 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+30606	2003-03-18 11:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+31132	2003-10-04 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+32978	2005-07-29 11:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+3250	2019-07-18 23:00:00	21	2	WMO	VIZ/Jin Yang MARK I MICROSONDE (Republic of Korea)           
+6498	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6498	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6498	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 

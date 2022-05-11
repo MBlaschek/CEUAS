@@ -1,0 +1,5 @@
+	date_time	sensor_id	value	source	comment
+0	1928-02-15 12:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+4176	1931-06-30 23:30:00	NUR 	1	SCH	  NUR USWB Friez PTU aircraft meteorograph based on Richard kite type {1930}^ <F=C,P=6A(bellows),T=B,U=H>
+6699	1933-06-30 23:30:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+23890	1969-04-14 18:00:00	Z?? 	1	SCH	  Z?? exact type insufficiently documented

@@ -1,0 +1,7 @@
+	sensor_id	source	comment	date_time	value
+626	2	WMO	 No radiosonde – passive target (e.g. reflector)                 		
+0	??? 	SCH	  ??? Unknown instrument category because data is not available for checking^		
+10290	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA FAN TYPE 	1960-01-01	3.0
+10293	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 	1982-01-01	3.0
+10294	IGRA2	IGRA2	USING SONDE MODEL , I2 , AUSTRALIA PHILIPS RS4 UNSPECIFIED 	1982-01-01	3.0
+10295	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1992-12-01	3.0

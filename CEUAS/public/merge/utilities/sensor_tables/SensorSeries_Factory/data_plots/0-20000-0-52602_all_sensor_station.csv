@@ -1,0 +1,4 @@
+	sensor_id	source	comment	date_time	value
+0	H1G 	SCH	  H1G China International Telecommunication Equipment Factory GZZ-1 Comb like Molchanov RZ-049 radiosonde {1955}^ (T=047) <F=V260(?)MB,P=A,T=B,U=H,W=O or Dm>		
+5932	H2G 	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"		
+18347	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		

@@ -1,0 +1,14 @@
+	date_time	sensor_id	value	source	comment
+0	1960-01-01 12:00:00	V18 	1	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>
+4299	1988-03-10 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+4301	1998-05-25 14:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+0	2013-01-01 12:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+250	2013-09-14 12:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+1358	2018-12-14 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1761	2020-04-29 11:43:35	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1764	2020-05-02 11:50:35	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+2116	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+2118	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+2119	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+2120	1992-03-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VAISALA RS21 UNSPECIFIED 
+2119	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

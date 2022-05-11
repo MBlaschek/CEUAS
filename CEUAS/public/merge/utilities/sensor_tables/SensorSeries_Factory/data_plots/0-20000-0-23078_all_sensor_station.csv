@@ -1,0 +1,23 @@
+	sensor_id	source	comment	date_time	value
+383	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+313	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+1638	160	WMO	MARL-A or Vektor-M – I-2012 (Russian Federation)                        		
+1799	162	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        		
+944	58	WMO	AVK-BAR (Russian Federation)                		
+2950	68	WMO	AVK-RZM-2 (Russian Federation)                		
+2956	69	WMO	MARL-A or Vektor-M-RZM-2 (Russian Federation)              		
+3535	88	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              		
+0	89	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              		
+2486	90	WMO	Radiosonde not specified or unknown             		
+18217	MRr 	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^		
+0	RK5 	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>		
+13793	RRB 	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>		
+20273	RZ1 	SCH	  RZ1 Russia/USSR MRZ 1780 MHz temperature only radiosonde {1986} WMO instr=27^		
+20272	RZ3 	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+6955	WRK 	SCH	  WRK exact type insufficiently documented		
+21208	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+11332	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 	1960-01-01	3.0
+11333	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 	1976-01-01	3.0
+11334	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR RKZ-5 1780 MHZ , to , RUSSIA/USSR MARS UNSPECIFIED 	1986-02-01	3.0
+11335	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+11335	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0

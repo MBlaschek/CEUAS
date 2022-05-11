@@ -1,0 +1,6 @@
+	sensor_id	source	comment	date_time	value
+5124	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
+5171	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+0	VDG 	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
+276	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		

@@ -1,0 +1,24 @@
+	date_time	sensor_id	value	source	comment
+0	1944-02-20 01:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+29281	1988-10-01 00:00:00	ZKB 	1	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"
+37145	1998-11-29 12:00:00	ZK2 	1	SCH	  ZK2 VIZ or Sippican model 1492-540 NWS B2 J031-1 1680 MHz RDF {1997} 31313=05102^ (W3=51,T=489) <F=T1680DL,P=Ac,T=TR (ML-405?),U=C,W=Da(ART-2)> NWS part
+43545	2007-11-07 12:00:00	ZKN 	1	SCH	  ZKN Sippican model 1492-540 NWS B2 J031-1 1680 MHz RDF, new RH coefficients {1999} 31313=05102^ (W3=51,T=489) <F=T1680DL,P=Ac,T=TR,U=C,W=Da(ART-2)>
+0	2013-01-01 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+260	2013-05-11 00:00:00	6	2	WMO	 No radiosonde – radio-acoustic sounder             
+261	2013-05-11 12:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+489	2013-09-02 12:00:00	49	2	WMO	VIZ MARK II (United States)              
+490	2013-09-03 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+509	2013-09-12 12:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+510	2013-09-13 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+1630	2015-03-27 03:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+1631	2015-03-27 12:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+1633	2015-03-28 03:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+1634	2015-03-28 12:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+1637	2015-03-30 00:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+3511	2017-11-11 11:18:00	85	2	WMO	Sippican MARK IIA with chip thermistor, carbon element and derived pressure   from GPS height   
+3512	2017-11-11 23:02:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+10548	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+10549	1988-10-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 
+10548	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+10556	1998-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VIZ/SIPPICAN B2 1492-540 NWS 1680 MHZ 
+10556	1998-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VIZ/SIPPICAN B2 1492-540 NWS 1680 MHZ 

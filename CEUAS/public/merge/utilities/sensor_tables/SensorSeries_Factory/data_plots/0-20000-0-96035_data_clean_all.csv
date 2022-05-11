@@ -1,0 +1,17 @@
+	date_time	sensor_id	value	source	comment
+0	1957-10-01 00:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
+11188	1985-04-24 00:00:00	CR  	1	SCH	  [13|16] Australian Astor RS4
+17285	1993-05-04 00:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
+0	2013-01-01 00:00:00	55	2	WMO	Meisei RS-01G (Japan)                
+4402	2016-03-18 00:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+4404	2016-03-18 12:00:00	122	2	WMO	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4555	2016-04-25 12:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+9966	2020-03-22 12:00:00	20	2	WMO	Indian Meteorological Service MK3 (India)              
+9968	2020-03-23 00:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+9976	2020-03-25 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
+9978	2020-03-25 12:00:00	135	2	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            
+5720	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ 1395-410 NWS 403 MHZ BASELINE 
+5723	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+5724	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , JAPAN MEISEI UNSPECIFIED 
+5725	1991-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 
+5726	1993-02-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ B 1492-520 NWS 1680 MHZ 

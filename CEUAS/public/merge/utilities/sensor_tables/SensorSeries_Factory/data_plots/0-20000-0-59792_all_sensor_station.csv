@@ -1,0 +1,9 @@
+	sensor_id	source	comment	date_time	value
+9813	J8t 	SCH	  J8t Japan Meisei RSII-80 or RS2-80 radiosonde, Taiwan 31313=52202^		
+11553	J94 	SCH	  J94 Japan Meisei RSII-91 radiosonde, SiO type 94 coated thermistor {~1994} 31313=74702^ (W3=47) <F=T1680FL,P=Ac,T=TR,U=A>		
+12005	UA4 	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>		
+5512	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+0	ZF4 	SCH	  ZF4 VIZ model 1195 NWS 403 MHz, new hygristor duct {1970}^ (T=413) <F=Vt403FB,P=A,T=TR(ML-405),U=C,W=Dm(SCR-658)>		
+5513	ZH42	SCH	  ZH42 exact type insufficiently documented		
+6890	ZI42	SCH	  ZI42 exact type insufficiently documented		
+7994	ZJ42	SCH	  ZJ42 exact type insufficiently documented		

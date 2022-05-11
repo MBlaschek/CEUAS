@@ -1,0 +1,21 @@
+	date_time	sensor_id	value	source	comment
+0	1904-01-01 02:00:00	G4  	1	SCH	  [23,24,25|05,15] French Mesural or Metox (There may be some radiation heating at 300 mb through 1976 as in stations 65578 and 91925)
+71600	2006-08-18 23:00:00	VNd 	1	SCH	  VNd Vaisala RS92-SGP or RS92-SGPD digital GPS radiosonde, dry cell battery {2003}^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=GC>
+71687	2006-09-29 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+1	2013-01-01 11:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+429	2013-05-01 11:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+431	2013-05-01 23:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+467	2013-05-11 11:00:00	110	2	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               
+469	2013-05-11 23:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+708	2013-07-17 23:00:00	9	2	WMO	 No radiosonde – system unknown or not specified          
+709	2013-07-18 11:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+1878	2014-08-14 11:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1880	2014-08-14 23:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+1916	2014-08-25 11:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1939	2014-09-01 00:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+1942	2014-09-02 11:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2071	2014-10-10 11:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+13993	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL UNSPECIFIED 
+13993	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL UNSPECIFIED 
+13995	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+13995	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

@@ -1,0 +1,10 @@
+	date_time	sensor_id	value	source	comment
+0	1967-11-05 23:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+1899	1975-09-25 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+2373	1982-02-28 23:00:00	V21 	1	SCH	  V21 Vaisala RS21 early capacitive hygrometer radiosonde {1974} WMO instr=36^ <F=T25,400,1680FU,P=2Ac,T=BRc,U=A>
+2618	1982-05-01 18:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+4926	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL UNSPECIFIED 
+4926	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL UNSPECIFIED 
+4929	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL FMO 1950A , ? 
+4931	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL UNSPECIFIED , ? 
+4931	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL UNSPECIFIED , ? 

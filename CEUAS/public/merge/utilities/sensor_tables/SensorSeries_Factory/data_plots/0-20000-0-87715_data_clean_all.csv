@@ -1,0 +1,33 @@
+	date_time	sensor_id	value	source	comment
+0	1946-01-01 12:00:00	V18 	1	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>
+12437	1980-01-10 12:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+12556	1980-04-14 12:00:00	V18 	1	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>
+12961	1981-04-23 12:00:00	V21 	1	SCH	  V21 Vaisala RS21 early capacitive hygrometer radiosonde {1974} WMO instr=36^ <F=T25,400,1680FU,P=2Ac,T=BRc,U=A>
+14189	1984-12-09 12:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+14226	1985-02-11 12:00:00	V21 	1	SCH	  V21 Vaisala RS21 early capacitive hygrometer radiosonde {1974} WMO instr=36^ <F=T25,400,1680FU,P=2Ac,T=BRc,U=A>
+14877	1986-10-22 12:00:00	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+16298	1990-05-07 12:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+16506	1991-05-01 12:00:00	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+19122	1996-02-12 18:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+19304	1996-07-04 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+19305	1997-09-01 12:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+19525	1998-04-13 12:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+20324	2000-04-04 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+20325	2000-09-11 12:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+20535	2001-05-26 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+20536	2001-07-11 11:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+20538	2001-07-19 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+20539	2011-10-13 12:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+1	2013-02-28 12:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+144	2013-05-31 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+644	2017-05-23 11:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+1748	2020-07-14 18:23:40	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+333	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS11 
+334	1964-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS11 , to , VAISALA RS13/15 UNSPECIFIED 
+335	1972-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS13/15 UNSPECIFIED , to , VAISALA RS18 
+336	1976-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS18 , to , VAISALA RS21 UNSPECIFIED 
+337	1984-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS21 UNSPECIFIED , to , VAISALA RS80 UNSPECIFIED 
+337	1984-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS21 UNSPECIFIED , to , VAISALA RS80 UNSPECIFIED 
+340	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+341	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+341	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

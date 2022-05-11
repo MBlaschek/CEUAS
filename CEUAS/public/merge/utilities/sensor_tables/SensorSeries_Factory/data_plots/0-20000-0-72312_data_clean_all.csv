@@ -1,0 +1,3 @@
+	date_time	sensor_id	value	source	comment
+0	1932-06-22 11:30:00	NU4 	1	SCH	  NU4 USA C. F. Marvin PTUW kite meteorograph {1917}^ <F=C,P=2A,T=B,U=H,W=anemometer>
+14	1932-06-29 23:30:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

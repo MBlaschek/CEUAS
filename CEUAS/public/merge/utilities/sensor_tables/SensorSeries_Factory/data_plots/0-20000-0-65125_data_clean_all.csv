@@ -1,0 +1,372 @@
+	date_time	sensor_id	value	source	comment
+0	2006-06-15 12:00:00	NA 	1	SCH	NA
+3	2006-06-17 06:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+46	2006-07-02 23:00:00	-922	1	SCH	NA
+47	2006-07-03 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+52	2006-07-06 00:00:00	-922	1	SCH	NA
+53	2006-07-06 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+64	2006-07-20 12:00:00	-922	1	SCH	NA
+66	2006-07-21 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+67	2006-07-22 00:00:00	-922	1	SCH	NA
+69	2006-07-23 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+70	2006-07-23 12:00:00	-922	1	SCH	NA
+71	2006-07-24 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+74	2006-07-25 12:00:00	-922	1	SCH	NA
+76	2006-07-26 06:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+77	2006-07-26 12:00:00	-922	1	SCH	NA
+78	2006-07-26 18:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+79	2006-07-27 00:00:00	-922	1	SCH	NA
+81	2006-07-27 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+83	2006-07-28 00:00:00	-922	1	SCH	NA
+84	2006-07-28 06:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+86	2006-07-28 18:00:00	-922	1	SCH	NA
+88	2006-07-29 06:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+90	2006-07-29 18:00:00	-922	1	SCH	NA
+93	2006-07-30 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+96	2006-07-31 06:00:00	-922	1	SCH	NA
+99	2006-08-01 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+102	2006-08-01 09:00:00	-922	1	SCH	NA
+103	2006-08-01 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+104	2006-08-01 15:00:00	-922	1	SCH	NA
+106	2006-08-01 21:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+107	2006-08-02 00:00:00	-922	1	SCH	NA
+109	2006-08-02 06:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+111	2006-08-02 12:00:00	-922	1	SCH	NA
+113	2006-08-02 18:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+114	2006-08-02 21:00:00	-922	1	SCH	NA
+115	2006-08-03 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+117	2006-08-03 06:00:00	-922	1	SCH	NA
+118	2006-08-03 09:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+119	2006-08-03 12:00:00	-922	1	SCH	NA
+120	2006-08-03 15:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+121	2006-08-03 18:00:00	-922	1	SCH	NA
+123	2006-08-04 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+124	2006-08-04 03:00:00	-922	1	SCH	NA
+125	2006-08-04 06:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+127	2006-08-04 12:00:00	-922	1	SCH	NA
+129	2006-08-04 18:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+130	2006-08-04 21:00:00	-922	1	SCH	NA
+131	2006-08-05 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+133	2006-08-05 06:00:00	-922	1	SCH	NA
+134	2006-08-05 09:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+136	2006-08-05 14:00:00	-922	1	SCH	NA
+137	2006-08-05 18:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+138	2006-08-05 21:00:00	-922	1	SCH	NA
+139	2006-08-06 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+142	2006-08-06 18:00:00	-922	1	SCH	NA
+144	2006-08-07 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+146	2006-08-07 06:00:00	-922	1	SCH	NA
+147	2006-08-07 09:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+149	2006-08-07 15:00:00	-922	1	SCH	NA
+151	2006-08-07 21:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+163	2006-08-09 09:00:00	-922	1	SCH	NA
+164	2006-08-09 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+165	2006-08-09 15:00:00	-922	1	SCH	NA
+166	2006-08-09 18:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+171	2006-08-10 09:00:00	-922	1	SCH	NA
+174	2006-08-10 18:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+175	2006-08-10 21:00:00	-922	1	SCH	NA
+176	2006-08-11 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+178	2006-08-11 06:00:00	-922	1	SCH	NA
+179	2006-08-11 09:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+181	2006-08-11 15:00:00	-922	1	SCH	NA
+182	2006-08-11 18:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+186	2006-08-12 06:00:00	-922	1	SCH	NA
+187	2006-08-12 09:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+188	2006-08-12 12:00:00	-922	1	SCH	NA
+189	2006-08-12 15:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+194	2006-08-13 09:00:00	-922	1	SCH	NA
+195	2006-08-13 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+200	2006-08-14 04:00:00	-922	1	SCH	NA
+203	2006-08-14 15:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+209	2006-08-15 09:00:00	-922	1	SCH	NA
+210	2006-08-15 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+213	2006-08-15 21:00:00	-922	1	SCH	NA
+214	2006-08-16 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+215	2006-08-16 03:00:00	-922	1	SCH	NA
+219	2006-08-16 15:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+222	2006-08-17 12:00:00	-922	1	SCH	NA
+224	2006-08-18 06:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+227	2006-08-19 18:00:00	-922	1	SCH	NA
+228	2006-08-20 06:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+230	2006-08-21 06:00:00	-922	1	SCH	NA
+233	2006-08-22 18:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+240	2006-08-26 06:00:00	-922	1	SCH	NA
+243	2006-08-27 18:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+245	2006-08-28 18:00:00	-922	1	SCH	NA
+247	2006-08-29 18:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+248	2006-08-30 06:00:00	-922	1	SCH	NA
+253	2006-09-01 18:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+258	2006-09-16 12:00:00	-922	1	SCH	NA
+261	2006-09-22 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+262	2006-09-25 00:00:00	-922	1	SCH	NA
+263	2006-09-25 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+268	2006-09-28 00:00:00	-922	1	SCH	NA
+269	2006-09-28 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+272	2006-10-04 00:00:00	-922	1	SCH	NA
+273	2006-10-04 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+274	2006-10-05 00:00:00	-922	1	SCH	NA
+275	2006-10-05 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+276	2006-10-06 01:00:00	-922	1	SCH	NA
+277	2006-10-06 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+281	2006-10-11 15:00:00	-922	1	SCH	NA
+282	2006-10-12 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+283	2006-10-20 01:00:00	-922	1	SCH	NA
+284	2006-10-20 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+287	2006-10-23 12:00:00	-922	1	SCH	NA
+289	2006-10-25 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+290	2006-10-26 00:00:00	-922	1	SCH	NA
+291	2006-10-26 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+292	2006-10-27 00:00:00	-922	1	SCH	NA
+293	2006-10-28 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+294	2006-10-29 00:00:00	-922	1	SCH	NA
+297	2006-10-30 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+298	2006-10-31 12:00:00	-922	1	SCH	NA
+300	2006-11-03 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+301	2006-11-05 12:00:00	-922	1	SCH	NA
+302	2006-11-06 13:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+303	2006-11-06 15:00:00	-922	1	SCH	NA
+304	2006-11-07 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+310	2006-11-15 12:00:00	-922	1	SCH	NA
+311	2006-11-16 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+312	2006-11-17 12:00:00	-922	1	SCH	NA
+314	2006-11-19 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+318	2006-11-24 12:00:00	-922	1	SCH	NA
+319	2006-11-25 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+320	2006-11-26 12:00:00	-922	1	SCH	NA
+321	2006-11-27 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+326	2006-12-02 12:00:00	-922	1	SCH	NA
+328	2006-12-04 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+336	2006-12-12 12:00:00	-922	1	SCH	NA
+337	2006-12-13 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+340	2006-12-16 12:00:00	-922	1	SCH	NA
+341	2006-12-17 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+350	2006-12-26 12:00:00	-922	1	SCH	NA
+352	2006-12-29 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+353	2006-12-30 12:00:00	-922	1	SCH	NA
+355	2007-01-01 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+358	2007-01-04 12:00:00	-922	1	SCH	NA
+359	2007-01-05 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+361	2007-01-07 12:00:00	-922	1	SCH	NA
+362	2007-01-08 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+365	2007-01-11 11:00:00	-922	1	SCH	NA
+367	2007-01-13 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+375	2007-01-23 12:00:00	-922	1	SCH	NA
+378	2007-01-26 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+381	2007-01-29 12:00:00	-922	1	SCH	NA
+382	2007-01-30 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+388	2007-02-06 12:00:00	-922	1	SCH	NA
+390	2007-02-08 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+391	2007-02-09 12:00:00	-922	1	SCH	NA
+393	2007-02-11 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+394	2007-02-12 12:00:00	-922	1	SCH	NA
+396	2007-02-14 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+397	2007-02-16 12:00:00	-922	1	SCH	NA
+400	2007-02-19 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+403	2007-02-22 12:00:00	-922	1	SCH	NA
+407	2007-02-26 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+413	2007-03-06 12:00:00	-922	1	SCH	NA
+415	2007-03-08 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+416	2007-03-09 12:00:00	-922	1	SCH	NA
+419	2007-03-12 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+420	2007-03-13 12:00:00	-922	1	SCH	NA
+422	2007-03-16 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+424	2007-03-18 12:00:00	-922	1	SCH	NA
+426	2007-03-20 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+427	2007-03-21 12:00:00	-922	1	SCH	NA
+430	2007-03-26 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+431	2007-03-27 12:00:00	-922	1	SCH	NA
+436	2007-04-03 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+437	2007-04-04 12:00:00	-922	1	SCH	NA
+438	2007-04-05 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+439	2007-04-06 12:00:00	-922	1	SCH	NA
+441	2007-04-10 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+443	2007-04-12 12:00:00	-922	1	SCH	NA
+444	2007-04-13 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+446	2007-04-14 12:00:00	-922	1	SCH	NA
+449	2007-04-16 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+450	2007-04-17 00:00:00	-922	1	SCH	NA
+451	2007-04-17 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+457	2007-04-20 12:00:00	-922	1	SCH	NA
+460	2007-04-22 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+462	2007-04-23 00:00:00	-922	1	SCH	NA
+463	2007-04-23 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+466	2007-04-26 00:00:00	-922	1	SCH	NA
+467	2007-04-26 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+471	2007-04-28 12:00:00	-922	1	SCH	NA
+472	2007-04-29 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+487	2007-05-06 12:00:00	-922	1	SCH	NA
+488	2007-05-07 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+494	2007-05-13 12:00:00	-922	1	SCH	NA
+495	2007-05-14 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+502	2007-05-19 12:00:00	-922	1	SCH	NA
+503	2007-05-20 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+504	2007-05-20 12:00:00	-922	1	SCH	NA
+505	2007-05-21 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+506	2007-05-21 12:00:00	-922	1	SCH	NA
+507	2007-05-22 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+516	2007-05-26 12:00:00	-922	1	SCH	NA
+517	2007-05-27 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+518	2007-05-27 12:00:00	-922	1	SCH	NA
+519	2007-05-28 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+520	2007-05-28 12:00:00	-922	1	SCH	NA
+522	2007-05-29 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+524	2007-05-30 12:00:00	-922	1	SCH	NA
+525	2007-05-31 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+527	2007-06-01 00:00:00	-922	1	SCH	NA
+528	2007-06-01 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+531	2007-06-03 00:00:00	-922	1	SCH	NA
+533	2007-06-04 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+536	2007-06-05 12:00:00	-922	1	SCH	NA
+537	2007-06-06 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+540	2007-06-07 12:00:00	-922	1	SCH	NA
+541	2007-06-08 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+546	2007-06-10 12:00:00	-922	1	SCH	NA
+549	2007-06-12 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+555	2007-06-15 12:00:00	-922	1	SCH	NA
+557	2007-06-16 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+561	2007-06-18 12:00:00	-922	1	SCH	NA
+563	2007-06-19 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+564	2007-06-20 00:00:00	-922	1	SCH	NA
+565	2007-06-21 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+576	2007-06-27 00:00:00	-922	1	SCH	NA
+578	2007-06-28 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+583	2007-06-30 12:00:00	-922	1	SCH	NA
+584	2007-07-01 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+585	2007-07-01 12:00:00	-922	1	SCH	NA
+586	2007-07-02 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+591	2007-07-04 12:00:00	-922	1	SCH	NA
+592	2007-07-05 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+595	2007-07-06 12:00:00	-922	1	SCH	NA
+596	2007-07-07 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+618	2007-07-18 12:00:00	-922	1	SCH	NA
+619	2007-07-19 00:00:00	124	1	SCH	Vaisala RS41/AUTOSONDE (Finland)                            
+620	2007-07-19 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+621	2007-07-20 00:00:00	-922	1	SCH	NA
+622	2007-07-20 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+623	2007-07-21 00:00:00	-922	1	SCH	NA
+624	2007-07-21 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+631	2007-07-25 00:00:00	-922	1	SCH	NA
+633	2007-07-26 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+642	2007-08-02 12:00:00	-922	1	SCH	NA
+644	2007-08-04 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+668	2007-08-30 15:00:00	-922	1	SCH	NA
+669	2007-08-31 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+687	2007-10-21 12:00:00	-922	1	SCH	NA
+688	2007-10-22 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+689	2007-10-23 12:00:00	-922	1	SCH	NA
+690	2007-10-24 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+692	2007-10-26 12:00:00	-922	1	SCH	NA
+694	2007-10-28 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+695	2007-10-29 12:00:00	-922	1	SCH	NA
+697	2007-10-31 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+698	2007-11-01 12:00:00	-922	1	SCH	NA
+699	2007-11-02 11:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+701	2007-11-04 12:00:00	-922	1	SCH	NA
+704	2007-11-07 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+709	2007-11-12 12:00:00	-922	1	SCH	NA
+711	2007-11-14 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+713	2007-11-16 12:00:00	-922	1	SCH	NA
+714	2007-11-17 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+715	2007-11-18 12:00:00	-922	1	SCH	NA
+716	2007-11-19 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+723	2007-11-26 12:00:00	-922	1	SCH	NA
+724	2007-11-27 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+734	2007-12-07 12:00:00	-922	1	SCH	NA
+735	2007-12-08 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+736	2007-12-09 12:00:00	-922	1	SCH	NA
+738	2007-12-11 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+739	2007-12-12 12:00:00	-922	1	SCH	NA
+740	2007-12-13 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+741	2007-12-14 12:00:00	-922	1	SCH	NA
+744	2007-12-17 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+751	2007-12-24 12:00:00	79	1	SCH	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+752	2007-12-25 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+759	2008-01-01 12:00:00	-922	1	SCH	NA
+760	2008-01-02 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+763	2008-01-05 12:00:00	-922	1	SCH	NA
+764	2008-01-06 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+770	2008-01-12 12:00:00	-922	1	SCH	NA
+771	2008-01-13 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+783	2008-01-25 12:00:00	-922	1	SCH	NA
+784	2008-01-26 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+797	2008-02-08 12:00:00	-922	1	SCH	NA
+799	2008-02-10 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+804	2008-02-15 12:00:00	-922	1	SCH	NA
+805	2008-02-16 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+810	2008-02-21 12:00:00	-922	1	SCH	NA
+811	2008-02-22 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+813	2008-02-24 12:00:00	-922	1	SCH	NA
+814	2008-02-25 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+822	2008-03-04 12:00:00	-922	1	SCH	NA
+823	2008-03-05 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+826	2008-03-08 12:00:00	-922	1	SCH	NA
+827	2008-03-09 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+829	2008-03-11 12:00:00	-922	1	SCH	NA
+835	2008-03-17 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+837	2008-03-19 12:00:00	-922	1	SCH	NA
+839	2008-03-21 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+841	2008-03-23 12:00:00	-922	1	SCH	NA
+842	2008-03-24 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+843	2008-03-25 12:00:00	-922	1	SCH	NA
+844	2008-03-26 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+850	2008-03-31 15:00:00	-922	1	SCH	NA
+852	2008-04-02 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+857	2008-04-07 12:00:00	-922	1	SCH	NA
+858	2008-04-08 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+861	2008-04-11 12:00:00	-922	1	SCH	NA
+862	2008-04-12 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+866	2008-04-16 12:00:00	-922	1	SCH	NA
+867	2008-04-17 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+868	2008-04-18 11:00:00	-922	1	SCH	NA
+869	2008-04-19 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+872	2008-04-22 12:00:00	-922	1	SCH	NA
+873	2008-04-23 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+874	2008-04-24 12:00:00	-922	1	SCH	NA
+875	2008-04-25 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+879	2008-04-28 15:00:00	-922	1	SCH	NA
+880	2008-04-29 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+881	2008-04-30 12:00:00	-922	1	SCH	NA
+883	2008-05-02 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+884	2008-05-03 12:00:00	-922	1	SCH	NA
+887	2008-05-06 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+889	2008-05-08 12:00:00	-922	1	SCH	NA
+891	2008-05-10 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+892	2008-05-11 12:00:00	-922	1	SCH	NA
+893	2008-05-12 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+894	2008-05-13 12:00:00	-922	1	SCH	NA
+896	2008-05-15 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+897	2008-05-16 12:00:00	-922	1	SCH	NA
+898	2008-05-17 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+901	2008-05-20 12:00:00	-922	1	SCH	NA
+903	2008-05-22 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+914	2008-06-02 12:00:00	-922	1	SCH	NA
+915	2008-06-03 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+921	2008-06-09 12:00:00	-922	1	SCH	NA
+922	2008-06-10 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+924	2008-06-12 12:00:00	-922	1	SCH	NA
+928	2008-06-16 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+932	2008-06-20 12:00:00	-922	1	SCH	NA
+933	2008-06-21 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+968	2008-07-27 00:00:00	-922	1	SCH	NA
+970	2008-07-29 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+976	2008-08-06 00:00:00	-922	1	SCH	NA
+977	2008-08-07 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+1002	2008-09-04 00:00:00	-922	1	SCH	NA
+1003	2008-09-05 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+1028	2008-09-30 12:00:00	-922	1	SCH	NA
+1032	2008-10-03 03:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+1039	2008-10-10 00:00:00	-922	1	SCH	NA
+1040	2008-10-11 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+1042	2008-10-13 00:00:00	-922	1	SCH	NA
+1044	2008-10-15 00:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+1067	2009-05-14 11:00:00	-922	1	SCH	NA
+1069	2009-05-16 11:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+1070	2009-05-17 12:00:00	-922	1	SCH	NA
+1073	2009-05-20 11:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+1075	2009-05-22 11:00:00	-922	1	SCH	NA
+1076	2009-05-23 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+1077	2009-05-24 12:00:00	-922	1	SCH	NA
+1078	2009-05-25 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+0	2014-11-18 12:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+117	2018-02-20 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            

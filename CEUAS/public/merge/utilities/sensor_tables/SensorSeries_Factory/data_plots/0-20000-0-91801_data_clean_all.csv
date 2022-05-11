@@ -1,0 +1,38 @@
+	date_time	sensor_id	value	source	comment
+0	1943-08-01 22:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
+12297	1979-01-25 23:00:00	AA8 	1	SCH	  AA8 Australia Astor MK I transistorized radiosonde {197608} WMO instr=13^ (T=089,W3=13) <F=T402FB,P=A,T=TR,U=L>
+12439	1979-03-09 05:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
+12571	1979-05-02 23:00:00	AA8 	1	SCH	  AA8 Australia Astor MK I transistorized radiosonde {197608} WMO instr=13^ (T=089,W3=13) <F=T402FB,P=A,T=TR,U=L>
+12700	1979-07-05 23:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
+22073	1996-08-30 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+22074	1996-09-30 23:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
+22443	1997-12-19 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+22444	1998-02-01 23:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
+22477	1998-03-10 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+22478	1998-05-07 23:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
+22636	1998-11-17 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+22637	1999-01-25 23:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
+22799	1999-09-17 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+22800	1999-11-08 23:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
+22892	2000-02-28 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+22893	2000-04-29 23:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
+23466	2002-04-11 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+23467	2002-07-31 23:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
+23672	2003-03-04 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+23673	2003-11-15 23:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
+24012	2005-01-26 23:00:00	VCR 	1	SCH	  VCR Vaisala RS80 DigiCORA I, II, or Marwin auto corr, RDF wind 31313=46102^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+24238	2005-11-21 22:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+24241	2005-11-24 23:00:00	VCR 	1	SCH	  VCR Vaisala RS80 DigiCORA I, II, or Marwin auto corr, RDF wind 31313=46102^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+24242	2005-11-25 23:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+24243	2005-11-26 23:00:00	VCR 	1	SCH	  VCR Vaisala RS80 DigiCORA I, II, or Marwin auto corr, RDF wind 31313=46102^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+24252	2005-12-05 23:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+24253	2005-12-06 23:00:00	VCR 	1	SCH	  VCR Vaisala RS80 DigiCORA I, II, or Marwin auto corr, RDF wind 31313=46102^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+24267	2005-12-20 23:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+24269	2005-12-22 23:00:00	VCR 	1	SCH	  VCR Vaisala RS80 DigiCORA I, II, or Marwin auto corr, RDF wind 31313=46102^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+24315	2006-02-06 23:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+24316	2006-02-07 23:00:00	VCR 	1	SCH	  VCR Vaisala RS80 DigiCORA I, II, or Marwin auto corr, RDF wind 31313=46102^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+24368	2006-03-30 23:00:00	VNK 	1	SCH	  VNK Vaisala RS92-K analog special interface radiosonde {2003} 31313=47902^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=0>
+24375	2006-04-05 23:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+24376	2006-04-06 23:00:00	VNK 	1	SCH	  VNK Vaisala RS92-K analog special interface radiosonde {2003} 31313=47902^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=0>
+4347	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+4348	2006-03-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED , to , VAISALA RS92-SGP UNSPECIFIED 

@@ -1,0 +1,111 @@
+	date_time	sensor_id	value	source	comment
+0	1976-02-01 00:00:00	NA 	1	SCH	NA
+126	1976-06-29 06:00:00	-922	1	SCH	NA
+128	1976-07-01 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+129	1976-07-02 06:00:00	-922	1	SCH	NA
+133	1976-07-06 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+138	1976-07-09 00:00:00	-922	1	SCH	NA
+139	1976-07-09 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+142	1976-07-11 00:00:00	-922	1	SCH	NA
+143	1976-07-13 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+144	1976-07-14 00:00:00	-922	1	SCH	NA
+145	1976-07-14 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+149	1976-07-17 06:00:00	-922	1	SCH	NA
+152	1976-07-23 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+153	1976-07-24 06:00:00	-922	1	SCH	NA
+156	1976-07-27 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+158	1976-07-28 00:00:00	-922	1	SCH	NA
+162	1976-07-31 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+165	1976-08-04 00:00:00	-922	1	SCH	NA
+167	1976-08-06 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+170	1976-08-08 06:00:00	-922	1	SCH	NA
+172	1976-08-13 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+174	1976-08-15 06:00:00	-922	1	SCH	NA
+175	1976-08-16 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+176	1976-08-17 00:00:00	-922	1	SCH	NA
+178	1976-08-18 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+186	1976-08-22 00:00:00	-922	1	SCH	NA
+193	1976-08-25 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+194	1976-08-27 00:00:00	-922	1	SCH	NA
+196	1976-09-07 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+206	1976-10-05 00:00:00	-922	1	SCH	NA
+207	1976-10-06 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+208	1976-10-06 12:00:00	-922	1	SCH	NA
+209	1976-10-07 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+211	1976-10-09 00:00:00	-922	1	SCH	NA
+212	1976-10-10 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+214	1976-10-14 00:00:00	-922	1	SCH	NA
+215	1976-10-14 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+218	1976-10-18 06:00:00	-922	1	SCH	NA
+219	1976-10-21 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+222	1976-10-23 00:00:00	-922	1	SCH	NA
+223	1976-10-23 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+226	1976-10-27 12:00:00	-922	1	SCH	NA
+227	1976-10-28 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+228	1976-10-28 06:00:00	-922	1	SCH	NA
+229	1976-10-30 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+230	1976-11-15 06:00:00	-922	1	SCH	NA
+241	1976-12-08 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+242	1976-12-08 06:00:00	-922	1	SCH	NA
+244	1976-12-11 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+248	1976-12-14 06:00:00	-922	1	SCH	NA
+249	1976-12-15 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+253	1976-12-21 06:00:00	-922	1	SCH	NA
+254	1976-12-23 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+255	1976-12-23 06:00:00	-922	1	SCH	NA
+256	1976-12-26 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+259	1976-12-27 12:00:00	-922	1	SCH	NA
+260	1976-12-28 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+262	1976-12-29 00:00:00	-922	1	SCH	NA
+263	1976-12-29 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+264	1976-12-30 00:00:00	-922	1	SCH	NA
+265	1976-12-30 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+275	1977-01-09 06:00:00	-922	1	SCH	NA
+277	1977-01-11 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+278	1977-01-11 06:00:00	-922	1	SCH	NA
+279	1977-01-13 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+280	1977-01-14 00:00:00	-922	1	SCH	NA
+281	1977-01-16 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+283	1977-01-18 06:00:00	-922	1	SCH	NA
+285	1977-01-19 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+286	1977-01-21 06:00:00	-922	1	SCH	NA
+287	1977-01-22 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+289	1977-01-25 00:00:00	-922	1	SCH	NA
+291	1977-01-29 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+292	1977-01-30 00:00:00	-922	1	SCH	NA
+293	1977-01-30 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+294	1977-01-31 00:00:00	-922	1	SCH	NA
+329	1977-11-02 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+340	1977-12-04 06:00:00	-922	1	SCH	NA
+341	1977-12-04 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+343	1977-12-08 12:00:00	-922	1	SCH	NA
+346	1977-12-13 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+351	1977-12-23 12:00:00	-922	1	SCH	NA
+352	1977-12-25 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+354	1977-12-26 06:00:00	-922	1	SCH	NA
+355	1977-12-28 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+356	1977-12-28 06:00:00	-922	1	SCH	NA
+357	1977-12-30 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+358	1977-12-30 06:00:00	-922	1	SCH	NA
+360	1977-12-31 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+361	1978-01-01 12:00:00	-922	1	SCH	NA
+395	1978-04-02 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+399	1978-04-08 12:00:00	-922	1	SCH	NA
+400	1978-04-09 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+407	1978-04-20 06:00:00	-922	1	SCH	NA
+408	1978-04-21 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+409	1978-04-22 00:00:00	-922	1	SCH	NA
+410	1978-04-22 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+411	1978-04-23 00:00:00	-922	1	SCH	NA
+413	1978-04-26 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+414	1978-04-30 00:00:00	-922	1	SCH	NA
+415	1978-05-02 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+416	1978-05-07 00:00:00	-922	1	SCH	NA
+417	1978-05-10 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+418	1978-05-11 12:00:00	-922	1	SCH	NA
+420	1978-05-15 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+425	1978-05-19 06:00:00	-922	1	SCH	NA
+427	1978-05-20 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+428	1978-05-21 06:00:00	-922	1	SCH	NA
+429	1978-05-27 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+457	2003-03-20 00:00:00	-922	1	SCH	NA

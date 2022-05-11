@@ -1,0 +1,17 @@
+	date_time	sensor_id	value	source	comment
+0	1919-01-22 14:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+1310	1934-01-26 10:00:00	NUU 	1	SCH	  NUU USWB Friez PTU 1934 aircraft meteorograph {1934}^ <F=C,P=7A(bellows),T=B,U=H>
+1409	1938-06-29 16:05:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+6641	1945-01-23 22:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+7334	1946-03-28 01:00:00	U2l 	1	SCH	  U2l USA AN/AMT-2 T-69F transmitter 390-410 MHz FM radiosonde {1945}^ <F=V390-410FB,P=A,T=TR,U=L,W=Da(SCR-658)>
+9334	1950-02-01 03:00:00	Z21 	1	SCH	  Z21 VIZ model 1000 US Army AN/AMT-2 {1947}^ (T=356) <F=V403FB,P=A,T=TR(ML-419/AM),U=L(ML-418),W=Dm(SCR-658)>
+18540	1956-05-31 21:00:00	UBD 	1	SCH	  UBD USWB Bendix 403 MHz Model 288-1 double duct radiosonde {1954}^ (I=E2 USWB 403 MHz double duct;T=129) <F=V403FB,P=A,T=TR,U=L,W=Dm(SCR-658)>
+19903	1957-05-06 21:00:00	UBE 	1	SCH	  UBE USWB Bendix 1680 MHz double duct radiosonde {1957}^ (I=E9 USWB 1680 MHz double duct;T=130) <F=V1680FB,P=A,T=TR,U=L,W=Da(GMD-1)>
+30984	1965-01-05 00:00:00	Ucl 	1	SCH	  Ucl USA Bendix AN/AMT-12 1660-1700 MHz LiCl hygristor radiosonde {early 1960s}^ <F=V1680PB,P=A+H,T=TR(ML-419/AM),U=L,W=Da>
+31211	1965-04-28 00:00:00	ZDT 	1	SCH	  ZDT VIZ model 1076 USWB 1680/403 MHz transponder {1963}^ (T=392) <F=V1680AB,P=A,T=TR(ML-405),U=C,W=T403a(AN/GMD-2)>
+31779	1966-02-04 00:00:00	UCl 	1	SCH	  UCl exact type insufficiently documented
+31825	1966-02-27 00:00:00	ZET 	1	SCH	  ZET VIZ model 1090 NCAR 1680 MHz {early 1970s}^
+36361	1972-05-03 00:00:00	ZFT 	1	SCH	  ZFT VIZ model 1199 NWS 1680/403 MHz transponder, new hygristor duct {1970}^ (T=414) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,N=T403a(AN/GMD-2)>
+37027	1973-04-01 00:00:00	ZFTc	1	SCH	  ZFTc VIZ model 1199 NWS 1680/403 MHz transponder, new hygristor duct, censoring {1973}^ (T=414) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,N=T403a(AN/GMD-2)>
+38207	1974-11-11 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+15965	1965-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , TRANSPONDER TYPE 

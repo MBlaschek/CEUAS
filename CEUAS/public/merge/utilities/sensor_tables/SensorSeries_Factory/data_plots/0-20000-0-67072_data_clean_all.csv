@@ -1,0 +1,334 @@
+	date_time	sensor_id	value	source	comment
+0	1966-12-03 11:00:00	NA 	1	SCH	NA
+209	1968-10-23 11:00:00	-922	1	SCH	NA
+210	1968-10-24 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+212	1968-10-30 11:00:00	-922	1	SCH	NA
+217	1968-11-06 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+218	1968-11-07 11:00:00	-922	1	SCH	NA
+223	1968-11-12 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+226	1968-11-15 11:00:00	-922	1	SCH	NA
+227	1968-11-16 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+228	1968-11-17 11:00:00	-922	1	SCH	NA
+231	1968-11-22 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+232	1968-11-23 11:00:00	-922	1	SCH	NA
+234	1968-11-25 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+235	1968-11-27 11:00:00	-922	1	SCH	NA
+237	1968-11-30 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+239	1968-12-02 11:00:00	-922	1	SCH	NA
+246	1968-12-20 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+249	1968-12-24 11:00:00	-922	1	SCH	NA
+253	1969-01-01 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+256	1969-01-08 11:00:00	-922	1	SCH	NA
+261	1969-01-21 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+263	1969-01-27 11:00:00	-922	1	SCH	NA
+268	1969-02-02 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+269	1969-02-04 11:00:00	-922	1	SCH	NA
+271	1969-02-12 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+272	1969-02-14 11:00:00	-922	1	SCH	NA
+274	1969-02-16 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+275	1969-02-17 11:00:00	-922	1	SCH	NA
+276	1969-02-18 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+277	1969-02-21 23:00:00	-922	1	SCH	NA
+280	1969-02-26 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+281	1969-02-27 11:00:00	-922	1	SCH	NA
+282	1969-02-28 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+285	1969-03-06 11:00:00	-922	1	SCH	NA
+286	1969-03-13 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+287	1969-03-15 11:00:00	-922	1	SCH	NA
+301	1969-04-18 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+303	1969-04-25 11:00:00	-922	1	SCH	NA
+309	1969-05-02 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+310	1969-05-04 11:00:00	-922	1	SCH	NA
+316	1969-05-23 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+317	1969-05-24 11:00:00	-922	1	SCH	NA
+318	1969-05-28 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+323	1969-10-02 11:00:00	-922	1	SCH	NA
+330	1969-10-14 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+334	1969-10-23 11:00:00	-922	1	SCH	NA
+335	1969-10-27 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+336	1969-10-31 11:00:00	-922	1	SCH	NA
+341	1969-11-11 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+342	1969-11-11 11:00:00	-922	1	SCH	NA
+345	1969-11-13 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+346	1969-11-16 11:00:00	-922	1	SCH	NA
+347	1969-11-18 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+348	1969-11-19 11:00:00	-922	1	SCH	NA
+351	1969-11-23 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+352	1969-11-27 11:00:00	-922	1	SCH	NA
+353	1969-11-28 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+354	1969-11-29 11:00:00	-922	1	SCH	NA
+355	1969-11-30 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+357	1969-12-11 11:00:00	-922	1	SCH	NA
+362	1969-12-19 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+363	1969-12-20 11:00:00	-922	1	SCH	NA
+365	1969-12-22 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+368	1969-12-26 05:00:00	-922	1	SCH	NA
+369	1969-12-27 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+372	1969-12-29 11:00:00	-922	1	SCH	NA
+377	1970-01-02 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+378	1970-01-03 05:00:00	-922	1	SCH	NA
+381	1970-01-05 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+382	1970-01-06 11:00:00	-922	1	SCH	NA
+386	1970-01-10 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+387	1970-01-11 11:00:00	-922	1	SCH	NA
+389	1970-01-12 23:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+390	1970-01-13 11:00:00	-922	1	SCH	NA
+392	1970-01-16 23:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+393	1970-01-17 11:00:00	-922	1	SCH	NA
+395	1970-01-19 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+396	1970-01-21 11:00:00	-922	1	SCH	NA
+398	1970-01-25 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+399	1970-01-25 11:00:00	-922	1	SCH	NA
+402	1970-01-27 06:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+403	1970-01-27 11:00:00	-922	1	SCH	NA
+406	1970-01-29 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+408	1970-01-31 23:00:00	-922	1	SCH	NA
+409	1970-02-01 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+411	1970-02-08 11:00:00	-922	1	SCH	NA
+412	1970-02-09 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+413	1970-02-10 11:00:00	-922	1	SCH	NA
+414	1970-02-11 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+415	1970-02-14 11:00:00	-922	1	SCH	NA
+418	1970-02-19 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+423	1970-02-25 11:00:00	-922	1	SCH	NA
+424	1970-02-26 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+427	1970-03-09 11:00:00	-922	1	SCH	NA
+431	1970-03-13 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+432	1970-03-14 11:00:00	-922	1	SCH	NA
+433	1970-03-15 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+434	1970-03-16 05:00:00	-922	1	SCH	NA
+436	1970-03-20 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+439	1970-03-23 11:00:00	-922	1	SCH	NA
+441	1970-03-25 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+443	1970-03-29 11:00:00	-922	1	SCH	NA
+445	1970-03-31 12:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+446	1970-04-01 11:00:00	-922	1	SCH	NA
+448	1970-04-04 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+451	1970-04-09 11:00:00	-922	1	SCH	NA
+452	1970-04-10 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+456	1970-04-14 11:00:00	-922	1	SCH	NA
+458	1970-04-16 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+459	1970-04-18 11:00:00	-922	1	SCH	NA
+462	1970-04-21 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+464	1970-04-22 11:00:00	-922	1	SCH	NA
+468	1970-04-25 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+470	1970-04-26 05:00:00	-922	1	SCH	NA
+471	1970-04-26 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+472	1970-04-27 11:00:00	-922	1	SCH	NA
+473	1970-04-28 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+474	1970-04-28 11:00:00	-922	1	SCH	NA
+476	1970-04-29 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+477	1970-04-30 11:00:00	-922	1	SCH	NA
+479	1970-05-02 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+480	1970-05-03 11:00:00	-922	1	SCH	NA
+481	1970-05-07 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+482	1970-05-08 05:00:00	-922	1	SCH	NA
+483	1970-05-09 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+484	1970-05-10 05:00:00	-922	1	SCH	NA
+485	1970-05-11 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+486	1970-05-12 05:00:00	-922	1	SCH	NA
+488	1970-05-16 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+489	1970-05-17 05:00:00	-922	1	SCH	NA
+490	1970-05-19 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+491	1970-05-20 05:00:00	-922	1	SCH	NA
+492	1970-05-23 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+493	1970-05-24 05:00:00	-922	1	SCH	NA
+498	1970-05-30 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+501	1970-06-02 11:00:00	-922	1	SCH	NA
+502	1970-06-03 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+504	1970-06-04 05:00:00	-922	1	SCH	NA
+506	1970-06-06 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+507	1970-06-07 05:00:00	-922	1	SCH	NA
+508	1970-06-07 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+511	1970-06-11 05:00:00	-922	1	SCH	NA
+513	1970-06-12 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+514	1970-06-12 11:00:00	-922	1	SCH	NA
+517	1970-06-14 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+518	1970-06-15 05:00:00	-922	1	SCH	NA
+519	1970-06-15 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+521	1970-08-07 05:00:00	-922	1	SCH	NA
+522	1970-08-12 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+524	1970-08-14 05:00:00	-922	1	SCH	NA
+526	1970-08-16 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+527	1970-08-17 05:00:00	-922	1	SCH	NA
+528	1970-08-18 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+529	1970-08-19 05:00:00	-922	1	SCH	NA
+530	1970-08-21 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+531	1970-08-22 05:00:00	-922	1	SCH	NA
+532	1970-08-23 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+533	1970-08-24 05:00:00	-922	1	SCH	NA
+534	1970-08-26 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+535	1970-08-27 05:00:00	-922	1	SCH	NA
+536	1970-08-28 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+537	1970-08-29 05:00:00	-922	1	SCH	NA
+538	1970-09-01 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+539	1970-09-02 05:00:00	-922	1	SCH	NA
+540	1970-09-03 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+541	1970-09-04 05:00:00	-922	1	SCH	NA
+543	1970-09-08 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+544	1970-09-09 05:00:00	-922	1	SCH	NA
+545	1970-09-19 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+546	1970-09-20 05:00:00	-922	1	SCH	NA
+549	1970-09-23 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+550	1970-09-24 05:00:00	-922	1	SCH	NA
+551	1970-09-27 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+552	1970-09-28 05:00:00	-922	1	SCH	NA
+553	1970-10-01 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+554	1970-10-02 05:00:00	-922	1	SCH	NA
+555	1970-10-03 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+556	1970-10-04 05:00:00	-922	1	SCH	NA
+557	1970-10-05 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+558	1970-10-06 05:00:00	-922	1	SCH	NA
+559	1970-10-10 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+560	1970-10-11 05:00:00	-922	1	SCH	NA
+562	1970-10-14 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+563	1970-10-15 05:00:00	-922	1	SCH	NA
+564	1970-10-18 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+565	1970-10-19 05:00:00	-922	1	SCH	NA
+567	1970-10-22 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+568	1970-10-23 05:00:00	-922	1	SCH	NA
+569	1970-10-25 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+570	1970-10-26 05:00:00	-922	1	SCH	NA
+571	1970-10-29 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+572	1970-10-30 05:00:00	-922	1	SCH	NA
+573	1970-11-01 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+575	1970-11-03 05:00:00	-922	1	SCH	NA
+577	1970-11-05 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+579	1970-11-07 05:00:00	-922	1	SCH	NA
+580	1970-11-08 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+581	1970-11-09 05:00:00	-922	1	SCH	NA
+582	1970-11-20 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+583	1970-11-21 05:00:00	-922	1	SCH	NA
+584	1970-11-23 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+585	1970-11-24 05:00:00	-922	1	SCH	NA
+586	1970-12-03 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+590	1970-12-07 05:00:00	-922	1	SCH	NA
+592	1970-12-13 11:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+594	1970-12-20 05:00:00	-922	1	SCH	NA
+596	1971-01-31 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+597	1971-02-01 05:00:00	-922	1	SCH	NA
+598	1971-02-06 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+599	1971-02-07 05:00:00	-922	1	SCH	NA
+600	1971-02-14 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+601	1971-02-15 05:00:00	-922	1	SCH	NA
+602	1971-02-24 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+603	1971-02-25 05:00:00	-922	1	SCH	NA
+604	1971-03-12 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+605	1971-03-13 05:00:00	-922	1	SCH	NA
+606	1971-03-14 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+607	1971-03-15 05:00:00	-922	1	SCH	NA
+608	1971-03-18 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+609	1971-03-19 05:00:00	-922	1	SCH	NA
+610	1971-03-24 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+611	1971-03-25 05:00:00	-922	1	SCH	NA
+612	1971-03-28 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+613	1971-03-29 05:00:00	-922	1	SCH	NA
+615	1971-04-30 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+616	1971-05-01 05:00:00	-922	1	SCH	NA
+617	1971-05-06 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+618	1971-05-07 05:00:00	-922	1	SCH	NA
+619	1971-05-09 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+620	1971-05-10 05:00:00	-922	1	SCH	NA
+621	1971-05-22 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+622	1971-05-23 05:00:00	-922	1	SCH	NA
+623	1971-05-24 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+625	1971-05-26 05:00:00	-922	1	SCH	NA
+626	1971-05-28 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+627	1971-05-29 05:00:00	-922	1	SCH	NA
+628	1971-05-30 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+629	1971-05-31 05:00:00	-922	1	SCH	NA
+630	1971-06-03 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+631	1971-06-04 05:00:00	-922	1	SCH	NA
+632	1971-06-08 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+633	1971-06-09 05:00:00	-922	1	SCH	NA
+634	1971-06-15 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+635	1971-06-16 05:00:00	-922	1	SCH	NA
+636	1971-06-19 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+637	1971-06-20 05:00:00	-922	1	SCH	NA
+638	1971-06-28 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+639	1971-06-29 05:00:00	-922	1	SCH	NA
+640	1971-07-01 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+641	1971-07-02 05:00:00	-922	1	SCH	NA
+642	1971-07-07 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+643	1971-07-08 05:00:00	-922	1	SCH	NA
+644	1971-07-09 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+645	1971-07-10 05:00:00	-922	1	SCH	NA
+646	1971-07-20 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+647	1971-07-21 05:00:00	-922	1	SCH	NA
+648	1971-07-29 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+649	1971-07-30 05:00:00	-922	1	SCH	NA
+651	1971-08-03 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+652	1971-08-04 05:00:00	-922	1	SCH	NA
+653	1971-08-08 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+654	1971-08-09 05:00:00	-922	1	SCH	NA
+655	1971-08-14 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+656	1971-08-15 05:00:00	-922	1	SCH	NA
+657	1971-08-22 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+658	1971-08-23 05:00:00	-922	1	SCH	NA
+659	1971-08-25 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+660	1971-08-26 05:00:00	-922	1	SCH	NA
+662	1971-08-29 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+663	1971-08-30 05:00:00	-922	1	SCH	NA
+664	1971-09-04 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+667	1971-09-07 05:00:00	-922	1	SCH	NA
+668	1971-09-08 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+669	1971-09-09 05:00:00	-922	1	SCH	NA
+670	1971-09-11 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+672	1971-09-13 05:00:00	-922	1	SCH	NA
+673	1971-09-16 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+674	1971-09-17 05:00:00	-922	1	SCH	NA
+675	1971-09-18 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+676	1971-09-19 05:00:00	-922	1	SCH	NA
+677	1971-10-03 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+678	1971-10-04 05:00:00	-922	1	SCH	NA
+679	1971-10-06 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+680	1971-10-07 05:00:00	-922	1	SCH	NA
+682	1971-10-14 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+684	1971-10-16 05:00:00	-922	1	SCH	NA
+685	1971-10-17 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+686	1971-10-18 05:00:00	-922	1	SCH	NA
+687	1971-10-20 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+689	1971-10-22 05:00:00	-922	1	SCH	NA
+690	1971-10-25 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+691	1971-10-26 05:00:00	-922	1	SCH	NA
+692	1971-10-27 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+693	1971-10-28 05:00:00	-922	1	SCH	NA
+694	1971-10-30 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+695	1971-10-31 05:00:00	-922	1	SCH	NA
+696	1971-11-03 09:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+698	1971-11-06 05:00:00	-922	1	SCH	NA
+699	1971-11-09 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+700	1971-11-10 05:00:00	-922	1	SCH	NA
+702	1971-11-14 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+704	1971-11-16 05:00:00	-922	1	SCH	NA
+705	1971-12-05 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+706	1971-12-06 05:00:00	-922	1	SCH	NA
+707	1971-12-08 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+708	1971-12-09 05:00:00	-922	1	SCH	NA
+710	1971-12-11 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+711	1971-12-12 05:00:00	-922	1	SCH	NA
+712	1971-12-13 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+713	1971-12-14 05:00:00	-922	1	SCH	NA
+714	1971-12-20 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+716	1971-12-22 05:00:00	-922	1	SCH	NA
+717	1971-12-23 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+719	1971-12-25 05:00:00	-922	1	SCH	NA
+720	1971-12-29 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+721	1971-12-30 05:00:00	-922	1	SCH	NA
+722	1972-07-04 05:00:00	3	1	SCH	 No radiosonde – active target (e.g. transponder)           
+723	1972-07-05 05:00:00	-922	1	SCH	NA
+724	1972-07-14 05:00:00	3	1	SCH	 No radiosonde – active target (e.g. transponder)           
+725	1972-07-15 05:00:00	-922	1	SCH	NA
+726	1972-07-17 05:00:00	2	1	SCH	 No radiosonde – passive target (e.g. reflector)                 
+727	1972-07-18 05:00:00	-922	1	SCH	NA
+728	1973-01-03 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+1228	1978-03-01 11:00:00	-922	1	SCH	NA
+1229	1978-03-04 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+1295	1978-12-27 05:00:00	-922	1	SCH	NA
+1296	1978-12-28 06:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+1297	1979-01-02 05:00:00	-922	1	SCH	NA
+1394	1979-06-01 05:00:00	3	1	SCH	 No radiosonde – active target (e.g. transponder)           
+1395	1979-06-02 05:00:00	-922	1	SCH	NA
+1400	1979-06-12 05:00:00	3	1	SCH	 No radiosonde – active target (e.g. transponder)           
+1401	1979-06-13 05:00:00	-922	1	SCH	NA
+1689	1982-04-12 23:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        

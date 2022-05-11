@@ -1,0 +1,14 @@
+	date_time	sensor_id	value	source	comment
+0	1932-01-01	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12010	1962-12-29	J56 	1	SCH	  J56 Japan Meisei RSII-56 1680 MHz radiosonde {1956}^ (I=J, W1=05, W2=09 through 198505, C=748) <F=V1680ME,P=2A,T=BS,U=Hr>
+12011	1963-02-04	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12174	1964-01-22	J56 	1	SCH	  J56 Japan Meisei RSII-56 1680 MHz radiosonde {1956}^ (I=J, W1=05, W2=09 through 198505, C=748) <F=V1680ME,P=2A,T=BS,U=Hr>
+12175	1964-01-28	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+13027	1973-02-17	W__ 	1	SCH	  W__ Wind only, method unspecified^
+7635	1960-01-01	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS53 ERRONEOUS , ? 
+7636	1960-01-01	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , VAISALA RS56 ERRONEOUS , ? 
+7637	1960-01-01	IGRA2	3	IGRA2	USING SONDE MODEL , I3 , VAISALA RS 2 56 ERRONEOUS , ? 
+7639	1962-02-01	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , JAPAN MEISEI RSII-56 1680 MHZ 
+7641	1982-01-01	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , JAPAN MEISEI RSII-80 , ? 
+7641	1982-01-01	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , JAPAN MEISEI RSII-80 , ? 
+7644	1989-01-01	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , JAPAN MEISEI UNSPECIFIED , ? 

@@ -1,0 +1,37 @@
+	sensor_id	source	comment	date_time	value
+287	110	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               		
+394	112	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 		
+446	113	WMO	Vaisala RS92/MARWIN MW32 (Finland)                           		
+445	116	WMO	PAZA-22/AVK-1 (Ukraine)                             		
+1910	117	WMO	Graw DFM-09 (Germany)                            		
+522	122	WMO	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         		
+449	132	WMO	Shanghai GTS1/GFE(L) (China)                            		
+452	136	WMO	Meisei iMDS-17 GPS dropsonde w/thermistor sensor, capacitance relative humidity   sensor, and capacitance pressure sensor (Japan)              		
+496	5	WMO	 No radiosonde – active temperature-humidity profiler            		
+481	7	WMO	iMet-1-AB (United States)                		
+64756	I32 	SCH	  I32 India 1680 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=184, W2=22, W3=20) <F=T1680FB,P=A,T=TR,U=L>		
+76764	I42 	SCH	  I42 India 1680 MHz Mark 4 carbon hygristor radiosonde {2003}, sometimes 31313=02002^ <F=T1680FL,P=A,T=TR,U=C>		
+31429	IA2 	SCH	  IA2 India 1680 MHz Audiomodulated radiosonde {1967}^ (W1=18, T=182)		
+44644	IA4 	SCH	  IA4 India 1680 MHz Audiomodulated transistorized radiosonde {1975} WMO instr=20^ (W1=18, W3=20, T=182) <F=T1680AB,P=A,T=TR,U=L>		
+47398	IA6 	SCH	  IA6 India 1680 MHz Audiomodulated or Mark 3 new thermistor radiosonde {198002} WMO instr=20^ (W1=18, W3=20, T=182) <F=T1680AB,P=A,T=TR,U=L>		
+0	IC2 	SCH	  IC2 India chronometric or clock drive 2-transmitter 75 and 397 MHz radiosonde {1957}^ (I=N1) <F=V75+397HC,P=A,T=BC,U=W,W=397 mhz>		
+76777	MI2 	SCH	  MI2 Mixed India 1680 MHz Mark 3 (I32) and Mark 4 (I42)^ Mixed 1680 MHz India Mark 3 (I32, DP usually ends with T around -10 C but very irregular,		
+44350	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
+6617	IGRA2	IGRA2	USING SONDE MODEL , INDIA CLOCK TYPE 	1944-03-01	3.0
+6619	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , INDIA CLOCK 75 MHZ , to , INDIA CLOCK 2 TRANSMITTERS 75/397 MHZ 	1955-03-01	3.0
+6621	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA CLOCK TYPE 	1960-01-01	3.0
+6623	IGRA2	IGRA2	CHANGE SONDE MODEL , I2 , NONE , to , INDIA CLOCK 2 TRANSMITTERS 75/397 MHZ 	1968-05-01	3.0
+6627	IGRA2	IGRA2	CHANGE SONDE MODEL , INDIA CLOCK TYPE , to , INDIA AUDIOMODULATED 	1968-05-01	3.0
+6628	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMODULATED 1680 MHZ , to , INDIA AUDIOMODULATED 1680 MHZ TRANSISTO 	1975-01-01	3.0
+6629	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMODULATED 1680 MHZ TRANSISTO , to , INDIA AUDIOMOD 1680 MHZ NEW THERMISTOR 	1980-02-01	3.0
+6631	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
+6632	IGRA2	IGRA2	CHANGE GROUND EQUIP , G2 , NONE , to , RADIOSONDE GROUND EQUIP (RSGE) 401 MHZ 	1986-01-01	3.0
+6633	IGRA2	IGRA2	CHANGE SONDE MODEL , I2 , NONE , to , INDIA AUDIOMOD 401 MHZ NEW THERMISTOR 	1986-01-01	3.0
+6631	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
+6637	IGRA2	IGRA2	CHANGE SONDE MODEL , I2 , INDIA AUDIOMOD 401 MHZ NEW THERMISTOR , to , INDIA AUDIOMOD 401 MHZ NEW HUMIDITY DUC 	1988-01-01	3.0
+6631	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
+6639	IGRA2	IGRA2	USING SONDE MODEL , I1 , SPECIAL: INDIA IMD RADIOMETER + AM1988 	1989-01-01	3.0
+6631	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
+6645	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMOD 1680 MHZ NEW HUMIDTY DUC , to , INDIA MARK 3 1680 MHZ 1992 VERSION 	1992-01-01	3.0
+6647	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , INDIA MARK 3 1680 MHZ 1992 VERSION , to , INDIA MARK 4 1680 MHZ CARBON HYGRISTOR 	2004-02-01	3.0
+6649	IGRA2	IGRA2	USING SONDE MODEL , I1 , SPECIAL: INDIA IMD RADIOMETER + MK3 OR 	2005-10-01	3.0

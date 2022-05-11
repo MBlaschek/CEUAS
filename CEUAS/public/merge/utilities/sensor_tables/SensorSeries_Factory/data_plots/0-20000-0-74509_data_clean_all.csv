@@ -1,0 +1,3 @@
+	date_time	sensor_id	value	source	comment
+0	1933-05-23 23:00:00	NUx 	1	SCH	  NUx US Navy Friez Aerograph Aero-1928-USN based on Richard kite type {1928}^
+1533	1935-10-10 15:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

@@ -1,0 +1,10 @@
+	date_time	sensor_id	value	source	comment
+0	1998-08-10 11:00:00	VC_ 	1	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+0	2013-01-01 11:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+1433	2015-03-23 13:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1436	2015-03-24 23:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1437	2015-03-25 11:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1462	2015-04-09 23:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1463	2015-04-10 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1471	2015-04-16 23:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1472	2015-04-17 11:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  

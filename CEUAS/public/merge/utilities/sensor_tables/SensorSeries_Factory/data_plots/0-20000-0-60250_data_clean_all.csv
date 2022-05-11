@@ -1,0 +1,11 @@
+	date_time	sensor_id	value	source	comment
+0	1943-04-23 15:00:00	V18 	1	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>
+17804	1976-02-06 00:00:00	VU_ 	1	SCH	  VU_ Vaisala unspecified model before RS80^ (W1=01, T=023)
+28765	1985-08-23 00:00:00	V2_ 	1	SCH	  V2_ Vaisala RS21 unspecified model {1974} WMO instr=36^ (W3=36, T=037)
+30168	1987-04-13 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+33017	1992-01-20 17:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+9356	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL FMO 1950A 
+9357	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , VAISALA RS18 
+9360	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL MH73A 
+9357	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , VAISALA RS18 
+9362	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL UNSPECIFIED 

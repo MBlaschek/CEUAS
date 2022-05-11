@@ -1,0 +1,13 @@
+	date_time	sensor_id	value	source	comment
+0	2004-10-01 12:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+206	2005-07-05 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+207	2005-12-27 11:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+240	2006-02-06 12:00:00	Zng 	1	SCH	  Zng Sippican model 1548-611 MK II Microsonde 403 MHz rod thermistor DGPS (LOS) no P, no cor {~1997} 31313=04908^ <F=T403DL,P=0,T=TR,U=C,N=G> used with
+241	2006-02-07 12:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+247	2006-02-15 12:00:00	Zng 	1	SCH	  Zng Sippican model 1548-611 MK II Microsonde 403 MHz rod thermistor DGPS (LOS) no P, no cor {~1997} 31313=04908^ <F=T403DL,P=0,T=TR,U=C,N=G> used with
+248	2006-02-17 12:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+318	2006-05-05 12:00:00	Zng 	1	SCH	  Zng Sippican model 1548-611 MK II Microsonde 403 MHz rod thermistor DGPS (LOS) no P, no cor {~1997} 31313=04908^ <F=T403DL,P=0,T=TR,U=C,N=G> used with
+0	2013-01-01 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+4568	2019-09-06 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+4570	2019-09-07 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+4904	2020-03-23 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           

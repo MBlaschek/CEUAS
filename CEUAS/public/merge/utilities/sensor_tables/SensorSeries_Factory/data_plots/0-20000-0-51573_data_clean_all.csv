@@ -1,0 +1,8 @@
+	date_time	sensor_id	value	source	comment
+0	1957-12-01 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+12422	1990-12-31 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12423	1992-05-11 23:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+12455	1992-09-28 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12456	1993-05-08 23:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+12481	1993-07-16 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+12908	1997-04-03 23:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^

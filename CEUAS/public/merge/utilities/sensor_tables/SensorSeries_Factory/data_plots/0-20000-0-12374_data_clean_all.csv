@@ -1,0 +1,170 @@
+	date_time	sensor_id	value	source	comment
+0	1920-01-25 07:00:00	RK2 	1	SCH	  RK2 USSR RKZ-2 radiosonde {1967}^ (W2=20, T=304) <F=V1780PB,P=B,T=TR,U=G>
+39463	1991-12-01 00:00:00	Vcv 	1	SCH	  Vcv exact type insufficiently documented
+39820	1992-03-02 00:00:00	MrV 	1	SCH	  MrV Mixed Russia MARS-2-2 (RRB, 31313=92903 or 02903, night, 0000Z) and Vaisala RS80 LoRAN (VCV, 31313=46105, day, 1200Z)^
+39912	1992-04-01 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+39913	1992-04-02 00:00:00	MrV 	1	SCH	  MrV Mixed Russia MARS-2-2 (RRB, 31313=92903 or 02903, night, 0000Z) and Vaisala RS80 LoRAN (VCV, 31313=46105, day, 1200Z)^
+40030	1992-05-12 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+40038	1992-05-14 12:00:00	MrV 	1	SCH	  MrV Mixed Russia MARS-2-2 (RRB, 31313=92903 or 02903, night, 0000Z) and Vaisala RS80 LoRAN (VCV, 31313=46105, day, 1200Z)^
+40461	1992-10-07 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+40466	1992-10-08 12:00:00	MrV 	1	SCH	  MrV Mixed Russia MARS-2-2 (RRB, 31313=92903 or 02903, night, 0000Z) and Vaisala RS80 LoRAN (VCV, 31313=46105, day, 1200Z)^
+40505	1992-10-21 12:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+40509	1992-10-23 00:00:00	MrV 	1	SCH	  MrV Mixed Russia MARS-2-2 (RRB, 31313=92903 or 02903, night, 0000Z) and Vaisala RS80 LoRAN (VCV, 31313=46105, day, 1200Z)^
+40896	1993-03-05 12:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+40906	1993-03-09 00:00:00	MrV 	1	SCH	  MrV Mixed Russia MARS-2-2 (RRB, 31313=92903 or 02903, night, 0000Z) and Vaisala RS80 LoRAN (VCV, 31313=46105, day, 1200Z)^
+41087	1993-05-08 12:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+41091	1993-05-10 00:00:00	MrV 	1	SCH	  MrV Mixed Russia MARS-2-2 (RRB, 31313=92903 or 02903, night, 0000Z) and Vaisala RS80 LoRAN (VCV, 31313=46105, day, 1200Z)^
+41181	1993-06-08 12:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+41185	1993-06-10 00:00:00	MrV 	1	SCH	  MrV Mixed Russia MARS-2-2 (RRB, 31313=92903 or 02903, night, 0000Z) and Vaisala RS80 LoRAN (VCV, 31313=46105, day, 1200Z)^
+41241	1993-06-30 12:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+46763	1997-06-24 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+46765	1997-06-25 00:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+46782	1997-06-29 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+46785	1997-06-30 12:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+46789	1997-07-01 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+46791	1997-07-02 00:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+46797	1997-07-03 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+46799	1997-07-04 00:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+46803	1997-07-05 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+46820	1997-07-09 12:00:00	MV4 	1	SCH	  MV4 Mixed Vaisala RS80 DigiCORA I/II/Marwin Omega (VCV, 31313=46105) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106) through 19970930 1100^
+47147	1997-09-30 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+48422	1998-11-09 12:00:00	MV8 	1	SCH	  MV8 Mixed Vaisala RS80 DigiCORA I, II, or Marwin LoRAN (VCL, 31313=46106) and RS90 LoRAN (V9l, 31313=47106), mostly V9l^
+53209	2005-06-14 12:00:00	VNl 	1	SCH	  VNl Vaisala RS92 DigiCORA III auto corr, LoRAN wind 31313=48006^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>
+53210	2005-06-15 00:00:00	V9l 	1	SCH	  V9l Vaisala RS90 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=47106^ <F=T403DL,P=Sc,T=Wc,U=2Ah,N=L>
+53211	2005-06-15 12:00:00	VGL 	1	SCH	  VGL Vaisala RS80 DigiCORA III auto corr, LoRAN wind 31313=46706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+53212	2005-06-16 00:00:00	VNl 	1	SCH	  VNl Vaisala RS92 DigiCORA III auto corr, LoRAN wind 31313=48006^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>
+53213	2005-06-16 12:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+53214	2005-06-17 00:00:00	VNl 	1	SCH	  VNl Vaisala RS92 DigiCORA III auto corr, LoRAN wind 31313=48006^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>
+53215	2005-06-17 12:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+53216	2005-06-18 00:00:00	MVN 	1	SCH	  MVN Mixed Vaisala RS92 DigiCORA III LoRAN (VNl, 31313=48006) and RS80 LoRAN (VGL, 31313=46706), mostly VNl^
+0	2013-01-01 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+1931	2015-08-25 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1934	2015-08-26 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1935	2015-08-27 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1936	2015-08-27 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1937	2015-08-28 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2120	2015-11-27 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2121	2015-11-28 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2246	2016-01-29 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2260	2016-02-05 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2261	2016-02-06 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2266	2016-02-08 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2267	2016-02-09 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2268	2016-02-09 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2269	2016-02-10 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2284	2016-02-17 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2285	2016-02-18 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2298	2016-02-24 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2299	2016-02-25 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2310	2016-03-01 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2311	2016-03-02 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2317	2016-03-05 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2318	2016-03-05 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2322	2016-03-07 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2323	2016-03-08 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2338	2016-03-15 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2339	2016-03-16 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2350	2016-03-21 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2351	2016-03-22 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2366	2016-03-29 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2367	2016-03-30 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2382	2016-04-06 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2383	2016-04-07 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2386	2016-04-08 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2387	2016-04-09 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2396	2016-04-13 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2397	2016-04-14 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2412	2016-04-21 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2413	2016-04-22 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2424	2016-04-27 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2425	2016-04-28 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2426	2016-04-28 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2427	2016-04-29 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2438	2016-05-04 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2439	2016-05-05 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2452	2016-05-11 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2453	2016-05-12 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2456	2016-05-13 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2457	2016-05-14 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2466	2016-05-18 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2467	2016-05-19 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2468	2016-05-19 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2469	2016-05-20 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2480	2016-05-25 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2481	2016-05-26 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2494	2016-06-01 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2495	2016-06-02 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2506	2016-06-07 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2507	2016-06-08 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2522	2016-06-15 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2523	2016-06-16 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2524	2016-06-16 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2525	2016-06-17 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2536	2016-06-22 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2537	2016-06-23 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2550	2016-06-29 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2551	2016-06-30 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2564	2016-07-06 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2565	2016-07-07 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2578	2016-07-13 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2579	2016-07-14 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2592	2016-07-20 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2593	2016-07-21 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2608	2016-07-28 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2609	2016-07-29 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2620	2016-08-03 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2621	2016-08-04 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2636	2016-08-11 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2637	2016-08-12 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2648	2016-08-17 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2649	2016-08-18 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2662	2016-08-24 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2663	2016-08-25 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2676	2016-08-31 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2677	2016-09-01 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2690	2016-09-07 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2691	2016-09-08 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2694	2016-09-09 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2695	2016-09-10 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2704	2016-09-14 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2705	2016-09-15 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2718	2016-09-21 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2719	2016-09-22 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2736	2016-09-30 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2737	2016-10-01 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2750	2016-10-07 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2751	2016-10-08 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2762	2016-10-13 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2763	2016-10-14 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2770	2016-10-17 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2771	2016-10-18 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2872	2016-12-07 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2873	2016-12-07 23:16:12	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2886	2016-12-14 11:15:59	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2887	2016-12-14 23:15:45	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2900	2016-12-21 11:16:57	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2901	2016-12-21 23:17:11	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2914	2016-12-28 11:16:10	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2915	2016-12-28 23:15:55	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2928	2017-01-04 11:15:47	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2929	2017-01-04 23:18:18	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+3044	2017-03-03 11:23:01	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+3054	2017-03-08 11:18:26	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+3055	2017-03-08 23:17:27	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+3056	2017-03-09 11:16:37	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+3057	2017-03-09 23:17:48	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+3061	2017-03-11 23:17:08	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+3288	2017-07-03 11:20:22	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+3289	2017-07-03 23:18:01	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+10394	1961-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , GERMANY LANG-REICHSAMT FUER WETTER RADA , to , FRANCE METOX HAIR UNSPECIFIED 
+10395	1968-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , POLAND RM-12 
+10398	1971-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR A-22-III , to , USSR RKZ-2 1780 MHZ 
+10400	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR RKZ-2 1780 MHZ 
+10401	1977-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RKZ-2 1780 MHZ , to , USSR RKZ-5 1780 MHZ 
+10403	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR RKZ-5 1780 MHZ 
+10406	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+10407	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , RUSSIA/USSR MARS UNSPECIFIED 
+10408	1987-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RKZ-5 1780 MHZ , to , RUSSIA/USSR MARS UNSPECIFIED 
+10406	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+10412	1993-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+10413	1993-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , RUSSIA/USSR MARS OR MRZ UNSPECIFIED 

@@ -1,0 +1,4 @@
+	date_time	sensor_id	value	source	comment
+0	2012-04-19 12:00:00	NA 	1	SCH	NA
+1	2012-04-19 16:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+0	2014-04-30 13:00:00	117	2	WMO	Graw DFM-09 (Germany)                            

@@ -1,0 +1,28 @@
+	sensor_id	source	comment	date_time	value
+3262	1	WMO	NA		
+2180	110	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               		
+4913	112	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 		
+0	117	WMO	Graw DFM-09 (Germany)                            		
+4077	121	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        		
+5329	145	WMO	Beijing Changfeng CF-06 (China)*                           		
+4286	37	WMO	Vaisala RS80 (Finland)                		
+838	57	WMO	Modem M2K2-DC (France)                		
+3281	6	WMO	 No radiosonde – radio-acoustic sounder             		
+4786	66	WMO	Vaisala RS80 /Autosonde (Finland)               		
+124	70	WMO	Vaisala RS92/Star (Finland)                		
+2454	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+34743	I31 	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>		
+0	IA3 	SCH	  IA3 India 401 MHz Audiomodulated transistorized radiosonde {1975} WMO instr=20^ (W1=18, W3=20, T=181) <F=T401AB,P=A,T=TR,U=L>		
+25487	IA5 	SCH	  IA5 India 401 MHz Audiomodulated or Mark 3 new thermistor radiosonde {198002} WMO instr=20^ (W1=18, W3=20, T=181) <F=T401AB,P=A,T=TR,U=L>		
+46507	MI1 	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate		
+41305	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+6145	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA AUDIOMODULATED 401 MHZ TRANSISTOR 	1974-11-01	3.0
+6147	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMODULATED 401 MHZ TRANSISTOR , to , INDIA AUDIOMOD 401 MHZ NEW THERMISTOR 	1980-02-01	3.0
+6149	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
+6149	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
+6153	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMOD 401 MHZ NEW THERMISTOR , to , INDIA AUDIOMOD 401 MHZ NEW HUMIDITY DUC 	1988-01-01	3.0
+6149	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
+6149	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
+6157	IGRA2	IGRA2	USING GROUND EQUIP. , G1 , RADIOSONDE GROUND EQUIP (RSGE) 401 MHZ 	1992-12-01	3.0
+6159	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMOD 401 MHZ NEW HUMIDITY DUC , to , INDIA MARK 3 401 MHZ 1992 VERSION 	1992-01-01	3.0
+6157	IGRA2	IGRA2	USING GROUND EQUIP. , G1 , RADIOSONDE GROUND EQUIP (RSGE) 401 MHZ 	1992-12-01	3.0

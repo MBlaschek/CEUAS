@@ -1,0 +1,12 @@
+	date_time	sensor_id	value	source	comment
+0	1943-08-16 10:00:00	VU_ 	1	SCH	  VU_ Vaisala unspecified model before RS80^ (W1=01, T=023)
+19	2013-01-12 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+5091	2020-02-06 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+5249	2020-04-25 12:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+6005	2021-05-12 12:00:00	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+6064	2021-06-11 00:00:00	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
+6066	2021-06-12 00:00:00	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+2031	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 
+2033	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+2034	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+2034	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

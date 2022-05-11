@@ -1,0 +1,19 @@
+	date_time	sensor_id	value	source	comment
+0	1963-05-03 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+15681	2010-02-15 11:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+859	2014-05-15 23:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+866	2014-05-17 23:00:00	59	2	WMO	Modem M2K2-R 1680 MHz RDF radiosonde with pressure sensor chip (France)        
+870	2014-05-18 23:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+889	2014-09-30 23:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+891	2014-10-01 11:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+893	2014-10-01 23:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+897	2014-10-02 23:00:00	70	2	WMO	Vaisala RS92/Star (Finland)                
+898	2014-10-03 11:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+902	2014-10-04 11:00:00	7	2	WMO	iMet-1-AB (United States)                
+904	2014-10-04 23:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+975	2014-10-28 11:00:00	71	2	WMO	Vaisala RS90/Loran/Digicora I, II or Marwin (Finland)            
+980	2014-10-29 23:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+2013	2015-11-02 22:30:00	47	2	WMO	Meisei RS2-91 (Japan)                
+2015	2015-11-03 10:33:00	177	2	WMO	Modem GPSonde M10 (France)                           
+2698	2018-07-27 11:00:00	47	2	WMO	Meisei RS2-91 (Japan)                
+2700	2018-07-27 23:00:00	177	2	WMO	Modem GPSonde M10 (France)                           

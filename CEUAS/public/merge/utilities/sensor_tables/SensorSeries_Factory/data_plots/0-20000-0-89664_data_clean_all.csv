@@ -1,0 +1,14 @@
+	date_time	sensor_id	value	source	comment
+0	1911-08-13 12:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+10	1956-04-15 03:00:00	U4a 	1	SCH	  U4a USA AN/AMT-4A LiCl hygristor radiosonde {~ 1951}^ (I=E6) <V1680PB,P=A,T=TR(ML-419/AM),U=L(ML-418),W=Da(AN/GMD-1)>
+12283	1979-10-25 12:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
+17074	1991-11-22 00:00:00	C5  	1	SCH	  [43,44,46|--] Atmospheric Instrumentation Research (AIR) IS-4A
+0	2013-01-01 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+1590	2016-02-12 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2332	2017-02-11 12:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+2335	2017-02-13 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+2626	2017-10-18 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+1626	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+1626	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+1626	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+1629	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , UNKNOWN 

@@ -1,0 +1,23 @@
+	sensor_id	source	comment	date_time	value
+6493	154	WMO	Graw DFM-17 (Germany)                            		
+674	182	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      		
+0	87	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         		
+25096	??? 	SCH	  ??? Unknown instrument category because data is not available for checking^		
+61664	C4  	SCH	  [12,45,64|27,29] Space Data Systems (Space, SDS, MSS, SDC [Space Data Corp.], SDD [Space Data Division], or OSC [from SDD of Orbital		
+62394	USHc	SCH	  USHc USA Space Data ARTsonde 909-10-01, erroneous humidity software {1990} 31313=01202^ <F=T1680AL,P=A,T=TC,U=C(VIZ B)>		
+66624	VU1 	SCH	  VU1 Vaisala RS80-56H or RS80-56 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1995} 31313=43702^ (W3=37, T=038) <F=T1680AL,P=Ac,T=CB,U=A>		
+10668	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
+0	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+49063	ZF1 	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+55651	ZJ1 	SCH	  ZJ1 VIZ model 1392-410 NWS 1680 MHz baseline, new hygristor {1980}^ (W1=19 calls this VIZ 1392-401, T=441) NWS stock no. J030 <F=T1680AB,P=A,		
+61363	ZKB 	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"		
+74289	ZRg 	SCH	  ZRg Sippican 1649-540 NWS J031-2 MK IIA Microsonde 1680 MHz GPS chip T, with P {2003} 31313=58708^ (W3=87) <F=T1680DL,P=Ac,T=TC,U=C,N=G> NWS part no.		
+16531	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 	1982-01-01	3.0
+16531	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 	1982-01-01	3.0
+16535	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ ACCU-LOK UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 	1988-10-01	3.0
+16536	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , USA SPACE DATA UNSPECIFIED 	1989-03-01	3.0
+16537	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1989-01-01	3.0
+16539	IGRA2	IGRA2	USING SONDE MODEL , I1 , USA SPACE DATA UNSPECIFIED 	1992-12-01	3.0
+16540	IGRA2	IGRA2	CHANGE SONDE MODEL , USA SPACE DATA UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 	1995-06-01	3.0
+16541	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VAISALA RS80-56H NWS SOLAR/IR CORR 	1995-11-01	3.0
+16542	IGRA2	IGRA2	CHANGE SONDE MODEL , VAISALA RS80-56H NWS SOLAR/IR CORR , to , VIZ/SIPPICAN MICROSONDE MKIIA GPS 	2006-05-01	3.0

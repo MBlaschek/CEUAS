@@ -1,0 +1,7 @@
+	sensor_id	source	comment	date_time	value
+104	111	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          		
+357	163	WMO	Modem M20 radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (France)             		
+0	57	WMO	Modem M2K2-DC (France)                		
+55	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+106	9	WMO	 No radiosonde – system unknown or not specified          		
+0	VGR 	SCH	  VGR Vaisala RS80 DigiCORA III auto corr, RDF wind 31313=46702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>		

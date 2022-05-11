@@ -1,0 +1,23 @@
+	sensor_id	source	comment	date_time	value
+3179	97	WMO	iMet-2/iMet-1500 RDF radiosonde with pressure sensor chip (South Africa)          		
+20119	AA74	SCH	  AA74 exact type insufficiently documented		
+22253	AP13	SCH	  AP13 exact type insufficiently documented		
+63846	BFI 	SCH	  BFI South Africa InterMet Africa iMet-2-BI 1680 MHz RDF radiosonde, automatic solar and IR corr {~2012}^ <F=T1680FL,P=Sp,T=TB,U=A,W=Ra		
+41777	MZd 	SCH	  MZd Mixed VIZ 1392-521 Thailand (ZJt) and AIR IS-4A-403 Thailand (UA4), no 31313, not always distinguishable^ Station 48407 in late 1990s, obs not reliably distinguishable because DP		
+44931	UA4 	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>		
+51861	Vhr 	SCH	  Vhr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702, assumed H-Humicap^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>		
+18875	W__ 	SCH	  W__ Wind only, method unspecified^		
+0	ZF12	SCH	  ZF12 exact type insufficiently documented		
+14823	ZF1c	SCH	  ZF1c VIZ model 1192 NWS 1680 MHz, new hygristor duct, censoring  {1973}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+18157	ZH1c	SCH	  ZH1c VIZ model 1292-410 NWS 1680 MHz baseline, censoring {1973}^ (W1=19 calls this VIZ 1292, T=427) NWS stock no. J005 <F=V1680AB,P=A,T=TR(ML-405),U=C,		
+26833	ZJt 	SCH	  ZJt VIZ model 1392-521 Thailand {~mid-1980s}^ <F=T1680(?)AB,T=TR,U=C,W=Ra>		
+14491	IGRA2	IGRA2	USING SONDE MODEL , I1 , USWB BENDIX UNSPECIFIED 	1960-01-01	3.0
+14492	IGRA2	IGRA2	USING SONDE MODEL , I2 , VIZ UNSPECIFIED 	1960-01-01	3.0
+14495	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 	1982-01-01	3.0
+14496	IGRA2	IGRA2	USING SONDE MODEL , I2 , AUSTRALIA PHILIPS RS4 UNSPECIFIED 	1982-01-01	3.0
+14498	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 	1986-01-01	3.0
+14492	IGRA2	IGRA2	USING SONDE MODEL , I2 , VIZ UNSPECIFIED 	1960-01-01	3.0
+14501	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1989-01-01	3.0
+14504	IGRA2	IGRA2	USING SONDE MODEL , USA ATMOS INSTR RESEARCH UNSPECIFIED 	1991-03-01	3.0
+14501	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1989-01-01	3.0
+14506	IGRA2	IGRA2	USING SONDE MODEL , I2 , USA ATMOS INSTR RESEARCH UNSPECIFIED 	1993-01-01	3.0

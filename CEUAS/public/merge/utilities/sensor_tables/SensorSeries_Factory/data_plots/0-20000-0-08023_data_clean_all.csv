@@ -1,0 +1,20 @@
+	date_time	sensor_id	value	source	comment
+0	1926-01-14 12:04:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+383	1977-09-02 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+386	1986-04-19 12:00:00	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+7176	1997-04-09 23:00:00	VB_ 	1	SCH	  VB_ Vaisala RS80 MicroCora radiosonde base case 31313=96099^ (W3=60) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+7560	1997-10-24 11:00:00	VC_ 	1	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+8666	1999-05-17 11:00:00	M__ 	1	SCH	  M__ Multiple instruments, use 31313 info^  If 31313 is not present, apply no corrections.  (This instrument type should be assigned only when all or almost all observations
+0	2013-01-01 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+3396	2017-09-26 11:02:11	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+3397	2017-09-26 23:25:48	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+3413	2017-10-06 11:00:27	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+3463	2017-10-31 11:03:37	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+4344	2019-01-23 11:03:54	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+6369	2021-11-09 23:14:56	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+6372	2021-11-11 11:14:56	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
+6412	2021-12-02 12:01:03	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+6413	2021-12-03 07:29:01	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
+14059	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+14061	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+14061	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

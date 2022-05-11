@@ -1,0 +1,20 @@
+	sensor_id	source	comment	date_time	value
+551	182	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      		
+0	87	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         		
+21813	??? 	SCH	  ??? Unknown instrument category because data is not available for checking^		
+10103	UBB 	SCH	  UBB USWB Bendix RaySonde, thermistor, lithium chloride hygristor {1939}^ <F=V72.2FB,P=A,T=TRd,U=L(called electrolytic in Smithsonian2002)>		
+35247	UBt 	SCH	  UBt USWB Bendix radiosonde with thermistor {~1960}^		
+0	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
+10435	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+33345	ZCH 	SCH	  ZCH VIZ model 1063 USWB 1680 MHz hypsometer {1961}^ (T=379) <F=V1680AB,P=A+H,T=TR(ML-405/AM),U=L,W=Da(WBRT or GMD-1)>		
+35415	ZDB 	SCH	  ZDB VIZ model 1079 USWB 1680/403 MHz hypsometer transponder {1963}^ (T=395) <F=V1680AB,P=A+H,T=TR(ML-405),U=C,W=T403a(AN/GMD-2,6CW4 Nuvistor)>		
+41276	ZF1 	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+49548	ZJ1 	SCH	  ZJ1 VIZ model 1392-410 NWS 1680 MHz baseline, new hygristor {1980}^ (W1=19 calls this VIZ 1392-401, T=441) NWS stock no. J030 <F=T1680AB,P=A,		
+61087	ZK2 	SCH	  ZK2 VIZ or Sippican model 1492-540 NWS B2 J031-1 1680 MHz RDF {1997} 31313=05102^ (W3=51,T=489) <F=T1680DL,P=Ac,T=TR (ML-405?),U=C,W=Da(ART-2)> NWS part		
+54848	ZKB 	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"		
+16998	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ TRANSPONDER UNSPECIFIED , to , VIZ HYPSOMETER UNSPECIFIED 	1965-02-01	3.0
+17003	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ HYPSOMETER UNSPECIFIED , to , VIZ ACCU-LOK UNSPECIFIED 	1981-07-01	3.0
+17005	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 	1982-01-01	3.0
+17005	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 	1982-01-01	3.0
+17009	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ ACCU-LOK UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 	1988-10-01	3.0
+17015	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VIZ/SIPPICAN B2 1492-540 NWS 1680 MHZ 	1997-06-01	3.0

@@ -1,0 +1,1395 @@
+	date_time	sensor_id	value	source	comment
+0	1944-01-01 01:00:00	NA 	1	SCH	NA
+1007	1946-04-25 02:00:00	-922	1	SCH	NA
+3248	1957-09-02 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3249	1957-09-03 18:00:00	-922	1	SCH	NA
+3253	1957-09-11 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3255	1957-09-16 12:00:00	-922	1	SCH	NA
+3257	1957-09-18 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3258	1957-09-19 12:00:00	-922	1	SCH	NA
+3263	1957-09-23 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3264	1957-09-25 12:00:00	-922	1	SCH	NA
+3268	1957-09-28 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3269	1957-09-29 12:00:00	-922	1	SCH	NA
+3272	1957-10-01 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3275	1957-10-04 12:00:00	-922	1	SCH	NA
+3276	1957-10-06 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3277	1957-10-08 12:00:00	-922	1	SCH	NA
+3280	1957-10-14 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3281	1957-10-15 12:00:00	-922	1	SCH	NA
+3282	1957-10-16 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3283	1957-10-18 12:00:00	-922	1	SCH	NA
+3284	1957-10-19 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3285	1957-10-20 12:00:00	-922	1	SCH	NA
+3287	1957-10-29 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3290	1957-11-03 12:00:00	-922	1	SCH	NA
+3291	1957-11-04 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3294	1957-11-12 12:00:00	-922	1	SCH	NA
+3301	1957-11-24 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3303	1957-11-26 12:00:00	-922	1	SCH	NA
+3305	1957-11-27 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3306	1957-12-03 12:00:00	-922	1	SCH	NA
+3322	1957-12-19 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3323	1957-12-20 12:00:00	-922	1	SCH	NA
+3324	1957-12-20 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3325	1957-12-22 18:00:00	-922	1	SCH	NA
+3351	1958-01-23 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3352	1958-01-24 12:00:00	-922	1	SCH	NA
+3370	1958-02-09 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3371	1958-02-10 12:00:00	-922	1	SCH	NA
+3373	1958-02-11 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3374	1958-02-12 12:00:00	-922	1	SCH	NA
+3384	1958-02-19 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3385	1958-02-20 12:00:00	-922	1	SCH	NA
+3386	1958-02-20 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3388	1958-02-23 12:00:00	-922	1	SCH	NA
+3400	1958-03-06 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3401	1958-03-08 12:00:00	-922	1	SCH	NA
+3406	1958-03-14 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3407	1958-03-15 12:00:00	-922	1	SCH	NA
+3411	1958-03-18 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3412	1958-03-19 12:00:00	-922	1	SCH	NA
+3414	1958-03-23 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3415	1958-03-25 12:00:00	-922	1	SCH	NA
+3416	1958-03-26 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3418	1958-03-29 12:00:00	-922	1	SCH	NA
+3420	1958-04-01 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3421	1958-04-02 12:00:00	-922	1	SCH	NA
+3426	1958-04-11 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3427	1958-04-12 12:00:00	-922	1	SCH	NA
+3436	1958-04-23 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3437	1958-04-24 12:00:00	-922	1	SCH	NA
+3440	1958-04-27 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3441	1958-04-28 12:00:00	-922	1	SCH	NA
+3455	1958-05-20 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3457	1958-05-23 12:00:00	-922	1	SCH	NA
+3472	1958-06-13 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3483	1958-07-08 12:00:00	-922	1	SCH	NA
+3486	1958-07-11 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3487	1958-07-12 12:00:00	-922	1	SCH	NA
+3503	1958-08-05 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3505	1958-08-11 12:00:00	-922	1	SCH	NA
+3507	1958-08-15 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3521	1958-09-01 12:00:00	-922	1	SCH	NA
+3522	1958-09-02 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3523	1958-09-03 18:00:00	-922	1	SCH	NA
+3526	1958-09-06 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3527	1958-09-07 12:00:00	-922	1	SCH	NA
+3528	1958-09-08 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3532	1958-09-11 12:00:00	-922	1	SCH	NA
+3533	1958-09-11 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3534	1958-09-12 12:00:00	-922	1	SCH	NA
+3535	1958-09-13 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3536	1958-09-13 18:00:00	-922	1	SCH	NA
+3541	1958-09-19 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3544	1958-09-23 12:00:00	-922	1	SCH	NA
+3552	1958-09-30 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3553	1958-10-01 12:00:00	-922	1	SCH	NA
+3556	1958-10-03 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3558	1958-10-10 18:00:00	-922	1	SCH	NA
+3559	1958-10-11 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3560	1958-10-13 12:00:00	-922	1	SCH	NA
+3561	1958-10-14 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3564	1958-10-21 18:00:00	-922	1	SCH	NA
+3568	1958-10-25 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3569	1958-10-27 12:00:00	-922	1	SCH	NA
+3570	1958-10-31 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3573	1958-11-04 12:00:00	-922	1	SCH	NA
+3574	1958-11-08 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3576	1958-11-10 12:00:00	-922	1	SCH	NA
+3578	1958-11-13 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3579	1958-11-14 12:00:00	-922	1	SCH	NA
+3580	1958-11-16 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3581	1958-11-17 12:00:00	-922	1	SCH	NA
+3583	1958-11-24 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3589	1958-12-03 18:00:00	-922	1	SCH	NA
+3596	1958-12-16 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3597	1958-12-17 12:00:00	-922	1	SCH	NA
+3599	1958-12-23 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3602	1958-12-28 12:00:00	-922	1	SCH	NA
+3605	1958-12-31 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3608	1959-01-04 18:00:00	-922	1	SCH	NA
+3609	1959-01-07 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3610	1959-01-10 18:00:00	-922	1	SCH	NA
+3612	1959-01-13 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3613	1959-01-14 12:00:00	-922	1	SCH	NA
+3625	1959-01-28 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3627	1959-01-29 12:00:00	-922	1	SCH	NA
+3632	1959-02-02 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3634	1959-02-03 12:00:00	-922	1	SCH	NA
+3635	1959-02-04 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3637	1959-02-05 18:00:00	-922	1	SCH	NA
+3641	1959-02-08 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3642	1959-02-09 18:00:00	-922	1	SCH	NA
+3658	1959-02-22 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3660	1959-02-23 12:00:00	-922	1	SCH	NA
+3661	1959-02-26 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3662	1959-02-27 12:00:00	-922	1	SCH	NA
+3663	1959-02-27 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3665	1959-03-01 18:00:00	-922	1	SCH	NA
+3668	1959-03-03 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3669	1959-03-04 12:00:00	-922	1	SCH	NA
+3670	1959-03-04 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3675	1959-03-09 12:00:00	-922	1	SCH	NA
+3676	1959-03-10 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3679	1959-03-12 12:00:00	-922	1	SCH	NA
+3682	1959-03-14 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3683	1959-03-15 12:00:00	-922	1	SCH	NA
+3684	1959-03-15 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3685	1959-03-16 12:00:00	-922	1	SCH	NA
+3686	1959-03-16 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3687	1959-03-17 12:00:00	-922	1	SCH	NA
+3695	1959-03-22 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3696	1959-03-23 12:00:00	-922	1	SCH	NA
+3697	1959-03-23 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3698	1959-03-24 12:00:00	-922	1	SCH	NA
+3700	1959-03-26 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3707	1959-03-31 12:00:00	-922	1	SCH	NA
+3708	1959-04-01 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3709	1959-04-02 12:00:00	-922	1	SCH	NA
+3711	1959-04-04 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3715	1959-04-10 12:00:00	-922	1	SCH	NA
+3716	1959-04-11 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3720	1959-04-17 18:00:00	-922	1	SCH	NA
+3726	1959-04-23 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3727	1959-04-24 12:00:00	-922	1	SCH	NA
+3731	1959-04-28 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3735	1959-05-01 12:00:00	-922	1	SCH	NA
+3739	1959-05-06 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3743	1959-05-22 12:00:00	-922	1	SCH	NA
+3746	1959-05-26 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3747	1959-05-29 12:00:00	-922	1	SCH	NA
+3748	1959-05-30 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3749	1959-05-31 12:00:00	-922	1	SCH	NA
+3751	1959-06-02 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3754	1959-06-05 12:00:00	-922	1	SCH	NA
+3757	1959-06-14 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3759	1959-06-19 12:00:00	-922	1	SCH	NA
+3760	1959-06-22 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3763	1959-06-29 12:00:00	-922	1	SCH	NA
+3764	1959-07-01 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3765	1959-07-06 12:00:00	-922	1	SCH	NA
+3766	1959-07-07 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3767	1959-07-08 12:00:00	-922	1	SCH	NA
+3768	1959-07-10 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3771	1959-07-12 12:00:00	-922	1	SCH	NA
+3772	1959-07-14 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3774	1959-07-19 12:00:00	-922	1	SCH	NA
+3775	1959-07-20 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3776	1959-07-26 12:00:00	-922	1	SCH	NA
+3778	1959-07-27 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3782	1959-07-31 12:00:00	-922	1	SCH	NA
+3796	1959-08-18 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3800	1959-08-27 12:00:00	-922	1	SCH	NA
+3801	1959-08-27 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3802	1959-08-28 12:00:00	-922	1	SCH	NA
+3804	1959-09-04 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3805	1959-09-05 12:00:00	-922	1	SCH	NA
+3807	1959-09-07 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3808	1959-09-08 12:00:00	-922	1	SCH	NA
+3809	1959-09-09 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3812	1959-09-12 12:00:00	-922	1	SCH	NA
+3815	1959-09-17 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3816	1959-09-21 12:00:00	-922	1	SCH	NA
+3820	1959-09-30 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3821	1959-10-01 12:00:00	-922	1	SCH	NA
+3822	1959-10-03 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3823	1959-10-03 18:00:00	-922	1	SCH	NA
+3824	1959-10-04 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3825	1959-10-07 18:00:00	-922	1	SCH	NA
+3828	1959-10-12 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3829	1959-10-13 12:00:00	-922	1	SCH	NA
+3831	1959-10-17 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3832	1959-10-18 12:00:00	-922	1	SCH	NA
+3835	1959-10-23 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3836	1959-10-25 12:00:00	-922	1	SCH	NA
+3837	1959-10-27 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3838	1959-10-29 12:00:00	-922	1	SCH	NA
+3839	1959-10-30 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3841	1959-11-01 12:00:00	-922	1	SCH	NA
+3843	1959-11-09 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3844	1959-11-15 12:00:00	-922	1	SCH	NA
+3851	1959-11-29 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3853	1959-12-03 12:00:00	-922	1	SCH	NA
+3857	1959-12-09 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3858	1959-12-10 12:00:00	-922	1	SCH	NA
+3887	1960-01-17 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3889	1960-01-20 12:00:00	-922	1	SCH	NA
+3890	1960-01-23 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3891	1960-01-24 12:00:00	-922	1	SCH	NA
+3896	1960-01-30 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3898	1960-01-31 12:00:00	-922	1	SCH	NA
+3903	1960-02-05 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3904	1960-02-06 18:00:00	-922	1	SCH	NA
+3908	1960-02-10 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3910	1960-02-13 12:00:00	-922	1	SCH	NA
+3921	1960-02-28 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3922	1960-03-01 12:00:00	-922	1	SCH	NA
+3923	1960-03-02 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3924	1960-03-03 12:00:00	-922	1	SCH	NA
+3933	1960-03-14 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3935	1960-03-16 12:00:00	-922	1	SCH	NA
+3937	1960-03-18 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3939	1960-03-20 12:00:00	-922	1	SCH	NA
+3940	1960-03-22 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3943	1960-03-26 12:00:00	-922	1	SCH	NA
+3946	1960-03-28 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3948	1960-03-30 12:00:00	-922	1	SCH	NA
+3951	1960-04-05 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3953	1960-04-06 18:00:00	-922	1	SCH	NA
+3955	1960-04-07 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3956	1960-04-09 12:00:00	-922	1	SCH	NA
+3964	1960-04-25 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3965	1960-04-27 12:00:00	-922	1	SCH	NA
+3966	1960-04-27 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3967	1960-04-28 12:00:00	-922	1	SCH	NA
+3970	1960-04-30 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3972	1960-05-06 18:00:00	-922	1	SCH	NA
+3973	1960-05-08 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3975	1960-05-10 18:00:00	-922	1	SCH	NA
+3981	1960-05-17 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3985	1960-05-23 12:00:00	-922	1	SCH	NA
+3986	1960-05-23 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3987	1960-05-24 12:00:00	-922	1	SCH	NA
+3993	1960-06-07 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+3999	1960-07-14 12:00:00	-922	1	SCH	NA
+4000	1960-07-27 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4014	1960-08-22 12:00:00	-922	1	SCH	NA
+4016	1960-08-28 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4017	1963-01-11 00:00:00	-922	1	SCH	NA
+4027	1963-02-22 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4029	1963-02-28 00:00:00	-922	1	SCH	NA
+4040	1963-03-28 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4041	1963-04-01 12:00:00	-922	1	SCH	NA
+4044	1963-04-30 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4045	1963-05-04 12:00:00	-922	1	SCH	NA
+4046	1963-05-08 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4047	1963-05-09 00:00:00	-922	1	SCH	NA
+4049	1963-05-24 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4050	1963-05-26 00:00:00	-922	1	SCH	NA
+4051	1963-06-03 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4054	1963-06-10 12:00:00	-922	1	SCH	NA
+4057	1963-06-21 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4058	1963-06-23 00:00:00	-922	1	SCH	NA
+4059	1963-06-25 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4060	1963-06-26 12:00:00	-922	1	SCH	NA
+4066	1963-07-03 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4068	1963-07-17 12:00:00	-922	1	SCH	NA
+4073	1963-07-25 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4074	1966-11-15 12:00:00	-922	1	SCH	NA
+4076	1966-11-22 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4078	1966-11-30 00:00:00	-922	1	SCH	NA
+4079	1966-12-03 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4081	1966-12-20 00:00:00	-922	1	SCH	NA
+4082	1966-12-21 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4084	1967-01-01 00:00:00	-922	1	SCH	NA
+4101	1967-04-15 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4102	1967-04-18 12:00:00	-922	1	SCH	NA
+4107	1967-06-13 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4108	1967-06-18 12:00:00	-922	1	SCH	NA
+4109	1967-06-18 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4110	1967-06-22 00:00:00	-922	1	SCH	NA
+4111	1967-07-07 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4112	1967-07-15 00:00:00	-922	1	SCH	NA
+4113	1967-07-16 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4116	1967-07-25 00:00:00	-922	1	SCH	NA
+4117	1967-07-28 18:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4118	1967-07-30 00:00:00	-922	1	SCH	NA
+4120	1979-05-01 00:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4121	1979-05-01 12:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4122	1979-05-01 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4123	1979-05-02 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4125	1979-05-03 00:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4126	1979-05-03 12:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4129	1979-05-05 00:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4130	1979-05-05 12:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4131	1979-05-05 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4132	1979-05-06 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4134	1979-05-06 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4135	1979-05-07 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4137	1979-05-07 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4139	1979-05-08 11:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4150	1979-05-13 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4151	1979-05-14 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4153	1979-05-14 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4154	1979-05-15 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4156	1979-05-15 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4157	1979-05-16 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4159	1979-05-16 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4160	1979-05-17 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4162	1979-05-17 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4163	1979-05-18 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4165	1979-05-20 00:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4166	1979-05-20 12:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4167	1979-05-20 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4168	1979-05-21 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4172	1979-05-22 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4173	1979-05-23 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4174	1979-05-23 06:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4175	1979-05-23 12:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4176	1979-05-23 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4177	1979-05-24 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4179	1979-05-24 17:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4180	1979-05-25 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4181	1979-05-25 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4182	1979-05-26 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4183	1979-05-26 06:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4184	1979-05-26 12:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4185	1979-05-26 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4187	1979-05-27 11:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4188	1979-05-28 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4189	1979-05-29 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4191	1979-05-29 17:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4192	1979-05-30 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4193	1979-05-30 12:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4194	1979-05-31 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4196	1979-05-31 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4197	1979-06-01 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4199	1979-06-01 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4200	1979-06-02 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4211	1979-06-07 12:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4212	1979-06-08 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4216	1979-06-09 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4217	1979-06-10 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4218	1979-06-10 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4219	1979-06-11 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4234	1979-06-18 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4235	1979-06-19 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4243	1979-06-23 00:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4244	1979-06-23 12:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4252	1979-06-26 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4253	1979-06-27 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4256	1979-06-28 00:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4257	1979-06-28 12:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4258	1979-06-29 00:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4259	1979-06-29 12:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4268	1979-07-04 12:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4269	1979-07-05 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4279	1979-07-09 23:00:00	-922	1	SCH	NA
+4280	1979-07-10 12:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4282	1979-07-11 12:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4283	1979-07-12 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4287	1979-07-13 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4288	1979-07-14 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4290	1979-07-14 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4291	1979-07-15 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4293	1979-07-15 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4294	1979-07-16 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4298	1979-07-17 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4299	1979-07-18 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4301	1979-07-18 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4302	1979-07-19 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4304	1979-07-19 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4305	1979-07-20 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4311	1979-07-22 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4312	1979-07-23 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4318	1979-07-25 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4319	1979-07-26 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4323	1979-07-27 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4324	1979-07-28 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4328	1979-07-29 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4329	1979-07-30 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4332	1979-07-31 12:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4333	1979-08-01 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4343	1979-08-06 00:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4344	1979-08-06 12:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4351	1979-08-10 00:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4352	1979-08-10 12:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4355	1979-08-11 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4356	1979-08-12 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4357	1979-08-12 12:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4359	1979-08-13 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4361	1979-08-13 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4362	1979-08-14 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4364	1979-08-14 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4365	1979-08-15 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4367	1979-08-15 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4368	1979-08-16 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4370	1979-08-16 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4371	1979-08-17 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4382	1979-08-22 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4383	1979-08-23 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4387	1979-08-24 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4388	1979-08-25 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4392	1979-08-26 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4393	1979-08-27 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4397	1979-08-29 00:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4398	1979-08-29 12:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4399	1979-08-29 18:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
+4400	1979-08-30 00:00:00	18	1	SCH	Graw DFM-06 (Germany)                
+4404	1979-09-10 11:00:00	-922	1	SCH	NA
+4405	1980-06-03 11:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4406	1980-08-23 00:00:00	-922	1	SCH	NA
+4407	1980-09-03 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4408	1980-10-07 12:00:00	-922	1	SCH	NA
+4409	1980-11-29 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4412	1983-11-20 00:00:00	-922	1	SCH	NA
+4413	1984-03-01 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4415	1985-04-29 00:00:00	-922	1	SCH	NA
+4416	1985-05-29 11:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+4417	1985-07-05 00:00:00	-922	1	SCH	NA
+4420	1986-08-15 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4421	1988-05-16 18:00:00	-922	1	SCH	NA
+4423	1988-09-28 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4424	1988-09-28 12:00:00	-922	1	SCH	NA
+4432	1988-10-06 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4433	1988-10-07 00:00:00	-922	1	SCH	NA
+4448	1988-10-17 01:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4449	1988-10-18 00:00:00	-922	1	SCH	NA
+4451	1988-10-18 21:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4453	1988-10-20 06:00:00	-922	1	SCH	NA
+4460	1988-10-24 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4462	1988-10-27 00:00:00	-922	1	SCH	NA
+4469	1988-11-01 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4470	1988-11-02 00:00:00	-922	1	SCH	NA
+4472	1988-11-03 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4473	1988-11-03 12:00:00	-922	1	SCH	NA
+4480	1988-11-07 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4482	1988-11-08 00:00:00	-922	1	SCH	NA
+4496	1988-11-18 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4497	1988-11-20 00:00:00	-922	1	SCH	NA
+4501	1988-11-22 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4502	1988-11-23 00:00:00	-922	1	SCH	NA
+4506	1988-11-26 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4507	1988-11-27 00:00:00	-922	1	SCH	NA
+4516	1988-12-03 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4518	1988-12-04 12:00:00	-922	1	SCH	NA
+4532	1988-12-12 01:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4533	1988-12-13 00:00:00	-922	1	SCH	NA
+4537	1988-12-16 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4538	1988-12-16 12:00:00	-922	1	SCH	NA
+4559	1988-12-30 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4560	1988-12-31 00:00:00	-922	1	SCH	NA
+4566	1989-01-04 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4567	1989-01-05 00:00:00	-922	1	SCH	NA
+4576	1989-01-14 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4577	1989-01-15 00:00:00	-922	1	SCH	NA
+4578	1989-01-15 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4579	1989-01-16 00:00:00	-922	1	SCH	NA
+4582	1989-01-17 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4583	1989-01-18 00:00:00	-922	1	SCH	NA
+4594	1989-01-24 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4595	1989-01-25 12:00:00	-922	1	SCH	NA
+4597	1989-01-26 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4598	1989-01-27 00:00:00	-922	1	SCH	NA
+4602	1989-01-29 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4603	1989-01-29 12:00:00	-922	1	SCH	NA
+4619	1989-02-07 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4620	1989-02-07 12:00:00	-922	1	SCH	NA
+4645	1989-02-22 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4646	1989-02-23 12:00:00	-922	1	SCH	NA
+4648	1989-02-24 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4649	1989-02-25 00:00:00	-922	1	SCH	NA
+4655	1989-02-28 01:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4656	1989-03-02 00:00:00	-922	1	SCH	NA
+4658	1989-03-03 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4659	1989-03-03 12:00:00	-922	1	SCH	NA
+4669	1989-03-08 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4670	1989-03-09 00:00:00	-922	1	SCH	NA
+4682	1989-03-17 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4683	1989-03-18 00:00:00	-922	1	SCH	NA
+4688	1989-03-21 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4689	1989-03-21 12:00:00	-922	1	SCH	NA
+4692	1989-03-23 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4693	1989-03-23 12:00:00	-922	1	SCH	NA
+4694	1989-03-25 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4695	1989-03-25 12:00:00	-922	1	SCH	NA
+4771	1989-05-12 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4772	1989-05-14 00:00:00	-922	1	SCH	NA
+4774	1989-05-15 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4775	1989-05-16 00:00:00	-922	1	SCH	NA
+4837	1989-07-03 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4838	1989-07-03 12:00:00	-922	1	SCH	NA
+4847	1989-07-10 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4848	1989-07-10 12:00:00	-922	1	SCH	NA
+4860	1989-07-20 01:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4861	1989-07-21 00:00:00	-922	1	SCH	NA
+4873	1989-07-29 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4874	1989-07-29 12:00:00	-922	1	SCH	NA
+4878	1989-07-31 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4879	1989-08-01 00:00:00	-922	1	SCH	NA
+4892	1989-08-08 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4893	1989-08-08 12:00:00	-922	1	SCH	NA
+4919	1989-09-03 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4920	1989-09-05 00:00:00	-922	1	SCH	NA
+4927	1989-09-11 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4928	1989-09-12 00:00:00	-922	1	SCH	NA
+4934	1989-09-16 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4935	1989-09-17 12:00:00	-922	1	SCH	NA
+4956	1989-09-30 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4958	1989-10-01 12:00:00	-922	1	SCH	NA
+4961	1989-10-03 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4962	1989-10-04 00:00:00	-922	1	SCH	NA
+4992	1989-10-23 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+4993	1989-10-23 12:00:00	-922	1	SCH	NA
+5042	1989-11-25 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5043	1989-11-26 00:00:00	-922	1	SCH	NA
+5099	1990-02-08 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5100	1990-02-08 12:00:00	-922	1	SCH	NA
+5102	1990-02-09 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5103	1990-02-10 00:00:00	-922	1	SCH	NA
+5116	1990-02-17 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5117	1990-02-18 00:00:00	-922	1	SCH	NA
+5125	1990-02-22 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5126	1990-02-22 12:00:00	-922	1	SCH	NA
+5130	1990-02-25 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5131	1990-02-25 12:00:00	-922	1	SCH	NA
+5139	1990-03-01 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5140	1990-03-01 18:00:00	-922	1	SCH	NA
+5148	1990-03-07 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5149	1990-03-07 12:00:00	-922	1	SCH	NA
+5150	1990-03-08 01:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5153	1990-03-10 00:00:00	-922	1	SCH	NA
+5155	1990-03-11 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5156	1990-03-11 12:00:00	-922	1	SCH	NA
+5162	1990-03-15 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5163	1990-03-15 12:00:00	-922	1	SCH	NA
+5174	1990-03-21 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5175	1990-03-22 00:00:00	-922	1	SCH	NA
+5177	1990-03-23 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5178	1990-03-24 00:00:00	-922	1	SCH	NA
+5183	1990-03-27 16:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5184	1990-03-28 00:00:00	-922	1	SCH	NA
+5201	1990-04-09 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5202	1990-04-09 12:00:00	-922	1	SCH	NA
+5224	1990-04-23 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5225	1990-04-24 00:00:00	-922	1	SCH	NA
+5254	1990-05-20 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5255	1990-05-20 12:00:00	-922	1	SCH	NA
+5265	1990-06-03 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5266	1990-06-03 12:00:00	-922	1	SCH	NA
+5267	1990-06-04 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5268	1990-06-04 12:00:00	-922	1	SCH	NA
+5275	1990-06-09 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5276	1990-06-10 11:00:00	-922	1	SCH	NA
+5282	1990-06-16 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5283	1990-06-17 12:00:00	-922	1	SCH	NA
+5287	1990-06-19 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5288	1990-06-20 00:00:00	-922	1	SCH	NA
+5290	1990-06-21 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5291	1990-06-21 12:00:00	-922	1	SCH	NA
+5299	1990-06-26 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5300	1990-06-27 00:00:00	-922	1	SCH	NA
+5310	1990-07-06 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5312	1990-07-09 00:00:00	-922	1	SCH	NA
+5313	1990-07-10 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5314	1990-07-10 11:00:00	-922	1	SCH	NA
+5315	1990-07-11 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5316	1990-07-12 00:00:00	-922	1	SCH	NA
+5343	1990-07-31 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5344	1990-07-31 11:00:00	-922	1	SCH	NA
+5379	1990-08-27 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5380	1990-08-30 00:00:00	-922	1	SCH	NA
+5387	1990-09-04 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5388	1990-09-05 00:00:00	-922	1	SCH	NA
+5399	1990-09-14 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5400	1990-09-14 12:00:00	-922	1	SCH	NA
+5403	1990-09-17 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5404	1990-09-18 12:00:00	-922	1	SCH	NA
+5407	1990-09-20 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5408	1990-09-20 12:00:00	-922	1	SCH	NA
+5411	1990-09-23 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5412	1990-09-23 11:00:00	-922	1	SCH	NA
+5425	1990-10-05 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5426	1990-10-06 00:00:00	-922	1	SCH	NA
+5427	1990-10-06 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5428	1990-10-07 00:00:00	-922	1	SCH	NA
+5429	1990-10-07 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5430	1990-10-08 00:00:00	-922	1	SCH	NA
+5434	1990-10-11 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5435	1990-10-11 11:00:00	-922	1	SCH	NA
+5437	1990-10-12 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5438	1990-10-13 00:00:00	-922	1	SCH	NA
+5439	1990-10-13 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5440	1990-10-14 00:00:00	-922	1	SCH	NA
+5465	1990-12-06 01:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5466	1990-12-06 11:00:00	-922	1	SCH	NA
+5471	1990-12-09 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5472	1990-12-09 11:00:00	-922	1	SCH	NA
+5477	1990-12-14 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5478	1990-12-16 00:00:00	-922	1	SCH	NA
+5494	1991-01-07 01:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5495	1991-01-07 11:00:00	-922	1	SCH	NA
+5498	1991-01-09 01:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5499	1991-01-10 00:00:00	-922	1	SCH	NA
+5528	1991-02-01 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5529	1991-02-02 00:00:00	-922	1	SCH	NA
+5557	1991-03-01 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5559	1991-03-02 01:00:00	-922	1	SCH	NA
+5560	1991-03-04 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5564	1991-03-08 00:00:00	-922	1	SCH	NA
+5566	1991-03-10 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5567	1991-03-11 00:00:00	-922	1	SCH	NA
+5597	1991-04-01 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5598	1991-04-02 11:00:00	-922	1	SCH	NA
+5638	1991-05-01 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5639	1991-05-01 23:00:00	-922	1	SCH	NA
+5684	1991-06-09 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5685	1991-06-09 23:00:00	-922	1	SCH	NA
+5688	1991-06-14 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5691	1991-06-16 11:00:00	-922	1	SCH	NA
+5697	1991-06-21 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5698	1991-06-21 23:00:00	-922	1	SCH	NA
+5704	1991-06-24 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5705	1991-06-25 11:00:00	-922	1	SCH	NA
+5706	1991-06-25 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5707	1991-06-27 00:00:00	-922	1	SCH	NA
+5712	1991-07-02 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5714	1991-07-02 23:00:00	-922	1	SCH	NA
+5717	1991-07-05 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5718	1991-07-05 11:00:00	-922	1	SCH	NA
+5729	1991-07-13 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5730	1991-07-14 11:00:00	-922	1	SCH	NA
+5733	1991-07-17 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5734	1991-07-19 11:00:00	-922	1	SCH	NA
+5740	1991-07-23 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5742	1991-07-24 23:00:00	-922	1	SCH	NA
+5743	1991-07-25 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5744	1991-07-25 23:00:00	-922	1	SCH	NA
+5751	1991-08-03 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5752	1991-08-04 11:00:00	-922	1	SCH	NA
+5757	1991-08-08 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5758	1991-08-09 23:00:00	-922	1	SCH	NA
+5760	1991-08-10 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5761	1991-08-11 11:00:00	-922	1	SCH	NA
+5763	1991-08-14 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5764	1991-08-14 12:00:00	-922	1	SCH	NA
+5790	1991-09-02 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5791	1991-09-03 11:00:00	-922	1	SCH	NA
+5830	1991-09-30 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5831	1991-10-01 11:00:00	-922	1	SCH	NA
+5834	1991-10-04 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5836	1991-10-04 23:00:00	-922	1	SCH	NA
+5889	1991-11-30 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5894	1991-12-05 00:00:00	-922	1	SCH	NA
+5898	1991-12-06 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5899	1991-12-07 11:00:00	-922	1	SCH	NA
+5900	1991-12-08 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5904	1991-12-10 11:00:00	-922	1	SCH	NA
+5906	1991-12-11 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5909	1991-12-13 11:00:00	-922	1	SCH	NA
+5917	1991-12-17 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5918	1991-12-17 23:00:00	-922	1	SCH	NA
+5920	1991-12-19 13:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5921	1991-12-20 12:00:00	-922	1	SCH	NA
+5922	1991-12-20 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5924	1991-12-21 23:00:00	-922	1	SCH	NA
+5927	1991-12-23 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5929	1991-12-24 11:00:00	-922	1	SCH	NA
+5930	1991-12-24 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5931	1991-12-25 11:00:00	-922	1	SCH	NA
+5933	1991-12-28 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5934	1991-12-28 11:00:00	-922	1	SCH	NA
+5935	1991-12-28 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5937	1991-12-29 23:00:00	-922	1	SCH	NA
+5939	1991-12-30 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5940	1991-12-31 23:00:00	-922	1	SCH	NA
+5941	1992-01-02 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5944	1992-01-04 11:00:00	-922	1	SCH	NA
+5947	1992-01-06 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5948	1992-01-07 11:00:00	-922	1	SCH	NA
+5951	1992-01-08 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5952	1992-01-09 11:00:00	-922	1	SCH	NA
+5954	1992-01-10 23:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+5956	1992-01-11 23:00:00	-922	1	SCH	NA
+5959	1992-01-14 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5960	1992-01-14 11:00:00	-922	1	SCH	NA
+5961	1992-01-14 23:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5962	1992-01-15 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+5963	1992-01-15 23:00:00	-922	1	SCH	NA
+5964	1992-01-17 12:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+5965	1992-01-17 23:00:00	-922	1	SCH	NA
+5969	1992-01-21 11:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+5970	1992-01-21 23:00:00	-922	1	SCH	NA
+5972	1992-01-23 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+5973	1992-01-23 11:00:00	-922	1	SCH	NA
+5974	1992-01-24 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+5976	1992-01-25 23:00:00	-922	1	SCH	NA
+5981	1992-01-30 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+5982	1992-01-31 11:00:00	-922	1	SCH	NA
+5983	1992-01-31 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+5986	1992-02-03 11:00:00	-922	1	SCH	NA
+5988	1992-02-04 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+5990	1992-02-05 11:00:00	-922	1	SCH	NA
+5991	1992-02-05 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+5992	1992-02-06 23:00:00	-922	1	SCH	NA
+5998	1992-02-10 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+5999	1992-02-11 11:00:00	-922	1	SCH	NA
+6001	1992-02-12 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6002	1992-02-12 23:00:00	-922	1	SCH	NA
+6003	1992-02-13 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6005	1992-02-15 00:00:00	-922	1	SCH	NA
+6006	1992-02-15 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6007	1992-02-16 23:00:00	-922	1	SCH	NA
+6012	1992-02-20 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6015	1992-02-21 23:00:00	-922	1	SCH	NA
+6017	1992-02-22 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6018	1992-02-23 11:00:00	-922	1	SCH	NA
+6019	1992-02-24 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6020	1992-02-24 11:00:00	-922	1	SCH	NA
+6031	1992-03-01 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6032	1992-03-02 11:00:00	-922	1	SCH	NA
+6033	1992-03-02 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6034	1992-03-03 11:00:00	-922	1	SCH	NA
+6037	1992-03-05 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+6038	1992-03-05 23:00:00	-922	1	SCH	NA
+6039	1992-03-07 00:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+6041	1992-03-07 23:00:00	-922	1	SCH	NA
+6042	1992-03-08 11:00:00	122	1	SCH	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         
+6044	1992-03-09 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6046	1992-03-10 11:00:00	-922	1	SCH	NA
+6049	1992-03-12 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6050	1992-03-13 12:00:00	-922	1	SCH	NA
+6054	1992-03-15 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6056	1992-03-16 11:00:00	-922	1	SCH	NA
+6063	1992-03-19 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6064	1992-03-20 11:00:00	-922	1	SCH	NA
+6068	1992-03-23 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6069	1992-03-23 23:00:00	-922	1	SCH	NA
+6071	1992-03-26 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6072	1992-03-26 12:00:00	-922	1	SCH	NA
+6076	1992-03-28 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6078	1992-03-30 11:00:00	-922	1	SCH	NA
+6085	1992-04-03 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6086	1992-04-04 11:00:00	-922	1	SCH	NA
+6091	1992-04-07 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6093	1992-04-08 11:00:00	-922	1	SCH	NA
+6095	1992-04-09 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6097	1992-04-10 12:00:00	-922	1	SCH	NA
+6099	1992-04-11 17:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6100	1992-04-11 23:00:00	-922	1	SCH	NA
+6102	1992-04-13 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6103	1992-04-13 11:00:00	-922	1	SCH	NA
+6104	1992-04-13 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6105	1992-04-14 11:00:00	-922	1	SCH	NA
+6108	1992-04-15 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6110	1992-04-16 23:00:00	-922	1	SCH	NA
+6119	1992-04-21 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6120	1992-04-22 11:00:00	-922	1	SCH	NA
+6123	1992-04-23 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6124	1992-04-24 11:00:00	-922	1	SCH	NA
+6127	1992-04-27 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6128	1992-04-27 12:00:00	-922	1	SCH	NA
+6132	1992-04-30 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6133	1992-04-30 23:00:00	-922	1	SCH	NA
+6134	1992-05-01 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6135	1992-05-02 00:00:00	-922	1	SCH	NA
+6136	1992-05-02 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6137	1992-05-02 23:00:00	-922	1	SCH	NA
+6140	1992-05-04 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6141	1992-05-05 00:00:00	-922	1	SCH	NA
+6149	1992-05-10 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6150	1992-05-10 11:00:00	-922	1	SCH	NA
+6153	1992-05-12 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6155	1992-05-13 11:00:00	-922	1	SCH	NA
+6156	1992-05-14 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6157	1992-05-14 23:00:00	-922	1	SCH	NA
+6158	1992-05-15 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6159	1992-05-15 23:00:00	-922	1	SCH	NA
+6160	1992-05-16 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6162	1992-05-17 11:00:00	-922	1	SCH	NA
+6166	1992-05-20 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6167	1992-05-21 00:00:00	-922	1	SCH	NA
+6170	1992-05-22 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6171	1992-05-23 23:00:00	-922	1	SCH	NA
+6173	1992-05-24 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6174	1992-05-25 11:00:00	-922	1	SCH	NA
+6175	1992-05-25 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6179	1992-05-28 11:00:00	-922	1	SCH	NA
+6180	1992-05-29 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6181	1992-05-30 11:00:00	-922	1	SCH	NA
+6189	1992-06-07 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6190	1992-06-08 00:00:00	-922	1	SCH	NA
+6193	1992-06-09 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6194	1992-06-10 11:00:00	-922	1	SCH	NA
+6198	1992-06-13 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6201	1992-06-14 11:00:00	-922	1	SCH	NA
+6203	1992-06-15 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6205	1992-06-16 11:00:00	-922	1	SCH	NA
+6208	1992-06-18 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6209	1992-06-18 11:00:00	-922	1	SCH	NA
+6212	1992-06-20 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6214	1992-06-22 23:00:00	-922	1	SCH	NA
+6217	1992-06-25 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6218	1992-06-26 13:00:00	-922	1	SCH	NA
+6219	1992-06-26 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6220	1992-06-27 11:00:00	-922	1	SCH	NA
+6223	1992-06-28 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6224	1992-06-29 11:00:00	-922	1	SCH	NA
+6229	1992-07-02 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6230	1992-07-03 00:00:00	-922	1	SCH	NA
+6232	1992-07-04 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6233	1992-07-04 11:00:00	-922	1	SCH	NA
+6234	1992-07-05 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6235	1992-07-05 11:00:00	-922	1	SCH	NA
+6247	1992-07-11 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6248	1992-07-12 11:00:00	-922	1	SCH	NA
+6251	1992-07-14 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6254	1992-07-16 11:00:00	-922	1	SCH	NA
+6259	1992-07-19 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6262	1992-07-20 23:00:00	-922	1	SCH	NA
+6264	1992-07-21 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6265	1992-07-22 11:00:00	-922	1	SCH	NA
+6267	1992-07-23 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6268	1992-07-23 23:00:00	-922	1	SCH	NA
+6271	1992-07-25 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6272	1992-07-26 00:00:00	-922	1	SCH	NA
+6275	1992-07-27 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6276	1992-07-27 23:00:00	-922	1	SCH	NA
+6281	1992-07-30 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6282	1992-07-30 23:00:00	-922	1	SCH	NA
+6290	1992-08-04 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6291	1992-08-05 12:00:00	-922	1	SCH	NA
+6293	1992-08-06 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6295	1992-08-07 11:00:00	-922	1	SCH	NA
+6302	1992-08-10 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6303	1992-08-12 00:00:00	-922	1	SCH	NA
+6308	1992-08-14 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6309	1992-08-15 00:00:00	-922	1	SCH	NA
+6311	1992-08-16 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6312	1992-08-17 11:00:00	-922	1	SCH	NA
+6315	1992-08-19 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6316	1992-08-19 11:00:00	-922	1	SCH	NA
+6318	1992-08-20 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6319	1992-08-20 23:00:00	-922	1	SCH	NA
+6320	1992-08-21 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6321	1992-08-21 23:00:00	-922	1	SCH	NA
+6333	1992-08-29 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6334	1992-08-29 23:00:00	-922	1	SCH	NA
+6335	1992-08-30 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6336	1992-08-31 11:00:00	-922	1	SCH	NA
+6338	1992-09-01 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6339	1992-09-01 23:00:00	-922	1	SCH	NA
+6352	1992-09-10 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6353	1992-09-10 23:00:00	-922	1	SCH	NA
+6365	1992-09-18 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6366	1992-09-18 11:00:00	-922	1	SCH	NA
+6369	1992-09-20 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6370	1992-09-20 11:00:00	-922	1	SCH	NA
+6371	1992-09-20 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6372	1992-09-21 11:00:00	-922	1	SCH	NA
+6378	1992-09-25 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6379	1992-09-25 11:00:00	-922	1	SCH	NA
+6387	1992-09-29 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6388	1992-09-30 11:00:00	-922	1	SCH	NA
+6392	1992-10-02 17:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6393	1992-10-02 23:00:00	-922	1	SCH	NA
+6400	1992-10-07 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6401	1992-10-07 23:00:00	-922	1	SCH	NA
+6414	1992-10-14 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6415	1992-10-15 00:00:00	-922	1	SCH	NA
+6422	1992-10-18 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6423	1992-10-18 23:00:00	-922	1	SCH	NA
+6428	1992-10-23 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6429	1992-10-24 11:00:00	-922	1	SCH	NA
+6430	1992-10-24 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6431	1992-10-25 11:00:00	-922	1	SCH	NA
+6440	1992-10-30 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6441	1992-10-31 00:00:00	-922	1	SCH	NA
+6443	1992-11-01 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6444	1992-11-01 23:00:00	-922	1	SCH	NA
+6451	1992-11-05 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6452	1992-11-05 23:00:00	-922	1	SCH	NA
+6461	1992-11-11 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6462	1992-11-12 00:00:00	-922	1	SCH	NA
+6465	1992-11-13 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6466	1992-11-14 00:00:00	-922	1	SCH	NA
+6469	1992-11-15 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6470	1992-11-16 23:00:00	-922	1	SCH	NA
+6471	1992-11-17 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6472	1992-11-18 11:00:00	-922	1	SCH	NA
+6475	1992-11-22 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6476	1992-11-22 23:00:00	-922	1	SCH	NA
+6477	1992-11-23 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6478	1992-11-23 23:00:00	-922	1	SCH	NA
+6479	1992-11-24 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6480	1992-11-24 23:00:00	-922	1	SCH	NA
+6483	1992-11-26 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6484	1992-11-27 00:00:00	-922	1	SCH	NA
+6486	1992-11-27 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6487	1992-11-28 12:00:00	-922	1	SCH	NA
+6495	1992-12-02 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6497	1992-12-03 23:00:00	-922	1	SCH	NA
+6499	1992-12-04 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6500	1992-12-05 11:00:00	-922	1	SCH	NA
+6504	1992-12-11 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6507	1992-12-13 00:00:00	-922	1	SCH	NA
+6509	1992-12-14 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6510	1992-12-14 12:00:00	-922	1	SCH	NA
+6511	1992-12-15 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6513	1992-12-16 00:00:00	-922	1	SCH	NA
+6517	1992-12-18 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6520	1992-12-20 23:00:00	-922	1	SCH	NA
+6521	1992-12-21 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6522	1992-12-21 23:00:00	-922	1	SCH	NA
+6526	1992-12-24 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6527	1992-12-24 23:00:00	-922	1	SCH	NA
+6528	1992-12-25 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6532	1992-12-28 11:00:00	-922	1	SCH	NA
+6534	1992-12-30 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6535	1992-12-30 23:00:00	-922	1	SCH	NA
+6539	1993-01-04 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6540	1993-01-05 23:00:00	-922	1	SCH	NA
+6541	1993-01-07 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6542	1993-01-09 00:00:00	-922	1	SCH	NA
+6549	1993-01-16 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6550	1993-01-18 00:00:00	-922	1	SCH	NA
+6554	1993-01-23 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6555	1993-01-24 00:00:00	-922	1	SCH	NA
+6557	1993-01-26 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6558	1993-01-28 00:00:00	-922	1	SCH	NA
+6561	1993-02-01 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6562	1993-02-01 23:00:00	-922	1	SCH	NA
+6563	1993-02-03 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6565	1993-02-05 23:00:00	-922	1	SCH	NA
+6581	1993-03-01 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6582	1993-03-01 23:00:00	-922	1	SCH	NA
+6584	1993-03-04 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6585	1993-03-04 23:00:00	-922	1	SCH	NA
+6591	1993-03-11 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6592	1993-03-12 00:00:00	-922	1	SCH	NA
+6596	1993-03-15 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6597	1993-03-17 00:00:00	-922	1	SCH	NA
+6598	1993-03-18 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6599	1993-03-18 23:00:00	-922	1	SCH	NA
+6605	1993-03-25 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6606	1993-03-25 23:00:00	-922	1	SCH	NA
+6609	1993-03-28 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6610	1993-03-29 23:00:00	-922	1	SCH	NA
+6611	1993-03-31 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6612	1993-04-04 00:00:00	-922	1	SCH	NA
+6623	1993-04-17 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6624	1993-04-18 00:00:00	-922	1	SCH	NA
+6634	1993-04-27 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6637	1993-04-30 23:00:00	-922	1	SCH	NA
+6639	1993-05-03 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6641	1993-05-05 11:00:00	-922	1	SCH	NA
+6644	1993-05-07 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6646	1993-05-08 12:00:00	-922	1	SCH	NA
+6650	1993-05-10 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6654	1993-05-16 11:00:00	-922	1	SCH	NA
+6658	1993-05-19 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6659	1993-05-20 11:00:00	-922	1	SCH	NA
+6661	1993-05-26 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6663	1993-05-27 11:00:00	-922	1	SCH	NA
+6664	1993-05-27 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6665	1993-05-28 11:00:00	-922	1	SCH	NA
+6666	1993-05-29 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6668	1993-05-30 00:00:00	-922	1	SCH	NA
+6672	1993-06-02 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6673	1993-06-03 00:00:00	-922	1	SCH	NA
+6682	1993-06-07 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6683	1993-06-08 00:00:00	-922	1	SCH	NA
+6684	1993-06-09 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6685	1993-06-09 11:00:00	-922	1	SCH	NA
+6687	1993-06-10 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6688	1993-06-10 23:00:00	-922	1	SCH	NA
+6691	1993-06-12 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6692	1993-06-12 23:00:00	-922	1	SCH	NA
+6695	1993-06-15 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6696	1993-06-16 00:00:00	-922	1	SCH	NA
+6698	1993-06-17 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6699	1993-06-18 00:00:00	-922	1	SCH	NA
+6701	1993-06-18 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6702	1993-06-19 11:00:00	-922	1	SCH	NA
+6703	1993-06-20 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6705	1993-06-20 23:00:00	-922	1	SCH	NA
+6708	1993-06-22 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6711	1993-06-24 11:00:00	-922	1	SCH	NA
+6713	1993-06-25 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6714	1993-06-26 00:00:00	-922	1	SCH	NA
+6716	1993-06-27 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6717	1993-06-27 11:00:00	-922	1	SCH	NA
+6722	1993-07-01 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6723	1993-07-03 00:00:00	-922	1	SCH	NA
+6734	1993-07-08 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6735	1993-07-09 00:00:00	-922	1	SCH	NA
+6751	1993-07-19 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6752	1993-07-19 23:00:00	-922	1	SCH	NA
+6759	1993-07-23 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6760	1993-07-24 00:00:00	-922	1	SCH	NA
+6769	1993-07-28 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6770	1993-07-29 00:00:00	-922	1	SCH	NA
+6772	1993-07-30 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6773	1993-07-30 11:00:00	-922	1	SCH	NA
+6775	1993-07-31 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6776	1993-08-01 00:00:00	-922	1	SCH	NA
+6780	1993-08-03 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6781	1993-08-04 00:00:00	-922	1	SCH	NA
+6789	1993-08-08 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6790	1993-08-09 00:00:00	-922	1	SCH	NA
+6797	1993-08-13 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6799	1993-08-15 23:00:00	-922	1	SCH	NA
+6803	1993-08-19 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6804	1993-08-19 23:00:00	-922	1	SCH	NA
+6805	1993-08-20 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6806	1993-08-20 23:00:00	-922	1	SCH	NA
+6813	1993-08-24 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6814	1993-08-25 00:00:00	-922	1	SCH	NA
+6815	1993-08-25 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6816	1993-08-25 23:00:00	-922	1	SCH	NA
+6820	1993-08-28 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6821	1993-08-28 11:00:00	-922	1	SCH	NA
+6823	1993-08-29 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6824	1993-08-29 23:00:00	-922	1	SCH	NA
+6826	1993-08-30 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6828	1993-09-01 00:00:00	-922	1	SCH	NA
+6834	1993-09-05 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6835	1993-09-06 00:00:00	-922	1	SCH	NA
+6836	1993-09-06 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6837	1993-09-07 00:00:00	-922	1	SCH	NA
+6843	1993-09-10 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6844	1993-09-11 00:00:00	-922	1	SCH	NA
+6846	1993-09-11 18:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6847	1993-09-11 23:00:00	-922	1	SCH	NA
+6848	1993-09-12 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6849	1993-09-13 00:00:00	-922	1	SCH	NA
+6853	1993-09-16 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6856	1993-09-18 00:00:00	-922	1	SCH	NA
+6857	1993-09-18 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6859	1993-09-19 11:00:00	-922	1	SCH	NA
+6863	1993-09-21 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6866	1993-09-22 23:00:00	-922	1	SCH	NA
+6869	1993-09-25 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6870	1993-09-25 12:00:00	-922	1	SCH	NA
+6877	1993-09-29 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6878	1993-09-30 00:00:00	-922	1	SCH	NA
+6879	1993-09-30 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6880	1993-09-30 23:00:00	-922	1	SCH	NA
+6883	1993-10-02 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6884	1993-10-03 00:00:00	-922	1	SCH	NA
+6885	1993-10-03 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6886	1993-10-04 00:00:00	-922	1	SCH	NA
+6889	1993-10-05 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6890	1993-10-05 23:00:00	-922	1	SCH	NA
+6899	1993-10-10 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6900	1993-10-11 00:00:00	-922	1	SCH	NA
+6901	1993-10-11 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6902	1993-10-11 23:00:00	-922	1	SCH	NA
+6903	1993-10-12 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6904	1993-10-13 00:00:00	-922	1	SCH	NA
+6909	1993-10-15 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6910	1993-10-15 23:00:00	-922	1	SCH	NA
+6911	1993-10-16 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6912	1993-10-17 00:00:00	-922	1	SCH	NA
+6914	1993-10-17 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6916	1993-10-19 12:00:00	-922	1	SCH	NA
+6931	1993-10-27 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6934	1993-10-28 12:00:00	-922	1	SCH	NA
+6935	1993-10-28 18:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6936	1993-10-28 23:00:00	-922	1	SCH	NA
+6939	1993-10-30 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6940	1993-10-30 23:00:00	-922	1	SCH	NA
+6946	1993-11-06 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6949	1993-11-07 11:00:00	-922	1	SCH	NA
+6950	1993-11-08 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6954	1993-11-11 11:00:00	-922	1	SCH	NA
+6955	1993-11-12 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6956	1993-11-12 23:00:00	-922	1	SCH	NA
+6957	1993-11-13 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6959	1993-11-15 00:00:00	-922	1	SCH	NA
+6961	1993-11-15 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6962	1993-11-16 11:00:00	-922	1	SCH	NA
+6963	1993-11-16 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6966	1993-11-18 11:00:00	-922	1	SCH	NA
+6967	1993-11-19 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6968	1993-11-19 23:00:00	-922	1	SCH	NA
+6969	1993-11-20 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6970	1993-11-21 00:00:00	-922	1	SCH	NA
+6972	1993-11-21 17:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6973	1993-11-22 00:00:00	-922	1	SCH	NA
+6979	1993-11-25 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6980	1993-11-26 11:00:00	-922	1	SCH	NA
+6981	1993-11-26 17:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6984	1993-11-28 00:00:00	-922	1	SCH	NA
+6991	1993-12-01 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6992	1993-12-02 00:00:00	-922	1	SCH	NA
+6998	1993-12-05 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+6999	1993-12-06 23:00:00	-922	1	SCH	NA
+7001	1993-12-07 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7002	1993-12-08 11:00:00	-922	1	SCH	NA
+7003	1993-12-08 17:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7004	1993-12-09 00:00:00	-922	1	SCH	NA
+7005	1993-12-09 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7006	1993-12-10 00:00:00	-922	1	SCH	NA
+7011	1993-12-12 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7012	1993-12-13 11:00:00	-922	1	SCH	NA
+7013	1993-12-13 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7014	1993-12-14 11:00:00	-922	1	SCH	NA
+7021	1993-12-18 17:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7022	1993-12-19 23:00:00	-922	1	SCH	NA
+7025	1993-12-21 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7026	1993-12-21 23:00:00	-922	1	SCH	NA
+7028	1993-12-23 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7029	1993-12-24 00:00:00	-922	1	SCH	NA
+7034	1993-12-26 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7035	1993-12-26 23:00:00	-922	1	SCH	NA
+7036	1993-12-27 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7037	1993-12-27 23:00:00	-922	1	SCH	NA
+7038	1993-12-28 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7039	1993-12-29 00:00:00	-922	1	SCH	NA
+7041	1993-12-30 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7042	1993-12-30 11:00:00	-922	1	SCH	NA
+7044	1994-01-01 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7045	1994-01-01 11:00:00	-922	1	SCH	NA
+7055	1994-01-08 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7056	1994-01-09 00:00:00	-922	1	SCH	NA
+7060	1994-01-11 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7061	1994-01-11 23:00:00	-922	1	SCH	NA
+7064	1994-01-14 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7065	1994-01-15 23:00:00	-922	1	SCH	NA
+7070	1994-01-19 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7071	1994-01-19 12:00:00	-922	1	SCH	NA
+7077	1994-01-23 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7078	1994-01-23 23:00:00	-922	1	SCH	NA
+7079	1994-01-24 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7081	1994-01-25 11:00:00	-922	1	SCH	NA
+7089	1994-01-29 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7091	1994-01-30 11:00:00	-922	1	SCH	NA
+7101	1994-02-08 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7102	1994-02-08 11:00:00	-922	1	SCH	NA
+7104	1994-02-09 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7105	1994-02-10 00:00:00	-922	1	SCH	NA
+7107	1994-02-11 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7108	1994-02-11 12:00:00	-922	1	SCH	NA
+7115	1994-02-15 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7116	1994-02-15 11:00:00	-922	1	SCH	NA
+7120	1994-02-17 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7121	1994-02-17 23:00:00	-922	1	SCH	NA
+7125	1994-02-20 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7126	1994-02-20 11:00:00	-922	1	SCH	NA
+7130	1994-02-23 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7132	1994-02-24 11:00:00	-922	1	SCH	NA
+7135	1994-02-25 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7136	1994-02-26 11:00:00	-922	1	SCH	NA
+7137	1994-02-26 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7138	1994-02-27 11:00:00	-922	1	SCH	NA
+7140	1994-02-28 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7142	1994-03-01 23:00:00	-922	1	SCH	NA
+7146	1994-03-04 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7148	1994-03-05 00:00:00	-922	1	SCH	NA
+7150	1994-03-06 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7152	1994-03-07 11:00:00	-922	1	SCH	NA
+7157	1994-03-10 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7158	1994-03-10 23:00:00	-922	1	SCH	NA
+7164	1994-03-13 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7165	1994-03-14 11:00:00	-922	1	SCH	NA
+7167	1994-03-15 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7168	1994-03-16 11:00:00	-922	1	SCH	NA
+7177	1994-03-21 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7178	1994-03-21 11:00:00	-922	1	SCH	NA
+7181	1994-03-23 13:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7182	1994-03-24 00:00:00	-922	1	SCH	NA
+7209	1994-04-08 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7210	1994-04-08 23:00:00	-922	1	SCH	NA
+7212	1994-04-10 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7214	1994-04-11 11:00:00	-922	1	SCH	NA
+7217	1994-04-13 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7218	1994-04-13 12:00:00	-922	1	SCH	NA
+7222	1994-04-15 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7223	1994-04-15 23:00:00	-922	1	SCH	NA
+7224	1994-04-17 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7225	1994-04-17 11:00:00	-922	1	SCH	NA
+7231	1994-04-20 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7234	1994-04-21 23:00:00	-922	1	SCH	NA
+7243	1994-04-26 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7244	1994-04-27 12:00:00	-922	1	SCH	NA
+7247	1994-04-28 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7248	1994-04-29 11:00:00	-922	1	SCH	NA
+7251	1994-05-01 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7252	1994-05-01 11:00:00	-922	1	SCH	NA
+7255	1994-05-03 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7256	1994-05-04 11:00:00	-922	1	SCH	NA
+7258	1994-05-05 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7259	1994-05-05 23:00:00	-922	1	SCH	NA
+7262	1994-05-07 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7263	1994-05-08 11:00:00	-922	1	SCH	NA
+7273	1994-05-13 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7274	1994-05-14 11:00:00	-922	1	SCH	NA
+7276	1994-05-15 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7277	1994-05-15 23:00:00	-922	1	SCH	NA
+7278	1994-05-16 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7279	1994-05-17 11:00:00	-922	1	SCH	NA
+7280	1994-05-17 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7281	1994-05-18 12:00:00	-922	1	SCH	NA
+7290	1994-05-26 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7291	1994-05-26 23:00:00	-922	1	SCH	NA
+7293	1994-05-28 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7295	1994-05-29 23:00:00	-922	1	SCH	NA
+7303	1994-06-19 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7306	1994-06-21 11:00:00	-922	1	SCH	NA
+7318	1994-07-01 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7319	1994-07-01 11:00:00	-922	1	SCH	NA
+7323	1994-07-03 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7324	1994-07-04 00:00:00	-922	1	SCH	NA
+7329	1994-07-06 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7330	1994-07-07 11:00:00	-922	1	SCH	NA
+7346	1994-07-16 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7347	1994-07-17 00:00:00	-922	1	SCH	NA
+7357	1994-07-23 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7359	1994-07-24 11:00:00	-922	1	SCH	NA
+7361	1994-07-25 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7362	1994-07-26 11:00:00	-922	1	SCH	NA
+7371	1994-07-31 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7372	1994-08-01 00:00:00	-922	1	SCH	NA
+7383	1994-08-07 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7384	1994-08-07 23:00:00	-922	1	SCH	NA
+7385	1994-08-08 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7386	1994-08-08 23:00:00	-922	1	SCH	NA
+7387	1994-08-09 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7388	1994-08-10 00:00:00	-922	1	SCH	NA
+7390	1994-08-11 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7391	1994-08-11 11:00:00	-922	1	SCH	NA
+7399	1994-08-15 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7401	1994-08-16 23:00:00	-922	1	SCH	NA
+7409	1994-08-21 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7410	1994-08-22 00:00:00	-922	1	SCH	NA
+7415	1994-08-25 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7418	1994-08-26 12:00:00	-922	1	SCH	NA
+7422	1994-08-28 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7424	1994-08-29 11:00:00	-922	1	SCH	NA
+7436	1994-09-04 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7437	1994-09-05 11:00:00	-922	1	SCH	NA
+7439	1994-09-07 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7440	1994-09-07 11:00:00	-922	1	SCH	NA
+7443	1994-09-09 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7445	1994-09-09 23:00:00	-922	1	SCH	NA
+7449	1994-09-12 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7450	1994-09-12 11:00:00	-922	1	SCH	NA
+7460	1994-09-17 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7461	1994-09-18 00:00:00	-922	1	SCH	NA
+7467	1994-09-21 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7468	1994-09-21 12:00:00	-922	1	SCH	NA
+7472	1994-09-24 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7473	1994-09-24 11:00:00	-922	1	SCH	NA
+7476	1994-09-25 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7477	1994-09-26 11:00:00	-922	1	SCH	NA
+7478	1994-09-26 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7480	1994-09-27 23:00:00	-922	1	SCH	NA
+7481	1994-09-28 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7482	1994-09-28 23:00:00	-922	1	SCH	NA
+7487	1994-10-01 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7488	1994-10-01 23:00:00	-922	1	SCH	NA
+7501	1994-10-12 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7506	1994-10-14 11:00:00	-922	1	SCH	NA
+7510	1994-10-16 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7511	1994-10-17 00:00:00	-922	1	SCH	NA
+7516	1994-10-19 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7517	1994-10-20 00:00:00	-922	1	SCH	NA
+7525	1994-10-24 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7526	1994-10-25 11:00:00	-922	1	SCH	NA
+7533	1994-10-28 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7534	1994-10-29 11:00:00	-922	1	SCH	NA
+7549	1994-11-07 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7551	1994-11-08 11:00:00	-922	1	SCH	NA
+7557	1994-11-11 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7558	1994-11-13 00:00:00	-922	1	SCH	NA
+7569	1994-11-18 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7570	1994-11-18 23:00:00	-922	1	SCH	NA
+7573	1994-11-20 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7574	1994-11-21 11:00:00	-922	1	SCH	NA
+7581	1994-11-25 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7582	1994-11-25 11:00:00	-922	1	SCH	NA
+7583	1994-11-26 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7584	1994-11-26 11:00:00	-922	1	SCH	NA
+7587	1994-11-27 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7588	1994-11-28 11:00:00	-922	1	SCH	NA
+7589	1994-11-28 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7590	1994-11-29 13:00:00	-922	1	SCH	NA
+7591	1994-11-30 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7592	1994-11-30 12:00:00	-922	1	SCH	NA
+7593	1994-12-01 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7594	1994-12-01 23:00:00	-922	1	SCH	NA
+7596	1994-12-02 23:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7597	1994-12-04 00:00:00	-922	1	SCH	NA
+7598	1994-12-04 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7600	1994-12-05 11:00:00	-922	1	SCH	NA
+7602	1994-12-06 12:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7603	1994-12-07 00:00:00	-922	1	SCH	NA
+7606	1994-12-08 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7607	1994-12-09 00:00:00	-922	1	SCH	NA
+7608	1994-12-09 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7609	1994-12-09 23:00:00	-922	1	SCH	NA
+7610	1994-12-10 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7611	1994-12-11 00:00:00	-922	1	SCH	NA
+7622	1994-12-16 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7623	1994-12-16 23:00:00	-922	1	SCH	NA
+7630	1994-12-20 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7631	1994-12-21 12:00:00	-922	1	SCH	NA
+7643	1994-12-28 00:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7644	1994-12-28 11:00:00	-922	1	SCH	NA
+7649	1994-12-31 11:00:00	20	1	SCH	Indian Meteorological Service MK3 (India)              
+7650	1994-12-31 23:00:00	-922	1	SCH	NA
+13705	2005-01-11 00:00:00	0	1	SCH	NA
+13706	2005-01-11 11:00:00	-922	1	SCH	NA
+14472	2006-05-13 14:00:00	150	1	SCH	Meteolabor SRS-C50/Argus (Switzerland)                            
+14473	2006-05-13 23:00:00	-922	1	SCH	NA
+14498	2006-05-31 13:00:00	150	1	SCH	Meteolabor SRS-C50/Argus (Switzerland)                            
+14499	2006-06-01 00:00:00	-922	1	SCH	NA
+14740	2006-10-25 12:00:00	150	1	SCH	Meteolabor SRS-C50/Argus (Switzerland)                            
+14741	2006-10-26 00:00:00	-922	1	SCH	NA
+14760	2006-11-04 11:00:00	150	1	SCH	Meteolabor SRS-C50/Argus (Switzerland)                            
+14761	2006-11-04 23:00:00	-922	1	SCH	NA
+14764	2006-11-06 11:00:00	150	1	SCH	Meteolabor SRS-C50/Argus (Switzerland)                            
+14765	2006-11-07 00:00:00	-922	1	SCH	NA
+14810	2007-01-01 12:00:00	150	1	SCH	Meteolabor SRS-C50/Argus (Switzerland)                            
+14811	2007-01-02 01:00:00	-922	1	SCH	NA
+14812	2007-01-02 12:00:00	150	1	SCH	Meteolabor SRS-C50/Argus (Switzerland)                            
+14814	2007-01-03 12:00:00	-922	1	SCH	NA
+14824	2007-01-09 00:00:00	150	1	SCH	Meteolabor SRS-C50/Argus (Switzerland)                            
+14825	2007-01-10 00:00:00	-922	1	SCH	NA
+14837	2007-01-16 12:00:00	150	1	SCH	Meteolabor SRS-C50/Argus (Switzerland)                            
+14841	2007-01-19 00:00:00	-922	1	SCH	NA
+14843	2007-01-20 01:00:00	150	1	SCH	Meteolabor SRS-C50/Argus (Switzerland)                            
+14844	2007-01-20 11:00:00	-922	1	SCH	NA
+14845	2007-04-13 01:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+14846	2007-04-15 01:00:00	-922	1	SCH	NA
+14847	2007-04-15 13:00:00	150	1	SCH	Meteolabor SRS-C50/Argus (Switzerland)                            
+14848	2007-04-16 01:00:00	-922	1	SCH	NA
+14849	2007-04-16 12:00:00	150	1	SCH	Meteolabor SRS-C50/Argus (Switzerland)                            
+14850	2007-04-17 01:00:00	-922	1	SCH	NA
+14899	2007-05-22 00:00:00	150	1	SCH	Meteolabor SRS-C50/Argus (Switzerland)                            
+14900	2007-05-22 12:00:00	-922	1	SCH	NA
+14921	2007-06-04 00:00:00	150	1	SCH	Meteolabor SRS-C50/Argus (Switzerland)                            
+14922	2007-06-04 11:00:00	-922	1	SCH	NA
+14997	2007-07-31 23:00:00	123	1	SCH	Vaisala RS41/DigiCORA MW41 (Finland)                           
+14998	2007-08-01 23:00:00	-922	1	SCH	NA
+15018	2007-08-15 11:00:00	113	1	SCH	Vaisala RS92/MARWIN MW32 (Finland)                           
+15019	2007-08-15 23:00:00	-922	1	SCH	NA
+15075	2007-09-15 00:00:00	0	1	SCH	NA
+15076	2007-09-15 11:00:00	-922	1	SCH	NA
+15221	2007-12-01 01:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+15222	2007-12-01 12:00:00	-922	1	SCH	NA
+15378	2008-04-26 13:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+15379	2008-04-30 11:00:00	-922	1	SCH	NA
+15803	2008-12-20 11:00:00	0	1	SCH	NA
+15804	2008-12-20 23:00:00	-922	1	SCH	NA
+16104	2009-11-01 23:00:00	123	1	SCH	Vaisala RS41/DigiCORA MW41 (Finland)                           
+16105	2009-11-02 11:00:00	-922	1	SCH	NA
+16359	2010-07-07 11:00:00	0	1	SCH	NA
+16360	2010-07-07 23:00:00	-922	1	SCH	NA
+16805	2011-10-01 23:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+16812	2011-10-10 23:00:00	-922	1	SCH	NA
+16813	2011-10-12 00:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+16863	2011-12-01 23:00:00	-922	1	SCH	NA
+16865	2011-12-03 23:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+16887	2011-12-30 23:00:00	-922	1	SCH	NA
+16891	2012-01-04 23:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+16940	2012-02-29 23:00:00	-922	1	SCH	NA
+16941	2012-03-02 00:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+16987	2012-04-18 00:00:00	-922	1	SCH	NA
+16994	2012-04-25 00:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+17004	2012-05-08 01:00:00	-922	1	SCH	NA
+17005	2012-05-09 00:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+17008	2012-05-12 00:00:00	-922	1	SCH	NA
+17010	2012-05-14 00:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+17013	2012-05-18 00:00:00	-922	1	SCH	NA
+17015	2012-05-20 00:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+17057	2012-07-05 00:00:00	-922	1	SCH	NA
+17058	2012-07-06 00:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+17111	2012-08-31 23:00:00	-922	1	SCH	NA
+17145	2012-12-09 23:00:00	117	1	SCH	Graw DFM-09 (Germany)                            
+0	2013-01-01 23:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+221	2015-10-17 11:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+406	2016-12-13 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+407	2016-12-14 23:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        

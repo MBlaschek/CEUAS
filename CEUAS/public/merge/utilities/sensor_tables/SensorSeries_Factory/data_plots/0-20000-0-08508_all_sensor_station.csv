@@ -1,0 +1,10 @@
+	sensor_id	source	comment	date_time	value
+1679	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
+1805	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+0	79	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            		
+46211	VC_ 	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
+55302	VNG 	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
+55338	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+0	ZKBc	SCH	"  ZKBc VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok, censoring {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060 <F=T1680AL,P=Ab,"		
+10454	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1989-01-01	3.0
+10456	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1992-12-01	3.0

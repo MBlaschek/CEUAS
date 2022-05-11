@@ -1,0 +1,15 @@
+	sensor_id	source	comment	date_time	value
+6	111	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          		
+484	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
+1507	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+2542	61	WMO	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            		
+2623	71	WMO	Vaisala RS90/Loran/Digicora I, II or Marwin (Finland)            		
+1	79	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            		
+327	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+9295	C2  	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"		
+0	ZF1 	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
+4244	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 	1982-01-01	3.0
+4246	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ 1397 NORWAY 72 MHZ 	1986-01-01	3.0
+4247	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1989-01-01	3.0
+4248	IGRA2	IGRA2	USING SONDE MODEL , I1 , USA ATMOS INSTR RESEARCH UNSPECIFIED 	1994-06-01	3.0
+4249	IGRA2	IGRA2	USING SONDE MODEL , I2 , VIZ UNSPECIFIED 	1994-06-01	3.0

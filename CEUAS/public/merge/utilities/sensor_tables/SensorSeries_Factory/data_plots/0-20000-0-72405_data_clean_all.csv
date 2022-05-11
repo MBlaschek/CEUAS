@@ -1,0 +1,9 @@
+	date_time	sensor_id	value	source	comment
+0	1918-12-17 13:00:00	NU3 	1	SCH	  NU3 USA C. F. Marvin PTU kite meteorograph {1912}^ <F=C,P=2A,T=D,U=H>
+17651	1938-05-31 22:00:00	UDc 	1	SCH	  UDc US Navy Diamond Hinman LiCl hygristor radiosonde, too cold {1938}^ LiCl humidity sensor, used at 9 Navy stations by mid-1940 <F=V65AB,P=A,T=E,U=L>
+17905	1938-08-02 22:00:00	UD3 	1	SCH	  UD3 US Navy Diamond Hinman LiCl hygristor radiosonde, temperature correction {1938}^ used at 9 Navy stations by mid-1940 <F=V65AB,P=A,T=E,U=L>
+21714	1941-03-01 09:00:00	UBA 	1	SCH	  UBA USWB Friez Diamond Hinman initial operational radiosonde, hair hygrometer, temperature corr {19380803}^ <F=V65AB,P=A,T=E(hydrochloric acid, ethyl
+34480	1950-09-30 21:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+48994	1960-10-10 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+48997	1969-05-16 15:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+50847	1973-05-10 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

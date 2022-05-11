@@ -1,0 +1,31 @@
+	sensor_id	source	comment	Unnamed: 0	date_time	value
+221	-922	WMO	NA			
+2582	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           			
+2575	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           			
+2622	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  			
+5512	163	WMO	Modem M20 radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (France)             			
+1868	177	WMO	Modem GPSonde M10 (France)                           			
+156	71	WMO	Vaisala RS90/Loran/Digicora I, II or Marwin (Finland)            			
+20	79	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            			
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               			
+53472	BAE 	SCH	  BAE Austria Elin radiosonde model 2404, hypsometer pressure {~ 1992} WMO instr=16^ (W2=23, W3=16) <F=?403,P=H>			
+73825	V9a 	SCH	  V9a Vaisala RS90 DigiCORA I, II, or Marwin country corr, GPS wind 31313=67108^ <F=T403DL,P=Sc,T=Wc,U=2Ah,N=G>			
+68831	V9t 	SCH	  V9t Vaisala RS90 DigiCORA I, II, or Marwin country corr, ranging wind 31313=67103^ <F=T403DL,P=Sc,T=Wc,U=2Ah,W=Ta>			
+66951	VA8 	SCH	  VA8 exact type insufficiently documented			
+79363	VNT 	SCH	  VNT Vaisala RS92 DigiCORA I, II, or Marwin country corr, ranging wind 31313=67903^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>			
+79597	VnG 	SCH	  VnG Vaisala RS92 DigiCORA I, II, or Marwin country corr, GPS wind 31313=67908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>			
+33683	Z0m 	SCH	  Z0m VIZ AN/AMT modified sonde assumed similar to Z4a {mid 1970s}^			
+0	Z4? 	SCH	  Z4? exact type insufficiently documented			
+1362	IGRA2	IGRA2	USING SONDE MODEL , VIZ AN/AMT-4 UNSPECIFIED 		1952-01-01	3.0
+1365	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ AN/AMT-4B UNSPECIFIED 		1960-01-01	3.0
+1366	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ AN/AMT-4 UNSPECIFIED , to , AUSTRIA AN/AMT-4 MODIFIED 		1960-01-01	3.0
+1367	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ AN/AMT-4 UNSPECIFIED 		1976-01-01	3.0
+1368	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ AN/AMT-4 UNSPECIFIED , to , VIZ ACCU-LOK UNSPECIFIED 		1977-02-01	3.0
+1370	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 		1982-01-01	3.0
+1371	IGRA2	IGRA2	USING SONDE MODEL , I2 , AUSTRIA ELIN 		1982-01-01	3.0
+1372	IGRA2	IGRA2	USING SONDE MODEL , I1 , AUSTRIA ELIN 		1986-01-01	3.0
+1373	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ ACCU-LOK UNSPECIFIED , to , AUSTRIA ELIN 		1988-05-01	3.0
+1372	IGRA2	IGRA2	USING SONDE MODEL , I1 , AUSTRIA ELIN 		1986-01-01	3.0
+1375	IGRA2	IGRA2	USING SONDE MODEL , I1 , AUSTRIA ELIN MODEL 2404 HYPSOMETER 		1992-12-01	3.0
+1376	IGRA2	IGRA2	CHANGE SONDE MODEL , AUSTRIA ELIN , to , VAISALA RS80 UNSPECIFIED 		1996-07-01	3.0
+1377	IGRA2	IGRA2	CHANGE SONDE MODEL , VAISALA RS80 UNSPECIFIED , to , VAISALA RS90-A NO NAVAID 		1997-11-01	3.0

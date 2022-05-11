@@ -1,0 +1,4 @@
+	date_time	sensor_id	value	source	comment
+0	1930-04-07 11:30:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+26655	1952-04-23 21:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+27194	1952-09-05 21:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

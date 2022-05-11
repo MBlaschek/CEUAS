@@ -1,0 +1,11 @@
+	sensor_id	source	comment	date_time	value
+5802	CVA 	SCH	  CVA Canada Valcom VIZ A model 1492-510 Accu-Lok {1986} WMO instr=31^ (W3=31)		
+5670	MC4 	SCH	  MC4 Mixed Canada Valcom (CVA) and Vaisala RS80 DigiCORA (VC_^ Canada mid-1990s, mixed Valcom (31=CV2) and Vaisala RS80 DigiCORA or Marwin (61=VC_), missing 31313 may be CV2		
+5753	VC_ 	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
+7055	VGL 	SCH	  VGL Vaisala RS80 DigiCORA III auto corr, LoRAN wind 31313=46706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>		
+7054	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+0	ZH1 	SCH	  ZH1 VIZ model 1292-410 NWS 1680 MHz baseline {1973}^ (W1=19 calls this VIZ 1292, T=427) NWS stock #J005 <F=V1680AB,P=A,T=TR(ML-405),U=C,W=Ra(WBRT or GMD-1)>		
+1699	ZI1 	SCH	  ZI1 VIZ model 1392-410 NWS 1680 MHz baseline {late 1970s}^ (W1=19 calls this VIZ 1392-401, T=441) NWS stock no. J030 <F=T1680AB,P=A,T=TR(ML-405),U=C,		
+2605	IGRA2	IGRA2	USING SONDE MODEL , I1 , CANADA SANGAMO UNSPECIFIED 	1982-01-01	3.0
+2605	IGRA2	IGRA2	USING SONDE MODEL , I1 , CANADA SANGAMO UNSPECIFIED 	1982-01-01	3.0
+2605	IGRA2	IGRA2	USING SONDE MODEL , I1 , CANADA SANGAMO UNSPECIFIED 	1982-01-01	3.0

@@ -1,0 +1,26 @@
+	sensor_id	source	comment	date_time	value
+444	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+13	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+4655	162	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        		
+427	27	WMO	AVK-MRZ (Russian Federation)                		
+181	58	WMO	AVK-BAR (Russian Federation)                		
+442	59	WMO	Modem M2K2-R 1680 MHz RDF radiosonde with pressure sensor chip (France)        		
+507	68	WMO	AVK-RZM-2 (Russian Federation)                		
+0	69	WMO	MARL-A or Vektor-M-RZM-2 (Russian Federation)              		
+3468	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+1663	88	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              		
+210	89	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              		
+1329	90	WMO	Radiosonde not specified or unknown             		
+915	99	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        		
+0	RR2 	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>		
+47822	RZ3 	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+48419	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+11590	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 	1960-01-01	3.0
+11591	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR RZ-049 UNSPECIFIED , to , USSR A-22 UNSPECIFIED 	1961-09-01	3.0
+11592	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 	1976-01-01	3.0
+11593	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+11594	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , RUSSIA/USSR MRZ UNSPECIFIED 	1988-02-01	3.0
+11593	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+11598	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ UNSPECIFIED 	1992-12-01	3.0
+11600	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 	1996-04-01	3.0
+11600	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 	1996-04-01	3.0

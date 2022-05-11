@@ -1,0 +1,10 @@
+	sensor_id	source	comment	date_time	value
+6268	119	WMO	Polus-MRZ-N1 (Russian Federation)                            		
+0	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+4137	160	WMO	MARL-A or Vektor-M – I-2012 (Russian Federation)                        		
+1895	162	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        		
+168	59	WMO	Modem M2K2-R 1680 MHz RDF radiosonde with pressure sensor chip (France)        		
+93	88	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              		
+2689	89	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              		
+1998	90	WMO	Radiosonde not specified or unknown             		
+0	RHM 	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),		

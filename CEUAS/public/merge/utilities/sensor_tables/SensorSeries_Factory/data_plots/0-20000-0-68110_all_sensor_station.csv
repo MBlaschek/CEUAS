@@ -1,0 +1,37 @@
+	sensor_id	source	comment	date_time	value
+676	112	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 		
+175	113	WMO	Vaisala RS92/MARWIN MW32 (Finland)                           		
+441	119	WMO	Polus-MRZ-N1 (Russian Federation)                            		
+576	121	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        		
+442	122	WMO	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         		
+532	124	WMO	Vaisala RS41/AUTOSONDE (Finland)                            		
+425	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+987	131	WMO	Taiyuan GTS1-1/GFE(L) (China )                           		
+455	152	WMO	Vaisala RS92-NGP/Intermet IMS-2000 (United States)                          		
+439	163	WMO	Modem M20 radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (France)             		
+672	177	WMO	Modem GPSonde M10 (France)                           		
+674	18	WMO	Graw DFM-06 (Germany)                		
+575	182	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      		
+688	20	WMO	Indian Meteorological Service MK3 (India)              		
+1986	58	WMO	AVK-BAR (Russian Federation)                		
+1831	70	WMO	Vaisala RS92/Star (Finland)                		
+1835	72	WMO	Vaisala RS90/PC-Cora (Finland)                		
+1591	74	WMO	Vaisala RS90/Star (Finland)                		
+1846	75	WMO	AVK-MRZ-ARMA (Russian Federation)                		
+1970	76	WMO	AVK-RF95-ARMA (Russian Federation)                		
+2013	84	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   		
+0	99	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        		
+11632	BFG 	SCH	  BFG South Africa InterMet Africa BAT-16G radiosonde {2007} 31313=49808^ <F=T1676-1682FL,P=none,T=TB,U=A,N=G>		
+11613	BFg 	SCH	  BFg South Africa InterMet Africa BAT-16G radiosonde, no rad corr {2007} 31313=09808^ <F=T1676-1682FL,P=none,T=TB,U=A,N=G>		
+1477	V8A 	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
+0	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+11381	ZQr 	SCH	  ZQr Sippican model 1547-___ MK II Microsonde 403 MHz PTU chip thermistor, auto solar corr {~ 2003} 31313=58602^ (W3=86) <F=T403DL,P=Ac,T=TC,U=C,W=Ra>		
+18023	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS13 25 MHZ 	1958-12-01	3.0
+18024	IGRA2	IGRA2	USING SONDE MODEL , I2 , VAISALA RS12 WATER INSULATED 	1958-12-01	3.0
+18025	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 	1960-01-01	3.0
+18026	IGRA2	IGRA2	CHANGE SONDE MODEL , VAISALA RS13 25 MHZ , to , VIZ UNSPECIFIED 	1974-01-01	3.0
+18027	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , VAISALA RS21 UNSPECIFIED 	1975-09-01	3.0
+18028	IGRA2	IGRA2	CHANGE SONDE MODEL , VAISALA RS21 UNSPECIFIED , to , VAISALA RS80 UNSPECIFIED 	1985-04-01	3.0
+18029	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 	1986-01-01	3.0
+18030	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0
+18030	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0

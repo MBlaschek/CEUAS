@@ -1,0 +1,350 @@
+	date_time	sensor_id	value	source	comment
+0	1954-07-01 03:00:00	ZE42	1	SCH	  ZE42 exact type insufficiently documented
+14986	1974-04-30 00:00:00	ZH12	1	SCH	  ZH12 exact type insufficiently documented
+18812	1977-06-14 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+19019	1977-11-11 00:00:00	ZH12	1	SCH	  ZH12 exact type insufficiently documented
+19178	1978-01-06 00:00:00	AA74	1	SCH	  AA74 exact type insufficiently documented
+20814	1979-05-01 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+20921	1979-06-01 00:00:00	AA74	1	SCH	  AA74 exact type insufficiently documented
+22817	1980-12-31 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+22915	1981-01-29 00:00:00	AP14	1	SCH	  AP14 exact type insufficiently documented
+26829	1984-09-11 12:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+26844	1984-09-16 12:00:00	AP14	1	SCH	  AP14 exact type insufficiently documented
+26845	1984-09-17 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+26847	1984-09-17 12:00:00	AP14	1	SCH	  AP14 exact type insufficiently documented
+26849	1984-09-18 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+26851	1984-09-18 12:00:00	AP14	1	SCH	  AP14 exact type insufficiently documented
+26853	1984-09-19 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+26855	1984-09-19 12:00:00	AP14	1	SCH	  AP14 exact type insufficiently documented
+26857	1984-09-20 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+26859	1984-09-20 12:00:00	AP14	1	SCH	  AP14 exact type insufficiently documented
+26860	1984-09-21 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+26862	1984-09-21 12:00:00	AP14	1	SCH	  AP14 exact type insufficiently documented
+26864	1984-09-22 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+26866	1984-09-22 12:00:00	AP14	1	SCH	  AP14 exact type insufficiently documented
+26868	1984-09-23 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+26870	1984-09-23 12:00:00	AP14	1	SCH	  AP14 exact type insufficiently documented
+26872	1984-09-24 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+26874	1984-09-24 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+27183	1984-12-16 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+27208	1984-12-23 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+27209	1984-12-24 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+27998	1985-07-15 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28008	1985-07-18 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28010	1985-07-18 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28012	1985-07-19 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28014	1985-07-19 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28020	1985-07-21 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28022	1985-07-21 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28040	1985-07-26 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28042	1985-07-26 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28044	1985-07-27 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28046	1985-07-27 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28048	1985-07-28 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28050	1985-07-28 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28052	1985-07-29 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28054	1985-07-29 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28056	1985-07-30 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28058	1985-07-30 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28060	1985-07-31 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28062	1985-07-31 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28064	1985-08-01 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28066	1985-08-01 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28068	1985-08-02 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28070	1985-08-02 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28072	1985-08-03 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28074	1985-08-03 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28076	1985-08-04 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28078	1985-08-04 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28080	1985-08-05 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28082	1985-08-05 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28084	1985-08-06 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28086	1985-08-06 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28088	1985-08-07 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28090	1985-08-07 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28092	1985-08-08 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28094	1985-08-08 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28096	1985-08-09 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28098	1985-08-09 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28100	1985-08-10 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28102	1985-08-10 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28104	1985-08-11 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28106	1985-08-11 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28108	1985-08-12 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28109	1985-08-12 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28111	1985-08-13 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28113	1985-08-13 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28115	1985-08-14 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28117	1985-08-14 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28119	1985-08-15 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28121	1985-08-15 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28123	1985-08-16 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28125	1985-08-16 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28127	1985-08-17 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28129	1985-08-17 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28131	1985-08-18 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28133	1985-08-18 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28135	1985-08-19 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28137	1985-08-19 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28139	1985-08-20 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28141	1985-08-20 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28143	1985-08-21 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28145	1985-08-21 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28147	1985-08-22 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28149	1985-08-22 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28151	1985-08-23 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28153	1985-08-23 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28155	1985-08-24 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28158	1985-08-24 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28160	1985-08-25 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28162	1985-08-25 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28164	1985-08-26 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28166	1985-08-26 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28168	1985-08-27 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28170	1985-08-27 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28180	1985-08-30 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28182	1985-08-30 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28184	1985-08-31 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28186	1985-08-31 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28188	1985-09-01 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28190	1985-09-01 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28192	1985-09-02 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28194	1985-09-02 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+28196	1985-09-03 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+28198	1985-09-03 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+29216	1986-05-18 12:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+29217	1986-05-19 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+29240	1986-05-25 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+29242	1986-05-25 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+29244	1986-05-26 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+29250	1986-05-27 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+29252	1986-05-28 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+29254	1986-05-28 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+29256	1986-05-29 00:00:00	UAA 	1	SCH	  UAA USA Airsonde AS-3A-1680 carbon hygristor {1982}^ <F=T1680AL,P=Ac,T=TB,U=C(VIZ Accu-Lok),W=Ra>
+29276	1986-06-03 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+40149	1994-01-21 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+40230	1994-02-10 12:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+40565	1994-05-06 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+40743	1994-06-22 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+40896	1994-07-31 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+41053	1994-09-10 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+43344	1996-04-18 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+43504	1996-05-29 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44201	1996-11-21 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+44216	1996-11-25 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44220	1996-11-26 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+44228	1996-11-28 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44236	1996-11-30 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+44240	1996-12-01 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44290	1996-12-14 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+44294	1996-12-15 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44297	1996-12-16 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+44313	1996-12-20 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44321	1996-12-22 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+44325	1996-12-23 00:00:00	VAr 	1	SCH	  VAr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+44343	1996-12-28 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44347	1996-12-29 00:00:00	VAr 	1	SCH	  VAr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+44351	1996-12-30 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44355	1996-12-31 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+44375	1997-01-05 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44399	1997-01-11 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44446	1997-01-23 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44452	1997-01-25 00:00:00	VAr 	1	SCH	  VAr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+44464	1997-01-28 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44472	1997-01-30 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44502	1997-02-08 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44573	1997-02-26 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44577	1997-02-27 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44581	1997-02-28 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44696	1997-03-29 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44700	1997-03-30 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44708	1997-04-01 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44712	1997-04-02 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44716	1997-04-03 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44720	1997-04-04 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44724	1997-04-05 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44728	1997-04-06 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44732	1997-04-07 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44736	1997-04-08 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44739	1997-04-09 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44743	1997-04-10 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44747	1997-04-11 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44751	1997-04-12 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44759	1997-04-14 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44763	1997-04-15 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44767	1997-04-16 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44771	1997-04-17 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44783	1997-04-20 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44787	1997-04-21 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44795	1997-04-23 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44799	1997-04-24 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44807	1997-04-26 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44811	1997-04-27 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+44962	1997-06-04 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+44966	1997-06-05 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45075	1997-07-03 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45111	1997-07-12 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45119	1997-07-14 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45135	1997-07-18 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45155	1997-07-23 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45167	1997-07-26 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45175	1997-07-28 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45195	1997-08-02 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45207	1997-08-05 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45222	1997-08-09 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45230	1997-08-11 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45234	1997-08-12 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45238	1997-08-13 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45246	1997-08-15 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45257	1997-08-18 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45261	1997-08-19 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45265	1997-08-20 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45277	1997-08-23 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45284	1997-08-25 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45296	1997-08-28 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45300	1997-08-29 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45303	1997-08-30 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45315	1997-09-02 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45331	1997-09-06 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45343	1997-09-09 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45359	1997-09-13 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45367	1997-09-15 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45387	1997-09-20 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45394	1997-09-22 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45402	1997-09-24 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45406	1997-09-25 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45414	1997-09-27 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45422	1997-09-29 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45426	1997-09-30 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45434	1997-10-02 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45442	1997-10-04 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45450	1997-10-06 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45469	1997-10-11 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45477	1997-10-13 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45500	1997-10-19 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45503	1997-10-20 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45507	1997-10-21 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45527	1997-10-26 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45538	1997-10-29 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45557	1997-11-03 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45601	1997-11-15 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45608	1997-11-17 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45614	1997-11-19 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45618	1997-11-20 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45626	1997-11-22 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45638	1997-11-25 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45650	1997-11-28 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45662	1997-12-01 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45676	1997-12-05 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45688	1997-12-08 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45692	1997-12-09 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45700	1997-12-11 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45708	1997-12-13 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45720	1997-12-16 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45732	1997-12-20 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45746	1997-12-24 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45761	1997-12-28 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45765	1997-12-29 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45773	1997-12-31 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+45793	1998-01-05 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45813	1998-01-10 00:00:00	VAr 	1	SCH	  VAr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+45821	1998-01-12 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45841	1998-01-17 00:00:00	VAr 	1	SCH	  VAr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+45849	1998-01-19 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45857	1998-01-21 00:00:00	VAr 	1	SCH	  VAr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+45861	1998-01-22 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+45869	1998-01-24 00:00:00	VAr 	1	SCH	  VAr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+45937	1998-02-10 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+46061	1998-03-13 00:00:00	VAr 	1	SCH	  VAr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+46081	1998-03-18 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+46089	1998-03-20 00:00:00	VAr 	1	SCH	  VAr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+46253	1998-05-01 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+46305	1998-05-14 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+46430	1998-06-15 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+47279	1999-01-16 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+47283	1999-01-17 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+47392	1999-02-14 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+47400	1999-02-16 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+47459	1999-03-03 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+47539	1999-03-23 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+47651	1999-04-21 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+47667	1999-04-25 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+47675	1999-04-27 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48595	1999-12-21 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+48603	1999-12-23 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48607	1999-12-24 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+48611	1999-12-25 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48615	1999-12-26 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+48619	1999-12-27 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48623	1999-12-28 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+48627	1999-12-29 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48639	2000-01-01 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+48705	2000-01-20 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48766	2000-02-05 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+48770	2000-02-06 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48794	2000-02-12 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+48802	2000-02-14 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48838	2000-02-23 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+48914	2000-03-15 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48917	2000-03-16 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+48920	2000-03-17 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48930	2000-03-20 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+48933	2000-03-21 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48945	2000-03-25 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+48947	2000-03-26 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48972	2000-04-03 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+48979	2000-04-05 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+48993	2000-04-09 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+48997	2000-04-10 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49031	2000-04-20 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+49035	2000-04-21 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49042	2000-04-23 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+49049	2000-04-25 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49079	2000-05-03 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+49086	2000-05-05 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49120	2000-05-14 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+49222	2000-06-09 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49298	2000-06-28 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+49302	2000-06-29 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49310	2000-07-01 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+49314	2000-07-02 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49326	2000-07-05 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+49329	2000-07-06 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49337	2000-07-08 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+49341	2000-07-09 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49353	2000-07-12 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+49357	2000-07-13 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49361	2000-07-14 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+49365	2000-07-15 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49381	2000-07-19 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+49385	2000-07-20 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49688	2000-10-05 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+49692	2000-10-06 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+49708	2000-10-10 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+49716	2000-10-12 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+50278	2001-03-07 00:00:00	ZJt2	1	SCH	  ZJt2 exact type insufficiently documented
+50282	2001-03-08 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+51438	2001-12-31 00:00:00	MU4 	1	SCH	  MU4 Mixed USA AIR IS-4A-403 (UA4) and Vaisala RS80 RDF wind (VAr)^ Thailand in late 1990s, obs not always distinguishable although min RH usually 1-3% with Vaisala and 5-15% with AIR
+51892	2002-04-24 00:00:00	UA4 	1	SCH	  UA4 USA AIR IS-4A-403 Intellisonde {1987} 31313=04602^ (W3=46, T=101) <F=T403DL,P=Ac,T=TB or TR,U=C or W,W=Ra>
+53030	2003-02-11 00:00:00	Vhr 	1	SCH	  Vhr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702, assumed H-Humicap^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+62982	2010-02-05 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+65085	2011-08-18 00:00:00	BFI 	1	SCH	  BFI South Africa InterMet Africa iMet-2-BI 1680 MHz RDF radiosonde, automatic solar and IR corr {~2012}^ <F=T1680FL,P=Sp,T=TB,U=A,W=Ra
+65306	2011-10-14 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+1087	2013-10-07 00:00:00	6	2	WMO	 No radiosonde – radio-acoustic sounder             
+1095	2013-10-09 00:00:00	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+1273	2014-03-05 00:00:00	132	2	WMO	Shanghai GTS1/GFE(L) (China)                            
+1705	2014-06-24 00:00:00	7	2	WMO	iMet-1-AB (United States)                
+3987	2016-06-18 00:00:00	97	2	WMO	iMet-2/iMet-1500 RDF radiosonde with pressure sensor chip (South Africa)          
+6075	2018-04-23 00:00:00	20	2	WMO	Indian Meteorological Service MK3 (India)              
+6079	2018-04-24 00:00:00	97	2	WMO	iMet-2/iMet-1500 RDF radiosonde with pressure sensor chip (South Africa)          
+9740	2021-07-13 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+9743	2021-07-14 00:00:00	97	2	WMO	iMet-2/iMet-1500 RDF radiosonde with pressure sensor chip (South Africa)          
+14611	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USWB BENDIX UNSPECIFIED 
+14612	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , VIZ UNSPECIFIED 
+14615	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 
+14616	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , AUSTRALIA PHILIPS RS4 UNSPECIFIED 
+14618	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+14612	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , VIZ UNSPECIFIED 
+14621	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+14624	1991-03-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VAISALA UNSPECIFIED 
+14621	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 

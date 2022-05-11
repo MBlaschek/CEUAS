@@ -1,0 +1,9 @@
+	date_time	sensor_id	value	source	comment
+0	1940-05-25 04:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+13039	1951-01-16 21:00:00	U?? 	1	SCH	  U?? exact type insufficiently documented
+13382	1951-04-15 21:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+14590	1952-02-28 21:00:00	U?? 	1	SCH	  U?? exact type insufficiently documented
+15005	1952-06-14 21:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+16175	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ OMEGA 
+16175	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ OMEGA 
+16179	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ (Generic) 

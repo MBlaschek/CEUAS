@@ -1,0 +1,983 @@
+	date_time	sensor_id	value	source	comment
+0	1981-07-04 12:00:00	NA 	1	SCH	NA
+52	1982-08-01 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+56	1982-08-12 12:00:00	-922	1	SCH	NA
+57	1982-08-13 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+76	1982-09-18 12:00:00	-922	1	SCH	NA
+77	1982-09-19 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+79	1982-09-22 12:00:00	-922	1	SCH	NA
+80	1982-09-23 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+83	1982-09-26 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+84	1982-09-27 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+100	1982-12-11 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+101	1982-12-12 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+102	1982-12-13 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+103	1982-12-14 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+105	1982-12-17 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+108	1982-12-19 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+109	1982-12-20 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+111	1982-12-22 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+112	1982-12-23 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+114	1982-12-26 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+115	1982-12-27 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+116	1982-12-28 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+117	1982-12-29 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+122	1983-01-03 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+128	1983-01-11 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+129	1983-01-12 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+133	1983-01-16 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+136	1983-01-19 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+138	1983-01-21 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+139	1983-01-22 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+140	1983-01-23 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+143	1983-01-26 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+144	1983-01-28 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+146	1983-01-30 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+147	1983-01-31 12:00:00	-922	1	SCH	NA
+148	1983-02-01 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+149	1983-02-02 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+153	1983-02-28 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+157	1983-03-05 12:00:00	-922	1	SCH	NA
+158	1983-03-08 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+161	1983-03-12 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+162	1983-03-14 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+163	1983-03-19 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+164	1983-03-24 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+166	1983-03-29 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+167	1983-03-30 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+168	1983-04-06 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+171	1983-04-11 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+172	1983-04-13 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+175	1983-04-16 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+178	1983-04-19 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+179	1983-04-20 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+180	1983-04-21 12:00:00	-922	1	SCH	NA
+181	1983-04-22 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+182	1983-04-23 12:00:00	-922	1	SCH	NA
+183	1983-04-24 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+184	1983-04-25 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+185	1983-04-26 12:00:00	-922	1	SCH	NA
+186	1983-04-27 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+193	1983-05-06 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+196	1983-05-10 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+198	1983-05-12 12:00:00	-922	1	SCH	NA
+199	1983-05-13 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+203	1983-05-18 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+208	1983-05-23 12:00:00	-922	1	SCH	NA
+209	1983-05-24 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+210	1983-05-25 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+213	1983-05-28 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+214	1983-05-29 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+215	1983-05-30 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+217	1983-06-01 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+219	1983-06-03 12:00:00	-922	1	SCH	NA
+221	1983-06-05 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+225	1983-06-09 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+226	1983-06-10 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+229	1983-06-14 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+230	1983-06-16 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+233	1983-06-20 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+234	1983-06-28 12:00:00	-922	1	SCH	NA
+235	1983-06-29 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+236	1983-06-30 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+241	1983-07-06 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+243	1983-07-08 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+244	1983-07-09 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+245	1983-07-16 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+248	1983-07-19 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+249	1983-07-19 12:00:00	-922	1	SCH	NA
+250	1983-07-19 23:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+254	1983-07-25 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+255	1983-07-26 12:00:00	-922	1	SCH	NA
+256	1983-07-27 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+257	1983-07-29 00:00:00	-922	1	SCH	NA
+258	1983-07-29 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+260	1983-08-02 12:00:00	-922	1	SCH	NA
+261	1983-08-04 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+266	1983-08-13 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+268	1983-08-15 12:00:00	-922	1	SCH	NA
+269	1983-08-17 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+270	1983-08-18 12:00:00	-922	1	SCH	NA
+271	1983-08-20 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+273	1983-08-23 12:00:00	-922	1	SCH	NA
+275	1983-08-26 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+280	1983-08-29 12:00:00	-922	1	SCH	NA
+281	1983-08-30 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+282	1983-08-30 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+283	1983-08-31 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+284	1983-08-31 12:00:00	-922	1	SCH	NA
+285	1983-09-01 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+287	1983-09-02 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+290	1983-09-04 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+292	1983-09-05 00:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+293	1983-09-05 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+294	1983-09-06 00:00:00	-922	1	SCH	NA
+296	1983-09-07 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+297	1983-09-08 12:00:00	-922	1	SCH	NA
+298	1983-09-09 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+299	1983-09-09 23:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+300	1983-09-10 12:00:00	-922	1	SCH	NA
+301	1983-09-11 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+302	1983-09-11 12:00:00	-922	1	SCH	NA
+303	1983-09-12 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+304	1983-09-12 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+305	1983-09-13 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+306	1983-09-13 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+307	1983-09-14 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+312	1983-09-20 12:00:00	-922	1	SCH	NA
+313	1983-09-22 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+314	1983-09-22 12:00:00	-922	1	SCH	NA
+315	1983-09-23 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+319	1983-09-27 12:00:00	-922	1	SCH	NA
+320	1983-09-28 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+321	1983-09-28 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+322	1983-09-29 00:00:00	-922	1	SCH	NA
+323	1983-10-01 00:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+326	1983-10-04 12:00:00	-922	1	SCH	NA
+327	1983-10-07 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+329	1983-10-08 12:00:00	-922	1	SCH	NA
+330	1983-10-09 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+331	1983-10-10 00:00:00	-922	1	SCH	NA
+332	1983-10-10 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+334	1983-10-11 18:00:00	-922	1	SCH	NA
+335	1983-10-12 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+339	1983-10-18 12:00:00	-922	1	SCH	NA
+342	1983-10-21 00:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+345	1983-10-22 12:00:00	-922	1	SCH	NA
+347	1983-10-24 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+349	1983-10-25 12:00:00	-922	1	SCH	NA
+351	1983-10-27 00:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+352	1983-10-28 12:00:00	-922	1	SCH	NA
+353	1983-10-30 00:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+357	1983-11-01 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+359	1983-11-02 00:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+360	1983-11-02 12:00:00	-922	1	SCH	NA
+362	1983-11-05 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+364	1983-11-08 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+365	1983-11-12 12:00:00	-922	1	SCH	NA
+366	1983-11-13 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+367	1983-11-13 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+368	1983-11-16 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+369	1983-11-16 12:00:00	-922	1	SCH	NA
+370	1983-11-16 23:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+371	1983-11-17 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+374	1983-11-18 23:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+375	1983-11-19 12:00:00	-922	1	SCH	NA
+376	1983-11-21 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+380	1983-11-25 12:00:00	-922	1	SCH	NA
+381	1983-11-25 23:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+383	1983-11-27 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+384	1983-11-27 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+385	1983-11-28 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+389	1983-11-30 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+390	1983-12-02 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+393	1983-12-04 12:00:00	-922	1	SCH	NA
+394	1983-12-05 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+395	1983-12-05 12:00:00	-922	1	SCH	NA
+396	1983-12-06 00:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+397	1983-12-07 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+398	1983-12-08 00:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+400	1983-12-09 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+405	1983-12-11 12:00:00	-922	1	SCH	NA
+406	1983-12-13 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+431	1983-12-26 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+433	1983-12-27 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+434	1983-12-27 23:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+437	1983-12-29 12:00:00	-922	1	SCH	NA
+438	1983-12-30 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+441	1983-12-31 12:00:00	-922	1	SCH	NA
+442	1984-01-01 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+443	1984-01-01 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+444	1984-01-02 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+445	1984-01-02 12:00:00	-922	1	SCH	NA
+447	1984-01-04 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+448	1984-01-04 23:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+449	1984-01-05 12:00:00	-922	1	SCH	NA
+450	1984-01-06 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+452	1984-01-06 23:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+454	1984-01-08 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+455	1984-01-08 12:00:00	-922	1	SCH	NA
+456	1984-01-08 23:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+457	1984-01-09 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+459	1984-01-10 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+460	1984-01-11 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+462	1984-01-12 12:00:00	-922	1	SCH	NA
+463	1984-01-13 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+464	1984-01-13 12:00:00	-922	1	SCH	NA
+466	1984-01-15 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+467	1984-01-15 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+468	1984-01-17 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+471	1984-01-20 12:00:00	-922	1	SCH	NA
+472	1984-01-21 00:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+473	1984-01-21 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+475	1984-01-22 12:00:00	-922	1	SCH	NA
+476	1984-01-23 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+477	1984-01-23 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+478	1984-01-24 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+483	1984-01-27 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+484	1984-01-28 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+486	1984-01-28 23:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+488	1984-01-30 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+494	1984-02-03 12:00:00	-922	1	SCH	NA
+495	1984-02-04 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+496	1984-02-04 12:00:00	-922	1	SCH	NA
+497	1984-02-05 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+499	1984-02-06 12:00:00	-922	1	SCH	NA
+500	1984-02-07 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+501	1984-02-07 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+502	1984-02-08 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+503	1984-02-08 12:00:00	-922	1	SCH	NA
+504	1984-02-09 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+506	1984-02-10 12:00:00	-922	1	SCH	NA
+507	1984-02-11 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+511	1984-02-13 12:00:00	-922	1	SCH	NA
+512	1984-02-14 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+518	1984-02-17 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+519	1984-02-18 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+520	1984-02-18 12:00:00	-922	1	SCH	NA
+521	1984-02-19 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+522	1984-02-19 12:00:00	-922	1	SCH	NA
+523	1984-02-20 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+524	1984-02-20 12:00:00	-922	1	SCH	NA
+525	1984-02-21 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+526	1984-02-21 12:00:00	-922	1	SCH	NA
+527	1984-02-22 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+529	1984-02-23 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+530	1984-02-24 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+531	1984-02-24 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+532	1984-02-25 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+536	1984-02-28 12:00:00	-922	1	SCH	NA
+538	1984-07-02 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+541	1984-07-05 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+542	1984-07-06 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+544	1984-07-08 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+545	1984-07-09 12:00:00	-922	1	SCH	NA
+547	1984-07-12 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+548	1984-07-14 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+550	1984-07-18 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+551	1984-07-19 12:00:00	-922	1	SCH	NA
+552	1984-07-20 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+557	1984-08-01 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+558	1984-08-03 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+559	1984-08-07 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+560	1984-08-08 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+564	1984-08-12 12:00:00	-922	1	SCH	NA
+565	1984-08-13 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+566	1984-08-15 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+567	1984-08-16 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+568	1984-08-17 12:00:00	-922	1	SCH	NA
+569	1984-08-20 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+570	1984-08-21 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+573	1984-08-24 12:00:00	-922	1	SCH	NA
+574	1984-08-25 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+575	1984-08-26 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+577	1984-08-28 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+578	1984-08-29 12:00:00	-922	1	SCH	NA
+579	1984-08-31 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+581	1984-09-07 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+583	1984-09-12 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+584	1984-09-13 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+588	1984-09-18 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+589	1984-09-19 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+590	1984-09-20 12:00:00	-922	1	SCH	NA
+591	1984-09-21 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+592	1984-09-22 00:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+593	1984-09-22 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+594	1984-09-23 12:00:00	-922	1	SCH	NA
+595	1984-09-24 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+598	1984-09-27 12:00:00	-922	1	SCH	NA
+599	1984-09-28 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+600	1984-09-30 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+601	1984-10-01 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+602	1984-10-05 12:00:00	-922	1	SCH	NA
+604	1984-10-07 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+605	1984-10-08 12:00:00	-922	1	SCH	NA
+608	1984-10-17 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+610	1984-10-18 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+613	1984-10-22 12:00:00	-922	1	SCH	NA
+616	1984-10-25 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+617	1984-10-26 12:00:00	-922	1	SCH	NA
+619	1984-10-28 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+620	1984-10-29 12:00:00	-922	1	SCH	NA
+623	1984-11-01 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+624	1984-11-03 12:00:00	-922	1	SCH	NA
+625	1984-11-04 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+626	1984-11-05 12:00:00	-922	1	SCH	NA
+627	1984-11-05 17:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+628	1984-11-06 12:00:00	-922	1	SCH	NA
+631	1984-11-08 23:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+632	1984-11-09 12:00:00	-922	1	SCH	NA
+634	1984-11-11 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+635	1984-11-12 12:00:00	-922	1	SCH	NA
+636	1984-11-13 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+637	1984-11-14 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+638	1984-11-15 12:00:00	-922	1	SCH	NA
+640	1984-11-17 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+643	1984-11-21 12:00:00	-922	1	SCH	NA
+646	1984-11-24 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+649	1984-11-27 12:00:00	-922	1	SCH	NA
+650	1984-11-28 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+651	1984-12-06 12:00:00	-922	1	SCH	NA
+652	1984-12-07 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+653	1984-12-08 12:00:00	-922	1	SCH	NA
+654	1984-12-09 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+655	1984-12-10 12:00:00	-922	1	SCH	NA
+656	1984-12-11 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+658	1984-12-14 12:00:00	-922	1	SCH	NA
+664	1984-12-20 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+665	1984-12-21 12:00:00	-922	1	SCH	NA
+666	1984-12-22 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+667	1984-12-23 12:00:00	-922	1	SCH	NA
+671	1984-12-27 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
+672	1984-12-28 12:00:00	-922	1	SCH	NA
+674	1984-12-30 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+675	1984-12-31 12:00:00	-922	1	SCH	NA
+682	1985-01-07 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+683	1985-01-08 12:00:00	-922	1	SCH	NA
+692	1985-01-17 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+693	1985-01-18 12:00:00	-922	1	SCH	NA
+694	1985-01-19 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+695	1985-01-20 12:00:00	-922	1	SCH	NA
+698	1985-01-23 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+699	1985-01-24 12:00:00	-922	1	SCH	NA
+713	1985-02-10 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+714	1985-02-11 12:00:00	-922	1	SCH	NA
+715	1985-02-13 13:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+716	1985-02-14 12:00:00	-922	1	SCH	NA
+731	1985-03-05 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+733	1985-03-07 12:00:00	-922	1	SCH	NA
+735	1985-03-09 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+736	1985-03-10 12:00:00	-922	1	SCH	NA
+744	1985-03-20 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+745	1985-03-21 12:00:00	-922	1	SCH	NA
+756	1985-04-01 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+757	1985-04-02 12:00:00	-922	1	SCH	NA
+758	1985-04-03 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+759	1985-04-06 12:00:00	-922	1	SCH	NA
+761	1985-04-08 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+762	1985-04-09 12:00:00	-922	1	SCH	NA
+765	1985-04-12 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+766	1985-04-13 12:00:00	-922	1	SCH	NA
+767	1985-04-14 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+768	1985-04-15 12:00:00	-922	1	SCH	NA
+772	1985-04-19 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+773	1985-04-21 12:00:00	-922	1	SCH	NA
+774	1985-04-22 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+775	1985-04-23 12:00:00	-922	1	SCH	NA
+777	1985-04-27 00:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+780	1985-04-29 00:00:00	-922	1	SCH	NA
+782	1985-04-30 00:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+783	1985-04-30 12:00:00	-922	1	SCH	NA
+785	1985-05-03 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+787	1985-05-04 12:00:00	-922	1	SCH	NA
+791	1985-05-05 23:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+792	1985-05-06 06:00:00	-922	1	SCH	NA
+802	1985-05-11 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+803	1985-05-12 00:00:00	-922	1	SCH	NA
+810	1985-05-15 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+811	1985-05-17 12:00:00	-922	1	SCH	NA
+815	1985-05-24 00:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+816	1985-05-24 12:00:00	-922	1	SCH	NA
+818	1985-05-25 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+819	1985-05-26 00:00:00	-922	1	SCH	NA
+835	1985-06-05 00:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+837	1985-06-06 00:00:00	-922	1	SCH	NA
+846	1985-06-11 23:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+847	1985-06-12 12:00:00	-922	1	SCH	NA
+854	1986-02-12 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+855	1987-08-18 23:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+857	1987-08-21 12:00:00	-922	1	SCH	NA
+872	1987-09-11 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+873	1987-09-17 12:00:00	-922	1	SCH	NA
+884	1987-10-05 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+885	1987-10-06 12:00:00	-922	1	SCH	NA
+892	1987-10-16 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+894	1987-10-20 12:00:00	-922	1	SCH	NA
+899	1987-10-25 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+900	1987-10-28 12:00:00	-922	1	SCH	NA
+905	1987-11-03 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+907	1987-11-05 12:00:00	-922	1	SCH	NA
+909	1987-11-10 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+912	1987-11-13 12:00:00	-922	1	SCH	NA
+913	1987-11-14 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+917	1987-11-19 12:00:00	-922	1	SCH	NA
+921	1987-11-23 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+923	1987-11-25 12:00:00	-922	1	SCH	NA
+924	1987-11-26 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+932	1987-12-04 12:00:00	-922	1	SCH	NA
+955	1988-01-06 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+956	1988-01-07 12:00:00	-922	1	SCH	NA
+960	1988-01-11 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+961	1988-01-12 12:00:00	-922	1	SCH	NA
+962	1988-01-13 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+964	1988-01-15 12:00:00	-922	1	SCH	NA
+967	1988-01-19 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+968	1988-01-20 12:00:00	-922	1	SCH	NA
+978	1988-01-30 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+979	1988-01-31 12:00:00	-922	1	SCH	NA
+980	1988-02-01 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+981	1988-02-02 12:00:00	-922	1	SCH	NA
+999	1988-02-22 16:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1001	1988-02-27 12:00:00	-922	1	SCH	NA
+1009	1988-03-07 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1010	1988-03-08 12:00:00	-922	1	SCH	NA
+1019	1988-03-17 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1020	1988-03-18 12:00:00	-922	1	SCH	NA
+1028	1988-03-29 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1029	1988-03-30 12:00:00	-922	1	SCH	NA
+1034	1988-04-04 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1035	1988-04-06 12:00:00	-922	1	SCH	NA
+1043	1988-04-15 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1048	1988-04-20 12:00:00	-922	1	SCH	NA
+1057	1988-05-01 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1058	1988-05-02 12:00:00	-922	1	SCH	NA
+1061	1988-05-05 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1062	1988-05-06 12:00:00	-922	1	SCH	NA
+1077	1988-05-23 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1078	1988-05-24 12:00:00	-922	1	SCH	NA
+1089	1988-06-07 15:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1090	1988-06-08 12:00:00	-922	1	SCH	NA
+1096	1988-06-13 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1097	1988-06-14 12:00:00	-922	1	SCH	NA
+1107	1988-07-02 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1108	1988-07-03 12:00:00	-922	1	SCH	NA
+1110	1988-07-05 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1111	1988-07-06 12:00:00	-922	1	SCH	NA
+1114	1988-07-09 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1116	1988-07-11 12:00:00	-922	1	SCH	NA
+1120	1988-07-15 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1121	1988-07-16 12:00:00	-922	1	SCH	NA
+1124	1988-07-19 12:00:00	114	1	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1125	1988-07-20 12:00:00	-922	1	SCH	NA
+1126	1988-07-22 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1128	1988-07-24 12:00:00	-922	1	SCH	NA
+1129	1988-07-25 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1130	1988-07-28 12:00:00	-922	1	SCH	NA
+1135	1988-08-03 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1136	1988-08-04 12:00:00	-922	1	SCH	NA
+1137	1988-08-05 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1139	1988-08-08 12:00:00	-922	1	SCH	NA
+1164	1988-11-24 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1165	1988-11-25 12:00:00	-922	1	SCH	NA
+1171	1988-12-01 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1172	1988-12-02 12:00:00	-922	1	SCH	NA
+1174	1988-12-03 21:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1175	1988-12-04 00:00:00	-922	1	SCH	NA
+1176	1988-12-04 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1177	1988-12-05 12:00:00	-922	1	SCH	NA
+1183	1988-12-11 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1184	1988-12-12 12:00:00	-922	1	SCH	NA
+1191	1988-12-19 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1192	1988-12-20 12:00:00	-922	1	SCH	NA
+1197	1988-12-25 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1199	1988-12-26 12:00:00	-922	1	SCH	NA
+1212	1989-01-09 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1213	1989-01-10 12:00:00	-922	1	SCH	NA
+1216	1989-01-13 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1225	1989-01-22 12:00:00	-922	1	SCH	NA
+1226	1989-01-23 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1227	1989-01-24 12:00:00	-922	1	SCH	NA
+1228	1989-01-25 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1229	1989-01-26 12:00:00	-922	1	SCH	NA
+1233	1989-01-30 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1235	1989-02-01 12:00:00	-922	1	SCH	NA
+1238	1989-02-04 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1239	1989-02-05 12:00:00	-922	1	SCH	NA
+1242	1989-02-08 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1243	1989-02-09 12:00:00	-922	1	SCH	NA
+1246	1989-02-12 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1247	1989-02-13 12:00:00	-922	1	SCH	NA
+1249	1989-02-15 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1250	1989-02-16 12:00:00	-922	1	SCH	NA
+1252	1989-02-18 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1253	1989-02-19 12:00:00	-922	1	SCH	NA
+1256	1989-02-22 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1257	1989-02-23 12:00:00	-922	1	SCH	NA
+1263	1989-03-01 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1264	1989-03-02 12:00:00	-922	1	SCH	NA
+1275	1989-03-18 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1276	1989-03-19 12:00:00	-922	1	SCH	NA
+1283	1989-03-26 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1284	1989-03-27 12:00:00	-922	1	SCH	NA
+1371	1990-12-09 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1372	1990-12-10 12:00:00	-922	1	SCH	NA
+1451	1991-03-13 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1452	1991-03-14 12:00:00	-922	1	SCH	NA
+1468	1991-04-01 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1469	1991-04-02 12:00:00	-922	1	SCH	NA
+1502	1991-06-02 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1513	1991-06-22 12:00:00	-922	1	SCH	NA
+1514	1991-06-25 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1515	1991-06-26 12:00:00	-922	1	SCH	NA
+1519	1991-07-01 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1539	1991-07-27 12:00:00	-922	1	SCH	NA
+1540	1991-07-28 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1548	1991-08-11 12:00:00	-922	1	SCH	NA
+1549	1991-08-12 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1550	1991-08-14 12:00:00	-922	1	SCH	NA
+1562	1991-09-01 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1564	1991-09-03 12:00:00	-922	1	SCH	NA
+1565	1991-09-04 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1566	1991-09-05 12:00:00	-922	1	SCH	NA
+1588	1991-10-01 11:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1593	1991-10-07 12:00:00	-922	1	SCH	NA
+1640	1991-12-01 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1661	1991-12-22 12:00:00	-922	1	SCH	NA
+1662	1991-12-23 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1669	1991-12-30 12:00:00	-922	1	SCH	NA
+1670	1991-12-31 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1672	1992-01-02 12:00:00	-922	1	SCH	NA
+1673	1992-01-03 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1674	1992-01-04 12:00:00	-922	1	SCH	NA
+1675	1992-01-05 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1679	1992-01-10 12:00:00	-922	1	SCH	NA
+1680	1992-01-12 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1686	1992-01-18 12:00:00	-922	1	SCH	NA
+1687	1992-01-19 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1688	1992-01-20 12:00:00	-922	1	SCH	NA
+1689	1992-01-21 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1690	1992-01-22 12:00:00	-922	1	SCH	NA
+1691	1992-01-23 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+1716	1992-02-22 00:00:00	-922	1	SCH	NA
+1717	1992-02-23 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+1722	1992-02-28 12:00:00	-922	1	SCH	NA
+1724	1992-03-01 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+1726	1992-03-04 12:00:00	4	1	SCH	 No radiosonde – passive temperature-humidity profiler            
+1731	1992-03-09 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+1753	1992-04-03 12:00:00	-922	1	SCH	NA
+1754	1992-04-04 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+1755	1992-04-05 12:00:00	-922	1	SCH	NA
+1757	1992-04-07 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+1775	1992-04-25 12:00:00	-922	1	SCH	NA
+1776	1992-04-27 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+1806	1992-06-05 12:00:00	-922	1	SCH	NA
+1807	1992-06-06 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+1871	1992-11-03 11:00:00	-922	1	SCH	NA
+1872	1992-11-04 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+1881	1992-11-15 12:00:00	-922	1	SCH	NA
+1883	1992-11-18 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+1900	1992-12-06 12:00:00	-922	1	SCH	NA
+1901	1992-12-07 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+1904	1992-12-10 12:00:00	-922	1	SCH	NA
+1905	1992-12-11 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2014	1993-04-09 12:00:00	-922	1	SCH	NA
+2015	1993-04-11 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2020	1993-04-16 12:00:00	-922	1	SCH	NA
+2021	1993-04-17 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2052	1993-05-20 12:00:00	-922	1	SCH	NA
+2053	1993-05-21 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2056	1993-05-25 12:00:00	-922	1	SCH	NA
+2057	1993-05-26 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2117	1993-08-01 11:00:00	-922	1	SCH	NA
+2118	1993-08-02 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2198	1993-11-05 12:00:00	-922	1	SCH	NA
+2199	1993-11-06 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2217	1993-11-26 12:00:00	-922	1	SCH	NA
+2218	1993-11-27 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2223	1993-12-04 12:00:00	-922	1	SCH	NA
+2226	1993-12-06 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2227	1993-12-07 12:00:00	-922	1	SCH	NA
+2229	1993-12-09 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2231	1993-12-12 12:00:00	-922	1	SCH	NA
+2232	1993-12-13 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2251	1994-01-01 12:00:00	-922	1	SCH	NA
+2252	1994-01-02 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2260	1994-01-10 12:00:00	-922	1	SCH	NA
+2261	1994-01-11 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2280	1994-01-31 12:00:00	-922	1	SCH	NA
+2283	1994-02-03 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2287	1994-02-07 12:00:00	-922	1	SCH	NA
+2288	1994-02-08 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2298	1994-02-18 12:00:00	-922	1	SCH	NA
+2299	1994-02-20 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2303	1994-02-24 12:00:00	-922	1	SCH	NA
+2304	1994-02-25 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2307	1994-05-02 12:00:00	-922	1	SCH	NA
+2309	1994-05-04 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2311	1994-05-06 11:00:00	-922	1	SCH	NA
+2316	1994-05-12 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2317	1994-05-13 12:00:00	-922	1	SCH	NA
+2319	1994-05-15 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2320	1994-05-16 12:00:00	-922	1	SCH	NA
+2333	1994-06-02 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2334	1994-06-03 12:00:00	-922	1	SCH	NA
+2338	1994-06-07 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2339	1994-06-08 12:00:00	-922	1	SCH	NA
+2340	1994-06-09 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2341	1994-06-10 12:00:00	-922	1	SCH	NA
+2342	1994-06-11 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2343	1994-06-12 12:00:00	-922	1	SCH	NA
+2346	1994-06-16 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2347	1994-06-17 12:00:00	-922	1	SCH	NA
+2349	1994-06-19 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2351	1994-06-21 12:00:00	-922	1	SCH	NA
+2352	1994-06-22 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2355	1994-06-25 12:00:00	-922	1	SCH	NA
+2357	1994-06-29 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2359	1994-07-01 12:00:00	-922	1	SCH	NA
+2360	1994-07-04 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2361	1994-07-05 12:00:00	-922	1	SCH	NA
+2377	1994-07-21 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2378	1994-07-22 12:00:00	-922	1	SCH	NA
+2390	1994-08-04 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2391	1994-08-05 12:00:00	-922	1	SCH	NA
+2394	1994-08-08 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2397	1994-08-12 12:00:00	-922	1	SCH	NA
+2399	1994-08-14 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2400	1994-08-15 12:00:00	-922	1	SCH	NA
+2402	1994-08-17 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2403	1994-08-18 12:00:00	-922	1	SCH	NA
+2406	1994-08-21 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2407	1994-08-22 12:00:00	-922	1	SCH	NA
+2408	1994-08-23 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2409	1994-08-24 12:00:00	-922	1	SCH	NA
+2410	1994-08-25 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2411	1994-08-26 12:00:00	-922	1	SCH	NA
+2412	1994-08-27 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2413	1994-08-28 12:00:00	-922	1	SCH	NA
+2416	1994-08-31 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2419	1994-09-04 12:00:00	-922	1	SCH	NA
+2423	1994-09-10 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2424	1994-09-11 12:00:00	-922	1	SCH	NA
+2425	1994-09-12 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2426	1994-09-15 12:00:00	-922	1	SCH	NA
+2428	1994-09-17 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2431	1994-09-21 12:00:00	-922	1	SCH	NA
+2435	1994-09-25 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2436	1994-09-27 12:00:00	-922	1	SCH	NA
+2441	1994-10-02 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2442	1994-10-03 12:00:00	-922	1	SCH	NA
+2446	1994-10-07 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2447	1994-10-08 12:00:00	-922	1	SCH	NA
+2448	1994-10-09 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2449	1994-10-10 12:00:00	-922	1	SCH	NA
+2453	1994-10-14 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2454	1994-10-15 12:00:00	-922	1	SCH	NA
+2455	1994-10-16 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2457	1994-10-18 12:00:00	-922	1	SCH	NA
+2458	1994-10-19 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2459	1994-10-20 12:00:00	-922	1	SCH	NA
+2462	1994-10-23 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2463	1994-10-24 11:00:00	-922	1	SCH	NA
+2466	1994-10-27 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2467	1994-10-29 12:00:00	-922	1	SCH	NA
+2468	1994-10-30 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2469	1994-10-31 12:00:00	-922	1	SCH	NA
+2471	1994-11-02 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2473	1994-11-04 12:00:00	-922	1	SCH	NA
+2475	1994-11-05 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2478	1994-11-08 12:00:00	-922	1	SCH	NA
+2479	1994-11-09 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2480	1994-11-10 12:00:00	-922	1	SCH	NA
+2483	1994-11-13 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2485	1994-11-15 12:00:00	-922	1	SCH	NA
+2489	1994-11-19 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2490	1994-11-20 12:00:00	-922	1	SCH	NA
+2493	1994-11-23 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2494	1994-11-25 12:00:00	-922	1	SCH	NA
+2497	1994-11-28 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2503	1994-12-04 12:00:00	-922	1	SCH	NA
+2505	1994-12-06 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2507	1994-12-08 12:00:00	-922	1	SCH	NA
+2511	1994-12-12 11:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2514	1994-12-15 12:00:00	-922	1	SCH	NA
+2515	1994-12-16 11:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2516	1994-12-17 12:00:00	-922	1	SCH	NA
+2518	1994-12-19 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2521	1994-12-22 12:00:00	-922	1	SCH	NA
+2523	1994-12-24 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2525	1994-12-26 12:00:00	-922	1	SCH	NA
+2526	1994-12-27 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2528	1994-12-29 12:00:00	-922	1	SCH	NA
+2530	1994-12-31 12:00:00	37	1	SCH	Vaisala RS80 (Finland)                
+2531	1995-01-01 12:00:00	-922	1	SCH	NA
+3250	2000-07-08 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3252	2000-07-12 12:00:00	-922	1	SCH	NA
+3255	2000-07-30 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3257	2000-08-09 12:00:00	-922	1	SCH	NA
+3258	2000-08-12 11:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3262	2000-08-26 12:00:00	-922	1	SCH	NA
+3264	2000-08-31 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3265	2000-09-07 12:00:00	-922	1	SCH	NA
+3266	2000-09-09 11:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3267	2000-09-13 11:00:00	-922	1	SCH	NA
+3269	2000-09-18 11:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3272	2000-09-30 12:00:00	-922	1	SCH	NA
+3273	2000-10-02 11:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3274	2000-10-04 11:00:00	-922	1	SCH	NA
+3276	2000-10-16 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3279	2000-10-25 11:00:00	-922	1	SCH	NA
+3280	2000-10-28 11:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3282	2000-11-01 12:00:00	-922	1	SCH	NA
+3283	2000-11-03 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3284	2000-11-04 12:00:00	-922	1	SCH	NA
+3288	2000-11-11 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3289	2000-11-14 12:00:00	-922	1	SCH	NA
+3291	2000-11-17 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3292	2000-11-18 12:00:00	-922	1	SCH	NA
+3295	2000-11-25 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3297	2000-11-27 12:00:00	-922	1	SCH	NA
+3302	2000-12-04 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3303	2000-12-07 12:00:00	-922	1	SCH	NA
+3307	2000-12-15 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3309	2000-12-18 12:00:00	-922	1	SCH	NA
+3314	2000-12-29 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3316	2001-01-01 12:00:00	-922	1	SCH	NA
+3323	2001-01-15 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3325	2001-01-19 12:00:00	-922	1	SCH	NA
+3327	2001-01-24 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3328	2001-01-25 12:00:00	-922	1	SCH	NA
+3329	2001-01-26 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3330	2001-01-27 12:00:00	-922	1	SCH	NA
+3333	2001-02-03 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3334	2001-02-07 12:00:00	-922	1	SCH	NA
+3336	2001-02-09 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3339	2001-02-15 12:00:00	-922	1	SCH	NA
+3340	2001-02-16 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3341	2001-02-17 12:00:00	-922	1	SCH	NA
+3342	2001-02-19 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3343	2001-02-21 12:00:00	-922	1	SCH	NA
+3346	2001-02-26 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3347	2001-02-28 12:00:00	-922	1	SCH	NA
+3352	2001-03-11 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3353	2001-03-12 12:00:00	-922	1	SCH	NA
+3355	2001-03-14 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3356	2001-03-16 12:00:00	-922	1	SCH	NA
+3357	2001-03-17 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3358	2001-03-19 12:00:00	-922	1	SCH	NA
+3359	2001-03-21 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3360	2001-03-23 12:00:00	-922	1	SCH	NA
+3363	2001-03-30 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3364	2001-04-02 12:00:00	-922	1	SCH	NA
+3366	2001-04-06 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3367	2001-04-07 12:00:00	-922	1	SCH	NA
+3369	2001-04-13 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3370	2001-04-14 12:00:00	-922	1	SCH	NA
+3381	2001-05-04 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3382	2001-05-05 12:00:00	-922	1	SCH	NA
+3383	2001-05-07 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3385	2001-05-11 12:00:00	-922	1	SCH	NA
+3386	2001-05-12 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3388	2001-05-16 12:00:00	-922	1	SCH	NA
+3390	2001-05-19 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3395	2001-06-01 12:00:00	-922	1	SCH	NA
+3396	2001-06-04 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3401	2001-06-13 12:00:00	-922	1	SCH	NA
+3402	2001-06-15 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3404	2001-06-18 12:00:00	-922	1	SCH	NA
+3405	2001-06-29 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3408	2001-07-07 12:00:00	-922	1	SCH	NA
+3411	2001-07-12 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3413	2001-07-14 12:00:00	-922	1	SCH	NA
+3414	2001-07-21 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3420	2001-08-03 12:00:00	-922	1	SCH	NA
+3421	2001-08-04 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3426	2001-08-16 12:00:00	-922	1	SCH	NA
+3428	2001-08-18 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3430	2001-08-24 12:00:00	-922	1	SCH	NA
+3432	2001-08-28 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3433	2001-08-29 12:00:00	-922	1	SCH	NA
+3434	2001-09-04 13:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3435	2001-09-06 12:00:00	-922	1	SCH	NA
+3436	2001-09-08 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3438	2001-09-13 12:00:00	-922	1	SCH	NA
+3439	2001-09-15 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3447	2001-10-03 12:00:00	-922	1	SCH	NA
+3450	2001-10-08 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3451	2001-10-13 12:00:00	-922	1	SCH	NA
+3453	2001-10-16 13:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3455	2001-10-22 12:00:00	-922	1	SCH	NA
+3459	2001-10-29 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3461	2001-11-04 12:00:00	-922	1	SCH	NA
+3462	2001-11-05 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3463	2001-11-07 12:00:00	-922	1	SCH	NA
+3470	2001-11-26 12:00:00	61	1	SCH	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            
+3472	2001-12-05 12:00:00	-922	1	SCH	NA
+3534	2003-06-16 11:00:00	67	1	SCH	Vaisala RS80/Digicora III (Finland)               
+3535	2003-06-17 12:00:00	-922	1	SCH	NA
+3716	2005-07-02 12:00:00	67	1	SCH	Vaisala RS80/Digicora III (Finland)               
+3717	2005-07-08 12:00:00	-922	1	SCH	NA
+3739	2005-09-28 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3740	2005-10-03 12:00:00	-922	1	SCH	NA
+3742	2005-10-18 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3743	2005-10-20 22:00:00	-922	1	SCH	NA
+3773	2006-03-02 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3774	2006-03-15 12:00:00	-922	1	SCH	NA
+3775	2006-03-29 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3778	2006-04-27 12:00:00	-922	1	SCH	NA
+3779	2006-05-11 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3780	2006-05-25 12:00:00	-922	1	SCH	NA
+3784	2006-06-15 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3785	2006-06-16 12:00:00	-922	1	SCH	NA
+3801	2006-08-05 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3802	2006-08-09 12:00:00	-922	1	SCH	NA
+3803	2006-08-10 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3804	2006-08-12 12:00:00	-922	1	SCH	NA
+3811	2006-09-20 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3812	2006-09-28 12:00:00	-922	1	SCH	NA
+3819	2006-10-14 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3820	2006-10-18 11:00:00	-922	1	SCH	NA
+3828	2006-11-15 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3829	2006-11-18 12:00:00	-922	1	SCH	NA
+3831	2006-11-25 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3832	2006-11-29 12:00:00	-922	1	SCH	NA
+3834	2006-12-06 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3835	2006-12-13 12:00:00	-922	1	SCH	NA
+3854	2007-06-14 12:00:00	67	1	SCH	Vaisala RS80/Digicora III (Finland)               
+3855	2007-06-15 12:00:00	-922	1	SCH	NA
+3857	2007-06-24 20:00:00	67	1	SCH	Vaisala RS80/Digicora III (Finland)               
+3858	2007-06-30 12:00:00	-922	1	SCH	NA
+3859	2007-07-07 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3860	2007-07-12 12:00:00	-922	1	SCH	NA
+3883	2008-08-02 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3884	2008-09-04 12:00:00	-922	1	SCH	NA
+3896	2008-10-15 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3897	2008-10-18 12:00:00	-922	1	SCH	NA
+3903	2008-11-08 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3904	2008-11-12 12:00:00	-922	1	SCH	NA
+3910	2008-11-29 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3911	2008-12-03 12:00:00	-922	1	SCH	NA
+3914	2008-12-13 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3915	2008-12-15 12:00:00	-922	1	SCH	NA
+3919	2008-12-27 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3920	2008-12-31 12:00:00	-922	1	SCH	NA
+3927	2009-03-11 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3929	2009-04-02 12:00:00	-922	1	SCH	NA
+3930	2009-04-15 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3933	2009-05-14 12:00:00	-922	1	SCH	NA
+3941	2009-09-16 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3945	2009-10-01 12:00:00	-922	1	SCH	NA
+3947	2009-10-08 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3948	2009-10-10 12:00:00	-922	1	SCH	NA
+3951	2009-10-22 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3952	2009-10-25 12:00:00	-922	1	SCH	NA
+3954	2009-10-31 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3955	2009-11-05 12:00:00	-922	1	SCH	NA
+3958	2009-11-14 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3959	2009-11-21 12:00:00	-922	1	SCH	NA
+3960	2009-11-25 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3961	2009-11-28 12:00:00	-922	1	SCH	NA
+3964	2009-12-09 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3965	2009-12-12 12:00:00	-922	1	SCH	NA
+3966	2009-12-17 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3967	2009-12-19 12:00:00	-922	1	SCH	NA
+3968	2009-12-23 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3969	2009-12-26 12:00:00	-922	1	SCH	NA
+3979	2010-01-27 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3980	2010-01-30 12:00:00	-922	1	SCH	NA
+3993	2010-03-03 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+3994	2010-03-06 12:00:00	-922	1	SCH	NA
+4001	2010-03-22 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4002	2010-03-24 12:00:00	-922	1	SCH	NA
+4005	2010-03-31 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4006	2010-04-03 12:00:00	-922	1	SCH	NA
+4008	2010-04-08 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4009	2010-04-10 12:00:00	-922	1	SCH	NA
+4010	2010-04-14 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4012	2010-04-21 12:00:00	-922	1	SCH	NA
+4025	2010-06-02 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4026	2010-06-05 12:00:00	-922	1	SCH	NA
+4029	2010-06-12 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4031	2010-06-16 12:00:00	-922	1	SCH	NA
+4034	2010-06-23 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4035	2010-06-26 12:00:00	-922	1	SCH	NA
+4037	2010-07-01 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4038	2010-07-03 11:00:00	-922	1	SCH	NA
+4039	2010-07-05 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4040	2010-07-07 12:00:00	-922	1	SCH	NA
+4041	2010-07-11 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4044	2010-07-21 12:00:00	-922	1	SCH	NA
+4047	2010-07-28 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4048	2010-07-31 12:00:00	-922	1	SCH	NA
+4049	2010-08-04 21:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4051	2010-08-12 12:00:00	-922	1	SCH	NA
+4052	2010-08-14 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4055	2010-08-25 12:00:00	-922	1	SCH	NA
+4056	2010-08-29 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4057	2010-09-01 12:00:00	-922	1	SCH	NA
+4058	2010-09-04 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4059	2010-09-08 12:00:00	-922	1	SCH	NA
+4061	2010-09-15 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4062	2010-09-19 12:00:00	-922	1	SCH	NA
+4063	2010-09-23 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4066	2010-10-02 12:00:00	-922	1	SCH	NA
+4068	2010-10-09 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4071	2010-10-18 12:00:00	-922	1	SCH	NA
+4074	2010-11-06 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4076	2010-11-10 12:00:00	-922	1	SCH	NA
+4078	2010-11-15 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4079	2010-11-17 12:00:00	-922	1	SCH	NA
+4082	2010-11-22 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4084	2010-11-27 12:00:00	-922	1	SCH	NA
+4085	2010-11-29 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4086	2010-12-01 12:00:00	-922	1	SCH	NA
+4101	2010-12-28 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4102	2010-12-29 12:00:00	-922	1	SCH	NA
+4104	2011-01-03 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4105	2011-01-05 12:00:00	-922	1	SCH	NA
+4131	2011-03-09 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4132	2011-03-13 12:00:00	-922	1	SCH	NA
+4137	2011-03-29 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4143	2011-04-20 12:00:00	-922	1	SCH	NA
+4145	2011-04-27 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4146	2011-04-30 12:00:00	-922	1	SCH	NA
+4148	2011-05-06 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4149	2011-05-07 12:00:00	-922	1	SCH	NA
+4150	2011-05-09 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4151	2011-05-11 12:00:00	-922	1	SCH	NA
+4152	2011-05-14 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4154	2011-05-20 12:00:00	-922	1	SCH	NA
+4156	2011-05-23 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4157	2011-05-25 12:00:00	-922	1	SCH	NA
+4158	2011-05-28 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4159	2011-05-30 12:00:00	-922	1	SCH	NA
+4160	2011-05-31 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4162	2011-06-04 12:00:00	-922	1	SCH	NA
+4163	2011-06-07 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4165	2011-06-11 12:00:00	-922	1	SCH	NA
+4166	2011-06-13 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4168	2011-06-18 12:00:00	-922	1	SCH	NA
+4170	2011-06-22 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4171	2011-06-25 12:00:00	-922	1	SCH	NA
+4173	2011-06-29 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4174	2011-07-02 12:00:00	-922	1	SCH	NA
+4178	2011-07-11 11:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4179	2011-07-13 12:00:00	-922	1	SCH	NA
+4180	2011-07-16 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4181	2011-07-18 12:00:00	-922	1	SCH	NA
+4182	2011-07-23 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4184	2011-07-27 12:00:00	-922	1	SCH	NA
+4185	2011-07-30 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4186	2011-08-05 12:00:00	-922	1	SCH	NA
+4187	2011-08-08 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4188	2011-08-10 12:00:00	-922	1	SCH	NA
+4191	2011-08-22 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4192	2011-08-24 12:00:00	-922	1	SCH	NA
+4194	2011-08-29 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4197	2011-09-07 12:00:00	-922	1	SCH	NA
+4198	2011-09-10 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4200	2011-09-21 12:00:00	-922	1	SCH	NA
+4204	2011-10-06 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4205	2011-10-09 12:00:00	-922	1	SCH	NA
+4207	2011-10-12 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4210	2011-10-27 12:00:00	-922	1	SCH	NA
+4211	2011-10-28 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4213	2011-10-31 12:00:00	-922	1	SCH	NA
+4214	2011-11-02 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4216	2011-11-16 12:00:00	-922	1	SCH	NA
+4217	2011-11-21 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4218	2011-11-23 12:00:00	-922	1	SCH	NA
+4257	2012-02-25 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4258	2012-02-27 12:00:00	-922	1	SCH	NA
+4261	2012-03-05 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4262	2012-03-07 12:00:00	-922	1	SCH	NA
+4356	2012-12-12 12:00:00	80	1	SCH	Vaisala RS92/Digicora III (Finland)               
+4357	2012-12-15 12:00:00	-922	1	SCH	NA
+0	2013-01-02 12:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+677	2019-07-19 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1428	1972-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS13/15 UNSPECIFIED , to , VAISALA RS18 
+1429	1976-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS18 , to , VAISALA RS21 UNSPECIFIED 
+1430	1984-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VAISALA RS21 UNSPECIFIED , to , VAISALA RS80 UNSPECIFIED 
+1431	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+1432	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+1432	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

@@ -1,0 +1,16 @@
+	sensor_id	source	comment	date_time	value
+1033	119	WMO	Polus-MRZ-N1 (Russian Federation)                            		
+1070	124	WMO	Vaisala RS41/AUTOSONDE (Finland)                            		
+3226	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+1501	135	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            		
+1192	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+259	163	WMO	Modem M20 radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (France)             		
+5709	184	WMO	Vacant                              		
+5737	84	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   		
+898	99	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        		
+0	V21 	SCH	  V21 Vaisala RS21 early capacitive hygrometer radiosonde {1974} WMO instr=36^ <F=T25,400,1680FU,P=2Ac,T=BRc,U=A>		
+13866	IGRA2	IGRA2	CHANGE SONDE MODEL , VAISALA RS21 UNSPECIFIED , to , VAISALA RS80 UNSPECIFIED 	1985-09-01	3.0
+13867	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 	1986-01-01	3.0
+13868	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0
+13869	IGRA2	IGRA2	USING SONDE MODEL , VAISALA RS80 UNSPECIFIED 	1990-12-01	3.0
+13868	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0

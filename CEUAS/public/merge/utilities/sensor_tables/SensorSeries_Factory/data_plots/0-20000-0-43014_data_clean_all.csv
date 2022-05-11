@@ -1,0 +1,33 @@
+	date_time	sensor_id	value	source	comment
+0	1953-12-31 21:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+19966	1979-07-03 00:00:00	IA3 	1	SCH	  IA3 India 401 MHz Audiomodulated transistorized radiosonde {1975} WMO instr=20^ (W1=18, W3=20, T=181) <F=T401AB,P=A,T=TR,U=L>
+23189	1983-05-31 13:00:00	IA5 	1	SCH	  IA5 India 401 MHz Audiomodulated or Mark 3 new thermistor radiosonde {198002} WMO instr=20^ (W1=18, W3=20, T=181) <F=T401AB,P=A,T=TR,U=L>
+33356	1993-06-28 11:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+44515	2004-03-13 12:00:00	I41 	1	SCH	  I41 India 401 MHz Mark 4 carbon hygristor radiosonde {2003}, sometimes 31313=02002^ <F=T401FL,P=B,T=TR,U=C>
+44550	2004-03-24 01:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+44634	2004-04-20 12:00:00	I41 	1	SCH	  I41 India 401 MHz Mark 4 carbon hygristor radiosonde {2003}, sometimes 31313=02002^ <F=T401FL,P=B,T=TR,U=C>
+44637	2004-04-21 11:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+44638	2004-04-22 01:00:00	I41 	1	SCH	  I41 India 401 MHz Mark 4 carbon hygristor radiosonde {2003}, sometimes 31313=02002^ <F=T401FL,P=B,T=TR,U=C>
+44655	2004-04-28 11:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+44833	2004-06-30 11:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+44858	2004-07-10 01:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+45224	2004-12-07 11:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+45382	2005-02-01 01:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+45533	2005-03-24 11:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+45633	2005-04-30 00:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+45829	2005-07-26 11:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+45917	2005-09-02 11:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+46269	2006-01-11 01:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+46422	2006-03-18 11:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+644	2015-12-08 00:00:00	26	2	WMO	Meteolabor Basora (Switzerland)                
+1368	2018-03-15 12:00:00	21	2	WMO	VIZ/Jin Yang MARK I MICROSONDE (Republic of Korea)           
+6803	1979-06-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMODULATED 401 MHZ TRANSISTOR , to , INDIA AUDIOMODULATED 401 MHZ TRANSISTOR 
+6805	1980-02-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMODULATED 401 MHZ TRANSISTOR , to , INDIA AUDIOMOD 401 MHZ NEW THERMISTOR 
+6807	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6807	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6810	1987-08-01 00:00:00	IGRA2	3	IGRA2	CHANGE GROUND EQUIP , G1 , UNKNOWN , to , RADIOSONDE GROUND EQUIP (RSGE) 401 MHZ 
+6811	1988-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMOD 401 MHZ NEW THERMISTOR , to , INDIA AUDIOMOD 401 MHZ NEW HUMIDITY DUC 
+6807	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6807	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6816	1992-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMOD 401 MHZ NEW HUMIDITY DUC , to , INDIA MARK 3 401 MHZ 1992 VERSION 
+6817	2006-11-01 00:00:00	IGRA2	3	IGRA2	USING GROUND EQUIP. , G1 , RADIOSONDE GROUND EQUIP (RSGE) 401 MHZ 

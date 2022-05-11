@@ -1,0 +1,12 @@
+	date_time	sensor_id	value	source	comment
+0	1976-03-04 12:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+5526	1998-05-04 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+6074	2000-04-13 11:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+6085	2000-04-25 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+7216	2003-03-22 11:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+7587	2003-10-04 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+9239	2005-07-27 11:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+10583	2007-02-14 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+6477	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6477	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6477	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 

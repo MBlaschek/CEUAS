@@ -1,0 +1,15 @@
+	date_time	sensor_id	value	source	comment
+0	1943-07-09 02:00:00	Zb3 	1	SCH	  Zb3 VIZ model 1091 or 1091-2 US Army AN/AMT-12A {1964}^ (T=400) <F=V1680PB,P=A+H(CFC-11 hypsometer fluid),T=TR(ML-419/AM),U=C(ML-476),W=Da(AN/GMD-1>
+18351	1973-04-01 00:00:00	Zb5c	1	SCH	  Zb5c VIZ model 1291 US Army AN/AMT-12, censoring {~1973}^ (T=426) <F=T1680PB,P=A+H(CFC-11 hypsometer fluid),T=TR(ML-419/AM),U=C(ML-476),W=Da(AN/GMD-1>
+26242	1984-09-26 11:00:00	ZJAc	1	SCH	  ZJAc VIZ model 1392-510 NWS 1680 MHz Accu-Lok, new hygristor, censoring {1980}^ (T=001) NWS stock no. J031 <F=T1680AB,P=A,T=TR(ML-405),U=C,
+32683	1994-09-08 23:00:00	ZKB 	1	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"
+0	2013-01-01 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+1367	2015-06-30 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1498	2015-09-13 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1502	2015-09-15 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1518	2015-09-24 23:45:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+1538	2015-10-08 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+1724	2016-02-09 00:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+15791	1968-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VIZ HYPSOMETER UNSPECIFIED 
+15793	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USA SPACE DATA UNSPECIFIED 
+15793	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USA SPACE DATA UNSPECIFIED 

@@ -1,0 +1,7 @@
+	sensor_id	source	comment	date_time	value
+55838	W_R 	SCH	  W_R exact type insufficiently documented		
+0	W__ 	SCH	  W__ Wind only, method unspecified^		
+55440	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+1201	IGRA2	IGRA2	USING SONDE MODEL , I1 , AUSTRALIA PHILIPS RS4 UNSPECIFIED 	1982-01-01	3.0
+1203	IGRA2	IGRA2	USING SONDE MODEL , I1 , AUSTRALIA PHILIPS UNSPECIFIED 	1986-01-01	3.0
+1204	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0

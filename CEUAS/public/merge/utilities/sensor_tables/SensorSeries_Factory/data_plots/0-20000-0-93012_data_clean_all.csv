@@ -1,0 +1,22 @@
+	date_time	sensor_id	value	source	comment
+0	1973-01-02 00:00:00	AP3 	1	SCH	  AP3 Australia Philips RS4 Model III radiosonde {~ 1984}^ (T=287) <F=T403FB,P=A,T=TR(VIZ),U=C(VIZ),W=Ra>
+2251	1985-11-13 10:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+5423	1987-12-21 22:00:00	AP3 	1	SCH	  AP3 Australia Philips RS4 Model III radiosonde {~ 1984}^ (T=287) <F=T403FB,P=A,T=TR(VIZ),U=C(VIZ),W=Ra>
+7720	1989-03-29 23:00:00	VAr 	1	SCH	  VAr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+9811	1991-02-01 22:00:00	VDr 	1	SCH	  VDr Vaisala RS80 PC Cora auto solar corr, RDF wind 31313=56202^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=Ra>
+10417	1991-08-23 11:00:00	VAr 	1	SCH	  VAr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+10452	1991-09-03 23:00:00	VDr 	1	SCH	  VDr Vaisala RS80 PC Cora auto solar corr, RDF wind 31313=56202^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=Ra>
+10461	1991-09-06 23:00:00	VAr 	1	SCH	  VAr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+10462	1991-09-07 11:00:00	VDr 	1	SCH	  VDr Vaisala RS80 PC Cora auto solar corr, RDF wind 31313=56202^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=Ra>
+10483	1991-09-14 11:00:00	VAr 	1	SCH	  VAr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+10495	1991-09-18 11:00:00	VDr 	1	SCH	  VDr Vaisala RS80 PC Cora auto solar corr, RDF wind 31313=56202^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=Ra>
+10827	1992-01-06 22:00:00	VAr 	1	SCH	  VAr Vaisala RS80 MicroCora radiosonde auto solar corr, RDF wind 31313=53702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+10828	1992-01-07 10:00:00	VDr 	1	SCH	  VDr Vaisala RS80 PC Cora auto solar corr, RDF wind 31313=56202^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=Ra>
+14121	1995-01-10 16:00:00	W02 	1	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)
+14610	1995-06-23 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+9922	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , DIAMOND HINMAN 
+9925	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ 1395 
+9925	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ 1395 
+9928	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ (Generic) 
+9929	1989-03-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , UNKNOWN SONDE , to , VAISALA RS80 
+9930	1993-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 

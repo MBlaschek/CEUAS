@@ -1,0 +1,8 @@
+	date_time	sensor_id	value	source	comment
+0	1954-10-23 11:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+0	2013-01-01 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+4833	2020-01-23 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+4908	2020-03-07 00:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+1986	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 
+1988	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA (Generic) 
+1990	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 

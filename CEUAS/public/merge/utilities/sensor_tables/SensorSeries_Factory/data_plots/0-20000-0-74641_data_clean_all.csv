@@ -1,0 +1,3 @@
+	date_time	sensor_id	value	source	comment
+0	1952-07-15 21:00:00	AH  	1	SCH	  [52,66,67|--] Vaisala RS80 H-Humicap with dry bias from contamination from packaging (WC+2002  TOGA COARE in late 1992 was first large use of
+1520	2001-08-03 17:00:00	V9L 	1	SCH	  V9L Vaisala RS90-AL LoRAN radiosonde^ <F=T403DL,P=Sc,T=Wc,U=2Ah,N=L>

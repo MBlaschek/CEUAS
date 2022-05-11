@@ -1,0 +1,6 @@
+	sensor_id	source	comment	date_time	value
+209	-922	SCH	NA		
+210	2	SCH	 No radiosonde – passive target (e.g. reflector)                 		
+722	3	SCH	 No radiosonde – active target (e.g. transponder)           		
+728	99	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        		
+0	NA 	SCH	NA		

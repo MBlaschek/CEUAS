@@ -1,0 +1,4 @@
+	sensor_id	source	comment	date_time	value
+7158	UL3 	SCH	  UL3 USA GALCIT radiosonde {1935}^ <F=V180HC(continuous signal for radio tracking but interrupted by contacts),P=A,T=B,U=H>		
+0	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
+16335	IGRA2	IGRA2	USING SONDE MODEL , TRANSPONDER TYPE 	1965-06-01	3.0

@@ -1,0 +1,16 @@
+	date_time	sensor_id	value	source	comment
+0	1950-08-16 03:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
+8611	1962-07-01 00:00:00	ZCH 	1	SCH	  ZCH VIZ model 1063 USWB 1680 MHz hypsometer {1961}^ (T=379) <F=V1680AB,P=A+H,T=TR(ML-405/AM),U=L,W=Da(WBRT or GMD-1)>
+9517	1963-09-27 00:00:00	ZDH 	1	SCH	  ZDH VIZ model 1073 USWB 1680 MHz hypsometer {1963}^ (T=389) <F=V1680AB,P=A+H(hypsometer fluid CFC-11),T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+10923	1965-09-08 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+10952	1966-01-01 12:00:00	ZDH 	1	SCH	  ZDH VIZ model 1073 USWB 1680 MHz hypsometer {1963}^ (T=389) <F=V1680AB,P=A+H(hypsometer fluid CFC-11),T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+11762	1967-02-17 00:00:00	ZEB 	1	SCH	  ZEB VIZ model 1096 USWB 1680/403 MHz hypsometer transponder {1965}^ (T=404) NWS stock no. J006A <F=V1680AB,P=A+H(CFC-11 hypsometer fluid),
+13586	1969-08-17 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+13587	1971-04-26 12:00:00	Z?? 	1	SCH	  Z?? exact type insufficiently documented
+14094	1972-01-06 00:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+25912	1988-06-21 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+15999	1963-09-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VIZ HYPSOMETER UNSPECIFIED 
+16002	1967-02-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ HYPSOMETER UNSPECIFIED , to , VIZ TRANSPONDER UNSPECIFIED 
+16004	1971-04-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VIZ TRANSPONDER UNSPECIFIED 
+16009	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
+16009	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 

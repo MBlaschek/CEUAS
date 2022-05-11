@@ -1,0 +1,18 @@
+	sensor_id	source	comment	date_time	value
+4026	0	WMO	NA		
+3606	110	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               		
+1	117	WMO	Graw DFM-09 (Germany)                            		
+170	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+441	126	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           		
+2387	130	WMO	Meisei RS-06G (Japan)                            		
+589	131	WMO	Taiyuan GTS1-1/GFE(L) (China )                           		
+3647	133	WMO	Nanjing GTS1-2/GFE(L) (China)                            		
+4610	134	WMO	Vacant                              		
+4930	136	WMO	Meisei iMDS-17 GPS dropsonde w/thermistor sensor, capacitance relative humidity   sensor, and capacitance pressure sensor (Japan)              		
+339	27	WMO	AVK-MRZ (Russian Federation)                		
+4679	34	WMO	Vinohrady (Czechia)                 		
+4040	40	WMO	Sprenger E084 (Germany)                		
+3588	7	WMO	iMet-1-AB (United States)                		
+6	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+19	90	WMO	Radiosonde not specified or unknown             		
+0	VC_ 	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		

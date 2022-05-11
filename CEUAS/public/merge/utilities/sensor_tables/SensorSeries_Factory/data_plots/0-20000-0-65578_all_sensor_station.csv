@@ -1,0 +1,9 @@
+	sensor_id	source	comment	date_time	value
+1420	177	WMO	Modem GPSonde M10 (France)                           		
+1991	57	WMO	Modem M2K2-DC (France)                		
+7	79	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            		
+0	U0  	SCH	  U0 exact type insufficiently documented		
+54679	VNG 	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
+54678	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+7428	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0
+7428	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0

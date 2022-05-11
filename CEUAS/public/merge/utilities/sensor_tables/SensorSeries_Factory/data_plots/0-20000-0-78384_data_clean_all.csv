@@ -1,0 +1,50 @@
+	date_time	sensor_id	value	source	comment
+0	1942-07-02 11:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+20769	1980-12-24 00:00:00	ZJA 	1	SCH	  ZJA VIZ model 1392-510 NWS 1680 MHz Accu-Lok, new hygristor {1980}^ (T=001) NWS stock no. J031 <F=T1680AB,P=A,T=TR(ML-405),U=C,W=Ra(WBRT or GMD-1)>
+26130	1988-09-01 00:00:00	ZKB 	1	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"
+30846	1999-05-27 12:00:00	CF  	1	SCH	  [51|--] VIZ B2 in USA, introduced in 1997 according to ERB2002
+34938	2012-04-24 12:00:00	VND 	1	SCH	  VND Vaisala RS92-D (RS92-DD or RS92-DL) with InterMet IMS 1500 for NWS CHUAS {2009} 31313=08302^ <F=T1676-1682DL,P=Sc,T=Wc,U=2Ah,W=Ra>
+0	2013-01-01 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+28	2013-01-30 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+29	2013-01-31 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+192	2013-07-07 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+193	2013-07-08 00:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+324	2013-09-28 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+325	2013-09-28 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+331	2013-10-20 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+332	2013-10-22 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+333	2013-10-23 00:00:00	51	2	WMO	VIZ-B2 (United States)                
+334	2013-10-23 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+345	2013-10-30 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+346	2013-10-31 00:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+361	2014-02-19 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+362	2014-02-20 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+400	2014-04-09 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+401	2014-04-10 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+480	2014-06-24 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+481	2014-06-25 00:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+545	2014-08-04 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+546	2014-08-05 00:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+556	2014-08-10 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+557	2014-08-11 00:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+595	2014-09-02 00:00:00	51	2	WMO	VIZ-B2 (United States)                
+596	2014-09-02 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+609	2014-09-09 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+610	2014-09-10 00:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+651	2014-10-08 12:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+652	2014-10-09 00:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+665	2014-10-16 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+666	2014-10-16 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+854	2015-04-02 12:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+855	2015-04-03 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+951	2015-07-09 00:00:00	51	2	WMO	VIZ-B2 (United States)                
+952	2015-07-09 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+954	2015-07-10 12:00:00	51	2	WMO	VIZ-B2 (United States)                
+955	2015-07-11 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+1004	2015-09-04 23:09:00	51	2	WMO	VIZ-B2 (United States)                
+1005	2015-09-05 12:00:00	183	2	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind
+1088	2015-12-05 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+4158	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+4160	1988-09-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ 
+4158	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+4158	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 

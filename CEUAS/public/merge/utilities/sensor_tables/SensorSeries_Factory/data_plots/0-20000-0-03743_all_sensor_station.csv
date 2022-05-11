@@ -1,0 +1,40 @@
+	sensor_id	source	comment	date_time	value
+1869	110	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               		
+2319	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
+2406	115	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             		
+1283	121	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        		
+1841	122	WMO	Meisei RS-11G GPS radiosonde w/thermistor, capacitance   relative humidity sensor,   and derived pressure from GPS   height (Japan)         		
+2076	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+2031	125	WMO	Vaisala RS41/MARWIN MW32 (Finland)                           		
+2118	126	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           		
+1135	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+569	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+1156	130	WMO	Meisei RS-06G (Japan)                            		
+1768	131	WMO	Taiyuan GTS1-1/GFE(L) (China )                           		
+1909	135	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            		
+1936	136	WMO	Meisei iMDS-17 GPS dropsonde w/thermistor sensor, capacitance relative humidity   sensor, and capacitance pressure sensor (Japan)              		
+2723	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+3099	154	WMO	Graw DFM-17 (Germany)                            		
+1785	18	WMO	Graw DFM-06 (Germany)                		
+1053	2	WMO	 No radiosonde – passive target (e.g. reflector)                 		
+1925	20	WMO	Indian Meteorological Service MK3 (India)              		
+791	27	WMO	AVK-MRZ (Russian Federation)                		
+1915	34	WMO	Vinohrady (Czechia)                 		
+1857	40	WMO	Sprenger E084 (Germany)                		
+1838	57	WMO	Modem M2K2-DC (France)                		
+1180	7	WMO	iMet-1-AB (United States)                		
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+12276	GK3 	SCH	"  GK3 Britain Kew Mark 3 radiosonde, crimped temperature sensor connections {1977} WMO instr=33^ or MK 3 or UK RS3 (W1=17, W2=11 starting 198505 called ""U. K. Meteorological"		
+0	GKB 	SCH	  GKB Britain Kew Mark IIB radiosonde with lag and radiation corrections {1956}^		
+230	GN2 	SCH	  GN2 Britain NPL PTU radiosonde {1938}^ <F=V35AS,P=Ai,T=W(brass)i,U=Gi>		
+31478	M__ 	SCH	  M__ Multiple instruments, use 31313 info^  If 31313 is not present, apply no corrections.  (This instrument type should be assigned only when all or almost all observations		
+18712	VC_ 	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
+22333	VD_ 	SCH	  VD_ Vaisala RS80 PC Cora base case 31313=96299^ (W3=62) <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=none>		
+15305	IGRA2	IGRA2	CHANGE SONDE MODEL , BRITAIN KEW MARK I , to , BRITAIN KEW MARK II 	1946-01-01	3.0
+15307	IGRA2	IGRA2	CHANGE SONDE MODEL , BRITAIN KEW MARK II , to , BRITAIN KEW MARK IIB UNSPECIFIED 	1952-01-01	3.0
+15311	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK II 	1960-01-01	3.0
+15315	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK IIB UNSPECIFIED 	1976-01-01	3.0
+15317	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN UNSPECIFIED 	1982-01-01	3.0
+15318	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK III 	1986-01-01	3.0
+15318	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK III 	1986-01-01	3.0
+15322	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1993-09-01	3.0

@@ -1,0 +1,16 @@
+	sensor_id	source	comment	date_time	value
+917	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
+912	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
+1583	177	WMO	Modem GPSonde M10 (France)                           		
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+966	84	WMO	Sippican MARK II with chip thermistor, carbon element and derived pressure from   GPS height   		
+0	RA4 	SCH	  RA4 USSR A-22-IV transponder radiosonde {1961}^ (W2=12, T=074) <F=V403ME,P=2A,T=BC,U=G,W=T216m>		
+10122	RRA 	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>		
+14002	RRN 	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^		
+14995	VDG 	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
+15910	VGG 	SCH	  VGG Vaisala RS80G or RS80-GH DigiCORA III auto corr, GPS wind 31313=46708^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
+10107	W__ 	SCH	  W__ Wind only, method unspecified^		
+12970	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+9125	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+9125	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+9127	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS OR MRZ UNSPECIFIED 	1992-12-01	3.0

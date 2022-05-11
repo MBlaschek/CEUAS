@@ -1,0 +1,4 @@
+	sensor_id	source	comment	date_time	value
+37408	W__ 	SCH	  W__ Wind only, method unspecified^		
+0	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+9423	IGRA2	IGRA2	USING SONDE MODEL , I1 , KEW MK IIB 	1976-01-01	3.0

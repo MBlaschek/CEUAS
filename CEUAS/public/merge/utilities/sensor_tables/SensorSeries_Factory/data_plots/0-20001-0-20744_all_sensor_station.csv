@@ -1,0 +1,32 @@
+	sensor_id	source	comment	date_time	value
+2945	126	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           		
+3210	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+1641	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+3783	160	WMO	MARL-A or Vektor-M – I-2012 (Russian Federation)                        		
+4357	162	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        		
+658	55	WMO	Meisei RS-01G (Japan)                		
+4857	69	WMO	MARL-A or Vektor-M-RZM-2 (Russian Federation)              		
+0	88	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              		
+3454	89	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              		
+3632	90	WMO	Radiosonde not specified or unknown             		
+20377	MR5 	SCH	  MR5 Mixed Russia RKZ-5 (RK5, DP to or near top) and MARS-2-2 (RRB, DP to T around -40), both using Meteorit-2 radar^		
+25232	MRB 	SCH	  MRB Mixed Russia MARS-2-2 (RRB, DP to T around -40) and MRZ-3A (RZ3, DP to or near top)^		
+19287	MRk 	SCH	  MRk exact type insufficiently documented		
+24911	MRr 	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^		
+11844	MRu 	SCH	  MRu Mixed Russia A-22 (RA4) and RKZ-5 (RK5), not distinguishable^		
+26893	MRz 	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^		
+11784	RA4 	SCH	  RA4 USSR A-22-IV transponder radiosonde {1961}^ (W2=12, T=074) <F=V403ME,P=2A,T=BC,U=G,W=T216m>		
+13959	RK5 	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>		
+20206	RRB 	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>		
+24309	RZ3 	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+30726	RZW 	SCH	  RZW Russia MRZ-3A radiosonde with MARL-A or Vektor-M phased-array radiotheodolite {2004} 31313=58803^ (W3=88) <F=T1680PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+0	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+10930	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 	1960-01-01	3.0
+10931	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , USSR RKZ-5 1780 MHZ 	1974-07-01	3.0
+10932	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 	1976-01-01	3.0
+10933	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR RKZ-5 1780 MHZ , to , RUSSIA/USSR MARS UNSPECIFIED 	1986-07-01	3.0
+10934	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+10934	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+10938	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS OR MRZ UNSPECIFIED 	1992-12-01	3.0
+10940	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS-2-2 AUTOMATED PROCESSN 	1996-07-01	3.0
+10940	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS-2-2 AUTOMATED PROCESSN 	1996-07-01	3.0

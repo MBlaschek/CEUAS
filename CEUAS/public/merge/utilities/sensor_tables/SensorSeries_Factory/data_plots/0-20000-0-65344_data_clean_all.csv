@@ -1,0 +1,15 @@
+	date_time	sensor_id	value	source	comment
+0	1940-01-02 06:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+1516	2014-10-11 11:00:00	57	2	WMO	Modem M2K2-DC (France)                
+1629	2014-11-15 11:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+2173	2015-05-14 11:00:00	57	2	WMO	Modem M2K2-DC (France)                
+2403	2015-07-25 11:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+2410	2015-07-27 11:00:00	57	2	WMO	Modem M2K2-DC (France)                
+2413	2015-07-28 11:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+2429	2015-08-01 11:00:00	57	2	WMO	Modem M2K2-DC (France)                
+2432	2015-08-02 11:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+2452	2015-08-08 11:00:00	57	2	WMO	Modem M2K2-DC (France)                
+2455	2015-08-10 11:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+2501	2015-08-26 11:00:00	57	2	WMO	Modem M2K2-DC (France)                
+2503	2015-08-27 11:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+6422	2021-12-14 11:00:00	154	2	WMO	Graw DFM-17 (Germany)                            

@@ -1,0 +1,11 @@
+	date_time	sensor_id	value	source	comment
+0	1948-02-09 14:00:00	FD4 	1	SCH	  FD4 France DIM R. V. 4 radiosonde {early 1970s}^
+32037	1982-01-02 12:00:00	V2_ 	1	SCH	  V2_ Vaisala RS21 unspecified model {1974} WMO instr=36^ (W3=36, T=037)
+54870	1999-04-06 11:00:00	VC_ 	1	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+0	2013-01-01 11:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
+2375	2016-05-15 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+2376	2016-05-16 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+3281	2018-05-27 23:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+101	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL FMO 1943B 
+102	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 
+104	1993-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

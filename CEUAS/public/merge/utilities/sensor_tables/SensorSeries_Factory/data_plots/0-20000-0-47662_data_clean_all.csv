@@ -1,0 +1,4 @@
+	date_time	sensor_id	value	source	comment
+0	1925-04-14 23:10:00	U1t 	1	SCH	  U1t USA AN/AMT-1 T-49 transmitter (several models) 70-74 MHz AM radiosonde {1945}^ <F=V70-74AB,P=2A,T=TRd(dark, in duct),U=L,W=Rm>
+2795	1946-02-12 23:00:00	U2a 	1	SCH	  U2a USA AN/AMT-2A T-69 transmitter 403 MHz FM radiosonde {1945}^ <F=V390-410FB,P=A,T=TR,U=L,W=Da(SCR-658)>
+3689	1946-11-16 22:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

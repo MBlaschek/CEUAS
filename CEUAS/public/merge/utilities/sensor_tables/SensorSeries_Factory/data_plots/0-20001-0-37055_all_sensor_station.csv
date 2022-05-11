@@ -1,0 +1,28 @@
+	sensor_id	source	comment	date_time	value
+4953	-922	SCH	NA		
+11495	1	SCH	NA		
+30945	112	SCH	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 		
+29431	114	SCH	Vaisala RS92/DigiCORA MW41 (Finland)                           		
+39498	121	SCH	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        		
+52447	123	SCH	Vaisala RS41/DigiCORA MW41 (Finland)                           		
+43882	128	SCH	AVK - AK2-02 (Russian Federation)                          		
+96	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+3268	160	WMO	MARL-A or Vektor-M – I-2012 (Russian Federation)                        		
+3798	162	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        		
+39949	20	SCH	Indian Meteorological Service MK3 (India)              		
+46894	27	SCH	AVK-MRZ (Russian Federation)                		
+47056	37	SCH	Vaisala RS80 (Finland)                		
+614	39	WMO	Sprenger E076 (Germany)                		
+43663	4	SCH	 No radiosonde – passive temperature-humidity profiler            		
+50266	57	SCH	Modem M2K2-DC (France)                		
+50845	58	SCH	AVK-BAR (Russian Federation)                		
+875	59	WMO	Modem M2K2-R 1680 MHz RDF radiosonde with pressure sensor chip (France)        		
+50385	68	SCH	AVK-RZM-2 (Russian Federation)                		
+2223	69	WMO	MARL-A or Vektor-M-RZM-2 (Russian Federation)              		
+47044	7	SCH	iMet-1-AB (United States)                		
+51612	88	SCH	MARL-A or Vektor-M-MRZ (Russian Federation)              		
+53432	89	SCH	MARL-A or Vektor-M-BAR (Russian Federation)              		
+53375	9	SCH	 No radiosonde – system unknown or not specified          		
+2830	90	WMO	Radiosonde not specified or unknown             		
+8234	99	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        		
+0	NA 	SCH	NA		

@@ -1,0 +1,9 @@
+	sensor_id	source	comment	date_time	value
+0	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+1884	162	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        		
+312	88	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              		
+3200	89	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              		
+3064	9	WMO	 No radiosonde – system unknown or not specified          		
+2535	90	WMO	Radiosonde not specified or unknown             		
+4290	92	WMO	Pressure only radiosonde plus transponder             		
+0	RHM 	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),		

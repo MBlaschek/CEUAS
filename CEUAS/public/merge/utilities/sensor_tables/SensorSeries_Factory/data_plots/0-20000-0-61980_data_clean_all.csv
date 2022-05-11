@@ -1,0 +1,13 @@
+	date_time	sensor_id	value	source	comment
+0	1948-07-01 10:30:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+36266	2007-09-12 05:00:00	FG2 	1	SCH	  FG2 France Geolink GPSonde M2K2 {2003} 31313=55608^ (W3=56) <F=T400-406DL,P=0,T=TC,U=A,W=D or N=GC>
+36274	2007-10-12 05:00:00	FGC 	1	SCH	  FGC France Geolink-Modem M2K2-DC 1680 MHz improved radiation protection {2006} 31313=45708^ <F=T1680DL,P=0,T=TC,U=A,N=GC>
+36296	2007-11-07 05:00:00	FG2 	1	SCH	  FG2 France Geolink GPSonde M2K2 {2003} 31313=55608^ (W3=56) <F=T400-406DL,P=0,T=TC,U=A,W=D or N=GC>
+36297	2007-11-07 11:00:00	FGC 	1	SCH	  FGC France Geolink-Modem M2K2-DC 1680 MHz improved radiation protection {2006} 31313=45708^ <F=T1680DL,P=0,T=TC,U=A,N=GC>
+36304	2007-11-14 05:00:00	FG2 	1	SCH	  FG2 France Geolink GPSonde M2K2 {2003} 31313=55608^ (W3=56) <F=T400-406DL,P=0,T=TC,U=A,W=D or N=GC>
+36305	2007-11-14 12:00:00	FGC 	1	SCH	  FGC France Geolink-Modem M2K2-DC 1680 MHz improved radiation protection {2006} 31313=45708^ <F=T1680DL,P=0,T=TC,U=A,N=GC>
+36435	2008-03-21 05:00:00	W?? 	1	SCH	  W?? exact type insufficiently documented
+36847	2010-04-30 05:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+36887	2011-06-20 11:00:00	FGC 	1	SCH	  FGC France Geolink-Modem M2K2-DC 1680 MHz improved radiation protection {2006} 31313=45708^ <F=T1680DL,P=0,T=TC,U=A,N=GC>
+0	2013-01-01 11:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
+10520	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 

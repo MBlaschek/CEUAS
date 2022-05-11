@@ -1,0 +1,116 @@
+	date_time	sensor_id	value	source	comment
+0	1958-03-01 12:00:00	RS6 	1	SCH	  RS6 USSR RZ-049 radiosonde, radiation and lag corrections {1957}^ (I=S1, T=274,337) <F=V403MB,P=2A,T=B,U=H,W=O or Dm>
+11015	1973-01-27 12:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+22051	1985-01-01 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+22052	1985-01-01 12:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+22398	1985-04-11 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+22400	1985-04-12 00:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+22428	1985-04-20 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+23583	1986-04-20 12:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+23598	1986-04-25 18:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+23599	1986-04-26 00:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+24229	1987-02-12 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+24230	1987-02-12 18:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+24448	1987-04-27 00:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+24449	1987-04-27 12:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+24600	1987-06-27 12:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+24601	1987-06-27 18:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+25087	1987-11-13 06:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+25088	1987-11-13 12:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+25756	1988-05-28 18:00:00	RRB 	1	SCH	  RRB USSR MARS-2-2 radiosonde {1983} 31313=72903^ (W3=29, T=225, 31313=72903) used with Meteorit-2 radar <F=T1780PM,P=0,T=TR,U=G,W=Ta>
+25757	1988-05-29 00:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+26280	1988-10-25 18:00:00	MRk 	1	SCH	  MRk exact type insufficiently documented
+26360	1988-11-16 18:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+26926	1989-04-30 12:00:00	MRk 	1	SCH	  MRk exact type insufficiently documented
+27337	1989-09-14 12:00:00	RK5 	1	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>
+27407	1989-10-23 12:00:00	MRk 	1	SCH	  MRk exact type insufficiently documented
+27687	1990-01-19 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+27688	1990-11-05 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+27803	1991-01-05 00:00:00	MRz 	1	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^
+27979	1991-04-12 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+29528	1997-05-29 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+29565	1998-02-10 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+29658	1998-05-17 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+30793	2003-07-01 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+32956	2007-07-15 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+32957	2007-09-18 12:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+33679	2008-09-15 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+33680	2008-11-19 12:00:00	Ru3 	1	SCH	  Ru3 Ukraine MRZ-3A 1780 MHz radiosonde {~2001} 31313=52703 (moist)^ (W3=27)
+34528	2010-01-18 12:00:00	RPK 	1	SCH	  RPK Ukraine PAZA-22M with MARL-A radar {~2009} 31313=58803 or 31313=52716 or *48**^
+35142	2010-11-25 00:00:00	RDM 	1	SCH	  RDM Russia RZM-2 radiosonde with 1680 MHz MARL-A or Vektor-M tracking {2004} 31313=56903^ (W3=69) <F=T1680PL,P=0,T=TR(MMT-1),U=A(HS-03M),W=Ta>
+35148	2010-11-28 00:00:00	RPK 	1	SCH	  RPK Ukraine PAZA-22M with MARL-A radar {~2009} 31313=58803 or 31313=52716 or *48**^
+35160	2010-12-04 00:00:00	RDM 	1	SCH	  RDM Russia RZM-2 radiosonde with 1680 MHz MARL-A or Vektor-M tracking {2004} 31313=56903^ (W3=69) <F=T1680PL,P=0,T=TR(MMT-1),U=A(HS-03M),W=Ta>
+35177	2010-12-12 12:00:00	RPK 	1	SCH	  RPK Ukraine PAZA-22M with MARL-A radar {~2009} 31313=58803 or 31313=52716 or *48**^
+0	2013-01-01 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1287	2014-10-08 00:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1288	2014-10-08 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1297	2014-10-13 00:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1298	2014-10-13 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1299	2014-10-14 00:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1300	2014-10-14 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1317	2014-10-23 00:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1318	2014-10-23 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1336	2014-11-01 12:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1337	2014-11-02 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1351	2014-11-09 00:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1352	2014-11-09 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1356	2014-11-11 12:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1358	2014-11-12 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1368	2014-11-17 12:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1369	2014-11-18 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1377	2014-11-22 00:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1378	2014-11-22 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1386	2014-11-26 12:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1387	2014-11-27 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1393	2014-11-30 00:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1394	2014-11-30 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1396	2014-12-01 12:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1398	2014-12-02 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1416	2014-12-11 12:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1417	2014-12-12 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1420	2014-12-13 12:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1422	2014-12-14 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1511	2015-01-28 00:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1512	2015-01-28 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1517	2015-01-31 00:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1518	2015-01-31 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1531	2015-02-07 00:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1532	2015-02-07 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1537	2015-02-10 00:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1538	2015-02-10 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1590	2015-03-08 12:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1592	2015-03-09 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1597	2015-03-12 00:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1598	2015-03-12 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1630	2015-03-28 12:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1632	2015-03-29 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1637	2015-04-01 00:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1638	2015-04-01 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+1670	2015-04-17 12:00:00	148	2	WMO	PAZA-22M/MARL-A                              
+1672	2015-04-18 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+5161	2020-01-31 00:00:00	173	2	WMO	МАRL-A (Russian Federation) – ASPAN-15 (Kazakhstan)                         
+5162	2020-01-31 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+5164	2020-02-01 12:00:00	173	2	WMO	МАRL-A (Russian Federation) – ASPAN-15 (Kazakhstan)                         
+5169	2020-02-04 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+5170	2020-02-04 12:00:00	173	2	WMO	МАRL-A (Russian Federation) – ASPAN-15 (Kazakhstan)                         
+5207	2020-02-23 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+5208	2020-02-23 12:00:00	173	2	WMO	МАRL-A (Russian Federation) – ASPAN-15 (Kazakhstan)                         
+5281	2020-03-31 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+5282	2020-03-31 12:00:00	173	2	WMO	МАRL-A (Russian Federation) – ASPAN-15 (Kazakhstan)                         
+5286	2020-04-02 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+5288	2020-04-03 12:00:00	173	2	WMO	МАRL-A (Russian Federation) – ASPAN-15 (Kazakhstan)                         
+5326	2020-04-22 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+5327	2020-04-23 00:00:00	173	2	WMO	МАRL-A (Russian Federation) – ASPAN-15 (Kazakhstan)                         
+5366	2020-05-12 12:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+5367	2020-05-13 00:00:00	173	2	WMO	МАRL-A (Russian Federation) – ASPAN-15 (Kazakhstan)                         
+5395	2020-05-27 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+5396	2020-05-27 12:00:00	173	2	WMO	МАRL-A (Russian Federation) – ASPAN-15 (Kazakhstan)                         
+6526	2021-12-15 00:00:00	88	2	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              
+6527	2021-12-15 11:30:00	173	2	WMO	МАRL-A (Russian Federation) – ASPAN-15 (Kazakhstan)                         
+8680	1960-12-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RZ-049 UNSPECIFIED , to , USSR A-22 UNSPECIFIED 
+8681	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 
+8682	1973-02-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , USSR RKZ-5 1780 MHZ 
+8683	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 
+8684	1984-09-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RKZ-5 1780 MHZ , to , RUSSIA/USSR MARS UNSPECIFIED 
+8685	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+8685	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 

@@ -1,0 +1,22 @@
+	date_time	sensor_id	value	source	comment
+0	1914-05-07 11:03:00	V18 	1	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>
+9483	1975-08-27 12:00:00	ZH_ 	1	SCH	  ZH_ VIZ 1292 series, unspecified model {1973}^
+14129	1982-09-27 11:00:00	ZJ_ 	1	SCH	  ZJ_ VIZ 1392 series new hygristor, unspecified model {1980}^
+24262	1996-10-24 11:00:00	VB_ 	1	SCH	  VB_ Vaisala RS80 MicroCora radiosonde base case 31313=96099^ (W3=60) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+24750	1997-07-04 11:00:00	VC_ 	1	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+26190	1999-07-30 11:00:00	V9- 	1	SCH	  V9- Vaisala RS90 DigiCORA I, II, or Marwin base case {1995} 31313=97199^ (W3=71) <F=T403DL,P=Sc,T=Wc,U=2Ah>
+0	2013-01-01 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+3376	2017-09-13 14:23:31	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+3377	2017-09-14 11:10:01	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+3388	2017-09-25 11:03:34	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+3389	2017-09-26 11:09:59	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+4489	2019-05-02 11:15:26	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+4490	2019-05-02 23:22:56	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+4497	2019-05-06 11:02:15	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+4498	2019-05-06 23:08:32	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+4502	2019-05-08 23:23:40	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+5785	2021-02-11 11:14:52	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+14051	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 
+14053	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 
+14055	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 
+14055	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 

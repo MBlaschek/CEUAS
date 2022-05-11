@@ -1,0 +1,31 @@
+	date_time	sensor_id	value	source	comment
+0	1930-01-13 20:30:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+14149	1943-04-23 21:00:00	U?? 	1	SCH	  U?? exact type insufficiently documented
+24804	1951-11-29 21:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+30103	1955-10-19 21:00:00	U?? 	1	SCH	  U?? exact type insufficiently documented
+39217	1965-03-15 00:00:00	Z?? 	1	SCH	  Z?? exact type insufficiently documented
+45218	1972-01-10 00:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+46503	1973-04-01 00:00:00	ZF1c	1	SCH	  ZF1c VIZ model 1192 NWS 1680 MHz, new hygristor duct, censoring  {1973}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
+52802	1981-08-11 00:00:00	ZJ1 	1	SCH	  ZJ1 VIZ model 1392-410 NWS 1680 MHz baseline, new hygristor {1980}^ (W1=19 calls this VIZ 1392-401, T=441) NWS stock no. J030 <F=T1680AB,P=A,
+57888	1988-09-01 00:00:00	ZKB 	1	SCH	"  ZKB VIZ model 1492-520 NWS 1680 MHz ART ""B"" Accu-Lok {1988} 31313=01102^ (T=004,W3=11,W2=28) NWS stock no. J060, 0.25 sec time sequenced <F=T1680AL,"
+64200	1997-05-21 00:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^
+68807	2003-10-01 00:00:00	Zql 	1	SCH	  Zql Sippican 1543-611 MK II Microsonde 403 MHz LoRAN-C chip thermistor, no corr {~ 2003} 31313=08606^ (W3=86) <F=T403DL,P=Ac,T=TC,U=C,N=L>
+0	2013-01-01 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+493	2013-09-04 18:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+494	2013-09-05 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+508	2013-09-11 18:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+509	2013-09-12 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+511	2013-09-12 16:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+512	2013-09-13 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+520	2013-09-16 18:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+521	2013-09-17 00:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+543	2013-09-28 00:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+544	2013-09-28 12:00:00	87	2	WMO	Sippican MARK IIA with chip thermistor, pressure and carbon element         
+555	2013-10-04 00:00:00	182	2	WMO	Lockheed Martin LMS-6 w/chip thermistor; external   boom mounted polymer capacitive   relative humidity sensor; capacitive pressure   sensor and GPS wind      
+16979	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
+16979	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
+16983	1988-09-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ ACCU-LOK UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 
+16985	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+16985	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 
+16991	1997-05-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VIZ/SIPPICAN MKII W/ROD TEMP. SENSOR 
+16993	2009-05-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ/SIPPICAN MKII W/ROD TEMP. SENSOR , to , VIZ/SIPPICAN MKII W/CHIP TEMP. SENSOR 

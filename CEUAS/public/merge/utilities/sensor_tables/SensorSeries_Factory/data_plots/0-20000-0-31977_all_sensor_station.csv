@@ -1,0 +1,13 @@
+	sensor_id	source	comment	date_time	value
+103	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+1729	152	WMO	Vaisala RS92-NGP/Intermet IMS-2000 (United States)                          		
+1549	162	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        		
+1755	56	WMO	M2K2 (France)                 		
+0	69	WMO	MARL-A or Vektor-M-RZM-2 (Russian Federation)              		
+1564	88	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              		
+586	89	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              		
+1269	90	WMO	Radiosonde not specified or unknown             		
+0	RZ3 	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+13257	IGRA2	IGRA2	USING SONDE MODEL , I1 , UNKNOWN 	1994-06-01	3.0
+13259	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 	1996-04-01	3.0
+13259	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 	1996-04-01	3.0

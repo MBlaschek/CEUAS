@@ -1,0 +1,3 @@
+	date_time	sensor_id	value	source	comment
+0	1980-02-04 18:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+121	2015-10-01 06:00:00	2	2	WMO	 No radiosonde – passive target (e.g. reflector)                 

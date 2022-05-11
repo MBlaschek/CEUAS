@@ -1,0 +1,71 @@
+	date_time	sensor_id	value	source	comment
+0	1928-03-18 02:30:00	IA3 	1	SCH	  IA3 India 401 MHz Audiomodulated transistorized radiosonde {1975} WMO instr=20^ (W1=18, W3=20, T=181) <F=T401AB,P=A,T=TR,U=L>
+25487	1980-05-06 00:00:00	IA5 	1	SCH	  IA5 India 401 MHz Audiomodulated or Mark 3 new thermistor radiosonde {198002} WMO instr=20^ (W1=18, W3=20, T=181) <F=T401AB,P=A,T=TR,U=L>
+34743	1992-01-29 11:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+41305	1999-08-30 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+41407	1999-10-09 11:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+46507	2004-06-22 11:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+46529	2004-06-28 00:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+47128	2004-12-03 00:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+47134	2004-12-04 11:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+47273	2005-01-18 12:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+47590	2005-04-03 00:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+47724	2005-05-09 00:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+47778	2005-05-25 00:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+48376	2005-12-03 11:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+48599	2006-02-02 02:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+49317	2006-09-01 11:00:00	MI1 	1	SCH	  MI1 Mixed India 401 MHz Mark 3 (I31) and Mark 4 (I41)^ Mixed 401 MHz India Mark 3 (I31, DP usually ends with T around -10 C but very irregular, moderate
+49338	2006-09-07 11:00:00	I31 	1	SCH	  I31 India 401 MHz Mark 3 radiosonde {1992} WMO instr=20^ (T=183, W1=22, W3=20) <F=T401-406FB,P=A,T=TR,U=L>
+0	2013-01-01 01:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+124	2013-03-01 00:00:00	70	2	WMO	Vaisala RS92/Star (Finland)                
+127	2013-03-02 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+838	2013-12-28 00:00:00	57	2	WMO	Modem M2K2-DC (France)                
+839	2013-12-29 01:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+2180	2015-06-16 12:00:00	110	2	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               
+2181	2015-06-16 23:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+2288	2015-08-10 00:00:00	110	2	WMO	Sippican LMS5 w/Chip Thermistor, duct mounted capacitance relative humidity sensor and derived pressure from GPS height               
+2289	2015-08-10 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+2454	2015-10-10 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+2455	2015-10-10 11:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+3262	2016-08-01 00:00:00	1	2	WMO	NA
+3263	2016-08-01 13:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+3281	2016-08-09 00:00:00	6	2	WMO	 No radiosonde – radio-acoustic sounder             
+3974	2017-06-26 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
+4077	2018-02-22 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4286	2018-09-22 00:00:00	37	2	WMO	Vaisala RS80 (Finland)                
+4287	2018-09-23 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4786	2019-10-25 01:00:00	66	2	WMO	Vaisala RS80 /Autosonde (Finland)               
+4788	2019-10-26 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4913	2020-02-01 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+4914	2020-02-02 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4923	2020-02-08 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+4925	2020-02-09 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4927	2020-02-11 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+4928	2020-02-12 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4939	2020-02-17 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+4946	2020-02-22 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4949	2020-02-23 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+4958	2020-02-29 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4963	2020-03-03 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+4966	2020-03-04 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4969	2020-03-05 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+4971	2020-03-06 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4972	2020-03-07 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+4979	2020-03-12 00:15:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4980	2020-03-13 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+4982	2020-03-14 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+4987	2020-03-18 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+4990	2020-03-19 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+5009	2020-03-30 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+5012	2020-03-31 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+5329	2021-11-08 12:00:00	145	2	WMO	Beijing Changfeng CF-06 (China)*                           
+6145	1974-11-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA AUDIOMODULATED 401 MHZ TRANSISTOR 
+6147	1980-02-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMODULATED 401 MHZ TRANSISTOR , to , INDIA AUDIOMOD 401 MHZ NEW THERMISTOR 
+6149	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6149	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6153	1988-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMOD 401 MHZ NEW THERMISTOR , to , INDIA AUDIOMOD 401 MHZ NEW HUMIDITY DUC 
+6149	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6149	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6157	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING GROUND EQUIP. , G1 , RADIOSONDE GROUND EQUIP (RSGE) 401 MHZ 
+6159	1992-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , INDIA AUDIOMOD 401 MHZ NEW HUMIDITY DUC , to , INDIA MARK 3 401 MHZ 1992 VERSION 
+6157	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING GROUND EQUIP. , G1 , RADIOSONDE GROUND EQUIP (RSGE) 401 MHZ 

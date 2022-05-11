@@ -1,0 +1,31 @@
+	sensor_id	source	comment	date_time	value
+0	115	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             		
+134	128	WMO	AVK - AK2-02 (Russian Federation)                          		
+48722	MR2 	SCH	  MR2 Mixed Russia A-22 (RA4) and MARS-2 (RR2)^ Mixed RA4 (A22, DP to or near top) and RR2 (MARS, DP to T around -40)		
+51732	MR7 	SCH	  MR7 Mixed Russia MARS-1 (RR1, no DP except at sfc), MARS-2, (RR2, DP to T > -40), and MRZ-3A (RZ3, DP to or near top)^		
+49918	MRA 	SCH	  MRA Mixed Russia MARS-2-1 (RRA, DP to T around -40) and MRZ-3A (RZ3, DP to or near top)^		
+49980	MRr 	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^		
+52499	Mru 	SCH	  Mru Mixed Ukraine MARS-2 RuN or Rus and MARS-2 surface DP only^		
+30554	RA4 	SCH	  RA4 USSR A-22-IV transponder radiosonde {1961}^ (W2=12, T=074) <F=V403ME,P=2A,T=BC,U=G,W=T216m>		
+54037	RPA 	SCH	  RPA Ukraine PAZA-12M with UL radiotheodolite {~2010} 31313=01503^ (W3=115)		
+49389	RRA 	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>		
+52160	RRN 	SCH	  RRN Russia/USSR MARS-2-1 radiosonde no correction, daytime or all obs report 31313=02803^		
+51647	RRS 	SCH	  RRS Russia/USSR MARS-2-1 radiosonde CIMO solar corr, 31313=32803^		
+52058	RRa 	SCH	  RRa USSR MARS-2-1 radiosonde, automated processing, dew point to or near top {~1987} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and		
+0	RS3 	SCH	  RS3 USSR RZ-043 radiosonde {1944}^ <F=V7.5MR,P=D,T=B,U=H>		
+49820	RZ3 	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+52565	RuN 	SCH	  RuN Ukraine MARS-2-1 radiosonde no correction, 31313=02803^		
+52564	Rua 	SCH	  Rua Ukraine MARS-2-1 radiosonde, automated processing, dew point to or near top {2001} 31313=02803^ (W3=28, T=224) <F=T1780PL,P=0,T=TR,U=G,W=Ta>		
+50999	WRR 	SCH	  WRR USSR/Russia MARS-0 windsonde {1984}^ (T=221) <F=T1780PL,P=0,W=Ta>		
+51205	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+15453	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR RZ-049 UNSPECIFIED , to , USSR A-22 UNSPECIFIED 	1960-07-01	3.0
+15454	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 	1960-01-01	3.0
+15455	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 	1976-01-01	3.0
+15456	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+15456	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+15458	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , RUSSIA/USSR MARS UNSPECIFIED 	1990-04-01	3.0
+15461	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS OR MRZ UNSPECIFIED 	1993-01-01	3.0
+15463	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS-2-1 	1997-01-01	3.0
+15466	IGRA2	IGRA2	CHANGE SONDE MODEL , I2 , NONE , to , RUSSIA/USSR MRZ-3A 	1997-05-01	3.0
+15468	IGRA2	IGRA2	USING SONDE MODEL , I2 , RUSSIA/USSR MARS-2-1 AUTOMATED PROCESSN 	1999-07-01	3.0
+15463	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS-2-1 	1997-01-01	3.0

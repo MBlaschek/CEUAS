@@ -1,0 +1,15 @@
+	sensor_id	source	comment	date_time	value
+1182	117	WMO	Graw DFM-09 (Germany)                            		
+1469	154	WMO	Graw DFM-17 (Germany)                            		
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+0	V18 	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>		
+29863	VCG 	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
+22800	VCV 	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>		
+31434	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+14691	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1976-01-01	3.0
+14693	IGRA2	IGRA2	CHANGE SONDE MODEL , VAISALA RS13/15 UNSPECIFIED , to , VAISALA RS18 	1980-01-01	3.0
+14691	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1976-01-01	3.0
+14691	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1976-01-01	3.0
+14699	IGRA2	IGRA2	CHANGE SONDE MODEL , VAISALA RS18 , to , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0
+14691	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1976-01-01	3.0
+14702	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1992-10-01	3.0

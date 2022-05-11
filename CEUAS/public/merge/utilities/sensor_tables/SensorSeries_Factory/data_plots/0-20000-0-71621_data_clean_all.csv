@@ -1,0 +1,4 @@
+	date_time	sensor_id	value	source	comment
+0	1955-07-01 21:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+7441	2001-02-07 23:00:00	VC_ 	1	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+7448	2001-02-20 13:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^

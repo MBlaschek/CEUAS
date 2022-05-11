@@ -1,0 +1,15 @@
+	date_time	sensor_id	value	source	comment
+0	1996-10-09 08:00:00	NA 	1	SCH	NA
+1	1996-10-10 07:00:00	-922	1	SCH	NA
+0	2014-11-24 17:02:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+29	2015-10-08 16:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+32	2015-10-09 01:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+36	2015-11-02 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+39	2016-01-20 17:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+64	2016-08-30 11:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+69	2016-11-29 13:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+89	2018-06-05 06:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+94	2018-07-08 07:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           
+95	2018-07-09 05:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
+103	2018-09-27 05:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
+115	2020-04-07 08:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  

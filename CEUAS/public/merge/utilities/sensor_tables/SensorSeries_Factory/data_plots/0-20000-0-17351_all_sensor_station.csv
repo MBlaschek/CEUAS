@@ -1,0 +1,14 @@
+	sensor_id	source	comment	date_time	value
+0	117	WMO	Graw DFM-09 (Germany)                            		
+2018	135	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            		
+5009	154	WMO	Graw DFM-17 (Germany)                            		
+1816	177	WMO	Modem GPSonde M10 (France)                           		
+700	18	WMO	Graw DFM-06 (Germany)                		
+249	80	WMO	Vaisala RS92/Digicora III (Finland)               		
+16042	V9f 	SCH	  V9f Vaisala RS90 DigiCORA III auto corr, GPS wind 31313=47808^ <F=T403DL,P=Sc,T=Wc,U=2Ah,N=G>		
+11149	VCR 	SCH	  VCR Vaisala RS80 DigiCORA I, II, or Marwin auto corr, RDF wind 31313=46102^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>		
+14946	VGG 	SCH	  VGG Vaisala RS80G or RS80-GH DigiCORA III auto corr, GPS wind 31313=46708^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
+16198	VNg 	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
+10484	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+0	ZkB 	SCH	  ZkB VIZ model 1492-522 Turkey 1680 MHz time sequenced {early 1990s}^ (T=450) <F=T1680AL,P=Ab,T=TR(ML-405),U=C,W=Ra(GMD-1 or RD-65)>		
+11877	Zmr 	SCH	  Zmr VIZ/Sippican MK II Microsonde no rad corr, RDF wind 31313=04902 not NWS^		

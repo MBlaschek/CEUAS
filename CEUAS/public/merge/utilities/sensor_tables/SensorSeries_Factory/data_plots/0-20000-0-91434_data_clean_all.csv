@@ -1,0 +1,5 @@
+	date_time	sensor_id	value	source	comment
+0	1956-03-26 05:00:00	U4b 	1	SCH	  U4b USA Bendix AN/AMT-4B LiCl hygristor radiosonde {~ 1954}^ (I=E7) <F=V1680PB,P=A,T=TR,U=L(ML-418/AMT-4),W=Da(AN/GMD-1)>
+481	1956-07-23 16:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+934	1979-01-15 00:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
+1105	1979-06-10 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

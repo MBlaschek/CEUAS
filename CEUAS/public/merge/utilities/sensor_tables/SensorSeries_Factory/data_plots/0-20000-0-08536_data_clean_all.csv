@@ -1,0 +1,8 @@
+	date_time	sensor_id	value	source	comment
+0	1948-01-11 15:00:00	CPC 	1	SCH	  CPC Canada/Portugal VIZ type Model IV radiosonde {1966}^ with carbon hygristor (W1=06 called Portugal, W2=06 ending 198607, many reports 1989-1991)
+19435	1977-03-28 12:00:00	ZH_ 	1	SCH	  ZH_ VIZ 1292 series, unspecified model {1973}^
+22109	1980-07-08 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+2509	2019-12-20 11:16:18	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+2512	2019-12-27 11:16:26	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
+2516	2020-01-03 11:16:31	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
+10475	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 

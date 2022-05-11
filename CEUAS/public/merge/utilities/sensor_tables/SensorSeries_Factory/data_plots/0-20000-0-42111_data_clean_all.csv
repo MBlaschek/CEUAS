@@ -1,0 +1,19 @@
+	date_time	sensor_id	value	source	comment
+0	1964-06-05 11:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+6832	1978-09-29 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+6834	1979-04-08 00:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+11246	1997-10-20 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+11313	1998-03-11 01:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+11488	1998-09-19 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+11825	1999-07-08 01:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+12030	2000-05-09 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+13587	2003-03-22 01:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+13923	2003-10-10 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+15031	2005-07-27 11:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
+1173	2015-12-04 00:00:00	21	2	WMO	VIZ/Jin Yang MARK I MICROSONDE (Republic of Korea)           
+2459	2019-10-29 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+2535	2020-01-24 00:00:00	112	2	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 
+2537	2020-01-26 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
+6170	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6170	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 
+6170	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 

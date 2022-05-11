@@ -1,0 +1,4 @@
+	sensor_id	source	comment	date_time	value
+0	W__ 	SCH	  W__ Wind only, method unspecified^		
+4291	IGRA2	IGRA2	USING SONDE MODEL , I1 , FRANCE METOX CT UNSPECIFIED 	1960-01-01	3.0
+4293	IGRA2	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL UNSPECIFIED 	1982-01-01	3.0

@@ -1,0 +1,4 @@
+	date_time	sensor_id	value	source	comment
+0	1973-06-20 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+64	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL FMO 1943B 
+65	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 

@@ -1,0 +1,6 @@
+	sensor_id	source	comment	date_time	value
+1	-922	SCH	NA		
+0	111	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          		
+2092	113	WMO	Vaisala RS92/MARWIN MW32 (Finland)                           		
+138	51	WMO	VIZ-B2 (United States)                		
+0	NA 	SCH	NA		

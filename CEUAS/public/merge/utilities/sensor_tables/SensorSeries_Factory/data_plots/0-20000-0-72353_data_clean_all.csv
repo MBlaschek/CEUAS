@@ -1,0 +1,9 @@
+	date_time	sensor_id	value	source	comment
+0	1948-09-16 03:00:00	UBA 	1	SCH	  UBA USWB Friez Diamond Hinman initial operational radiosonde, hair hygrometer, temperature corr {19380803}^ <F=V65AB,P=A,T=E(hydrochloric acid, ethyl
+10606	1966-04-21 18:00:00	Z46 	1	SCH	  Z46 VIZ model 1090 US Army AN/AMT-4D {1964}^ (T=399) <F=V1680PB,P=A,T=TR(ML-419/AM),U=C(ML-476),W=Da(AN/GMD-1>
+10743	1966-06-29 18:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+11319	1967-04-14 18:00:00	Z46 	1	SCH	  Z46 VIZ model 1090 US Army AN/AMT-4D {1964}^ (T=399) <F=V1680PB,P=A,T=TR(ML-419/AM),U=C(ML-476),W=Da(AN/GMD-1>
+11440	1967-06-14 18:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+16499	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
+16499	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
+16503	1988-09-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ ACCU-LOK UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 

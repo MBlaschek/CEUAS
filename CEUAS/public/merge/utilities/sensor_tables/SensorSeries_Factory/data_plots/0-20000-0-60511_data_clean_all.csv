@@ -1,0 +1,4 @@
+	date_time	sensor_id	value	source	comment
+0	1981-09-13 18:00:00	G4  	1	SCH	  [23,24,25|05,15] French Mesural or Metox (There may be some radiation heating at 300 mb through 1976 as in stations 65578 and 91925)
+76	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , MESURAL FMO 1943B 
+77	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 

@@ -1,0 +1,359 @@
+	date_time	sensor_id	value	source	comment
+0	1954-01-01 03:00:00	ZH1 	1	SCH	  ZH1 VIZ model 1292-410 NWS 1680 MHz baseline {1973}^ (W1=19 calls this VIZ 1292, T=427) NWS stock #J005 <F=V1680AB,P=A,T=TR(ML-405),U=C,W=Ra(WBRT or GMD-1)>
+22936	1981-01-23 00:00:00	ZI1 	1	SCH	  ZI1 VIZ model 1392-410 NWS 1680 MHz baseline {late 1970s}^ (W1=19 calls this VIZ 1392-401, T=441) NWS stock no. J030 <F=T1680AB,P=A,T=TR(ML-405),U=C,
+24464	1983-03-16 00:00:00	CS1 	1	SCH	  CS1 Canada Sangamo VIZ LiCl hygristor 107 MHz {1963}^ <F=V107AB,P=A,T=TB,U=L>
+31405	1992-09-17 00:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^
+31840	1993-04-22 00:00:00	Zmv 	1	SCH	  Zmv VIZ/Sippican MK II Microsonde no rad corr, Omega wind 31313=04905^
+31853	1993-04-28 12:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^
+31896	1993-05-20 00:00:00	Zmv 	1	SCH	  Zmv VIZ/Sippican MK II Microsonde no rad corr, Omega wind 31313=04905^
+32835	1994-09-02 00:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+32836	1994-09-02 12:00:00	Zmv 	1	SCH	  Zmv VIZ/Sippican MK II Microsonde no rad corr, Omega wind 31313=04905^
+32837	1994-09-03 00:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+32838	1994-09-03 12:00:00	ZKT 	1	SCH	"  ZKT VIZ model 1499-510 NWS ART ""B"" 1680/403 MHz J051 transponder {~ 1990} 31313=01103^ NWS stock no. J051 <F=T1680AL,P=Ab,T=TR(ML-405),U=C,N=T403a(WBRT"
+32850	1994-09-08 00:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+34344	1996-09-24 17:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+34388	1996-10-18 00:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+34389	1996-10-18 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+34390	1996-10-19 00:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+34391	1996-10-19 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+34396	1996-10-22 00:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+34971	1997-08-06 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+34991	1997-08-16 00:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+35055	1997-09-17 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+35056	1997-09-17 12:00:00	VCV 	1	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+35083	1997-10-01 00:00:00	Mv4 	1	SCH	  Mv4 Mixed Vaisala RS80 DigiCORA I/II/Marwin VLF (VCA, 31313=46105 with wind starting 19970930 1200) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106)^
+35410	1998-03-16 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+35449	1998-04-06 00:00:00	Mv4 	1	SCH	  Mv4 Mixed Vaisala RS80 DigiCORA I/II/Marwin VLF (VCA, 31313=46105 with wind starting 19970930 1200) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106)^
+35584	1998-06-13 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+35644	1998-07-13 12:00:00	Mv4 	1	SCH	  Mv4 Mixed Vaisala RS80 DigiCORA I/II/Marwin VLF (VCA, 31313=46105 with wind starting 19970930 1200) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106)^
+35776	1998-09-17 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+35843	1998-10-07 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+35844	1998-10-07 06:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+35934	1998-11-16 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+35953	1998-11-26 00:00:00	Mv4 	1	SCH	  Mv4 Mixed Vaisala RS80 DigiCORA I/II/Marwin VLF (VCA, 31313=46105 with wind starting 19970930 1200) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106)^
+35981	1998-12-10 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36169	1999-03-18 00:00:00	Mv4 	1	SCH	  Mv4 Mixed Vaisala RS80 DigiCORA I/II/Marwin VLF (VCA, 31313=46105 with wind starting 19970930 1200) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106)^
+36208	1999-04-07 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36236	1999-04-21 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36237	1999-04-22 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36285	1999-05-17 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36287	1999-05-18 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36302	1999-05-24 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36305	1999-05-24 18:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36330	1999-05-31 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36333	1999-05-31 18:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36356	1999-06-07 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36358	1999-06-08 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36370	1999-06-14 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36372	1999-06-15 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36384	1999-06-21 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36387	1999-06-22 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36392	1999-06-26 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36394	1999-06-27 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36396	1999-06-28 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36398	1999-06-29 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36417	1999-07-05 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36418	1999-07-05 06:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36419	1999-07-05 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36420	1999-07-05 18:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36444	1999-07-11 18:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36446	1999-07-12 06:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36447	1999-07-12 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36448	1999-07-12 18:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36469	1999-07-19 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36471	1999-07-20 00:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+36472	1999-07-20 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36483	1999-07-26 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36485	1999-07-27 00:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+36486	1999-07-27 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36489	1999-07-29 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36490	1999-07-29 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36494	1999-08-01 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36495	1999-08-01 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36496	1999-08-02 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36498	1999-08-03 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36506	1999-08-07 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36507	1999-08-07 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36510	1999-08-09 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36512	1999-08-10 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36524	1999-08-16 00:00:00	Mv4 	1	SCH	  Mv4 Mixed Vaisala RS80 DigiCORA I/II/Marwin VLF (VCA, 31313=46105 with wind starting 19970930 1200) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106)^
+36541	1999-08-25 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36549	1999-08-30 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36551	1999-08-31 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36563	1999-09-06 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36565	1999-09-07 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36577	1999-09-13 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36579	1999-09-14 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36591	1999-09-20 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36593	1999-09-21 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36605	1999-09-27 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36607	1999-09-28 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36608	1999-09-28 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36610	1999-09-29 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36619	1999-10-04 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36621	1999-10-05 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36622	1999-10-05 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36623	1999-10-06 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36633	1999-10-11 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36635	1999-10-12 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36638	1999-10-13 12:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+36639	1999-10-14 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36640	1999-10-14 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36645	1999-10-16 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36646	1999-10-17 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36666	1999-10-27 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36669	1999-10-28 12:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+36670	1999-10-29 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36682	1999-11-04 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36685	1999-11-05 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36690	1999-11-08 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36691	1999-11-08 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36693	1999-11-09 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36699	1999-11-12 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36707	1999-11-16 12:00:00	Mv4 	1	SCH	  Mv4 Mixed Vaisala RS80 DigiCORA I/II/Marwin VLF (VCA, 31313=46105 with wind starting 19970930 1200) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106)^
+36724	1999-11-25 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36817	2000-01-12 00:00:00	VCG 	1	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+36818	2000-01-12 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36912	2000-03-01 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36918	2000-03-04 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+36922	2000-03-06 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+36929	2000-03-09 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37104	2000-06-04 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37120	2000-06-13 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37132	2000-06-19 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37137	2000-06-21 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37141	2000-06-23 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37142	2000-06-24 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37143	2000-06-24 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37144	2000-06-25 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37151	2000-06-28 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37173	2000-07-09 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37178	2000-07-12 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37191	2000-07-18 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37192	2000-07-19 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37194	2000-07-20 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37208	2000-07-27 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37228	2000-08-06 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37232	2000-08-08 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37245	2000-08-14 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37247	2000-08-15 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37255	2000-08-19 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37258	2000-08-21 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37260	2000-08-22 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37262	2000-08-23 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37274	2000-08-29 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37277	2000-08-30 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37278	2000-08-31 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37279	2000-08-31 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37282	2000-09-02 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37284	2000-09-03 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37293	2000-09-07 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37294	2000-09-08 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37333	2000-09-27 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37334	2000-09-28 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37367	2000-10-14 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37372	2000-10-17 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37374	2000-10-18 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37595	2001-02-08 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37597	2001-02-09 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37638	2001-03-02 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37639	2001-03-02 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37658	2001-03-12 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37659	2001-03-12 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37765	2001-05-04 12:00:00	Mv4 	1	SCH	  Mv4 Mixed Vaisala RS80 DigiCORA I/II/Marwin VLF (VCA, 31313=46105 with wind starting 19970930 1200) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106)^
+37786	2001-05-15 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37798	2001-05-21 12:00:00	Mv4 	1	SCH	  Mv4 Mixed Vaisala RS80 DigiCORA I/II/Marwin VLF (VCA, 31313=46105 with wind starting 19970930 1200) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106)^
+37806	2001-05-25 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37808	2001-05-26 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37812	2001-05-28 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37813	2001-05-29 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37814	2001-05-29 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37820	2001-06-01 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37828	2001-06-05 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37853	2001-06-18 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37854	2001-06-18 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37897	2001-07-10 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37899	2001-07-11 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37900	2001-07-12 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37918	2001-07-21 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37919	2001-07-21 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37925	2001-07-24 12:00:00	Mv4 	1	SCH	  Mv4 Mixed Vaisala RS80 DigiCORA I/II/Marwin VLF (VCA, 31313=46105 with wind starting 19970930 1200) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106)^
+37934	2001-07-29 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37939	2001-07-31 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37940	2001-08-01 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37951	2001-08-06 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37952	2001-08-07 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37953	2001-08-07 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37958	2001-08-11 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37965	2001-08-14 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37966	2001-08-15 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37968	2001-08-16 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37970	2001-08-17 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37971	2001-08-17 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37977	2001-08-20 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37982	2001-08-23 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37987	2001-08-25 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37988	2001-08-26 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37989	2001-08-26 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37990	2001-08-27 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37991	2001-08-27 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37992	2001-08-28 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+37996	2001-08-30 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+37999	2001-08-31 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+38001	2001-09-01 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+38006	2001-09-04 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+38012	2001-09-07 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+38014	2001-09-08 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+38015	2001-09-08 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+38017	2001-09-09 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+38545	2002-06-10 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+38561	2002-06-18 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+38562	2002-06-18 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+38571	2002-06-23 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+38572	2002-06-23 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+38582	2002-06-28 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+38597	2002-07-06 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+38605	2002-07-10 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+38613	2002-07-14 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+38633	2002-07-24 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+38634	2002-07-25 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+38653	2002-08-03 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+38656	2002-08-05 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+38721	2002-09-06 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+38722	2002-09-07 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+38770	2002-10-01 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+38804	2002-10-18 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+38806	2002-10-19 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+39211	2003-05-11 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+39212	2003-05-11 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+39214	2003-05-12 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+39368	2003-07-29 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+39419	2003-08-24 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+39422	2003-08-26 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+39426	2003-08-28 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+39427	2003-08-28 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+39438	2003-09-03 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+39471	2003-09-19 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+39484	2003-09-26 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+39486	2003-09-27 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+39858	2004-06-23 00:00:00	Mv4 	1	SCH	  Mv4 Mixed Vaisala RS80 DigiCORA I/II/Marwin VLF (VCA, 31313=46105 with wind starting 19970930 1200) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106)^
+39872	2004-06-30 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+39896	2004-07-12 12:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+39897	2004-07-13 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+39910	2004-07-21 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+39911	2004-07-21 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+39912	2004-07-22 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+39913	2004-07-22 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+39914	2004-07-23 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+39915	2004-07-23 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+39918	2004-07-25 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+39922	2004-07-27 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+39968	2004-08-19 00:00:00	Mv4 	1	SCH	  Mv4 Mixed Vaisala RS80 DigiCORA I/II/Marwin VLF (VCA, 31313=46105 with wind starting 19970930 1200) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106)^
+39996	2004-09-03 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+40001	2004-09-06 00:00:00	Mv4 	1	SCH	  Mv4 Mixed Vaisala RS80 DigiCORA I/II/Marwin VLF (VCA, 31313=46105 with wind starting 19970930 1200) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106)^
+40007	2004-09-09 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+40010	2004-09-10 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+40011	2004-09-11 00:00:00	VCA 	1	SCH	  VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+40014	2004-09-12 12:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+41371	2006-08-12 00:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+41427	2006-09-12 00:00:00	VCL 	1	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+41428	2006-09-12 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+41570	2006-11-28 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+41571	2006-11-28 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+41631	2006-12-31 01:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+41632	2006-12-31 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+41647	2007-01-09 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+41648	2007-01-09 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+41649	2007-01-10 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+41650	2007-01-10 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+41651	2007-01-11 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+41652	2007-01-11 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+41653	2007-01-12 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+41654	2007-01-12 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42019	2007-07-17 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42020	2007-07-17 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42537	2008-04-05 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42538	2008-04-05 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42539	2008-04-06 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42540	2008-04-06 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42541	2008-04-07 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42542	2008-04-07 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42543	2008-04-07 23:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42544	2008-04-08 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42545	2008-04-09 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42546	2008-04-09 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42547	2008-04-10 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42548	2008-04-10 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42550	2008-04-12 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42551	2008-04-12 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42552	2008-04-13 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42553	2008-04-13 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42554	2008-04-14 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42555	2008-04-14 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42556	2008-04-15 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42557	2008-04-15 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42562	2008-04-18 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42563	2008-04-18 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42564	2008-04-19 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42565	2008-04-19 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42566	2008-04-20 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42567	2008-04-20 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42568	2008-04-21 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42569	2008-04-21 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42570	2008-04-22 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42571	2008-04-22 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42697	2008-06-28 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42698	2008-06-28 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42699	2008-06-29 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42700	2008-06-29 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42701	2008-06-30 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42702	2008-06-30 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42703	2008-07-01 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42704	2008-07-01 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42705	2008-07-02 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42706	2008-07-02 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42707	2008-07-03 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42708	2008-07-03 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42709	2008-07-04 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42710	2008-07-04 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42713	2008-07-06 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42714	2008-07-06 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42715	2008-07-07 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42716	2008-07-07 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42717	2008-07-08 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42718	2008-07-08 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42719	2008-07-09 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42720	2008-07-09 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42721	2008-07-10 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42722	2008-07-10 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42723	2008-07-11 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42724	2008-07-11 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42725	2008-07-12 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42726	2008-07-12 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42727	2008-07-13 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+42728	2008-07-13 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+43141	2009-02-07 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+43142	2009-02-07 12:00:00	VN8 	1	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+0	2013-01-01 00:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+1947	2015-09-24 17:15:58	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+1948	2015-09-25 00:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+2046	2015-11-12 22:19:13	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+2047	2015-11-13 12:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+2438	2016-06-01 17:28:05	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+2439	2016-06-02 00:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+2702	2016-10-13 17:37:36	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+2703	2016-10-14 00:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+2787	2016-11-24 19:31:09	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+2788	2016-11-25 00:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+2803	2016-12-05 19:23:31	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+2805	2016-12-07 00:00:00	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+3249	2017-07-26 17:15:58	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+3250	2017-07-26 23:15:04	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+4577	2019-06-12 17:16:19	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
+4578	2019-06-12 23:15:13	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
+5607	2021-10-29 16:59:00	117	2	WMO	Graw DFM-09 (Germany)                            
+2835	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CANADA SANGAMO UNSPECIFIED 
+2835	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CANADA SANGAMO UNSPECIFIED 
+2835	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , CANADA SANGAMO UNSPECIFIED 
+2839	1992-09-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , I1 , CANADA VALCOM UNSPECIFIED , to , VIZ B 1492-520 NWS 1680 MHZ 
+2841	1994-09-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , VIZ B 1492-520 NWS 1680 MHZ , to , VAISALA RS80 UNSPECIFIED 

@@ -1,0 +1,29 @@
+	sensor_id	source	comment	date_time	value
+529	129	WMO	MARL-A or Vektor-M - AK2-02 (Russian Federation)                        		
+5221	160	WMO	MARL-A or Vektor-M – I-2012 (Russian Federation)                        		
+1445	162	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        		
+2078	58	WMO	AVK-BAR (Russian Federation)                		
+1444	69	WMO	MARL-A or Vektor-M-RZM-2 (Russian Federation)              		
+0	88	WMO	MARL-A or Vektor-M-MRZ (Russian Federation)              		
+1351	89	WMO	MARL-A or Vektor-M-BAR (Russian Federation)              		
+1417	90	WMO	Radiosonde not specified or unknown             		
+30996	MR2 	SCH	  MR2 Mixed Russia A-22 (RA4) and MARS-2 (RR2)^ Mixed RA4 (A22, DP to or near top) and RR2 (MARS, DP to T around -40)		
+31082	MRa 	SCH	  MRa Mixed Russia A-22 no RH (RA1) and A-22 (RA4)^ Mixed RA1 (A22, no DP except at sfc) and RA4 ( A-22, DP to or near top)		
+31534	MRb 	SCH	  MRb Mixed Russia A-22 (RA4), MARS-1 (RR1), and MARS-2-1 (RRA)^ Mixed RA4 (A22, DP to or near top), RR1 (MARS-1, no DP except at sfc), and RR2 (MARS, DP to T around -40)		
+33190	MRr 	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^		
+29851	RA1 	SCH	  RA1 USSR A-22 temperature only radiosonde {1957}^		
+0	RA4 	SCH	  RA4 USSR A-22-IV transponder radiosonde {1961}^ (W2=12, T=074) <F=V403ME,P=2A,T=BC,U=G,W=T216m>		
+40667	RHM 	SCH	  RHM Russia MRZ-3AK1 (previously MRZ* or BAR) 1680 MHz radiosonde, MARL-A or Vektor-M {2004} 31313=58903^ (W3=89) <F=T1780PL,P=0,T=TR(MMT-1),		
+31754	RRA 	SCH	  RRA USSR MARS-2-1 radiosonde {1983} 31313=72803^ (W3=28, T=224, 31313=72803) used with Meteor and Meteorit-1 radar <F=T1780PL,P=0,T=TR,U=G,W=Ta>		
+38505	RRM 	SCH	  RRM Russia OAO Meteo MARS-2-1 modernized with MRZ-3A case and sensor arrangement {~2003}^ <F=T1780PL,P=0,T=TR,U=G,W=Ta>		
+40256	RZW 	SCH	  RZW Russia MRZ-3A radiosonde with MARL-A or Vektor-M phased-array radiotheodolite {2004} 31313=58803^ (W3=88) <F=T1680PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+24363	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+13069	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 	1960-01-01	3.0
+13070	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR RZ-049 UNSPECIFIED , to , USSR A-22 UNSPECIFIED 	1963-01-01	3.0
+13071	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 	1976-01-01	3.0
+13072	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+13073	IGRA2	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , RUSSIA/USSR MARS UNSPECIFIED 	1988-01-01	3.0
+13072	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 	1986-01-01	3.0
+13077	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS OR MRZ UNSPECIFIED 	1992-12-01	3.0
+13079	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS-2-1 	1996-05-01	3.0
+13079	IGRA2	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS-2-1 	1996-05-01	3.0

@@ -1,0 +1,42 @@
+	date_time	sensor_id	value	source	comment
+0	1950-01-03 13:03:00	RS6 	1	SCH	  RS6 USSR RZ-049 radiosonde, radiation and lag corrections {1957}^ (I=S1, T=274,337) <F=V403MB,P=2A,T=B,U=H,W=O or Dm>
+16403	1976-01-20 12:00:00	RA4 	1	SCH	  RA4 USSR A-22-IV transponder radiosonde {1961}^ (W2=12, T=074) <F=V403ME,P=2A,T=BC,U=G,W=T216m>
+20562	1979-09-23 12:00:00	WRA 	1	SCH	  WRA USSR A22 wind only {~ 1957}^ winds only <F=V403ME,P=2A,T=0,U=0,W=T216m>
+20690	1979-11-07 12:00:00	RA4 	1	SCH	  RA4 USSR A-22-IV transponder radiosonde {1961}^ (W2=12, T=074) <F=V403ME,P=2A,T=BC,U=G,W=T216m>
+30568	1989-08-13 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+33859	1993-10-11 12:00:00	WRZ 	1	SCH	  WRZ USSR/Russia MRZ-2A windsonde {1986} (WMO instr=27)^ (W3=27, T=232) <F=T1780FL,P=0,W=Ta>
+33939	1993-12-17 00:00:00	MRz 	1	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^
+34372	1994-07-26 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+35035	1995-12-26 00:00:00	RZ1 	1	SCH	  RZ1 Russia/USSR MRZ 1780 MHz temperature only radiosonde {1986} WMO instr=27^
+35090	1996-02-21 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+35091	1996-07-02 00:00:00	RZ1 	1	SCH	  RZ1 Russia/USSR MRZ 1780 MHz temperature only radiosonde {1986} WMO instr=27^
+35100	1996-07-12 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+35128	1996-08-10 00:00:00	RZ1 	1	SCH	  RZ1 Russia/USSR MRZ 1780 MHz temperature only radiosonde {1986} WMO instr=27^
+35146	1996-09-08 00:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+35173	1997-01-10 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+35174	1997-03-31 12:00:00	RZ3 	1	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>
+35229	1997-08-09 12:00:00	MRz 	1	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^
+35479	1998-11-18 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+35480	1998-12-28 00:00:00	MRz 	1	SCH	  MRz Mixed Russia MRZ no RH (RZ1, surface DP only) and MRZ-3A (RZ3, 31313=52703, DP to or near top)^
+36362	2001-11-01 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+36363	2002-02-03 00:00:00	Mrz 	1	SCH	  Mrz Mixed Ukraine MRZ no RH above surface and MRZ-3A (Run, 31313=02703)^
+36486	2002-10-21 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+36487	2002-11-27 00:00:00	Mrz 	1	SCH	  Mrz Mixed Ukraine MRZ no RH above surface and MRZ-3A (Run, 31313=02703)^
+36751	2003-09-15 00:00:00	Run 	1	SCH	  Run Ukraine MRZ-3A 1780 MHz radiosonde no radiation corr {~2001} 31313=02703 (moist)^ (W3=27)
+38544	2009-12-28 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+0	2013-01-02 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+645	2017-04-08 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+647	2017-04-12 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+648	2017-04-14 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+687	2017-07-06 00:00:00	116	2	WMO	PAZA-22/AVK-1 (Ukraine)                             
+688	2017-07-08 00:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+1291	2019-06-18 12:00:00	1	2	WMO	NA
+1292	2019-06-19 12:00:00	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             
+15413	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 
+15414	1961-06-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RZ-049 UNSPECIFIED , to , USSR A-22 UNSPECIFIED 
+15415	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 
+15416	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+15417	1987-01-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , RUSSIA/USSR MRZ UNSPECIFIED 
+15416	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+15421	1996-07-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 
+15421	1996-07-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MRZ-3A 

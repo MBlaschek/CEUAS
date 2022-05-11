@@ -1,0 +1,17 @@
+	sensor_id	source	comment	date_time	value
+28241	MZR 	SCH	  MZR Mixed VIZ AN/AMT-4D/F (Z4a) and USSR A-22-IV (RA4) or possibly A-22-IV.D (RAD)^ Station 48900 from 19790901 0000 to 19780315 0000, VIZ near 0000Z, A-22 at other times		
+28740	RA4 	SCH	  RA4 USSR A-22-IV transponder radiosonde {1961}^ (W2=12, T=074) <F=V403ME,P=2A,T=BC,U=G,W=T216m>		
+34089	RZ3 	SCH	  RZ3 Russia/USSR MRZ-3A 1780 MHz radiosonde {1986} 31313=52703 (moist)^ (W3=27, T=233) <F=T1780PL,P=0,T=TR(MMT-1),U=G,W=Ta>		
+35961	VCG 	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
+35951	VCN 	SCH	  VCN Vaisala RS80 DigiCORA I, II, or Marwin auto corr, no wind 31313=46100^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=none>		
+34831	VCV 	SCH	  VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>		
+33481	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
+0	Z472	SCH	  Z472 exact type insufficiently documented		
+28750	Z4a 	SCH	  Z4a VIZ US Army AN/AMT-4D/F radiosonde {~1973}^ <F=?1680PB>		
+26683	Z4a2	SCH	  Z4a2 exact type insufficiently documented		
+17992	IGRA2	IGRA2	USING SONDE MODEL , I1 , FRANCE METOX CT UNSPECIFIED 	1960-01-01	3.0
+17993	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , USSR A-22-IV.D 403 MHZ TRANSPONDER 	1977-09-01	3.0
+17994	IGRA2	IGRA2	CHANGE SONDE MODEL , VIZ UNSPECIFIED , to , USSR A-22-IV UNSPECIFIED 	1977-09-01	3.0
+17996	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR A-22-IV UNSPECIFIED 	1982-01-01	3.0
+18001	IGRA2	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 	1992-12-01	3.0
+18003	IGRA2	IGRA2	USING SONDE MODEL , VAISALA RS80 UNSPECIFIED 	1994-07-01	3.0

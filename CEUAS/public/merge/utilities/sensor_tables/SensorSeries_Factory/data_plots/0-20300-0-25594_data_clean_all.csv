@@ -1,0 +1,17 @@
+	date_time	sensor_id	value	source	comment
+0	1946-02-09 23:05:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+18802	1977-10-05 00:00:00	RA4 	1	SCH	  RA4 USSR A-22-IV transponder radiosonde {1961}^ (W2=12, T=074) <F=V403ME,P=2A,T=BC,U=G,W=T216m>
+28004	1988-09-01 00:00:00	MR2 	1	SCH	  MR2 Mixed Russia A-22 (RA4) and MARS-2 (RR2)^ Mixed RA4 (A22, DP to or near top) and RR2 (MARS, DP to T around -40)
+28505	1989-03-01 12:00:00	RA4 	1	SCH	  RA4 USSR A-22-IV transponder radiosonde {1961}^ (W2=12, T=074) <F=V403ME,P=2A,T=BC,U=G,W=T216m>
+28546	1989-04-01 00:00:00	MR2 	1	SCH	  MR2 Mixed Russia A-22 (RA4) and MARS-2 (RR2)^ Mixed RA4 (A22, DP to or near top) and RR2 (MARS, DP to T around -40)
+28838	1989-07-30 18:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+28839	1989-09-01 00:00:00	MR2 	1	SCH	  MR2 Mixed Russia A-22 (RA4) and MARS-2 (RR2)^ Mixed RA4 (A22, DP to or near top) and RR2 (MARS, DP to T around -40)
+29044	1989-11-27 00:00:00	MRr 	1	SCH	  MRr Mixed Russia MARS no RH (RR1, no RH so sfc DP only) and MARS-2 (RR2, either RRA or RRB, DP to T around -40)^
+30142	1991-04-29 00:00:00	RR2 	1	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>
+30202	1991-05-31 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
+11909	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR RZ-049 UNSPECIFIED 
+11910	1962-08-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR RZ-049 UNSPECIFIED , to , USSR A-22 UNSPECIFIED 
+11911	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USSR A-22 UNSPECIFIED 
+11912	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
+11913	1988-09-01 00:00:00	IGRA2	3	IGRA2	CHANGE SONDE MODEL , USSR A-22 UNSPECIFIED , to , RUSSIA/USSR MARS UNSPECIFIED 
+11912	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 

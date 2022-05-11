@@ -1,0 +1,8 @@
+	date_time	sensor_id	value	source	comment
+0	1966-11-18 00:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+3435	1974-11-03 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+3656	1975-03-05 12:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+4810	1976-11-05 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+4834	1976-11-22 00:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"
+4848	1976-12-01 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
+5006	1977-03-14 12:00:00	H2G 	1	SCH	"  H2G China GZZ-2, GZZ-59, GZZ (P-59), SMA-GZZ, 59-701 or ""Shang/M, P-band radar"" (mechanical) sonde {~1961} WMO instr=32^ (T=045, W2=19, W3=32)"

@@ -1,0 +1,6 @@
+	sensor_id	source	comment	date_time	value
+0	NUU 	SCH	  NUU USWB Friez PTU 1934 aircraft meteorograph {1934}^ <F=C,P=7A(bellows),T=B,U=H>		
+3067	UBA 	SCH	  UBA USWB Friez Diamond Hinman initial operational radiosonde, hair hygrometer, temperature corr {19380803}^ <F=V65AB,P=A,T=E(hydrochloric acid, ethyl		
+3015	UBa 	SCH	  UBa USWB Friez Diamond Hinman initial operational radiosonde, hair hygrometer, too cold {1938}^ <F=V65AB,P=A,T=E(hydrochloric acid, ethyl alcohol, and		
+2932	W1P 	SCH	  W1P Wind only, 1-theodolite tracking of pilot balloon (pibal)^		
+4272	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
