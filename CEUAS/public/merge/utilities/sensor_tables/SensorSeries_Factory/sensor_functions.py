@@ -96,8 +96,14 @@ class IgraMetaData():
         stat = df.loc[df.WMOID == wmoid]
 
         # Extracting and converting dates 
+        
+        #print(stat)
+        #months = np.unique(stat.MONTH)
+        #print('MONTHS :::' , months)
+        
         month = [i if len(i) == 2 else '0'+i for i in stat.MONTH]
         month = [m if int(m) <=12 else '01' for m in month]
+        
         stat["MONTH"] = month
         stat["DATE"] = stat["YEAR"].astype(str) + stat["MONTH"].astype(str)
         stat["DATE"] = pd.to_datetime(stat['DATE'] , format='%Y%m' )
@@ -260,12 +266,17 @@ class Analyze():
         data_wmo['source'] = 'WMO'
         data_sch['source'] = 'SCH'
     
+        # tidying some values 
+        data_wmo['comment'] = [ str( self.Sensor.get_sensor_id_comments(str(i).replace(' ','').replace('.0',''))) for i in data_wmo.sensor_id]
+        data_sch['comment'] = [ str( self.Sensor.get_sensor_id_comments(str(i).replace(' ','').replace('.0',''))) for i in data_sch.sensor_id]
+            
+        data_wmo['sensor_id'] = data_wmo['sensor_id'].astype(str)
         self.data_sch = data_sch
         self.data_wmo = data_wmo 
         
         
     def get_indices(self, data):
-        """         # find the indices where the sensor was replaced 
+        """ # find the indices where the sensor was replaced 
         i.e. spots the change in the sensor ina  time series """
 
         data = data.reset_index()
@@ -291,58 +302,48 @@ class Analyze():
     def clean_df(self, df):
         """ Clean the WMO dataframe from all nans """
         
-    
         # cleaning WMO data from nans 
-        data_wmo_clean = df.loc[ (self.data_wmo.sensor_id != 'nan') & (self.data_wmo.sensor_id != '-922')].dropna( subset=['sensor_id'])
+        data_wmo_clean = df.loc[ (self.data_wmo.sensor_id != 'nan') 
+                               & (self.data_wmo.sensor_id != '-922')
+                               & (self.data_wmo.sensor_id != -922)].dropna( subset=['sensor_id'] )                                                                          
+                                                                                                                 
         data_wmo_clean.reset_index()
 
-        #print(data_wmo_clean[data_wmo_clean.date_time >=  pd.Timestamp('1994-11-02') ][:20])
-
-        indices_wmo_clean = self.get_indices(data_wmo_clean)
-        #print(indices_wmo_clean)
-
-        data_wmo_clean = data_wmo_clean.iloc[indices_wmo_clean]
-
-        return data_wmo_clean
+        return data_wmo_clean 
     
     
     
     def analyze(self):
-        """ Extract ifnormation from the station file dataframe """
+        """ Extract information from the station file dataframe """
         
         self.load_data()
         
-        data_wmo = self.data_wmo
-        data_sch = self.data_sch
+        # data from Schroeder and WMO 
+        wmo = self.data_wmo
+        sch = self.data_sch
+
         
-        data_wmo_clean = self.clean_df(data_wmo)
-            
-            
-        # getting only variation in the sensor_id indices 
-        indices_sch = self.get_indices(data_sch)
-        indices_wmo = self.get_indices(data_wmo)
+        # cleaning the df from nans and nans values
+        # need to be separated for WMO bar plot
+        data_wmo_clean = self.clean_df(wmo)
+        self.clean_data_wmo = data_wmo_clean
         indices_wmo_clean = self.get_indices(data_wmo_clean)
+        
+        #  self.get_indices simplifies the df by taking into accounts only updates in the sensors
+        self.data_wmo_clean_simplified = data_wmo_clean.iloc [ indices_wmo_clean ] 
 
-        # all data, no cleaning 
-        data_df = pd.concat( [data_sch.iloc[ list(indices_sch)], data_wmo. iloc[ list(indices_wmo)] ] ) 
+        # simmplified indices
+        indices_sch = self.get_indices(sch)
+        indices_wmo = self.get_indices(wmo)
+        
+        
+        # data excluding nans, simplified sensors updates
+        data_clean_simplified = pd.concat( [sch.iloc[ indices_sch], 
+                                            data_wmo_clean. iloc[ indices_wmo_clean] ] ) 
                     
-        comments = [ str( self.Sensor.get_sensor_id_comments(str(i).replace(' ','').replace('.0',''))) for i in data_df.sensor_id]
 
-        data_df['comment'] = comments
-        sid_clean = [str(i).replace('.0','')  for i in data_df.sensor_id]
-        data_df['sensor_id'] = sid_clean    
-
+        self.data_all_cleaned_simplified = data_clean_simplified
         
-        # only cleaned WMO data 
-        data_df_clean = pd.concat( [data_sch.iloc[ list(indices_sch)], data_wmo_clean. iloc[ list(indices_wmo_clean)] ] ) 
-        comments = [ str( self.Sensor.get_sensor_id_comments(str(i).replace(' ','').replace('.0',''))) for i in data_df_clean.sensor_id]
-
-        data_df_clean['comment'] = comments
-        sid_clean = [str(i).replace('.0','')  for i in data_df_clean.sensor_id]
-        data_df_clean['sensor_id'] = sid_clean   
-        
-        return data_sch, data_wmo, data_df, data_wmo_clean, data_df_clean 
-
 
     def get_all_sensors(self, df):
         """ Extract a small table with unqiue sensors and description """
@@ -357,126 +358,57 @@ class Analyze():
         return df_sensor
 
 
-class Plot():
-    """ Main class to hold plotting utilities """
-    
-    def __init__(self,station, save=False):
-        if not os.path.isdir('plots'):
-            os.mkdir('plots')
-            
-        self.station=station
-        self.save = save
-        
-    def time_series(self, data_df, label = ''):
-        """ Creates a time series using also SNHT """
-        #filter date
-        #data_df = data_df.loc[data_df.date_time <= pd.Timestamp('1995-01-01')]
+    def simplify_day_night(self, df):
+        df.reset_index()
+        hours = pd.to_datetime( df.date_time).dt.hour
+        moments = []
+        for h in hours:
+            h = int(h)
+            if h <= 3 or h > 21:
+                m = 'night'
+            elif h > 3 and h <= 9:
+                m = 'morning'
+            elif h > 9 and h <=15:
+                m = 'day'
+            elif h > 15 and h <=21:
+                m = 'evening'
+                #print("EVENINGGGGG" , h )
+            moments.append(m)
 
-        station = self.station.split('-')[-1] if '-' in self.station else self.station 
-        
-        if not os.path.isdir('plots'):
-            os.mkdir('plots')
-        if not os.path.isdir('plots/html'):
-            os.mkdir('plots/html')
-        if not os.path.isdir('plots/png'):
-            os.mkdir('plots/png')    
-            
-        try:
-            with open('/mnt/users/staff/leo/python/CEUAS/CEUAS/public/adjust/feedbackmerged0' + station + '_breakanalysis.json') as f:
-                d=json.load(f)
-                time = pd.to_datetime(d['days_since_1900'] , unit='d', origin=pd.Timestamp('1900-01-01') )
-        except:
-            return 
-        snht = pd.DataFrame( {'time': time , 'snht':d['tsasum'] } )
+        df['moment'] = moments
 
-        symbols = {"IGRA2":'star', "WMO":'circle', "SCH":'square'}
+        window = 10
+        #dfr=df[window+1:]
 
-        # Create figure with secondary y-axis
-        subfig = make_subplots(specs=[[{"secondary_y": True}]])
-        fig1 = px.line(snht, x="time", y="snht")
-        fig2 = px.scatter(data_df, x="date_time", y="value", color="sensor_id",
-                        hover_name="sensor_id", hover_data=["comment"],
-                        symbol="source",
-                        symbol_map= symbols )
+        # fill vector with indices to keep
+        indices_to_keep = list(range(window))
 
-        fig2.update_traces(yaxis="y2")
+        for index in range(window, len(df)) :
 
-        subfig.add_traces(fig1.data + fig2.data)
-        subfig.layout.xaxis.title=""
-        subfig.layout.yaxis.title="SNHT"
-        subfig.layout.yaxis2.title="Metadata Source"
-        
+            # idea: take "windows" previous records, extract only same moment of the day,
+            # get list of unique sensor_ids
+            # if list == one single id equal to the considered one, then do not save index
 
-        subfig.for_each_trace(lambda t: t.update(line=dict(color=t.marker.color)))
+            dfr =  df[index-window:index]
+            m = df.iloc[index].moment 
 
-        subfig.update_layout(title='Sensors Time Series - ' + self.station + ' ' + label)
-        subfig.update_layout(width= 2000, height = 800)
+            sensor =  df.iloc[index].sensor_id
 
+            dfr = dfr[ dfr.moment == m ]
 
-        subfig.update_traces(marker=dict(size=14,
-                                      line=dict(width=2,
-                                                color='DarkSlateGrey')),
-                          selector=dict(mode='markers'))
+            dfr_sensor = list( dfr[dfr.moment== m].sensor_id.values) 
+            if len(dfr_sensor) ==0:
+                indices_to_keep.append(index)
 
+            else:
 
+                if sensor == dfr_sensor[-1]:
+                    continue
 
-        igra2 = data_df.loc[data_df.source == 'IGRA2']
-        for d in igra2.date_time:
-            subfig.add_vline(x=d, line_width=3, line_dash="dash", line_color="green")
+                else:
+                    indices_to_keep.append(index)
 
-
-
-        subfig.update_layout(hovermode="x unified")
-
-        subfig.update_layout(
-        yaxis = dict(
-        tickfont = dict(size=16)),
-        font=dict(
-            size=16,
-            color="black"
-            )
-        )
-
-        subfig.update_yaxes( ticktext= ['Schroeder', 'WMO', 'IGRA2'],
-                          tickvals= [1,2,3], secondary_y=True )
-
-        
-        
-        if self.save:
-            plotly.offline.plot(subfig, filename=  'plots/html/' + self.station + "_time_series.html" )
-            pio.write_image(subfig, "plots/png/" + self.station + "_timeSeries_ku.png")
-            
-
-        return subfig
-
-    def sensor_table(self, data):
-        
-        if len(data)==0:
-            return False
-        
-        fig = go.Figure(data=[go.Table(
-        header=dict(values=list(['Sensor','Source', 'Comment']),
-                    fill_color='gold',
-                    align='left',
-                    font_size=20),
-        columnwidth = [40,40,300],
-        cells=dict(values=[data.sensor_id, data.source, data.comment],
-                   fill_color='aliceblue',
-                   align='left',
-                   font_size=16,
-                   height=30
-                  )),
-        ])
-
-        fig.update_layout(width=1900, height= 65*len(data))
-
-        if self.save:
-            plotly.offline.plot(fig, filename=  'plots/html/' + self.station + "_sensor_table.html" )
-            pio.write_image(fig, "plots/png/" + self.station + "_sensor_table.png")
-
-        return fig
-
-
+        return df.iloc[indices_to_keep] 
 
 # Loading IGRA2 metadata 
 ig = IgraMetaData()
@@ -488,7 +420,7 @@ sensor = Sensor()
 # Merged file source (if data not already available)
 merged = '/scratch/das/federico/MERGED_APRIL2022'
 
-def get_data(station):
+def get_data(station, force_create=False):
     """ Extract the data for plotting either from the database or from the reduced csv files 
     stored in data_plots directory """
     
@@ -497,8 +429,15 @@ def get_data(station):
     if not os.path.isdir(out_dir_data_plots):
         os.mkdir(out_dir_data_plots)
         
+    analyze = Analyze(sensor,merged,station)
+            
     if not (os.path.isfile(out_dir_data_plots + '/' + station + '_data_clean_all.csv') 
-            and os.path.isfile(out_dir_data_plots + '/' + station + '_all_sensor_station.csv') ):
+            and os.path.isfile(out_dir_data_plots + '/' + station + '_all_sensor_station.csv')
+            and os.path.isfile(out_dir_data_plots + '/' + station + '_clean_data_wmo.csv' )
+            ) or force_create:
+
+        if force_create:
+            logging.debug(" --- FORCING CREATION --- data file: ")
 
         logging.debug(" --- RETRIEVING --- data file: ")
 
@@ -506,28 +445,48 @@ def get_data(station):
 
         # Analyze data
         logging.debug(" --- ANALYZING --- data file: ")
-        analyze = Analyze(sensor,merged,station)
-        data_sch, data_wmo, data_df, data_wmo_clean, data_df_clean = analyze.analyze()
 
-        data_clean_all = pd.concat([data_df_clean, stat_igra2_sonde])
+        
+        analyze.analyze()
+        
+        data_all_cleaned_simplified = analyze.data_all_cleaned_simplified
+        clean_data_wmo = analyze.clean_data_wmo
+        
+        # data_sch, data_wmo, data_df, data_wmo_clean, data_df_clean = analyze.analyze()
+        
+        # data_sch, data_wmo, data_df, data_wmo_clean_red, data_df_clean, data_wmo_clean = analyze.analyze()
+        
+        # concatenating WMO, Sch and IGRA2
+        data_all_cleaned_simplified = pd.concat([data_all_cleaned_simplified, stat_igra2_sonde])
         
         # extract unique sensor id table for the station
-        all_sensor_station = analyze.get_all_sensors(data_clean_all)
+        all_sensor_station = analyze.get_all_sensors(data_all_cleaned_simplified)
 
-        all_sensor_station.to_csv(out_dir_data_plots + '/' + station + '_all_sensor_station.csv' , sep='\t')
-        data_clean_all.to_csv(out_dir_data_plots + '/' + station + '_data_clean_all.csv' , sep='\t')
-        
-        
+        all_sensor_station.to_csv(out_dir_data_plots          + '/' + station + '_all_sensor_station.csv' , sep='\t')
+        data_all_cleaned_simplified.to_csv(out_dir_data_plots + '/' + station + '_data_clean_all.csv' , sep='\t')
+        clean_data_wmo.to_csv(out_dir_data_plots              + '/' + station + '_clean_data_wmo.csv' , sep='\t')
+
     else:
         logging.debug(" --- READING --- data file: ")
-        data_clean_all = pd.read_csv(out_dir_data_plots + '/' + station + '_data_clean_all.csv', sep='\t')
+        data_all_cleaned_simplified = pd.read_csv(out_dir_data_plots     + '/' + station + '_data_clean_all.csv', sep='\t')
         all_sensor_station = pd.read_csv(out_dir_data_plots + '/' + station + '_all_sensor_station.csv', sep='\t')
+        clean_data_wmo = pd.read_csv(out_dir_data_plots     + '/' + station + '_clean_data_wmo.csv', sep='\t')
             
     
     #print(data_df_clean_all.head(10) , all_sensor_station_df.head(10) )
-    return [data_clean_all , all_sensor_station ]
+    all_sensor_station = all_sensor_station[ ['sensor_id', 'source', 'comment'] ] 
+    all_sensor_station['comment'] = [str(s).replace('\n','').replace('\t','').replace('^', ' ').replace('>',']').replace('<','[')
+                                     for s in all_sensor_station.comment]
+    
 
+    data_all_cleaned_simplified = data_all_cleaned_simplified [ [c for c in data_all_cleaned_simplified.columns if "Unnamed" not in c ] ]
+    clean_data_wmo = clean_data_wmo [ [c for c in clean_data_wmo.columns if "Unnamed" not in c ] ]
+    
+    data_all_cleaned_simplified = analyze.simplify_day_night(data_all_cleaned_simplified)
+    
+    return [data_all_cleaned_simplified , all_sensor_station, clean_data_wmo ]
 
+        
 
 
 

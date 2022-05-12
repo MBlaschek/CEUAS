@@ -90,6 +90,7 @@ class Plot():
                           symbol="source",
                           symbol_map= symbols )
 
+        fig2.update_yaxes(range=[1, 3])
         fig2.update_traces(yaxis="y2")
         
         subfig.update_layout(legend = dict(font = dict(size = self.fontsize-2, 
@@ -146,6 +147,8 @@ class Plot():
 
         return subfig
 
+
+    
     def sensor_table(self, data):
         
         if len(data)==0:
@@ -156,7 +159,7 @@ class Plot():
                     fill_color='gold',
                     align='left',
                     font_size=self.fontsize+1),
-        columnwidth = [1,1,8],
+        columnwidth = [1,1,10],
             
         cells=dict(values=[data.sensor_id, data.source, data.comment],
                    fill_color='aliceblue',
@@ -164,9 +167,9 @@ class Plot():
                    font_size=self.fontsize,
                    line_color='darkslategray',
                    fill=dict(color=['paleturquoise', 'white']),
-                   height=50)
-            
-                  
+                   height = 20
+                   )
+
         ) ] )
 
         #fig.update_layout(height= 65*len(data))
@@ -181,11 +184,9 @@ class Plot():
     def wmo_bar_plot(self, data):
         
         data = data.loc[ data['source'] == 'WMO' ]
-        nans_ind = np.where( (data.sensor_id != 'nan') & (data.sensor_id != '-922') ) [0]
-        data_df_clean = data.iloc[nans_ind]
+        data['sensor_id'] = data.sensor_id.astype(str)
 
-
-        df = data_df_clean.groupby(["sensor_id"]).count().sort_values(by=['value'])
+        df = data.groupby(["sensor_id"]).count().sort_values(by=['value'])
         fig = px.bar(df, y=df.index, x='value', 
                      title = 'WMO codes counts',
                      orientation='h')
