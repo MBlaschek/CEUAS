@@ -1,0 +1,20 @@
+	sensor_id	source	comment	Unnamed: 0	date_time	value
+9269	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           			
+6159	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           			
+0	80	WMO	Vaisala RS92/Digicora III (Finland)               			
+14552	DDD 	SCH	  DDD Germany Duckert PT radiosonde {1930}^ <F=V5-10FB,P=D,T=BC>			
+20110	DF1 	SCH	  DF1 East Germany Freiberg radiosonde {1948}^ <F=V26.75HB,P=A,T=B,U=H>			
+23414	DF2 	SCH	  DF2 East Germany Freiberg double radiation shield radiosonde {1951}^ (I=F, W1=04, W2=10 ends 198607 but may have been reassigned			
+23102	MDF 	SCH	  MDF Mixed Germany Freiberg (DF1) and Freiberg double radiation shield (DF2)^ Station 10393 in 1951 and 1952 and possibly other East German stations			
+0	N?? 	SCH	  N?? exact type insufficiently documented			
+42511	RK2 	SCH	  RK2 USSR RKZ-2 radiosonde {1967}^ (W2=20, T=304) <F=V1780PB,P=B,T=TR,U=G>			
+72183	RR2 	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>			
+72764	RRn 	SCH	  RRn USSR MARS-2-2 radiosonde no correction 31313=02903^			
+90762	VDG 	SCH	  VDG Vaisala RS80 PC Cora auto corr, GPS wind 31313=46208^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>			
+74117	VDT 	SCH	  VDT Vaisala RS80 PC Cora auto corr, ranging wind 31313=46203^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>			
+72782	VDV 	SCH	  VDV Vaisala RS80 PC Cora auto corr, Omega wind 31313=46205^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>			
+90626	VNg 	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>			
+48731	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected			
+5359	IGRA2	IGRA2	USING SONDE MODEL , I1 , E GERMANY FREIBERG UNSPECIFIED 		1960-01-01	3.0
+5360	IGRA2	IGRA2	CHANGE SONDE MODEL , E GERMANY FREIBERG UNSPECIFIED , to , USSR RKZ-2 1780 MHZ 		1971-02-01	3.0
+5363	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 		1993-01-01	3.0
