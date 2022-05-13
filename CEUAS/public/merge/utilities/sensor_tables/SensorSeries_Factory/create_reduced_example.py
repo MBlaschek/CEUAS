@@ -14,7 +14,9 @@ for f in ['plot_functions_sensor.py',
           'sensor_functions.py',
           'sensor_metadata_DASHBOARD.ipynb',
           'sensor_metadata_DASHBOARD.py',
-          'test_sensor_notebook.ipynb' ]:
+          'test_sensor_notebook.ipynb',
+          'sensor_configuration_all.csv',
+          'igra2-metadata.txt']:
 
     os.system('cp ' + f + '  ' + ex )
 
