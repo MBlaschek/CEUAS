@@ -10,15 +10,13 @@ if not os.path.isdir(ex + '/data_plots'):
     os.mkdir(ex + '/data_plots')
 
     
-for f in ['plot_functions_sensor.py',
-          'sensor_functions.py',
-          'sensor_metadata_DASHBOARD.ipynb',
+for f in ['sensor_metadata_DASHBOARD.ipynb',
           'sensor_metadata_DASHBOARD.py',
-          'test_sensor_notebook.ipynb',
           'sensor_configuration_all.csv',
-          'igra2-metadata.txt']:
+          'igra2-metadata.txt',
+          'modules']:
 
-    os.system('cp ' + f + '  ' + ex )
+    os.system('cp -r ' + f + '  ' + ex )
 
 
 """ copying the station data """

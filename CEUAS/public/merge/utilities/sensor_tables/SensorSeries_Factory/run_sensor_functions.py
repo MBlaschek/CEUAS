@@ -1,6 +1,8 @@
+import sys
+sys.path.append('modules')
+
 from sensor_functions import *
 from plot_functions_sensor import *
-
 
 
 
@@ -8,7 +10,7 @@ def run_wrapper(save_fig, station):
     """ Wrapper to full run on a station file """
   
     # getting the data
-    data_clean_all, all_sensor_station = get_data(station)
+    data_clean_all, all_sensor_station, data_all_wmo = get_data(station, force_create=False)
  
     plot = Plot(station.split('_')[-1], save=save_fig)
  
@@ -25,16 +27,13 @@ def run_wrapper(save_fig, station):
 """ Running """
 
 
-
-
-    
 stations = [s.split('_')[0] for s in os.listdir(merged) if 'before' not in s]
 
-#stations = [s for s in stations if '10393' in s or '06610' in s or '11035' in s or '82930' in s ]
+stations = [s for s in stations if '10393' in s or '06610' in s or '11035' in s or '82930' in s ]
 
 # single or multiprocessing
 POOL = True
-save_fig = False
+save_fig = True
 
 
 
