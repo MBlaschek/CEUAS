@@ -799,6 +799,8 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
             if group + '/' + v == cfv['cdmname']:
                 vlist.append(cfv['shortname'])
                 try:
+                    if v == 'sensor_id':
+                        print('sid')
                     logger.debug('CFCOPY %s %s', v, vlist[-1])
                     if fin[group][v].ndim == 1:
 #                         try:
@@ -895,7 +897,8 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
                                     'This is a netCDF dimension but not a netCDF variable.')
                                 fout[sname].make_scale(sname)
                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
-                            hilf[mask, :] = np.nan
+                            if (v in ['original_value', 'observation_value']) or (group in ['advanced_homogenisation', 'advanced_uncertainty', 'era5fb']):
+                                hilf[mask, :] = np.nan
                             #hilf = hilf[idx[0]:idx[-1] + 1, :]
 #                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
                             if hilf.shape[0] == 0:
