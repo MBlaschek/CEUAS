@@ -5,43 +5,13 @@
 74196	74196.0	2009-05-04 11:00:00	SRA 	1	SCH	  SRA Switzerland SRS-400 analog radiosonde with Rotronic HC2 capacitive humidity sensor {2008} 31313=52603^ <F=T400DL,P=H(water),T=H(copper-constantin),
 77823	77823.0	2012-11-01 11:00:00	SGG 	1	SCH	  SGG SGN Switzerland SRS-C34 digital GPS radiosonde with pressure, ROTRONICS HC2 humidity {<= 2010} 31313=52608^ <F=T400DL,P=H(water),T=H,U=A(ROTRONICS HC2),N=G>
 0	0.0	2013-01-01 11:00:00	26	2	WMO	Meteolabor Basora (Switzerland)                
-217	217.0	2013-04-19 23:00:00	-922	2	WMO	NA
-218	218.0	2013-04-20 11:00:00	26	2	WMO	Meteolabor Basora (Switzerland)                
-260	260.0	2013-05-11 11:00:00	-922	2	WMO	NA
-261	261.0	2013-05-11 23:00:00	26	2	WMO	Meteolabor Basora (Switzerland)                
-269	269.0	2013-05-15 23:00:00	-922	2	WMO	NA
-270	270.0	2013-05-16 11:00:00	26	2	WMO	Meteolabor Basora (Switzerland)                
-300	300.0	2013-05-31 11:00:00	-922	2	WMO	NA
-301	301.0	2013-05-31 23:00:00	26	2	WMO	Meteolabor Basora (Switzerland)                
-351	351.0	2013-06-25 23:00:00	-922	2	WMO	NA
-352	352.0	2013-06-26 12:00:00	26	2	WMO	Meteolabor Basora (Switzerland)                
-464	464.0	2013-08-20 23:00:00	-922	2	WMO	NA
-465	465.0	2013-08-21 11:00:00	26	2	WMO	Meteolabor Basora (Switzerland)                
-589	589.0	2013-10-22 11:00:00	-922	2	WMO	NA
-590	590.0	2013-10-22 23:00:00	26	2	WMO	Meteolabor Basora (Switzerland)                
-760	760.0	2014-01-15 23:05:00	-922	2	WMO	NA
-761	761.0	2014-01-16 11:00:00	26	2	WMO	Meteolabor Basora (Switzerland)                
-802	802.0	2014-02-05 23:00:00	-922	2	WMO	NA
-803	803.0	2014-02-06 11:00:00	26	2	WMO	Meteolabor Basora (Switzerland)                
-843	843.0	2014-02-26 11:00:00	-922	2	WMO	NA
-844	844.0	2014-02-26 22:57:00	26	2	WMO	Meteolabor Basora (Switzerland)                
-945	945.0	2014-04-18 11:00:00	-922	2	WMO	NA
-946	946.0	2014-04-18 22:57:00	26	2	WMO	Meteolabor Basora (Switzerland)                
 983	983.0	2014-05-07 11:02:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
 1187	1187.0	2014-08-17 11:00:00	26	2	WMO	Meteolabor Basora (Switzerland)                
 1188	1188.0	2014-08-17 23:00:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
-1197	1197.0	2014-08-22 11:00:00	-922	2	WMO	NA
-1198	1198.0	2014-08-22 23:00:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
-1205	1205.0	2014-08-26 11:00:00	-922	2	WMO	NA
-1206	1206.0	2014-08-26 23:14:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
 1278	1278.0	2014-10-01 23:00:00	26	2	WMO	Meteolabor Basora (Switzerland)                
 1358	1358.0	2014-11-10 23:00:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
 1739	1739.0	2015-05-20 11:00:00	26	2	WMO	Meteolabor Basora (Switzerland)                
 1740	1740.0	2015-05-20 23:00:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
-3083	3083.0	2017-03-22 10:00:00	-922	2	WMO	NA
-3084	3084.0	2017-03-22 12:06:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
-3132	3132.0	2017-04-15 10:00:00	-922	2	WMO	NA
-3133	3133.0	2017-04-15 12:50:00	126	2	WMO	Meteolabor SRS–C34/Argus 37 (Switzerland)                           
 3209	3209.0	2017-05-23 10:56:00	150	2	WMO	Meteolabor SRS-C50/Argus (Switzerland)                            
 3783	3783.0	2018-03-06 10:24:52	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
 3785	3785.0	2018-03-06 23:00:00	150	2	WMO	Meteolabor SRS-C50/Argus (Switzerland)                            
@@ -311,8 +281,6 @@
 4233	4233.0	2018-09-17 23:00:08	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
 4234	4234.0	2018-09-18 11:00:10	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
 4237	4237.0	2018-09-19 15:54:06	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
-4238	4238.0	2018-09-19 18:00:00	-922	2	WMO	NA
-4239	4239.0	2018-09-19 23:00:07	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
 4242	4242.0	2018-09-21 11:00:05	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
 4243	4243.0	2018-09-21 23:00:07	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
 4248	4248.0	2018-09-24 11:16:36	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
@@ -413,8 +381,6 @@
 4415	4415.0	2018-12-13 23:00:07	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
 4416	4416.0	2018-12-14 10:58:57	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
 4417	4417.0	2018-12-14 23:00:06	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
-4422	4422.0	2018-12-17 06:00:00	-922	2	WMO	NA
-4423	4423.0	2018-12-17 08:48:32	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
 4424	4424.0	2018-12-17 11:00:03	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
 4425	4425.0	2018-12-17 17:00:05	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
 4427	4427.0	2018-12-18 11:09:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
@@ -487,7 +453,6 @@
 4558	4558.0	2019-02-21 23:00:06	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
 4559	4559.0	2019-02-22 11:18:02	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
 4560	4560.0	2019-02-22 23:00:07	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
-4564	4564.0	2019-02-24 23:00:00	-922	2	WMO	NA
 4565	4565.0	2019-02-25 11:00:19	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
 4566	4566.0	2019-02-25 23:00:08	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
 4567	4567.0	2019-02-26 11:07:32	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  

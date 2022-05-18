@@ -1,0 +1,11 @@
+conda create -n DashPlotly python=3.8 anaconda
+conda install -c conda-forge dash-core-components
+conda install -c conda-forge dash-html-components
+conda install -c plotly jupyter-dash
+conda install -c conda-forge dash-bootstrap-components
+
+
+
+
+
+
