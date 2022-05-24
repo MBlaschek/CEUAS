@@ -795,7 +795,8 @@ def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
 ###############################################################################
 
 
-def check_body(variable: list = None, statid: list = None, product_type: str = None, pressure_level: list = None,
+def check_body(observed_variable: list = None, variable: list = None, statid: list = None, product_type: str = None, 
+               pressure_level: list = None,
                day: list = None, month: list = None, year: list = None, date: list = None, time: list = None, 
                bbox: list = None, country: str = None, area: list = None,
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
@@ -902,27 +903,30 @@ def check_body(variable: list = None, statid: list = None, product_type: str = N
     # Variable
     #
     if variable is None:
-        raise KeyError('Missing argument: variable')
-    else:
-        if not isinstance(variable, list):
-            variable = [variable]
+        if observed_variable is None:
+            raise KeyError('Missing argument: variable')
+        else:
+            variable = observed_variable
 
-        for ivar in variable:
-            if ivar not in allowed_variables:
-                raise KeyError('Invalid variable selected: ' + ivar)
-        for i in range(len(variable)):
-            if variable[i] in ['dewpoint_departure', 'dew_point_departure','dewpoint_depression']:
-                variable[i] = 'dew_point_depression'
-            if variable[i] in ['geopotential_height']:
-                variable[i] = 'geopotential'
-            if variable[i] in ['air_temperature']:
-                variable[i] = 'temperature'
-            if variable[i] in ['eastward_wind_speed']:
-                variable[i] = 'u_component_of_wind'
-            if variable[i] in ['northward_wind_speed']:
-                variable[i] = 'v_component_of_wind'
-            if variable[i] in ['wind_from_direction']:
-                variable[i] = 'wind_direction'
+    if not isinstance(variable, list):
+        variable = [variable]
+
+    for ivar in variable:
+        if ivar not in allowed_variables:
+            raise KeyError('Invalid variable selected: ' + ivar)
+    for i in range(len(variable)):
+        if variable[i] in ['dewpoint_departure', 'dew_point_departure','dewpoint_depression']:
+            variable[i] = 'dew_point_depression'
+        if variable[i] in ['geopotential_height']:
+            variable[i] = 'geopotential'
+        if variable[i] in ['air_temperature']:
+            variable[i] = 'temperature'
+        if variable[i] in ['eastward_wind_speed']:
+            variable[i] = 'u_component_of_wind'
+        if variable[i] in ['northward_wind_speed']:
+            variable[i] = 'v_component_of_wind'
+        if variable[i] in ['wind_from_direction']:
+            variable[i] = 'wind_direction'
                 
         d['variable'] = variable
     #
@@ -1469,8 +1473,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     # Raises Errors will be handled by base_exception_handler of the hug server
     # in debug this will give a traceback
     #
-    if 'observed_variable' in body:
-        body['variable'] = body['observed_variable']
+    
     body = check_body(wmotable=wmotable, **body)
     #
     # check if the request isn't too long
