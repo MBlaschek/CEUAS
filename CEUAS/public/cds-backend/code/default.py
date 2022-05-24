@@ -1469,6 +1469,8 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     # Raises Errors will be handled by base_exception_handler of the hug server
     # in debug this will give a traceback
     #
+    if 'observed_variable' in body:
+        body['variable'] = body['observed_variable']
     body = check_body(wmotable=wmotable, **body)
     #
     # check if the request isn't too long
