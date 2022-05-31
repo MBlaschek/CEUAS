@@ -41,6 +41,7 @@ from numba import njit
 import geopy
 import json
 import netCDF4
+import csv
 
 from functools import partial
 from itertools import islice
@@ -49,30 +50,36 @@ from multiprocessing import set_start_method, Pool
 
 # check codes from there
 # https://github.com/glamod/common_data_model/blob/master/tables/observed_variable.dat
-cdm_codes = {'temperature': 85, 'relative_humidity': 38, 'dew_point_temperature': 36, 'dew_point_depression': 34,
-             'geopotential': 117, 'wind_direction': 106, 'wind_speed': 107, 'u_component_of_wind': 104,
-             'v_component_of_wind': 105,
-             'specific_humidity': 39}
-#new codes
-ipar=[0]*140
-ipar[0]=0
-ipar[34]=34
-ipar[39]=39
-ipar[85]=126
-ipar[106]=106
-ipar[107]=107
-ipar[117]=117
-#ipar[]=136
-ipar[36]=137 #dp
-ipar[38]=138 #rh
-ipar[104]=139
-ipar[105]=140
+# cdm_codes = {'temperature': 85, 'relative_humidity': 38, 'dew_point_temperature': 36, 'dew_point_depression': 34,
+#              'geopotential': 117, 'wind_direction': 106, 'wind_speed': 107, 'u_component_of_wind': 104,
+#              'v_component_of_wind': 105,
+#              'specific_humidity': 39}
+# #new codes
+# ipar=[0]*140
+# ipar[0]=0
+# ipar[34]=34
+# ipar[39]=39
+# ipar[85]=126
+# ipar[106]=106
+# ipar[107]=107
+# ipar[117]=117
+# #ipar[]=136
+# ipar[36]=137 #dp
+# ipar[38]=138 #rh
+# ipar[104]=139
+# ipar[105]=140
 
-cdm_codes = {'temperature': ipar[85], 'relative_humidity': ipar[38], 'dew_point_temperature': ipar[36], 
-             'dew_point_depression': ipar[34],             
-             'geopotential': ipar[117], 'wind_direction': ipar[106], 'wind_speed': ipar[107], 
-             'u_component_of_wind': ipar[104],'v_component_of_wind': ipar[105],
-             'specific_humidity': ipar[39]}
+# cdm_codes = {'temperature': ipar[85], 'relative_humidity': ipar[38], 'dew_point_temperature': ipar[36], 
+#              'dew_point_depression': ipar[34],             
+#              'geopotential': ipar[117], 'wind_direction': ipar[106], 'wind_speed': ipar[107], 
+#              'u_component_of_wind': ipar[104],'v_component_of_wind': ipar[105],
+#              'specific_humidity': ipar[39]}
+
+cdm_codes = {'temperature': 126, 'relative_humidity': 138, 'dew_point_temperature': 137, 
+             'dew_point_depression': 34,             
+             'geopotential': 117, 'wind_direction': 106, 'wind_speed': 107, 
+             'u_component_of_wind': 139,'v_component_of_wind': 140,
+             'specific_humidity': 39}
 # get codes from there
 # https://apps.ecmwf.int/odbgov/varno/
 odb_codes = {'geopotential': 1, 'temperature': 2, 'u_component_of_wind': 3, 'v_component_of_wind': 4,
@@ -2823,7 +2830,7 @@ class CDMDataset:
         #
         if 'optional' in request.keys():
             snames.extend(request['optional'])
-            
+                        
         if 'bias_estimate_method' in request.keys():
             # use era5adj group
             pass
@@ -2835,6 +2842,7 @@ class CDMDataset:
                 cfcopy[ss] = cf_dict[ss]
             except:
                 pass
+        print(cfcopy)
         #
         # End Definition of Variables to write
         #
@@ -2852,7 +2860,7 @@ class CDMDataset:
                 igroup = 'observations_table'
                 do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                           var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
-                                         'observation_value', 'date_time', 'sensor_id', 'secondary_value',
+                                         'observation_value', 'observed_variable', 'date_time', 'sensor_id', 'secondary_value',
                                          'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
@@ -2976,15 +2984,18 @@ class CDMDataset:
                               var_selection=['station_name'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 
+                if 'single_csv' in request.keys():
+                    fout['variable']=np.array([request['variable']]*len(fout['station_name']))
+                
                 dtype = dict(names = list(fout.keys()), formats=[])
                 lfout=[]
-                print(fout)
                 for k in dtype['names']:
                     if len(fout[k].shape)==1:
                         pass #lfout.append(fout[k])
                     else:
                         fout[k]=fout[k].view('|S{}'.format(fout[k].shape[1])).flatten().astype(str) 
                     dtype['formats'].append(fout[k].dtype)
+
                 headstr = ''
                 formatstr = ''
                 for n,d in zip(dtype['names'],dtype['formats']):
@@ -3019,7 +3030,12 @@ class CDMDataset:
                 
 #                s=csvwrite(formatall,*fout.values())
 
-                if filename_out is not None:
+                if (filename_out is not None) and ('single_csv' in request.keys()):
+                    with open(filename_out[:-3],'w') as f:
+                        f.write(headstr[:-1]+'\n')
+                        b=[item for sublist in zip(*fout.values()) for item in sublist]
+                        f.write(formatall%tuple(b))
+                elif filename_out is not None:
                     with gzip.open(filename_out,'wt',compresslevel=1) as f:
                         f.write(headstr[:-1]+'\n')
                         b=[item for sublist in zip(*fout.values()) for item in sublist]
