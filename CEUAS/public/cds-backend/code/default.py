@@ -1901,7 +1901,7 @@ def variable_definition(variable=None, response=None):
         Args:
             variable: str - variable of interest
     """
-    logger.debug("GET variable_definition: %s", request.query_string)
+    logger.debug("GET variable_definition")
     if variable == None:
         rfile=config['config_dir']+'/cf.json'
         response.set_header('Content-Disposition', 'attachment; filename=' + rfile)
