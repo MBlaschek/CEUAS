@@ -1902,7 +1902,7 @@ def variable_definition(variable=None, response=None):
             variable: str - variable of interest
     """
     logger.debug("GET variable_definition: %s", request.query_string)
-    if variable = None:
+    if variable == None:
         rfile=config['config_dir']+'/cf.json'
         response.set_header('Content-Disposition', 'attachment; filename=' + rfile)
         return rfile
