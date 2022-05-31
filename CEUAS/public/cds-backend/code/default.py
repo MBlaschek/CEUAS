@@ -1882,6 +1882,38 @@ def index(request=None, response=None):
     response.set_header('Content-Disposition', 'attachment; filename=' + rfile)
     return rfile
 
+@hug.get('/variable_codes/', output=hug.output_format.file)
+def variable_codes(request=None, response=None):
+    """ 
+        Returns a json with all the variable codes
+    """
+    logger.debug("GET variable_codes")
+    rfile='/data/public/tmp/variable_codes.json'
+    with open(rfile, 'w') as fp:
+        json.dump(eua.cdm_codes, fp)
+    response.set_header('Content-Disposition', 'attachment; filename=' + rfile)
+    return rfile
+
+@hug.get('/variable_definition/', output=hug.output_format.file)
+def variable_definition(variable=None, response=None):
+    """ 
+        Returns a json with the variable definition
+        Args:
+            variable: str - variable of interest
+    """
+    logger.debug("GET variable_definition: %s", request.query_string)
+    if variable = None:
+        rfile=config['config_dir']+'/cf.json'
+        response.set_header('Content-Disposition', 'attachment; filename=' + rfile)
+        return rfile
+    else:
+        cf = json.load(open(config['config_dir']+'/cf.json', 'r'))
+        rfile='/data/public/tmp/variable_definition_'+variable+'.json'
+        with open(rfile, 'w') as fp:
+            json.dump(cf[variable], fp)
+        response.set_header('Content-Disposition', 'attachment; filename=' + rfile)
+        return rfile
+
 def datetime_to_seconds(dates, ref='1900-01-01T00:00:00'):
     """ from datetime64 to seconds since 1900-01-01 00:00:00"""
     return ((numpy.datetime64(dates) - numpy.datetime64(ref)) / numpy.timedelta64(1, 's')).astype(numpy.int64)
