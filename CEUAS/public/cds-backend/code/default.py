@@ -802,7 +802,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                gridded: list = None, toolbox: str = None, cdm: list = None, da: bool = True, compression: str = None,
                pass_unknown_keys: bool = False, nodims: str = None, hdf: str = None, speed_test: str = None, 
-               single_parallel: bool = False,
+               single_parallel: bool = False, single_csv: bool = False,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
 
@@ -1253,15 +1253,26 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
     #
     # remove statids i
     
-#     #
-#     # single_parallel
-#     #
+    #
+    # single_parallel
+    #
     if (single_parallel == False) or (single_parallel == 'False') or (len(d['statid']) > 1):
         d['single_parallel'] = False
 #     if (single_parallel == True) or (single_parallel == 'True'):
 #         d['single_parallel'] = True
 #     else:
 #         d['single_parallel'] = False
+
+    #
+    # single_csv
+    #
+    if ((single_csv == True) or (single_csv == 'True')) and (d['format'] in ['csv', 'fast_csv']):
+        d['single_csv'] = True
+#     if (single_parallel == True) or (single_parallel == 'True'):
+#         d['single_parallel'] = True
+#     else:
+#         d['single_parallel'] = False
+
     
     #
     #
@@ -1685,10 +1696,16 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
 
         logger.debug('wpath: %s; format %s Time %f', wpath, body['format'],time.time()-tt)
 
+        if body['single_csv']:
+            combined_csv = pd.concat([pd.read_csv(f[0].split('.gz')[0]) for f in results])
+            results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+"single_csv.csv", '')]
+            combined_csv.to_csv(results[0][0], index=False,)# encoding='utf-8-sig')
+            
         if 'local_execution' in body.keys():
             return rfile
         
         tt=time.time()
+            
         with zipfile.ZipFile(rfile, 'w' ) as f:
             for r in results:
                 try:
