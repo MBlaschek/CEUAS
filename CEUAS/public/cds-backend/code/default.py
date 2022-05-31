@@ -1266,7 +1266,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
     #
     # single_csv
     #
-    if ((single_csv == True) or (single_csv == 'True')) and (d['format'] in ['csv', 'fast_csv']):
+    if ((single_csv == True) or (single_csv == 'True')) and (d['format'] == 'csv'):
         d['single_csv'] = True
 #     if (single_parallel == True) or (single_parallel == 'True'):
 #         d['single_parallel'] = True
