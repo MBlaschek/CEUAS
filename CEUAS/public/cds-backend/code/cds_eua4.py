@@ -75,6 +75,18 @@ from multiprocessing import set_start_method, Pool
 #              'u_component_of_wind': ipar[104],'v_component_of_wind': ipar[105],
 #              'specific_humidity': ipar[39]}
 
+glamod_cdm_codes = {34:'dew point depression',
+                    39:'specific humidity',
+                    106:'wind from direction',
+                    107:'wind speed',
+                    117:'geopotential height',
+                    126:'air temperature',
+                    137:'air dewpoint',
+                    138:'relative humidity',
+                    139:'eastward wind speed',
+                    140:'northward wind speed',  
+                   }
+
 cdm_codes = {'temperature': 126, 'relative_humidity': 138, 'dew_point_temperature': 137, 
              'dew_point_depression': 34,             
              'geopotential': 117, 'wind_direction': 106, 'wind_speed': 107, 
@@ -2856,6 +2868,9 @@ class CDMDataset:
         
         if request['format'] in ['csv', 'fast_csv']:
             fout={}
+            # for single_csv - adding second header
+            groups=[]
+            foutlen_old = 0
             if 'observations_table' in self.groups:
                 igroup = 'observations_table'
                 do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
@@ -2864,6 +2879,12 @@ class CDMDataset:
                                          'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                if 'single_csv' in request.keys():
+                    # for single_csv - adding second header
+                    for grpsnew in range((len(fout)-foutlen_old)):
+                        groups.append(igroup)
+                    foutlen_old = len(fout)
+                    print(groups)
             #
             # Feedback Information
             #
@@ -2875,6 +2896,11 @@ class CDMDataset:
                                              'biascorr@body'])
                     # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    if 'single_csv' in request.keys():
+                        # for single_csv - adding second header
+                        for grpsnew in range((len(fout)-foutlen_old)):
+                            groups.append(igroup)
+                        foutlen_old = len(fout)
                 except KeyError as e:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
             #
@@ -2886,6 +2912,11 @@ class CDMDataset:
                     do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                               var_selection=['bias_estimate', 'bias_estimation_method'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    if 'single_csv' in request.keys():
+                        # for single_csv - adding second header
+                        for grpsnew in range((len(fout)-foutlen_old)):
+                            groups.append(igroup)
+                        foutlen_old = len(fout)
                 except KeyError as e:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
 
@@ -2904,6 +2935,11 @@ class CDMDataset:
                         do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                                   var_selection=varsel)
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                        if 'single_csv' in request.keys():
+                            # for single_csv - adding second header
+                            for grpsnew in range((len(fout)-foutlen_old)):
+                                groups.append(igroup)
+                            foutlen_old = len(fout)
                     except KeyError as e:
                         print(e)
                         #raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
@@ -2917,6 +2953,11 @@ class CDMDataset:
                     do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                               var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+                    if 'single_csv' in request.keys():
+                        # for single_csv - adding second header
+                        for grpsnew in range((len(fout)-foutlen_old)):
+                            groups.append(igroup)
+                        foutlen_old = len(fout)
                 except KeyError as e:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
 
@@ -2966,26 +3007,32 @@ class CDMDataset:
                     return headstr[:-1]+'\n'#+formatall%tuple(item for sublist in zip(*fout.values()) for item in sublist)
     
             else:
-                #
-                # Station Configuration
-                #
-                if 'station_configuration' in self.groups:
-                    igroup = 'station_configuration'
-                    cfcstationcon = {'station_name': 
-                                     {
-                                         'cdmname': 'station_configuration/station_name',
-                                         'units': 'NA',
-                                         'shortname': 'station_id',
-                                         'coordinates': 'lat lon time plev',
-                                         'standard_name': 'station_name'
-                                     }
-                                    } 
-                    do_csvcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', compression,
-                              var_selection=['station_name'])
-                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                
                 if 'single_csv' in request.keys():
-                    fout['variable']=np.array([request['variable']]*len(fout['station_name']))
+                    fout['variable']=np.array([glamod_cdm_codes[cdm_codes[request['variable']]]]*len(fout['z_coordinate']))
+                    groups.append('observations_table')
+                    wigos_primid = b''.join(self.file['station_configuration']['primary_id'][:]).decode('UTF-8')
+                    fout['primary_id']=np.array([wigos_primid]*len(fout['z_coordinate'])) #self.filename.split('/')[-1].split('_CEU')[0]
+                    groups.append('station_configuration')
+                else:
+                    #
+                    # Station Configuration
+                    #
+                    if 'station_configuration' in self.groups:
+                        igroup = 'station_configuration'
+                        cfcstationcon = {'station_name': 
+                                         {
+                                             'cdmname': 'station_configuration/station_name',
+                                             'units': 'NA',
+                                             'shortname': 'station_id',
+                                             'coordinates': 'lat lon time plev',
+                                             'standard_name': 'station_name'
+                                         }
+                                        } 
+                        do_csvcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', compression,
+                                  var_selection=['station_name'])
+                        logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+
+                
                 
                 dtype = dict(names = list(fout.keys()), formats=[])
                 lfout=[]
@@ -3008,7 +3055,17 @@ class CDMDataset:
                     else:
                         formatstr = formatstr+'"%.'+sd[2:]+'s",'
                         #formatstr = formatstr+'%.'+''+'s,'
-
+                if 'single_csv' in request.keys():
+                    group_headstr = ''
+#                     print(groups)
+                    for hs in groups:
+#                         print(hs)
+                        group_headstr = group_headstr+hs+','
+#                         print(group_headstr)
+                        
+#                 print(headstr)
+#                 print(group_headstr)
+                        
                 print(time.time()-time0)
                 formatstrn=formatstr[:-1]+'\n'
                 formatall=formatstrn*fout[dtype['names'][0]].shape[0]
@@ -3031,8 +3088,10 @@ class CDMDataset:
 #                s=csvwrite(formatall,*fout.values())
 
                 if (filename_out is not None) and ('single_csv' in request.keys()):
-                    with open(filename_out[:-3],'w') as f:
+#                     with open(filename_out[:-3],'w') as f:
+                    with gzip.open(filename_out,'wt',compresslevel=1) as f:
                         f.write(headstr[:-1]+'\n')
+                        f.write(group_headstr[:-1]+'\n')
                         b=[item for sublist in zip(*fout.values()) for item in sublist]
                         f.write(formatall%tuple(b))
                 elif filename_out is not None:
