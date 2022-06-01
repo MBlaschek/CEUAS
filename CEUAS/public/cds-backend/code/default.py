@@ -1926,14 +1926,14 @@ def variable_definition(variable=None, response=None):
     logger.debug("GET variable_definition")
     if variable == None:
         rfile=config['config_dir']+'/cf.json'
-        response.set_header('Content-Disposition', 'attachment; filename=' + rfile)
+        response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
         return rfile
     else:
         cf = json.load(open(config['config_dir']+'/cf.json', 'r'))
         rfile='/data/public/tmp/variable_definition_'+variable+'.json'
         with open(rfile, 'w') as fp:
             json.dump(cf[variable], fp)
-        response.set_header('Content-Disposition', 'attachment; filename=' + rfile)
+        response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
         return rfile
 
 def datetime_to_seconds(dates, ref='1900-01-01T00:00:00'):
