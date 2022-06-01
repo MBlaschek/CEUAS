@@ -1697,7 +1697,12 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         logger.debug('wpath: %s; format %s Time %f', wpath, body['format'],time.time()-tt)
 
         if body['single_csv']:
-            combined_csv = pd.concat([pd.read_csv(f[0].split('.gz')[0]) for f in results])
+            write_results = []
+            for i_res in results:
+                if i_res[0] != '':
+                    write_results.append(i_res[0])
+#             combined_csv = pd.concat([pd.read_csv(f[0].split('.gz')[0], header=[0,1]) for f in results])
+            combined_csv = pd.concat([pd.read_csv(f, header=[0,1]) for f in write_results])
             results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+"single_csv.csv", '')]
             combined_csv.to_csv(results[0][0], index=False,)# encoding='utf-8-sig')
             
