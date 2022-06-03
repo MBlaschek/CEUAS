@@ -63,7 +63,7 @@ def test(x, window, missing):
                        tsquare)
     return tsa
 
-@njit
+#@njit(fastmath={'nsz','arcp','contract','afn','reassoc'},cache=True)
 def numba_snhtmov(t, tsa, snhtparas, count, tmean, tsquare):
     """Standard Normal Homogeneity Test Moving Window
 
@@ -77,7 +77,7 @@ def numba_snhtmov(t, tsa, snhtparas, count, tmean, tsquare):
     Output: tsa
     """
     n = snhtparas[0]
-    max_miss = snhtparas[1]
+    min_sampsize = snhtparas[1]
     # ninc=snhtparas[2]
 
     ni = t.shape[0]
@@ -106,17 +106,17 @@ def numba_snhtmov(t, tsa, snhtparas, count, tmean, tsquare):
         if good > 0:
             count[j] = good - 1
 
-    if good > n - 2 * max_miss:
+    if good > min_sampsize:
         rm = int(n / 2)  # needs to be an integer
         # k 1460/2=730 - 650=80, n-80
-        for k in range(rm - max_miss, ni - (rm - max_miss)):
+        for k in range(min_sampsize, ni - min_sampsize):
             xm = k - rm  # 80-730
             if xm < 0:
                 xm = 0
             xp = k + rm
             if xp > ni - 1:
                 xp = ni - 1
-            if (count[k] - count[xm] > rm - max_miss) and (count[xp] - count[k] > rm - max_miss):
+            if (count[k] - count[xm] > min_sampsize) and (count[xp] - count[k] > min_sampsize):
                 x = (tmean[count[k]] - tmean[count[xm]]) / (count[k] - count[xm])  # Mittelwert 1 Periode
                 y = (tmean[count[xp]] - tmean[count[k]]) / (count[xp] - count[k])  # Mittelwert 2 Periode
                 xy = (tmean[count[xp]] - tmean[count[xm]]) / (count[xp] - count[xm])  # Mittelwert ganze Periode
@@ -131,6 +131,8 @@ def numba_snhtmov(t, tsa, snhtparas, count, tmean, tsquare):
                     tsa[k] = 0.
     return tsa
 
+numba_snhtmov_njit =njit(numba_snhtmov,fastmath={'nsz','arcp','contract','afn','reassoc'},debug=True,cache=False)
+
 # Michis function with equal sampling
 # t is time series
 # dbin=RC['months'][days since reftime] number of month (0-11)  - should be indexed with days since reftime !!
@@ -142,7 +144,8 @@ def numba_snhtmov(t, tsa, snhtparas, count, tmean, tsquare):
 #     (typically used to actually calculate the means of the intervals prior and after kref)
 
 @njit(fastmath={'nsz','arcp','contract','afn','reassoc'},cache=True)
-def numba_snhteqmov(t, dbin, tsa, n, max_miss,miss_val, count, tmean, tsquare,kref=0):
+def numba_snhteqmov(t, dbin, tsa, n, min_sampsize,miss_val, count, tmean, tsquare,kref=0):
+#def numba_snhtmov(t, tsa, snhtparas, count, tmean, tsquare):
     """Standard Normal Homogeneity Test Moving Window
 
     t         = np.random.randn(1000)
@@ -194,20 +197,20 @@ def numba_snhteqmov(t, dbin, tsa, n, max_miss,miss_val, count, tmean, tsquare,kr
     bmax=tsa[0]
     tsamax=tsa[0]
     kmax=0
-    if np.sum(count[-1,:]) > n - 2 * max_miss:
+    if np.sum(count[-1,:]) > min_sampsize:
         rm = n//2  # needs to be an integer
         # k 1460/2=730 - 650=80, n-80
         xm=0
-        k=rm-max_miss-1
+        k=min_sampsize-1
         xp=k+rm
         if xp>ni-1:
             xp=ni-1 
 
         spsave=np.sum(count[xp,:] - count[k,:])
         smsave=np.sum(count[k,:] - count[xm,:])
-        k=rm - max_miss
+        k=min_sampsize
         ll=0
-        while k<ni - (rm - max_miss):
+        while k<ni - min_sampsize:
             xm = k - rm  # 80-730
             if xm < 0:
                 xm = 0
@@ -222,22 +225,23 @@ def numba_snhteqmov(t, dbin, tsa, n, max_miss,miss_val, count, tmean, tsquare,kr
             spsave += (count[xp,dbin[xp]]-count[xp-1,dbin[xp]])-ck #if True: #(np.sum(count[k,:] - count[xm,:]) > rm - max_miss) and (np.sum(count[xp,:] - count[k,:]) > rm - max_miss):
             #print(k,smsave,spsave)
             # skip tsa calculation if previous tsa value was small
-            if ( tsa[k-1]<20 or tsa[k-11]>tsa[k-1] ) and ll<10 and tsa[k-1]!=0:
-                tsa[k]=tsa[k-1]
-                k+=1
-                ll+=1
-                continue
+            #if ( tsa[k-1]<10 or tsa[k-11]>tsa[k-1] ) and ll<10 and tsa[k-1]!=0:
+                #tsa[k]=tsa[k-1]
+                #k+=1
+                #ll+=1
+                #continue
             ll=0
-            if smsave > rm - max_miss and spsave > rm - max_miss:
+            if smsave > min_sampsize and spsave > min_sampsize:
                 cp=0; cm=0; c=0; x=np.float32(0); y=x; xx=x; xy=x
                 sm=smsave
                 sp=spsave
+                mcbin=0
                 for ibin in range(12):
                     kp=k
                     km=k
                     cdiff=count[k,ibin] - count[xm,ibin]-(count[xp,ibin] - count[k,ibin])
                     #r=cdiff - count[k,ibin]
-                    while(kp<xp and cdiff<0 and sp>rm - max_miss):
+                    while(kp<xp and cdiff<0 and sp>min_sampsize):
                         dbdiff=(ibin-dbin[kp]+12)%12
                         if dbdiff>1:
                             kp+=(dbdiff-1)*30
@@ -245,13 +249,13 @@ def numba_snhteqmov(t, dbin, tsa, n, max_miss,miss_val, count, tmean, tsquare,kr
                                 kp=xp-1
                                 break
                         kp+=1
-                        while kp<xp and count[kp,ibin]>count[kp-1,ibin] and sp>rm - max_miss:
+                        while kp<xp and count[kp,ibin]>count[kp-1,ibin] and sp>min_sampsize:
                             cdiff+=1 #=r+ count[kp,ibin]
                             kp+=1
                             #print('p',k,kp,ibin,dbin[kp],cdiff)
                             sp-=1
                     #r=count[xm,ibin]+(count[xp,ibin] - count[k,ibin])
-                    while(km>xm and cdiff>0 and sm>rm - max_miss):
+                    while(km>xm and cdiff>0 and sm>min_sampsize):
                         dbdiff=(dbin[km]-ibin+12)%12
                         if dbdiff>1:
                             km-=(dbdiff-1)*30
@@ -259,29 +263,37 @@ def numba_snhteqmov(t, dbin, tsa, n, max_miss,miss_val, count, tmean, tsquare,kr
                                 km=xm
                                 break
                         km-=1
-                        while count[km+1,ibin]>count[km,ibin] and sm>rm - max_miss:
+                        while count[km+1,ibin]>count[km,ibin] and sm>min_sampsize:
                             cdiff-=1 #=count[km,ibin] - r
                             #print('m',k,km,ibin,dbin[km],cdiff)
-                            km-=1
+                            km-=1   
                             sm-=1
-                    x+= (tmean[km,ibin] - tmean[xm,ibin]) #/ (count[km,ibin] - count[xm,ibin])  # Mittelwert 1 Periode
-                    y+= (tmean[xp,ibin] - tmean[kp,ibin]) #/ (count[xp,ibin] - count[kp,ibin])  # Mittelwert 2 Periode
-                    c+= (count[xp,ibin] - count[xm,ibin]-(count[kp,ibin]-count[km,ibin]))
+                    
+                    if count[km,ibin] - count[xm,ibin]>0 and count[xp,ibin] - count[kp,ibin]>0:
+                        
+                        x+= (tmean[km,ibin] - tmean[xm,ibin]) / (count[km,ibin] - count[xm,ibin])  # Mittelwert 1 Periode
+                        mcbin+=1
+                        
+                        y+= (tmean[xp,ibin] - tmean[kp,ibin]) / (count[xp,ibin] - count[kp,ibin])  # Mittelwert 2 Periode
+                        xy+= (tmean[xp,ibin] - tmean[xm,ibin]-(tmean[kp,ibin]-tmean[km,ibin])) / (count[xp,ibin] - count[xm,ibin]-(count[kp,ibin]-count[km,ibin]))  # Mittelwert ganze Periode
+                        xx+= (tsquare[xp,ibin] - tsquare[xm,ibin]-(tsquare[kp,ibin]-tsquare[km,ibin])) / (count[xp,ibin] - count[xm,ibin]-(count[kp,ibin]-count[km,ibin]))  # Mittelwert ganze Periode
+                        
+                    #c+= (count[xp,ibin] - count[xm,ibin]-(count[kp,ibin]-count[km,ibin]))
                     cp+=count[xp,ibin] - count[kp,ibin]
                     cm+=count[km,ibin] - count[xm,ibin]
-                    xy+= (tmean[xp,ibin] - tmean[xm,ibin]-(tmean[kp,ibin]-tmean[km,ibin])) #/ (count[xp,ibin] - count[xm,ibin]-(count[kp,ibin]-count[km,ibin]))  # Mittelwert ganze Periode
-                    xx+= (tsquare[xp,ibin] - tsquare[xm,ibin]-(tsquare[kp,ibin]-tsquare[km,ibin])) #/ (count[xp,ibin] - count[xm,ibin]-(count[kp,ibin]-count[km,ibin]))  # Mittelwert ganze Periode
+                    #xy+= (tmean[xp,ibin] - tmean[xm,ibin]-(tmean[kp,ibin]-tmean[km,ibin])) #/ (count[xp,ibin] - count[xm,ibin]-(count[kp,ibin]-count[km,ibin]))  # Mittelwert ganze Periode
+                    #xx+= (tsquare[xp,ibin] - tsquare[xm,ibin]-(tsquare[kp,ibin]-tsquare[km,ibin])) #/ (count[xp,ibin] - count[xm,ibin]-(count[kp,ibin]-count[km,ibin]))  # Mittelwert ganze Periode
                 
-                if cm+1>=rm-max_miss and cp+1>=rm-max_miss:
+                if cm+1>=min_sampsize and cp+1>=min_sampsize and mcbin>3:
                     
-                    sig = xx / np.float32(c)  # t*t ganze Periode
-                    xym=xy/ np.float32(c)
+                    sig = xx / np.float32(mcbin)  # t*t ganze Periode
+                    xym=xy/ np.float32(mcbin)
                     if sig > xym * xym:
                         sig = sig - xym * xym  # standard deviation of the whole window
                         # n1 * (m1-m)**2 + n2 * (m2-m)**2 / stddev
-                        tsa[k] = (np.float32(cm)* (x/np.float32(cm) - xym)*(x/np.float32(cm) - xym)  + np.float32(cp) * (y/np.float32(cp) - xym)*(y/np.float32(cp) - xym)) / sig
+                        tsa[k] = 30.*(np.float32(mcbin)* (x/np.float32(mcbin) - xym)*(x/np.float32(mcbin) - xym)  + np.float32(mcbin) * (y/np.float32(mcbin) - xym)*(y/np.float32(mcbin) - xym)) / sig
                         if tsa[k]>tsamax:
-                            bmax=y/np.float32(cp)-x/np.float32(cm)
+                            bmax=y/np.float32(mcbin)-x/np.float32(mcbin)
                             tsamax=tsa[k]
                             kmax=k
                     else:
@@ -294,14 +306,14 @@ def numba_snhteqmov(t, dbin, tsa, n, max_miss,miss_val, count, tmean, tsquare,kr
             k+=1
             
     if kref:
-        return y/np.float32(cp)-x/np.float32(cm)  # break estimate at kref
+        return y/np.float32(mcbin)-x/np.float32(mcbin)  # break estimate at kref
     else:
         
         return bmax # break estimate at position with maximum tsa
 
 # Averaging with equal sampling
 @njit(fastmath={'nsz','arcp','contract','afn','reassoc'},cache=True)
-def numba_meaneqmov(t, dbin,tsa, n,max_miss, miss_val, count, tmean, tsquare,kref=0):
+def numba_meaneqmov(t, dbin,tsa, n,min_sampsize, miss_val, count, tmean, tsquare,kref=0):
 
     ni = t.shape[0]
 
@@ -329,11 +341,135 @@ def numba_meaneqmov(t, dbin,tsa, n,max_miss, miss_val, count, tmean, tsquare,kre
     tsamax=tsa[0]
     kmax=0
     
-    if np.sum(count[ni-1,:]) > n - 2 * max_miss:
-        rm = n//2  # needs to be an integer
+    if np.sum(count[ni-1,:]) > min_sampsize:
+        rm = n//4  # needs to be an integer
         # k 1460/2=730 - 650=80, n-80
         xm=0
-        k=rm-max_miss-1
+        k=min_sampsize-1
+        xp=k+rm
+        if xp>ni-1:
+            xp=ni-1 
+
+        spsave=np.sum(count[xp,:] - count[k,:])
+        smsave=np.sum(count[k,:] - count[xm,:])
+        if kref:
+            k=kref
+            #gen=range(kref,kref+1)
+        #else:
+            #gen=range(rm - max_miss, ni - (rm - max_miss))
+        #for k in gen:
+            xm = k - rm  # 80-730
+            if xm < 0:
+                xm = 0
+            xp = k + rm
+            if xp > ni - 1:
+                xp = ni - 1
+
+            smsave=np.sum(count[k,:] - count[xm,:])
+            spsave=np.sum(count[xp,:] - count[k,:]) 
+            #print(k,smsave,spsave)
+            if smsave > min_sampsize and spsave > min_sampsize:
+                cp=0; cm=0; c=0; x=np.float32(0); y=x; xx=x; xy=x
+                sm=smsave
+                sp=spsave
+                pcbin=0
+                mcbin=0
+                for ibin in range(12):
+                    kp=k
+                    km=k
+                    cdiff=count[k,ibin] - count[xm,ibin]-(count[xp,ibin] - count[k,ibin])
+                    #r=cdiff - count[k,ibin]
+                    while(kp<xp and cdiff<0 and sp>min_sampsize):
+                        dbdiff=(ibin-dbin[kp]+12)%12
+                        if dbdiff>1:
+                            kp+=(dbdiff-1)*30
+                            if kp>xp-1:
+                                kp=xp-1
+                                break
+                        kp+=1
+                        while kp<xp and count[kp,ibin]>count[kp-1,ibin] and sp>min_sampsize:
+                            cdiff+=1 #=r+ count[kp,ibin]
+                            kp+=1
+                            #print('p',k,kp,ibin,dbin[kp],cdiff)
+                            sp-=1
+                    #r=count[xm,ibin]+(count[xp,ibin] - count[k,ibin])
+                    while(km>xm and cdiff>0 and sm>min_sampsize):
+                        dbdiff=(dbin[km]-ibin+12)%12
+                        if dbdiff>1:
+                            km-=(dbdiff-1)*30
+                            if km<xm:
+                                km=xm+1
+                                break
+                        km-=1
+                        while km>0 and count[km+1,ibin]>count[km,ibin] and sm>min_sampsize:
+                            cdiff-=1 #=count[km,ibin] - r
+                            #print('m',k,km,ibin,dbin[km],cdiff)
+                            km-=1
+                            sm-=1
+
+                    if (count[km,ibin] - count[xm,ibin]>5) and (count[xp,ibin] - count[kp,ibin])>5:
+                        
+                        x+= (tmean[km,ibin] - tmean[xm,ibin]) / (count[km,ibin] - count[xm,ibin])  # Mittelwert 1 Periode
+                        y+= (tmean[xp,ibin] - tmean[kp,ibin]) / (count[xp,ibin] - count[kp,ibin])  # Mittelwert 2 Periode
+                        mcbin+=1
+                        
+                    #c+= (count[xp,ibin] - count[xm,ibin]+(count[kp,ibin]-count[km,ibin]))
+                    cp+=count[xp,ibin] - count[kp,ibin]
+                    cm+=count[km,ibin] - count[xm,ibin]
+                    #xy+= (tmean[xp,ibin] - tmean[xm,ibin]-(tmean[kp,ibin]-tmean[km,ibin])) #/ (count[xp,ibin] - count[xm,ibin]-(count[kp,ibin]-count[km,ibin]))  # Mittelwert ganze Periode
+                    #xx+= (tsquare[xp,ibin] - tsquare[xm,ibin]-(tsquare[kp,ibin]-tsquare[km,ibin])) #/ (count[xp,ibin] - count[xm,ibin]-(count[kp,ibin]-count[km,ibin]))  # Mittelwert ganze Periode
+                
+                if cm>=min_sampsize and cp>=min_sampsize and mcbin>3:
+                    
+                    bmax=y/np.float32(mcbin)-x/np.float32(mcbin)
+                else:
+                    #print(k,cm,cp,'too small')
+                    tsa[k]=0.
+            else:
+                tsa[k]=0.
+    #if np.abs(bmax)>5:
+        #print(bmax)
+    return bmax
+    
+@njit(cache=True,fastmath={'nsz','arcp','contract','afn','reassoc'})
+def meqm_ini(t,tmean,tsquare,count,dbin):
+    
+    ni = t.shape[0]
+    tmean[0,:] = 0.
+    tsquare[0,:] = 0.
+    count[0,:]=0
+    if ~np.isnan(t[0]):
+        tmean[0,0]=t[0]
+        tsquare[0,0]=t[0]
+        count[0,0]=1
+
+    for j in range(1,ni):
+        # compare_lists if nan ?
+        tmean[j,:]=tmean[j-1,:]
+        tsquare[j,:]=tsquare[j-1,:]
+        count[j,:]=count[j-1,:]
+        dj=dbin[j]
+        if ~np.isnan(t[j]) :  
+            tmean[j,dj]+= t[j]
+            tsquare[j,dj]+= t[j]*t[j]
+            count[j,dj]+=1
+    return
+    
+def meaneqmov(t, dbin,tsa, n,min_sampsize, miss_val, count, tmean, tsquare,kref=0):
+
+    ni = t.shape[0]
+
+    meqm_ini(t,tmean,tsquare,count,dbin)
+    
+    bmax=miss_val
+    tsamax=tsa[0]
+    kmax=0
+    
+    if np.sum(count[ni-1,:]) > min_sampsize:
+        rm = n//4  # needs to be an integer
+        # k 1460/2=730 - 650=80, n-80
+        xm=0
+        k=min_sampsize-1
         xp=k+rm
         if xp>ni-1:
             xp=ni-1 
@@ -343,7 +479,7 @@ def numba_meaneqmov(t, dbin,tsa, n,max_miss, miss_val, count, tmean, tsquare,kre
         if kref:
             gen=range(kref,kref+1)
         else:
-            gen=range(rm - max_miss, ni - (rm - max_miss))
+            gen=range(min_sampsize, min_sampsize)
         for k in gen:
             xm = k - rm  # 80-730
             if xm < 0:
@@ -355,7 +491,7 @@ def numba_meaneqmov(t, dbin,tsa, n,max_miss, miss_val, count, tmean, tsquare,kre
             smsave=np.sum(count[k,:] - count[xm,:])
             spsave=np.sum(count[xp,:] - count[k,:]) 
             #print(k,smsave,spsave)
-            if smsave > rm - max_miss and spsave > rm - max_miss:
+            if smsave > min_sampsize and spsave > min_sampsize:
                 cp=0; cm=0; c=0; x=np.float32(0); y=x; xx=x; xy=x
                 sm=smsave
                 sp=spsave
@@ -364,7 +500,7 @@ def numba_meaneqmov(t, dbin,tsa, n,max_miss, miss_val, count, tmean, tsquare,kre
                     km=k
                     cdiff=count[k,ibin] - count[xm,ibin]-(count[xp,ibin] - count[k,ibin])
                     #r=cdiff - count[k,ibin]
-                    while(kp<xp and cdiff<0 and sp>rm - max_miss):
+                    while(kp<xp and cdiff<0 and sp>rmin_sampsize):
                         dbdiff=(ibin-dbin[kp]+12)%12
                         if dbdiff>1:
                             kp+=(dbdiff-1)*30
@@ -372,13 +508,13 @@ def numba_meaneqmov(t, dbin,tsa, n,max_miss, miss_val, count, tmean, tsquare,kre
                                 kp=xp-1
                                 break
                         kp+=1
-                        while kp<xp and count[kp,ibin]>count[kp-1,ibin] and sp>rm - max_miss:
+                        while kp<xp and count[kp,ibin]>count[kp-1,ibin] and sp>min_sampsize:
                             cdiff+=1 #=r+ count[kp,ibin]
                             kp+=1
                             #print('p',k,kp,ibin,dbin[kp],cdiff)
                             sp-=1
                     #r=count[xm,ibin]+(count[xp,ibin] - count[k,ibin])
-                    while(km>xm and cdiff>0 and sm>rm - max_miss):
+                    while(km>xm and cdiff>0 and sm>min_sampsize):
                         dbdiff=(dbin[km]-ibin+12)%12
                         if dbdiff>1:
                             km-=(dbdiff-1)*30
@@ -386,7 +522,7 @@ def numba_meaneqmov(t, dbin,tsa, n,max_miss, miss_val, count, tmean, tsquare,kre
                                 km=xm+1
                                 break
                         km-=1
-                        while km>0 and count[km+1,ibin]>count[km,ibin] and sm>rm - max_miss:
+                        while km>0 and count[km+1,ibin]>count[km,ibin] and sm>min_sampsize:
                             cdiff-=1 #=count[km,ibin] - r
                             #print('m',k,km,ibin,dbin[km],cdiff)
                             km-=1
@@ -400,15 +536,21 @@ def numba_meaneqmov(t, dbin,tsa, n,max_miss, miss_val, count, tmean, tsquare,kre
                     xy+= (tmean[xp,ibin] - tmean[xm,ibin]-(tmean[kp,ibin]-tmean[km,ibin])) #/ (count[xp,ibin] - count[xm,ibin]-(count[kp,ibin]-count[km,ibin]))  # Mittelwert ganze Periode
                     xx+= (tsquare[xp,ibin] - tsquare[xm,ibin]-(tsquare[kp,ibin]-tsquare[km,ibin])) #/ (count[xp,ibin] - count[xm,ibin]-(count[kp,ibin]-count[km,ibin]))  # Mittelwert ganze Periode
                 
-                if cm>=rm-max_miss and cp>=rm-max_miss:
+                if cm>=min_sampsize and cp>=min_sampsize:
                     
+                    if c==0 or cm==0 or cp==0:
+                        print(min_sampsize,c,cm,cp,'zero!')
                     sig = xx / np.float32(c)  # t*t ganze Periode
                     xym=xy/ np.float32(c)
                     if sig > xym * xym:
                         sig = sig - xym * xym  # standard deviation of the whole window
                         # n1 * (m1-m)**2 + n2 * (m2-m)**2 / stddev
-                        tsa[k] = (np.float32(cm)* (x/np.float32(cm) - xym)*(x/np.float32(cm) - xym)  + np.float32(cp) * (y/np.float32(cp) - xym)*(y/np.float32(cp) - xym)) / sig
-                        if tsa[k]>tsamax:
+                        if sig==0:
+                            print(sig,'zero!')
+                            bmax=0.
+                            kmax=k
+                        else:
+                            tsa[k] = (np.float32(cm)* (x/np.float32(cm) - xym)*(x/np.float32(cm) - xym)  + np.float32(cp) * (y/np.float32(cp) - xym)*(y/np.float32(cp) - xym)) / sig
                             bmax=y/np.float32(cp)-x/np.float32(cm)
                             tsamax=tsa[k]
                             kmax=k
@@ -423,11 +565,9 @@ def numba_meaneqmov(t, dbin,tsa, n,max_miss, miss_val, count, tmean, tsquare,kre
         #print(bmax)
     return bmax
     
-    
-    
 
 # @njit
-def numba_meaneqsamp(test,ref,ni,istart,left_maxlen,right_maxlen,increment,miss_val,max_miss):
+def numba_meaneqsamp(test,ref,ni,istart,left_maxlen,right_maxlen,increment,miss_val,min_sampsize):
     tsa = []
     plus = []
     minus = []
@@ -477,7 +617,7 @@ def numba_meaneqsamp(test,ref,ni,istart,left_maxlen,right_maxlen,increment,miss_
             imc=np.count_nonzero(im[:jendlen])
         
         minlen=min(left_maxlen,right_maxlen)
-        if(minlen-ipc  <  max_miss)  and  (minlen-imc  <  max_miss) :
+        if(minlen-ipc  >  min_sampsize)  and  (minlen-imc  >  min_sampsize) :
             for ibin in range(0, 12,1):
                 iph[:jstartlen]=np.logical_and(ip[:startlen], dbin[jstart:j+left_maxlen] == ibin)
                 pmon[ibin]=np.count_nonzero(iph[:jstartlen])
@@ -507,7 +647,7 @@ def numba_meaneqsamp(test,ref,ni,istart,left_maxlen,right_maxlen,increment,miss_
                         i+=1
             ipc=np.count_nonzero(ip[:jstartlen])
             imc=np.count_nonzero(im[:jendlen])
-            if((minlen-ipc < max_miss) and (inlen-imc < max_miss)):
+            if((minlen-ipc > min_sampsize) and (inlen-imc > min_sampsize)):
                 for ibin in range(0, 12):
                     pmon[ibin]=np.logical_and(np.count_nonzero(ip[:jstartlen]), dbin[jstart:j+left_maxlen-1] == ibin)
                     mmon[ibin]=np.logical_and(np.count_nonzero(im[:jendlen]), dbin[j+left_maxlen:jend] == ibin)
@@ -546,7 +686,7 @@ def numba_meaneqsamp(test,ref,ni,istart,left_maxlen,right_maxlen,increment,miss_
 
 
 @njit
-def snhteqsamp(test,ref,ni,istart,istop,maxlen,increment,miss_val,max_miss,tsa,plus,minus,prms,mrms,pcount,mcount):
+def snhteqsamp(test,ref,ni,istart,istop,maxlen,increment,miss_val,min_sampsize,tsa,plus,minus,prms,mrms,pcount,mcount):
     
     #dbin = []
     #for i in range(ni):
@@ -610,7 +750,7 @@ def snhteqsamp(test,ref,ni,istart,istop,maxlen,increment,miss_val,max_miss,tsa,p
         
     ini= True 
 
-    for j in range(istart-max_miss, istop-maxlen+max_miss, increment): # remove +1 of end, bc start is 0
+    for j in range(istart-min_sampsize, istop-min_sampsize, increment): # remove +1 of end, bc start is 0
 
 
         jstart=j
@@ -644,7 +784,7 @@ def snhteqsamp(test,ref,ni,istart,istop,maxlen,increment,miss_val,max_miss,tsa,p
             imcall=imc
 
 
-        if((maxlen//2-ipc  <  max_miss)  and  (maxlen//2-imc  <  max_miss)):
+        if((maxlen//2-ipc  >min_sampsize)  and  (maxlen//2-imc  >  min_sampsize)):
             for ibin in range(0, 12,1):
                 iph=np.logical_and(ip[:jstartlen], dbin[jstart:j+m2-1] == ibin)
                 pmon=np.sum(iph) # ??? not sure why it would be pmon(ibin), when only this iteration is used in the whole loop and it needs to get written also once per iteration
