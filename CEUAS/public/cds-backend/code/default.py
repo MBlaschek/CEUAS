@@ -1709,12 +1709,15 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                     write_results.append(i_res[0])
 #             combined_csv = pd.concat([pd.read_csv(f[0].split('.gz')[0], header=[0,1]) for f in results])
             combined_csv = pd.concat([pd.read_csv(f, header=11) for f in write_results])
-            results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+"single_csv.csv", '')]
-            with open(results[0][0], 'w') as file:
+            results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+"single_csv.csv.gz", '')]
+            with gzip.open(results[0][0], 'w') as file:
                 with gzip.open(write_results[0]) as f:
                     for i in range(11):
-                        file.write(f.readline().decode())
-            combined_csv.to_csv(results[0][0], index=False, mode="a")
+#                         # for csv output str is needed
+#                         file.write(f.readline().decode())
+                        # for gzip output byte is needed
+                        file.write(f.readline())
+            combined_csv.to_csv(results[0][0], index=False, mode="a", compression='gzip')
             
         if 'local_execution' in body.keys():
             return rfile
