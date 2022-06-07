@@ -3175,8 +3175,6 @@ class CDMDataset:
                         f.write('# Variables selected: '+ str(glamod_cdm_codes[cdm_codes[request['variable']]]) +' \n')
                         
                         f.write('######################################################################################### \n')
-                        f.write('#\n')
-                        f.write('#\n')
                         f.write(headstr[:-1]+'\n')
                         b=[item for sublist in zip(*fout.values()) for item in sublist]
                         f.write(formatall%tuple(b))
