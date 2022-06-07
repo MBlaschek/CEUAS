@@ -60,6 +60,7 @@ import hug
 import numpy
 import pandas as pd
 import xarray
+import gzip
 
 
 ###############################################################################
@@ -1268,6 +1269,8 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
     #
     if ((single_csv == True) or (single_csv == 'True')) and (d['format'] == 'csv'):
         d['single_csv'] = True
+    else:
+        d['single_csv'] = False
 #     if (single_parallel == True) or (single_parallel == 'True'):
 #         d['single_parallel'] = True
 #     else:
@@ -1702,9 +1705,13 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                 if i_res[0] != '':
                     write_results.append(i_res[0])
 #             combined_csv = pd.concat([pd.read_csv(f[0].split('.gz')[0], header=[0,1]) for f in results])
-            combined_csv = pd.concat([pd.read_csv(f, header=[0,1]) for f in write_results])
+            combined_csv = pd.concat([pd.read_csv(f, header=11) for f in write_results])
             results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+"single_csv.csv", '')]
-            combined_csv.to_csv(results[0][0], index=False,)# encoding='utf-8-sig')
+            with open(results[0][0], 'w') as file:
+                with gzip.open(write_results[0]) as f:
+                    for i in range(11):
+                        file.write(f.readline().decode())
+            combined_csv.to_csv(results[0][0], index=False, mode="a")
             
         if 'local_execution' in body.keys():
             return rfile
