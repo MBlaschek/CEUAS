@@ -3131,10 +3131,17 @@ class CDMDataset:
                         f.write('# This is a CSV file following the CDS convention cdm-obs \n')
                         f.write('# Data source: CUON \n')
                         f.write('# Version: v1 \n')
-#                         f.write('# Time extent: 20180901 - 20180901 \n')
-#                         f.write('# Geographic area: 50_0_40_10 \n')
-#                         f.write('# Variables selected and units \n')
-#                         f.write('# air_temperature [ K ] \n')
+                        
+#                         f.write('# Time extent: ' + request['date'][0]' + ' - ' + request['date'][1] +' \n')
+
+#                         bx = ''
+#                         if request['bbox']:
+#                             for i in request['bbox']:
+#                                 bx=bx + str(i)+'_' 
+#                         f.write('# Geographic area: ' + bx[:-1] + ' [South West North East] \n')
+
+    #                         f.write('# Variables selected and units \n')
+    #                         f.write('# air_temperature [ K ] \n')
                         f.write('######################################################################################### \n')
                         f.write('The column names below are from the following cdm-obs tables \n')
                         f.write('#'+group_headstr[:-1]+'\n')            
@@ -3151,10 +3158,12 @@ class CDMDataset:
                         f.write('# This is a CSV file following the CDS convention cdm-obs \n')
                         f.write('# Data source: CUON \n')
                         f.write('# Version: v1 \n')
-#                         f.write('# Time extent: 20180901 - 20180901 \n')
-#                         f.write('# Geographic area: 50_0_40_10 \n')
-#                         f.write('# Variables selected and units \n')
-#                         f.write('# air_temperature [ K ] \n')
+                        
+#                         f.write('# Time extent: ' + request['date'][0]' + ' - ' + request['date'][1] +' \n')
+#                         f.write('# Geographic area: single station \n')
+
+    #                         f.write('# Variables selected and units \n')
+    #                         f.write('# air_temperature [ K ] \n')
                         f.write('######################################################################################### \n')
                         f.write('#\n')
                         f.write('#\n')
