@@ -1709,14 +1709,32 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                     write_results.append(i_res[0])
 #             combined_csv = pd.concat([pd.read_csv(f[0].split('.gz')[0], header=[0,1]) for f in results])
             combined_csv = pd.concat([pd.read_csv(f, header=14) for f in write_results])
+            geo_ll = []
+            for geo in write_results:
+                with gzip.open(geo, 'rt') as fd:
+                    reader = csv.reader(fd)
+                    rows = list(reader)
+                    geo_row = []
+                    exmn = rows[9][0]
+                    exmn = exmn.split(' [South_West_North_East]')[0]
+                    exmn = exmn.split('# Geographic area: ')[-1]
+                    exmn =  exmn.split('_')
+                    for row_ll in exmn:
+                        print(row_ll)
+                        geo_row.append(float(row_ll))
+                    geo_ll.append(geo_row)
+            geo_ll = np.array(geo_ll)
             results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+"single_csv.csv.gz", '')]
             with gzip.open(results[0][0], 'w') as file:
-                with gzip.open(write_results[0]) as f:
+                with gzip.open(write_results[0], 'r') as f:
                     for i in range(14):
-#                         # for csv output str is needed
-#                         file.write(f.readline().decode())
-                        # for gzip output byte is needed
-                        file.write(f.readline())
+                        if i == 9:
+                            file.write(str('# Geographic area: ' + str([np.min(geo_ll[:,0]),np.min(geo_ll[:,1]),np.max(geo_ll[:,2]),np.max(geo_ll[:,3])]) + ' [South_West_North_East] \n').encode())
+                        else:
+    #                         # for csv output str is needed
+    #                         file.write(f.readline().decode())
+                            # for gzip output byte is needed
+                            file.write(f.readline())
             combined_csv.to_csv(results[0][0], index=False, mode="a", compression='gzip')
             
         if 'local_execution' in body.keys():
