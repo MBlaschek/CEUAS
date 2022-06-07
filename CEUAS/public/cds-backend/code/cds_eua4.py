@@ -2009,9 +2009,9 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
                 if len(files) > 1:
                     return CDMDatasetList(*files)
                 if files[0][-4:] == '.csv':
-                    return pd.read_csv(files[0])
+                    return pd.read_csv(files[0], header=11)
                 elif files[0][-7:] == '.csv.gz':
-                    return pd.read_csv(files[0], compression='gzip')
+                    return pd.read_csv(files[0], compression='gzip', header=11)
                 else:
                     return CDMDataset(filename=files[0])
         else:
@@ -2912,7 +2912,7 @@ class CDMDataset:
                                          'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence'])
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                if 'single_csv' in request.keys():
+                if request['single_csv']:
                     # for single_csv - adding second header
                     for grpsnew in range((len(fout)-foutlen_old)):
                         groups.append(igroup)
@@ -2929,7 +2929,7 @@ class CDMDataset:
                                              'biascorr@body'])
                     # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                    if 'single_csv' in request.keys():
+                    if request['single_csv']:
                         # for single_csv - adding second header
                         for grpsnew in range((len(fout)-foutlen_old)):
                             groups.append(igroup)
@@ -2945,7 +2945,7 @@ class CDMDataset:
                     do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                               var_selection=['bias_estimate', 'bias_estimation_method'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                    if 'single_csv' in request.keys():
+                    if request['single_csv']:
                         # for single_csv - adding second header
                         for grpsnew in range((len(fout)-foutlen_old)):
                             groups.append(igroup)
@@ -2968,7 +2968,7 @@ class CDMDataset:
                         do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                                   var_selection=varsel)
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                        if 'single_csv' in request.keys():
+                        if request['single_csv']:
                             # for single_csv - adding second header
                             for grpsnew in range((len(fout)-foutlen_old)):
                                 groups.append(igroup)
@@ -2986,7 +2986,7 @@ class CDMDataset:
                     do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                               var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                    if 'single_csv' in request.keys():
+                    if request['single_csv']:
                         # for single_csv - adding second header
                         for grpsnew in range((len(fout)-foutlen_old)):
                             groups.append(igroup)
@@ -3040,7 +3040,7 @@ class CDMDataset:
                     return headstr[:-1]+'\n'#+formatall%tuple(item for sublist in zip(*fout.values()) for item in sublist)
     
             else:
-                if 'single_csv' in request.keys():
+                if request['single_csv']:
                     fout['variable']=np.array([glamod_cdm_codes[cdm_codes[request['variable']]]]*len(fout['z_coordinate']))
                     groups.append('observations_table')
                     wigos_primid = b''.join(self.file['station_configuration']['primary_id'][:]).decode('UTF-8')
@@ -3088,7 +3088,7 @@ class CDMDataset:
                     else:
                         formatstr = formatstr+'"%.'+sd[2:]+'s",'
                         #formatstr = formatstr+'%.'+''+'s,'
-                if 'single_csv' in request.keys():
+                if request['single_csv']:
                     group_headstr = ''
 #                     print(groups)
                     for hs in groups:
@@ -3120,7 +3120,7 @@ class CDMDataset:
                 
 #                s=csvwrite(formatall,*fout.values())
 
-                if (filename_out is not None) and ('single_csv' in request.keys()):
+                if (filename_out is not None) and (request['single_csv']):
 #                     with open(filename_out[:-3],'w') as f:
                     with gzip.open(filename_out,'wt',compresslevel=1) as f:
                         f.write('######################################################################################## \n')
@@ -3131,14 +3131,14 @@ class CDMDataset:
                         f.write('# This is a CSV file following the CDS convention cdm-obs \n')
                         f.write('# Data source: CUON \n')
                         f.write('# Version: v1 \n')
-                        f.write('# Time extent: 20180901 - 20180901 \n')
-                        f.write('# Geographic area: 50_0_40_10 \n')
-                        f.write('# Variables selected and units \n')
-                        f.write('# air_temperature [ K ] \n')
+#                         f.write('# Time extent: 20180901 - 20180901 \n')
+#                         f.write('# Geographic area: 50_0_40_10 \n')
+#                         f.write('# Variables selected and units \n')
+#                         f.write('# air_temperature [ K ] \n')
                         f.write('######################################################################################### \n')
                         f.write('The column names below are from the following cdm-obs tables \n')
-                        f.write('#'+headstr[:-1]+'\n')
-                        f.write(group_headstr[:-1]+'\n')
+                        f.write('#'+group_headstr[:-1]+'\n')            
+                        f.write(headstr[:-1]+'\n')
                         b=[item for sublist in zip(*fout.values()) for item in sublist]
                         f.write(formatall%tuple(b))
                 elif filename_out is not None:
@@ -3151,11 +3151,13 @@ class CDMDataset:
                         f.write('# This is a CSV file following the CDS convention cdm-obs \n')
                         f.write('# Data source: CUON \n')
                         f.write('# Version: v1 \n')
-                        f.write('# Time extent: 20180901 - 20180901 \n')
-                        f.write('# Geographic area: 50_0_40_10 \n')
-                        f.write('# Variables selected and units \n')
-                        f.write('# air_temperature [ K ] \n')
+#                         f.write('# Time extent: 20180901 - 20180901 \n')
+#                         f.write('# Geographic area: 50_0_40_10 \n')
+#                         f.write('# Variables selected and units \n')
+#                         f.write('# air_temperature [ K ] \n')
                         f.write('######################################################################################### \n')
+                        f.write('#\n')
+                        f.write('#\n')
                         f.write(headstr[:-1]+'\n')
                         b=[item for sublist in zip(*fout.values()) for item in sublist]
                         f.write(formatall%tuple(b))
