@@ -3132,15 +3132,17 @@ class CDMDataset:
                         f.write('# Data source: CUON \n')
                         f.write('# Version: v1 \n')
                         
-                        f.write('# Time extent: ' + str(request['date'][0]) + ' - ' + str(request['date'][1]) +' \n')
+                        f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) + ' - ' + 
+                                str(request['date'][1][:4])+'.'+str(request['date'][1][4:6])+'.'+str(request['date'][1][6:8]) +' \n')
 
-                        bx = ''
+                        bx = 'nan_nan_nan_nan_'
                         if request['bbox']:
+                            bx = ''
                             for i in request['bbox']:
                                 bx=bx + str(i)+'_' 
                         f.write('# Geographic area: ' + str(bx[:-1]) + ' [South West North East] \n')
 
-                        f.write('# Variables selected: '+ str(request['variable']) +' \n')
+                        f.write('# Variables selected: multi variable or station request - see variable column \n')
                         
                         f.write('######################################################################################### \n')
                         f.write('The column names below are from the following cdm-obs tables \n')
@@ -3160,15 +3162,17 @@ class CDMDataset:
                         f.write('# Data source: CUON \n')
                         f.write('# Version: v1 \n')
                         
-                        f.write('# Time extent: ' + str(request['date'][0]) + ' - ' + str(request['date'][1]) +' \n')
+                        f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) + ' - ' + 
+                                str(request['date'][1][:4])+'.'+str(request['date'][1][4:6])+'.'+str(request['date'][1][6:8]) +' \n')
 
-                        bx = ''
+                        bx = 'nan_nan_nan_nan_'
                         if request['bbox']:
+                            bx = ''
                             for i in request['bbox']:
                                 bx=bx + str(i)+'_' 
                         f.write('# Geographic area: ' + str(bx[:-1]) + ' [South West North East] \n')
-
-                        f.write('# Variables selected: '+ str(request['variable']) +' \n')
+                        
+                        f.write('# Variables selected: '+ str(glamod_cdm_codes[cdm_codes[request['variable']]]) +' \n')
                         
                         f.write('######################################################################################### \n')
                         f.write('#\n')
