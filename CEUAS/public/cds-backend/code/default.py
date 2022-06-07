@@ -1077,6 +1077,8 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
     #
     if area is not None:
         bbox = area
+    else:
+        d['bbox']=False
     
     #
     # Countries
@@ -1126,6 +1128,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
         print(bbox)
         if bbox[0] < -90 or bbox[0] > 90 or bbox[2] < -90 or bbox[2] > 90 or bbox[1] < -180 or bbox[1] > 360 or bbox[3] < -180 or bbox[3] > 360 or bbox[3] - bbox[1] > 360:
             raise ValueError('Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]')
+        d['bbox']=bbox
         statid = []
         active_file = config['config_dir'] + '/active.json'
         bbact = json.load(open(active_file,"r"))
