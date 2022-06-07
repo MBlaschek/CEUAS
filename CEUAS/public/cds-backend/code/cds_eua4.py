@@ -3135,12 +3135,14 @@ class CDMDataset:
                         f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) + ' - ' + 
                                 str(request['date'][1][:4])+'.'+str(request['date'][1][4:6])+'.'+str(request['date'][1][6:8]) +' \n')
 
-                        bx = 'nan_nan_nan_nan_'
+                        lat = fout['latitude']
+                        lon = fout['longitude']
+                        bx = str(np.min(lat))+'_'+str(np.min(lon))+'_'+str(np.max(lat))+'_'+str(np.max(lon))+'_'
                         if request['bbox']:
                             bx = ''
                             for i in request['bbox']:
                                 bx=bx + str(i)+'_' 
-                        f.write('# Geographic area: ' + str(bx[:-1]) + ' [South West North East] \n')
+                        f.write('# Geographic area: ' + str(bx[:-1]) + ' [South_West_North_East] \n')
 
                         f.write('# Variables selected: multi variable or station request - see variable column \n')
                         
@@ -3165,12 +3167,14 @@ class CDMDataset:
                         f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) + ' - ' + 
                                 str(request['date'][1][:4])+'.'+str(request['date'][1][4:6])+'.'+str(request['date'][1][6:8]) +' \n')
 
-                        bx = 'nan_nan_nan_nan_'
+                        lat = fout['latitude']
+                        lon = fout['longitude']
+                        bx = str(np.min(lat))+'_'+str(np.min(lon))+'_'+str(np.max(lat))+'_'+str(np.max(lon))+'_'
                         if request['bbox']:
                             bx = ''
                             for i in request['bbox']:
                                 bx=bx + str(i)+'_' 
-                        f.write('# Geographic area: ' + str(bx[:-1]) + ' [South West North East] \n')
+                        f.write('# Geographic area: ' + str(bx[:-1]) + ' [South_West_North_East] \n')
                         
                         f.write('# Variables selected: '+ str(glamod_cdm_codes[cdm_codes[request['variable']]]) +' \n')
                         
