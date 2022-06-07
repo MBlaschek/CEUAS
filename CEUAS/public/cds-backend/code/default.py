@@ -1729,7 +1729,9 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                 with gzip.open(write_results[0], 'r') as f:
                     for i in range(14):
                         if i == 9:
-                            file.write(str('# Geographic area: ' + str([np.min(geo_ll[:,0]),np.min(geo_ll[:,1]),np.max(geo_ll[:,2]),np.max(geo_ll[:,3])]) + ' [South_West_North_East] \n').encode())
+                            file.write(str('# Geographic area: ' + str([np.min(geo_ll[:,0]),np.min(geo_ll[:,1]),np.max(geo_ll[:,2]),np.max(geo_ll[:,3])]) +
+                                           ' [South_West_North_East] \n').encode())
+                            f.readline()
                         else:
     #                         # for csv output str is needed
     #                         file.write(f.readline().decode())
