@@ -3123,12 +3123,39 @@ class CDMDataset:
                 if (filename_out is not None) and ('single_csv' in request.keys()):
 #                     with open(filename_out[:-3],'w') as f:
                     with gzip.open(filename_out,'wt',compresslevel=1) as f:
-                        f.write(headstr[:-1]+'\n')
+                        f.write('######################################################################################## \n')
+                        f.write('# This file contains data retrieved from the CDS https://https://cds-test.copernicus-climate.eu/cdsapp#!/dataset/insitu-comprehensive-upper-air-observation-network \n')
+                        f.write('# This is a C3S product under the following licences: \n')
+                        f.write('#     - licence-to-use-copernicus-products \n')
+                        f.write('#     - igra-data-policy \n')
+                        f.write('# This is a CSV file following the CDS convention cdm-obs \n')
+                        f.write('# Data source: CUON \n')
+                        f.write('# Version: v1 \n')
+                        f.write('# Time extent: 20180901 - 20180901 \n')
+                        f.write('# Geographic area: 50_0_40_10 \n')
+                        f.write('# Variables selected and units \n')
+                        f.write('# air_temperature [ K ] \n')
+                        f.write('######################################################################################### \n')
+                        f.write('The column names below are from the following cdm-obs tables \n')
+                        f.write('#'+headstr[:-1]+'\n')
                         f.write(group_headstr[:-1]+'\n')
                         b=[item for sublist in zip(*fout.values()) for item in sublist]
                         f.write(formatall%tuple(b))
                 elif filename_out is not None:
                     with gzip.open(filename_out,'wt',compresslevel=1) as f:
+                        f.write('######################################################################################## \n')
+                        f.write('# This file contains data retrieved from the CDS https://https://cds-test.copernicus-climate.eu/cdsapp#!/dataset/insitu-comprehensive-upper-air-observation-network \n')
+                        f.write('# This is a C3S product under the following licences: \n')
+                        f.write('#     - licence-to-use-copernicus-products \n')
+                        f.write('#     - igra-data-policy \n')
+                        f.write('# This is a CSV file following the CDS convention cdm-obs \n')
+                        f.write('# Data source: CUON \n')
+                        f.write('# Version: v1 \n')
+                        f.write('# Time extent: 20180901 - 20180901 \n')
+                        f.write('# Geographic area: 50_0_40_10 \n')
+                        f.write('# Variables selected and units \n')
+                        f.write('# air_temperature [ K ] \n')
+                        f.write('######################################################################################### \n')
                         f.write(headstr[:-1]+'\n')
                         b=[item for sublist in zip(*fout.values()) for item in sublist]
                         f.write(formatall%tuple(b))
