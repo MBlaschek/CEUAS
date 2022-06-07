@@ -2006,7 +2006,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
             if 'speed_test' in request:
                     return files[0]
             else:
-                if len(files) > 1:
+                if (len(files) > 1) and (files[0][-3:] == '.nc'):
                     return CDMDatasetList(*files)
                 if files[0][-4:] == '.csv':
                     return pd.read_csv(files[0], header=14)
@@ -3145,8 +3145,8 @@ class CDMDataset:
                         f.write('# Variables selected: multi variable or station request - see variable column \n')
                         
                         f.write('######################################################################################### \n')
-                        f.write('The column names below are from the following cdm-obs tables \n')
-                        f.write('#'+group_headstr[:-1]+'\n')            
+                        f.write('# The column names below are from the following cdm-obs tables \n')
+                        f.write('# '+group_headstr[:-1]+'\n')            
                         f.write(headstr[:-1]+'\n')
                         b=[item for sublist in zip(*fout.values()) for item in sublist]
                         f.write(formatall%tuple(b))
@@ -3175,6 +3175,8 @@ class CDMDataset:
                         f.write('# Variables selected: '+ str(glamod_cdm_codes[cdm_codes[request['variable']]]) +' \n')
                         
                         f.write('######################################################################################### \n')
+                        f.write('#\n')
+                        f.write('#\n')
                         f.write(headstr[:-1]+'\n')
                         b=[item for sublist in zip(*fout.values()) for item in sublist]
                         f.write(formatall%tuple(b))
