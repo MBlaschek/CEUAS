@@ -2009,9 +2009,9 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
                 if len(files) > 1:
                     return CDMDatasetList(*files)
                 if files[0][-4:] == '.csv':
-                    return pd.read_csv(files[0], header=11)
+                    return pd.read_csv(files[0], header=14)
                 elif files[0][-7:] == '.csv.gz':
-                    return pd.read_csv(files[0], compression='gzip', header=11)
+                    return pd.read_csv(files[0], compression='gzip', header=14)
                 else:
                     return CDMDataset(filename=files[0])
         else:
@@ -3132,22 +3132,23 @@ class CDMDataset:
                         f.write('# Data source: CUON \n')
                         f.write('# Version: v1 \n')
                         
-#                         f.write('# Time extent: ' + request['date'][0]' + ' - ' + request['date'][1] +' \n')
+                        f.write('# Time extent: ' + str(request['date'][0]) + ' - ' + str(request['date'][1]) +' \n')
 
-#                         bx = ''
-#                         if request['bbox']:
-#                             for i in request['bbox']:
-#                                 bx=bx + str(i)+'_' 
-#                         f.write('# Geographic area: ' + bx[:-1] + ' [South West North East] \n')
+                        bx = ''
+                        if request['bbox']:
+                            for i in request['bbox']:
+                                bx=bx + str(i)+'_' 
+                        f.write('# Geographic area: ' + str(bx[:-1]) + ' [South West North East] \n')
 
-    #                         f.write('# Variables selected and units \n')
-    #                         f.write('# air_temperature [ K ] \n')
+                        f.write('# Variables selected: '+ str(request['variable']) +' \n')
+                        
                         f.write('######################################################################################### \n')
                         f.write('The column names below are from the following cdm-obs tables \n')
                         f.write('#'+group_headstr[:-1]+'\n')            
                         f.write(headstr[:-1]+'\n')
                         b=[item for sublist in zip(*fout.values()) for item in sublist]
                         f.write(formatall%tuple(b))
+                        
                 elif filename_out is not None:
                     with gzip.open(filename_out,'wt',compresslevel=1) as f:
                         f.write('######################################################################################## \n')
@@ -3159,11 +3160,16 @@ class CDMDataset:
                         f.write('# Data source: CUON \n')
                         f.write('# Version: v1 \n')
                         
-#                         f.write('# Time extent: ' + request['date'][0]' + ' - ' + request['date'][1] +' \n')
-#                         f.write('# Geographic area: single station \n')
+                        f.write('# Time extent: ' + str(request['date'][0]) + ' - ' + str(request['date'][1]) +' \n')
 
-    #                         f.write('# Variables selected and units \n')
-    #                         f.write('# air_temperature [ K ] \n')
+                        bx = ''
+                        if request['bbox']:
+                            for i in request['bbox']:
+                                bx=bx + str(i)+'_' 
+                        f.write('# Geographic area: ' + str(bx[:-1]) + ' [South West North East] \n')
+
+                        f.write('# Variables selected: '+ str(request['variable']) +' \n')
+                        
                         f.write('######################################################################################### \n')
                         f.write('#\n')
                         f.write('#\n')
