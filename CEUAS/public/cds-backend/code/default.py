@@ -1712,7 +1712,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
             results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+"single_csv.csv.gz", '')]
             with gzip.open(results[0][0], 'w') as file:
                 with gzip.open(write_results[0]) as f:
-                    for i in range(11):
+                    for i in range(14):
 #                         # for csv output str is needed
 #                         file.write(f.readline().decode())
                         # for gzip output byte is needed
