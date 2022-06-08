@@ -806,7 +806,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                gridded: list = None, toolbox: str = None, cdm: list = None, da: bool = True, compression: str = None,
                pass_unknown_keys: bool = False, nodims: str = None, hdf: str = None, speed_test: str = None, 
-               single_parallel: bool = False, single_csv: bool = True,
+               single_parallel: bool = False, single_csv: bool = True, single_csv_target: str = 'CDS_CUON_output_file',
                **kwargs) -> dict:
     """ Check Request for valid values and keys
 
@@ -865,6 +865,11 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                          'dew_point_temperature',
                          'geopotential', 'geopotential_height',
                          'dew_point_depression', 'dewpoint_departure','dewpoint_depression', 'dew_point_departure']
+    #
+    # single csv target name
+    #
+    d['single_csv_target']=single_csv_target
+    
     #
     # Unknown keys ?
     #
@@ -1713,6 +1718,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
 #             combined_csv = pd.concat([pd.read_csv(f[0].split('.gz')[0], header=[0,1]) for f in results])
             combined_csv = pd.concat([pd.read_csv(f, header=14) for f in write_results])
             geo_ll = []
+            var_ll = []
             for geo in write_results:
                 with gzip.open(geo, 'rt') as fd:
                     reader = csv.reader(fd)
@@ -1726,11 +1732,17 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                         print(row_ll)
                         geo_row.append(float(row_ll))
                     geo_ll.append(geo_row)
+                    
+                    var_ll.append(rows[10][0])
+            var_ll = ", ".join(np.unique(var_ll))
             geo_ll = np.array(geo_ll)
-            results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+"single_csv.csv.gz", '')]
+            results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+body['single_csv_target']+".csv.gz", '')]
             with gzip.open(results[0][0], 'w') as file:
                 with gzip.open(write_results[0], 'r') as f:
                     for i in range(14):
+                        if i == 10:
+                            file.write(str('# Variables selected: ' + str(var_ll) + ' \n').encode())
+                            f.readline()
                         if i == 9:
                             file.write(str('# Geographic area: ' + str([np.min(geo_ll[:,0]),np.min(geo_ll[:,1]),np.max(geo_ll[:,2]),np.max(geo_ll[:,3])]) +
                                            ' [South_West_North_East] \n').encode())
