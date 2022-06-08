@@ -1743,7 +1743,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                         if i == 10:
                             file.write(str('# Variables selected: ' + str(var_ll) + ' \n').encode())
                             f.readline()
-                        if i == 9:
+                        elif i == 9:
                             file.write(str('# Geographic area: ' + str([np.min(geo_ll[:,0]),np.min(geo_ll[:,1]),np.max(geo_ll[:,2]),np.max(geo_ll[:,3])]) +
                                            ' [South_West_North_East] \n').encode())
                             f.readline()
