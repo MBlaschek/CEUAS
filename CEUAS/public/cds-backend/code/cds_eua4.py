@@ -3119,7 +3119,10 @@ class CDMDataset:
                 print(len(sss),time.time()-tt)
                 
 #                s=csvwrite(formatall,*fout.values())
-
+                cf = read_standardnames()
+                #
+                # CSV Header
+                #
                 if (filename_out is not None) and (request['single_csv']):
 #                     with open(filename_out[:-3],'w') as f:
                     with gzip.open(filename_out,'wt',compresslevel=1) as f:
@@ -3144,7 +3147,7 @@ class CDMDataset:
                                 bx=bx + str(i)+'_' 
                         f.write('# Geographic area: ' + str(bx[:-1]) + ' [South_West_North_East] \n')
 
-                        f.write('# Variables selected: multi variable or station request - see variable column \n')
+                        f.write(str(glamod_cdm_codes[cdm_codes[request['variable']]]) + ' ['+ cf[glamod_cdm_codes[cdm_codes[request['variable']]].replace(" ", "_")]['units'] +']\n')
                         
                         f.write('######################################################################################### \n')
                         f.write('# The column names below are from the following cdm-obs tables \n')
@@ -3176,7 +3179,7 @@ class CDMDataset:
                                 bx=bx + str(i)+'_' 
                         f.write('# Geographic area: ' + str(bx[:-1]) + ' [South_West_North_East] \n')
                         
-                        f.write('# Variables selected: '+ str(glamod_cdm_codes[cdm_codes[request['variable']]]) +' \n')
+                        f.write('# Variables selected: '+ str(glamod_cdm_codes[cdm_codes[request['variable']]]) + ' ['+ cf[glamod_cdm_codes[cdm_codes[request['variable']]].replace(" ", "_")]['units'] +']\n')
                         
                         f.write('######################################################################################### \n')
                         f.write('#\n')
