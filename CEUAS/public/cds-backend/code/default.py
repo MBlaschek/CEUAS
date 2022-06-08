@@ -104,6 +104,9 @@ if config['cds_eua_version'] == 3:
 elif config['cds_eua_version'] == 4:
     import cds_eua4 as eua
     CDS_EUA_VERSION = 4
+elif config['cds_eua_version'] == 5:
+    import cds_eua5 as eua
+    CDS_EUA_VERSION = 5
     
 print('CDS_EUA_VERSION: ', CDS_EUA_VERSION)
     
@@ -803,7 +806,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                gridded: list = None, toolbox: str = None, cdm: list = None, da: bool = True, compression: str = None,
                pass_unknown_keys: bool = False, nodims: str = None, hdf: str = None, speed_test: str = None, 
-               single_parallel: bool = False, single_csv: bool = False,
+               single_parallel: bool = False, single_csv: bool = True,
                **kwargs) -> dict:
     """ Check Request for valid values and keys
 
