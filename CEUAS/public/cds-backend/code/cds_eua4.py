@@ -831,6 +831,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
         var_selection = [var_selection]
 
     for i in cf.keys():
+        print(i)
         if i not in ['platform_id', 'platform_name']:
             if i in ['air_temperature', 'dew_point_temperature','dew_point_depression', 'relative_humidity', 'specific_humidity',
                      'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential']:
@@ -851,8 +852,8 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
             if group + '/' + v == cfv['cdmname']:
                 vlist.append(cfv['shortname'])
                 try:
-                    if v == 'sensor_id':
-                        print('sid')
+#                     if v == 'sensor_id':
+#                         print('sid')
                     logger.debug('CFCOPY %s %s', v, vlist[-1])
                     if fin[group][v].ndim == 1:
 #                         try:
@@ -2863,7 +2864,7 @@ class CDMDataset:
         #
         # Common Variables needed for a requested file
         #
-        snames = ['platform_id', 'platform_name', 'observation_value', 'latitude',
+        snames = ['observation_value', 'latitude', # 'platform_id', 'platform_name', 
                   'longitude', 'time', 'air_pressure', 'trajectory_label', 
                   'report_id', 'station_id']
         varseldict={}
@@ -2904,18 +2905,64 @@ class CDMDataset:
 #         rstcd = self.file['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
 #         zrstcd=recordindex[zidx+1]-idx[0]
 #         rstcd=None
+        #
+        # Adding CDM
+        #
+        cdm_obstab = []
+        cdm_eratab = []
+        cdmlist = request.get('cdm', None)
+#         print('cdmlist: ', cdmlist)
+#                 print('cfcopy: ', cfcopy)
+        if cdmlist != None:
+            # removing variables with restricted access
+            if ('era5fb/obsvalue@body' in cdmlist) or ('observations_table/observation_value' in cdmlist):
+                try: cdmlist.remove('era5fb/obsvalue@body')
+                except: pass
+                try: cdmlist.remove('observations_table/observation_value')
+                except: pass
+            for i in cdmlist:
+                print(i)
+                grp = i.split('/')[0]
+                if i == 'era5fb':
+                    logger.debug('Full er5fb CDM-request disabled.')
+                elif grp == 'era5fb':
+                    try: 
+                        var = i.split('/')[1]
+                        cdm_eratab.append(var)
+                        cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
+                    except: pass
+                    cdmlist.remove(i)
+
+                if i == 'observations_table':
+                    logger.debug('Full observations_table CDM-request disabled.')
+                elif grp == 'observations_table':
+                    try: 
+                        var = i.split('/')[1]
+#                                 if var != 'data_policy_licence':
+                        cdm_obstab.append(var)
+                        cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
+                    except: pass
+                    cdmlist.remove(i)
+                    # NOW USE THOSE for the do_cfcopy below
+            logger.debug('CDM - adding groups and variables: %s', str(cdmlist))
+            print('CDM - adding groups and variables: %s', str(cdmlist))
         
         if request['format'] in ['csv', 'fast_csv']:
             fout={}
             # for single_csv - adding second header
             groups=[]
             foutlen_old = 0
+
             if 'observations_table' in self.groups:
                 igroup = 'observations_table'
+                varselcfcopy = ['observation_id', 'latitude', 'longitude', 'z_coordinate',
+                                    'observation_value', 'date_time', 'sensor_id', 'secondary_value',
+                                    'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']
+                for co in cdm_obstab:
+                    if not co in varselcfcopy:
+                        varselcfcopy.append(co)
                 do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
-                          var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
-                                         'observation_value', 'observed_variable', 'date_time', 'sensor_id', 'secondary_value',
-                                         'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence'])
+                          var_selection=varselcfcopy)
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 if request['single_csv']:
@@ -2930,10 +2977,13 @@ class CDMDataset:
             #
             if 'era5fb' in self.groups:
                 igroup = 'era5fb'
+                varselcfcopy = ['fg_depar@body', 'an_depar@body', 'biascorr@body']
+                for co in cdm_eratab:
+                    if not co in varselcfcopy:
+                        varselcfcopy.append(co)
                 try:
                     do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
-                              var_selection=['fg_depar@body', 'an_depar@body',
-                                             'biascorr@body'])
+                              var_selection=varselcfcopy)
                     # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     if request['single_csv']:
@@ -3219,44 +3269,47 @@ class CDMDataset:
 
                 print('attrs written')
 
-                #
-                # Adding CDM
-                #
-                cdm_obstab = []
-                cdm_eratab = []
-                cdmlist = request.get('cdm', None)
-                print('cdmlist: ', cdmlist)
-                print('cfcopy: ', cfcopy)
+#                 #
+#                 # Adding CDM
+#                 #
+#                 cdm_obstab = []
+#                 cdm_eratab = []
+#                 cdmlist = request.get('cdm', None)
+#                 print('cdmlist: ', cdmlist)
+# #                 print('cfcopy: ', cfcopy)
                 if cdmlist != None:
-                    # removing variables with restricted access
-                    if ('era5fb/obsvalue@body' in cdmlist) or ('observations_table/observation_value' in cdmlist):
-                        try: cdmlist.remove('era5fb/obsvalue@body')
-                        except: pass
-                        try: cdmlist.remove('observations_table/observation_value')
-                        except: pass
-                    for i in cdmlist:
-                        grp = i.split('/')[0]
-                        if i == 'era5fb':
-                            logger.debug('Full er5fb CDM-request disabled.')
-                        elif grp == 'era5fb':
-                            try: 
-                                var = i.split('/')[1]
-                                cdm_eratab.append(var)
-                                cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
-                            except: pass
-                            cdmlist.remove(i)
+#                     # removing variables with restricted access
+#                     if ('era5fb/obsvalue@body' in cdmlist) or ('observations_table/observation_value' in cdmlist):
+#                         try: cdmlist.remove('era5fb/obsvalue@body')
+#                         except: pass
+#                         try: cdmlist.remove('observations_table/observation_value')
+#                         except: pass
+#                     for i in cdmlist:
+#                         print(i)
+#                         grp = i.split('/')[0]
+#                         if i == 'era5fb':
+#                             logger.debug('Full er5fb CDM-request disabled.')
+#                         elif grp == 'era5fb':
+#                             try: 
+#                                 var = i.split('/')[1]
+#                                 cdm_eratab.append(var)
+#                                 cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
+#                             except: pass
+#                             cdmlist.remove(i)
 
-                        if i == 'observations_table':
-                            logger.debug('Full observations_table CDM-request disabled.')
-                        elif grp == 'observations_table':
-                            try: 
-                                var = i.split('/')[1]
-                                cdm_obstab.append(var)
-                                cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
-                            except: pass
-                            cdmlist.remove(i)
-                            # NOW USE THOSE for the do_cfcopy below
-                    logger.debug('CDM - adding groups and variables: %s', str(cdmlist))
+#                         if i == 'observations_table':
+#                             logger.debug('Full observations_table CDM-request disabled.')
+#                         elif grp == 'observations_table':
+#                             try: 
+#                                 var = i.split('/')[1]
+# #                                 if var != 'data_policy_licence':
+#                                 cdm_obstab.append(var)
+#                                 cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
+#                             except: pass
+#                             cdmlist.remove(i)
+#                             # NOW USE THOSE for the do_cfcopy below
+#                     logger.debug('CDM - adding groups and variables: %s', str(cdmlist))
+                    print('CDM - adding groups and variables: %s', str(cdmlist))
                     for cdmstring in cdmlist:
                         print(cdmstring)
                         cdmsplit = cdmstring.split('/')
@@ -3289,13 +3342,17 @@ class CDMDataset:
                 #
                 # Variables based on cfcopy
                 #
-                print('cfcopy: ', cfcopy)
+#                 print('cfcopy: ', cfcopy)
                 if 'observations_table' in self.groups:
+                    varselcfcopy = ['observation_id', 'latitude', 'longitude', 'z_coordinate',
+                                    'observation_value', 'date_time', 'sensor_id', 'secondary_value',
+                                    'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']
+                    for co in cdm_obstab:
+                        if not co in varselcfcopy:
+                            varselcfcopy.append(co)
                     igroup = 'observations_table'
                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
-                              var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
-                                             'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                             'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']+cdm_obstab)
+                              var_selection=varselcfcopy)
                     # 'observed_variable','units'
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     if 'nodims' in request.keys():
@@ -3305,10 +3362,13 @@ class CDMDataset:
                 #
                 if 'era5fb' in self.groups:
                     igroup = 'era5fb'
+                    varselcfcopy = ['fg_depar@body', 'an_depar@body', 'biascorr@body']
+                    for co in cdm_eratab:
+                        if not co in varselcfcopy:
+                            varselcfcopy.append(co)
                     try:
                         do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
-                                  var_selection=['fg_depar@body', 'an_depar@body',
-                                                 'biascorr@body']+cdm_eratab)
+                                  var_selection=varselcfcopy)
                         # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     except KeyError as e:
@@ -3780,7 +3840,7 @@ class CDMDataset:
         #
         # Common Variables needed for a requested file
         #
-        snames = ['platform_id', 'platform_name', 'observation_value', 'latitude',
+        snames = ['observation_value', 'latitude', # 'platform_id', 'platform_name', 
                   'longitude', 'time', 'air_pressure', 'trajectory_label', 
                   'report_id', 'station_id']
         varseldict={}
