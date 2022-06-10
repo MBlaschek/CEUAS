@@ -75,16 +75,16 @@ from multiprocessing import set_start_method, Pool
 #              'u_component_of_wind': ipar[104],'v_component_of_wind': ipar[105],
 #              'specific_humidity': ipar[39]}
 
-glamod_cdm_codes = {34:'dew point depression',
-                    39:'specific humidity',
-                    106:'wind from direction',
-                    107:'wind speed',
-                    117:'geopotential height',
-                    126:'air temperature',
-                    137:'air dewpoint',
-                    138:'relative humidity',
-                    139:'eastward wind speed',
-                    140:'northward wind speed',  
+glamod_cdm_codes = {34:'dew_point_depression',
+                    39:'specific_humidity',
+                    106:'wind_from_direction',
+                    107:'wind_speed',
+                    117:'geopotential_height',
+                    126:'air_temperature',
+                    137:'air_dewpoint',
+                    138:'relative_humidity',
+                    139:'eastward_wind_speed',
+                    140:'northward_wind_speed',  
                    }
 
 cdm_codes = {'temperature': 126, 'relative_humidity': 138, 'dew_point_temperature': 137, 
@@ -1073,7 +1073,8 @@ def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None)
                             s1 = fin[group][v].shape[1]
                             sname = 'string{}'.format(s1)
                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
-                            hilf[mask, :] = np.nan
+                            # 
+#                             hilf[mask, :] = np.nan
                             #hilf = hilf[idx[0]:idx[-1] + 1, :]
 #                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
                             if hilf.shape[0] == 0:
@@ -1224,6 +1225,11 @@ def seconds_to_datetime(seconds, ref='1900-01-01'):
     """ from seconds to datetime64 """
     seconds = np.asarray(seconds)
     return pd.to_datetime(seconds, unit='s', origin=ref).values
+
+def seconds_to_str(seconds, ref='1900-01-01'):
+    """ from seconds to datetime64 """
+    seconds = np.asarray(seconds)
+    return pd.to_datetime(seconds, unit='s', origin=ref).values.astype(str)
 
 
 def datetime_to_seconds(dates, ref='1900-01-01T00:00:00'):
@@ -2887,7 +2893,7 @@ class CDMDataset:
                 cfcopy[ss] = cf_dict[ss]
             except:
                 pass
-        print(cfcopy)
+#         print(cfcopy)
         #
         # End Definition of Variables to write
         #
@@ -2918,6 +2924,7 @@ class CDMDataset:
                         groups.append(igroup)
                     foutlen_old = len(fout)
                     print(groups)
+                fout['date_time'] = seconds_to_str(fout['date_time'])
             #
             # Feedback Information
             #
@@ -3218,6 +3225,8 @@ class CDMDataset:
                 cdm_obstab = []
                 cdm_eratab = []
                 cdmlist = request.get('cdm', None)
+                print('cdmlist: ', cdmlist)
+                print('cfcopy: ', cfcopy)
                 if cdmlist != None:
                     # removing variables with restricted access
                     if ('era5fb/obsvalue@body' in cdmlist) or ('observations_table/observation_value' in cdmlist):
@@ -3280,6 +3289,7 @@ class CDMDataset:
                 #
                 # Variables based on cfcopy
                 #
+                print('cfcopy: ', cfcopy)
                 if 'observations_table' in self.groups:
                     igroup = 'observations_table'
                     do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
