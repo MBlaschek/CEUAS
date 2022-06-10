@@ -1715,6 +1715,9 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
             for i_res in results:
                 if i_res[0] != '':
                     write_results.append(i_res[0])
+            # to place the stations in an order manner
+            write_results.sort()
+            print(i_res[0])
 #             combined_csv = pd.concat([pd.read_csv(f[0].split('.gz')[0], header=[0,1]) for f in results])
             combined_csv = pd.concat([pd.read_csv(f, header=14) for f in write_results])
             geo_ll = []
