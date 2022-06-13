@@ -1229,8 +1229,11 @@ def seconds_to_datetime(seconds, ref='1900-01-01'):
 
 def seconds_to_str(seconds, ref='1900-01-01'):
     """ from seconds to datetime64 """
+    os.environ['TZ'] = 'UTC'
+    time.tzset()
     seconds = np.asarray(seconds)
-    return pd.to_datetime(seconds, unit='s', origin=ref).values.astype(str)
+    out =  pd.to_datetime(seconds, unit='s', origin=ref).astype(str)
+    return np.array([s + '+00' for s in out])
 
 
 def datetime_to_seconds(dates, ref='1900-01-01T00:00:00'):
@@ -2920,6 +2923,7 @@ class CDMDataset:
                 except: pass
                 try: cdmlist.remove('observations_table/observation_value')
                 except: pass
+            rmv_list = []
             for i in cdmlist:
                 print(i)
                 grp = i.split('/')[0]
@@ -2931,7 +2935,7 @@ class CDMDataset:
                         cdm_eratab.append(var)
                         cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
                     except: pass
-                    cdmlist.remove(i)
+                    rmv_list.append(i)
 
                 if i == 'observations_table':
                     logger.debug('Full observations_table CDM-request disabled.')
@@ -2942,10 +2946,12 @@ class CDMDataset:
                         cdm_obstab.append(var)
                         cfcopy[var]={'cdmname': i, 'units': '', 'shortname': var, 'coordinates': 'lat lon time plev', 'standard_name': var, 'cdsname': var,}
                     except: pass
-                    cdmlist.remove(i)
+                    rmv_list.append(i)
                     # NOW USE THOSE for the do_cfcopy below
             logger.debug('CDM - adding groups and variables: %s', str(cdmlist))
             print('CDM - adding groups and variables: %s', str(cdmlist))
+            for rmi in rmv_list:
+                cdmlist.remove(rmi)
         
         if request['format'] in ['csv', 'fast_csv']:
             fout={}
@@ -3123,6 +3129,22 @@ class CDMDataset:
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
 
                 
+                #
+                # sort fout to have the columns in correct order
+                #
+                fout_sorted = {}
+                for i_element in sorted(fout.keys()):
+                    if not i_element in ['observation_value','variable']:
+                        fout_sorted[i_element] = fout[i_element]
+                if request['single_csv']:
+                    fout_sorted['variable'] = fout['variable']
+                fout_sorted['observation_value'] = fout['observation_value']
+                fout = fout_sorted
+                del fout_sorted
+                
+                #
+                # prepare to write csv
+                #
                 
                 dtype = dict(names = list(fout.keys()), formats=[])
                 lfout=[]
@@ -3161,19 +3183,19 @@ class CDMDataset:
                 formatall=formatstrn*fout[dtype['names'][0]].shape[0]
 #                formatall=formatstrn*lfout[0].shape[0]
 #                 with open(filename_out,'w') as f:
-#                 with lz4.frame.open(filename_out,'wt') as f:
+#                 with lz4.frame.open(filename_out,'wt') as f
 
-                tt=time.time()
-                ss=[]
-                for v in fout.values():
-                    ss.append(f"{tuple(v)}".split(','))
-                x=[','.join(t) for t in zip(*ss)]
-                sss='\n'.join(x)
-                print(len(sss),time.time()-tt)
-                tt=time.time()
-                b=[item for sublist in zip(*fout.values()) for item in sublist]
-                s=formatall%tuple(b)
-                print(len(sss),time.time()-tt)
+#                 tt=time.time()
+#                 ss=[]
+#                 for v in fout.values():
+#                     ss.append(f"{tuple(v)}".split(','))
+#                 x=[','.join(t) for t in zip(*ss)]
+#                 sss='\n'.join(x)
+#                 print(len(sss),time.time()-tt)
+#                 tt=time.time()
+#                 b=[item for sublist in zip(*fout.values()) for item in sublist]
+#                 s=formatall%tuple(b)
+#                 print(len(sss),time.time()-tt)
                 
 #                s=csvwrite(formatall,*fout.values())
                 cf = read_standardnames()
@@ -3882,8 +3904,11 @@ class CDMDataset:
         ###
         
         # outputfiles:
-        del cfcopy['platform_id']
-        del cfcopy['platform_name']
+        try:
+            del cfcopy['platform_id']
+            del cfcopy['platform_name']
+        except:
+            pass
 
         list_cfcopy = []
         for chunks in cfcopy:
