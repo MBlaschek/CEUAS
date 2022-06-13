@@ -1018,11 +1018,17 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
         else:
             d['cdm'] = cdm
             d['da'] = False
+        print(d['cdm'])
+        if not ('observations_table/data_policy_licence' in d['cdm']):
+            d['cdm'].append('observations_table/data_policy_licence')
+            print(d['cdm'])
+    else:
+        d['cdm'] = ['observations_table/data_policy_licence']
 
     #
     # gridded [lower left upper right]
     #
-    elif gridded is not None:
+    if gridded is not None:
         if not isinstance(gridded, (list, tuple)) or len(gridded) != 4:
             raise ValueError('Invalid selection, gridded: [lower left upper right]')
         try:
@@ -1259,7 +1265,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                 'stations ')
     d['statid'] = statid
     print(len(d['statid']), d['statid'])
-    if len(d['statid']) == 1:
+    if len(d['statid']) == 1 and ((single_parallel == True) or (single_parallel == 'True')):
         d['single_parallel'] = True
     #
     #
@@ -1274,6 +1280,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
 #         d['single_parallel'] = True
 #     else:
 #         d['single_parallel'] = False
+    print('single_parallel: ', d['single_parallel'])
 
     #
     # single_csv
