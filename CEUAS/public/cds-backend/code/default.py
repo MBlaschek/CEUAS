@@ -60,6 +60,7 @@ import hug
 import numpy
 import pandas as pd
 import xarray
+import gzip
 
 
 ###############################################################################
@@ -103,6 +104,9 @@ if config['cds_eua_version'] == 3:
 elif config['cds_eua_version'] == 4:
     import cds_eua4 as eua
     CDS_EUA_VERSION = 4
+elif config['cds_eua_version'] == 5:
+    import cds_eua5 as eua
+    CDS_EUA_VERSION = 5
     
 print('CDS_EUA_VERSION: ', CDS_EUA_VERSION)
     
@@ -802,7 +806,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                format: str = None, period: list = None, optional: list = None, wmotable: dict = None,
                gridded: list = None, toolbox: str = None, cdm: list = None, da: bool = True, compression: str = None,
                pass_unknown_keys: bool = False, nodims: str = None, hdf: str = None, speed_test: str = None, 
-               single_parallel: bool = False, single_csv: bool = False,
+               single_parallel: bool = False, single_csv: bool = True, single_csv_target: str = 'CDS_CUON_output_file',
                **kwargs) -> dict:
     """ Check Request for valid values and keys
 
@@ -861,6 +865,11 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                          'dew_point_temperature',
                          'geopotential', 'geopotential_height',
                          'dew_point_depression', 'dewpoint_departure','dewpoint_depression', 'dew_point_departure']
+    #
+    # single csv target name
+    #
+    d['single_csv_target']=single_csv_target
+    
     #
     # Unknown keys ?
     #
@@ -1076,6 +1085,8 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
     #
     if area is not None:
         bbox = area
+    else:
+        d['bbox']=False
     
     #
     # Countries
@@ -1125,6 +1136,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
         print(bbox)
         if bbox[0] < -90 or bbox[0] > 90 or bbox[2] < -90 or bbox[2] > 90 or bbox[1] < -180 or bbox[1] > 360 or bbox[3] < -180 or bbox[3] > 360 or bbox[3] - bbox[1] > 360:
             raise ValueError('Invalid selection, bounding box: lower<upper [-90, 90], left<right [-180, 360]')
+        d['bbox']=bbox
         statid = []
         active_file = config['config_dir'] + '/active.json'
         bbact = json.load(open(active_file,"r"))
@@ -1268,6 +1280,8 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
     #
     if ((single_csv == True) or (single_csv == 'True')) and (d['format'] == 'csv'):
         d['single_csv'] = True
+    else:
+        d['single_csv'] = False
 #     if (single_parallel == True) or (single_parallel == 'True'):
 #         d['single_parallel'] = True
 #     else:
@@ -1701,10 +1715,47 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
             for i_res in results:
                 if i_res[0] != '':
                     write_results.append(i_res[0])
+            # to place the stations in an order manner
+            write_results.sort()
+            print(i_res[0])
 #             combined_csv = pd.concat([pd.read_csv(f[0].split('.gz')[0], header=[0,1]) for f in results])
-            combined_csv = pd.concat([pd.read_csv(f, header=[0,1]) for f in write_results])
-            results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+"single_csv.csv", '')]
-            combined_csv.to_csv(results[0][0], index=False,)# encoding='utf-8-sig')
+            combined_csv = pd.concat([pd.read_csv(f, header=14) for f in write_results])
+            geo_ll = []
+            var_ll = []
+            for geo in write_results:
+                with gzip.open(geo, 'rt') as fd:
+                    reader = csv.reader(fd)
+                    rows = list(reader)
+                    geo_row = []
+                    exmn = rows[9][0]
+                    exmn = exmn.split(' [South_West_North_East]')[0]
+                    exmn = exmn.split('# Geographic area: ')[-1]
+                    exmn =  exmn.split('_')
+                    for row_ll in exmn:
+                        print(row_ll)
+                        geo_row.append(float(row_ll))
+                    geo_ll.append(geo_row)
+                    
+                    var_ll.append(rows[10][0])
+            var_ll = ", ".join(np.unique(var_ll))
+            geo_ll = np.array(geo_ll)
+            results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+body['single_csv_target']+".csv.gz", '')]
+            with gzip.open(results[0][0], 'w') as file:
+                with gzip.open(write_results[0], 'r') as f:
+                    for i in range(14):
+                        if i == 10:
+                            file.write(str('# Variables selected: ' + str(var_ll) + ' \n').encode())
+                            f.readline()
+                        elif i == 9:
+                            file.write(str('# Geographic area: ' + str([np.min(geo_ll[:,0]),np.min(geo_ll[:,1]),np.max(geo_ll[:,2]),np.max(geo_ll[:,3])]) +
+                                           ' [South_West_North_East] \n').encode())
+                            f.readline()
+                        else:
+    #                         # for csv output str is needed
+    #                         file.write(f.readline().decode())
+                            # for gzip output byte is needed
+                            file.write(f.readline())
+            combined_csv.to_csv(results[0][0], index=False, mode="a", compression='gzip')
             
         if 'local_execution' in body.keys():
             return rfile
