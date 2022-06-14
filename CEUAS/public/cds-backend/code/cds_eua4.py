@@ -3139,6 +3139,11 @@ class CDMDataset:
                 #
                 # sort fout to have the columns in correct order
                 #
+                sorted_groups = {}
+                iiter = 0
+                for ivar in fout.keys():
+                    sorted_groups[ivar] = groups[iiter]
+                    iiter += 1
                 fout_sorted = {}
                 for i_element in sorted(fout.keys()):
                     if not i_element in ['observation_value','variable']:
@@ -3177,9 +3182,10 @@ class CDMDataset:
                 if request['single_csv']:
                     group_headstr = ''
 #                     print(groups)
-                    for hs in groups:
+#                     for hs in groups:
+                    for hs in fout.keys():
 #                         print(hs)
-                        group_headstr = group_headstr+hs+','
+                        group_headstr = group_headstr+sorted_groups[hs]+','
 #                         print(group_headstr)
                         
 #                 print(headstr)
