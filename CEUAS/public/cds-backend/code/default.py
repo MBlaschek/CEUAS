@@ -1557,6 +1557,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
 
     print(time.time()-tt)
     makebodies(bodies, body, spv, bo, 0)  # List of split requests
+    print('bodies: ', bodies)
     for k in range(len(bodies)):
         key=bodies[k]['statid']
         bodies[k]['filename']=active[key][5]
@@ -1643,6 +1644,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     #
     # Smaller request?
     #
+    
     elif debug or len(body['variable']) * len(body['statid'])<10:
         #
         # Single Threading
@@ -1718,15 +1720,16 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         logger.debug('wpath: %s; format %s Time %f', wpath, body['format'],time.time()-tt)
 
         if body['single_csv']:
+            print('start writing single_csv')
             write_results = []
             for i_res in results:
                 if i_res[0] != '':
                     write_results.append(i_res[0])
             # to place the stations in an order manner
             write_results.sort()
-            print(i_res[0])
-#             combined_csv = pd.concat([pd.read_csv(f[0].split('.gz')[0], header=[0,1]) for f in results])
-            combined_csv = pd.concat([pd.read_csv(f, header=14) for f in write_results])
+            print('input files: ', results)
+            combined_csv = pd.concat([pd.read_csv(f, header=14) for f in write_results], ignore_index=True)
+                
             geo_ll = []
             var_ll = []
             for geo in write_results:
@@ -1739,7 +1742,6 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                     exmn = exmn.split('# Geographic area: ')[-1]
                     exmn =  exmn.split('_')
                     for row_ll in exmn:
-                        print(row_ll)
                         geo_row.append(float(row_ll))
                     geo_ll.append(geo_row)
                     
@@ -1747,6 +1749,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
             var_ll = ", ".join(np.unique(var_ll))
             geo_ll = np.array(geo_ll)
             results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+body['single_csv_target']+".csv.gz", '')]
+
             with gzip.open(results[0][0], 'w') as file:
                 with gzip.open(write_results[0], 'r') as f:
                     for i in range(14):
