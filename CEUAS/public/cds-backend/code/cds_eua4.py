@@ -1346,6 +1346,8 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
     """
     import os
     import glob
+    
+    print('entering process_flat with: ', request_variables)
     # mimicks process_flat from cds_eua2
     msg = ''  # Message or error
     filename = ''  # Filename
@@ -2752,6 +2754,7 @@ class CDMDataset:
  
 
     def read_write_request(self, filename_out: str, request: dict, cf_dict: dict):
+        print('starting read_write_request: ', request)
         """ This is the basic request used in the cds_eua2 script
 
         Args:
@@ -2950,8 +2953,10 @@ class CDMDataset:
                     # NOW USE THOSE for the do_cfcopy below
             logger.debug('CDM - adding groups and variables: %s', str(cdmlist))
             print('CDM - adding groups and variables: %s', str(cdmlist))
-            for rmi in rmv_list:
-                cdmlist.remove(rmi)
+            additional_cdmlist = []
+            for a_cdm in cdmlist:
+                if not a_cdm in rmv_list:
+                    additional_cdmlist.append(a_cdm)
         
         if request['format'] in ['csv', 'fast_csv']:
             fout={}
@@ -2978,6 +2983,8 @@ class CDMDataset:
                     foutlen_old = len(fout)
                     print(groups)
                 fout['date_time'] = seconds_to_str(fout['date_time'])
+#                 fout['data_policy_licence'] = np.array(fout['data_policy_licence']).astype(float)
+                
             #
             # Feedback Information
             #
@@ -3299,8 +3306,8 @@ class CDMDataset:
 #                 cdmlist = request.get('cdm', None)
 #                 print('cdmlist: ', cdmlist)
 # #                 print('cfcopy: ', cfcopy)
-                if cdmlist != None:
-#                     # removing variables with restricted access
+                if len(additional_cdmlist) > 0:
+                #                     # removing variables with restricted access
 #                     if ('era5fb/obsvalue@body' in cdmlist) or ('observations_table/observation_value' in cdmlist):
 #                         try: cdmlist.remove('era5fb/obsvalue@body')
 #                         except: pass
@@ -3332,7 +3339,7 @@ class CDMDataset:
 #                             # NOW USE THOSE for the do_cfcopy below
 #                     logger.debug('CDM - adding groups and variables: %s', str(cdmlist))
                     print('CDM - adding groups and variables: %s', str(cdmlist))
-                    for cdmstring in cdmlist:
+                    for cdmstring in additional_cdmlist:
                         print(cdmstring)
                         cdmsplit = cdmstring.split('/')
     #                     try:
