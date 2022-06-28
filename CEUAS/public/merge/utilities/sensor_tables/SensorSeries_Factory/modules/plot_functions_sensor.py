@@ -145,7 +145,7 @@ class Plot():
                                                   height=700, )
             
             plotly.offline.plot(subfig, filename=  'plots/html/' + self.station + "_time_series.html" )
-            pio.write_image(subfig, "plots/png/" + self.station + "_timeSeries_ku.png")
+            pio.write_image(subfig, "plots/png/" + self.station + "_timeSeries.png")
             
 
         return subfig
@@ -182,7 +182,7 @@ class Plot():
             
             plotly.offline.plot(fig, filename=  'plots/html/' + self.station + "_sensor_table.html" )
             pio.write_image(fig, "plots/png/" + self.station + "_sensor_table.png")
-
+        
         return fig
     
     

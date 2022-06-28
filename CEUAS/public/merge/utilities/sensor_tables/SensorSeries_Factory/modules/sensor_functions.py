@@ -97,10 +97,6 @@ class IgraMetaData():
 
         # Extracting and converting dates 
         
-        #print(stat)
-        #months = np.unique(stat.MONTH)
-        #print('MONTHS :::' , months)
-        
         month = [i if len(i) == 2 else '0'+i for i in stat.MONTH]
         month = [m if int(m) <=12 else '01' for m in month]
         
@@ -141,7 +137,7 @@ class IgraMetaData():
 
 
 class Sensor():
-    """ Hold mehtods to extract the sensor_configuration table """ 
+    """ Hold methods to extract the sensor_configuration table """ 
     
     def __init__(self):
         # sensor configuration
@@ -162,8 +158,9 @@ class Sensor():
         self.sensor_conf = sensor_conf
         
         
-    def get_sensor_id_comments(self,sensor_id):
-        """ Extracts the metadata realtive to a given sensor id from the sensor_configuration table """
+    def get_sensor_id_comments(self, sensor_id):
+        """ Extracts the metadata realtive to a given sensor id from the sensor_configuration table.
+            usage :: get_sensor_id_comments('VDT', sensor_conf) """
 
         sensor_conf = self.sensor_conf
         s = sensor_id
@@ -206,17 +203,22 @@ class Analyze():
         """ Load the data if existing or tries to read it from merged files """
         station = self.station
         
-        lista = [f for f in os.listdir('data/') if station in f]
+        try:
+            lista = [f for f in os.listdir('data/') if station in f]
+        except:
+            lista = []
+            
         #print('LISTA ::: ' , lista)
         if not (len(lista)>0):
             
             print("Retrieving data from merged file")
             merged = self.merged
-            file = [f for f in os.listdir(merged) if station in f  and 'before' not in f ][0]
+            file = [f for f in os.listdir(merged) if station in f  and 'before' not in f and '.nc' in f ][0]
 
             station = file.split('/')[-1].split('_')[0]
             file = merged + '/' + file 
 
+            print(file)
             f = h5.File(file, 'r')
             ts = f['recordtimestamp'][:]
             tsd = pd.to_datetime( ts, unit='s',  origin=pd.Timestamp('1900-01-01') )
@@ -225,9 +227,42 @@ class Analyze():
             index_minus = 0   # change to start from a certain date onwards 
 
             #index_plus = np.where(tsd >  pd.Timestamp('1997-01-01')  )[0][0]
-            index_plus = np.where(tsd <  pd.Timestamp('2013-01-01')  )[0][-1]
+            
+            
+            # find first integer code i.e. first WMO code  with own index
+            records_sensors = np.take ( f['observations_table']['sensor_id'][:].view('|S4'), f['recordindex'][:] ) 
+            sensors = [ i.decode('utf-8') for i in records_sensors ]
+            sensors_unique, ind = np.unique(sensors, return_index=True)
+            
+            d = dict(zip( sensors_unique, ind ) )
 
+            # cleaning the dictionary from unecessary non wmo keys 
+            
+            import copy
+            keys = copy.copy(list(d.keys()))
+            for k in keys:
+                if not (k.isnumeric() or k == '-922' or k == -922) :
+                    del d[k]
+            
+            d = dict(sorted(d.items(), key=lambda item: item[1]))
+            
+            #wmos = [c for c in d.keys() if c.isnumeric() and c != '-922' and c != -922 ]
+            
+            # first wmo entry 
+            first_wmo = next(iter(d)) # outputs 'foo'
+            index_first_wmo = d[first_wmo] 
+            index_plus = index_first_wmo
+          
+            """ old 
+            try:
+                index_plus = np.where(tsd <  pd.Timestamp('2013-01-01')  )[0][-1]
+            except:
+                index_plus = 0
+            """    
+                
             ### Extracting Schroeder 
+            print(file)
+            
             ind_obs_sch = list(f['recordindex'][:]) [index_minus:index_plus]
             i = np.take( f['observations_table']['sensor_id'][:].view('|S4') , ind_obs_sch) 
             ids_s = [s.decode('utf-8').replace('.0','').replace('.','') for s in i ]
@@ -237,14 +272,12 @@ class Analyze():
             data_sch['value'] = 1
 
             ### Extracting WMO
-            ind_obs_wmo     = list(f['recordindex'][:]) [index_plus+1:]
-            ind_obs_wmo_all = list(f['recordindex'][:]) # taking all WMOs
-
+            ind_obs_wmo     = list(f['recordindex'][:]) [index_plus:]
 
             wmoids = np.take(  f['observations_table']['sensor_id'][:].view('|S4') , ind_obs_wmo)
             wmoids = [s.decode('utf-8') for s in wmoids ]
 
-            dic_wmo = {'date_time':tsd[index_plus+1:] , 'sensor_id':wmoids }
+            dic_wmo = {'date_time':tsd[index_plus:] , 'sensor_id':wmoids }
             data_wmo = pd.DataFrame (dic_wmo)
             data_wmo['value'] = 2
 
@@ -360,7 +393,7 @@ class Analyze():
 
     def simplify_day_night(self, df):
         df.reset_index()
-        hours = pd.to_datetime( df.date_time).dt.hour
+        hours = pd.to_datetime(df.date_time).dt.hour
         moments = []
         for h in hours:
             h = int(h)
@@ -372,7 +405,6 @@ class Analyze():
                 m = 'day'
             elif h > 15 and h <=21:
                 m = 'evening'
-                #print("EVENINGGGGG" , h )
             moments.append(m)
 
         df['moment'] = moments
@@ -381,13 +413,15 @@ class Analyze():
         #dfr=df[window+1:]
 
         # fill vector with indices to keep
-        indices_to_keep = list(range(window))
+        
+        indices_to_keep = []
 
         for index in range(window, len(df)) :
 
-            # idea: take "windows" previous records, extract only same moment of the day,
+            # idea: take a number of "windows" previous records, extract only same moment of the day,
             # get list of unique sensor_ids
             # if list == one single id equal to the considered one, then do not save index
+            # since there is no change in sensor 
 
             dfr =  df[index-window:index]
             m = df.iloc[index].moment 
@@ -409,6 +443,7 @@ class Analyze():
                     indices_to_keep.append(index)
 
         if len(indices_to_keep) >0:
+            print(len(df) , indices_to_keep )
             return df.iloc[indices_to_keep] 
         else:
             return df 
@@ -423,7 +458,7 @@ sensor = Sensor()
 # Merged file source (if data not already available)
 merged = '/scratch/das/federico/MERGED_APRIL2022'
 
-def get_data(station, force_create=False):
+def get_data(merged, station, force_create=False):
     """ Extract the data for plotting either from the database or from the reduced csv files 
     stored in data_plots directory """
     
@@ -432,12 +467,18 @@ def get_data(station, force_create=False):
     if not os.path.isdir(out_dir_data_plots):
         os.mkdir(out_dir_data_plots)
         
-    analyze = Analyze(sensor,merged,station)
             
-    if not (os.path.isfile(out_dir_data_plots + '/' + station + '_data_clean_all.csv') 
+    cond = bool(os.path.isfile(out_dir_data_plots + '/' + station + '_data_clean_all.csv') 
             and os.path.isfile(out_dir_data_plots + '/' + station + '_all_sensor_station.csv')
-            and os.path.isfile(out_dir_data_plots + '/' + station + '_clean_data_wmo.csv' )
-            ) or force_create:
+            and os.path.isfile(out_dir_data_plots + '/' + station + '_clean_data_wmo.csv') )
+                
+    print('cond is ' , cond )
+    print('cond combi is ' ,  not cond and not force_create )
+
+    if force_create:
+        logging.debug(" --- FORCING CREATION --- data file: ")
+            
+    if ( not cond or force_create):
 
         try:
             all_stat = os.listdir(merged)
@@ -446,17 +487,17 @@ def get_data(station, force_create=False):
             logging.error("Cannot retrieve data! Please check accessibility to merged directory! ")
             sys.exit()
             
-        if force_create:
-            logging.debug(" --- FORCING CREATION --- data file: ")
 
-        logging.debug(" --- RETRIEVING --- data file: ")
+
+        logging.debug(" --- RETRIEVING --- data merged file: ")
 
         stat_igra2, stat_igra2_sonde = ig.get_igra_metadata(station)
 
         # Analyze data
         logging.debug(" --- ANALYZING --- data file: ")
 
-        
+        analyze = Analyze(sensor, merged, station)
+
         analyze.analyze()
         
         data_all_cleaned_simplified = analyze.data_all_cleaned_simplified
@@ -487,7 +528,7 @@ def get_data(station, force_create=False):
             
     
     #print(data_df_clean_all.head(10) , all_sensor_station_df.head(10) )
-    all_sensor_station = all_sensor_station[ ['sensor_id', 'source', 'comment'] ] 
+    all_sensor_station = all_sensor_station[ ['sensor_id', 'source', 'comment'] ]  
     all_sensor_station['comment'] = [str(s).replace('\n','').replace('\t','').replace('^', ' ').replace('>',']').replace('<','[')
                                      for s in all_sensor_station.comment]
     
