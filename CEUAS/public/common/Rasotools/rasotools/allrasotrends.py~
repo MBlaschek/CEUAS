@@ -1,0 +1,787 @@
+import os,glob,sys
+import numpy
+#from scipy.io import netcdf
+from scipy.stats import linregress
+import matplotlib.pylab as plt
+from Magics.macro import *
+import netCDF4
+import time
+from rasotools.utils import *
+#from rasotools.pythranutils import *
+from rasotools.anomaly import *
+from rasotools.set_trendmaps import *
+from mpl_toolkits.basemap import Basemap
+import matplotlib.patches as mpatches
+import matplotlib.cm as cm
+import matplotlib.colors as colors
+
+from netCDF4 import Dataset
+from numba import *
+                                
+@njit
+def fcp(outVar,ghilf,idx,ip):
+    for it in range(ghilf.shape[3]):
+	for ilon in range(ghilf.shape[1]):
+	    for ilat in range(ghilf.shape[0]):
+		outVar[it,idx,ilat,ilon]=ghilf[ilat,ilon,ip,it]
+    
+def append_gridded(ifile,ofile,ganomalies,days,ps):
+    #input file
+    dsin = Dataset(ifile)
+    dsin.set_auto_maskandscale(False)    
+    
+    #output file
+    dsout = Dataset(ofile, "w")
+    dsout.set_auto_maskandscale(False)    
+    #Copy dimensions
+    for dname, the_dim in dsin.dimensions.iteritems():
+	print dname, len(the_dim)
+	if dname!='time':
+	    dsout.createDimension(dname, len(the_dim))
+	else:
+	    dsout.createDimension(dname, ganomalies.shape[4])
+    
+    
+    #Copy variables
+    press=dsin.variables['pressure'][:]
+    t=time.time()
+    ghilf=numpy.nanmean(ganomalies,axis=2)
+    print 'toout:',time.time()-t
+    for v_name, varin in dsin.variables.iteritems():
+	outVar = dsout.createVariable(v_name, varin.datatype, varin.dimensions)
+	print v_name,varin.datatype
+	if v_name=='time':
+	    outVar[:] = days[:]
+	elif v_name=='anomalies':
+	    ov=numpy.empty(outVar.shape)
+	    ov.fill(numpy.nan)
+	    for ip in range(ps.shape[0]):
+		if ps[ip] in press:
+		    idx=numpy.where(press==ps[ip])[0][0]
+		    
+		    fcp(ov, ghilf, idx, ip)
+	    
+	    ov[numpy.isnan(ov)]=-1.e30
+	    ov[696:696+varin.shape[0],:,:,:]=varin[:]
+	    outVar[:]=ov
+	    
+		    #for ilon in range(ganomalies.shape[1]):
+			#for ilat in range(ganomalies.shape[0]):
+			    #outVar[:,idx,ilat,ilon]=ghilf[ilat,ilon,ip,:]
+			    
+	    print 'toout:',time.time()-t
+			
+	else:
+	    outVar[:] = varin[:]
+	    
+	
+	for attname in varin.ncattrs():
+#	    if dounpackshort and attname in ['add_offset','scale_factor']: continue
+#	    if dounpackshort and attname == 'missing_value':
+#		setattr(var,attname,mval)
+#	    if attname == '_FillValue': continue
+#	    else:
+	    print attname
+	    if attname=='units' and v_name=='time':
+		setattr(outVar,attname,"days since 1900-01-01 00:00:00")
+	    else:
+		setattr(outVar,attname,getattr(varin,attname))
+	
+    for attname in dsin.ncattrs():
+	print attname
+	setattr(dsout,attname,getattr(dsin,attname))
+	
+    #close the output file
+    dsout.close()
+
+
+def read_hadCRUT4(path,prefix,startyear=1957,endyear=2013,ens=0):
+    
+    t1=time.time()
+    try:
+	f=numpy.load('CRUT4_'+str(startyear)+'_'+str(endyear)+'.npz')
+	hadmed=f["hadmed"]
+	hadens=f["hadens"]
+    except:
+	
+	#opt=Nio.options()
+	#opt.MissingToFillValue=False
+	#opt.MaskedArrayMode='MaskedNever'
+    
+	fn=path+prefix+".median.nc"
+	try:
+	    f = netCDF4.Dataset(fn,"r")
+	    f.set_auto_mask(False)
+	except:
+	    print fn+' not found'
+    
+	x=f.variables['temperature_anomaly'][:]
+	hadmed=numpy.zeros([1,(endyear-startyear+1)*12,x.shape[1]/2,x.shape[2]/2],dtype=numpy.float32)
+	had_rebin_3672_to_1836(x,hadmed,0,startyear,endyear,numpy.float32(-1.e30),numpy.float('nan'))
+#	had_rebin_pythran_3672_to_1836(x,hadmed,0,startyear,endyear,numpy.float(-1.e30),numpy.float('nan'))
+	
+	hadens=numpy.zeros([100,hadmed.shape[1],x.shape[1]/2,x.shape[2]/2],dtype=numpy.float32)
+	if ens!=0:
+	    for ens in range(100):
+		fn=os.path.join(path,prefix+'.anomalies.'+'{0:1}'.format(ens+1)+".nc")
+		try:
+		    f = netCDF4.Dataset(fn,"r")
+		except:
+		    print fn+' not found'
+		print ens
+		x=f.variables['temperature_anomaly'][:]
+		had_rebin_3672_to_1836(x,hadens,ens,startyear,endyear,numpy.float32(-1.e30),numpy.float('nan'))
+		
+	numpy.savez('CRUT4_'+str(startyear)+'_'+str(endyear)+'.npz', hadmed=hadmed,hadens=hadens)
+    
+    print time.time()-t1
+	
+#    plt.contour(numpy.reshape(hadens[0,0,:,:],[18,36]))
+    #sys.exit()
+    return hadmed,hadens
+
+def read_alltrends(path,tasks,days):
+
+    stnames= glob.glob('[0-9]?????')
+#    stnames=['001001','011035']
+    minlen=120 # 10 Years
+    str=[' ']
+    #opt=Nio.options()
+    #opt.MissingToFillValue=False
+    #opt.MaskedArrayMode='MaskedNever'
+
+    tt=time.time()
+    istat=0
+    goodsts=[]
+    for statid in stnames: #[0:30]:
+        found=False
+        toofew=False
+        for d in tasks:
+            if len(d["file"])>0 and toofew==False:
+                for ens in d["ens"]:
+                    if len(d["ens"])==1:
+                        fn=os.path.join(path,statid,d["file"]+d["suff"]+statid+".nc")
+                    else:
+                        fn=os.path.join(path,statid,d["file"]+d["suff"]+"{0:0>2}".format(ens)+'_'+statid+".nc")
+
+#                    print d["shortname"]+' '+fn
+#                    if statid=='091765':
+#			print fn
+                    if not os.path.isfile(fn):
+                        break
+
+		    if statid=='003125':
+			pass
+		    
+                    try:
+#		    f = Nio.open_file(fn,"r",options=opt)
+			f = netCDF4.Dataset(fn,"r")
+			f.set_auto_mask(False)
+                    except:
+                        print fn+' not found'
+                        continue
+
+                    if istat==0:
+			if d["shortname"]=="tmcorr":
+			    lats=numpy.empty(d["data"].shape[0],numpy.float32)
+			    lats[:]=numpy.nan
+			    lons=lats.copy()
+			    ps=f.variables['press'][:]
+                        d["data"].fill(numpy.nan)
+                        #if len(days)==0:
+                            #days=f.variables['datum'][0,:]
+
+		    dat=f.variables['datum'][0,:]
+		    if d["shortname"]=="tmcorr":
+			lats[istat]=f.variables['lat'][:]
+			lons[istat]=f.variables['lon'][:]
+		    nc_miss_val=numpy.float32(-999.)
+
+		    if len(d["index"])==1:
+			if dat.shape[0]<minlen:
+			    toofew=True
+			    print statid+' series too short'
+			    break
+			index=numpy.zeros(dat.shape[0],dtype=numpy.int32)
+			getindex(days,dat,index) 
+		    else:
+			index=numpy.zeros(dat.shape[0],dtype=numpy.int32)
+			getindex2(days,dat,index)   
+			d["index"][istat,ens,0:dat.shape[0]]=index
+			index=numpy.arange(dat.shape[0],dtype=numpy.int32)
+                            
+                    pindex=numpy.arange(16,dtype=numpy.int32)
+                    copystride(d["data"],f.variables[d['var']][:,:,0:len(index)],index,istat,ens,pindex,nc_miss_val)
+		    if istat==725:
+			pass
+
+                    f.close()
+                    if d["shortname"]=="tmcorr":
+			found=True
+            #else:
+#                print d["name"]+' no data'
+        if found:
+            goodsts.append(statid)
+            print statid,istat,lons[istat]
+            istat+=1
+    for k in range(len(tasks)):
+        tasks[k]["data"]=tasks[k]["data"][0:istat,:,:,:,:]
+
+    lats=lats[0:istat]
+    lons=lons[0:istat]
+        
+    print time.time()-tt
+    return istat,lats,lons,ps,goodsts
+
+
+def allrasotrends(path,tasks,plotproperties,intervals,pindex,days,stnames,interv):
+ 
+    os.chdir(path)
+  
+    startyear=tasks[0]["startdate"]/10000
+    hadmed,hadens=read_hadCRUT4(path+'/../common/','HadCRUT.4.3.0.0',startyear=startyear,endyear=2014,ens=1)
+    
+    hadmedslopes=numpy.zeros([1,hadmed.shape[2],hadmed.shape[3]],dtype=numpy.float32)
+    hadslopes=numpy.zeros([100,hadmed.shape[2],hadmed.shape[3]],dtype=numpy.float32)
+    t=time.time()
+    first=(intervals[0]-startyear)*12
+    last=(intervals[1]-startyear+1)*12
+    tolerance=intervals[2]
+    hadtime=numpy.arange(last-first)
+
+    for ilat in range(hadmed.shape[2]):
+	for ilon in range(hadmed.shape[3]):
+	    hadmedslopes[0,ilat,ilon]=fastlinregress(hadtime,numpy.reshape(hadmed[0,first:last,ilat,ilon],[hadtime.shape[0]]))*120.
+    
+#    hadensflat=hadens.flatten()
+    for iens in range(hadens.shape[0]):
+#	ioffset=iens*hadens.shape[1]*hadens.shape[2]*hadens.shape[3]
+#	idx=numpy.arange(first,last)*hadens.shape[2]*hadens.shape[3]
+	for ilat in range(hadmed.shape[2]):
+	    for ilon in range(hadmed.shape[3]):
+		hadslopes[iens,ilat,ilon]=fastlinregress(hadtime,
+		                                         numpy.reshape(hadens[iens,first:last,ilat,ilon],
+		                                                       [hadtime.shape[0]]))*120.
+#		b=fastlinregress(hadtime,numpy.take(hadensflat,
+#		                                    ioffset+ilat*hadens.shape[3]+ilon+idx))*120.
+		                                         
+#		print hadslopes[iens,ilat,ilon]-b
+	    
+
+    print time.time()-t
+    try:
+	raobcoretime=os.path.getmtime(stnames[0]+'/feedbackglobbincorrsave'+stnames[0]+'.nc')
+	richtime=os.path.getmtime(stnames[0]+'/feedbackglobbincorrsave_rio24_'+stnames[0]+'.nc')
+	npztime=os.path.getmtime('allsave.npz')
+	if raobcoretime>npztime or richtime>npztime:
+	    os.remove('allsave.npz')
+    except:
+	pass
+    try:
+        d=numpy.load('allsave.npz')
+        lats=d["lats"]
+        lons=d["lons"]
+        days=d["days"]
+        ps=d["ps"]
+        stnames=d["stnames"]
+        d.close()
+        istat=lats.shape[0]
+        for k in range(len(tasks)):
+            d=numpy.load(tasks[k]["shortname"]+'.npz')
+            tasks[k]["data"]=d["data"]
+            tasks[k]["index"]=d["index"]
+            d.close()
+
+    except:
+
+        istat,lats,lons,ps,stnames=read_alltrends(path,tasks,days)
+
+        numpy.savez('allsave.npz',
+                    lats=lats,
+                    lons=lons,
+                    days=days,
+                    ps=ps,
+                    stnames=stnames
+                    )
+        for k in range(len(tasks)):
+            numpy.savez(tasks[k]["shortname"]+'.npz',
+                        data=tasks[k]["data"],
+                        index=tasks[k]["index"]
+                        )
+    if isinstance(stnames,list):
+      stnames=numpy.asarray(stnames)
+    istnames=stnames.astype(numpy.int32)
+    tmshape=tasks[0]["data"].shape
+    climatology=numpy.zeros(12,numpy.float32)
+
+    slopes=[]
+    sli=-1
+    for k in range(len(tasks)):
+        for inter in range(intervals.shape[0]):
+            sli+=1
+            slopes.append({ "shortname":tasks[k]["shortname"],
+                            "ens":tasks[k]["ens"],
+                            "interval":intervals[:],
+                            "data":numpy.empty([tmshape[0],len(tasks[k]["ens"]),tmshape[2],pindex.shape[0]],numpy.float32)
+                            }
+                          )
+            slopes[sli]["data"].fill(numpy.nan)
+
+
+    dists=numpy.empty((tmshape[0]+1)*tmshape[0]/2,numpy.float64)
+    dists.fill(numpy.nan)
+    tdist(dists,lats,lons,1)
+    ni=36
+    nj=18
+    glons=5.+10.*numpy.arange(ni)
+    glats=-85.+10.*numpy.arange(nj)
+    gstatindex=numpy.zeros([nj,ni,30],dtype=numpy.int32) # 20 is max stations per 10x10 degree box
+    find_gstatindex(glons,glats,lons,lats,gstatindex)
+
+    currentdatabg=numpy.zeros([tmshape[0],tmshape[2],pindex.shape[0],tmshape[4]],numpy.float32)
+    currentdatatm=numpy.zeros([tmshape[0],tmshape[2],pindex.shape[0],tmshape[4]],numpy.float32)
+    currentdata=numpy.zeros([tmshape[0],tmshape[2],pindex.shape[0],tmshape[4]],numpy.float32)
+
+    good=numpy.zeros([tmshape[0],tmshape[2],pindex.shape[0]],numpy.int32)
+    anomalies=numpy.zeros([tmshape[0],tmshape[2],pindex.shape[0],tmshape[4]],numpy.float32)
+    orig=numpy.zeros(tmshape[4],numpy.float32)
+    anomaly=numpy.zeros(tmshape[4],numpy.float32)
+    ganomalies=numpy.zeros([nj,ni,tmshape[2],pindex.shape[0],tmshape[4]],numpy.float32)
+    gslopes=numpy.zeros([nj,ni,tmshape[2],pindex.shape[0]],numpy.float32)
+    gst=numpy.zeros(tmshape[4],dtype=numpy.int32)
+
+    keytmcorr=-1
+    keytm=-1
+    for key in range(len(tasks)):
+        if tasks[key]["shortname"]=="tmcorr":
+            keytmcorr=key
+        if tasks[key]["shortname"]=="tm":
+            keytm=key        
+    sli=-1
+    for key in range(len(tasks)):
+        print tasks[key]["shortname"]
+        if tasks[key]["shortname"] == "rio":
+            enslist=tasks[key]["ens"]
+        else:
+            enslist=[0]
+            
+        for iens in enslist: #range(len(tasks[key]["ens"])):
+            
+            # replace RAOBCORE adjustments with unadjusted series
+            t=time.time()
+            if tasks[key]["shortname"] == "tm":
+                expandandadd(tasks[key]["data"],tasks[keytmcorr]["data"].reshape(tmshape[0],tmshape[2],tmshape[3],tmshape[4]),
+                             tasks[key]["index"],pindex,0,currentdatatm,+1.0)
+#                print currentdata[1171,0,0,:]-currentdatatm[1171,0,0,:]
+                currentdata=currentdatatm.copy()
+            elif tasks[key]["shortname"] == "rio":  
+                expandandadd(tasks[key]["data"],currentdatatm,tasks[key]["index"],pindex,iens,currentdata,-1.0)
+            elif tasks[key]["shortname"] == "rcorr":
+		zero=currentdatatm-currentdatatm
+                expandandadd(tasks[key]["data"],zero,tasks[key]["index"],pindex,iens,currentdata,-1.0)
+	    elif tasks[key]["shortname"] == "bg": 
+                expandandadd(tasks[key]["data"],currentdata,tasks[keytm]["index"],pindex,0,currentdatabg,0.0)
+                currentdata=currentdatabg.copy()
+	    elif tasks[key]["shortname"] == "bgdiff":  
+		currentdata=currentdatatm-currentdatabg
+            else:
+                expandandadd(tasks[key]["data"],currentdata,tasks[keytm]["index"],pindex,0,currentdata,0.0)
+            
+            print 'expand',iens,time.time()-t
+	    
+	    if intervals.ndim>1:
+		intrange=intervals.shape[0]
+	    else:
+		intrange=1
+            for inter in range(intrange):
+                interval=numpy.asarray(intervals[:],dtype=numpy.int32)
+                stop=interval[1]
+                start=interval[0]
+                stime=(start-startyear)*12
+                itime=stime+numpy.arange((stop-start+1)*12)
+                if iens==0:
+                    sli+=1
+                
+                t=time.time()
+                
+                s=slopes[sli]["data"]
+                                
+		corig=currentdata.copy()
+                anomalies_and_slopes(currentdata,startyear,interval,tolerance,iens,itime,orig,anomaly,anomalies,climatology,
+                                     good,s)
+ 
+ # remove India               
+		mask=(istnames>42000)&(istnames<44000)
+		s[mask,:,:,:]=numpy.nan
+		anomalies[mask,:,:,:]=numpy.nan
+		mask=(istnames>48600)&(istnames<48900)
+		s[mask,:,:,:]=numpy.nan
+		anomalies[mask,:,:,:]=numpy.nan
+ 
+ 		
+                if tasks[key]["shortname"]=='rcorr' or tasks[key]["shortname"]=='bgdiff':
+		    ylim=dict()
+		    ylim['rcorr']=[-1,3]
+		    ylim['bgdiff']=[-2,5]
+		    tit={'rcorr':'adjustment','bgdiff':'obs-bg'}
+		    xlim={'05':[1958,2013],'14':[1935,2015]}
+		    xstart={'05':1958,'14':1900}
+		    mask=(lats<30.)
+		    s[mask,:,:,:]=numpy.nan
+		    anomalies[mask,:,:,:]=numpy.nan
+		    rmsanomalies=numpy.empty([corig.shape[3],corig.shape[2]])
+		    meananomalies=numpy.empty([corig.shape[3],corig.shape[2]])
+		    countanomalies=numpy.empty([corig.shape[3],corig.shape[2]],dtype='int')
+		    for ip in range(corig.shape[2]):
+			for it in range(corig.shape[3]):
+			    countanomalies[it,ip]=numpy.sum(~numpy.isnan(corig[:,:,ip,it]))
+			    meananomalies[it,ip]=numpy.nanmean(corig[:,:,ip,it])
+			    rmsanomalies[it,ip]=numpy.nanstd(corig[:,:,ip,it])
+			    rmsanomalies[it,ip]=numpy.sqrt(rmsanomalies[it,ip]*rmsanomalies[it,ip]+meananomalies[it,ip]*meananomalies[it,ip])
+		    
+			font = {'family' : 'sans-serif',
+			        'weight' : 'normal',
+			        'size'   : 10}
+			
+			plt.rc('font', **font)
+			
+			plt.figure(figsize=[20/2.54,8/2.54])
+			lw=3
+			plt.subplot(2,1,1)    
+			l1,=plt.plot(xstart[path[-2:]]+1./24+numpy.arange(anomalies.shape[3])/12.,
+			             rmsanomalies[:,ip],label='rms '+tit[tasks[key]["shortname"]],linewidth=lw)
+			l2,=plt.plot(xstart[path[-2:]]+1./24+numpy.arange(anomalies.shape[3])/12.,
+			             meananomalies[:,ip],'r',label='mean '+tit[tasks[key]["shortname"]],linewidth=lw)
+			plt.plot(xlim[path[-2:]],[0.,0.],'k')
+			if ip >0:
+			    plt.ylim(ylim[tasks[key]["shortname"]])
+			else:
+			    yl=ylim[tasks[key]["shortname"]]
+			    plt.ylim([yl[0],yl[1]+1])
+
+			plt.xlim(xlim[path[-2:]])
+			plt.ylabel('K')
+			plt.legend(handles=[l1,l2],frameon=False)
+			plt.title('Radiosondes north of 30N, {0} hPa'.format(int(ps[pindex[ip]])))
+			plt.subplot(2,1,2)    
+			plt.plot(xstart[path[-2:]]+1./24+numpy.arange(anomalies.shape[3])/12.,
+			         countanomalies[:,ip],'g',label='Data count',linewidth=lw)
+			plt.xlim(xlim[path[-2:]])
+			plt.ylabel('Data Count')
+			plt.savefig(tasks[key]["shortname"]+'_'+path[-2:]+'_{0}'.format(int(ps[pindex[ip]]))+'.eps')
+                               
+                if tasks[key]["shortname"]=='tmcorr':
+#                    print s[numpy.where(stnames=="094120")[0][0],0,0,0]
+                    print s[896:909,0,0,0]
+                print 'slope',time.time()-t
+                
+                t=time.time()
+		
+		itime=numpy.int32(itime)
+                grid_anomalies(anomalies,good,tolerance,gstatindex,ganomalies,gslopes,gst,start,stop,itime,orig)
+                
+
+                print 'grid',time.time()-t
+                t=time.time()
+		
+		if ganomalies.shape[4]>10000 and False:
+		    for im in range(ganomalies.shape[4]-1,ganomalies.shape[4]):
+			f=plt.figure(figsize=(20,13))
+			t1=time.time()
+			m =Basemap(llcrnrlon=-180.,llcrnrlat=-90.,urcrnrlon=180,urcrnrlat=90.)
+			m.drawmapboundary(fill_color=rgb(0.6,0.8,1))
+			parallels = (numpy.arange(-90.,91,90.))
+			# labels = [left,right,top,bottom]
+			m.drawparallels(parallels,labels=[True,True,True,True])
+			meridians = numpy.arange(-180.,181.,60.)
+			m.drawmeridians(meridians,labels=[True,True,True,True])
+			m.drawcoastlines(linewidth=0.25)
+			
+			glons=5.+10.*numpy.arange(ni)
+			glats=-85.+10.*numpy.arange(nj)
+			gglons=glons.copy()
+			gglons[gglons>180]-=360
+			x, y = m(*numpy.meshgrid(gglons,glats))
+	
+			clevs=(numpy.arange(21)-10)
+			cmap=cm.get_cmap(name='hsv')
+			cNorm  = colors.Normalize(vmin=clevs[0], vmax=clevs[-1])
+			scalarMap = cm.ScalarMappable(norm=cNorm, cmap=cmap)
+			for ilon in range(glons.shape[0]):
+			    for ilat in range(glats.shape[0]):
+				if ganomalies[ilat,ilon,0,3,im]==ganomalies[ilat,ilon,0,3,im] or ganomalies[ilat,ilon,1,3,im]==ganomalies[ilat,ilon,1,3,im]:
+				    xy=zip([x[ilat,ilon]-5,x[ilat,ilon]+5,x[ilat,ilon]+5,x[ilat,ilon]-5,x[ilat,ilon]-5],
+					   [y[ilat,ilon]-5,y[ilat,ilon]-5,y[ilat,ilon]+5,y[ilat,ilon]+5,y[ilat,ilon]-5])
+				    cl=clevs[clevs>numpy.nanmean(ganomalies[ilat,ilon,:,3,im])]
+				    if cl.shape[0]==0:
+					cl=clevs.shape[0]-1
+				    else:
+					cl=cl[0]
+				    colorVal = scalarMap.to_rgba(cl)
+				    poly = mpatches.Polygon( xy, facecolor=colorVal, edgecolor=[0.8,0.8,0.8],lw=0.3)
+				    plt.gca().add_patch(poly)
+	#		m.contourf(x,y, ganomalies[:,:,0,3,im])
+			ax=f.add_subplot(2,1,2)
+			ax.set_position([0.13,0.87,0.77,0.04])
+			ax.set_xlim([clevs[0],clevs[-1]])
+    #		    ax.get_xaxis().set_visible(False)
+			ax.get_yaxis().set_visible(False)
+			ax.set_title(tasks[key]["shortname"]+', {0}{1:2>0}'.format(1900+im/12,numpy.mod(im,12)+1))
+			for ipos in range(clevs.shape[0]-1):
+			    xy=zip([clevs[ipos],clevs[ipos+1],clevs[ipos+1],clevs[ipos],clevs[ipos]],[0,0,1,1,0])
+			    colorVal = scalarMap.to_rgba(clevs[ipos])
+			    poly=mpatches.Polygon(xy, facecolor=colorVal, edgecolor=[0.8,0.8,0.8],lw=0.3)
+			    plt.gca().add_patch(poly)
+			
+			print time.time()-t
+			f.savefig('test_'+tasks[key]["shortname"]+'{0:4}'.format(im)+'.eps')
+			plt.close(f)
+			print time.time()-t
+		    
+		    if tasks[key]["shortname"]=='tmcorr':
+			append_gridded('../exp07/raobcore15_gridded_2013.nc','raobcore15_gridded_2014.nc',
+    
+			               ganomalies,days,ps[pindex.astype(int)])
+		    if tasks[key]["shortname"]=='tm':
+			append_gridded('../exp07/raobcore_raw_gridded_2013.nc','raobcore15_raw_gridded_2014.nc',
+			               ganomalies,days,ps[pindex.astype(int)])
+		    if tasks[key]["shortname"]=='rio':
+			append_gridded('../exp07/rich15obs_mean_gridded_2013.nc','rich15obs_mean_gridded_2014.nc',
+			               ganomalies,days,ps[pindex.astype(int)])
+    #		if tasks[key]["shortname"]=='tmcorr':
+    #		    append_gridded('../exp07/rich15tau_mean_gridded_2013.nc','rich15tau_mean_gridded_2014.nc',
+    #		                   ganomalies)
+		    
+		
+
+                for ipar in range(2):
+                    parstr="{0:0>2}".format(ipar*12)
+                    for ip in range(pindex.shape[0]):
+            
+                        pstr="{0:0>3}".format(ps[pindex[ip]].astype(numpy.int))
+			scosts=numpy.zeros(s.shape[0])
+                        cost=tcost(dists,s[:,iens,ipar,ip],scosts)
+                        
+                        if ip==pindex.shape[0]-1 and ipar==1:
+                            print 'cost',time.time()-t
+                        cstr="{0:8.2f}".format(cost)
+                        
+                        estr=''
+                        if len(tasks[key]["ens"])>1:
+                            estr="{0:0>2}".format(iens)
+			
+			if plotproperties['map']=='Globe':
+			    ppage = page(
+			        layout='positional',  
+			        page_x_length=29.7, 
+			        page_y_length=21., 
+			        page_id_line='off',
+			        page_x_position=0., 
+			        page_y_position=0.)
+			else:
+			    ppage = page(
+			        layout='positional',  
+			        page_x_length=14.7, 
+			        page_y_length=20., 
+			        page_id_line='off',
+			        page_x_position=0., 
+			        page_y_position=0.)
+
+                        out = output({"output_name_first_page_number":"off",
+			              "output_formats":plotproperties["outputformat"], 
+                                      'output_name': 'trends_'+tasks[key]["shortname"]+estr+'_'+
+                                      "{:4}".format(interval[0])+"-{:4}".format(interval[1])+'_'+
+			              pstr+'_'+parstr+'_'+plotproperties['map']})
+                            #define the cartesian projection
+            
+                        statstr="{:4}".format(sum(~numpy.isnan(s[:,iens,ipar,ip])))
+                        lines =["Temperature Trends [K/10a], "+tasks[key]["shortname"]+estr+', '+
+                                "{:4}".format(interval[0])+"-{:4}".format(interval[1])+', '+parstr+"h, "+pstr+' hPa',
+                                statstr+' Stations, Cost: '+cstr+', '+plotproperties["version"]]
+            
+            
+                        clev=numpy.linspace(-1.6,0.4,21)
+                        clev=numpy.append(clev,10.)
+                        clev=numpy.append(-10.,clev)
+                        vec=s[0:istat,iens,ipar,ip].flatten()
+                        mask=~numpy.isnan(vec)
+                        inp=minput({'Input_values':vec[mask].astype(numpy.float64),  #.ravel?
+                                    'Input_latitude_values':lats[mask].astype(numpy.float64),
+                                    'Input_longitude_values':lons[mask].astype(numpy.float64),
+                                    'Input_Type':'geographical'})
+                        
+			if plotproperties['plotstatids']:
+			    cind=numpy.argsort(-scosts[mask])
+			    projection,coastlines,title,legend,symb,symb2,symb3,symb4,cont=\
+				set_trendmaps(lines,clev,
+				              stnames=numpy.concatenate([stnames[mask][cind[0:3]],stnames[mask][cind[0:3]]]),
+				              slopes=numpy.concatenate([vec[mask][cind[0:3]].astype(numpy.float64),vec[mask][cind[0:3]]]),
+				              costs=numpy.concatenate([scosts[mask][cind[0:3]],scosts[mask][cind[0:3]]]),
+			                      map=plotproperties['map'])
+			    ilav=numpy.concatenate([lats[mask][cind[0:3]].astype(numpy.float64),
+			                            numpy.asarray([-80.,-80.,-80.])+1.0])
+			    ilov=numpy.concatenate([lons[mask][cind[0:3]].astype(numpy.float64),
+			                            numpy.asarray([-20.,0.,20.])+1.0])
+			    print tasks[key]["shortname"],pstr,parstr
+			    print scosts[mask][cind[0:3]]
+			    lst='['
+			    for str in stnames[mask][cind[0:3]]:
+				lst=lst+'"'+str+'",'
+			    lst=lst[0:-1]+']'
+			    print lst
+			    print vec[mask][cind[0:3]]
+			    if ip==1:				
+				pass
+			    inp3=minput({'Input_latitude_values':ilav,
+				        'Input_longitude_values':ilov,
+				        'Input_Type':'geographical'})
+			    inp4=minput({'Input_latitude_values':ilav-2.0,
+				        'Input_longitude_values':ilov+2.0,
+				        'Input_Type':'geographical'})
+			    inp5=minput({'Input_latitude_values':ilav-4.0,
+				        'Input_longitude_values':ilov+2.0,
+				        'Input_Type':'geographical'})
+			else:
+			    projection,coastlines,title,legend,symb,cont=set_trendmaps(lines,clev,map=plotproperties['map'])
+                        
+			try:
+#			    if(len(vec[mask])==0):
+#				raise(ValueError)
+			    glats=numpy.linspace(-94.999,94.999,nj+2)
+			    glons=numpy.linspace(5,375,ni+2)
+
+			    idum=plotproperties["plotlist"].index("gridded")
+			    hilf=numpy.empty([nj+2,ni+2])
+			    hilf[:]=numpy.nan
+     
+			    if ipar==0 and ip==9:
+				print out.args['output_name']
+			    hilf[1:nj+1,1:ni+1]=gslopes[:,:,ipar,ip].reshape([nj,ni]).copy()
+    #                        hilf[1:nj+1,1:ni+1]=hadmedslopes[0,:,:].reshape([nj,ni]).copy()
+			    mask2=numpy.isnan(hilf)
+			    hilf[mask2]=-1.e21
+			    
+			    inp2=minput({'Input_field':hilf[:,1:ni+1],  #.ravel?
+				        'Input_field_initial_latitude':glats[0]-5,
+				        'Input_field_initial_longitude':glons[0]-5,
+				        'Input_field_latitude_step':(glats[1]-glats[0]),
+				        'Input_field_longitude_step':glons[1]-glons[0],
+				        'Input_Type':'geographical'})
+		
+			   #plot(out,projection,coastlines,inp,symb,title,legend,inp2,cont)
+			    out.args['output_title']=os.getcwd()+'/'+out.args['output_name']
+			    if len(vec[mask])>0:
+				plot(out,projection,inp2,cont,inp,symb,title,legend,coastlines)
+			except ValueError:
+			    try:
+				if numpy.sum(mask)!=0:
+				    idum=plotproperties["plotlist"].index("stations")
+				    out.args['output_title']=os.getcwd()+'/'+out.args['output_name']
+				    if plotproperties['plotstatids']:
+					plot(out,projection,inp,symb,inp3,symb2,inp4,symb3,inp5,symb4,title,legend,coastlines)
+				    else:
+					plot(out,projection,inp,symb,title,legend,coastlines)
+				else:
+				    print out.args['output_name']+': no valid data'
+			    except ValueError:
+				print 'Maps plotting switched off'
+
+                
+                t=time.time()
+                zslopes=zonaltrends(gslopes)
+		hadmedzslopes=zonaltrends(numpy.reshape(hadmedslopes[0,:,:],[nj,ni,1,1]))
+		hadzslopes=numpy.zeros([100,nj,1])
+		for jens in range(100):
+		    hadzslopes[jens,:,:]=zonaltrends(numpy.reshape(hadslopes[jens,:,:],[nj,ni,1,1]))
+                
+                print 'zslopes',time.time()-t
+                out = output({"output_name_first_page_number":"off",
+		              "output_formats":plotproperties["outputformat"], 
+                              'output_name': 'trendszonal_'+tasks[key]["shortname"]+estr+'_'+
+                              "{:4}".format(interval[0])+"-{:4}".format(interval[1])})
+               
+                
+#                xx,yy=numpy.meshgrid(glats[1:19],ps[pindex])
+		tasks[key]["zslopes"][iens,:,:]=zslopes
+		mask=numpy.isnan(zslopes)
+		zslopes[mask]=-1.e21
+                inputs=minput({'Input_field':zslopes.T,  #.ravel?
+ #                                   'Input_field_x_coordinates':xx,
+ #                                   'Input_field_y_coordinates':yy,
+		                    'Input_field_x_list':glats[1:19],
+		                    'Input_field_y_list':ps[numpy.asarray(pindex,dtype=int)]
+                                    })
+               
+                lines =["Temperature Trends [K/10a], "+tasks[key]["shortname"]+estr+', '+
+                                "{:4}".format(interval[0])+"-{:4}".format(interval[1])]
+                
+                projection,horizontal,vertical,title,legend,cont=set_zonalcross(lines,clev)
+		
+		ppage = page(
+	        layout='positional',  
+	        page_x_length=29.7, 
+	        page_y_length=21., 
+	        page_id_line='off',
+	        page_x_position=0., 
+	        page_y_position=0.)
+		out.args['output_title']=os.getcwd()+'/'+out.args['output_name']
+		plot(out,ppage,projection,horizontal,vertical,inputs,cont,title,legend)
+#		plot(out,ppage,inputs,cont,title,legend)
+    
+               
+    belts=numpy.asarray([[0,17],[11,17],[0,6],[7,10],[9,17],[0,8]])
+    beltnames=["Globe",'NHEx','SHEx','Tropics','NH','SH']
+    hadmedbeltslopes=numpy.zeros([1,belts.shape[0],1])
+    hadbeltslopes=numpy.zeros([100,belts.shape[0],1])
+    
+    hadmedbeltslopes=belttrends(hadmedzslopes,belts)
+    for jens in range(100):
+	hadbeltslopes[jens,:,:]=belttrends(numpy.reshape(hadzslopes[jens,:,:],[nj,1]),belts)
+	
+    for ibelt in range(len(beltnames)):
+	    
+	linesplustext=[]
+	legend_user_lines=[]
+	lines =["Temperature Trends [K/10a], "+beltnames[ibelt]+estr+', '+
+	                            "{:4}".format(interval[0])+"-{:4}".format(interval[1]),plotproperties['version']]
+
+	out = output({"output_name_first_page_number":"off",
+	              "output_formats":plotproperties["outputformat"], 
+                      'output_name': 'trendsbelt_'+beltnames[ibelt]+'_'+
+                      "{:4}".format(interval[0])+"-{:4}".format(interval[1])})
+	amplevels=numpy.asarray(pindex[numpy.where(numpy.logical_and(ps[numpy.asarray(pindex,dtype=int)]>=100,
+	                                                             ps[numpy.asarray(pindex,dtype=int)]<=300))],dtype=int)
+	print 'amplevels:',amplevels
+	for key in range(len(tasks)):
+	
+	    for iens in tasks[key]["ens"]: #range(len(tasks[key]["ens"])):
+		if ibelt==0:
+		    tasks[key]["beltslopes"][iens,:,:]=belttrends(tasks[key]["zslopes"][iens,:,:],belts)
+	    shade=1
+	    if tasks[key]["shortname"] != "rio" or shade==0:
+		for iens in tasks[key]["ens"]: #range(len(tasks[key]["ens"])):
+		    linesplustext=linesplustext+addprofile(tasks[key],ps[numpy.asarray(pindex,dtype=int)],iens,ibelt)
+		    amp=numpy.max(tasks[key]["beltslopes"][iens,ibelt,amplevels].flatten())/hadmedbeltslopes[ibelt,0]
+		    amps=" {0:3.1f}".format(amp)
+		    tasks[key]['amps'][interv,ibelt]=amp
+		    if len(tasks[key]["ens"])>1:
+			legend_user_lines=legend_user_lines+[tasks[key]["shortname"]+"{0:0>2}".format(iens)+amps]
+		    else:
+			legend_user_lines=legend_user_lines+[tasks[key]["shortname"]+amps]
+	    else:
+		linesplustext=linesplustext+add_ens_profile(tasks[key], ps[numpy.asarray(pindex,dtype=int)], ibelt)
+		amp=numpy.max(numpy.mean(tasks[key]["beltslopes"][:,ibelt,amplevels],axis=0).flatten())/hadmedbeltslopes[ibelt,0]
+		amps=" {0:3.1f}".format(amp)
+		tasks[key]['amps'][interv,ibelt]=amp
+		legend_user_lines=legend_user_lines+[tasks[key]["shortname"]+amps]
+		
+	    tasks[key]['had'][interv,ibelt]=hadmedbeltslopes[ibelt,0]
+	    		      
+	projection,horizontal,vertical,title,legend=set_belttrends(lines,legend_user_lines)
+	hadtrend=addhadtrend(hadmedbeltslopes[ibelt,0],hadbeltslopes[:,ibelt,0])
+	legend_user_lines=legend_user_lines+["HadCRUT4"]
+
+	out.args['output_title']=os.getcwd()+'/'+out.args['output_name']	
+	plot(out,ppage,projection,horizontal,vertical,linesplustext,hadtrend,title,legend)
+	
+    return

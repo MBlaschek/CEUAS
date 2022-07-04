@@ -1,0 +1,607 @@
+import os,glob,sys
+import numpy
+#from scipy.io import netcdf
+from scipy.stats import linregress
+import matplotlib.pylab as plt
+from Magics.macro import *
+import netCDF4
+import time
+from rasotools.utils import *
+#from rasotools.pythranutils import *
+from rasotools.anomaly import *
+#from rasotools.panomaly import *
+from rasotools.set_trendmaps import *
+from mpl_toolkits.basemap import Basemap
+import matplotlib.patches as mpatches
+import matplotlib.cm as cm
+import matplotlib.colors as colors
+from rasotools.dumpandspagarr import *
+
+from netCDF4 import Dataset
+from numba import *
+from rasotools.allrasotrends import *
+                                
+
+def allrasodiffs(path,tasks,plotproperties,intervals,days,stnames,interv,gstations=None,sats=0,daynight=None,ref="tmcorr"):
+ 
+    pindex=numpy.asarray(plotproperties['pindex'],dtype='int')
+    msupindex=numpy.asarray(plotproperties['msupindex'],dtype='int')
+#    msups=plotproperties['msups']
+    msups=['TLT','TMT','TTS','TLS']
+    
+    os.chdir(path)
+    startyear=tasks[0]["startdate"]/10000
+    if interv==0:
+	sats={'uah':dict(),'rss':dict()}
+        sats['uah']['full'],sats['uah']['18']=read_uah(path+'/../../MSUUAHDaten/','5.6',startyear=startyear,endyear=2015,ens=0)
+        sats['rss']['full'],sats['rss']['18']=read_rss(path+'/../../MSUDaten/','V3_3',startyear=startyear,endyear=2015,ens=0)
+
+    t=time.time()
+    first=(intervals[0]-startyear)*12
+    last=(intervals[1]-startyear+1)*12
+    tolerance=intervals[2]
+    hadtime=numpy.arange(last-first,dtype=float)
+    hilf=hadtime-hadtime
+
+    try:
+	raobcoretime=os.path.getmtime(stnames[0]+'/feedbackglobbincorrsave'+stnames[0]+'.nc')
+	richtime=os.path.getmtime(stnames[0]+'/feedbackglobbincorrsave_rio24_'+stnames[0]+'.nc')
+	npztime=os.path.getmtime('allsave.npz')
+	if raobcoretime>npztime or richtime>npztime:
+	    os.remove('allsave.npz')
+    except:
+	pass
+    try:
+        d=numpy.load('allsave.npz')
+        lats=d["lats"]
+        lons=d["lons"]
+        days=d["days"]
+        ps=d["ps"]
+        stnames=d["stnames"]
+        d.close()
+        istat=lats.shape[0]
+	if interv==0:
+	    for k in range(len(tasks)):
+		d=numpy.load(tasks[k]["shortname"]+'.npz')
+		tasks[k]["data"]=d["data"]
+		tasks[k]["index"]=d["index"]
+		tasks[k]["msudata"]=d["msudata"]
+		d.close()
+
+		print 'read: ',tasks[k]["shortname"],time.time()-t
+    except:
+
+        istat,lats,lons,ps,stnames=read_alltrends(path,tasks,days)
+	t=time.time()
+        numpy.savez('allsave.npz',
+                    lats=lats,
+                    lons=lons,
+                    days=days,
+                    ps=ps,
+                    stnames=stnames
+                    )
+        for k in range(len(tasks)):
+            numpy.savez(tasks[k]["shortname"]+'.npz',
+                        data=tasks[k]["data"],
+                        index=tasks[k]["index"],
+	                msudata=tasks[k]["msudata"]
+                        )
+	    print 'save: ',tasks[k]["shortname"],time.time()-t
+    if isinstance(stnames,list):
+	stnames=numpy.asarray(stnames)
+    istnames=stnames.astype(numpy.int)
+    tmshape=tasks[0]["data"].shape
+    climatology=numpy.zeros(12,numpy.float64)
+
+    slopes=[]
+    sli=-1
+    for k in range(len(tasks)):
+	#if tasks[k]['shortname'] in sats.keys():
+	    #tasks[k]['msudata']=satst(lats,lons,sats[tasks[k]['shortname']]['full'])
+	    
+        for inter in range(intervals.size/3):
+            sli+=1
+            slopes.append({ "shortname":tasks[k]["shortname"],                            "ens":tasks[k]["ens"],
+                            "interval":intervals[:],
+                            "data":numpy.empty([tmshape[0],len(tasks[k]["ens"]),tmshape[2]+1,
+	                                        pindex.shape[0]+msupindex.shape[0]],numpy.float64),
+                            }
+                          )
+            slopes[sli]["data"].fill(numpy.nan)
+
+
+    dists=numpy.empty((tmshape[0]+1)*tmshape[0]/2,numpy.float64)
+    dists.fill(numpy.nan)
+    tdist(dists,lats,lons,1)
+    
+    
+    ni=36
+    nj=18
+    glons=5.+10.*numpy.arange(ni)
+    glats=-85.+10.*numpy.arange(nj)
+    belts=numpy.asarray([[0,18],[11,18],[0,8],[7,11],[9,18],[0,9]])
+    beltnames=["Globe",'NHEx','SHEx','Tropics','NH','SH']
+
+    gstatindex=numpy.zeros([nj,ni,30],dtype=numpy.int) # 20 is max stations per 10x10 degree box
+    find_gstatindex(glons,glats,lons,lats,gstatindex)
+
+    currentdatabg=numpy.zeros([tmshape[0],tmshape[2],pindex.shape[0],tmshape[4]],numpy.float64)
+    currentdatatm=numpy.zeros([tmshape[0],tmshape[2],pindex.shape[0],tmshape[4]],numpy.float64)
+    currentdata  =numpy.zeros([tmshape[0],tmshape[2],pindex.shape[0],tmshape[4]],numpy.float64)
+    zero=         numpy.zeros([tmshape[0],tmshape[2],pindex.shape[0],tmshape[4]],numpy.float64)
+    currentdatauah=numpy.zeros([tmshape[0],tmshape[2],msupindex.shape[0],tmshape[4]],numpy.float64)
+    currentdatarss=numpy.zeros([tmshape[0],tmshape[2],msupindex.shape[0],tmshape[4]],numpy.float64)
+    currentdatamsu=numpy.zeros([tmshape[0],tmshape[2],msupindex.shape[0],tmshape[4]],numpy.float64)
+    jcurrentdata=numpy.zeros((1,1,1,1))
+
+    orig=numpy.zeros(tmshape[4])
+    anomaly=numpy.zeros(tmshape[4])
+    gst=numpy.zeros(tmshape[4],dtype=numpy.float)
+
+    keytmcorr=-1
+    keytm=-1
+    for key in range(len(tasks)):
+        if tasks[key]["shortname"]=="tmcorr":
+            keytmcorr=key
+        if tasks[key]["shortname"]=="tm":
+            keytm=key        
+        if tasks[key]["shortname"]=="rss":
+            keyrss=key        
+        if tasks[key]["shortname"]=="uah":
+            keyuah=key        
+    
+    try:
+	expandandadd(tasks[keyuah]["msudata"],currentdatauah,tasks[keytm]["index"],msupindex,0,currentdatauah,0.0)
+	expandandadd(tasks[keyrss]["msudata"],currentdatarss,tasks[keytm]["index"],msupindex,0,currentdatarss,0.0)
+    except:
+	pass
+    
+    sli=-1
+    for key in range(len(tasks)):
+        print tasks[key]["shortname"]
+        if tasks[key]["shortname"] in ["rio","ce20c_andep"]:
+            enslist=tasks[key]["ens"]
+        else:
+            enslist=[0]
+            
+        for iens in enslist: #range(len(tasks[key]["ens"])):
+            
+            # replace RAOBCORE adjustments with unadjusted series
+	    sat=False
+            t=time.time()
+            if tasks[key]["shortname"] == "tm":
+                expandandadd(tasks[key]["data"],tasks[keytmcorr]["data"].reshape(tmshape[0],tmshape[2],tmshape[3],tmshape[4]),
+                             tasks[key]["index"],pindex,0,currentdatatm,+1.0)
+                currentdata[:]=currentdatatm[:]
+            if tasks[key]["shortname"] == "tmcorr":
+                currentdata[:]=tasks[key]["data"].reshape(tmshape[0],tmshape[2],ps.shape[0],tmshape[4])[:,:,pindex,:]
+            elif 'rio' in tasks[key]["shortname"]:  
+                expandandadd(tasks[key]["data"],currentdatatm,tasks[key]["index"],pindex,iens,currentdata,-1.0)
+            elif tasks[key]["shortname"] == "rcorr":
+                expandandadd(tasks[key]["data"],zero,tasks[key]["index"],pindex,iens,currentdata,-1.0)
+	    elif tasks[key]["shortname"] == "bg": 
+                expandandadd(tasks[key]["data"],currentdata,tasks[keytm]["index"],pindex,0,currentdatabg,0.0)
+                currentdata[:]=currentdatabg.copy()
+#                currentdatabg=tasks[key]["data"].reshape(tmshape[0],tmshape[2],ps.shape[0],tmshape[4])[:,:,pindex,:]
+#                currentdata[:]=currentdatabg.copy()
+	    elif tasks[key]["shortname"] in ["erapresat_andep","jra55_andep","jra55_fgdep","ce20c_andep","e20c_andep","n20c_andep"]: 
+                picopy(currentdata,currentdatatm,tasks[key]["data"],iens,pindex)
+#currentdata[:]=currentdatatm+tasks[key]["data"].reshape(tmshape[0],tmshape[2],ps.shape[0],tmshape[4])[:,:,pindex,:]
+            elif tasks[key]["shortname"] in ["ce20c_andep"]:
+#                currentdata[:]=currentdatatm+tasks[key]["data"][:,iens,:,:,:].reshape(tmshape[0],tmshape[2],ps.shape[0],tmshape[4])[:,:,pindex,:]
+                picopy(currentdata,currentdatatm,tasks[key]["data"],iens,pindex)
+	    elif tasks[key]["shortname"] in ["fg_dep"]: 
+                currentdata[:]=currentdatatm-tasks[key]["data"].reshape(tmshape[0],tmshape[2],ps.shape[0],tmshape[4])[:,:,pindex,:]
+	    elif tasks[key]["shortname"] == "bgdiff":  
+		currentdata[:]=currentdatatm-currentdatabg
+	    elif tasks[key]["shortname"] in ["uah",'rss']:  
+		#currentdata=numpy.asarray([0.])
+		sat=True
+            else:
+                expandandadd(tasks[key]["data"],currentdata,tasks[keytm]["index"],pindex,0,currentdata,0.0)
+            
+	    expandandadd(tasks[key]["msudata"],currentdatamsu,tasks[keytm]["index"],msupindex,iens,currentdatamsu,0.0)
+	    
+	    try:
+		for stn in range(stnames.shape[0]):
+		    if stnames[stn] not in gstations:
+			currentdata[stn,:,:,:]=numpy.nan
+	    except:
+		pass
+	    
+	    try:
+		if daynight=='Day':
+		    mask=numpy.logical_and(lons>-90.,lons<90.)
+		    currentdata[mask,0,:,:]=numpy.nan
+		    currentdata[numpy.logical_not(mask),1,:,:]=numpy.nan		    
+		elif daynight=='Night':
+		    mask=numpy.logical_and(lons>-90.,lons<90.)
+		    currentdata[mask,1,:,:]=numpy.nan
+		    currentdata[numpy.logical_not(mask),0,:,:]=numpy.nan
+		else:
+		    pass
+	    except:
+		pass
+		
+            print 'expand',iens,time.time()-t
+	    
+	    if intervals.ndim>1:
+		intrange=intervals.shape[0]
+	    else:
+		intrange=1
+            for inter in range(intrange):
+                interval=numpy.asarray(intervals[:],dtype=numpy.int)
+                stop=interval[1]
+                start=interval[0]
+                stime=(start-startyear)*12
+                itime=stime+numpy.arange((stop-start+1)*12)
+                if iens==0:
+                    sli+=1
+                
+                t=time.time()
+                
+                s=slopes[sli]["data"]
+                                
+		if not sat:
+#		    jcurrentdata=numpy.concatenate((currentdata,currentdatamsu),axis=2)
+#		    print 'if',time.time()-t
+		    cs=currentdata.shape
+		    if jcurrentdata.shape[2]!=cs[2]+currentdatamsu.shape[2]:
+			jcurrentdata=numpy.zeros((cs[0],cs[1],cs[2]+currentdatamsu.shape[2],cs[3]))
+		    ncat(currentdata,currentdatamsu,jcurrentdata)
+		    print 'if',time.time()-t
+		    anomalies=jcurrentdata[:]
+		    
+		    jpindex=numpy.concatenate((pindex,msupindex))
+		    print 'if',time.time()-t
+	        else:
+		    jcurrentdata=currentdatamsu[:]
+		    anomalies=currentdatamsu[:]
+		    jpindex=msupindex
+		    print 'else',time.time()-t
+		    #anomalies_and_slopes(currentdatamsu,startyear,interval,tolerance,iens,itime,orig,anomaly,anomalies,climatology,
+                                     #good,s)
+		
+		good=numpy.zeros([tmshape[0],tmshape[2],jpindex.shape[0]],numpy.int)
+                print time.time()-t
+		if key<2 and (tasks[key]["shortname"]=='tm' and ref!='tm' or tasks[key]["shortname"]=='tmcorr' and ref!='tmcorr' and ref!='night'):
+		    break
+		if tasks[key]["shortname"] == ref and inter==0:
+		    jcurrentdatatm=jcurrentdata.copy()
+		    break
+		else:
+		    if ref=='night':
+			test=jcurrentdata[:,::-1,:,:].copy()
+			calc_diffs(jcurrentdata[:,::-1,:,:],jcurrentdata,startyear,interval,tolerance,iens,good,s)
+		    else:
+			calc_diffs(jcurrentdata,jcurrentdatatm,startyear,interval,tolerance,iens,good,s)
+			
+#		anomaliesd_diffs(jcurrentdata,startyear,interval,int(tolerance),int(iens),itime,orig,anomaly,anomalies,
+#		                       climatology,good,s)
+ 
+ # remove India               
+		mask=(istnames>42000)&(istnames<44000)
+		s[mask,:,:,:]=numpy.nan
+		anomalies[mask,:,:,:]=numpy.nan
+		mask=(istnames>48600)&(istnames<48900)
+		s[mask,:,:,:]=numpy.nan
+		anomalies[mask,:,:,:]=numpy.nan
+ 
+ 		
+#                if tasks[key]["shortname"]=='rcorr' or tasks[key]["shortname"]=='bgdiff':
+#		    northof30N(tasks,key,corig,path,ps,pindex)
+                               
+                s[:,:,2,:]=numpy.nanmean(s[:,:,:2,:],axis=2)
+                print 'slope',time.time()-t
+                if tasks[key]['shortname']=='rio':
+		    print 'rio'
+                t=time.time()
+		
+		itime=numpy.asarray(itime,dtype=int)
+		try:
+		    if gslopes.shape[3]!=jpindex.shape[0]:
+			gslopes=numpy.zeros([nj,ni,tmshape[2],jpindex.shape[0]],numpy.float64)
+		except:
+			gslopes=numpy.zeros([nj,ni,tmshape[2],jpindex.shape[0]],numpy.float64)
+ 
+                grid_diffs(s,good,int(tolerance),gstatindex,gslopes,iens,gst)
+                
+
+                print 'grid',time.time()-t
+		g=gslopes.shape
+                t=time.time()
+
+		zanomalies=numpy.nanmean(numpy.nanmean(gslopes,axis=1),axis=1)
+		zs=zanomalies.shape
+		beltanomalies=numpy.zeros([len(beltnames),zs[1]])
+		for b in range(len(beltnames)):
+		    beltanomalies[b,:]=numpy.nanmean(zanomalies[belts[b,0]:belts[b,1],:],axis=0)
+		
+#		tasks[key]['beltanomalies'][:]=beltanomalies[:]
+		#plt.plot(1900.+itime/12.,beltanomalies[0,15,itime])
+		print time.time()-t
+		
+		pmax=3
+		rprefix=''
+		if ref=='night':
+		    pmax=1
+		    rprefix='rad'
+                for ipar in range(pmax):
+                    parstr="{0:0>2}".format(ipar*12)
+                    for ip in range(jpindex.shape[0]):
+			
+			if ip<pindex.shape[0] and jpindex.shape[0]!=msupindex.shape[0]:
+			    pstr="{0:0>3}".format(ps[jpindex[ip]].astype(numpy.int))
+			    psuff=' hPa'
+			else:
+			    pstr=msups[jpindex[ip]]
+			    psuff=''
+                        
+                        estr=''
+                        if len(tasks[key]["ens"])>1:
+                            estr="{0:0>2}".format(iens)
+			
+			if plotproperties['map']=='Globe':
+			    ppage = page(
+			        layout='positional',  
+			        page_x_length=29.7, 
+			        page_y_length=21., 
+			        page_id_line='off',
+			        page_x_position=0., 
+			        page_y_position=0.)
+			        
+			    pmap=''
+			else:
+			    ppage = page(
+			        layout='positional',  
+			        page_x_length=14.7, 
+			        page_y_length=20., 
+			        page_id_line='off',
+			        page_x_position=0., 
+			        page_y_position=0.)
+			    pmap='_'+plotproperties['map']
+
+			nprefix=''
+			if "gridded" in plotproperties["plotlist"]:
+			    nprefix+='gridded_'
+			if "stations" in plotproperties["plotlist"]:
+			    nprefix+='stations_'
+			    
+                        out = output({"output_name_first_page_number":"off",
+			              "output_formats":plotproperties["outputformat"], 
+                                      'output_name': nprefix+'diff_'+tasks[key]["shortname"]+'_'estr+estr+'_'+
+                                      "{:4}".format(interval[0])+"-{:4}".format(interval[1])+'_'+
+			              pstr+'_'+parstr})
+                            #define the cartesian projection
+            
+			clev=numpy.linspace(-1.0,1.0,21)
+			clev=numpy.append(clev,5.)
+			clev=numpy.append(-5.,clev)
+			clev*=3
+			if "stations" in plotproperties["plotlist"]:
+			
+			    scosts=numpy.zeros(s.shape[0])
+			    cost=tcost(dists,s[:,iens,ipar,ip],scosts)
+                        
+			    if ip==jpindex.shape[0]-1 and ipar==1:
+				print 'cost',time.time()-t
+			    cstr="{0:8.2f}".format(cost)
+			    statstr="{:4}".format(sum(~numpy.isnan(s[:,iens,ipar,ip])))
+			    if ref=='night':
+				tref='12-00'
+			    else:
+				tref=ref
+			    lines =["Temperature Difference [K], "+tasks[key]["shortname"]+'-'+estr+', '+ref+', '+
+				    "{:4}".format(interval[0])+"-{:4}".format(interval[1])+', '+parstr+"h, "+pstr+psuff,
+				    statstr+' Stations, Cost: '+cstr+', '+plotproperties["version"]]
+            
+		
+			    vec=s[0:istat,iens,ipar,ip].flatten()
+			    mask=~numpy.isnan(vec)
+			    inp=minput({'Input_values':vec[mask].astype(numpy.float64),  #.ravel?
+				        'Input_latitude_values':lats[mask].astype(numpy.float64),
+				        'Input_longitude_values':lons[mask].astype(numpy.float64),
+				        'Input_Type':'geographical'})
+			    
+			else:
+			    lines =["Temperature Difference [K], "+tasks[key]["shortname"]+estr+', '+
+				    "{:4}".format(interval[0])+"-{:4}".format(interval[1])+', '+parstr+"h, "+pstr+psuff,
+				    plotproperties["version"]]
+
+			if plotproperties['plotstatids']=='True' and "stations" in plotproperties["plotlist"]:
+			    cind=numpy.argsort(-scosts[mask])
+			    maxs=cind.shape[0]
+			    projection,coastlines,title,legend,symb,symb2,symb3,symb4,cont=\
+				set_trendmaps(lines,clev,
+				              stnames=numpy.concatenate([stnames[mask][cind[0:maxs]],stnames[mask][cind[0:maxs]]]),
+				              slopes=numpy.concatenate([vec[mask][cind[0:maxs]].astype(numpy.float64),vec[mask][cind[0:maxs]]]),
+				              costs=numpy.concatenate([scosts[mask][cind[0:maxs]],scosts[mask][cind[0:maxs]]]),
+			                      map=plotproperties['map'])
+			    ilav=numpy.concatenate([lats[mask][cind[0:maxs]].astype(numpy.float64),
+			                            numpy.asarray([-80.,-80.,-80.])+1.0])
+			    ilov=numpy.concatenate([lons[mask][cind[0:maxs]].astype(numpy.float64),
+			                            numpy.asarray([-20.,0.,20.])+1.0])
+			    #print tasks[key]["shortname"],pstr,parstr
+			    #print scosts[mask][cind[0:maxs]]
+			    lst='['
+			    for str in stnames[mask][cind[0:maxs]]:
+				lst=lst+'"'+str+'",'
+			    lst=lst[0:-1]+']'
+			    #print lst
+			    #print vec[mask][cind[0:maxs]]
+			    if ip==1:				
+				pass
+			    inp3=minput({'Input_latitude_values':ilav,
+				        'Input_longitude_values':ilov,
+				        'Input_Type':'geographical'})
+			    inp4=minput({'Input_latitude_values':ilav-2.0,
+				        'Input_longitude_values':ilov+2.0,
+				        'Input_Type':'geographical'})
+			    inp5=minput({'Input_latitude_values':ilav-4.0,
+				        'Input_longitude_values':ilov+2.0,
+				        'Input_Type':'geographical'})
+			else:
+			    projection,coastlines,title,legend,symb,cont=set_trendmaps(lines,clev,map=plotproperties['map'])
+                        
+			if "gridded" in plotproperties["plotlist"]:
+			    glats=numpy.linspace(-94.999,94.999,nj+2)
+			    glons=numpy.linspace(5,375,ni+2)
+
+			    hilf=numpy.empty([nj+2,ni+2])
+			    hilf[:]=numpy.nan
+     
+			    if ipar==0 and ip==9:
+				print out.args['output_name']
+			    hilf[1:nj+1,1:ni+1]=gslopes[:,:,ipar,ip].reshape([nj,ni]).copy()
+    #                        hilf[1:nj+1,1:ni+1]=hadmedslopes[0,:,:].reshape([nj,ni]).copy()
+			    mask2=numpy.isnan(hilf)
+			    hilf[mask2]=-1.e21
+			    
+			    inp2=minput({'Input_field':hilf[:,1:ni+1],  #.ravel?
+				        'Input_field_initial_latitude':glats[0]-5,
+				        'Input_field_initial_longitude':glons[0]-5,
+				        'Input_field_latitude_step':(glats[1]-glats[0]),
+				        'Input_field_longitude_step':glons[1]-glons[0],
+				        'Input_Type':'geographical'})
+		
+			   #plot(out,projection,coastlines,inp,symb,title,legend,inp2,cont)
+			    out.args['output_title']=os.getcwd()+'/'+out.args['output_name']
+			    if len(vec[mask])>0:
+				plot(out,projection,inp2,cont,inp,symb,title,legend,coastlines)
+			else:
+			    if "stations" in plotproperties["plotlist"]:
+				if numpy.sum(mask)!=0:
+				    out.args['output_title']=os.getcwd()+'/'+out.args['output_name']
+				    if plotproperties['plotstatids']=='True':
+					plot(out,projection,inp,symb,inp3,symb2,inp4,symb3,inp5,symb4,title,legend,coastlines)
+				    else:
+					#print 'plot inp:',inp
+					plot(out,projection,inp,symb,title,legend,coastlines)
+				else:
+				    print out.args['output_name']+': no valid data'
+
+                
+                t=time.time()
+		s=gslopes.shape
+		zslopes=numpy.zeros([s[0],s[3]])
+                zslopes=zonaltrends(gslopes,zslopes)
+
+                print 'zslopes',time.time()-t
+		if 'zonal' in plotproperties['plotlist'] and zslopes.shape[1]>=pindex.shape[0]:
+		    out = output({"output_name_first_page_number":"off",
+			          "output_formats":plotproperties["outputformat"], 
+			          'output_name': 'diffzonal_'+tasks[key]["shortname"]+estr+'_'+
+			          "{:4}".format(interval[0])+"-{:4}".format(interval[1])})
+		   
+		    
+		    mask=numpy.isnan(zslopes)
+		    zslopes[mask]=-1.e21
+		   
+		    lines =["Temperature Difference [K], "+tasks[key]["shortname"]+estr+', '+
+			            "{:4}".format(interval[0])+"-{:4}".format(interval[1])]
+		    
+		    projection,horizontal,vertical,title,legend,cont=set_zonalcross(lines,clev)
+		    
+		    ppage = page(
+		    layout='positional',  
+		    page_x_length=29.7, 
+		    page_y_length=21., 
+		    page_id_line='off',
+		    page_x_position=0., 
+		    page_y_position=0.)
+		    out.args['output_title']=os.getcwd()+'/'+out.args['output_name']
+		    
+		    hilf=zslopes.T#[pindex,:]
+		    xa=glats#[1:19]
+		    ya=numpy.asarray(ps[numpy.asarray(pindex,dtype=int)],numpy.float64)
+		    inputs=minput({'Input_field':hilf,  #.ravel?
+			                'Input_field_x_list':xa,
+			                'Input_field_y_list':ya,
+		                        'Input_type':'cartesian'
+			                })
+		    
+		    plot(out,ppage,projection,horizontal,vertical,inputs,cont,title,legend)
+    
+               	
+    for ibelt in range(len(beltnames)):
+	    
+	linesplustext=[]
+	legend_user_lines=[]
+	lines =["Temperature Difference [K], "+beltnames[ibelt]+estr+', '+
+	                            "{:4}".format(interval[0])+"-{:4}".format(interval[1]),plotproperties['version']]
+	
+	profsat=''
+	if 'satseries' in plotproperties['plotlist']:
+	    profsat='sat'
+
+	out = output({"output_name_first_page_number":"off",
+	              "output_formats":plotproperties["outputformat"], 
+                      'output_name': profsat+'diffsbelt_'+beltnames[ibelt]+'_'+
+                      "{:4}".format(interval[0])+"-{:4}".format(interval[1])})
+	#amplevels=pindex[numpy.where(numpy.logical_and(ps[pindex]>=100,
+	                                                             #ps[pindex]<=300))]
+	#print 'amplevels:',amplevels
+	ti=range(len(tasks))
+	li=[ta['shortname'] for ta in tasks]
+	if 'rio' in li:
+	    ti.insert(0,ti.pop(li.index('rio')))
+		
+	for key in ti:
+	
+	    for iens in tasks[key]["ens"]: #range(len(tasks[key]["ens"])):
+		if ibelt==0:
+		    tasks[key]["beltslopes"][iens,:,:]=belttrends(tasks[key]["zslopes"][iens,:,:],belts)
+	    shade=1
+	    if tasks[key]["shortname"] != "rio" or shade==0:
+		for iens in tasks[key]["ens"]: #range(len(tasks[key]["ens"])):
+		    
+		    if 'satseries' in plotproperties['plotlist']:
+			if tasks[key]["shortname"] != "uah" and tasks[key]["shortname"] != "rss":
+			    tasks[key]["beltslopes"][iens,ibelt,-4]=numpy.nan
+			linesplustext=linesplustext+addsattrend(tasks[key]["beltslopes"][iens,ibelt,-4:],[800.,550.,250.,90.],
+			                                        scol=tasks[key]["color"],iens=iens) # SAT
+			#amp=tasks[key]["beltslopes"][iens,ibelt,-3]/hadmedbeltslopes[ibelt,0]
+		    else:
+			if tasks[key]["beltslopes"].shape[2]>=pindex.shape[0]:
+			    linesplustext=linesplustext+addprofile(tasks[key],ps[pindex],iens,ibelt) # RASO
+			else:
+			    linesplustext=linesplustext+addsattrend(tasks[key]["beltslopes"][iens,ibelt,:],[800.,550.,250.,90.],
+			                                            scol=tasks[key]["color"],iens=iens) # SAT
+			#try:
+			    #amp=numpy.max(tasks[key]["beltslopes"][iens,ibelt,amplevels].flatten())/hadmedbeltslopes[ibelt,0]
+			#except:
+			    #amp=tasks[key]["beltslopes"][iens,ibelt,1]/hadmedbeltslopes[ibelt,0]
+		    #amps=" {0:3.1f}".format(amp)
+		    #tasks[key]['amps'][iens,interv,ibelt]=amp
+		    #if len(tasks[key]["ens"])>1:
+			#legend_user_lines=legend_user_lines+[tasks[key]["shortname"]+"{0:0>2}".format(iens)+amps]
+		    #else:
+			#legend_user_lines=legend_user_lines+[tasks[key]["shortname"]+amps]
+	    #else:
+		#amp=numpy.zeros(tasks[key]["ens"].shape[0])
+		#if 'satseries' in plotproperties['plotlist']:
+		    #for iens in tasks[key]["ens"]: #range(len(tasks[key]["ens"])):
+			#tasks[key]["beltslopes"][iens,ibelt,-4]=numpy.nan
+			#amp[iens]=tasks[key]["beltslopes"][iens,ibelt,-3]/hadmedbeltslopes[ibelt,0]
+			#linesplustext=linesplustext+addsattrend(tasks[key]["beltslopes"][iens,ibelt,-4:],[800.,550.,250.,90.],
+			                                        #scol=tasks[key]["color"],iens=iens) # SAT
+			#print tasks[key]["beltslopes"][iens,ibelt,-4:]
+		#else:
+		    #linesplustext=linesplustext+add_ens_profile(tasks[key], ps[pindex], ibelt)
+		    #for iens in tasks[key]["ens"]: #range(len(tasks[key]["ens"])):
+			#amp[iens]=numpy.max(tasks[key]["beltslopes"][iens,ibelt,amplevels])/hadmedbeltslopes[ibelt,0]
+		#amps=" {0:3.1f}".format(numpy.mean(amp))
+		#tasks[key]['amps'][:,interv,ibelt]=amp
+		#legend_user_lines=legend_user_lines+[tasks[key]["shortname"]+amps]
+		
+	    #tasks[key]['had'][interv,ibelt]=hadmedbeltslopes[ibelt,0]
+	    		      
+#	projection,horizontal,vertical,title,legend=set_belttrends(lines,legend_user_lines,plotproperties)
+	#hadtrend=addhadtrend(hadmedbeltslopes[ibelt,0],hadbeltslopes[:,ibelt,0])
+	#legend_user_lines=legend_user_lines+["HadCRUT4"]
+
+#	out.args['output_title']=os.getcwd()+'/'+out.args['output_name']	
+#	plot(out,ppage,projection,horizontal,vertical,linesplustext,title,legend)
+	
+    return 
+

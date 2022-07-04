@@ -1,0 +1,60 @@
+srvx7.img.univie.ac.at{~leo/python/Rasotools/rasotools/x}473 %pythran putilse30.py
+CRITICAL Leave the vessel! Women and children first!
+C++ compiler failed to compile translated code.
+E: Compile error!
+
+******** Command line was: ********
+'c++' '/tmp/tmp6nucsl.cpp' '-I/opt/anaconda/include/python2.7' '-I/opt/anaconda/lib/python2.7/site-packages/numpy/core/include/numpy' '-I/opt/anaconda/lib/python2.7/site-packages/.' '-I/opt/anaconda/lib/python2.7/site-packages/pythran' '-I/opt/anaconda/lib/python2.7/site-packages/pythran/pythonic/patch' '-DENABLE_PYTHON_MODULE' '-DUSE_GMP' '-O2' '-g' '-std=c++11' '-O2' '-shared' '-o' 'putilse30.so' '-L/opt/anaconda/lib/python2.7/config' '-lpthread' '-ldl' '-lutil' '-lpython2.7' '-lboost_python' '-lgmp' '-lgmpxx' '-fPIC' '-ltcmalloc_minimal'
+
+******** Output :  ********
+
+/tmp/tmp6nucsl.cpp: In instantiation of ‘struct __pythran_putilse30::tdist::type<pythonic::types::ndarray<double, 1ul>, pythonic::types::ndarray<double, 1ul>, pythonic::types::ndarray<double, 1ul>, double>’:
+/tmp/tmp6nucsl.cpp:2363:213:   required from here
+/tmp/tmp6nucsl.cpp:815:99: internal compiler error: Segmentation fault
+       typedef typename std::tuple_element<0,typename std::remove_reference<__type13>::type>::type __type14;
+                                                                                                   ^
+0x9526ff crash_signal
+        ../.././gcc/toplev.c:337
+0x5688ea tsubst(tree_node*, tree_node*, int, tree_node*)
+        ../.././gcc/cp/pt.c:11696
+0x56dea2 tsubst_template_args
+        ../.././gcc/cp/pt.c:10015
+0x568a1b tsubst(tree_node*, tree_node*, int, tree_node*)
+        ../.././gcc/cp/pt.c:11934
+0x568f8b tsubst(tree_node*, tree_node*, int, tree_node*)
+        ../.././gcc/cp/pt.c:11584
+0x56dea2 tsubst_template_args
+        ../.././gcc/cp/pt.c:10015
+0x56e3c7 tsubst_aggr_type
+        ../.././gcc/cp/pt.c:10212
+0x5687f5 tsubst(tree_node*, tree_node*, int, tree_node*)
+        ../.././gcc/cp/pt.c:12147
+0x56dea2 tsubst_template_args
+        ../.././gcc/cp/pt.c:10015
+0x56e3c7 tsubst_aggr_type
+        ../.././gcc/cp/pt.c:10212
+0x5687f5 tsubst(tree_node*, tree_node*, int, tree_node*)
+        ../.././gcc/cp/pt.c:12147
+0x5703d5 tsubst_decl
+        ../.././gcc/cp/pt.c:11101
+0x568f2f tsubst(tree_node*, tree_node*, int, tree_node*)
+        ../.././gcc/cp/pt.c:11550
+0x57a411 instantiate_class_template_1
+        ../.././gcc/cp/pt.c:9182
+0x57a411 instantiate_class_template(tree_node*)
+        ../.././gcc/cp/pt.c:9446
+0x5d10dd complete_type(tree_node*)
+        ../.././gcc/cp/typeck.c:134
+0x5b11b2 cp_parser_nested_name_specifier_opt
+        ../.././gcc/cp/parser.c:5399
+0x5b183b cp_parser_nested_name_specifier
+        ../.././gcc/cp/parser.c:5462
+0x5c2ce1 cp_parser_elaborated_type_specifier
+        ../.././gcc/cp/parser.c:14979
+0x5ab597 cp_parser_type_specifier
+        ../.././gcc/cp/parser.c:14367
+Please submit a full bug report,
+with preprocessed source if appropriate.
+Please include the complete backtrace with any bug report.
+See <http://gcc.gnu.org/bugs.html> for instructions.
+

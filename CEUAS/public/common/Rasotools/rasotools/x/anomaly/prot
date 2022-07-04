@@ -1,0 +1,456 @@
+[31mCRITICAL[0m [34mLeave the vessel! Women and children first!
+C++ compiler failed to compile translated code.
+E: Compile error!
+
+******** Command line was: ********
+'clang' '/tmp/tmpThqpTM.cpp' '-I/opt/anaconda/include/python2.7' '-I/opt/anaconda/lib/python2.7/site-packages/numpy/core/include/numpy' '-I/opt/anaconda/lib/python2.7/site-packages/.' '-I/opt/anaconda/lib/python2.7/site-packages/pythran' '-I/opt/anaconda/lib/python2.7/site-packages/pythran/pythonic/patch' '-DENABLE_PYTHON_MODULE' '-DUSE_GMP' '-O2' '-g' '-std=c++11' '-O2' '-shared' '-o' 'xyanomaliesmbbcore.so' '-L/opt/anaconda/lib/python2.7/config' '-lpthread' '-ldl' '-lutil' '-lpython2.7' '-lboost_python' '-lgmp' '-lgmpxx' '-fPIC' '-ltcmalloc_minimal'
+
+******** Output :  ********
+
+/tmp/tmpThqpTM.cpp:73:29: error: implicit instantiation of undefined template 'std::tuple_element<0, double>'
+      typedef typename std::tuple_element<0,typename std::remove_reference<__type2>::type>::type __type3;
+                            ^
+/tmp/tmpThqpTM.cpp:217:24: note: in instantiation of template class '__pythran_xyanomaliesmbbcore::bubblesort::type<long &>' requested here
+  typename bubblesort::type<argument_type0>::result_type bubblesort::operator()(argument_type0&& X) const
+                       ^
+/tmp/tmpThqpTM.cpp:289:13: note: while substituting deduced template arguments into function template 'operator()' [with argument_type0 = long &]
+            bubblesort()(est);
+            ^
+/tmp/tmpThqpTM.cpp:310:60: note: in instantiation of function template specialization '__pythran_xyanomaliesmbbcore::xyanomaliesmbbcore::operator()<pythonic::types::ndarray<double, 4>, pythonic::types::ndarray<double, 4> &, pythonic::types::ndarray<double, 4> &, long, pythonic::types::ndarray<long, 1>, pythonic::types::ndarray<double, 1> &, pythonic::types::ndarray<double, 1> &, long, long, long, long, long &, pythonic::types::ndarray<double, 1> &, pythonic::types::ndarray<long, 1> >' requested here
+  return __pythran_xyanomaliesmbbcore::xyanomaliesmbbcore()(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13);
+                                                           ^
+/usr/local/bin/../lib/gcc/x86_64-unknown-linux-gnu/4.9.2/../../../../include/c++/4.9.2/tuple:673:12: note: template is declared here
+    struct tuple_element;
+           ^
+/tmp/tmpThqpTM.cpp:80:24: error: subscripted value is not an array, pointer, or vector
+      typedef decltype(std::declval<__type0>()[std::declval<__type12>()]) __type13;
+                       ^~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/tmpThqpTM.cpp:83:54: error: subscripted value is not an array, pointer, or vector
+      typedef typename pythonic::assignable<decltype(std::declval<__type0>()[std::declval<__type10>()])>::type __type18;
+                                                     ^~~~~~~~~~~~~~~~~~~~~~~ ~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /tmp/tmpThqpTM.cpp:3:
+In file included from /opt/anaconda/lib/python2.7/site-packages/pythran/pythonic/core.hpp:5:
+/opt/anaconda/lib/python2.7/site-packages/pythran/pythonic/types/combined.hpp:37:40: error: invalid operands to binary expression ('long' and 'indexable_container<long, int>')
+    typedef decltype(std::declval<T0>()+std::declval<T1>()) type;
+                     ~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+/opt/anaconda/lib/python2.7/site-packages/pythran/pythonic/types/combined.hpp:32:22: note: in instantiation of template class '__combined<long, indexable_container<long, int>>' requested here
+    typedef typename __combined< T0, typename __combined<T1, Types...>::type >::type type;
+                     ^
+/tmp/tmpThqpTM.cpp:88:54: note: in instantiation of template class '__combined<long, indexable<long>, indexable<long>, container<int>, container<int> >' requested here
+      typedef typename pythonic::assignable<typename __combined<__type0,__type16,__type17,__type19,__type20>::type>::type result_type;
+                                                     ^
+/tmp/tmpThqpTM.cpp:217:24: note: in instantiation of template class '__pythran_xyanomaliesmbbcore::bubblesort::type<long &>' requested here
+  typename bubblesort::type<argument_type0>::result_type bubblesort::operator()(argument_type0&& X) const
+                       ^
+/tmp/tmpThqpTM.cpp:289:13: note: while substituting deduced template arguments into function template 'operator()' [with argument_type0 = long &]
+            bubblesort()(est);
+            ^
+/tmp/tmpThqpTM.cpp:310:60: note: in instantiation of function template specialization '__pythran_xyanomaliesmbbcore::xyanomaliesmbbcore::operator()<pythonic::types::ndarray<double, 4>, pythonic::types::ndarray<double, 4> &, pythonic::types::ndarray<double, 4> &, long, pythonic::types::ndarray<long, 1>, pythonic::types::ndarray<double, 1> &, pythonic::types::ndarray<double, 1> &, long, long, long, long, long &, pythonic::types::ndarray<double, 1> &, pythonic::types::ndarray<long, 1> >' requested here
+  return __pythran_xyanomaliesmbbcore::xyanomaliesmbbcore()(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13);
+                                                           ^
+/opt/anaconda/lib/python2.7/site-packages/pythran/pythonic/types/combined.hpp:12:75: note: candidate template ignored: deduced conflicting types for parameter 'T' ('long' vs. 'indexable_container<long, int>')
+typename std::enable_if< pythonic::types::is_callable<T>::value, T>::type operator+(T , T);
+                                                                          ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr<type-parameter-0-0, type-parameter-0-1>' against 'long'
+__GMP_DEFINE_BINARY_FUNCTION(operator+, __gmp_binary_plus)
+                             ^
+/usr/include/gmpxx.h:2941:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPP_DEFINE_BINARY_FUNCTION(fun, eval_fun)        \
+                              ^
+/usr/include/gmpxx.h:2887:72: note: expanded from macro '\
+__GMPP_DEFINE_BINARY_FUNCTION'
+__gmp_binary_expr<__gmp_expr<T, U>, __gmp_expr<V, W>, eval_fun> >      \
+                                                                       ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr<type-parameter-0-0, type-parameter-0-1>' against 'long'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2928:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNS_DEFINE_BINARY_FUNCTION(fun, eval_fun, signed char)        \
+                               ^
+/usr/include/gmpxx.h:2916:32: note: expanded from macro '\
+__GMPNS_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, signed long int)
+                               ^
+/usr/include/gmpxx.h:2899:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<__gmp_expr<T, U>, bigtype, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr' against 'indexable_container'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2928:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNS_DEFINE_BINARY_FUNCTION(fun, eval_fun, signed char)        \
+                               ^
+/usr/include/gmpxx.h:2916:32: note: expanded from macro '\
+__GMPNS_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, signed long int)
+                               ^
+/usr/include/gmpxx.h:2908:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<bigtype, __gmp_expr<T, U>, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr<type-parameter-0-0, type-parameter-0-1>' against 'long'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2929:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNU_DEFINE_BINARY_FUNCTION(fun, eval_fun, unsigned char)      \
+                               ^
+/usr/include/gmpxx.h:2919:32: note: expanded from macro '\
+__GMPNU_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, unsigned long int)
+                               ^
+/usr/include/gmpxx.h:2899:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<__gmp_expr<T, U>, bigtype, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr' against 'indexable_container'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2929:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNU_DEFINE_BINARY_FUNCTION(fun, eval_fun, unsigned char)      \
+                               ^
+/usr/include/gmpxx.h:2919:32: note: expanded from macro '\
+__GMPNU_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, unsigned long int)
+                               ^
+/usr/include/gmpxx.h:2908:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<bigtype, __gmp_expr<T, U>, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr<type-parameter-0-0, type-parameter-0-1>' against 'long'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2930:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNS_DEFINE_BINARY_FUNCTION(fun, eval_fun, signed int)         \
+                               ^
+/usr/include/gmpxx.h:2916:32: note: expanded from macro '\
+__GMPNS_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, signed long int)
+                               ^
+/usr/include/gmpxx.h:2899:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<__gmp_expr<T, U>, bigtype, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr' against 'indexable_container'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2930:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNS_DEFINE_BINARY_FUNCTION(fun, eval_fun, signed int)         \
+                               ^
+/usr/include/gmpxx.h:2916:32: note: expanded from macro '\
+__GMPNS_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, signed long int)
+                               ^
+/usr/include/gmpxx.h:2908:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<bigtype, __gmp_expr<T, U>, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr<type-parameter-0-0, type-parameter-0-1>' against 'long'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2931:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNU_DEFINE_BINARY_FUNCTION(fun, eval_fun, unsigned int)       \
+                               ^
+/usr/include/gmpxx.h:2919:32: note: expanded from macro '\
+__GMPNU_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, unsigned long int)
+                               ^
+/usr/include/gmpxx.h:2899:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<__gmp_expr<T, U>, bigtype, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr' against 'indexable_container'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2931:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNU_DEFINE_BINARY_FUNCTION(fun, eval_fun, unsigned int)       \
+                               ^
+/usr/include/gmpxx.h:2919:32: note: expanded from macro '\
+__GMPNU_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, unsigned long int)
+                               ^
+/usr/include/gmpxx.h:2908:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<bigtype, __gmp_expr<T, U>, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr<type-parameter-0-0, type-parameter-0-1>' against 'long'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2932:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNS_DEFINE_BINARY_FUNCTION(fun, eval_fun, signed short int)   \
+                               ^
+/usr/include/gmpxx.h:2916:32: note: expanded from macro '\
+__GMPNS_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, signed long int)
+                               ^
+/usr/include/gmpxx.h:2899:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<__gmp_expr<T, U>, bigtype, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr' against 'indexable_container'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2932:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNS_DEFINE_BINARY_FUNCTION(fun, eval_fun, signed short int)   \
+                               ^
+/usr/include/gmpxx.h:2916:32: note: expanded from macro '\
+__GMPNS_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, signed long int)
+                               ^
+/usr/include/gmpxx.h:2908:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<bigtype, __gmp_expr<T, U>, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr<type-parameter-0-0, type-parameter-0-1>' against 'long'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2933:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNU_DEFINE_BINARY_FUNCTION(fun, eval_fun, unsigned short int) \
+                               ^
+/usr/include/gmpxx.h:2919:32: note: expanded from macro '\
+__GMPNU_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, unsigned long int)
+                               ^
+/usr/include/gmpxx.h:2899:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<__gmp_expr<T, U>, bigtype, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr' against 'indexable_container'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2933:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNU_DEFINE_BINARY_FUNCTION(fun, eval_fun, unsigned short int) \
+                               ^
+/usr/include/gmpxx.h:2919:32: note: expanded from macro '\
+__GMPNU_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, unsigned long int)
+                               ^
+/usr/include/gmpxx.h:2908:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<bigtype, __gmp_expr<T, U>, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr<type-parameter-0-0, type-parameter-0-1>' against 'long'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2934:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNS_DEFINE_BINARY_FUNCTION(fun, eval_fun, signed long int)    \
+                               ^
+/usr/include/gmpxx.h:2916:32: note: expanded from macro '\
+__GMPNS_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, signed long int)
+                               ^
+/usr/include/gmpxx.h:2899:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<__gmp_expr<T, U>, bigtype, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr' against 'indexable_container'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2934:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNS_DEFINE_BINARY_FUNCTION(fun, eval_fun, signed long int)    \
+                               ^
+/usr/include/gmpxx.h:2916:32: note: expanded from macro '\
+__GMPNS_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, signed long int)
+                               ^
+/usr/include/gmpxx.h:2908:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<bigtype, __gmp_expr<T, U>, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr<type-parameter-0-0, type-parameter-0-1>' against 'long'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2935:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNU_DEFINE_BINARY_FUNCTION(fun, eval_fun, unsigned long int)  \
+                               ^
+/usr/include/gmpxx.h:2919:32: note: expanded from macro '\
+__GMPNU_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, unsigned long int)
+                               ^
+/usr/include/gmpxx.h:2899:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<__gmp_expr<T, U>, bigtype, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr' against 'indexable_container'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2935:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNU_DEFINE_BINARY_FUNCTION(fun, eval_fun, unsigned long int)  \
+                               ^
+/usr/include/gmpxx.h:2919:32: note: expanded from macro '\
+__GMPNU_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, unsigned long int)
+                               ^
+/usr/include/gmpxx.h:2908:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<bigtype, __gmp_expr<T, U>, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr<type-parameter-0-0, type-parameter-0-1>' against 'long'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2936:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPND_DEFINE_BINARY_FUNCTION(fun, eval_fun, float)              \
+                               ^
+/usr/include/gmpxx.h:2922:32: note: expanded from macro '\
+__GMPND_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, double)
+                               ^
+/usr/include/gmpxx.h:2899:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<__gmp_expr<T, U>, bigtype, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr' against 'indexable_container'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2936:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPND_DEFINE_BINARY_FUNCTION(fun, eval_fun, float)              \
+                               ^
+/usr/include/gmpxx.h:2922:32: note: expanded from macro '\
+__GMPND_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, double)
+                               ^
+/usr/include/gmpxx.h:2908:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<bigtype, __gmp_expr<T, U>, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr<type-parameter-0-0, type-parameter-0-1>' against 'long'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2937:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPND_DEFINE_BINARY_FUNCTION(fun, eval_fun, double)             \
+                               ^
+/usr/include/gmpxx.h:2922:32: note: expanded from macro '\
+__GMPND_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, double)
+                               ^
+/usr/include/gmpxx.h:2899:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<__gmp_expr<T, U>, bigtype, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr' against 'indexable_container'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2937:32: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPND_DEFINE_BINARY_FUNCTION(fun, eval_fun, double)             \
+                               ^
+/usr/include/gmpxx.h:2922:32: note: expanded from macro '\
+__GMPND_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, double)
+                               ^
+/usr/include/gmpxx.h:2908:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<bigtype, __gmp_expr<T, U>, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr<type-parameter-0-0, type-parameter-0-1>' against 'long'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2938:33: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNLD_DEFINE_BINARY_FUNCTION(fun, eval_fun, long double)
+                                ^
+/usr/include/gmpxx.h:2925:32: note: expanded from macro '\
+__GMPNLD_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, long double)
+                               ^
+/usr/include/gmpxx.h:2899:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<__gmp_expr<T, U>, bigtype, eval_fun> >               \
+                                                                           ^
+/usr/include/gmpxx.h:3136:30: note: candidate template ignored: could not match '__gmp_expr' against 'indexable_container'
+/usr/include/gmpxx.h:2942:31: note: expanded from macro '__GMP_DEFINE_BINARY_FUNCTION'
+__GMPN_DEFINE_BINARY_FUNCTION(fun, eval_fun)
+                              ^
+/usr/include/gmpxx.h:2938:33: note: expanded from macro '\
+__GMPN_DEFINE_BINARY_FUNCTION'
+__GMPNLD_DEFINE_BINARY_FUNCTION(fun, eval_fun, long double)
+                                ^
+/usr/include/gmpxx.h:2925:32: note: expanded from macro '\
+__GMPNLD_DEFINE_BINARY_FUNCTION'
+__GMPNN_DEFINE_BINARY_FUNCTION(fun, eval_fun, type, long double)
+                               ^
+/usr/include/gmpxx.h:2908:76: note: expanded from macro '\
+__GMPNN_DEFINE_BINARY_FUNCTION'
+<T, __gmp_binary_expr<bigtype, __gmp_expr<T, U>, eval_fun> >               \
+                                                                           ^
+/opt/anaconda/lib/python2.7/site-packages/pythran/pythonic/types/tuple.hpp:33:34: note: candidate template ignored: could not match 'tuple<type-parameter-0-0...>' against 'long'
+std::tuple<Types0..., Types1...> operator+(std::tuple<Types0...> const& t0, std::tuple<Types1...> const& t1) {
+                                 ^
+/opt/anaconda/lib/python2.7/site-packages/pythran/pythonic/types/tuple.hpp:37:34: note: candidate template ignored: could not match 'tuple<type-parameter-0-0...>' against 'long'
+std::tuple<Types0..., Types1...> operator+(std::tuple<Types0...> && t0, std::tuple<Types1...> const& t1) {
+                                 ^
+/opt/anaconda/lib/python2.7/site-packages/pythran/pythonic/types/tuple.hpp:41:34: note: candidate template ignored: could not match 'tuple<type-parameter-0-0...>' against 'long'
+std::tuple<Types0..., Types1...> operator+(std::tuple<Types0...> const& t0, std::tuple<Types1...> && t1) {
+                                 ^
+/opt/anaconda/lib/python2.7/site-packages/pythran/pythonic/types/tuple.hpp:45:34: note: candidate template ignored: could not match 'tuple<type-parameter-0-0...>' against 'long'
+std::tuple<Types0..., Types1...> operator+(std::tuple<Types0...> && t0, std::tuple<Types1...> && t1) {
+                                 ^
+/opt/anaconda/lib/python2.7/site-packages/pythran/pythonic/types/combined.hpp:9:26: note: candidate template ignored: disabled by 'enable_if' [with T0 = long, T1 = indexable_container<long, int>]
+typename std::enable_if< pythonic::types::is_callable<T0>::value and pythonic::types::is_callable<T1>::value, pythonic::types::variant<T0,T1> >::type operator+(T0 , T1 );
+                         ^
+/usr/include/gmpxx.h:3132:29: note: candidate function template not viable: requires single argument 'expr', but 2 arguments were provided
+__GMP_DEFINE_UNARY_FUNCTION(operator+, __gmp_unary_plus)
+                            ^
+/usr/include/gmpxx.h:2865:78: note: expanded from macro '__GMP_DEFINE_UNARY_FUNCTION'
+inline __gmp_expr<T, __gmp_unary_expr<__gmp_expr<T, U>, eval_fun> >          \
+                                                                             ^
+/tmp/tmpThqpTM.cpp:289:13: error: no matching function for call to object of type '__pythran_xyanomaliesmbbcore::bubblesort'
+            bubblesort()(est);
+            ^~~~~~~~~~~~
+/tmp/tmpThqpTM.cpp:310:60: note: in instantiation of function template specialization '__pythran_xyanomaliesmbbcore::xyanomaliesmbbcore::operator()<pythonic::types::ndarray<double, 4>, pythonic::types::ndarray<double, 4> &, pythonic::types::ndarray<double, 4> &, long, pythonic::types::ndarray<long, 1>, pythonic::types::ndarray<double, 1> &, pythonic::types::ndarray<double, 1> &, long, long, long, long, long &, pythonic::types::ndarray<double, 1> &, pythonic::types::ndarray<long, 1> >' requested here
+  return __pythran_xyanomaliesmbbcore::xyanomaliesmbbcore()(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13);
+                                                           ^
+/tmp/tmpThqpTM.cpp:217:70: note: candidate template ignored: substitution failure [with argument_type0 = long &]
+  typename bubblesort::type<argument_type0>::result_type bubblesort::operator()(argument_type0&& X) const
+                                                                     ^
+/tmp/tmpThqpTM.cpp:290:70: error: subscripted value is not an array, pointer, or vector
+            fieldminus[pythonic::types::make_tuple(0L, 0L, i, j)] += est[pythonic::__builtin__::proxy::int_{}(pythonic::numpy::proxy::floor{}((0.05 * n)))];
+                                                                     ^~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/tmp/tmpThqpTM.cpp:310:60: note: in instantiation of function template specialization '__pythran_xyanomaliesmbbcore::xyanomaliesmbbcore::operator()<pythonic::types::ndarray<double, 4>, pythonic::types::ndarray<double, 4> &, pythonic::types::ndarray<double, 4> &, long, pythonic::types::ndarray<long, 1>, pythonic::types::ndarray<double, 1> &, pythonic::types::ndarray<double, 1> &, long, long, long, long, long &, pythonic::types::ndarray<double, 1> &, pythonic::types::ndarray<long, 1> >' requested here
+  return __pythran_xyanomaliesmbbcore::xyanomaliesmbbcore()(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13);
+                                                           ^
+/tmp/tmpThqpTM.cpp:291:69: error: subscripted value is not an array, pointer, or vector
+            fieldplus[pythonic::types::make_tuple(0L, 0L, i, j)] += est[pythonic::__builtin__::proxy::int_{}(pythonic::numpy::proxy::floor{}((0.95 * n)))];
+                                                                    ^~~ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+7 errors generated.
+[0m

@@ -1,0 +1,100 @@
+/tmp/tmp9AAOql.cpp: In instantiation of ‘struct __pythran_anomaly::bootstrap_resample::type<pythonic::types::ndarray<double, 2ul>, pythonic::types::ndarray<double, 1ul>, pythonic::types::ndarray<long int, 1ul>, long int>’:
+/tmp/tmp9AAOql.cpp:1376:165:   required from here
+/tmp/tmp9AAOql.cpp:270:135: internal compiler error: Segmentation fault
+       typedef typename pythonic::assignable<typename std::tuple_element<0,typename std::remove_reference<__type4>::type>::type>::type __type5;
+                                                                                                                                       ^
+0x97036f crash_signal
+	../.././gcc/toplev.c:337
+0x582c4a tsubst(tree_node*, tree_node*, int, tree_node*)
+	../.././gcc/cp/pt.c:11699
+0x588232 tsubst_template_args
+	../.././gcc/cp/pt.c:10018
+0x582d7b tsubst(tree_node*, tree_node*, int, tree_node*)
+	../.././gcc/cp/pt.c:11937
+0x5832eb tsubst(tree_node*, tree_node*, int, tree_node*)
+	../.././gcc/cp/pt.c:11587
+0x588232 tsubst_template_args
+	../.././gcc/cp/pt.c:10018
+0x588757 tsubst_aggr_type
+	../.././gcc/cp/pt.c:10215
+0x582b55 tsubst(tree_node*, tree_node*, int, tree_node*)
+	../.././gcc/cp/pt.c:12150
+0x588232 tsubst_template_args
+	../.././gcc/cp/pt.c:10018
+0x588757 tsubst_aggr_type
+	../.././gcc/cp/pt.c:10215
+0x582b55 tsubst(tree_node*, tree_node*, int, tree_node*)
+	../.././gcc/cp/pt.c:12150
+0x588232 tsubst_template_args
+	../.././gcc/cp/pt.c:10018
+0x588757 tsubst_aggr_type
+	../.././gcc/cp/pt.c:10215
+0x582b55 tsubst(tree_node*, tree_node*, int, tree_node*)
+	../.././gcc/cp/pt.c:12150
+0x58a765 tsubst_decl
+	../.././gcc/cp/pt.c:11104
+0x58328f tsubst(tree_node*, tree_node*, int, tree_node*)
+	../.././gcc/cp/pt.c:11553
+0x5947a1 instantiate_class_template_1
+	../.././gcc/cp/pt.c:9185
+0x5947a1 instantiate_class_template(tree_node*)
+	../.././gcc/cp/pt.c:9449
+0x5ed68d complete_type(tree_node*)
+	../.././gcc/cp/typeck.c:134
+0x5cb312 cp_parser_nested_name_specifier_opt
+	../.././gcc/cp/parser.c:5399
+Please submit a full bug report,
+with preprocessed source if appropriate.
+Please include the complete backtrace with any bug report.
+See <http://gcc.gnu.org/bugs.html> for instructions.
+[31mCRITICAL[0m [34mCover me Jack. Jack? Jaaaaack!!!!
+E: ('error: Command "gcc -pthread -fno-strict-aliasing -g -O2 -DNDEBUG -g -fwrapv -O3 -Wall -fPIC -DUSE_GMP -DENABLE_PYTHON_MODULE -I/opt/anaconda/lib/python2.7/site-packages/pythran -I/opt/anaconda/lib/python2.7/site-packages/numpy/core/include -I/opt/anaconda/include/python2.7 -c /tmp/tmp9AAOql.cpp -o /tmp/tmp5Xk9VK/tmp/tmp9AAOql.o -std=c++11 -fno-math-errno -w" failed with exit status 1',)[0m
+/tmp/tmp9AAOql.cpp: In instantiation of ‘struct __pythran_anomaly::bootstrap_resample::type<pythonic::types::ndarray<double, 2ul>, pythonic::types::ndarray<double, 1ul>, pythonic::types::ndarray<long int, 1ul>, long int>’:
+/tmp/tmp9AAOql.cpp:1376:165:   required from here
+/tmp/tmp9AAOql.cpp:270:135: internal compiler error: Segmentation fault
+       typedef typename pythonic::assignable<typename std::tuple_element<0,typename std::remove_reference<__type4>::type>::type>::type __type5;
+                                                                                                                                       ^
+0x97036f crash_signal
+	../.././gcc/toplev.c:337
+0x582c4a tsubst(tree_node*, tree_node*, int, tree_node*)
+	../.././gcc/cp/pt.c:11699
+0x588232 tsubst_template_args
+	../.././gcc/cp/pt.c:10018
+0x582d7b tsubst(tree_node*, tree_node*, int, tree_node*)
+	../.././gcc/cp/pt.c:11937
+0x5832eb tsubst(tree_node*, tree_node*, int, tree_node*)
+	../.././gcc/cp/pt.c:11587
+0x588232 tsubst_template_args
+	../.././gcc/cp/pt.c:10018
+0x588757 tsubst_aggr_type
+	../.././gcc/cp/pt.c:10215
+0x582b55 tsubst(tree_node*, tree_node*, int, tree_node*)
+	../.././gcc/cp/pt.c:12150
+0x588232 tsubst_template_args
+	../.././gcc/cp/pt.c:10018
+0x588757 tsubst_aggr_type
+	../.././gcc/cp/pt.c:10215
+0x582b55 tsubst(tree_node*, tree_node*, int, tree_node*)
+	../.././gcc/cp/pt.c:12150
+0x588232 tsubst_template_args
+	../.././gcc/cp/pt.c:10018
+0x588757 tsubst_aggr_type
+	../.././gcc/cp/pt.c:10215
+0x582b55 tsubst(tree_node*, tree_node*, int, tree_node*)
+	../.././gcc/cp/pt.c:12150
+0x58a765 tsubst_decl
+	../.././gcc/cp/pt.c:11104
+0x58328f tsubst(tree_node*, tree_node*, int, tree_node*)
+	../.././gcc/cp/pt.c:11553
+0x5947a1 instantiate_class_template_1
+	../.././gcc/cp/pt.c:9185
+0x5947a1 instantiate_class_template(tree_node*)
+	../.././gcc/cp/pt.c:9449
+0x5ed68d complete_type(tree_node*)
+	../.././gcc/cp/typeck.c:134
+0x5cb312 cp_parser_nested_name_specifier_opt
+	../.././gcc/cp/parser.c:5399
+Please submit a full bug report,
+with preprocessed source if appropriate.
+Please include the complete backtrace with any bug report.
+See <http://gcc.gnu.org/bugs.html> for instructions.
