@@ -15,9 +15,9 @@ import h5py
 import netCDF4
 import matplotlib.pylab as plt
 import os,sys,glob,psutil,shutil
-sys.path.append(os.getcwd()+'/../adjust/rasotools/')
-sys.path.append(os.path.expanduser('~/python/Rasotools/rasotools/'))
-sys.path.append(os.path.expanduser('~/python/Rasotools/'))
+#sys.path.append(os.getcwd()+'/../common/rasotools/')
+sys.path.append(os.path.expanduser('../common/Rasotools/rasotools/'))
+sys.path.append(os.path.expanduser('../common/Rasotools/'))
 #sys.path.append(os.getcwd()+'/../adjust/rasotools/')
 from utils import tdist,extract,rmeanw
 from anomaly import ndnanmean2,nnanmean,danomaly
@@ -78,7 +78,7 @@ except:
     #RC['transdict']={'montemp':'mtemperatures','rasocorrmon':'madjustments','goodmon':'goodmon'}
     RC['transdict']={'montemp':'mini_adjusted_temperatures','rasocorrmon':'madjustments','goodmon':'goodmon'}
     RC['richfuture']=True 
-    RC['findfuture']=True
+    RC['findfuture']=False
     RC['goodsondes']=[141,142,123,124,125,113,114,79,80,81,70,152,177,183] # from WMO manual on codes, 2019 edition
     RC['apriori_prob_default']=0.01
     
@@ -395,8 +395,9 @@ def bilin(hadmed,temperatures,rcy,rcm,days,lat,lon):
 def RAOB_findbreaks(method,fn):
 
     #import SNHT
-    sys.path.append(os.path.expanduser('~/python/Rasotools/rasotools/'))
-    sys.path.append(os.path.expanduser('~/python/Rasotools/'))
+    os.chdir('/mnt/users/staff/federico/GitHub/CEUAS_master_SEPTEMBER2021/CEUAS/CEUAS/public/adjust')
+    sys.path.append(os.path.expanduser('../common/Rasotools/rasotools/'))
+    sys.path.append(os.path.expanduser('../common/Rasotools/'))
     from utils import rmeanw
     tt=time.time()
     finfo={}
@@ -466,8 +467,8 @@ ray_RAOB_findbreaks=ray.remote(RAOB_findbreaks)
 
 def RAOB_adjustbs(finfo):
     
-    sys.path.append(os.path.expanduser('~/python/Rasotools/rasotools/'))
-    sys.path.append(os.path.expanduser('~/python/Rasotools/'))
+    sys.path.append(os.path.expanduser('../common/Rasotools/rasotools/'))
+    sys.path.append(os.path.expanduser('../common/Rasotools/'))
     from utils import tdist,extract,rmeanw
     from anomaly import ndnanmean2,nnanmean,ndnanvar2
     tt=time.time()
@@ -599,8 +600,8 @@ def RAOB_adjustbs(finfo):
 
 def RAOB_adjust(finfo):
     
-    sys.path.append(os.path.expanduser('~/python/Rasotools/rasotools/'))
-    sys.path.append(os.path.expanduser('~/python/Rasotools/'))
+    sys.path.append(os.path.expanduser('../common/Rasotools/rasotools/'))
+    sys.path.append(os.path.expanduser('../common/Rasotools/'))
     from utils import tdist,extract,rmeanw
     from anomaly import ndnanmean2,nnanmean,ndnanvar2
     tt=time.time()
@@ -1427,8 +1428,8 @@ def add_breakprofile(ref,l,rich,richtemp,method,ib):
 
 #@ifray(ray.remote,RC['richfuture'])
 def rich_adjust(l,obj_ref,rich_iter,obj_rich_ref=None):
-    sys.path.append(os.path.expanduser('~/python/Rasotools/rasotools/'))
-    sys.path.append(os.path.expanduser('~/python/Rasotools/'))
+    sys.path.append(os.path.expanduser('../common/Rasotools/rasotools/'))
+    sys.path.append(os.path.expanduser('../common/Rasotools/'))
     import warnings
     warnings.filterwarnings("ignore")
     tt=time.time()
@@ -1821,8 +1822,8 @@ def findstart(fg_dep,minlen):
     return istart,igood
 
 def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_initial_composite_ref=None):
-    sys.path.append(os.path.expanduser('~/python/Rasotools/rasotools/'))
-    sys.path.append(os.path.expanduser('~/python/Rasotools/'))
+    sys.path.append(os.path.expanduser('../common/Rasotools/rasotools/'))
+    sys.path.append(os.path.expanduser('../common/Rasotools/'))
     
     tt=time.time()
 
@@ -2161,13 +2162,16 @@ if __name__ == '__main__':
     print(time.time()-tt)
 
     
+    futures=[]
     if not RC['findfuture']:  
-        func=partial(RAOB_adjustbreaks,'SNHT')
-        results=list(map(func,obj_ref))
-        results_ref=results
+        #func=partial(RAOB_adjustbreaks,'SNHT',sdist_ref)
+        #results=list(map(func,obj_ref))
+        #results_ref=results
+        sdist=ray.get(sdist_ref)
+        for l in range(len(obj_ref)):
+            futures.append(RAOB_adjustbreaks('SNHT',sdist,ray.get(obj_ref[l]),l))
+        obj_ref=futures
     else:
-        futures=[]
-        results_ref=[]
         for l in range(len(obj_ref)):
             futures.append(ray_RAOB_adjustbreaks.remote('SNHT',sdist_ref,obj_ref[l],l))
         obj_ref = ray.get(futures)
