@@ -1348,24 +1348,30 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
     # day/month/year selection
     #
     if year is not None and date_not_yet_existing:
+        sday = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12',
+                '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24',
+                '25', '26', '27', '28', '29', '30', '31']
+        smonth = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
         datelist = []
         newdates = []
         if isinstance(year, (int, str)):
             year = [year]
         if month is None:
-            month = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+            month = smonth
         elif isinstance(month, (int, str)):
             month = [month]
-        if day is not None:
-            day = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12',
-                   '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24',
-                   '25', '26', '27', '28', '29', '30', '31']
+        if day is None:
+            day=sday
         elif isinstance(day, (int, str)):
             day = [day]
         # for removal of e.g. 31.02.:
         for i in year:
             for j in month:
+                if not (str(j).zfill(2) in smonth):
+                    raise ValueError('not a valid month: %s' % j)
                 for k in day:
+                    if not (str(k).zfill(2) in sday):
+                        raise ValueError('not a valid day: %s' % k)
                     try:
                         datetime.strptime(str(i)+str(j).zfill(2)+str(k).zfill(2), '%Y%m%d')
                         datelist.append(str(i)+str(j).zfill(2)+str(k).zfill(2))
@@ -1408,7 +1414,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
     #
     # times
     #
-    if time is not None:
+    if (time is not None) and (time != '') and (time != []):
         if not isinstance(time, list):
             time = [time]
         for i in range(len(time)):
