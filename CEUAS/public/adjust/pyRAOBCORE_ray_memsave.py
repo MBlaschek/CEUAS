@@ -16,8 +16,8 @@ import netCDF4
 import matplotlib.pylab as plt
 import os,sys,glob,psutil,shutil
 #sys.path.append(os.getcwd()+'/../common/rasotools/')
-sys.path.append(os.path.expanduser('../common/Rasotools/rasotools/'))
-sys.path.append(os.path.expanduser('../common/Rasotools/'))
+#sys.path.append(os.path.expanduser('../common/Rasotools/rasotools/'))
+#sys.path.append(os.path.expanduser('../common/Rasotools/'))
 #sys.path.append(os.getcwd()+'/../adjust/rasotools/')
 from utils import tdist,extract,rmeanw
 from anomaly import ndnanmean2,nnanmean,danomaly
@@ -67,7 +67,7 @@ except:
     RC['days']= [ x.day for x in dates]
     RC['snht_thresh'] = 25
     RC['mon_thresh'] = 0
-    RC['mean_maxlen'] = RC['snht_maxlen']*2
+    RC['mean_maxlen'] = RC['snht_maxlen']*3
     RC['plot']=False
     RC['CPUs']=60
     RC['min_neighbours']=[[3,10],[10,30]]
@@ -78,9 +78,10 @@ except:
     #RC['transdict']={'montemp':'mtemperatures','rasocorrmon':'madjustments','goodmon':'goodmon'}
     RC['transdict']={'montemp':'mini_adjusted_temperatures','rasocorrmon':'madjustments','goodmon':'goodmon'}
     RC['richfuture']=True 
-    RC['findfuture']=False
+    RC['findfuture']=True
     RC['goodsondes']=[141,142,123,124,125,113,114,79,80,81,70,152,177,183] # from WMO manual on codes, 2019 edition
     RC['apriori_prob_default']=0.01
+    RC['exp']='exp01'
     
     with open('RC.json','w') as f:
         json.dump(RC,f)
@@ -176,30 +177,34 @@ def test(x, window, missing):
 def read_hadCRUT5(path,prefix,refdate):
 
     t1=time.time()
-    fn=path+prefix+".anomalies.ensemble_mean.nc"
+    fn=path+prefix+".analysis.anomalies.ensemble_mean.nc"
     fvar='tas_mean'
     fevar='tas'
     try:
         with netCDF4.Dataset(fn,"r") as f:
             f.set_auto_mask(False)
-            hadmed=f.variables[fvar][:]
-            hadmed[np.abs(hadmed)>1.e29]=np.nan
             sdate=f.variables['time'].getncattr('units')
-            index=refdate[0]-int(sdate.split('-')[0].split()[-1])*12
+            index=(refdate[0]-int(sdate.split('-')[0].split()[-1]))*12
+            hadmed=f.variables[fvar][index:,:,:]
+            hadmed[np.abs(hadmed)>1.e29]=np.nan
+            ds1900=f.variables['time'][index:]-f.variables['time'][index]
+            dslon=f.variables['longitude'][:]
+            dslat=f.variables['latitude'][:]
     except:
         print((fn+' not found'))
     print('hadmed',time.time()-t1)
 
-    return hadmed[index:,:,:] #,hadtem,hadens
+    return {'hadmed':hadmed,'time':ds1900,'lat':dslat,'lon':dslon} #,hadtem,hadens
 
 #@njit
-def do_test(fg_dep,temperature,rc_month,snht_maxlen,snht_min_sampsize,miss_val):
+def do_test(fg_dep,temperature,anomaly,hadcrut_dep,rc_month,snht_maxlen,snht_min_sampsize,miss_val):
 
     tmean = np.zeros((fg_dep.shape[2]),dtype=fg_dep.dtype)
     tsquare = np.zeros((fg_dep.shape[2]),dtype=fg_dep.dtype)
     count = np.zeros(shape=(fg_dep.shape[2]),dtype=np.int32)
     tsas=np.zeros(fg_dep.shape,dtype=fg_dep.dtype)
     tsarad=np.zeros((1,6,fg_dep.shape[2]),dtype=fg_dep.dtype)
+    tsahad=np.zeros((1,2,fg_dep.shape[2]),dtype=fg_dep.dtype)
     
     parr=np.array((snht_maxlen,snht_min_sampsize))
     for ih in range(fg_dep.shape[0]):
@@ -218,9 +223,16 @@ def do_test(fg_dep,temperature,rc_month,snht_maxlen,snht_min_sampsize,miss_val):
         SNHT.numba_snhtmov_njit((temperature[1,ip,:]-temperature[0,ip,:]), tsarad[0,ip,:], 
                                              parr,
                                              count,tmean,tsquare)
+    for ih in range(2):
+        #SNHT.numba_snhteqmov((temperature[1,ip,:]-temperature[0,ip,:]).flatten(), rc_month, tsarad[0,ip,:], 
+                             #snht_maxlen,snht_maxmiss,miss_val,count,tmean,tsquare)
+        SNHT.numba_snhtmov_njit(hadcrut_dep[ih,:], tsahad[0,ih,:], 
+                                             parr,
+                                             count,tmean,tsquare)
+            
         #print(ip)
     
-    return tsas,tsarad
+    return tsas,tsarad,tsahad
 
 @njit
 def areg1(x,z,alpha):
@@ -265,17 +277,19 @@ def break_analyze(finfo):
     #plt.plot(finfo['days']/365.25,np.sum(finfo['tsas'][1,:,:],axis=0))
     #plt.plot(finfo['days']/365.25,np.sum(finfo['tsarad'][0,:,:],axis=0))
     
-    totalo=np.concatenate((finfo['tsarad'][0,:,:],finfo['tsas'][0,:,:],finfo['tsas'][1,:,:]),axis=0)
-    weight=np.array([2.0]*6+[1.0]*6+[0.8]*3+[0.5]*5+[1.0]*6+[0.8]*3+[0.5]*5)
+    totalo=np.concatenate((finfo['tsarad'][0,:,:],finfo['tsas'][0,:13,:],finfo['tsas'][1,:13,:],finfo['tsahad'][0,:,:]),axis=0)
+    weight=np.array([2.0]*6+[1.0]*6+[0.8]*3+[0.5]*4+[2.0]+[1.0]*6+[0.8]*3+[0.5]*4+[2.0])
     weight/=np.mean(weight)
     total=np.zeros(totalo.shape[1])
     for i in range(len(weight)):
         total+=totalo[i,:]*weight[i]
-    print('totalo',totalo.shape)
+    #totalo[:6,:]*=3
+    #total=np.max(totalo,axis=0)
+    #print('totalo',totalo.shape)
     if RC['plot']:
         plt.figure(figsize=(6,12))
-        lmax=6#totalo.shape[0]
-        for l in range(lmax):    
+        lmax=totalo.shape[0]
+        for l in range(0,lmax,2):    
             plt.subplot(lmax+1,1,l+1)
             plt.plot(finfo['days'][::5]/365.25,totalo[l][::5],label=str(l))
             plt.legend()
@@ -294,7 +308,12 @@ def break_analyze(finfo):
         breaklist[l]=np.argmax(total)
         lb=max(breaklist[l]-RC['snht_maxlen']//2,0)
         rb=min(total.shape[0],breaklist[l]+RC['snht_maxlen']//2)
+        tbl=total[breaklist[l]]
         total[lb:rb]=0.
+        #for i in range(lb,rb):
+            #total[i]-=tbl*(((RC['snht_maxlen']/2-np.abs(breaklist[l]-i))/(RC['snht_maxlen']/2))**2)
+            #if total[i]<0:
+                #total[i]=0
         l+=1
         #print(l,np.max(total))
         #plt.plot(finfo['days']/365.25,total)
@@ -346,19 +365,21 @@ def metadata_analysis(sonde_type):
     
     return apriori_probs,lastsonde
 #@njit
-def bilin(hadmed,temperatures,rcy,rcm,days,lat,lon):
+def bilin(hadmeddict,temperatures,rcy,rcm,days,lat,lon):
     ilat=int(np.floor((lat+90)/5))
     ilon=int(np.floor((180+lon)/5))
-    if ilon>=hadmed.shape[2]:
-        ilon-=hadmed.shape[2]
-    t850=np.zeros(len(days))
+    if ilon>=hadmeddict['hadmed'].shape[2]:
+        ilon-=hadmeddict['hadmed'].shape[2]
+    t850=np.zeros((2,len(days)))
     t850.fill(np.nan)
     tm=0
     mold=(rcy[days[0]]-1900)*12+rcm[days[0]]
     mc=0
     iref=0
-    hadmedsmooth=rmeanw(hadmed[(rcy[days[:]]-1900)*12+rcm[days[:]],ilat,ilon],30)
-    for i in range(len(days)):
+    
+    hadmedsmooth=rmeanw(hadmeddict['hadmed'][(rcy[days[:]]-1900)*12+rcm[days[:]],ilat,ilon],30)
+    
+    for ih in range(2):
         #mc+=1
         #if temperatures[0,13,i]==temperatures[0,13,i] and temperatures[1,13,i]==temperatures[1,13,i]:
             #tm+=temperatures[0,13,i]+temperatures[1,13,i]
@@ -386,7 +407,7 @@ def bilin(hadmed,temperatures,rcy,rcm,days,lat,lon):
         #else:
             #t850[iref:i]=np.nan
             
-        t850[i]=np.nanmean(temperatures[:,13,i])-hadmedsmooth[i] #rmeanw(hadmed[(rcy[days[i]]-1900)*12+rcm[days[i]],ilat,ilon],30))
+        t850[ih,:]=temperatures[ih,13,:]-hadmedsmooth #rmeanw(hadmed[(rcy[days[i]]-1900)*12+rcm[days[i]],ilat,ilon],30))
         
     return t850
     
@@ -394,10 +415,6 @@ def bilin(hadmed,temperatures,rcy,rcm,days,lat,lon):
 #@ifray(ray.remote,RC['findfuture'])
 def RAOB_findbreaks(method,fn):
 
-    #import SNHT
-    os.chdir('/mnt/users/staff/federico/GitHub/CEUAS_master_SEPTEMBER2021/CEUAS/CEUAS/public/adjust')
-    sys.path.append(os.path.expanduser('../common/Rasotools/rasotools/'))
-    sys.path.append(os.path.expanduser('../common/Rasotools/'))
     from utils import rmeanw
     tt=time.time()
     finfo={}
@@ -433,21 +450,24 @@ def RAOB_findbreaks(method,fn):
         finfo['climatologies']=np.zeros_like(finfo['temperatures'],shape=(s[0],s[1],12))
         ccount=np.zeros(12)
         good=danomaly(finfo['temperatures'],bins,ccount,finfo['anomalies'],finfo['climatologies'])
-        finfo['hadcrut']=bilin(hadmed,finfo['anomalies'],RC['years'],RC['months'],finfo['days'],finfo['lat'],finfo['lon'])
+        # finfo['hadcrut'] is difference between station anomalies at 850 hPa and (smoothed) hadcrut anomalies
+        finfo['hadcrut_dep']=bilin(hadmeddict,finfo['anomalies'],RC['years'],RC['months'],finfo['days'],finfo['lat'],finfo['lon'])
         
         #print('before snht: {:6.4f}'.format(time.time()-tt)) 
         #print(typeof(finfo['fg_dep']),typeof(RC['months'][finfo['days']]),
               #typeof(RC['snht_maxlen']),typeof(RC['snht_maxmiss']),typeof(RC['miss_val']))
         if method=='SNHT':
             
-            finfo['tsas'],finfo['tsarad']=do_test(finfo['fg_dep'],finfo['temperatures'],RC['months'][finfo['days']],
+            finfo['tsas'],finfo['tsarad'],finfo['tsahad']=do_test(finfo['fg_dep'],finfo['temperatures'],finfo['anomalies'],finfo['hadcrut_dep'],RC['months'][finfo['days']],
                                                   RC['snht_maxlen'],RC['snht_min_sampsize'],RC['miss_val'])  
             
             #print('before analyze: {:6.4f}'.format(time.time()-tt))  
             #print(version_info)
             finfo['breaklist']=np.sort(break_analyze(finfo))
         elif method=='Binseg':
-            testset=np.concatenate((finfo['fg_dep'][0,2:8,:],finfo['fg_dep'][1,2:8,:],finfo['fg_dep'][1,2:8,:]-finfo['fg_dep'][0,2:8,:],finfo['hadcrut'].reshape(1,finfo['hadcrut'].shape[0])),axis=0)
+            testset=np.concatenate((finfo['fg_dep'][0,2:8,:],
+                                    finfo['fg_dep'][1,2:8,:],finfo['fg_dep'][1,2:8,:]-finfo['fg_dep'][0,2:8,:],
+                                    finfo['hadcrut'].reshape(1,finfo['hadcrut'].shape[0])),axis=0)
             algo = rpt.Binseg(model="l2").fit(testset.T)
             finfo['breaklist'] = algo.predict(pen=1.5*np.log(testset.shape[1]) * testset.shape[0] * np.nanvar(testset))
             finfo['breaklist'] = np.sort(finfo['breaklist'])[:-1]
@@ -600,15 +620,14 @@ def RAOB_adjustbs(finfo):
 
 def RAOB_adjust(finfo):
     
-    sys.path.append(os.path.expanduser('../common/Rasotools/rasotools/'))
-    sys.path.append(os.path.expanduser('../common/Rasotools/'))
+    #sys.path.append(os.path.expanduser('../common/Rasotools/rasotools/'))
+    #sys.path.append(os.path.expanduser('../common/Rasotools/'))
     from utils import tdist,extract,rmeanw
     from anomaly import ndnanmean2,nnanmean,ndnanvar2
     tt=time.time()
     if type(finfo) is not dict:
         finfo=ray.get(finfo)
-    finfo['adjusted_fg_dep']=np.empty_like(finfo['fg_dep'])
-    finfo['adjusted_fg_dep'][:]=finfo['fg_dep'][:]
+    finfo['adjusted_fg_dep']=finfo['fg_dep'].copy()
     mask=np.isnan(finfo['adjusted_fg_dep'])
     s=finfo['adjusted_fg_dep'].shape
     tmean = np.zeros_like(finfo['adjusted_fg_dep'],shape=(s[2],12))
@@ -618,13 +637,12 @@ def RAOB_adjust(finfo):
 
     fb=finfo['breaklist']
     finfo['adjustments']=np.zeros_like(finfo['adjusted_fg_dep'],shape=(s[0],s[1],fb.shape[0]))
-    finfo['adjusted_temperatures']=np.empty_like(finfo['adjusted_fg_dep'])
-    finfo['adjusted_temperatures'][:]=finfo['temperatures'][:]
-    finfo['adjusted_anomalies']=np.empty_like(finfo['adjusted_fg_dep'])
-    finfo['adjusted_anomalies'][:]=finfo['anomalies'][:]
+    finfo['adjusted_temperatures']=finfo['temperatures'].copy()
+    finfo['adjusted_anomalies']=finfo['anomalies'].copy()
+    finfo['adjusted_hadcrut_dep']=finfo['hadcrut_dep'].copy()
     
     sh=finfo['adjustments'].shape
-    RC_months=np.array(RC['months'])[finfo['days']]-1
+    #RC_months=np.array(RC['months'])[finfo['days']]-1
     ipl=2
     if RC['plot']:
         plt.subplot(2,1,1)
@@ -665,6 +683,17 @@ def RAOB_adjust(finfo):
         ini2=np.zeros(finfo['adjusted_fg_dep'].shape[:2])
         break_profiles[ib,:,:]=-ndnanmean2(finfo['adjusted_fg_dep'][:,:,istart:fb[ib]-30],ini,RC['snht_min_sampsize'])+\
                                ndnanmean2(finfo['adjusted_fg_dep'][:,:,fb[ib]+30:istop],ini2,RC['snht_min_sampsize'])
+        for ih in range(break_profiles.shape[1]):
+            
+            if np.sum(~np.isnan(finfo['adjusted_anomalies'][ih,13,istart:fb[ib]-30]))>RC['snht_min_sampsize'] and \
+               np.sum(~np.isnan(finfo['adjusted_anomalies'][ih,13,fb[ib]+30:istop]))>RC['snht_min_sampsize']:
+                y=-np.nanmean(finfo['adjusted_hadcrut_dep'][ih,istart:fb[ib]-30])+\
+                    np.nanmean(finfo['adjusted_hadcrut_dep'][ih,fb[ib]+30:istop])
+                break_profiles[ib,ih,13]=y
+            else:
+                break_profiles[ib,ih,13]=np.nan
+                
+
         ini=np.zeros(finfo['adjusted_fg_dep'].shape[:2])
         ini2=np.zeros(finfo['adjusted_fg_dep'].shape[:2])
         break_confidence[ib,:,:]=np.sqrt(0.5*(ndnanvar2(finfo['adjusted_fg_dep'][:,:,istart:fb[ib]-30],ini,RC['snht_min_sampsize'])+\
@@ -704,6 +733,9 @@ def RAOB_adjust(finfo):
                     finfo['adjusted_fg_dep'][ih,ip,:fb[ib]]+=break_profiles[ib,ih,ip]
                     finfo['adjusted_temperatures'][ih,ip,:fb[ib]]+=break_profiles[ib,ih,ip]
                     finfo['adjusted_anomalies'][ih,ip,:fb[ib]]+=break_profiles[ib,ih,ip]
+                    if ip==13:
+                        
+                        finfo['adjusted_hadcrut_dep'][ih,:fb[ib]]+=break_profiles[ib,ih,ip]
         
         
         #print(ib,fb[ib],break_profiles[ib,:,:])
@@ -736,30 +768,33 @@ def RAOB_adjust(finfo):
                     'adjusted_fg_dep':finfo['adjusted_fg_dep'],}
     
 #@ifray(ray.remote,RC['findfuture'])    
-def RAOB_adjustbreaks(method,dists,finfo,i):
+def RAOB_adjustbreaks(method,dists,active,finfo,i):
     
+    tt=time.time()
     adjustments=copy.copy(finfo)
     adjustments['sdists']=extract(dists,i)
+    adjustments['active']=active
 
     adjustments.update(RAOB_adjust(finfo))
     
+    print(time.time()-tt)
     return ray.put(adjustments)
 
 ray_RAOB_adjustbreaks=ray.remote(RAOB_adjustbreaks)
 
     
-def fcopy(fn,exper='exp02'):
-    fo=exper.join(fn.split('exp03'))
-    if not os.path.isdir(os.path.dirname(fo)):
-        os.mkdir(os.path.dirname(fo))
+#def fcopy(fn,exper='exp02'):
+    #fo=exper.join(fn.split('exp03'))
+    #if not os.path.isdir(os.path.dirname(fo)):
+        #os.mkdir(os.path.dirname(fo))
     
-    try:
+    #try:
         
-        shutil.copy(fn,fo)
-    except:
-        print(fn,'could not be copied to',fo)
+        #shutil.copy(fn,fo)
+    #except:
+        #print(fn,'could not be copied to',fo)
     
-    return
+    #return
 
 @njit(fastmath={'nsz','arcp','contract','afn','reassoc'},cache=True)
 def goodmon(var,idx,out):
@@ -953,7 +988,7 @@ def write_bgmonmean(ipath,opath,prefix,fi):
     
     return
 
-#@njit
+@njit
 def addini(adjorig,iniad):
     
     ad=adjorig.shape
@@ -996,7 +1031,7 @@ def write_adjustment(ipath,opath,prefix,fi,rich_ref0=None,rich_ref1=None,initial
             for name, variable in src.variables.items():
                 if name == 'datum':
                     x = dst.createVariable(name, variable.datatype, variable.dimensions)
-                    dst[name][:] = np.concatenate((np.array([1]),fi['days'][fi['goodbreaklist'][:]],np.array([44998])),axis=0)
+                    dst[name][:] = np.concatenate((np.array([1]),fi['days'][fi['goodbreaklist']],np.array([44998])),axis=0)
                     # copy variable attributes all at once via dictionary
                     dst[name].setncatts(src[name].__dict__)
                 elif name in ['rasocorr','rasobreak']: #,'goodmon','rasocorrmon','eracorrmon']:
@@ -1047,9 +1082,9 @@ def write_adjustment(ipath,opath,prefix,fi,rich_ref0=None,rich_ref1=None,initial
                                 if 'initial_adjustments' in initial_adjust_RICH.keys():
                                     dst[name][:,:RC['pidx'].shape[0],:] = addini(rich_ref1['tau']['rich_adjustments'],initial_adjust_RICH['initial_adjustments'])
                                 else:
-                                    dst[name][:,:RC['pidx'].shape[0],:] = addini(rich_ref1['tau']['rich_adjustments'],np.zeros(fi['adjustments'].shape[1:]))
+                                    dst[name][:,:RC['pidx'].shape[0],:] = addini(rich_ref1['tau']['rich_adjustments'],np.zeros(fi['adjustments'].shape[:2]))
                             else:
-                                dst[name][:,:RC['pidx'].shape[0],:] = addini(rich_ref1['tau']['rich_adjustments'],np.zeros(fi['adjustments'].shape[1:]))
+                                dst[name][:,:RC['pidx'].shape[0],:] = addini(rich_ref1['tau']['rich_adjustments'],np.zeros(fi['adjustments'].shape[:2]))
                     else:
                         x = dst.createVariable(name, variable.datatype, variable.dimensions)
                         if variable.datatype in [np.dtype('float32'),np.dtype('float64')]:
@@ -1081,7 +1116,7 @@ def write_adjustment(ipath,opath,prefix,fi,rich_ref0=None,rich_ref1=None,initial
     
     return
 
-#@njit
+@njit
 def make_adjusted_series(orig,adjustments,breaklist):
     
     adjusted_series=orig.copy()
@@ -1090,14 +1125,14 @@ def make_adjusted_series(orig,adjustments,breaklist):
         for ih in range(adjusted_series.shape[0]):
             for ip in range(adjusted_series.shape[1]):  
                 if ib>0:
-                    adjusted_series[ih,ip,breaklist[ib-1]:breaklist[ib]]-=adjustments[ih,ip,ib]
+                    adjusted_series[ih,ip,breaklist[ib-1]:breaklist[ib]]-=adjustments[ih,ip,ib-1]
                 else:
                     adjusted_series[ih,ip,:breaklist[ib]]-=adjustments[ih,ip,ib]
     
     return adjusted_series
 
 #@ifray(ray.remote,RC['richfuture'])
-def save_monmean(tfile,l,fi,rich_ref0=None,rich_ref1=None,initial_adjust_RAOB=None,initial_adjust_rich=None):
+def save_monmean(tfile,l,exper='exp02',fi={},rich_ref0=None,rich_ref1=None,initial_adjust_RAOB=None,initial_adjust_rich=None):
     
     #return ray.put({'break_profiles':break_profiles,'adjusted_temperatures':finfo['adjusted_temperatures']})
     #fnames= fi['sid']
@@ -1112,7 +1147,6 @@ def save_monmean(tfile,l,fi,rich_ref0=None,rich_ref1=None,initial_adjust_RAOB=No
     fi['tau']={}
     
     tidx=np.where(RC['days']==1)[0]
-    exper='exp02'
     ipath=fi['sid'][-6:].join(os.path.dirname(tfile).split(files[0][-9:-3]))
     plist=['temperatures','ini_adjusted_temperatures','fg']
     if rich_ref0:
@@ -1345,7 +1379,7 @@ def lagmean(ldiff,sdiff,ldays,sdays,llmaxlen,slmaxlen,thresh,lprofl,sprofl,lprof
                 lprofl[ih,ip]/=cl
                 sprofl[ih,ip]/=cl
             else:
-                if ip<=6:
+                if False: #ip<=6:
                     lprofl[ih,ip]=lprofl[ih,ip+1] # take value from next pressure level downward, assuming constant bias in the vertical
                     sprofl[ih,ip]=sprofl[ih,ip+1]
                 else:    
@@ -1519,7 +1553,7 @@ def rich_adjust(l,obj_ref,rich_iter,obj_rich_ref=None):
         richtemp={'tau':{},'obs':{}} # these arrays are for convenience but are too large to be stored in the object store
         richtemp['tau']['rich_adjusted_fg_dep']=ref[l]['fg_dep'].copy()
         richtemp['obs']['rich_adjusted_anomalies']=ref[l]['anomalies'].copy()
-        print('richens',richcount,len(richens))
+        #print('richens',richcount,len(richens))
         bp=richens[richcount]['tau']['break_profiles']
 
         # main loop over breakpoints. 
@@ -1537,6 +1571,9 @@ def rich_adjust(l,obj_ref,rich_iter,obj_rich_ref=None):
                     
                     
                     refcount +=1
+                    if ref[l]['active'][si][-1]<tib+RC['snht_min_sampsize'] or ref[l]['active'][si][0]>tib-RC['snht_min_sampsize']:
+                        #print('reference ends early')
+                        continue
                     if ref[l]['sdists'][si]*6370. > weight_distance and refcount>500: # second condition is for test stations at remote places
                         print('not enough buddies found','{:5.1f}'.format(ref[l]['sdists'][si]*6370.),refcount,lblen)
                         break
@@ -1591,7 +1628,7 @@ def rich_adjust(l,obj_ref,rich_iter,obj_rich_ref=None):
                     if rbm<breaklistref.shape[0]:
                         
                         if ib>0:
-                            sibm1=np.searchsorted(ref[si]['days'],ref[l]['goodbreaklist'][ib-1])
+                            #sibm1=np.searchsorted(ref[si]['days'],ref[l]['goodbreaklist'][ib-1])
                             tibm1=ref[l]['days'][ref[l]['goodbreaklist'][ib-1]] # we need days since 1900 here! breaklist values are indices of time series, not days since 1900
                             #lmaxlen=np.min((tib-breaklistref[rbm],tib-tibm1,RC['mean_maxlen'])) if rich_iter==0 else np.min([tib-tibm1,RC['mean_maxlen']])
                             lmaxlen=np.min((tib-breaklistref[rbm],tib-tibm1)) if rich_iter==0 else np.min([tib-tibm1])
@@ -1653,9 +1690,11 @@ def rich_adjust(l,obj_ref,rich_iter,obj_rich_ref=None):
                                                   lidx[1]-lidx[0],sidx[1]-sidx[0])
                         if np.sum(~np.isnan(aprof[0,:]))>9 or np.sum(~np.isnan(aprof[1,:]))>9:
                             rich[method]['buddies'][ib].append(aprof)
-                        if method=='tau':   
-                            rich['found']['ref'][ib].append(ref[si]['sid'][-6:])
-                            rich['found']['refsid'][ib].append('{:5.0f} km'.format(ref[l]['sdists'][si]*6370.))
+                            if ib==4 and ref[si]['sid'][-6:]=='045004':
+                                print('bad buddy')
+                            if method=='tau':   
+                                rich['found']['ref'][ib].append(ref[si]['sid'][-6:])
+                                rich['found']['refsid'][ib].append('{:5.0f} km'.format(ref[l]['sdists'][si]*6370.))
                                     
                     lblen=len(rich['tau']['buddies'][ib])        
                     if lblen>=min_neighbours[rich_iter]:
@@ -1672,7 +1711,7 @@ def rich_adjust(l,obj_ref,rich_iter,obj_rich_ref=None):
                                 np.array(rich[method]['buddies'][ib]).shape)
                                 rich[method]['break_profiles'][ib,:,:]=np.nan
                                 
-                            if ref[l]['sid'][-6:]=='012425' and ib==11 and method=='tau':
+                            if ref[l]['sid'][-6:]=='159431' and ib==4 and method=='obs':
                                 plt.plot(ref[l]['days'][lidx[0]:lidx[2]],comp['tau']['test'][:,:,lidx[0]:lidx[2]][0,3,:])
                                 plt.plot(ref[si]['days'][sidx[0]:sidx[2]],comp['tau']['ref'][:,:,sidx[0]:sidx[2]][0,3,:])
                                 plt.plot(ref[si]['days'][sidx[1]],0,'ro')
@@ -1682,12 +1721,18 @@ def rich_adjust(l,obj_ref,rich_iter,obj_rich_ref=None):
                                 plt.plot(ref[si]['days'][sidx[0]:sidx[2]],comp['obs']['ref'][:,:,sidx[0]:sidx[2]][0,3,:])
         
                                 plt.savefig('rich_{}_{}_{}_ts.png'.format(richcount,ref[l]['sid'][-6:],ib))
-                                plt.semilogy(rich['tau']['buddies'][ib][0][0,:],RC['stdplevs'][RC['pidx']])
-                                plt.semilogy(rich['tau']['buddies'][ib][0][1,:],RC['stdplevs'][RC['pidx']])
-                                plt.ylim(1000,10)
-                                plt.semilogy(rich['obs']['buddies'][ib][0][0,:],RC['stdplevs'][RC['pidx']])
-                                plt.semilogy(rich['obs']['buddies'][ib][0][1,:],RC['stdplevs'][RC['pidx']])
-                                plt.savefig('rich_{}_{}_{}_prof.png'.format(richcount,ref[l]['sid'][-6:],ib))
+                                plt.close()
+                                taubuddies=np.array(rich['tau']['buddies'][ib])
+                                obsbuddies=np.array(rich['obs']['buddies'][ib])
+                                for m in 'tau','obs':
+                                    
+                                    for i in range(taubuddies.shape[0]):
+                                    
+                                        plt.semilogy(rich[m]['buddies'][ib][i][0,:],RC['stdplevs'][RC['pidx']],'b',label=rich['found']['ref'][ib][i]+'00')
+                                        plt.semilogy(rich[m]['buddies'][ib][i][1,:],RC['stdplevs'][RC['pidx']],'r',label=rich['found']['ref'][ib][i]+'12')
+                                    plt.ylim(1000,10)
+                                    #plt.legend()
+                                    plt.savefig('rich'+m+'_{}_{}_{}_prof.png'.format(richcount,ref[l]['sid'][-6:],ib))
                                 print('ib')
                             add_breakprofile(ref,l,rich,richtemp,method,ib)
                             #bstart= 0 if ib==0 else ref[l]['goodbreaklist'][ib-1]
@@ -1832,8 +1877,10 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
         # Note that for each stations only at most 500 buddies (out of 1300) are tested.
         ref=[None for i in range(len(obj_ref))]
         ref[l]=ray.get(obj_ref[l])
+        oref=obj_ref
         #ref=ray.get(obj_ref)
         if obj_rich_ref:
+            orref=obj_rich_ref
             rich_ref=[None for i in range(len(obj_ref))]
             rich_ref[l]=ray.get(obj_rich_ref[l])
         if initial_composite_ref:
@@ -1846,11 +1893,13 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
         else:
             rich_initial_composite=None
     else: # if called directly from python, the first dereferencing must be done manually
-        ref=ray.get(obj_ref) # first dereference - gets list ob object references
-        ref=ray.get(ref) # second dereference - gets actual dictionaries
+        oref=ray.get(obj_ref) # first dereference - gets list ob object references
+        ref=[None for i in range(len(oref))]
+        ref[l]=ray.get(oref[l]) # second dereference - gets actual dictionaries
         if obj_rich_ref:
-            rich_ref=ray.get(obj_rich_ref) # first dereference - gets list ob object references
-            rich_ref=ray.get(rich_ref) # second dereference - gets actual dictionaries
+            orref=ray.get(obj_rich_ref) # first dereference - gets list ob object references
+            rich_ref=[None for i in range(len(orref))]
+            rich_ref[l]=ray.get(orref[l]) # first dereference - gets list ob object references
             
             #rich_ref=[None for i in range(len(obj_ref))]
             #rich_ref[l]=ray.get(obj_rich_ref[l])
@@ -1927,6 +1976,9 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
                 for si in sdidx[1:]: # try ref stations beginning with nearest:
                     if si>=len(ref):
                         continue
+                    if ref[l]['active'][si][-1]<ref[l]['days'][-1]-RC['snht_min_sampsize']:
+                        #print('reference ends early')
+                        continue
                         
                     refcount +=1
                     if ref[l]['sdists'][si]*6370. > RC['weight_distance'][0] and refcount>500: # second condition is for test stations at remote places
@@ -1934,7 +1986,8 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
                         break
 
                     if ref[si] is None:
-                        ref[si]=ray.get(obj_ref[si])
+                        ref[si]=ray.get(oref[si])
+                        #print(ref[si]['sid'[-6:]],ref[si]['days'][-1],'reference ok')
 
                     try:
 
@@ -1984,14 +2037,17 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
                             continue
                             
                         refcount +=1
+                        if ref[l]['active'][si][-1]<ref[l]['days'][-1]-RC['snht_min_sampsize']:
+                            #print('reference ends early')
+                            continue
                         if ref[l]['sdists'][si]*6370. > RC['weight_distance'][0] and refcount>500: # second condition is for test stations at remote places
                             print('not enough buddies found','{:5.1f}'.format(ref[l]['sdists'][si]*6370.),refcount)
                             break
         
                         if rich_ref[si] is None:
-                            rich_ref[si]=ray.get(obj_rich_ref[si])
+                            rich_ref[si]=ray.get(orref[si])
                         if ref[si] is None:
-                            ref[si]=ray.get(obj_ref[si])
+                            ref[si]=ray.get(oref[si])
                         if rich_initial_composite:
                             if rich_initial_composite[si]:
                                 ric=ray.get(rich_initial_composite[si])
@@ -2113,9 +2169,9 @@ if __name__ == '__main__':
         pattern=''
         pkl='RAOBx'
     process = psutil.Process(os.getpid())
-    files = glob.glob('/users/staff/leo/fastscratch/rise/1.0/exp02/[01]*/feedbackmerged'+pattern+'*.nc')[:]
+    files = glob.glob('/users/staff/leo/fastscratch/rise/1.0/'+RC['exp']+'/[01]*/feedbackmerged'+pattern+'*.nc')[:]
     tt=time.time()
-    hadmed= read_hadCRUT5('/users/staff/leo/fastscratch/rise/1.0/common/','HadCRUT.5.0.1.0',RC['refdate'])
+    hadmeddict= read_hadCRUT5('/users/staff/leo/fastscratch/rise/1.0/common/','HadCRUT.5.0.1.0',RC['refdate'])
     # read data and analyze breakpoints
     #func=partial(RAOB_findbreaks,'SNHT')
     #with Pool(20) as P:        
@@ -2158,33 +2214,37 @@ if __name__ == '__main__':
     
     print(time.time()-tt)
     # calculate distance between stations
-    sdist_ref=stdists(ray.get(obj_ref))
+    obj=ray.get(obj_ref)
+    sids=[f['sid'] for f in obj] 
+    sdist_ref=stdists(obj)
+    active=[ob['days'][[0,-1]] for ob in obj]
+    del obj
+    active_ref=ray.put(active)
     print(time.time()-tt)
 
     
     futures=[]
-    if not RC['findfuture']:  
+    if False and not RC['findfuture']:  
         #func=partial(RAOB_adjustbreaks,'SNHT',sdist_ref)
         #results=list(map(func,obj_ref))
         #results_ref=results
         sdist=ray.get(sdist_ref)
         for l in range(len(obj_ref)):
-            futures.append(RAOB_adjustbreaks('SNHT',sdist,ray.get(obj_ref[l]),l))
-        obj_ref=futures
+            futures.append(RAOB_adjustbreaks('SNHT',sdist,active,ray.get(obj_ref[l]),l))
+        obj_ref=ray.put(futures)
     else:
         for l in range(len(obj_ref)):
-            futures.append(ray_RAOB_adjustbreaks.remote('SNHT',sdist_ref,obj_ref[l],l))
+            futures.append(ray_RAOB_adjustbreaks.remote('SNHT',sdist_ref,active_ref,obj_ref[l],l))
         obj_ref = ray.get(futures)
     
     del futures
     
-    break_sum=np.sum([len(l['goodbreaklist']) for l in ray.get(obj_ref)])
-    print('Total number of "good" breaks',break_sum)
+    #break_sum=np.sum([len(l['goodbreaklist']) for l in ray.get(obj_ref)])
+    #print('Total number of "good" breaks',break_sum)
 
     
-    sids=[f['sid'] for f in ray.get(obj_ref)] 
     if pattern=='':
-        pattern='012425'
+        pattern='159431'
     lx= sids.index('feedbackmerged'+pattern)
     
     single_obj_ref=ray.put(obj_ref) 
@@ -2205,7 +2265,7 @@ if __name__ == '__main__':
             else:
                 lneedscomposite.append(l)
             
-        ifile='exp03'.join(files[0].split('exp02'))
+        ifile='exp03'.join(files[0].split(RC['exp']))
         #for lx in lrecent:
             #initial_adjust_RAOB=initial_adjust(lx,single_obj_ref,single_results_ref,sdist_ref)  
             #save_monmean(ifile,0,[obj_ref[lx]],[results_ref[lx]],
@@ -2261,11 +2321,11 @@ if __name__ == '__main__':
     #initial_adjust_ref=[ray.put(initial_composite[l]) for l in range(len(initial_composite))]
     initial_adjust_ref=[initial_composite[l] for l in range(len(initial_composite))]
     
-    save_monmean(ifile,0,[obj_ref[lx]],initial_adjust_RAOB=[initial_adjust_ref[lx]])
+    save_monmean(ifile,0,exper=RC['exp'],fi=[obj_ref[lx]],initial_adjust_RAOB=[initial_adjust_ref[lx]])
     print('before write',time.time()-tt)
     futures=[]
     for l in range(len(obj_ref)):
-        futures.append(ray_save_monmean.remote(ifile,0,[obj_ref[l]],initial_adjust_RAOB=[initial_adjust_ref[l]]))
+        futures.append(ray_save_monmean.remote(ifile,0,exper=RC['exp'],fi=[obj_ref[l]],initial_adjust_RAOB=[initial_adjust_ref[l]]))
     x = ray.get(futures)
     print('after write',time.time()-tt)
     
@@ -2297,14 +2357,14 @@ if __name__ == '__main__':
     
     #if not RC['richfuture']:    
         #RC['richfuture']=True
-    if False:
-        rich_ref0=rich_adjust(lx,single_obj_ref,0)
-        breakplot(lx,obj_ref,obj_rich_ref0=[rich_ref0])
-        single_rich_ref0=ray.put([rich_ref0])
-    elif True:
-        rich_ref1=rich_adjust(lx,single_obj_ref,1,obj_rich_ref=single_rich_ref0)  
-        breakplot(lx,obj_ref,obj_rich_ref0=[rich_ref0[lx]],obj_rich_ref1=[rich_ref1])
-        save_monmean(ifile,0,[obj_ref[lx]],rich_ref0=[rich_ref0[lx]],rich_ref1=[rich_ref1])
+    if True:
+        rich_ref00=rich_adjust(lx,single_obj_ref,0)
+        #breakplot(lx,obj_ref,obj_rich_ref0=[rich_ref00])
+        #save_monmean(ifile,0,exper=RC['exp'],fi=[obj_ref[lx]],rich_ref1=[rich_ref00])
+    if True:
+        rich_ref2=rich_adjust(lx,single_obj_ref,1,obj_rich_ref=single_rich_ref0)  
+        #breakplot(lx,obj_ref,obj_rich_ref0=[rich_ref0[lx]],obj_rich_ref1=[rich_ref2])
+        #save_monmean(ifile,0,exper=RC['exp'],fi=[obj_ref[lx]],rich_ref0=[rich_ref0[lx]],rich_ref1=[rich_ref2])
 
     print('before second RICH iteration',time.time()-tt)
     #rich_ref1=[]
@@ -2380,7 +2440,7 @@ if __name__ == '__main__':
 
     print('after initial_adjust needscomposite',time.time()-tt)
 
-    save_monmean(ifile,0,[obj_ref[lx]],rich_ref1=[rich_ref1[lx]],
+    save_monmean(ifile,0,exper=RC['exp'],fi=[obj_ref[lx]],rich_ref1=[rich_ref1[lx]],
                  initial_adjust_RAOB=[initial_adjust_ref[lx]],
                  initial_adjust_rich=[rich_initial_adjust_ref[lx]])
 
@@ -2388,7 +2448,7 @@ if __name__ == '__main__':
     futures=[]
     for l in range(len(obj_ref)):
         #futures.append(ray_save_monmean.remote(files[0],l,single_obj_ref,single_results_ref,rich_ref0=single_rich_ref0,rich_ref1=single_rich_ref1))
-        futures.append(ray_save_monmean.remote(ifile,0,[obj_ref[l]], rich_ref1=[rich_ref1[l]],
+        futures.append(ray_save_monmean.remote(ifile,0,exper=RC['exp'],fi=[obj_ref[l]], rich_ref1=[rich_ref1[l]],
                                                initial_adjust_RAOB=[initial_adjust_ref[l]],
                                                initial_adjust_rich=[rich_initial_adjust_ref[l]]))
     
