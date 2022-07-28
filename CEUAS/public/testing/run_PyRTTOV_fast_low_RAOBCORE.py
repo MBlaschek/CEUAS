@@ -494,8 +494,22 @@ def calc_station(statid, chum, odir, adj = None):
                                 chandata.append(2)
                                 daydata.append(day)
                                 mondata.append(mon)
-        a34,b34 = rttov_calc(np.array(tadata34)[np.array(chandata34) == 34], np.array(humdata34)[np.array(chandata34) == 34], np.array(pressdata34)[np.array(chandata34) == 34], [x for x, y in zip(eradata34, chandata34) if y == 34], np.array(datedata34)[np.array(chandata34) == 34], [3,4])
-        a2,b2 = rttov_calc(np.array(tadata)[np.array(chandata) == 2], np.array(humdata)[np.array(chandata) == 2], np.array(pressdata)[np.array(chandata) == 2], [x for x, y in zip(eradata, chandata) if y == 2], np.array(datedata)[np.array(chandata) == 2], [2])
+        a34,b34 = rttov_calc(
+            np.array(tadata34)[np.array(chandata34) == 34],
+            np.array(humdata34)[np.array(chandata34) == 34],
+            np.array(pressdata34)[np.array(chandata34) == 34],
+            [x for x, y in zip(eradata34, chandata34) if y == 34],
+            np.array(datedata34)[np.array(chandata34) == 34],
+            [3,4]
+        )
+        a2,b2 = rttov_calc(
+            np.array(tadata)[np.array(chandata) == 2],
+            np.array(humdata)[np.array(chandata) == 2],
+            np.array(pressdata)[np.array(chandata) == 2],
+            [x for x, y in zip(eradata, chandata) if y == 2],
+            np.array(datedata)[np.array(chandata) == 2],
+            [1,2]
+        )
 
         middle_index = len(wholemon)//2    
 
@@ -506,12 +520,13 @@ def calc_station(statid, chum, odir, adj = None):
 
         b_final = []
         for i in wholemon[:middle_index]:
-            b = [[np.nan, np.nan, np.nan]]
+            b = [[np.nan, np.nan, np.nan, np.nan]]
             if i in date_out2:
                 b[0][0] = testb2[date_out2 == i][0][0]
+                b[0][1] = testb2[date_out2 == i][0][1]
             if i in date_out34:
-                b[0][1] = testb34[date_out34 == i][0][0]
-                b[0][2] = testb34[date_out34 == i][0][1]
+                b[0][2] = testb34[date_out34 == i][0][0]
+                b[0][3] = testb34[date_out34 == i][0][1]
             b_final.append(b)
 
         try:
@@ -535,12 +550,13 @@ def calc_station(statid, chum, odir, adj = None):
         
         b_final = []
         for i in wholemon[middle_index:]:
-            b = [[np.nan, np.nan, np.nan]]
+            b = [[np.nan, np.nan, np.nan, np.nan]]
             if i in date_out2:
                 b[0][0] = testb2[date_out2 == i][0][0]
+                b[0][1] = testb2[date_out2 == i][0][1]
             if i in date_out34:
-                b[0][1] = testb34[date_out34 == i][0][0]
-                b[0][2] = testb34[date_out34 == i][0][1]
+                b[0][2] = testb34[date_out34 == i][0][0]
+                b[0][3] = testb34[date_out34 == i][0][1]
             b_final.append(b)
 
         if adj == None:
@@ -586,8 +602,9 @@ if __name__ == '__main__':
 #     for i in stats:
 #         statlist.append(i.split('-')[-1][:5])
 #     calc_station(statlist[0])
-    for i in ["RISE", "RASE"]: #[None, "RAOBCORE", "RICH", "RISE", "RASE"]:
-        pool = multiprocessing.Pool(processes=40)
-        func=partial(calc_station, chum = consthum, adj = i, odir = odir)
-        result_list = list(pool.map(func, statlist))
-        print(result_list)
+#     for i in ["RISE", "RASE"]: #[None, "RAOBCORE", "RICH", "RISE", "RASE"]:
+    i = None
+    pool = multiprocessing.Pool(processes=40)
+    func=partial(calc_station, chum = consthum, adj = i, odir = odir)
+    result_list = list(pool.map(func, statlist))
+    print(result_list)
