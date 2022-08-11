@@ -16,6 +16,9 @@ sys.path.append(os.getcwd()+'/../cds-backend/code/')
 import cds_eua3 as eua
 import pickle
 import multiprocessing
+# from multiprocessing import set_start_method
+# set_start_method("spawn")
+
 from functools import partial
 
 def ef(p, t=None, over_water=True, over_ice=False, **kwargs):
@@ -368,8 +371,15 @@ def rttov_calc(tadata, humdata, pressdata, eradata, datedata, chan):
 
 def calc_station(statid, chum, odir, adj = None):
     statlist = statid
-    statid = statlist.split('/')[-2][1:]
-    conv_statlist = glob.glob('/mnt/users/scratch/leo/scratch/converted_v8/*' + statid + '*_CEUAS_merged_v1.nc')
+    statid = statlist.split('.nc')[0][-5:]
+    if len(glob.glob("./"+odir+"/"+statid
+                    )) > 0:
+        print('skipped')
+        return
+    try:
+        os.makedirs("./"+odir+"/"+statid+"/")
+    except:
+        pass
     print(statid)
 
     try:
@@ -378,9 +388,9 @@ def calc_station(statid, chum, odir, adj = None):
         df.press = df.press * 100.
         ###
         df = df[df.press.isin([5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000])]
-        df = df[df.date_time > '1979']
+        df = df[df.datum > '1950']
         df = df.rename({'datum':'time', 'press':'plev'}, axis='columns')
-    
+
         all_dfta = df
         all_dfta = all_dfta.rename({'temperatures':'ta'}, axis='columns')
 
@@ -393,7 +403,7 @@ def calc_station(statid, chum, odir, adj = None):
                 if dfsh.index[j] == pl[i]:
                     dfsh.hus.iloc[j] = chum[i]
 
-        
+
         ###
         if adj != None:
             all_dfta.ta = all_dfta.ta - all_dfta[adj+'_bias_estimate']
@@ -425,7 +435,7 @@ def calc_station(statid, chum, odir, adj = None):
             else:
                 dn_dfta = all_dfta[all_dfta.index.get_level_values('hour') == 0]
 
-            for yr in range(1979,2022,1):
+            for yr in range(1950,2022,1):
                 for mon in range(int(str(yr)+'01'), int(str(yr)+'13'), 1):
                     wholemon.append(mon)
                     ###############
@@ -443,6 +453,12 @@ def calc_station(statid, chum, odir, adj = None):
                     if len(mon_mean) >= 9:
                         with xarray.open_dataset('./era/era_'+str(yr)+'.nc') as era:
                             era_input = era.sel(time = str(yr)+'-'+str(mon)[-2:]+'-01T00:00:00.000000000', latitude = dfta.lat.iloc[0], longitude = dfta.lon.iloc[0], method='nearest')
+                        nancheck = False
+                        for i in era_input:
+                            if np.isnan(era_input[i]):
+                                nancheck = True
+                        if nancheck:
+                            continue
                         date = pd.to_datetime(float(era_input.time))
                         plevs_to_check = mon_mean.index
 
@@ -547,7 +563,7 @@ def calc_station(statid, chum, odir, adj = None):
         testb34 = b34[np.array(daydata34)[np.array(chandata34) == 34] == False]
         date_out2 = np.array(mondata)[np.array(chandata) == 2][np.array(daydata)[np.array(chandata) == 2] == False]
         date_out34 = np.array(mondata34)[np.array(chandata34) == 34][np.array(daydata34)[np.array(chandata34) == 34] == False]
-        
+
         b_final = []
         for i in wholemon[middle_index:]:
             b = [[np.nan, np.nan, np.nan, np.nan]]
@@ -566,8 +582,13 @@ def calc_station(statid, chum, odir, adj = None):
             pickle.dump( b_final, open( odir+"/"+statid+"/"+adj+"_"+statid+"_night_refl.p", "wb" ) )
             pickle.dump( wholemon[middle_index:], open( odir+"/"+statid+"/"+adj+"_"+statid+"_night_dates.p", "wb" ) )
         print('night done: '+statid)
-    except:
+    except Exception as e:
+        print(e)
         print('nothing to calculate: '+statid)
+        return
+    return
+
+
 #         if adj == None:
 #             pickle.dump( np.array([[[np.nan, np.nan, np.nan]]]), open( "rttov_out/"+statid+"/"+statid+"_day_refl.p", "wb" ) )
 #             pickle.dump( [197901], open( "rttov_out/"+statid+"/"+statid+"_day_dates.p", "wb" ) )
@@ -597,14 +618,21 @@ if __name__ == '__main__':
                          15468.00, 21684.00, 35328.00 , 44220.00]
                    )/2.
     statlist = []
-    statlist = glob.glob('/mnt/ssdraid/scratch/leo/rise/1.0/exp00/*/feedbackmerged*.nc')
+    statlist = glob.glob('/mnt/ssdraid/scratch/leo/rise/1.0/exp01/*/feedbackmerged*.nc')
+    
 #     stats = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*68842*_CEUAS_merged_v1.nc')
 #     for i in stats:
 #         statlist.append(i.split('-')[-1][:5])
 #     calc_station(statlist[0])
 #     for i in ["RISE", "RASE"]: #[None, "RAOBCORE", "RICH", "RISE", "RASE"]:
+
     i = None
-    pool = multiprocessing.Pool(processes=40)
+    
+#     for j in statlist:
+#         print(j)
+#         calc_station(j, chum = consthum, adj = i, odir = odir)
+#         print('done')
+    pool = multiprocessing.get_context('spawn').Pool(processes=40)
     func=partial(calc_station, chum = consthum, adj = i, odir = odir)
-    result_list = list(pool.map(func, statlist))
+    result_list = list(pool.map(func, statlist[:]))
     print(result_list)
