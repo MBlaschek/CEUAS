@@ -64,7 +64,17 @@ import asyncio
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi import Response
+from fastapi import Request
 app = FastAPI()
+
+# from pydantic import BaseModel
+# class Item(BaseModel):
+#     variable: str
+
+from typing import Any, Dict, AnyStr, List, Union
+JSONObject = Dict[AnyStr, Any]
+JSONArray = List[Any]
+JSONStructure = Union[JSONArray, JSONObject]
 
 ###############################################################################
 #
@@ -1889,7 +1899,7 @@ def index(request=None, response=None):
 
 
 @app.post('/', response_class=FileResponse)
-async def index(request=None, body=None, response=None):
+async def index(body: JSONStructure = None):
 # async def index(body:dict):
 
     """ Main Hug index function for Post requests
@@ -1913,9 +1923,8 @@ async def index(request=None, body=None, response=None):
      - period           – ['19990101', '20000101']
 
     """
-    logger
     randdir = '{:012d}'.format(numpy.random.randint(100000000000))
-    logger.info("%s POST %s", randdir, str(body))
+    logger.info("%s POST %s %s", randdir,type(body), str(body))
     tmpdir = config['tmp_dir'] + '/' + randdir
     try:
         #rfile='/fio/srvx7/leo/x'
