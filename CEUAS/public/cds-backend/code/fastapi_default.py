@@ -67,14 +67,17 @@ from fastapi import Response
 from fastapi import Request
 app = FastAPI()
 
-# from pydantic import BaseModel
-# class Item(BaseModel):
-#     variable: str
+from pydantic import BaseModel
+class Item(BaseModel):
+    body: dict
 
-from typing import Any, Dict, AnyStr, List, Union
-JSONObject = Dict[AnyStr, Any]
-JSONArray = List[Any]
-JSONStructure = Union[JSONArray, JSONObject]
+
+#from typing import Any, Dict, AnyStr, List, Union
+#JSONObject = Dict[AnyStr, Any]
+#JSONArray = List[Any]
+#JSONStructure = Union[JSONArray, JSONObject]
+
+
 
 ###############################################################################
 #
@@ -1899,7 +1902,30 @@ def index(request=None, response=None):
 
 
 @app.post('/', response_class=FileResponse)
-async def index(body: JSONStructure = None):
+async def index(body:Request, request=None, response=None):
+    body_str = (await body.body()).decode()
+    body = {}
+    if '&' in body_str: 
+        separator = '&'
+        separator_inside = '='
+        for i in body_str.split(separator):
+            element = i.split(separator_inside)
+            # check what happens to lists!
+            body[element[0]] = element[1]
+    else:
+        body = json.loads(body_str)
+       # separator = ', '
+       # separator_inside = ': '
+       # body_str = body_str.replace('"', '')
+       # body_str = body_str.replace('{', '')
+       # body_str = body_str.replace('}', '')
+#    for i in body_str.split(separator):
+#        element = i.split(separator_inside)
+#        # remove lists and create them new
+#        # e1 = element[1].split(,)
+#        body[element[0]] = element[1]
+    logger.info('BODY: %s', str(body))
+
 # async def index(body:dict):
 
     """ Main Hug index function for Post requests
@@ -1923,8 +1949,10 @@ async def index(body: JSONStructure = None):
      - period           – ['19990101', '20000101']
 
     """
+
+    logger.info('ASYNC INDEX POST')
     randdir = '{:012d}'.format(numpy.random.randint(100000000000))
-    logger.info("%s POST %s %s", randdir,type(body), str(body))
+    logger.info("%s BODY %s %s", randdir,type(body),body)
     tmpdir = config['tmp_dir'] + '/' + randdir
     try:
         #rfile='/fio/srvx7/leo/x'
