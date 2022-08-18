@@ -1813,7 +1813,8 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
 
 
 @app.get('/', response_class=FileResponse)
-def index(request:dict):
+# def index(request:dict):
+def index(request=None, response=None):
     """ Main Hug Index Function on get requests
 
     index function requests get URI and converts into dictionary.
@@ -1888,7 +1889,9 @@ def index(request:dict):
 
 
 @app.post('/', response_class=FileResponse)
-async def index(body:dict):
+async def index(request=None, body=None, response=None):
+# async def index(body:dict):
+
     """ Main Hug index function for Post requests
 
     Args:
@@ -1910,6 +1913,7 @@ async def index(body:dict):
      - period           – ['19990101', '20000101']
 
     """
+    logger
     randdir = '{:012d}'.format(numpy.random.randint(100000000000))
     logger.info("%s POST %s", randdir, str(body))
     tmpdir = config['tmp_dir'] + '/' + randdir
