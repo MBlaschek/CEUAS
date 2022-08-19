@@ -1183,16 +1183,62 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
     else:
         logger.info('start check statid with: %s', statid)
         # '0-20200-0-*': 
-        try:
-            if statid == 'all' or statid == None:
-                statid = slnum  # <- list of all station ids from init_server
+#         try:
+        if statid == 'all' or statid == None:
+            statid = slnum  # <- list of all station ids from init_server
 
-            elif isinstance(statid, (str, int)):
-                valid_id = None
-                if('*' in statid):
-                    if statid[:3] == '0-2':
+        elif isinstance(statid, (str, int)):
+            valid_id = None
+            if('*' in statid):
+                if statid[:3] == '0-2':
+                    stats = []
+                    pat=statid[:statid.index('*')]
+                    for l in slnum: # -> searches all slnum for matching statids
+                        if pat in l: 
+                            stats.append(l)
+                    valid_id = stats
+                else:
+                    stats = []
+                    for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
+                        m = s + statid
+                        pat=m[:m.index('*')]
+                        for l in slnum: # -> searches all slnum for matching statids
+                            if pat in l: 
+                                stats.append(l)
+                        valid_id = stats
+
+            else:
+#                     if not ((len(statid) == 15) or (len(statid) == 5)):
+#                         raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
+
+                if statid[:2] == '0-' and statid in slnum:
+                    valid_id = statid
+                else:
+                    for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
+                        l = s + statid
+                        if l in slnum:
+                            valid_id = l
+                            break
+
+            if valid_id == None:
+                raise ValueError('statid not available - please select an area, country or check your statid')
+
+            # if wildcard was used, valid_id is already a list so it can be directly given to statid:
+            if isinstance(valid_id, list):
+                statid = valid_id
+            else:
+                statid = [valid_id]
+
+        else:
+            valid_id = None
+            new_statid = []
+            for k in statid:
+                logger.info('preparing: %s', k)
+
+                if('*' in k):
+                    if k[:3] == '0-2':
                         stats = []
-                        pat=statid[:statid.index('*')]
+                        pat=k[:k.index('*')]
                         for l in slnum: # -> searches all slnum for matching statids
                             if pat in l: 
                                 stats.append(l)
@@ -1200,88 +1246,42 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                     else:
                         stats = []
                         for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
-                            m = s + statid
+                            m = s + k
                             pat=m[:m.index('*')]
                             for l in slnum: # -> searches all slnum for matching statids
                                 if pat in l: 
                                     stats.append(l)
-                            valid_id = stats
+                        valid_id = stats
 
                 else:
-    #                     if not ((len(statid) == 15) or (len(statid) == 5)):
-    #                         raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
+#                         if not ((len(k) == 15) or (len(k) == 5)):
+#                             raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
 
-                    if statid[:2] == '0-' and statid in slnum:
-                        valid_id = statid
+                    if k[:3] == '0-2' and k in slnum:
+                        valid_id = k
                     else:
                         for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
-                            l = s + statid
+                            l = s + k
                             if l in slnum:
                                 valid_id = l
                                 break
 
-                if valid_id == None:
-                    raise ValueError('statid not available - please select an area, country or check your statid')
-
-                # if wildcard was used, valid_id is already a list so it can be directly given to statid:
+                # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
                 if isinstance(valid_id, list):
-                    statid = valid_id
+                    new_statid = new_statid.extend(valid_id)
                 else:
-                    statid = [valid_id]
+                    new_statid.append(valid_id)
+                logger.info('after stat con: %s*, new_statid)
 
-            else:
-                valid_id = None
-                new_statid = []
-                for k in statid:
-                    logger.info('preparing: %s', k)
+            if valid_id == None:
+                raise ValueError('statid not available - please select an area, country or check your statid')
 
-                    if('*' in k):
-                        if k[:3] == '0-2':
-                            stats = []
-                            pat=k[:k.index('*')]
-                            for l in slnum: # -> searches all slnum for matching statids
-                                if pat in l: 
-                                    stats.append(l)
-                            valid_id = stats
-                        else:
-                            stats = []
-                            for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
-                                m = s + k
-                                pat=m[:m.index('*')]
-                                for l in slnum: # -> searches all slnum for matching statids
-                                    if pat in l: 
-                                        stats.append(l)
-                            valid_id = stats
-
-                    else:
-    #                         if not ((len(k) == 15) or (len(k) == 5)):
-    #                             raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
-
-                        if k[:3] == '0-2' and k in slnum:
-                            valid_id = k
-                        else:
-                            for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
-                                l = s + k
-                                if l in slnum:
-                                    valid_id = l
-                                    break
-
-                    # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
-                    if isinstance(valid_id, list):
-                        new_statid = new_statid.extend(valid_id)
-                    else:
-                        new_statid.append(valid_id)
-                    logger.info('after stat con: %s*, new_statid)
-
-                if valid_id == None:
-                    raise ValueError('statid not available - please select an area, country or check your statid')
-
-                statid = [] 
-                [statid.append(x) for x in new_statid if x not in statid] 
-        except Exception:
-            raise RuntimeError(
-                'Invalid selection, specify either bbox, country or statid. Use "statid":"all" to select all ' \
-                'stations ')
+            statid = [] 
+            [statid.append(x) for x in new_statid if x not in statid] 
+#         except Exception:
+#             raise RuntimeError(
+#                 'Invalid selection, specify either bbox, country or statid. Use "statid":"all" to select all ' \
+#                 'stations ')
     d['statid'] = statid
     logger.info('final station selection: %s, %s', len(d['statid']), d['statid'])
     if len(d['statid']) == 1 and ((single_parallel == True) or (single_parallel == 'True')):
