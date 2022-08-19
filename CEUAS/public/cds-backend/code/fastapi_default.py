@@ -1181,6 +1181,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
     # Stations
     #
     else:
+        logger.info('start check statid with: %s', statid)
         # '0-20200-0-*': 
         try:
             if statid == 'all' or statid == None:
@@ -1232,6 +1233,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                 valid_id = None
                 new_statid = []
                 for k in statid:
+                    logger.info('preparing: %s', k)
 
                     if('*' in k):
                         if k[:3] == '0-2':
@@ -1249,7 +1251,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                                 for l in slnum: # -> searches all slnum for matching statids
                                     if pat in l: 
                                         stats.append(l)
-                                valid_id = stats
+                            valid_id = stats
 
                     else:
     #                         if not ((len(k) == 15) or (len(k) == 5)):
@@ -1264,11 +1266,12 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                                     valid_id = l
                                     break
 
-                        # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
-                        if isinstance(valid_id, list):
-                            new_statid = new_statid.extend(valid_id)
-                        else:
-                            new_statid.append(valid_id)
+                    # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
+                    if isinstance(valid_id, list):
+                        new_statid = new_statid.extend(valid_id)
+                    else:
+                        new_statid.append(valid_id)
+                    logger.info('after stat con: %s*, new_statid)
 
                 if valid_id == None:
                     raise ValueError('statid not available - please select an area, country or check your statid')
@@ -1280,7 +1283,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                 'Invalid selection, specify either bbox, country or statid. Use "statid":"all" to select all ' \
                 'stations ')
     d['statid'] = statid
-    print(len(d['statid']), d['statid'])
+    logger.info('final station selection: %s, %s', len(d['statid']), d['statid'])
     if len(d['statid']) == 1 and ((single_parallel == True) or (single_parallel == 'True')):
         d['single_parallel'] = True
     #
@@ -1903,30 +1906,6 @@ def index(request=None, response=None):
 
 @app.post('/', response_class=FileResponse)
 async def index(body:Request, request=None, response=None):
-    body_str = (await body.body()).decode()
-    body = {}
-    if '&' in body_str: 
-        separator = '&'
-        separator_inside = '='
-        for i in body_str.split(separator):
-            element = i.split(separator_inside)
-            # check what happens to lists!
-            body[element[0]] = element[1]
-    else:
-        body = json.loads(body_str)
-       # separator = ', '
-       # separator_inside = ': '
-       # body_str = body_str.replace('"', '')
-       # body_str = body_str.replace('{', '')
-       # body_str = body_str.replace('}', '')
-#    for i in body_str.split(separator):
-#        element = i.split(separator_inside)
-#        # remove lists and create them new
-#        # e1 = element[1].split(,)
-#        body[element[0]] = element[1]
-    logger.info('BODY: %s', str(body))
-
-# async def index(body:dict):
 
     """ Main Hug index function for Post requests
 
@@ -1949,6 +1928,14 @@ async def index(body:Request, request=None, response=None):
      - period           – ['19990101', '20000101']
 
     """
+
+    body_str = (await body.body()).decode()
+    logger.info('REQUEST STRING: %s', body_str)
+
+    if '&' in body_str:	
+       	body = urllib.parse.parse_qs(body_str)
+    else:
+        body = json.loads(body_str)
 
     logger.info('ASYNC INDEX POST')
     randdir = '{:012d}'.format(numpy.random.randint(100000000000))
