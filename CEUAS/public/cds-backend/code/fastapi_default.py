@@ -1267,11 +1267,13 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                                 break
 
                 # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
+                logger.info('final newstatid: %s   and valid_id: %s',new_statid, valid_id)
                 if isinstance(valid_id, list):
-                    new_statid = new_statid.extend(valid_id)
+                    for ns in valid_id:
+                        new_statid.append(ns)
                 else:
                     new_statid.append(valid_id)
-                logger.info('after stat con: %s*, new_statid)
+                logger.info('after stat con: %s', new_statid)
 
             if valid_id == None:
                 raise ValueError('statid not available - please select an area, country or check your statid')
