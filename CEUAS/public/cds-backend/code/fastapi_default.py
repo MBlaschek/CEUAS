@@ -1939,6 +1939,10 @@ async def index(body:Request, request=None, response=None):
     else:
         body = json.loads(body_str)
 
+    for i in body:
+        if len(body[i]) == 1:
+            body[i] = body[i][0]
+
     logger.info('ASYNC INDEX POST')
     randdir = '{:012d}'.format(numpy.random.randint(100000000000))
     logger.info("%s BODY %s %s", randdir,type(body),body)
