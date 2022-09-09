@@ -407,10 +407,10 @@ def calc_station(statid, chum, odir, adj = None):
             adjstatlist = glob.glob(statlist.split('feedback')[0]+'feedbackglobbincorrsave_rio24_0*.nc')[0]
         elif adj == 'rit':
             adjstatlist = glob.glob(statlist.split('feedback')[0]+'feedbackglobbincorrsave_rit24_0*.nc')[0]
-            if adjstatlist != None:
-                adj_df = xr.open_dataset(adjstatlist).to_dataframe()
-                adj_df.press = adj_df.press * 100.
-                adj_df = adj_df[adj_df.press.isin([3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000])]
+        if adjstatlist != None:
+            adj_df = xr.open_dataset(adjstatlist).to_dataframe()
+            adj_df.press = adj_df.press * 100.
+            adj_df = adj_df[adj_df.press.isin([3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000])]
 
         print(statlist)
         df = xr.open_dataset(statlist).to_dataframe()
@@ -686,24 +686,6 @@ def calc_station(statid, chum, odir, adj = None):
         return
     return
 
-
-#         if adj == None:
-#             pickle.dump( np.array([[[np.nan, np.nan, np.nan]]]), open( "rttov_out/"+statid+"/"+statid+"_day_refl.p", "wb" ) )
-#             pickle.dump( [197901], open( "rttov_out/"+statid+"/"+statid+"_day_dates.p", "wb" ) )
-#         else:
-#             pickle.dump( np.array([[[np.nan, np.nan, np.nan]]]), open( "rttov_out/"+statid+"/"+adj+"_"+statid+"_day_refl.p", "wb" ) )
-#             pickle.dump( [197901], open( "rttov_out/"+statid+"/"+adj+"_"+statid+"_day_dates.p", "wb" ) )
-#         print('nothing to calculate: '+statid)
-        
-#         if adj == None:
-#             pickle.dump( np.array([[[np.nan, np.nan, np.nan]]]), open( "rttov_out/"+statid+"/"+statid+"_night_refl.p", "wb" ) )
-#             pickle.dump( [197901], open( "rttov_out/"+statid+"/"+statid+"_night_dates.p", "wb" ) )
-#         else:
-#             pickle.dump( np.array([[[np.nan, np.nan, np.nan]]]), open( "rttov_out/"+statid+"/"+adj+"_"+statid+"_night_refl.p", "wb" ) )
-#             pickle.dump( [197901], open( "rttov_out/"+statid+"/"+adj+"_"+statid+"_night_dates.p", "wb" ) )
-#         print('nothing to calculate: '+statid)
-
-
 if __name__ == '__main__': 
 #     [3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000]
     consthum = np.array([3.90, 5.90, 9.17, 20.30,
@@ -730,7 +712,7 @@ if __name__ == '__main__':
 # #             print('done')
 # #         except:
 # #             print('failed')
-    for i in [None, 'raobcore', 'rio', 'rit']:# [None, 'raobcore']:
+    for i in ['rio']:# [None, 'raobcore', 'rio', 'rit']:
         if i == None:
             odir = "rttov_out_unadj_testing"
         elif i == 'raobcore':
