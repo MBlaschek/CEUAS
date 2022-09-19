@@ -249,7 +249,7 @@ def write_bt_file(stat, adj):
 
 
 if __name__ == '__main__': 
-    for o in ['rio', 'rit', 'unadj', 'raobcore',]: # 'rio', 'rit', 'unadj', 'raobcore',
+    for o in [ 'rio', 'rit', 'unadj', 'raobcore']: # 'rio', 'rit', 'unadj', 'raobcore',
         fs = glob.glob('./rttov_out_'+o+'_testing/*')
         print(fs)
 #         fs = glob.glob('./rttov_out_'+i+'_20220906/*')
@@ -259,7 +259,7 @@ if __name__ == '__main__':
             if len(glob.glob(i+'/*')) > 0:
                 sid.append(i.split('/')[-1])
 
-        pool = multiprocessing.Pool(processes=20)
+        pool = multiprocessing.Pool(processes=40)
         func=partial(write_bt_file, adj = o)
         result_list = list(pool.map(func, sid[:]))
         print(result_list)
