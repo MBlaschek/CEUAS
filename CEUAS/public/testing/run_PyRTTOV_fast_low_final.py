@@ -728,8 +728,9 @@ if __name__ == '__main__':
         
         pool = multiprocessing.Pool(processes=40)
         func=partial(calc_station, chum = consthum, adj = i, odir = odir)
-        result_list = list(pool.map(func, statlist[:]))
+        result_list = list(map(func, statlist[:1]))
         print(result_list)
+        print('finished')
     
     '''
     ['/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_8_msu.dat', 
