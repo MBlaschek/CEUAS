@@ -423,6 +423,7 @@ def calc_station(statid, chum, odir, adj = None):
         df = df.reset_index()    
         df = df.rename({'time':'time_idx'}, axis='columns')
         df = df.rename({'datum':'time', 'press':'plev'}, axis='columns')
+        df = df[df.montemp < 400]
 
         #
         ##
@@ -525,7 +526,7 @@ def calc_station(statid, chum, odir, adj = None):
                         if len(mon_mean[mon_mean.plev == j].ta) > 0:
                             if np.isnan(mon_mean[mon_mean.plev == j].ta.iloc[0]):
                                 mon_mean = mon_mean[mon_mean.plev != j]
-                                reduced_sh = reduced_sh[reduced_sh.index != j]
+                                #reduced_sh = reduced_sh[reduced_sh.index != j]
 
                     ## append goodmon
 
@@ -566,7 +567,7 @@ def calc_station(statid, chum, odir, adj = None):
 
                                 high_reduced_sh = reduced_sh[reduced_sh.index.isin(high_mon_mean.plev)]
                                 tadata34.append(high_mon_mean.ta)
-                                humdata34.append(high_reduced_sh.hus)
+                                humdata34.append(np.array(high_reduced_sh.hus))
                                 pressdata34.append(high_mon_mean.plev)
                                 datedata34.append(date)
                                 eradata34.append(era_input)  
@@ -590,12 +591,12 @@ def calc_station(statid, chum, odir, adj = None):
                                 if(not (85000 in plevs_to_check)):
                                     s = low_mon_mean.iloc[0]
                                     s.ta = np.nan
-                                    s.name = 85000
+                                    s.plev = 85000
                                     low_mon_mean = low_mon_mean.append(s)
 
                                 low_reduced_sh = reduced_sh[reduced_sh.index.isin(low_mon_mean.plev)]
                                 tadata.append(low_mon_mean.ta)
-                                humdata.append(low_reduced_sh.hus)
+                                humdata.append(np.array(low_reduced_sh.hus))
                                 pressdata.append(low_mon_mean.plev)
                                 datedata.append(date)
                                 eradata.append(era_input)  
@@ -607,27 +608,29 @@ def calc_station(statid, chum, odir, adj = None):
     #     print('calc monmeans')
 
     #     return
-    #     print('tadata: ',tadata)
-    #     print('humdata: ',humdata)
-    #     print('pressdata: ',pressdata)
-    #     print('datedata: ',datedata)
-
+    #     print('tadata: ',np.shape(tadata))
+    #     print('humdata: ',np.shape(humdata))
+    #     print('pressdata: ',np.shape(pressdata))
+    #     print('datedata: ',np.shape(datedata))
         print('before 34 c')
+
+
         a34,b34 = rttov_calc(
-            np.array(tadata34)[np.array(chandata34) == 34],
-            np.array(humdata34)[np.array(chandata34) == 34],
-            np.array(pressdata34)[np.array(chandata34) == 34],
-            [x for x, y in zip(eradata34, chandata34) if y == 34],
-            np.array(datedata34)[np.array(chandata34) == 34],
+            np.array(tadata34),
+            np.array(humdata34),
+            np.array(pressdata34),
+            eradata34, # [x for x, y in zip(eradata34, chandata34) if y == 34],
+            np.array(datedata34), # [np.array(chandata34) == 34],
             [3,4]
         )
+
         print('before 12 c')
         a2,b2 = rttov_calc(
-            np.array(tadata)[np.array(chandata) == 2],
-            np.array(humdata)[np.array(chandata) == 2],
-            np.array(pressdata)[np.array(chandata) == 2],
-            [x for x, y in zip(eradata, chandata) if y == 2],
-            np.array(datedata)[np.array(chandata) == 2],
+            np.array(tadata),
+            np.array(humdata),
+            np.array(pressdata),
+            eradata, # ([x for x, y in zip(eradata, chandata) if y == 2],
+            np.array(datedata), # [np.array(chandata) == 2],
     #         [2]
             [1,2]
         )
@@ -693,7 +696,9 @@ if __name__ == '__main__':
                          15468.00, 21684.00, 35328.00 , 44220.00]
                    )/2.
     statlist = []
-#     statlist = glob.glob('/mnt/ssdraid/scratch/leo/rise/1.0/exp02/*11035*/feedbackglobbincorrmon0*.nc')
+#     statlist = glob.glob('/mnt/ssdraid/scratch/leo/rise/1.0/exp02/*85469*/feedbackglobbincorrmon0*.nc')
+#     statlist = glob.glob('/mnt/ssdraid/scratch/leo/rise/1.0/exp02/*17095*/feedbackglobbincorrmon0*.nc')
+
     statlist = glob.glob('/mnt/ssdraid/scratch/leo/rise/1.0/exp02/*/feedbackglobbincorrmon0*.nc')
 
 
@@ -712,7 +717,7 @@ if __name__ == '__main__':
 # #             print('done')
 # #         except:
 # #             print('failed')
-    for i in ['rio']:# [None, 'raobcore', 'rio', 'rit']:
+    for i in [None, 'raobcore', 'rio', 'rit']:# [None, 'raobcore', 'rio', 'rit']:
         if i == None:
             odir = "rttov_out_unadj_testing"
         elif i == 'raobcore':
@@ -730,7 +735,8 @@ if __name__ == '__main__':
         func=partial(calc_station, chum = consthum, adj = i, odir = odir)
         result_list = list(pool.map(func, statlist[:]))
         print(result_list)
-    
+
+#         calc_station(statlist[0], chum=consthum, adj=i, odir=odir)
     '''
     ['/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_8_msu.dat', 
     '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_17_amsub.dat',
