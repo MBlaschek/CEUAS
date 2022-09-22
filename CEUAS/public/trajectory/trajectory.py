@@ -1,22 +1,22 @@
 import numpy
 import numpy as np
-import time
-import datetime
-import netCDF4
-import matplotlib.pylab as plt
-import os,sys,glob
-sys.path.append(os.getcwd()+'/../adjust/rasotools/')
-from utils import *
-from multiprocessing import Pool
+# import time
+# import datetime
+# import netCDF4
+# import matplotlib.pylab as plt
+# import os,sys,glob
+# sys.path.append(os.getcwd()+'/../adjust/rasotools/')
+# from utils import *
+# from multiprocessing import Pool
 #import odb
-from eccodes import *
-from functools import partial
-from collections import OrderedDict
-import json
-import gzip
-import pandas as pd
-import scipy
-from scipy import stats
+# from eccodes import *
+# from functools import partial
+# from collections import OrderedDict
+# import json
+# import gzip
+# import pandas as pd
+# import scipy
+# from scipy import stats
 
 def calc_height(t, p, jump = True):
     '''
@@ -36,6 +36,7 @@ def calc_height(t, p, jump = True):
     
     '''
     # from: https://www.cesm.ucar.edu/models/cesm1.1/cesm/cesmBbrowser/html_code/cam/tropopause.F90.html
+    # https://agupubs.onlinelibrary.wiley.com/doi/full/10.1029/2003GL018240
     SHR_CONST_AVOGAD  = 6.02214e26
     SHR_CONST_BOLTZ   = 1.38065e-23
     SHR_CONST_MWDAIR  = 28.966
@@ -93,13 +94,13 @@ def calc_height(t, p, jump = True):
     return z
 
 
-# to gpm
-from scipy.integrate import quad
+# # to gpm
+# from scipy.integrate import quad
 
-def integrand(x):
-    return (6371000 / (6371000 + x))**2
-def expint(x):
-    return quad(integrand, 0, x,)[0]
+# def integrand(x):
+#     return (6371000 / (6371000 + x))**2
+# def expint(x):
+#     return quad(integrand, 0, x,)[0]
 
 
 def haversine(lon1, lat1, lon2, lat2):
@@ -151,7 +152,7 @@ def transport(lat, lon, u_dist, v_dist):
     return new_lat, new_lon
 
 
-def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean', factor = 1, u_factor = None, v_factor = None, z_variant = 'ucar'):
+def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean', factor = 1, u_factor = None, v_factor = None, z_variant = 'ucar', output='degree'):
     '''
     w_rs -> radio sonde rising speed
     '''
@@ -166,9 +167,9 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
         z = calc_height(temperature, pressure, jump = True) # m from K and Pa
     elif z_variant == 'ucar': 
         z = calc_height(temperature, pressure, jump = False) # m from K and Pa
-#     print(temperature, pressure)
-#     vec_expint = numpy.vectorize(expint)
-#     z = vec_expint(z)
+    
+    new_lat = lat
+    new_lon = lon
     
     lat_displacement = [0.]
     lon_displacement = [0.]
@@ -179,32 +180,19 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
     rts = [0]
     
     for i in range(len(z)):
-        if i == 0:
-            new_lat = lat
-            new_lon = lon
-        else:
+        if i != 0:
             rising_time = (z[i]-z[i-1]) / w_rs
             rts.append(rts[-1] + rising_time)
-#             print(z[i], z[i-1], z[i]-z[i-1], rising_time)
-#             match wind:
-#                 case 'mean':
-#                     new_lat, new_lon = transport(new_lat, new_lon, (np.mean([u[i],u[i-1]]) * rising_time)/1000., (np.mean([v[i],v[i-1]]) * rising_time)/1000.)
-#                 case 'upper':
-#                     new_lat, new_lon = transport(new_lat, new_lon, (u[i] * rising_time)/1000., (v[i] * rising_time)/1000.)
-#                 case 'lower':
-#                     new_lat, new_lon = transport(new_lat, new_lon, (u[i-1] * rising_time)/1000., (v[i-1] * rising_time)/1000.) 
-#                 case _:
-#                     print('error: not a valid wind request')
             u_shear.append(u[i]-u[i-1])
             v_shear.append(v[i]-v[i-1])
-#             if (u_factor != 1) or (v_factor != 1):
-#                 u_factor = 1 +5*(u[i]-u[i-1])
-#                 v_factor = 1 +5*(v[i]-v[i-1])
 
             if wind == 'mean':
-                new_lat, new_lon = transport(new_lat, new_lon, (np.mean([u[i],u[i-1]]) * rising_time)/1000. * u_factor, (np.mean([v[i],v[i-1]]) * rising_time)/1000. * v_factor)
-#                 print('u disp:', (np.mean([u[i],u[i-1]]) * rising_time)/1000.)
-#                 print('v disp:', (np.mean([v[i],v[i-1]]) * rising_time)/1000.)
+                if output == 'degree':
+                    new_lat, new_lon = transport(new_lat, new_lon, (np.mean([u[i],u[i-1]]) * rising_time)/1000. * u_factor, (np.mean([v[i],v[i-1]]) * rising_time)/1000. * v_factor)
+                elif output == 'km':
+                    new_lon = (np.mean([u[i],u[i-1]]) * rising_time)/1000. * u_factor
+                    new_lat = (np.mean([v[i],v[i-1]]) * rising_time)/1000. * v_factor
+                                        
             elif wind == 'upper':
                 new_lat, new_lon = transport(new_lat, new_lon, (u[i] * rising_time)/1000. * u_factor, (v[i] * rising_time)/1000. * v_factor)
             elif wind == 'lower':
@@ -213,11 +201,12 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
                 print('error: not a valid wind request')
 
 
-            
-            lat_displacement.append(lat - new_lat)
-            lon_displacement.append(lon - new_lon)
-#         lat_displacement.append(new_lat)
-#         lon_displacement.append(new_lon)
+            if output == 'degree':
+                lat_displacement.append(lat - new_lat)
+                lon_displacement.append(lon - new_lon)
+            elif output == 'km':
+                lat_displacement.append(new_lat)
+                lon_displacement.append(new_lon)
 
     return lat_displacement, lon_displacement, np.array(u_shear), np.array(v_shear), rts
 
