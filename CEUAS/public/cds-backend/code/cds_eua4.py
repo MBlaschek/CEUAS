@@ -3050,7 +3050,6 @@ class CDMDataset:
             # advanced_uncertainty
             # 
             if 'advanced_uncertainty' in self.groups:
-                print('advanced_uncertainty in self.groups')
                 igroup = 'advanced_uncertainty'
                 try:
                     do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
@@ -3110,6 +3109,7 @@ class CDMDataset:
                     return headstr[:-1]+'\n'#+formatall%tuple(item for sublist in zip(*fout.values()) for item in sublist)
     
             else:
+                print('all data pulled from file, start creating csv')
                 if request['single_csv']:
                     fout['variable']=np.array([glamod_cdm_codes[cdm_codes[request['variable']]]]*len(fout['z_coordinate']))
                     groups.append('observations_table')
