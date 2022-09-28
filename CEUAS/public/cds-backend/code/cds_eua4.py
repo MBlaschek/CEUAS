@@ -3227,7 +3227,10 @@ class CDMDataset:
                         f.write('# Data source: CUON \n')
                         f.write('# Version: v1 \n')
                         
-                        f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) + ' - ' + 
+                        if len(request['date']) == 1:
+                            f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) +' \n')
+                        else:
+                            f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) + ' - ' + 
                                 str(request['date'][1][:4])+'.'+str(request['date'][1][4:6])+'.'+str(request['date'][1][6:8]) +' \n')
 
                         lat = fout['latitude']
@@ -3239,7 +3242,10 @@ class CDMDataset:
                                 bx=bx + str(i)+'_' 
                         f.write('# Geographic area: ' + str(bx[:-1]) + ' [South_West_North_East] \n')
 
-                        f.write(str(glamod_cdm_codes[cdm_codes[request['variable']]]) + ' ['+ cf[glamod_cdm_codes[cdm_codes[request['variable']]].replace(" ", "_")]['units'] +']\n')
+                        try:
+                            f.write(str(glamod_cdm_codes[cdm_codes[request['variable']]]) + ' ['+ cf[glamod_cdm_codes[cdm_codes[request['variable']]].replace(" ", "_")]['units'] +']\n')
+                        except:
+                            f.write(str(request['variable']) + '\n')
                         
                         f.write('######################################################################################### \n')
                         f.write('# The column names below are from the following cdm-obs tables \n')
@@ -3259,7 +3265,13 @@ class CDMDataset:
                         f.write('# Data source: CUON \n')
                         f.write('# Version: v1 \n')
                         
-                        f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) + ' - ' + 
+                        # f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) + ' - ' + 
+                        #         str(request['date'][1][:4])+'.'+str(request['date'][1][4:6])+'.'+str(request['date'][1][6:8]) +' \n')
+                        
+                        if len(request['date']) == 1:
+                            f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) +' \n')
+                        else:
+                            f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) + ' - ' + 
                                 str(request['date'][1][:4])+'.'+str(request['date'][1][4:6])+'.'+str(request['date'][1][6:8]) +' \n')
 
                         lat = fout['latitude']
@@ -3271,7 +3283,11 @@ class CDMDataset:
                                 bx=bx + str(i)+'_' 
                         f.write('# Geographic area: ' + str(bx[:-1]) + ' [South_West_North_East] \n')
                         
-                        f.write('# Variables selected: '+ str(glamod_cdm_codes[cdm_codes[request['variable']]]) + ' ['+ cf[glamod_cdm_codes[cdm_codes[request['variable']]].replace(" ", "_")]['units'] +']\n')
+                        try:
+                            f.write('# Variables selected: '+ str(glamod_cdm_codes[cdm_codes[request['variable']]]) + ' ['+ cf[glamod_cdm_codes[cdm_codes[request['variable']]].replace(" ", "_")]['units'] +']\n')
+                        except:
+                            f.write(str(request['variable']) + '\n')
+                        
                         
                         f.write('######################################################################################### \n')
                         f.write('#\n')
