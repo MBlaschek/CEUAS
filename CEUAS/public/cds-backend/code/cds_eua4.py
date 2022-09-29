@@ -87,11 +87,11 @@ glamod_cdm_codes = {34:'dew_point_depression',
                     140:'northward_wind_speed',  
                    }
 
-cdm_codes = {'temperature': 126, 'relative_humidity': 138, 'dew_point_temperature': 137, 
-             'dew_point_depression': 34,             
-             'geopotential': 117, 'wind_direction': 106, 'wind_speed': 107, 
-             'u_component_of_wind': 139,'v_component_of_wind': 140,
-             'specific_humidity': 39}
+cdm_codes = {'temperature': 126, 'air_temperature': 126, 
+             'relative_humidity': 138, 'dew_point_temperature': 137, 'dew_point_depression': 34, 'specific_humidity': 39            
+             'geopotential': 117, 'geopotential_height':117,
+             'wind_direction': 106, 'wind_speed': 107, 'u_component_of_wind': 139,'v_component_of_wind': 140,
+            }
 # get codes from there
 # https://apps.ecmwf.int/odbgov/varno/
 odb_codes = {'geopotential': 1, 'temperature': 2, 'u_component_of_wind': 3, 'v_component_of_wind': 4,
