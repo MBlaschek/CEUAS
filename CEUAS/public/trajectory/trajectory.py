@@ -83,11 +83,11 @@ def calc_height(t, p, jump = True):
 
             height = t[i-1]/L * ((p[i]/p[i-1])**(-L*287.053/9.80665) -1)
             if np.isnan(height):
-                print('p: ', p[i])
-                print('p-1: ', p[i-1])
-                print('t: ', t[i])
-                print('t-1: ', t[i-1])
-                print('L: ', L)
+#                print('p: ', p[i])
+#                print('p-1: ', p[i-1])
+#                print('t: ', t[i])
+#                print('t-1: ', t[i-1])
+#                print('L: ', L)
                 z.append(z[-1])
             else:
                 z.append(z[-1] + height)
@@ -167,6 +167,62 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
         z = calc_height(temperature, pressure, jump = True) # m from K and Pa
     elif z_variant == 'ucar': 
         z = calc_height(temperature, pressure, jump = False) # m from K and Pa
+    
+    new_lat = lat
+    new_lon = lon
+    
+    lat_displacement = [0.]
+    lon_displacement = [0.]
+    
+    u_shear=[0.]
+    v_shear=[0.]
+    
+    rts = [0]
+    
+    for i in range(len(z)):
+        if i != 0:
+            rising_time = (z[i]-z[i-1]) / w_rs
+            rts.append(rts[-1] + rising_time)
+            u_shear.append(u[i]-u[i-1])
+            v_shear.append(v[i]-v[i-1])
+
+            if wind == 'mean':
+                if output == 'degree':
+                    new_lat, new_lon = transport(new_lat, new_lon, (np.mean([u[i],u[i-1]]) * rising_time)/1000. * u_factor, (np.mean([v[i],v[i-1]]) * rising_time)/1000. * v_factor)
+                elif output == 'km':
+                    new_lon = (np.mean([u[i],u[i-1]]) * rising_time)/1000. * u_factor
+                    new_lat = (np.mean([v[i],v[i-1]]) * rising_time)/1000. * v_factor
+                                        
+            elif wind == 'upper':
+                new_lat, new_lon = transport(new_lat, new_lon, (u[i] * rising_time)/1000. * u_factor, (v[i] * rising_time)/1000. * v_factor)
+            elif wind == 'lower':
+                new_lat, new_lon = transport(new_lat, new_lon, (u[i-1] * rising_time)/1000. * u_factor, (v[i-1] * rising_time)/1000. * v_factor) 
+            else:
+                print('error: not a valid wind request')
+
+
+            if output == 'degree':
+                lat_displacement.append(lat - new_lat)
+                lon_displacement.append(lon - new_lon)
+            elif output == 'km':
+                lat_displacement.append(new_lat)
+                lon_displacement.append(new_lon)
+
+    return lat_displacement, lon_displacement, np.array(u_shear), np.array(v_shear), rts
+
+
+def trajectory_height(lat, lon, u, v, height, w_rs = 5.0, wind = 'mean', factor = 1, u_factor = None, v_factor = None, z_variant = 'ucar', output='degree'):
+    '''
+    w_rs -> radio sonde rising speed
+    '''
+    if height[0] > height[-1]:
+        print("Please resort the input data - ascending order is necessary!")
+        return 0,0,0,0
+    if ((u_factor == None) and (v_factor == None)):
+        u_factor = factor
+        v_factor = factor
+    
+    z = height
     
     new_lat = lat
     new_lon = lon
