@@ -806,7 +806,7 @@ def get_global_attributes(cf=None, url=None):
 #
 ###############################################################################
 
-def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
+def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, aux_idx=None):
     """ Copy H5PY variables and apply subsetting (idx)
 
     Args:
@@ -820,7 +820,10 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
 
     """
     
-    
+    print('group: ', group)
+    print('var_sel: ', var_selection)
+    print('idx: ', idx.shape)
+    print('---')
     
     # cuts vars and copies attributes of observation, feedback and header tables
     tt = time.time()
@@ -831,7 +834,6 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
         var_selection = [var_selection]
 
     for i in cf.keys():
-        print(i)
         if i not in ['platform_id', 'platform_name']:
             if i in ['air_temperature', 'dew_point_temperature','dew_point_depression', 'relative_humidity', 'specific_humidity',
                      'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential']:
@@ -847,8 +849,11 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
     for _, cfv in cf.items():
         logger.debug('CFCOPY Looking for: %s in %s', cfv['cdmname'], group)
         for v in var_selection:
-            if mask is None and 'data_policy_licence' in var_selection:
-                mask=fin[group]['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
+            if mask is None:
+#                 mask=fin[group]['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
+                mask=np.where(fin['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] != 4)[0]
+                mask_shape = mask.shape[0]
+                print('mask shape', mask_shape)
             if group + '/' + v == cfv['cdmname']:
                 vlist.append(cfv['shortname'])
                 try:
@@ -857,21 +862,20 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
                     logger.debug('CFCOPY %s %s', v, vlist[-1])
                     if fin[group][v].ndim == 1:
 #                         try:
+                        hilf = fin[group][v][idx[0]:idx[-1] + 1]
+                        hilf = hilf[mask]
+        
                         if compression == 'lzf':
                             fout.create_dataset_like(vlist[-1], fin[group][v],
                                                      compression="lzf",
                                                      compression_opts = None,
-                                                     shape=idx.shape,
+                                                     shape=hilf.shape,
                                                      chunks=True)
                         elif compression == 'gzip':
                             fout.create_dataset_like(vlist[-1], fin[group][v],
-                                                     shape=idx.shape,
+                                                     shape=hilf.shape,
                                                      chunks=True)
-                        hilf = fin[group][v][idx[0]:idx[-1] + 1]
-                        if v in ['observation_value','obsvalue@body']:
-                            hilf[mask]=np.nan
-                        #hilf = hilf[idx[0]:idx[-1] + 1]  # use a min:max range
-#                             hilf = fin[group][v][idx[0]:idx[-1] + 1]  # use a min:max range
+
                         if 'time' in v:
                             # convert time units
                             us = fin[group][v].attrs['units']
@@ -883,23 +887,27 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
                                 hilf = hilf  # //60//60+int(dh[0])
                             elif b'days' in us:
                                 hilf *= 24 * 3600
-                        fout[vlist[-1]][:] = hilf[idx - idx[0]]  # but write just the subset corresponding to the variable
+                        fout[vlist[-1]][:] = hilf # [idx - idx[0]]  # but write just the subset corresponding to the variable
 #                         except:
 #                             logger.warning('not found: %s %s', group, v)
 #                             pass
-                    else:                        
+                    else:   
+                        print('entering n_dim > 1')
                         if v == 'station_name':
                             s1 = fin[group][v].shape[1]
+                            hilf = np.array([fin[group][v][0]]*mask_shape)
+                            print('hilf: ', hilf)
+                            print('mask shape: ', hilf.shape[0])
                             if compression == 'lzf':
                                 fout.create_dataset_like(vlist[-1], fin[group][v],
                                                          compression="lzf",
                                                          compression_opts = None,
-                                                         shape=(idx.shape[0], s1),
+                                                         shape=(hilf.shape[0], s1), # 1 because only first element is selected in an array -> hilf dim
                                                          chunks=True)
                             elif compression == 'gzip':
                                 fout.create_dataset_like(vlist[-1], fin[group][v],
                                                          compression=compression,
-                                                         shape=(idx.shape[0], s1),
+                                                         shape=(hilf.shape[0], s1), # 1 because only first element is selected in an array -> hilf dim
                                                          chunks=True)
                             sname = 'string{}'.format(s1)
                             if sname not in fout.keys():
@@ -916,23 +924,28 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
                                 fout[sname].attrs['NAME'] = np.string_(
                                     'This is a netCDF dimension but not a netCDF variable.')
                                 fout[sname].make_scale(sname)
-                            hilf = fin[group][v][0]
-                            if hilf.shape[0] == 0:
-                                print('x')
-                            hilf = np.array([hilf]*idx.shape[0])
+                            print('hilf: ', hilf.shape)
+                            print('fout[vlist[-1]][:]: ', fout[vlist[-1]][:].shape)
                             fout[vlist[-1]][:] = hilf
                         
                         else: 
+                            print('entering n_dim > 1')
                             s1 = fin[group][v].shape[1]
+                            hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+#                             if aux_idx != None:
+#                                 hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+#                                 aux_idx.shape[0]
+                            hilf = hilf[mask]
+                            
                             if compression == 'lzf':
                                 fout.create_dataset_like(vlist[-1], fin[group][v],
                                                          compression="lzf",
                                                          compression_opts = None,
-                                                         shape=(idx.shape[0], s1),
+                                                         shape=(hilf.shape[0], s1),
                                                          chunks=True)
                             elif compression == 'gzip':
                                 fout.create_dataset_like(vlist[-1], fin[group][v],
-                                                         shape=(idx.shape[0], s1),
+                                                         shape=(hilf.shape[0], s1),
                                                          chunks=True)
                             sname = 'string{}'.format(s1)
                             if sname not in fout.keys():
@@ -949,14 +962,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
                                 fout[sname].attrs['NAME'] = np.string_(
                                     'This is a netCDF dimension but not a netCDF variable.')
                                 fout[sname].make_scale(sname)
-                            hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
-                            if (v in ['original_value', 'observation_value']) or (group in ['advanced_homogenisation', 'advanced_uncertainty', 'era5fb']):
-                                hilf[mask, :] = np.nan
-                            #hilf = hilf[idx[0]:idx[-1] + 1, :]
-#                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
-                            if hilf.shape[0] == 0:
-                                print('x')
-                            fout[vlist[-1]][:] = hilf[idx - idx[0], :]
+                            fout[vlist[-1]][:] = hilf
                             
                 except Exception as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
@@ -1001,6 +1007,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
         logger.warning('slow copy: %s %f s', group, tt)
         
 def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
+    restriction_active = True
     """ Copy H5PY variables and apply subsetting (idx)
 
     Args:
@@ -1037,17 +1044,21 @@ def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None)
     mask=None
     for _, cfv in cf.items():
         logger.debug('CFCOPY Looking for: %s in %s', cfv['cdmname'], group)
+        logger.debug('IDX: %s', idx)
         for v in var_selection:
             if mask is None and 'data_policy_licence' in var_selection:
-                mask=fin[group]['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
+#                 mask=fin[group]['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
+                mask=fin['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] != 4
             if group + '/' + v == cfv['cdmname']:
                 vlist.append(cfv['shortname'])
                 try:
                     logger.debug('CFCOPY %s %s', v, vlist[-1])
                     if fin[group][v].ndim == 1:
                         hilf = fin[group][v][idx[0]:idx[-1] + 1]
-                        if v in ['observation_value','obsvalue@body']:
-                            hilf[mask]=np.nan
+#                         if (v in ['observation_value','obsvalue@body']) and restriction_active:
+                        if (group in ['observations_table','era5fb']) and restriction_active:
+#                             hilf[mask]=np.nan
+                            hilf = hilf[mask]
                         if 'time' in v:
                             # convert time units
                             us = fin[group][v].attrs['units']
@@ -1059,7 +1070,7 @@ def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None)
                                 hilf = hilf  # //60//60+int(dh[0])
                             elif b'days' in us:
                                 hilf *= 24 * 3600
-                        fout[v] = hilf[idx - idx[0]]  # but write just the subset corresponding to the variable
+                        fout[v] = hilf# [idx - idx[0]]  # but write just the subset corresponding to the variable
                     else:                        
                         if v == 'station_name':
                             s1 = fin[group][v].shape[1]
@@ -1068,19 +1079,23 @@ def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None)
                             if hilf.shape[0] == 0:
                                 print('x')
                             hilf = np.array([hilf]*idx.shape[0])
+                            if (group in ['observations_table','era5fb']) and restriction_active:
+                                hilf = hilf[mask]
                             fout[v] = hilf
                         
                         else: 
                             s1 = fin[group][v].shape[1]
                             sname = 'string{}'.format(s1)
                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+                            if (group in ['observations_table','era5fb']) and restriction_active:
+                                hilf = hilf[mask]
                             # 
 #                             hilf[mask, :] = np.nan
                             #hilf = hilf[idx[0]:idx[-1] + 1, :]
 #                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
                             if hilf.shape[0] == 0:
                                 print('x')
-                            fout[v] = hilf[idx - idx[0], :]
+                            fout[v] = hilf[:,:] # [idx - idx[0], :]
                             
                 except Exception as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
@@ -1475,7 +1490,9 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             # request_variables['variable'] is a list
             if request_variables['format'] in ['csv','fast_csv']: # in request_variables.keys():
                 filename_out = outputdir + '/dest_' + statid + '_' + cdmnamedict[
-                    request_variables['variable']] + '.csv.gz'
+#                     request_variables['variable']] + '.csv.gz'
+                    request_variables['variable']] + '.csv'
+
             ### for parallel writing into single file: 
 #             elif request_variables['hdf']:
 #                 filename_out = outputdir
@@ -2298,9 +2315,9 @@ def parallel_writing(filename, dims, trajectory_index, idx, zidx, compression, f
                 #
                 # Fix Attributes and Globals
                 #
-                if key == 'trajectory_label':
-                    fout['trajectory_label'].attrs['cf_role'] = np.string_('trajectory_id')
-                    fout['trajectory_label'].attrs['long_name'] = np.string_('Label of trajectory')
+#                 if key == 'trajectory_label':
+#                     fout['trajectory_label'].attrs['cf_role'] = np.string_('trajectory_id')
+#                     fout['trajectory_label'].attrs['long_name'] = np.string_('Label of trajectory')
                 for a, v in globatts.items():
                     fout.attrs[a] = np.string_(v)
 
@@ -2862,8 +2879,9 @@ class CDMDataset:
         #
         tt=time.time() - time0
         print(tt)
-        dims = {'obs': np.zeros(idx.shape[0], dtype=np.int32),
-                'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
+        restricted_dim = np.where(self['observations_table']['data_policy_licence'][idx] != 4)[0]
+        dims = {'obs': np.zeros(restricted_dim.shape[0], dtype=np.int32)} # ,
+#                 'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
         globatts = get_global_attributes()  # could put more infors there ?
         #
         # Definition of Variables to write
@@ -2972,6 +2990,7 @@ class CDMDataset:
                 for co in cdm_obstab:
                     if not co in varselcfcopy:
                         varselcfcopy.append(co)
+                logger.debug('varsel: %s', varselcfcopy)
                 do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
                           var_selection=varselcfcopy)
                 # 'observed_variable','units'
@@ -3100,7 +3119,8 @@ class CDMDataset:
 #                 with open(filename_out,'w') as f:
 #                 with lz4.frame.open(filename_out,'wt') as f:
                 if filename_out is not None:
-                    with gzip.open(filename_out,'wt',compresslevel=1) as f:
+#                     with gzip.open(filename_out,'wt',compresslevel=1) as f:
+                    with open(filename_out,'wt') as f:
                         f.write(headstr[:-1]+'\n')
                         b=[item for sublist in zip(*fout.values()) for item in sublist]
                         f.write(formatall%tuple(b))
@@ -3217,7 +3237,8 @@ class CDMDataset:
                 #
                 if (filename_out is not None) and (request['single_csv']):
 #                     with open(filename_out[:-3],'w') as f:
-                    with gzip.open(filename_out,'wt',compresslevel=1) as f:
+#                     with gzip.open(filename_out,'wt',compresslevel=1) as f:
+                    with open(filename_out,'wt') as f:
                         f.write('######################################################################################## \n')
                         f.write('# This file contains data retrieved from the CDS https://https://cds-test.copernicus-climate.eu/cdsapp#!/dataset/insitu-comprehensive-upper-air-observation-network \n')
                         f.write('# This is a C3S product under the following licences: \n')
@@ -3255,7 +3276,8 @@ class CDMDataset:
                         f.write(formatall%tuple(b))
                         
                 elif filename_out is not None:
-                    with gzip.open(filename_out,'wt',compresslevel=1) as f:
+#                     with gzip.open(filename_out,'wt',compresslevel=1) as f:
+                    with open(filename_out,'wt') as f:
                         f.write('######################################################################################## \n')
                         f.write('# This file contains data retrieved from the CDS https://https://cds-test.copernicus-climate.eu/cdsapp#!/dataset/insitu-comprehensive-upper-air-observation-network \n')
                         f.write('# This is a C3S product under the following licences: \n')
@@ -3312,22 +3334,16 @@ class CDMDataset:
                     fout[d].attrs['NAME'] = np.string_('This is a netCDF dimension but not a netCDF variable.')
                     fout[d].make_scale(d)  # resolves phony_dim problem
 
-                fout.create_dataset('trajectory_index', data=trajectory_index)
-                fout['trajectory_index'].attrs['long_name'] = np.string_(
-                    "index of trajectory this obs belongs to")
-                fout['trajectory_index'].attrs['instance_dimension'] = np.string_("trajectory")
-                fout['trajectory_index'].attrs['coordinates'] = np.string_("lat lon time plev")
+#                 fout.create_dataset('trajectory_index', data=trajectory_index)
+#                 fout['trajectory_index'].attrs['long_name'] = np.string_("index of trajectory this obs belongs to")
+#                 fout['trajectory_index'].attrs['instance_dimension'] = np.string_("trajectory")
+#                 fout['trajectory_index'].attrs['coordinates'] = np.string_("lat lon time plev")
 
                 print('attrs written')
 
-#                 #
-#                 # Adding CDM
-#                 #
-#                 cdm_obstab = []
-#                 cdm_eratab = []
-#                 cdmlist = request.get('cdm', None)
-#                 print('cdmlist: ', cdmlist)
-# #                 print('cfcopy: ', cfcopy)
+                #
+                # Adding CDM
+                #
                 if len(additional_cdmlist) > 0:
                 #                     # removing variables with restricted access
 #                     if ('era5fb/obsvalue@body' in cdmlist) or ('observations_table/observation_value' in cdmlist):
@@ -3469,18 +3485,18 @@ class CDMDataset:
                     except KeyError as e:
                         raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
 
-                #
-                # Header Information
-                #
-                if 'header_table' in self.groups:
-                    igroup = 'header_table'
-                    # only records fitting criteria (zidx) are copied
-                    # todo why is lon, lat not here?
-                    do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', compression,
-                              var_selection=['report_id'])
-                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                    # ,'station_name','primary_station_id'])
-                    # todo could be read from the observations_table
+#                 #
+#                 # Header Information
+#                 #
+#                 if 'header_table' in self.groups:
+#                     igroup = 'header_table'
+#                     # only records fitting criteria (zidx) are copied
+#                     # todo why is lon, lat not here?
+#                     do_cfcopy(fout, self.file, igroup, zidx, cfcopy, 'trajectory', compression,
+#                               var_selection=['report_id'], aux_idx = idx)
+#                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+#                     # ,'station_name','primary_station_id'])
+#                     # todo could be read from the observations_table
                 #
                 # Station Configuration
                 #
@@ -3503,8 +3519,8 @@ class CDMDataset:
                 #
                 # Fix Attributes and Globals
                 #
-                fout['trajectory_label'].attrs['cf_role'] = np.string_('trajectory_id')
-                fout['trajectory_label'].attrs['long_name'] = np.string_('Label of trajectory')
+#                 fout['trajectory_label'].attrs['cf_role'] = np.string_('trajectory_id')
+#                 fout['trajectory_label'].attrs['long_name'] = np.string_('Label of trajectory')
                 for a, v in globatts.items():
                     fout.attrs[a] = np.string_(v)
 
