@@ -2194,11 +2194,11 @@ def parallel_writing(filename, dims, trajectory_index, idx, zidx, compression, f
                     fout[d].make_scale(d)  # resolves phony_dim problem
 
             elif value == 2:
-                fout.create_dataset('trajectory_index', data=trajectory_index)
-                fout['trajectory_index'].attrs['long_name'] = np.string_(
-                    "index of trajectory this obs belongs to")
-                fout['trajectory_index'].attrs['instance_dimension'] = np.string_("trajectory")
-                fout['trajectory_index'].attrs['coordinates'] = np.string_("lat lon time plev")
+#                 fout.create_dataset('trajectory_index', data=trajectory_index)
+#                 fout['trajectory_index'].attrs['long_name'] = np.string_(
+#                     "index of trajectory this obs belongs to")
+#                 fout['trajectory_index'].attrs['instance_dimension'] = np.string_("trajectory")
+#                 fout['trajectory_index'].attrs['coordinates'] = np.string_("lat lon time plev")
 
                 print('attrs written')
                 
@@ -2937,6 +2937,7 @@ class CDMDataset:
         cdmlist = request.get('cdm', None)
 #         print('cdmlist: ', cdmlist)
 #                 print('cfcopy: ', cfcopy)
+        additional_cdmlist = []
         if cdmlist != None:
             # removing variables with restricted access
             if ('era5fb/obsvalue@body' in cdmlist) or ('observations_table/observation_value' in cdmlist):
@@ -2971,7 +2972,6 @@ class CDMDataset:
                     # NOW USE THOSE for the do_cfcopy below
             logger.debug('CDM - adding groups and variables: %s', str(cdmlist))
             print('CDM - adding groups and variables: %s', str(cdmlist))
-            additional_cdmlist = []
             for a_cdm in cdmlist:
                 if not a_cdm in rmv_list:
                     additional_cdmlist.append(a_cdm)
@@ -3899,8 +3899,8 @@ class CDMDataset:
         #
         tt=time.time() - time0
         print(tt)
-        dims = {'obs': np.zeros(idx.shape[0], dtype=np.int32),
-                'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
+        dims = {'obs': np.zeros(idx.shape[0], dtype=np.int32)} #,
+#                 'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
         globatts = get_global_attributes()  # could put more infors there ?
         #
         # Definition of Variables to write
@@ -3908,7 +3908,7 @@ class CDMDataset:
         # Common Variables needed for a requested file
         #
         snames = ['observation_value', 'latitude', # 'platform_id', 'platform_name', 
-                  'longitude', 'time', 'air_pressure', 'trajectory_label', 
+                  'longitude', 'time', 'air_pressure', #'trajectory_label', 
                   'report_id', 'station_id']
         varseldict={}
         varseldict['temperature']=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate']
