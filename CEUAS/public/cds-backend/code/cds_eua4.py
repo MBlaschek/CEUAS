@@ -820,10 +820,10 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
 
     """
     
-    print('group: ', group)
-    print('var_sel: ', var_selection)
-    print('idx: ', idx.shape)
-    print('---')
+#     print('group: ', group)
+#     print('var_sel: ', var_selection)
+#     print('idx: ', idx.shape)
+#     print('---')
     
     # cuts vars and copies attributes of observation, feedback and header tables
     tt = time.time()
@@ -853,7 +853,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
 #                 mask=fin[group]['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
                 mask=np.where(fin['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] != 4)[0]
                 mask_shape = mask.shape[0]
-                print('mask shape', mask_shape)
+#                 print('mask shape', mask_shape)
             if group + '/' + v == cfv['cdmname']:
                 vlist.append(cfv['shortname'])
                 try:
@@ -892,12 +892,12 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
 #                             logger.warning('not found: %s %s', group, v)
 #                             pass
                     else:   
-                        print('entering n_dim > 1')
+#                         print('entering n_dim > 1')
                         if v == 'station_name':
                             s1 = fin[group][v].shape[1]
                             hilf = np.array([fin[group][v][0]]*mask_shape)
-                            print('hilf: ', hilf)
-                            print('mask shape: ', hilf.shape[0])
+#                             print('hilf: ', hilf)
+#                             print('mask shape: ', hilf.shape[0])
                             if compression == 'lzf':
                                 fout.create_dataset_like(vlist[-1], fin[group][v],
                                                          compression="lzf",
@@ -924,12 +924,12 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
                                 fout[sname].attrs['NAME'] = np.string_(
                                     'This is a netCDF dimension but not a netCDF variable.')
                                 fout[sname].make_scale(sname)
-                            print('hilf: ', hilf.shape)
-                            print('fout[vlist[-1]][:]: ', fout[vlist[-1]][:].shape)
+#                             print('hilf: ', hilf.shape)
+#                             print('fout[vlist[-1]][:]: ', fout[vlist[-1]][:].shape)
                             fout[vlist[-1]][:] = hilf
                         
                         else: 
-                            print('entering n_dim > 1')
+#                             print('entering n_dim > 1')
                             s1 = fin[group][v].shape[1]
                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
 #                             if aux_idx != None:
