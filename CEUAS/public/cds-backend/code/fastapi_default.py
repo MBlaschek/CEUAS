@@ -1035,11 +1035,12 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
             d['cdm'] = cdm
             d['da'] = False
         print(d['cdm'])
-        if not ('observations_table/data_policy_licence' in d['cdm']):
-            d['cdm'].append('observations_table/data_policy_licence')
-            print(d['cdm'])
+#         if not ('observations_table/data_policy_licence' in d['cdm']):
+#             d['cdm'].append('observations_table/data_policy_licence')
+#             print(d['cdm'])
     else:
-        d['cdm'] = ['observations_table/data_policy_licence']
+#         d['cdm'] = ['observations_table/data_policy_licence']
+        d['cdm'] = None
 
     #
     # gridded [lower left upper right]
@@ -1585,6 +1586,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     print(time.time()-tt)
     makebodies(bodies, body, spv, bo, 0)  # List of split requests
     print('bodies: ', bodies)
+    print('gdict2: ', gdict2)
     for k in range(len(bodies)):
         key=bodies[k]['statid']
         bodies[k]['filename']=active[key][5]
@@ -1760,7 +1762,8 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
             geo_ll = []
             var_ll = []
             for geo in write_results:
-                with gzip.open(geo, 'rt') as fd:
+#                 with gzip.open(geo, 'rt') as fd:
+                with open(geo, 'rt') as fd:
                     reader = csv.reader(fd)
                     rows = list(reader)
                     geo_row = []
@@ -1775,24 +1778,28 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                     var_ll.append(rows[10][0])
             var_ll = ", ".join(np.unique(var_ll))
             geo_ll = np.array(geo_ll)
-            results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+body['single_csv_target']+".csv.gz", '')]
+#             results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+body['single_csv_target']+".csv.gz", '')]
+            results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+body['single_csv_target']+".csv", '')]
 
-            with gzip.open(results[0][0], 'w') as file:
-                with gzip.open(write_results[0], 'r') as f:
+#             with gzip.open(results[0][0], 'w') as file:
+            with open(results[0][0], 'w') as file:
+#                 with gzip.open(write_results[0], 'r') as f:
+                with open(write_results[0], 'r') as f:
                     for i in range(14):
                         if i == 10:
-                            file.write(str('# Variables selected: ' + str(var_ll) + ' \n').encode())
+                            file.write(str('# Variables selected: ' + str(var_ll) + ' \n')) # str().encode()
                             f.readline()
                         elif i == 9:
                             file.write(str('# Geographic area: ' + str([np.min(geo_ll[:,0]),np.min(geo_ll[:,1]),np.max(geo_ll[:,2]),np.max(geo_ll[:,3])]) +
-                                           ' [South_West_North_East] \n').encode())
+                                           ' [South_West_North_East] \n')) # str().encode()
                             f.readline()
                         else:
     #                         # for csv output str is needed
     #                         file.write(f.readline().decode())
                             # for gzip output byte is needed
                             file.write(f.readline())
-            combined_csv.to_csv(results[0][0], index=False, mode="a", compression='gzip')
+#             combined_csv.to_csv(results[0][0], index=False, mode="a", compression='gzip')
+            combined_csv.to_csv(results[0][0], index=False, mode="a")
             
         if 'local_execution' in body.keys():
             return rfile
