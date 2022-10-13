@@ -22,7 +22,7 @@ def write_trj(stat):
 #     stat = '11035'
 #     try:
     # check if output already exists:
-    checkfile = glob.glob('/mnt/users/staff/a1400070/scratch/trajectory_files/*'+str(stat)+'*.nc')
+    checkfile = glob.glob('/mnt/users/staff/a1400070/scratch/trajectory_files_new/*'+str(stat)+'*.nc')
     if len(checkfile) > 0:
         return 1
 
@@ -42,37 +42,43 @@ def write_trj(stat):
     if (not ('126' in file.recordindices.keys())) or (not ('139' in file.recordindices.keys())) or (not ('140' in file.recordindices.keys())):
         return 2
 
+#     try:
+#         igra_file = glob.glob('/scratch/das/federico/COP2_HARVEST_APRIL2022/igra2/*'+stat+'*')[0]
+#         i_file = eua.CDMDataset(filename = igra_file)
+#         igra_file_avail = True
+#     except:
+#         igra_file_avail = False
+#     print('igra_file_avail:', igra_file_avail)
+    
     try:
-        igra_file = glob.glob('/scratch/das/federico/COP2_HARVEST_APRIL2022/igra2/*'+stat+'*')[0]
-        i_file = eua.CDMDataset(filename = igra_file)
-        igra_file_avail = True
+#         y = file.observations_table.z_coordinate_type[:]
+#         x = file.observations_table.z_coordinate[:]
+#         x = x[y==1]
+#         x = x[~np.isnan(x)]
+#         x = (np.sort(np.unique(x))[-100:])
+#         plev_threshold = np.median(x) - 1000
+
+
+        statlen = len(file.observations_table.observed_variable[:])
+        latd = np.full(statlen, np.nan)
+        lond = np.full(statlen, np.nan)
+        timed = np.full(statlen, np.nan)
+        ttime = np.full(statlen, np.nan)
+
+        slat = file.observations_table.latitude[0]
+        slon = file.observations_table.longitude[0]
     except:
-        igra_file_avail = False
-    print('igra_file_avail:', igra_file_avail)
-
-    y = file.observations_table.z_coordinate_type[:]
-    x = file.observations_table.z_coordinate[:]
-    x = x[y==1]
-    x = x[~np.isnan(x)]
-    x = (np.sort(np.unique(x))[-100:])
-    plev_threshold = np.median(x) - 1000
-
-
-    statlen = len(file.observations_table.observed_variable[:])
-    latd = np.full(statlen, np.nan)
-    lond = np.full(statlen, np.nan)
-    timed = np.full(statlen, np.nan)
-    ttime = np.full(statlen, np.nan)
-
-    slat = file.observations_table.latitude[0]
-    slon = file.observations_table.longitude[0]
+        return 4
     print('ascents: ', len(file.header_table.report_id[:])-1)
     for i in range(len(file.header_table.report_id[:])-1):
         var_recidx = {}
-        for j in file.recordindices.keys():
-            if j not in ['index', 'recordtimestamp']:
-                var_recidx[j]=[file.recordindices[j][i], file.recordindices[j][i+1]]
-
+        try:
+            for j in file.recordindices.keys():
+                if j not in ['index', 'recordtimestamp']:
+                    var_recidx[j]=[file.recordindices[j][i], file.recordindices[j][i+1]]
+        except:
+            return 5
+        
         t_idx_s = var_recidx['126'][0] #file.recordindices['126'][i]
         t_idx_e = var_recidx['126'][1] #file.recordindices['126'][i+1]
         u_idx_s = var_recidx['139'][0] #file.recordindices['139'][i]
@@ -85,6 +91,11 @@ def write_trj(stat):
         if (u_idx_s == u_idx_e) or (u_idx_s == u_idx_e) or (t_idx_s == t_idx_e):
             # replace with nan filling
             continue
+        
+        # check for z_coordinate_type
+        z_coordinate_type = file.observations_table.z_coordinate_type[t_idx_s:t_idx_e]
+        if len(np.where(z_coordinate_type == 1)[0]) < 3:
+            continue
 
         # -----------
 
@@ -96,7 +107,6 @@ def write_trj(stat):
         z_coordinate_u = file.observations_table.z_coordinate[u_idx_s:u_idx_e]
         z_coordinate_v = file.observations_table.z_coordinate[v_idx_s:v_idx_e]
 
-
         # find shortest array
         z_coords = [z_coordinate_t, z_coordinate_u, z_coordinate_v]
         shortest_zc = 0
@@ -105,9 +115,8 @@ def write_trj(stat):
             if len(z_coords[k+1]) < len(z_coords[shortest_zc]):
                 shortest_zc = k+1
 
-    #     print(shortest_zc, len(z_coords[shortest_zc]))
         # if shortest array < 7 -> skip
-        if len(z_coords[shortest_zc]) < 7:
+        if len(z_coords[shortest_zc]) < 3:
             # replace with nan filling
             continue
 
@@ -133,33 +142,18 @@ def write_trj(stat):
                     u_new.append(np.nan)
                     v_new.append(np.nan)
 
-#             print(z_coordinate_u)
-#             print(u)
-#             print(v)
             u = np.array(u_new)
             v = np.array(v_new)
-    #         print()
-    #         print(z_coordinate_t)
-    #         print(u)
-    #         print(v)
-    #         print()
-    #         print()
 
         # -----------
-
         input_df = pd.DataFrame({'t':t, 'u':u, 'v':v, 'p':z_coordinate_t, 'idx':np.array(range(t_idx_s, t_idx_e))})
         # flip for ascending order
         input_df = input_df.dropna().iloc[::-1].reset_index()
-        if len(input_df) < 7:
+        if len(input_df) < 3:
             continue
-    #     display(input_df)
+#         print(input_df)
 
 
-    #     print(repid)
-    #     print(pd.to_datetime(file.observations_table.date_time[t_idx_s], unit='s', origin='1900-01-01') )
-    #     print(pd.to_datetime(file.observations_table.date_time[t_idx_e], unit='s', origin='1900-01-01') )
-    #     print(pd.to_datetime(file.observations_table.date_time[t_idx_s+1], unit='s', origin='1900-01-01') )
-    #     print(pd.to_datetime(file.observations_table.date_time[t_idx_e-1], unit='s', origin='1900-01-01') )
 
         # check if best possible time is selected
         date_time = file.observations_table.date_time[t_idx_s] #dt_date = pd.to_datetime(date_time, unit='s', origin='1900-01-01')
@@ -208,19 +202,28 @@ def write_trj(stat):
     #     input_df['displaced_time'] = np.array(phys_model[4]) + date_time
     #     input_df['displaced_time_dt'] = pd.to_datetime(input_df['displaced_time'], unit='s', origin='1900-01-01')
     #     display(input_df)
-        for j in var_recidx:
-            helper = np.array(range(var_recidx[j][0], var_recidx[j][1]))
-            if len(helper) == len(phys_model[0]):
-                latd[helper] = np.array(phys_model[0])
-                lond[helper] = np.array(phys_model[1])
-                if input_df.p[0] > plev_threshold:
-                    timed[helper] = np.array(phys_model[4])
-                    ttime[helper] = np.array(phys_model[4])+date_time
+    
+        helper = list(input_df.idx)
+#         print(helper, np.array(phys_model[0]))
+        latd[helper] = np.array(phys_model[0])
+        lond[helper] = np.array(phys_model[1])
+        timed[helper] = np.array(phys_model[4])
+        ttime[helper] = np.array(phys_model[4])+date_time
+        
+#         for j in var_recidx:
+#             helper = np.array(range(var_recidx[j][0], var_recidx[j][1]))
+#             print('helper', helper)
+#             if len(helper) == len(phys_model[0]):
+#                 latd[helper] = np.array(phys_model[0])
+#                 lond[helper] = np.array(phys_model[1])
+# #                 if input_df.p[0] > plev_threshold:
+#                 timed[helper] = np.array(phys_model[4])
+#                 ttime[helper] = np.array(phys_model[4])+date_time
 
     file.close()
 
 #         output_file = glob.glob('/mnt/users/staff/a1400070/scratch/converted_v8/*'+stat+'*.nc')[0]
-    output_file = '/mnt/users/staff/a1400070/scratch/trajectory_files/trajectory_'+str(stat)+'.nc'
+    output_file = '/mnt/users/staff/a1400070/scratch/trajectory_files_new/trajectory_'+str(stat)+'.nc'
 #         with h5py.File(output_file, 'r+') as newfile:
     with h5py.File(output_file, 'w') as newfile:
         newfile.create_group('advanced_homogenisation')
