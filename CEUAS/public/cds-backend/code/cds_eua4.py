@@ -822,8 +822,8 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
     
 #     print('group: ', group)
 #     print('var_sel: ', var_selection)
-#     print('idx: ', idx.shape)
-#     print('---')
+    print('idx: ', idx.shape)
+    print('---')
     
     # cuts vars and copies attributes of observation, feedback and header tables
     tt = time.time()
@@ -851,7 +851,8 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
         for v in var_selection:
             if mask is None:
 #                 mask=fin[group]['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
-                mask=np.where(fin['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] != 4)[0]
+#                 mask=np.where(fin['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] != 4)[0]
+                mask=np.where(fin['observations_table']['data_policy_licence'][idx] != 4)[0]
                 mask_shape = mask.shape[0]
 #                 print('mask shape', mask_shape)
             if group + '/' + v == cfv['cdmname']:
@@ -862,7 +863,8 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
                     logger.debug('CFCOPY %s %s', v, vlist[-1])
                     if fin[group][v].ndim == 1:
 #                         try:
-                        hilf = fin[group][v][idx[0]:idx[-1] + 1]
+#                         hilf = fin[group][v][idx[0]:idx[-1] + 1]
+                        hilf = fin[group][v][idx]
                         hilf = hilf[mask]
         
                         if compression == 'lzf':
@@ -931,7 +933,8 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
                         else: 
 #                             print('entering n_dim > 1')
                             s1 = fin[group][v].shape[1]
-                            hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+#                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+                            hilf = fin[group][v][idx, :]
 #                             if aux_idx != None:
 #                                 hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
 #                                 aux_idx.shape[0]
@@ -1048,13 +1051,15 @@ def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None)
         for v in var_selection:
             if mask is None and 'data_policy_licence' in var_selection:
 #                 mask=fin[group]['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
-                mask=fin['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] != 4
+#                 mask=fin['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] != 4
+                mask=fin['observations_table']['data_policy_licence'][idx] != 4
             if group + '/' + v == cfv['cdmname']:
                 vlist.append(cfv['shortname'])
                 try:
                     logger.debug('CFCOPY %s %s', v, vlist[-1])
                     if fin[group][v].ndim == 1:
-                        hilf = fin[group][v][idx[0]:idx[-1] + 1]
+#                         hilf = fin[group][v][idx[0]:idx[-1] + 1]
+                        hilf = fin[group][v][idx]
 #                         if (v in ['observation_value','obsvalue@body']) and restriction_active:
                         if (group in ['observations_table','era5fb']) and restriction_active:
 #                             hilf[mask]=np.nan
@@ -1086,7 +1091,8 @@ def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None)
                         else: 
                             s1 = fin[group][v].shape[1]
                             sname = 'string{}'.format(s1)
-                            hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+#                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+                            hilf = fin[group][v][idx, :]
                             if (group in ['observations_table','era5fb']) and restriction_active:
                                 hilf = hilf[mask]
                             # 
@@ -2880,6 +2886,7 @@ class CDMDataset:
         tt=time.time() - time0
         print(tt)
         restricted_dim = np.where(self['observations_table']['data_policy_licence'][idx] != 4)[0]
+        print('restricted_dim.shape[0]',restricted_dim.shape[0])
         dims = {'obs': np.zeros(restricted_dim.shape[0], dtype=np.int32)} # ,
 #                 'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
         globatts = get_global_attributes()  # could put more infors there ?
