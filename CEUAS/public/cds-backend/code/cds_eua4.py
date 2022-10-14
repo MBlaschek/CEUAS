@@ -2844,9 +2844,7 @@ class CDMDataset:
         idx = np.where(mask)[0] + trange.start  # absolute integer index
         if restriction_active:
             print('IDX: ',idx.shape[0])
-            idx = np.where(self['observations_table']['data_policy_licence'][idx] != 4)[0] 
-            print('IDX: ',idx.shape[0])
-            idx = np.where(self['observations_table']['data_policy_licence'][idx] != 4)[0] 
+            idx = idx[self['observations_table']['data_policy_licence'][idx] != 4]
             print('IDX: ',idx.shape[0])
         if len(idx) == 0:
             logger.warning('No matching data found %s', self.name)
@@ -3623,9 +3621,7 @@ class CDMDataset:
         idx = np.where(mask)[0] + trange.start  # absolute integer index
         if restriction_active:
             print('IDX: ',idx.shape[0])
-            idx = np.where(self['observations_table']['data_policy_licence'][idx] != 4)[0] 
-            print('IDX: ',idx.shape[0])
-            idx = np.where(self['observations_table']['data_policy_licence'][idx] != 4)[0] 
+            idx = idx[self['observations_table']['data_policy_licence'][idx] != 4]
             print('IDX: ',idx.shape[0])
         if len(idx) == 0:
             logger.warning('No matching data found %s', self.name)
