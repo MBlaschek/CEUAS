@@ -2821,7 +2821,12 @@ class CDMDataset:
         # - trange      - datetime slice
         # - mask        - logical array applied after trange for time, plev, variable
         #
-
+        print((cdmnum,
+               dates=request.get('date', None),
+               plevs=request.get('pressure_level', None),
+               times=request.get('time', None),
+               rtsindex=request.get('rtsidx',None)
+               ))
         trange, mask = self.read_observed_variable(cdmnum,
                                                    variable='observation_value',
                                                    dates=request.get('date', None),
@@ -4014,6 +4019,7 @@ class CDMDataset:
         #
         # Pressure levels
         #
+        logger.info('before pressure - [READ] Observed variable %s', varnum)
         xplevs = None
         if plevs is not None:
             if self.da:
@@ -4039,6 +4045,7 @@ class CDMDataset:
         #
         # Times
         #
+        logger.info('before time - [READ] Observed variable %s', varnum)
         if times is not None:
             # standard times [0-23], day before has been added
             times = totimes(times)  # not sure why this does notsort ?
@@ -4064,6 +4071,7 @@ class CDMDataset:
                 logger.info('[READ] first day (%s) times %d/%d', seconds_to_datetime([first_day * 86400]),
                             first_day_logic.sum(), first_day_logic.size)
 
+        logger.info('before output selection - [READ] Observed variable %s', varnum)
         if return_xarray:
             return_coordinates = True
 
