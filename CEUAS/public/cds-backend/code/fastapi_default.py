@@ -449,7 +449,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
 #             with Pool(10) as p:
 #                 sklist=list(p.map(func,zip(slist,slnum)))
 #             with multiprocessing.get_context('spawn').Pool(10) as p:
-            with Pool(10) as p:
+            with Pool(9) as p:
                 sklist=list(p.map(func,zip(slist,slnum)))
         else:
             sklist = list(map(func, zip(slist, slnum)))
@@ -568,7 +568,7 @@ slnum = list(active.keys())
 # set_start_method("spawn")  # or fork ? not sure why, pickling?
 # set_start_method("forkserver")  # fork is not threadsafe, unfortunately
 # with multiprocessing.get_context('spawn').Pool(16) as P:
-with Pool(16) as P:
+with Pool(9) as P:
     x=P.map(np.sin,np.arange(16))
 
 # P=Pool(16) 
@@ -1696,7 +1696,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         #b2=[]
         #for b in reversed(bidx):
             #b2.append(bodies[b])
-        with Pool(10) as Pl:
+        with Pool(9) as Pl:
             results = list(Pl.map(func, bodies,chunksize=3))
         #results = list(map(func, bodies))
             # results = list(p.starmap(func, zip(input_dirs, [debug]*len(bodies), bodies), chunksize=1))
