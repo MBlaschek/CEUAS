@@ -2822,10 +2822,10 @@ class CDMDataset:
         # - mask        - logical array applied after trange for time, plev, variable
         #
         print((cdmnum,
-               dates=request.get('date', None),
-               plevs=request.get('pressure_level', None),
-               times=request.get('time', None),
-               rtsindex=request.get('rtsidx',None)
+               request.get('date', None),
+               request.get('pressure_level', None),
+               request.get('time', None),
+               request.get('rtsidx',None)
                ))
         trange, mask = self.read_observed_variable(cdmnum,
                                                    variable='observation_value',
