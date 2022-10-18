@@ -848,19 +848,15 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
                     except:
                         pass
     vlist = []
-#     mask=None
+    mask=None
     for _, cfv in cf.items():
         logger.debug('CFCOPY Looking for: %s in %s', cfv['cdmname'], group)
         for v in var_selection:
-#             if (mask is None) and restriction_active:
-# # #                 mask=fin[group]['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
-# # #                 mask=np.where(fin['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] != 4)[0]
-#                 if restriction_active:
-#                     mask=np.where(fin['observations_table']['data_policy_licence'][idx] != 4)[0]
-#                 else:
-#                     mask=np.where(fin['observations_table']['data_policy_licence'][idx] != 999)[0]
-#                 mask_shape = mask.shape[0]
-# #                 print('mask shape', mask_shape)
+            if (mask is None):
+                if restriction_active:
+                    mask=np.where(fin['observations_table']['data_policy_licence'][idx] != 4)[0]
+                else:
+                    mask=np.where(fin['observations_table']['data_policy_licence'][idx] != 999)[0]
             if group + '/' + v == cfv['cdmname']:
                 vlist.append(cfv['shortname'])
                 try:
@@ -871,7 +867,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
 #                         try:
 #                         hilf = fin[group][v][idx[0]:idx[-1] + 1]
                         hilf = fin[group][v][idx]
-#                         hilf = hilf[mask]
+                        hilf = hilf[mask]
         
                         if compression == 'lzf':
                             fout.create_dataset_like(vlist[-1], fin[group][v],
@@ -903,7 +899,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
 #                         print('entering n_dim > 1')
                         if v == 'station_name':
                             s1 = fin[group][v].shape[1]
-                            hilf = np.array([fin[group][v][0]]*idx.shape[0])
+                            hilf = np.array([fin[group][v][0]]*mask.shape[0])
 #                             print('hilf: ', hilf)
 #                             print('mask shape: ', hilf.shape[0])
                             if compression == 'lzf':
@@ -932,19 +928,12 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
                                 fout[sname].attrs['NAME'] = np.string_(
                                     'This is a netCDF dimension but not a netCDF variable.')
                                 fout[sname].make_scale(sname)
-#                             print('hilf: ', hilf.shape)
-#                             print('fout[vlist[-1]][:]: ', fout[vlist[-1]][:].shape)
                             fout[vlist[-1]][:] = hilf
                         
                         else: 
-#                             print('entering n_dim > 1')
                             s1 = fin[group][v].shape[1]
-#                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
                             hilf = fin[group][v][idx, :]
-#                             if aux_idx != None:
-#                                 hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
-#                                 aux_idx.shape[0]
-#                             hilf = hilf[mask]
+                            hilf = hilf[mask]
                             
                             if compression == 'lzf':
                                 fout.create_dataset_like(vlist[-1], fin[group][v],
@@ -1049,26 +1038,23 @@ def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None)
                     except:
                         pass
     vlist = []
-#     mask=None
+    mask=None
     for _, cfv in cf.items():
         logger.debug('CFCOPY Looking for: %s in %s', cfv['cdmname'], group)
         logger.debug('IDX: %s', idx)
         for v in var_selection:
-#             if (mask is None) and restriction_active:
-# #                 mask=fin[group]['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
-# #                 mask=fin['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] != 4
-#                 mask=fin['observations_table']['data_policy_licence'][idx] != 4
+            if (mask is None):
+                if restriction_active:
+                    mask=np.where(fin['observations_table']['data_policy_licence'][idx] != 4)[0]
+                else:
+                    mask=np.where(fin['observations_table']['data_policy_licence'][idx] != 999)[0]
             if group + '/' + v == cfv['cdmname']:
                 vlist.append(cfv['shortname'])
                 try:
                     logger.debug('CFCOPY %s %s', v, vlist[-1])
                     if fin[group][v].ndim == 1:
-#                         hilf = fin[group][v][idx[0]:idx[-1] + 1]
                         hilf = fin[group][v][idx]
-#                         if (v in ['observation_value','obsvalue@body']) and restriction_active:
-#                         if (group in ['observations_table','era5fb']) and restriction_active:
-# #                             hilf[mask]=np.nan
-#                             hilf = hilf[mask]
+                        hilf = hilf[mask]
                         if 'time' in v:
                             # convert time units
                             us = fin[group][v].attrs['units']
@@ -1089,21 +1075,14 @@ def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None)
                             if hilf.shape[0] == 0:
                                 print('x')
                             hilf = np.array([hilf]*idx.shape[0])
-#                             if (group in ['observations_table','era5fb']) and restriction_active:
-#                                 hilf = hilf[mask]
+                            hilf = hilf[mask]
                             fout[v] = hilf
                         
                         else: 
                             s1 = fin[group][v].shape[1]
                             sname = 'string{}'.format(s1)
-#                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
                             hilf = fin[group][v][idx, :]
-#                             if (group in ['observations_table','era5fb']) and restriction_active:
-#                                 hilf = hilf[mask]
-                            # 
-#                             hilf[mask, :] = np.nan
-                            #hilf = hilf[idx[0]:idx[-1] + 1, :]
-#                             hilf = fin[group][v][idx[0]:idx[-1] + 1, :]
+                            hilf = hilf[mask]
                             if hilf.shape[0] == 0:
                                 print('x')
                             fout[v] = hilf[:,:] # [idx - idx[0], :]
@@ -2847,10 +2826,12 @@ class CDMDataset:
         print(tt)
         
         idx = np.where(mask)[0] + trange.start  # absolute integer index
+        print(idx)
         if restriction_active:
-            print('IDX: ',idx.shape[0])
-            idx = idx[self['observations_table']['data_policy_licence'][idx] != 4]
-            print('IDX: ',idx.shape[0])
+#             idx = idx[self['observations_table']['data_policy_licence'][idx] != 4]
+            dim_idx = np.where(self['observations_table']['data_policy_licence'][idx] != 4)[0] + trange.start
+        else:
+            dim_idx = idx
         if len(idx) == 0:
             logger.warning('No matching data found %s', self.name)
             raise ValueError('No matching data found')  # add CDMname for logging
@@ -2879,7 +2860,7 @@ class CDMDataset:
         tt=time.time() - time0
         print(tt)
 
-        dims = {'obs': np.zeros(idx.shape[0], dtype=np.int32)}# ,
+        dims = {'obs': np.zeros(dim_idx.shape[0], dtype=np.int32)}# ,
 #                 'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
         globatts = get_global_attributes()  # could put more infors there ?
         #
@@ -3625,9 +3606,9 @@ class CDMDataset:
         print(tt)
         idx = np.where(mask)[0] + trange.start  # absolute integer index
         if restriction_active:
-            print('IDX: ',idx.shape[0])
-            idx = idx[self['observations_table']['data_policy_licence'][idx] != 4]
-            print('IDX: ',idx.shape[0])
+            dim_idx = np.where(self['observations_table']['data_policy_licence'][idx] != 4)[0] + trange.start
+        else:
+            dim_idx = idx
         if len(idx) == 0:
             logger.warning('No matching data found %s', self.name)
             raise ValueError('No matching data found')  # add CDMname for logging
@@ -3653,7 +3634,7 @@ class CDMDataset:
         #
         tt=time.time() - time0
         print(tt)
-        dims = {'obs': np.zeros(idx.shape[0], dtype=np.int32)} #,
+        dims = {'obs': np.zeros(dim_idx.shape[0], dtype=np.int32)} #,
 #                 'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
         globatts = get_global_attributes()  # could put more infors there ?
         #
