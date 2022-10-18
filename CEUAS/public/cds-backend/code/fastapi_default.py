@@ -1696,7 +1696,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         #b2=[]
         #for b in reversed(bidx):
             #b2.append(bodies[b])
-        with Pool(16) as Pl:
+        with Pool(10) as Pl:
             results = list(Pl.map(func, bodies,chunksize=3))
         #results = list(map(func, bodies))
             # results = list(p.starmap(func, zip(input_dirs, [debug]*len(bodies), bodies), chunksize=1))
