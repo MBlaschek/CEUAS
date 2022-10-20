@@ -76,7 +76,7 @@ from multiprocessing import set_start_method, Pool
 #              'u_component_of_wind': ipar[104],'v_component_of_wind': ipar[105],
 #              'specific_humidity': ipar[39]}
 
-restriction_active = True
+restriction_active = False
 
 glamod_cdm_codes = {34:'dew_point_depression',
                     39:'specific_humidity',
@@ -809,7 +809,7 @@ def get_global_attributes(cf=None, url=None):
 #
 ###############################################################################
 
-def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, aux_idx=None):
+def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, mask=None):
     """ Copy H5PY variables and apply subsetting (idx)
 
     Args:
@@ -848,7 +848,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
                     except:
                         pass
     vlist = []
-    mask=None
+#     mask=None
     for _, cfv in cf.items():
         logger.debug('CFCOPY Looking for: %s in %s', cfv['cdmname'], group)
         for v in var_selection:
@@ -899,7 +899,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
 #                         print('entering n_dim > 1')
                         if v == 'station_name':
                             s1 = fin[group][v].shape[1]
-                            hilf = np.array([fin[group][v][0]]*mask.shape[0])
+                            hilf = np.array([fin[group][v][0]]*np.where(mask)[0].shape[0])
 #                             print('hilf: ', hilf)
 #                             print('mask shape: ', hilf.shape[0])
                             if compression == 'lzf':
@@ -1004,7 +1004,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
     if tt > 0.4:
         logger.warning('slow copy: %s %f s', group, tt)
         
-def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None):
+def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, mask=None):
     """ Copy H5PY variables and apply subsetting (idx)
 
     Args:
@@ -1038,10 +1038,10 @@ def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None)
                     except:
                         pass
     vlist = []
-    mask=None
+#     mask=None
     for _, cfv in cf.items():
         logger.debug('CFCOPY Looking for: %s in %s', cfv['cdmname'], group)
-        logger.debug('IDX: %s', idx)
+#         logger.debug('IDX: %s', idx)
         for v in var_selection:
             if (mask is None):
                 if restriction_active:
@@ -2154,7 +2154,7 @@ class CDMDatasetList(dict):
         return text
 
 
-def parallel_writing(filename, dims, trajectory_index, idx, zidx, compression, filename_out, request, globatts, cfcopy):
+def parallel_writing(filename, dims, trajectory_index, mask, base_idx, zidx, compression, filename_out, request, globatts, cfcopy):
     time0 = time.time()
 #     cfcopy, add_aux_vars = parallel_input
     key, value = list(cfcopy.items())[0]
@@ -2208,8 +2208,8 @@ def parallel_writing(filename, dims, trajectory_index, idx, zidx, compression, f
                                          'standard_name': 'station_name'
                                      }
                                     } 
-                    do_cfcopy(fout, infile.file, igroup, idx, cfcstationcon, 'obs', compression,
-                              var_selection=['station_name'])
+                    do_cfcopy(fout, infile.file, igroup, base_idx, cfcstationcon, 'obs', compression,
+                              var_selection=['station_name'], mask=mask)
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
 
             else:           
@@ -2219,10 +2219,10 @@ def parallel_writing(filename, dims, trajectory_index, idx, zidx, compression, f
                 #
                 if 'observations_table' in infile.groups:
                     igroup = 'observations_table'
-                    do_cfcopy(fout, infile.file, igroup, idx, cfcopy, 'obs', compression,
+                    do_cfcopy(fout, infile.file, igroup, base_idx, cfcopy, 'obs', compression,
                               var_selection=['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                              'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                             'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']) #+cdm_obstab)
+                                             'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence'], mask=mask) #+cdm_obstab)
                     # 'observed_variable','units'
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     if 'nodims' in request.keys():
@@ -2233,9 +2233,9 @@ def parallel_writing(filename, dims, trajectory_index, idx, zidx, compression, f
                 if 'era5fb' in infile.groups:
                     igroup = 'era5fb'
                     try:
-                        do_cfcopy(fout, infile.file, igroup, idx, cfcopy, 'obs', compression,
+                        do_cfcopy(fout, infile.file, igroup, base_idx, cfcopy, 'obs', compression,
                                   var_selection=['fg_depar@body', 'an_depar@body',
-                                                 'biascorr@body']) #+cdm_eratab)
+                                                 'biascorr@body'], mask=mask) #+cdm_eratab)
                         # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     except KeyError as e:
@@ -2247,8 +2247,8 @@ def parallel_writing(filename, dims, trajectory_index, idx, zidx, compression, f
                 if 'adjera5' in infile.groups:
                     igroup = 'adjera5'
                     try:
-                        do_cfcopy(fout, infile.file, igroup, idx, cfcopy, 'obs', compression,
-                                  var_selection=['bias_estimate', 'bias_estimation_method'])
+                        do_cfcopy(fout, infile.file, igroup, base_idx, cfcopy, 'obs', compression,
+                                  var_selection=['bias_estimate', 'bias_estimation_method'], mask=mask)
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     except KeyError as e:
                         print(e)
@@ -2266,8 +2266,8 @@ def parallel_writing(filename, dims, trajectory_index, idx, zidx, compression, f
 
                     if varsel:       
                         try:
-                            do_cfcopy(fout, infile.file, igroup, idx, cfcopy, 'obs', compression,
-                                      var_selection=varsel)
+                            do_cfcopy(fout, infile.file, igroup, base_idx, cfcopy, 'obs', compression,
+                                      var_selection=varsel, mask=mask)
                             logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                         except KeyError as e:
                             print(e)
@@ -2281,25 +2281,25 @@ def parallel_writing(filename, dims, trajectory_index, idx, zidx, compression, f
                     print('advanced_uncertainty in infile.groups')
                     igroup = 'advanced_uncertainty'
                     try:
-                        do_cfcopy(fout, infile.file, igroup, idx, cfcopy, 'obs', compression,
-                                  var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
+                        do_cfcopy(fout, infile.file, igroup, base_idx, cfcopy, 'obs', compression,
+                                  var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'], mask=mask)
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     except KeyError as e:
                         print(e)
     #                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), infile.name))
 
-                #
-                # Header Information
-                #
-                if 'header_table' in infile.groups:
-                    igroup = 'header_table'
-                    # only records fitting criteria (zidx) are copied
-                    # todo why is lon, lat not here?
-                    do_cfcopy(fout, infile.file, igroup, zidx, cfcopy, 'trajectory', compression,
-                              var_selection=['report_id'])
-                    logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
-                    # ,'station_name','primary_station_id'])
-                    # todo could be read from the observations_table
+#                 #
+#                 # Header Information
+#                 #
+#                 if 'header_table' in infile.groups:
+#                     igroup = 'header_table'
+#                     # only records fitting criteria (zidx) are copied
+#                     # todo why is lon, lat not here?
+#                     do_cfcopy(fout, infile.file, igroup, zidx, cfcopy, 'trajectory', compression,
+#                               var_selection=['report_id'])
+#                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
+#                     # ,'station_name','primary_station_id'])
+#                     # todo could be read from the observations_table
 
 
                 #
@@ -2806,7 +2806,8 @@ class CDMDataset:
                request.get('time', None),
                request.get('rtsidx',None)
                ))
-        trange, mask = self.read_observed_variable(cdmnum,
+        
+        trange, mask, base_mask = self.read_observed_variable(cdmnum,
                                                    variable='observation_value',
                                                    dates=request.get('date', None),
                                                    plevs=request.get('pressure_level', None),
@@ -2818,6 +2819,7 @@ class CDMDataset:
                                                    group='observations_table',
                                                    dimgroup='observations_table',
                                                    return_index=True,
+                                                   return_base_index=True,
                                                    rtsindex=request.get('rtsidx',None)
                                                    )
         logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange.start,
@@ -2825,13 +2827,13 @@ class CDMDataset:
         tt=time.time() - time0
         print(tt)
         
+        base_idx = np.where(base_mask)[0] + trange.start  # absolute integer index
         idx = np.where(mask)[0] + trange.start  # absolute integer index
-        print(idx)
         if restriction_active:
 #             idx = idx[self['observations_table']['data_policy_licence'][idx] != 4]
-            dim_idx = np.where(self['observations_table']['data_policy_licence'][idx] != 4)[0] + trange.start
-        else:
-            dim_idx = idx
+            licence_mask = self['observations_table']['data_policy_licence'][base_idx] != 4
+            mask = np.logical_and(mask, licence_mask)
+            idx = np.where(mask)[0]+ trange.start
         if len(idx) == 0:
             logger.warning('No matching data found %s', self.name)
             raise ValueError('No matching data found')  # add CDMname for logging
@@ -2850,17 +2852,17 @@ class CDMDataset:
             # sorted indices are in recordindices group / by variable
             recordindex = self.file['recordindices'][str(cdmnum)][()]  # values
             
-        zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex <= trange.stop))[0]
+#         zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex <= trange.stop))[0]
         
-        #calc_trajindexfast_rt(recordindex,trajectory_index,trange.start)
-        zidx = calc_trajindexfastl(recordindex, zidx, idx, trajectory_index)
+#         #calc_trajindexfast_rt(recordindex,trajectory_index,trange.start)
+#         zidx = calc_trajindexfastl(recordindex, zidx, idx, trajectory_index)
         #
         # Dimensions and Global Attributes
         #
         tt=time.time() - time0
         print(tt)
 
-        dims = {'obs': np.zeros(dim_idx.shape[0], dtype=np.int32)}# ,
+        dims = {'obs': np.zeros(idx.shape[0], dtype=np.int32)}# ,
 #                 'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
         globatts = get_global_attributes()  # could put more infors there ?
         #
@@ -2971,8 +2973,8 @@ class CDMDataset:
                     if not co in varselcfcopy:
                         varselcfcopy.append(co)
                 logger.debug('varsel: %s', varselcfcopy)
-                do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
-                          var_selection=varselcfcopy)
+                do_csvcopy(fout, self.file, igroup, base_idx, cfcopy, 'obs', compression,
+                          var_selection=varselcfcopy, mask=mask)
                 # 'observed_variable','units'
                 logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                 if request['single_csv']:
@@ -2994,8 +2996,8 @@ class CDMDataset:
                     if not co in varselcfcopy:
                         varselcfcopy.append(co)
                 try:
-                    do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
-                              var_selection=varselcfcopy)
+                    do_csvcopy(fout, self.file, igroup, base_idx, cfcopy, 'obs', compression,
+                              var_selection=varselcfcopy, mask=mask)
                     # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     if request['single_csv']:
@@ -3011,8 +3013,8 @@ class CDMDataset:
             if 'adjera5' in self.groups:
                 igroup = 'adjera5'
                 try:
-                    do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
-                              var_selection=['bias_estimate', 'bias_estimation_method'])
+                    do_csvcopy(fout, self.file, igroup, base_idx, cfcopy, 'obs', compression,
+                              var_selection=['bias_estimate', 'bias_estimation_method'], mask=mask)
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     if request['single_csv']:
                         # for single_csv - adding second header
@@ -3034,8 +3036,8 @@ class CDMDataset:
 
                 if varsel:       
                     try:
-                        do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
-                                  var_selection=varsel)
+                        do_csvcopy(fout, self.file, igroup, base_idx, cfcopy, 'obs', compression,
+                                  var_selection=varsel, mask=mask)
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                         if request['single_csv']:
                             # for single_csv - adding second header
@@ -3051,8 +3053,8 @@ class CDMDataset:
             if 'advanced_uncertainty' in self.groups:
                 igroup = 'advanced_uncertainty'
                 try:
-                    do_csvcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
-                              var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
+                    do_csvcopy(fout, self.file, igroup, base_idx, cfcopy, 'obs', compression,
+                              var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'], mask=mask)
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     if request['single_csv']:
                         # for single_csv - adding second header
@@ -3131,8 +3133,8 @@ class CDMDataset:
                                              'standard_name': 'station_name'
                                          }
                                         } 
-                        do_csvcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', compression,
-                                  var_selection=['station_name'])
+                        do_csvcopy(fout, self.file, igroup, base_idx, cfcstationcon, 'obs', compression,
+                                  var_selection=['station_name'], mask=mask)
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
 
                 
@@ -3398,8 +3400,8 @@ class CDMDataset:
                         if not co in varselcfcopy:
                             varselcfcopy.append(co)
                     igroup = 'observations_table'
-                    do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
-                              var_selection=varselcfcopy)
+                    do_cfcopy(fout, self.file, igroup, base_idx, cfcopy, 'obs', compression,
+                              var_selection=varselcfcopy, mask=mask)
                     # 'observed_variable','units'
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     if 'nodims' in request.keys():
@@ -3414,8 +3416,8 @@ class CDMDataset:
                         if not co in varselcfcopy:
                             varselcfcopy.append(co)
                     try:
-                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
-                                  var_selection=varselcfcopy)
+                        do_cfcopy(fout, self.file, igroup, base_idx, cfcopy, 'obs', compression,
+                                  var_selection=varselcfcopy, mask=mask)
                         # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     except KeyError as e:
@@ -3426,8 +3428,8 @@ class CDMDataset:
                 if 'adjera5' in self.groups:
                     igroup = 'adjera5'
                     try:
-                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
-                                  var_selection=['bias_estimate', 'bias_estimation_method'])
+                        do_cfcopy(fout, self.file, igroup, base_idx, cfcopy, 'obs', compression,
+                                  var_selection=['bias_estimate', 'bias_estimation_method'], mask=mask)
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     except KeyError as e:
                         raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
@@ -3444,8 +3446,8 @@ class CDMDataset:
 
                     if varsel:       
                         try:
-                            do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
-                                      var_selection=varsel)
+                            do_cfcopy(fout, self.file, igroup, base_idx, cfcopy, 'obs', compression,
+                                      var_selection=varsel, mask=mask)
                             logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                         except KeyError as e:
                             print(e)
@@ -3459,8 +3461,8 @@ class CDMDataset:
                     print('advanced_uncertainty in self.groups')
                     igroup = 'advanced_uncertainty'
                     try:
-                        do_cfcopy(fout, self.file, igroup, idx, cfcopy, 'obs', compression,
-                                  var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'])
+                        do_cfcopy(fout, self.file, igroup, base_idx, cfcopy, 'obs', compression,
+                                  var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'], mask=mask)
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     except KeyError as e:
                         raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
@@ -3492,8 +3494,8 @@ class CDMDataset:
                                          'standard_name': 'station_name'
                                      }
                                     } 
-                    do_cfcopy(fout, self.file, igroup, idx, cfcstationcon, 'obs', compression,
-                              var_selection=['station_name'])
+                    do_cfcopy(fout, self.file, igroup, base_idx, cfcstationcon, 'obs', compression,
+                              var_selection=['station_name'], mask=mask)
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
 
                 #
@@ -3586,7 +3588,7 @@ class CDMDataset:
         cdmnum = cdmattrs['cdmcode']  # 85 for air_temperature
         time0 = time.time()
 
-        trange, mask = self.read_observed_variable(cdmnum,
+        trange, mask, base_mask = self.read_observed_variable(cdmnum,
                                                    variable='observation_value',
                                                    dates=request.get('date', None),
                                                    plevs=request.get('pressure_level', None),
@@ -3598,17 +3600,19 @@ class CDMDataset:
                                                    group='observations_table',
                                                    dimgroup='observations_table',
                                                    return_index=True,
+                                                   return_base_index=True,
                                                    rtsindex=request.get('rtsidx',None)
                                                    )
         logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange.start,
                      trange.stop, time.time() - time0, self.name)
         tt=time.time() - time0
         print(tt)
+        base_idx = np.where(base_mask)[0] + trange.start  # absolute integer index
         idx = np.where(mask)[0] + trange.start  # absolute integer index
         if restriction_active:
-            dim_idx = np.where(self['observations_table']['data_policy_licence'][idx] != 4)[0] + trange.start
-        else:
-            dim_idx = idx
+            licence_mask = self['observations_table']['data_policy_licence'][base_idx] != 4
+            mask = np.logical_and(mask, licence_mask)
+            idx = np.where(mask)[0]+ trange.start
         if len(idx) == 0:
             logger.warning('No matching data found %s', self.name)
             raise ValueError('No matching data found')  # add CDMname for logging
@@ -3627,8 +3631,9 @@ class CDMDataset:
             # sorted indices are in recordindices group / by variable
             recordindex = self.file['recordindices'][str(cdmnum)][()]  # values
             
-        zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex <= trange.stop))[0]
-        zidx = calc_trajindexfastl(recordindex, zidx, idx, trajectory_index)
+#         zidx = np.where(np.logical_and(recordindex >= trange.start, recordindex <= trange.stop))[0]
+#         zidx = calc_trajindexfastl(recordindex, zidx, idx, trajectory_index)
+        zidx=[]
         #
         # Dimensions and Global Attributes
         #
@@ -3703,7 +3708,7 @@ class CDMDataset:
         ###pool###
         fname = str(self.filename)
         P = Pool(10)
-        func = partial(parallel_writing, fname, dims, trajectory_index, idx, zidx, compression, filename_out, request, globatts)
+        func = partial(parallel_writing, fname, dims, trajectory_index, mask, base_idx, zidx, compression, filename_out, request, globatts)
         pool_out = list(P.map(func, list_cfcopy, chunksize=3))
         print(pool_out)
         filelist = glob.glob(filename_out[:-3]+'_*')
@@ -3867,6 +3872,7 @@ class CDMDataset:
                                dimgroup: str = 'observations_table',
                                return_coordinates: bool = False,
                                return_index: bool = False,
+                               return_base_index: bool = False,
                                use_odb_codes: bool = False,
                                return_xarray: bool = False,
                                **kwargs
@@ -3996,6 +4002,8 @@ class CDMDataset:
         else:
             logic = np.ones(trange.stop-trange.start, dtype=np.bool)
             # todo apply trange before, to make a subset 
+        if return_base_index:
+            base_index = copy.copy(logic)
         logger.info('[READ] Observed variable %s', varnum)
         #
         # Pressure levels
@@ -4072,6 +4080,10 @@ class CDMDataset:
         if return_index:
             if return_coordinates:
                 return trange, logic, xdates[logic], xplevs[logic]  # no trange here????
+            if return_base_index:
+                print('logic: ', logic)
+                print('base logic: ', base_index)
+                return trange, logic, base_index
             return trange, logic
 
         if dates is None:
