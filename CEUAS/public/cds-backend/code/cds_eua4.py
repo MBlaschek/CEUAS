@@ -76,7 +76,7 @@ from multiprocessing import set_start_method, Pool
 #              'u_component_of_wind': ipar[104],'v_component_of_wind': ipar[105],
 #              'specific_humidity': ipar[39]}
 
-restriction_active = False
+restriction_active = True
 
 glamod_cdm_codes = {34:'dew_point_depression',
                     39:'specific_humidity',
