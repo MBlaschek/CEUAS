@@ -959,6 +959,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
     #
     allowed_optionals = ['sonde_type', 'bias_estimate','obs_minus_an','obs_minus_bg', 'bias_estimate_method', 
                          'RISE_bias_estimate', 'RICH_bias_estimate', 'RASE_bias_estimate', 'RAOBCORE_bias_estimate',
+                         'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time',
                          'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate',
                          'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
                          'wind_bias_estimate',
