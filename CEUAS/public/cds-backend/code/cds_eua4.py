@@ -505,7 +505,9 @@ def read_standardnames(url: str = None) -> dict:
               'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type',
               'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 
               'station_name', 
-              'RISE_bias_estimate', 'RICH_bias_estimate', 'RASE_bias_estimate', 'RAOBCORE_bias_estimate', 
+              'RISE_bias_estimate', 'RICH_bias_estimate', 
+              'RASE_bias_estimate', 'RAOBCORE_bias_estimate', 
+              'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time',
               'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
               'wind_bias_estimate',
               'humidity_bias_estimate',
@@ -523,6 +525,8 @@ def read_standardnames(url: str = None) -> dict:
                  'station_configuration/station_name',
                  'advanced_homogenisation/RISE_bias_estimate', 'advanced_homogenisation/RICH_bias_estimate',
                  'advanced_homogenisation/RASE_bias_estimate', 'advanced_homogenisation/RAOBCORE_bias_estimate',
+                 'advanced_homogenisation/latitude_displacement', 'advanced_homogenisation/longitude_displacement',
+                 'advanced_homogenisation/time_since_launch', 'advanced_homogenisation/true_time',
                  'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
                  'advanced_homogenisation/wind_bias_estimate', 
                  'advanced_homogenisation/humidity_bias_estimate',
@@ -631,6 +635,14 @@ def read_standardnames(url: str = None) -> dict:
     cf['RASE_bias_estimate']['description'] = 'Temperature bias adjustments depending on solar elevation, calculated from ERA5 background departures (Haimberger et al. 2012)'
     cf['RAOBCORE_bias_estimate']['shortname'] = 'RAOBCORE_bias_estimate'
     cf['RAOBCORE_bias_estimate']['description'] = 'Temperature bias adjustments (constant between breakpoints), calculated from ERA5 background departures (Haimberger et al. 2012)'
+    cf['latitude_displacement']['shortname'] = 'latitude_displacement'
+    cf['latitude_displacement']['description'] = 'trajectory meta data'
+    cf['longitude_displacement']['shortname'] = 'longitude_displacement'
+    cf['longitude_displacement']['description'] = 'trajectory meta data'
+    cf['time_since_launch']['shortname'] = 'time_since_launch'
+    cf['time_since_launch']['description'] = 'trajectory meta data'
+    cf['true_time']['shortname'] = 'true_time'
+    cf['true_time']['description'] = 'trajectory meta data'
     cf['wind_bias_estimate']['shortname'] = 'wind_bias_estimate'
     cf['wind_bias_estimate']['description'] = 'Vertically constant wind direction adjustments, calculated as in Gruber and Haimberger (2008)'
     cf['desroziers_30']['shortname'] = 'desroziers_30'
@@ -882,15 +894,18 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
 
                         if 'time' in v:
                             # convert time units
-                            us = fin[group][v].attrs['units']
-                            if b'hours' in us:
-                                hilf = hilf * 3600  # hilf+=int(dh[0])
-                            elif b'minutes' in us:
-                                hilf = hilf * 60  # +int(dh[0])
-                            elif b'seconds' in us:
-                                hilf = hilf  # //60//60+int(dh[0])
-                            elif b'days' in us:
-                                hilf *= 24 * 3600
+                            try:
+                                us = fin[group][v].attrs['units']
+                                if b'hours' in us:
+                                    hilf = hilf * 3600  # hilf+=int(dh[0])
+                                elif b'minutes' in us:
+                                    hilf = hilf * 60  # +int(dh[0])
+                                elif b'seconds' in us:
+                                    hilf = hilf  # //60//60+int(dh[0])
+                                elif b'days' in us:
+                                    hilf *= 24 * 3600
+                            except:
+                                pass
                         fout[vlist[-1]][:] = hilf # [idx - idx[0]]  # but write just the subset corresponding to the variable
 #                         except:
 #                             logger.warning('not found: %s %s', group, v)
@@ -1057,15 +1072,18 @@ def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None,
                         hilf = hilf[mask]
                         if 'time' in v:
                             # convert time units
-                            us = fin[group][v].attrs['units']
-                            if b'hours' in us:
-                                hilf = hilf * 3600  # hilf+=int(dh[0])
-                            elif b'minutes' in us:
-                                hilf = hilf * 60  # +int(dh[0])
-                            elif b'seconds' in us:
-                                hilf = hilf  # //60//60+int(dh[0])
-                            elif b'days' in us:
-                                hilf *= 24 * 3600
+                            try:
+                                us = fin[group][v].attrs['units']
+                                if b'hours' in us:
+                                    hilf = hilf * 3600  # hilf+=int(dh[0])
+                                elif b'minutes' in us:
+                                    hilf = hilf * 60  # +int(dh[0])
+                                elif b'seconds' in us:
+                                    hilf = hilf  # //60//60+int(dh[0])
+                                elif b'days' in us:
+                                    hilf *= 24 * 3600
+                            except:
+                                pass
                         fout[v] = hilf# [idx - idx[0]]  # but write just the subset corresponding to the variable
                     else:                        
                         if v == 'station_name':
@@ -2874,7 +2892,7 @@ class CDMDataset:
                   'longitude', 'time', 'air_pressure', 'trajectory_label', 
                   'report_id', 'station_id']
         varseldict={}
-        varseldict['temperature']=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate']
+        varseldict['temperature']=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate', 'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time']
         varseldict['wind_direction']=['wind_bias_estimate']
         varseldict['u_component_of_wind']=['wind_bias_estimate']
         varseldict['v_component_of_wind']=['wind_bias_estimate']
@@ -2929,7 +2947,7 @@ class CDMDataset:
                 except: pass
             rmv_list = []
             for i in cdmlist:
-                print(i)
+#                 print(i)
                 grp = i.split('/')[0]
                 if i == 'era5fb':
                     logger.debug('Full er5fb CDM-request disabled.')
@@ -2968,7 +2986,7 @@ class CDMDataset:
                 igroup = 'observations_table'
                 varselcfcopy = ['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                     'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                    'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']
+                                    'original_precision', 'reference_sensor_id', 'report_id', 'data_policy_licence']
                 for co in cdm_obstab:
                     if not co in varselcfcopy:
                         varselcfcopy.append(co)
@@ -3025,6 +3043,7 @@ class CDMDataset:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
 
             if 'advanced_homogenisation' in self.groups :
+                print('request[optional]',request['optional'])
                 igroup = 'advanced_homogenisation'
                 varsel=[]
                 try:
@@ -3033,7 +3052,7 @@ class CDMDataset:
                             varsel.append(o)
                 except:
                     pass
-
+                print('varsel',varsel)
                 if varsel:       
                     try:
                         do_csvcopy(fout, self.file, igroup, base_idx, cfcopy, 'obs', compression,
@@ -3541,6 +3560,9 @@ class CDMDataset:
                         fout[newname] = fout[i]
                         fout.__delitem__(i)
                         fout[newname].attrs['version'] = np.string_(version[1:]) # 'x.x'
+                        
+                    if ('string' in i):
+                        del fout[i]
 
                 # removing variables with restricted access
                 try: fout['observations_table'].__delitem__('observation_value')
@@ -3651,7 +3673,7 @@ class CDMDataset:
                   'longitude', 'time', 'air_pressure', #'trajectory_label', 
                   'report_id', 'station_id']
         varseldict={}
-        varseldict['temperature']=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate']
+        varseldict['temperature']=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate', 'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time']
         varseldict['wind_direction']=['wind_bias_estimate']
         varseldict['u_component_of_wind']=['wind_bias_estimate']
         varseldict['v_component_of_wind']=['wind_bias_estimate']
@@ -3726,6 +3748,10 @@ class CDMDataset:
                         if not i in merge.keys():
                             print(i)
                             filetocopy.copy(i, merge, name=i)
+                            
+                            if ('string' in i):
+                                del merge[i]
+
         logger.debug('netcdfs merged [%d] to %s', len(filelist), filename_out)
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
@@ -4081,8 +4107,8 @@ class CDMDataset:
             if return_coordinates:
                 return trange, logic, xdates[logic], xplevs[logic]  # no trange here????
             if return_base_index:
-                print('logic: ', logic)
-                print('base logic: ', base_index)
+#                 print('logic: ', logic)
+#                 print('base logic: ', base_index)
                 return trange, logic, base_index
             return trange, logic
 
