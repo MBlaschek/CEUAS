@@ -3440,7 +3440,7 @@ class CDMDataset:
                         # ['vertco_reference_1@body','obsvalue@body','fg_depar@body'])
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     except KeyError as e:
-                        raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+                        raise KeyError(str(e))
                 #
                 # Adjusted Values with ERA5
                 # TODO: Names not set, group missing
@@ -3451,7 +3451,7 @@ class CDMDataset:
                                   var_selection=['bias_estimate', 'bias_estimation_method'], mask=mask)
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     except KeyError as e:
-                        raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+                        raise KeyError(str(e))
 
                 if 'advanced_homogenisation' in self.groups :
                     igroup = 'advanced_homogenisation'
@@ -3469,7 +3469,7 @@ class CDMDataset:
                                       var_selection=varsel, mask=mask)
                             logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                         except KeyError as e:
-                            print(e)
+                            raise KeyError(str(e))
                             #raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
 
 
@@ -3484,7 +3484,7 @@ class CDMDataset:
                                   var_selection=['desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180'], mask=mask)
                         logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
                     except KeyError as e:
-                        raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+                        raise KeyError(str(e))
 
 #                 #
 #                 # Header Information
