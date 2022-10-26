@@ -76,7 +76,7 @@ from multiprocessing import set_start_method, Pool
 #              'u_component_of_wind': ipar[104],'v_component_of_wind': ipar[105],
 #              'specific_humidity': ipar[39]}
 
-restriction_active = True
+restriction_active = False
 
 glamod_cdm_codes = {34:'dew_point_depression',
                     39:'specific_humidity',
@@ -977,7 +977,7 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
                                 fout[sname].make_scale(sname)
                             fout[vlist[-1]][:] = hilf
                             
-                except Exception as e:
+                except MemoryError as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
                     hilf = np.zeros(shape=(idx.shape[0]), dtype='S10')
@@ -1105,7 +1105,7 @@ def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None,
                                 print('x')
                             fout[v] = hilf[:,:] # [idx - idx[0], :]
                             
-                except Exception as e:
+                except MemoryError as e:
                     # todo fix for missing report_id SHOULD BE REMOVED
                     print(e)
                     
@@ -1564,7 +1564,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
                 print('')
 
     except Exception as e:
-    #except Exception as e:
+    #except MemoryError as e:
         if debug:
             raise e
         logger.error('Exception %s occurred while reading %s', repr(e), filename)
@@ -1976,7 +1976,7 @@ def cds_request_wrapper(request: dict, request_filename: str = None, cds_dataset
             return CDMDatasetList(*files)
         return CDMDataset(filename=files[0])
 
-    except Exception as e:
+    except MemoryError as e:
         logger.error('CDSAPI Request failed %s', str(request))
         raise e
 
@@ -2054,7 +2054,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
         else:
             return request_filename
 
-    except Exception as e:
+    except MemoryError as e:
         logger.error('VM Request failed %s', str(request))
         raise e
 
@@ -2472,7 +2472,7 @@ class CDMDataset:
                     self[igroup].update(link=self.file[igroup])
                 
 
-        except Exception as e:
+        except MemoryError as e:
             logger.debug(repr(e))
             self.close()
 
@@ -3043,7 +3043,7 @@ class CDMDataset:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
 
             if 'advanced_homogenisation' in self.groups :
-                print('request[optional]',request['optional'])
+                #print('request[optional]',request['optional'])
                 igroup = 'advanced_homogenisation'
                 varsel=[]
                 try:
