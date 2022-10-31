@@ -631,6 +631,8 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
                 recordindex[ri]=j+1
                 recordtimestamp[ri]=obstab['date_time'][idxu]
                 ri+=1
+        else:
+            print('spurious idxu')
 
         addedvar[l,0]=i
         addedvar[l,1]=j#.append([i, j])
@@ -1347,7 +1349,22 @@ def convert_missing(wpath,fn):
     # resorting the data
     #
     @njit
-    def make_vrindex(vridx,ridx,idx):
+    def make_vrindex(vridx,ridx): # this function is similar to np.unique with return_index=True, but it expands the index to the  
+        # original array dimensions
+        l=0
+        for i in range(len(ridx)): # to set the recordindices
+            if i == 0:
+                l +=1
+            else:
+                if ridx[i]>ridx[i-1]:
+                    vridx[ridx[i-1] + 1 : ridx[i] + 1]=l # next record after l
+                    l += 1
+                else:
+                    l += 1
+        vridx[ridx[i] + 1 :]=l #len(idx) # next record for the last element is the len of the data
+
+    @njit
+    def make_vrindexold(vridx,ridx,idx):
         l=0
         for i in range(1,len(idx)): # to set the recordindices
             if ridx[i]>ridx[i-1]:
@@ -1389,22 +1406,67 @@ def convert_missing(wpath,fn):
     absidx=[]
     absidx=np.empty_like(obsv)
     abscount=0
+    idx = []
     for j in range(len(allvars)):
-        idx=np.where(obsv==allvars[j])[0] # index of all elements form certain variable j
+        idx.append(np.where(obsv==allvars[j])[0]) # index of all elements form certain variable j
 #         print(j,len(idx),',',end='')
         vridx.append(np.zeros(ri.shape[0]+1,dtype=np.int64)) # all zeros in lenght of record index
-        ridx=ridxall[idx] # ridxall where variable is j
-        make_vrindex(vridx[-1],ridx,idx)
-        #make_vrindex(vridx[-1],ridx,idx)
+        ridx=ridxall[idx[-1]] # ridxall where variable is j
+        make_vrindex(vridx[-1],ridx)
+        ##begin debugcopy
+        #l=0
+        ##print(ridx[0])
+        
+        ##vridx[-1][:ridx[0]]=l
+        ##l += 1
+        ##vridx[-1][ridx[0]] = l
+        #for i in range(len(ridx)): # to set the recordindices
+            ##print(ridx[i])
+            #if i == 0:
+                #l +=1
+            #else:
+                #if ridx[i]>ridx[i-1]:
+                    #vridx[-1][ridx[i-1] + 1:ridx[i] + 1]=l # next record after l
+                    #l += 1
+                #else:
+                    #l += 1
+            ##print(i, vridx[-1][:20])
+        #vridx[-1][ridx[i] + 1:]=l #len(idx) # next record for the last element is the len of the data
+        ##end debugcopy
         vridx[-1]+=abscount # abscount for stacking the recordindex
 
-        absidx[abscount:abscount+len(idx)]=idx # why copy? - to make sure it's not just the ref. - maybe ok without the cp
-        abscount+=len(idx)
+        absidx[abscount:abscount+len(idx[-1])]=idx[-1] # why copy? - to make sure it's not just the ref. - maybe ok without the cp
+        abscount+=len(idx[-1])
         vridx[-1][-1]=abscount
     #absidx=np.concatenate(absidx)
 
     # recordtimestamps are only necessary once
-    recordtimestamps = rt 
+    recordtimestamps = rt
+    
+    # check integrity of indices
+    ref = datetime(1900, 1, 1)
+    od = out['date_time'][:jj][absidx]
+    oov = out['observed_variable'][:jj][absidx]
+    ooval = out['observation_value'][:jj][absidx]
+    pres = out['z_coordinate'][:jj][absidx]
+    for j in range(len(allvars)):
+        for i in range(1, rt.shape[0]):
+            
+            if any(od[vridx[j][i]:vridx[j][i + 1]]!=rt[i]):
+                print('spurious',allvars[j], i, ref+timedelta(seconds=int(od[vridx[j][i - 1]])),
+                      ref+timedelta(seconds=int(od[vridx[j][i + 1] - 1])), ref+timedelta(seconds=int(rt[ridxall[i]])) )
+                print('spurious',allvars[j], i, oov[vridx[j][i]],oov[vridx[j][i + 1] - 1])
+                print('spurious',allvars[j], i, ooval[vridx[j][i]:vridx[j][i + 1]])
+            #else:
+                #if vridx[j][i] == vridx[j][i + 1]:
+                    ##print('no values', allvars[j], i)
+                    #pass
+                #else:
+                    #print('ok',allvars[j], i, ref+timedelta(seconds=int(od[vridx[j][i]])),
+                      #ref+timedelta(seconds=int(od[vridx[j][i + 1] - 1])), ref+timedelta(seconds=int(rt[i])) )
+                    #print('ok', allvars[j], i, oov[vridx[j][i]],oov[vridx[j][i + 1] - 1])
+                    #print('ok',allvars[j], i, ooval[vridx[j][i]:vridx[j][i + 1]])
+                
     del ridxall
 
     print('elapsed converting: ',time.time()-tt)
@@ -1592,9 +1654,9 @@ if __name__ == '__main__':
         #f.write("done") 
         #f.close()
 
-    files = glob.glob('/raid60/scratch/federico/MERGED_JUNE2021/*v1.nc')
+    files = glob.glob('/mnt/scratch/scratch/federico/MERGED_15JUNE2022/*64600*v1.nc')
     files_to_convert = glob.glob('/raid60/scratch/federico/MERGED_JUNE2021/*72357*v1.nc')
-    files = glob.glob('/scratch/das/federico/TRY_MERGED_FEB2022/*89564*v1.nc')
+    #files = glob.glob('/scratch/das/federico/TRY_MERGED_FEB2022/*89564*v1.nc')
     files_to_convert = files #glob.glob('/scratch/das/federico/TRY_MERGED_JAN2022/*72357*v1.nc')
     
     ipar=np.zeros(140,dtype=np.int32)-2100000000 # 
@@ -1612,32 +1674,32 @@ if __name__ == '__main__':
     ipar[105]=140
 
     print(files)
-    nfiles=glob.glob(wpath+'*v1.nc')
-    nfile=os.path.dirname(nfiles[0])+'/'+files[0].split('/')[-1]
-    ofiles=['/mnt/users/scratch/leo/scratch/converted_v7/0-20000-0-89564_CEUAS_merged_v1.nc']
-    nfiles=['/mnt/users/scratch/leo/scratch/converted_v8/0-20000-0-89564_CEUAS_merged_v1.nc']
-    with h5py.File(ofiles[0],'r') as f:
-        vcode=f['observations_table']['observed_variable'][:]
-        vcodes=np.unique(vcode)
-        print(vcodes)
-        print(ofiles[0])
-        for v in vcodes:
-            print(v,np.sum(v==vcode))
-        with h5py.File(nfiles[0],'r') as g:
-            vcode=g['observations_table']['observed_variable'][:]
-            vcodes=np.unique(vcode)
-            print(vcodes)
-            print(nfiles[0])
-            for v in vcodes:
-                print(v,np.sum(v==vcode))
+    #nfiles=glob.glob(wpath+'*v1.nc')
+    #nfile=os.path.dirname(nfiles[0])+'/'+files[0].split('/')[-1]
+    #ofiles=['/mnt/users/scratch/leo/scratch/converted_v7/0-20000-0-89564_CEUAS_merged_v1.nc']
+    #nfiles=['/mnt/users/scratch/leo/scratch/converted_v8/0-20000-0-89564_CEUAS_merged_v1.nc']
+    #with h5py.File(ofiles[0],'r') as f:
+        #vcode=f['observations_table']['observed_variable'][:]
+        #vcodes=np.unique(vcode)
+        #print(vcodes)
+        #print(ofiles[0])
+        #for v in vcodes:
+            #print(v,np.sum(v==vcode))
+        #with h5py.File(nfiles[0],'r') as g:
+            #vcode=g['observations_table']['observed_variable'][:]
+            #vcodes=np.unique(vcode)
+            #print(vcodes)
+            #print(nfiles[0])
+            #for v in vcodes:
+                #print(v,np.sum(v==vcode))
             
-            nstart=g['recordindices']['126'][0]
-            nstop=g['recordindices']['126'][-1]
-            plt.plot(g['observations_table']['date_time'][nstart:nstop]/86400/365.25,g['observations_table']['observation_value'][nstart:nstop])
-            ostart=f['recordindices']['85'][0]
-            ostop=f['recordindices']['85'][-1]
-            plt.plot(f['observations_table']['date_time'][ostart:ostop]/86400/365.25,f['observations_table']['observation_value'][ostart:ostop])
-            print(nstop-nstart,ostop-ostart)
+            #nstart=g['recordindices']['126'][0]
+            #nstop=g['recordindices']['126'][-1]
+            #plt.plot(g['observations_table']['date_time'][nstart:nstop]/86400/365.25,g['observations_table']['observation_value'][nstart:nstop])
+            #ostart=f['recordindices']['85'][0]
+            #ostop=f['recordindices']['85'][-1]
+            #plt.plot(f['observations_table']['date_time'][ostart:ostop]/86400/365.25,f['observations_table']['observation_value'][ostart:ostop])
+            #print(nstop-nstart,ostop-ostart)
     
     already_done = glob.glob(wlpath+'*.txt')
 
@@ -1656,7 +1718,7 @@ if __name__ == '__main__':
     pool = multiprocessing.Pool(processes=20)
 #     #result_list = pool.map(convert_missing, files_to_convert)
     func=partial(convert_missing,wpath)
-    result_list = list(p.map(func, files_to_convert))
+    result_list = list(map(func, files_to_convert))
 #     print(result_list)
     print('total:',time.time()-tt)
 
