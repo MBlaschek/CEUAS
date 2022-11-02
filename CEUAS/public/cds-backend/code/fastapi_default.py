@@ -66,6 +66,7 @@ from fastapi.responses import FileResponse
 from fastapi import Response
 from fastapi import Request
 app = FastAPI()
+import subprocess
 
 from pydantic import BaseModel
 class Item(BaseModel):
@@ -1757,8 +1758,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                     write_results.append(i_res[0])
             # to place the stations in an order manner
             write_results.sort()
-            print('input files: ', results)
-            combined_csv = pd.concat([pd.read_csv(f, header=14) for f in write_results], ignore_index=True)
+            #combined_csv = pd.concat([pd.read_csv(f, header=14) for f in write_results], ignore_index=True)
                 
             geo_ll = []
             var_ll = []
@@ -1766,7 +1766,8 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
 #                 with gzip.open(geo, 'rt') as fd:
                 with open(geo, 'rt') as fd:
                     reader = csv.reader(fd)
-                    rows = list(reader)
+                    rows = [next(reader) for x in range(15)]
+                    #rows = list(reader)
                     geo_row = []
                     exmn = rows[9][0]
                     exmn = exmn.split(' [South_West_North_East]')[0]
@@ -1786,7 +1787,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
             with open(results[0][0], 'w') as file:
 #                 with gzip.open(write_results[0], 'r') as f:
                 with open(write_results[0], 'r') as f:
-                    for i in range(14):
+                    for i in range(15):
                         if i == 10:
                             file.write(str('# Variables selected: ' + str(var_ll) + ' \n')) # str().encode()
                             f.readline()
@@ -1800,26 +1801,36 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                             # for gzip output byte is needed
                             file.write(f.readline())
 #             combined_csv.to_csv(results[0][0], index=False, mode="a", compression='gzip')
-            combined_csv.to_csv(results[0][0], index=False, mode="a")
+            #combined_csv.to_csv(results[0][0], index=False, mode="a")
+            print('pdconcat', time.time() - tt)
+        with open(results[0][0]+'2', 'w') as fd:
+	    
+            p1 = subprocess.Popen(["cat", results[0][0], results[0][0]], stdout=fd)
             
         if 'local_execution' in body.keys():
             return rfile
         
-        tt=time.time()
+        #tt=time.time()
             
-        with zipfile.ZipFile(rfile, 'w' ) as f:
-            for r in results:
-                try:
-                    if len(r[0]) > 0:
-                        f.write(r[0], os.path.basename(r[0]))
-                    if debug:
-                        continue  # do not remove
-                    os.remove(r[0])  # remove NetCDF file
-                except:
-                    pass
-        logger.debug('files compressed [%d] to %s', len(results), rfile)
-        print('ZIPPING: ', tt - time.time())
+        #with zipfile.ZipFile(rfile, 'w' ) as f:
+            #for r in results:
+                #try:
+                    #if len(r[0]) > 0:
+                        #f.write(r[0], os.path.basename(r[0]))
+                    #if debug:
+                        #continue  # do not remove
+                    #os.remove(r[0])  # remove NetCDF file
+                #except:
+                    #pass
+        #logger.debug('files compressed [%d] to %s', len(results), rfile)
+        #print('ZIPPING: ', tt - time.time())
 
+        print('input files: ', results)
+        write_results.insert(0, results[0][0]+'2')
+        p1 = subprocess.Popen(["tail", '-n', '+16', '-q']+write_results, stdout=subprocess.PIPE)
+        with open(rfile, 'wb') as fout:
+            p2 = subprocess.run(['pigz', '-A', body['single_csv_target'] + '.csv', '--zip'], stdin=p1.stdout, stdout=fout)
+        print('pdconcat',time.time() - tt, p2)
 #     else:
 #         with zipfile.ZipFile(rfile, 'w', compression=zipfile.ZIP_DEFLATED) as f:
 #             for v in body['variable']:
