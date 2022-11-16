@@ -9,6 +9,7 @@ import os,sys,glob
 import copy
 import time
 import xarray as xr
+import pickle
 
 import matplotlib
 import matplotlib.pylab as plt
@@ -39,11 +40,14 @@ def seconds_to_datetime(seconds, ref='1900-01-01'):
 
 
 @ray.remote
-def calc_station(sid, year):
+def calc_station(sid, year, selected_mons = None):
     show_date = False
     diff = True
     stat = sid
-    compare_to = 'bg' # fc
+    compare_to = 'fc' # fc
+    
+    if selected_mons == None:
+        selected_mons = [1,2,3,4,5,6,7,8,9,10,11,12]
     
     maxtimediff = pd.Timedelta(hours=2)
     
@@ -120,7 +124,7 @@ def calc_station(sid, year):
                 rmse_sum_shdisp_adjsonde, rms_sum_shbase, rms_sum_adjsonde, rms_sum_sonde,
                 rms_sum_shdisp, rms_sum_dispminusbase]
 
-    for mon in [1,2,3,4,5,6,7,8,9,10,11,12]:
+    for mon in selected_mons:
 
         df_mon = df[df.date_time.dt.month == mon]
     #     display(df_mon)
@@ -202,13 +206,15 @@ if __name__ == '__main__':
     stdplevs = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500]
     diff = True
     show_date = False
-    for year in [1960]: #[1970, 1980, 1990, 2000, 2010, 2020]:
+    for year in [1960, 1970, 1980, 1990, 2000, 2010, 2020]:
         file_list = []
         for i in glob.glob('/mnt/users/scratch/leo/scratch/converted_v9/*.nc')[:]:
             print(i)
             sid = i.split('_CEUAS_merged_v1.nc')[0][-5:]
             file_list.append(calc_station.remote(sid,year))
         results = ray.get(file_list)
+        with open('era5_temperature_fc_'+str(year)+'_rmse_data.p', 'wb') as file:
+            pickle.dump(results, file)
 
         rmse_sum_shbase_sonde, rmse_sum_shbase_adjsonde, rmse_sum_shdisp_sonde, rmse_sum_shdisp_adjsonde, rms_sum_shbase, rms_sum_adjsonde, rms_sum_sonde, rms_sum_shdisp, rms_sum_dispminusbase = copy.deepcopy(results[0])
         for i in results[1:]:
@@ -288,6 +294,6 @@ if __name__ == '__main__':
 
 #         maplt.title(str(year)+' Temperature RMSE \n' + str(len(results)) + ' stations    ' +str(len(rms_sum_shdisp[50000])) +' valid ascents')
         maplt.title(str(year)+' Temperature RMSE \n' +str(len(rms_sum_shdisp[50000])) +' valid ascents')
-        maplt.savefig(str(year)+'_world_rmse_plot.png')
+        maplt.savefig(str(year)+'_era5_fc_world_rmse_plot.png')
         maplt.close()
         print('RMSE calculation: ', time.time()-t0)
