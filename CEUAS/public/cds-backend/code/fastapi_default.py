@@ -1959,9 +1959,11 @@ async def index(body:Request, request=None, response=None):
 
     """
 
+    #print('body', body.client[0])
+    client = body.client[0] + ':' + str(body.client[1])
     body_str = (await body.body()).decode()
+    #print(body_str)
     logger.info('REQUEST STRING: %s', body_str)
-
     if '&' in body_str:	
        	body = urllib.parse.parse_qs(body_str)
     else:
@@ -1974,6 +1976,7 @@ async def index(body:Request, request=None, response=None):
     logger.info('ASYNC INDEX POST')
     randdir = '{:012d}'.format(numpy.random.randint(100000000000))
     logger.info("%s BODY %s %s", randdir,type(body),body)
+    logger.debug("CLIENT %s ", client)
     tmpdir = config['tmp_dir'] + '/' + randdir
     try:
         #rfile='/fio/srvx7/leo/x'
