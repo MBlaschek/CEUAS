@@ -1980,8 +1980,8 @@ async def index(body:Request, request=None, response=None):
     logger.info('REQUEST STRING: %s', body_str)
     
     request_logger.info('REQUEST STRING: %s', body_str)
-    request_logger.info('REQUEST IP: %s', hostip)
-    request_logger.info('CLIENT IP: %s', clientip)
+    request_logger.info('body.client.host IP: %s', hostip)
+    request_logger.info('body.client[0] IP: %s', clientip)
 
     if '&' in body_str:	
        	body = urllib.parse.parse_qs(body_str)
