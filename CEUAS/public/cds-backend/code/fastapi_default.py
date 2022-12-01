@@ -143,6 +143,14 @@ class MyFilter(object):
     def filter(self, logrecord):
         return logrecord.levelno <= self.__level
 
+request_logger = logging.getLogger('request_logger')
+request_logger.setLevel(10)  # 10 Debug
+r_ch = logging.FileHandler(config['logger_dir'] + '/request.log')
+r_ch.setLevel(logging.DEBUG)
+formatter = logging.Formatter('%(asctime)s - %(name)s | %(funcName)s - %(levelname)s - %(message)s')
+r_ch.setFormatter(formatter)
+request_logger.addHandler(r_ch)
+
 
 logger = logging.getLogger(config['logger_name'])
 logger.setLevel(config['logger_level'])  # 10 Debug
@@ -168,6 +176,7 @@ if not config['debug']:
     ch3.setLevel(logging.DEBUG)  # respond only to Debug and above
     ch3.setFormatter(formatter)
     logger.addHandler(ch3)
+    
 else:
     # create console handler and set level to info for stdout
     ch2 = logging.StreamHandler(sys.stdout)
@@ -1540,15 +1549,18 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     #
     # check if the request isn't too long
     #
-    lenprod = (len(body['variable']) * len(body['statid']) * # variables and stations
-               ((int(body['date'][-1][:4])-int(body['date'][0][:4]))*12 # years in months
-                + (int(body['date'][-1][4:6])-int(body['date'][0][4:6])))) # months
+    time_len = ((int(body['date'][-1][:4])-int(body['date'][0][:4]))*12 + # variables and stations
+                (int(body['date'][-1][4:6])-int(body['date'][0][4:6]))) # months
+    if time_len == 0:
+        time_len = 1
+    lenprod = len(body['variable']) * len(body['statid']) * time_len
 #     if len(body['variable']) == 1 and ((int(body['date'][-1][:4])-int(body['date'][0][:4]))*12 + (int(body['date'][-1][4:6])-int(body['date'][0][4:6]))) == 1:
-#         logger.warning('Requesting more than 500 elements - Exception: 1 variable and 1 month of every station')
-#     if lenprod > 30000:
-#         # lenght restriction deactivated as long following line is out commented.
-#         raise RuntimeError('Request too large - please split')
-# #         logger.warning('Request very large - please split')
+#         logger.warning('Requesting too many elements - Exception: please split your request')
+    request_logger.info('REQUEST ELEMENTS: %s', lenprod)
+    if lenprod > 300000:
+        # lenght restriction deactivated as long following line is out commented.
+        raise RuntimeError('Request too large - please split your request')
+#         logger.warning('Request very large - please split')
     #
     logger.debug('Cleaned Request %s', str(body))
     os.makedirs(output_dir, exist_ok=True)  # double check
@@ -1855,6 +1867,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
 #                     os.remove(ifile)  # remove csv
 
     logger.debug('Request-File: %s [Time: %7.4f s]', rfile, (time.time() - tt))
+    request_logger.info('REQUEST TIME: %s', (time.time() - tt))
     return rfile
 
 
@@ -1958,12 +1971,18 @@ async def index(body:Request, request=None, response=None):
      - period           – ['19990101', '20000101']
 
     """
+    
 
-    #print('body', body.client[0])
-    client = body.client[0] + ':' + str(body.client[1])
+    hostip = body.client.host
+    clientip = body.client[0] + ':' + str(body.client[1])
+
     body_str = (await body.body()).decode()
-    #print(body_str)
     logger.info('REQUEST STRING: %s', body_str)
+    
+    request_logger.info('REQUEST STRING: %s', body_str)
+    request_logger.info('REQUEST IP: %s', hostip)
+    request_logger.info('CLIENT IP: %s', clientip)
+
     if '&' in body_str:	
        	body = urllib.parse.parse_qs(body_str)
     else:
@@ -1976,7 +1995,6 @@ async def index(body:Request, request=None, response=None):
     logger.info('ASYNC INDEX POST')
     randdir = '{:012d}'.format(numpy.random.randint(100000000000))
     logger.info("%s BODY %s %s", randdir,type(body),body)
-    logger.debug("CLIENT %s ", client)
     tmpdir = config['tmp_dir'] + '/' + randdir
     try:
         #rfile='/fio/srvx7/leo/x'
