@@ -401,7 +401,10 @@ def bufr_to_dataframe(file=''):
    
         codes_set(bufr, 'unpack', 1) # eCcodes must expand all the descriptors and unpack the data section
     
-        date = '19'+codes_get_array(bufr, "typicalDate")[0][2:]
+        if 'AMMA' in file:
+            date = codes_get_array(bufr, "typicalDate")[0]
+        else:
+            date = '19'+codes_get_array(bufr, "typicalDate")[0][2:]  # must fix this cause when reading from e.g. era5/odbs/ai_bfr/era5.10106.bfr , I obtain codes_get_array(bufr, "typicalDate") -> 20710627 i.e. it starts from 2000 and not 1900 !
         timePeriod = codes_get_array(bufr, "typicalTime")[0]   
         
         year, month, day =  date[0:4], date[4:6] , date[6:8]
@@ -627,6 +630,8 @@ def uadb_ascii_to_dataframe(file=''):
             
             if gph == -999.0 or gph == -99999.00 or gph >= 99999.0:
                 gph = np.nan
+            else:
+                gph = gph * 9.80665 
          
             temp = float(line[23:29])
             if temp == -999.0:
@@ -799,7 +804,9 @@ def igra2_ascii_to_dataframe(file=''):
             gph     = int(line[16:21])        # 17- 21  integer geopotential height  [m]
             
             if gph == -9999 or gph == -8888:   # reading the values andh check if they are missing or removed as -9999 or -8888 before dividing by 10 as the instructions say 
-                gph = np.nan # 23- 27  integer temperature, [Celsius to Kelvin ]    
+                gph = np.nan # 23- 27  integer temperature, [Celsius to Kelvin ] 
+            else:
+                gph = gph * 9.80665 
                 
             zflag   = line[21]                # 22- 22  character gph processing flag, 
         
