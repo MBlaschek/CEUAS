@@ -97,7 +97,11 @@ class Merger():
                                           'ncar':b'4', 
                                           'bufr':b'5',  
                                           'era5_1':b'1' , 
+                                          'era5_1_mobile':b'1' , 
+                                          
                                           'era5_2':b'2', 
+                                          'era5_2_mobile':b'2', 
+                                          
                                           'era5_1759' :b'6' , 
                                           'era5_1761':b'7' ,  
                                           'era5_3188' :b'8' ,
@@ -116,6 +120,7 @@ class Merger():
         self.std_plevs    = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000]
 
         self.add_sensor = True
+            
         self.copy = True # make a copy of the merged file before adding the sensor. Argument for the add_sensor wrapper function  
         
         
@@ -250,13 +255,16 @@ class Merger():
                     s[k] = v 
                     
         if '20999' in station:
-            sc = pd.DataFrame( columns = stat_conf.columns)  # empty dataframe 
+            sc = pd.DataFrame( 0, index=[0], columns = stat_conf.columns)  # empty dataframe 
         else:
             sc = clean_station_configuration(s)
-
+        
+        for c in sc.columns:
+            if 'Unnamed' in c:
+                sc = sc.drop(columns=c)
+            
         data['station_configuration'] = sc
                         
-        
         for k,v in self.datasets.items() :
             data[k] = {}
             for F in v:
@@ -319,12 +327,14 @@ class Merger():
 
     def get_null(self, tipo = ''):
         ''' Simply returns the proper format for ''null' value '''        
-        if tipo == np.int32 :
+        if tipo in  [np.int32, np.int64]  :
             void = -2147483648
         elif tipo == np.float32 :
             void = np.nan
         elif tipo == np.bytes_ :
             void = b'nan'
+        else:
+            return np.nan 
         return void
         
     def delete_ds(self, dt):
@@ -939,13 +949,22 @@ class Merger():
             stat_conf.longitude = np.array ( range(len(all_combined_head) ) )
             stat_conf = clean_station_configuration(stat_conf)
         else:
-            stat_conf = self.stat_conf_CUON 
+            #stat_conf = self.stat_conf_CUON 
+            for v in self.data['station_configuration'].columns:
+                    a = self.get_null( tipo = self.dic_type_attributes['station_configuration'][v]['type'])
+                    print(v,  '   ' ,  self.dic_type_attributes['station_configuration'][v]['type'] , '   ' , a )
+                    print(0)
+                    
+            stat_conf = pd.DataFrame(np.repeat(self.data['station_configuration'].values , len(all_combined_head) , axis=0), columns=self.data['station_configuration'].columns)  
+            stat_conf['primary_id'] = np.bytes_(self.station)
+            stat_conf['primary_id'] = stat_conf['primary_id'].astype('|S15')
+            
         # check other variables !!! 
         
         self.data['station_configuration'] = stat_conf 
+            
         for k in self.data['station_configuration'].columns: # try writing only one entry
-            if "Unnamed" in k:
-                continue
+
             
             """
             try:
@@ -1208,12 +1227,11 @@ class Merger():
             for k in table.keys(): 
                 if k == 'station_name':
                     print(0)
+
                 var_type = self.dic_type_attributes[content][k]['type']
 
                 ''' trying to convert the variable types to the correct types stored as attribute, read from the numpy dic file '''
                 if type(table[k][0]) != var_type:
-                    #if 'freq' in k:
-                    #    print(0)
                     try:
                         table[k] = table[k].astype( var_type ) 
                         #print('Done station_conf' , k )
@@ -1225,6 +1243,7 @@ class Merger():
                             print ('FAILED converting column ' , k, ' type ', type(table[k][0]) , ' to type ', var_type , '  so used np.float64')
 
                 dic = {k:table[k]}  
+
                 write_dict_h5(out_name, dic , content, self.encodings[content], var_selection=[], mode='a', attrs = attrs_dic  )
 
         # Writing the observations_table, header_table, era5fb 
@@ -1233,8 +1252,6 @@ class Merger():
             for k in table.keys(): 
                 if k == 'index' or k == 'hdrlen' or 'string' in k :
                     continue
-                if k == 'station_name':
-                    print(0)
 
                 var_type = self.dic_type_attributes[content][k]['type']
 
@@ -1318,6 +1335,7 @@ class Merger():
 base_dir = '/scratch/das/federico/COP2_HARVEST_NOVEMBER2022'
 
 data_directories   = { 'era5_1'       : base_dir + '/era5_1' ,
+                                   'era5_1_mobile'       : base_dir + '/era5_1_mobile' ,
                                    'era5_2'       : base_dir + '/era5_2' ,
                                    'era5_3188' : base_dir + '/era5_3188' ,
                                    'era5_1759' : base_dir + '/era5_1759' ,
@@ -1334,7 +1352,7 @@ data_directories   = { 'era5_1'       : base_dir + '/era5_1' ,
 
 out_dir = '/scratch/das/federico/MERGING_DEC2022_FIXED_1'
 
-out_dir = '/scratch/das/federico/PROVAAA'
+out_dir = '/scratch/das/federico/ERA5_1_mobile'
 
 os.system('rm -r ' + out_dir )
 
@@ -1350,32 +1368,28 @@ def create_stat_dic(stat_id, data_directories, kind):
     station_dic = {}
     total_dim = []
     found_20001 = False
-    if kind == 'mobile':
-        # there will be only one single file and one single dataset to consider for mobile stations
-        file_ds = stat_id.split('_harvested')[0].split('Issue-_')[1]
-        station_dic[file_ds] = [ data_directories['era5_1'].split('era5_1')[0] + '/' + file_ds + '/' + stat_id]
-        size = os.path.getsize(data_directories['era5_1'].split('era5_1')[0] + '/' + file_ds + '/' + stat_id)
-        
-    else:
-        for d,i in data_directories.items():
+
+    for d,i in data_directories.items():
+        if kind == 'mobile':
+            if d not in ['era5_1_mobile' , 'era5_2_mobile']:
+                continue
+            files = os.listdir(i)
+            for f in files: # normal check for any file
+                Id = f.split('_'+d)[0]
+                if Id == stat_id:
+                    if d not in station_dic.keys():
+                        station_dic[d] = []                            
+                    station_dic[d].append(i + '/' + f)
     
-                files = os.listdir(i)
-                for f in files: # normal check for any file
-                    Id = f.split('_'+d)[0]
-                    if Id == stat_id:
+                    total_dim. append( os.path.getsize (i + '/' + f) )
+                if '-20001-' in f:  # here, look for possible alternatives identified as e.g. 0-20001-0-10393 to be merged together
+                    stat = stat_id.split('-')[-1]
+                    stat_id_2 = '0-20001-0-' + stat 
+                    if Id == stat_id_2:
                         if d not in station_dic.keys():
                             station_dic[d] = []                            
                         station_dic[d].append(i + '/' + f)
-        
-                        total_dim. append( os.path.getsize (i + '/' + f) )
-                    if '-20001-' in f:  # here, look for possible alternatives identified as e.g. 0-20001-0-10393 to be merged together
-                        stat = stat_id.split('-')[-1]
-                        stat_id_2 = '0-20001-0-' + stat 
-                        if Id == stat_id_2:
-                            if d not in station_dic.keys():
-                                station_dic[d] = []                            
-                            station_dic[d].append(i + '/' + f)
-                            found_20001 = True
+                        found_20001 = True
     
         size = sum(total_dim)        
         if found_20001:
@@ -1429,7 +1443,7 @@ if __name__ == '__main__':
 
     out = open('Failed_merged.txt' , 'a+')
     for station in stations.split(','):
-        print(station)
+        #print(station)
 
         station_dic, size, station = create_stat_dic(station, data_directories, kind)
 
