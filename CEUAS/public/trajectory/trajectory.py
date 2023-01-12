@@ -1,22 +1,8 @@
 import numpy
 import numpy as np
-# import time
-# import datetime
-# import netCDF4
-# import matplotlib.pylab as plt
-# import os,sys,glob
-# sys.path.append(os.getcwd()+'/../adjust/rasotools/')
-# from utils import *
-# from multiprocessing import Pool
-#import odb
-# from eccodes import *
-# from functools import partial
-# from collections import OrderedDict
-# import json
-# import gzip
-# import pandas as pd
-# import scipy
-# from scipy import stats
+
+from pyproj import Geod
+g = Geod(ellps="WGS84")
 
 def calc_height(t, p, jump = True):
     '''
@@ -130,10 +116,10 @@ def inverse_haversine(lat, lon, distance, direction):
     lon = numpy.radians(lon)
     d = numpy.array(distance)
     r = 6371 #[km]
-    if direction == "SOUTH":
-        brng = numpy.radians(180)
-    elif direction == "WEST":
-        brng = numpy.radians(270)
+    if direction == "NORTH":
+        brng = numpy.radians(0)
+    elif direction == "EAST":
+        brng = numpy.radians(90)
     else:
         return "error - not a valid direction"
     return_lat = numpy.arcsin(numpy.sin(lat) * numpy.cos(d / r) + numpy.cos(lat) * numpy.sin(d / r) * numpy.cos(brng))
@@ -143,16 +129,31 @@ def inverse_haversine(lat, lon, distance, direction):
 
 
 # from haversine import inverse_haversine, Direction
-def transport(lat, lon, u_dist, v_dist):
+def transport(lat, lon, u_dist, v_dist, transport_type):
+    if transport_type == 'sphere':
+        new_lat, new_lon = transport_sphere(lat, lon, u_dist, v_dist)
+    else:
+        new_lat, new_lon = transport_geod(lat, lon, u_dist, v_dist)
+    return new_lat, new_lon
+
+def transport_sphere(lat, lon, u_dist, v_dist):
     '''
     dist: [km]
     '''
-    new_lat, new_lon = inverse_haversine(lat, lon, u_dist, "WEST")
-    new_lat, new_lon = inverse_haversine(new_lat, new_lon, v_dist, "SOUTH")
+    new_lat, new_lon = inverse_haversine(lat, lon, u_dist, "EAST")
+    new_lat, new_lon = inverse_haversine(new_lat, new_lon, v_dist, "NORTH")
+    return new_lat, new_lon
+
+def transport_geod(lat, lon, u_dist, v_dist):
+    '''
+    dist: [km]
+    '''
+    new_lon, new_lat, backward_azim = g.fwd(lons=lon, lats=lat, az=90., dist=u_dist*1000.0)
+    new_lon, new_lat, backward_azim = g.fwd(lons=new_lon, lats=new_lat, az=0., dist=v_dist*1000.0)
     return new_lat, new_lon
 
 
-def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean', factor = 1, u_factor = None, v_factor = None, z_variant = 'ucar', output='degree'):
+def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean', factor = 1, u_factor = None, v_factor = None, z_variant = 'ucar', output='degree', transport_type='sphere'):
     '''
     w_rs -> radio sonde rising speed
     '''
@@ -188,22 +189,22 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
 
             if wind == 'mean':
                 if output == 'degree':
-                    new_lat, new_lon = transport(new_lat, new_lon, (np.mean([u[i],u[i-1]]) * rising_time)/1000. * u_factor, (np.mean([v[i],v[i-1]]) * rising_time)/1000. * v_factor)
+                    new_lat, new_lon = transport(new_lat, new_lon, (np.mean([u[i],u[i-1]]) * rising_time)/1000. * u_factor, (np.mean([v[i],v[i-1]]) * rising_time)/1000. * v_factor, transport_type)
                 elif output == 'km':
                     new_lon = (np.mean([u[i],u[i-1]]) * rising_time)/1000. * u_factor
                     new_lat = (np.mean([v[i],v[i-1]]) * rising_time)/1000. * v_factor
                                         
             elif wind == 'upper':
-                new_lat, new_lon = transport(new_lat, new_lon, (u[i] * rising_time)/1000. * u_factor, (v[i] * rising_time)/1000. * v_factor)
+                new_lat, new_lon = transport(new_lat, new_lon, (u[i] * rising_time)/1000. * u_factor, (v[i] * rising_time)/1000. * v_factor, transport_type)
             elif wind == 'lower':
-                new_lat, new_lon = transport(new_lat, new_lon, (u[i-1] * rising_time)/1000. * u_factor, (v[i-1] * rising_time)/1000. * v_factor) 
+                new_lat, new_lon = transport(new_lat, new_lon, (u[i-1] * rising_time)/1000. * u_factor, (v[i-1] * rising_time)/1000. * v_factor, transport_type) 
             else:
                 print('error: not a valid wind request')
 
 
             if output == 'degree':
-                lat_displacement.append(lat - new_lat)
-                lon_displacement.append(lon - new_lon)
+                lat_displacement.append(new_lat - lat)
+                lon_displacement.append(new_lon - lon)
             elif output == 'km':
                 lat_displacement.append(new_lat)
                 lon_displacement.append(new_lon)
@@ -211,7 +212,7 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
     return lat_displacement, lon_displacement, np.array(u_shear), np.array(v_shear), rts
 
 
-def trajectory_height(lat, lon, u, v, height, w_rs = 5.0, wind = 'mean', factor = 1, u_factor = None, v_factor = None, z_variant = 'ucar', output='degree'):
+def trajectory_height(lat, lon, u, v, height, w_rs = 5.0, wind = 'mean', factor = 1, u_factor = None, v_factor = None, z_variant = 'ucar', output='degree', transport_type='sphere'):
     '''
     w_rs -> radio sonde rising speed
     '''
@@ -244,15 +245,15 @@ def trajectory_height(lat, lon, u, v, height, w_rs = 5.0, wind = 'mean', factor 
 
             if wind == 'mean':
                 if output == 'degree':
-                    new_lat, new_lon = transport(new_lat, new_lon, (np.mean([u[i],u[i-1]]) * rising_time)/1000. * u_factor, (np.mean([v[i],v[i-1]]) * rising_time)/1000. * v_factor)
+                    new_lat, new_lon = transport(new_lat, new_lon, (np.mean([u[i],u[i-1]]) * rising_time)/1000. * u_factor, (np.mean([v[i],v[i-1]]) * rising_time)/1000. * v_factor, transport_type)
                 elif output == 'km':
                     new_lon = (np.mean([u[i],u[i-1]]) * rising_time)/1000. * u_factor
                     new_lat = (np.mean([v[i],v[i-1]]) * rising_time)/1000. * v_factor
                                         
             elif wind == 'upper':
-                new_lat, new_lon = transport(new_lat, new_lon, (u[i] * rising_time)/1000. * u_factor, (v[i] * rising_time)/1000. * v_factor)
+                new_lat, new_lon = transport(new_lat, new_lon, (u[i] * rising_time)/1000. * u_factor, (v[i] * rising_time)/1000. * v_factor, transport_type)
             elif wind == 'lower':
-                new_lat, new_lon = transport(new_lat, new_lon, (u[i-1] * rising_time)/1000. * u_factor, (v[i-1] * rising_time)/1000. * v_factor) 
+                new_lat, new_lon = transport(new_lat, new_lon, (u[i-1] * rising_time)/1000. * u_factor, (v[i-1] * rising_time)/1000. * v_factor, transport_type) 
             else:
                 print('error: not a valid wind request')
 
