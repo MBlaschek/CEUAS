@@ -1,0 +1,735 @@
+
+Header 1. Begin offset: 0, end offset: 46183, number of rows in block: 2262, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19580525.000000,19581025.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<1.000000,122.000000>
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16013.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=91.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=6.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=32.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=423.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19580525.000000,19581025.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<110000.000000,120000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA21'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: constant, value=2.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=130.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<32396098.000000,32396219.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,32.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=2.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,98066.500000>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-308.164978,328.795013>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 2. Begin offset: 46183, end offset: 92352, number of rows in block: 2268, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19590223.000000,19591214.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<123.000000,262.000000>
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16013.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=91.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=6.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=32.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=423.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19590223.000000,19591214.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<110000.000000,120000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA21'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: constant, value=2.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=130.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<32396220.000000,32396359.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,32.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=2.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,98066.500000>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-337.199341,345.437988>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 3. Begin offset: 92352, end offset: 169391, number of rows in block: 3854, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19600315.000000,19601230.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<263.000000,518.000000>
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16013.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=91.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=6.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=32.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=423.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19600315.000000,19601230.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<110000.000000,150000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA21'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: constant, value=2.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=130.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<32396360.000000,32396615.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,32.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=2.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,98066.500000>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-343.921692,342.493347>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 4. Begin offset: 169391, end offset: 261189, number of rows in block: 4642, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19610106.000000,19611130.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<519.000000,746.000000>
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16013.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=91.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=6.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=32.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=423.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19610106.000000,19611130.000000>
+16. name: time@hdr, type: INTEGER, codec: constant, value=110000.000000
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA21'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: constant, value=2.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=130.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<32396616.000000,32396843.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,32.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=2.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,98066.500000>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-348.698975,341.043335>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 5. Begin offset: 261189, end offset: 305966, number of rows in block: 2196, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19620301.000000,19621218.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<747.000000,849.000000>
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16013.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=91.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=6.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=32.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=423.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19620301.000000,19621218.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<100000.000000,120000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA21'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: constant, value=2.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=130.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<32396844.000000,32396946.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,38.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=2.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,127486.453125>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-358.621552,355.341125>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 6. Begin offset: 305966, end offset: 383513, number of rows in block: 3890, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19630101.000000,19631009.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<850.000000,1025.000000>
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16013.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=91.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=6.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=32.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=423.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19630101.000000,19631009.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<110000.000000,130000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA21'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: constant, value=2.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=130.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<32396947.000000,32397122.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,38.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=2.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,127486.453125>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-356.119598,349.736725>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 7. Begin offset: 383513, end offset: 478996, number of rows in block: 4446, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19660101.000000,19661212.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int16, range=<1.000000,1247.000000>
+7. name: reportype@hdr, type: INTEGER, codec: int8, range=<16013.000000,16022.000000>
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: int8, range=<91.000000,101.000000>
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: int8, range=<5.000000,6.000000>
+12. name: codetype@hdr, type: INTEGER, codec: int8, range=<32.000000,35.000000>
+13. name: stalt@hdr, type: REAL, codec: constant, value=423.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19660101.000000,19661212.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<110000.000000,130000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: int8_string, #words=2
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: int8, range=<1.000000,2.000000>
+22. name: collection_identifier@conv, type: INTEGER, codec: int8, range=<1.000000,130.000000>
+23. name: unique_identifier@conv, type: INTEGER, codec: int32, range=<5668908.000000,32397344.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,34.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: int8, range=<1.000000,2.000000>
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,107873.148438>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-347.928833,347.275421>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 8. Begin offset: 478996, end offset: 483735, number of rows in block: 122, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19670503.000000,19670930.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<7.000000,30.000000>
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16022.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=101.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=5.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=35.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=423.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19670503.000000,19670930.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<110000.000000,130000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA24'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: constant, value=1.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=1.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<5668914.000000,5668937.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,10.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<1.500000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=1.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<30000.000000,85000.000000>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-313.884552,328.729553>
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 9. Begin offset: 483735, end offset: 491904, number of rows in block: 280, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19680401.000000,19680929.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<31.000000,58.000000>
+7. name: reportype@hdr, type: INTEGER, codec: int8, range=<16013.000000,16022.000000>
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: int8, range=<91.000000,101.000000>
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: int8, range=<5.000000,6.000000>
+12. name: codetype@hdr, type: INTEGER, codec: int8, range=<32.000000,35.000000>
+13. name: stalt@hdr, type: REAL, codec: constant, value=423.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19680401.000000,19680929.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<120000.000000,130000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA24'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: int8, range=<1.000000,2.000000>
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=1.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<5668938.000000,5668965.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,26.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: int8, range=<1.000000,2.000000>
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<2991.028320,292924.625000>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-339.583984,337.681549>
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 10. Begin offset: 491904, end offset: 504628, number of rows in block: 498, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19690107.000000,19691231.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<59.000000,101.000000>
+7. name: reportype@hdr, type: INTEGER, codec: int8, range=<16013.000000,16022.000000>
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: int8, range=<91.000000,101.000000>
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: int8, range=<5.000000,6.000000>
+12. name: codetype@hdr, type: INTEGER, codec: int8, range=<32.000000,35.000000>
+13. name: stalt@hdr, type: REAL, codec: constant, value=423.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19690107.000000,19691231.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<110000.000000,130000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA24'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: int8, range=<1.000000,2.000000>
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=1.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<5668966.000000,5669008.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,30.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,52671.515625>
+26. name: varno@body, type: INTEGER, codec: int8, range=<1.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: int8, range=<1.000000,2.000000>
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<4158.019531,274998.093750>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-4513.453613,204.024353>
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 11. Begin offset: 504628, end offset: 552288, number of rows in block: 2125, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19700102.000000,19701231.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int16, range=<102.000000,1278.000000>
+7. name: reportype@hdr, type: INTEGER, codec: int8, range=<16013.000000,16022.000000>
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: int8, range=<91.000000,101.000000>
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: int8, range=<5.000000,6.000000>
+12. name: codetype@hdr, type: INTEGER, codec: int8, range=<32.000000,35.000000>
+13. name: stalt@hdr, type: REAL, codec: constant, value=423.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19700102.000000,19701231.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<110000.000000,130000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: int8_string, #words=2
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: int8, range=<1.000000,2.000000>
+22. name: collection_identifier@conv, type: INTEGER, codec: int8, range=<1.000000,130.000000>
+23. name: unique_identifier@conv, type: INTEGER, codec: int32, range=<5669009.000000,32397375.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,44.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,206900.703125>
+26. name: varno@body, type: INTEGER, codec: int8, range=<1.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: int8, range=<1.000000,2.000000>
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,403524.031250>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-343.054688,3877.137939>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 12. Begin offset: 552288, end offset: 583382, number of rows in block: 1333, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19710103.000000,19711228.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<227.000000,360.000000>
+7. name: reportype@hdr, type: INTEGER, codec: int8, range=<16013.000000,16022.000000>
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: int8, range=<91.000000,101.000000>
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: int8, range=<5.000000,6.000000>
+12. name: codetype@hdr, type: INTEGER, codec: int8, range=<32.000000,35.000000>
+13. name: stalt@hdr, type: REAL, codec: short_real, range=<423.000000,432.000000>
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19710103.000000,19711228.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<110000.000000,130000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA24'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: int8, range=<1.000000,2.000000>
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=1.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<5669134.000000,5669267.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,38.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,106804.226562>
+26. name: varno@body, type: INTEGER, codec: int8, range=<1.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: int8, range=<1.000000,2.000000>
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<2991.028320,263033.968750>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-358.325775,4725.839844>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 13. Begin offset: 583382, end offset: 671575, number of rows in block: 4096, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19720118.000000,19721229.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int16, range=<361.000000,1372.000000>
+7. name: reportype@hdr, type: INTEGER, codec: int8, range=<16013.000000,16022.000000>
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: int8, range=<91.000000,101.000000>
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: int8, range=<5.000000,6.000000>
+12. name: codetype@hdr, type: INTEGER, codec: int8, range=<32.000000,35.000000>
+13. name: stalt@hdr, type: REAL, codec: constant, value=432.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19720118.000000,19721229.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<100000.000000,130000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: int8_string, #words=2
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: int8, range=<1.000000,2.000000>
+22. name: collection_identifier@conv, type: INTEGER, codec: int8, range=<1.000000,130.000000>
+23. name: unique_identifier@conv, type: INTEGER, codec: int32, range=<5669268.000000,32397469.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,46.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: int8, range=<1.000000,2.000000>
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,403524.031250>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-358.739685,355.117004>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 14. Begin offset: 671575, end offset: 773982, number of rows in block: 5190, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19730106.000000,19731231.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<1373.000000,1570.000000>
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16013.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=91.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=6.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=32.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=432.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19730106.000000,19731231.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<100000.000000,130000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA21'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: constant, value=2.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=130.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<32397470.000000,32397667.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,48.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=2.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,176519.703125>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-347.990936,357.087677>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 15. Begin offset: 773982, end offset: 860911, number of rows in block: 4396, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19740101.000000,19740924.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<1571.000000,1717.000000>
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16013.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=91.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=6.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=32.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=432.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19740101.000000,19740924.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<100000.000000,130000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA21'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: constant, value=2.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=130.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<32397668.000000,32397814.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,76.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=2.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,313812.812500>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-347.384399,337.847870>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 16. Begin offset: 860911, end offset: 900088, number of rows in block: 1908, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19750116.000000,19751231.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<1718.000000,1804.000000>
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16013.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=91.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=6.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=32.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=432.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19750116.000000,19751231.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<120000.000000,130000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA21'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: constant, value=2.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=130.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<32397815.000000,32397901.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,38.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=2.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,147099.750000>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-314.476105,320.468597>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 17. Begin offset: 900088, end offset: 997271, number of rows in block: 4918, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19760102.000000,19761128.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<1805.000000,1994.000000>
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16013.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=91.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=6.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=32.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=432.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19760102.000000,19761128.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<110000.000000,130000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA21'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: constant, value=2.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=130.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<32397902.000000,32398091.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,46.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=2.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,186326.343750>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-342.156830,340.340118>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 18. Begin offset: 997271, end offset: 1062658, number of rows in block: 3274, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19770207.000000,19771209.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<1995.000000,2113.000000>
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16013.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=91.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=6.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=32.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=432.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19770207.000000,19771209.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<110000.000000,120000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA21'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5726047.000000
+21. name: station_type@conv, type: INTEGER, codec: constant, value=2.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=130.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<32398092.000000,32398210.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,52.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=2.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,225552.953125>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-343.408875,338.270020>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 19. Begin offset: 1062658, end offset: 1175104, number of rows in block: 5724, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19780114.000000,19781231.000000>
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<2114.000000,2235.000000>
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16013.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=91.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=6.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=32.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=432.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19780114.000000,19781231.000000>
+16. name: time@hdr, type: INTEGER, codec: int16, range=<110000.000000,140000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA21'
+20. name: sonde_type@conv, type: INTEGER, codec: int32, range=<-5726047.000000,-5648991.000000>
+21. name: station_type@conv, type: INTEGER, codec: constant, value=2.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=130.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<32398211.000000,32398332.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,76.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=2.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,313812.812500>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-310.480194,349.639374>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 20. Begin offset: 1175104, end offset: 1370220, number of rows in block: 10000, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: int16, range=<19790102.000000,19791231.000000>
+5. name: antime@desc, type: INTEGER, codec: int32, range=<0.000000,120000.000000>
+6. name: seqno@hdr, type: INTEGER, codec: int8, range=<2236.000000,2454.000000>
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16013.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=91.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=6.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=32.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=432.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: int16, range=<19790102.000000,19791231.000000>
+16. name: time@hdr, type: INTEGER, codec: int32, range=<0.000000,230000.000000>
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA21'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5648991.000000
+21. name: station_type@conv, type: INTEGER, codec: constant, value=2.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=130.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: int8, range=<32398333.000000,32398551.000000>
+24. name: entryno@body, type: INTEGER, codec: int8, range=<1.000000,76.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<0.000000,360.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=2.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<-9796.843750,323619.437500>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-344.952972,358.965302>, missingValue=-2147483647.000000
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+
+Header 21. Begin offset: 1370220, end offset: 1373340, number of rows in block: 46, byteOrder: same
+0. name: expver@desc, type: STRING, codec: constant_string, value='1759    '
+1. name: type@desc, type: INTEGER, codec: constant, value=263.000000
+2. name: class@desc, type: INTEGER, codec: constant, value=22.000000
+3. name: stream@desc, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate@desc, type: INTEGER, codec: constant, value=19791231.000000
+5. name: antime@desc, type: INTEGER, codec: constant, value=120000.000000
+6. name: seqno@hdr, type: INTEGER, codec: constant, value=2454.000000
+7. name: reportype@hdr, type: INTEGER, codec: constant, value=16013.000000
+8. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+9. name: subtype@hdr, type: INTEGER, codec: constant, value=91.000000
+10. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+11. name: obstype@hdr, type: INTEGER, codec: constant, value=6.000000
+12. name: codetype@hdr, type: INTEGER, codec: constant, value=32.000000
+13. name: stalt@hdr, type: REAL, codec: constant, value=432.000000
+14. name: statid@hdr, type: STRING, codec: constant_string, value='1:82930 '
+15. name: date@hdr, type: INTEGER, codec: constant, value=19791231.000000
+16. name: time@hdr, type: INTEGER, codec: constant, value=120000.000000
+17. name: lat@hdr, type: REAL, codec: constant, value=-9.370000
+18. name: lon@hdr, type: REAL, codec: constant, value=-54.900002
+19. name: source@hdr, type: STRING, codec: constant_string, value='NCARUA21'
+20. name: sonde_type@conv, type: INTEGER, codec: constant, value=-5648991.000000
+21. name: station_type@conv, type: INTEGER, codec: constant, value=2.000000
+22. name: collection_identifier@conv, type: INTEGER, codec: constant, value=130.000000
+23. name: unique_identifier@conv, type: INTEGER, codec: constant, value=32398551.000000
+24. name: entryno@body, type: INTEGER, codec: int8, range=<15.000000,60.000000>
+25. name: obsvalue@body, type: REAL, codec: short_real, range=<1.000000,330.000000>
+26. name: varno@body, type: INTEGER, codec: int8, range=<111.000000,112.000000>
+27. name: vertco_type@body, type: INTEGER, codec: constant, value=2.000000
+28. name: vertco_reference_1@body, type: REAL, codec: short_real, range=<24516.625000,235359.593750>
+29. name: timeseries_index@conv, type: INTEGER, codec: constant_or_missing, value=NULL, missingValue=2147483647.000000
+30. name: bias_volatility@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+31. name: an_depar@body, type: REAL, codec: short_real, range=<-10.823426,254.522964>
+32. name: eda_spread@errstat, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000

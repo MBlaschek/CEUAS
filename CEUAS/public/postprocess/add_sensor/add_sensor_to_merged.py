@@ -262,12 +262,11 @@ class Sensor(MergedFile):
         
         def make_wmo_dates(wmo):
             """ Build dates for the wmo df.
-            Correpsonds to the starting date of the validity of the sensor id from era5 fb. """
+            Corresponds to the starting date of the validity of the sensor id from era5 fb. """
             
             dates_n = []
             for d in wmo.date.values:
                 if type(d) == str and '/' in d :
-                    print(d)
                     s = d.split('/')
                     d,m,y = s[0] , s[1], s[2]
                     
@@ -323,7 +322,7 @@ class Sensor(MergedFile):
             for i in range(len(cdmd[k])): 
                 d=cdmd[k].iloc[i] 
                 
-                print(' Analyzing ', d.element_name)
+                #print(' Analyzing ', d.element_name)
                 
                 groups[k][d.element_name]=({k+'_len':len(cdm[k])}, cdm[k][d.element_name].values) # element_name is the netcdf variable name, which is the column name of the cdm table k 
                 
@@ -333,28 +332,23 @@ class Sensor(MergedFile):
                     print('*** Setting the attributes to the sensor_configuration table ' , d.element_name )
                     
                 except KeyError:
-                    print('Failed --- ')
+                    print('Failed --- ' , k , ' ', i )
                     pass
-                
                 groupencodings[k][d.element_name]={'compression': 'gzip'}
-
         # self.data['crs'].to_netcdf(self.file, format='netCDF4', engine='h5netcdf',group='ciao', mode='a') #
                 
         for k in groups.keys():
             try:           
                 groups[k].to_netcdf(self.MergedFile.file, format='netCDF4', engine='h5netcdf', encoding=groupencodings[k], group=k, mode='a') #
-                
-                print('+++ Written  group: ' , k  )
+                #print('+++ Written  group: ' , k  )
             except  KeyError:
-                print('--- Passing group ' )
-                    
+                print('--- Passing group ' , k )
         return 'done'           
                     
                     
     def extract_sensor_id(self):
         """ Extract the sensor id from the Schroeder's data,
               map the sensor id to the datetime list from the station data """
-        
         try:
             station_id = int(self.data['station_id'])
         except:
@@ -362,12 +356,15 @@ class Sensor(MergedFile):
         # select the data from the Schroeder's DF for this station_id
         
         sch_df = self.cdm['metadata_schroeder']
-        located_df = sch_df.loc[ ( sch_df['station_id'] ==  station_id )]
-        
+        if '0-20000-0-' in self.MergedFile.file or '0-20001-0-' in self.MergedFile.file: #only WMO codes from OSCAR must be compared with Schroeder's table
+            located_df = sch_df.loc[ ( sch_df['station_id'] ==  station_id )]
+        else:
+            located_df = sch_df.loc[ ( sch_df['station_id'] ==  'DUMMY' )] # dummy emtpy 
+
         sensor_datetime = {} # I fill a dic with the datetime (closest found in the station file) and the sensor id (extracted from Schroed. data)
         """ The idea is the following:
               - I need to map the date_time contained in the merged file with the timestamps I read from Schroeder file.
-              For this, I check which date_time is the closest to the time stamp, since they will hardly ever be identical. This is why I minimize the time distance to match them.
+                For this, I check which date_time is the closest to the time stamp, since they will hardly ever be identical. This is why I minimize the time distance to match them.
               - this works in most cases, however there are weird time stamps in the Schroeder's table, e.g. 194611000000 that has not day.
                  For now I have to skip these, since I have no clear solution. However, I find that the sensor type is unidentified in such cases, most of the times.
                  So the information is somewhat irrelevant.       
@@ -407,14 +404,12 @@ class Sensor(MergedFile):
                 if num == 0 :
                     index_dt = np.where( self.data['recordtimestampdecoded'] == lista[num+1] )[0][0] # getting the following datetime 
                     index_max = self.data['recordindex'][index_dt]
-                    
                     sensor_datetime[dt]['max_index'] = index_max # temporary arbitrary large number (to be reduced to the actual size of the observations_table)
                     sensor_datetime[dt]['min_index'] = 0
                     
                 elif num > 0 and dt != lista[-1]: # all the values until the last one in the list (most recent datetime available in Schroeder's data)
                     index_dt = np.where( self.data['recordtimestampdecoded'] == lista[num+1] )[0][0]  # getting the following datetime 
                     index_max = self.data['recordindex'][index_dt]
-    
                     sensor_datetime[dt]['max_index'] = index_max 
                     sensor_datetime[dt]['min_index'] = sensor_datetime[lista[num-1]]['max_index']
                     
@@ -425,15 +420,14 @@ class Sensor(MergedFile):
         self.sensor_datetime = sensor_datetime
 
     def replace_sensor_id(self):
-        
         self.data['h5py_file'] = h5py.File(self.MergedFile.file, 'r+')
-        
         print(' *** Replacing the sensor_id *** ')
         #replace = self.data['h5py_file']['observations_table']['sensor_id'][:]
+
         try:    
             del self.data['h5py_file']['observations_table']['sensor_id']
         except:
-            pass
+            pass  
         
         sensor_datetime = self.sensor_datetime 
         lista = list(sensor_datetime.keys())
@@ -445,10 +439,8 @@ class Sensor(MergedFile):
             sensor_id = sensor_datetime[dt]['sensor']
             while len(sensor_id) < 4:
                 sensor_id = sensor_id + b' ' 
-                #print(sensor_id)
                 
             """ If I have only one sensor, it will be applied to the whole length of the observations_table """    
-            
             if  sensor_datetime[dt]['max_index'] == -1:
                 length = self.data['length_max']
             else:
@@ -466,28 +458,31 @@ class Sensor(MergedFile):
             self.data['h5py_file']['observations_table'].create_dataset('index', data=index)
             
         #temp_sensor_list = []  # TO DO CHANGE !!!!!  ONLY FOR DEVELOPMENT / TESTING 
-        
-        
+
+
         # must replace sensor_ids starting from 2013-01-01, find the correct index in the obstable / era5fb table
         # index_add_era5 == index from which one must use ERA5 
-        index_timestamp = np.searchsorted( self.data['recordtimestampdecoded'], np.datetime64('2013-01-01') )
-        index_add_era5 = self.data['recordindex'][index_timestamp]
+        if '0-20999-0-' in self.MergedFile.file:
+            index_add_era5 = 0
+            
+            #elif '0-20000-0' in self.MergedFile.file or '0-20001-0' in self.MergedFile.file:
+        else:
+            index_timestamp = np.searchsorted( self.data['recordtimestampdecoded'], np.datetime64('2013-01-01') )
+            if index_timestamp ==  len(self.data['recordindex']): # the index_timestamp where era5 should be replaced must be less than the total length, or the date 01-01-2013 is not included in the data 
+                index_add_era5 = -1
+            elif index_timestamp < len(self.data['recordindex']):
+                index_add_era5 = self.data['recordindex'][index_timestamp]
+                
+            
         # if index_replace == 0, the file has only ERA5 data after 2013
         # if index_replace == len(self.data['recordtimestampdecoded'] ), the file has no ERA5 data after 2013
         # if in between, part of sensor from Schroeder, part from ERA5 
         
         slen= 4 # define strings length for the sensor id
         stringa=np.zeros(slen,dtype='S1')
-        
-        """
-        add_era5 = True
-        if index_add_era5 == len(self.data['recordtimestampdecoded'] ): 
-            add_era5 = False
-            # no ERA5 data available i.e. 2013 is outside data range
-        """
-        
-        def make_emtpy_vec(l, slen= 4):
-            """ Creates an empty vectotr i.e. filled with b'NA ' of given length """
+
+        def make_empty_vec(l, slen= 4):
+            """ Creates an empty vector i.e. filled with b'NA ' (standard for non available sensor_id) of given length """
             sensor_id = b'NA '
             slen = len(sensor_id)
             s = 'string{}'.format(slen)
@@ -497,10 +492,13 @@ class Sensor(MergedFile):
         ### only use ERA5:
         # dump the whole content as sensor_id from ERA5 
         if index_add_era5 == 0:
-            sensor_list_combined = self.data['h5py_file']['era5fb']['sonde_type@conv'][:].astype(int).astype('|S4')   
-
-        else:
+            sensor_list_combined = update_wmo(self.wmo_sensor_update, sensor_list_era5, self.MergedFile.file)
             
+            sensor_list_combined = self.data['h5py_file']['era5fb']['sonde_type@conv'][:].astype(int).astype('|S4')  
+            
+        elif index_add_era5 == -1:
+            #pass
+
             def update_wmo(updated_wmo, era5_sensors, file):
                 """ Must update the sensor id due to incosistent notation in the WMO guideline.
                     See table page A-398
@@ -544,7 +542,6 @@ class Sensor(MergedFile):
                         to_update = [ conv_dic[i] if i in conv_dic.keys() else  i for i in to_update   ] 
                         
                         era5_sensors = list(era5_sensors[:index]) + to_update 
-                        
                         a = 0
                     
                     updated_wmo = 0
@@ -553,12 +550,14 @@ class Sensor(MergedFile):
             
             # here, need to check if Schroeder data available and the dates 
 
-            if index_add_era5 == len(self.data['recordtimestampdecoded'] ):  # case I only use Schroeder data if available
+            #if index_add_era5 == len(self.data['recordtimestampdecoded'] ):  # case I only use Schroeder data if available
+            if index_add_era5 == -1:  # case I only use Schroeder data if available
                 if temp_sensor_list: # case where I found some sensor_ids inside Schroeder's table 
                     sensor_list_sch = np.concatenate(temp_sensor_list)
-                    sensor_list_combined = sensor_list_sch[:(index_add_era5-1)] 
+                    sensor_list_combined = sensor_list_sch
+                    #sensor_list_combined = sensor_list_sch[:(index_add_era5-1)] 
                 else: # empty Schroeder and no ERA5 
-                    sensor_list_combined = make_emtpy_vec(len(self.data['h5py_file']['observations_table']['index']),  slen= 4)
+                    sensor_list_combined = make_empty_vec(len(self.data['h5py_file']['observations_table']['index']),  slen= 4)
 
             else: # here I have to check the dates and see if Schr is available. There is for sure data both before and after 2013 
                 if temp_sensor_list:
@@ -570,17 +569,20 @@ class Sensor(MergedFile):
                     
                     sensor_list_combined = np.append(sensor_list_sch,sensor_list_era5).astype('|S4')                    
                 else:
-                    sensor_list_combined = make_emtpy_vec( index_add_era5-1,  slen= 4) # until 2013 here empty Schroeder
+                    sensor_list_combined = make_empty_vec( index_add_era5-1,  slen= 4) # until 2013 here empty Schroeder
                     sensor_list_era5 = self.data['h5py_file']['era5fb']['sonde_type@conv'][index_add_era5-1:].astype(int)
                     sensor_list_combined = np.append(sensor_list_sch,sensor_list_era5).astype('|S4')                    
 
         slen= 4 # define strings length for the sensor id
-        stringa=np.zeros(slen,dtype='S1')                    
-        self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = sensor_list_combined.view('S1').reshape(sensor_list_combined.shape[0], slen ), 
+        stringa=np.zeros(slen,dtype='S1') 
+        
+        try:
+            self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = sensor_list_combined.view('S1').reshape(sensor_list_combined.shape[0], slen ), 
                                                                             compression = 'gzip' ,  chunks=True)                
-                
-  
-                
+        except:
+            sensor_list_combined = make_empty_vec( len(self.data['h5py_file']['observations_table']['index']) ,  slen= 4)
+            self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data =sensor_list_combined, compression = 'gzip' ,  chunks=True )     
+             
         """ Adding missing dimensions ??? """
         try:            
             self.data['h5py_file']['observations_table'].create_dataset( 'string{}'.format(slen) ,  data=stringa[:slen]  )                
@@ -588,33 +590,9 @@ class Sensor(MergedFile):
             #self.data['h5py_file']['observations_table']['sensor_id'].dims[0].attach_scale( self.data['h5py_file']['observations_table']['index'] )
             #self.data['h5py_file']['observations_table']['sensor_id'].dims[1].attach_scale( self.data['h5py_file']['observations_table'][ 'string{}'.format(slen)  ] )
             print(' *** Done with the attributes of the dimension *** ')
-        except ValueError:
-            print('WRONG ')
-                
-        #sensor_id = b'NA '
-        #slen = len(sensor_id)
-        #s = 'string{}'.format(slen)
-        #stringa=np.zeros(slen,dtype='S1')
-        #sensor_list = np.full( (len(self.data['h5py_file']['observations_table']['index']) ), sensor_id).astype(  np.dtype('|S4')  )
-                
+        except:
+            print('WRONG adding missing dimension, might not be necessary'  )
 
-                    
-                    
-        """ 
-        self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = sensor_list_combined.view('S1').reshape( len(sensor_list_combined), slen ) , 
-                                                                    compression = 'gzip' ,  chunks=True)       
-        
-        self.data['h5py_file']['observations_table']['sensor_id'].dims[0].attach_scale(  self.data['h5py_file']['observations_table']['index'] )  
-        self.data['h5py_file']['observations_table'].create_dataset( s ,  data=stringa[:slen]  )                
-        self.data['h5py_file']['observations_table']['string{}'.format(slen)].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')                             
-        self.data['h5py_file']['observations_table']['sensor_id'].dims[1].attach_scale( self.data['h5py_file']['observations_table'][ s ])
-        """
-                
-                
-                
-                
-                
-                
         self.data['h5py_file'].close()
             
     def run(self):
@@ -647,7 +625,9 @@ def wrapper(out_dir = '' , station_id = '' , file = '', copy = copy ):
 
 
 
-os.system( ' cp ../../merge/PROVA/0-20001-0-27594_CEUAS_merged_v1.nc   PROVA_s')
+
+
+
 
 if __name__ == '__main__':
         
@@ -681,7 +661,6 @@ if __name__ == '__main__':
                         """ Running sensor module """
                         sensor = Sensor( MF = MF , copy = True )  # loading sensor class 
                         run = sensor.run() # running module 
-                            
                         print(' *** Done Writing Sensor Information for file ' , file )    
                         
                     except:
@@ -703,29 +682,27 @@ if __name__ == '__main__':
             
 
             """ File source directory """
-            merged_directory = 'PROVA_s/'
+            #merged_directory = '/scratch/das/federico/TRY_SENSOR_MOBILE/'
+            
+            #merged_directory = '/users/staff/federico/GitHub/CEUAS_master_JULY2922/CEUAS/CEUAS/public/merge/CIAO_DEC2022'
             
             """ Moving postprocessed files to new directory """
             
-            #os.system( ' cp ../../merge/PROVA/0-20001-0-27594_CEUAS_merged_v1.nc   PROVA_s')            
-            os.system( ' cp /scratch/das/federico/MERGED_25FEB2022/0-20000-0-06610_CEUAS_merged_v1_beforeSensor.nc   PROVA_s')            
+            #os.system( ' cp ../../merge/PROVA/0-20001-0-27594_CEUAS_merged_v1.nc   PROVA_s')     
+            merged_directory = '/scratch/das/federico/TRY_SENSOR_MOBILE/'
+            os.system('rm -r ' + merged_directory )       
+            os.system('mkdir ' + merged_directory )       
+            os.system('cp -r   /scratch/das/federico/ERA5_1_mobile_mobile/prova/0-20999-0-YLV96WM_CEUAS_merged_v1_beforeSensor.nc ' + merged_directory  )
             
-            
-            #os.system( ' cp ../../merge/PROVA_s/0-20000-0-82930_CEUAS_merged_v1_beforeSensor.nc   PROVA_s')            
 
-
-            
-            postprocessed_new = '/raid60/scratch/federico/PROVA_sensor_newsensors'
-            postprocessed_new = 'PROVA_newsensors_21MARCH2022'
-            
-            os.system('rm -r  /raid60/scratch/federico/PROVA_sensor_newsensors/')
-            os.system('mkdir ' + postprocessed_new)
+            postprocessed_new = '/scratch/das/federico/SENSOR_MOBILE/' 
+            os.system('rm -r  ' + postprocessed_new )
+            os.system('mkdir ' + postprocessed_new )
         
-            stations_list = [ s for s in os.listdir(merged_directory) if 'empty'  not in s ]           
+            stations_list = [ s for s in os.listdir(merged_directory) ]           
             #stations_list = [ s for s in stations_list if 'Sensor'   in s ]           
             #processed = [ s.split('_')[0] for s in os.listdir(postprocessed_new) ]  # skipping processed files 
             processed = []
-            
             cleaned_list = []
 
             for file in stations_list:
