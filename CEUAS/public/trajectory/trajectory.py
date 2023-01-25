@@ -153,7 +153,7 @@ def transport_geod(lat, lon, u_dist, v_dist):
     return new_lat, new_lon
 
 
-def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean', factor = 1, u_factor = None, v_factor = None, z_variant = 'ucar', output='degree', transport_type='sphere'):
+def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean', factor = 1, u_factor = None, v_factor = None, z_variant = 'ucar', output='degree', transport_type='ellipsoid'):
     '''
     w_rs -> radio sonde rising speed
     '''
