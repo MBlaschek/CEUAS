@@ -1,0 +1,6 @@
+The file analyze_inventory generates, at times, random failed files
+written in the logs/ directory.
+No idea why.
+When running multiple times, sometimes some files get flagged as failed, sometimes not.
+It happens especially with era5_2.
+This only affects max ~30 files.
