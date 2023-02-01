@@ -2941,11 +2941,27 @@ class CDMDataset:
                   'longitude', 'time', 'air_pressure', 'trajectory_label', 
                   'report_id', 'station_id']
         varseldict={}
-        varseldict['temperature']=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate', 'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time']
-        varseldict['wind_direction']=['wind_bias_estimate']
-        varseldict['u_component_of_wind']=['wind_bias_estimate']
-        varseldict['v_component_of_wind']=['wind_bias_estimate']
-        varseldict['relative_humidity']=['humidity_bias_estimate']
+        # varseldict['temperature']=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate', 'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time']
+        # varseldict['wind_direction']=['wind_bias_estimate']
+        # varseldict['u_component_of_wind']=['wind_bias_estimate']
+        # varseldict['v_component_of_wind']=['wind_bias_estimate']
+        # varseldict['relative_humidity']=['humidity_bias_estimate']
+        
+        allowed_variables = ['temperature', 'air_temperature',
+                         'u_component_of_wind', 'eastward_wind_speed',
+                         'v_component_of_wind', 'northward_wind_speed',
+                         'wind_speed',
+                         'wind_direction', 'wind_from_direction',
+                         'relative_humidity',
+                         'specific_humidity',
+                         'dew_point_temperature',
+                         'geopotential', 'geopotential_height',
+                         'dew_point_depression', 'dewpoint_departure','dewpoint_depression', 'dew_point_departure']
+        
+        for alv in allowed_variables:
+            varseldict[alv]=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate', 'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time', 'wind_bias_estimate', 'humidity_bias_estimate']
+
+        
         # added report_id -> in observations_table, not to be confused with report_id from header_table -> trajectory_label
         logger.debug('Request-keys: %s', str(request.keys()))
         snames.append(cdsname)  # Add requested variable
@@ -3131,7 +3147,7 @@ class CDMDataset:
                         foutlen_old = len(fout)
                 except KeyError as e:
                     raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
-
+                    
             if request['format'] in ['fast_csv']:
                 dellist = []
                 for i in fout:
@@ -3160,8 +3176,8 @@ class CDMDataset:
                         formatstr = formatstr+'%.6f,'
                     else:
                         formatstr = formatstr+'"%.'+sd[2:]+'s",'
-                        #formatstr = formatstr+'%.'+''+'s,'
-
+                        #formatstr = formatstr+'%.'+''+'s,
+                
                 print(time.time()-time0)
                 formatstrn=formatstr[:-1]+'\n'
                 formatall=formatstrn*fout[dtype['names'][0]].shape[0]
@@ -3218,6 +3234,8 @@ class CDMDataset:
                 for i_element in sorted(fout.keys()):
                     if not i_element in ['observation_value','variable']:
                         fout_sorted[i_element] = fout[i_element]
+                print('unsorted', fout.keys())
+                print('sorted', fout_sorted.keys())
                 if request['single_csv']:
                     fout_sorted['variable'] = fout['variable']
                 fout_sorted['observation_value'] = fout['observation_value']
