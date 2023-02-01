@@ -1299,7 +1299,11 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
     d['statid'] = statid
     logger.info('final station selection: %s, %s', len(d['statid']), d['statid'])
     if len(d['statid']) == 1 and ((single_parallel == True) or (single_parallel == 'True')):
-        d['single_parallel'] = True
+        # d['single_parallel'] = True
+        d['single_parallel'] = False
+        ##########
+        ########## Turn back on!
+        ##########
     #
     #
     # remove statids i
@@ -1721,6 +1725,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     print(time.time()-tt,results)
     wpath = ''  # same as output_dir ?
     for r in results:
+        print(r)
         if r[0] != '':
             wpath = r[0]
             break
