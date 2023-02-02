@@ -875,40 +875,44 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
                 try:
                     checkdummy = (fin[group][v].ndim == 1)
                 except:
-                    fill_var = np.nan
-                    hilf = np.array([fill_var]*np.where(mask)[0].shape[0])
-                    if compression == 'lzf':
-                        fout.create_dataset_like(vlist[-1], fin['observations_table']['z_coordinate'],
-                                                 compression="lzf",
-                                                 compression_opts = None,
-                                                 shape=hilf.shape,
-                                                 fillvalue=fill_var,
-                                                 chunks=True)
-                    elif compression == 'gzip':
-                        fout.create_dataset_like(vlist[-1], fin['observations_table']['z_coordinate'],
-                                                 shape=hilf.shape,
-                                                 fillvalue=fill_var,
-                                                 chunks=True)
-                    fout[vlist[-1]][:] = hilf
+                    if (group in ['advanced_homogenisation', 'advanced_uncertainty']) or (v in ['sensor_id']):
+                        fill_var = np.nan
+                        hilf = np.array([fill_var]*np.where(mask)[0].shape[0])
+                        if compression == 'lzf':
+                            fout.create_dataset_like(vlist[-1], fin['observations_table']['z_coordinate'],
+                                                     compression="lzf",
+                                                     compression_opts = None,
+                                                     shape=hilf.shape,
+                                                     fillvalue=fill_var,
+                                                     chunks=True)
+                        elif compression == 'gzip':
+                            fout.create_dataset_like(vlist[-1], fin['observations_table']['z_coordinate'],
+                                                     shape=hilf.shape,
+                                                     fillvalue=fill_var,
+                                                     chunks=True)
+                        fout[vlist[-1]][:] = hilf
 
-                    try:
+                        try:
 
-                        for a in cfv.keys():
-                            if a not in ['shortname', 'odbcode', 'cdmcode']:
-                                fout[vlist[-1]].attrs[a] = np.string_(cfv[a])
-                            if a == 'units' and cfv[a] == 'NA':
-                                fout[vlist[-1]].attrs[a] = np.string_('')
-                    except:
-                        # quick fix should be removed
-                        logger.warning('%s/%s has no attributes', group, v)
-                    l = 0
-                    for d in fout[cfv['shortname']].dims:
-                        if len(d) > 0:
-                            if l == 0:
-                                fout[vlist[-1]].dims[l].attach_scale(fout[dim0])
-                            else:
-                                fout[vlist[-1]].dims[l].attach_scale(fout[sname])
-                    continue
+                            for a in cfv.keys():
+                                if a not in ['shortname', 'odbcode', 'cdmcode']:
+                                    fout[vlist[-1]].attrs[a] = np.string_(cfv[a])
+                                if a == 'units' and cfv[a] == 'NA':
+                                    fout[vlist[-1]].attrs[a] = np.string_('')
+                        except:
+                            # quick fix should be removed
+                            logger.warning('%s/%s has no attributes', group, v)
+                        l = 0
+                        for d in fout[cfv['shortname']].dims:
+                            if len(d) > 0:
+                                if l == 0:
+                                    fout[vlist[-1]].dims[l].attach_scale(fout[dim0])
+                                else:
+                                    fout[vlist[-1]].dims[l].attach_scale(fout[sname])
+                        continue
+                        
+                    else:
+                        pass
                                 
                 
                 try:
@@ -1112,10 +1116,13 @@ def do_csvcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None,
                     try:
                         checkdummy = (fin[group][v].ndim == 1)
                     except:
-                        fill_var = np.nan
-                        hilf = np.array([fill_var]*np.where(mask)[0].shape[0])
-                        fout[v] = hilf
-                        continue
+                        if (group in ['advanced_homogenisation', 'advanced_uncertainty']) or (v in ['sensor_id']):
+                            fill_var = np.nan
+                            hilf = np.array([fill_var]*np.where(mask)[0].shape[0])
+                            fout[v] = hilf
+                            continue
+                        else:
+                            pass
                     
                     if fin[group][v].ndim == 1:
                         hilf = fin[group][v][idx]
