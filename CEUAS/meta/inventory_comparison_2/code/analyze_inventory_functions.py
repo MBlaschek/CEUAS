@@ -444,7 +444,6 @@ class Data():
                                    3    : 104        , # uwind m/s , upper air u component 
                                    4    : 105        ,  # vwind m/s
                                    7    : 39          ,  # specific humidity
-                                   
                                   111 : 106    , # degree (angle) , wind from direction 
                                   112 : 107    , # m/s , wind force 
                                   29   : 38      , # relative humidity in %
@@ -1052,7 +1051,7 @@ class Inventory():
         # extracting standard 5 digits station id 
         stat_id = [ str(s[6:]) for s in igra2['station_id_igra'] ]
         igra2['station_id'] = stat_id
-        igra2 = igra2[['station_id_igra', 'station_name','latitude','longitude', 'station_id', 'start_date', 'end_date']]
+        igra2 = igra2[['station_id_igra', 'station_name','latitude','longitude', 'elevation', 'station_id', 'start_date', 'end_date']]
         
         # clean for missing values in lat and lon (i.e. values < 0)
         igra2 = igra2.loc[ (igra2['latitude'] >= -180) & (igra2['longitude'] >= -180) ]
@@ -1061,7 +1060,7 @@ class Inventory():
         igra2.name = 'IGRA2'
 
         #############################################
-        # Reading SCHROEDER data
+        ### Reading SCHROEDER data
         #############################################
     
         sch = pd.read_csv(self.schroeder, sep='\t') # columns:  'wmo', 'lat', 'lon', 'station', 'date_min', 'date_max' 
@@ -1069,6 +1068,7 @@ class Inventory():
                                     'lon':'longitude', 'lat':'latitude'})    
         sch['WMO_id'] = sch.station_id
         sch['isRadio'] = None
+        sch['elevation'] = -999  # not available
         sch = sch.reset_index(drop=True)
         sch.name='SCHROEDER'
 
@@ -1083,6 +1083,7 @@ class Inventory():
         wmo['isRadio'] = None
         wmo = wmo.reset_index(drop=True)
         wmo.name='WMO'
+        #wmo.sch['elevation'] = '' ### TO DO implement !!! it is available
 
         
         
@@ -1091,10 +1092,10 @@ class Inventory():
         #############################################        
         wban =pd.read_fwf(self.wban,widths=(10,5,6,17,22,39,31,31,8,10,10,10,8,7),
                         names=('dum1','station_id','WMO_id','dum0','Country','dum2','station_name','dum3','start_date','end_date',
-                                      'latitude','longitude','dum4','Elev'),
+                                      'latitude','longitude','dum4','elevation'),
                         skiprows=1 )
         
-        wban = wban[ [ 'station_id', 'WMO_id' , 'station_name', 'latitude', 'longitude', 'start_date', 'end_date'] ]
+        wban = wban[ [ 'station_id', 'WMO_id' , 'station_name', 'latitude', 'longitude', 'start_date', 'end_date', 'elevation'] ]
         wban = wban.dropna(subset = ['latitude', "longitude"])
         #wban = wban.replace( {'00 00 00': 0 , '0  0  0':0} )
         
@@ -1119,9 +1120,9 @@ class Inventory():
         #############################################
         oscar = pd.read_csv( self.oscar , sep='\t')
         oscar = oscar.rename(columns = {'StationId':'WIGOS', 'Longitude':'longitude', 
-                                        'Latitude':'latitude' , 'StationName':'station_name',} )
+                                        'Latitude':'latitude' , 'StationName':'station_name', "Hp": 'elevation'} )
         
-        oscar = oscar [['WIGOS', 'station_name', 'latitude', 'longitude', 'ObsRems']]
+        oscar = oscar [['WIGOS', 'station_name', 'latitude', 'longitude', 'elevation', 'ObsRems' ]]
         
         # storing original lat and lon (using N,S,W,E notation )
         oscar['original_lat'] = oscar['latitude']
@@ -1159,7 +1160,7 @@ class Inventory():
 
             chuan=pd.DataFrame(chuan)
             chuan=chuan.rename(columns = {'unique_record_ID':'station_id','WMO#':'WMO_id','Stationname':'station_name',
-                                          'Lon_DegE':'longitude', 'Lat_DegN':'latitude', 'Alt_masl':'Elev'})
+                                          'Lon_DegE':'longitude', 'Lat_DegN':'latitude', 'Alt_masl':'elevation'})
 
             # filtering missing values for coordinates
             chuan = chuan.loc[ (chuan['latitude'] > -90) & (chuan['longitude'] > -90)]
@@ -1172,7 +1173,7 @@ class Inventory():
             chuan['start_date'] = chuan['StartStationYear'] + chuan['StartStationMonth']
             chuan['end_date'] = chuan['EndStationYear'] + chuan['EndStationMonth']
             
-            chuan = chuan[['station_id', 'WMO_id' , 'station_name' , 'latitude' , 'longitude', 'start_date', 'end_date' ]]
+            chuan = chuan[['station_id', 'WMO_id' , 'station_name' , 'latitude' , 'longitude', 'start_date', 'end_date', 'elevation' ]]
             chuan['isRadio'] = None
             chuan.name = 'CHUAN'
         
@@ -1429,7 +1430,7 @@ def wrapper(data, file):
         
         name = 'inventories/' + dataset + '/' + data.file.split('/')[-1] + '_inventories.csv'
         
-        all_inventories_red = all_inventories[ ['file_statid', 'station_id', 'station_name', 'latitude', 'longitude', 
+        all_inventories_red = all_inventories[ ['file_statid', 'station_id', 'station_name', 'latitude', 'longitude', 'elevation',
                                                 'original_lat', 'original_lon', 'distance_km', 'lat_file',
                                                 'lon_file',  'inventory', 'WIGOS', 'WMO_id', 'WIGOS_calc', 'file_min_date', 
                                                 'file_max_date', 'start_date', 'end_date', 'isRadio', 'WIGOS_best', 'city', 'variables'] ]
@@ -1518,10 +1519,17 @@ if __name__ == '__main__':
     databases = ['igra2']
     databases = [ 'era5_1', ]
     databases = [ 'amma', ]
+
+
+    databases = ['era5_2'] #     databases = ['igra2']
+
+    databases = alldb #     databases = ['igra2']
+
+    databases = ['amma' , 'igra2' , 'era5_3188'] #     databases = ['igra2']
     
     # enable multiprocesing
     POOL = True
-    n_pool = 20
+    n_pool = 40
     # only process missing files 
     CHECK_MISSING = False  
     CHECK_FAILED = False
