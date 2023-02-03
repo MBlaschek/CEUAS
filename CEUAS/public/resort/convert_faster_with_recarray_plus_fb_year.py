@@ -1709,6 +1709,11 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
     readict['obstypes'] = obstypes
     readict['obsunits'] = obsunits
 
+    try:
+        os.mkdir(outdir)
+    except:
+        pass
+    
     readictplot(readict, ('mean', 'std','rms'), (30000, ), outdir+os.path.basename(fn).split('_')[0])
 
     #P.close()
@@ -1734,7 +1739,25 @@ def dim_attach(g, k):
             print(g.filename.split('/')[-1],k, e)
             pass
 
-
+def read_station_height(fn, jj, inventory_list):
+    heights = np.zeros(1, dtype=np.float32)
+    wigos = fn.split('/')[-1].split('_')[0]
+    pd_list = []
+    for fns in inventory_list:
+        try:
+            
+            pd_list.append(pd.read_csv(fns, delimiter='\t'))
+            print(fns.split('/')[-1], len(pd_list[-1]))
+            matches = pd_list[-1].index[pd_list[-1]['primary_id']==wigos].tolist()
+            #matches = pd_list[-1].index[pd_list[-1]['StationId']==wigos].tolist()
+            for l in matches:
+                #heights[:] = pd_list[-1]['Hha'][l]
+                #print(heights[0])
+                print(pd_list[-1]['start_date'][l], pd_list[-1]['elevation'][l])
+                heights[:] = pd_list[-1]['elevation'][l]
+        except Exception as e:
+            print(fns, e)
+    return heights
     #fpattern=path_to_gridded+'/era5fct.{}{:0>2}.130.nc'
     #func=partial(offline_fb,fpattern,lat,lon)
     #tfgs=list(map(func,yms))
@@ -1761,6 +1784,10 @@ def convert_missing(refs, wpath,cyear, fn):
                          'path':os.path.expandvars('$RSCRATCH/20CRv3/'),'prefix':'anl_meant','suffix':'_pres','glue':'_'},
                }
     
+    #inventory_list = glob.glob('../merge/example_notebooks/new_stat_conf/*.dat')
+    #inventory_list = glob.glob('../../meta/inventory_comparison_2/data/tables/vola_legacy_report.txt')
+    inventory_list = glob.glob('../../meta/inventory_comparison_2/code/station_configuration/CUON_station_configuration_extended.csv')
+    station_elevation = read_station_height(fn,100, inventory_list)
 
     tt=time.time()
     nanlist = [float('nan'), np.nan, 0, -2147483648]
@@ -2021,7 +2048,7 @@ def convert_missing(refs, wpath,cyear, fn):
     #for i in reduced_fbkeys:
         #fb_avars[i] = fb_out[i][:jj]
 
-    print(time.time()-tt)    
+    print(time.time()-tt)
 
     # sorting:
     print('start sorting')
@@ -2054,6 +2081,9 @@ def convert_missing(refs, wpath,cyear, fn):
                         else:
                             xdata = file[i][j][headerslice][:]
                         newfile[i].create_dataset(j, data=xdata)
+                    if i == 'header_table':
+                        newfile[i]['height_of_station_above_sea_level'][:] = station_elevation
+                        
                 else:
                     if 'index' not in file[i].keys():
                         sh = file[i][list(file[i].keys())[0]].shape[0]
@@ -2207,6 +2237,7 @@ def convert_missing(refs, wpath,cyear, fn):
         del a_loaded_feedback
         gc.collect()
 
+        obskeys.append('station_elevation') # fix for adding station elevation 
         if True:
             for i in obskeys:
                 if i in reduced_obskeys or i == 'observation_id' :
@@ -2215,25 +2246,29 @@ def convert_missing(refs, wpath,cyear, fn):
                     #continue
 
                 print(i, time.time()-tt)
-                with eua.CDMDataset(fn) as data:
-                    #i='z_coordinate'
-                    rest_data = data.observations_table[i][tslice]
-                if rest_data.ndim==2: #i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
-                    final = np.empty((addedvar[-1][1],len(rest_data[0])), dtype=rest_data[0].dtype)
-                else:
-                    final = np.empty(addedvar[-1][1], dtype=rest_data.dtype)
-
+                if i != 'station_elevation':                   
+                    with eua.CDMDataset(fn) as data:
+                        #i='z_coordinate'
+                        rest_data = data.observations_table[i][tslice]
+                    if rest_data.ndim==2: #i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
+                        final = np.empty((addedvar[-1][1],len(rest_data[0])), dtype=rest_data[0].dtype)
+                    else:
+                        final = np.empty(addedvar[-1][1], dtype=rest_data.dtype)
+    
                 #print('vor fill_restdata', fn)
-                ov_vars = fill_restdata(final, rest_data, addedvar, jj) #,out['z_coordinate'][:jj])
-
-                ov_vars = ov_vars[absidx]
+                    ov_vars = fill_restdata(final, rest_data, addedvar, jj) #,out['z_coordinate'][:jj])
+                    ov_vars = ov_vars[absidx]
+                else:
+                    ov_vars = np.full(jj, station_elevation,dtype=np.float32) # add station elevation
+                    
                 if i == 'index':
                     pass
                 elif i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
                     alldict = {i:np.asarray(ov_vars, dtype='S1')}
                     write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])
                 else:
-                    alldict = pandas.DataFrame({i:ov_vars})
+                    #alldict = pandas.DataFrame({i:ov_vars})
+                    alldict = {i:ov_vars}
                     write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])  
 
         if True:
@@ -2500,7 +2535,8 @@ if __name__ == '__main__':
     #files = glob.glob('/mnt/scratch/scratch/federico/MERGING_DEC2022_FIXED_1/*-0-*v1.nc')
     #files = glob.glob('/mnt/scratch/scratch/federico/MERGING_DEC2022_FIXED_1/*-20???-0-82930*v1.nc')
     #files = glob.glob('/mnt/scratch/scratch/federico/VIENNA_SENSORFIX_JAN2023/*-20???-0-11035*v1.nc')
-    files = glob.glob('/mnt/scratch/scratch/federico/YEAR_SPLIT_MERGING/[12]???/0-*v2.nc')
+    #files = glob.glob('/mnt/scratch/scratch/federico/YEAR_SPLIT_MERGING/[12]???/0-*v2.nc')
+    files = glob.glob('/mnt/scratch/scratch/federico/MERGED_FEB2023/0-*02974*v1.nc')
 #    files = glob.glob('/mnt/scratch/scratch/federico/COP2_HARVEST_NOVEMBER2022/era5_1_mobile/*ASEU03*.nc')
     #files_to_convert = glob.glob('/raid60/scratch/federico/MERGED_JUNE2021/*72357*v1.nc')
     #files = glob.glob('/scratch/das/federico/TRY_MERGED_FEB2022/*89564*v1.nc')
@@ -2555,7 +2591,7 @@ if __name__ == '__main__':
     
     refs = load_20CRoffset(readict)
     readicts = []
-    for i in range(2022, 1957, -1):
+    for i in range(2022, 1904, -1):
         
         func=partial(convert_missing, refs, wpath, i)
         result_list = list(map(func, files_to_convert[:]))
