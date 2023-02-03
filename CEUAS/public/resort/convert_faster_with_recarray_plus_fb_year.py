@@ -36,6 +36,83 @@ import ray
 #opath='/raid60/scratch/uli/converted_v5/'
 #opath='/raid60/scratch/leo/scratch/converted_v5/'
 # if there are nan values in the pressure level - we will just sort without any converting!
+def rmeanw(t,runmean):
+    tmean=t.copy()
+    index=np.zeros(tmean.shape[0],dtype='int')
+    
+    tret=rmean(t,tmean,index,runmean)
+    tret[:runmean]=np.nan
+    tret[-runmean:]=np.nan
+    return tret
+
+@njit(cache=True)
+def rmean(t,tmean,index,runmean):
+
+    tret=np.zeros(t.shape[0])
+    ni=t.shape[0]
+    good=runmean-runmean
+    if runmean<2:
+        for i in range(ni):
+            tret[i]=t[i]
+    else:
+
+        for j in range(ni):
+            tret[j]=np.nan
+            if t[j]==t[j]:
+                index[good]=j
+                good+=1
+
+        if good>runmean+2:
+            i=runmean//2
+            tmean[:]=np.nan
+            if runmean%2==1:
+                tmean[i]=0.
+                for k in range(-runmean//2+1,runmean//2+1):
+                    tmean[i]+=t[index[i+k]]
+                tmean[i]/=runmean
+
+                for i in range(runmean//2+1,good-runmean//2):
+                    tmean[i]=(tmean[i-1]*runmean+t[index[i+runmean//2]])/(runmean+1)
+
+            else:
+
+                i=runmean//2
+                tmean[i]=0.
+                for k in range(-runmean//2,runmean//2):
+                    tmean[i]+=t[index[i+k]]
+                tmean[i]/=runmean
+
+                for i in range(runmean//2+1,good-runmean//2-1):
+                    tmean[i]=(tmean[i-1]*runmean+t[index[i+runmean//2-1]])/(runmean+1)
+
+            for i in range(good):
+                tret[index[i]]=tmean[i]
+        else:
+            for i in range(good):
+                tret[index[i]]=t[index[i]]
+
+    return tret
+
+@njit(cache=True)
+def thin2(t,n):
+
+    ni=t.shape[0]
+    index=np.zeros(ni//n,dtype=np.int32)-1
+    if n<2:
+        for i in range(t.shape[0]):
+            index[i]=i
+    else:
+        ni=t.shape[0]//n
+        for i in range(ni):
+            index[i]=i*n
+            for j in range(n):
+                idx=i*n+j
+                if t[idx]==t[idx]:
+                    index[i]=idx
+                    break
+
+    return index
+
 def do_resort(fn):
     targetfile = opath+fn.split('/')[-1] 
 
@@ -518,7 +595,7 @@ def do_fb_copy(a_loaded_feedback,loaded_feedback,j,i):
     a_loaded_feedback['biascorr_fg@body'][j]=loaded_feedback['biascorr_fg@body'][i]
     return
 
-@njit(boundscheck=True)          
+#@njit(cache=True, boundscheck=True)          
 def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
             idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
             cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,crhsh,cdpdsh,cuwind,cvwind,cwd,cws,
@@ -738,6 +815,8 @@ def triint(tera5, reatab, tlon, tlat, lons, lats, secs, ts,obss,press, zs, p, dy
             w1=1.-w0
             if lats[il] != oldlats: 
                 iyref = np.searchsorted(-tlat, -lats[il]) - 2
+                if iyref == 2:
+                    print(iyref)
                 oldlats = lats[il]
             if lons[il] != oldlons:
                 if tlon[-1] - tlon[0] > 0:
@@ -749,7 +828,7 @@ def triint(tera5, reatab, tlon, tlat, lons, lats, secs, ts,obss,press, zs, p, dy
                         
                         hlon[hlon<hlon[0]] += 360.
                     else:
-                        hlon[hlon>0] -= 360.
+                        hlon[hlon>hlon[-1]] -= 360.
                     ixref = np.searchsorted(hlon, lons[il]) - 2
                     #ixref = np.where(np.abs(hlon-lons[il]) <=0.5)[0][0] - 2
                 if ixref <0:
@@ -766,6 +845,8 @@ def triint(tera5, reatab, tlon, tlat, lons, lats, secs, ts,obss,press, zs, p, dy
                     for iy in range(4):
                         #print(yval.dtype, tlon.dtype, tera5[iy, :, it, ip:ip+1].T.dtype, lons[il])
                         #print(yval.shape, tlon.shape, tera5[iy, :, it, ip:ip+1].T.shape)
+                        if ixref == 2:
+                            print(ixref)
                         xx = polinl(hlon[ixref:ixref+4],tera5[iyref+iy, ixref:ixref+4, it, ip:ip+1].T,lons[il])
                         #print(xx.shape, xx.dtype)
                         yval[i, iy] = xx[0] #polinl(tlon,tera5[iy, :, it, ip:ip+1].T,lons[il])
@@ -829,7 +910,8 @@ def offline_fb3(fpattern,p,pn, fdict,ts, obstype, latorig,lonorig,z, refs,ans):
             latmin = np.min(lats)
             latmax = np.max(lats)
             dx=360/sh[1]
-            dy=180/(sh[0]-1)
+            dy=(fdict['latitude'][0] - fdict['latitude'][-1])/(sh[0]-sh[0] % 2)
+                
             if lonmin < 0:
                 lonmin += 360.
                 lons += 360.
@@ -838,11 +920,11 @@ def offline_fb3(fpattern,p,pn, fdict,ts, obstype, latorig,lonorig,z, refs,ans):
             ixrefmin=int(np.floor(lonmin/dx))
             ixrefmax=int(np.floor(lonmax/dx))
             if latmin== -90.:
-                latmin *= 0.99999
+                latmin = fdict['latitude'][-1]
             if latmax == 90.:
-                latmax *= 0.99999
-            iyrefmin= int(np.floor((90-latmax)/dy))
-            iyrefmax = int(np.floor((90-latmin)/dy))
+                latmax = fdict['latitude'][0]
+            iyrefmin= int(np.floor((fdict['latitude'][0]-latmax)/dy))
+            iyrefmax = int(np.floor((fdict['latitude'][0]-latmin)/dy))
             if ixrefmax >= ixrefmin:
                 
                 xsten = np.arange(ixrefmin-1, ixrefmax+3)#[ix - 1, ix, ix + 1, ix + 2])
@@ -966,11 +1048,11 @@ def offline_fb3(fpattern,p,pn, fdict,ts, obstype, latorig,lonorig,z, refs,ans):
 
             val =val*np.float32(g[p].attrs['scale_factor'])+np.float32(g[p].attrs['add_offset'])
 
-            print(time.time() - tt)
+            #print(time.time() - tt)
         
         reatab = np.zeros_like(lons)
         #params = {'t': 126}
-        idx = triint(tera5, reatab, tlon, tlat, lons, lats, secs, tss,obss,pres,zs, pn, dy)
+        idx = triint(tera5[:, :, :, pidx], reatab, tlon, tlat, lons, lats, secs, tss,obss,pres[pidx],zs, pn, dy)
 
         print(ans,p, reatab[0], time.time()-tt)
     except FileNotFoundError as e:
@@ -1305,6 +1387,80 @@ def load_20CRoffset(readict):
 
 ray_load_20CRoffset = ray.remote(load_20CRoffset)
 
+def readictplot(readict, tasks, plevs, figprefix, marker='*'):
+    
+        
+    for sfunc in tasks:
+
+        for p in readict['obstypes'].keys():
+
+            plev = plevs[0]
+
+            idx=np.where(np.logical_and(readict['obs']['obstype']==readict['obstypes'][p],readict['obs']['z_coordinate']==plev))[0]
+            if len(idx) < 50:
+                continue
+
+            for k,v in readict.items():
+                if 'obs' in k:
+                    continue
+                if k =='era5fb':
+                    i = 0
+                
+                if 'ftype' in v.keys():                    
+                    iterable = v['ftype']
+                else:
+                    iterable = v
+                    
+                for ftype in iterable:  
+                    if 'fc' in ftype:
+                        dtype='fc'
+                    else:
+                        dtype='an'
+
+                    if dtype in readict[k].keys():
+
+                        rms=[]
+                        years=[]
+                        ref = datetime(1900, 1, 1)
+                        tsy = ref.year + np.floor(readict['obs']['date_time'][idx]/365.25/86400)
+                        
+                        q = np.nanquantile(readict['obs']['obs'][idx]-readict[k][dtype]['refvalues'][idx], (0.01, 0.99))
+                        print(p, k, q)
+                        ystart = (ref + timedelta(seconds=int(readict['obs']['date_time'][idx[0]]))).year
+                        ystop = (ref + timedelta(seconds=int(readict['obs']['date_time'][idx[-1]]))).year + 1
+                        smarker = marker
+                        if ystop - ystart == 1:
+                            marker = '*'
+                        
+                        for iy in range(ystart, ystop):
+                            #print(iy)
+
+                            idy=np.where(tsy==iy)[0]
+                            rv = np.clip(readict['obs']['obs'][idx[idy]] - readict[k][dtype]['refvalues'][idx[idy]], q[0], q[1])
+                            if len(idy)>50 and np.sum(~np.isnan(rv)) > 50:
+                                if sfunc == 'rms':
+
+                                    rms.append(np.sqrt(np.nanmean((rv)**2)))
+                                elif sfunc == 'std':
+                                    rms.append(np.nanstd(rv))
+                                else:
+                                    rms.append(np.nanmean(rv))
+
+                            else:
+                                rms.append(np.nan)
+                            years.append(iy)
+
+                        plt.plot(np.array(years),np.array(rms),'-'+marker, 
+                                 label='obs -'+k+'_'+dtype+', '+sfunc+'= {:5.3f}'.format(np.sqrt(np.nanmean(np.array(rms)**2))))
+
+            plt.title('Monthly '+sfunc+' reanalysis '+p+' departures, '+str(int(plev/100)) + ' hPa, '+figprefix.split('/')[-1].split('_')[0])
+            plt.ylabel(sfunc+' ['+readict['obsunits'][p]+']')
+            plt.legend()
+            plt.tight_layout()
+            #plt.xlim(1935, 1965)
+            plt.savefig(figprefix+'_'+p+'_'+sfunc+'stats.png')
+            plt.close()
+
 def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
     from scipy.interpolate import RectBivariateSpline
 
@@ -1325,14 +1481,19 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
                #}
 
     cyear = int(out_name.split('/')[-2])
+    outdir = os.path.dirname(out_name) + '/'
     with h5py.File(fn,'r') as f:
         try:
-
-            ts=f['observations_table']['date_time'][[0, -1]]
+            if f['observations_table']['date_time'].shape[0] == 1:
+                
+                ts=f['observations_table']['date_time'][:]
+            else:
+                ts=f['observations_table']['date_time'][[0, -1]]
             ref = datetime(1900, 1, 1)
             tstart = int((datetime(cyear, 1, 1) - ref).total_seconds())
             tstop = int((datetime(cyear+1, 1, 1) - ref).total_seconds())
             if tstop < ts[0] or tstart > ts[-1]:
+#                print(fn, cyear, 'year missing in obs records')
                 return
 
             ts=f['observations_table']['date_time'][:]
@@ -1341,22 +1502,23 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
                 return
             else:
                 ts = ts[tslice]
-        except MemoryError as e:
-            return
+        except Exception as e:
+            print(fn, cyear, e)
+            return 
 
     #P=multiprocessing.Pool(12)
     with h5py.File(fn,'r') as f:
         try:
 
-            ts=f['observations_table']['date_time'][:]
-            ref = datetime(1900, 1, 1)
-            tstart = int((datetime(cyear, 1, 1) - ref).total_seconds())
-            tstop = int((datetime(cyear+1, 1, 1) - ref).total_seconds())
-            tslice =slice(*np.searchsorted(ts, (tstart, tstop)))
-            if ts[tslice].shape[0] == 0:
-                return
-            else:
-                ts = ts[tslice]
+            #ts=f['observations_table']['date_time'][:]
+            #ref = datetime(1900, 1, 1)
+            #tstart = int((datetime(cyear, 1, 1) - ref).total_seconds())
+            #tstop = int((datetime(cyear+1, 1, 1) - ref).total_seconds())
+            #tslice =slice(*np.searchsorted(ts, (tstart, tstop)))
+            #if ts[tslice].shape[0] == 0:
+                #return
+            #else:
+                #ts = ts[tslice]
             
             lat=f['observations_table']['latitude'][tslice]
             lon=f['observations_table']['longitude'][tslice]
@@ -1372,7 +1534,8 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
                 print('no pressure in', np.sum(zt!=1), 'observations')
                 print('x')
             ofb=True
-        except:
+        except Exception as e:
+            print(fn, cyear, e)
             return None
         try:
 
@@ -1426,10 +1589,10 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
             l += m - 1
         l += 1
 
-    try:
-        os.remove(out_name)
-    except:
-        pass
+    #try:
+        #os.remove(out_name)
+    #except:
+        #pass
         
     obstypes={'t':ipar[85],'u':ipar[104],'v':ipar[105],'q':ipar[39],'z':ipar[117]}    
     obsunits={'t':'K','u':'m/s','v':'m/s','q':'g/kg','z':'m^2/s^2'}
@@ -1490,7 +1653,7 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
             #tr[111]=106 #dd
             #tr[112]=107  #ff
 
-            if dtype in readict[k].keys():  
+            if False and dtype in readict[k].keys():  
                 tt=time.time()
                 for p in readict[k][dtype].keys():
                     if p =='refvalues':
@@ -1517,34 +1680,23 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
                             plt.legend()
                             #plt.xlim(1935, 1965)
                             plt.subplot(2,1,2)
-                            plt.plot(1900+ts[idx]/365.25/86400,obs[idx]-rv,
+                            plt.plot(np.int32(1900+ts[idx]/365.25/86400),obs[idx]-rv,
                                      label='offline mean:{:5.3f} rms= {:5.3f}'.format(np.nanmean(obs[idx]-rv), np.sqrt(np.nanmean((obs[idx]-rv)**2))))
-                            plt.plot(1900+ts[idx]/365.25/86400,o_minus_an[idx]+rv-rv,
+                            plt.plot(np.int32(1900+ts[idx]/365.25/86400),o_minus_an[idx]+rv-rv,
                                      label='online mean:{:5.3f} rms:{:5.3f}'.format(np.nanmean(o_minus_an[idx]+rv-rv), np.sqrt(np.nanmean((o_minus_an[idx]+rv-rv)**2))))
                             plt.title(p+', obs -'+k )
-                            plt.ylim(-10, 10)
+                            yscale = 10. ** np.floor(np.log10(np.max(np.abs(obs[idx]-rv)))) + 1
+                            plt.ylim(-yscale, yscale)
                             plt.legend()
                             plt.tight_layout()
                             fnp=fn.split('/')[-1].split('CEUAS_merged_v1.nc')[0]
-                            plt.savefig(os.path.expanduser('~/tmp/'+fnp+p+'_'+k+dtype+'.png'))
+                            plt.savefig(outdir +fnp+p+'_'+k+dtype+'.png')
                             plt.close()
 
                         except Exception as e:
 
                             print('plotting reference', e)
 
-                print('writing',k)
-                df = {dtype:readict[k][dtype]['refvalues']}  # making a 1 column dataframe
-                try:
-                    os.mkdir(os.path.basename(out_name))
-                except:
-                    pass
-                try:
-
-                    write_dict_h5(out_name, df, k, {dtype: {'compression': 'gzip'}}, 
-                                  var_selection=[], mode='a', attrs = {dtype:readict[k][dtype]['t']['attribs']} )  
-                except Exception as e:
-                    print(e, 'no values from ',k,'for station ',os.path.basename(fn))
 
 
     if not ofb:
@@ -1553,62 +1705,11 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
     readict['era5fb']={'ftype':['an','fc']}                  
     readict['era5fb']['an']={'refvalues':obs-o_minus_an }                  
     readict['era5fb']['fc']={'refvalues':obs-o_minus_bg }
-    for sfunc in 'mean', 'std','rms':
+    readict['obs'] = {'z_coordinate': z,'obstype': obstype,'date_time': ts, 'obs': obs,}
+    readict['obstypes'] = obstypes
+    readict['obsunits'] = obsunits
 
-        for p in obstypes.keys():
-
-            plev = 30000
-
-            idx=np.where(np.logical_and(obstype==obstypes[p],z==plev))[0]
-            if len(idx) < 50:
-                continue
-
-            for k,v in readict.items():
-                if k =='era5fb':
-                    i = 0
-                for ftype in v['ftype']:  
-                    if 'fc' in ftype:
-                        dtype='fc'
-                    else:
-                        dtype='an'
-
-                    if dtype in readict[k].keys():
-
-                        rms=[]
-                        years=[]
-                        tsy = np.floor(ts[idx]/365.25/86400)
-                        
-                        q = np.nanquantile(obs[idx]-readict[k][dtype]['refvalues'][idx], (0.01, 0.99))
-                        print(p, k, q)
-                        
-                        for iy in range(yms[0][0]-1900, yms[-1][0]+1-1900):
-                            #print(iy)
-
-                            idy=np.where(tsy==iy)[0]
-                            rv = np.clip(obs[idx[idy]] - readict[k][dtype]['refvalues'][idx[idy]], q[0], q[1])
-                            if len(idy)>50 and np.sum(~np.isnan(rv)) > 50:
-                                if sfunc == 'rms':
-
-                                    rms.append(np.sqrt(np.nanmean((rv)**2)))
-                                elif sfunc == 'std':
-                                    rms.append(np.nanstd(rv))
-                                else:
-                                    rms.append(np.nanmean(rv))
-
-                            else:
-                                rms.append(np.nan)
-                            years.append(iy)
-
-                        plt.plot(1900+np.array(years),np.array(rms),'-*', 
-                                 label='obs -'+k+'_'+dtype+', '+sfunc+'= {:5.3f}'.format(np.sqrt(np.nanmean(np.array(rms)**2))))
-
-            plt.title('Monthly '+sfunc+' reanalysis '+p+' departures, '+str(int(plev/100)) + ' hPa, '+fn.split('/')[-1].split('_')[0])
-            plt.ylabel(sfunc+' ['+obsunits[p]+']')
-            plt.legend()
-            plt.tight_layout()
-            #plt.xlim(1935, 1965)
-            plt.savefig(os.path.expanduser('~/tmp/'+os.path.basename(fn).split('_')[0]+'_'+p+'_'+sfunc+'stats.png'))
-            plt.close()
+    readictplot(readict, ('mean', 'std','rms'), (30000, ), outdir+os.path.basename(fn).split('_')[0])
 
     #P.close()
     #P.join()
@@ -1617,6 +1718,22 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
     readict['tslice'] = tslice
     return readict
 
+def dim_attach(g, k):
+    for v in g[k].keys(): #var_selection:
+        l=0            
+        try:
+            fvv=g[k][v]
+            if 'string' not in v and v!='index':                    
+                g[k][v].dims[l].attach_scale(g[k]['index'])
+                #print(v,fvv.ndim,type(fvv[0]))
+                if fvv.ndim==2 or type(fvv[0]) in [str,bytes,np.bytes_]:
+                    slen=fvv.shape[1] #sdict[v]
+                    #slen=10
+                    g[k][v].dims[1].attach_scale(g[k]['string{}'.format(slen)])
+        except MemoryError as e:
+            print(g.filename.split('/')[-1],k, e)
+            pass
+
 
     #fpattern=path_to_gridded+'/era5fct.{}{:0>2}.130.nc'
     #func=partial(offline_fb,fpattern,lat,lon)
@@ -1624,6 +1741,14 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
 
 def convert_missing(refs, wpath,cyear, fn):
 
+    print(fn.split('/')[-1], cyear,end=' ' )
+    wpathy = wpath+'/' + str(cyear) + '/'
+    targetfile = wpathy + fn.split('/')[-1]
+    if os.path.isfile(wpathy+'/log/'+fn.split('/')[-1]+".txt"):
+        print('already processed')
+        return targetfile
+    else:
+        print('processing...')
     sys.path.insert(0,os.getcwd()+'/../resort/rasotools-master/')
     
     readict={'era5':{'ftype':('t','fct'),'param':{'t':'130','u':'131','v':'132','q':'133','z':'129'},
@@ -1642,24 +1767,53 @@ def convert_missing(refs, wpath,cyear, fn):
 
 
     rscratch='/mnt/users/scratch/leo/scratch/'
-    print(fn, cyear)
     try:
-        reaname = os.path.expandvars(wpath+'/rea/'+fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]+'_'+str(cyear) + '.pkl')
-        with xopen(reaname,'rb') as f:
+        reaname = os.path.expandvars(wpathy+fn.split('/')[-1].split('x_CEUAS_merged_v1.nc')[0]+'_'+str(cyear) + '.pkl')
+        with open(reaname,'rb') as f:
             readict=pickle.load(f)
     except:
 
-        out_name = wpath+'/' + str(cyear) + '/' + fn.split('/')[-1]  
+        out_name = wpathy + fn.split('/')[-1]  
 
         path_to_gridded=os.path.expandvars(rscratch+'/era5/gridded/')
         readict=retrieve_anfg(fn,readict, refs, out_name,path_to_gridded)
         if readict is None:
-            print(fn, cyear, 'year missing or missing header_table or corrupt observations_table')
+            print(fn.split('/')[-1], 'no data for year', cyear)
             return
         with open(reaname,'wb') as f:
             pickle.dump(readict,f)
     print (time.time()-tt)
     
+     # wpath+fn.split('/')[-1]
+    try:
+        os.mkdir(wpathy)
+    except:
+        pass
+    if os.path.isfile(targetfile):
+        try:
+            os.remove(targetfile)
+        except:
+            print('file could not be removed - overwriting will lead to errors')
+
+    #print('writing reanalysis reference series')
+    #for k in readict.keys():
+        #if k in ('tslice', ):
+            #continue
+        #for dtype in 'an', 'fc':
+            
+            #try:
+                #os.mkdir(os.path.basename(targetfile))
+            #except:
+                #pass
+            #try:
+        
+                #df = {dtype:readict[k][dtype]['refvalues']}  # making a 1 column dataframe
+                #write_dict_h5(targetfile, df, k, {dtype: {'compression': 'gzip'}}, 
+                              #var_selection=[], mode='a', attrs = {dtype:readict[k][dtype]['t']['attribs']} )  
+            #except Exception as e:
+                #print(e, 'no values from ',k,'for station ',os.path.basename(fn))
+
+
     tslice = readict['tslice']
     with eua.CDMDataset(fn) as data:
         keys = data.observations_table.keys()
@@ -1714,7 +1868,7 @@ def convert_missing(refs, wpath,cyear, fn):
             for l in loaded_data:
                 print(l.shape)
             print(fn, e)
-            return
+            return None
 
         del loaded_data
         a_loaded_obstab = np.rec.fromarrays(a_loaded_data, dtype=ld)
@@ -1728,7 +1882,9 @@ def convert_missing(refs, wpath,cyear, fn):
             for o in fbkeys:
                 if o in ['fg_depar@body','an_depar@body','biascorr@body','biascorr_fg@body']:  
                     loaded_fb.append((data.era5fb[o][tslice]))
-                    a_loaded_fb.append(np.empty_like(loaded_fb[-1],shape=2*len(loaded_fb[-1])+addmem))
+                    a_loaded_fb.append(np.zeros_like(loaded_fb[-1],shape=2*len(loaded_fb[-1])+addmem))
+                    if o in  ['fg_depar@body','an_depar@body']:
+                        a_loaded_fb[-1].fill(np.nan)
                     loaded_type['names'].append(o)
                     loaded_type['formats'].append(loaded_fb[-1].dtype)
                     lf.append((o,loaded_fb[-1].dtype))
@@ -1756,7 +1912,9 @@ def convert_missing(refs, wpath,cyear, fn):
                             i20+=1
                 if i%1000000==0:
                     print(i,i20,iera)
-        if(ofb):      
+        if(ofb):
+            if(np.any(loaded_feedback['fg_depar@body']>1.e26) or np.any(readict['era5']['fc']['refvalues']>1.e26)):
+               print(cyear)
             add_fb(loaded_obstab,loaded_feedback,readict['20CRv3']['an']['refvalues'],
                    readict['era5']['an']['refvalues'],readict['era5']['fc']['refvalues'])
 
@@ -1867,38 +2025,44 @@ def convert_missing(refs, wpath,cyear, fn):
 
     # sorting:
     print('start sorting')
-    targetfile = wpath+'/' + str(cyear) + '/' + fn.split('/')[-1] # wpath+fn.split('/')[-1]
-    try:
-        os.mkdir(wpath+'/' + str(cyear))
-    except:
-        pass
-    if os.path.isfile(targetfile):
-        try:
-            os.remove(targetfile)
-        except:
-            print('file could not be removed - overwriting will lead to errors')
 
     with h5py.File(fn, 'r') as file:
-        with h5py.File(targetfile, 'w') as newfile:
+        with h5py.File(targetfile, 'a') as newfile:
+
+            headerslice = slice(*np.searchsorted(file['header_table']['record_timestamp'][:], (rt[0], rt[-1]+1)))
+
             groups = []
             for i in file.keys():
                 if type(file[i]) == h5py._hl.group.Group:
                     if i not in ('observations_table','era5fb'):
                         newfile.create_group(i)
                         groups.append(i)
-                elif i == 'recordindex' or i == 'recordtimestamp':
+                elif i in ('recordindex', 'recordtimestamp', 'dateindex'):
                     pass
                 else:
                     newfile.create_dataset(i, data=file[i][:])
             for i in groups:
                 if(i == 'recordindices' or i == 'observations_table' or i == 'era5fb'):
                     pass
+                elif i in ('header_table', 'source_configuration'):
+                    if 'index' not in file[i].keys():
+                        newfile[i].create_dataset('index', data=np.empty(headerslice.stop-headerslice.start, dtype='S1'))                       
+                    for j in file[i].keys():
+                        print(i, j)
+                        if 'string' in j:
+                            xdata = file[i][j][:]
+                        else:
+                            xdata = file[i][j][headerslice][:]
+                        newfile[i].create_dataset(j, data=xdata)
                 else:
+                    if 'index' not in file[i].keys():
+                        sh = file[i][list(file[i].keys())[0]].shape[0]
+                        newfile[i].create_dataset('index', data=np.empty(sh, dtype='S1'))                       
                     for j in file[i].keys():
                         newfile[i].create_dataset(j, data=file[i][j][:])
+                    
+                dim_attach(newfile, i)
 
-#    allvars = copy.copy(avars['observed_variable'])
-#    allvars.sort()
     obsv = out['observed_variable'][:jj]
     allvars = np.sort(np.unique(obsv))
     #
@@ -1920,36 +2084,6 @@ def convert_missing(refs, wpath,cyear, fn):
                     l += 1
         vridx[ridx[i] + 1 :]=l #len(idx) # next record for the last element is the len of the data
 
-    @njit
-    def make_vrindexold(vridx,ridx,idx):
-        l=0
-        for i in range(1,len(idx)): # to set the recordindices
-            if ridx[i]>ridx[i-1]:
-                vridx[ridx[i-1]:ridx[i]]=l # next record after l
-                l=i
-        vridx[ridx[i]:]=l #len(idx) # next record for the last element is the len of the data
-
-    @njit
-    def make_vrindexn(vridx,ridx,idx,dta):
-        #lold=0
-        l=0
-        for i in range(1,len(idx)): # to set the recordindices
-            if dta[idx[i]]>dta[idx[i-1]]:
-                vridx[ridx[l]:ridx[i]]=l # next record after l
-                l=i
-        vridx[ridx[i]:]=l
-#        vridx[-1]=len(idx)
-#                l+=1
-#        vridx[ridx[i]:]=len(idx) # next record for the last element is the len of the data
-
-    @njit
-    def make_vrindex2(vridx,ridx,idx,dta):
-        l=0
-        for i in range(1,len(idx)): # to set the recordindices
-            if ridx[i]>ridx[i-1] or dta[idx[i]]>dta[idx[i-1]]:
-                vridx[ridx[i-1]:ridx[i]]=l # next record after l
-                l=i
-        vridx[ridx[i]:]=len(idx) # next record for the last element is the len of the data
 
     ridxall=np.zeros(obsv.shape[0],dtype=np.int64) # reverse index - index of the record index
     j=-1
@@ -1970,26 +2104,6 @@ def convert_missing(refs, wpath,cyear, fn):
         vridx.append(np.zeros(ri.shape[0]+1,dtype=np.int64)) # all zeros in lenght of record index
         ridx=ridxall[idx[-1]] # ridxall where variable is j
         make_vrindex(vridx[-1],ridx)
-        ##begin debugcopy
-        #l=0
-        ##print(ridx[0])
-
-        ##vridx[-1][:ridx[0]]=l
-        ##l += 1
-        ##vridx[-1][ridx[0]] = l
-        #for i in range(len(ridx)): # to set the recordindices
-            ##print(ridx[i])
-            #if i == 0:
-                #l +=1
-            #else:
-                #if ridx[i]>ridx[i-1]:
-                    #vridx[-1][ridx[i-1] + 1:ridx[i] + 1]=l # next record after l
-                    #l += 1
-                #else:
-                    #l += 1
-            ##print(i, vridx[-1][:20])
-        #vridx[-1][ridx[i] + 1:]=l #len(idx) # next record for the last element is the len of the data
-        ##end debugcopy
         vridx[-1]+=abscount # abscount for stacking the recordindex
 
         absidx[abscount:abscount+len(idx[-1])]=idx[-1] # why copy? - to make sure it's not just the ref. - maybe ok without the cp
@@ -2159,13 +2273,197 @@ def convert_missing(refs, wpath,cyear, fn):
     write_dict_h5(targetfile, {'recordtimestamp':recordtimestamps}, 'recordindices', {'recordtimestamp': { 'compression': None } }, ['recordtimestamp'])
 
     print('elapsed writing '+targetfile+':',time.time()-tt)
-    f= open(wlpath+fn.split('/')[-1]+"_yearly.txt","w+")
+    try:
+        os.mkdir(wpathy+'/log')
+    except:
+        pass
+    f= open(wpathy+'/log/'+fn.split('/')[-1]+".txt","w")
     f.write("done") 
     f.close()
-    return
+    return targetfile
 
 ray_convert_missing = ray.remote(convert_missing)
 
+def rmsplot(files):
+    
+    readicts = []
+    print('rmsplot', files)
+    for file in files:
+        year = os.path.dirname(file).split('/')[-1]
+        pkname = file +'_'+year + '.pkl'
+        
+        print(pkname)
+        try:
+            
+            with open(pkname,'rb') as f:
+                readicts.append(pickle.load(f))
+        except:
+            print (pkname + ' not found')
+    if len(readicts) == 0:
+        print(pkname+' no feedback information found')
+        return
+    
+    readict = {'obs' : {}}
+    print(readicts[0].keys())
+    for k in readicts[0]['obs'].keys():
+        readict['obs'][k] = np.concatenate([i['obs'][k] for i in readicts])
+    for p in readicts[0]['obstypes'].keys():
+
+        for k,v in readicts[0].items():
+            if k in ('obs', 'tslice'):
+                continue
+            if 'obs' in k:
+                readict[k] = readicts[0][k]
+                continue
+            if k =='era5fb':
+                i = 0
+            for ftype in v['ftype']:  
+                if 'fc' in ftype:
+                    dtype='fc'
+                else:
+                    dtype='an'
+                if k not in readict.keys():
+                    readict[k] = {}
+                if dtype not in readict[k].keys():
+                    readict[k][dtype] = {}
+                readict[k][dtype]['refvalues'] = np.concatenate([i[k][dtype]['refvalues'] for i in readicts])
+
+
+    readictplot(readict, ('mean', 'std','rms'), (30000, ), wpath+'/plots/'+os.path.basename(pkname).split('.')[0].split('_')[0], marker='')
+    return
+
+ray_rmsplot = ray.remote(rmsplot)
+
+def do_station(refs_ref, file, years):
+    
+    futures = [ray_convert_missing.remote(refs_ref, wpath, year, file ) for year in years]
+    
+
+    return ray.get(ray_rmsplot.remote(futures))
+
+ray_do_station = ray.remote(do_station)
+
+def readgridded(readict, refs_ref, year, month):
+    fdict = {}
+    for k,v in readict.items():
+        fdict[k] = {}
+        if k!='20CRv3':
+            continue
+        for ftype in v['ftype']:  
+            if 'fc' in ftype:
+                dtype='fc'
+            else:
+                dtype='an'
+            if dtype not in readict[k].keys():
+                readict[k][dtype]={}
+                #readict[k][dtype]['refvalues']=np.empty(obs.shape,dtype=np.float32)
+                #readict[k][dtype]['refvalues'].fill(np.nan)
+            fdict[k][dtype] = {}
+            for p,pn in v['param'].items():
+                if k!='JRA55':
+        
+                    fpattern=v['path']+v['prefix']+ftype+v['glue']+'{}{:0>2}'+v['glue']+pn+v['suffix']+'.nc'
+                else:
+                    fpattern=v['path']+v['prefix']+ftype+v['glue']+pn+'.reg_tl319.{}{:0>2}'+v['glue']+v['suffix']+'.nc'
+            
+                if k != '20CRv3':
+                    fn = fpattern.format(year,month)
+                    zname = 'level'
+                else:
+                    fn =  v['path']+v['prefix']+ftype+v['glue']+'{}'.format(year)+v['glue']+pn+v['suffix']+'.nc'
+                    zname = 'isobaricInhPa'
+                    
+                
+                with h5py.File(fn,'r') as g:
+                    
+                    if p not in fdict[k][dtype].keys():
+                        if k != '20CRv3':
+                            fdict['level'] = g['level'][:]
+                            fdict['pidx'] = np.searchsorted(fdict['level'],refs['level'])
+                        else:
+                            fdict['level'] = g['isobaricInhPa'][:]                                  
+                            fdict['pidx'] = np.searchsorted(-fdict['level'], -refs['level'])
+                        
+                        fdict['longitude']= g['longitude'][:]
+                        fdict['latitude']= g['latitude'][:]
+                        
+                        fdict['attribs'] =  dict(g[p].attrs)
+                        try:
+                            
+                            del fdict['attribs']['DIMENSION_LIST']
+                        except:
+                            pass
+                        for kk,vv in g.attrs.items():
+                            fdict['attribs'][kk]=vv
+                        fdict['attribs']['source_filename']=fn
+                        fdict[k][dtype][p] = g[p][:][:, fdict['pidx'], :, :]* np.float32(fdict['attribs']['scale_factor'])+np.float32(fdict['attribs']['add_offset'])
+                        
+                        print(k, dtype, p)
+                        tunits=g['time'].attrs['units']
+                        try:
+                            tunits=tunits.decode('latin1')
+                        except:
+                            pass
+                        fdict['tunits']=tunits.split()
+            
+        
+    return fdict
+        #found=len(glob.glob(fpattern.format(*yms[0])))
+        #print(fpattern.format(*yms[0]),found)
+        #if found:
+    fdict = {}
+    func=partial(offline_fb3,fpattern,p,obstypes[p], fdict,ts,obstype, lat,lon, z, refs)
+
+ray_readgridded =ray.remote(readgridded)   
+
+def plot_contents(wpath,cyear, fn):
+
+    pardict = {'0': ['unknown',''], 
+               '34': ['dewpoint depression','K'],
+               '39': ['specific humidity','kg/kg'],
+               '139': ['u-component of wind','m/s'],
+               '140': ['v-component of wind','m/s'],
+               '106': ['wind from direction','deg'],
+               '107': ['wind speed','m/s'],
+               '117': ['geopotential','J/kg'],
+               '126': ['temperature','K'],
+               '137': ['dewpoint','K'],
+               '138': ['relative humidity','']
+               }
+    print(fn.split('/')[-1], cyear,end=' ' )
+    wpathy = wpath+'/' + str(cyear) + '/'
+    targetfile = wpathy + fn.split('/')[-1]
+    #if os.path.isfile(wpathy+'/log/'+fn.split('/')[-1]+".txt"):
+        #print('already processed')
+        #return targetfile
+    #else:
+        #print('processing...')
+    sys.path.insert(0,os.getcwd()+'/../resort/rasotools-master/')
+    
+    with h5py.File(targetfile, 'r') as f:
+        rk = list(f['recordindices'].keys())[:-2]
+        for pl in [70000.]:
+            plt.figure(figsize=(10, (len(rk) +1) *1.5))
+            l = 1
+            for v in rk:
+                tslice = slice(*f['recordindices'][v][[0, -1]])
+                ts = f['observations_table']['date_time'][:][tslice]
+                obs = f['observations_table']['observation_value'][tslice]
+                pidx = np.where(f['observations_table']['z_coordinate'][tslice]==pl)[0]
+                if len(pidx) < 2:
+                    continue
+                plt.subplot( len(rk),1, l)
+                plt.plot(np.asarray(1900+ts[pidx]/86400/365.25, dtype='int'), rmeanw(obs[pidx], 30))
+                #plt.plot(np.asarray(1900+thin2(ts[pidx], 10)/86400/365.25, dtype='int'), thin2(rmeanw(obs[pidx], 30), 10))
+                plt.title(os.path.basename(targetfile).split('_')[0]+','+str(np.int(pl/100.)) + 'hPa, '+ pardict[v][0])
+                plt.ylabel(pardict[v][1])
+                l += 1
+        plt.tight_layout()
+        plt.savefig(targetfile[:-3]+'.png')
+        plt.close()
+                
+                
+        
 
 # files = glob.glob('/raid60/scratch/federico/MERGED_DATABASE_OCTOBER2020_sensor/0-20000-0-01*.nc')
 # files = glob.glob('/raid60/scratch/federico/DATABASE_JANUARY2021_sensor/0-20000-0-97690*.nc')
@@ -2180,29 +2478,11 @@ ray_convert_missing = ray.remote(convert_missing)
 
 if __name__ == '__main__':
 
-    no_height = ['/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-41915_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-94231_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-43009_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-40951_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-43042_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-94323_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-41565_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-41738_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-42484_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-42354_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-43259_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-62381_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20500-0-80417_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-95721_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-78088_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-87544_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-38696_CEUAS_merged_v0.nc',
-                 '/raid60/scratch/federico/DATABASE_JANUARY2021_FIXED_sensor/0-20000-0-04085_CEUAS_merged_v0.nc',]    
 
-    wpath= os.path.expandvars('$RSCRATCH/converted_v10/') #'./'
+    wpath= os.path.expandvars('$RSCRATCH/converted_v11/') #'./'
     opath=wpath
     wlpath=wpath+'log/'
-    for p in wpath,wlpath:      
+    for p in wpath,wlpath, wpath + '/long', wpath + '/rea':      
         try:
             os.mkdir(p)
         except:
@@ -2216,8 +2496,11 @@ if __name__ == '__main__':
 
 #    files = glob.glob('/mnt/scratch/scratch/federico/MERGED_15JUNE2022/*02365*v1.nc')
 #    files = glob.glob('/mnt/scratch/scratch/federico/MERGING_DEC2022_FIXED_1/*27612*v1.nc')
-    files = glob.glob('/mnt/scratch/scratch/federico/MERGING_DEC2022_FIXED_1/*-20???-0-[12]*v1.nc')
-    files = glob.glob('/mnt/scratch/scratch/federico/MERGING_DEC2022_FIXED_1/*-20???-0-10393*v1.nc')
+#    files = glob.glob('/mnt/scratch/scratch/federico/MERGING_DEC2022_FIXED_1/*-20???-0-[12]*v1.nc')
+    #files = glob.glob('/mnt/scratch/scratch/federico/MERGING_DEC2022_FIXED_1/*-0-*v1.nc')
+    #files = glob.glob('/mnt/scratch/scratch/federico/MERGING_DEC2022_FIXED_1/*-20???-0-82930*v1.nc')
+    #files = glob.glob('/mnt/scratch/scratch/federico/VIENNA_SENSORFIX_JAN2023/*-20???-0-11035*v1.nc')
+    files = glob.glob('/mnt/scratch/scratch/federico/YEAR_SPLIT_MERGING/[12]???/0-*v2.nc')
 #    files = glob.glob('/mnt/scratch/scratch/federico/COP2_HARVEST_NOVEMBER2022/era5_1_mobile/*ASEU03*.nc')
     #files_to_convert = glob.glob('/raid60/scratch/federico/MERGED_JUNE2021/*72357*v1.nc')
     #files = glob.glob('/scratch/das/federico/TRY_MERGED_FEB2022/*89564*v1.nc')
@@ -2237,48 +2520,17 @@ if __name__ == '__main__':
     ipar[104]=139
     ipar[105]=140
 
-    print(files)
-    #nfiles=glob.glob(wpath+'*v1.nc')
-    #nfile=os.path.dirname(nfiles[0])+'/'+files[0].split('/')[-1]
-    #ofiles=['/mnt/users/scratch/leo/scratch/converted_v7/0-20000-0-89564_CEUAS_merged_v1.nc']
-    #nfiles=['/mnt/users/scratch/leo/scratch/converted_v8/0-20000-0-89564_CEUAS_merged_v1.nc']
-    #with h5py.File(ofiles[0],'r') as f:
-        #vcode=f['observations_table']['observed_variable'][:]
-        #vcodes=np.unique(vcode)
-        #print(vcodes)
-        #print(ofiles[0])
-        #for v in vcodes:
-            #print(v,np.sum(v==vcode))
-        #with h5py.File(nfiles[0],'r') as g:
-            #vcode=g['observations_table']['observed_variable'][:]
-            #vcodes=np.unique(vcode)
-            #print(vcodes)
-            #print(nfiles[0])
-            #for v in vcodes:
-                #print(v,np.sum(v==vcode))
+    print(files[0], files[-1])
 
-            #nstart=g['recordindices']['126'][0]
-            #nstop=g['recordindices']['126'][-1]
-            #plt.plot(g['observations_table']['date_time'][nstart:nstop]/86400/365.25,g['observations_table']['observation_value'][nstart:nstop])
-            #ostart=f['recordindices']['85'][0]
-            #ostop=f['recordindices']['85'][-1]
-            #plt.plot(f['observations_table']['date_time'][ostart:ostop]/86400/365.25,f['observations_table']['observation_value'][ostart:ostop])
-            #print(nstop-nstart,ostop-ostart)
+    #already_done = glob.glob(wlpath+'*_yearly.txt')
 
-    already_done = glob.glob(wlpath+'*_yearly.txt')
-
-    files_to_convert = []#files #[]
-    for i in files:
-        if not wlpath+i.split('/')[-1]+'_yearly.txt' in already_done:
-            files_to_convert.append(i)
+    #files_to_convert = []#files #[]
+    #for i in files:
+        #if not wlpath+i.split('/')[-1]+'_yearly.txt' in already_done:
+            #files_to_convert.append(i)
     files_to_convert = files
     #files_to_convert.sort()
     tt=time.time()
-
-    #for i in files_to_convert:
-        #print(i)
-        #convert_missing(wpath, i)
-
 
     
     readict={'era5':{'ftype':('t','fct'),'param':{'t':'130','u':'131','v':'132','q':'133','z':'129'},
@@ -2290,20 +2542,62 @@ if __name__ == '__main__':
                         '20CRv3':{'ftype':('',),'param':{'t':'TMP','u':'UGRD','v':'VGRD'},#,'q':'SPFH'},#,'z':'HGT'},
                          'path':os.path.expandvars('$RSCRATCH/20CRv3/'),'prefix':'anl_meant','suffix':'_pres','glue':'_'},
                }
+    readict={'era5':{'ftype':('','fc'),'param':{'t':'130','u':'131','v':'132','q':'133','z':'129'},
+                     'path':os.path.expandvars('$RSCRATCH/era5/gridded/'),'prefix':'era5','suffix':'','glue':'.'},
+             #'CERA20C':{'ftype':('t',),'param':{'t':'130','u':'131','v':'132','q':'133','z':'129'},
+               #'path':os.path.expandvars('$RSCRATCH/CERA20C/'),'prefix':'CERA20C','suffix':'','glue':'.'},
+                          #'JRA55':{'ftype':('fcst_mdl',),'param':{'t':'011_tmp','u':'033_ugrd','v':'034_vgrd','q':'051_spfh'},
+               #'path':os.path.expandvars('$RSCRATCH/JRA55/split/'),'prefix':'test.','suffix':'grb','glue':'.'},
+                        '20CRv3':{'ftype':('',),'param':{'t':'TMP','u':'UGRD','v':'VGRD'},#,'q':'SPFH'},#,'z':'HGT'},
+                         'path':os.path.expandvars('$RSCRATCH/20CRv3/'),'prefix':'anl_meant','suffix':'_pres','glue':'_'},
+               }
+    
+    
     refs = load_20CRoffset(readict)
-#    pool = multiprocessing.Pool(processes=20)
-    #for i in range(2023, 2014, -1):
+    readicts = []
+    for i in range(2022, 1957, -1):
         
-        #func=partial(convert_missing, refs, wpath, i)
-        #result_list = list(map(func, files_to_convert[:]))
-    #exit()
+        func=partial(convert_missing, refs, wpath, i)
+        result_list = list(map(func, files_to_convert[:]))
+        
+    # simple plotting
+    for i in  ('long', ):#(1995, 1994, -1):
+        
+        func=partial(plot_contents, wpath, i)
+        result_list = list(map(func, files_to_convert[:]))
 
-#     #result_list = pool.map(convert_missing, files_to_convert)
-    ray.init(num_cpus=60)
-    refs_ref = ray.put(refs)
-    futures = [ray_convert_missing.remote(refs_ref, wpath, year, file ) for file in files_to_convert for year in range(2023, 1904, -1)]
-    obj_result_list = ray.get(futures)
+    exit()
+               
 
+    ray.init(num_cpus=40, _temp_dir=os.path.expanduser('~/ray'))
+    #refs_ref = ray.put(refs)
+
+    #for year in range(2015, 1904, -1):
+            
+        #futures = [ ray_convert_missing.remote(refs_ref, wpath, year, file )  for file in files_to_convert]
+    #obj_result_list = ray.get(futures)
+
+    pwd = os.getcwd()
+    wpath = os.path.expandvars('$RSCRATCH/converted_v10/')
+#    os.chdir(wpath)
+    obj_result_list = glob.glob(wpath+'/[12]???/*v1.nc')
+    os.chdir(pwd)
+    shlist = np.unique([os.path.basename(ll) for ll in obj_result_list if ll is not None])
+    futures = []
+    vienna = False
+    for file in shlist:
+        if '11035' in file:
+            vienna = True
+        sublist = sorted([s for s in obj_result_list if s is not None and file in s])
+        #rmsplot(sublist)
+        if vienna:
+            futures.append(ray_rmsplot.remote(sublist))
+    ray.get(futures)
+
+    #futures = []
+    #for file in files_to_convert:
+        #futures .append(ray_do_station.remote(refs_ref, file, range(2022, 1904, -1)))
 #     print(result_list)
     print('total:',time.time()-tt)
+    l = 0
 
