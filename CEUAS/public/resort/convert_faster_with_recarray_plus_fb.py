@@ -974,7 +974,7 @@ def offline_fb3(fpattern,p,pn, fdict,ts, obstype, latorig,lonorig,z, refs,ans):
         
         reatab = np.zeros_like(lons)
         #params = {'t': 126}
-        idx = triint(tera5, reatab, tlon, tlat, lons, lats, secs, tss,obss,pres,zs, pn, dy)
+        idx = triint(tera5[:, :, :, pidx], reatab, tlon, tlat, lons, lats, secs, tss,obss,pres[pidx],zs, pn, dy)
 
         print(ans,p, reatab[0], time.time()-tt)
     except FileNotFoundError as e:
@@ -2151,7 +2151,7 @@ if __name__ == '__main__':
         #f.close()
 
 #    files = glob.glob('/mnt/scratch/scratch/federico/MERGED_15JUNE2022/*02365*v1.nc')
-#    files = glob.glob('/mnt/scratch/scratch/federico/MERGING_DEC2022_FIXED_1/*10393*v1.nc')
+    files = glob.glob('/mnt/scratch/scratch/federico/MERGING_DEC2022_FIXED_1/*73033*v1.nc')
     files = glob.glob('/mnt/scratch/scratch/federico/VIENNA_SENSORFIX_JAN2023/*11035*v1.nc')
     #files = glob.glob('/mnt/scratch/scratch/federico/MERGING_DEC2022_FIXED_1/*-20???-0-[12]*v1.nc')
 #    files = glob.glob('/mnt/scratch/scratch/federico/COP2_HARVEST_NOVEMBER2022/era5_1_mobile/*ASEU03*.nc')
