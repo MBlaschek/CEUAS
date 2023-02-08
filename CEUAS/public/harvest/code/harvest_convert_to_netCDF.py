@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 import sys
 import os.path 
 import glob 
@@ -40,6 +41,11 @@ pd.set_option('display.max_colwidth', -1)
 
 debug = False
 
+try:
+    os.mkdir('logs')
+except:
+    pass
+
 
 """ Some colors for pretty printout """ 
 red    = '\033[91m' 
@@ -52,8 +58,6 @@ long_string_len = 100  # maximum allowed length of strings in header and observa
 fixed_string_len = 20  # maximum allowed length of strings in header and observations_table
 id_string_length = 10 # maximum allowed length of strings for observation_id and report_id in header and observations_table
 
-if not os.path.isdir('logs'):
-    os.mkdir('logs')
     
 """ Possible variable types as listed int he CMD tables """
 okinds={'varchar (pk)':np.dtype('|S' + str(fixed_string_len) ),
@@ -599,7 +603,9 @@ def uadb_ascii_to_dataframe(file=''):
             
             if gph == -999.0 or gph == -99999.00 or gph >= 99999.0:
                 gph = np.nan
-         
+            else:
+                gph = gph * 9.80665 
+                # see https://confluence.ecmwf.int/pages/viewpage.action?pageId=111155328
             temp = float(line[23:29])
             if temp == -999.0:
                 temp = np.nan 
@@ -772,6 +778,9 @@ def igra2_ascii_to_dataframe(file=''):
             
             if gph == -9999 or gph == -8888:   # reading the values andh check if they are missing or removed as -9999 or -8888 before dividing by 10 as the instructions say 
                 gph = np.nan # 23- 27  integer temperature, [Celsius to Kelvin ]    
+            else:
+                gph = gph * 9.80665 
+                # see https://confluence.ecmwf.int/pages/viewpage.action?pageId=111155328
                 
             zflag   = line[21]                # 22- 22  character gph processing flag, 
         
@@ -906,7 +915,6 @@ def make_odb_header(odbfile, dataset):
                    
     """ These values must be removed rom the fb, since they have NULL values and it creates problem with 
     alldict=pd.read_csv(f,delimiter='\t', usecols=columns, quoting=3,comment='#', skipinitialspace=True, dtype=tdict) """                  
-    
     if dataset in ["era5_1759", "era5_1761", "era5_3188"]:
         remove = ['sonde_type@conv' , "eda_spread@errstat", "bias_volatility@body" , "timeseries_index@conv"]
         for c in remove:
@@ -919,22 +927,24 @@ def make_odb_header(odbfile, dataset):
     return columns, kinds, tdict
     
     
-
-
-        
-        
-    
 def read_all_odbsql_stn_withfeedback(dataset, odbfile):
     """ Read the text gzip files, created from the original ODB files. """
     columns, kinds, tdict = make_odb_header(odbfile, dataset)      
     try:            
         t=time.time()                 
+        
+        """
         try:
             f=gzip.open(odbfile)                 
         except:
             print(odbfile, 'The zipped ODB file was not found !')
             return
-    
+        # this does NOT WORK since gzip.open() does NOT trow an error even if it is a ODB file and not a gzipped file...
+        """
+        
+        if '.gz' not in odbfile:
+            print(odbfile, 'The zipped ODB file was not found !')
+            return            
         #d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','reportype','andate','antime',
         #                 'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','collection_identifier@conv','source@hdr']
         
@@ -1002,9 +1012,7 @@ def read_all_odbsql_stn_withfeedback(dataset, odbfile):
                     
             if type(alldict[c].iloc[0]) is numpy.float64:
                 alldict[c]=numpy.float32(alldict[c])
-    
-        #print('after odb:',time.time()-t)
-            
+        #print('after odb:',time.time()-t)   
     except MemoryError:
         print('Reading ODB failed !  ' + odbfile)
         return alldict
@@ -1027,7 +1035,6 @@ def fromfb_l(fbv,di, cdmfb,cdmkind):
             
     else:    
         x=fbv[cdmfb]
-        
     return x
 
 
@@ -1038,13 +1045,11 @@ def hdrfromfb(fbv,di,cdmfb,cdmkind):
             x=cdmfb[0](fbv[cdmfb[1]],fbv[cdmfb[2]])
             if di[list(di.keys())[0]].shape[0]<fbv.shape[0]:
                 x=numpy.unique(x)
-            
         else:
             if cdmfb[1] in fbv.keys():    
                 x=cdmfb[0](fbv[cdmfb[1]])
             else:
                 x=cdmfb[0](di[cdmfb[1]])
-       
     else:
         x=fbv[cdmfb][di['recordindex'].values]
         
@@ -1196,8 +1201,12 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
             if type(fvv[0]) not in [str,bytes,numpy.bytes_]:
 
                 if fvv.dtype !='S1':
-                    
-                    fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
+                    try:
+                        
+                        fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
+                    except:
+                        fd[k].create_dataset(v,fvv.shape,fvv.dtype, chunks=True)
+                        
                     fd[k][v][:]=fvv[:]
                     if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
                         if v in attrs.keys():
@@ -1240,8 +1249,12 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                         fd[k].create_dataset( 'string{}'.format(slen),  data=string10[:slen]  )
                     except:
                         pass               
-                        
-                fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)
+                try:
+                    
+                    fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)
+                except:
+                    #fd[k].create_dataset(v,data=np.bytes_(fvv).view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)                    
+                    pass
                 if v in attrs.keys():
                     fd[k][v].attrs['description']     =numpy.bytes_(attrs[v]['description'])
                     fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])                
@@ -3039,7 +3052,7 @@ def filelist_cleaner(lista, dataset=''):
    
 
 
-
+'''
 def clean_station_configuration(cdm_tab ):
     """ Replace wrong characters from the station configuration tables """
     subs={'o':[240,242,243,244,245,246,248],'O':[210,211,212,213,214,216],
@@ -3047,6 +3060,8 @@ def clean_station_configuration(cdm_tab ):
           'u':[249,250,251,252,253],'U':[217,218,219,220],
           'i':[236,237,238,239],'I':[204,205,206,207,304],
           'S':[350],'n':[241],'c':[231],'C':[199],'e':[232,233,234,235],'E':[200,201,202,203]}
+    
+    
     for k in cdm_tab['station_configuration'].columns:
         if type(cdm_tab['station_configuration'][k][0]) is str:
             try:               
@@ -3067,8 +3082,39 @@ def clean_station_configuration(cdm_tab ):
                 cdm_tab['station_configuration'][k]=numpy.string_(cdm_tab['station_configuration'][k])
 
     print('Cleaned station_configuration')
+'''
 
 
+def clean_station_configuration(tab ):
+    """ Replace wrong characters from the station configuration tables """
+    subs={'o':[240,242,243,244,245,246,248],'O':[210,211,212,213,214,216],
+          'a':[224,225,226,227,228,229,230],'A':[192,193,194,195,196,197,198],
+          'u':[249,250,251,252,253],'U':[217,218,219,220],
+          'i':[236,237,238,239],'I':[204,205,206,207,304],
+          'S':[350],'n':[241],'c':[231],'C':[199],'e':[232,233,234,235],'E':[200,201,202,203]}
+    
+    tab = tab.reset_index(drop=True) 
+    for k in tab.columns:
+        if type(tab[k][0]) is str:
+            try:               
+                tab[k].values[:]=tab[k].values[:].astype('S')
+            except:
+                for l in range(tab[k].values.shape[0]):
+                    try:                       
+                        tab[k].values[l]=numpy.string_([k].values[l])
+                    except:
+                        for m in range(len(tab[k].values[l])):
+                            mychar=tab[k].values[l][m]
+                            if ord(mychar)>128:
+                                for n,v in subs.items():
+                                        if ord(mychar) in v:
+                                            tab[k].values[l]=n.join(tab[k].values[l].split(mychar))
+                        
+                        tab[k].values[l]=numpy.string_( (tab[k].values[l] ).encode('utf-8') ) 
+                tab[k]=numpy.string_(tab[k])
+                
+    print('Cleaned station_configuration')
+    return tab
     
 
 
@@ -3135,7 +3181,8 @@ if __name__ == '__main__':
     
     
     cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
-    clean_station_configuration(cdm_tab)              
+    sc_cleaned = clean_station_configuration(cdm_tab['station_configuration'])    # removing problematic ASCII characters
+    cdm_tab['station_configuration'] =sc_cleaned
             
             
     """ Leo run         
