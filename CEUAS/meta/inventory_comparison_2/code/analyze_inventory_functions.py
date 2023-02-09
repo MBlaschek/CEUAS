@@ -1102,6 +1102,8 @@ class Inventory():
         # converting lat, lon to decimal format 
         
         #l = list(self.utils.degMinSec_to_decimal(["-10 56 00"]) )
+        wban['elevation']=wban['elevation']*0.3048
+        wban['elevation'][wban['elevation']==-99999.0*0.3048]=np.nan
         
         lat_dec = list(self.utils.degMinSec_to_decimal(wban['latitude'] ))
         lon_dec = list(self.utils.degMinSec_to_decimal(wban['longitude'] ))
@@ -1525,7 +1527,7 @@ if __name__ == '__main__':
 
     databases = alldb #     databases = ['igra2']
 
-    databases = ['amma' , 'igra2' , 'era5_3188'] #     databases = ['igra2']
+    #databases = ['amma' , 'igra2' , 'era5_3188'] #     databases = ['igra2']
     
     # enable multiprocesing
     POOL = True

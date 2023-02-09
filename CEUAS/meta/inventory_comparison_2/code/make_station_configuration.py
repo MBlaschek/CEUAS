@@ -94,8 +94,6 @@ special_columns = {'primary_id_scheme':primary_id_scheme,
                    'metadata_contact':metadata_contact
                    }
 
-
-
 # initialize empty dic as the stat_conf table 
 
 def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_regions = '', file = ''):
@@ -302,18 +300,23 @@ def make_inventory(v):
     extra_vars = { 'distance_km': [],
                             'distance_km_minusLat': [],
                             'city_dist_km': [] ,
+                            'elevation':[],
                             'file': [] }
     
-    #files = [f for f in files if '72805' in f ]
-    if os.path.isfile('inventories/territory_code.csv'):
-        territories = pd.read_csv('inventories/territory_code.csv', sep = '\t', names = ['file', 'territory'])
-        terr_dic = dict(zip(territories.file, territories.territory.astype(str))) 
+    
+    if os.path.isfile('inventories/territory_code.npy'):
+        terr_dic = np.load('inventories/territory_code.npy' , allow_pickle=True ).item()
         
     else:
-        terr_dic = {}
+        terr_dic = {'file':[], 'terr':[]}
     
+    #files = [f for f in files if '10393' in f or '10395' in f or '09393' in f ]
+    #files = files[4000:]
     for file in tqdm(files):    
         
+        if '10393' in file:
+            print(0)
+            
         df = pd.read_csv(file, sep = '\t', header = 0)
         df = df.dropna( subset = ['latitude','longitude'])
         df = df.loc[df['distance_km'] < 30 ]
@@ -327,8 +330,29 @@ def make_inventory(v):
         best_inv = get_best_inventory(df)
         #if best_inv.empty:
         #    continue
+        
         for e in extra_vars.keys():
-            extra_vars[e].append(best_inv[e].values[0])
+
+                if e != "elevation":
+                    extra_vars[e].append(best_inv[e].values[0])                    
+                else:
+                    try:
+                        
+                        df['elevation'] = df['elevation'].astype(float)
+                    except:
+                        df['elevation'] =  [str(i).replace(',', '.') for i in df.elevation.values]
+                        df['elevation'] = df['elevation'].astype(float)
+                        
+                    #a = df.sort_values(by=['distance_km']) # already done above ?
+                    #elev = [i.replace(',', '.') for i in df.elevation.values]
+                    elev = [e for e in df.elevation.values]
+                    
+                    value = [e for e in elev if e and e > -999 ]
+                    if len(value) >0:
+                        extra_vars[e].append(value[0])
+                    else:
+                        extra_vars[e].append(-999) 
+
 
         for c in stat_conf_columns:
             
@@ -341,9 +365,12 @@ def make_inventory(v):
                     terr = terr_dic[ file.split('/')[-1].split('_inventories')[0]  ]
                 except:
                     # this is slow due to the implementation of the function below
+                    print('Calculating territory --- ')
                     terr = iso_from_country_from_coordinates(lat=best_inv.latitude.values[0], lon=best_inv.longitude.values[0] , 
                                                           cdm_sub_regions=cdm_sub_regions,
                                                           json_data = json_data, file = file)      
+                    
+                    terr_dic[file.split('/')[-1].split('_inventories')[0] ] = terr
                     
                 stat_conf_dic[c].append(terr) 
                 
@@ -377,18 +404,21 @@ def make_inventory(v):
             else:
                 stat_conf_dic[c].append('')
                 
-    df = pd.DataFrame(stat_conf_dic)
-    ind = df.index
+    statconf_df = pd.DataFrame(stat_conf_dic)
+    ind = statconf_df.index
     # adding record number
-    df['record_number'] = list(range(1,len(df)+1))
-    df.to_csv('station_configuration/' + v + '_station_configuration.csv' , sep= '\t' )           
-    df.to_excel('station_configuration/' + v + '_station_configuration.xlsx' )
+    statconf_df['record_number'] = list(range(1,len(statconf_df)+1))
+    statconf_df.to_csv('station_configuration/' + v + '_station_configuration.csv' , sep= '\t' )           
+    statconf_df.to_excel('station_configuration/' + v + '_station_configuration.xlsx' )
         
-    for e in extra_vars.keys():
-        df[e] = extra_vars[e]
-    df.to_csv('station_configuration/' + v + '_station_configuration_extended.csv' , sep= '\t' )           
-    df.to_excel('station_configuration/' + v + '_station_configuration_extended.xlsx' )
 
+    for c in extra_vars.keys():
+        statconf_df[c] = extra_vars[c]
+    
+    statconf_df.to_csv('station_configuration/' + v + '_station_configuration_extended.csv' , sep= '\t' )           
+    statconf_df.to_excel('station_configuration/' + v + '_station_configuration_extended.xlsx' )
+
+    np.save( 'inventories/territory_code', terr_dic, allow_pickle=True )
     print('*** Done with the inventory ',  v )
 
 
@@ -402,8 +432,8 @@ def make_CUON():
     ''' Create one single inventory out of the CUON datasets '''
     
     inv = []
-    for s in glob.glob('station_configuration/*_station_configuration*'):
-        if 'CUON' in s or 'xl' in s or 'all' in s or 'extended' in s:
+    for s in glob.glob('station_configuration/*_station_configuration_extended*'):
+        if 'CUON' in s or 'xl' in s or 'all'  in s:
             continue
         df = pd.read_csv(s, sep='\t')
         print(s , ' ' , len(df))
@@ -419,20 +449,31 @@ def make_CUON():
     
     # storing combined CUON dictionary 
     combined_cuon= {}
-    for c in inventory_cuon.columns:
+    # reading all station configuration columns
+    station_conf_columns = pd.read_csv('station_configuration/era5_1_station_configuration.csv', sep='\t').columns
+    
+    for c in station_conf_columns:
         if c in  'index' or 'Unnamed' in c :
             continue     
         combined_cuon[c] = []
     
+    combined_cuon['elevation'] = []
     # looping through all the unique ids and combining data
-    for i in tqdm(all_ids):
-        indices = np.where( inventory_cuon['primary_id'].astype(str) == i )[0]
+    
+    #all_ids = ['0-20001-0-10393']
+    for index, stat in tqdm(enumerate(all_ids)):
+        indices = np.where( inventory_cuon['primary_id'].astype(str) == stat )[0]
         df_i = inventory_cuon.iloc[indices]
     
-        for c in list(inventory_cuon.columns):
+        for c in list(station_conf_columns):
             if c in  'index' or 'Unnamed' in c :
                 continue 
 
+            if c == 'record_number':
+                combined_cuon[c].append(index)
+                index = index+1 
+                continue
+            
             values = [f.replace('[','').replace(']','') for f in df_i[c].astype(str).values if isinstance(f,str) ]
             #if c == 'observed_variables':
             #   values = np.unique( [f.split(',') for f in values ] ) 
@@ -499,9 +540,13 @@ def make_CUON():
                 
             combined_cuon[c].append(values)
             #print(0)
+        elev = str(df_i['elevation'].values[0]).replace(',','.')
+        
+        combined_cuon['elevation'].append(elev)
         
     d = pd.DataFrame(combined_cuon)
-    d.to_csv('station_configuration/CUON_station_configuration.csv', sep='\t')
+    combined_cuon['record_number'] = list(range(len(    combined_cuon['latitude'] ) ))
+    d.to_csv('station_configuration/CUON_station_configuration_extended.csv', sep='\t')
     df.to_excel('station_configuration/CUON_station_configuration.xlsx' )
 
 
