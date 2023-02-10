@@ -39,7 +39,7 @@ from numba import njit
 
 try:
     sys.path.append('../cds-backend/code/')
-    import cds_eua3 as eua
+    import cds_eua4 as eua
 except Exception as e:
     print('CDS_EUA3 Module is required. Add to path')
     raise e
