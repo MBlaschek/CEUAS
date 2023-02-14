@@ -120,7 +120,7 @@ def write_trj(stat):
             v_new = []
 
             for k in range(len(z_coordinate_t)):
-                if z_coordinate_u[0] < z_coordinate_t[k] < z_coordinate_u[-1]:
+                if z_coordinate_u[0] <= z_coordinate_t[k] <= z_coordinate_u[-1]:
                     u_new.append(np.interp(z_coordinate_t[k], z_coordinate_u, u))
                     v_new.append(np.interp(z_coordinate_t[k], z_coordinate_v, v))
                 else:
@@ -167,10 +167,10 @@ def write_trj(stat):
 
         # print('maximal height above ground', z_high, p_lowest_level)
 
-        # station_z = file.observations_table.station_elevation[input_df.idx.iloc[0]]
-        # # if the first observation is more than 1500 m above ground, the ascent is invalid (we check for high and low pressure)
-        # if np.logical_and(((z_low - station_z) > 1500), ((z_low - station_z) > 1500)):
-        #     continue
+        station_z = file.observations_table.station_elevation[input_df.idx.iloc[0]]
+        # if the first observation is more than 1500 m above ground, the ascent is invalid (we check for high and low pressure)
+        if np.logical_and(((z_high - station_z) > 1500), ((z_high - station_z) > 1500)):
+            continue
 
 
         # check if best possible time is selected # skipped for now
@@ -250,7 +250,7 @@ def write_trj(stat):
 
     # writing to input file
 
-    targetfile = '/mnt/users/staff/uvoggenberger/scratch/converted_v11/'+str(stat.split('/')[-1])
+    targetfile = '/mnt/users/staff/uvoggenberger/scratch/hum_adj_2022/'+str(stat.split('/')[-1])
     mode='r+'
     group = 'advanced_homogenisation'
 
@@ -286,7 +286,7 @@ if __name__ == '__main__':
     
     file_list = []
     result_ids = []
-    for i in glob.glob('/mnt/users/staff/uvoggenberger/scratch/converted_v11/*11035*.nc')[:]:
+    for i in glob.glob('/mnt/users/staff/uvoggenberger/scratch/hum_adj_2022/*.nc')[:]:
         # file_list.append(i.split('_CEUAS_merged_v1.nc')[0][-5:])
         file_list.append(i)
         result_ids.append(write_trj.remote(file_list[-1]))
