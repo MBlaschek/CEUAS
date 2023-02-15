@@ -39,11 +39,15 @@ from harvest_convert_to_netCDF import write_dict_h5, clean_station_configuration
 # nan int = -2147483648 
 #from harvest_convert_to_netCDF import datetime_toseconds   # importing the function to write files with h5py 
 
+
+"""
 @njit
 def replace_global(replaced_indices, replaced_vector, replacing_vector):
+    #FAILED Attempt to make vector item replacement faster 
     for insert_index, replacing_value in zip(replaced_indices, replacing_vector):
         replaced_vector[insert_index] = replacing_value 
-        
+"""    
+
         
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning) # deactivates Pandas warnings 
@@ -297,8 +301,7 @@ class Merger():
             return np.nan 
         return void
         
-
-
+        
     def make_unique_datetime(self):
         """ Building the global set of date_times and indices from the various datasets. 
               The datetimeindex is read from the original netCDF file. 
@@ -306,9 +309,6 @@ class Merger():
               """
 
         logging.info('\n *** Running make_all_datetime ' )
-
-        all_uniques     = []  # storing a list with all the unique date_times            
-        which_k_in_dt = {}  # list of avilable dataset for each unique date_time, so that when looping over the distinct date_times, only the proper dataset will be read and compared 
 
         """ Loop over all the datasets 
                 k: name of the dataset
@@ -344,25 +344,37 @@ class Merger():
                     ### filter data 
                     # remove internal duplicates i.e. data for the same records but multiple pressure levels
                     # remove also non finite plevel data (i.e. where plve == nan ) 
-                    ind_filtered = list(range(inf, sup ))
-                    plev =  self.data[k][F]['observations_table']['z_coordinate'][ind_filtered] 
-                    fin = np.where(np.isfinite(plev) )[0]
+                    #ind_filtered = np.arange(inf, sup)
                     
-                    plev = plev[fin]
+                    plev =  self.data[k][F]['observations_table']['z_coordinate'][inf:sup]
+                    plev_finite_ind = np.where(np.isfinite(plev) )[0]
+                    obs_var = self.data[k][F]['observations_table']['observed_variable'][inf:sup][plev_finite_ind]
+                    plev_finite = plev[plev_finite_ind]
                     
-                    # TO DO IMPROVE SPEED
+                    processed_p, indices_temp = [],[]
+                    for value, press,index in zip(plev_finite, obs_var, plev_finite_ind):
+                        if press in processed_p:
+                            continue
+                        if np.isfinite(value):
+                            indices_temp.append(inf + index) # appending the lower index 
+                            processed_p.append(press)
+                    
+                    '''
+                    # TO DO IMPROVE SPEED, too slow 
                     df = pd.DataFrame.from_dict ( {'plev': plev , 
-                                                                       'observed_variable':  self.data[k][F]['observations_table']['observed_variable'][fin] , 
-                                                                       'indices' : fin    } )
+                                                                       'observed_variable':  self.data[k][F]['observations_table']['observed_variable'][plev_finite] , 
+                                                                       'indices' : plev_finite    } )
                     
                     dfr =df.drop_duplicates (subset = ['plev', 'observed_variable'] , ignore_index=True )
                     # add_offset 
+                    '''
                     
-                    indices.append( [inf +i for i in list(dfr.indices) ] ) # append list of real indices and true length
-                    indices.append( len(dfr.indices) )
+                    indices.append( indices_temp ) # append list of real indices and true length
+                    indices.append( len(indices_temp) )
                     
-                    
-                    inserting_indices =  list(range(len(dfr.indices)))  # the new vector where the values are replaced is created from scratch, index starts from 0 each time 
+                    ### TRY 
+                    #inserting_indices =  list(range(len(indices_temp)))  # the new vector where the values are replaced is created from scratch, index starts from 0 each time 
+                    inserting_indices = np.arange(len(indices_temp))
                     
                     indices.append( inserting_indices) # where to put the read data in the empty template vector 
                     # INDICES DESCRIPTION ::: indices = [inf, sup, total length, indices_to_read, length reduced indices, indices_to_insert ]
@@ -385,8 +397,7 @@ class Merger():
         
         ### build intermediate dictionary with dates 
         logging.info('\n *** Build intermediate dictionary with dates ' )
-        
-        
+
         # CHECK TIMESTAMP Timestamp('1979-06-20 12:00:00') 
         for dt in all_timestamps: # <- loop over all possible timestamps 
             all_timestamps_dic[dt] = {}
@@ -399,11 +410,11 @@ class Merger():
                             all_timestamps_dic[dt][k]= {}
                         all_timestamps_dic[dt][k][F] = self.unique_dates[k][F]['datetimes'][dt]['indices']
                              
+        logging.info('\n *** Done build intermediate dictionary with dates ' )
+        
         ### flag for public data, extract duplicates
         processed_timestamps = []
-        all_combined_timestamps ={}
-        removed_duplicates = []
-        
+        all_combined_timestamps ={}        
         
         for dt,index in zip(all_timestamps, range(len(all_timestamps)) ) :
             
@@ -427,7 +438,7 @@ class Merger():
             all_combined_timestamps[dt]['all_duplicated_files'] = []
             all_combined_timestamps[dt]['all_duplicated_records'] = []
             all_combined_timestamps[dt]['indices'] = []
-            
+            all_combined_timestamps[dt]['index_header'] = []
             
             # if the time delta is less than the specified limit in self.hour_time_delta
             possible_duplicate_timestamps = [d for d in all_timestamps[index+1:index+3] if d >=dt and abs(d-dt)< pd.Timedelta(hours= self.hour_time_delta)  ] 
@@ -437,8 +448,9 @@ class Merger():
             
             # list with all possible duplicated date_times 
             possible_duplicate_timestamps.append(dt)
-            all_datasets =  list([ all_timestamps_dic[time].keys() for time in possible_duplicate_timestamps ][0])
-            all_combined_timestamps[dt]['all_duplicated_datasets'].extend(all_datasets)
+            all_datasets =  [ list(all_timestamps_dic[g].keys())[0] for g in possible_duplicate_timestamps ]
+
+            all_combined_timestamps[dt]['all_duplicated_datasets'].append( np.bytes_([''.join(d) for d in all_datasets ][0]))
             
             if 'ncar' in all_datasets or  'igra2' in all_datasets or  'era5_1759' in all_datasets or 'era5_1761' in all_datasets:
                     all_combined_timestamps[dt]['policy'] = 4
@@ -454,13 +466,15 @@ class Merger():
             else:
                 best_ds = False # must look for longest records 
                 
-                
-            
+
             for time in possible_duplicate_timestamps:
-                
                 best_dt, best_file, best_record = time,'',0        
                 
-                if best_ds and best_ds in all_timestamps_dic[time].keys():
+                if best_ds and best_ds not in all_timestamps_dic[time].keys():
+                    continue
+                
+                elif  best_ds and best_ds in all_timestamps_dic[time].keys():
+                    
                     files = list(all_timestamps_dic[time][best_ds].keys())
                     all_combined_timestamps[dt]['all_duplicated_files'].extend(files)  
                     
@@ -476,11 +490,11 @@ class Merger():
                 elif not best_ds:
                     datasets = all_timestamps_dic[time].keys()
                     for ds in datasets:
-                        files = all_timestamps_dic[time][best_ds]
-                        all_combined_timestamps[dt]['all_duplicated_file'].extend(files)  
+                        files = all_timestamps_dic[time][ds]
+                        all_combined_timestamps[dt]['all_duplicated_files'].extend(files)  
                         
                         for file in files:
-                            records = all_timestamps_dic[time][best_ds][file][4]
+                            records = all_timestamps_dic[time][ds][file][4]
                             if records >= best_record:
                                 best_dt = time
                                 best_file = file
@@ -489,94 +503,14 @@ class Merger():
                                 all_combined_timestamps[dt]['all_duplicated_records'].append(records)
                                 all_combined_timestamps[dt]['all_duplicated_files'].append(file)  
 
-
                 all_combined_timestamps[dt]['best_ds'] = best_ds  
                 all_combined_timestamps[dt]['best_file'] = best_file  
                 all_combined_timestamps[dt]['real_time'] = best_dt # might not coincide 
                 all_combined_timestamps[dt]['indices'] = all_timestamps_dic[best_dt][best_ds][best_file] # might not coincide 
-
-        """
-        for dt in all_combined_timestamps.keys():
-            
-            if dt == pd.Timestamp('1979-06-03 13:00:00'):
-                print(0)
-
-            best_duplicates_dic[dt] = {}
-            best_duplicates_dic[dt]['best_ds'] = ''
-            best_duplicates_dic[dt]['file'] = ''
-            best_duplicates_dic[dt]['records'] = ''
-            best_duplicates_dic[dt]['indices'] = ''
-            best_duplicates_dic[dt]['policy'] = ''
-            best_duplicates_dic[dt]['all_ds'] = ''
-            
-            best_ds, best_file, best_records = '', '', 0
-            available_datasets = [ g for g in all_combined_timestamps[dt].keys() if g != 'policy' ]
-            if len(available_datasets)==0:
-                continue
-            
-            era5 = [ f for f in available_datasets if f == 'era5_1' or f== 'era5_1_mobile' or f=='era5_2' or f== 'era5_2_mobile' ]
-            
-            if len(era5) >0:
-                for best_ds in era5:
-                    files = all_combined_timestamps[dt][best_ds].keys()
-                    for file in files:
-                        records = all_combined_timestamps[dt][best_ds][file][4]
-                        if records >= best_records:
-                            best_file = file
-                            best_records = records                    
-                            best_ds = era5[0]
-                            indices = all_combined_timestamps[dt][best_ds][file]                            
-                            '''
-                            indices = [ all_combined_timestamps[dt][best_ds][file][0], 
-                                        all_combined_timestamps[dt][best_ds][file][1],
-                                        all_combined_timestamps[dt][best_ds][file][2]]
-                            '''
-            else:
-                if 'igra2' in available_datasets:  # there must be only one igra file but keep same loop structure
-                    best_ds = 'igra2'
-                    files = all_combined_timestamps[dt]['igra2'].keys()                    
-                    for file in files:
-                        records = all_combined_timestamps[dt]['igra2'][file][4]
-                        if records > best_records:
-                            best_file = file
-                            best_records = records  
-                            indices = all_combined_timestamps[dt][best_ds][file]                            
-                             
-                elif 'ncar' in available_datasets:
-                    best_ds = 'ncar'
-                    files = all_combined_timestamps[dt]['ncar'].keys()
-                    for file in files:
-                        records = all_combined_timestamps[dt]['ncar'][file][4]
-                        if records > best_records:
-                            best_file = file
-                            best_records = records                    
-                            best_ds = 'ncar'        
-                            indices = all_combined_timestamps[dt][best_ds][file]                            
-                          
-                else:
-                    for ds in available_datasets:
-                        files = all_combined_timestamps[dt][ds].keys()
-                        for file in files:
-                            records = all_combined_timestamps[dt][ds][file][4]
-                            if records > best_records:
-                                best_file = file
-                                best_records = records                    
-                                best_ds = ds
-                                indices = all_combined_timestamps[dt][best_ds][file]                            
-                                
-
-            best_duplicates_dic[dt]['best_ds'] = best_ds
-            best_duplicates_dic[dt]['file']        = best_file
-            best_duplicates_dic[dt]['records'] = best_records
-            
-            best_duplicates_dic[dt]['indices'] = indices
-            best_duplicates_dic[dt]['policy']  = np.full( (records), all_combined_timestamps[dt]['policy'] )
-
-            best_duplicates_dic[dt]['duplicates'] =  np.bytes_(''.join( [d for d in available_datasets if d != best_ds ] ) )
-            
-        """
-        
-        
+                #if dt == pd.Timestamp('1979-07-27 11:00:00') or best_dt == pd.Timestamp('1979-07-27 11:00:00'):
+                #    print(0)
+                all_combined_timestamps[dt]['index_header'] = list(self.unique_dates[best_ds][best_file]['datetimes'].keys()).index(best_dt) # index of this merged time in the original file, for constructing the header table 
+   
         # reloop to select candidates, duplicates 
         all_unique_dates = np.unique( list(all_combined_timestamps.keys()) )
         self.all_unique_dates = all_unique_dates
@@ -615,6 +549,14 @@ class Merger():
         # looping over the best file only 
         offset_obs, offset_head = 0,0 
         
+        records_dic = {}
+        keys = ['date_time', 'source_id' , 'file' , 'original_record_index' , 'policy' , 'duplicates' ]
+        for k in keys:
+            records_dic[k] = []
+
+        
+        
+        
         for dt in selected_timestamps_this_year:
             best_ds =  self.best_duplicates_dic[dt]['best_ds'] 
             
@@ -636,24 +578,27 @@ class Merger():
                 combined[best_ds][best_file]['report_id'] = []
                 # TODO
                 combined[best_ds][best_file]['duplicates'] = []
-                
                 combined[best_ds][best_file]['files'] = []
+                combined[best_ds][best_file]['source_id'] = []
+                
+                
                 
                 combined[best_ds][best_file]['all_reading_indices_header_tab'] = []
                 combined[best_ds][best_file]['all_inserting_indices_header_tab'] = []
                 
                 combined[best_ds][best_file]['all_reading_indices_obs_tab'] = []
                 combined[best_ds][best_file]['all_inserting_indices_obs_tab'] = []
-                
+
             # reading selected indices
             # indices =  self.best_duplicates_dic[dt]['indices'][5]  
             
-            # storing indices for the observations table and the header table 
+            # storing indices for the observations table and the header table
+            
             combined[best_ds][best_file]['all_inserting_indices_obs_tab'].extend( [ offset_obs + i for i in self.best_duplicates_dic[dt]['indices'][5] ] ) # must be sequential, since the best file has already been selected 
             combined[best_ds][best_file]['all_reading_indices_obs_tab'].extend( self.best_duplicates_dic[dt]['indices'][3] )
             
             combined[best_ds][best_file]['all_indices_header_in_obstab'].append( self.best_duplicates_dic[dt]['indices'][0] ) # indices of the header wrt the observations table (i.e. first occurrence of each date_time) or record_index
-            index_header = list( self.unique_dates[best_ds][best_file]['datetimes'].keys() ).index(dt)     
+            index_header = list( self.unique_dates[best_ds][best_file]['datetimes'].keys() ).index(self.best_duplicates_dic[dt]['real_time'])      # self.best_duplicates_dic[dt]['real_time']
             
             combined[best_ds][best_file]['all_reading_indices_header_tab'].append(index_header) # indices of the header wrt the observations table (i.e. first occurrence of each date_time)
             combined[best_ds][best_file]['all_inserting_indices_header_tab'].append(offset_head) 
@@ -661,10 +606,21 @@ class Merger():
             combined[best_ds][best_file]['data_policy_licence'].extend([policy]* len(combined[best_ds][best_file]['all_inserting_indices_obs_tab']) )        
             combined[best_ds][best_file]['report_id'].extend( np.full( len(combined[best_ds][best_file]['all_inserting_indices_obs_tab']), offset_head ) )
             combined[best_ds][best_file]['files'].append(best_file)
+            combined[best_ds][best_file]['source_id'].append(best_ds)
+            
             combined[best_ds][best_file]['duplicates'].append(  self.best_duplicates_dic[dt]['all_duplicated_datasets'])
             
-            if self.best_duplicates_dic[dt]['indices'][4] == 0:
-                print('check ')
+            
+            # saving a small header table to simplify checks 
+            records_dic['date_time'].append(dt)
+            records_dic['source_id'].append(best_ds)
+            records_dic['file'].append(best_file)
+            records_dic['original_record_index'].append(best_file)
+            records_dic['policy'].append(policy)
+            records_dic['duplicates'].append(self.best_duplicates_dic[dt]['all_duplicated_datasets'])
+            
+            #if self.best_duplicates_dic[dt]['indices'][4] == 0:
+            #    print('check ')
             # storing length of tables
             total_length_obstab = total_length_obstab +  self.best_duplicates_dic[dt]['indices'][4]  # length of selected observations
             total_length_headertab = total_length_headertab + 1
@@ -676,8 +632,11 @@ class Merger():
         combined['total_length_headertab'] = total_length_headertab
         
         self.best_record = combined
+        record_df = pd.DataFrame.from_dict(records_dic)
+        self.record_df = record_df 
         
         return 0
+    
     
     
     
@@ -696,10 +655,10 @@ class Merger():
         # dummy observation_id
         if var == 'observation_id':
             vector = np.array(list(range(combined_records['total_length_obstab'])) )
-            return vector
+            return vector # to eb filled later 
         
-        # special case for empty variables
-        if var in self.empty_cdm_var:
+        elif var in self.empty_cdm_var:
+            # special case for empty variables
             var_type = self.dic_type_attributes['observations_table'][var]['type']
             if var_type == np.int32 :
                 nan = np.int32(-2147483648)
@@ -707,55 +666,57 @@ class Merger():
                 nan = np.float32(np.nan)       
             vector = np.empty( (combined_records['total_length_obstab']) , dtype=np.dtype(nan) ) 
                 
-        else:  # other regular variables
-            vector = np.empty( (combined_records['total_length_obstab'])  )
-
-            for ds in datasets:
-                for file in combined_records[ds].keys():
-                    indices_insert = combined_records[ds][file]['all_inserting_indices_obs_tab']
-                    indices_read = combined_records[ds][file]['all_reading_indices_obs_tab']
+        elif var == 'source_id': 
+            vector = np.full( (combined_records['total_length_obstab']) , b'dummy_source' ) # filling a vector with dataset id i.e. source_id field
+        else: # other regular variable
+            vector = np.empty( (combined_records['total_length_obstab'])  )                
+        
+        total_l = 0
+        for ds in datasets:
+            for file in combined_records[ds].keys():
+                indices_insert = combined_records[ds][file]['all_inserting_indices_obs_tab']
+                indices_read = combined_records[ds][file]['all_reading_indices_obs_tab']
+                
+                if var == 'source_id': 
+                    np.put (vector , indices_insert, ds)
                     
-                    if var == 'source_id': 
-                        vector = np.full( (combined_records['total_length_obstab']) , 'dummy' ) # filling a vector with dataset id i.e. source_id field
-                        np.put (vector , indices_insert, ds)
-                        
-                    elif var == 'sensor_id': # this will be replaced by the dedicated sensor script 
-                        vector = np.empty( (combined_records['total_length_obstab']) )
-                        
-                    elif var in ['advanced_assimilation_feedback' , 'advanced_uncertainty']:
-                        if ds in ['era5_1' , 'era5_2']:
-                            np.put (vector , indices_insert, 1)
-                        else:
-                            np.put (vector , indices_insert, 0)
+                elif var  in ['sensor_id', 'adjustment_id']: # this will be replaced by the dedicated sensor script 
+                    vector = np.empty( (combined_records['total_length_obstab']) )
                     
-                    elif var in ['data_policy_licence', 'report_id']:
-                        data = combined_records[ds][file][var]
-                        np.put (vector , indices_insert, data)
-                        
+                elif var in ['advanced_assimilation_feedback' , 'advanced_uncertainty']:
+                    if ds in ['era5_1' , 'era5_2']:
+                        np.put (vector , indices_insert, 1)
                     else:
-                        # accessing h5py data and slicing 
-                        h5py_data = self.data[ds][file]['h5py_file']['observations_table'][var][:]
-                        data = h5py_data[indices_read]
+                        np.put (vector , indices_insert, 0)
+                
+                elif var in ['data_policy_licence', 'report_id']:
+                    data = combined_records[ds][file][var]
+                    np.put (vector , indices_insert, data)
+                    
+                else:
+                    # accessing h5py data and slicing 
+                    data = self.data[ds][file]['h5py_file']['observations_table'][var][:][indices_read]
 
-                        #sliced_data = self.data[ds][file]['h5py_file']['era5fb'][var][indices_reading]
+                    #sliced_data = self.data[ds][file]['h5py_file']['era5fb'][var][indices_reading]
 
-                        if var == 'observed_variable':  # check if the convention for CDM variable is correctly used
-                            old_to_new_cdm = { 
-                                            85:126, 
-                                            104:139,
-                                            105:140,
-                                            38:138,
-                                            36:137
-                                        }
-                            data = np.array( [ old_to_new_cdm[v]  if v in old_to_new_cdm.keys() else v for v in list(data) ] )
-                        try: # replaced_indices, replaced_vector, replacing_vector)
-                            dummy = replace_global(indices_insert, vector, data)
-                        except:
-                            pass
-                                
-                        # updating the vector 
-                        np.put ( vector, indices_insert, data )                        
-                        
+                    if var == 'observed_variable':  # check if the convention for CDM variable is correctly used
+                        old_to_new_cdm = { 
+                                        85:126, 
+                                        104:139,
+                                        105:140,
+                                        38:138,
+                                        36:137
+                                    }
+                        data = np.array( [ old_to_new_cdm[v]  if v in old_to_new_cdm.keys() else v for v in list(data) ] )
+                    try: # replaced_indices, replaced_vector, replacing_vector)
+                        #dummy = replace_global(indices_insert, vector, data)
+                        np.put(vector , indices_insert, data)
+                    except:
+                        pass
+                            
+                    # updating the vector 
+                    #np.put ( vector, indices_insert, data )                        
+                    
         # obtain record index i.e. start of each record 
         if var == 'date_time':
             record_index = np.unique(vector, return_index=True)[1]
@@ -779,8 +740,14 @@ class Merger():
         tipo = self.dic_type_attributes['era5fb'][var]['type']                   
         void = self.get_null(tipo)
         #vector = np.full( (combined_records['total_length_obstab']) , void ) # filling a vector with dataset id i.e. source_id field
-
-        vector = np.empty( (combined_records['total_length_obstab'])  ) # filling a vector with dataset id i.e. source_id field
+        
+        if var in [ 'collection_identifier@conv' , 'timeseries_index@conv', 'unique_identifier@conv', 'source@hdr', 'statid@hdr', 'expver']:
+            vector = np.array( [b'NA'] * combined_records['total_length_obstab']  ) # filling a vector with dataset id i.e. source_id field
+        #elif var in ['expver']:
+        #    vector = np.empty( (combined_records['total_length_obstab'])  , dtype=int ) # filling a vector with dataset id i.e. source_id field
+            
+        else:
+            vector = np.empty( (combined_records['total_length_obstab'])  ) # filling a vector with dataset id i.e. source_id field
         
         for ds in datasets:
             if 'era5' in ds:  # in this case we read the fb from the table 
@@ -794,11 +761,17 @@ class Merger():
                         data = self.data[ds][file]['h5py_file']['era5fb'][var][:][indices_reading]
 
                         try: # replaced_indices, replaced_vector, replacing_vector)
-                            dummy = replace_global(indices_writing, vector, data)
+                            #dummy = replace_global(indices_writing, vector, data)
+                            np.put(vector , indices_writing, data)
+                            
                             #sliced_data = h5py_data[indices_reading]
                             #np.put (vector , indices_writing, sliced_data)                        
                         except:  
-                            pass
+                            data = [ b''.join(i) for i in data ]
+                            #dummy = replace_global(indices_writing, vector, data)
+                            np.put(vector , indices_writing, data)
+                            print(0)
+                            #pass
                             ''' 
                             data = [ b''.join(i) for i in d ]
                             vector = np.empty( (combined_records['total_length_obstab'])  , dtype=np.bytes_ ) # filling a vector with dataset id i.e. source_id field                            
@@ -818,22 +791,18 @@ class Merger():
     def make_header_var(self, tab='', var='' ):
         """  """
         combined_records = self.best_record  
-        
         # extract datasets
         datasets = [ d for d in combined_records.keys() if 'length' not in d and 'policy' not in d]
         
-        if tab =='source_configuration':
-            tipo = np.bytes_
-        else:
-            tipo = self.dic_type_attributes[tab][var]['type']                   
+        tipo = self.dic_type_attributes[tab][var]['type']                   
         void = self.get_null(tipo)
         
         if var in ['latitude' , 'longitude', 'report_id']:
             vector = self.obs_in_header[var][self.record_index]
             return vector 
             
-        if var in ['duplicates']:
-            vector = np.full( (combined_records['total_length_headertab']) , b'NA ' ) # filling a vector with dataset id i.e. source_id field
+        if var in ['duplicates', 'source_id']:
+            vector = np.full( (combined_records['total_length_headertab']) , b'NA                                                          ' ) # filling a vector with dataset id i.e. source_id field
         else:
             vector = np.full( (combined_records['total_length_headertab']) , void ) # filling a vector with dataset id i.e. source_id field
 
@@ -845,8 +814,9 @@ class Merger():
                     np.put (vector , combined_records[ds][file]['all_inserting_indices_header_tab'], duplicates)                        
                 else:
                     reading_indices = combined_records[ds][file]['all_reading_indices_header_tab']                    
-                    h5py_data = self.data[ds][file]['h5py_file'][tab][var]
-                    sliced_data = h5py_data[reading_indices]                    
+                    sliced_data = self.data[ds][file]['h5py_file'][tab][var][:][reading_indices]  
+                    if var == 'source_id':
+                        sliced_data = [b''.join(f) for f in sliced_data ] 
                     np.put (vector , combined_records[ds][file]['all_inserting_indices_header_tab'], sliced_data)                        
 
         
@@ -890,16 +860,14 @@ class Merger():
 
         logging.info('***** Starting the merging process merge_all_data')
 
-        #""" All possible unique_dates to loop on """
-        #date_times = self.make_unique_datetime
-        #date_times.sort()
-        #date_times = np.array(date_times) 
-
         # avoidable loops, should not matter much  # self.all_years:  
-        #for this_year in self.all_years:  # loop over all available years in the date_times 
         #for this_year in [1981, 1982, 1983]:  # loop over all available years in the date_times 
         #for this_year in self.all_years:   # loop over all available years in the date_times 
-        for this_year in [1979]:   # loop over all available years in the date_times 
+        obs_offset = 0
+        head_offset = 0
+        
+        #for this_year in self.all_years:   # loop over all available years in the date_times 
+        for this_year in [1980,1981]:   # loop over all available years in the date_times 
             
             print('=== Running year ::: ' , this_year )
             self.current_year = this_year 
@@ -908,16 +876,38 @@ class Merger():
             # extract all indices per file, create aggregated vectors with proper lenght
             a = self.merge_all_timestamps(selected_timestamps_this_year)
             
-            # extract data from harvested files for observations_table variables
-            all_obst_tab_vars =  self.observations_table_vars + self.empty_cdm_var
-
+            # extract data from harvested files for observations_table variables, except date_time
             
+            all_obst_tab_vars =  self.observations_table_vars + self.empty_cdm_var
+            all_obst_tab_vars.remove('date_time')
             ### WRITING OBSERVATIONS TABLE 
-            print('Writing OBSERVATIONS ' ,  datetime.now()  )                        
+            print('Writing OBSERVATIONS ' ,  datetime.now()  )         
+            
+            for v in ['date_time']:
+                date_time = self.make_obstab_var(var=v)
+                self.write_merged_new(var = v, table = 'observations_table', data=date_time )
+            
             for v in all_obst_tab_vars:
                 ### Observations table
-                #print('Extracting data ' , v , '   ' ,  datetime.now()  )                                        
-                data = self.make_obstab_var(var=v)
+                #print('Extracting data ' , v , '   ' ,  datetime.now()  )      
+                if v == 'observation_id':
+                    data = np.array ( [  obs_offset +i for i in list(range(self.best_record['total_length_obstab']) )  ]  )
+                    obs_offset = obs_offset + data[-1] # adding last entry
+                    
+                elif v == 'report_id':
+                    dt, length = np.unique(date_time, return_counts=True )
+                    report_id_obs, report_id_head = [],[]
+                    for i,c,index in zip(dt, length, list(range(len(dt))) ):
+                        report_id_obs.extend( [index]*c )
+                        report_id_head.append(head_offset + index)
+                    head_offset = head_offset + report_id_head[-1]
+                    self.write_merged_new(var = v, table = 'report_id', data=report_id_obs )
+                elif v == 'source_id':
+                    print(0)
+                    data = self.make_obstab_var(var=v)
+                    
+                else:
+                    data = self.make_obstab_var(var=v)
                 #print('Writing data ' ,  v, '   ', datetime.now()  )                                        
                 self.write_merged_new(var = v, table = 'observations_table', data=data )
             print('Written OBSERVATIONS ',  datetime.now()  )       
@@ -938,9 +928,23 @@ class Merger():
             ### WRITING HEADER TABLE 
             print('Writing HEADER ')
             for d in self.header_columns:
-                data = self.make_header_var(tab='header_table', var=d)
+                if d == 'report_id':
+                    data = np.array(report_id_head)
+                    
+                else:
+                    data = self.make_header_var(tab='header_table', var=d)
                 self.write_merged_new(var = d, table = 'header_table', data=data )             
             print('Written HEADER ')
+            
+            
+            ### WRITING RECORD TIMESTAMPS AND INDEX
+            di=xr.Dataset()
+            datetimes, recordindex = np.unique( date_time, return_index=True )
+            di['recordtimestamp'] = ( {'recordtimestamp' : datetimes.shape } , datetimes )
+            di['recordtimestamp'].attrs['units']='seconds since 1900-01-01 00:00:00'
+            di['recordindex']          = ( {'recordindex' : recordindex.shape } ,  recordindex )
+
+            self.write_merged_new(var='record_index', table='record_index', data=di)                      
             
             
             ### WRITING STATION CONFIGURATION TABLE 
@@ -953,17 +957,18 @@ class Merger():
                 except:
                     pass
                     #print('wrong variable ' , d )
-                    
-                    
+                         
             ### WRITING SOURCE CONFIGURATION
-            print('Writing source_configuration ' )                        
-            source_conf=xr.Dataset()
-            source_files =  self.make_sourceconf_var(tab='source_configuration', var='source_file' )            
-            source_files = np.array(source_files).astype(dtype='|S70')
-            source_conf['source_file'] = ( {'source_file' : source_files.shape } , source_files )
-            self.write_merged_new(var='source_file', table = 'source_configuration', data= source_conf )
-            
-            
+            source_files =  self.make_sourceconf_var(tab='source_configuration', var='source_file' )                        
+            self.write_merged_new(var = 'source_file', table = 'source_configuration', data=source_files )              
+            # OLD,, slow
+            #print('Writing source_configuration ' )                        
+            #source_conf=xr.Dataset()
+            #source_files =  self.make_sourceconf_var(tab='source_configuration', var='source_file' )            
+            #source_files = np.array(source_files).astype(dtype='|S70')
+            #source_conf['source_file'] = ( {'source_file' : source_files.shape } , source_files )
+            #self.write_merged_new(var='source_file', table = 'source_configuration', data= source_conf )
+
             ### WRITING CDM METADATA TABLES
             self.write_merged_new(table = 'cdm_tables', data= self.data , var='')
             
@@ -975,9 +980,7 @@ class Merger():
             else:
                 pass
             
-            
             for a in [1,2]:
-                
                 print(a)
                 ### era5fb table 
                 
@@ -1001,29 +1004,6 @@ class Merger():
                 del cleaned_df_container 
             
                 #print(blue + 'Memory used after deleting the cleaned_df_container: ', process.memory_info().rss/1000000000 , cend)
-
-        
-            """ Storing the merged date_time values and indices """
-            di=xr.Dataset()
-            combined_date_time = np.array(combined_date_time)
-            di['recordtimestamp'] = ( {'recordtimestamp' : combined_date_time.shape } , combined_date_time )
-            di['recordtimestamp'].attrs['units']='seconds since 1900-01-01 00:00:00'
-        
-            """ Creating the merged indices mi """
-            mi = [] 
-            mi.append(0)
-            for i in range(len(combined_indices)):
-                mi.append( combined_indices[i] + mi[-1] )
-            mi.pop()
-            pop = np.array(mi) # removing last unecessary index  
-            di['recordindex']          = ( {'recordindex' : pop.shape } , pop )
-        
-        
-
-            self.write_merged(content = 'recordindex', table = di)                      
-            self.write_merged(content = 'cdm_tables', table= '')
-        
-
         
             ### STATION CONFIGURATION 
             
@@ -1060,15 +1040,6 @@ class Merger():
                 self.write_merged(content = 'station_configuration', table= {k:a})
                 logging.info('*** Written station_configuration %s             ', k)
                         
-            """ Adding sensor_id to observations_table """
-            if self.add_sensor:
-                print('*** Adding sensor *** ')            
-                add_sensor = wrapper(out_dir = self.out_dir , station_id = self.station.split('-')[-1] , file = self.out_name , copy = self.copy )
-                print('*** Added sensor *** ')
-            else:
-                pass
-        
-            #return 0      
             '''
 
 
@@ -1091,12 +1062,12 @@ class Merger():
                     descr   = bytes( self.dic_type_attributes[table][var]['description']    , 'utf-8' )
                 except:
                     descr    = bytes( 'missing'    , 'utf-8' )
-                    print(' FFF FAILING WITH DESCRIPTION: ', var , ' ' ,  self.dic_type_attributes[table][var]['description']) 
+                    #print(' FFF FAILING WITH DESCRIPTION: ', var , ' ' ,  self.dic_type_attributes[table][var]['description']) 
                 try:
                     ext_tab = bytes( self.dic_type_attributes[table][var]['external_table'] , 'utf-8' )
                 except:
                     ext_tab = bytes( 'missing' , 'utf-8' )
-                    print(' FFF FAILING WITH EXTERNAL TABLE : ', var )                                                         
+                    #print(' FFF FAILING WITH EXTERNAL TABLE : ', var )                                                         
 
                 var_type = self.dic_type_attributes[table][var]['type']
     
@@ -1112,7 +1083,7 @@ class Merger():
     
                 dic = {var: data}  # making a 1 colum dictionary to write 
                 #print('SHAPE IS FFF ', table[k].shape )
-                write_dict_h5(out_name, dic , table, self.encodings[table], var_selection=[], mode='a', attrs = {'descriptiption':descr, 'external_table':ext_tab}  )
+                write_dict_h5(out_name, dic , table, self.encodings[table], var_selection=[], mode='a', attrs = {'description':descr, 'external_table':ext_tab}  )  
 
         elif table == 'cdm_tables':
             for k in data['cdm_tables'].keys():
@@ -1120,15 +1091,17 @@ class Merger():
                 table.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a', group = k)
                 #logging.info('Writing the cdm table %s to the netCDF output ', k)
 
+        #elif table == 'source_configuration':  
+        #    data.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a', group = table)
+        #    #logging.info('Writing the source_configuration table to the netCDF output ')
+        
         elif table == 'source_configuration':  
-            data.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a', group = table)
-            #logging.info('Writing the source_configuration table to the netCDF output ')
+            dic = {var: data} 
+            write_dict_h5(out_name, dic , table, self.encodings[table], var_selection=[], mode='a', attrs = {'description':'Filename for data from source', 'external_table':''}  ) 
 
-        """ Writing the tables 
-        if table == 'recordindex':  # writing the recordindex, recordtimestamp, dateindex
-            #logging.info('Writing the merged record indices to the netCDF output ')
-            table.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a')
-        """
+        elif table == 'record_index':  
+            data.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a')
+            
 
         """
         elif table == 'station_configuration':
@@ -1213,13 +1186,15 @@ data_directories   = { 'era5_1'       : base_dir + '/era5_1' ,
                                    'igra2'          : base_dir + '/igra2' ,
 
                                    }
-'''
+
 
 
 data_directories   = { 'era5_1'       : base_dir + '/era5_1' ,
                                    'ncar'           : base_dir + '/ncar' ,
 
                                    }
+
+'''
 
 
 
@@ -1230,6 +1205,7 @@ data_directories   = { 'era5_1'       : base_dir + '/era5_1' ,
 
 out_dir = '/scratch/das/federico/YEAR_SPLIT_MERGING_02FEB2023'
 
+out_dir = '/scratch/das/federico/YEAR_SPLIT_MERGING_02FEB2023_fix'
 os.system('rm -r ' + out_dir )
 
 run_mode = 'dummy'
