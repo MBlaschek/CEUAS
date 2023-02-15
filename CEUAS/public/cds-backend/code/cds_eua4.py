@@ -3060,7 +3060,7 @@ class CDMDataset:
                 igroup = 'observations_table'
                 varselcfcopy = ['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                     'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                    'original_precision', 'reference_sensor_id', 'report_id', 'data_policy_licence', 'station_elevation']
+                                    'original_precision', 'reference_sensor_id', 'report_id', 'data_policy_licence', 'station_elevation'] #  
                 for co in cdm_obstab:
                     if not co in varselcfcopy:
                         varselcfcopy.append(co)
@@ -3208,7 +3208,7 @@ class CDMDataset:
                 if request['single_csv']:
                     fout['variable']=np.array([glamod_cdm_codes[cdm_codes[request['variable']]]]*len(fout['z_coordinate']))
                     groups.append('observations_table')
-                    wigos_primid = b''.join(self.file['station_configuration']['primary_id'][:]).decode('UTF-8')
+                    wigos_primid = b''.join(self.file['station_configuration']['primary_id'][0]).decode('UTF-8')
                     fout['primary_id']=np.array([wigos_primid]*len(fout['z_coordinate'])) #self.filename.split('/')[-1].split('_CEU')[0]
                     groups.append('station_configuration')
                 else:
@@ -3490,7 +3490,7 @@ class CDMDataset:
                 if 'observations_table' in self.groups:
                     varselcfcopy = ['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                     'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                    'original_precision', 'reference_sensor_id', 'report_id', 'data_policy_licence', 'station_elevation']
+                                    'original_precision', 'reference_sensor_id', 'report_id', 'data_policy_licence', 'station_elevation'] # 
                     for co in cdm_obstab:
                         if not co in varselcfcopy:
                             varselcfcopy.append(co)
