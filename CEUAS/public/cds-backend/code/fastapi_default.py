@@ -2041,7 +2041,6 @@ def index(request=None, response=None):
 
     rfile='/data/public/tmp/constraints.csv'
 
-#     response.set_header('Content-Disposition', 'attachment; filename=' + rfile)
     return rfile
 
 @app.get('/variable_codes/', response_class=FileResponse)
@@ -2056,28 +2055,6 @@ def variable_codes(request=None, response=None):
 #     response.set_header('Content-Disposition', 'attachment; filename=' + rfile)
     return rfile
 
-# @app.get('/service_definition/', response_class=FileResponse)
-# def service_definition():
-#     """ 
-#         Returns a json with the service definition
-#             linking all variables to the correct ingestions parameters
-#         Args:
-#             None
-#     """
-#     logger.debug("GET service_definition")
-#     with eua.CDMDataset(config['data_dir']) as sd_file:
-        
-#     if variable == None:
-#         rfile=config['config_dir']+'/cf.json'
-# #         response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
-#         return rfile
-#     else:
-#         cf = json.load(open(config['config_dir']+'/cf.json', 'r'))
-#         rfile='/data/public/tmp/variable_definition_'+variable+'.json'
-#         with open(rfile, 'w') as fp:
-#             json.dump(cf[variable], fp)
-# #         response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
-#         return rfile
 
 @app.get('/variable_definition/', response_class=FileResponse)
 def variable_definition(variable=None, response=None):
@@ -2099,6 +2076,19 @@ def variable_definition(variable=None, response=None):
 #         response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
         return rfile
 
+
+@app.get('/station_configuration/', response_class=FileResponse)
+def station_configuration(response=None):
+    """ 
+        Returns a the station configuration file for all merged stations
+        Args:
+            -
+    """
+    logger.debug("GET station_configuration")
+    rfile = './CUON_station_configuration_extended.csv'
+    return rfile
+
+
 def datetime_to_seconds(dates, ref='1900-01-01T00:00:00'):
     """ from datetime64 to seconds since 1900-01-01 00:00:00"""
     return ((numpy.datetime64(dates) - numpy.datetime64(ref)) / numpy.timedelta64(1, 's')).astype(numpy.int64)
@@ -2119,12 +2109,7 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
     active_file = config['config_dir'] + '/active.json'
     act = json.load(open(active_file,"r"))
     
-#     namelist_file = config['config_dir'] + '/namelist.json'
-#     namelist = json.load(open(namelist_file,"r"))
-    
     output_file = '/tmp/maplist_'+str(date)
-#     with open('/tmp/info_'+str(date)+str(enddate, "w") as f:
-#             f.writelines([str(date), str(enddate), str(var)])
     if (enddate is None) or (date == enddate):
         reqdate = date.split('-')
         interm_file = '/data/public/constraints_by_date/'+str(var)+'/'+str(var)+'_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
@@ -2135,30 +2120,6 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
         with open(output_file, "w") as f:
             f.writelines(lines)
             
-#     copyfile(interm_file, '/tmp/maplist_'+str(date)+str(enddate))
-    
-#     if enddate is None:
-#         date = datetime_to_seconds(date)
-#         rows = []
-#         rows.append(['station_name', 'longitude', 'latitude'])
-#         for i in act:
-#             if (date >= act[i][0]) and (date <= act[i][1]):
-#                 # renaming deactivated for now
-#                 # name = namelist[i]
-#                 name = i
-#                 rows.append([name, act[i][3], act[i][2]])
-
-#         with open(output_file, 'w') as csvfile:  
-#             # creating a csv writer object  
-#             csvwriter = csv.writer(csvfile)  
-#             # writing the data rows  
-#             csvwriter.writerows(rows) 
-#         reqdate = date.split('-')
-#         interm_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
-#         copyfile(interm_file, output_file)
-#         copyfile(interm_file, '/tmp/maplist_'+str(date)+str(enddate))
-            
-#     if not enddate is None:
     else:    
         date = datetime_to_seconds(date)
         enddate = datetime_to_seconds(enddate)
@@ -2177,8 +2138,8 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
             # writing the data rows  
             csvwriter.writerows(rows)
 
-#     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(output_file))
     return output_file
+
 
 @app.post('/maplist_post/', response_class=FileResponse)
 def mapdata(date=None, enddate=None, var=85, response=None,):
@@ -2196,12 +2157,7 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
     active_file = config['config_dir'] + '/active.json'
     act = json.load(open(active_file,"r"))
     
-#     namelist_file = config['config_dir'] + '/namelist.json'
-#     namelist = json.load(open(namelist_file,"r"))
-    
     output_file = '/tmp/maplist_'+str(date)
-#     with open('/tmp/info_'+str(date)+str(enddate, "w") as f:
-#             f.writelines([str(date), str(enddate), str(var)])
     if (enddate is None) or (date == enddate):
         reqdate = date.split('-')
         interm_file = '/data/public/constraints_by_date/'+str(var)+'/'+str(var)+'_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
@@ -2211,31 +2167,6 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
         lines[0] = "station_name,longitude,latitude\n"
         with open(output_file, "w") as f:
             f.writelines(lines)
-            
-#     copyfile(interm_file, '/tmp/maplist_'+str(date)+str(enddate))
-    
-#     if enddate is None:
-#         date = datetime_to_seconds(date)
-#         rows = []
-#         rows.append(['station_name', 'longitude', 'latitude'])
-#         for i in act:
-#             if (date >= act[i][0]) and (date <= act[i][1]):
-#                 # renaming deactivated for now
-#                 # name = namelist[i]
-#                 name = i
-#                 rows.append([name, act[i][3], act[i][2]])
-
-#         with open(output_file, 'w') as csvfile:  
-#             # creating a csv writer object  
-#             csvwriter = csv.writer(csvfile)  
-#             # writing the data rows  
-#             csvwriter.writerows(rows) 
-#         reqdate = date.split('-')
-#         interm_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
-#         copyfile(interm_file, output_file)
-#         copyfile(interm_file, '/tmp/maplist_'+str(date)+str(enddate))
-            
-#     if not enddate is None:
     else:    
         date = datetime_to_seconds(date)
         enddate = datetime_to_seconds(enddate)
@@ -2254,7 +2185,6 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
             # writing the data rows  
             csvwriter.writerows(rows)
 
-#     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(output_file))
     return output_file
 
 @app.get('/maplist2/', response_class=FileResponse)
@@ -2292,9 +2222,7 @@ def mapdata2(date=None, plev=None, var=None, response=None):
         # writing the data rows  
         csvwriter.writerows(rows) 
             
-#     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(output_file))
     return output_file
-
 
 
 @app.get('/statlist/', response_class=FileResponse)
@@ -2312,9 +2240,6 @@ def statdata(date:str=None, mindate:str=None, enddate:str=None, response:str=Non
     """
     active_file = config['config_dir'] + '/active.json'
     act = json.load(open(active_file,"r"))
-    
-#     namelist_file = config['config_dir'] + '/namelist.json'
-#     namelist = json.load(open(namelist_file,"r"))
     
     output_file = '/tmp/maplist_'+str(date)
     
@@ -2368,8 +2293,6 @@ def statdata(date:str=None, mindate:str=None, enddate:str=None, response:str=Non
             # writing the data rows  
             csvwriter.writerows(rows)
             
-
-#     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(output_file))
     return output_file
 
 
