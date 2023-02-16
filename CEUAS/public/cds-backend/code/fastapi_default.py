@@ -97,6 +97,7 @@ config = {'logger_name': 'upperair',
           'grid_dir': '.',
           'tmp_dir': '.',
           'config_dir': './config',
+          'station_configuration':'.',
           'cds_eua_version': 4,
           'debug': False,
           'reload_pwd': 'reload'}
@@ -2085,7 +2086,7 @@ def station_configuration(response=None):
             -
     """
     logger.debug("GET station_configuration")
-    rfile = './CUON_station_configuration_extended.csv'
+    rfile = config['station_configuration']
     return rfile
 
 
