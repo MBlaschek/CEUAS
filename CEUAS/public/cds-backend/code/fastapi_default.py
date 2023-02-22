@@ -482,8 +482,8 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         orphan_slist = glob.glob(os.path.expandvars(config['data_dir'] + '/20999-*_CEUAS_merged_v1.nc'))
         if len(orphan_slist) > 0:
             orphan_slnum = [i.split('/')[-1].split('_CEUAS_merged_v1.nc')[0].replace('.nc','') for i in orphan_slist]
-            orphan_func = partial(makedaterange, vola, debug=debug, orphan=True)
-            orphan_sklist = list(map(func, zip(orphan_slist, orphan_slnum)))
+            orphan_func = partial(makedaterange, vola, debug=debug, orphan=False) # keep lat/lon with orphn=False
+            orphan_sklist = list(map(orphan_func, zip(orphan_slist, orphan_slnum)))
 
             sklist += orphan_sklist
             slist += orphan_slist
