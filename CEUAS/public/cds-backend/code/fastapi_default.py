@@ -217,7 +217,7 @@ except:
 #
 ###############################################################################
 
-def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
+def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False, orphan=False) -> dict:
     """ Read HDF5 radiosonde cdm backend file and extract datetime and geo information
 
     Args:
@@ -252,22 +252,35 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
                 if CDS_EUA_VERSION >= 3:
                     #if isinstance(f['recordindices'], h5py._hl.group.Group):
                     if 'recordindices' in f.keys():
-                        active[skey] = [int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][0], funits)),
-                                    int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][-1], funits)),
-                                    float(f['observations_table']['latitude'][-1]),
-                                    float(f['observations_table']['longitude'][-1])]
-                    else:
-                        try:
-                            
-                            active[skey] = [int(eua.to_seconds_since(f['recordtimestamp'][0], funits)),
-                                        int(eua.to_seconds_since(f['recordtimestamp'][-1], funits)),
+                        if orphan:
+                            active[skey] = [int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][0], funits)),
+                                        int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][-1], funits)),
+                                        float(np.nan),
+                                        float(np.nan)]
+                        else:
+                            active[skey] = [int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][0], funits)),
+                                        int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][-1], funits)),
                                         float(f['observations_table']['latitude'][-1]),
                                         float(f['observations_table']['longitude'][-1])]
+                    else:
+                        try:
+                            if orphan:
+                                active[skey] = [int(eua.to_seconds_since(f['recordtimestamp'][0], funits)),
+                                            int(eua.to_seconds_since(f['recordtimestamp'][-1], funits)),
+                                            float(np.nan),
+                                            float(np.nan)]
+                            else:
+                                active[skey] = [int(eua.to_seconds_since(f['recordtimestamp'][0], funits)),
+                                            int(eua.to_seconds_since(f['recordtimestamp'][-1], funits)),
+                                            float(f['observations_table']['latitude'][-1]),
+                                            float(f['observations_table']['longitude'][-1])]
                         except:
                             print('makedaterange: ',s.split('/')[-1],' recordtimestamp does not exist')
                             return active
                 idx = numpy.where(vola.StationId.values == skey)[0]
-                if len(idx) > 0:
+                if orphan:
+                    active[skey].append('XXX')
+                elif len(idx) > 0:
                     active[skey].append(vola.CountryCode[idx[0]])
                 else:
                     # if no country code available -> reverse geo search for them 
@@ -464,6 +477,17 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
                 sklist=list(p.map(func,zip(slist,slnum)))
         else:
             sklist = list(map(func, zip(slist, slnum)))
+        
+        # orphans are added to the active list
+        orphan_slist = glob.glob(os.path.expandvars(config['data_dir'] + '/20999-*_CEUAS_merged_v1.nc'))
+        if len(orphan_slist) > 0:
+            orphan_slnum = [i.split('/')[-1].split('_CEUAS_merged_v1.nc')[0].replace('.nc','') for i in orphan_slist]
+            orphan_func = partial(makedaterange, vola, debug=debug, orphan=True)
+            orphan_sklist = list(map(func, zip(orphan_slist, orphan_slnum)))
+
+            sklist += orphan_sklist
+            slist += orphan_slist
+        
         
         short_slist=[]
         for s,sl in zip(sklist,slist):
@@ -1223,8 +1247,9 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
             else:
 #                     if not ((len(statid) == 15) or (len(statid) == 5)):
 #                         raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
-
-                if statid[:2] == '0-' and statid in slnum:
+                if statid in slnum:
+                    valid_id = statid
+                elif statid[:2] == '0-' and statid in slnum:
                     valid_id = statid
                 else:
                     for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
