@@ -503,7 +503,7 @@ def read_standardnames(url: str = None) -> dict:
               'air_temperature', 'dew_point_temperature','dew_point_depression', 'relative_humidity', 'specific_humidity',
               'eastward_wind', 'northward_wind', 'wind_speed', 'wind_from_direction', 'geopotential',
               'trajectory_label', 'obs_minus_bg', 'obs_minus_an', 'bias_estimate', 'sonde_type',
-              'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 
+              'sample_size', 'sample_error', 'report_id', 'reference_sonde_type', 'station_elevation',
               'station_name', 
               'RISE_bias_estimate', 'RICH_bias_estimate', 
               'RASE_bias_estimate', 'RAOBCORE_bias_estimate', 
@@ -521,8 +521,8 @@ def read_standardnames(url: str = None) -> dict:
     cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body',
                  'observations_table/sensor_id',
                  'observations_table/secondary_value', 'observations_table/original_precision',
-                 'observations_table/report_id', 'observations_table/reference_sensor_id',
-                 'station_configuration/station_name',
+                 'observations_table/report_id', 'observations_table/reference_sensor_id', 'observations_table/station_elevation',
+                 'station_configuration/station_name', 
                  'advanced_homogenisation/RISE_bias_estimate', 'advanced_homogenisation/RICH_bias_estimate',
                  'advanced_homogenisation/RASE_bias_estimate', 'advanced_homogenisation/RAOBCORE_bias_estimate',
                  'advanced_homogenisation/latitude_displacement', 'advanced_homogenisation/longitude_displacement',
@@ -655,6 +655,8 @@ def read_standardnames(url: str = None) -> dict:
     cf['desroziers_180']['description'] = 'Observation error estimated from ERA5 background and analysis departure statistics (Desroziers, 2005), using a 180 day window'
     cf['humidity_bias_estimate']['shortname'] = 'humidity_bias_estimate'
     cf['humidity_bias_estimate']['description'] = 'Humidity bias estimate, using ERA5 background departure statistics and quantile matching'
+    cf['station_elevation']['shortname'] = 'station_elevation'
+    cf['station_elevation']['description'] = 'Elevation of station location above mean sea level'
     return cf
 
 
@@ -2966,7 +2968,7 @@ class CDMDataset:
                          'dew_point_depression', 'dewpoint_departure','dewpoint_depression', 'dew_point_departure']
         
         for alv in allowed_variables:
-            varseldict[alv]=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate', 'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time', 'wind_bias_estimate', 'humidity_bias_estimate']
+            varseldict[alv]=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate', 'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time', 'wind_bias_estimate', 'humidity_bias_estimate', 'station_elevation']
 
         
         # added report_id -> in observations_table, not to be confused with report_id from header_table -> trajectory_label
@@ -3058,7 +3060,7 @@ class CDMDataset:
                 igroup = 'observations_table'
                 varselcfcopy = ['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                     'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                    'original_precision', 'reference_sensor_id', 'report_id', 'data_policy_licence']
+                                    'original_precision', 'reference_sensor_id', 'report_id', 'data_policy_licence', 'station_elevation'] #  
                 for co in cdm_obstab:
                     if not co in varselcfcopy:
                         varselcfcopy.append(co)
@@ -3206,7 +3208,7 @@ class CDMDataset:
                 if request['single_csv']:
                     fout['variable']=np.array([glamod_cdm_codes[cdm_codes[request['variable']]]]*len(fout['z_coordinate']))
                     groups.append('observations_table')
-                    wigos_primid = b''.join(self.file['station_configuration']['primary_id'][:]).decode('UTF-8')
+                    wigos_primid = b''.join(self.file['station_configuration']['primary_id'][0]).decode('UTF-8')
                     fout['primary_id']=np.array([wigos_primid]*len(fout['z_coordinate'])) #self.filename.split('/')[-1].split('_CEU')[0]
                     groups.append('station_configuration')
                 else:
@@ -3488,7 +3490,7 @@ class CDMDataset:
                 if 'observations_table' in self.groups:
                     varselcfcopy = ['observation_id', 'latitude', 'longitude', 'z_coordinate',
                                     'observation_value', 'date_time', 'sensor_id', 'secondary_value',
-                                    'original_precision', 'reference_sensor_id', 'report_id','data_policy_licence']
+                                    'original_precision', 'reference_sensor_id', 'report_id', 'data_policy_licence', 'station_elevation'] # 
                     for co in cdm_obstab:
                         if not co in varselcfcopy:
                             varselcfcopy.append(co)

@@ -97,6 +97,7 @@ config = {'logger_name': 'upperair',
           'grid_dir': '.',
           'tmp_dir': '.',
           'config_dir': './config',
+          'station_configuration':'.',
           'cds_eua_version': 4,
           'debug': False,
           'reload_pwd': 'reload'}
@@ -216,7 +217,7 @@ except:
 #
 ###############################################################################
 
-def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
+def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False, orphan=False) -> dict:
     """ Read HDF5 radiosonde cdm backend file and extract datetime and geo information
 
     Args:
@@ -251,22 +252,35 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False) -> dict:
                 if CDS_EUA_VERSION >= 3:
                     #if isinstance(f['recordindices'], h5py._hl.group.Group):
                     if 'recordindices' in f.keys():
-                        active[skey] = [int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][0], funits)),
-                                    int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][-1], funits)),
-                                    float(f['observations_table']['latitude'][-1]),
-                                    float(f['observations_table']['longitude'][-1])]
-                    else:
-                        try:
-                            
-                            active[skey] = [int(eua.to_seconds_since(f['recordtimestamp'][0], funits)),
-                                        int(eua.to_seconds_since(f['recordtimestamp'][-1], funits)),
+                        if orphan:
+                            active[skey] = [int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][0], funits)),
+                                        int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][-1], funits)),
+                                        float(np.nan),
+                                        float(np.nan)]
+                        else:
+                            active[skey] = [int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][0], funits)),
+                                        int(eua.to_seconds_since(f['recordindices']['recordtimestamp'][-1], funits)),
                                         float(f['observations_table']['latitude'][-1]),
                                         float(f['observations_table']['longitude'][-1])]
+                    else:
+                        try:
+                            if orphan:
+                                active[skey] = [int(eua.to_seconds_since(f['recordtimestamp'][0], funits)),
+                                            int(eua.to_seconds_since(f['recordtimestamp'][-1], funits)),
+                                            float(np.nan),
+                                            float(np.nan)]
+                            else:
+                                active[skey] = [int(eua.to_seconds_since(f['recordtimestamp'][0], funits)),
+                                            int(eua.to_seconds_since(f['recordtimestamp'][-1], funits)),
+                                            float(f['observations_table']['latitude'][-1]),
+                                            float(f['observations_table']['longitude'][-1])]
                         except:
                             print('makedaterange: ',s.split('/')[-1],' recordtimestamp does not exist')
                             return active
                 idx = numpy.where(vola.StationId.values == skey)[0]
-                if len(idx) > 0:
+                if orphan:
+                    active[skey].append('XXX')
+                elif len(idx) > 0:
                     active[skey].append(vola.CountryCode[idx[0]])
                 else:
                     # if no country code available -> reverse geo search for them 
@@ -463,6 +477,17 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
                 sklist=list(p.map(func,zip(slist,slnum)))
         else:
             sklist = list(map(func, zip(slist, slnum)))
+        
+        # orphans are added to the active list
+        orphan_slist = glob.glob(os.path.expandvars(config['data_dir'] + '/20999-*_CEUAS_merged_v1.nc'))
+        if len(orphan_slist) > 0:
+            orphan_slnum = [i.split('/')[-1].split('_CEUAS_merged_v1.nc')[0].replace('.nc','') for i in orphan_slist]
+            orphan_func = partial(makedaterange, vola, debug=debug, orphan=False) # keep lat/lon with orphn=False
+            orphan_sklist = list(map(orphan_func, zip(orphan_slist, orphan_slnum)))
+
+            sklist += orphan_sklist
+            slist += orphan_slist
+        
         
         short_slist=[]
         for s,sl in zip(sklist,slist):
@@ -969,7 +994,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
     #
     allowed_optionals = ['sonde_type', 'bias_estimate','obs_minus_an','obs_minus_bg', 'bias_estimate_method', 
                          'RISE_bias_estimate', 'RICH_bias_estimate', 'RASE_bias_estimate', 'RAOBCORE_bias_estimate',
-                         'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time',
+                         'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time', 'station_elevation',
                          'RISE_1.8_bias_estimate', 'RICH_1.8_bias_estimate', 'RASE_1.8_bias_estimate', 'RAOBCORE_1.8_bias_estimate',
                          'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
                          'wind_bias_estimate',
@@ -1222,8 +1247,9 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
             else:
 #                     if not ((len(statid) == 15) or (len(statid) == 5)):
 #                         raise ValueError('statid %s of wrong size - please select statid without "0-20..."-prefix of 5 digits, or with "0-20..."-prefix of 15 digits' % str(statid))
-
-                if statid[:2] == '0-' and statid in slnum:
+                if statid in slnum:
+                    valid_id = statid
+                elif statid[:2] == '0-' and statid in slnum:
                     valid_id = statid
                 else:
                     for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
@@ -2041,7 +2067,6 @@ def index(request=None, response=None):
 
     rfile='/data/public/tmp/constraints.csv'
 
-#     response.set_header('Content-Disposition', 'attachment; filename=' + rfile)
     return rfile
 
 @app.get('/variable_codes/', response_class=FileResponse)
@@ -2056,28 +2081,6 @@ def variable_codes(request=None, response=None):
 #     response.set_header('Content-Disposition', 'attachment; filename=' + rfile)
     return rfile
 
-# @app.get('/service_definition/', response_class=FileResponse)
-# def service_definition():
-#     """ 
-#         Returns a json with the service definition
-#             linking all variables to the correct ingestions parameters
-#         Args:
-#             None
-#     """
-#     logger.debug("GET service_definition")
-#     with eua.CDMDataset(config['data_dir']) as sd_file:
-        
-#     if variable == None:
-#         rfile=config['config_dir']+'/cf.json'
-# #         response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
-#         return rfile
-#     else:
-#         cf = json.load(open(config['config_dir']+'/cf.json', 'r'))
-#         rfile='/data/public/tmp/variable_definition_'+variable+'.json'
-#         with open(rfile, 'w') as fp:
-#             json.dump(cf[variable], fp)
-# #         response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
-#         return rfile
 
 @app.get('/variable_definition/', response_class=FileResponse)
 def variable_definition(variable=None, response=None):
@@ -2099,6 +2102,19 @@ def variable_definition(variable=None, response=None):
 #         response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(rfile))
         return rfile
 
+
+@app.get('/station_configuration/', response_class=FileResponse)
+def station_configuration(response=None):
+    """ 
+        Returns a the station configuration file for all merged stations
+        Args:
+            -
+    """
+    logger.debug("GET station_configuration")
+    rfile = config['station_configuration']
+    return rfile
+
+
 def datetime_to_seconds(dates, ref='1900-01-01T00:00:00'):
     """ from datetime64 to seconds since 1900-01-01 00:00:00"""
     return ((numpy.datetime64(dates) - numpy.datetime64(ref)) / numpy.timedelta64(1, 's')).astype(numpy.int64)
@@ -2119,12 +2135,7 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
     active_file = config['config_dir'] + '/active.json'
     act = json.load(open(active_file,"r"))
     
-#     namelist_file = config['config_dir'] + '/namelist.json'
-#     namelist = json.load(open(namelist_file,"r"))
-    
     output_file = '/tmp/maplist_'+str(date)
-#     with open('/tmp/info_'+str(date)+str(enddate, "w") as f:
-#             f.writelines([str(date), str(enddate), str(var)])
     if (enddate is None) or (date == enddate):
         reqdate = date.split('-')
         interm_file = '/data/public/constraints_by_date/'+str(var)+'/'+str(var)+'_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
@@ -2135,30 +2146,6 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
         with open(output_file, "w") as f:
             f.writelines(lines)
             
-#     copyfile(interm_file, '/tmp/maplist_'+str(date)+str(enddate))
-    
-#     if enddate is None:
-#         date = datetime_to_seconds(date)
-#         rows = []
-#         rows.append(['station_name', 'longitude', 'latitude'])
-#         for i in act:
-#             if (date >= act[i][0]) and (date <= act[i][1]):
-#                 # renaming deactivated for now
-#                 # name = namelist[i]
-#                 name = i
-#                 rows.append([name, act[i][3], act[i][2]])
-
-#         with open(output_file, 'w') as csvfile:  
-#             # creating a csv writer object  
-#             csvwriter = csv.writer(csvfile)  
-#             # writing the data rows  
-#             csvwriter.writerows(rows) 
-#         reqdate = date.split('-')
-#         interm_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
-#         copyfile(interm_file, output_file)
-#         copyfile(interm_file, '/tmp/maplist_'+str(date)+str(enddate))
-            
-#     if not enddate is None:
     else:    
         date = datetime_to_seconds(date)
         enddate = datetime_to_seconds(enddate)
@@ -2177,8 +2164,8 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
             # writing the data rows  
             csvwriter.writerows(rows)
 
-#     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(output_file))
     return output_file
+
 
 @app.post('/maplist_post/', response_class=FileResponse)
 def mapdata(date=None, enddate=None, var=85, response=None,):
@@ -2196,12 +2183,7 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
     active_file = config['config_dir'] + '/active.json'
     act = json.load(open(active_file,"r"))
     
-#     namelist_file = config['config_dir'] + '/namelist.json'
-#     namelist = json.load(open(namelist_file,"r"))
-    
     output_file = '/tmp/maplist_'+str(date)
-#     with open('/tmp/info_'+str(date)+str(enddate, "w") as f:
-#             f.writelines([str(date), str(enddate), str(var)])
     if (enddate is None) or (date == enddate):
         reqdate = date.split('-')
         interm_file = '/data/public/constraints_by_date/'+str(var)+'/'+str(var)+'_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
@@ -2211,31 +2193,6 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
         lines[0] = "station_name,longitude,latitude\n"
         with open(output_file, "w") as f:
             f.writelines(lines)
-            
-#     copyfile(interm_file, '/tmp/maplist_'+str(date)+str(enddate))
-    
-#     if enddate is None:
-#         date = datetime_to_seconds(date)
-#         rows = []
-#         rows.append(['station_name', 'longitude', 'latitude'])
-#         for i in act:
-#             if (date >= act[i][0]) and (date <= act[i][1]):
-#                 # renaming deactivated for now
-#                 # name = namelist[i]
-#                 name = i
-#                 rows.append([name, act[i][3], act[i][2]])
-
-#         with open(output_file, 'w') as csvfile:  
-#             # creating a csv writer object  
-#             csvwriter = csv.writer(csvfile)  
-#             # writing the data rows  
-#             csvwriter.writerows(rows) 
-#         reqdate = date.split('-')
-#         interm_file = '/data/private/test/85/85_'+reqdate[0]+'_'+str(int(reqdate[1]))+'_'+str(int(reqdate[2]))+'.csv'
-#         copyfile(interm_file, output_file)
-#         copyfile(interm_file, '/tmp/maplist_'+str(date)+str(enddate))
-            
-#     if not enddate is None:
     else:    
         date = datetime_to_seconds(date)
         enddate = datetime_to_seconds(enddate)
@@ -2254,7 +2211,6 @@ def mapdata(date=None, enddate=None, var=85, response=None,):
             # writing the data rows  
             csvwriter.writerows(rows)
 
-#     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(output_file))
     return output_file
 
 @app.get('/maplist2/', response_class=FileResponse)
@@ -2292,9 +2248,7 @@ def mapdata2(date=None, plev=None, var=None, response=None):
         # writing the data rows  
         csvwriter.writerows(rows) 
             
-#     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(output_file))
     return output_file
-
 
 
 @app.get('/statlist/', response_class=FileResponse)
@@ -2312,9 +2266,6 @@ def statdata(date:str=None, mindate:str=None, enddate:str=None, response:str=Non
     """
     active_file = config['config_dir'] + '/active.json'
     act = json.load(open(active_file,"r"))
-    
-#     namelist_file = config['config_dir'] + '/namelist.json'
-#     namelist = json.load(open(namelist_file,"r"))
     
     output_file = '/tmp/maplist_'+str(date)
     
@@ -2368,8 +2319,6 @@ def statdata(date:str=None, mindate:str=None, enddate:str=None, response:str=Non
             # writing the data rows  
             csvwriter.writerows(rows)
             
-
-#     response.set_header('Content-Disposition', 'attachment; filename=' + os.path.basename(output_file))
     return output_file
 
 
