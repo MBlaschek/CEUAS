@@ -15,12 +15,15 @@ import h5py
 import netCDF4
 import matplotlib.pylab as plt
 import os,sys,glob,psutil,shutil
+import xarray as xr
 #sys.path.append(os.getcwd()+'/../common/rasotools/')
 #sys.path.append(os.path.expanduser('../common/Rasotools/rasotools/'))
 #sys.path.append(os.path.expanduser('../common/Rasotools/'))
 #sys.path.append(os.getcwd()+'/../adjust/rasotools/')
 from utils import tdist,extract,rmeanw
 from anomaly import ndnanmean2,nnanmean,danomaly
+import pyRAOBCORE_numbamod as pnm  
+from harvest_convert_to_netCDF import write_dict_h5
 # import ftest
 #from multiprocessing import Pool
 #import odb
@@ -36,65 +39,11 @@ import pickle
 #import xarray as xr
 import ruptures as rpt
 from pympler.asizeof import asizeof
+
 import ray
 
-#plt.rcParams['lines.linewidth'] = 3
-
-#RAOBCORE constants
-try:
-    
-    with open('RCx.json') as f:
-        json.load(f,RC)
-except:
-    
-    RC=dict(
-        snht_maxlen = 1460,
-        snht_min_sampsize = 80,
-        snht_increment = 30,
-        miss_val=math.nan,
-        stdplevs = (10.0, 20.0, 30.0, 50.0, 70.0, 100.0, 150.0, 200.0, 
-                             250.0, 300.0, 400.0, 500.0, 700.0, 850.0, 925.0, 1000.0),
-        pidx= (0,1,2,3,4,5,6,7,8,9,10,11,12,13),
-        )
-    
-    RC['refdate']=(1900,1,1)
-    refdate=datetime.datetime(*RC['refdate'])
-    lastdate=datetime.datetime(2023,1,1)
-    numdays=(lastdate-refdate).days
-    dates = [refdate + datetime.timedelta(days=x) for x in range(numdays)]
-    RC['years']= [ x.year for x in dates]
-    RC['months']= [ x.month for x in dates]
-    RC['days']= [ x.day for x in dates]
-    RC['snht_thresh'] = 25
-    RC['mon_thresh'] = 0
-    RC['mean_maxlen'] = RC['snht_maxlen']*3
-    RC['plot']=False
-    RC['CPUs']=60
-    RC['min_neighbours']=[[3,10],[10,30]]
-    RC['weight_distance']=[3000,5000]
-#    RC['ri_min_sampsize']=[330,30]
-    RC['ri_min_sampsize']=[330,80]
-    RC['initial_adjustments']='era5neighbours' #'era5' #'era5bc' #'era5neighbours'
-    #RC['transdict']={'montemp':'mtemperatures','rasocorrmon':'madjustments','goodmon':'goodmon'}
-    RC['transdict']={'montemp':'mini_adjusted_temperatures','rasocorrmon':'madjustments','goodmon':'goodmon'}
-    RC['richfuture']=True 
-    RC['findfuture']=True
-    RC['goodsondes']=[141,142,123,124,125,113,114,79,80,81,70,152,177,183] # from WMO manual on codes, 2019 edition
-    RC['apriori_prob_default']=0.01
-    RC['exp']='exp01'
-    
-    with open('RC.json','w') as f:
-        json.dump(RC,f)
-for k in 'years','months','days','stdplevs','pidx':
-    if type(k) is int:
-        RC[k]=np.array(RC[k],dtype=np.int32)
-    else:
-        RC[k]=np.array(RC[k])
-    if k in  ('months','days'):
-        RC[k]-=1
-
-#RC['plot']=True
-RC['savetsa']=True
+from add_solarangle_adjustments import add_solelev
+ray_add_solelev=ray.remote(add_solelev)
 
 #sys.path.append(os.getcwd()+'/../cds-backend/code/')
 #import cds_eua3 as eua
@@ -103,11 +52,81 @@ RC['savetsa']=True
 #import dask
 from timeit import default_timer as timer
 from numba import njit,prange,typeof
+import cds_eua4 as eua
 import SNHT
 
-# ## Translated hom-functions
+#plt.rcParams['lines.linewidth'] = 3
 
-# In[2]:
+#RAOBCORE constants
+def RC_ini(RCfile):
+    
+    try:
+        
+        with open(RCfile) as f:
+            RC = json.load(f)
+    except Exception as e:
+        
+        RC=dict(
+            snht_maxlen = 1460,
+            snht_min_sampsize = 80,
+            snht_increment = 30,
+            miss_val=math.nan,
+            stdplevs = (10.0, 20.0, 30.0, 50.0, 70.0, 100.0, 150.0, 200.0, 
+                                 250.0, 300.0, 400.0, 500.0, 700.0, 850.0, 925.0, 1000.0),
+            pidx= (0,1,2,3,4,5,6,7,8,9,10,11,12,13, 14, 15),
+            )
+        
+        RC['refdate']=(1900,1,1)
+        RC['lastdate']=(2023,1,1)
+        RC['snht_thresh'] = 25
+        RC['mon_thresh'] = 0
+        RC['mean_maxlen'] = RC['snht_maxlen']*3
+        RC['plot']=False
+        RC['CPUs']=25
+        RC['min_neighbours']=[[3,10],[10,30]]
+        RC['weight_distance']=[3000,5000]
+    #    RC['ri_min_sampsize']=[330,30]
+        RC['ri_min_sampsize']=[330,80]
+        RC['initial_adjustments']='era5neighbours' #'rharm' #'era5neighbours' #'era5' #'era5bc' #'era5neighbours'
+        #RC['transdict']={'montemp':'mtemperatures','rasocorrmon':'madjustments','goodmon':'goodmon'}
+        RC['transdict']={'montemp':'mini_adjusted_temperatures','rasocorrmon':'madjustments','goodmon':'goodmon'}
+        RC['rharm'] = 'rcuon'
+        RC['rich'] = True
+        RC['richfuture']=True 
+        RC['findfuture']=True
+        RC['goodsondes']=[141,142,123,124,125,113,114,79,80,81,70,152,177,183] # from WMO manual on codes, 2019 edition
+        RC['apriori_prob_default']=0.01
+        RC['exp']='exp00'
+        RC['CUON'] = 'converted_v10/'
+        RC['fgdepname'] = 'era5_fgdep'
+        RC['version'] = '1.8' #1.9.0'
+        RC['add_solelev'] = False
+        RC['write_to_backend'] = False
+        
+        with open(RCfile,'w') as f:
+            json.dump(RC,f, indent=4, sort_keys=True)
+            
+    refdate=datetime.datetime(*RC['refdate'])
+    lastdate=datetime.datetime(*RC['lastdate'])
+    numdays=(lastdate-refdate).days
+    dates = [refdate + datetime.timedelta(days=x) for x in range(numdays)]
+    RC['years']= [ x.year for x in dates]
+    RC['months']= [ x.month for x in dates]
+    RC['days']= [ x.day for x in dates]
+    for k in 'years','months','days','stdplevs','pidx':
+        if type(k) is int:
+            RC[k]=np.array(RC[k],dtype=np.int32)
+        else:
+            RC[k]=np.array(RC[k])
+        if k in  ('months','days'):
+            RC[k]-=1
+    
+    RC['tidx'] = np.where(RC['days']==0)[0]
+    #RC['plot']=True
+    RC['savetsa']=True
+    
+    return RC
+
 
 
 def ifray(dec, condition):
@@ -177,7 +196,7 @@ def test(x, window, missing):
 def read_hadCRUT5(path,prefix,refdate):
 
     t1=time.time()
-    fn=path+prefix+".analysis.anomalies.ensemble_mean.nc"
+    fn=path+prefix+".analysis.anomalies.ensemble_mean.nc.1"
     fvar='tas_mean'
     fevar='tas'
     try:
@@ -234,42 +253,7 @@ def do_test(fg_dep,temperature,anomaly,hadcrut_dep,rc_month,snht_maxlen,snht_min
     
     return tsas,tsarad,tsahad
 
-@njit
-def areg1(x,z,alpha):
-    x[0]=z[0]
-    for i in range(1,z.shape[0]):
-        x[i]=alpha*x[i-1]+z[i]
-    return
 
-@njit(parallel=True)
-def break_simulator(x):
-    m=x.shape[0]
-    p=x.shape[1]
-    n=x.shape[2]
-    
-    tsas=np.zeros(x.shape,dtype=np.float32)
-    imax=np.zeros((m,p),dtype=np.int32)
-    rmax=np.zeros((m,p),dtype=np.int32)
-   
-    for im in range(m):
-        for ip in prange(p):
-            tsa = np.zeros((x.shape[2]),dtype=np.float32)
-            tmean = np.zeros((x.shape[2],12),dtype=np.float32)
-            tsquare = np.zeros((x.shape[2],12),dtype=np.float32)
-            count = np.zeros((x.shape[2],12),dtype=np.int32)
-
-            z=np.random.randn(n)
-            areg1(x[im,ip,:],z,0.0)
-            x[im,ip,n//2:]+=im*0.2
-            tsas[im,ip,:]=SNHT.numba_snhteqmov(x[im,ip,:].flatten(), tsa, 
-                                               RC['snht_maxlen'],RC['snht_min_sampsize'],RC['miss_val'],
-                                               count,tmean,tsquare)
-            imax[im,ip]=np.argmax(tsas[im,ip,:])
-            rmax[im,ip]=np.max(tsas[im,ip,:])
-        print(im)
-    
-    return imax,rmax,tsas  
-    
 def break_analyze(finfo):
     
     breaklist=np.zeros(50,dtype=np.int32)
@@ -413,35 +397,141 @@ def bilin(hadmeddict,temperatures,rcy,rcm,days,lat,lon):
     
     
 #@ifray(ray.remote,RC['findfuture'])
-def RAOB_findbreaks(method,fn):
+def RAOB_findbreaks(method,fnorig):
 
     from utils import rmeanw
     tt=time.time()
     finfo={}
+    
+    variable = 'temperature'
+    
+    fidx = RC['filesorig'].index(fnorig)
+    fn = RC['outdir'] + RC['statids'][fidx] + '/feedbackmerged' +RC['statids'][fidx] + '.nc'
+    cache = False
+    if os.path.isfile(fn):
+        if os.path.getmtime(fn) > os.path.getmtime(fnorig):
+            cache = True
+            
+    if not cache:
+    
+        with eua.CDMDataset(fnorig) as iofile:
+            if '126' not in iofile['recordindices'].keys():
+                    return None
+            if np.unique(iofile['recordindices']['126'][:]).shape[0] < 365:
+                    return None
+            
+            try:
+                
+                x = iofile.station_configuration.station_name[:]
+                sn = x.view('S'+str(x.shape[1]))[0][0].decode()
+            except:
+                sn = 'missing'
+
+            dq=iofile.read_data_to_3dcube(['temperature'], 
+                    dates=None,
+                    plevs=(RC['stdplevs']*100.).astype(int),
+                    feedback=['fg_depar@body', 'biascorr@body'],
+                    feedback_group='era5fb')
+        #data = iofile.read_data_to_cube(variable,
+                #dates=None,
+                #plevs=(RC['stdplevs'][RC['pidx']]*100.).astype(int),
+                #feedback=['fg_depar', 'bias'],
+                #feedback_group='era5fb')#,**kwargs)
+
+            if not dq:
+                print(fnorig.split('/')[-1], 'failed', iofile['recordindices']['126'].shape[0])
+                return None
+        dql={}
+        for k in dq.keys():
+        ###dq[k].rename_dims({'plev':'pressure'})
+            dql[RC['cdict'][k]]=dq[k].rename(RC['cdict'][k])
+        xrdq=xr.Dataset(dql).rename_dims({'press':'pressure', 'datum': 'time'})
+        xrdq.attrs['unique_source_identifier']=RC['wigos'][fidx] #fnf
+        xrdq.attrs['station_name'] = sn
+        for ih in range(xrdq['era5_fgdep'].shape[0]):
+            for ip in range(xrdq['era5_fgdep'].shape[1]):
+                v=xrdq['era5_fgdep'].values[ih,ip,:]
+                o=xrdq['temperatures'].values[ih,ip,:]
+                qs=numpy.nanquantile(v,[0.005,0.995])
+                idx=numpy.where(numpy.logical_or(v<qs[0],v>qs[1]))
+                #print(qs,idx)
+                v[idx]=numpy.nan
+                o[idx]=numpy.nan
+                hilf=xrdq['bias_estimate'].values[ih,ip,:]
+                hilf[numpy.isnan(hilf)]=0.
+                xrdq['era5_fgdep'].values[ih,ip,:]=-v-hilf
+                # ignore missing fgdep, bias_estimate
+                #idx=numpy.where(numpy.logical_and(numpy.isnan(v),~numpy.isnan(o)))
+                ##print(len(idx[0]))
+                #xrdq['era5_fgdep'].values[ih,ip,idx]=0.
+
+
+        try:
+            os.mkdir(RC['outdir']+RC['statids'][fidx])
+        except:
+            pass
+    
+        fo = RC['outdir']+RC['statids'][fidx] + '/feedbackmerged' + RC['statids'][fidx] + '.nc'
+        xrdq.to_netcdf(path=fo, format='NETCDF4_CLASSIC')
+        print('wrote '+fo)
 
     try:
         
+        ndays = RC['months'].shape[0]
         with h5py.File(fn,'r') as f:
             if f['datum'].shape[0]<RC['snht_maxlen']:
                 return finfo
-            finfo['days']=f['datum'][:]
+            finfo['ifile'] = fn
+            finfo['ifileorig'] = fnorig
+            finfo['days']=f['datum'][:ndays] - 1
             #print(fn.split('/')[-1],finfo['days'].shape)
-            finfo['fg_dep']=-f['era5_fgdep'][:,np.array(RC['pidx']),:]
-            finfo['era5bc']=-f['bias_estimate'][:,np.array(RC['pidx']),:] # ERA5 bias correction - to be used for adjusting most recent part of some series
-            finfo['temperatures']=f['temperatures'][:,np.array(RC['pidx']),:]
+            finfo['fg_dep']=-f['era5_fgdep'][:,np.array(RC['pidx']),:ndays]
+            finfo['era5bc']=-f['bias_estimate'][:,np.array(RC['pidx']),:ndays] # ERA5 bias correction - to be used for adjusting most recent part of some series
+            finfo['temperatures']=f['temperatures'][:,np.array(RC['pidx']),:ndays]
             #finfo['fg']=finfo['temperatures']-finfo['fg_dep']
             finfo['lon']=f['lon'][0]
             finfo['lat']=f['lat'][0]
             finfo['sid']=fn.split('/')[-1][:-3]
+            finfo['station_name'] = f.attrs['station_name'].decode("utf-8")
             finfo['wigos']=f.attrs['unique_source_identifier'].decode("utf-8")
             if 'sonde_type' in f.keys():       
                 #print(f['sonde_type'].shape)
-                tt=time.time()
-                finfo['apriori_probs'],finfo['lastsonde']=metadata_analysis(f['sonde_type'][0,0,:].view('S{}'.format(f['sonde_type'].shape[3])))
+                finfo['apriori_probs'],finfo['lastsonde']=metadata_analysis(f['sonde_type'][0,0,:ndays].view('S{}'.format(f['sonde_type'].shape[3])))
                 #print(time.time()-tt)
             else:
                 finfo['apriori_probs']=np.zeros_like(finfo['days'],dtype=np.float32)
                 finfo['lastsonde']=0
+        
+        finfo['rharm'] =False
+        if RC['rharm'] in ('rharmc', 'rcuon'):
+            
+            try:
+                
+                fnrharm_h = '/'.join(fn.split('/')[:-3]) + '/exp01/' + finfo['sid'][-6:] + '/rharm_h_' + finfo['sid'][-6:] +'.nc'
+                #fnrharm = '/'.join(fn.split('/')[:-3]) + '/exp01/' + finfo['sid'][-6:] + '/rharm_' + finfo['sid'][-6:] +'.nc'
+                with h5py.File(fnrharm_h,'r') as f:
+                
+                    radjust = f['ta'][:]
+                    rdays = np.int64(f['datum'][0, :]) // 86400
+                    finfo['rharmbc'] = np.empty_like(finfo['era5bc'])
+                    finfo['rharmbc'].fill(np.nan)
+                    l = 0
+                    for i in range(finfo['days'].shape[0]):
+                        while rdays[l] < finfo['days'][i]:
+                            l += 1
+                            if l == rdays.shape[0]:
+                                l -= 1
+                                break
+                        if rdays[l] == finfo['days'][i]:
+                            finfo['rharmbc'][:, :, i] =radjust[:, RC['pidx'], l] - finfo['temperatures'][:, :, i]
+                            if RC['rharm'] == 'rharmc':
+                                
+                                finfo['temperatures'][:, :, i] += finfo['rharmbc'][:, :, i]
+                                finfo['rharmbc'][:, :, i] = 0.
+                finfo['rharm'] = True
+            except FileNotFoundError:
+                finfo['rharm'] = False
+            
         
         bins=RC['months'][finfo['days']]
         finfo['anomalies']=np.empty_like(finfo['temperatures'])
@@ -475,10 +565,10 @@ def RAOB_findbreaks(method,fn):
             del testset
         
         
-        print(finfo['sid']+' findbreaks: {:6.4f}'.format(time.time()-tt))  
+        print(finfo['sid']+' findbreaks: found {:d}, {:6.4f}'.format(len(finfo['breaklist']), time.time()-tt))  
         obj_ref= ray.put(finfo)
-    except MemoryError as e:
-        print(e)
+    except Exception as e:
+        print(fnorig, e)
         return None
     
     return obj_ref
@@ -716,19 +806,8 @@ def RAOB_adjust(finfo):
     
         for ih in range(sh[0]):
             for ip in range(sh[1]):
-                #break_profiles[ib,ih,ip]=SNHT.numba_meaneqmov(fg_dep[ih,ip,istart:istop], 
-                                                          #RC_months[istart:istop], tsa, 
-                                                          #RC['mean_maxlen'],RC['snht_maxmiss'],RC['miss_val'], 
-                                                          #count, tmean, tsquare, kref=fb[ib]-istart)
-                
-                
-                #if np.sum(~np.isnan(fg_dep[ih,ip,istart:fb[ib]]))>RC['mean_maxlen']//4-RC['snht_maxmiss'] and np.sum(~np.isnan(fg_dep[ih,ip,fb[ib]:istop]))>RC['mean_maxlen']//4-RC['snht_maxmiss']:
                     
-                    #break_profiles[ib,ih,ip]=-np.nanmean(fg_dep[ih,ip,istart:fb[ib]])+np.nanmean(fg_dep[ih,ip,fb[ib]:istop])
-                #else:
-                    #break_profiles[ib,ih,ip]=np.nan
-                    
-                if ~np.isnan(break_profiles[ib,ih,ip]):
+                if ~np.isnan(break_profiles[ib,ih,ip]) and (finfo['rharm'] == False or RC['rharm'] != 'rharmc'):
                     finfo['adjustments'][ih,ip,:ib]-=break_profiles[ib,ih,ip]
                     finfo['adjusted_fg_dep'][ih,ip,:fb[ib]]+=break_profiles[ib,ih,ip]
                     finfo['adjusted_temperatures'][ih,ip,:fb[ib]]+=break_profiles[ib,ih,ip]
@@ -743,7 +822,7 @@ def RAOB_adjust(finfo):
     
     
     
-    print('adjust: {:6.4f}'.format(time.time()-tt))  
+    print('adjust: {:d}, {:6.4f}'.format(len(finfo['goodbreaklist']), time.time()-tt))  
     finfo['adjusted_temperatures'][mask]=np.nan
     if RC['plot']:
         plt.subplot(2,1,1)
@@ -783,72 +862,6 @@ def RAOB_adjustbreaks(method,dists,active,finfo,i):
 ray_RAOB_adjustbreaks=ray.remote(RAOB_adjustbreaks)
 
     
-#def fcopy(fn,exper='exp02'):
-    #fo=exper.join(fn.split('exp03'))
-    #if not os.path.isdir(os.path.dirname(fo)):
-        #os.mkdir(os.path.dirname(fo))
-    
-    #try:
-        
-        #shutil.copy(fn,fo)
-    #except:
-        #print(fn,'could not be copied to',fo)
-    
-    #return
-
-@njit(fastmath={'nsz','arcp','contract','afn','reassoc'},cache=True)
-def goodmon(var,idx,out):
-
-    l=0
-    for i in range(len(idx)-1):
-        if idx[i+1]>idx[i]:
-            l+=1
-    if l==0:
-        print('idx not valid')
-    for ih in range(var.shape[0]):
-        for ip in range(var.shape[1]):
-            l=0
-            for i in range(len(idx)-1):
-                if idx[i+1]>idx[i]:
-                    mc=0
-                    for j in range(idx[i],idx[i+1]):
-                        v=var[ih,ip,j]
-                        if not np.isnan(var[ih,ip,j]):
-                            mc+=1
-                    out[ih,ip,l]=mc
-                    l+=1
-                
-    return out
-    
-@njit(fastmath={'nsz','arcp','contract','afn','reassoc'},cache=True)
-def monmean(var,idx,out,thresh=0,goodmon=goodmon):
-    l=0
-    for i in range(len(idx)-1):
-        if idx[i+1]>idx[i]:
-            l+=1
-    if l==0:
-        print('idx not valid')
-    out[:]=np.nan
-    for ih in range(var.shape[0]):
-        for ip in range(var.shape[1]):
-            l=0
-            for i in range(len(idx)-1):
-                if idx[i+1]>idx[i]:
-                    mc=0
-                    mm=np.float32(0.)
-                    for j in range(idx[i],idx[i+1]):
-                        v=var[ih,ip,j]
-                        if v==v:
-                            mm+=v
-                            mc+=1
-                    if mc>thresh:
-                        out[ih,ip,l]=mm/mc
-                    else:
-                        out[ih,ip,l]=np.nan
-                    l+=1
-                
-    return out[:,:,:l]
-
 #@njit
 def do_monmean(vars,tidx,fi):
     
@@ -860,146 +873,107 @@ def do_monmean(vars,tidx,fi):
             
     for v in vars:
         out=np.empty((fi[v].shape[0],fi[v].shape[1],fi['months'].shape[0]),dtype=fi[v].dtype)
-        fi['m'+v]=monmean(fi[v],idx,out,RC['mon_thresh'])
+        fi['m'+v]=pnm.monmean(fi[v],idx,out,RC['mon_thresh'])
         
     out=np.empty((fi[v].shape[0],fi[v].shape[1],fi['months'].shape[0]),dtype=np.int32)
-    fi['goodmon']=goodmon(fi['temperatures'],idx,out)
+    fi['goodmon']=pnm.goodmon(fi['temperatures'],idx,out)
             
                 
     return
 
-def write_monmean(ipath,opath,prefix,fi):
+def write_monmean(opath,prefix,fi):
+        
+    if not os.path.isdir(os.path.dirname(opath+'/'+fi['sid'][-6:])):
+        os.mkdir(os.path.dirname(opath+'/'+fi['sid'][-6:]))
     
-    if not os.path.isdir(os.path.dirname(opath)):
-        os.mkdir(os.path.dirname(opath))
+    mtnames = {'feedbackglobbincorrmon': 'monthly adjusted temperature','feedbackglobbgmon': 'monthly background temperature',}
     
-    fno=opath+'/'+prefix+fi['sid'][-6:]+'.nc'
-    fni=ipath+'/'+prefix+fi['sid'][-6:]+'.nc'
+    fno=opath+'/'+fi['sid'][-6:]+'/'+prefix+fi['sid'][-6:]+'.nc'
     try:
-        with netCDF4.Dataset(fni) as src, netCDF4.Dataset(fno, "w") as dst:
+        with netCDF4.Dataset(fno, "w") as dst:
             # copy global attributes all at once via dictionary
-            new_globals=src.__dict__
-            new_globals['history']=datetime.datetime.today().strftime("%m/%d/%Y")
-            new_globals['source']='ERA5, IGRA2, NCAR UADB'
-            new_globals['references']='Copernicus Early Upper Air Dataset'
+            new_globals={'Conventions': 'CF-1.1',
+                         'title': 'Monthly radiosonde temperatures and -adjustments',
+                         'institution': 'Institute for Meteorology and Geophysics, University of Vienna',
+                         'Stationname': fi['station_name'], 
+                         'history': datetime.datetime.today().strftime("%m/%d/%Y"), 
+                         'source':'ERA5, IGRA2, NCAR UADB', 
+                         'references':'Copernicus Early Upper Air Dataset', 
+                         'url': 'early-upper-air.copernicus-climate.eu'
+                         }
             dst.setncatts(new_globals)
             # copy dimensions
-            for name, dimension in src.dimensions.items():
+            dims = {'station': 1,'numdat': 4,'time': 1,'pressure': RC['stdplevs'].shape[0],'hour': fi['temperatures'].shape[0]}
+            for name, dimension in dims.items(): #src.dimensions.items():
                 if name =='time':
                     dst.createDimension(
-                        name, (fi['mtemperatures'].shape[2] if not dimension.isunlimited() else None))
+                        name, (fi['mtemperatures'].shape[2] ))
                 else:
                     dst.createDimension(
-                        name, (len(dimension) if not dimension.isunlimited() else None))
+                        name, (dimension))
             # copy all file data except for the excluded
-            for name, variable in src.variables.items():
+            dt = {'lat': np.dtype('float32'), 'lon': np.dtype('float32'), 'press': np.dtype('float32'), 'datum': np.dtype('int32'),
+                  'montemp': np.dtype('float32'), 'goodmon': np.dtype('float32'), 'rasocorrmon': np.dtype('float32')}
+            dd = {'lat': ('station',), 'lon': ('station',), 'press': ('pressure',), 'datum': ('numdat', 'time'),
+                  'montemp': ('hour', 'pressure', 'time'), 'goodmon': ('hour', 'pressure', 'time'), 'rasocorrmon': ('hour', 'pressure', 'time')}
+
+            d = {'lat': {'long_name': 'station latitude', 'units': 'degrees_north', 'axis': 'Y', 'valid_range': np.array([-90.,  90.]), 'missing_value': -999.0},
+                 'lon': {'long_name': 'station longitude', 'units': 'degrees_east', 'axis': 'X', 'valid_range': np.array([-180.,  180.]), 'missing_value': -999.0},
+                 'press': {'long_name': 'pressure levels', 'units': 'hPa', 'axis': 'Z', 'valid_range': np.array([   0., 1100.]), 'missing_value': -999.0},
+                 'datum': {'long_name': 'datum', 'units': 'days since 1900-01-01 0:0:0', 'axis': 'T', 'calendar': 'gregorian', 'missing_value': -999.0},
+                 'montemp': {'long_name': mtnames[prefix], 'units': 'K', 'missing_value': -999.0, 'valid_range': np.array([  0., 400.], dtype=np.float32), 'cell_methods': 'time: mean over months'},
+                 'goodmon': {'long_name': 'number_of_values_in_month', 'missing_value': -999.0, 'valid_range': np.array([ 0., 31.], dtype=np.float32)},
+                 'rasocorrmon': {'long_name': 'monthly_raso_correction', 'units': 'K', 'missing_value': -999.0, 'valid_range': np.array([-20.,  20.], dtype=np.float32), 'cell_methods': 'time: mean over months'}
+                 }
+            fi['press'] = RC['stdplevs']
+
+            for name, atts in d.items():
                 if name == 'datum':
-                    x = dst.createVariable(name, variable.datatype, variable.dimensions)
+                    x = dst.createVariable(name, dt[name], dd[name]) # type and dimensions
                     dst[name][:] = fi['months'][:]
                     # copy variable attributes all at once via dictionary
-                    dst[name].setncatts(src[name].__dict__)
+                    dst[name].setncatts(atts)
                 elif name in ['montemp','goodmon','rasocorrmon']: #,'goodmon','rasocorrmon','eracorrmon']:
-                    x = dst.createVariable(name, variable.datatype, variable.dimensions)
-                    if variable.datatype in [np.dtype('float32'),np.dtype('float64')]:
+                    x = dst.createVariable(name, dt[name], dd[name])
+                    if dt[name] in [np.dtype('float32'),np.dtype('float64')]:
                         
                         dst[name][:]=np.nan
                     else:
                         dst[name][:]=0
                     
-                    if name in ['montemp','goodmon']:
-                        
+                    if name == 'goodmon':
                         dst[name][:,:RC['pidx'].shape[0],:] = fi[RC['transdict'][name]][:]
+                        
+                    if name in ['montemp']:
+                        if prefix == 'feedbackglobbincorrmon':
+                            
+                            dst[name][:,:RC['pidx'].shape[0],:] = fi[RC['transdict'][name]][:]
+                        else:
+                            dst[name][:,:RC['pidx'].shape[0],:] = fi['mfg']
+
                     elif name=='rasocorrmon':
                         dst[name][:,:RC['pidx'].shape[0],:] = fi['mtemperatures']-fi['mini_adjusted_temperatures']
 
                        
                     # copy variable attributes all at once via dictionary
-                    dst[name].setncatts(src[name].__dict__)
+                    dst[name].setncatts(atts)
                     
-                elif name in ['eracorrmon']:
-                    pass
-                else:
-                    x = dst.createVariable(name, variable.datatype, variable.dimensions)
-                    dst[name][:] = src[name][:]
-                    # copy variable attributes all at once via dictionary
-                    dst[name].setncatts(src[name].__dict__)
-    except FileNotFoundError:
-        print(fni,'could not be copied to',fno)
-    
-    return
-def write_bgmonmean(ipath,opath,prefix,fi):
-    
-    if not os.path.isdir(os.path.dirname(opath)):
-        os.mkdir(os.path.dirname(opath))
-    
-    fno=opath+'/'+prefix+fi['sid'][-6:]+'.nc'
-    fni=ipath+'/'+prefix+fi['sid'][-6:]+'.nc'
-    try:
-        with netCDF4.Dataset(fni) as src, netCDF4.Dataset(fno, "w") as dst:
-            # copy global attributes all at once via dictionary
-            new_globals=src.__dict__
-            new_globals['history']=datetime.datetime.today().strftime("%m/%d/%Y")
-            new_globals['source']='ERA5, IGRA2, NCAR UADB'
-            new_globals['references']='Copernicus Early Upper Air Dataset'
-            dst.setncatts(new_globals)
-            # copy dimensions
-            for name, dimension in src.dimensions.items():
-                if name =='time':
-                    dst.createDimension(
-                        name, (fi['mtemperatures'].shape[2] if not dimension.isunlimited() else None))
-                else:
-                    dst.createDimension(
-                        name, (len(dimension) if not dimension.isunlimited() else None))
-            # copy all file data except for the excluded
-            for name, variable in src.variables.items():
-                if name == 'datum':
-                    x = dst.createVariable(name, variable.datatype, variable.dimensions)
-                    dst[name][:] = fi['months'][:]
-                    # copy variable attributes all at once via dictionary
-                    dst[name].setncatts(src[name].__dict__)
-                elif name in ['goodmon','montemp']: #,'goodmon','rasocorrmon','eracorrmon']:
-                    x = dst.createVariable(name, variable.datatype, variable.dimensions)
-                    if variable.datatype in [np.dtype('float32'),np.dtype('float64')]:
+                else: # lat,lon,pressure levels
+                    x = dst.createVariable(name,dt[name], dd[name] )
+                    if fi[name] is np.ndarray:
                         
-                        dst[name][:]=np.nan
+                        dst[name][:] = fi[name][:]
                     else:
-                        dst[name][:]=0
-                    
-                    if name in ['goodmon']:
+                        dst[name][:] = np.array((fi[name],) )
                         
-                        dst[name][:,:RC['pidx'].shape[0],:] = fi[RC['transdict'][name]][:]
-                    elif name=='montemp':
-                        dst[name][:,:RC['pidx'].shape[0],:] = fi['mfg']
-                    else:
-                        pass
-                       
                     # copy variable attributes all at once via dictionary
-                    dst[name].setncatts(src[name].__dict__)
-                    
-                elif name in ['eracorrmon','rasocorrmon']:
-                    pass
-                else:
-                    x = dst.createVariable(name, variable.datatype, variable.dimensions)
-                    dst[name][:] = src[name][:]
-                    # copy variable attributes all at once via dictionary
-                    dst[name].setncatts(src[name].__dict__)
-    except FileNotFoundError:
-        print(fni,'could not be copied to',fno)
+                    dst[name].setncatts(atts)
+    except Exception as e:
+        print('could not write',fno, e)
     
     return
 
-@njit
-def addini(adjorig,iniad):
-    
-    ad=adjorig.shape
-    res_with_ini=np.concatenate((adjorig[:,:,0:1],adjorig[:],np.zeros((ad[0],ad[1],1))),axis=2)
-    for ih in range(ad[0]):
-        for ip in range(ad[1]):
-            res_with_ini[ih,ip,:-1]+=iniad[ih,ip]
-            
-    return res_with_ini
-
-def write_adjustment(ipath,opath,prefix,fi,rich_ref0=None,rich_ref1=None,initial_adjust_RAOB=None,initial_adjust_RICH=None):
+def write_adjustment(opath,prefix,fi,rich_ref0=None,rich_ref1=None,initial_adjust_RAOB=None,initial_adjust_RICH=None):
     
     if len(fi['goodbreaklist'])==0:
         print(fi['sid']+': no breaks for this station')
@@ -1010,38 +984,60 @@ def write_adjustment(ipath,opath,prefix,fi,rich_ref0=None,rich_ref1=None,initial
     if not os.path.isdir(os.path.dirname(opath)):
         os.mkdir(os.path.dirname(opath))
     
-    fno=opath+'/'+prefix+fi['sid'][-6:]+'.nc'
-    fni=ipath+'/'+prefix+fi['sid'][-6:]+'.nc'
+    fno=opath+'/'+fi['sid'][-6:]+'/'+prefix+fi['sid'][-6:]+'.nc'
+    #fni=ipath+'/'+prefix+fi['sid'][-6:]+'.nc'
     try:
-        with netCDF4.Dataset(fni) as src, netCDF4.Dataset(fno, "w") as dst:
+        with netCDF4.Dataset(fno, "w") as dst:
             # copy global attributes all at once via dictionary
-            new_globals=src.__dict__
-            new_globals['history']=datetime.datetime.today().strftime("%m/%d/%Y")
-            new_globals['source']='ERA5, IGRA2, NCAR UADB'
-            new_globals['references']='Copernicus Early Upper Air Dataset'
+            new_globals={'Conventions': 'CF-1.1',
+                         'title': 'Monthly radiosonde temperatures and -adjustments',
+                         'institution': 'Institute for Meteorology and Geophysics, University of Vienna',
+                         'Stationname': fi['station_name'], 
+                         'history': datetime.datetime.today().strftime("%m/%d/%Y"), 
+                         'source':'ERA5, IGRA2, NCAR UADB', 
+                         'references':'Copernicus Early Upper Air Dataset', 
+                         'url': 'early-upper-air.copernicus-climate.eu'
+                         }
             dst.setncatts(new_globals)
             # copy dimensions
-            for name, dimension in src.dimensions.items():
+            dims = {'station': 1,'numdat': 4,'time': 1,'pressure': RC['stdplevs'].shape[0],'hour': fi['temperatures'].shape[0]}
+            for name, dimension in dims.items(): #src.dimensions.items():
                 if name =='time':
-                    dst.createDimension(name, (len(fi['goodbreaklist'])+2 if not dimension.isunlimited() else None))
+                    dst.createDimension(
+                        name, (len(fi['goodbreaklist'])+2 ))
                 else:
                     dst.createDimension(
-                        name, (len(dimension) if not dimension.isunlimited() else None))
+                        name, (dimension))
             # copy all file data except for the excluded
-            for name, variable in src.variables.items():
+            dt = {'lat': np.dtype('float32'), 'lon': np.dtype('float32'), 'press': np.dtype('float32'), 'datum': np.dtype('int32'),
+                  'rasocorr': np.dtype('float32'), 'rasobreak': np.dtype('float32')}
+            dd = {'lat': ('station',), 'lon': ('station',), 'press': ('pressure',), 'datum': ('numdat', 'time'),
+                  'rasocorr': ('hour', 'pressure', 'time'),'rasobreak': ('hour', 'pressure', 'time') }
+
+            d = {'lat': {'long_name': 'station latitude', 'units': 'degrees_north', 'axis': 'Y', 'valid_range': np.array([-90.,  90.]), 'missing_value': -999.0},
+                 'lon': {'long_name': 'station longitude', 'units': 'degrees_east', 'axis': 'X', 'valid_range': np.array([-180.,  180.]), 'missing_value': -999.0},
+                 'press': {'long_name': 'pressure levels', 'units': 'hPa', 'axis': 'Z', 'valid_range': np.array([   0., 1100.]), 'missing_value': -999.0},
+                 'datum': {'long_name': 'datum', 'units': 'days since 1900-01-01 0:0:0', 'axis': 'T', 'calendar': 'gregorian', 'missing_value': -999.0},
+                 'rasocorr': {'long_name': 'raso_correct', 'units': 'K', 'missing_value': -999.0, 'valid_range': np.array([-20.,  20.], dtype=np.float32)}, 
+                 'rasobreak': {'long_name': 'raso_correct', 'units': 'K', 'missing_value': -999.0, 'valid_range': np.array([-20.,  20.], dtype=np.float32)}, 
+                 }
+            fi['press'] = RC['stdplevs']
+
+            # copy all file data except for the excluded
+            for name, attrs in d.items():
                 if name == 'datum':
-                    x = dst.createVariable(name, variable.datatype, variable.dimensions)
+                    x = dst.createVariable(name, dt[name], dd[name])
                     dst[name][:] = np.concatenate((np.array([1]),fi['days'][fi['goodbreaklist']],np.array([44998])),axis=0)
                     # copy variable attributes all at once via dictionary
-                    dst[name].setncatts(src[name].__dict__)
+                    dst[name].setncatts(attrs)
                 elif name in ['rasocorr','rasobreak']: #,'goodmon','rasocorrmon','eracorrmon']:
                     
                     if rich_ref0 and 'ri' in prefix:
                         suff=''
                         if rich_ref1:
                             suff='0'
-                        x = dst.createVariable(name+suff, variable.datatype, variable.dimensions)
-                        if variable.datatype in [np.dtype('float32'),np.dtype('float64')]:
+                        x = dst.createVariable(name+suff, dt[name], dd[name])
+                        if dt[name] in [np.dtype('float32'),np.dtype('float64')]:
                             
                             dst[name+suff][:]=np.nan
                         else:
@@ -1056,8 +1052,8 @@ def write_adjustment(ipath,opath,prefix,fi,rich_ref0=None,rich_ref1=None,initial
                                                                                   rich_ref0['tau']['rich_adjustments'][:],np.zeros((ad[0],ad[1],1))),axis=2)
 
                     if rich_ref1:
-                        x = dst.createVariable(name, variable.datatype, variable.dimensions)
-                        if variable.datatype in [np.dtype('float32'),np.dtype('float64')]:
+                        x = dst.createVariable(name, dt[name], dd[name])
+                        if dt[name] in [np.dtype('float32'),np.dtype('float64')]:
                             
                             dst[name][:]=np.nan
                         else:
@@ -1068,11 +1064,11 @@ def write_adjustment(ipath,opath,prefix,fi,rich_ref0=None,rich_ref1=None,initial
                             if initial_adjust_RICH:
                                 if 'initial_adjustments' in initial_adjust_RICH.keys():
                                     
-                                    dst[name][:,:RC['pidx'].shape[0],:] = addini(rich_ref1['obs']['rich_adjustments'],initial_adjust_RICH['initial_adjustments'])
+                                    dst[name][:,:RC['pidx'].shape[0],:] = pnm.addini(rich_ref1['obs']['rich_adjustments'],initial_adjust_RICH['initial_adjustments'])
                                 else:
-                                    dst[name][:,:RC['pidx'].shape[0],:] = addini(rich_ref1['obs']['rich_adjustments'],np.zeros(fi['adjustments'].shape[:2]))
+                                    dst[name][:,:RC['pidx'].shape[0],:] = pnm.addini(rich_ref1['obs']['rich_adjustments'],np.zeros(fi['adjustments'].shape[:2]))
                             else:
-                                dst[name][:,:RC['pidx'].shape[0],:] = addini(rich_ref1['obs']['rich_adjustments'],np.zeros(fi['adjustments'].shape[:2]))
+                                dst[name][:,:RC['pidx'].shape[0],:] = pnm.addini(rich_ref1['obs']['rich_adjustments'],np.zeros(fi['adjustments'].shape[:2]))
                             #rich_ref1['obs']['rich_adjustments'][:],np.zeros((ad[0],ad[1],1))),axis=2)
                         elif 'rit' in prefix and rich_ref1:
                             ad=rich_ref1['tau']['rich_adjustments'].shape
@@ -1080,14 +1076,14 @@ def write_adjustment(ipath,opath,prefix,fi,rich_ref0=None,rich_ref1=None,initial
                                                                                   #rich_ref1['tau']['rich_adjustments'][:],np.zeros((ad[0],ad[1],1))),axis=2)
                             if initial_adjust_RICH:
                                 if 'initial_adjustments' in initial_adjust_RICH.keys():
-                                    dst[name][:,:RC['pidx'].shape[0],:] = addini(rich_ref1['tau']['rich_adjustments'],initial_adjust_RICH['initial_adjustments'])
+                                    dst[name][:,:RC['pidx'].shape[0],:] = pnm.addini(rich_ref1['tau']['rich_adjustments'],initial_adjust_RICH['initial_adjustments'])
                                 else:
-                                    dst[name][:,:RC['pidx'].shape[0],:] = addini(rich_ref1['tau']['rich_adjustments'],np.zeros(fi['adjustments'].shape[:2]))
+                                    dst[name][:,:RC['pidx'].shape[0],:] = pnm.addini(rich_ref1['tau']['rich_adjustments'],np.zeros(fi['adjustments'].shape[:2]))
                             else:
-                                dst[name][:,:RC['pidx'].shape[0],:] = addini(rich_ref1['tau']['rich_adjustments'],np.zeros(fi['adjustments'].shape[:2]))
+                                dst[name][:,:RC['pidx'].shape[0],:] = pnm.addini(rich_ref1['tau']['rich_adjustments'],np.zeros(fi['adjustments'].shape[:2]))
                     else:
-                        x = dst.createVariable(name, variable.datatype, variable.dimensions)
-                        if variable.datatype in [np.dtype('float32'),np.dtype('float64')]:
+                        x = dst.createVariable(name, dt[name], dd[name])
+                        if dt[name] in [np.dtype('float32'),np.dtype('float64')]:
                             
                             dst[name][:]=np.nan
                         else:
@@ -1097,42 +1093,32 @@ def write_adjustment(ipath,opath,prefix,fi,rich_ref0=None,rich_ref1=None,initial
                         if initial_adjust_RAOB:
                             if 'initial_adjustments' in initial_adjust_RAOB.keys():
                                 
-                                dst[name][:,:RC['pidx'].shape[0],:] = addini(fi['adjustments'],initial_adjust_RAOB['initial_adjustments'])
+                                dst[name][:,:RC['pidx'].shape[0],:] = pnm.addini(fi['adjustments'],initial_adjust_RAOB['initial_adjustments'])
                             else:
-                                dst[name][:,:RC['pidx'].shape[0],:] = addini(fi['adjustments'],np.zeros(fi['adjustments'].shape[:2]))
+                                dst[name][:,:RC['pidx'].shape[0],:] = pnm.addini(fi['adjustments'],np.zeros(fi['adjustments'].shape[:2]))
                         else:
-                            dst[name][:,:RC['pidx'].shape[0],:] = addini(fi['adjustments'],np.zeros(fi['adjustments'].shape[:2]))
+                            dst[name][:,:RC['pidx'].shape[0],:] = pnm.addini(fi['adjustments'],np.zeros(fi['adjustments'].shape[:2]))
                             
                     # copy variable attributes all at once via dictionary
-                    dst[name].setncatts(src[name].__dict__)
+                    dst[name].setncatts(attrs)
                     
                 else:
-                    x = dst.createVariable(name, variable.datatype, variable.dimensions)
-                    dst[name][:] = src[name][:]
+                    x = dst.createVariable(name, dt[name], dd[name])
+                    if fi[name] is np.ndarray:
+                        
+                        dst[name][:] = fi[name][:]
+                    else:
+                        dst[name][:] = np.array((fi[name],) )
                     # copy variable attributes all at once via dictionary
-                    dst[name].setncatts(src[name].__dict__)
-    except FileNotFoundError:
-        print(fni,'could not be copied to',fno)
+                    dst[name].setncatts(attrs)
+    except Exception as e:
+        print(fno,'could not written',fno, e)
     
     return
 
-@njit
-def make_adjusted_series(orig,adjustments,breaklist):
-    
-    adjusted_series=orig.copy()
-    
-    for ib in range(len(breaklist)-1,-1,-1):
-        for ih in range(adjusted_series.shape[0]):
-            for ip in range(adjusted_series.shape[1]):  
-                if ib>0:
-                    adjusted_series[ih,ip,breaklist[ib-1]:breaklist[ib]]-=adjustments[ih,ip,ib-1]
-                else:
-                    adjusted_series[ih,ip,:breaklist[ib]]-=adjustments[ih,ip,ib]
-    
-    return adjusted_series
 
 #@ifray(ray.remote,RC['richfuture'])
-def save_monmean(tfile,l,exper='exp02',fi={},rich_ref0=None,rich_ref1=None,initial_adjust_RAOB=None,initial_adjust_rich=None):
+def save_monmean(l,exper='exp02',fi={},rich_ref0=None,rich_ref1=None,initial_adjust_RAOB=None,initial_adjust_rich=None):
     
     #return ray.put({'break_profiles':break_profiles,'adjusted_temperatures':finfo['adjusted_temperatures']})
     #fnames= fi['sid']
@@ -1146,8 +1132,8 @@ def save_monmean(tfile,l,exper='exp02',fi={},rich_ref0=None,rich_ref1=None,initi
     fi['obs']={}
     fi['tau']={}
     
-    tidx=np.where(RC['days']==1)[0]
-    ipath=fi['sid'][-6:].join(os.path.dirname(tfile).split(files[0][-9:-3]))
+    tidx=np.where(RC['days']==0)[0] + 1
+    #ipath=fi['sid'][-6:].join(os.path.dirname(tfile).split(tfile[-9:-3]))
     plist=['temperatures','ini_adjusted_temperatures','fg']
     if rich_ref0:
         if type(rich_ref0[l]) is not dict:
@@ -1185,11 +1171,11 @@ def save_monmean(tfile,l,exper='exp02',fi={},rich_ref0=None,rich_ref1=None,initi
             #plist=plist+['rich_adjusted_temperatures_1']
     do_monmean(plist,tidx,fi)
     prefix='feedbackglobbincorrmon'
-    write_monmean(ipath,exper.join(ipath.split('exp03')),prefix,fi)
+    write_monmean(RC['outdir'],prefix,fi)
     prefix='feedbackglobbgmon'
-    write_bgmonmean(ipath,exper.join(ipath.split('exp03')),prefix,fi) 
+    write_monmean(RC['outdir'],prefix,fi) 
     prefix='feedbackglobbincorrsave'
-    write_adjustment(ipath,exper.join(ipath.split('exp03')),prefix,fi,
+    write_adjustment(RC['outdir'],prefix,fi,
                      initial_adjust_RAOB=initial_adjust_RAOB)#,initial_adjust_rich=initial_adjust_rich)
     if rich_ref0 or rich_ref1:
         for iens in [24]:#range(len(rich_ref0)):
@@ -1211,7 +1197,7 @@ def save_monmean(tfile,l,exper='exp02',fi={},rich_ref0=None,rich_ref1=None,initi
                             if 'initial_adjustments' in initial_adjust_rich[1][iens][method].keys():
                                 iar=initial_adjust_rich[1][iens][method]
 
-                    write_adjustment(ipath,exper.join(ipath.split('exp03')),prefix,fi,
+                    write_adjustment(RC['outdir'],prefix,fi,
                                      rich_ref0=riref0,
                                      rich_ref1=riref1,
                                      initial_adjust_RAOB=initial_adjust_RAOB,
@@ -1219,126 +1205,6 @@ def save_monmean(tfile,l,exper='exp02',fi={},rich_ref0=None,rich_ref1=None,initi
 
 ray_save_monmean=ray.remote(save_monmean)    
     
-def write_era5bc(opath,fi):
-    
-    flag=False
-    fn='../Temperature_adjustment/'+st+'/feedbackmerged'+st+'.nc'
-    f = netCDF4.Dataset(fn,"r")
-    fno='../Temperature_adjustment/'+st+'/ERA5bc_RAOBCORE_v'+version+'_'+st+'.nc'
-    fo = netCDF4.Dataset(fno,"w", format='NETCDF4_CLASSIC')
-
-    for i in f.ncattrs():
-        if i=='history':
-            setattr(fo,i,datetime.date.today().strftime("%Y/%m/%d"))
-        elif i=='source':
-            setattr(fo,i,'RAOBCORE/RICH v'+version+' solar elevation dependency (from 197901 onward)' )
-        elif i=='title':
-            setattr(fo,i,'Station daily temperature series with ERA5/20VRv3 background departure statistics and RISE bias estimates' )
-        else:
-            setattr(fo,i,getattr(f,i))
-    for i in list(f.dimensions.keys()):
-        if i=='time':
-            fo.createDimension(i,s["mdatum"].shape[0])
-        else:
-            try:
-                fo.createDimension(i,len(f.dimensions[i]))
-            except:
-                flag=True
-                continue
-    nalias=8    
-    fo.createDimension('nalias',8)
-    fo.createDimension('nchar',8)
-    if flag:
-        return
-    #nogos=['flags',u's_type', u'eijra_fgdep', u'jra55_fgdep', u'jra55_andep', u'e20c_andep', u'n20c_andep', u'ce20c_andep', u'erapresat_andep']
-    tobecopied=['datum','hours','lat','lon','alt','press','temperatures','an_dep',fgdepvar,'source','mergedstats']
-    for i in list(f.variables.keys()):
-        var=f.variables[i]
-        if i=='datum':
-            fo.createVariable(i,var.dtype,var.dimensions)
-            fo.variables[i][:]=s["mdatum"][:]
-        elif i=='hours':
-            fo.createVariable(i,var.dtype,var.dimensions)
-            fo.variables[i][:]=s["mhours"][:]
-        elif i=='temperatures':
-            fo.createVariable(i,var.dtype,var.dimensions)
-            s["mtemperatures"][numpy.isnan(s["mtemperatures"])]=-999.
-            fo.variables[i][:]=s["mtemperatures"][:]
-        elif i==fgdepvar:
-            fo.createVariable(i,var.dtype,var.dimensions)
-            s["m"+fgdepname][numpy.isnan(s["m"+fgdepname])]=-999.
-            fo.variables[i][:]=s["m"+fgdepname][:]
-        #elif i=='an_dep':
-            s["newbias"][numpy.isnan(s["newbias"])]=-999.
-            s["newrichbias"][numpy.isnan(s["newrichbias"])]=-999.
-            try:
-                fo.createVariable('bias',var.dtype,var.dimensions)
-            except:
-                pass
-            fo.variables['bias'][:]=s["newbias"][:]
-            fo.createVariable('richbias',var.dtype,var.dimensions)
-            fo.variables['richbias'][:]=s["newrichbias"][:]
-        elif i in ('lon','lat','alt','press'):
-            fo.createVariable(i,var.dtype,var.dimensions)
-            fo.variables[i][:]=var[:]
-        elif i in ('source'):
-            #str_out = netCDF4.stringtochar(numpy.array(['test'], 'S4'))
-            fo.createVariable(i,'S1',('time','nchar'))
-            x=numpy.empty((var.shape[0]),dtype='S8')
-            x.fill('        ')
-            try:
-                svar=var[:]
-            except:
-                print('could not read source, supplying BUFRDATA')
-                svar=x
-            str_out = netCDF4.stringtochar(numpy.asarray(svar,'S8'))
-            fo.variables[i][:]=str_out
-        elif i in ('mergedstats'):
-            fo.createVariable(i,'S1',('time','nalias','nchar'))
-            tt=time.time()
-            x=numpy.empty((var.shape[0],nalias),dtype='S8')
-            x.fill('        ')
-            try:
-                svar=var[:]
-                for k in range(svar.shape[0]):
-                    l=svar[k].split(',')
-                    #if len(l)>1:
-                        #print 'l>1'
-                    for m in range(len(l)):
-                        x[k,m]=l[m]+' '*(8-len(l[m]))
-            except:
-                print('could not read mergedstats, filling with WMO number')
-                x.fill(st[1:]+'   ')
-
-            str_out = netCDF4.stringtochar(x)
-            fo.variables[i][:]=str_out
-            print(('mergevar:',time.time()-tt))
-        else:
-            if i in tobecopied:
-                print((i,'some unknown variable'))
-                fo.createVariable(i,var.dtype,var.dimensions)
-
-        for j in var.ncattrs():
-            if j!='_FillValue' and j!='scale_factor' and j!='add_offset':
-                if i in tobecopied:
-                    if i=='an_dep':
-                        setattr(fo.variables['bias'],j,getattr(var,j))
-                        setattr(fo.variables['richbias'],j,getattr(var,j))
-                    elif i=='datum' and j=='units':
-                        setattr(fo.variables[i],j,'days since 1900-01-01 00:00:00')
-                    else:
-                        setattr(fo.variables[i],j,getattr(var,j))
-
-    setattr(fo.variables[fgdepvar],'infos','obs-20CRv3 up to 1949; obs-ERA5 1950 onwards')
-    setattr(fo.variables['bias'],'long_name','RAOBCORE v'+version+' RISE bias estimate')
-    setattr(fo.variables['richbias'],'long_name','RICH v'+version+' RICH bias estimate')
-    #setattr(fo.variables['source'],'info','Preferred source used for merged temperature record')
-    #setattr(fo.variables['source'],'valid_entries','BUFRDATA: (ECMWF holdings), NCARUA(20,21,24): sources from NCAR, CHUAN2.1: ERA-CLIM(2) digitized data')
-    #setattr(fo.variables['mergedstats'],'info','ODB statIDs that matched during merge - bias adjustments should be applied to those')
-
-
-    fo.close()
-    f.close()
     
 def stdists(finfo):
     
@@ -1359,57 +1225,6 @@ def stdists(finfo):
 ray_stdists=ray.remote(stdists)
 
 
-@njit(fastmath={'nsz','arcp','contract','afn','reassoc'},cache=True)
-def lagmean(ldiff,sdiff,ldays,sdays,llmaxlen,slmaxlen,thresh,lprofl,sprofl,lprofr,sprofr):
-    
-    idx=np.searchsorted(sdays,ldays)
-    for ih in range(ldiff.shape[0]):
-        for ip in range(ldiff.shape[1]-1,-1,-1):
-            cl=0
-            for i in range(llmaxlen):
-                j=idx[i]
-                if j==sdays.shape[0]:
-                    break
-                if ldiff[ih,ip,i]==ldiff[ih,ip,i]:
-                    if sdays[j]==ldays[i] and sdiff[ih,ip,j]==sdiff[ih,ip,j]:
-                        lprofl[ih,ip]+=ldiff[ih,ip,i]
-                        sprofl[ih,ip]+=sdiff[ih,ip,j]
-                        cl+=1
-            if cl>thresh:
-                lprofl[ih,ip]/=cl
-                sprofl[ih,ip]/=cl
-            else:
-                if False: #ip<=6:
-                    lprofl[ih,ip]=lprofl[ih,ip+1] # take value from next pressure level downward, assuming constant bias in the vertical
-                    sprofl[ih,ip]=sprofl[ih,ip+1]
-                else:    
-                    lprofl[ih,ip]=np.nan
-                    sprofl[ih,ip]=np.nan
-                
-            cr=0
-            for i in range(llmaxlen,ldiff.shape[2]):
-                j=idx[i]
-                if j==sdays.shape[0]:
-                    break
-                if ldiff[ih,ip,i]==ldiff[ih,ip,i]:
-                    if sdays[j]==ldays[i] and sdiff[ih,ip,j]==sdiff[ih,ip,j]:
-                        lprofr[ih,ip]+=ldiff[ih,ip,i]
-                        sprofr[ih,ip]+=sdiff[ih,ip,j]
-                        cr+=1
-            if cr>thresh:
-                lprofr[ih,ip]/=cr
-                sprofr[ih,ip]/=cr
-            else:
-                if ip<=6:
-                    lprofr[ih,ip]=lprofr[ih,ip+1] # take value from next pressure level downward, assuming constant bias in the vertical
-                    sprofr[ih,ip]=sprofr[ih,ip+1]
-                else:
-                    lprofr[ih,ip]=np.nan
-                    sprofr[ih,ip]=np.nan
-                
-    return (lprofr-lprofl)-(sprofr-sprofl)
-    
-
 def rich_calcadjprofile(ldiff,sdiff,ldays,sdays,tbin,sbin,llmaxlen,slmaxlen):
 
     sprof=np.zeros(sdiff.shape[:2],dtype=ldiff.dtype)
@@ -1418,27 +1233,9 @@ def rich_calcadjprofile(ldiff,sdiff,ldays,sdays,tbin,sbin,llmaxlen,slmaxlen):
     lprofr=np.zeros(ldiff.shape[:2],dtype=ldiff.dtype)
     sprofr=np.zeros(ldiff.shape[:2],dtype=ldiff.dtype)
 
-    sprof=lagmean(ldiff,sdiff,ldays,sdays,llmaxlen,slmaxlen,RC['snht_min_sampsize'],lprofl,sprofl,lprofr,sprofr)
+    sprof=pnm.lagmean(ldiff,sdiff,ldays,sdays,llmaxlen,slmaxlen,RC['snht_min_sampsize'],lprofl,sprofl,lprofr,sprofr)
     return sprof
 
-@njit
-def calc_breakprofiles(adjlist,weight):
-    breakprofile=np.zeros(adjlist.shape[1:],dtype=adjlist.dtype)
-    
-    for i in range(breakprofile.shape[0]):
-        for j in range(breakprofile.shape[1]):
-            bsum=0.
-            wsum=0.
-            count=0
-            for k in range(adjlist.shape[0]):
-                if adjlist[k,i,j]==adjlist[k,i,j]:
-                    bsum+=adjlist[k,i,j]*weight[k]
-                    wsum+=weight[k]
-                    count+=1
-            if count>1:
-                breakprofile[i,j]=bsum/wsum
-    return breakprofile
-            
 def add_breakprofile(ref,l,rich,richtemp,method,ib):
     
     bp=rich[method]['break_profiles']
@@ -1663,9 +1460,9 @@ def rich_adjust(l,obj_ref,rich_iter,obj_rich_ref=None):
                         if not RC['richfuture']:
                             #!!!!! this is the debug setting change to rich_ref['tau']['rich_adjusted_anomalies'] or .. [obs] !!!!!!!!!!!
                             comp={'tau':{'test':richtemp['tau']['rich_adjusted_fg_dep'],
-                                         'ref':make_adjusted_series(ref[si]['fg_dep'],ref[si]['adjustments'],ref[si]['goodbreaklist'])},
+                                         'ref':pnm.make_adjusted_series(ref[si]['fg_dep'],ref[si]['adjustments'],ref[si]['goodbreaklist'])},
                                     'obs':{'test':richtemp['obs']['rich_adjusted_anomalies'],
-                                            'ref':make_adjusted_series(ref[si]['anomalies'],ref[si]['adjustments'],ref[si]['goodbreaklist'])}}
+                                            'ref':pnm.make_adjusted_series(ref[si]['anomalies'],ref[si]['adjustments'],ref[si]['goodbreaklist'])}}
                         else:
                             #!!!!! this is the full  setting, requires complete first RICH iteration
                             try:
@@ -1673,9 +1470,9 @@ def rich_adjust(l,obj_ref,rich_iter,obj_rich_ref=None):
                                 #comp={'tau':{'test':richtemp['tau']['rich_adjusted_fg_dep'],'ref':rich_ref[si]['tau']['rich_adjusted_fg_dep']},
                                            #'obs':{'test':richtemp['obs']['rich_adjusted_anomalies'],'ref':rich_ref[si]['obs']['rich_adjusted_anomalies']}}
                                 comp={'tau':{'test':richtemp['tau']['rich_adjusted_fg_dep'],
-                                             'ref':make_adjusted_series(ref[si]['fg_dep'],rich_ref[si][richcount]['tau']['rich_adjustments'],ref[si]['goodbreaklist'])},
+                                             'ref':pnm.make_adjusted_series(ref[si]['fg_dep'],rich_ref[si][richcount]['tau']['rich_adjustments'],ref[si]['goodbreaklist'])},
                                            'obs':{'test':richtemp['obs']['rich_adjusted_anomalies'],
-                                                  'ref':make_adjusted_series(ref[si]['anomalies'],rich_ref[si][richcount]['obs']['rich_adjustments'],ref[si]['goodbreaklist'])}}
+                                                  'ref':pnm.make_adjusted_series(ref[si]['anomalies'],rich_ref[si][richcount]['obs']['rich_adjustments'],ref[si]['goodbreaklist'])}}
                             except KeyError:
                                 print(ref[l]['sid']+': reference '+ref[si]['sid']+' has no rich_adjusted values')
                                 continue
@@ -1702,7 +1499,7 @@ def rich_adjust(l,obj_ref,rich_iter,obj_rich_ref=None):
                             try:
                                 if len(rich[method]['buddies'][ib])>0:
                                     buddies=np.array(rich[method]['buddies'][ib])
-                                    rich[method]['break_profiles'][ib,:,:]=calc_breakprofiles(buddies,
+                                    rich[method]['break_profiles'][ib,:,:]=pnm.calc_breakprofiles(buddies,
                                                                                           rich['found']['weight'][:buddies.shape[0]])
                                 else:
                                     rich[method]['break_profiles'][ib,:,:]=np.nan
@@ -1846,26 +1643,6 @@ def breakplot(l,obj_ref,obj_rich_ref0=None,obj_rich_ref1=None):
 
 ray_breakplot=ray.remote(breakplot)
 
-@njit
-def findstart(fg_dep,minlen):
-    i=fg_dep.shape[2]-1
-    igood=np.zeros(2,dtype=np.int32)
-    isave=np.zeros(2,dtype=np.int32)
-    while i>0 and (igood[0]<minlen or igood[1]<minlen):
-        for j in range(fg_dep.shape[0]):
-            if fg_dep[j,11,i]==fg_dep[j,11,i]:
-                igood[j]+=1
-                if igood[j]==minlen:
-                    isave[j]=i
-        i-=1
-        
-    istart=i
-    #if igood[0]>=minlen and igood[1]<minlen/8:
-        #istart=isave[0]
-    #if igood[1]>=minlen and igood[0]<minlen/8:
-        #istart=isave[1]
-    return istart,igood
-
 def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_initial_composite_ref=None):
     sys.path.append(os.path.expanduser('../common/Rasotools/rasotools/'))
     sys.path.append(os.path.expanduser('../common/Rasotools/'))
@@ -1954,22 +1731,35 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
             RAOBini['initial_adjustments'][np.isnan(RAOBini['initial_adjustments'])]=0.
 
                         
-    #elif RC['initial_adjustments']=='era5neighbours':
-    if True: 
-        if ref[l]['lastsonde']: # and RC['initial_adjustments'] not in ['era5','era5bc']:
+    elif RC['initial_adjustments']=='era5neighbours':
+    #if True: 
+        if ref[l]['lastsonde'] or ref[l]['rharm']: # and RC['initial_adjustments'] not in ['era5','era5bc']:
             #start,igood=findstart(ref[l]['fg_dep'],RC['mean_maxlen'])
             #ini=np.zeros(ref[l]['adjusted_fg_dep'].shape[:2])
             #RAOBini['initial_adjustments']= ndnanmean2(ref[l]['adjusted_fg_dep'][:,:,start:],ini,RC['snht_min_sampsize'])
             #RAOBini['initial_adjustments'][np.isnan(RAOBini['initial_adjustments'])]=0.
             RAOBini['initial_adjustments']=np.zeros_like(ref[l]['fg_dep'],shape=ref[l]['fg_dep'].shape[:2])
+            if ref[l]['rharm']:
+                start=np.max((0,ref[l]['days'].shape[0]-RC['mean_maxlen']))
+                if ref[l]['days'].shape[0]-start>RC['snht_min_sampsize']:
+                    
+                    ini=np.zeros(ref[l]['adjusted_fg_dep'].shape[:2])
+                    rharmini = np.zeros_like(ini)
+                    rawini = np.zeros_like(ini)
+                    rharmini = ndnanmean2(ref[l]['rharmbc'][:,:,start:],ini,RC['snht_min_sampsize'])[:]
+                    rawini = ndnanmean2(ref[l]['adjusted_fg_dep'][:,:,start:],ini.copy(),RC['snht_min_sampsize'])[:]
+                    RAOBini['initial_adjustments']= rawini - rharmini
+                    RAOBini['initial_adjustments'][np.isnan(RAOBini['initial_adjustments'])]=0.
+                
             if obj_rich_ref:
                 for i in range(32):
                     for method in 'tau','obs':
-                        richensini[i][method]['initial_adjustments']=np.zeros_like(ref[l]['fg_dep'],shape=ref[l]['fg_dep'].shape[:2])
+                        richensini[i][method]['initial_adjustments']=RAOBini['initial_adjustments'].copy()
             pass
+        
         else:
             #start=np.max((0,ref[l]['days'].shape[0]-RC['mean_maxlen']))
-            start,igood=findstart(ref[l]['fg_dep'],RC['mean_maxlen'])
+            start,igood=pnm.findstart(ref[l]['fg_dep'],RC['mean_maxlen'])
             spagini=[]
             if any(igood>RC['snht_min_sampsize']):
                 refcount=0
@@ -2067,14 +1857,14 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
                                                     
                                                     if firstbuddy:    # calculate rich adjusted test time series                               
                                                         ini=np.zeros(ref[l]['adjusted_fg_dep'].shape[:2])
-                                                        ri_test_adjusted_fg_dep[iens][method]=make_adjusted_series(ref[l]['fg_dep'],rich_ref[l][iens][method]['rich_adjustments'],
+                                                        ri_test_adjusted_fg_dep[iens][method]=pnm.make_adjusted_series(ref[l]['fg_dep'],rich_ref[l][iens][method]['rich_adjustments'],
                                                                             ref[l]['goodbreaklist'])
                                                         if iens==len(richensini)-1 and method=='obs':
                                                             firstbuddy=False
 
                                                     # calculate rich adjusted reference time series
                                                     ini=np.zeros(ref[si]['adjusted_fg_dep'].shape[:2])
-                                                    ri_adjusted_fg_dep[iens][method]=make_adjusted_series(ref[si]['fg_dep'],rich_ref[si][iens][method]['rich_adjustments'],
+                                                    ri_adjusted_fg_dep[iens][method]=pnm.make_adjusted_series(ref[si]['fg_dep'],rich_ref[si][iens][method]['rich_adjustments'],
                                                                                             ref[si]['goodbreaklist'])
                                                     rspagest=ndnanmean2(ri_adjusted_fg_dep[iens][method][:,:,start:],ini,RC['snht_min_sampsize'])
                                                     for ih in range(rspagest.shape[0]):
@@ -2131,7 +1921,12 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
         if ref[l]['days'].shape[0]-start>RC['snht_min_sampsize']:
             
             ini=np.zeros(ref[l]['adjusted_fg_dep'].shape[:2])
-            RAOBini['initial_adjustments']= ndnanmean2(ref[l]['adjusted_fg_dep'][:,:,start:],ini,RC['snht_min_sampsize'])
+            ini2 = np.zeros_like(ini)
+            rharmini = np.zeros_like(ini)
+            rawini = np.zeros_like(ini)
+            rharmini = ndnanmean2(ref[l]['rharmbc'][:,:,start:],ini,RC['snht_min_sampsize'])[:]
+            rawini = ndnanmean2(ref[l]['adjusted_fg_dep'][:,:,start:],ini.copy(),RC['snht_min_sampsize'])[:]
+            RAOBini['initial_adjustments']= rawini - rharmini
             RAOBini['initial_adjustments'][np.isnan(RAOBini['initial_adjustments'])]=0.
 
     RAOBini['initial_adjustment_method']=RC['initial_adjustments']
@@ -2143,6 +1938,159 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
         
 
 ray_initial_adjust=ray.remote(initial_adjust)
+
+def do_copy(fni, fno, grvdict={'recordindices': [], 'observations_table': ['index', 'date_time', 'z_coordinate', 'observed_variable', 'observation_value']}, mode='r+'):
+    
+    if(not os.path.isfile(fno)):
+        mode = 'w'
+        
+    with h5py.File(fni,'r') as f:
+        try:
+            
+            with h5py.File(fno,mode) as g:
+                
+                for k, vv in grvdict.items():
+                           
+                    if k not in g.keys():
+                        
+                        g.create_group(k)
+                    
+                    if not vv:
+                        vv = list(f[k].keys())
+                        
+                    for v in vv:
+                        
+                        try:
+                            try:
+                                del g[k][v]
+                            except Exception as e:
+                                #print(e)
+                                pass
+                            
+                            g[k].create_dataset_like(v,f[k][v],compression='gzip')
+                            g[k][v][:]=f[k][v][:]
+                        except Exception as e:
+                            print(e)
+                            continue
+                        #ll+=1
+                        for a,av in f[k][v].attrs.items():
+                            if a not in ('CLASS','NAME','REFERENCE_LIST','DIMENSION_LIST'):
+                                #print(a,av)
+                                g[k][v].attrs[a]=av
+                    
+                    for v in g[k].keys(): #var_selection:
+                        l=0            
+                        try:
+                            fvv=g[k][v]
+                            if 'string' not in v and v!='index':                    
+                                g[k][v].dims[l].attach_scale(g[k]['index'])
+                                #print(v,fvv.ndim,type(fvv[0]))
+                                if fvv.ndim==2 or type(fvv[0]) in [str,bytes,numpy.bytes_]:
+                                    slen=sdict[v]
+                                    #slen=10
+                                    g[k][v].dims[1].attach_scale(g[k]['string{}'.format(slen)])
+                        except Exception as e:
+                            print(fn.split('/')[-1],e)
+                            pass
+                
+        except Exception as e:
+            print(fn.split('/')[-1],e)
+            pass
+        
+        print(fn.split('/')[-1]+' copied to '+fno)
+
+def add_adj(fi, mode='r'):
+    
+    statid=fi['sid'][-6:] #adjfile[-8:-3]
+    adjfile = RC['outdir'] + statid + '/feedbackglobbincorrsave' + statid + '.nc'
+    adjustments={'raobcore':os.path.expandvars(adjfile),
+                 'rich':os.path.expandvars('corrsave_rio24_'.join(adjfile.split('corrsave'))),
+                 'rase':os.path.expandvars(('ERA5bc_RAOBCORE_v'+RC['version']+'_').join(adjfile.split('feedbackglobbincorrsave'))),
+                 'rise':os.path.expandvars(('ERA5bc_RAOBCORE_v'+RC['version']+'_').join(adjfile.split('feedbackglobbincorrsave')))}
+    adjname={'raobcore':'rasocorr',
+                 'rich':'rasocorr',
+                 'rase':'bias',
+                 'rise':'richbias'}
+
+    outfile = RC['outdir']+ statid+'/' + fi['ifileorig'].split('/')[-1]
+    if mode == 'r+':
+        try:
+            with eua.CDMDataset(fi['ifileorig'], mode=mode) as data:
+                outfile = fi['ifileorig']
+        except:
+            mode = 'r'
+            print('could not open read-write, opening readonly', fi['ifileorig'])
+            
+    print('writing to:', outfile)
+
+    try:
+        with eua.CDMDataset(fi['ifileorig'], mode=mode) as data:
+            
+        
+            xyz = data.read_observed_variable(eua.cdm_codes['temperature'],return_xarray=True,date_time_in_seconds=True)
+        
+            ref=np.datetime64(datetime.datetime(1900,1,1),'ns')
+            xyzt=(xyz.date_time.values-ref).astype('long')//1000000000
+    
+
+            for k,v in adjustments.items():
+                try:
+                    
+                    adjustments=xr.open_dataset(v,decode_times=False)
+                    if adjustments.datum.ndim==2:
+                        atime0=(adjustments.datum[0].values.astype(int)-1)*86400.
+                    else:
+                        atime0=(adjustments.datum.values.astype(int)-1)*86400.
+                   
+                    
+                    mask=adjustments[adjname[k]].values==-999.
+                    adjustments[adjname[k]].values[mask]=np.nan
+                    tt=time.time()
+                    adj=pnm.add_biasestimate(xyz.values,xyzt,xyz.z_coordinate.values,atime0,
+                                         adjustments[adjname[k]].values,adjustments.press.values*100)
+                    print('add:',time.time()-tt)
+                    xyz.values=adj
+                    
+                    #idx=np.where(xyz.z_coordinate.values==50000)
+                    #plt.plot(xyzt[idx]/86400/365.25,adj[idx])
+                    #plt.plot(atime0/86400/365.25,adjustments.rasocorr.values[0,11,:])
+                    #plt.plot(atime0/86400/365.25,adjustments.rasocorr.values[1,11,:])
+                    #plt.show()
+                    # Daten schreiben neue Variable monkey in neuer gruppe adjust
+                    if mode == 'r':
+                        if not os.path.isfile(outfile):
+                            #shutil.copyfile(fi['ifileorig'], outfile)
+                            do_copy(fi['ifileorig'], outfile)
+                        with eua.CDMDataset(outfile, mode='r+') as odata:
+                            odata.write_observed_data(k.upper()+'_bias_estimate',
+                                                     ragged=xyz,  # input data
+                                                     varnum=eua.cdm_codes['temperature'],  # observed_variable to be aligned with
+                                                     group='advanced_homogenisation',   # name of the new group
+                                                     data_time='date_time',  # named datetime coordinate
+                                                     data_plevs='z_coordinate',  # named pressure coordinate
+                                                     attributes={'version':RC['version']}
+                                                    )
+                            print(k, time.time() - tt)
+                    else:
+                        key = k.upper()+'_bias_estimate'
+                        alldict = pandas.DataFrame({key:xyz})
+                        write_dict_h5(outfile, alldict, 'advanced_homogenisation', {key: { 'compression': 'gzip' } }, [key])  
+                        #data.write_observed_data(k.upper()+'_bias_estimate',
+                                                 #ragged=xyz,  # input data
+                                                 #varnum=eua.cdm_codes['temperature'],  # observed_variable to be aligned with
+                                                 #group='advanced_homogenisation',   # name of the new group
+                                                 #data_time='date_time',  # named datetime coordinate
+                                                 #data_plevs='z_coordinate',  # named pressure coordinate
+                                                 #attributes={'version':RC['version']}
+                                                #)
+                    print('write:',time.time()-tt)
+                except Exception as e:
+                    print('could not write', k,e)
+    except Exception as e:
+        print('could not write '+outfile, e)
+
+ray_add_adj=ray.remote(add_adj)
+
 
 '''
 RAOBCORE/RICH python - main script
@@ -2162,40 +2110,83 @@ if __name__ == '__main__':
     
     
     #prolog()
-    if len(sys.argv)>1:
-        pattern=sys.argv[1]
+    if len(sys.argv)>2:
+        pattern=sys.argv[2]
+        RCdir = sys.argv[1]
+        pkl='RAOBx'
+    elif len(sys.argv)>1:
+        pattern=''
+        RCdir = sys.argv[1]
         pkl='RAOBx'
     else:
         pattern=''
+        RCdir = 'exp00'
         pkl='RAOBx'
-    process = psutil.Process(os.getpid())
-    files = glob.glob('/users/staff/leo/fastscratch/rise/1.0/'+RC['exp']+'/[01]*/feedbackmerged'+pattern+'*.nc')[:]
     tt=time.time()
+    process = psutil.Process(os.getpid())
+    #files = glob.glob('/users/staff/leo/fastscratch/rise/1.0/'+RC['exp']+'/[01]*/feedbackmerged'+pattern+'*.nc')[:]
+    RCfile = os.path.expandvars('$FSCRATCH/rise/1.0/')+RCdir+'/RC.json'
+    RC = RC_ini(RCfile)
+                                
+    filesorig = glob.glob('/mnt/users/scratch/leo/scratch/'+RC['CUON']+'/*'+pattern+'*.nc')[:]
+    filesorig.sort()
+    lats = [];lons = []; wigos = []; wshort = [];statids = []
+    goodfilesorig = []
+    for fn in filesorig:
+        if '00000' in fn:
+            continue
+
+        #lats.append(f['observations_table']['latitude'][-1])
+        #lons.append(f['observations_table']['longitude'][-1])
+        wigos.append(fn.split('_CEUAS')[0].split('/')[-1]) 
+        wshort.append(fn.split('_CEUAS')[0].split('-')[-1][:5])
+        l = 0
+        while str(l) + wshort[-1] in statids:
+            l += 1
+        statids.append(str(l)+wshort[-1])
+        goodfilesorig.append(fn)
+        print(statids[-1])
+    RC['filesorig'] = goodfilesorig
+    RC['statids'] = statids
+    RC['wigos'] = wigos
+    RC['outdir'] = '/users/staff/leo/fastscratch/rise/1.0/'+RC['exp']+'/'
+    RC['cdict'] ={'temperature':'temperatures','fg_depar@body':'era5_fgdep','biascorr@body':'bias_estimate','lat':'lat','lon':'lon','hours':'hours'}
+    print(time.time() -tt)
     hadmeddict= read_hadCRUT5('/users/staff/leo/fastscratch/rise/1.0/common/','HadCRUT.5.0.1.0',RC['refdate'])
-    # read data and analyze breakpoints
-    #func=partial(RAOB_findbreaks,'SNHT')
-    #with Pool(20) as P:        
-        #finfo=list(P.map(func,files))
-        
-    #finfo=[i for i in finfo if i]
+
     
-    ray.init(num_cpus=RC['CPUs'])
+    ray.init(num_cpus=RC['CPUs'], object_store_memory=1024*1024*1024*50)
     #ray.init(address='131.130.157.11:49705', _redis_password='5241590000000000')
-    #func=partial(RAOB_findbreaks,'SNHT')
-    #with Pool(20) as P:        
-        #obj_ref=list(P.map(func,files))
+
     
     if not RC['findfuture']:  
         func=partial(RAOB_findbreaks,'SNHT') # Binseg
-        obj_ref=list(map(func,files))
+        obj_ref=list(map(func,RC['filesorig']))
         obj_ref = [i for i in obj_ref if i]
         finfo=ray.get(obj_ref)
+        #add_adj(finfo[0], mode='r')
     else:
         futures = []
-        for fn in files:
+        for fn in RC['filesorig']:
             futures.append(ray_RAOB_findbreaks.remote('SNHT',fn))
         obj_ref  = ray.get(futures)
+        #futures = []
+        #for o in obj_ref:
+            #futures.append(ray_add_adj.remote(o, mode='r'))
+        #ray.get(futures)
+    
+    for key in ('filesorig', 'statids', 'wigos'):
+        l = 0
+        m = 0
+        for i in obj_ref:
+            if i:
+                RC[key][l] = RC[key][m]
+                l += 1
+            m += 1
+        RC[key] = RC[key][:l]
+        
     obj_ref = [i for i in obj_ref if i]
+    
     
     break_sum=np.sum([len(l['breaklist']) for l in ray.get(obj_ref)])
     if RC['plot']:
@@ -2224,14 +2215,15 @@ if __name__ == '__main__':
 
     
     futures=[]
-    if False and not RC['findfuture']:  
-        #func=partial(RAOB_adjustbreaks,'SNHT',sdist_ref)
+    if not RC['findfuture']:  
+        func=partial(RAOB_adjustbreaks,'SNHT',ray.get(sdist_ref), active,ray.get(obj_ref[0]))
+        results=list(map(func,[0]))
         #results=list(map(func,obj_ref))
-        #results_ref=results
-        sdist=ray.get(sdist_ref)
-        for l in range(len(obj_ref)):
-            futures.append(RAOB_adjustbreaks('SNHT',sdist,active,ray.get(obj_ref[l]),l))
-        obj_ref=ray.put(futures)
+        obj_ref=results
+        #sdist=ray.get(sdist_ref)
+        #for l in range(len(obj_ref)):
+            #futures.append(RAOB_adjustbreaks('SNHT',sdist,active,ray.get(obj_ref[l]),l))
+        #obj_ref=ray.put(futures)
     else:
         for l in range(len(obj_ref)):
             futures.append(ray_RAOB_adjustbreaks.remote('SNHT',sdist_ref,active_ref,obj_ref[l],l))
@@ -2244,8 +2236,9 @@ if __name__ == '__main__':
 
     
     if pattern=='':
-        pattern='159431'
-    lx= sids.index('feedbackmerged'+pattern)
+        pattern='91413'
+        
+    lx= sids.index('feedbackmerged0'+pattern)
     
     single_obj_ref=ray.put(obj_ref) 
     #single_results_ref=ray.put(results_ref)
@@ -2258,14 +2251,14 @@ if __name__ == '__main__':
         initial_composite=[{} for i in range(len(obj_ref))]
         for l in range(len(obj_ref)):
             d=ray.get(obj_ref[l])
-            if d['lastsonde']==1:
+            if d['lastsonde']==1 or (d['rharm'] == 1 and RC['rharm'] in ('rharmc', 'rcuon')):
                 lgood.append(l)
             elif d['days'][-1]>int(110*365.25):
                 lrecent.append(l)
             else:
                 lneedscomposite.append(l)
             
-        ifile='exp03'.join(files[0].split(RC['exp']))
+        ifile=ray.get(obj_ref[0])['ifile'] #'exp03'.join(files[0].split(RC['exp']))
         #for lx in lrecent:
             #initial_adjust_RAOB=initial_adjust(lx,single_obj_ref,single_results_ref,sdist_ref)  
             #save_monmean(ifile,0,[obj_ref[lx]],[results_ref[lx]],
@@ -2277,12 +2270,16 @@ if __name__ == '__main__':
                          #initial_adjust_RAOB=[initial_adjust_RAOB])
                          
 # for some values of RC['initial_adjust'] even the "good" sondes are initial-adjusted
-    #for l in lgood:
-        #initial_adjust_RAOB=initial_adjust(l,single_obj_ref,single_results_ref,sdist_ref)  
-    futures=[]
-    for l in lgood: #range(len(obj_ref)):
-        futures.append(ray_initial_adjust.remote(l,single_obj_ref))
-    iadjustlist = ray.get(futures)
+    if(not RC['findfuture']):
+        
+        iadjustlist =[]    
+        for l in lgood:
+            iadjustlist.append(initial_adjust(l,single_obj_ref)) #,single_results_ref,sdist_ref)
+    else:
+        futures=[]
+        for l in lgood: #range(len(obj_ref)):
+            futures.append(ray_initial_adjust.remote(l,single_obj_ref))
+        iadjustlist = ray.get(futures)
     for i in range(len(lgood)): 
         initial_composite[lgood[i]]=copy.copy(iadjustlist[i])
     #initial_composite_ref=ray.put(initial_composite)
@@ -2321,15 +2318,27 @@ if __name__ == '__main__':
     #initial_adjust_ref=[ray.put(initial_composite[l]) for l in range(len(initial_composite))]
     initial_adjust_ref=[initial_composite[l] for l in range(len(initial_composite))]
     
-    save_monmean(ifile,0,exper=RC['exp'],fi=[obj_ref[lx]],initial_adjust_RAOB=[initial_adjust_ref[lx]])
+    if lx >= len(obj_ref):
+        lx = 0
+    save_monmean(0,exper=RC['exp'],fi=[obj_ref[lx]],initial_adjust_RAOB=[initial_adjust_ref[lx]])
     print('before write',time.time()-tt)
     futures=[]
     for l in range(len(obj_ref)):
-        futures.append(ray_save_monmean.remote(ifile,0,exper=RC['exp'],fi=[obj_ref[l]],initial_adjust_RAOB=[initial_adjust_ref[l]]))
+        futures.append(ray_save_monmean.remote(0,exper=RC['exp'],fi=[obj_ref[l]],initial_adjust_RAOB=[initial_adjust_ref[l]]))
     x = ray.get(futures)
     print('after write',time.time()-tt)
     
-    func=partial(save_monmean,files[0])
+    if RC['add_solelev']:  # zum Testen
+        print('before addsolelev',time.time()-tt)
+        add_solelev(ray.get(obj_ref[lx]), RC)
+        futures=[]
+        for l in range(len(obj_ref)):
+            futures.append(ray_add_solelev.remote(obj_ref[l], RC))
+        x = ray.get(futures)
+        add_adj(ray.get(obj_ref[0]), mode='r')
+        print('after addsolelev',time.time()-tt)
+
+    #func=partial(save_monmean,files[0])
     #res=list(map(func, [obj_ref[l]], [results_ref[l]]))
     #res=list(map(func, obj_ref, results_ref))
 
@@ -2440,7 +2449,7 @@ if __name__ == '__main__':
 
     print('after initial_adjust needscomposite',time.time()-tt)
 
-    save_monmean(ifile,0,exper=RC['exp'],fi=[obj_ref[lx]],rich_ref1=[rich_ref1[lx]],
+    save_monmean(0,exper=RC['exp'],fi=[obj_ref[lx]],rich_ref1=[rich_ref1[lx]],
                  initial_adjust_RAOB=[initial_adjust_ref[lx]],
                  initial_adjust_rich=[rich_initial_adjust_ref[lx]])
 
@@ -2448,12 +2457,27 @@ if __name__ == '__main__':
     futures=[]
     for l in range(len(obj_ref)):
         #futures.append(ray_save_monmean.remote(files[0],l,single_obj_ref,single_results_ref,rich_ref0=single_rich_ref0,rich_ref1=single_rich_ref1))
-        futures.append(ray_save_monmean.remote(ifile,0,exper=RC['exp'],fi=[obj_ref[l]], rich_ref1=[rich_ref1[l]],
+        futures.append(ray_save_monmean.remote(0,exper=RC['exp'],fi=[obj_ref[l]], rich_ref1=[rich_ref1[l]],
                                                initial_adjust_RAOB=[initial_adjust_ref[l]],
                                                initial_adjust_rich=[rich_initial_adjust_ref[l]]))
     
     res = ray.get(futures)
+    if RC['add_solelev']:
+        print('rich before addsolelev',time.time()-tt)
+        add_solelev(ray.get(obj_ref[lx]), RC)
+        futures=[]
+        for l in range(len(obj_ref)):
+            futures.append(ray_add_solelev.remote(obj_ref[l], RC))
+        x = ray.get(futures)
+        print('after addsolelev',time.time()-tt)
+    
+    if RC['write_to_backend']:
         
+        futures = []
+        for o in obj_ref:
+            futures.append(ray_add_adj.remote(o, mode='r'))
+        ray.get(futures)
+        print('wrote to backend files',time.time()-tt)
 
         
     print('Mem [MiB]',process.memory_info().rss//1024//1024)
