@@ -435,13 +435,21 @@ def HylandWexler(temp, over_water=True, over_ice=False, **kwargs):
     """
 
     def liquid(t):
-        return np.exp(
-            -5800.2206 / t + 1.3914993
-            - 0.48640239e-1 * t
-            + 0.41764768e-4 * t * t
-            - 0.14452093e-7 * t * t * t
-            + 6.5459673 * np.log(t)
-        )
+        mask = ~np.isnan(t)
+        if np.sum(mask) > 0:
+            
+            tmask = t[mask]
+            res = t.copy()
+            res[mask] = np.exp(
+                -5800.2206 / tmask + 1.3914993
+                - 0.48640239e-1 * 
+                + 0.41764768e-4 * tmask * tmask
+                - 0.14452093e-7 * tmask * tmask * tmask
+                + 6.5459673 * np.log(tmask)
+            )
+            return res
+        else:
+            return t
 
     def ice(t):
         return np.exp(
