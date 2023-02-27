@@ -16,7 +16,7 @@ import scipy.stats
 import f90nml
 import xarray as xr
 sys.path.append('../../cds-backend/code/')
-import cds_eua3 as eua
+import cds_eua4 as eua
 import urllib3
 import json
 import h5py
@@ -24,7 +24,7 @@ import copy
 from functools import partial
 from multiprocessing import Pool
 
-@njit
+@njit(boundscheck=True)
 def add_winddirbias(xyzu,xyzv,xyzd,xyzt,press,atime0,adj,adjpress):
     adjd=np.full_like(xyzv,np.nan)
     adju=np.full_like(xyzv,np.nan)
@@ -64,7 +64,7 @@ def nanargmax(tsamax):
                 argabsmax=it
     return argabsmax
 
-@njit
+@njit(boundscheck=True)
 def select_breaks(tsa,tsaint,thresh):
     breakidx=np.full(20,-1)
     
@@ -107,9 +107,18 @@ def select_breaks(tsa,tsaint,thresh):
 def calc_dirshifts(ddeps,cdict,breakidx,tsaint,delta):
     
     dirshifts=np.zeros(breakidx.shape[0])
-    ff=np.sqrt(cdict['u']['xrdq']['uwind'].values**2+cdict['v']['xrdq']['vwind'].values**2)
+    ff = np.empty_like(cdict['u']['xrdq']['uwind'].values)
+    ff[:] = np.nan
+    idx = np.where(~np.isnan(cdict['u']['xrdq']['uwind'].values))
+    if len(idx) > 0:      
+        ff[idx]=np.sqrt(cdict['u']['xrdq']['uwind'].values[idx]**2+cdict['v']['xrdq']['vwind'].values[idx]**2)
+        #idy =np.where(ff[idx]<0.5)[0]
+        #if len(idy) > 0:        
+            #ff[idx[idy]] = np.nan
+           
     #strongddeps=copy.deepcopy(ddeps)
-    ddeps[ff<0.5]=np.nan
+    #ddeps[ff<0.5]=np.nan
+    ddeps[np.isnan(ff)]=np.nan
     ds=cdict['d']['xrdq']['winddirection'].values[:]
     #ds[ds>360]=np.nan
     #ds[ds<0]=np.nan
@@ -129,9 +138,14 @@ def calc_dirshifts(ddeps,cdict,breakidx,tsaint,delta):
     for bi in range(breakidx.shape[0]-1,0,-1):
         istart=np.max((breakidx[bi-1],breakidx[bi]-tsaint))
         istop=np.min((breakidx[bi]+tsaint,ddeps.shape[2]))
-        dirshifts[bi]=np.nanmean(ddeps[:,:,istart:breakidx[bi]-delta])-np.nanmean(ddeps[:,:,breakidx[bi]+delta:istop]) #:istop
-        unc=np.sqrt(0.5*(np.nanstd(ddeps[:,:,istart:breakidx[bi]-delta])**2+np.nanstd(ddeps[:,:,breakidx[bi]+delta:istop])**2))
         count=np.sum(~np.isnan(ddeps[:,:,istart:istop]))
+        if(count > 50):
+    
+            dirshifts[bi]=np.nanmean(ddeps[:,:,istart:breakidx[bi]-delta])-np.nanmean(ddeps[:,:,breakidx[bi]+delta:istop]) #:istop
+            unc=np.sqrt(0.5*(np.nanstd(ddeps[:,:,istart:breakidx[bi]-delta])**2+np.nanstd(ddeps[:,:,breakidx[bi]+delta:istop])**2))
+        else:
+            dirshifts[bi] = np.nan
+            unc = np.nan
         if dirshifts[bi]!=dirshifts[bi]:
             dirshifts[bi]=0.
         adir=abs(dirshifts[bi])
@@ -247,7 +261,8 @@ def homogenize_station(opath,via_backend,fnf):
            'u':{'ua':'uwind','obs_minus_bg':'era5_fgdep','bias_estimate':'bias_estimate','lat':'lat','lon':'lon','hours':'hours'},
            'v':{'va':'vwind','obs_minus_bg':'era5_fgdep','bias_estimate':'bias_estimate','lat':'lat','lon':'lon','hours':'hours'}}
 
-    varnos={'d':106,'u':104,'v':105}
+    varnos={'d':106,'u':104,'v':105} # v7
+    varnos={'d':106,'u':139,'v':140} # v8 onward
     plist=[1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000]
     fnu=[]
     fnd=[]
@@ -326,7 +341,8 @@ def homogenize_station(opath,via_backend,fnf):
         try:
             
 #            ifile=glob.glob('downloaded/wind_downloaded_*/'+fnf+'_CEUAS_merged_v1.nc')[0]
-            ifile=glob.glob('../converted_v7/'+fnf+'_CEUAS_merged_v1.nc')[0]
+            #ifile=glob.glob('../converted_v11/long/'+fnf+'_CEUAS_merged_v1.nc')[0]
+            ifile = fnf
         
             data=eua.CDMDataset(ifile)
         except:
@@ -375,8 +391,8 @@ def homogenize_station(opath,via_backend,fnf):
             ndata[para]['xrdq']['datum'].attrs['units']='days since 1900-01-01 00:00:00'
             ndata[para]['xrdq']['press'].attrs['units']='hPa'
             
-            ndata[para]['xrdq']['lat']=xr.DataArray(np.asarray([data['observations_table']['latitude'][istop]]),name='lat',dims=('station'))
-            ndata[para]['xrdq']['lon']=xr.DataArray(np.asarray([data['observations_table']['latitude'][istop]]),name='lon',dims=('station'))
+            ndata[para]['xrdq']['lat']=xr.DataArray(np.asarray([data['observations_table']['latitude'][-1]]),name='lat',dims=('station'))
+            ndata[para]['xrdq']['lon']=xr.DataArray(np.asarray([data['observations_table']['latitude'][-1]]),name='lon',dims=('station'))
             ndata[para]['xrdq']['hours']=xr.DataArray(out[6],name='hours',dims=('hour','datum'))
             ndata[para]['xrdq']=ndata[para]['xrdq'].rename_dims({'press':'pressure','datum':'time'})
             ndata[para]['xrdq'].attrs['unique_source_identifier']=fnf
@@ -410,9 +426,21 @@ def homogenize_station(opath,via_backend,fnf):
                     fv=ov-vv
                     fd=270-np.arctan2(fv,fu)*180/np.pi
                     v=o2-fd
-                    v[v>180]-=360
-                    v[v<-180]+=360
-                    v[np.abs(v)>90.]=np.nan # larger deviations than 90 degrees are highly unlikely to come from wrong north alignment, are therefore discarded
+                    idx = np.where(~np.isnan(v))[0]
+                    if len(idx) > 0:
+                        idy = np.where(v[idx]>180)[0]
+                        if len(idy) > 0:
+                            v[idx[idy]] -= 360
+                        idy = np.where(v[idx]<-180)[0]
+                        if len(idy) > 0:
+                            v[idx[idy]] += 360
+                        idy = np.where(np.abs(v[idx]) > 90)[0]
+                        if len(idy) > 0:
+                            v[idx[idy]] =np.nan # larger deviations than 90 degrees are highly unlikely to come from wrong north alignment, are therefore discarded
+                        
+                    #v[v>180]-=360
+                    #v[v<-180]+=360
+                    #v[np.abs(v)>90.]=np.nan # larger deviations than 90 degrees are highly unlikely to come from wrong north alignment, are therefore discarded
                     
                     #qs=np.nanquantile(v,[0.005,0.995])
                     #idx=np.where(np.logical_or(v<qs[0],v>qs[1]))
@@ -420,7 +448,13 @@ def homogenize_station(opath,via_backend,fnf):
                     #v[idx]=np.nan
                     #o[idx]=np.nan
                     #ds[ih,ip,:]=o2[:]
-                    v[ff<2.0]=np.nan
+                    
+                    idx = np.where(~np.isnan(ff))[0]
+                    if len(idx) > 0:
+                        idy = np.where(ff[idx]<2.0)[0]
+                        if len(idy) > 0:        
+                            v[idx[idy]]=np.nan # wind directions for small wind speeds too uncertain
+                          
                     ddeps[ih,ip,:]=v[:]
                     tsa[ih,ip,:]=np.nan
                     snhtmov2(v, tsa[ih,ip,:], snhtparas, index, count, tmean, tsquare)    
@@ -457,7 +491,7 @@ def homogenize_station(opath,via_backend,fnf):
                 os.mkdir(opath+prefix+fn)
             except:
                 pass
-    except Exception as e:
+    except MemoryError as e:
         print(e)
         failedfiles.append(fnf+' early')
         
@@ -523,7 +557,7 @@ def homogenize_station(opath,via_backend,fnf):
             
             print('wrote '+fo)
         except Exception as e:
-            print('writing back to merged file failed')
+            print('writing back to merged file failed', e)
             failedfiles.append(fnf+'-merged')
     
     return fnf
@@ -539,11 +573,11 @@ if __name__ == "__main__":
     version='1.0'
     os.chdir(os.path.expandvars('$RSCRATCH/tmp'))
     via_backend=False
-    fns=glob.glob(os.path.expandvars('$RSCRATCH/converted_v7/*v1.nc'))
+    fns=glob.glob(os.path.expandvars('$RSCRATCH/converted_v11/long/*v1.nc'))
     fns.sort(key=os.path.getmtime)
-    fstart=fns.index('/raid60/scratch/leo/scratch//converted_v7/0-20000-0-41517_CEUAS_merged_v1.nc')
-    for i in range(len(fns[:fstart])):
-        fns[i]=fns[i].split('/')[-1].split('_CEUAS_merged_v1.nc')[0]
+    #fstart=fns.index('/raid60/scratch/leo/scratch//converted_v7/0-20000-0-41517_CEUAS_merged_v1.nc')
+    #for i in range(len(fns[:fstart])):
+        #fns[i]=fns[i].split('/')[-1].split('_CEUAS_merged_v1.nc')[0]
     #fns=['0-20000-0-35229']
     homogenize_winddir(via_backend,fns=fns)
     
