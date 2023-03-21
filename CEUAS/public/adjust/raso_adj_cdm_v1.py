@@ -36,6 +36,8 @@ import pandas as pd
 import xarray as xr
 from xarray.core import dataarray
 from numba import njit
+import ray
+import copy
 
 try:
     sys.path.append('../cds-backend/code/')
@@ -373,13 +375,17 @@ def test(x, window, missing):
     tsquare = np.zeros(x.shape[0])
     count = np.zeros(x.shape[0], dtype=np.int32)
 
-    numba_snhtmov(np.squeeze(np.asarray(x)),
-                  tsa,
-                  snhtparas,
-                  count,
-                  tmean,
-                  tsquare)
-
+    if len(x) > 1:
+        
+        numba_snhtmov(np.squeeze(np.asarray(x)),
+                      tsa,
+                      snhtparas,
+                      count,
+                      tmean,
+                      tsquare)
+    else:
+        pass
+    
     return tsa
 
 
@@ -884,7 +890,12 @@ def adjustment_procedure(data: xr.Dataset, dim: str = 'time', plev: str = 'plev'
     #
     # 3. SNHT
     #
-    data['test'] = (data[dep_name].dims , np.apply_along_axis(test, axis, data[dep_name].values, window, missing))
+    
+    if  len(data[dep_name].values) > 0:
+        
+        data['test'] = (data[dep_name].dims , np.apply_along_axis(test, axis, data[dep_name].values, window, missing))
+    else:
+        data['test'] = data[dep_name] + np.nan
     logger.info("Updated axis")
     #
     # Attributes
@@ -1088,7 +1099,7 @@ def run_backend_file(args, **kwargs):
         raise IOError("not a CDM backend file")
     
     if not args.feedback:
-        args.feedback = 'an_depar@body'
+        args.feedback = 'fg_depar@body'
         args.feedback_group = 'era5fb'
     
     if args.feedback_group not in iofile.groups:
@@ -1144,39 +1155,56 @@ def run_backend_file(args, **kwargs):
         variable = 'relative_humidity'
         # Code 34, dew point departure
         # variable = 'dew_point_departure'
-        data = iofile.read_data_to_cube(variable,
-                                        dates=args.dates,
-                                        plevs=args.plevs,
-                                        feedback=args.feedback,
-                                        feedback_group=args.feedback_group,
-                                        **kwargs)
-        # should contain variables
-        # e.g. temperature, temperature_an_depar
-        variable, depar = list(data.keys())
-        data = xr.Dataset(data)
-        # run adjustment procedure
-        data = adjustment_procedure(data,
-                                    obs_name=variable,
-                                    dep_name=depar,
-                                    metadata=False,
-                                    times=[0, 12],
-                                    dim='time',
-                                    plev='plev',
-                                    return_dataset=False,
-                                    #quantile_adjustments=True,
-                                    )
-        # TODO Convert adjustments to other variables?
-        #
-        #
-        # Write back adjusted (interpolation, extrapolation)
-        #
-        iofile.write_observed_data('humidity_bias_estimate',
-                                   varnum=eua.cdm_codes[variable],
-                                   cube=data['adjustments'],
-                                   group=args.homogenisation,
-                                   interpolate=args.interpolate_missing,
-                                   interpolate_datetime=args.interpolate_missing,
-                                   extrapolate_plevs=args.interpolate_missing)
+        try:
+            data = iofile.read_data_to_cube(variable,
+                                            dates=args.dates,
+                                            plevs=args.plevs,
+                                            feedback=args.feedback,
+                                            feedback_group=args.feedback_group,
+                                            **kwargs)
+            # should contain variables
+            # e.g. temperature, temperature_an_depar
+            variable, depar = list(data.keys())
+        
+            
+            if data['relative_humidity'].shape[0] <20:
+                return
+                
+            data = xr.Dataset(data)
+            # run adjustment procedure
+            data = adjustment_procedure(data,
+                                        obs_name=variable,
+                                        dep_name=depar,
+                                        metadata=False,
+                                        times=[0, 12],
+                                        dim='time',
+                                        plev='plev',
+                                        return_dataset=False,
+                                        #quantile_adjustments=True,
+                                        )
+            # TODO Convert adjustments to other variables?
+            #
+            #
+            # Write back adjusted (interpolation, extrapolation)
+            #
+        except:
+            logger.warning('could not adjust '+ os.path.basename(iofile.filename))
+            return
+        if not os.path.isfile(iofile.filename+'.x'):
+            
+            print('write', iofile.filename, args.interpolate_missing)
+            iofile.write_observed_data('humidity_bias_estimate',
+                                       varnum=eua.cdm_codes[variable],
+                                       cube=data['adjustments'],
+                                       group=args.homogenisation,
+                                       interpolate=args.interpolate_missing,
+                                       interpolate_datetime=args.interpolate_missing,
+                                       extrapolate_plevs=args.interpolate_missing)
+            with open(iofile.filename+'.x', 'w') as f:
+                f.write('')
+        else:
+            print(iofile.filename, 'already processed')
+            pass
         
     if args.winds:
         # Code 106 (wind_direction), 107 (wind_speed)
@@ -1184,6 +1212,7 @@ def run_backend_file(args, **kwargs):
         variable = 'wind_speed'
         raise NotImplementedError()
 
+ray_run_backend_file = ray.remote(run_backend_file)
 
 # -----------------------------------------------------------------------------
 #
@@ -1319,5 +1348,14 @@ date: {}
         #
         # BACKEND File
         #
-        run_backend_file(args, **kwargs)
+        fns = glob.glob(os.path.expandvars('$RSCRATCH/converted_v11/long/*v1.nc'))
+        ray.init(num_cpus=60)
+        futures = []
+        for fn in fns:
+            fargs = copy.copy(args)
+            fargs.backend = fn
+            #run_backend_file(fargs, **kwargs)
+            futures.append(ray_run_backend_file.remote(fargs, **kwargs))
+        ray.get(futures)
+        print('finished')
 # FIN
