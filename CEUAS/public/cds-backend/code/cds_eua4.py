@@ -33,6 +33,7 @@ import copy
 # import lz4.frame
 
 import h5py  # most likely non standard on CDS
+import hdf5plugin
 import numpy as np
 import pandas as pd
 import xarray as xr

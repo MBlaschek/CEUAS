@@ -59,6 +59,7 @@ import numpy
 import pandas as pd
 import xarray
 import gzip
+import hdf5plugin
 
 import asyncio
 from fastapi import FastAPI
@@ -195,13 +196,6 @@ for i, j in config.items():
 ###############################################################################
 host = socket.gethostname()
 logger.info("HUG started on %s", host)
-# try:
-#     # todo this part is deprecated / LEO delete?
-#     if 'srvx' in host:
-#         sys.path.append(os.path.expanduser('~leo/python/'))
-#         config['data_dir'] = os.environ["RSCRATCH"]  # ?
-# except:
-#     pass
 
 global constraints
 try:
@@ -310,26 +304,22 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False, orphan=False) ->
     return active
 
 def read_tstamps(fn):
-    if '0-20100-0-01802' in fn:
-        print(fn)
-    with h5py.File(fn,'r') as f:
-    #print(f[fk]['recordindices'].keys())
-        fk=fn.split('/')[-1].split('_CEUAS_merged')[0]
-        print(fk)
-        rts=f['recordindices']['recordtimestamp'][:]
+    try:
+        with h5py.File(fn,'r') as f:
+        #print(f[fk]['recordindices'].keys())
+            fk=fn.split('/')[-1].split('_CEUAS_merged')[0]
+            rts=f['recordindices']['recordtimestamp'][:]
+    except:
+        print('ERROR read_tstamps: ', fn)
+        rts=[0]
     return fk,rts
 
 def pkl_initialize(config,slist=[]):
 
-    #set_start_method('forkserver') 
+    slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-*_CEUAS_merged_v1.nc'))
+    slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
+    slist += glob.glob(os.path.expandvars(config['data_dir'] + '/20999-*_CEUAS_merged_v1.nc'))
 
-##    flist=glob.glob(os.path.expandvars(config['data_dir'] + 'converted_v5/0-*-0-*_CEUAS_merged_v1.nc')) 
-    #config['data_dir']='/raid60/scratch/leo/scratch/converted_v5'
-    #config['comp_dir']='/raid60/scratch/leo/scratch/converted_v5'
-    #slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v1.nc'))
-    #slist += glob.glob(os.path.expandvars(config['data_dir'] + '/0-20?00-0-*_CEUAS_merged_v1.nc'))
-    #slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
-    #slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
     #flist=glob.glob(os.path.expandvars(rpath+'*.nc'))
     fout=os.path.expandvars(config['config_dir']+'/h5link.pkl')
     
@@ -351,6 +341,7 @@ def pkl_initialize(config,slist=[]):
         l=0
         #with Pool(10) as p:
         tup=map(read_tstamps,list(slist))
+        print('done read_tstamps')
         rtsdict=dict(tup)
         
 #         rtsdict = {}
@@ -372,6 +363,7 @@ def pkl_initialize(config,slist=[]):
             #with open('.pkl'.join(fout.split('.nc')), 'wb') as f:
                 #pickle.dump(rtsdict, f, pickle.HIGHEST_PROTOCOL)
             
+        print('start concating')
         rtsarr=numpy.concatenate(list(rtsdict.values()))      ## contains the record timestamps
         rtsidx=[0]+[len(rtsdict[v]) for v in rtsdict.keys()]  ## contains the indices where the timestamps of station i starts
         rtsidx=numpy.cumsum(rtsidx)
@@ -418,8 +410,6 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
     active_file = config['config_dir'] + '/active.json'
     namelist_file  = config['config_dir'] + '/namelist.json'
     
-#     config['data_dir']='/raid60/scratch/leo/scratch/converted_v5'
-#     config['comp_dir']='/raid60/scratch/leo/scratch/comp'
     
     namelist = None
     active = None
@@ -448,12 +438,8 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         #
         # find Merged Netcdf files and intercomparison files
         #
-#        slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-2000?-0-?????_CEUAS_merged_v1.nc'))
-#        slist += glob.glob(os.path.expandvars(config['data_dir'] + '/0-20?00-0-*_CEUAS_merged_v1.nc'))
         slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-*_CEUAS_merged_v1.nc'))
-        slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????.nc'))
         slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
-        # slnum = [i[-34:-19] for i in slist]
         slnum = [i.split('/')[-1].split('_')[0].replace('.nc','') for i in slist]
         volapath = 'https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
         f = urllib.request.urlopen(volapath)
@@ -595,22 +581,9 @@ active, wmo_regions, cf = init_server()
 # Active Station Numbers
 slnum = list(active.keys())
 
-
-# slist = [config['data_dir'] + '/0-20000-0-' + s + '_CEUAS_merged_v0.nc' for s in slnum]
-# slist = [s[5] for _,s in active.items()]
-
-# try:
-# set_start_method("spawn")  # or fork ? not sure why, pickling?
-# set_start_method("forkserver")  # fork is not threadsafe, unfortunately
-# with multiprocessing.get_context('spawn').Pool(16) as P:
 with Pool(9) as P:
     x=P.map(np.sin,np.arange(16))
-
-# P=Pool(16) 
-# x=P.map(np.sin,np.arange(16))
 print(x)
-# except RuntimeError:
-#     pass
 
 ###############################################################################
 #
@@ -1227,7 +1200,9 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
         elif isinstance(statid, (str, int)):
             valid_id = None
             if('*' in statid):
+                print('placeholder: ', statid, type(statid))
                 if statid[:3] == '0-2':
+                    print(':3 == 0-2')
                     stats = []
                     pat=statid[:statid.index('*')]
                     for l in slnum: # -> searches all slnum for matching statids
@@ -1235,6 +1210,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                             stats.append(l)
                     valid_id = stats
                 else:
+                    print(':3 != 0-2')
                     stats = []
                     for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
                         m = s + statid
@@ -1942,7 +1918,6 @@ def index(request=None, response=None):
     logger.info("%s GET %s", randdir, str(body))
     tmpdir = config['tmp_dir'] + '/' + randdir
     try:
-        # rfile = process_request(body, tmpdir, config['data_dir'], wmo_regions)
         rfile = process_request(body, tmpdir, wmo_regions, P, debug=config['debug'])
     except Exception as e:
         logger.error("%s GET FAILED, %s", randdir, e)
@@ -2020,8 +1995,13 @@ async def index(body:Request, request=None, response=None):
         body = json.loads(body_str)
 
     for i in body:
-        if len(body[i]) == 1:
-            body[i] = body[i][0]
+        print(i)
+        print(body[i])
+        try:
+            if len(body[i]) == 1:
+                body[i] = body[i][0]
+        except:
+            pass
 
     logger.info('ASYNC INDEX POST')
     randdir = '{:012d}'.format(numpy.random.randint(100000000000))
