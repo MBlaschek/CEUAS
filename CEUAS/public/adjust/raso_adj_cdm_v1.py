@@ -39,6 +39,9 @@ from numba import njit
 import ray
 import copy
 
+sys.path.insert(0,os.getcwd()+'/../resort/rasotools-master/')
+import rasotools
+
 try:
     sys.path.append('../cds-backend/code/')
     import cds_eua4 as eua
@@ -1200,12 +1203,62 @@ def run_backend_file(args, **kwargs):
                                        interpolate=args.interpolate_missing,
                                        interpolate_datetime=args.interpolate_missing,
                                        extrapolate_plevs=args.interpolate_missing)
+            
+            # add also dewpoint homogenisation:
+            # read data:
+            rh = iofile.read_data_to_cube('relative_humidity',
+                                            dates=args.dates,
+                                            plevs=args.plevs,
+                                            feedback='humidity_bias_estimate',
+                                            feedback_group=args.homogenisation,
+                                           )
+
+            dp = iofile.read_data_to_cube('dew_point_temperature',
+                                            dates=args.dates,
+                                            plevs=args.plevs,
+                                            feedback=None,
+                                            feedback_group=None,
+                                           )
+            ta = iofile.read_data_to_cube('air_temperature',
+                                            dates=args.dates,
+                                            plevs=args.plevs,
+                                            feedback=None,
+                                            feedback_group=None,
+                                           )
+            # combine cube
+            comb = xr.combine_by_coords([ta['air_temperature'], dp['dew_point_temperature']])
+            comb = xr.combine_by_coords([comb, rh['relative_humidity']])
+            comb = xr.combine_by_coords([comb, rh['relative_humidity_humidity_bias_estimate'].rename('relative_humidity_humidity_bias_estimate')])
+            
+            # convert adjusted relative humidity to adjusted dewpoint temperature
+            comb['dew_point_temperature_adjusted'] = rasotools.met.convert.to_dpd(temp=comb['air_temperature'], 
+                                                                                  press=comb['plev'],
+                                                                                  rel_humi=comb['relative_humidity']-comb['relative_humidity_humidity_bias_estimate'],
+                                                                                  svp_method='Sonntag',
+                                                                                  dp_instead_of_dpd=True
+                                                                                 )
+            # create bias estimates
+            comb['dew_point_temperature_humidity_bias_estimate'] = comb['dew_point_temperature'] - comb['dew_point_temperature_adjusted']
+            
+            # write to file, into the same variable, at different lines
+            print('write', iofile.filename, args.interpolate_missing)
+            iofile.write_observed_data('humidity_bias_estimate',
+                                       varnum=eua.cdm_codes['dew_point_temperature'],
+                                       cube=comb['dew_point_temperature_humidity_bias_estimate'],
+                                       group=args.homogenisation,
+                                       interpolate=args.interpolate_missing,
+                                       interpolate_datetime=args.interpolate_missing,
+                                       extrapolate_plevs=args.interpolate_missing)
+            
             with open(iofile.filename+'.x', 'w') as f:
                 f.write('')
         else:
             print(iofile.filename, 'already processed')
             pass
         
+        
+        
+
     if args.winds:
         # Code 106 (wind_direction), 107 (wind_speed)
         variable = 'wind_direction'
@@ -1262,6 +1315,7 @@ date: {}
     parser.add_argument("--temperature", help="run adjustment on temperatures", action="store_true")
     parser.add_argument("--humidity", help="run adjustment on humidities", action="store_true")
     parser.add_argument("--winds", help="run adjustment on winds", action="store_true")
+    parser.add_argument("--dewpoint", help="run adjustment on dewpoint", action="store_true")
     parser.add_argument("--feedback", help="feedback variables")
     parser.add_argument("--feedback_group", help="feedback group name (only backend files)", default='era5fb')
     parser.add_argument("--homogenisation", help="homogenisation group name (only backend files)", default='advanced_homogenisation')
@@ -1326,7 +1380,7 @@ date: {}
     #
     # Check input variable
     #
-    if not (args.temperature or args.humidity or args.winds):
+    if not (args.temperature or args.humidity or args.winds or args.dewpoint):
         logger.error('Please specify at least one option: --temperature, --humidty or --winds')
         sys.exit(0)
     #
@@ -1348,14 +1402,15 @@ date: {}
         #
         # BACKEND File
         #
-        fns = glob.glob(os.path.expandvars('$RSCRATCH/converted_v11/long/*v1.nc'))
-        ray.init(num_cpus=60)
-        futures = []
-        for fn in fns:
-            fargs = copy.copy(args)
-            fargs.backend = fn
-            #run_backend_file(fargs, **kwargs)
-            futures.append(ray_run_backend_file.remote(fargs, **kwargs))
-        ray.get(futures)
-        print('finished')
+        run_backend_file(args, **kwargs)
+        # fns = glob.glob(os.path.expandvars('$RSCRATCH/converted_v11/long/*v1.nc'))
+        # ray.init(num_cpus=60)
+        # futures = []
+        # for fn in fns:
+        #     fargs = copy.copy(args)
+        #     fargs.backend = fn
+        #     #run_backend_file(fargs, **kwargs)
+        #     futures.append(ray_run_backend_file.remote(fargs, **kwargs))
+        # ray.get(futures)
+        # print('finished')
 # FIN
