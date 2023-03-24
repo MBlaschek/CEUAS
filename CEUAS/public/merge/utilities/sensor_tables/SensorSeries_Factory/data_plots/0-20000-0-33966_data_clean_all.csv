@@ -1,8 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1999-07-31	RuN 	1	SCH	  RuN Ukraine MARS-2-1 radiosonde no correction, 31313=02803^
-129	2011-07-15	RPA 	1	SCH	  RPA Ukraine PAZA-12M with UL radiotheodolite {~2010} 31313=01503^ (W3=115)
-142	2011-08-13	RuN 	1	SCH	  RuN Ukraine MARS-2-1 radiosonde no correction, 31313=02803^
-143	2011-08-17	RPA 	1	SCH	  RPA Ukraine PAZA-12M with UL radiotheodolite {~2010} 31313=01503^ (W3=115)
-146	2011-09-07	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-147	2011-10-19	RPA 	1	SCH	  RPA Ukraine PAZA-12M with UL radiotheodolite {~2010} 31313=01503^ (W3=115)
-0	2013-01-03	115	2	WMO	PAZA-12M/Radiotheodolite-UL (Ukraine)                             

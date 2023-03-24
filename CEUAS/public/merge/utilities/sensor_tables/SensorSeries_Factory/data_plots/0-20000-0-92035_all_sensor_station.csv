@@ -1,8 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	79	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            		
-66863	V8N 	SCH	  V8N exact type insufficiently documented		
-66980	VCG 	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
-0	W__ 	SCH	  W__ Wind only, method unspecified^		
-66862	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
-10493	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 GPS UNSPECIFIED 	2005-03-01	3.0
-10495	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , VAISALA RS80 GPS UNSPECIFIED , to , VAISALA RS92 GPS UNSPECIFIED 	2007-02-01	3.0

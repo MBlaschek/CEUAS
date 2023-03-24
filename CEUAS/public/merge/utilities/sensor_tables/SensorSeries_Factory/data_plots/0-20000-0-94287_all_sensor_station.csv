@@ -1,7 +1,0 @@
-	sensor_id	source	comment	date_time	value
-49466	??? 	SCH	  ??? Unknown instrument category because data is not available for checking^		
-0	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
-49681	W_R 	SCH	  W_R exact type insufficiently documented		
-498	IGRA2	IGRA2	USING SONDE MODEL , I1 , AUSTRALIA PHILIPS RS4 UNSPECIFIED 	1982-01-01	3.0
-500	IGRA2	IGRA2	USING SONDE MODEL , I1 , AUSTRALIA PHILIPS UNSPECIFIED 	1986-01-01	3.0
-501	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0

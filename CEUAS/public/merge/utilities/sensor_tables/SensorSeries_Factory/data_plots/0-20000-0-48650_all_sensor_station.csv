@@ -1,5 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	VCG 	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
-8226	VGG 	SCH	  VGG Vaisala RS80G or RS80-GH DigiCORA III auto corr, GPS wind 31313=46708^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
-2870	VHG 	SCH	  VHG Vaisala RS80-15G or RS80-15GA codeless GPS radiosonde, pre-199905, Intermediate Frequency (IF) drift problem {1995}^ <F=T403FL,P=Ac,T=CB,U=A,N=G>		
-8231	VNg 	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		

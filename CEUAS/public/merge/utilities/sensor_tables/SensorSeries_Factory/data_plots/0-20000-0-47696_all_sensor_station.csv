@@ -1,9 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	U1s 	SCH	  U1s USA AN/AMQ-1D 72 MHz single duct radiosonde {early 1950s}^ (I=E8)		
-2102	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
-7767	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS 53 	1960-01-01	3.0
-7768	IGRA2	IGRA2	USING SONDE MODEL , I2 , VAISALA RS 56 	1960-01-01	3.0
-7769	IGRA2	IGRA2	USING SONDE MODEL , I3 , VAISALA RS 2 56 	1960-01-01	3.0
-7770	IGRA2	IGRA2	USING SONDE MODEL , I1 , MEISEI RSII-80 	1982-01-01	3.0
-7770	IGRA2	IGRA2	USING SONDE MODEL , I1 , MEISEI RSII-80 	1982-01-01	3.0
-7774	IGRA2	IGRA2	USING SONDE MODEL , I1 , MEISEI-JAPAN (G) 	1989-01-01	3.0

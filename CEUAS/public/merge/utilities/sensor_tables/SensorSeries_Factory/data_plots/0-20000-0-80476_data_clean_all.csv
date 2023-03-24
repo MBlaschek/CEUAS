@@ -1,7 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1951-12-01 11:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
-6972	1985-06-14 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-6973	1985-11-20 12:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
-7265	1987-04-01 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-17923	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ AN/AMT 2C 
-17924	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 

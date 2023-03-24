@@ -1,6 +1,0 @@
-	sensor_id	source	comment	date_time	value
-14054	??? 	SCH	  ??? Unknown instrument category because data is not available for checking^		
-0	NUx 	SCH	  NUx US Navy Friez Aerograph Aero-1928-USN based on Richard kite type {1928}^		
-8352	U?? 	SCH	  U?? exact type insufficiently documented		
-40412	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
-16377	IGRA2	IGRA2	USING SONDE MODEL , TRANSPONDER TYPE 	1965-04-01	3.0

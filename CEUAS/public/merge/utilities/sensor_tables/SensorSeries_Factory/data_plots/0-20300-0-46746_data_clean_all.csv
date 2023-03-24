@@ -1,5 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1974-12-16 12:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
-5085	1987-06-30 06:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-5533	1988-09-29 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
-7484	1994-08-31 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

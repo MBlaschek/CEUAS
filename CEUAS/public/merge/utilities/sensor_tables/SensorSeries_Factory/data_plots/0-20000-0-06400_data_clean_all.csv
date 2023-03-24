@@ -1,4 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1949-01-24 09:00:00	VC_ 	1	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
-2254	2001-07-06 08:00:00	M__ 	1	SCH	  M__ Multiple instruments, use 31313 info^  If 31313 is not present, apply no corrections.  (This instrument type should be assigned only when all or almost all observations
-2328	2002-09-11 04:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

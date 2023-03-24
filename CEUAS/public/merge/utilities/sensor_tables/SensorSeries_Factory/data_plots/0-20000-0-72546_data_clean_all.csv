@@ -1,6 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1939-04-01 10:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-24473	1962-04-23 00:00:00	W02 	1	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)
-24527	1962-06-07 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-24900	1963-04-14 23:00:00	W02 	1	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)
-24980	1963-06-15 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

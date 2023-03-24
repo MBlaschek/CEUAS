@@ -1,5 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	W__ 	SCH	  W__ Wind only, method unspecified^		
-14533	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
-4417	IGRA2	IGRA2	USING SONDE MODEL , I1 , USWB BENDIX UNSPECIFIED 	1960-01-01	3.0
-4420	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1989-01-01	3.0

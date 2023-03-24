@@ -1,8 +1,0 @@
-,scheme,description
-0,0,WMO Identifier
-1,1,Volunteer Observing Ships network code
-2,2,WBAN Identifier
-3,3,ICAO call sign
-4,4,CHUAN Identifier
-5,5,WIGOS Identifier
-6,6,Specially constructed Identifier

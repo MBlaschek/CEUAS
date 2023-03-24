@@ -1,9 +1,0 @@
-	sensor_id	source	comment	date_time	value
-3399	117	WMO	Graw DFM-09 (Germany)                            		
-3480	154	WMO	Graw DFM-17 (Germany)                            		
-951	177	WMO	Modem GPSonde M10 (France)                           		
-3460	34	WMO	Vinohrady (Czechia)                 		
-3513	4	WMO	 No radiosonde – passive temperature-humidity profiler            		
-0	57	WMO	Modem M2K2-DC (France)                		
-3430	6	WMO	 No radiosonde – radio-acoustic sounder             		
-0	W__ 	SCH	  W__ Wind only, method unspecified^		

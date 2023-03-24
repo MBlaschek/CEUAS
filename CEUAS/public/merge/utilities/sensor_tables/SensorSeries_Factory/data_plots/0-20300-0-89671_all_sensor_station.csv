@@ -1,3 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	U4a 	SCH	  U4a USA AN/AMT-4A LiCl hygristor radiosonde {~ 1951}^ (I=E6) <V1680PB,P=A,T=TR(ML-419/AM),U=L(ML-418),W=Da(AN/GMD-1)>		
-6373	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		

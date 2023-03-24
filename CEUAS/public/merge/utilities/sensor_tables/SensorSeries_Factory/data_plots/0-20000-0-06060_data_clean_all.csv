@@ -1,5 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1985-08-07 06:00:00	ZP9 	1	SCH	  ZP9 exact type insufficiently documented
-0	2013-01-02 04:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
-686	2015-02-03 12:00:00	113	2	WMO	Vaisala RS92/MARWIN MW32 (Finland)                           
-687	2015-02-04 04:00:00	117	2	WMO	Graw DFM-09 (Germany)                            

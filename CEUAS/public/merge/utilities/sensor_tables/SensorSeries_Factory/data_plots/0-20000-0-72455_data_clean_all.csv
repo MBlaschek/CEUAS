@@ -1,8 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1923-01-02 06:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
-4860	1958-04-05 00:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
-5154	1958-10-11 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-5694	1976-06-18 12:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
-16816	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
-16816	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ MK I MICROSONDE OMEGA UNSPECIFIED 
-16819	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 

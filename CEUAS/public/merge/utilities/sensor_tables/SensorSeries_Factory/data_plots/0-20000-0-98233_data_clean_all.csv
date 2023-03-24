@@ -1,8 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1979-06-27 00:00:00	NA 	1	SCH	NA
-1	1980-10-12 12:00:00	-922	1	SCH	NA
-0	2017-03-02 00:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
-138	2017-06-10 01:00:00	51	2	WMO	VIZ-B2 (United States)                
-139	2017-06-10 12:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          
-2092	2020-06-19 03:00:00	113	2	WMO	Vaisala RS92/MARWIN MW32 (Finland)                           
-2093	2020-06-19 12:00:00	111	2	WMO	Sippican LMS6 w/Chip Thermistor, external boom mounted capacitance relative   humidity sensor, and derived pressure from GPS   height          

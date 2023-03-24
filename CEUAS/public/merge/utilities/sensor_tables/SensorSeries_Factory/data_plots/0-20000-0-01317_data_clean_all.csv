@@ -1,3 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1923-04-03 11:00:00	V11 	1	SCH	  V11 Vaisala RS11 radiosonde {1939}^ <F=T25FR,P=Ac,T=BSc,U=Hc>
-203	1942-02-28 04:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

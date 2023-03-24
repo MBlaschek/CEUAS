@@ -1,8 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1973-06-20 00:00:00	NA 	1	SCH	NA
-9	1973-09-17 00:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
-76	1979-05-01 00:00:00	130	1	SCH	Meisei RS-06G (Japan)                            
-189	1981-08-23 17:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
-0	2015-10-27 11:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        
-445	2017-06-09 00:00:00	67	2	WMO	Vaisala RS80/Digicora III (Finland)               
-446	2017-06-10 00:00:00	121	2	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        

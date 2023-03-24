@@ -1,9 +1,0 @@
-	sensor_id	source	comment	date_time	value
-588	117	WMO	Graw DFM-09 (Germany)                            		
-185	183	WMO	Vaisala RS92-D/Intermet IMS 1500 w/silicon capacitive   pressure sensor, capacitive wire   temperature sensor, twin thin-film heated   polymer capacitive relative humidity sensor   and RDF wind		
-184	51	WMO	VIZ-B2 (United States)                		
-0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
-0	ZF1 	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
-4232	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 	1982-01-01	3.0
-4234	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ 1397 NORWAY 72 MHZ 	1986-01-01	3.0
-4235	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1992-12-01	3.0

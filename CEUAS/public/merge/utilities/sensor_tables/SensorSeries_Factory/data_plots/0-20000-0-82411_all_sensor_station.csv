@@ -1,4 +1,0 @@
-	sensor_id	source	comment	date_time	value
-1	VCG 	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
-12	VNG 	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
-0	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		

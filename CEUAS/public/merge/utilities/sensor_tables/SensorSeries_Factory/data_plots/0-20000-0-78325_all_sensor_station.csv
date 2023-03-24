@@ -1,5 +1,0 @@
-	sensor_id	source	comment	date_time	value
-15822	RK2 	SCH	  RK2 USSR RKZ-2 radiosonde {1967}^ (W2=20, T=304) <F=V1780PB,P=B,T=TR,U=G>		
-15849	RR2 	SCH	  RR2 USSR MARS-2 unspecified model {1983}^ (T=223) temperature, humidity, and winds <F=T1780PL,P=0,T=TR,U=G,W=Ta>		
-728	UB4 	SCH	  UB4 USWB Bendix-Friez Type 400,000 radiosonde {1944}^ <F=V403AB,P=2A,T=T,U=L,W=O>		
-0	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		

@@ -1,7 +1,0 @@
-	sensor_id	source	comment	date_time	value
-11151	UA5 	SCH	  UA5 USA AIR IS-5A-4035G Intellisonde GPS capacitive hygrometer {1995} 31313=04608^ <F=T403DL,P=Ac,T=TB,U=A,N=Gc>		
-10156	UAX 	SCH	  UAX USA AIR IS-4A-1680 X Intellisonde {~ 1990} 31313=04402^ (W3=44)		
-11508	VHg 	SCH	  VHg Vaisala RS80-15GH H-Humicap GPS radiosonde^ <F=T403FL,P=Ac,T=CB,U=A,N=G>		
-0	W02 	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)		
-10154	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
-7503	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		

@@ -1,9 +1,0 @@
-	sensor_id	source	comment	date_time	value
-30918	AA63	SCH	  AA63 exact type insufficiently documented		
-67240	VDR 	SCH	  VDR Vaisala RS80 PC Cora auto corr, RDF wind 31313=46202^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>		
-0	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
-15974	W_R 	SCH	  W_R exact type insufficiently documented		
-68	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
-1112	IGRA2	IGRA2	USING SONDE MODEL , I1 , AUSTRALIA PHILIPS RS4 UNSPECIFIED 	1982-01-01	3.0
-1114	IGRA2	IGRA2	USING SONDE MODEL , I1 , AUSTRALIA PHILIPS UNSPECIFIED 	1986-01-01	3.0
-1115	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0

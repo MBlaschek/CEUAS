@@ -1,6 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1926-10-27 20:00:00	N?? 	1	SCH	  N?? exact type insufficiently documented
-6099	1933-07-01 17:45:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
-12862	1939-07-05 21:00:00	U?? 	1	SCH	  U?? exact type insufficiently documented
-29733	1954-02-17 04:00:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
-31870	1955-09-03 04:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

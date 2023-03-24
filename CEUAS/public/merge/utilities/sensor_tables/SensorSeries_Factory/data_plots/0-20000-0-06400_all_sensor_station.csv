@@ -1,4 +1,0 @@
-	sensor_id	source	comment	date_time	value
-2254	M__ 	SCH	  M__ Multiple instruments, use 31313 info^  If 31313 is not present, apply no corrections.  (This instrument type should be assigned only when all or almost all observations		
-0	VC_ 	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
-2328	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		

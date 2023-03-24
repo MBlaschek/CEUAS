@@ -1,3 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	DL1 	SCH	  DL1 Germany Lang or RfW radiosonde {1938}^ (I=L, T=215) <F=V27.75HE,P=A,T=B,U=H>		
-154	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		

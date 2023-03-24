@@ -1,4 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1961-05-01	W__ 	1	SCH	  W__ Wind only, method unspecified^
-5382	1997-11-11	ZMr 	1	SCH	  ZMr VIZ/Sippican MK II Microsonde auto solar corr, RDF wind 31313=54902^
-5643	1998-05-19	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

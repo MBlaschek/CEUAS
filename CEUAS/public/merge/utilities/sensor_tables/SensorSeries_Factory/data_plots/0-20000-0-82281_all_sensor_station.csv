@@ -1,8 +1,0 @@
-	sensor_id	source	comment	date_time	value
-4994	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
-4995	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
-0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
-0	VHG 	SCH	  VHG Vaisala RS80-15G or RS80-15GA codeless GPS radiosonde, pre-199905, Intermediate Frequency (IF) drift problem {1995}^ <F=T403FL,P=Ac,T=CB,U=A,N=G>		
-1998	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 	1982-01-01	3.0
-2000	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA (Generic) 	1986-01-01	3.0
-2002	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 	1989-01-01	3.0

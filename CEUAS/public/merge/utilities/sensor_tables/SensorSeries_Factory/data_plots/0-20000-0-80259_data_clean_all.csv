@@ -1,9 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1984-11-02 00:00:00	NA 	1	SCH	NA
-1	1985-06-05 12:00:00	99	1	SCH	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        
-0	2016-06-01 12:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
-229	2017-02-03 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
-950	2019-05-30 12:00:00	51	2	WMO	VIZ-B2 (United States)                
-951	2019-05-31 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  
-964	2019-06-13 12:00:00	71	2	WMO	Vaisala RS90/Loran/Digicora I, II or Marwin (Finland)            
-965	2019-06-14 12:00:00	141	2	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  

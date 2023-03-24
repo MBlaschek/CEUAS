@@ -1,4 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1909-09-27 22:33:00	NF4 	1	SCH	  NF4 France Teisserenc de Bort small PT meteorograph {1898}^ <F=C,P=D,T=BS>
-4	1909-10-06 21:05:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-6	1932-04-04 23:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^

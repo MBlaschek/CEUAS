@@ -1,5 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1918-09-01 13:43:00	??? 	1	SCH	  ??? Unknown instrument category because data is not available for checking^
-29235	1971-12-29 00:00:00	ZF1 	1	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>
-36218	1980-09-02 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-17636	1965-07-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , VIZ TRANSPONDER UNSPECIFIED 

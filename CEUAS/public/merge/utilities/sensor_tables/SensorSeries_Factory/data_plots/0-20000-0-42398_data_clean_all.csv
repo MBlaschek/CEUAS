@@ -1,5 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1954-01-01 02:00:00	WI4 	1	SCH	  WI4 India wind only 401-MHz transmitter {1970}^ <F=V401F->
-13179	1978-03-03 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-237	2015-10-13 23:42:00	21	2	WMO	VIZ/Jin Yang MARK I MICROSONDE (Republic of Korea)           
-6394	1972-04-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , WIND: INDIA 401 MHZ TRANSMITTER 

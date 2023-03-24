@@ -1,5 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	2008-04-16 12:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
-0	2013-01-01 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
-4079	2020-01-24 00:00:00	114	2	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           
-4197	2020-03-23 12:00:00	123	2	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           

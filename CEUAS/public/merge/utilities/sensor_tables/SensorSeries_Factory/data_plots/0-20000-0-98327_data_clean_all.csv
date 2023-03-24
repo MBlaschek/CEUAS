@@ -1,6 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1945-03-19 10:00:00	C3  	1	SCH	  [--|08] VIZ with humidity duct solar heating problem (1965 to about 1972)
-41834	1987-12-11 12:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
-42976	1989-06-06 23:00:00	C4  	1	SCH	  [12,45,64|27,29] Space Data Systems (Space, SDS, MSS, SDC [Space Data Corp.], SDD [Space Data Division], or OSC [from SDD of Orbital
-10767	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USWB BENDIX UNSPECIFIED 
-10768	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , USA SPACE DATA UNSPECIFIED 

@@ -1,9 +1,0 @@
-	sensor_id	source	comment	date_time	value
-2217	0	WMO	NA		
-144	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
-5383	49	WMO	VIZ MARK II (United States)              		
-6613	7	WMO	iMet-1-AB (United States)                		
-2460	99	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        		
-0	RK5 	SCH	  RK5 USSR RKZ-5 radiosonde {1971}^ (W1=14, W2=20, T=311) <F=V1780PE,P=0,T=TR,U=G>		
-42207	UIa 	SCH	  UIa USA InterMet iMet-1-AA no pressure C/A GPS 403-MHz radiosonde {2004} 31313=50708(?)^ <F=T400.15-406DL,P=0,T=TB,U=A(made by Humeriel, France),N=G>		
-46175	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		

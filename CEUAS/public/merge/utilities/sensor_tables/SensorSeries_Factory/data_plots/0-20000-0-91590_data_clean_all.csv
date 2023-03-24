@@ -1,3 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1943-02-05 22:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
-966	1945-07-30 22:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

@@ -1,6 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1927-08-04 13:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
-4795	1934-06-27 11:30:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-17343	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ OMEGA 
-17343	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ OMEGA 
-17347	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ (Generic) 

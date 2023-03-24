@@ -1,1 +1,0 @@
-../../../../public/harvest/data/example_stations/igra2/BRM00082930-data.txt

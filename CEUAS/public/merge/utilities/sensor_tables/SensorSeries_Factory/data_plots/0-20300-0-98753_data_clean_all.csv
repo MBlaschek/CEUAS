@@ -1,4 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1949-03-01 03:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
-14781	1998-04-06 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-14782	2010-06-10 06:00:00	ZSg 	1	SCH	  ZSg Sippican LMS6 model 1848-___ radiosonde 400-406 MHz GPS {2005}^ <F=T400-406DL,P=0,T=TC,U=A,N=G> (W3=111 or 11 reused, should be 31313=51108 starting 20080101

@@ -1,8 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1970-06-04 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
-14662	2004-10-10 09:43:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-0	2013-01-01 12:00:00	57	2	WMO	Modem M2K2-DC (France)                
-36	2013-02-05 12:00:00	177	2	WMO	Modem GPSonde M10 (France)                           
-9165	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
-9165	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS UNSPECIFIED 
-9167	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , RUSSIA/USSR MARS OR MRZ UNSPECIFIED 

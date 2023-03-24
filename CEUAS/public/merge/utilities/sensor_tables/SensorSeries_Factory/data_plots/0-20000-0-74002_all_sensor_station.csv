@@ -1,8 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	U41 	SCH	  U41 USA AN/AMT-4 MD-147C Modulator, T-93 or 304A transmitter 1680 MHz AM external thermistor sonde {<= 1948}^ (I=E5) <F=V1680PB,P=A,T=TR(ML-419/AM),		
-9050	VC6 	SCH	  VC6 Vaisala RS80 DigiCORA I, II, or Marwin no corr, LoRAN wind 31313=06106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>		
-10542	VGL 	SCH	  VGL Vaisala RS80 DigiCORA III auto corr, LoRAN wind 31313=46706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>		
-11145	VNg 	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
-11146	VNl 	SCH	  VNl Vaisala RS92 DigiCORA III auto corr, LoRAN wind 31313=48006^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>		
-11147	VNn 	SCH	  VNn Vaisala RS92 DigiCORA III auto corr, no wind 31313=48000^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=0>		
-7666	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		

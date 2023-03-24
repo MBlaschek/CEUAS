@@ -1,8 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	V18 	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>		
-21658	V9* 	SCH	  V9* Vaisala RS90 Star radiosonde base case 31313=97499^ (W3=74) <F=T403DL,P=Sc,T=Wc,U=2Ah>		
-16738	VE_ 	SCH	  VE_ Vaisala RS80 Star radiosonde base case 31313=96399^ (W3=63) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
-8861	W__ 	SCH	  W__ Wind only, method unspecified^		
-9385	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1982-01-01	3.0
-9387	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1995-01-01	3.0
-9388	IGRA2	IGRA2	CHANGE SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED , to , VAISALA RS90 UNSPECIFIED 	2003-02-01	3.0

@@ -1,9 +1,0 @@
-	sensor_id	source	comment	date_time	value
-2092	MC4 	SCH	  MC4 Mixed Canada Valcom (CVA) and Vaisala RS80 DigiCORA (VC_^ Canada mid-1990s, mixed Valcom (31=CV2) and Vaisala RS80 DigiCORA or Marwin (61=VC_), missing 31313 may be CV2		
-2109	VC_ 	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
-2480	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
-0	ZH1 	SCH	  ZH1 VIZ model 1292-410 NWS 1680 MHz baseline {1973}^ (W1=19 calls this VIZ 1292, T=427) NWS stock #J005 <F=V1680AB,P=A,T=TR(ML-405),U=C,W=Ra(WBRT or GMD-1)>		
-2505	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ USWB ELECTRONIC UNSPECIFIED 	1960-01-01	3.0
-2507	IGRA2	IGRA2	USING SONDE MODEL , I1 , CANADA SANGAMO UNSPECIFIED 	1982-01-01	3.0
-2507	IGRA2	IGRA2	USING SONDE MODEL , I1 , CANADA SANGAMO UNSPECIFIED 	1982-01-01	3.0
-2507	IGRA2	IGRA2	USING SONDE MODEL , I1 , CANADA SANGAMO UNSPECIFIED 	1982-01-01	3.0

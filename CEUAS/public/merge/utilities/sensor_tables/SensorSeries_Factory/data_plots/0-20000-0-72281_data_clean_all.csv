@@ -1,3 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1943-04-01 15:00:00	U4b 	1	SCH	  U4b USA Bendix AN/AMT-4B LiCl hygristor radiosonde {~ 1954}^ (I=E7) <F=V1680PB,P=A,T=TR,U=L(ML-418/AMT-4),W=Da(AN/GMD-1)>
-8337	1968-08-29 20:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

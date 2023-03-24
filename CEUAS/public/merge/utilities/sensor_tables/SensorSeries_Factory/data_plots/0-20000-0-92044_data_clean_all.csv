@@ -1,9 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1944-03-13 10:00:00	V8H 	1	SCH	  V8H Vaisala RS80 H-humicap unspecified model {1992}^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
-30274	2002-05-09 23:00:00	V9g 	1	SCH	  V9g Vaisala RS90 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47108^ <F=T403DL,P=Sc,T=Wc,U=2Ah,N=G>
-30279	2002-05-27 00:00:00	V8H 	1	SCH	  V8H Vaisala RS80 H-humicap unspecified model {1992}^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
-30280	2002-05-28 00:00:00	V9g 	1	SCH	  V9g Vaisala RS90 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47108^ <F=T403DL,P=Sc,T=Wc,U=2Ah,N=G>
-30926	2005-04-22 00:00:00	VNG 	1	SCH	  VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
-31690	2007-06-14 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-31692	2007-09-22 00:00:00	VNg 	1	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
-0	2013-01-01 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               

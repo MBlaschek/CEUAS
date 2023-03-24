@@ -1,3 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1972-08-25 04:42:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
-2657	1996-08-16 06:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

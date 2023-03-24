@@ -1,5 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
-12944	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
-2868	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN WHITELEY KEW MARK II 	1960-01-01	3.0
-2869	IGRA2	IGRA2	USING SONDE MODEL , I1 , AUSTRALIA PHILIPS UNSPECIFIED 	1986-01-01	3.0

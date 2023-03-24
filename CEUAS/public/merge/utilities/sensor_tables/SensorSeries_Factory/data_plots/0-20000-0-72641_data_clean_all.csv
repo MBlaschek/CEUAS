@@ -1,3 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1919-05-27 13:00:00	OUA 	1	SCH	  OUA (U4_ or Uc_) USA Regener luminol chemiluminescent ozonesonde, initial AFCRL version {1960}^ New Mexico State University, Albuquerque
-26181	1964-09-02 22:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

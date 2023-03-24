@@ -1,6 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1938-12-31 08:30:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
-13375	1984-10-22 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-13381	2012-01-02 06:00:00	W_P 	1	SCH	  W_P Wind only, pilot balloon (pibal)^
-2865	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , WHITELY ELECTRIC 
-2866	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , PHILIPS (Generic) 

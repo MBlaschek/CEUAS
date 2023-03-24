@@ -1,8 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	W__ 	SCH	  W__ Wind only, method unspecified^		
-2758	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
-15058	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK IIB UNSPECIFIED 	1960-01-01	3.0
-15061	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1982-01-01	3.0
-15064	IGRA2	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL MH73A 	1986-01-01	3.0
-15065	IGRA2	IGRA2	USING SONDE MODEL , I2 , VAISALA RS18 	1986-01-01	3.0
-15064	IGRA2	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL MH73A 	1986-01-01	3.0

@@ -1,8 +1,0 @@
-	sensor_id	source	comment	date_time	value
-7804	V18 	SCH	  V18 Vaisala RS18 hair hygrometer radiosonde {1972} WMO instr=35^ (W3=35, T=031) <F=T25,400,1680FR,P=2Ac,T=BRc,U=Hrc>		
-9591	V21 	SCH	  V21 Vaisala RS21 early capacitive hygrometer radiosonde {1974} WMO instr=36^ <F=T25,400,1680FU,P=2Ac,T=BRc,U=A>		
-0	W__ 	SCH	  W__ Wind only, method unspecified^		
-9946	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
-1801	IGRA2	IGRA2	USING SONDE MODEL , I1 , BRITAIN KEW MARK IIB UNSPECIFIED 	1960-01-01	3.0
-1803	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1982-01-01	3.0
-1803	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 	1982-01-01	3.0

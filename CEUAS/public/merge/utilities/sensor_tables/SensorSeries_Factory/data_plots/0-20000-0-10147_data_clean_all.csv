@@ -1,5 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1904-04-06 10:30:00	ND_ 	1	SCH	  ND_ Germany unspecified airplane meteorograph {late 1930s}^
-0	2016-05-02 09:42:35	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            
-2	2016-05-10 08:03:25	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
-3	2016-05-11 10:45:10	124	2	WMO	Vaisala RS41/AUTOSONDE (Finland)                            

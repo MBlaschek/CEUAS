@@ -1,3 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1977-05-01 12:00:00	IA3 	1	SCH	  IA3 India 401 MHz Audiomodulated transistorized radiosonde {1975} WMO instr=20^ (W1=18, W3=20, T=181) <F=T401AB,P=A,T=TR,U=L>
-722	1980-02-16 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

@@ -1,6 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1948-01-01 04:00:00	W_R 	1	SCH	  W_R exact type insufficiently documented
-43406	1985-07-26 23:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-764	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , PHILIPS RS4 
-766	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , PHILIPS (Generic) 
-768	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 

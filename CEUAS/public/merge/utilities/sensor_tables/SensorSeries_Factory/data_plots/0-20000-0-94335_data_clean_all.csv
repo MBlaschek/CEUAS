@@ -1,6 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1943-06-09 04:00:00	ABA 	1	SCH	  ABA Australia Bendix-Friez license USWB radiosonde, no radiation corrections {1942}^ <F=V72AB,P=2A,T=E,U=H>
-21514	1963-07-10 00:00:00	AA53	1	SCH	  AA53 exact type insufficiently documented
-35318	1973-01-01 00:00:00	AA63	1	SCH	  AA63 exact type insufficiently documented
-39845	1975-05-24 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-672	1943-06-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , BENDIX FRIEZ 

@@ -1,6 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1943-07-03 03:00:00	GKB 	1	SCH	  GKB Britain Kew Mark IIB radiosonde with lag and radiation corrections {1956}^
-6	2014-11-18 12:00:00	117	2	WMO	Graw DFM-09 (Germany)                            
-9830	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , KEW MK IIB 
-9832	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 
-9834	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 

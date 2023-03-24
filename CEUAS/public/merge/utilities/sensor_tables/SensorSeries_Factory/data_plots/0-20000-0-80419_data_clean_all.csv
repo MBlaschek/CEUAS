@@ -1,4 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1954-09-27 11:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
-17901	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ AN/AMT 2C 
-17902	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 

@@ -1,5 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	W__ 	SCH	  W__ Wind only, method unspecified^		
-36092	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
-9105	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR , ? 	1982-01-01	3.0
-9106	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ AN/AMT-4B UNSPECIFIED , ? 	1986-01-01	3.0

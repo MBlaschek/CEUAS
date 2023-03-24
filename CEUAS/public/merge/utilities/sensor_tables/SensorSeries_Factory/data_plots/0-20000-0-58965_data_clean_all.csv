@@ -1,4 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1954-07-01 03:00:00	J56 	1	SCH	  J56 Japan Meisei RSII-56 1680 MHz radiosonde {1956}^ (I=J, W1=05, W2=09 through 198505, C=748) <F=V1680ME,P=2A,T=BS,U=Hr>
-13933	1979-12-27 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-13937	1981-04-03 00:00:00	J80 	1	SCH	  J80 Japan Meisei RSII-80 or RS2-80 radiosonde {1981} 31313=72202^ (W2=09, W3=22, 31313=72202) <F=T1680FB,P=A,T=TR,U=C>

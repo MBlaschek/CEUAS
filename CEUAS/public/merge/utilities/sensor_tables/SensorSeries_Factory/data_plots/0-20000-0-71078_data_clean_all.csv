@@ -1,4 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1982-06-19 12:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^
-4	1993-08-19 18:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-7	1994-07-22 12:00:00	Zml 	1	SCH	  Zml VIZ/Sippican MK II Microsonde no rad corr, LoRAN wind 31313=04906^

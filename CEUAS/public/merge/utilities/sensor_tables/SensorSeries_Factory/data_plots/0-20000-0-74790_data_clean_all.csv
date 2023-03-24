@@ -1,7 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1942-03-19 23:05:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
-3756	1986-01-14 12:00:00	VHL 	1	SCH	  VHL Vaisala RS80-15L or RS80-15LA LoRAN radiosonde^ (T=022) <F=T403FL,P=Ac,T=CB,U=A,N=L>
-3799	1986-03-17 12:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-17783	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ OMEGA 
-17783	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ OMEGA 
-17787	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ (Generic) 

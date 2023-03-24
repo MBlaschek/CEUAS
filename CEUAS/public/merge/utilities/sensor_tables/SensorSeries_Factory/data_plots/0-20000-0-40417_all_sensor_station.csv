@@ -1,5 +1,0 @@
-	sensor_id	source	comment	date_time	value
-1436	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
-1433	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
-0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
-0	VC_ 	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		

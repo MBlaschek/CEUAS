@@ -1,4 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1942-10-12 22:00:00	NA 	1	SCH	NA
-36	1943-01-15 22:00:00	-922	1	SCH	NA
-121	2020-04-08 23:00:00	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     

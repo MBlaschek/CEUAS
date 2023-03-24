@@ -1,8 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1973-06-22 00:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
-1177	1990-11-28 05:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-1179	2005-08-30 12:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
-1310	2006-04-03 11:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-10260	1960-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , INDIA FAN TYPE 
-10263	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ 1392 SERIES UNSPEC TRANSISTOR XMTR 
-10264	1982-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , AUSTRALIA PHILIPS RS4 UNSPECIFIED 

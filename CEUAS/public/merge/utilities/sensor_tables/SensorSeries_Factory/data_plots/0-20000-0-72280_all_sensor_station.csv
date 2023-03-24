@@ -1,7 +1,0 @@
-	sensor_id	source	comment	date_time	value
-15292	U4B 	SCH	  U4B USA Bendix AN/AMT-4B carbon hygristor radiosonde {~ 1955}^ <F=V1680PB,P=A,T=TR(ML-419/AM,FSN=6660-752-7528),U=C(ML-476),W=Da(AN/GMD-1)>		
-0	U4b 	SCH	  U4b USA Bendix AN/AMT-4B LiCl hygristor radiosonde {~ 1954}^ (I=E7) <F=V1680PB,P=A,T=TR,U=L(ML-418/AMT-4),W=Da(AN/GMD-1)>		
-21888	VCG 	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
-19351	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
-16999	Z46 	SCH	  Z46 VIZ model 1090 US Army AN/AMT-4D {1964}^ (T=399) <F=V1680PB,P=A,T=TR(ML-419/AM),U=C(ML-476),W=Da(AN/GMD-1>		
-19928	Z47c	SCH	  Z47c VIZ model 1190 US Army AN/AMT-4D, censoring {1973}^ (T=409) <F=Vt1680PB,P=A,T=TR(ML-419/AM),U=C(ML-476),W=Da(AN/GMD-1>		

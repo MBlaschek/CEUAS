@@ -1,9 +1,0 @@
-	sensor_id	source	comment	date_time	value
-2535	112	WMO	Jin Yang RSG-20A with derived pressure from GPS height/GL-5000P (Republic   of Korea)                 		
-2459	121	WMO	Jin Yang 1524LA LORAN-C/GL5000 (Republic of Korea)                        		
-1173	21	WMO	VIZ/Jin Yang MARK I MICROSONDE (Republic of Korea)           		
-0	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
-6832	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
-6170	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
-6170	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0
-6170	IGRA2	IGRA2	USING SONDE MODEL , I1 , INDIA MARK 3 	1982-01-01	3.0

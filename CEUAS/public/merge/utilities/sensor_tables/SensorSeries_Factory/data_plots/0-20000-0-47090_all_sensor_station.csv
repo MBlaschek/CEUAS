@@ -1,9 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	21	WMO	VIZ/Jin Yang MARK I MICROSONDE (Republic of Korea)           		
-233	57	WMO	Modem M2K2-DC (France)                		
-7248	BKg 	SCH	  BKg South Korea Jinyang 403 MHz RSG-20A GPS radiosonde {2010?} 31313=52108^ [F=T403DL,P=Ac,T=T,U=A,N=G>		
-4353	DGM 	SCH	  DGM Germany Graw DFM06-TU-GPS radiosonde {2006} 31313=51808 or 51708^ <F=T402-406DL,P=0,T=TB,U=A,N=GC>		
-4295	DGj 	SCH	  DGj Germany Graw DFM90/DGPS radiosonde auto solar corr {2004} 31313=55008^ <F=T402-406DL,P=Ac(or P=0),T=TB,U=A,W=Ra(or W=Da)orN=GC>		
-0	V9l 	SCH	  V9l Vaisala RS90 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=47106^ <F=T403DL,P=Sc,T=Wc,U=2Ah,N=L>		
-239	VCL 	SCH	  VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>		
-5961	VNg 	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		

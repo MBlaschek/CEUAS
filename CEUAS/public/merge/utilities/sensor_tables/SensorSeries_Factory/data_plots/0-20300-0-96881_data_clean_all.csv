@@ -1,6 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1954-07-01 05:00:00	L2  	1	SCH	  [|16] Philips Astor, MK I, or MK II
-4622	1982-02-15 00:00:00	C1  	1	SCH	  General VIZ type
-5385	1992-06-15 00:00:00	V8A 	1	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
-5926	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ (Generic) 
-5927	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , MEISEI-JAPAN (G) 

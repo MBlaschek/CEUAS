@@ -1,5 +1,0 @@
-	sensor_id	source	comment	date_time	value
-17954	VNg 	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
-0	W__ 	SCH	  W__ Wind only, method unspecified^		
-17941	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
-9398	IGRA2	IGRA2	USING SONDE MODEL , I1 , MESURAL FMO 1950A 	1982-01-01	3.0

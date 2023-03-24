@@ -1,6 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1931-09-09 10:00:00	VC_ 	1	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
-0	2013-01-01 04:00:00	79	2	WMO	Vaisala RS92/Digicora I, II or Marwin (Finland)            
-909	2015-07-06 02:30:03	81	2	WMO	Vaisala RS92/Autosonde (Finland)                
-1884	2018-04-19 02:15:08	142	2	WMO	Vaisala RS41 with pressure derived from GPS height/ AUTOSONDE (Finland)                     
-1379	1992-12-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , AUSTRIA ELIN 

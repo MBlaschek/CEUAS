@@ -1,3 +1,0 @@
-/scratch/das/federico/COP2_HARVEST_FEB2022/era5_1//0-20999-0-89022_era5_1_harvested_era5.conv.??????.89022.txt.gz.nc
-/scratch/das/federico/COP2_HARVEST_FEB2022/era5_1//0-20999-0-60018_era5_1_harvested_era5.conv.??????.60018.txt.gz.nc
-/scratch/das/federico/COP2_HARVEST_FEB2022/era5_1//0-20999-0-08221_era5_1_harvested_era5.conv.??????.08221.txt.gz.nc

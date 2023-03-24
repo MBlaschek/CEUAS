@@ -1,7 +1,0 @@
-	sensor_id	source	comment	date_time	value
-263	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
-325	123	WMO	Vaisala RS41/DigiCORA MW41 (Finland)                           		
-262	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
-0	162	WMO	MARL-A or Vektor-M – MRZ-3MK (Russian Federation)                        		
-0	ZF1 	SCH	  ZF1 VIZ model 1192 NWS 1680 MHz, new hygristor duct {1970}^ (T=411) <F=Vt1680AB,P=A,T=TR(ML-405),U=C,W=Da(WBRT or GMD-1)>		
-10112	IGRA2	IGRA2	USING SONDE MODEL , I1 , VIZ UNSPECIFIED 	1992-12-01	3.0

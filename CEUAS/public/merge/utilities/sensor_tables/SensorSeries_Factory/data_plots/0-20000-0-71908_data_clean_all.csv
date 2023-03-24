@@ -1,4 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1954-01-01 03:00:00	VC_ 	1	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
-0	2013-01-01 00:00:00	80	2	WMO	Vaisala RS92/Digicora III (Finland)               
-5050	2019-12-03 00:00:00	117	2	WMO	Graw DFM-09 (Germany)                            

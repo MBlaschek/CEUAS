@@ -1,8 +1,0 @@
-	sensor_id	source	comment	date_time	value
-1440	114	WMO	Vaisala RS92/DigiCORA MW41 (Finland)                           		
-1443	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
-0	80	WMO	Vaisala RS92/Digicora III (Finland)               		
-0	VC_ 	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
-21210	ZNg 	SCH	  ZNg Sippican model 1548-611 MK II Microsonde 403 MHz rod thermistor DGPS (LOS) no P, solar cor {~1997} 31313=54908^ <F=T403DL,P=0,T=TR,U=C,N=G> used		
-21658	Zn8 	SCH	  Zn8 Sippican model 1548-611 MK II Microsonde 403 MHz rod thermistor DGPS (LOS) no P, unspec cor {~1997} 31313=94908^ <F=T403DL,P=Ac,T=TR,U=C,N=G> used		
-20122	Zng 	SCH	  Zng Sippican model 1548-611 MK II Microsonde 403 MHz rod thermistor DGPS (LOS) no P, no cor {~1997} 31313=04908^ <F=T403DL,P=0,T=TR,U=C,N=G> used with		

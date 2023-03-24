@@ -1,3 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1990-02-14 00:00:00	BFa 	1	SCH	  BFa South Africa InterMet Africa iMet-2-AA 403 MHz no pres GPS sonde, automatic solar and IR corr {~2009} 31313=49908^ <F=T403FL,P=none,T=TB,U=A,N=G>
-0	2013-01-01 10:00:00	99	2	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        

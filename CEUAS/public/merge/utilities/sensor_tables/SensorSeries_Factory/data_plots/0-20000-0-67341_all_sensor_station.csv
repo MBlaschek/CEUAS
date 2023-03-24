@@ -1,8 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	U0  	SCH	  U0 exact type insufficiently documented		
-21296	VC_ 	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		
-21858	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		
-9710	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 	1982-01-01	3.0
-9712	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1986-01-01	3.0
-9712	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1986-01-01	3.0
-9712	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1986-01-01	3.0

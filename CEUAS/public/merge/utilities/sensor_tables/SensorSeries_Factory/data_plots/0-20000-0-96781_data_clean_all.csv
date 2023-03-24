@@ -1,7 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1954-07-01 23:00:00	C3  	1	SCH	  [--|08] VIZ with humidity duct solar heating problem (1965 to about 1972)
-4508	1977-12-08 00:00:00	L2  	1	SCH	  [|16] Philips Astor, MK I, or MK II
-5341	1981-09-06 23:00:00	C2  	1	SCH	"  [10,31,38,48,65|01,02,03,18] VIZ specifically [VIZ A was ""pressure commutated""] includes VIZ A (model 1492-510, used 1986 to no later"
-6833	1993-09-21 06:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-5886	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VIZ (Generic) 
-5887	1986-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I2 , MEISEI-JAPAN (G) 

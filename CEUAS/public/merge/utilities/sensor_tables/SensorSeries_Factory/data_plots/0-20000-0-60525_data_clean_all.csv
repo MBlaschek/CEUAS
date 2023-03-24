@@ -1,5 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1952-01-14 03:00:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
-26103	1993-01-25 11:00:00	VC_ 	1	SCH	  VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
-79	1976-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , FRANCE MESURAL FMO 1943B 
-80	1989-01-01 00:00:00	IGRA2	3	IGRA2	USING SONDE MODEL , I1 , VAISALA RS18 

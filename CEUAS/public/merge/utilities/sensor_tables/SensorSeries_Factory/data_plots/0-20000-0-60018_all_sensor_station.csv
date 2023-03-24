@@ -1,5 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	VCG 	SCH	  VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>		
-27750	VN8 	SCH	  VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
-27246	VNg 	SCH	  VNg Vaisala RS92 DigiCORA III auto corr, GPS wind 31313=48008^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>		
-14125	IGRA2	IGRA2	USING SONDE MODEL , VAISALA RS80-15GH GPS H HUMICAP 	2003-10-01	3.0

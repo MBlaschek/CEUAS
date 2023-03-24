@@ -1,4 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1926-01-11 02:07:00	W__ 	1	SCH	  W__ Wind only, method unspecified^
-817	2014-10-02 12:00:00	37	2	WMO	Vaisala RS80 (Finland)                
-1707	2016-05-01 06:00:00	2	2	WMO	 No radiosonde – passive target (e.g. reflector)                 

@@ -1,6 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	117	WMO	Graw DFM-09 (Germany)                            		
-1450	135	WMO	Meisei iMS-100 GPS radiosonde w/thermistor sensor, capacitance relative humidity   sensor, and derived pressure from GPS height (Japan)            		
-2039	141	WMO	Vaisala RS41 with pressure derived from GPS height/ DigiCORA MW41   (Finland)                  		
-1241	18	WMO	Graw DFM-06 (Germany)                		
-0	V8A 	SCH	  V8A Vaisala RS80 A-Humicap unspecified model {1981} WMO instr=37^ (assume W2=04 or 14, W3=37) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>		

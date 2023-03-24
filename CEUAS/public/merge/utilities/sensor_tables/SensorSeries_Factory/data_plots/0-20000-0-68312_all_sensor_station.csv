@@ -1,8 +1,0 @@
-	sensor_id	source	comment	date_time	value
-48	67	WMO	Vaisala RS80/Digicora III (Finland)               		
-0	99	WMO	iMet-2/iMet-3200 GPS radiosonde with derived pressure from GPS height (South Africa)        		
-7272	BFa 	SCH	  BFa South Africa InterMet Africa iMet-2-AA 403 MHz no pres GPS sonde, automatic solar and IR corr {~2009} 31313=49908^ <F=T403FL,P=none,T=TB,U=A,N=G>		
-0	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
-18037	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA UNSPECIFIED 	1960-01-01	3.0
-18038	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS21 UNSPECIFIED 	1986-01-01	3.0
-18039	IGRA2	IGRA2	USING SONDE MODEL , I1 , VAISALA RS80 UNSPECIFIED 	1989-01-01	3.0

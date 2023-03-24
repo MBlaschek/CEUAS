@@ -1,7 +1,0 @@
-	date_time	sensor_id	value	source	comment
-0	1928-06-05 15:00:00	NUU 	1	SCH	  NUU USWB Friez PTU 1934 aircraft meteorograph {1934}^ <F=C,P=7A(bellows),T=B,U=H>
-6488	1962-03-04 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-6545	1962-04-24 00:00:00	W02 	1	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)
-6595	1962-06-08 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected
-6938	1963-04-15 00:00:00	W02 	1	SCH	  W02 Wind only, passive target (e. g. reflector) (WMO instr=02)^ (W3=02)
-7015	1963-06-15 00:00:00	XXX 	1	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected

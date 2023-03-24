@@ -1,5 +1,0 @@
-	sensor_id	source	comment	date_time	value
-0	AA63	SCH	  AA63 exact type insufficiently documented		
-45766	W_P 	SCH	  W_P Wind only, pilot balloon (pibal)^		
-37196	W__ 	SCH	  W__ Wind only, method unspecified^		
-40103	XXX 	SCH	  XXX Reject all obs with this station ID in this period^ misidentified or erroneous observations which should be rejected		

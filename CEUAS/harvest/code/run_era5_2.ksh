@@ -1,1 +1,0 @@
-../../public/harvest/code/run_era5_2.ksh
