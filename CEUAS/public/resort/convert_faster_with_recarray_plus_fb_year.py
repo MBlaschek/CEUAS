@@ -11,6 +11,7 @@ import zipfile, os, time
 import urllib3
 from datetime import datetime, timedelta
 import glob
+import hdf5plugin
 import h5py
 sys.path.append(os.getcwd()+'/../cds-backend/code/')
 sys.path.append(os.getcwd()+'/../harvest/code/')
@@ -32,10 +33,67 @@ import matplotlib.pylab as plt
 warnings.filterwarnings('ignore')
 import pickle
 import ray
+from assemble_longrecord import h5concatenate
+ray_h5concatenate = ray.remote(h5concatenate)
 
 #opath='/raid60/scratch/uli/converted_v5/'
 #opath='/raid60/scratch/leo/scratch/converted_v5/'
 # if there are nan values in the pressure level - we will just sort without any converting!
+
+@ray.remote
+class h5p:
+    def __init__(self, fn):
+        self.fn = fn
+        self.fp = h5py.File(fn, 'r')
+        
+    
+    def content(self):
+        return list(self.fp.keys())
+    
+    def name(self):
+        return self.fn
+    
+    def shape(self, v):
+        return self.fp[v].shape
+    
+    def slice4d(self, v, tup):            
+        return self.fp[v][tup[0], tup[1], tup[2], tup[3]]
+    def slice3d(self, v, tup):            
+        return self.fp[v][tup[0], tup[1], tup[2]]
+    def slice2d(self, v, tup):            
+        return self.fp[v][tup[0], tup[1]]
+    def slice(self, v, tup):            
+        return self.fp[v][tup]
+    def full(self, v):            
+        return self.fp[v][:]
+    def vattr(self, v, attr):
+        return self.fp[v].attrs[attr]
+    def vattrs(self, v):
+        d = {}
+        for k, v in  self.fp[v].attrs.items():
+            if type(v) is str or type(v) is int or type(v) is float:
+                d[k] = v
+                
+        return d
+        
+    
+    
+#fn = '/mnt/users/scratch/leo/scratch/era5/gridded/era5t.196507.131.nc'
+#ray.init(num_cpus=10)
+
+#tt = time.time()
+#x = h5p.remote(fn)
+#print(time.time() - tt)
+#for k in range(14):
+    #y = ray.get(x.slice4d.remote('u', (slice(k, k+2), slice(k, k+2), slice(k, k+2), slice(k, k+2))))
+    #print(time.time() - tt)
+
+#del x
+#print(ray.get(x.content.remote()))
+#print(ray.get(x.shape.remote('u')))
+#print(ray.get(x.slice4d.remote('u', (slice(0, 2), slice(0, 2), slice(0, 2), slice(0, 2)))))
+#print(type(x))
+
 def rmeanw(t,runmean):
     tmean=t.copy()
     index=np.zeros(tmean.shape[0],dtype='int')
@@ -242,10 +300,10 @@ def do_resort(fn):
             pass
         elif keys[i] == 'observation_id' or keys[i] == 'report_id' or keys[i] == 'sensor_id' or keys[i] == 'source_id':
             alldict = {keys[i]:np.asarray(ov_vars, dtype='S1')}
-            write_dict_h5(targetfile, alldict, 'observations_table', {keys[i]: { 'compression': 'gzip' } }, [keys[i]])
+            write_dict_h5(targetfile, alldict, 'observations_table', {keys[i]: { 'compression': 32015, 'compression_opts':(3,) } }, [keys[i]])
         else:
             alldict = pandas.DataFrame({keys[i]:ov_vars})
-            write_dict_h5(targetfile, alldict, 'observations_table', {keys[i]: { 'compression': 'gzip' } }, [keys[i]])  
+            write_dict_h5(targetfile, alldict, 'observations_table', {keys[i]: { 'compression': 32015, 'compression_opts':(3,) } }, [keys[i]])  
 
     for i in range(len(fbkeys)):
         fb_vars = data.era5fb[fbkeys[i]][:]
@@ -254,10 +312,10 @@ def do_resort(fn):
             pass
         elif fbkeys[i] == 'expver' or fbkeys[i] == 'source@hdr' or fbkeys[i] == 'source_id' or fbkeys[i] == 'statid@hdr':
             alldict = {fbkeys[i]:np.asarray(fb_vars, dtype='S1')}
-            write_dict_h5(targetfile, alldict, 'era5fb', {fbkeys[i]: { 'compression': 'gzip' } }, [fbkeys[i]])
+            write_dict_h5(targetfile, alldict, 'era5fb', {fbkeys[i]: { 'compression': 32015, 'compression_opts':(3,) } }, [fbkeys[i]])
         else:
             alldict = pandas.DataFrame({fbkeys[i]:fb_vars})
-            write_dict_h5(targetfile, alldict, 'era5fb', {fbkeys[i]: { 'compression': 'gzip' } }, [fbkeys[i]]) 
+            write_dict_h5(targetfile, alldict, 'era5fb', {fbkeys[i]: { 'compression': 32015, 'compression_opts':(3,) } }, [fbkeys[i]]) 
     #
     # writing the recordindices and recordtimestamp.
     #       
@@ -274,7 +332,7 @@ from numba.typed import List
 
 @njit(boundscheck=True)
 def ipl(observed_variable,observation_value,z_coordinate,z_coordinate_type,recordtimestamp):
-    jdx=np.where(np.logical_and(observed_variable==85,~np.isnan(observation_value)))[0]
+    jdx=np.where(np.logical_and(observed_variable==ipar[85],~np.isnan(observation_value)))[0]
     idx=np.empty(len(jdx),dtype=np.int64)
     press=np.empty(len(jdx),dtype=z_coordinate.dtype)
     relhum=np.empty(len(jdx),dtype=observation_value.dtype)
@@ -317,19 +375,19 @@ def ipl(observed_variable,observation_value,z_coordinate,z_coordinate_type,recor
             dpd[j-1]=observation_value[i]
         if observed_variable[i]==ipar[36] and observation_value[i]==observation_value[i] and z_coordinate[i]==z_coordinate[i]:
             dewpoint[j-1]=observation_value[i]
-        if observed_variable[i]==85 and observation_value[i]==observation_value[i]:
+        if observed_variable[i]==ipar[85] and observation_value[i]==observation_value[i]:
             temp[j-1]=observation_value[i]
             good=True
 
     return idx,press,temp,relhum,spechum,dpd,dewpoint
 
-@njit(boundscheck=True)
+@njit(cache=True, boundscheck=False)
 def ipl2(lobs, fb):
 
     observed_variable=lobs['observed_variable']
     observation_value=lobs['observation_value']
     z_coordinate=lobs['z_coordinate']
-    z_coordinate_type=lobs['z_coordinate_type']
+    #z_coordinate_type=lobs['z_coordinate_type']
     recordtimestamp=lobs['date_time']
 
     departure=fb['an_depar@body']
@@ -380,8 +438,14 @@ def ipl2(lobs, fb):
 
     for v in temp,relhum,dewpoint,dpd,spechum,uwind,vwind,wd,ws,d_temp,d_relhum,d_spechum,d_dpd,d_dewpoint,d_uwind,d_vwind,d_wd,d_ws,fgd_temp,fgd_relhum,fgd_spechum,fgd_dpd,fgd_dewpoint,fgd_uwind,fgd_vwind,fgd_wd,fgd_ws:
         v.fill(np.nan)
-    p=z_coordinate[0]-1.
-    rts=recordtimestamp[0]-1
+    if len(z_coordinate) > 0:
+        
+        p=z_coordinate[0]-1.
+        rts=recordtimestamp[0]-1
+    else:
+        idx = np.array([-1])
+        return idx,press,temp,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,d_temp,d_relhum,d_spechum,d_dpd,d_dewpoint,d_uwind,d_vwind,d_wd,d_ws,fgd_temp,fgd_relhum,fgd_spechum,fgd_dpd,fgd_dewpoint,fgd_uwind,fgd_vwind,fgd_wd,fgd_ws
+        
     j=-1
     #good=True
     for i in range(observation_value.shape[0]):
@@ -408,7 +472,7 @@ def ipl2(lobs, fb):
             dewpoint[j]=observation_value[i]
             d_dewpoint[j]=observation_value[i]-departure[i]
             fgd_dewpoint[j]=observation_value[i]-fg_departure[i]
-        elif observed_variable[i]==85:
+        elif observed_variable[i]==ipar[85]:
             temp[j]=observation_value[i]
             d_temp[j]=observation_value[i]-departure[i]
             fgd_temp[j]=observation_value[i]-fg_departure[i]
@@ -595,14 +659,42 @@ def do_fb_copy(a_loaded_feedback,loaded_feedback,j,i):
     a_loaded_feedback['biascorr_fg@body'][j]=loaded_feedback['biascorr_fg@body'][i]
     return
 
-#@njit(cache=True, boundscheck=True)          
+@njit(cache=True)
+def z_to_p_ifs(h): # geopotential height (m^/s^2) to pressure (Pa)
+    a = 5.252368255329
+    b = 44330.769230769
+    c = 0.000157583169442
+    ptro = 226.547172
+    po = 1013.25
+    g = 9.80665
+ 
+    h /= g
+    if h != h:
+
+        p = h
+
+    elif h > 11000.0:
+
+        y = -c * (h - 11000.0)
+
+        p = ptro * np.exp(y)
+
+    else:
+
+        y = 1.0 - h / b
+
+        p = po * (y**a)
+
+    return p * 100. # we want Pa
+
+#@njit(cache=True, boundscheck=False)          
 def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
             idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
             cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,crhsh,cdpdsh,cuwind,cvwind,cwd,cws,
             d_cdpddp,d_cdpdrh,d_cdpdsh,d_cshrh,d_cshdpd,d_crhsh,d_crhdpd,
             fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd,
             d_cwd,d_cws,fgd_cwd,fgd_cws,
-            humvar,wvar):
+            humvar,wvar, zvar):
 
 
     recordindex=np.empty(idx.shape[0],obstab['date_time'].dtype)
@@ -616,6 +708,9 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
     addedvar=np.zeros((a_obstab['observation_value'].shape[0],2),dtype=np.int32)
     humlist=List()
     wlist=List()
+    zlist=List()
+    ztype = List()
+    zcount = 0
     recordindex[0]=0
     recordtimestamp[0]=obstab['date_time'][0] # date_time[0]
     ri=1
@@ -631,6 +726,13 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
         for i in range(idx[k],idxu):
             j+=1
             if obstab['observation_value'][i]==obstab['observation_value'][i]: 
+                if obstab['z_coordinate_type'][i] == 2:  # convert height to pressure using standard atmosphere
+                    #print(obstab['date_time'][i])
+                    zlist.append(obstab['z_coordinate'][i])
+                    ztype.append(obstab['observed_variable'][i])
+                    obstab['z_coordinate_type'][i] = 1
+                    obstab['z_coordinate'][i] = z_to_p_ifs(obstab['z_coordinate'][i])
+                    zcount += 1
                 do_copy(a_obstab,obstab,j,i)
                 do_fb_copy(a_loaded_feedback,loaded_feedback,j,i)
                 if obstab['observed_variable'][i] in humvar:
@@ -638,6 +740,13 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
                 elif obstab['observed_variable'][i] in wvar:
                     wlist.append(obstab['observed_variable'][i])
             else:
+                if obstab['z_coordinate_type'][i] == 2:  # convert height to pressure using standard atmosphere
+                    print(obstab['date_time'][i])
+                    zlist.append(obstab['z_coordinate'][i])
+                    ztype.append(obstab['observed_variable'][i])
+                    obstab['z_coordinate_type'][i] = 1
+                    obstab['z_coordinate'][i] = z_to_p_ifs(obstab['z_coordinate'][i])
+                    zcount += 1
                 do_copy(a_obstab,obstab,j,i)
                 if obstab['observed_variable'][i] in humvar:
                     a_loaded_feedback['biascorr@body'][j]=np.nan
@@ -663,6 +772,26 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
                         #if ii>104 and lens[ii-104]!=lens[ii-105]:
                             #print('inconsistent')
 
+        if zlist:
+            #for h in zvar: # only geopotential, i.e. one could remove the loop
+                #if h in zlist:# note: meaning of zlist is just opposite to humlist, wlist - i.e. if set, then geopotential is missing
+            if zvar[0] not in ztype: # Sometimes geopotential is also a variable. Then we do not have to add a line.
+                j+=1
+                do_copy(a_obstab,obstab,j,i)
+                a_loaded_feedback['biascorr@body'][j]=np.nan
+                a_loaded_feedback['biascorr_fg@body'][j]=np.nan
+                a_obstab['observed_variable'][j]=zvar[0]
+                a_obstab['observation_value'][j] = zlist[0]
+                #print(k, i, j, a_obstab['date_time'][j], a_obstab['observation_value'][j])
+                #qconvert(j,k,h,a_obstab['observation_value'],a_obstab['conversion_flag'],a_obstab['conversion_method'],
+                         #a_loaded_feedback['an_depar@body'],a_loaded_feedback['fg_depar@body'],
+                         #temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd,crhsh, cdpdsh, 
+                         #d_cdpddp,d_cdpdrh,d_cdpdsh,d_cshrh,d_cshdpd,d_crhsh,d_crhdpd,
+                         #fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd)
+                if a_obstab['observation_value'][j]!=a_obstab['observation_value'][j]:
+                    j-=1
+            zlist.clear()
+            ztype.clear()
         if humlist:
             for h in humvar:
                 if h not in humlist:
@@ -676,6 +805,7 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
                              temp,cdpddp,cdpdrh,crhdpd,cshrh,cshdpd,crhsh, cdpdsh, 
                              d_cdpddp,d_cdpdrh,d_cdpdsh,d_cshrh,d_cshdpd,d_crhsh,d_crhdpd,
                              fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd)
+                    print(j,k,h,a_obstab['observation_value'][j],a_obstab['conversion_flag'][j],a_obstab['conversion_method'][j])
                     if a_obstab['observation_value'][j]!=a_obstab['observation_value'][j]:
                         j-=1
             humlist.clear()
@@ -708,8 +838,8 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
                 recordindex[ri]=j+1
                 recordtimestamp[ri]=obstab['date_time'][idxu]
                 ri+=1
-        else:
-            print('spurious idxu')
+        #else:
+            #print('spurious idxu')
 
         addedvar[l,0]=i
         addedvar[l,1]=j#.append([i, j])
@@ -720,6 +850,8 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
     addedvar[l,0]=i+1
     addedvar[l,1]=j#.append([i, j])
     l+=1
+    if zcount > 0:
+        print(zcount, 'z-levels converted to p-levels')
     #addedvar[i]=j#.append([i, j])
     #addv=np.empty((len(addedvar),2),dtype=np.int64)
     #for k in range(len(addedvar)):
@@ -728,7 +860,7 @@ def augment(obstab, a_obstab, loaded_feedback, a_loaded_feedback,
     return a_obstab, a_loaded_feedback, recordindex[:ri], recordtimestamp[:ri], j, addedvar[:l]
 
 
-@njit
+@njit(cache=True, boundscheck=False)
 def fill_obsid(avar,conversion_flag):
     for o in range(avar.shape[0]):
         if conversion_flag[o] == 0:
@@ -736,7 +868,7 @@ def fill_obsid(avar,conversion_flag):
                 avar[o,i]=b'9'
     return avar
 
-@njit()
+@njit(cache=True, boundscheck=False)
 def fill_restdata(final, rest_data, addedvar, j): #,test):
 
     for l in range(addedvar.shape[0]-1):
@@ -755,7 +887,7 @@ def fill_restdata(final, rest_data, addedvar, j): #,test):
 def split(x): 
     return [i.encode() for i in x.decode()]
 
-@njit(cache=True)
+@njit(cache=True, boundscheck=False)
 def polinl(XA,YA,X):
 
 
@@ -782,7 +914,7 @@ def polinl(XA,YA,X):
 
     return Y
 
-@njit(cache=True)
+@njit(cache=True, boundscheck=False)
 def triint(tera5, reatab, tlon, tlat, lons, lats, secs, ts,obss,press, zs, p, dy):
     sh = tera5.shape
     pval = np.zeros((sh[2],sh[3]))
@@ -815,8 +947,8 @@ def triint(tera5, reatab, tlon, tlat, lons, lats, secs, ts,obss,press, zs, p, dy
             w1=1.-w0
             if lats[il] != oldlats: 
                 iyref = np.searchsorted(-tlat, -lats[il]) - 2
-                if iyref == 2:
-                    print(iyref)
+                #if iyref == 2:
+                    #print(iyref)
                 oldlats = lats[il]
             if lons[il] != oldlons:
                 if tlon[-1] - tlon[0] > 0:
@@ -845,9 +977,13 @@ def triint(tera5, reatab, tlon, tlat, lons, lats, secs, ts,obss,press, zs, p, dy
                     for iy in range(4):
                         #print(yval.dtype, tlon.dtype, tera5[iy, :, it, ip:ip+1].T.dtype, lons[il])
                         #print(yval.shape, tlon.shape, tera5[iy, :, it, ip:ip+1].T.shape)
-                        if ixref == 2:
-                            print(ixref)
-                        xx = polinl(hlon[ixref:ixref+4],tera5[iyref+iy, ixref:ixref+4, it, ip:ip+1].T,lons[il])
+                        #if ixref == 2:
+                            #print(ixref)
+                        if ixref + 4 > tera5.shape[1]:
+                            xx = polinl(hlon[0:0+4],tera5[iyref+iy, 0:0+4, it, ip:ip+1].T,lons[il])
+                            #print('ixref was too large!')
+                        else:
+                            xx = polinl(hlon[ixref:ixref+4],tera5[iyref+iy, ixref:ixref+4, it, ip:ip+1].T,lons[il])
                         #print(xx.shape, xx.dtype)
                         yval[i, iy] = xx[0] #polinl(tlon,tera5[iy, :, it, ip:ip+1].T,lons[il])
                     xx = polinl(tlat[iyref:iyref+4], yval, lats[il])
@@ -905,10 +1041,10 @@ def offline_fb3(fpattern,p,pn, fdict,ts, obstype, latorig,lonorig,z, refs,ans):
             sh = g[p].shape
 
 
-            lonmin = np.min(lons)
-            lonmax = np.max(lons)
-            latmin = np.min(lats)
-            latmax = np.max(lats)
+            lonmin = np.nanmin(lons)
+            lonmax = np.nanmax(lons)
+            latmin = np.nanmin(lats)
+            latmax = np.nanmax(lats)
             dx=360/sh[1]
             dy=(fdict['latitude'][0] - fdict['latitude'][-1])/(sh[0]-sh[0] % 2)
                 
@@ -917,14 +1053,19 @@ def offline_fb3(fpattern,p,pn, fdict,ts, obstype, latorig,lonorig,z, refs,ans):
                 lons += 360.
             if lonmax < 0:
                 lonmax += 360.
-            ixrefmin=int(np.floor(lonmin/dx))
-            ixrefmax=int(np.floor(lonmax/dx))
-            if latmin== -90.:
-                latmin = fdict['latitude'][-1]
-            if latmax == 90.:
-                latmax = fdict['latitude'][0]
-            iyrefmin= int(np.floor((fdict['latitude'][0]-latmax)/dy))
-            iyrefmax = int(np.floor((fdict['latitude'][0]-latmin)/dy))
+            try:
+                ixrefmin=int(np.floor(lonmin/dx))
+                ixrefmax=int(np.floor(lonmax/dx))
+                if latmin== -90.:
+                    latmin = fdict['latitude'][-1]
+                if latmax == 90.:
+                    latmax = fdict['latitude'][0]
+                iyrefmin= int(np.floor((fdict['latitude'][0]-latmax)/dy))
+                iyrefmax = int(np.floor((fdict['latitude'][0]-latmin)/dy))
+            except Exception as e:
+                print('spurious lat, lon', e)
+                return
+                
             if ixrefmax >= ixrefmin:
                 
                 xsten = np.arange(ixrefmin-1, ixrefmax+3)#[ix - 1, ix, ix + 1, ix + 2])
@@ -973,6 +1114,218 @@ def offline_fb3(fpattern,p,pn, fdict,ts, obstype, latorig,lonorig,z, refs,ans):
             tunits = fdict['tunits']
             if tunits[0]=='hours':
                 secs=np.int64(g['time'][:])*3600
+            if tunits[-2]!='1900-01-01':
+                if tunits[-2] =='1800-01-01':
+                    offset=datetime.strptime(tunits[-2],'%Y-%m-%d')-datetime(1900,1,1) #+ timedelta(days=1)
+                else:
+                    offset=datetime.strptime(tunits[-2],'%Y-%m-%d')-datetime(1900,1,1)
+                    
+                secs=secs+int(offset.total_seconds())
+                delta = secs[1] - secs[0]
+                if datetime(1900, 1, 1) + timedelta(seconds=int(secs[0])) != datetime(ans[0], ans[1], 1):
+                    secs = (datetime(ans[0], ans[1], 1) - datetime(1900, 1, 1) ).total_seconds() + np.arange(secs.shape[0]) *delta
+                    print('modified timestamp of '+fn)
+                
+
+#        print(val[0, 0],'\n', ans[0, 0],'\n', time.time()-tt)
+        
+        an1 = [ans[0], ans[1] + 1]
+        if an1[1] == 13:
+            an1 = [ans[0] + 1, 1]
+        try:
+            
+            with h5py.File(fpattern.format(an1[0],an1[1]),'r') as g:
+                
+                if xsten[0] == xsten[-1] - xsten.shape[0] + 1:
+                    tera51=g[p][ysten[0]:ysten[-1] + 1,xsten[0]:xsten[-1] + 1,0:1,:]
+                else:
+                    tera51=g[p][ysten[0]:ysten[-1] + 1, :, :, :][:,xsten,0:1,:]
+                
+                try:
+                    mv=np.where(tera51==fdict['attribs']['missing_value'])
+                    tera51 =tera51 * np.float32(g[p].attrs['scale_factor'])+ np.float32(g[p].attrs['add_offset'])
+                    tera51[mv]=np.nan
+                except:
+                    pass
+    
+                if '20CRv3' in fpattern:
+                    for it in 0, :                       
+                        for ip in range(len(pidx)):
+                            if latmax > 90 - 2 * dy:
+                                tera51[:,:,it,pidx[ip]]+=refs[p][an1[1] - 1, ysten[0]:ysten[-1] + 1,:, it % 8, ip][:, xsten]
+                            elif latmin < -90 + 2 * dy:
+                                tera51[:,:,it,pidx[ip]]+=refs[p][an1[1] - 1, ysten[0]:ysten[-1] + 1,:,it % 8, ip][:, xsten]
+                            else:    
+                                if xsten[0] == xsten[-1]- xsten.shape[0] + 1:
+                                    tera51[:,:,it,pidx[ip]]+=refs[p][an1[1] - 1, ysten[0]:ysten[-1] + 1,xsten[0]:xsten[-1] + 1,it % 8, ip]
+                                else:
+                                    tera51[:,:,it,pidx[ip]]+=refs[p][an1[1] - 1, ysten[0]:ysten[-1] + 1,xsten,it % 8, ip].T
+            tera5 = np.concatenate((tera5, tera51), axis=2)
+            secs = np.concatenate((secs, secs[[-1]]+secs[-1]-secs[-2]))
+
+        except FileNotFoundError as e:
+            print(fpattern.format(an1[0],an1[1]), ' extrapolating last hours of month')
+            tera5 = np.concatenate((tera5, tera5[:, :, -1:, :]), axis=2)
+            secs = np.concatenate((secs, secs[[-1]]+secs[-1]-secs[-2]))
+            pass
+
+        #print(time.time() - tt)
+        if False:
+            #X, Y = np.meshgrid(g['longitude'], g['latitude'])
+            val = np.empty(sh[2:])
+            off = 2
+            #print('lin', time.time() - tt)
+            #tt = time.time()
+            gt = g[p][iy +1 - off:iy + 1 + off, ix + 1- off:ix + 1 + off, :, :][::-1]
+            glat = g['latitude'][iy + 1- off:iy + 1+ off][::-1].copy()
+            glon = g['longitude'][ix + 1- off:ix + 1+ off].copy()
+
+            for it in range(gt.shape[2]):
+
+                for ip in range(gt.shape[3]):
+
+                    interp_spline = RectBivariateSpline( glat,glon, gt[:, :, it, ip].reshape(gt.shape[:2]))
+                    val[it, ip] = interp_spline(lat, lon)
+
+            val =val*np.float32(g[p].attrs['scale_factor'])+np.float32(g[p].attrs['add_offset'])
+
+            #print(time.time() - tt)
+        
+        reatab = np.zeros_like(lons)
+        #params = {'t': 126}
+        idx = triint(tera5[:, :, :, pidx], reatab, tlon, tlat, lons, lats, secs, tss,obss,pres[pidx],zs, pn, dy)
+
+        #print(ans,p, reatab[0], time.time()-tt)
+    except FileNotFoundError as e:
+        print(fn, 'not available, continuing')
+        return 
+    return reatab[:len(idx)], ans[2] + idx, secs,pres,fdict['attribs']
+
+def offline_fb4(fpattern,p,pn, fdict,ts, obstype, latorig,lonorig,z, refs,gactor, ans):
+    #from scipy.interpolate import RectBivariateSpline
+    tt=time.time()
+    
+    if ans[3] == ans[2]: # no data
+        return
+    lons = lonorig[ans[2]:ans[3]]
+    lats = latorig[ans[2]:ans[3]]
+    tss = ts[ans[2]:ans[3]]
+    obss = obstype[ans[2]:ans[3]]
+    zs = z[ans[2]:ans[3]] / 100.
+    try:
+
+        fn = fpattern.format(ans[0],ans[1])
+        if type(gactor) == dict:
+            gact = gactor
+            #print(gact[os.path.basename(fn)].content.remote())
+        else:
+            refs = ray.get(refs)
+            gact = ray.get(gactor)
+            #print(gact[os.path.basename(fn)].content.remote())
+        #print(ray.get(gact[os.path.basename(fn)].content.remote()))
+        g = gact[os.path.basename(fn)]
+        if True: #with h5py.File(fn,'r') as g:
+            
+            if not fdict:
+                fdict['level'] = ray.get(g.full.remote('level')) #g['level'])
+                fdict['pidx'] = np.searchsorted(fdict['level'],refs['level'])
+                
+                fdict['longitude']= ray.get(g.full.remote('longitude'))#g['longitude'][:]
+                fdict['latitude']= ray.get(g.full.remote('latitude'))#g['latitude'][:]
+                
+    
+                tunits=ray.get(g.vattr.remote('time', 'units')) #g['time'].attrs['units']
+                try:
+                    tunits=tunits.decode('latin1')
+                except:
+                    pass
+                fdict['tunits']=tunits.split()
+    
+            fdict['attribs'] =  ray.get(g.vattrs.remote(p)) #dict(g[p].attrs)
+            try:
+                
+                del fdict['attribs']['DIMENSION_LIST']
+            except:
+                pass
+            #for k,v in g.attrs.items():
+                #fdict['attribs'][k]=v
+            fdict['attribs']['source_filename']=fn
+                
+            pres = fdict['level']
+            pidx = fdict['pidx']
+            sh = ray.get(g.shape.remote(p)) #g[p].shape
+
+
+            lonmin = np.min(lons)
+            lonmax = np.max(lons)
+            latmin = np.min(lats)
+            latmax = np.max(lats)
+            dx=360/sh[1]
+            dy=(fdict['latitude'][0] - fdict['latitude'][-1])/(sh[0]-sh[0] % 2)
+                
+            if lonmin < 0:
+                lonmin += 360.
+                lons += 360.
+            if lonmax < 0:
+                lonmax += 360.
+            ixrefmin=int(np.floor(lonmin/dx))
+            ixrefmax=int(np.floor(lonmax/dx))
+            if latmin== -90.:
+                latmin = fdict['latitude'][-1]
+            if latmax == 90.:
+                latmax = fdict['latitude'][0]
+            iyrefmin= int(np.floor((fdict['latitude'][0]-latmax)/dy))
+            iyrefmax = int(np.floor((fdict['latitude'][0]-latmin)/dy))
+            if ixrefmax >= ixrefmin:
+                
+                xsten = np.arange(ixrefmin-1, ixrefmax+3)#[ix - 1, ix, ix + 1, ix + 2])
+            else:
+                ixrefmax = int(np.floor(lonmax+360./dx))
+                xsten = np.arange(ixrefmin-1, ixrefmax+3) % fdict['longitude'].shape[0]
+            ysten = np.arange(iyrefmin-2, iyrefmax+3)#[iy - 1, iy, iy + 1, iy + 2])
+            ysten[ysten>(sh[0]-1)] = sh[0] - 1
+            ysten[ysten<0] = 0
+            xsten[xsten>(sh[1]-1)] -= sh[1]
+            xsten[xsten<0] += sh[1]
+
+            if xsten[0] == xsten[-1] - xsten.shape[0] + 1:
+                tera5=ray.get(g.slice2d.remote(p, (slice(ysten[0], ysten[-1] + 1), slice(xsten[0], xsten[-1] + 1)))).copy() #g[p][ysten[0]:ysten[-1] + 1,xsten[0]:xsten[-1] + 1,:,:]
+                #tera5=g[p][ysten[0]:ysten[-1] + 1,xsten[0]:xsten[-1] + 1,:,:]
+                tlon = fdict['longitude'][:][xsten[0]:xsten[-1] + 1]
+            else:
+                tera5=ray.get(g.slice1d.remote(p, slice(ysten[0], ysten[-1] + 1)))[:,xsten,:,:] #g[p][ysten[0]:ysten[-1] + 1, :, :, :][:,xsten,:,:]
+                tlon = fdict['longitude'][:][xsten]
+            tlat = fdict['latitude'][ysten[0]:ysten[-1] + 1]
+            
+            try:
+                mv=np.where(tera5==fdict['attribs']['missing_value'])
+                tera5 = tera5 * np.float32(fdict['attribs']['scale_factor'])+np.float32(fdict['attribs']['add_offset'])
+                tera5[mv]=np.nan
+            except:
+                pass
+
+            if '20CRv3' in fpattern:
+                for it in range(tera5.shape[2]):                       
+                    for ip in range(len(pidx)):
+                        if latmax > 90 - 2 * dy:
+                            tera5[:,:,it,pidx[ip]]+=refs[p][ans[1] - 1, ysten[0]:ysten[-1] + 1,:, it % 8, ip][:, xsten]
+                        elif latmin < -90 + 2 * dy:
+                            tera5[:,:,it,pidx[ip]]+=refs[p][ans[1] - 1, ysten[0]:ysten[-1] + 1,:,it % 8, ip][:, xsten]
+                        else:    
+                            if xsten[0] == xsten[-1]- xsten.shape[0] + 1:
+                                tera5[:,:,it,pidx[ip]]+=refs[p][ans[1] - 1, ysten[0]:ysten[-1] + 1,xsten[0]:xsten[-1] + 1,it % 8, ip]
+                            else:
+                                tera5[:,:,it,pidx[ip]]+=refs[p][ans[1] - 1, ysten[0]:ysten[-1] + 1,xsten,it % 8, ip].T
+            #attribs['missing_value'] = np.nan
+            #for k,v in g[p].attrs.items():
+                #if k not in ['scale_factor','add_offset','DIMENSION_LIST','_FillValue','name','long_name','standard_name','units']:
+                    #attribs[k]=v
+                    #if k=='missing_value':
+                        #attribs[k]=np.nan
+            tunits = fdict['tunits']
+            if tunits[0]=='hours':
+                secs=np.int64(ray.get(g.full.remote('time')))*3600
+                #secs=np.int64(g['time'][:])*3600
             if tunits[-2]!='1900-01-01':
                 if tunits[-2] =='1800-01-01':
                     offset=datetime.strptime(tunits[-2],'%Y-%m-%d')-datetime(1900,1,1) #+ timedelta(days=1)
@@ -1351,15 +1704,6 @@ def load_20CRoffset(readict):
                                         print(time.time() - tt)
 
 
-
-                                #tups = []
-                                #for it in range(ifield.shape[2]):
-                                    #for ip in range(ifield.shape[3]):
-                                        #tups.append((ifield[:,:,it,ip], ilon,ilat,olon,olat,1))
-
-                                #with multiprocessing.Pool(20) as pool:
-                                    #res = pool.map(Interp2dx, tups)
-
                                 ttt = time.time()
                                 for it in range(ifields.shape[2]):
                                     for ip in range(ifields.shape[3]):
@@ -1397,6 +1741,8 @@ def readictplot(readict, tasks, plevs, figprefix, marker='*'):
             plev = plevs[0]
 
             idx=np.where(np.logical_and(readict['obs']['obstype']==readict['obstypes'][p],readict['obs']['z_coordinate']==plev))[0]
+            if p == 'u':
+                idxv = np.where(np.logical_and(readict['obs']['obstype']==readict['obstypes']['v'],readict['obs']['z_coordinate']==plev))[0]
             if len(idx) < 50:
                 continue
 
@@ -1420,6 +1766,7 @@ def readictplot(readict, tasks, plevs, figprefix, marker='*'):
                     if dtype in readict[k].keys():
 
                         rms=[]
+                        rmsv = []
                         years=[]
                         ref = datetime(1900, 1, 1)
                         tsy = ref.year + np.floor(readict['obs']['date_time'][idx]/365.25/86400)
@@ -1436,7 +1783,38 @@ def readictplot(readict, tasks, plevs, figprefix, marker='*'):
                             #print(iy)
 
                             idy=np.where(tsy==iy)[0]
-                            rv = np.clip(readict['obs']['obs'][idx[idy]] - readict[k][dtype]['refvalues'][idx[idy]], q[0], q[1])
+                            if p != 'u':
+                                
+                                rv = np.clip(readict['obs']['obs'][idx[idy]] - readict[k][dtype]['refvalues'][idx[idy]], q[0], q[1])
+                            else:
+                                ou = readict['obs']['obs'][idx[idy]]
+                                fu = readict[k][dtype]['refvalues'][idx[idy]]
+                                fv = readict[k][dtype]['refvalues'][idxv[idy]]
+                                ov = readict['obs']['obs'][idxv[idy]]
+                                ff=np.sqrt(ou**2+ov**2)
+                                o2=270-np.arctan2(ov,ou)*180/np.pi
+                                fd=270-np.arctan2(fv,fu)*180/np.pi
+                                v=o2-fd
+                                idxx = np.where(~np.isnan(v))[0]
+                                if len(idxx) > 0:
+                                    idyy = np.where(v[idxx]>180)[0]
+                                    if len(idyy) > 0:
+                                        v[idxx[idyy]] -= 360
+                                    idyy = np.where(v[idxx]<-180)[0]
+                                    if len(idyy) > 0:
+                                        v[idxx[idyy]] += 360
+                                    idyy = np.where(np.abs(v[idxx]) > 90)[0]
+                                    if len(idyy) > 0:
+                                        v[idxx[idyy]] =np.nan # larger deviations than 90 degrees are highly unlikely to come from wrong north alignment, are therefore discarded
+                                
+                                idxx = np.where(~np.isnan(ff))[0]
+                                if len(idxx) > 0:
+                                    idyy = np.where(ff[idxx]<2.0)[0]
+                                    if len(idyy) > 0:        
+                                        v[idxx[idyy]]=np.nan # wind directions for small wind speeds too uncertain
+                                        fd[idxx[idyy]]=np.nan # wind directions for small wind speeds too uncertain
+                                        o2[idxx[idyy]]=np.nan # wind directions for small wind speeds too uncertain
+                                rv = v
                             if len(idy)>50 and np.sum(~np.isnan(rv)) > 50:
                                 if sfunc == 'rms':
 
@@ -1461,8 +1839,8 @@ def readictplot(readict, tasks, plevs, figprefix, marker='*'):
             plt.savefig(figprefix+'_'+p+'_'+sfunc+'stats.png')
             plt.close()
 
-def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
-    from scipy.interpolate import RectBivariateSpline
+def retrieve_anfg(fn, readict, refs, gactor, out_name,path_to_gridded):
+    #from scipy.interpolate import RectBivariateSpline
 
 
     #era5=refdiff('/raid60/scratch/leo/scratch/ERA5/gridded/','era5fc.{0}{1:02}.'+par['gid'],1979,1983,tidx,fieldsperday=2,
@@ -1480,45 +1858,49 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
                          #'path':os.path.expandvars('$RSCRATCH/20CRv3/'),'prefix':'anl_meant','suffix':'_pres','glue':'_'},
                #}
 
+    tt=time.time()
     cyear = int(out_name.split('/')[-2])
     outdir = os.path.dirname(out_name) + '/'
     with h5py.File(fn,'r') as f:
         try:
-            if f['observations_table']['date_time'].shape[0] == 1:
-                
-                ts=f['observations_table']['date_time'][:]
+            if f['recordtimestamp'].shape[0] == 1:                
+                ts=f['recordtimestamp'][:]
             else:
-                ts=f['observations_table']['date_time'][[0, -1]]
+                ts=f['recordtimestamp'][[0, -1]]
+            #if f['observations_table']['date_time'].shape[0] == 1:
+                
+                #ts=f['observations_table']['date_time'][:]
+            #else:
+                #ts=f['observations_table']['date_time'][[0, -1]]
             ref = datetime(1900, 1, 1)
             tstart = int((datetime(cyear, 1, 1) - ref).total_seconds())
-            tstop = int((datetime(cyear+1, 1, 1) - ref).total_seconds())
+            tstop = int((datetime(cyear+1, 1, 1) - ref-timedelta(seconds=1)).total_seconds())
             if tstop < ts[0] or tstart > ts[-1]:
 #                print(fn, cyear, 'year missing in obs records')
                 return
 
-            ts=f['observations_table']['date_time'][:]
-            tslice =slice(*np.searchsorted(ts, (tstart, tstop)))
+            ts=f['recordtimestamp'][:]
+            ri = f['recordindex'][:]
+            sta, sto = np.searchsorted(ts, (tstart, tstop))
+            if sto == ri.shape[0]:
+                return
+            li = list(ri[np.searchsorted(ts, (tstart, tstop))])
+            tslice =slice(*li)
+            #tslice =slice(*ri[np.searchsorted(ts, (tstart, tstop))])
+            
+            #ts=f['observations_table']['date_time'][:]
+            #tslice =slice(*np.searchsorted(ts, (tstart, tstop)))
+
             if ts[tslice].shape[0] == 0:
                 return
             else:
-                ts = ts[tslice]
+                ts = f['observations_table']['date_time'][tslice]
         except Exception as e:
             print(fn, cyear, e)
             return 
 
-    #P=multiprocessing.Pool(12)
-    with h5py.File(fn,'r') as f:
         try:
 
-            #ts=f['observations_table']['date_time'][:]
-            #ref = datetime(1900, 1, 1)
-            #tstart = int((datetime(cyear, 1, 1) - ref).total_seconds())
-            #tstop = int((datetime(cyear+1, 1, 1) - ref).total_seconds())
-            #tslice =slice(*np.searchsorted(ts, (tstart, tstop)))
-            #if ts[tslice].shape[0] == 0:
-                #return
-            #else:
-                #ts = ts[tslice]
             
             lat=f['observations_table']['latitude'][tslice]
             lon=f['observations_table']['longitude'][tslice]
@@ -1532,7 +1914,6 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
             zt=f['observations_table']['z_coordinate_type'][tslice]
             if np.any(zt!=1):
                 print('no pressure in', np.sum(zt!=1), 'observations')
-                print('x')
             ofb=True
         except Exception as e:
             print(fn, cyear, e)
@@ -1610,6 +1991,8 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
                 readict[k][dtype]['refvalues'].fill(np.nan)
 
             for p,pn in v['param'].items():
+                #if p == 't':
+                    #continue
                 if k!='JRA55':
 
                     fpattern=v['path']+v['prefix']+ftype+v['glue']+'{}{:0>2}'+v['glue']+pn+v['suffix']+'.nc'
@@ -1619,7 +2002,10 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
                 #print(fpattern.format(*yms[0]),found)
                 #if found:
                 fdict = {}
-                func=partial(offline_fb3,fpattern,p,obstypes[p], fdict,ts,obstype, lat,lon, z, refs)
+                if gactor is None:
+                    func=partial(offline_fb3,fpattern,p,obstypes[p], fdict,ts,obstype, lat,lon, z, refs)
+                else:
+                    func=partial(offline_fb4,fpattern,p,obstypes[p], fdict,ts,obstype, lat,lon, z, refs, gactor)
 #                func=partial(offline_fb3,fpattern,p,fdict, lat+latdis,lon+londis,ts,refs)
                 #tups=list(P.map(func,yms[:]))
                 tups=list(map(func,yms[:])) # no multiprocessing because function is already mapped
@@ -1653,8 +2039,7 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
             #tr[111]=106 #dd
             #tr[112]=107  #ff
 
-            if False and dtype in readict[k].keys():  
-                tt=time.time()
+            if dtype in readict[k].keys():  
                 for p in readict[k][dtype].keys():
                     if p =='refvalues':
                         continue
@@ -1676,17 +2061,24 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
                             plt.plot(1900+ts[idx]/365.25/86400,obs[idx], label='obs')
                             rv = readict[k][dtype]['refvalues'][idx]
                             plt.plot(1900+ts[idx]/365.25/86400,rv, label=k)
+                            tmin = int(1900 + np.floor(ts[idx[0][0]]/365.25/86400))
+                            tmax = int(1900 + np.floor(ts[idx[0][-1]]/365.25/86400) + 1)
+                            plt.xlim(1900+ts[idx[0][0]]/365.25/86400, 1900+ts[idx[0][-1]]/365.25/86400)
+                            ax = plt.gca()
+                            ax.set_xticks(np.arange(tmin, tmax+1))
                             plt.title(p+', '+fn.split('/')[-1].split('_')[0]+' '+str(plev//100) +' hPa')
                             plt.legend()
                             #plt.xlim(1935, 1965)
                             plt.subplot(2,1,2)
-                            plt.plot(np.int32(1900+ts[idx]/365.25/86400),obs[idx]-rv,
+                            plt.plot(1900+ts[idx]/365.25/86400,obs[idx]-rv,
                                      label='offline mean:{:5.3f} rms= {:5.3f}'.format(np.nanmean(obs[idx]-rv), np.sqrt(np.nanmean((obs[idx]-rv)**2))))
-                            plt.plot(np.int32(1900+ts[idx]/365.25/86400),o_minus_an[idx]+rv-rv,
+                            plt.plot(1900+ts[idx]/365.25/86400,o_minus_an[idx]+rv-rv,
                                      label='online mean:{:5.3f} rms:{:5.3f}'.format(np.nanmean(o_minus_an[idx]+rv-rv), np.sqrt(np.nanmean((o_minus_an[idx]+rv-rv)**2))))
                             plt.title(p+', obs -'+k )
                             yscale = 10. ** np.floor(np.log10(np.max(np.abs(obs[idx]-rv)))) + 1
                             plt.ylim(-yscale, yscale)
+                            ax = plt.gca()
+                            ax.set_xticks(np.arange(tmin, tmax+1))
                             plt.legend()
                             plt.tight_layout()
                             fnp=fn.split('/')[-1].split('CEUAS_merged_v1.nc')[0]
@@ -1698,7 +2090,8 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
                             print('plotting reference', e)
 
 
-
+    readict['tslice'] = tslice
+    print(os.path.basename(fn),cyear, 'feedback calculated', time.time() - tt)
     if not ofb:
         return readict
 
@@ -1714,13 +2107,12 @@ def retrieve_anfg(fn, readict, refs, out_name,path_to_gridded):
     except:
         pass
     
-    readictplot(readict, ('mean', 'std','rms'), (30000, ), outdir+os.path.basename(fn).split('_')[0])
+    #readictplot(readict, ('mean', 'std','rms'), (30000, ), outdir+os.path.basename(fn).split('_')[0])
 
     #P.close()
     #P.join()
     #del P
 
-    readict['tslice'] = tslice
     return readict
 
 def dim_attach(g, k):
@@ -1762,14 +2154,21 @@ def read_station_height(fn, jj, inventory_list):
     #func=partial(offline_fb,fpattern,lat,lon)
     #tfgs=list(map(func,yms))
 
-def convert_missing(refs, wpath,cyear, fn):
+def convert_missing(refs, gactor, wpath,cyear, fn):
 
+    tt=time.time()
     print(fn.split('/')[-1], cyear,end=' ' )
     wpathy = wpath+'/' + str(cyear) + '/'
     targetfile = wpathy + fn.split('/')[-1]
-    if os.path.isfile(wpathy+'/log/'+fn.split('/')[-1]+".txt"):
+    logfile = wpathy+'/log/'+fn.split('/')[-1]+".txtx"
+    if os.path.isfile(logfile):
         print('already processed')
-        return targetfile
+        wtime = os.path.getmtime(logfile)
+        rtime = os.path.getmtime(fn)
+        if rtime>wtime:
+            print(logfile, 'older than some input')
+        else:
+            return targetfile
     else:
         print('processing...')
     sys.path.insert(0,os.getcwd()+'/../resort/rasotools-master/')
@@ -1786,31 +2185,81 @@ def convert_missing(refs, wpath,cyear, fn):
     
     #inventory_list = glob.glob('../merge/example_notebooks/new_stat_conf/*.dat')
     #inventory_list = glob.glob('../../meta/inventory_comparison_2/data/tables/vola_legacy_report.txt')
-    inventory_list = glob.glob('../../meta/inventory_comparison_2/code/station_configuration/CUON_station_configuration_extended.csv')
-    station_elevation = read_station_height(fn,100, inventory_list)
 
-    tt=time.time()
     nanlist = [float('nan'), np.nan, 0, -2147483648]
 
+### code for checking if z_coordinate_type=2 exists in particular year
+    if False:
+        with h5py.File(fn,'r') as f:
+            try:
+                if f['recordtimestamp'].shape[0] == 1:                
+                    ts=f['recordtimestamp'][:]
+                else:
+                    ts=f['recordtimestamp'][[0, -1]]
+                #if f['observations_table']['date_time'].shape[0] == 1:
+                    
+                    #ts=f['observations_table']['date_time'][:]
+                #else:
+                    #ts=f['observations_table']['date_time'][[0, -1]]
+                ref = datetime(1900, 1, 1)
+                tstart = int((datetime(cyear, 1, 1) - ref).total_seconds())
+                tstop = int((datetime(cyear+1, 1, 1) - ref-timedelta(seconds=1)).total_seconds())
+                if tstop < ts[0] or tstart > ts[-1]:
+    #                print(fn, cyear, 'year missing in obs records')
+                    return
+    
+                ts=f['recordtimestamp'][:]
+                ri = f['recordindex'][:]
+                sta, sto = np.searchsorted(ts, (tstart, tstop))
+                if sto == ri.shape[0]:
+                    return
+                li = list(ri[np.searchsorted(ts, (tstart, tstop))])
+                tslice =slice(*li)
+                
+                if ts[tslice].shape[0] == 0:
+                    return
+                
+                n = np.sum(f['observations_table']['z_coordinate_type'][tslice]==2)
+                if n > 0:
+                    print(fn, n, 'with z as coordinate')
+                else:
+                    return
+            except Exception as e:
+                print(fn, e)
+                exit()
+                return
 
+### code for checking if z_coordinate_type=2 exists in particular year
     rscratch='/mnt/users/scratch/leo/scratch/'
     try:
-        reaname = os.path.expandvars(wpathy+fn.split('/')[-1].split('x_CEUAS_merged_v1.nc')[0]+'_'+str(cyear) + '.pkl')
+        reaname = os.path.expandvars(wpathy+fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]+'_'+str(cyear) + '.pkl')
+        wtime = os.path.getmtime(reaname)
+        rtime = os.path.getmtime(fn)
+        if rtime>wtime:
+            print(reaname, 'older than some input')
+            raise ValueError
         with open(reaname,'rb') as f:
             readict=pickle.load(f)
+            if 'tslice' not in readict.keys():
+                print(reaname, 'something is wrong with readict, recreating...')
+                raise ValueError
     except:
 
         out_name = wpathy + fn.split('/')[-1]  
 
         path_to_gridded=os.path.expandvars(rscratch+'/era5/gridded/')
-        readict=retrieve_anfg(fn,readict, refs, out_name,path_to_gridded)
+        readict=retrieve_anfg(fn,readict, refs, gactor, out_name,path_to_gridded)
         if readict is None:
-            print(fn.split('/')[-1], 'no data for year', cyear)
+            print(fn.split('/')[-1], 'no data for year', cyear, time.time() - tt)
             return
         with open(reaname,'wb') as f:
             pickle.dump(readict,f)
-    print (time.time()-tt)
+    print ('read fb',time.time()-tt)
     
+    inventory_list = glob.glob('../../meta/inventory_comparison_2/code/station_configuration/CUON_station_configuration_extended.csv')
+    station_elevation = read_station_height(fn,100, inventory_list)
+    print('read inventory', time.time()-tt)
+
      # wpath+fn.split('/')[-1]
     try:
         os.mkdir(wpathy)
@@ -1835,7 +2284,7 @@ def convert_missing(refs, wpath,cyear, fn):
             #try:
         
                 #df = {dtype:readict[k][dtype]['refvalues']}  # making a 1 column dataframe
-                #write_dict_h5(targetfile, df, k, {dtype: {'compression': 'gzip'}}, 
+                #write_dict_h5(targetfile, df, k, {dtype: {'compression': 32015, 'compression_opts':(3,)}}, 
                               #var_selection=[], mode='a', attrs = {dtype:readict[k][dtype]['t']['attribs']} )  
             #except Exception as e:
                 #print(e, 'no values from ',k,'for station ',os.path.basename(fn))
@@ -1876,11 +2325,11 @@ def convert_missing(refs, wpath,cyear, fn):
             index = data.observations_table.index.shape[0]
             if o in ['observed_variable','observation_value','observation_id','z_coordinate','z_coordinate_type','date_time','conversion_flag','conversion_method']:  
                 if len(data.observations_table[o].shape)==1:
-                    loaded_data.append((data.observations_table[o][tslice]))
+                    loaded_data.append(data.observations_table[o][tslice])
                     a_loaded_data.append(np.empty_like(loaded_data[-1],shape=2*len(loaded_data[-1])+addmem))
                 else:
                     #loaded_data.append(data.observations_table[o][:index, :].view('S{}'.format(data.observations_table[o].shape[1])).flatten())
-                    loaded_data.append(np.zeros(tslice.stop-tslice.start, dtype='S21'))
+                    loaded_data.append(data.observations_table[o][tslice, :].view('S{}'.format(data.observations_table[o].shape[1])).flatten())
 #                     a_loaded_data.append(np.empty((2*len(loaded_data[-1]),len(loaded_data[-1][0])), dtype=loaded_data[-1][0].dtype))
                     a_loaded_data.append(np.empty_like(loaded_data[-1],shape=2*len(loaded_data[-1])+addmem))
                     a_loaded_data[-1].fill(b' '*data.observations_table[o].shape[1])
@@ -1920,7 +2369,7 @@ def convert_missing(refs, wpath,cyear, fn):
             a_loaded_feedback = np.rec.fromarrays(a_loaded_fb, dtype=lf)
             del a_loaded_fb
 
-        @njit
+        @njit(cache=True, boundscheck=False)
         def add_fb(loaded_obstab,loaded_feedback,ref20CR,refera5an,refera5fc):
             i20=0
             iera=0
@@ -1953,10 +2402,14 @@ def convert_missing(refs, wpath,cyear, fn):
 
         # --->
 
-    print(time.time()-tt)
+    print('before ipl2', time.time()-tt)
     idx,press,temp,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,\
     d_temp,d_relhum,d_spechum,d_dpd,d_dewpoint,d_uwind,d_vwind,d_wd,d_ws,\
     fgd_temp,fgd_relhum,fgd_spechum,fgd_dpd,fgd_dewpoint,fgd_uwind,fgd_vwind,fgd_wd,fgd_ws=ipl2(loaded_obstab, loaded_feedback)
+    if idx[0] == -1:
+        print(fn, 'no z coordinate')
+        return targetfile
+    print('after ipl2', time.time()-tt)
 
     xtemp=xr.DataArray(temp)
     xpress=xr.DataArray(press)
@@ -2013,20 +2466,24 @@ def convert_missing(refs, wpath,cyear, fn):
     d_cwd = np.where(cwd > 0., cwd, 360.+cwd)
     fgd_cwd = 90 - np.arctan2(-fgd_vwind, -fgd_uwind) * 180 / np.pi - 180.
     fgd_cwd = np.where(cwd > 0., cwd, 360.+cwd)
+    
 
     humvar=np.array((ipar[34],ipar[36],ipar[38],ipar[39])) #dpd,dp,rh,sh
     wvar=np.array((ipar[104],ipar[105],ipar[106],ipar[107])) #dpd,dp,rh,sh
+    hvar = np.array([117]) # geopotential (if pressure is not present)
 
     reduced_obskeys=List(loaded_obstab.dtype.fields.keys())
     reduced_fbkeys=List(loaded_feedback.dtype.fields.keys())
+    print('before augment', time.time()-tt)
     out, fb_out, ri, rt, jj, addedvar=augment(loaded_obstab, a_loaded_obstab, loaded_feedback, a_loaded_feedback,
                                               idx,temp,press,relhum,spechum,dpd,dewpoint,uwind,vwind,wd,ws,
                                              cdpddp,cdpdrh,cshrh,cshdpd,crhdpd,crhsh,cdpdsh,cuwind,cvwind,cwd,cws,
                                              d_cdpddp,d_cdpdrh,d_cdpdsh,d_cshrh,d_cshdpd,d_crhsh,d_crhdpd,
                                              fgd_cdpddp,fgd_cdpdrh,fgd_cdpdsh,fgd_cshrh,fgd_cshdpd,fgd_crhsh,fgd_crhdpd,
                                              d_cwd,d_ws,fgd_cwd,fgd_ws,
-                                             humvar,wvar)
+                                             humvar,wvar, hvar)
 
+    print('after augment', time.time()-tt)
     for ii in range(104,108):
         #idx=np.where(loaded_obstab['observed_variable']==ii)[0]
         idy=np.where(a_loaded_obstab['observed_variable'][:jj]==ipar[ii])[0]    
@@ -2048,13 +2505,16 @@ def convert_missing(refs, wpath,cyear, fn):
     #for i in reduced_fbkeys:
         #fb_avars[i] = fb_out[i][:jj]
 
-    print(time.time()-tt)
-
     # sorting:
-    print('start sorting')
+    print('start sorting', time.time()-tt)
 
+    #try:      
+        #os.remove(targetfile)
+    #except:
+        #pass
+    
     with h5py.File(fn, 'r') as file:
-        with h5py.File(targetfile, 'a') as newfile:
+        with h5py.File(targetfile, 'w') as newfile:
 
             headerslice = slice(*np.searchsorted(file['header_table']['record_timestamp'][:], (rt[0], rt[-1]+1)))
 
@@ -2062,34 +2522,35 @@ def convert_missing(refs, wpath,cyear, fn):
             for i in file.keys():
                 if type(file[i]) == h5py._hl.group.Group:
                     if i not in ('observations_table','era5fb'):
-                        newfile.create_group(i)
                         groups.append(i)
+                        newfile.create_group(i)
+                        
                 elif i in ('recordindex', 'recordtimestamp', 'dateindex'):
                     pass
                 else:
-                    newfile.create_dataset(i, data=file[i][:])
+                    newfile.create_dataset(i, data=file[i][:], compression= 'gzip')
             for i in groups:
                 if(i == 'recordindices' or i == 'observations_table' or i == 'era5fb'):
                     pass
                 elif i in ('header_table', 'source_configuration'):
                     if 'index' not in file[i].keys():
-                        newfile[i].create_dataset('index', data=np.empty(headerslice.stop-headerslice.start, dtype='S1'))                       
+                        newfile[i].create_dataset('index', data=np.empty(headerslice.stop-headerslice.start, dtype='S1'), compression= 'gzip')                       
                     for j in file[i].keys():
-                        print(i, j)
+                        #print(i, j)
                         if 'string' in j:
                             xdata = file[i][j][:]
                         else:
                             xdata = file[i][j][headerslice][:]
-                        newfile[i].create_dataset(j, data=xdata)
+                        newfile[i].create_dataset(j, data=xdata, compression= 'gzip')
                     if i == 'header_table':
                         newfile[i]['height_of_station_above_sea_level'][:] = station_elevation
                         
                 else:
                     if 'index' not in file[i].keys():
                         sh = file[i][list(file[i].keys())[0]].shape[0]
-                        newfile[i].create_dataset('index', data=np.empty(sh, dtype='S1'))                       
+                        newfile[i].create_dataset('index', data=np.empty(sh, dtype='S1'), compression= 'gzip')                       
                     for j in file[i].keys():
-                        newfile[i].create_dataset(j, data=file[i][j][:])
+                        newfile[i].create_dataset(j, data=file[i][j][:], compression= 'gzip')
                     
                 dim_attach(newfile, i)
 
@@ -2099,7 +2560,7 @@ def convert_missing(refs, wpath,cyear, fn):
     #
     # resorting the data
     #
-    @njit
+    @njit(cache=True, boundscheck=False)
     def make_vrindex(vridx,ridx): # this function is similar to np.unique with return_index=True, but it expands the index to the  
         # original array dimensions
         l=0
@@ -2176,20 +2637,18 @@ def convert_missing(refs, wpath,cyear, fn):
     #path_to_gridded=os.path.expandvars('$RSCRATCH/era5/gridded/')
     #readict=retrieve_anfg(out_name,path_to_gridded)
 
-    tt=time.time()
     if os.path.isfile(targetfile):
         mode='r+'
     else:
         mode='w'
 
     for i in obskeys:
-        print(i)
-        print(time.time()-tt)
 
         if i == 'observation_id':
-            ov_vars = np.empty(jj,dtype='S11')
+            ov_vars = np.empty(jj,dtype=out[i].dtype)
             ov_vars[:]=out[i][:jj]
-            ov_vars=fill_obsid(ov_vars.view('S1').reshape((len(ov_vars),11)),out['conversion_flag'][:jj])
+            dim1 = int(str(out[i].dtype).split('S')[-1])
+            ov_vars=fill_obsid(ov_vars.view('S1').reshape((len(ov_vars),dim1)),out['conversion_flag'][:jj])
 
         elif i in reduced_obskeys:
             ov_vars = out[i][:jj]
@@ -2201,10 +2660,11 @@ def convert_missing(refs, wpath,cyear, fn):
             pass
         elif i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
             alldict = {i:np.asarray(ov_vars, dtype='S1')}
-            write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])
+            write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 32015, 'compression_opts':(3,) } }, [i])
         else:
-            alldict = pandas.DataFrame({i:ov_vars})
-            write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])  
+            alldict = {i:ov_vars}
+            write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 32015, 'compression_opts':(3,) } }, [i])  
+        #print(i, time.time()-tt)
     del ov_vars
     del obsv
     #del dta
@@ -2214,9 +2674,6 @@ def convert_missing(refs, wpath,cyear, fn):
 
     if True:
         for i in fbkeys:
-            print(i)
-            print(time.time()-tt)
-
             if i in reduced_fbkeys:
                 ov_vars = fb_out[i][:jj]
             else: 
@@ -2228,36 +2685,37 @@ def convert_missing(refs, wpath,cyear, fn):
                 pass
             elif i in ['expver', 'source@hdr', 'source_id', 'statid@hdr']:
                 alldict = {i:np.asarray(ov_vars, dtype='S1')}
-                write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i])
+                write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 32015, 'compression_opts':(3,) } }, [i])
             else:
                 alldict = pandas.DataFrame({i:ov_vars})
-                write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i]) 
+                write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 32015, 'compression_opts':(3,) } }, [i]) 
 
+            #print(i, time.time()-tt)
         del fb_out
         del a_loaded_feedback
         gc.collect()
 
         obskeys.append('station_elevation') # fix for adding station elevation 
-        if True:
+        #if True:
+        with eua.CDMDataset(fn) as data:
             for i in obskeys:
                 if i in reduced_obskeys or i == 'observation_id' :
                     continue
                 #if i not in ('latitude','longitude','report_id'):
                     #continue
-
-                print(i, time.time()-tt)
                 if i != 'station_elevation':                   
-                    with eua.CDMDataset(fn) as data:
                         #i='z_coordinate'
-                        rest_data = data.observations_table[i][tslice]
+                    rest_data = data.observations_table[i][tslice]
                     if rest_data.ndim==2: #i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
                         final = np.empty((addedvar[-1][1],len(rest_data[0])), dtype=rest_data[0].dtype)
                     else:
                         final = np.empty(addedvar[-1][1], dtype=rest_data.dtype)
     
                 #print('vor fill_restdata', fn)
+
                     ov_vars = fill_restdata(final, rest_data, addedvar, jj) #,out['z_coordinate'][:jj])
                     ov_vars = ov_vars[absidx]
+
                 else:
                     ov_vars = np.full(jj, station_elevation,dtype=np.float32) # add station elevation
                     
@@ -2265,22 +2723,21 @@ def convert_missing(refs, wpath,cyear, fn):
                     pass
                 elif i in ['observation_id', 'report_id', 'sensor_id', 'source_id']:
                     alldict = {i:np.asarray(ov_vars, dtype='S1')}
-                    write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])
+                    write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 32015, 'compression_opts':(3,) } }, [i])
                 else:
                     #alldict = pandas.DataFrame({i:ov_vars})
                     alldict = {i:ov_vars}
-                    write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 'gzip' } }, [i])  
+                    write_dict_h5(targetfile, alldict, 'observations_table', {i: { 'compression': 32015, 'compression_opts':(3,) } }, [i])  
 
-        if True:
+                #print(i, time.time()-tt)
+        #if True:
+        with eua.CDMDataset(fn) as data:
             for i in fbkeys:
-                print(i)
-                print(time.time()-tt)
 
                 if i in reduced_fbkeys:
                     continue
                 else: 
-                    with eua.CDMDataset(fn) as data:
-                        rest_data = data.era5fb[i][tslice]
+                    rest_data = data.era5fb[i][tslice]
                     if i in ['expver', 'source@hdr', 'source_id', 'statid@hdr']:
                         final = np.empty((addedvar[-1][1],len(rest_data[0])), dtype=rest_data[0].dtype)
                     else:
@@ -2293,16 +2750,17 @@ def convert_missing(refs, wpath,cyear, fn):
                     pass
                 elif i in ['expver', 'source@hdr', 'source_id', 'statid@hdr']:
                     alldict = {i:np.asarray(ov_vars, dtype='S1')}
-                    write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i])
+                    write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 32015, 'compression_opts':(3,) } }, [i])
                 else:
-                    alldict = pandas.DataFrame({i:ov_vars})
-                    write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i]) 
+                    alldict = {i:ov_vars}
+                    write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 32015, 'compression_opts':(3,) } }, [i]) 
+                #print(i, time.time()-tt)
         #
         # writing the recordindices and recordtimestamp.
         #       
     recordindices=vridx
     for i in range(len(recordindices)):
-        testvar = pandas.DataFrame({str(allvars[i]):recordindices[i]})
+        testvar = {str(allvars[i]):recordindices[i]}
         write_dict_h5(targetfile, testvar, 'recordindices', {str(allvars[i]): { 'compression': None } }, [str(allvars[i])]) 
 
     write_dict_h5(targetfile, {'recordtimestamp':recordtimestamps}, 'recordindices', {'recordtimestamp': { 'compression': None } }, ['recordtimestamp'])
@@ -2322,21 +2780,29 @@ ray_convert_missing = ray.remote(convert_missing)
 def rmsplot(files):
     
     readicts = []
+    year = os.path.dirname(files[0]).split('/')[-1]
+    pkname = files[0] +'_'+year + '.pkl'
+    fno = wpath+'/plots/'+os.path.basename(pkname).split('.')[0].split('_')[0]
+    if os.path.exists(fno+'.txtx'):
+        print(fno+' already plotted')
+        return
+    
     print('rmsplot', files)
     for file in files:
         year = os.path.dirname(file).split('/')[-1]
-        pkname = file +'_'+year + '.pkl'
+        pkname = file.split('_CEUAS')[0] +'_'+year + '.pkl'
         
         print(pkname)
         try:
             
             with open(pkname,'rb') as f:
                 readicts.append(pickle.load(f))
-        except:
-            print (pkname + ' not found')
+        except Exception as e:
+            print (pkname + ' not found', e)
     if len(readicts) == 0:
         print(pkname+' no feedback information found')
         return
+    
     
     readict = {'obs' : {}}
     print(readicts[0].keys())
@@ -2363,8 +2829,15 @@ def rmsplot(files):
                     readict[k][dtype] = {}
                 readict[k][dtype]['refvalues'] = np.concatenate([i[k][dtype]['refvalues'] for i in readicts])
 
+    try:
+        os.mkdir(wpath+'/plots')
+    except:
+        pass
+    
+    readictplot(readict, ('mean', 'std','rms'), (85000, ), fno, marker='')
+    with open(fno+'.txt', 'w') as f:
+        f.write('plots done')
 
-    readictplot(readict, ('mean', 'std','rms'), (30000, ), wpath+'/plots/'+os.path.basename(pkname).split('.')[0].split('_')[0], marker='')
     return
 
 ray_rmsplot = ray.remote(rmsplot)
@@ -2536,12 +3009,20 @@ if __name__ == '__main__':
     #files = glob.glob('/mnt/scratch/scratch/federico/MERGING_DEC2022_FIXED_1/*-20???-0-82930*v1.nc')
     #files = glob.glob('/mnt/scratch/scratch/federico/VIENNA_SENSORFIX_JAN2023/*-20???-0-11035*v1.nc')
     #files = glob.glob('/mnt/scratch/scratch/federico/YEAR_SPLIT_MERGING/[12]???/0-*v2.nc')
-    files = glob.glob('/mnt/scratch/scratch/federico/MERGED_FEB2023/0-*02974*v1.nc')
+    tt = time.time()
+    files = glob.glob('/mnt/scratch/scratch/federico/MERGED_FEB2023/0-20300-0-21965*v1.nc')[:]
+    #files = glob.glob('/mnt/scratch/scratch/federico/MERGED_FEB2023/*.nc')[:]
+    files = glob.glob('/mnt/scratch/scratch/federico/MERGED_FEB2023/*11035*v1.nc')[:]
+
+    #files = glob.glob('/mnt/scratch/scratch/federico/MERGED_FEB2023_MOBILE_mobile/*v1.nc')[:] + \
+        #glob.glob('/mnt/scratch/scratch/federico/MERGED_FEB2023_coordinates_coordinate/*v1.nc')[:] #MERGED_FEB2023_big 
 #    files = glob.glob('/mnt/scratch/scratch/federico/COP2_HARVEST_NOVEMBER2022/era5_1_mobile/*ASEU03*.nc')
     #files_to_convert = glob.glob('/raid60/scratch/federico/MERGED_JUNE2021/*72357*v1.nc')
     #files = glob.glob('/scratch/das/federico/TRY_MERGED_FEB2022/*89564*v1.nc')
     #files_to_convert = files #glob.glob('/scratch/das/federico/TRY_MERGED_JAN2022/*72357*v1.nc')
 
+        
+    print(len(files), time.time() - tt)
     ipar=np.zeros(140,dtype=np.int32)-2100000000 # 
     ipar[0]=0
     ipar[34]=34
@@ -2591,45 +3072,110 @@ if __name__ == '__main__':
     
     refs = load_20CRoffset(readict)
     readicts = []
-    for i in range(2022, 1904, -1):
+    #for i in range(1950, 1939, -1):
         
-        func=partial(convert_missing, refs, wpath, i)
-        result_list = list(map(func, files_to_convert[:]))
+        #func=partial(convert_missing, refs, wpath, i)
+        #result_list = list(map(func, files_to_convert[:]))
         
-    # simple plotting
-    for i in  ('long', ):#(1995, 1994, -1):
+    ## simple plotting
+    #for i in  ('long', ):#(1995, 1994, -1):
         
-        func=partial(plot_contents, wpath, i)
-        result_list = list(map(func, files_to_convert[:]))
+        #func=partial(plot_contents, wpath, i)
+        #result_list = list(map(func, files_to_convert[:]))
 
-    exit()
+    #exit()
                
 
-    ray.init(num_cpus=40, _temp_dir=os.path.expanduser('~/ray'))
+    
+    #fp = {}
+    #for fn in glob.glob(os.path.expandvars('$RSCRATCH/era5/gridded/era5t.*')):
+        #fp[os.path.basename(fn)] = h5py.File(fn, 'r')
+        
+    #ray_fp = ray.put(fp)
+        
+    #ray.init(num_cpus=60, _temp_dir=os.path.expanduser('~/ray'))
     #refs_ref = ray.put(refs)
 
-    #for year in range(2015, 1904, -1):
-            
-        #futures = [ ray_convert_missing.remote(refs_ref, wpath, year, file )  for file in files_to_convert]
+    futures = []
+    for year in range(1960, 1959, -1):
+        """        glist = glob.glob(os.path.expandvars('$RSCRATCH/era5/gridded/era5t.{}??.*.nc'.format(year))) + \
+            glob.glob(os.path.expandvars('$RSCRATCH/era5/gridded/era5fct.{}*.nc'.format(year))) + \
+            glob.glob(os.path.expandvars('$RSCRATCH/20CRv3/anl_meant_{}*.nc'.format(year)))
+        gactor = {}
+        gp = {}
+        futures = []
+        for g in glist:
+            gactor[os.path.basename(g)] = h5p.remote(g)
+            #gp[os.path.basename(g)] = h5py.File(g, 'r')
+            #print(os.path.basename(g))
+            futures.append(gactor[os.path.basename(g)].name.remote())
+        x = ray.get(futures)
+        myactors =ray.put(gactor)
+        #convert_missing(refs_ref, myactors, wpath, year, files_to_convert[0]) 
+        futures = [ ray_convert_missing.remote(refs_ref, myactors, wpath, year, file )  for file in files_to_convert[:]]
+        """
+        for file in files_to_convert:
+            convert_missing(refs, None, wpath, year, file) 
+        
+        #futures = futures + [ ray_convert_missing.remote(refs_ref, None, wpath, year, file )  for file in files_to_convert]
     #obj_result_list = ray.get(futures)
+        
+    """
+        del myactors
+        for g in glist:
+            del gactor[os.path.basename(g)]
+    """
+
+    print('')
+    if False:
+        pwd = os.getcwd()
+        obj_result_list = glob.glob(wpath+'/[12]???/*v1.nc')
+        os.chdir(pwd)
+        shlist = np.unique([os.path.basename(ll) for ll in obj_result_list if ll is not None])
+        futures = []
+        vienna = False
+        for file in shlist:
+            if '11035' in file:
+                vienna = True
+            sublist = sorted([s for s in obj_result_list if s is not None and file in s])
+            #rmsplot(sublist)
+            #if True or vienna:
+            futures.append(ray_rmsplot.remote(sublist))
+        ray.get(futures)
 
     pwd = os.getcwd()
-    wpath = os.path.expandvars('$RSCRATCH/converted_v10/')
-#    os.chdir(wpath)
-    obj_result_list = glob.glob(wpath+'/[12]???/*v1.nc')
+    os.chdir(wpath)
+    longlist = glob.glob('[12]???/*v1.nc')
     os.chdir(pwd)
-    shlist = np.unique([os.path.basename(ll) for ll in obj_result_list if ll is not None])
-    futures = []
-    vienna = False
-    for file in shlist:
-        if '11035' in file:
-            vienna = True
-        sublist = sorted([s for s in obj_result_list if s is not None and file in s])
-        #rmsplot(sublist)
-        if vienna:
-            futures.append(ray_rmsplot.remote(sublist))
+    shlist = []
+    shlist = [os.path.basename(ll) for ll in longlist]
+    fkeys = np.unique(shlist)
+    
+    futures =[]   
+    for fks in fkeys:
+        fkey = wpath+'/[12]???/' + fks
+        
+        #try:
+            
+            #fnc = glob.glob('/'.join(fkey.split('/')[:-2]) + '/' + fkey.split('/')[-1])[0]
+        #except:
+            #print(fkey, 'no match found')
+            #continue
+        #tt = time.time()
+        #h = h5py.File(fnc,'r')
+        #rvars = list(h['recordindices'].keys())
+        ##for i in range(len(rvars)):
+            ##if rvars[i].isdecimal():
+                ##rvars[i] = int(rvars[i])
+        ##rvars.sort()
+        #rdict = {rvars[i]: [] for i in range(len(rvars))}
+        #ridict = {rvars[i]: [] for i in range(len(rvars))}
+        #risave = {}
+        
+        #h5concatenate(fkey)
+        futures .append(ray_h5concatenate.remote(fkey))
+        
     ray.get(futures)
-
     #futures = []
     #for file in files_to_convert:
         #futures .append(ray_do_station.remote(refs_ref, file, range(2022, 1904, -1)))
