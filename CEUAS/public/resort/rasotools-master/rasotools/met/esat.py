@@ -442,7 +442,7 @@ def HylandWexler(temp, over_water=True, over_ice=False, **kwargs):
             res = t.copy()
             res[mask] = np.exp(
                 -5800.2206 / tmask + 1.3914993
-                - 0.48640239e-1 * 
+                - 0.48640239e-1 *tmask
                 + 0.41764768e-4 * tmask * tmask
                 - 0.14452093e-7 * tmask * tmask * tmask
                 + 6.5459673 * np.log(tmask)
