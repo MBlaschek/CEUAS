@@ -1577,7 +1577,7 @@ def process_flat(outputdir: str, cftable: dict, debug:bool, request_variables: d
             gdict = {
                 'recordindices':[str(cdm_codes[request_variables['variable']]),'recordtimestamp'],
                 'observations_table':['date_time','z_coordinate','observation_value','observed_variable','report_id'],
-                'header_table':[],
+                'header_table':['report_timestamp'],
                 'station_configuration': ['station_name', 'primary_id']
             }
             if '0-20100-0' not in statid and '0-20200-0' not in statid:
@@ -2884,26 +2884,34 @@ class CDMDataset:
                request.get('rtsidx',None)
                ))
         
+        report_timestamp = False
+        opts = request.get('optional', None)
+        if opts != None:
+            if 'report_timestamp' in opts:
+                report_timestamp = True
+        
         trange, mask, base_mask = self.read_observed_variable(cdmnum,
-                                                   variable='observation_value',
-                                                   dates=request.get('date', None),
-                                                   plevs=request.get('pressure_level', None),
-                                                   times=request.get('time', None),
-                                                   observed_variable_name='observed_variable',
-                                                   date_time_name='date_time',
-                                                   date_time_in_seconds=False,
-                                                   z_coordinate_name='z_coordinate',
-                                                   group='observations_table',
-                                                   dimgroup='observations_table',
-                                                   return_index=True,
-                                                   return_base_index=True,
-                                                   rtsindex=request.get('rtsidx',None)
-                                                   )
+                                                              variable='observation_value',
+                                                              dates=request.get('date', None),
+                                                              plevs=request.get('pressure_level', None),
+                                                              times=request.get('time', None),
+                                                              observed_variable_name='observed_variable',
+                                                              date_time_name='date_time',
+                                                              date_time_in_seconds=False,
+                                                              z_coordinate_name='z_coordinate',
+                                                              group='observations_table',
+                                                              dimgroup='observations_table',
+                                                              return_index=True,
+                                                              return_base_index=True,
+                                                              rtsindex=request.get('rtsidx',None),
+                                                              report_timestamp = report_timestamp,
+                                                             )
         logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange.start,
                      trange.stop, time.time() - time0, self.name)
         tt=time.time() - time0
         print(tt)
-        
+        print('MASK', mask)
+        print()
         base_idx = np.where(base_mask)[0] + trange.start  # absolute integer index
         idx = np.where(mask)[0] + trange.start  # absolute integer index
         if restriction_active:
@@ -3841,6 +3849,7 @@ class CDMDataset:
     def make_datetime_slice(self, varnum:int = None, dates: list = None, date_time_name: str = 'date_time',
                             date_time_in_seconds: bool = False,
                             add_day_before: bool = False,
+                            report_timestamp = False,
                             **kwargs) -> slice:
         """ Create a datetime slice for HDF5 optimal reading
 
@@ -3869,8 +3878,13 @@ class CDMDataset:
                 timestamp_units = self.read_attributes('recordtimestamp').get('units', None)
             elif 'recordindices' in self.groups:
                 if isinstance(self['recordindices'], CDMGroup):
-                    timestamp = self.load_variable_from_file('recordtimestamp', group='recordindices', return_data=True)[0]
-                    timestamp_units = self.read_attributes('recordtimestamp', group='recordindices').get('units', None)
+                    # change to report_timestamp here
+                    if report_timestamp:
+                        timestamp = self.load_variable_from_file('report_timestamp', group='header_table', return_data=True)[0]
+                        timestamp_units = self.read_attributes('report_timestamp', group='header_table').get('units', None)
+                    else:
+                        timestamp = self.load_variable_from_file('recordtimestamp', group='recordindices', return_data=True)[0]
+                        timestamp_units = self.read_attributes('recordtimestamp', group='recordindices').get('units', None)
             else:
                 # backup if recordtimestamp not present
                 timestamp = self.load_variable_from_file(date_time_name, return_data=True)[0]
@@ -3980,6 +3994,7 @@ class CDMDataset:
                                return_base_index: bool = False,
                                use_odb_codes: bool = False,
                                return_xarray: bool = False,
+                               report_timestamp: bool = False,
                                **kwargs
                                ):
         """ Read a variable from a CDM backend file
@@ -4001,6 +4016,7 @@ class CDMDataset:
             return_index: subset and logic array
             use_odb_codes: ODB Codes or CDM Codes
             return_xarray: convert to xarray object
+            report_timestamp: use report_timestamp instead of record_timestamp for data selection -> nominal time instead of true time
 
         Returns:
             values
@@ -4022,7 +4038,7 @@ class CDMDataset:
             mixed, as they are available, like records. Hence to retrieve one variable the observed_variable needs
             to be used to subset the array in memory (faster)
         """
-        
+                
         if not self.da:        
             if not self.hasgroups:
                 raise RuntimeError('This function only works with CDM Backend files')
@@ -4074,10 +4090,12 @@ class CDMDataset:
                 trange=slice(ssvar[kwargs['rtsindex'][0]+minday],ssvar[-1],None)
                 
         else:
-            
+            # change to report_timestamp here
             trange = self.make_datetime_slice(dates=dates, varnum=varnum, date_time_name=date_time_name,
-                                          date_time_in_seconds=date_time_in_seconds,
-                                          add_day_before=True if times is not None else False)
+                                              date_time_in_seconds=date_time_in_seconds,
+                                              add_day_before=True if times is not None else False,
+                                              report_timestamp = report_timestamp,
+                                             )
         
         if dates is not None:
             print('dates not None')
