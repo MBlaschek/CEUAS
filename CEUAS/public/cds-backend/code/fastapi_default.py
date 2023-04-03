@@ -328,15 +328,13 @@ def pkl_initialize(config,slist=[]):
     i=0
     imem=0
     
-    if not slist:
-        
-        try:
-                
-            with open(fout, 'rb') as f:
-                rtskeys,rtsidx,rtsarr=pickle.load(f)
-        except: 
-            raise ValueError('cannot read '+fout)
-    else:         
+    try:
+
+        with open(fout, 'rb') as f:
+            rtskeys,rtsidx,rtsarr=pickle.load(f)
+    except: 
+        print('cannot read '+fout)
+        print('creating new h5link')
         #with h5py.File(fout,'r') as f:
         l=0
         #with Pool(10) as p:
@@ -972,6 +970,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                          'desroziers_30', 'desroziers_60', 'desroziers_90', 'desroziers_180',
                          'wind_bias_estimate',
                          'humidity_bias_estimate', 'humidity_1.0_bias_estimate',
+                         'report_timestamp',
                         ]
     # bias_estimate_method : raobcore, rich, ...
     if optional is not None:
