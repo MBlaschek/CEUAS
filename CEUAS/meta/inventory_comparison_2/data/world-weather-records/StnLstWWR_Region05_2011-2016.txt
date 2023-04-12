@@ -1,0 +1,257 @@
+        R                                                                                             Total No. Monthly Obs by Element |     
+        e                                                                Statn  Barom  Local         Mean Mean Mean      Mean Mean Mean|Totl 
+        c                                                                 Elev   Elev  Statn     :    Stn Slvl  Dly Totl  Max  Min     |  #  
+  Wmo#  #  Lat   Lon   Country Name             Station Name               (m)  (.1m)    #       :   Pres Pres Temp Prec Temp Temp   RH| Obs 
+ 
+  89564 1 6736S 06253E AUSTRALIA                MAWSON                      10 -99999            :     36   36   36    0   36   36    0  180
+  89571 1 6834S 07758E AUSTRALIA                DAVIS                       18 -99999            :     36   36   36   29   36   36    0  209
+  89577 1 8022S 07722E AUSTRALIA                DOME A                    4084 -99999            :     36    0    0    0    0    0    0   36
+  89611 1 6617S 11031E AUSTRALIA                CASEY                       40 -99999            :     36   36   36   22   36   36    0  202
+  89642 1 6639S 14000E FRANCE                   DUMONT D'URVILLE            43    430            :      0   72   72    0   72   72   72  360
+  91570 1 1828S 16305E FRANCE                   SURPRISE                     4     40            :      0   54   54    0   54   54   54  270
+  91571 1 2027S 16412E FRANCE                   TIEBAGHI                   595 -99999            :      0    0   46   45   46   46   29  212
+  91573 1 1943S 16339E FRANCE                   BELEP AEROD.                82    840            :      0   64   64   59   63   63   61  374
+  91574 1 1958S 15828E FRANCE                   CHESTERFIELD                 4     60            :      0   52   58    0   57   57   56  280
+  91577 1 2033S 16417E FRANCE                   KOUMAC                      19    190            :      0   72   72   72   72   72   72  432
+  91578 1 2103S 16450E FRANCE                   KONE                         9     70            :      0   72   72   72   72   72   72  432
+  91579 1 2038S 16634E FRANCE                   OULOUP                       7     90            :      0   70   69   67   69   69   70  414
+  91582 1 2057S 16713E FRANCE                   LIFOU-RADAR                 29 -99999            :      0   72   72   72   72   72   72  432
+  91583 1 2055S 16519E FRANCE                   POINDIMIE                   14    140            :      0   71   71   71   71   71   71  426
+  91586 1 2047S 16515E FRANCE                   TOUHO AEROD.                 2     70            :      0   72   72   72   72   72   72  432
+  91587 1 2128S 16802E FRANCE                   LA ROCHE                    41    480            :      0   72   72   71   72   72   72  431
+  91590 1 2201S 16613E FRANCE                   LA TONTOUTA                 37    110            :      0   72   72   72   72   72   72  432
+  91592 1 2216S 16627E FRANCE                   NOUMEA-RADAR                69 -99999            :      0   72   72   72   72   72   72  432
+  91596 1 2235S 16727E FRANCE                   MOUE                        95   1040            :      0   72   66   72   65   65   65  405
+  91753 1 1314S 17611W FRANCE                   HIHIFO                      30    280            :      0   72   72   72   72   72   72  432
+  91754 1 1418S 17807W FRANCE                   MAOPOOPO                    35    360            :      0   72   72   72   72   72   72  432
+  91824 1 1905S 16956W NIUE                     HANAN AIRPORT               59    590            :      0   71   72   72   72   72   72  431
+  91921 1 0847S 14013W FRANCE                   NUKUATAHA AERO              64    720            :      0   48   48   48   48   48   48  288
+  91925 1 0948S 13902W FRANCE                   HIVA-OA                     51    530            :      0   72   72   72   72   72   72  432
+  91929 1 1626S 15145W FRANCE                   BORA-BORA-MOTU-AERO          3     30            :      0   72   72   72   72   72   72  432
+  91933 1 1721S 14530W FRANCE                   ANAA1                        3     40            :      0   46   46   46   46   46   46  276
+  91936 1 1744S 14909W FRANCE                   TAIARAPU-EST                 2     30            :      0   72   72   72   72   72   71  431
+  91938 1 1733S 14936W FRANCE                   FAAA                         2     20            :      0   72   72   72   72   72   72  432
+  91941 1 1457S 14739W FRANCE                   RANGIROA AERO                7     70            :      0   48   48   48   48   48   48  288
+  91943 1 1427S 14501W FRANCE                   TAKAROA                      2     30            :      0   72   72   72   72   72   72  432
+  91944 1 1803S 14057W FRANCE                   HAO AERO                     3     50            :      0   72   72   72   72   72   72  432
+  91945 1 1954S 14456W FRANCE                   HEREHERETUE                  2     30            :      0   69   69   66   68   68   69  409
+  91948 1 2307S 13457W FRANCE                   MANGAREVA                   91    890            :      0   72   72   72   72   72   72  432
+  91954 1 2322S 14931W FRANCE                   TUBUAI AERO                  3     60            :      0   54   54   71   54   54   54  341
+  91958 1 2737S 14420W FRANCE                   RAPA                         2     20            :      0   72   72   72   72   72   72  432
+  93004 1 3426S 17241E NEW ZEALAND              CAPE REINGA AWS            214   1910            :      0   24   24   24   24   24    0  120
+  93020 1 3516S 17355E NEW ZEALAND              KERIKERI AERO 2            150 -99999            :      0   24    0    0    0    0    0   24
+  93021 1 3516S 17355E NEW ZEALAND              KERIKERI AERODROME AWS     150 -99999            :      0   24   24   24   24   24    0  120
+  93023 1 3508S 17401E NEW ZEALAND              PURERUA AWS                 82    870            :      0   24   24   23   24   24    0  119
+  93034 1 3525S 17349E NEW ZEALAND              KAIKOHE AWS                204 -99999            :      0    0   23   23   23   23    0   92
+  93057 1 3546S 17422E NEW ZEALAND              WHANGAREI AERO AWS          37    380            :      0   24   24   23   24   24    0  119
+  93058 1 3546S 17422E NEW ZEALAND              WHANGAREI AERO              37 -99999            :      0   24    0    0    0    0    0   24
+  93069 1 3554S 17507E NEW ZEALAND              MOKOHINAU AWS               60    600            :      0   24    0    0    0    0    0   24
+  93098 1 3648S 17437E NEW ZEALAND              AUCKLAND, WHENUAPAI AWS     26 -99999            :      0   24   24    0   24   24    0   96
+  93103 1 3636S 17450E NEW ZEALAND              WHANGAPARAOA AWS            89    890            :      0   24   24   24   24   24    0  120
+  93110 1 3700S 17447E NEW ZEALAND              AUCKLAND AERO                7 -99999            :      0   24   24   24   24   24    0  120
+  93129 1 3650S 17541E NEW ZEALAND              WHITIANGA AERO AWS           5     60            :      0   24   24   24   24   24    0  120
+  93146 1 3722S 17541E NEW ZEALAND              PAEROA AWS                  18    190            :      0   24   24   24   24   24    0  120
+  93172 1 3752S 17520E NEW ZEALAND              HAMILTON AERO               51 -99999            :      0   24    0    0    0    0    0   24
+  93173 1 3752S 17520E NEW ZEALAND              HAMILTON AWS                53    530            :      0   24   24   24   24   24    0  120
+  93185 1 3740S 17612E NEW ZEALAND              TAURANGA AERODROME           4 -99999            :      0   24    0    0    0    0    0   24
+  93186 1 3740S 17612E NEW ZEALAND              TAURANGA AERO AWS            4     50            :      0   24   24   24   24   24    0  120
+  93190 1 3756S 17655E NEW ZEALAND              WHAKATANE AERO               6 -99999            :      0   24    0    0    0    0    0   24
+  93191 1 3756S 17655E NEW ZEALAND              WHAKATANE AERO AWS           7     70            :      0   24   24   24   24   24    0  120
+  93196 1 3734S 17819E NEW ZEALAND              HICKS BAY AWS               46    460            :      0   24   24    0   24   24    0   96
+  93201 1 3810S 17442E NEW ZEALAND              PORT TAHAROA AWS            27    280            :      0   24   24   24   24   24    0  120
+  93226 1 3853S 17520E NEW ZEALAND              TAUMARUNUI AWS             195 -99999            :      0   24   24   24   24   24    0  120
+  93236 1 3841S 17604E NEW ZEALAND              TAUPO WXT AWS              385   3850            :      0   24   23    0   24   23    0   94
+  93243 1 3844S 17605E NEW ZEALAND              TAUPO AERO                 396 -99999            :      0   24    0    0    0    0    0   24
+  93245 1 3845S 17605E NEW ZEALAND              TAUPO AWS                  400   4010            :      0   24   24   24   24   24    0  120
+  93246 1 3807S 17619E NEW ZEALAND              ROTORUA AERO 2             281   2850            :      0   24    0    0    0    0    0   24
+  93247 1 3806S 17619E NEW ZEALAND              ROTORUA AERO AWS           283 -99999            :      0   24   24   23   24   24    0  119
+  93249 1 3805S 17642E NEW ZEALAND              KAWERAU AWS                 42 -99999            :      0    0   24    0   24   24    0   72
+  93257 1 3824S 17645E NEW ZEALAND              GALATEA AWS                174 -99999            :      0   24   24    0   24   24    0   96
+  93258 1 3804S 17604E NEW ZEALAND              MAMAKU RADAR WXT AWS       617   6170            :      0   24   24    0   24   24    0   96
+  93263 1 3954S 17539E NEW ZEALAND              FLAT HILLS WXT AWS         263   2630            :      0   24   24    0   24   24    0   96
+  93285 1 3823S 17818E NEW ZEALAND              TOLAGA BAY WXT AWS          12    120            :      0   24   24    0   24   24    0   96
+  93291 1 3840S 17759E NEW ZEALAND              GISBORNE AERO                4 -99999            :      0   24    0    0    0    0    0   24
+  93292 1 3840S 17759E NEW ZEALAND              GISBORNE AWS                 5     50            :      0   24   24   24   24   24    0  120
+  93308 1 3901S 17411E NEW ZEALAND              NEW PLYMOUTH AERO           27 -99999            :      0   24    0    0    0    0    0   24
+  93309 1 3900S 17411E NEW ZEALAND              NEW PLYMOUTH AWS            30    320            :      0   24   24   24   24   24    0  120
+  93313 1 3937S 17418E NEW ZEALAND              HAWERA AWS                  98 -99999            :      0   24   24   23   24   24    0  119
+  93325 1 3958S 17502E NEW ZEALAND              WANGANUI AERO                8    170            :      0   24    0    0    0    0    0   24
+  93327 1 3958S 17501E NEW ZEALAND              WANGANUI AWS                 8    140            :      0   24   24   24   24   24    0  120
+  93340 1 3928S 17540E NEW ZEALAND              WAIOURU TREATMENT PLANT    806 -99999            :      0    0   24   24   24   24    0   96
+  93345 1 3956S 17502E NEW ZEALAND              WANGANUI 2 AWS              18 -99999            :      0    0   24    0   24   24    0   72
+  93372 1 3928S 17652E NEW ZEALAND              NAPIER AERO                  2 -99999            :      0   24    0    0    0    0    0   24
+  93373 1 3928S 17652E NEW ZEALAND              NAPIER AERO AWS              3     30            :      0   24   24   24   24   24    0  120
+  93376 1 3939S 17706E NEW ZEALAND              CAPE KIDNAPPERS WXT AWS    118   1180            :      0   24   24    0   24   24    0   96
+  93378 1 3939S 17650E NEW ZEALAND              HASTINGS AWS                16 -99999            :      0    0   24   24   24   24    0   96
+  93393 1 3907S 17758E NEW ZEALAND              MAHIA AWS                  136   1360            :      0   24   23    0   23   23    0   93
+  93401 1 4012S 17522E NEW ZEALAND              OHAKEA AERO                 48 -99999            :      0   24    0    0    0    0    0   24
+  93402 1 4012S 17522E NEW ZEALAND              OHAKEA AWS                  50 -99999            :      0   24   24    0   24   24    0   96
+  93404 1 4020S 17537E NEW ZEALAND              PALMERSTON NORTH AWS        39 -99999            :      0   24   24   24   24   24    0  120
+  93405 1 4020S 17537E NEW ZEALAND              PALMERSTON N AERO           45 -99999            :      0   24    0    0    0    0    0   24
+  93410 1 4037S 17515E NEW ZEALAND              LEVIN AWS                   14 -99999            :      0   24   24   24   24   24    0  120
+  93417 1 4054S 17459E NEW ZEALAND              PARAPARAUMU AERO             5 -99999            :      0   24   24   24   24   24    0  120
+  93420 1 4054S 17459E NEW ZEALAND              PARAPARAUMU AERO AWS         5     80            :      0   24   24   24   24   24    0  120
+  93430 1 4105S 17447E NEW ZEALAND              MANA ISLAND AWS            100 -99999            :      0    0    0   24    0    0    0   24
+  93437 1 4117S 17446E NEW ZEALAND              WELLINGTON, KELBURN AWS    125 -99999            :      0   24   24   24   24   24    0  120
+  93439 1 4119S 17448E NEW ZEALAND              WELLINGTON AERO              4 -99999            :      0   24   24   24   24   24    0  120
+  93441 1 4003S 17616E NEW ZEALAND              TAKAPAU PLAINS AWS         330 -99999            :      0   24   24   24   24   24    0  120
+  93467 1 4059S 17538E NEW ZEALAND              MASTERTON AERO AWS         138 -99999            :      0   24   24   24   24   24    0  120
+  93479 1 4135S 17514E NEW ZEALAND              NGAWI AWS                    6 -99999            :      0   24   24    0   24   24    0   96
+  93493 1 4029S 17637E NEW ZEALAND              CAPE TURNAGAIN AWS         292 -99999            :      0   24   24    0   24   24    0   96
+  93498 1 4054S 17613E NEW ZEALAND              CASTLEPOINT AWS            120   1200            :      0   24   24   24   24   24    0  120
+  93514 1 4143S 17135E NEW ZEALAND              WESTPORT AERO                2 -99999            :      0   24    0    0    0    0    0   24
+  93515 1 4144S 17135E NEW ZEALAND              WESTPORT AERO AWS            2     50            :      0   24   24   24   24   24    0  120
+  93527 1 4033S 17300E NEW ZEALAND              FAREWELL SPIT AWS            3 -99999            :      0   23   23    0   23   23    0   92
+  93545 1 4118S 17314E NEW ZEALAND              NELSON AERO                  2 -99999            :      0   24   24   24   24   24    0  120
+  93546 1 4118S 17313E NEW ZEALAND              NELSON AWS                   4 -99999            :      0   24   24   24   24   24    0  120
+  93577 1 4131S 17352E NEW ZEALAND              BLENHEIM AERO               40 -99999            :      0   24    0    0    0    0    0   24
+  93579 1 4131S 17352E NEW ZEALAND              BLENHEIM AERO AWS           35 -99999            :      0   24   24   24   24   24    0  120
+  93586 1 4107S 17426E NEW ZEALAND              BROTHERS ISLAND AWS         68    690            :      0   24   23   24   23   23    0  117
+  93597 1 4144S 17417E NEW ZEALAND              CAPE CAMPBELL AWS            2 -99999            :      0   24   24   23   24   24    0  119
+  93614 1 4243S 17059E NEW ZEALAND              HOKITIKA AERO               39 -99999            :      0   24   24   24   24   24    0  120
+  93615 1 4243S 17059E NEW ZEALAND              HOKITIKA AWS                38    400            :      0   24   24    0   24   24    0   96
+  93619 1 4313S 17010E NEW ZEALAND              OKARITO                      2 -99999            :      0    0   24   24   24   24    0   96
+  93656 1 4246S 17253E NEW ZEALAND              CULVERDEN AWS              181 -99999            :      0   24   24    0   24   24    0   96
+  93678 1 4225S 17341E NEW ZEALAND              KAIKOURA AWS               105 -99999            :      0   24   24    0   24   24    0   96
+  93709 1 4352S 16900E NEW ZEALAND              HAAST AWS                    5     50            :      0   24   24   24   24   24    0  120
+  93720 1 4440S 16755E NEW ZEALAND              MILFORD SOUND                3 -99999            :      0   24   24   24   24   24    0  120
+  93722 1 4444S 16915E NEW ZEALAND              WANAKA AIRPORT             348 -99999            :      0   24    0    0    0    0    0   24
+  93729 1 4443S 16915E NEW ZEALAND              WANAKA AERO AWS            352   3530            :      0   24   24   24   24   24    0  120
+  93737 1 4414S 17007E NEW ZEALAND              PUKAKI AERODROME AWS       473 -99999            :      0   24   24   24   24   24    0  120
+  93747 1 4432S 16953E NEW ZEALAND              TARA HILLS AWS             488 -99999            :      0    0    0   24    0    0    0   24
+  93753 1 4402S 17046E NEW ZEALAND              FAIRLIE AWS                403 -99999            :      0   24   24    0   24   24    0   96
+  93765 1 4354S 17148E NEW ZEALAND              ASHBURTON AERO AWS          89 -99999            :      0    0   24   24   24   24    0   96
+  93772 1 4418S 17114E NEW ZEALAND              TIMARU AERO                 25 -99999            :      0   24    0    0    0    0    0   24
+  93773 1 4418S 17114E NEW ZEALAND              TIMARU AERO AWS             26    270            :      0   24   24   24   24   24    0  120
+  93781 1 4330S 17232E NEW ZEALAND              CHRISTCHURCH AERO           37 -99999            :      0   24   24   24   24   24    0  120
+  93784 1 4336S 17239E NEW ZEALAND              SUGAR LOAF AWS             618 -99999            :      0    0   24    0   24   24    0   72
+  93786 1 4336S 17243E NEW ZEALAND              LYTTELTON HARBOUR            5 -99999            :      0    0   24   24   24   24    0   96
+  93792 1 4345S 17307E NEW ZEALAND              LE BONS BAY AWS            236   2380            :      0   24   24   24   24   24    0  120
+  93796 1 4458S 17105E NEW ZEALAND              OAMARU AIRPORT AWS          30    310            :      0   24   24   24   24   24    0  120
+  93797 1 4506S 17057E NEW ZEALAND              OAMARU AWS                  40 -99999            :      0    0   23   24   23   23    0   93
+  93800 1 4513S 16653E NEW ZEALAND              SECRETARY ISLAND AWS        19    190            :      0   23   23   23   23   23    0  115
+  93811 1 4532S 16739E NEW ZEALAND              MANAPOURI AERO AWS         209   2090            :      0   24   24   24   24   24    0  120
+  93830 1 4501S 16844E NEW ZEALAND              QUEENSTOWN AERO            349 -99999            :      0   24    0    0    0    0    0   24
+  93831 1 4501S 16844E NEW ZEALAND              QUEENSTOWN AERO AWS        354   3540            :      0   24   24   24   24   24    0  120
+  93834 1 4545S 16827E NEW ZEALAND              LUMSDEN AWS                187   1950            :      0   24   24   24   24   24    0  120
+  93838 1 4557S 16754E NEW ZEALAND              BIRCHWOOD WXT AWS          147   1470            :      0   24   24    0   24   24    0   96
+  93844 1 4625S 16820E NEW ZEALAND              INVERCARGILL AERO            0 -99999            :      0   24   24   24   24   24    0  120
+  93845 1 4625S 16819E NEW ZEALAND              INVERCARGILL AERO AWS        1     30            :      0   24   24   24   24   24    0  120
+  93851 1 4531S 16919E NEW ZEALAND              ROXBURGH WXT AWS           160   1600            :      0   24   24    0   24   24    0   96
+  93855 1 4515S 16923E NEW ZEALAND              ALEXANDRA                  150 -99999            :      0    0   24   24   24   24    0   96
+  93864 1 4607S 16853E NEW ZEALAND              GORE AWS                   123 -99999            :      0    0   24   24   24   24    0   96
+  93887 1 4627S 16949E NEW ZEALAND              NUGGET POINT AWS           129   1300            :      0   24   24   24   24   24    0  120
+  93890 1 4556S 17012E NEW ZEALAND              DUNEDIN AERO                 1 -99999            :      0   24    0    0    0    0    0   24
+  93891 1 4556S 17012E NEW ZEALAND              DUNEDIN AERO AWS             1     20            :      0   24   24    0   24   24    0   96
+  93898 1 4548S 17029E NEW ZEALAND              SWAMPY SUMMIT AWS          722 -99999            :      0    0   24    0   24   24    0   72
+  93909 1 4717S 16728E NEW ZEALAND              SOUTH WEST CAPE AWS        101   1020            :      0   24   24   23   24   24    0  119
+  93929 1 5029S 16618E NEW ZEALAND              ENDERBY IS AWS              40    400            :      0   24   24   24   24   24    0  120
+  93945 1 5233S 16909E NEW ZEALAND              CAMPBELL ISLAND AWS         19    190            :      0   24   24    0   24   24    0   96
+  93987 1 4357S 17634W NEW ZEALAND              CHATHAM ISLANDS AWS         48 -99999            :      0   23   23   23   23   23    0  115
+  93994 1 2914S 17756W NEW ZEALAND              RAOUL ISLAND AWS            49 -99999            :      0   23   23   23   23   23    0  115
+  94100 1 1418S 12639E AUSTRALIA                KALUMBURU                   23 -99999            :     36   36   35   28   36   35    0  206
+  94120 1 1225S 13054E AUSTRALIA                DARWIN AIRPORT              30 -99999            :     36   36   36   36   36   36    0  216
+  94131 1 1431S 13223E AUSTRALIA                TINDAL RAAF                134 -99999            :     36   36   35   24   36   36    0  203
+  94150 1 1216S 13649E AUSTRALIA                GOVE AIRPORT                52 -99999            :     36   36   36   36   36   36    0  216
+  94170 1 1241S 14155E AUSTRALIA                WEIPA AERO                  18 -99999            :     36   36   36   30   36   36    0  210
+  94203 1 1757S 12214E AUSTRALIA                BROOME AIRPORT               7 -99999            :     36   36   36   36   36   36    0  216
+  94212 1 1814S 12740E AUSTRALIA                HALLS CREEK AIRPORT        422 -99999            :     36   36   36   36   36   36    0  216
+  94238 1 1939S 13411E AUSTRALIA                TENNANT CREEK AIRPORT      376 -99999            :     36   36   36   34   36   36    0  214
+  94260 1 1745S 13932E AUSTRALIA                BURKETOWN AIRPORT            6 -99999            :     36   36   36   31   36   36    0  211
+  94274 1 1818S 14332E AUSTRALIA                GEORGETOWN AIRPORT         302 -99999            :     36   36   35   32   36   36    0  211
+  94287 1 1652S 14545E AUSTRALIA                CAIRNS AERO                  2 -99999            :     36   36   36   35   36   36    0  215
+  94294 1 1915S 14646E AUSTRALIA                TOWNSVILLE AERO              4 -99999            :     36   36   36   35   36   36    0  215
+  94299 1 1617S 14958E AUSTRALIA                WILLIS ISLAND                9 -99999            :     36   36   36   32   36   36    0  212
+  94300 1 2453S 11340E AUSTRALIA                CARNARVON AIRPORT            4 -99999            :     36   36   36   25   36   36    0  205
+  94302 1 2214S 11406E AUSTRALIA                LEARMONTH AIRPORT            5 -99999            :     36   36   35   22   35   35    0  199
+  94312 1 2022S 11838E AUSTRALIA                PORT HEDLAND AIRPORT         6 -99999            :     36   36   36   16   36   36    0  196
+  94313 1 2215S 11820E AUSTRALIA                WITTENOOM                  463 -99999            :      0    0   36   35   36   36    0  143
+  94317 1 2325S 11948E AUSTRALIA                NEWMAN AERO                524 -99999            :     36   36   36   32   36   36    0  212
+  94326 1 2348S 13353E AUSTRALIA                ALICE SPRINGS AIRPORT      546 -99999            :     36   36   36   36   36   36    0  216
+  94332 1 2041S 13929E AUSTRALIA                MOUNT ISA AERO             340 -99999            :     36   36   36   15   36   36    0  195
+  94340 1 2044S 14309E AUSTRALIA                RICHMOND POST OFFICE       211 -99999            :      0    0   36   36   36   36    0  144
+  94346 1 2326S 14417E AUSTRALIA                LONGREACH AERO             192 -99999            :     36   36   36   36   36   36    0  216
+  94367 1 2107S 14913E AUSTRALIA                MACKAY M.O                  30 -99999            :     36   36   36   32   36   36    0  212
+  94374 1 2323S 15029E AUSTRALIA                ROCKHAMPTON AERO            10 -99999            :     36   36   36   35   36   36    0  215
+  94380 1 2351S 15116E AUSTRALIA                GLADSTONE RADAR             75 -99999            :     36   36   36   31   36   36    0  211
+  94403 1 2848S 11442E AUSTRALIA                GERALDTON AIRPORT           30 -99999            :     30   30   30   28   30   30    0  178
+  94430 1 2637S 11832E AUSTRALIA                MEEKATHARRA AIRPORT        517 -99999            :     36   36   36   14   36   36    0  194
+  94461 1 2502S 12818E AUSTRALIA                GILES METEOROLOGICAL OFF   598 -99999            :     36   36   36   36   36   36    0  216
+  94476 1 2733S 13527E AUSTRALIA                OODNADATTA AIRPORT         117 -99999            :     36   36   36   33   36   36    0  213
+  94480 1 2939S 13804E AUSTRALIA                MARREE COMPARISON           50 -99999            :      0    0   31   35   36   33    0  135
+  94485 1 2926S 14201E AUSTRALIA                TIBOOBURRA POST OFFICE     183 -99999            :      0    0   36   36   36   36    0  144
+  94510 1 2625S 14615E AUSTRALIA                CHARLEVILLE AERO           302 -99999            :     36   36   36   18   36   36    0  198
+  94517 1 2803S 14836E AUSTRALIA                ST GEORGE AIRPORT          199 -99999            :     36   36   36   33   36   36    0  213
+  94568 1 2738S 15243E AUSTRALIA                AMBERLEY AMO                24 -99999            :     36   36   35   14   36   36    0  193
+  94570 1 2623S 15302E AUSTRALIA                TEWANTIN RSL PARK            6 -99999            :     36   36   36   28   36   36    0  208
+  94578 1 2724S 15308E AUSTRALIA                BRISBANE AERO                5 -99999            :     36   36   36   36   36   36    0  216
+  94589 1 2926S 15322E AUSTRALIA                YAMBA PILOT STATION         27 -99999            :     36   36   34   36   35   35    0  212
+  94601 1 3422S 11508E AUSTRALIA                CAPE LEEUWIN                13 -99999            :     36   36   36   35   36   36    0  215
+  94602 1 3200S 11530E AUSTRALIA                ROTTNEST ISLAND             43 -99999            :     36   36   36   36   36   36    0  216
+  94610 1 3156S 11559E AUSTRALIA                PERTH AIRPORT               15 -99999            :     36   36   36   36   36   36    0  216
+  94637 1 3047S 12127E AUSTRALIA                KALGOORLIE-BOULDER AIRPO   365 -99999            :     36   36   36    7   36   36    0  187
+  94638 1 3350S 12154E AUSTRALIA                ESPERANCE                   25 -99999            :     36   36   36   36   36   36    0  216
+  94647 1 3141S 12854E AUSTRALIA                EUCLA                       93 -99999            :     36   36   35   25   35   36    0  203
+  94653 1 3208S 13342E AUSTRALIA                CEDUNA AMO                  15 -99999            :     36   36   36   29   36   36    0  209
+  94655 1 3042S 13435E AUSTRALIA                TARCOOLA AERO              123 -99999            :     36   36   36   22   36   36    0  202
+  94659 1 3109S 13648E AUSTRALIA                WOOMERA AERODROME          167 -99999            :     36   36   36   30   36   36    0  210
+  94672 1 3457S 13831E AUSTRALIA                ADELAIDE AIRPORT             2 -99999            :     36   36   36   36   36   36    0  216
+  94681 1 3429S 13900E AUSTRALIA                NURIOOTPA VITICULTURAL     275 -99999            :     36   36   36   34   36   36    0  214
+  94689 1 3159S 14128E AUSTRALIA                BROKEN HILL (PATTON STRE   315 -99999            :      0    0   35   35   35   36    0  141
+  94693 1 3414S 14205E AUSTRALIA                MILDURA AIRPORT             50 -99999            :     36   36   36   35   36   36    0  215
+  94707 1 3304S 14714E AUSTRALIA                CONDOBOLIN AG RESEARCH S   195 -99999            :      0    0   35   36   35   36    0  142
+  94709 1 3356S 14715E AUSTRALIA                WYALONG POST OFFICE        245 -99999            :      0    0   36   36   36   36    0  144
+  94711 1 3129S 14550E AUSTRALIA                COBAR MO                   260 -99999            :     36   36   36   35   36   36    0  215
+  94730 1 3326S 14933E AUSTRALIA                BATHURST AGRICULTURAL ST   713 -99999            :      0    0   34   34   36   36    0  140
+  94738 1 3204S 15056E AUSTRALIA                SCONE SCS                  216 -99999            :      0    0    0    4   20   24    0   48
+  94740 1 3102S 15016E AUSTRALIA                GUNNEDAH RESOURCE CENTRE   307 -99999            :      0    0   36   36   36   36    0  144
+  94750 1 3457S 15032E AUSTRALIA                NOWRA RAN AIR STATION AW   109 -99999            :     36   36   36   28   36   36    0  208
+  94767 1 3357S 15110E AUSTRALIA                SYDNEY AIRPORT AMO           6 -99999            :     36   36   36   36   36   36    0  216
+  94776 1 3248S 15150E AUSTRALIA                WILLIAMTOWN RAAF             9 -99999            :     36   36   36    2   36   36    0  182
+  94786 1 3126S 15252E AUSTRALIA                PORT MACQUARIE AIRPORT A     4 -99999            :     36   36   36   34   36   36    0  214
+  94791 1 3019S 15307E AUSTRALIA                COFFS HARBOUR MO             5 -99999            :     36   36   36   34   36   36    0  214
+  94802 1 3456S 11749E AUSTRALIA                ALBANY AIRPORT              68 -99999            :     24   24   24   20   24   24    0  140
+  94812 1 3710S 13945E AUSTRALIA                ROBE COMPARISON              3 -99999            :      0    0   35   30   36   36    0  137
+  94814 1 3517S 13854E AUSTRALIA                STRATHALBYN RACECOURSE      58 -99999            :     36   36   36   35   36   36    0  215
+  94821 1 3745S 14046E AUSTRALIA                MOUNT GAMBIER AERO          63 -99999            :     36   36   36   36   36   36    0  216
+  94826 1 3826S 14133E AUSTRALIA                CAPE NELSON LIGHTHOUSE      45 -99999            :     36   36   36   36   36   36    0  216
+  94827 1 3619S 14139E AUSTRALIA                NHILL AERODROME            139 -99999            :     36   36   36   36   36   36    0  216
+  94842 1 3851S 14331E AUSTRALIA                CAPE OTWAY LIGHTHOUSE       82 -99999            :     36   36   33   33   34   34    0  206
+  94865 1 3751S 14445E AUSTRALIA                LAVERTON RAAF               20 -99999            :     36   36   35   35   36   35    0  213
+  94866 1 3740S 14450E AUSTRALIA                MELBOURNE AIRPORT          113 -99999            :     36   36   36   36   36   36    0  216
+  94893 1 3908S 14625E AUSTRALIA                WILSONS PROMONTORY LIGHT    95 -99999            :     35   35   35   28   36   35    0  204
+  94907 1 3807S 14708E AUSTRALIA                EAST SALE AIRPORT            5 -99999            :     36   36   36   34   36   36    0  214
+  94910 1 3509S 14727E AUSTRALIA                WAGGA WAGGA AMO            212 -99999            :     36   36   36   36   36   36    0  216
+  94926 1 3519S 14912E AUSTRALIA                CANBERRA AIRPORT           577 -99999            :     36   36   36   35   36   36    0  215
+  94937 1 3555S 15009E AUSTRALIA                MORUYA HEADS PILOT STATI    17 -99999            :     20   20   36   36   36   36    0  184
+  94954 1 4041S 14441E AUSTRALIA                CAPE GRIM BAPS (COMPARIS    94 -99999            :     36   36   36   35   36   36    0  215
+  94967 1 4329S 14709E AUSTRALIA                CAPE BRUNY LIGHTHOUSE       55 -99999            :      7    7   33   33   35   33    0  148
+  94975 1 4250S 14730E AUSTRALIA                HOBART AIRPORT               4 -99999            :     36   36   36   36   36   36    0  216
+  94983 1 4100S 14821E AUSTRALIA                LARAPUNA (EDDYSTONE POIN    20 -99999            :     36   36   36   33   36   36    0  213
+  94995 1 3133S 15905E AUSTRALIA                LORD HOWE ISLAND AERO        5 -99999            :     36   36   36   31   36   36    0  211
+  94996 1 2902S 16756E AUSTRALIA                NORFOLK ISLAND AERO        112 -99999            :     36   36   36   36   36   36    0  216
+  94998 1 5430S 15856E AUSTRALIA                MACQUARIE ISLAND             6 -99999            :     36   36   36   35   36   36    0  215
+  95322 1 2011S 13001E AUSTRALIA                RABBIT FLAT                340 -99999            :     36   36   35   36   36   36    0  215
+  95482 1 2554S 13921E AUSTRALIA                BIRDSVILLE AIRPORT          47 -99999            :     36   36   30   35   35   32    0  204
+  95492 1 2759S 14349E AUSTRALIA                THARGOMINDAH AIRPORT       131 -99999            :     36   36   35   36   35   35    0  213
+  95527 1 2929S 14951E AUSTRALIA                MOREE AERO                 213 -99999            :     36   36   36   27   36   36    0  207
+  95529 1 2639S 15011E AUSTRALIA                MILES CONSTANCE STREET     305 -99999            :     36   36   36   33   36   36    0  213
+  95541 1 2947S 15107E AUSTRALIA                INVERELL (RAGLAN ST)       582 -99999            :      0    0   35   35   36   35    0  141
+  95625 1 3137S 11713E AUSTRALIA                CUNDERDIN AIRFIELD         217 -99999            :     36   36   36   36   36   36    0  216
+  95640 1 3240S 11640E AUSTRALIA                WANDERING                  275 -99999            :      0    0   36   35   36   36    0  143
+  95646 1 3051S 12807E AUSTRALIA                FORREST                    159 -99999            :     36   36   36   28   36   36    0  208
+  95670 1 3346S 13813E AUSTRALIA                SNOWTOWN (RAYVILLE PARK)   109 -99999            :     36   33   36   35   36   36    0  212
+  95719 1 3213S 14835E AUSTRALIA                DUBBO AIRPORT AWS          284 -99999            :     36   36   36   32   36   36    0  212
+  95753 1 3336S 15047E AUSTRALIA                RICHMOND RAAF               19 -99999            :     36   36   35   29   35   35    0  206
+  95784 1 3153S 15231E AUSTRALIA                TAREE AIRPORT AWS            8 -99999            :     36   36   36   30   36   36    0  210
+  95805 1 3545S 13636E AUSTRALIA                CAPE BORDA                 158 -99999            :     36   36   34   36   36   34    0  212
+  95869 1 3533S 14457E AUSTRALIA                DENILIQUIN AIRPORT AWS      94 -99999            :     36   36   36   35   36   36    0  215
+  95908 1 3630S 14818E AUSTRALIA                THREDBO VILLAGE           1380 -99999            :      0    0   36   34   36   36    0  142
+  95916 1 3556S 14823E AUSTRALIA                CABRAMURRA SMHEA AWS      1482 -99999            :      0    0   36   32   36   36    0  140
+  95940 1 3506S 15048E AUSTRALIA                JERVIS BAY (POINT PERPEN    85 -99999            :     36   36   36   26   36   36    0  206
+  95959 1 4154S 14640E AUSTRALIA                LIAWENEE                  1057 -99999            :     36   36   36   29   36   36    0  209
+  95964 1 4103S 14647E AUSTRALIA                LOW HEAD                     3 -99999            :     36   36   36   35   36   36    0  215
+  95966 1 4133S 14713E AUSTRALIA                LAUNCESTON AIRPORT         167 -99999            :     36   36   36   36   36   36    0  216
+  95977 1 4259S 14704E AUSTRALIA                GROVE (RESEARCH STATION)    65 -99999            :      0    0   36   28   36   36    0  136
+  96995 1 1027S 10541E AUSTRALIA                CHRISTMAS ISLAND AERO      261 -99999            :     36   36   29   16   36   34    0  187
+  96996 1 1211S 09650E AUSTRALIA                COCOS ISLAND AIRPORT         3 -99999            :     36   36   36   36   36   36    0  216

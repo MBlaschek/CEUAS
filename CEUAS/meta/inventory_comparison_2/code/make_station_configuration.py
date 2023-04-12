@@ -314,8 +314,6 @@ def make_inventory(v):
     #files = files[4000:]
     for file in tqdm(files):    
         
-        if '10393' in file:
-            print(0)
             
         df = pd.read_csv(file, sep = '\t', header = 0)
         df = df.dropna( subset = ['latitude','longitude'])
@@ -381,6 +379,8 @@ def make_inventory(v):
                     
                 elif c == 'start_date' or c == 'end_date':
                     a = best_inv[ statConf_to_inventory[c] ].values[0]
+                    if '-' in a:
+                        a = ''.join(a.split('-'))
                     try:
                         b = float(a)
                     except:
@@ -481,12 +481,14 @@ def make_CUON():
                 
             # extracting min and max date 
             if c == 'start_date':
+                values = [v.replace('-','') for v in values ]
                 try:
                     values = [ int ( min ( [float(s) for s in values if float(s) > 2021 ] ) ) ]
                 except:
                     values = [ int ( min ( [float(s) for s in values ] ) ) ]
                     
             if c == 'end_date':
+                values = [v.replace('-','') for v in values ]                
                 try:
                     values = [ int ( max ( [float(s) for s in values ]) ) ]
                 except:                    
@@ -722,7 +724,7 @@ args = parser.parse_args()
 v                = args.dataset
 
 
-if v in  [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1', 'amma']:
+if v in  [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1', 'amma', 'hara', 'giub']:
     WHAT = 'INVENTORY'
     
 elif v in ['CUON', 'MERGE']:

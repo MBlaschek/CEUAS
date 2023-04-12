@@ -1,0 +1,205 @@
+        R                                                                                             Total No. Monthly Obs by Element |     
+        e                                                                Statn  Barom  Local         Mean Mean Mean      Mean Mean Mean|Totl 
+        c                                                                 Elev   Elev  Statn     :    Stn Slvl  Dly Totl  Max  Min     |  #  
+  Wmo#  #  Lat   Lon   Country Name             Station Name               (m)  (.1m)    #       :   Pres Pres Temp Prec Temp Temp   RH| Obs 
+ 
+  71017 1 7346N 10518W CANADA                   STEFANSSON ISLAND           11    110            :     34   33   19    1   23   31    0  141
+  71018 1 7443N 09459W CANADA                   RESOLUTE CS                 30 -99999            :     42   40   36   29   36   41    0  224
+  71022 1 5411N 13016W CANADA                   PRINCE RUPERT A             35    356            :     12    0   10   10   11   11    0   54
+  71026 1 5002N 11043W CANADA                   MEDICINE HAT RCS           715   7174            :     48   48   48   48   48   48    0  288
+  71029 1 7046N 11748W CANADA                   HOLMAN CS                   30    299            :     46   39   38   45   38   39    0  245
+  71043 1 6510N 12629W CANADA                   NORMAN WELLS A              73    780            :     21   21    6    6    6    6    0   66
+  71049 1 6553N 08927W CANADA                   WAGER BAY (AUT)             18    180            :     21   21   10    6   10   10    0   78
+  71066 1 5822N 11706W CANADA                   HIGH LEVEL A               338   3368            :     31   20   10   10   10   11    0   92
+  71069 1 5517N 11447W CANADA                   SLAVE LAKE AWOS A          583   5827            :      0    0   12   12   12   12    0   48
+  71072 1 7608N 11912W CANADA                   MOULD BAY A                 12    204            :     12    0   12   11   12   12    0   59
+  71074 1 7847N 10333W CANADA                   ISACHSEN (AUT)              58    580            :     24   23   18    1   21   24    0  111
+  71078 1 5631N 10103W CANADA                   LYNN LAKE A                357   3542            :     12    0    0    0    0    0    0   12
+  71079 1 5548N 09752W CANADA                   THOMPSON A                 224   2282            :     59   59   36   36   36   36    0  262
+  71081 1 6828N 08109W CANADA                   HALL BEACH A                 9     70            :     19   19    0    0    0    0    0   38
+  71090 1 7017N 06819W CANADA                   CLYDE A                     27    268            :     22   22    0    0    0    0    0   44
+  71109 1 5041N 12722W CANADA                   PORT HARDY A                22    232            :     51   51   38   38   38   38    0  254
+  71120 1 5425N 11017W CANADA                   COLD LAKE A                541   5473            :     70   70   56   56   56   56    0  364
+  71122 1 5111N 11533W CANADA                   BANFF CS                  1397  13969            :     48   48   48   48   48   48    0  288
+  71123 1 5311N 11321W CANADA                   EDMONTON INT'L A           723   7067            :     16   16    8    8    8    8    0   64
+  71158 1 5222N 09701W CANADA                   BERENS RIVER CS            222   2235            :     48   48   48   48   48   48    0  288
+  71160 1 6243N 10910W CANADA                   FORT RELIANCE (AUT)        168   1676            :     48   48   48   44   48   48    0  284
+  71185 1 5014N 05735W CANADA                   DANIELS HARBOUR             19    190            :     40   40   42   38   42   43    0  245
+  71197 1 4734N 05909W CANADA                   PORT AUX BASQUES            40    402            :     39   39   39   38   40   40    0  235
+  71199 1 6007N 12850W CANADA                   WATSON LAKE (AUT)          683   6895            :     45   45   45   43   45   45    0  268
+  71208 1 5349N 08953W CANADA                   BIG TROUT LAKE             222   2222            :     36   36   36   36   36   36    0  216
+  71222 1 5826N 13001W CANADA                   DEASE LAKE (AUT)           801   8022            :     48   36   48   44   48   48    0  272
+  71260 1 4617N 08419W CANADA                   SAULT STE MARIE A          192   1950            :     15   15    5    5    5    5    0   50
+  71279 1 5013N 06615W CANADA                   SEPT-ILES                   53    526            :     48   48   47   41   47   48    0  279
+  71288 1 6907N 10508W CANADA                   CAMBRIDGE BAY GSN           19   1869            :     48   44   44   48   44   44    0  272
+  71299 1 4925N 08226W CANADA                   KAPUSKASING CDA ON         218   2180            :     46   46   46   44   46   46    0  274
+  71309 1 5117N 08037W CANADA                   MOOSONEE RCS                 9     91            :     48   48   48   45   48   48    0  285
+  71320 1 6847N 08114W CANADA                   HALL BEACH CLIMATE           8     82            :     47   45   44   42   45   45    0  268
+  71321 1 6345N 06832W CANADA                   IQALUIT CLIMATE             34    335            :     45   45   47   46   47   47    0  277
+  71322 1 6106N 09404W CANADA                   ARVIAT CLIMATE              10     98            :     48   48   48   47   48   48    0  287
+  71332 1 6749N 11508W CANADA                   KUGLUKTUK CLIMATE           23    235            :     48   48   47   42   47   48    0  280
+  71350 1 4620N 06310W CANADA                   HARRINGTON CDA CS           53    536            :     48   48   48   42   48   48    0  282
+  71355 1 8230N 06220W CANADA                   ALERT CLIMATE               65    654            :     48   47   42   42   44   47    0  270
+  71356 1 6419N 09600W CANADA                   BAKER LAKE CLIMATE          51    508            :     47   47   47   37   47   47    0  272
+  71357 1 6733N 06402W CANADA                   QIKIQTARJUAQ CLIMATE         6     64            :     47   47   43   40   46   47    0  270
+  71358 1 7029N 06831W CANADA                   CLYDE RIVER CLIMATE         26    265            :     37   35   34   34   35   37    0  212
+  71361 1 6050N 11547W CANADA                   HAY RIVER CLIMATE          164   1640            :     48   48   48   47   48   48    0  287
+  71362 1 6002N 11156W CANADA                   FORT SMITH CLIMATE         203   2030            :     46   46   46   37   46   46    0  267
+  71363 1 6838N 09551W CANADA                   GJOA HAVEN CLIMATE          42    420            :     44   42   40   40   40   42    0  248
+  71364 1 6819N 13331W CANADA                   INUVIK CLIMATE             103   1030            :     48   48   48   45   48   48    0  285
+  71365 1 6146N 12114W CANADA                   FORT SIMPSON CLIMATE       168   1680            :     48   48   48   48   48   48    0  288
+  71407 1 6832N 08948W CANADA                   KUGAARUK CLIMATE            16    170            :     48   48   48   48   48   48    0  288
+  71434 1 5459N 08526W CANADA                   PEAWANUCK (AUT)             53    535            :     47   46   41   35   45   42    0  256
+  71446 1 5016N 10744W CANADA                   SWIFT CURRENT CDA          825   8250            :     71   71   48   48   48   48    0  334
+  71467 1 7159N 12515W CANADA                   SACHS HARBOUR CLIMATE       88    880            :     41   41   40   35   40   41    0  238
+  71480 1 6517N 12645W CANADA                   NORMAN WELLS CLIMATE        94    936            :     45   44   45   41   45   46    0  266
+  71490 1 6506N 10226W CANADA                   ROBERTSON LAKE (AUT)       244   2437            :     16   16   14    4   15   16    0   81
+  71550 1 5106N 10004W CANADA                   DAUPHIN CS                 304   3045            :     48   48   48   48   48   48    0  288
+  71559 1 4913N 10258W CANADA                   ESTEVAN                    581   5806            :     36   36   36   36   36   36    0  216
+  71574 1 4738N 06545W CANADA                   BATHURST A                  59    596            :      9    9    9    9    9    9    0   54
+  71575 1 6414N 07632W CANADA                   CAPE DORSET CLIMATE         50    500            :     46   46   46   42   46   46    0  272
+  71576 1 7241N 07758W CANADA                   POND INLET CLIMATE          65    553            :     48   48   48   47   48   48    0  287
+  71585 1 5639N 11113W CANADA                   FORT MCMURRAY CS           369   3688            :     43   42   47   46   47   47    0  272
+  71586 1 5509N 10516W CANADA                   LA RONGE RCS               379   3820            :     47   47   47   43   47   47    0  278
+  71592 1 7259N 08501W CANADA                   ARCTIC BAY CS               10    100            :     36   31   22    0   24   31    0  144
+  71600 1 4356N 06001W CANADA                   SABLE ISLAND                 5     60            :     46   46   39   38   41   43    0  253
+  71601 1 4423N 06318W CANADA                   SHEARWATER A                44    551            :     24   24    0    0    0    0    0   48
+  71618 1 5844N 09404W CANADA                   CHURCHILL                   29 -99999            :     10    0    9    8    9   10    0   46
+  71623 1 4301N 08105W CANADA                   LONDON INT'L AIRPORT       278   2795            :     15   15    0    0    0    0    0   30
+  71624 1 4325N 07923W CANADA                   TORONTO LESTER B. PEARSO   173   1636            :     27   27   15   15   15   15    0  114
+  71627 1 4517N 07327W CANADA                   MONTREAL/PIERRE ELLIOTT     36    335            :     24   24   23   23   23   23    0  140
+  71665 1 5633N 06141W CANADA                   NAIN                         8    120            :     45   45   44   35   44   44    0  257
+  71693 1 5517N 11447W CANADA                   SLAVE LAKE RCS             583   5828            :     35   35   35   35   35   36    0  211
+  71695 1 5358N 10106W CANADA                   THE PAS CLIMATE            274   2740            :     47   46   46   37   46   47    0  269
+  71696 1 5844N 09404W CANADA                   CHURCHILL CLIMATE           28    285            :     48   47   47   48   47   47    0  284
+  71700 1 4531N 06619W CANADA                   FREDERICTON A               21    313            :     12    0   11   11   11   12    0   57
+  71706 1 4610N 06305W CANADA                   CHARLOTTETOWN A             49    530            :     21   21    2    2    2    2    0   50
+  71707 1 4606N 06002W CANADA                   SYDNEY A                    62    719            :     36   36   14   14   14   14    0  128
+  71708 1 4629N 07114W CANADA                   QUEBEC/JEAN LESAGE INTL     74    726            :     32   32    0   10    0    0    0   74
+  71709 1 4715N 06128W CANADA                   ILES DE LA MADELEINE A      11    175            :     23   23    2    2    2    2    0   54
+  71713 1 4722N 07002W CANADA                   LA POCATIERE                31    310            :     48   48   47   47   47   48    0  285
+  71721 1 4616N 07559W CANADA                   MANIWAKI AIRPORT           200   2008            :     48   48   48   45   48   48    0  285
+  71727 1 4820N 07100W CANADA                   BAGOTVILLE A               159   1593            :     71   71   58   58   58   58    0  374
+  71731 1 4613N 07915W CANADA                   NORTH BAY A                370   3590            :     22   22    8    8    8    8    0   76
+  71741 1 5042N 12026W CANADA                   KAMLOOPS AUT               345   3450            :     48   48   48   43   48   48    0  283
+  71742 1 4857N 05434W CANADA                   GANDER AIRPORT CS          151   1535            :     48   48   48   40   48   48    0  280
+  71743 1 5755N 07259W CANADA                   RIVIERE AUX FEUILLES       171   1714            :     47   47   32    8   33   40    0  207
+  71744 1 4701N 06528W CANADA                   MIRAMICHI RCS               33    338            :     12   12   12   12   12   12    0   72
+  71749 1 4813N 08912W CANADA                   THUNDER BAY A              199   2060            :     16   16    0    0    0    0    0   32
+  71773 1 6044N 13506W CANADA                   WHITEHORSE AUTO            707   7070            :     48   44   44   48   44   44    0  272
+  71779 1 5302N 12231W CANADA                   QUESNEL AIRPORT AUTO       545   5453            :     48   48   48   45   48   48    0  285
+  71799 1 4823N 12316W CANADA                   VICTORIA INT'L A            20    176            :     28   28   14   14   14   14    0  112
+  71801 1 4722N 05227W CANADA                   ST JOHN'S A                141   1349            :     15   15    7    7    7    7    0   58
+  71803 1 4834N 05421W CANADA                   GANDER INT'L A             151   1586            :     15   15    6    6    6    6    0   54
+  71805 1 4645N 05610W FRANCE                   ST-PIERRE                   21     70            :      0   72   72   72   72   72   72  432
+  71811 1 5008N 06610W CANADA                   SEPT-ILES A                 55    697            :     23   23    0    0    0    0    0   46
+  71813 1 5011N 06149W CANADA                   NATASHQUAN A                12     91            :     36   36   43   33   44   36    0  228
+  71815 1 4819N 05820W CANADA                   STEPHENVILLE A              25     93            :     36   36   21   21   21   21    0  156
+  71816 1 5319N 06025W CANADA                   GOOSE A                     49    473            :     72   72   55   55   55   55    0  364
+  71818 1 5341N 05702W CANADA                   CARTWRIGHT A                14    150            :     57   57   40   40   52   40    0  286
+  71823 1 5346N 07341W CANADA                   LA GRANDE IV               303   3028            :     56   56   32   30   39   33    0  246
+  71826 1 6608N 06543W CANADA                   PANGNIRTUNG                 23    226            :     53   53   37   33   37   38    0  251
+  71827 1 5338N 07742W CANADA                   LA GRANDE RIVIERE A        195   2024            :     24   24   24   24   24   24    0  144
+  71828 1 5448N 06648W CANADA                   SCHEFFERVILLE              517   5209            :     42   40   38   29   38   42    0  229
+  71831 1 4915N 08217W CANADA                   KAPUSKASING A              227   2294            :     34   34   20   20   20   20    0  148
+  71842 1 5007N 09154W CANADA                   SIOUX LOOKOUT A            383   3957            :     47   47   31   28   31   31    0  215
+  71844 1 5349N 08954W CANADA                   BIG TROUT LAKE READAC      222   2243            :      0    0    8    8    8    8    0   32
+  71852 1 4933N 09708W CANADA                   WINNIPEG RICHARDSON INT'   239   2380            :     23   23    0    0    0    0    0   46
+  71862 1 4908N 10235W CANADA                   ESTEVAN A                  581   5838            :     35   35   18   18   18   18    0  142
+  71863 1 5016N 10424W CANADA                   REGINA INT'L A             578   5805            :     32   32   10    0   10   10    0   94
+  71867 1 5335N 10104W CANADA                   THE PAS A                  270   2753            :     35   35   19   19   19   19    0  146
+  71869 1 5313N 10540W CANADA                   PRINCE ALBERT A            428   4306            :     57   57   34   34   34   34    0  250
+  71874 1 4923N 11229W CANADA                   LETHBRIDGE A               929   9236            :     18   18    0    0    0    0    0   36
+  71877 1 5104N 11401W CANADA                   CALGARY INT'L A           1084  10787            :     19   19    5    5    5    5    0   58
+  71879 1 5320N 11319W CANADA                   EDMONTON CITY CENTRE A     671   6684            :     12   12   12   12   12   12    0   72
+  71884 1 4350N 06605W CANADA                   YARMOUTH RCS                36    360            :     36   36   36   34   36   36    0  214
+  71887 1 5025N 12016W CANADA                   KAMLOOPS A                 345   3607            :     27   27   13   13   13   13    0  106
+  71892 1 4907N 12307W CANADA                   VANCOUVER INT'L A            4     46            :     27   27   13   13   13   13    0  106
+  71894 1 4923N 12632W CANADA                   ESTEVAN POINT CS             6     80            :     48   47   45   38   45   46    0  269
+  71899 1 5409N 13302W CANADA                   LANGARA                     41    407            :      0    0    4    4    4    4    0   16
+  71905 1 5510N 07727W CANADA                   KUUJJUARAPIK A              10    240            :     23   23    0    0    0    0    0   46
+  71906 1 5805N 06825W CANADA                   KUUJJUAQ A                  40    440            :     61   61   38   37   38   38    0  273
+  71907 1 5817N 07803W CANADA                   INUKJUAK A                  26    279            :     23   23    0    0    0    0    0   46
+  71909 1 6327N 06820W CANADA                   IQALUIT A                   34    226            :     33   33    0    0    0    0    0   66
+  71913 1 5826N 09402W CANADA                   CHURCHILL A                 29    322            :     16   16    0    0    0    0    0   32
+  71915 1 6411N 08322W CANADA                   CORAL HARBOUR A             62    562            :     66   66   53   52   55   54    0  346
+  71917 1 7959N 08556W CANADA                   EUREKA A                    10    127            :     55   55   41   41   41   41    0  274
+  71922 1 5505N 10510W CANADA                   LA RONGE A                 379   3808            :     32   32    9    9    9    9    0  100
+  71923 1 6108N 10053W CANADA                   ENNADAI LAKE (AUT)         353   3531            :     27   26   24   13   24   26    0  140
+  71924 1 7426N 09435W CANADA                   RESOLUTE CARS               68    677            :     34   34   14   14   14   14    0  124
+  71925 1 6904N 10505W CANADA                   CAMBRIDGE BAY A             27    232            :     34   34   19   19   19   19    0  144
+  71926 1 6411N 09603W CANADA                   BAKER LAKE A                19    176            :     31   31   13   13   13   13    0  114
+  71932 1 5623N 11108W CANADA                   FORT MCMURRAY A            369   3746            :      0    0    0    0   12    0    0   12
+  71934 1 6001N 11135W CANADA                   FORT SMITH A               205   2052            :     34   34   18   18   18   18    0  140
+  71935 1 6030N 11528W CANADA                   HAY RIVER A                165   1698            :     33   33   20   20   20   20    0  146
+  71936 1 6217N 11416W CANADA                   YELLOWKNIFE A              206   2144            :     21   21    0    0    0    0    0   42
+  71938 1 6729N 11505W CANADA                   KUGLUKTUK A                 23    252            :     33   33   17   17   17   17    0  134
+  71945 1 5850N 12236W CANADA                   FORT NELSON A              382   3885            :     58   58   42   42   42   42    0  284
+  71946 1 6128N 12108W CANADA                   FORT SIMPSON A             169   1699            :     33   33   11   11   11   11    0  110
+  71953 1 6004N 12829W CANADA                   WATSON LAKE A              687   6866            :     33   33    8    7    8    8    0   97
+  71956 1 4553N 08234W CANADA                   GORE BAY CLIMATE           189   1886            :     48   48   48   46   48   48    0  286
+  71957 1 6811N 13317W CANADA                   INUVIK A                    68    627            :     27   27    6    0    6    6    0   72
+  71964 1 6043N 13504W CANADA                   WHITEHORSE A               706   7030            :     45   45   24    0   24   24    0  162
+  71965 1 6322N 13531W CANADA                   MAYO A                     504   5063            :     31   31    7    7    7    7    0   90
+  71966 1 6403N 13908W CANADA                   DAWSON                     370   3701            :     48   48   48   45   48   48    0  285
+  71984 1 6922N 12405W CANADA                   PAULATUK                     6     65            :     35   35   48   43   48   48    0  257
+  71989 1 7614N 11921W CANADA                   MOULD BAY CS                 2 -99999            :     38   38   33   14   37   37    0  197
+  71990 1 6314N 13002W CANADA                   MACMILLAN PASS            1379  13790            :     48   46   43   29   43   47    0  256
+  76225 1 2839N 10604W MEXICO                   CHIHUAHUA                 1408  14100            :     71   71   72   72   72   72    0  430
+  76311 1 2642N 10819W MEXICO                   CHOIX                      237   2390            :     59   59   59   59   59   59    0  354
+  76393 1 2540N 10018W MEXICO                   MONTERREY                  515   5290            :     72   72   72   72   48   48    0  384
+  76405 1 2405N 11020W MEXICO                   LA PAZ                      42    440            :     72   72   72   72   72   72    0  432
+  76458 1 2313N 10625W MEXICO                   MAZATLAN                     6     80            :     70   70   70   71   70   69    0  420
+  76577 1 2101N 10114W MEXICO                   GUANAJUATO                2075  20780            :     72   72   72   72   72   72    0  432
+  76644 1 2056N 08938W MEXICO                   MERIDA                      10    120            :     72   72   72   72   72   72    0  432
+  76654 1 1903N 10420W MEXICO                   MANZANILLO                   3    100            :     71   71   72   72   72   72    0  430
+  76680 1 1924N 09912W MEXICO                   TACUBAYA CENTRAL          2308  23100            :     72   72   72   72   72   72    0  432
+  76692 1 1912N 09608W MEXICO                   VERACRUZ                    10    130            :     72   72   72   72   72   72    0  432
+  76833 1 1606N 09511W MEXICO                   SALINA CRUZ                  8    100            :     60   60   72   72   72   72    0  408
+  78016 1 3222N 06440W BERMUDA                  L.F. WADE INTERNATIONAL      6     75            :      0   43   48   43   48   48   48  278
+  78062 1 2633N 07842W BAHAMAS                  FREEPORT INTERNATIONAL A     3     40            :      0   39   36   36   36   36    0  183
+  78073 1 2503N 07728W THE BAHAMAS              LYNDEN PINDLING INTERNAT     4      7            :      0   68   72   72   72   72    0  356
+  78310 1 2131N 08434W CUBA                     CABO DE SAN ANTONIO          9    100            :      0   36   36   36   36   36    0  180
+  78325 1 2305N 08212W CUBA                     CASABLANCA                  49    501            :      0   36   36   36   36   36    0  180
+  78355 1 2115N 07731W CUBA                     CAMAGUEY                   117   1180            :      0   35   36   36   36   36    0  179
+  78369 1 2008N 07405W CUBA                     PUNTA DE MAISI               7     80            :      0   36   36   36   36   36    0  180
+  78384 1 1918N 08122W CAYMAN ISLANDS           OWEN ROBERTS AIRPORT GRA     3     30            :      0   72   72   72   72   72    0  360
+  78388 1 1830N 07755W JAMAICA                  SANGSTER INT'L AIRPORT       9 -99999            :      0    0   48   48   48   48    0  192
+  78397 1 1756N 07647W JAMAICA                  NORMAN MANLEY INTERNATIO     3 -99999            :      0    0   48   48   48   48    0  192
+  78583 1 1732N 08818W BELIZE                   PHILIP GOLDSON INTERNATI     5     45            :      0    0   54   54   54   54    0  216
+  78627 1 1519N 09130W GUATEMALA                HUEHUETENANGO             1870 -99999            :      0    0   60   60   60   60    0  240
+  78641 1 1435N 09032W GUATEMALA                INSIVUMEH                 1502 -99999            :      0    0   60   60   60   60    0  240
+  78647 1 1356N 09050W GUATEMALA                PUERTO SAN JOSE              6 -99999            :      0    0   60   60   60    0    0  180
+  78650 1 1335N 08950W EL SALVADOR              ACAJUTLA PUERTO NUEV        15    100            :     60    0   45   60   60   60    0  285
+  78700 1 1318N 08739W HONDURAS                 AMAPALA                     10    115            :      0    0   12   12   12   12   12   60
+  78703 1 1619N 08632W HONDURAS                 ROATAN                       5     65            :     12   12   12   12   12   12   12   84
+  78704 1 1556N 08556W HONDURAS                 TRUJILLO                     3     45            :     12   12   12   12   12   12   12   84
+  78705 1 1545N 08651W HONDURAS                 LA CEIBA                    15    165            :     11   11   11   12   11   11   12   79
+  78706 1 1547N 08728W HONDURAS                 TELA                         7     85            :     12   12   12   12   12   12   12   84
+  78707 1 1507N 08708W HONDURAS                 YORO                       677   6785            :     12   12   12   12   12   12   12   84
+  78708 1 1527N 08756W HONDURAS                 LA MESA                     27    285            :     12   11   12   12   12   12   12   83
+  78714 1 1450N 08552W HONDURAS                 CATACAMAS                  391   3925            :      0    0   12   12   12   12   12   60
+  78717 1 1447N 08846W HONDURAS                 SANTA ROSA DE COPAN       1080  10815            :     12   12   12   12   12   12   12   84
+  78718 1 1426N 08912W HONDURAS                 OCOTEPEQUE                 791   7925            :     11    7   11   12   12   11   12   76
+  78719 1 1418N 08810W HONDURAS                 LA ESPERANZA              1679  16805            :     12   12   12   12   12   12   12   84
+  78720 1 1404N 08713W HONDURAS                 TEGUCIGALPA               1000  10015            :     12   12   12   12   12   12   12   84
+  78724 1 1319N 08709W HONDURAS                 CHOLUTECA                   58    595            :     12   12   12   12   12   12   12   84
+  78762 1 0959N 08410W COSTA RICA               JUAN SANTAMARIA INTERNAT   913   9150            :     72    0   72   72   72   72   72  432
+  78764 1 0957N 08408W COSTA RICA               TOBIAS BOLANOS PALMA AIR   997   9990            :     72    0   72   72   72   72   72  432
+  78767 1 0957N 08301W COSTA RICA               PUERTO LIMON                 5     70            :     72    0   72   72   71   71   72  430
+  78774 1 1035N 08532W COSTA RICA               DANIEL ODUBER INTERNATIO    70    720            :     72    0   71   70   72   72   72  429
+  78858 1 1718N 06243W ST KITTS                 R L BRADSHAW INT'L AIRPO    51    668            :      0   72   72   72   72   72    0  360
+  78862 1 1708N 06147W ANTIGUA AND BARBUDA      V.C BIRD INTERNATIONAL A    19     19            :     72   72   72   72   72   72   72  504
+  78890 1 1620N 06100W FRANCE                   LA DESIRADE METEO           27    260            :      0   62   64   63   64   64   60  377
+  78891 1 1618N 06120W FRANCE                   LE MOULE LAUREAL            21    250            :      0    0   48   48   48   48    0  192
+  78894 1 1754N 06251W FRANCE                   ST-BARTHELEMY METEO         44    450            :      0   72   72   72   72   72   72  432
+  78897 1 1615N 06130W FRANCE                   LE RAIZET AERO              11     80            :      0   72   72   72   72   72   72  432
+  78922 1 1446N 06052W FRANCE                   TRINITE-CARAVEL             26    390            :      0   72   72   72   72   72   72  432
+  78924 1 1430N 06101W FRANCE                   DIAMANT-RADAR              366   3770            :      0    0   30   43   28   28    0  129
+  78925 1 1435N 06059W FRANCE                   LAMENTIN-AERO                3     80            :      0   72   72   72   72   72   72  432
+  78948 1 1339N 06057W ST. LUCIA                HEWANORRA INT'L AIRPORT      3     10            :      0   48   48   48   48   48    0  240
+  78951 1 1308N 06112W ST. VINCENT AND THE GREN E.T. JOSHUA                 14    137            :      0   60   60   60   60   60    0  300
+  78954 1 1304N 05930W BARBADOS                 GRANTLEY ADAMS INTERNATI    52    567            :     24   24   24   24   24   24    0  144
+  78958 1 1200N 06147W GRENADA                  POINT SALINES AIRPOR        41    408            :     60   60   60   60   60   60    0  360
+  78962 1 1109N 06050W TRINIDAD AND TOBAGO      CROWN POINT                  3     80            :     58   58   70   60   58   70    0  374
+  78970 1 1035N 06121W TRINIDAD AND TOBAGO      PIARCO                      22    220            :     72   72   72   72   72   72    0  432

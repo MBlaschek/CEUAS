@@ -1,0 +1,1217 @@
+        R                                                                                             Total No. Monthly Obs by Element |     
+        e                                                                Statn  Barom  Local         Mean Mean Mean      Mean Mean Mean|Totl 
+        c                                                                 Elev   Elev  Statn     :    Stn Slvl  Dly Totl  Max  Min     |  #  
+  Wmo#  #  Lat   Lon   Country Name             Station Name               (m)  (.1m)    #       :   Pres Pres Temp Prec Temp Temp   RH| Obs 
+ 
+  01001 1 7056N 00840W NORWAY                   JAN MAYEN                   10 -99999            :      0    0   24   24    0    0    0   48
+  02013 1 6744N 01728E SWEDEN                   RITSEM A                   532   5330            :     34   68   71   72   71   71   36  423
+  02019 1 6825N 01810E SWEDEN                   KATTERJåKK A               516   5180            :     34   70   72   72   72   72   24  416
+  02020 1 6825N 01810E SWEDEN                   KATTERJåKK                 515   5173            :      0    0   72   72   72   72    0  288
+  02024 1 6730N 01818E SWEDEN                   STORA SJöFALLET A          425   4270            :      0    0   72    0   72   72   34  250
+  02029 1 6755N 01836E SWEDEN                   TARFALA A                 1150  11520            :     23    0   41    0   41   41    0  146
+  02031 1 6804N 01950E SWEDEN                   RENSJöN A                  493   4950            :      0    0   72   72   72   72   36  324
+  02036 1 6751N 01902E SWEDEN                   NIKKALUOKTA A              466   4677            :     33   68   71   72   71   71   35  421
+  02038 1 6715N 02016E SWEDEN                   LATNIVAARA A               453   4550            :      0    0   72   72   72   72   35  323
+  02044 1 6750N 02020E SWEDEN                   KIRUNA FLYGPLATS           459   4610            :     35   69   72    0   72   72   33  353
+  02049 1 6709N 02039E SWEDEN                   GäLLIVARE A                359   3610            :     34   70   72   72   72   72   36  428
+  02054 1 6803N 02146E SWEDEN                   NEDRE SOPPERO V            355 -99999            :      0    0   35    0   35   35   34  139
+  02055 1 6841N 02132E SWEDEN                   NAIMAKKA A                 402   4040            :      0    0   71   72   71   71   32  317
+  02064 1 6720N 02214E SWEDEN                   SAITTAROVA A               240   2420            :      0    0   72   72   72   72   36  324
+  02072 1 6744N 02250E SWEDEN                   PARKALOMPOLO A             312   3132            :     31   67   70   72   70   70   33  413
+  02081 1 6827N 02227E SWEDEN                   KARESUANDO A               330   3320            :     32   68   70   72   70   70   34  416
+  02095 1 6712N 02324E SWEDEN                   PAJALA A                   171   1730            :     32   68   72   72   72   72   36  424
+  02101 1 6548N 01505E SWEDEN                   HEMAVAN FLYGPLATS          458   4600            :     32   68   72    0   72   72   34  350
+  02102 1 6506N 01431E SWEDEN                   STEKENJOKK A              1036  10380            :      0    0   71    0   71   71   26  239
+  02103 1 6547N 01504E SWEDEN                   HEMAVAN-GIERTEVARTO A      793   7950            :      0    0   72    0   72   72   36  252
+  02110 1 6520N 01504E SWEDEN                   GIELAS A                   577   5790            :      0    0   72   72   72   72   36  324
+  02119 1 6653N 01801E SWEDEN                   KVIKKJOKK-ÅRRENJARKA A     320   3220            :     35   72   72   72   72   72   24  419
+  02121 1 6641N 01607E SWEDEN                   MIERKENIS A                614   6154            :     33   69   71   72   71   71   36  423
+  02123 1 6620N 01706E SWEDEN                   JAKKVIK V                  552 -99999            :      0    0   35    0   35   35   23  128
+  02124 1 6603N 01751E SWEDEN                   ARJEPLOG A                 431   4322            :     36   72   72   72   72   72   22  418
+  02126 1 6501N 01742E SWEDEN                   GUNNARN A                  251   2530            :     35   71   72   72   72   72   36  430
+  02130 1 6629N 01626E SWEDEN                   LILLVIKEN-ROPARUDDEN V     481 -99999            :      0    0   36    0   36   36   34  142
+  02135 1 6534N 01752E SWEDEN                   BURESJöN A                 393   3950            :      0    0   72   72   72   72   36  324
+  02141 1 6618N 01912E SWEDEN                   TJåKAAPE MO                581   5826            :     30   54   60   31   60   60   23  318
+  02146 1 6630N 01941E SWEDEN                   VAJMAT V                   324 -99999            :      0    0   35    0   35   35   34  139
+  02147 1 6509N 01836E SWEDEN                   MALå-BRäNNAN A             363   3650            :      0    0   71   72   71   71   33  318
+  02149 1 6536N 01916E SWEDEN                   ARVIDSJAUR A               382   3835            :     33   57   60   72   60   60    9  351
+  02151 1 6630N 02008E SWEDEN                   JOKKMOKK FLYGPLATS MO      275   2770            :     24   35   52   35   52   52   10  260
+  02154 1 6553N 02009E SWEDEN                   VIDSEL MO                  182   1840            :     33   69   72   31   72   72   36  385
+  02161 1 6645N 02056E SWEDEN                   NATTAVAARA A               327   3290            :      0    0   69   72   69   69   30  309
+  02170 1 6545N 02146E SWEDEN                   SAVAST V                     9 -99999            :      0    0   36    0   36   36   36  144
+  02171 1 6549N 02138E SWEDEN                   BODEN MO                    25    270            :     33   68   72   33   72   72   36  386
+  02173 1 6540N 02104E SWEDEN                   ÄLVSBYN A                   40    420            :      0    0   72   72   72   72   36  324
+  02174 1 6617N 02108E SWEDEN                   LAKATRäSK A                185   1861            :     36   72   71   72   71   71   35  428
+  02176 1 6502N 02134E SWEDEN                   PITE-RöNNSKäR A              4     60            :      0    0   71   72   71   71   34  319
+  02181 1 6616N 02251E SWEDEN                   ÖVERKALIX-SVARTBYN A        61    630            :     34   70   72   72   72   72   36  428
+  02184 1 6649N 02220E SWEDEN                   PAHAROVA A                 228   2300            :     36   72   72   72   72   72   36  432
+  02186 1 6533N 02207E SWEDEN                   LULEå FLYGPLATS             17    190            :     36   72   71   30   71   71   36  387
+  02188 1 6519N 02223E SWEDEN                   RöDKALLEN A                  1     30            :      0    0   71   72   71   71   32  317
+  02191 1 6542N 02306E SWEDEN                   STORöN A                     4     60            :      0    0   71   72   71   71   29  314
+  02197 1 6549N 02407E SWEDEN                   HAPARANDA A                 16    180            :     35   72   72   72   72   72   34  429
+  02199 1 6637N 02328E SWEDEN                   YLINENJäRVI A              132   1340            :      0    0   72   72   72   72   34  322
+  02207 1 6317N 01207E SWEDEN                   STORLIEN-VISJöVALEN A      583   5850            :     35   71   72   72   72   72   35  429
+  02209 1 6303N 01217E SWEDEN                   SYLARNA A                 1030  10321            :      0    0   70    0   70   70   32  242
+  02210 1 6311N 01211E SWEDEN                   BLåHAMMAREN A             1090  10920            :      0    0   72    0   72   72   24  240
+  02216 1 6319N 01343E SWEDEN                   MATTMAR V                  355 -99999            :      0    0   36    0   36   36   36  144
+  02217 1 6323N 01309E SWEDEN                   ARE-BJORNANGE V            435 -99999            :      0    0   35    0   35   35   35  140
+  02219 1 6430N 01413E SWEDEN                   GäDDEDE A                  550   5520            :     36   72   72   72   72   72   33  429
+  02221 1 6350N 01330E SWEDEN                   KORSVATTNET A              717   7190            :      0    0   72   72   72   72   36  324
+  02226 1 6312N 01429E SWEDEN                   OSTERSUND FROSON           376   3770            :     33   68   72    0   72   72   36  353
+  02230 1 6413N 01533E SWEDEN                   GUBBHöGEN A                310   3120            :      0    0   71   72   71   71   35  320
+  02231 1 6341N 01436E SWEDEN                   FöLLINGE A                 362   3640            :      0    0   72   72   72   72   36  324
+  02233 1 6458N 01523E SWEDEN                   SAXNAS V                   545 -99999            :      0    0   36    0   36   36   36  144
+  02236 1 6346N 01520E SWEDEN                   HALLHåXåSEN A              375   3764            :     36   72   72   72   72   72   36  432
+  02242 1 6405N 01614E SWEDEN                   HOTING A                   241   2430            :      0    0   71   72   71   71   36  321
+  02243 1 6341N 01657E SWEDEN                   JUNSELE A                  214   2160            :     33   71   72   72   72   72   36  428
+  02245 1 6435N 01651E SWEDEN                   VILHELMINA A               348   3493            :     35   71   72   72   72   72   36  430
+  02247 1 6309N 01610E SWEDEN                   KRåNGEDE A                 183   1841            :     36   72   72   72   72   72   36  432
+  02254 1 6410N 01719E SWEDEN                   ÅSELE A                    307   3084            :     33   70   72   72   72   72   36  427
+  02256 1 6442N 01727E SWEDEN                   RISTRASK V                 575 -99999            :      0    0   36    0   36   36   31  139
+  02260 1 6307N 01815E SWEDEN                   VäSTMARKUM A               141   1427            :     34   69   70   72   70   70   35  420
+  02261 1 6433N 01843E SWEDEN                   LYCKSELE A                 210   2110            :     36   72   72   72   72   72   36  432
+  02263 1 6405N 01822E SWEDEN                   FREDRIKA A                 327   3290            :      0    0   72   72   72   72   33  321
+  02265 1 6339N 01833E SWEDEN                   HEMLING A                  182   1832            :     35   71   72   72   72   72   34  428
+  02267 1 6325N 01859E SWEDEN                   ÖRNSKöLDSVIKS FLYGPLATS    108   1100            :     33   68   71    0   71   71   35  349
+  02269 1 6311N 01901E SWEDEN                   SKAGSUDDE A                 11    130            :      0    0   72   72   72   72   32  320
+  02271 1 6456N 01923E SWEDEN                   NORSJö A                   309   3105            :     35   69   70   72   70   70   34  420
+  02282 1 6434N 01942E SWEDEN                   PETISTRäSK A               258   2600            :      0    0   71   72   71   71   35  320
+  02284 1 6326N 01941E SWEDEN                   JäRNäSKLUBB A                6     70            :     33   69   72   72   72   72   24  414
+  02286 1 6348N 02017E SWEDEN                   UMEå FLYGPLATS              14    160            :     32   68   72    0   72   72   35  351
+  02287 1 6348N 02052E SWEDEN                   HOLMöN A                     6     80            :     36   70   70   72   70   70   34  422
+  02292 1 6423N 02118E SWEDEN                   HOKMARKSBERGET V           105 -99999            :      0    0   36    0   36   36   36  144
+  02293 1 6437N 02104E SWEDEN                   SKELLEFTEå FLYGPLATS        48    500            :     34   69   72    0   72   72   36  355
+  02297 1 6429N 02135E SWEDEN                   BJURöKLUBB A                40    420            :     36   72   72   72   72   72   35  431
+  02302 1 6150N 01217E SWEDEN                   STORBO V                   660 -99999            :      0    0   32    0   32   32   28  124
+  02303 1 6244N 01244E SWEDEN                   FLATRUET V                 955 -99999            :      0    0   36    0   36   36   35  143
+  02307 1 6153N 01251E SWEDEN                   IDRE FJäLL A               869   8710            :      0    0   72    0   72   72   14  230
+  02308 1 6227N 01240E SWEDEN                   TäNNäS A                   723   7243            :     35   71   71   72   71   71   36  427
+  02311 1 6106N 01314E SWEDEN                   SALEN-HOGFJALLET V         725 -99999            :      0    0   36    0   36   36   36  144
+  02316 1 6141N 01311E SWEDEN                   SäRNA A                    425   4270            :      0    0   72    0   72   72    0  216
+  02317 1 6206N 01337E SWEDEN                   DRAVAGEN A                 566   5680            :      0    0   72   72   72   72   24  312
+  02319 1 6245N 01351E SWEDEN                   BöRTNAN A                  467   4690            :      0    0   72   72   72   72   24  312
+  02321 1 6115N 01402E SWEDEN                   ÄLVDALEN A                 252   2530            :     34   70   71   72   71   71   36  425
+  02325 1 6230N 01409E SWEDEN                   KLöVSJöHöJDEN A            802   8032            :     35   71   72   72   72   72   35  429
+  02327 1 6203N 01425E SWEDEN                   SVEG A                     362   3640            :     36   71   72   72   72   72   36  431
+  02329 1 6140N 01500E SWEDEN                   HAMRA A                    454   4550            :     36   70   70   72   70   70   34  422
+  02331 1 6245N 01505E SWEDEN                   HUNGE A                    343   3450            :      0    0   72   72   72   72   34  322
+  02337 1 6217N 01540E SWEDEN                   NORRBERG-NORRHOG V         320 -99999            :      0    0   21    0   21   21   18   81
+  02338 1 6122N 01543E SWEDEN                   EDSBYN A                   184   1860            :     36   71   72   72   72   72   36  431
+  02343 1 6230N 01617E SWEDEN                   TORPSHAMMAR A               99   1003            :     33   69   72   72   72   72   33  423
+  02347 1 6150N 01632E SWEDEN                   DELSBO A                    70    716            :     31   67   72   72   72   72   36  422
+  02349 1 6245N 01643E SWEDEN                   SILLRE V                   205 -99999            :      0    0   34    0   34   34   32  134
+  02354 1 6226N 01721E SWEDEN                   SUNDSVALL-RASTA V           80 -99999            :      0    0   36    0   36   36   36  144
+  02355 1 6142N 01731E SWEDEN                   KUGGöREN A                   8     98            :     36   71   72   72   72   72   35  430
+  02366 1 6231N 01726E SWEDEN                   SUNDSVALLS FLYGPLATS         4     60            :     33   72   72    0   72   72   36  357
+  02368 1 6213N 01745E SWEDEN                   BRäMöN A                    17    190            :      0    0   59   72   59   59   21  270
+  02382 1 6239N 01806E SWEDEN                   LUNGö A                     17    190            :      0    0   70   72   70   70   36  318
+  02403 1 5842N 01307E SWEDEN                   NAVEN A                     53    550            :      0    0   72   72   72   72   34  322
+  02407 1 6041N 01343E SWEDEN                   MALUNG A                   306   3080            :     36   72   72   72   72   72   36  432
+  02408 1 5913N 01205E SWEDEN                   BLOMSKOG A                 170   1712            :     30   66   71   72   71   71   36  417
+  02411 1 5940N 01238E SWEDEN                   ARVIKA A                    66    680            :     36   72   72   72   72   72   36  432
+  02413 1 6038N 01253E SWEDEN                   BRATTMON V                 525 -99999            :      0    0   33    0   33   33   33  132
+  02418 1 5927N 01320E SWEDEN                   KARLSTAD FLYGPLATS         107   1090            :     35   71   72    0   72   72   36  358
+  02423 1 5952N 01307E SWEDEN                   SUNNE A                    110   1120            :      0    0   71   72   71   71   36  321
+  02426 1 6009N 01348E SWEDEN                   GUSTAVSFORS A              187   1881            :     35   70   72   72   72   72   36  429
+  02429 1 5940N 01411E SWEDEN                   DAGLöSEN A                 133   1350            :      0    0   69   72   69   69   22  301
+  02431 1 5952N 01515E SWEDEN                   KLOTEN A                   289   2910            :     33   69   70   72   70   70   36  420
+  02432 1 5914N 01503E SWEDEN                   ÖREBRO                      53    550            :     33   69   72    0   72   72   36  354
+  02435 1 6026N 01530E SWEDEN                   BORLäNGE FLYGPLATS         152   1540            :     36   69   72    0   72   72   35  356
+  02440 1 6058N 01626E SWEDEN                   ÅMOT A                     162   1640            :      0    0   72   72   72   72   24  312
+  02441 1 6058N 01430E SWEDEN                   MORA A                     196   1980            :     34   70   72   72   72   72   36  428
+  02443 1 5939N 01707E SWEDEN                   ENKöPING MO                 26    280            :     35   71   71   33   71   71   36  388
+  02449 1 5923N 01627E SWEDEN                   ESKILSTUNA A                15    170            :     36   72   72   72   72   72   24  420
+  02450 1 6044N 01734E SWEDEN                   EGGEGRUND A                  5     70            :      0    0   71    0   71   71   11  224
+  02452 1 5918N 01454E SWEDEN                   KILSBERGEN-SUTTARBODA A    219   2210            :      0    0   72   72   72   72   24  312
+  02453 1 6043N 01710E SWEDEN                   GäVLE A                     16    180            :      0    0   72   72   72   72   33  321
+  02456 1 6014N 01754E SWEDEN                   FILMS KYRKBY A              33    346            :     36   71   71   72   71   71   35  427
+  02458 1 5954N 01736E SWEDEN                   UPPSALA FLYGPLATS           21    230            :     32   68   72   32   72   72   36  384
+  02460 1 5938N 01757E SWEDEN                   STOCKHOLM-ARLANDA           42    440            :     34   70   72    0   72   72   36  356
+  02462 1 5952N 01738E SWEDEN                   UPPSALA AUT                 13    150            :     33   69   72   28   72   72   24  370
+  02464 1 5921N 01757E SWEDEN                   STOCKHOLM/BROMMA            14    170            :     35   71   72    0   72   72   35  357
+  02468 1 6023N 01508E SWEDEN                   STORA SPåNSBERGET A        492   4940            :      0    0   72   72   72   72   36  324
+  02469 1 5911N 01755E SWEDEN                   TULLINGE A                  45    470            :      0    0   72   72   72   72   24  312
+  02472 1 6007N 01507E SWEDEN                   SKEPPSMORA V               240 -99999            :      0    0   35    0   35   35   33  138
+  02476 1 5903N 01624E SWEDEN                   FLODA A                     19    210            :     33   68   71   72   71   71   35  421
+  02481 1 5955N 01641E SWEDEN                   SALA A                      57    590            :     32   68   72   72   72   72   35  423
+  02482 1 6016N 01659E SWEDEN                   KERSTINBO A                 56    570            :     33   68   71   72   71   71   35  421
+  02484 1 5921N 01803E SWEDEN                   STOCKHOLM A                 44    460            :     35   48   72    0   72   72   34  333
+  02485 1 5921N 01803E SWEDEN                   STOCKHOLM                   44    460            :     36   72   72   72   72   72   36  432
+  02486 1 5921N 01731E SWEDEN                   ADELSö A                     6     80            :      0    0   70   72   70   70   36  318
+  02487 1 5921N 01844E SWEDEN                   SKARPö A                    20    203            :      0    0   61    0   61   61   36  219
+  02488 1 6032N 01823E SWEDEN                   ÖRSKäR A                     8     93            :     35   71   72   72   72   72   34  428
+  02489 1 5904N 01807E SWEDEN                   BERGA MO                     4     60            :     25   58   67   26   67   67   31  341
+  02490 1 5950N 01838E SWEDEN                   SVANBERGA A                 15    162            :     34   70   71   72   71   71   22  411
+  02493 1 5945N 01925E SWEDEN                   SöDERARM A                  15    170            :      0    0   60    0   60   60   12  192
+  02496 1 5927N 01930E SWEDEN                   SVENSKA HöGARNA             12    140            :      0    0   72   72   72   72    0  288
+  02498 1 5927N 01930E SWEDEN                   SVENSKA HöGARNA             12    140            :     33   69   72   72   72   72   36  426
+  02500 1 5854N 01100E SWEDEN                   NORDKOSTER A                33    346            :     35   71   72   72   72   72   36  430
+  02501 1 5835N 01104E SWEDEN                   VäDERöARNA A                22    240            :     35   68   71    0   71   71   22  338
+  02505 1 5806N 01120E SWEDEN                   MåSESKäR A                  16    180            :      0    0   72   72   72   72   35  323
+  02507 1 5838N 01126E SWEDEN                   HUD V                       80 -99999            :      0    0   33    0   33   33   31  130
+  02513 1 5743N 01200E SWEDEN                   GöTEBORG A                   5     70            :     29   64   71   72   71   71   33  411
+  02515 1 5811N 01209E SWEDEN                   ASBRACKA-TORPABRON V        20 -99999            :      0    0   33    0   33   33   24  123
+  02516 1 5738N 01136E SWEDEN                   VINGA A                     12    140            :     34   70   72   71   72   72   23  414
+  02518 1 5718N 01154E SWEDEN                   NIDINGEN A                   2     40            :      0    0   70    0   70   70   23  233
+  02520 1 5826N 01242E SWEDEN                   SåTENäS                     54    560            :     33   69   72   33   72   72   36  387
+  02521 1 5836N 01225E SWEDEN                   ERIKSTAD-BERGARUD V         55 -99999            :      0    0   23    0   23   23   10   79
+  02526 1 5741N 01218E SWEDEN                   LANDVETTER FLYGPLATS       154   1550            :     35   71   72    0   72   72   36  358
+  02536 1 5747N 01310E SWEDEN                   RåNGEDALA A                297   2987            :     33   69   69   72   69   69   36  417
+  02539 1 5707N 01247E SWEDEN                   ULLARED A                  122   1240            :      0    0   72   72   72   72   24  312
+  02540 1 5836N 01212E SWEDEN                   KROPPEFJäLL-GRANAN A       174   1760            :      0    0   72   72   72   72   33  321
+  02542 1 5819N 01302E SWEDEN                   HäLLUM A                    70    713            :     35   71   72   72   72   72   36  430
+  02544 1 5831N 01431E SWEDEN                   KARLSBORG MO                95    970            :     36   70   70   35   70   70   34  385
+  02545 1 5834N 01434E SWEDEN                   AXSTåL MO                   91    930            :     31   67   72   26   72   72   36  376
+  02546 1 5853N 01423E SWEDEN                   GåRDSJö A                  211   2121            :     34   70   71   72   71   71   35  424
+  02548 1 5806N 01425E SWEDEN                   VISINGSö A                  94    960            :      0    0   71   72   71   71   19  304
+  02549 1 5730N 01428E SWEDEN                   TOMTABACKEN A              356   3580            :      0    0   72   72   72   72   34  322
+  02550 1 5745N 01404E SWEDEN                   JöNKöPINGS FLYGPLATS       226   2280            :     32   67   72    0   72   72   35  350
+  02552 1 5804N 01514E SWEDEN                   MALEXANDER A               195   1970            :      0    0   72   72   72   72   23  311
+  02553 1 5805N 01345E SWEDEN                   KYMBO V                    220 -99999            :      0    0   36    0   36   36   32  140
+  02554 1 5843N 01502E SWEDEN                   KETTSTAKA A                225   2270            :      2    2   70   72   70   70   34  320
+  02556 1 5718N 01408E SWEDEN                   HAGSHULT MO                169   1710            :     31   60   66   32   66   66   30  351
+  02557 1 5753N 01552E SWEDEN                   HORN A                      90    912            :     35   70   72   72   72   72   36  429
+  02558 1 5841N 01619E SWEDEN                   KOLMåRDEN-STRöMSFORS A     153   1550            :      0    0   72   72   72   72   35  323
+  02559 1 5742N 01628E SWEDEN                   GLADHAMMAR A                35    370            :      0    0   72   72   72   72   36  324
+  02561 1 5838N 01526E SWEDEN                   KVARN MO                    72    740            :     30   65   71   32   71   71   34  374
+  02562 1 5824N 01532E SWEDEN                   MALMSLäTT                   93    950            :     34   69   71   34   71   71   35  385
+  02563 1 5815N 01701E SWEDEN                   HARSTENA A                  14    160            :     32   68   71   72   71   71   35  420
+  02565 1 5723N 01548E SWEDEN                   MåLILLA A                   95    970            :     32   68   72   72   72   72   36  424
+  02567 1 5845N 01752E SWEDEN                   LANDSORT A                  18    197            :     36   72   72   72   72   72   36  432
+  02574 1 5835N 01609E SWEDEN                   NORRKöPING-SMHI             40    416            :     35   66   68   68   68   68   11  384
+  02575 1 5722N 01706E SWEDEN                   ÖLANDS NORRA UDDE A          2     35            :     35   71   72   71   72   72   23  416
+  02587 1 5755N 01857E SWEDEN                   FåRöSUND AR A               13    149            :      0    0   71   72   71   71   35  320
+  02589 1 5824N 01912E SWEDEN                   GOTSKA SANDöN A             16    172            :     36   72   72   72   72   72   36  432
+  02590 1 5740N 01821E SWEDEN                   VISBY FLYGPLATS             42    440            :     36   72   72   27   72   72   36  387
+  02595 1 5729N 01828E SWEDEN                   ROMA V                      35 -99999            :      0    0   36    0   36   36   36  144
+  02598 1 5726N 01859E SWEDEN                   ÖSTERGARNSHOLM A             5     70            :      0    0   66    0   66   66   36  234
+  02602 1 5623N 01256E SWEDEN                   HUNNESTORP V               140 -99999            :      0    0   36    0   36   36   21  129
+  02603 1 5652N 01240E SWEDEN                   EFTRA-BROEN V               50 -99999            :      0    0   34    0   34   34   33  135
+  02605 1 5627N 01233E SWEDEN                   HALLANDS VäDERö A           10    120            :      0    0   57   72   57   57   10  253
+  02607 1 5618N 01251E SWEDEN                   BARKåKRA                    18    200            :     35   70   71    0   71   71   35  353
+  02609 1 5530N 01324E SWEDEN                   RYNGE V                     50 -99999            :      0    0   36    0   36   36   36  144
+  02611 1 5602N 01246E SWEDEN                   HELSINGBORG A               43    442            :     36   72   72   72   72   72   35  431
+  02615 1 5523N 01249E SWEDEN                   FALSTERBO A                  5     70            :     34   72   72   72   72   72   35  429
+  02616 1 5523N 01249E SWEDEN                   FALSTERBO                    5     70            :     36   36   72   72   72   72    0  360
+  02618 1 5657N 01304E SWEDEN                   TORUP A                    130   1320            :     33   69   69   70   69   69   36  415
+  02622 1 5651N 01353E SWEDEN                   LJUNGBY A                  148   1500            :      0    0   72   72   72   72   36  324
+  02623 1 5552N 01340E SWEDEN                   HöRBY A                    114   1160            :      0    0   72   72   72   72   36  324
+  02625 1 5529N 01419E SWEDEN                   SKILLINGE A                  4     52            :     34   70   72   72   72   72   36  428
+  02628 1 5601N 01451E SWEDEN                   HANö A                      55    570            :      0    0   72   72   72   72   35  323
+  02629 1 5617N 01357E SWEDEN                   HäSTVEDA MO                103   1050            :     31   66   71   32   71   71   35  377
+  02631 1 5542N 01314E SWEDEN                   LUND                        73    729            :      0    0   36   36   36   36    0  144
+  02632 1 5557N 01542E SWEDEN                   UTKLIPPAN A                  3     50            :      0    0   71    0   71   71   36  249
+  02635 1 5534N 01304E SWEDEN                   MALMö A                     20    220            :      0    0   72   71   72   72   36  323
+  02636 1 5531N 01323E SWEDEN                   STURUP                      72    730            :     34   70   71    0   71   71   36  353
+  02644 1 5612N 01624E SWEDEN                   ÖLANDS SöDRA UDDE A          2     40            :     30   66   71   72   71   71   24  405
+  02646 1 5640N 01627E SWEDEN                   OLANDSBRON V                 5 -99999            :      0    0   36    0   36   36   36  144
+  02648 1 5651N 01450E SWEDEN                   VäXJö A                    199   2000            :     33   69   72   72   72   72   22  412
+  02652 1 5601N 01406E SWEDEN                   KRISTIANSTAD V              10 -99999            :      0    0   31    0   31   31   29  122
+  02661 1 5650N 01528E SWEDEN                   KOSTA MO                   230   2320            :     33   67   70   34   70   70   34  378
+  02664 1 5616N 01516E SWEDEN                   RONNEBY-BREDåKRA            58    600            :     36   72   72   33   72   72   36  393
+  02667 1 5609N 01536E SWEDEN                   KARLSKRONA-SöDERSTJ. MO      2     40            :     35   71   72   34   72   72   35  391
+  02670 1 5641N 01618E SWEDEN                   KALMAR FLYGPLATS             6     80            :     35   69   72    0   72   72   35  355
+  02679 1 5655N 01809E SWEDEN                   HOBURG A                    39    410            :     33   69   72   72   72   72   36  426
+  02706 1 6014N 02403E FINLAND                  LOHJA PORLA                 37 -99999            :      0    0   48   48   48   48   47  239
+  02708 1 6210N 02248E FINLAND                  KARVIA ALKKIA              160 -99999            :      0    0   48   48   48   48   48  240
+  02710 1 6255N 02625E FINLAND                  VESANTO SONKARI            120 -99999            :      0    0   48   47   48   48   48  239
+  02714 1 6430N 02625E FINLAND                  VAALA PELSO                114   1150            :     41   41   48   48   47   47   48  320
+  02717 1 6810N 02547E FINLAND                  KITTILA POKKA              275 -99999            :      0    0   48   48   48   48   48  240
+  02719 1 6749N 02745E FINLAND                  SODANKYLA LOKKA            240 -99999            :      0    0   48   48   48   48   48  240
+  02722 1 6824N 02725E FINLAND                  INARI SAARISELKA MATKAIL   302 -99999            :      0    0   48   48   48   48   48  240
+  02725 1 6326N 02426E FINLAND                  HALSUA KANALA PUROLA       153 -99999            :      0    0   47   45   47   47   47  233
+  02741 1 6010N 01959E FINLAND                  JOMALA JOMALABY             11    127            :     48   48   48   48   48   48   47  335
+  02750 1 5950N 02315E FINLAND                  HANKO TVARMINNE              3 -99999            :      0    0   48   48   48   48   48  240
+  02756 1 6022N 02306E FINLAND                  SALO KARKKA                  3 -99999            :      0    0   48   18   48   48   48  210
+  02758 1 6025N 02424E FINLAND                  VIHTI MAASOJA               42    442            :     46   46   48    0   48   48   48  284
+  02762 1 6116N 02215E FINLAND                  KOKEMAKI RAUSENKULMA        37    385            :      0    0    0   48    0    0    0   48
+  02767 1 6103N 02502E FINLAND                  HAMEENLINNA LAMMI PAPPIL   125 -99999            :      0    0   48   48   48   48   48  240
+  02768 1 6111N 02603E FINLAND                  HEINOLA ASEMANTAUS          92 -99999            :      0    0   48   48   48   48   48  240
+  02770 1 6150N 02417E FINLAND                  JUUPAJOKI HYYTIALA         153 -99999            :      0    0   48   48   48   48   48  240
+  02771 1 6152N 02605E FINLAND                  JOUTSA LEIVONMAKI SAVENA   146 -99999            :      0    0   48   48   48   48   48  240
+  02778 1 6148N 02919E FINLAND                  SAVONLINNA PUNKAHARJU LA    78    795            :     48   48   48   47   48   48   48  335
+  02788 1 6308N 02718E FINLAND                  MAANINKA HALOLA             90    913            :     47   47   47   47   47   47   47  329
+  02789 1 6322N 02839E FINLAND                  RAUTAVAARA YLA-LUOSTA      166   1655            :     48   48   48   48   48   48   47  335
+  02791 1 6313N 02914E FINLAND                  JUUKA NIEMELA              116 -99999            :      0    0   48   48   48   48   48  240
+  02796 1 6319N 03002E FINLAND                  LIEKSA LAMPELA              98 -99999            :      0    0   48   48   48   48   48  240
+  02797 1 6408N 02525E FINLAND                  HAAPAVESI MUSTIKKAMAKI     112 -99999            :      0    0   48   48   48   48   48  240
+  02798 1 6340N 02849E FINLAND                  VALTIMO KK                 115 -99999            :      0    0   48   48   48   48   48  240
+  02801 1 6902N 02047E FINLAND                  ENONTEKIO KILPISJARVI KY   480   4827            :     48   47   48   46   48   48   48  333
+  02803 1 6441N 02505E FINLAND                  SIIKAJOKI REVONLAHTI        48    495            :     48   48   48   48   48   48   48  336
+  02805 1 6945N 02700E FINLAND                  UTSJOKI KEVO               107   1063            :     48   48   48   48   48   48   48  336
+  02807 1 6836N 02725E FINLAND                  INARI IVALO LENTOASEMA     147   1449            :     47   47   47    0   47   47   47  282
+  02811 1 6622N 02919E FINLAND                  KUUSAMO KIUTAKONGAS        160 -99999            :      0    0   47   48   47   47   48  237
+  02812 1 6631N 02439E FINLAND                  YLITORNIO MELTOSJARVI       92 -99999            :      0    0   48   48   48   48   48  240
+  02813 1 6634N 02600E FINLAND                  ROVANIEMI APUKKA           106   1074            :     48   48   48   48   48   48   48  336
+  02815 1 6717N 02810E FINLAND                  SAVUKOSKI KK               180 -99999            :      0    0   48   48   48   48   48  240
+  02816 1 6805N 02711E FINLAND                  SODANKYLA VUOTSO           247   2488            :     48   48   48   48   48   48   48  336
+  02819 1 6744N 02936E FINLAND                  SALLA VARRIOTUNTURI        370 -99999            :      0    0   48   48   48   48   47  239
+  02823 1 6758N 02340E FINLAND                  MUONIO ALAMUONIO           254   2526            :     16   46   48   48   48   48   48  302
+  02825 1 7004N 02754E FINLAND                  UTSJOKI NUORGAM             22 -99999            :      0    0   48   48   48   48   48  240
+  02828 1 6023N 02233E FINLAND                  KAARINA YLTOINEN             6     52            :     48   48   48   48   48   48   48  336
+  02829 1 6035N 02448E FINLAND                  HYVINKAA HYVINKAANKYLA      86 -99999            :     19   19   48   48   48   48   48  278
+  02830 1 6041N 02648E FINLAND                  KOUVOLA ANJALA              33 -99999            :      0    0   48   48   48   48   48  240
+  02831 1 6031N 02740E FINLAND                  VIROLAHTI KOIVUNIEMI         5 -99999            :      0    0   48   48   48   48   48  240
+  02832 1 6214N 03020E FINLAND                  TOHMAJARVI KEMIE            90 -99999            :      0    0   48   48   48   48   48  240
+  02833 1 6256N 02229E FINLAND                  SEINAJOKI PELMAA            26    317            :     48   48   48   48   48   48   48  336
+  02834 1 6350N 02713E FINLAND                  VIEREMA KAARAKKALA         207   2076            :     48   48   48   48   48   48   48  336
+  02836 1 6721N 02637E FINLAND                  SODANKYLA, LAPIN ILMATIE   179   1793            :     48   48   48   48   48   48   48  336
+  02844 1 6646N 02358E FINLAND                  PELLO KK MUSEOTIE           84    859            :     48   48   48   48   47   47   48  334
+  02845 1 6633N 02550E FINLAND                  ROVANIEMI LENTOASEMA       195   2012            :     48   48   48   48   48   48   48  336
+  02864 1 6547N 02435E FINLAND                  KEMI KEMI-TORNIO LENTOAS    19    145            :     48   48   47    0   47   47   48  285
+  02869 1 6559N 02913E FINLAND                  KUUSAMO LENTOASEMA         264   2658            :     48   48   48    0   48   48   48  288
+  02874 1 6501N 02443E FINLAND                  HAILUOTO OJAKYLA             8     72            :      0    0   48   48   48   48   48  240
+  02897 1 6416N 02740E FINLAND                  KAJAANI LENTOASEMA         147   1340            :     48   48   48    0   48   48   48  288
+  02903 1 6343N 02308E FINLAND                  KRUUNUPYY KOKKOLA-PIETAR    26    250            :     48   48   48    0   48   48   48  288
+  02910 1 6326N 02104E FINLAND                  MUSTASAARI VALASSAARET       4    110            :     44   44   44    0   44   44   44  264
+  02913 1 6307N 02302E FINLAND                  KAUHAVA LENTOASEMA          42    436            :     45   45   48    0   48   48   48  282
+  02915 1 6304N 02551E FINLAND                  VIITASAARI HAAPANIEMI      132   1318            :     48   48   48   48   48   48   48  336
+  02917 1 6300N 02748E FINLAND                  SIILINJARVI KUOPIO LENTO    99   1019            :     47   47   46    0   46   46   47  279
+  02924 1 6232N 02413E FINLAND                  AHTARI MYLLYMAKI           157   1597            :     48   48   48   48   48   48   47  335
+  02929 1 6239N 02936E FINLAND                  LIPERI JOENSUU LENTOASEM   121   1193            :     47   47   48    0   48   48   47  285
+  02935 1 6224N 02540E FINLAND                  JYVASKYLA LENTOASEMA       139   1410            :     48   48   48   48   48   48   48  336
+  02942 1 6150N 02228E FINLAND                  KANKAANPAA NIINISALO PUO   124   1248            :     18   48   48   48   48   48   48  306
+  02944 1 6125N 02337E FINLAND                  PIRKKALA TAMPERE-PIRKKAL   119   1122            :     47   47   48    0   48   48   47  285
+  02945 1 6151N 02447E FINLAND                  JAMSA HALLI LENTOASEMA     145   1447            :     46   46   46    0   46   46   46  276
+  02947 1 6141N 02712E FINLAND                  MIKKELI LENTOASEMA          99   1000            :     14   48   48   14   48   48   48  268
+  02958 1 6102N 02809E FINLAND                  LAPPEENRANTA LENTOASEMA    106   1055            :     48   48   48    0   48   48   48  288
+  02963 1 6048N 02330E FINLAND                  JOKIOINEN JOKIOISTEN OBS   104   1030            :     24   48   48   48   24   24   48  264
+  02965 1 6057N 02538E FINLAND                  LAHTI LAUNE                 78    787            :     48   48   48   48   48   48   48  336
+  02966 1 6053N 02656E FINLAND                  KOUVOLA UTTI LENTOASEMA     99    995            :     48   48   48    0   48   48   48  288
+  02974 1 6019N 02457E FINLAND                  VANTAA HELSINKI-VANTAAN     51    535            :     48   48   48   48   48   48   48  336
+  02976 1 6022N 02657E FINLAND                  KOTKA RANKKI                 9    131            :     48   48   48    0   48   48   48  288
+  02978 1 6010N 02456E FINLAND                  HELSINKI KAISANIEMI          4     40            :     48   48   48   48   48   48   48  336
+  02980 1 5957N 01957E FINLAND                  LEMLAND NYHAMN               8    100            :     48   48   48    0   48   48   44  284
+  02981 1 5947N 02122E FINLAND                  PARAINEN UTO                 9     68            :     47   47   48   48   48   48   44  330
+  02982 1 5946N 02257E FINLAND                  HANKO RUSSARO                5     65            :     48   48   48    0   48   48   48  288
+  02984 1 5955N 02401E FINLAND                  INKOO BOGASKAR              10    120            :     48   48   48    0   48   48   48  288
+  02991 1 6012N 02537E FINLAND                  PORVOO EMASALO              20    271            :     48   48   48    0   48   48   48  288
+  03005 1 6008N 00111W UNITED KINGDOM           LERWICK                     82     82            :      0   71   72   71   72   72    0  358
+  03017 1 5857N 00254W UNITED KINGDOM           KIRKWALL                    26     26            :      0   70   72   70   72   72    0  356
+  03026 1 5813N 00619W UNITED KINGDOM           STORNOWAY AIRPORT           15     15            :      0   72   72   72   72   72    0  360
+  03066 1 5739N 00334W UNITED KINGDOM           KINLOSS                      5      5            :      0   69   72   70   71   71    0  353
+  03091 1 5712N 00212W UNITED KINGDOM           DYCE                        65     65            :      0   71   72   71   72   72    0  358
+  03100 1 5630N 00653W UNITED KINGDOM           TIREE                        9      9            :      0   72   72   72   72   72    0  360
+  03162 1 5519N 00312W UNITED KINGDOM           ESKDALEMUIR                236    236            :      0   72   72   72   72   72    0  360
+  03171 1 5623N 00252W UNITED KINGDOM           LEUCHARS                    10     10            :      0   72   72   72   72   72    0  360
+  03257 1 5418N 00132W UNITED KINGDOM           LEEMING                     33     33            :      0   72   72   72   72   72    0  360
+  03302 1 5315N 00432W UNITED KINGDOM           VALLEY                      10     10            :      0   72   72   72   72   72    0  360
+  03377 1 5311N 00031W UNITED KINGDOM           WADDINGTON                  68     68            :      0   72   72   72   72   72    0  360
+  03414 1 5248N 00240W UNITED KINGDOM           SHAWBURY                    72     72            :      0   72   72   72   72   72    0  360
+  03502 1 5208N 00434W UNITED KINGDOM           ABERPORTH                  133    133            :      0   71   72   71   60   72    0  346
+  03590 1 5207N 00058E UNITED KINGDOM           WATTISHAM                   89     89            :      0   72   72   72   72   72    0  360
+  03740 1 5130N 00159W UNITED KINGDOM           LYNEHAM                    145    145            :      0   71   71   69   71   71    0  353
+  03772 1 5129N 00027W UNITED KINGDOM           HEATHROW                    25     25            :      0   72   72   72   72   72    0  360
+  03797 1 5121N 00120E UNITED KINGDOM           MANSTON                     49     49            :      0   69   72   68   72   72    0  353
+  03808 1 5013N 00520W UNITED KINGDOM           CAMBORNE                    87     87            :      0   72   72   72   72   72    0  360
+  03862 1 5047N 00150W UNITED KINGDOM           HURN                        10     10            :      0   71   71   71   72   72    0  357
+  03917 1 5440N 00613W UNITED KINGDOM           ALDERGROVE                  63     63            :      0   72   72   72   72   72    0  360
+  03951 1 5129N 00926W REPUBLIC OF IRELAND      SHERKINISLAND               21    210            :     60   60   60   60   60   60   60  420
+  03952 1 5148N 00815W REPUBLIC OF IRELAND      ROCHES_POINT                40    400            :     60   60   60   60   60   60   60  420
+  03953 1 5156N 01014W REPUBLIC OF IRELAND      VALENTIA_OBSERVATORY        24    240            :     60   60   60   60   60   60   60  420
+  03955 1 5151N 00829W REPUBLIC OF IRELAND      CORK_AIRPORT               155   1550            :     60   60   60   60   60   60   60  420
+  03956 1 5218N 00630W REPUBLIC OF IRELAND      JOHNSTOWNII                 62    620            :     60   60   60   60   60   60   60  420
+  03958 1 5210N 00816W REPUBLIC OF IRELAND      MOORE_PARK                  46    460            :     60   60   60   60   60   60   60  420
+  03961 1 5252N 00655W REPUBLIC OF IRELAND      OAK_PARK                    62    620            :     60   60   60   60   60   60   60  420
+  03962 1 5241N 00855W REPUBLIC OF IRELAND      SHANNON_AIRPORT             15    150            :     60   60   60   60   60   60   60  420
+  03963 1 5320N 00954W REPUBLIC OF IRELAND      MACE_HEAD                   21    210            :     60   60   60   60   60   60   60  420
+  03966 1 5303N 00801W REPUBLIC OF IRELAND      GURTEEN                     75    750            :     60   60   60   60   60   60   60  420
+  03967 1 5318N 00626W REPUBLIC OF IRELAND      CASEMENT                    91    910            :     60   60   60   60   60   60   60  420
+  03968 1 5331N 00640W REPUBLIC OF IRELAND      DUNSANY                     83    830            :     60   60   60   60   60   60   60  420
+  03969 1 5326N 00614W REPUBLIC OF IRELAND      DUBLIN_AIRPORT              71    710            :     60   60   60   60   60   60   60  420
+  03970 1 5343N 00900W REPUBLIC OF IRELAND      CLAREMORRIS                 68    680            :     60   60   60   60   60   60   60  420
+  03971 1 5332N 00722W REPUBLIC OF IRELAND      MULLINGAR                  101   1010            :     60   60   60   60   60   60   60  420
+  03973 1 5354N 00849W REPUBLIC OF IRELAND      KNOCK_AIRPORT              201   2010            :     60   60   60   60   60   60   60  420
+  03975 1 5344N 00759W REPUBLIC OF IRELAND      MT_DILLON                   39    390            :     60   60   60   60   60   60   60  420
+  03976 1 5414N 01000W REPUBLIC OF IRELAND      BELMULLET                    9     90            :     60   60   60   60   60   60   60  420
+  03978 1 5430N 00815W REPUBLIC OF IRELAND      FINNER                      33    330            :     60   60   60   60   60   60   60  420
+  03979 1 5403N 00719W REPUBLIC OF IRELAND      BALLYHAISE                  78    780            :     60   60   60   60   60   60   60  420
+  03980 1 5522N 00720W REPUBLIC OF IRELAND      MALIN_HEAD                  20    200            :     60   60   60   60   60   60   60  420
+  03981 1 5410N 00827W REPUBLIC OF IRELAND      MARKREE                     34    340            :     60   60   60   60   60   60   60  420
+  03982 1 5322N 00621W REPUBLIC OF IRELAND      PHOENIXPARK                 48    480            :     60   60   60   60   60   60   60  420
+  03984 1 5355N 00934W REPUBLIC OF IRELAND      NEWPORT                     22    220            :     60   60   60   60   60   60   60  420
+  03985 1 5317N 00847W REPUBLIC OF IRELAND      ATHENRY                     40    400            :     48   48   48   48   48   48   48  336
+  03995 1 5156N 01014W IRELAND                  VALENTIA OBSERVATORY        24 -99999            :     12    0    0    0   12   12    0   36
+  04202 1 7632N 06842W GREENLAND                PITUFFIK                    77 -99999            :      0    0   72    0    0    0    0   72
+  04211 1 7247N 05608W GREENLAND                MITTARFIK UPERNAVIK        126   1300            :      0   69   72    0   57   57    0  255
+  04221 1 6914N 05104W GREENLAND                MITTARFIK ILULISSAT         29    336            :      0   72   72    0   72   72    0  288
+  04250 1 6411N 05144W GREENLAND                NUUK                        80    837            :      0   72   72   63   72   72    0  351
+  04270 1 6110N 04526W GREENLAND                MITTARFIK NARSARSUAQ        34    310            :      0   72   72   72   72   72    0  360
+  04272 1 6043N 04603W GREENLAND                QAQORTOQ                    57 -99999            :      0    0   72    0    0    0    0   72
+  04320 1 7646N 01840W GREENLAND                DANMARKSHAVN                11    120            :      0   69   72   72   69   69    0  351
+  04339 1 7029N 02157W GREENLAND                ITTOQQORTOORMIIT            70    715            :      0   68   72   34   66   66    0  306
+  04360 1 6537N 03738W GREENLAND                TASIILAQ                    54    559            :      0   70   72   61   57   57    0  317
+  06011 1 6201N 00646W THE FAROE ISLANDS        TORSHAVN                    54    559            :      0   72   72   68   72   72    0  356
+  06051 1 5646N 00819E DENMARK                  VESTERVIG                   18     36            :      0   72   72   72   72   72    0  360
+  06088 1 5527N 00824E DENMARK                  NORDBY                       4     89            :      0   72   72   72   72   72    0  360
+  06132 1 5550N 01037E DENMARK                  TRANEBJERG OST              16    158            :      0   72   72   72   72   72    0  360
+  06186 1 5541N 01233E DENMARK                  LANDBOHÃ¸JSKOLEN (KÃ¸BEN     7     50            :      0   72   72   72   72   72    0  360
+  06193 1 5518N 01446E DENMARK                  HAMMER ODDE FYR              8     94            :      0   72   72   72   72   72    0  360
+  06210 1 5210N 00425E NETHERLANDS, THE         VALKENBURG                   0     14            :      0   60   60   60   60   60   60  360
+  06235 1 5255N 00447E NETHERLANDS, THE            DE KOOY                   1     11            :      0   72   72   72   72   72   72  432
+  06240 1 5218N 00446E NETHERLANDS, THE            SCHIPHOL                 -3    -27            :      0   72   72   72   72   72   72  432
+  06260 1 5206N 00511E NETHERLANDS, THE            DE BILT                   2     35            :      0   72   72   72   72   72   72  432
+  06270 1 5313N 00545E NETHERLANDS, THE            LEEUWARDEN                1     23            :      0   72   72   72   72   72   72  432
+  06275 1 5203N 00553E NETHERLANDS, THE            DEELEN                   48    467            :      0   72   72   72   72   72   72  432
+  06280 1 5307N 00635E NETHERLANDS, THE            EELDE                     5     40            :      0   72   72   72   72   72   72  432
+  06290 1 5216N 00653E NETHERLANDS, THE            TWENTHE                  35    345            :      0   72   72   72   72   72   72  432
+  06310 1 5126N 00335E NETHERLANDS, THE            VLISSINGEN                8     97            :      0   72   72   72   72   72   72  432
+  06344 1 5157N 00426E NETHERLANDS, THE            ROTTERDAM                -4    -45            :      0   72   72   72   72   72   72  432
+  06350 1 5133N 00455E NETHERLANDS, THE            GILZE-RIJEN              15    135            :      0   72   72   72   72   72   72  432
+  06370 1 5126N 00524E NETHERLANDS, THE            EINDHOVEN                23    224            :      0   72   72   72   72   72   72  432
+  06375 1 5139N 00542E NETHERLANDS, THE            VOLKEL                   22    214            :      0   72   72   72   72   72   60  420
+  06380 1 5054N 00546E NETHERLANDS, THE            MAASTRICHT              114   1134            :      0   72   72   72   72   72   72  432
+  06590 1 4938N 00612E GRAND-DUCHY OF LUXEMBOUR LUXEMBOURG - FINDEL AIRP   376   3771            :     72   72   72   72   72   72    0  432
+  06601 1 4732N 00735E SWITZERLAND              BASEL / BINNINGEN          316   3175            :     36   36   36   36   12   12   12  180
+  06602 1 4721N 00721E SWITZERLAND              DELEMONT                   439   4398            :     16   16   35   36   12   12   24  151
+  06603 1 4628N 00649E SWITZERLAND              VEVEY                      405 -99999            :      0    0   12   12   12   12   12   60
+  06604 1 4700N 00657E SWITZERLAND              NEUCHATEL                  485   4853            :     36   36   36   36   12   12   12  180
+  06605 1 4708N 00703E SWITZERLAND              CHASSERAL                 1599  15956            :     36    0   36   36   12   12   12  144
+  06606 1 4703N 00704E SWITZERLAND              CRESSIER                   431   4325            :     35   35   34   34   12   12   12  174
+  06608 1 4703N 00659E SWITZERLAND              CHAUMONT                  1136  11368            :     36    0   36   36   12   12   12  144
+  06609 1 4633N 00701E SWITZERLAND              LE MOLESON                1974  19757            :     36    0   36   36   12   12   12  144
+  06610 1 4649N 00657E SWITZERLAND              PAYERNE                    490   4904            :     36   36   12   12   12   12   12  132
+  06612 1 4705N 00648E SWITZERLAND              LA CHAUX-DE-FONDS         1017  10184            :     36    0   36   36   12   12   12  144
+  06613 1 4636N 00739E SWITZERLAND              FRUTIGEN                   756 -99999            :      0    0   12   12   12   12   12   60
+  06614 1 4607N 00701E SWITZERLAND              LES MARECOTTES             990 -99999            :      0    0   12   12   12   12   12   60
+  06615 1 4604N 00713E SWITZERLAND              MONTAGNIER, BAGNES         848 -99999            :      0    0    0   12    0    0    0   12
+  06616 1 4725N 00656E SWITZERLAND              FAHY                       596   5978            :     36   36   36   36   12   12   12  180
+  06617 1 4659N 00637E SWITZERLAND              LA BREVINE                1050  10508            :     12    0   36   36   12   12   12  120
+  06618 1 4644N 00634E SWITZERLAND              MATHOD                     437   4378            :     36   35   34   35   11   11   11  173
+  06619 1 4650N 00635E SWITZERLAND              BULLET / LA FRETAZ        1205  12066            :     36    0   36   36   12   12   12  144
+  06620 1 4741N 00837E SWITZERLAND              SCHAFFHAUSEN               438   4398            :     36   36   36   36   12   12   12  180
+  06621 1 4736N 00917E SWITZERLAND              GUETTINGEN                 440   4411            :     36   36   36   36   12   12   12  180
+  06623 1 4739N 00901E SWITZERLAND              SALEN-REUTENEN             718   7195            :     36    0   36   36   12   12   12  144
+  06624 1 4742N 00828E SWITZERLAND              HALLAU                     419   4205            :     36   33   36   36   12   12   12  177
+  06625 1 4646N 00707E SWITZERLAND              FRIBOURG / POSIEUX         646   6475            :     36    0   36   36   12   12   12  144
+  06626 1 4722N 00758E SWITZERLAND              GOESGEN                    380   3819            :     36   36   36   36   12   12   12  180
+  06627 1 4629N 00708E SWITZERLAND              CHATEAU-D'OEX             1029  10305            :     36    0   36   36   12   12   12  144
+  06628 1 4645N 00716E SWITZERLAND              PLAFFEIEN                 1042  10438            :     36    0   36   36   12   12   12  144
+  06631 1 4659N 00728E SWITZERLAND              BERN / ZOLLIKOFEN          552   5543            :     36   36   36   36   12   12   12  180
+  06632 1 4711N 00725E SWITZERLAND              GRENCHEN                   427   4293            :     36   36   36   36   12   12   11  179
+  06633 1 4723N 00805E SWITZERLAND              BUCHS / AARAU              386   3880            :     36   36   36   36   12   12   12  180
+  06634 1 4715N 00747E SWITZERLAND              WYNAU                      422 -99999            :     24   24   24   24    0    0    0   96
+  06635 1 4707N 00736E SWITZERLAND              KOPPIGEN                   484   4855            :     36   36   36   36   12   12   12  180
+  06636 1 4658N 00717E SWITZERLAND              MUEHLEBERG                 479   4811            :     36   35   36   36   12   12   12  179
+  06637 1 4644N 00810E SWITZERLAND              MEIRINGEN                  588   5901            :     36   26   36   36   12   12   12  170
+  06638 1 4656N 00748E SWITZERLAND              LANGNAU I.E.               745   7465            :     36    0   36   36   12   12   12  144
+  06639 1 4700N 00756E SWITZERLAND              NAPF                      1403  14053            :     36    0   36   36   12   12   12  144
+  06640 1 4639N 00704E SWITZERLAND              MARSENS                    714 -99999            :      0    0   12   12   12   12   12   60
+  06641 1 4734N 00753E SWITZERLAND              MOEHLIN                    344   3455            :     36   36   35   35   12   12   12  178
+  06642 1 4638N 00945E SWITZERLAND              BERGUEN / LATSCH          1407 -99999            :      0    0   12   12   12   12   12   60
+  06643 1 4715N 00747E SWITZERLAND              WYNAU                      422   4236            :     36   36   12   12   12   12   12  132
+  06644 1 4715N 00814E SWITZERLAND              MOSEN                      453   4539            :     14   14   14   14   12   12   12   92
+  06645 1 4726N 00753E SWITZERLAND              RUENENBERG                 611   6127            :     36    0   36   36   12   12   12  144
+  06646 1 4733N 00814E SWITZERLAND              BEZNAU                     325   3270            :     36   35   36   36   12   12   12  179
+  06647 1 4732N 00814E SWITZERLAND              WUERENLINGEN               334   3355            :     36   35   36   36   12   12   12  179
+  06648 1 4711N 00800E SWITZERLAND              EGOLZWIL                   521   5225            :     36   36   35   36   12   12   12  179
+  06649 1 4723N 00937E SWITZERLAND              OBERRIET                   409   4098            :     12   12   12   12   12   12   12   84
+  06650 1 4702N 00818E SWITZERLAND              LUZERN                     454   4556            :     36   36   36   36   12   12   12  180
+  06651 1 4657N 00801E SWITZERLAND              SCHUEPFHEIM                742   7435            :     35    0   36   36   12   12   12  143
+  06652 1 4653N 00801E SWITZERLAND              FLUEHLI                    939 -99999            :      0    0   12   12   12   12   12   60
+  06653 1 4700N 00831E SWITZERLAND              GERSAU                     521 -99999            :      0    0   12   12   12   12   12   60
+  06654 1 4612N 00803E SWITZERLAND              SIMPLON-DORF              1465  14658            :      2    0    2   12    2    2    2   22
+  06655 1 4649N 00825E SWITZERLAND              ENGELBERG                 1035  10369            :     36    0   36   36   12   12   12  144
+  06656 1 4644N 00804E SWITZERLAND              BRIENZ                     567   5680            :     32    0    0   36    0    0    0   68
+  06657 1 4651N 00811E SWITZERLAND              GISWIL                     471   4718            :     36   36   36   36   12   12   12  180
+  06659 1 4659N 00815E SWITZERLAND              PILATUS                   2106  21037            :     36    0   36   36   12   12   12  144
+  06660 1 4723N 00834E SWITZERLAND              ZUERICH / FLUNTERN         555   5573            :     36   36   36   36   12   12   12  180
+  06662 1 4705N 00838E SWITZERLAND              SATTEL-AEGERI              790   7909            :      3    0   12   12   12   12   12   63
+  06663 1 4638N 00911E SWITZERLAND              VALS                      1242 -99999            :      0    0   12   12   12   12   12   60
+  06664 1 4726N 00831E SWITZERLAND              ZUERICH / AFFOLTERN        443   4449            :     36   36   36   36   12   12   12  180
+  06665 1 4711N 00852E SWITZERLAND              LACHEN / GALGENEN          468 -99999            :      0    0   12   12   12   12   12   60
+  06666 1 4736N 00811E SWITZERLAND              LEIBSTADT                  341   3425            :     36   34   36   36   12   12   12  178
+  06668 1 4642N 00836E SWITZERLAND              GOESCHENEN                 950   9511            :     10    0   10   12   10   10   10   62
+  06669 1 4729N 00824E SWITZERLAND              LAEGERN                    845   8454            :     36    0   36    0   12   12   12  108
+  06670 1 4729N 00832E SWITZERLAND              ZUERICH / KLOTEN           426   4276            :     36   36   36   36   12   12   12  180
+  06671 1 4740N 00859E SWITZERLAND              STECKBORN                  398   3995            :     58    0    0    0    0    0    0   58
+  06672 1 4653N 00837E SWITZERLAND              ALTDORF                    438   4397            :     36   36   36   36   12   12   12  180
+  06673 1 4713N 00841E SWITZERLAND              WAEDENSWIL                 485   4867            :     36   36   36   36   12   12   12  180
+  06674 1 4711N 00828E SWITZERLAND              CHAM                       442   4433            :     12   12   12   12   12   12   12   84
+  06675 1 4708N 00845E SWITZERLAND              EINSIEDELN                 910   9115            :     36    0   36   36   12   12   12  144
+  06678 1 4730N 00914E SWITZERLAND              BISCHOFSZELL               470   4685            :     36   35   35   36   11   11   11  175
+  06679 1 4729N 00854E SWITZERLAND              AADORF / TAENIKON          539   5393            :     36   36   36   36   12   12   12  180
+  06680 1 4715N 00921E SWITZERLAND              SAENTIS                   2502  24944            :     36    0   36   36   12   12   12  144
+  06681 1 4726N 00924E SWITZERLAND              ST. GALLEN                 775   7770            :     36    0   36   36   12   12   12  144
+  06682 1 4655N 00911E SWITZERLAND              ELM                        958   9595            :     32    0   36   36   12   12   12  140
+  06683 1 4713N 00856E SWITZERLAND              SCHMERIKON                 408   4095            :     33    0    0    0    0    0    0   33
+  06685 1 4702N 00904E SWITZERLAND              GLARUS                     516   5179            :     36   36   36   36   12   12   12  180
+  06686 1 4701N 00930E SWITZERLAND              BAD RAGAZ                  496   4975            :     34   34   36   36   12   12   12  176
+  06687 1 4708N 00913E SWITZERLAND              QUINTEN                    419   4205            :     33    0    0    0    0    0    0   33
+  06688 1 4651N 00911E SWITZERLAND              CRAP MASEGN               2480  24815            :     35    0   32    0   12   12   12  103
+  06689 1 4722N 00856E SWITZERLAND              HOERNLI                   1144  11340            :     36    0   36   36   12   12   12  144
+  06690 1 4729N 00934E SWITZERLAND              ALTENRHEIN                 398   3985            :     36   36   36   12   12   12   12  156
+  06693 1 4716N 00907E SWITZERLAND              EBNAT-KAPPEL               623   6245            :     36    0   36   36   12   12   12  144
+  06695 1 4638N 00835E SWITZERLAND              ANDERMATT                 1438  14388            :     12    0   36   36   12   12   12  120
+  06699 1 4625N 00606E SWITZERLAND              LA DOLE                   1670 -99999            :     24    0   24   24    0    0    0   72
+  06700 1 4615N 00608E SWITZERLAND              GENEVE-COINTRIN            410   4123            :     36   36   36   36   12   12   12  180
+  06702 1 4625N 00606E SWITZERLAND              LA DOLE                   1669  16709            :     24    0   12   12   12   12   12   84
+  06703 1 4640N 00619E SWITZERLAND              LES CHARBONNIERES         1045  10458            :     12    0   12   12   12   12   12   72
+  06704 1 4631N 00621E SWITZERLAND              BIERE                      683   6844            :     36    0   36   36   12   12   12  144
+  06705 1 4624N 00614E SWITZERLAND              NYON / CHANGINS            455   4595            :     36   36   36   36   12   12   12  180
+  06707 1 4637N 00643E SWITZERLAND              VILLARS-TIERCELIN          859 -99999            :      0    0   12   12   12   12   11   59
+  06708 1 4634N 00651E SWITZERLAND              ORON                       827   8285            :     23    0   23   23   12   12   12  105
+  06709 1 4624N 00651E SWITZERLAND              BOUVERET                   374   3755            :     16   16   15    0   11   11   11   80
+  06710 1 4711N 00705E SWITZERLAND              COURTELARY                 695 -99999            :      0    0   12   12   12   12   12   60
+  06711 1 4631N 00640E SWITZERLAND              PULLY                      455   4567            :     36   36   36   36   12   12   12  180
+  06712 1 4620N 00655E SWITZERLAND              AIGLE                      381   3823            :     36   36   36   36   12   12   12  180
+  06713 1 4623N 00706E SWITZERLAND              COL DES MOSSES            1412 -99999            :      0    0   12   12   12   12   12   60
+  06714 1 4620N 00712E SWITZERLAND              LES DIABLERETS            2964  29648            :     11    0   29    0    7    7    7   61
+  06715 1 4611N 00702E SWITZERLAND              EVIONNAZ                   482   4828            :     12   12   36   12   12   12   12  108
+  06716 1 4609N 00737E SWITZERLAND              MOTTEC                    1580  15808            :     12    0   12   12   12   12   12   72
+  06717 1 4552N 00710E SWITZERLAND              COL DU GRAND ST-BERNARD   2472  24876            :     36    0   36   36   12   12   12  144
+  06720 1 4613N 00720E SWITZERLAND              SION                       482   4829            :     36   36   12   12   12   12   12  132
+  06721 1 4622N 00811E SWITZERLAND              BINN                      1448 -99999            :      0    0   11   12   11   11   11   56
+  06722 1 4607N 00731E SWITZERLAND              EVOLENE / VILLA           1825  18288            :     36    0   36   36   12   12   12  144
+  06723 1 4606N 00716E SWITZERLAND              LES ATTELAS               2730  27340            :     14    0   28    0   12   12   12   78
+  06724 1 4618N 00728E SWITZERLAND              MONTANA                   1427  14242            :     36    0   36   36   12   12   12  144
+  06725 1 4625N 00749E SWITZERLAND              BLATTEN, LOETSCHENTAL     1538  15388            :     12    0   36   36   12   12   12  120
+  06727 1 4618N 00751E SWITZERLAND              VISP                       639   6408            :     36    0   36   36   12   12   12  144
+  06728 1 4612N 00750E SWITZERLAND              GRAECHEN                  1605  16058            :     12    0   36   36   12   12   12  120
+  06729 1 4632N 00953E SWITZERLAND              SAMEDAN                   1709 -99999            :     24    0   24   24    0    0    0   72
+  06730 1 4633N 00759E SWITZERLAND              JUNGFRAUJOCH              3580  35761            :     36    0   36    0   12   12   12  108
+  06731 1 4645N 00735E SWITZERLAND              THUN                       570   5708            :     12   12   12   36   12   12   12  108
+  06733 1 4637N 00723E SWITZERLAND              BOLTIGEN                   820   8208            :     12    0   12   12   12   12   12   72
+  06734 1 4640N 00752E SWITZERLAND              INTERLAKEN                 577   5785            :     36   35   36   36   12   12   12  179
+  06735 1 4630N 00734E SWITZERLAND              ADELBODEN                 1326  13281            :     36    0   36   36   12   12   12  144
+  06736 1 4635N 00758E SWITZERLAND              KLEINE SCHEIDEGG          2061 -99999            :      0    0    0   12    0    0    0   12
+  06739 1 4626N 00806E SWITZERLAND              EGGISHORN                 2893  28945            :     21    0   26    0   12   12   12   83
+  06740 1 4646N 00826E SWITZERLAND              TITLIS                    3040  30940            :     12    0   29    2   12   12   12   79
+  06744 1 4634N 00820E SWITZERLAND              GRIMSEL HOSPIZ            1980  19615            :     36    0   36   36   12   12   12  144
+  06745 1 4630N 00818E SWITZERLAND              ULRICHEN                  1345  13472            :     36    0   36   36   12   12   12  144
+  06747 1 4557N 00749E SWITZERLAND              MONTE ROSA                2885  28870            :     33    0   33    0   11   11   11   99
+  06748 1 4602N 00745E SWITZERLAND              ZERMATT                   1638  16397            :     36    0   36   36   12   12   12  144
+  06749 1 4559N 00747E SWITZERLAND              GORNERGRAT                3129  31298            :     36    0   36    0   12   12   12  108
+  06750 1 4639N 00837E SWITZERLAND              GUETSCH OB ANDERMATT      2283  22840            :     35    0   36   36   12   12   12  143
+  06751 1 4627N 00831E SWITZERLAND              ROBIEI                    1896  18963            :     36    0   36   36   36   36   12  192
+  06752 1 4619N 00836E SWITZERLAND              CEVIO                      417   4220            :     12   12   12   12   12   12   12   84
+  06753 1 4631N 00841E SWITZERLAND              PIOTTA                     990   9909            :     36    0   36   36   12   12   12  144
+  06754 1 4625N 00855E SWITZERLAND              MATRO                     2171  21904            :     12    0   31    0   12   12   12   79
+  06756 1 4628N 00856E SWITZERLAND              ACQUAROSSA / COMPROVASCO   575   5764            :     12   12   12   12   12   12   12   84
+  06758 1 4615N 00910E SWITZERLAND              GRONO                      323   3243            :     14   14   36   36   12   12   12  136
+  06759 1 4612N 00847E SWITZERLAND              CIMETTA                   1661  16621            :     36    0   36   36   12   12   12  144
+  06760 1 4610N 00847E SWITZERLAND              LOCARNO / MONTI            366   3742            :     36   36   36   36   12   12   12  180
+  06762 1 4610N 00856E SWITZERLAND              MAGADINO / CADENAZZO       203   2046            :     36   36   12   12   12   12   12  132
+  06770 1 4600N 00858E SWITZERLAND              LUGANO                     273   3011            :     36   36   36   36   12   12   12  180
+  06771 1 4551N 00856E SWITZERLAND              STABIO                     353   3528            :     36   36   36   36   12   12   12  180
+  06774 1 4628N 00940E SWITZERLAND              BIVIO                     1856 -99999            :      0    0   12   12   12   12   12   60
+  06777 1 4556N 00901E SWITZERLAND              MONTE GENEROSO            1600  16012            :     34    0   33   25   11   11   11  125
+  06778 1 4639N 01016E SWITZERLAND              BUFFALORA                 1968  19695            :     36    0   36   36   12   12   12  144
+  06779 1 4626N 00946E SWITZERLAND              SEGL-MARIA                1804  18048            :     12    0   36   36   12   12   12  120
+  06780 1 4650N 00948E SWITZERLAND              WEISSFLUHJOCH             2691  26737            :     36    0   36   36   12   12   12  144
+  06781 1 4645N 00903E SWITZERLAND              TAVANASA                   800 -99999            :      0    0    0   36    0    0    0   36
+  06782 1 4642N 00851E SWITZERLAND              DISENTIS / SEDRUN         1197  11984            :     36    0   36   36   12   12   12  144
+  06783 1 4628N 00911E SWITZERLAND              S. BERNARDINO             1638  16400            :     36    0   36   36   12   12   12  144
+  06784 1 4649N 00951E SWITZERLAND              DAVOS                     1594  15955            :     36    0   36   36   12   12   12  144
+  06785 1 4648N 00941E SWITZERLAND              AROSA                     1878  18788            :     36    0   36   36   12   12   12  144
+  06786 1 4652N 00932E SWITZERLAND              CHUR                       556   5571            :     36   36   36   36   12   12   12  180
+  06787 1 4637N 00926E SWITZERLAND              ANDEER                     987   9882            :     36    0   36   36   12   12   12  144
+  06788 1 4621N 00938E SWITZERLAND              VICOSOPRANO               1089  10898            :     12    0   12   36   12   12   12   96
+  06789 1 4647N 00913E SWITZERLAND              ILANZ                      698   6988            :      3    0   12   12   12   12   12   63
+  06790 1 4659N 00940E SWITZERLAND              SCHIERS                    626 -99999            :      0    0   12   12   12   12   12   60
+  06791 1 4625N 00949E SWITZERLAND              PIZ CORVATSCH             3302  33024            :     36    0   36   36   12   12   12  144
+  06792 1 4632N 00953E SWITZERLAND              SAMEDAN                   1708  17099            :     36    0   12   12   12   12   12   96
+  06793 1 4645N 00933E SWITZERLAND              VALBELLA                  1569  15705            :     26    0   26   26   12   12   12  114
+  06794 1 4621N 01004E SWITZERLAND              POSCHIAVO / ROBBIA        1078  10794            :     36    0   36   36   12   12   12  144
+  06795 1 4635N 00932E SWITZERLAND              PIZ MARTEGNAS             2670  26715            :     25    0   30   22   11   11   11  110
+  06796 1 4636N 01026E SWITZERLAND              STA. MARIA, VAL MUESTAIR  1383  13845            :     36    0   36   36   12   12   12  144
+  06797 1 4625N 01001E SWITZERLAND              PASSO DEL BERNINA         2260  22608            :     35    0   34   36   12   12   12  141
+  06798 1 4648N 01017E SWITZERLAND              SCUOL                     1303  13053            :     36    0   36   36   12   12   12  144
+  06799 1 4649N 01016E SWITZERLAND              NALUNS / SCHLIVERA        2400  24015            :     36    0   36    0   12   12   12  108
+  06801 1 4649N 00657E SWITZERLAND              PAYERNE                    490 -99999            :     24   24   24   24    0    0    0   96
+  06802 1 4613N 00720E SWITZERLAND              SION                       482 -99999            :     24   24   24   24    0    0    0   96
+  06808 1 4610N 00856E SWITZERLAND              MAGADINO / CADENAZZO       203 -99999            :     24   24   24   24    0    0    0   96
+  06901 1 4657N 00726E SWITZERLAND              BERN / BOLLWERK            535   5320            :     12   12   12   12   12   12   12   84
+  06903 1 4649N 00951E SWITZERLAND              DAVOS / SEEHORNWALD       1637  16397            :     12    0   12   11   12   12   12   71
+  06904 1 4724N 00837E SWITZERLAND              DUEBENDORF / GIESSEN       432   4340            :     12   12   12   12   12   12   12   84
+  06905 1 4719N 00749E SWITZERLAND              HAERKINGEN                 430   4324            :     12   12   12   12   12   12   12   84
+  06906 1 4729N 00822E SWITZERLAND              LAEGEREN / ZINDELEN        688   6907            :     12    0   12   12   12   12   12   72
+  06907 1 4631N 00638E SWITZERLAND              LAUSANNE                   538   5276            :     12   12   12   12   12   12   12   84
+  06908 1 4704N 00828E SWITZERLAND              RIGI / SEEBODENALP        1031  10326            :     12    0   12   12   12   12   12   72
+  06909 1 4723N 00832E SWITZERLAND              ZUERICH                    408   4072            :     12   12   12   12   12   12   12   84
+  06990 1 4708N 00931E SWITZERLAND              VADUZ                      457   4585            :     36   36   36   36   12   12   12  180
+  07002 1 5043N 00135E FRANCE                   BOULOGNE-SEM                73    680            :      0   72   72   72   72   72   72  432
+  07003 1 5030N 00137E FRANCE                   LE-TOUQUET                   5    200            :      0   72   72   72   72   72   72  432
+  07005 1 5008N 00150E FRANCE                   ABBEVILLE                   69    720            :      0   72   72   72   72   72   72  432
+  07010 1 5103N 00220E FRANCE                   DUNKERQUE                   11    160            :      0   72   72   72   72   72   72  432
+  07015 1 5034N 00305E FRANCE                   LILLE-LESQUIN               47    470            :      0   72   72   72   72   72   72  432
+  07020 1 4943N 00156W FRANCE                   PTE DE LA HAGUE              6    220            :      0   72   72   72   72   72   72  432
+  07024 1 4939N 00127W FRANCE                   GONNEVILLE                 134   1380            :      0   72   72   72   72   72   72  432
+  07027 1 4910N 00027W FRANCE                   CAEN-CARPIQUET              67    670            :      0   72   72   72   72   72   72  432
+  07028 1 4930N 00004E FRANCE                   CAP-DE-LA-HEVE             100   1040            :      0   72   72   72   72   72   72  432
+  07031 1 4921N 00010E FRANCE                   ST GATIEN DES B            139   1430            :      0   72   72   72   72   72   72  432
+  07037 1 4922N 00110E FRANCE                   ROUEN-BOOS                 151   1520            :      0   72   72   72   72   72   72  432
+  07038 1 4901N 00113E FRANCE                   EVREUX-HUEST               138   1380            :      0   72   72   72   72   72   72  432
+  07040 1 4955N 00105E FRANCE                   DIEPPE                      38    400            :      0   72   72   72   72   72   72  432
+  07046 1 4931N 00005E FRANCE                   OCTEVILLE                   94    950            :      0   72   72   72   72   72   72  432
+  07055 1 4926N 00207E FRANCE                   BEAUVAIS-TILLE              89   1110            :      0   72   72   72   72   72   72  432
+  07057 1 4915N 00231E FRANCE                   CREIL                       88    880            :      0   72   72   72   72   72   72  432
+  07059 1 4958N 00242E FRANCE                   MEAULTE                    107   1120            :      0   72   72   72   72   72   72  432
+  07061 1 4949N 00312E FRANCE                   ST QUENTIN                  98    980            :      0   72   72   72   72   72   72  432
+  07072 1 4912N 00409E FRANCE                   REIMS-PRUNAY                95    950            :      0   56   56   56   56   56   56  336
+  07075 1 4946N 00438E FRANCE                   CHARLEVILLE-MEZ            147   1480            :      0   72   72   72   72   72   72  432
+  07093 1 4858N 00614E FRANCE                   M.N.L.                     260   2580            :      0   72   72   72   72   72   72  432
+  07100 1 4828N 00503W FRANCE                   OUESSANT-STIFF              64    680            :      0   72   72   72   72   72   72  432
+  07103 1 4802N 00443W FRANCE                   PTE DU RAZ                  67    810            :      0   39   39   47   48   48   39  260
+  07107 1 4840N 00419W FRANCE                   BRIGNOGAN                    9    180            :      0   72   72   72   72   72   72  432
+  07109 1 4816N 00426W FRANCE                   LANVEOC                     81    830            :      0   72   72   72   72   72   72  432
+  07110 1 4827N 00423W FRANCE                   BREST-GUIPAVAS              94    980            :      0   72   72   72   72   72   72  432
+  07117 1 4849N 00328W FRANCE                   PLOUMANAC'H                 55    580            :      0   72   72   72   72   72   72  432
+  07118 1 4845N 00328W FRANCE                   LANNION_AERO                85    870            :      0   72   72   72   72   72   72  432
+  07120 1 4832N 00251W FRANCE                   ST BRIEUC                  135   1350            :      0   72   72   72   72   72   72  432
+  07125 1 4835N 00204W FRANCE                   DINARD                      58    590            :      0   72   72   72   72   72   72  432
+  07130 1 4804N 00144W FRANCE                   RENNES-ST JACQUES           36    370            :      0   72   72   72   72   72   72  432
+  07134 1 4801N 00044W FRANCE                   LAVAL-ETRONNIER            100   1000            :      0   72   72   72   72   72   72  432
+  07139 1 4826N 00006E FRANCE                   ALENCON                    143   1450            :      0   72   72   72   72   72   72  432
+  07140 1 4803N 00122E FRANCE                   CHATEAUDUN                 126   1270            :      0   72   72   72   72   72   72  432
+  07143 1 4827N 00130E FRANCE                   CHARTRES                   155   1560            :      0   72   72   72   72   72   72  432
+  07145 1 4846N 00200E FRANCE                   TRAPPES                    167   1740            :      0   72   72   72   72   72   72  432
+  07146 1 4845N 00206E FRANCE                   TOUSSUS LE NOBLE           154   1610            :      0   72   72   72   72   72   72  432
+  07147 1 4846N 00212E FRANCE                   VILLACOUBLAY               174   1760            :      0   72   72   72   72   72   72  432
+  07149 1 4843N 00223E FRANCE                   ORLY                        89    900            :      0   72   72   72   72   72   72  432
+  07150 1 4858N 00225E FRANCE                   LE BOURGET                  49    490            :      0   72   72   72   72   72   72  432
+  07153 1 4836N 00240E FRANCE                   MELUN                       91    920            :      0   72   72   72   72   72   72  432
+  07156 1 4849N 00220E FRANCE                   PARIS-MONTSOURIS            75    780            :      0   72   72   72   72   72   72  432
+  07157 1 4900N 00232E FRANCE                   ROISSY                     108   1120            :      0   72   72   72   72   72   72  432
+  07166 1 4846N 00409E FRANCE                   VATRY-AERO                 179   1670            :      0   72   72   72   72   72   72  432
+  07168 1 4819N 00401E FRANCE                   TROYES-BARBEREY            112   1180            :      0   72   72   72   72   72   72  432
+  07169 1 4837N 00454E FRANCE                   ST-DIZIER                  139   1390            :      0   72   72   72   72   72   72  432
+  07180 1 4841N 00613E FRANCE                   NANCY-ESSEY                212   2130            :      0   72   72   72   72   72   72  432
+  07181 1 4834N 00557E FRANCE                   NANCY-OCHEY                336   3430            :      0   72   72   72   72   72   72  432
+  07190 1 4832N 00738E FRANCE                   STRASBOURG-ENTZHEIM        150   1510            :      0   72   72   72   72   72   72  432
+  07197 1 4755N 00724E FRANCE                   COLMAR-MEYENHEIM           207   2090            :      0   58   72   72   72   72   72  418
+  07200 1 4747N 00422W FRANCE                   PTE DE PENMARCH              3    190            :      0   48   48   48   48   48   46  286
+  07201 1 4758N 00409W FRANCE                   QUIMPER                     82    850            :      0   72   72   72   72   72   72  432
+  07203 1 4739N 00330W FRANCE                   ILE DE GROIX                41    450            :      0    0   72   72   72   72   72  360
+  07205 1 4745N 00326W FRANCE                   LORIENT-LANN BIHOUE         45    440            :      0   72   72   72   72   72   72  432
+  07207 1 4717N 00313W FRANCE                   BELLE ILE-LE TALUT          34    430            :      0   72   72   72   72   72   72  432
+  07217 1 4718N 00209W FRANCE                   ST NAZAIRE-MONTOIR           3     40            :      0   72   72   72   72   72   72  432
+  07222 1 4709N 00136W FRANCE                   NANTES-BOUGUENAIS           26    260            :      0   72   72   72   72   72   72  432
+  07230 1 4728N 00036W FRANCE                   BEAUCOUZE                   50    480            :      0   72   72   72   72   72   72  432
+  07235 1 4756N 00011E FRANCE                   LE MANS                     48    520            :      0   72   72   72   72   72   72  432
+  07240 1 4726N 00043E FRANCE                   TOURS                      108   1120            :      0   72   72   72   72   72   72  432
+  07245 1 4740N 00112E FRANCE                   BLOIS                      119   1300            :      0   72   72   72   72   72   72  432
+  07247 1 4719N 00141E FRANCE                   ROMORANTIN                  83    860            :      0   72   72   72   72   72   72  432
+  07249 1 4759N 00146E FRANCE                   ORLEANS                    123   1250            :      0   72   72   72   72   72   72  432
+  07255 1 4703N 00221E FRANCE                   BOURGES - RADAR            162 -99999            :      0   72   72   72   72   72   72  432
+  07257 1 4703N 00238E FRANCE                   AVORD                      175   1770            :      0   72   72   72   72   72   72  432
+  07260 1 4659N 00306E FRANCE                   NEVERS-MARZY               175   1770            :      0   72   72   72   72   72   72  432
+  07266 1 4749N 00332E FRANCE                   AUXERRE-PERRIGNY           152   1530            :      0   45   45   45   45   45   45  270
+  07280 1 4716N 00505E FRANCE                   DIJON-LONGVIC              219   2270            :      0   72   72   72   72   72   72  432
+  07283 1 4750N 00520E FRANCE                   LANGRES                    466   4670            :      0   72   72   72   72   72   72  432
+  07288 1 4714N 00559E FRANCE                   BESANCON                   307   3100            :      0   72   72   72   72   72   72  432
+  07292 1 4747N 00621E FRANCE                   LUXEUIL                    271   2740            :      0   72   72   72   72   72   72  432
+  07296 1 4735N 00650E FRANCE                   DORANS                     401   4020            :      0   72   72   72   72   72   72  432
+  07299 1 4736N 00730E FRANCE                   BALE-MULHOUSE              263   2730            :      0   72   72   72   72   72   72  432
+  07300 1 4641N 00219W FRANCE                   L ILE D YEU                 32    320            :      0   72   72   72   72   72   72  432
+  07306 1 4642N 00122W FRANCE                   LA ROCHE SUR YON            90    910            :      0   72   72   72   72   72   72  432
+  07314 1 4602N 00124W FRANCE                   CHASSIRON                   11    230            :      0   72   72   72   72   72   72  432
+  07316 1 4610N 00111W FRANCE                   LA ROCHELLE AERODROM        20    180            :      0   60   60   60   60   60   60  360
+  07330 1 4618N 00024W FRANCE                   NIORT                       57    610            :      0   72   72   72   72   72   72  432
+  07335 1 4635N 00018E FRANCE                   POITIERS-BIARD             123   1200            :      0   72   72   72   72   72   72  432
+  07354 1 4652N 00144E FRANCE                   CHATEAUROUXDEOLS           158   1570            :      0   72   72   72   72   72   72  432
+  07361 1 4610N 00157E FRANCE                   GUERET-ST LAURENT          365   3660            :      0   61   61   61   61   61   61  366
+  07374 1 4610N 00323E FRANCE                   VICHY-CHARMEIL             249   2510            :      0   72   72   72   72   72   72  432
+  07379 1 4624N 00400E FRANCE                   ST YAN                     242   2420            :      0   72   72   72   72   72   72  432
+  07385 1 4617N 00447E FRANCE                   MACON                      219   2190            :      0   72   72   72   72   72   72  432
+  07386 1 4702N 00525E FRANCE                   TAVAUX SA                  195   1950            :      0   72   72   72   72   72   72  432
+  07412 1 4539N 00018W FRANCE                   COGNAC                      30    310            :      0   72   72   72   72   72   72  432
+  07434 1 4551N 00110E FRANCE                   LIMOGES-BELLEGARDE         402   4030            :      0   72   72   72   72   72   72  432
+  07438 1 4508N 00128E FRANCE                   BRIVE                      112   1170            :      0   72   72   72   72   72   72  432
+  07460 1 4547N 00308E FRANCE                   CLERMONT-FD                331   3260            :      0   72   72   72   72   72   72  432
+  07471 1 4504N 00345E FRANCE                   LE PUY-LOUDES              833   8330            :      0    0   72   72   72   72   72  360
+  07475 1 4532N 00417E FRANCE                   ST ETIENNE-BOUTHEON        395   3960            :      0   72   72   72   72   72   72  432
+  07480 1 4543N 00456E FRANCE                   LYON-BRON                  197   1980            :      0   72   72   72   72   72   72  432
+  07481 1 4543N 00504E FRANCE                   LYON-ST EXUPERY            235   2400            :      0   72   72   72   72   72   72  432
+  07482 1 4558N 00519E FRANCE                   AMBERIEU                   250   2520            :      0   72   72   72   72   72   72  432
+  07486 1 4521N 00518E FRANCE                   GRENOBLE-ST GEOIRS         384   3860            :      0   72   72   72   72   72   72  432
+  07487 1 4513N 00550E FRANCE                   GRENOBLE - LVD             220   2200            :      0   48   48   48   48   48   48  288
+  07490 1 4555N 00606E FRANCE                   MEYTHET                    458   4590            :      0   72   72   72   72   72   72  432
+  07491 1 4538N 00552E FRANCE                   CHAMBERY-AIX               235   2350            :      0   72   72   72   72   72   72  432
+  07497 1 4536N 00645E FRANCE                   BOURG ST MAURICE           865   8680            :      0    0   72   72   72   72   72  360
+  07500 1 4437N 00114W FRANCE                   CAP-FERRET                   9    280            :      0   72   72   72   72   72   72  432
+  07503 1 4425N 00114W FRANCE                   BISCARROSSE                 35    390            :      0   72   72   72   72   72   72  432
+  07510 1 4449N 00041W FRANCE                   BORDEAUX-RADAR              46 -99999            :      0   72   72   72   72   72   72  432
+  07524 1 4410N 00035E FRANCE                   AGEN                        58    690            :      0   72   72   72   72   72   72  432
+  07530 1 4449N 00031E FRANCE                   BERGERAC                    49    520            :      0   72   72   72   72   72   72  432
+  07535 1 4444N 00123E FRANCE                   GOURDON                    260   2610            :      0   72   72   72   72   72   72  432
+  07540 1 4401N 00122E FRANCE                   MONTAUBAN                  106   1070            :      0   72   72   72   72   72   72  432
+  07549 1 4453N 00225E FRANCE                   AURILLAC                   639   6400            :      0   72   72   72   72   72   72  432
+  07552 1 4424N 00228E FRANCE                   RODEZ-AVEYRON              578   5790            :      0   72   72   72   72   72   72  432
+  07554 1 4432N 00327E FRANCE                   MENDE                      932   9340            :      0    0   72   72   72   72   72  360
+  07558 1 4407N 00301E FRANCE                   MILLAU                     712   7130            :      0   72   72   72   72   72   72  432
+  07560 1 4407N 00334E FRANCE                   MONT AIGOUAL              1567  15640            :      0    0   72   72   72   72   72  360
+  07563 1 4354N 00454E FRANCE                   AVIGNON                     34    480            :      0   72   72   72   72   72   72  432
+  07570 1 4432N 00422E FRANCE                   LANAS SYN                  280   2800            :      0   72   72   72   72   72   72  432
+  07577 1 4434N 00443E FRANCE                   MONTELIMAR                  73    740            :      0   72   72   72   72   72   72  432
+  07579 1 4408N 00451E FRANCE                   ORANGE                      57    550            :      0   72   72   72   72   72   72  432
+  07586 1 4404N 00503E FRANCE                   CARPENTRAS                  99   1060            :      0   72   72   72   72   72   72  432
+  07588 1 4403N 00559E FRANCE                   ST AUBAN                   458   4610            :      0   72   72   72   72   72   72  432
+  07591 1 4433N 00630E FRANCE                   EMBRUN                     871   8770            :      0    0   72   72   72   72   72  360
+  07600 1 4323N 00141W FRANCE                   SOCOA                       21    430            :      0   72   72   72   72   72   72  432
+  07602 1 4328N 00132W FRANCE                   BIARRITZ-PAYS-BASQUE        71    710            :      0   72   72   72   72   72   72  432
+  07603 1 4341N 00104W FRANCE                   DAX                         31    310            :      0   72   72   72   72   72   72  432
+  07607 1 4354N 00030W FRANCE                   MONT-DE-MARSAN              59    590            :      0   72   72   72   72   72   72  432
+  07610 1 4323N 00024W FRANCE                   PAU-UZEIN                  183   1830            :      0   72   72   72   72   72   72  432
+  07621 1 4311N 00000E FRANCE                   TARBES-OSSUN               360   3640            :      0   60   60   60   60   60   60  360
+  07622 1 4341N 00036E FRANCE                   AUCH                       122   1280            :      0   72   72   72   72   72   72  432
+  07627 1 4300N 00106E FRANCE                   ST GIRONS                  414   4150            :      0   72   72   72   72   72   72  432
+  07628 1 4327N 00115E FRANCE                   MURET-LHERM                189   1900            :      0   72   72   72   72   72   72  432
+  07630 1 4337N 00122E FRANCE                   TOULOUSE-BLAGNAC           151   1500            :      0   72   72   72   72   72   72  432
+  07632 1 4354N 00206E FRANCE                   ALBI                       172   1710            :      0   72   72   72   72   72   72  432
+  07635 1 4312N 00217E FRANCE                   CARCASSONNE                128   1270            :      0   72   72   72   72   72   72  432
+  07638 1 4319N 00321E FRANCE                   BEZIERS-VIAS                15    160            :      0   72   72   72   72   72   72  432
+  07641 1 4323N 00341E FRANCE                   SETE                        75    770            :      0   72   72   72   72   72   72  432
+  07643 1 4334N 00357E FRANCE                   MONTPELLIER-AEROPORT         2     80            :      0   72   72   72   72   72   72  432
+  07645 1 4351N 00424E FRANCE                   NIMES-COURBESSAC            59    620            :      0   72   72   72   72   72   72  432
+  07646 1 4345N 00425E FRANCE                   NIMES-GARONS                94   1050            :      0   72   72   72   72   72   72  432
+  07647 1 4331N 00455E FRANCE                   ISTRES                      23    240            :      0   72   72   72   72   72   72  432
+  07648 1 4336N 00506E FRANCE                   SALON DE PROVENCE           58    590            :      0   72   72   72   72   72   72  432
+  07650 1 4326N 00513E FRANCE                   MARIGNANE-PROFILEUR          7 -99999            :      0   72   72   72   72   72   72  432
+  07661 1 4304N 00556E FRANCE                   CAP CEPET                  115   1340            :      0   72   72   72   72   72   72  432
+  07666 1 4255N 00303E FRANCE                   LEUCATE                     42    400            :      0   72   72   72   72   72   72  432
+  07667 1 4305N 00608E FRANCE                   HYERES                       2     40            :      0   72   72   72   72   72   72  432
+  07675 1 4322N 00623E FRANCE                   LE LUC                      80    820            :      0   72   72   72   72   72   72  432
+  07684 1 4333N 00657E FRANCE                   CANNES                       2     40            :      0   72   72   72   72   72   72  432
+  07690 1 4338N 00712E FRANCE                   NICE-RADAR                   1 -99999            :      0   72   72   72   72   72   72  432
+  07747 1 4244N 00252E FRANCE                   PERPIGNAN                   42    440            :      0   72   72   72   72   72   72  432
+  07749 1 4231N 00308E FRANCE                   CAP BEAR                    82    860            :      0   66   72   72   72   72   72  426
+  07753 1 4237N 00855E FRANCE                   ILE ROUSSE                 142   1450            :      0   72   72   72   72   72   72  432
+  07754 1 4231N 00847E FRANCE                   CALVI                       57    580            :      0   72   72   72   72   72   72  432
+  07761 1 4155N 00847E FRANCE                   AJACCIO                      5     90            :      0   72   72   72   72   72   72  432
+  07765 1 4155N 00924E FRANCE                   SOLENZARA                   12    170            :      0   72   72   72   72   72   72  432
+  07770 1 4122N 00910E FRANCE                   CAP PERTUSATO              107   1160            :      0   72   72   72   72   72   72  432
+  07775 1 4215N 00932E FRANCE                   ALISTRO                     65    740            :      0   72   72   72   72   72   72  432
+  07780 1 4130N 00906E FRANCE                   FIGARI                      20    230            :      0   72   72   72   72   72   72  432
+  07785 1 4300N 00921E FRANCE                   CAP CORSE                   72   1130            :      0   72   72   72   72   72   72  432
+  07790 1 4232N 00929E FRANCE                   BASTIA                      10    120            :      0   72   72   72   72   72   72  432
+  08001 1 4322N 00825W SPAIN                    A CORUÑA                    58    670            :     60   51   60   60   60   60   58  409
+  08002 1 4318N 00822W SPAIN                    A CORUÑA/ALVEDRO            98   1030            :     60   60   60   48   60   60   60  408
+  08008 1 4307N 00727W SPAIN                    LUGO/ROZAS                 445   4460            :     60   60   60   60   60   60   60  420
+  08011 1 4334N 00603W SPAIN                    ASTURIAS/AVILÉS            127   1300            :     60   60   60   60   60   60   60  420
+  08014 1 4334N 00542W SPAIN                    GIJÓN, MUSEL                 5     60            :     60   60   60   60   60   60   60  420
+  08015 1 4321N 00552W SPAIN                    OVIEDO                     336   3390            :     60   60   60   60   60   60   60  420
+  08021 1 4326N 00350W SPAIN                    SANTANDER/PARAYAS            5     10            :     60   60   60   60   60   60   60  420
+  08023 1 4329N 00348W SPAIN                    SANTANDER I,CMT             52    590            :     60   60   60   60   60   60   60  420
+  08025 1 4318N 00254W SPAIN                    BILBAO/AEROPUERTO           42    390            :     60   60   60   60   60   60   60  420
+  08027 1 4318N 00202W SPAIN                    SAN SEBASTIÁN,IGUELDO      251   2590            :     60   60   60   60   60   60   60  420
+  08029 1 4321N 00148W SPAIN                    HONDARRIBIA-MALKARROA        4     40            :     60   60   60   60   60   60   60  420
+  08042 1 4253N 00825W SPAIN                    SANTIAGO DE COMPOSTELA/L   370   3670            :     60   60   60   60   60   60   60  420
+  08044 1 4226N 00837W SPAIN                    PONTEVEDRA                 108   1080            :     60   60   60   60   60   60   60  420
+  08045 1 4214N 00837W SPAIN                    VIGO/PEINADOR              261   2580            :     60   60   60   60   60   60   59  419
+  08048 1 4220N 00752W SPAIN                    OURENSE                    143   1470            :     60   60   60   60   60   60   60  420
+  08053 1 4234N 00636W SPAIN                    PONFERRADA                 534   5500            :     60   60   60   60   60   60   60  420
+  08055 1 4235N 00539W SPAIN                    LEÓN/VIRGEN DEL CAMINO     916   9140            :     39   39   60   60   60   60   39  357
+  08072 1 4200N 00436W SPAIN                    PALENCIA-AUTILLA PINO      874   8600            :      0    0   57   55   57   57   57  283
+  08075 1 4221N 00337W SPAIN                    BURGOS/VILLAFRÍA           891   8900            :     60   60   60   60   60   60   60  420
+  08080 1 4253N 00244W SPAIN                    FORONDA-TXOKIZA            513   5130            :     60   60   60   60   60   60   60  420
+  08084 1 4227N 00220W SPAIN                    LOGROÑO/AGONCILLO          353   3630            :     60   60   60   60   60   60   60  420
+  08085 1 4247N 00139W SPAIN                    PAMPLONA/NOAIN             459   4530            :     60   59   59   60   59   59   59  415
+  08087 1 4212N 00129W SPAIN                    BARDENAS REALES            295   2950            :     58   55   51   51   51   51   55  372
+  08094 1 4205N 00020W SPAIN                    HUESCA/PIRINEOS            541   5540            :     60   60   60   60   60   60   60  420
+  08112 1 4212N 00052E SPAIN                    TALARN                     807   8070            :     54   51   47   45   47   47   51  342
+  08117 1 4220N 00156E SPAIN                    LA MOLINA                 1703  17030            :     52   52   50   50   50   50   52  356
+  08130 1 4131N 00544W SPAIN                    ZAMORA                     656   6670            :     60   60   60   60   60   60   60  420
+  08140 1 4143N 00451W SPAIN                    VALLADOLID/VILLANUBLA      846   8460            :     60   60   60   60   60   60   60  420
+  08141 1 4138N 00445W SPAIN                    VALLADOLID                 735   7350            :     60   60   60   60   60   60   60  420
+  08148 1 4146N 00229W SPAIN                    SORIA                     1082  10820            :     58   58   58   58   58   58   58  406
+  08157 1 4107N 00125W SPAIN                    DAROCA I                   779   7790            :     60   60   60   60   60   60   60  420
+  08160 1 4140N 00100W SPAIN                    ZARAGOZA/AEROPUERTO        263   2580            :     60   60   60   60   60   60   60  420
+  08171 1 4138N 00036E SPAIN                    LLEIDA                     185   1990            :     60   60   60   60   60   60   60  420
+  08175 1 4109N 00111E SPAIN                    REUS/AEROPUERTO             71    760            :     60   60   60   60   60   60   60  420
+  08179 1 4124N 00153E SPAIN                    CORBERA ,PIC D'AGULLES     647   6470            :      0    0   59   59   59   59   59  295
+  08181 1 4118N 00204E SPAIN                    BARCELONA/AEROPUERTO         4     50            :     60   59   60   60   60   60   56  415
+  08184 1 4155N 00246E SPAIN                    GIRONA/COSTA BRAVA         143   1290            :     60   60   60   60   60   60   60  420
+  08202 1 4058N 00530W SPAIN                    SALAMANCA/MATACAN          790   7940            :     60   60   60   60   60   60   60  420
+  08210 1 4040N 00441W SPAIN                    ÁVILA                     1130  11320            :     60   60   60   60   60   60   60  420
+  08213 1 4057N 00408W SPAIN                    SEGOVIA                   1005  10050            :     60   60   60   60   60   60   60  420
+  08215 1 4048N 00401W SPAIN                    NAVACERRADA,PUERTO        1894  18880            :     60   60   60   60   60   60   60  420
+  08219 1 4042N 00346W SPAIN                    COLMENAR VIEJO/FAMET      1004   9980            :     60   60   60   60   60   60   60  420
+  08220 1 4027N 00343W SPAIN                    MADRID, C. UNIVERSITARIA   664   6690            :      0    0   53   49   53   53   57  265
+  08221 1 4028N 00333W SPAIN                    MADRID/BARAJAS             609   5820            :     60   60   60   60   60   60   60  420
+  08222 1 4025N 00341W SPAIN                    MADRID,RETIRO              667   6670            :     60   60   60   60   60   60   60  420
+  08223 1 4023N 00347W SPAIN                    MADRID/CUATRO VIENTOS      690   6870            :     60   60   60   60   60   60   60  420
+  08224 1 4018N 00343W SPAIN                    MADRID/GETAFE              620   6170            :     60   60   60   60   60   60   60  420
+  08226 1 4040N 00310W SPAIN                    GUADALAJARA-EL SERRANILL   639   6400            :      5    5   42   31   42   42   32  199
+  08227 1 4029N 00327W SPAIN                    MADRID/TORREJÓN            607   6120            :     60   60   60   60   60   60   60  420
+  08231 1 4004N 00208W SPAIN                    CUENCA                     948   9460            :     60   60   60   60   60   60   60  420
+  08232 1 4050N 00153W SPAIN                    MOLINA DE ARAGÓN          1062  10630            :     60   60   60   60   60   60   60  420
+  08233 1 4056N 00118W SPAIN                    CALAMOCHA                  890   8890            :     60   60   60   60   60   60   60  420
+  08235 1 4021N 00107W SPAIN                    TERUEL                     900   9020            :     60   60   60   60   60   60   60  420
+  08238 1 4049N 00030E SPAIN                    TORTOSA                     50    500            :     60   60   60   60   60   60   60  420
+  08261 1 3928N 00620W SPAIN                    CÁCERES                    394   3910            :     60   60   60   60   60   60   60  420
+  08272 1 3953N 00403W SPAIN                    TOLEDO                     515   5160            :     60   60   60   60   60   60   60  420
+  08280 1 3857N 00152W SPAIN                    ALBACETE/LOS LLANOS        702   7040            :     60   60   60   60   60   60   60  420
+  08284 1 3929N 00028W SPAIN                    VALENCIA/AEROPUERTO         56    620            :     60   60   60   60   60   60   60  420
+  08285 1 3929N 00022W SPAIN                    VALENCIA                    11    110            :     14   14   60   60   60   60   14  282
+  08286 1 3957N 00004W SPAIN                    CASTELLÓN-ALMAZORA          43    440            :     60   60   60   60   60   60   60  420
+  08301 1 3933N 00238E SPAIN                    PALMA DE MALLORCA, CMT       3     60            :     60   60   60   60   60   60   60  420
+  08302 1 3936N 00242E SPAIN                    MALLORCA/SON BONET          41    410            :      0    0    0    1    0    0    0    1
+  08306 1 3934N 00244E SPAIN                    PALMA DE MALLORCA/SON SA     8     50            :     60   60   60   60   60   60   60  420
+  08308 1 3923N 00247E SPAIN                    LLUCMAJOR-RADAR            113   1130            :      0    0   59   60   59   59   60  297
+  08314 1 3951N 00413E SPAIN                    MENORCA/AEROPUERTO          91    860            :     60   60   60   60   60   60   60  420
+  08330 1 3853N 00649W SPAIN                    BADAJOZ/TALAVERA LA REAL   185   1920            :     60   60   60   60   60   60   60  420
+  08335 1 3830N 00507W SPAIN                    HINOJOSA DEL DUQUE-DEHES   551   5410            :     26   26   46   43   46   46   41  274
+  08348 1 3859N 00355W SPAIN                    CIUDAD REAL                628   6290            :     60   60   60   60   60   60   60  420
+  08349 1 3857N 00344W SPAIN                    ALMAGRO / FAMET            622   6250            :     60   60   60   60   60   60   60  420
+  08359 1 3822N 00030W SPAIN                    ALICANTE                    81    820            :     60   60   60   60   60   60   60  420
+  08360 1 3817N 00034W SPAIN                    ALICANTE/EL ALTET           43    310            :     60   60   60   60   60   60   60  420
+  08373 1 3853N 00123E SPAIN                    IBIZA/ES CODOLÁ              6    170            :     60   60   60   60   60   60   60  420
+  08383 1 3717N 00655W SPAIN                    HUELVA, RONDA ESTE          19    200            :     58   58   60   60   60   60   60  416
+  08391 1 3725N 00553W SPAIN                    SEVILLA/SAN PABLO           34    310            :     60   60   60   60   60   60   60  420
+  08397 1 3710N 00537W SPAIN                    MORÓN DE LA FRONTERA        87    880            :     60   60   60   60   60   60   60  420
+  08410 1 3751N 00451W SPAIN                    CÓRDOBA/AEROPUERTO          90    920            :     60   60   60   60   60   60   60  420
+  08417 1 3747N 00349W SPAIN                    JAÉN                       580   5800            :     60   60   60   60   60   60   60  420
+  08419 1 3711N 00347W SPAIN                    GRANADA/AEROPUERTO         567   5700            :     60   60   60   60   60   60   60  420
+  08420 1 3708N 00338W SPAIN                    GRANADA/BASE AÉREA         687   6920            :     60   60   60   60   60   60   60  420
+  08429 1 3757N 00114W SPAIN                    MURCIA/ALCANTARILLA         75    750            :     60   60   60   60   60   60   60  420
+  08430 1 3800N 00110W SPAIN                    MURCIA                      61    620            :     60   60   60   60   60   60   60  420
+  08433 1 3747N 00048W SPAIN                    MURCIA/SAN JAVIER            4     40            :      0    0   60   59   60   60    0  239
+  08449 1 3638N 00620W SPAIN                    ROTA B.N.OBSERVATORIO'      21    230            :     60   60   60   60   60   60   60  420
+  08451 1 3645N 00603W SPAIN                    JEREZ DE LA FRONTERA/AER    27    280            :     60   60   60   60   60   60   60  420
+  08452 1 3630N 00615W SPAIN                    CÁDIZ,OBS.                   2     90            :     49   47   51   51   51   51   48  348
+  08458 1 3601N 00536W SPAIN                    TARIFA                      32    250            :      0    0   54   48   54   54   54  264
+  08482 1 3640N 00429W SPAIN                    MÁLAGA/AEROPUERTO            5     70            :     49   49   60   60   60   60   60  398
+  08487 1 3651N 00221W SPAIN                    ALMERÍA/AEROPUERTO          21    210            :     60   60   60   60   60   60   60  420
+  08495 1 3609N 00520W GIBRALTAR                GIBRALTAR                    4      4            :      0   72   72   72    0    0    0  216
+  08911 1 4246N 00038W SPAIN                    ARAGÜES DEL PUERTO-REFUG  1540  15400            :      0    0   55   54   55   55    0  219
+  08912 1 4257N 00048W SPAIN                    ISABA, EL FERIAL          1591  15910            :      0    0   44   35   49   48    0  176
+  08913 1 4254N 00048W SPAIN                    ANSÓ-REFUGIO DE LINZA     1340  13400            :      0    0   53   54   54   54    0  215
+  08914 1 4247N 00032W SPAIN                    CANDANCHU-ETUKSA          1560  15600            :      0    0    1    1    1    1    0    4
+  08917 1 4246N 00023W SPAIN                    SALLENT DE GÁLLEGO-FURCO  1855  18550            :      0    0   14   15   15   15    0   59
+  08918 1 4246N 00022W SPAIN                    SALLENT DE GALLEGO (FORM  1500  15000            :      0    0   52   53   53   53    0  211
+  08920 1 4249N 00018W SPAIN                    SALLENT DE GÁLLEGO-RESPO  2145  21450            :      0    0   47   49   48   49    0  193
+  08922 1 4246N 00014W SPAIN                    PANTICOSA (REFUGIO CASA   1645  16450            :      0    0   54   54   54   54    0  216
+  08924 1 4242N 00017W SPAIN                    PANTICOSA-ESQUI           1830  18300            :      0    0   40   22   41   42    0  145
+  08925 1 4238N 00027E SPAIN                    ERISTE (REFUGIO ANGEL OR  2115  21150            :      0    0   53   54   53   53    0  213
+  08926 1 4240N 00001E SPAIN                    FANLO REFUGIO DE GORIZ    2195  21950            :      0    0   53   53   53   53    0  212
+  08927 1 4240N 00006E SPAIN                    BIELSA (REFUGIO DE PINET  1240  12400            :      0    0   50   52   50   51    0  203
+  08928 1 4241N 00029E SPAIN                    BENASQUE (REFUGIO DE EST  1890  18900            :      0    0   52   53   53   53    0  211
+  08930 1 4234N 00033E SPAIN                    CERLER (ESQUI COTA 2000)  2020  20200            :      0    0    8    7    8    8    0   31
+  08942 1 4210N 00134E SPAIN                    PORT DEL COMTE            1813  18130            :      0    0   58   60   58   58    0  234
+  08946 1 4224N 00209E SPAIN                    NURIA                     1967  19670            :      0    0   12   12   12   12    0   48
+  08948 1 4226N 00216E SPAIN                    VALLTER 2000              2167  21670            :      0    0   24   43   32   30    0  129
+  08958 1 4007N 00102W SPAIN                    CAMARENA DE LA SIERRA     1520  15200            :      0    0   53   54   54   54    0  215
+  08960 1 4023N 00038W SPAIN                    VALDELINARES-ESQUÍ        1955  19550            :      0    0   10    8   18   19    0   55
+  10035 1 5431N 00932E GERMANY                  SCHLESWIG                   43    480            :     72   72   72   72   72   72    0  432
+  10147 1 5337N 00959E GERMANY                  HAMBURG-FUHLSBUETTEL        11    150            :     72   72   72   72   72   72    0  432
+  10170 1 5410N 01204E GERMANY                  ROSTOCK-WARNEMUENDE          4    128            :     72   72   72   72   72   72    0  432
+  10184 1 5405N 01324E GERMANY                  GREIFSWALD                   2     65            :     72   72   72   72   72   72    0  432
+  10200 1 5323N 00713E GERMANY                  EMDEN-FLUGPLATZ              0    -16            :     71   71   72   72   72   72    0  430
+  10338 1 5227N 00940E GERMANY                  HANNOVER                    55    594            :     72   72   72   72   72   72    0  432
+  10361 1 5206N 01134E GERMANY                  MAGDEBURG                   76    850            :     72   72   72   72   72   72    0  432
+  10379 1 5222N 01303E GERMANY                  POTSDAM                     81    996            :     72   72   72   72   72   72    0  432
+  10381 1 5227N 01318E GERMANY                  BERLIN-DAHLEM               51    700            :     72   72   72   72   72   72    0  432
+  10384 1 5228N 01324E GERMANY                  BERLIN-TEMPELHOF            48    490            :     69   69   72   72   72   72    0  426
+  10393 1 5212N 01407E GERMANY                  LINDENBERG                  98   1038            :     72   72   72   72   72   72    0  432
+  10410 1 5124N 00658E GERMANY                  ESSEN-BREDENEY             150   1498            :     70   70   72   72   72   72    0  428
+  10438 1 5117N 00926E GERMANY                  KASSEL                     231   2317            :     22   22   24   24   24   24    0  140
+  10453 1 5147N 01037E GERMANY                  BROCKEN                   1134  11525            :     72    0   72   72   72   72    0  360
+  10469 1 5126N 01214E GERMANY                  LEIPZIG/HALLE              131   1355            :     72   72   72   72   72   72    0  432
+  10488 1 5107N 01345E GERMANY                  DRESDEN-KLOTZSCHE          227   2324            :     72   72   72   72   72   72    0  432
+  10499 1 5109N 01457E GERMANY                  GOERLITZ                   238   2396            :     72   72   72   72   72   72    0  432
+  10554 1 5058N 01057E GERMANY                  ERFURT-WEIMAR              316   3220            :     72   72   72   72   72   72    0  432
+  10578 1 5025N 01257E GERMANY                  FICHTELBERG               1213  12146            :     72    0   72   72   72   72    0  360
+  10609 1 4944N 00639E GERMANY                  TRIER-PETRISBERG           265   2732            :     72   72   72   71   72   72    0  431
+  10628 1 4959N 00757E GERMANY                  GEISENHEIM                 110   1112            :     63   63   72   72   72   72    0  414
+  10637 1 5001N 00831E GERMANY                  FRANKFURT/MAIN             100   1041            :     72   72   72   72   72   72    0  432
+  10708 1 4912N 00706E GERMANY                  SAARBRUECKEN/ENSHEIM       320   3202            :     72   72   72   72   72   72    0  432
+  10738 1 4841N 00913E GERMANY                  STUTTGART-ECHTERDINGEN     371   3916            :     72   72   72   72   72   72    0  432
+  10763 1 4930N 01103E GERMANY                  NUERNBERG                  314   3176            :     72   72   72   72   72   72    0  432
+  10870 1 4820N 01148E GERMANY                  MUENCHEN-FLUGHAFEN         446   4466            :     72   72   72   72   72   72    0  432
+  10961 1 4725N 01059E GERMANY                  ZUGSPITZE                 2964  29602            :     71    0   72   72   72   72    0  359
+  10962 1 4748N 01100E GERMANY                  HOHENPEISSENBERG           977   9855            :     72    0   72   72   72   72    0  360
+  11010 1 4814N 01411E AUSTRIA                  LINZ/HOERSCHING-FLUGHAFE   298   3130            :     60   60   60   60   60   60   60  420
+  11012 1 4803N 01408E AUSTRIA                  KREMSMUENSTER              382   3900            :     60   60   60   60   60   60   60  420
+  11022 1 4846N 01556E AUSTRIA                  RETZ                       320   3200            :     60   60   60   60   60   60   60  420
+  11035 1 4815N 01621E AUSTRIA                  WIEN/HOHE WARTE            198   2090            :     60   60   60   60   60   60   60  420
+  11036 1 4807N 01634E AUSTRIA                  WIEN/SCHWECHAT-FLUGHAFEN   183   1830            :     60   60   60   60   60   60   60  420
+  11101 1 4730N 00945E AUSTRIA                  BREGENZ                    424   4370            :     60   60   60   60   60   60   60  420
+  11120 1 4716N 01121E AUSTRIA                  INNSBRUCK-FLUGHAFEN        581   5930            :     60   60   60   60   60   60   60  420
+  11126 1 4713N 01128E AUSTRIA                  PATSCHERKOFEL             2247  22520            :     60    0   60   60   60   60   60  360
+  11130 1 4735N 01210E AUSTRIA                  KUFSTEIN                   490   4920            :     60   60   60   60   60   60   60  420
+  11146 1 4703N 01257E AUSTRIA                  SONNBLICK                 3105  31110            :     60    0   60   60   60   60   60  360
+  11150 1 4748N 01300E AUSTRIA                  SALZBURG-FLUGHAFEN         430   4450            :     60   60   60   60   60   60   60  420
+  11155 1 4749N 01343E AUSTRIA                  FEUERKOGEL                1618  16200            :     60    0   60   60   60   60   60  360
+  11157 1 4732N 01408E AUSTRIA                  AIGEN IM ENNSTAL           641   6520            :     60   60   60   60   60   60   60  420
+  11171 1 4747N 01518E AUSTRIA                  MARIAZELL/ST SEBASTIAN     864   8650            :     60   60   60   60   60   60   60  420
+  11190 1 4751N 01632E AUSTRIA                  EISENSTADT                 184   1820            :     60   60   60   60   60   60   60  420
+  11204 1 4650N 01248E AUSTRIA                  LIENZ                      661   6680            :     60   60   60   60   60   60   60  420
+  11212 1 4636N 01340E AUSTRIA                  VILLACHER ALPE            2140  21600            :     60    0   60   60   60   60   60  360
+  11231 1 4639N 01420E AUSTRIA                  KLAGENFURT-FLUGHAFEN       448   4760            :     60   60   60   60   60   60   60  420
+  11240 1 4700N 01526E AUSTRIA                  GRAZ-THALERHOF-FLUGHAFEN   340   3630            :     60   60   60   60   60   60   54  414
+  11244 1 4652N 01554E AUSTRIA                  BAD GLEICHENBERG           269   2710            :     60   60   60   60   60   60   60  420
+  11389 1 4812N 01538E AUSTRIA                  ST.POELTEN LANDHAUS        274   2700            :     60   60   60   60   60   60   60  420
+  11406 1 5004N 01223E CZECH_REPUBLIC           CHEB                       483   4900            :     60   24   60   60   60   60   60  384
+  11518 1 5006N 01415E CZECH REPUBLIC           PRAHA/RUZYNE               364   3653            :     60   24   60   60   60   60   60  384
+  11723 1 4909N 01641E CZECH REPUBLIC           BRNO/TURANY                241   2457            :     60   24   60   60   60   60   60  384
+  11782 1 4942N 01807E CZECH REPUBLIC           OSTRAVA/MOSNOV             250   2517            :     60   24   60   60   60   60   60  384
+  11801 1 4824N 01708E SLOVAKIA                 KUCHYNA NOVY DVOR          206 -99999            :     24   24   24   24   24   24    0  144
+  11816 1 4810N 01712E SLOVAKIA                 BRATISLAVA, AIRPORT        133   1430            :     72   72   72   72   72   72   72  504
+  11819 1 4817N 01724E SLOVAKIA                 JASLOVSKE BOHUNICE         178   1850            :     24   24   24   24   24   24    0  144
+  11826 1 4822N 01730E SLOVAKIA                 PIESTANY                   164   1640            :     24   24   24   24   24   24    0  144
+  11841 1 4908N 01822E SLOVAKIA                 ZILINA                     311   3110            :     24   24   24   24   24   24    0  144
+  11855 1 4810N 01805E SLOVAKIA                 NITRA                      136   1360            :     24   24   24   24   24   24    0  144
+  11856 1 4810N 01816E SLOVAKIA                 MOCHOVCE                   262   2700            :     24   24   24   24   24   24    0  144
+  11858 1 4752N 01812E SLOVAKIA                 HURBANOVO                  115   1210            :     72   72   72   72   72   72   72  504
+  11867 1 4828N 01822E SLOVAKIA                 PRIEVIDZA                  261   2640            :     24   24   24   24   24   24    0  144
+  11880 1 4806N 01831E SLOVAKIA                 DUDINCE                    140   1440            :     24   24   24   24   24   24    0  144
+  11903 1 4839N 01909E SLOVAKIA                 SLIAC                      313   3210            :     72   72   72   72   72   72   72  504
+  11916 1 4835N 01922E SLOVAKIA                 CHOPOK                    2007  20080            :     24    0   24   24   24   24    0  120
+  11918 1 4913N 01925E SLOVAKIA                 LIESEK                     693   6980            :     24    0   24   24   24   24    0  120
+  11927 1 4812N 01926E SLOVAKIA                 LUCENEC                    215   2150            :     24   24   24   24   24   24    0  144
+  11930 1 4907N 02008E SLOVAKIA                 LOMNICKY STIT             2635  26350            :     24    0   24   24   24   24    0  120
+  11933 1 4904N 02003E SLOVAKIA                 STRBSKE PLESO             1356  13230            :     24    0   24   24   24   24    0  120
+  11934 1 4904N 02015E SLOVAKIA                 POPRAD                     694   7070            :     72    0   72   72   72   72   72  432
+  11938 1 4831N 02007E SLOVAKIA                 TELGART                    906   9060            :     24    0   24   24   24   24    0  120
+  11952 1 4901N 02011E SLOVAKIA                 POPRAD - GANOVCE           703 -99999            :     24    0   24   24   24   24    0  120
+  11955 1 4901N 02111E SLOVAKIA                 PRESOV                     324 -99999            :     24   24   24   24   24   24    0  144
+  11968 1 4840N 02114E SLOVAKIA                 KOÅ ICE, AIRPORT           230   2320            :     72   72   72   72   72   72   72  504
+  11976 1 4908N 02123E SLOVAKIA                 STROPKOV-TISINEC           217   2200            :     24   24   24   24   24   24    0  144
+  11978 1 4824N 02126E SLOVAKIA                 MILHOSTOV                  106   1060            :     24   24   24   24   24   24    0  144
+  11993 1 4834N 02200E SLOVAKIA                 KAMENICA NAD CIROCHO       178   1780            :     24   24   24   24   24   24    0  144
+  12100 1 5411N 01535E POLAND                   KOLOBRZEG                    3     56            :     72   72   72   72   72   72   72  504
+  12105 1 5412N 01609E POLAND                   KOSZALIN                    33    342            :     72   72   72   72   72   72   72  504
+  12115 1 5435N 01651E POLAND                   USTKA                        3    116            :     72   72   72   72   72   72   72  504
+  12120 1 5445N 01732E POLAND                   LEBA                         2     35            :     72   72   72   72   72   72   72  504
+  12125 1 5433N 01743E POLAND                   LEBORK                      39    410            :     25   25   36   36   36   36    0  194
+  12135 1 5436N 01849E POLAND                   HEL                          1     31            :     72   72   72   72   72   72   72  504
+  12140 1 5424N 01842E POLAND                   GDANSK-PORT POLNOCNY         7     90            :     24   24   24   24   24   24    0  144
+  12160 1 5410N 01926E POLAND                   ELBLAG                     189   1850            :     36   36   36   36   36   36    0  216
+  12185 1 5404N 02122E POLAND                   KETRZYN                    106   1099            :     36   36   36   36   36   36    0  216
+  12195 1 5408N 02257E POLAND                   SUWALKI                    184   1856            :     72   72   72   72   72   72   72  504
+  12200 1 5355N 01415E POLAND                   SWINOUJSCIE                  5     61            :     72   72   72   72   72   72   72  504
+  12205 1 5324N 01437E POLAND                   SZCZECIN-DABIE               1     73            :     72   72   72   72   72   72   72  504
+  12210 1 5346N 01525E POLAND                   RESKO                       52    558            :     36   36   36   36   36   36    0  216
+  12230 1 5308N 01645E POLAND                   PILA                        72    733            :     36   36   36   36   36   36    0  216
+  12235 1 5343N 01732E POLAND                   CHOJNICE                   164   1724            :     72   72   72   72   72   72   72  504
+  12250 1 5303N 01836E POLAND                   TORUN                       69    722            :     72   72   72   72   72   72   72  504
+  12270 1 5306N 02022E POLAND                   MLAWA                      147   1485            :     36   36   36   36   36   36    0  216
+  12272 1 5346N 02025E POLAND                   OLSZTYN                    133   1368            :     72   72   72   72   72   72   72  504
+  12280 1 5347N 02135E POLAND                   MIKOLAJKI                  127   1278            :     36   36   36   36   36   36    0  216
+  12295 1 5306N 02310E POLAND                   BIALYSTOK                  148   1521            :     72   72   72   72   72   72   72  504
+  12300 1 5244N 01517E POLAND                   GORZOW WLKP                 71    726            :     72   72   72   72   72   72   72  504
+  12310 1 5221N 01437E POLAND                   SLUBICE                     53    540            :     72   72   72   72   72   72   72  504
+  12330 1 5225N 01650E POLAND                   POZNAN                      88    885            :     72   72   72   72   72   72   72  504
+  12345 1 5212N 01840E POLAND                   KOLO                       115   1177            :     72   72   72   72   72   72   72  504
+  12360 1 5235N 01944E POLAND                   PLOCK                      106   1093            :     60   60   60   60   60   60   60  420
+  12375 1 5210N 02058E POLAND                   WARSZAWA-OKECIE            107   1069            :     72   72   72   72   72   72   72  504
+  12385 1 5211N 02215E POLAND                   SIEDLCE                    152   1550            :     72   72   72   72   72   72   72  504
+  12399 1 5205N 02337E POLAND                   TERESPOL                   133   1373            :     36   36   36   36   36   36    0  216
+  12400 1 5156N 01531E POLAND                   ZIELONA GORA               192   1927            :     72   72   72   72   72   72   72  504
+  12415 1 5112N 01612E POLAND                   LEGNICA                    122   1246            :     72   72   72   72   72   72   72  504
+  12418 1 5150N 01632E POLAND                   LESZNO-STRZYZEWICE          91    930            :     36   36   36   36   36   36    0  216
+  12424 1 5106N 01654E POLAND                   WROCLAW                    120   1214            :     72   72   72   72   72   72   72  504
+  12435 1 5147N 01805E POLAND                   KALISZ                     137   1397            :     72   72   72   72   72   72   72  504
+  12455 1 5113N 01833E POLAND                   WIELUN                     199   2008            :     72   72   72   72   72   72   72  504
+  12465 1 5143N 01923E POLAND                   LODZ                       175   1814            :     72   72   72   72   72   72   72  504
+  12469 1 5121N 01952E POLAND                   SULEJOW                    188   1892            :     36   36   36   36   36   36    0  216
+  12488 1 5134N 02133E POLAND                   KOZIENICE                  123   1261            :     36   36   36   36   36   36    0  216
+  12495 1 5113N 02224E POLAND                   LUBLIN RADAWIEC            238   2397            :     72   72   72   72   72   72   72  504
+  12497 1 5133N 02332E POLAND                   WLODAWA                    177   1795            :     72   72   72   72   72   72   72  504
+  12500 1 5054N 01547E POLAND                   JELENIA GORA               342   3439            :     72   72   72   72   72   72   72  504
+  12510 1 5044N 01544E POLAND                   SNIEZKA                   1603  16135            :     72   36   72   72   72   72   72  468
+  12520 1 5026N 01637E POLAND                   KLODZKO                    356   3575            :     72   72   72   72   72   72   72  504
+  12530 1 5038N 01758E POLAND                   OPOLE                      163   1638            :     72   72   72   72   72   72   72  504
+  12540 1 5004N 01811E POLAND                   RACIBORZ                   206   2064            :     72   72   72   72   72   72   72  504
+  12550 1 5049N 01906E POLAND                   CZESTOCHOWA                294   2958            :     36   36   36   36   36   36    0  216
+  12560 1 5014N 01902E POLAND                   KATOWICE                   278   2799            :     72   72   72   72   72   72   72  504
+  12566 1 5005N 01948E POLAND                   KRAKOW-BALICE              237   2415            :     72   72   72   72   72   72   72  504
+  12570 1 5049N 02042E POLAND                   KIELCE-SUKOW               260   2611            :     72   72   72   72   72   72   72  504
+  12575 1 5002N 02059E POLAND                   TARNOW                     209   2091            :     72   72   72   72   72   72   72  504
+  12580 1 5007N 02202E POLAND                   RZESZOW-JASIONKA           211   2126            :     36   36   36   36   36   36    0  216
+  12585 1 5042N 02143E POLAND                   SANDOMIERZ                 217   2189            :     72   72   72   72   71   72   72  503
+  12600 1 4948N 01900E POLAND                   BIELSKO-BIALA              396   4000            :     72   72   72   72   72   72   72  504
+  12625 1 4918N 01958E POLAND                   ZAKOPANE                   855   8570            :     72   36   72   72   72   72   72  468
+  12650 1 4914N 01959E POLAND                   KASPROWY WIERCH           1991  19888            :     72   36   72   72   72   72   72  468
+  12660 1 4938N 02041E POLAND                   NOWY SACZ                  292   2959            :     36   36   36   36   36   36    0  216
+  12670 1 4942N 02146E POLAND                   KROSNO                     329   3313            :     36   36   36   36   36   36    0  216
+  12690 1 4928N 02221E POLAND                   LESKO                      420   4221            :     36   36   36   36   36   36    0  216
+  12843 1 4726N 01911E HUNGARY                  BUDAPEST/PESTSZENTLORINC   139   1394            :     72   72   72   72   72   72   72  504
+  12882 1 4729N 02137E HUNGARY                  DEBRECEN                   107   1080            :     72   72   72   72   72   72   72  504
+  12925 1 4627N 01658E HUNGARY                  NAGYKANIZSA                139   1404            :     72   72   72   72   72   72   72  504
+  12942 1 4600N 01814E HUNGARY                  PECS/POGANY                200   2099            :     72   72   72   72   72   72   72  504
+  12982 1 4615N 02005E HUNGARY                  SZEGED                      81    827            :     72   72   72   72   72   72   72  504
+  13067 1 4606N 01946E SERBIA                   PALIC                      103   1020            :     36    0   36   36   36   36    0  180
+  13160 1 4546N 01908E SERBIA                   SOMBOR                      89    870            :     36    0   36   36   36   36    0  180
+  13168 1 4519N 01950E SERBIA                   NOVI SAD - RIMSKI SA        87    860            :     36    0   36   36   36   36    0  180
+  13173 1 4524N 02023E SERBIA                   ZRENJANIN                   82    800            :     36    0   36   36   36   36    0  180
+  13174 1 4550N 02028E SERBIA                   KIKINDA                     82    810            :     36    0   36   36   36   36    0  180
+  13180 1 4504N 02102E SERBIA                   BANATSKI KARLOVAC           91    900            :     36    0   36   36   36   36    0  180
+  13183 1 4508N 02118E SERBIA                   VRSAC                       86    850            :     36    0   36   36   36   36    0  180
+  13262 1 4432N 01914E SERBIA                   LOZNICA                    122   1210            :     36    0   36   36   36   36    0  180
+  13266 1 4501N 01934E SERBIA                   SREMSKA MITROVICA           83    820            :     36    0   36   36   36   36    0  180
+  13269 1 4417N 01955E SERBIA                   VALJEVO                    177   1760            :     36    0   36   36   36   36    0  180
+  13272 1 4449N 02017E SERBIA                   BEOGRAD/SURCIN              99    965            :     36    0   36   36   36   36    0  180
+  13274 1 4448N 02028E SERBIA                   BEOGRAD                    132   1320            :     36    0   36   36   36   36    0  180
+  13275 1 4446N 02025E SERBIA                   BEOGRAD/KOSUTNJAK          203   2030            :     36    0   36   36   36   36    0  180
+  13278 1 4402N 02056E SERBIA                   KRAGUJEVAC                 185   1850            :     36    0   36   36   36   36    0  180
+  13279 1 4422N 02056E SERBIA                   SMEDEREVSKA PALANKA        121   1206            :     36    0   36   36   36   36    0  180
+  13285 1 4445N 02130E SERBIA                   VELIKO GRADISTE             84    820            :     36    0   36   36   36   36    0  180
+  13289 1 4408N 02158E SERBIA                   CRNI VRH                  1037  10370            :     36    0   36   36   36   36    0  180
+  13295 1 4414N 02232E SERBIA                   NEGOTIN                     44    421            :     36    0   36   36   36   36    0  180
+  13367 1 4344N 01943E SERBIA                   ZLATIBOR                  1028  10280            :     36    0   36   36   36   36    0  180
+  13369 1 4316N 01959E SERBIA                   SJENICA                   1040  10380            :     36    0   36   36   36   36    0  180
+  13370 1 4350N 02002E SERBIA                   POZEGA UZICKA              312   3100            :     36    0   36   36   36   36    0  180
+  13376 1 4343N 02042E SERBIA                   KRALJEVO                   217   2150            :     36    0   36   36   36   36    0  180
+  13378 1 4317N 02048E SERBIA                   KOPAONIK                  1713  17107            :     36    0   36   36   36   36    0  180
+  13382 1 4308N 02116E SERBIA                   KURSUMLIJA                 383   3840            :     36    0   36   36   36   36    0  180
+  13383 1 4334N 02120E SERBIA                   KRUSEVAC                   167   1660            :     36    0   36   36   36   36    0  180
+  13384 1 4356N 02123E SERBIA                   CUPRIJA                    125   1230            :     36    0   36   36   36   36    0  180
+  13388 1 4320N 02154E SERBIA                   NIS                        204   2020            :     36    0   36   36   35   36    0  179
+  13389 1 4259N 02157E SERBIA                   LESKOVAC                   232   2300            :     36    0   36   36   36   36    0  180
+  13392 1 4353N 02217E SERBIA                   ZAJECAR                    144   1443            :     36    0   36   36   35   36    0  179
+  13397 1 4301N 02244E SERBIA                   DIMITROVGRAD               450   4472            :     36    0   36   36   36   36    0  180
+  13489 1 4232N 02155E SERBIA                   VRANJE                     434   4330            :     36    0   36   36   36   36    0  180
+  14007 1 4630N 01343E SLOVENIA                 RATECE                     864 -99999            :     48    0   48   48   48   48    0  240
+  14008 1 4623N 01351E SLOVENIA                 KREDARICA                 2514 -99999            :     48    0   48   48   48   48    0  240
+  14015 1 4604N 01431E SLOVENIA                 LJUBLJANA/BEZIGRAD         299 -99999            :     48    0   48   48   48   48    0  240
+  14021 1 4629N 01507E SLOVENIA                 SLOVENJ GRADEC             444 -99999            :      0    0   48   48   48   48    0  192
+  14023 1 4614N 01514E SLOVENIA                 CELJE                      242 -99999            :      0    0   48   48   48   48    0  192
+  14026 1 4629N 01541E SLOVENIA                 MARIBOR/SLIVNICA           264 -99999            :     48   48   48   48   48   48    0  288
+  14031 1 4639N 01612E SLOVENIA                 MURSKA SOBOTA              187 -99999            :     48    0   48   48   48   48    0  240
+  14106 1 4554N 01338E SLOVENIA                 NOVA GORICA                 55 -99999            :     48   48   48   48   48   48    0  288
+  14121 1 4548N 01511E SLOVENIA                 NOVO MESTO                 220 -99999            :     48   48   48   48   48   48    0  288
+  14216 1 4520N 01427E CROATIA                  RIJEKA                     120   1249            :     12   12   12   12   12   12   12   84
+  14236 1 4549N 01558E CROATIA                  ZAGREB GRIC                157   1625            :     12   12   12   12   12   12   12   84
+  14246 1 4617N 01622E CROATIA                  VARAZDIN                   167   1679            :     12   12   12   12   12   12   12   84
+  14328 1 4516N 01513E CROATIA                  OGULIN                     328   3282            :     12   12   12   12   12   12   12   84
+  14330 1 4433N 01522E CROATIA                  GOSPIC                     564   5653            :     12   12   12   12   12   12   12   84
+  14428 1 4408N 01512E CROATIA                  ZADAR                        5     59            :     12   12   12   12   12   12   12   84
+  14442 1 4402N 01612E CROATIA                  KNIN                       255   2551            :     12   12   12   12   12   12   12   84
+  14445 1 4331N 01626E CROATIA                  SPLIT MARJAN               122   1280            :     12   12   12   12   12   12   12   84
+  14447 1 4310N 01626E CROATIA                  HVAR                        20    254            :     12   12   12   12   12   12   12   84
+  14472 1 4239N 01805E CROATIA                  DUBROVNIK                   52    533            :     12   12   12   12   12   12   12   84
+  15023 1 4738N 02614E ROMANIA                  SUCEAVA                    352   3532            :     60   60   60   60   60   60   60  420
+  15085 1 4709N 02431E ROMANIA                  BISTRITA                   366   3672            :     60   60   60   60   60   60   60  420
+  15090 1 4710N 02738E ROMANIA                  IASI                        74    757            :     60   60   60   60   60   60   60  420
+  15120 1 4647N 02334E ROMANIA                  CLUJ-NAPOCA                410   4113            :     60   60   60   60   60   60   60  420
+  15247 1 4546N 02116E ROMANIA                  TIMISOARA                   86    872            :     60   60   60   60   60   60   60  420
+  15260 1 4547N 02405E ROMANIA                  SIBIU                      443   4443            :     59   59   59   60   60   60   60  417
+  15280 1 4527N 02528E ROMANIA                  VARFU OMU                 2504  25114            :     60    0   60   60   60   60   60  360
+  15292 1 4525N 02214E ROMANIA                  CARANSEBES                 241   2422            :     60   60   60   60   60   60   60  420
+  15310 1 4528N 02802E ROMANIA                  GALATI                      69    703            :     60   60   60   60   60   60   60  420
+  15350 1 4508N 02651E ROMANIA                  BUZAU                       97    983            :     60   60   60   60   60   60   60  420
+  15360 1 4509N 02946E ROMANIA                  SULINA                      13    134            :     60   59   59   60   59   59   60  416
+  15420 1 4431N 02605E ROMANIA                  BUCURESTI BANEASA           90    912            :     60   60   60   60   60   60   60  420
+  15450 1 4419N 02352E ROMANIA                  CRAIOVA                    192   1932            :     60   60   60   60   60   60   60  420
+  15480 1 4413N 02839E ROMANIA                  CONSTANTA                   13    140            :     60   60   60   60   60   60   60  420
+  17600 1 3443N 03229E CYPRUS                   PAFOS (AIRPORT)             10     84            :      0   36   36   36   36   36    0  180
+  17607 1 3509N 03324E CYPRUS                   ATHALASSA (RADIOSOND       162   1618            :     34   34   36   36   36   36    0  212
+  17609 1 3453N 03338E CYPRUS                   LARNAKA (AIRPORT)            1     30            :      0   36   36   36   36   36    0  180
+  26038 1 5924N 02436E ESTONIA                  TALLINN-HARKU               33 -99999            :     60   60   60   60   60   60    0  360
+  26045 1 5931N 02632E ESTONIA                  KUNDA                        3 -99999            :     60   60   60   60   60   60    0  360
+  26115 1 5855N 02204E ESTONIA                  RISTNA                       7 -99999            :     56   56   56   60   56   56    0  340
+  26135 1 5849N 02525E ESTONIA                  TURI                        60 -99999            :     59   59   59   60   59   59    0  355
+  26214 1 5823N 02149E ESTONIA                  VILSANDI                     6 -99999            :     60   60   60   60   60   60    0  360
+  26231 1 5825N 02428E ESTONIA                  PARNU                       12 -99999            :     60   60   60   60   60   60    0  360
+  26242 1 5816N 02628E ESTONIA                  TARTU-TORAVERE              71 -99999            :     60   60   60   60   60   60    0  360
+  26247 1 5747N 02602E ESTONIA                  VALGA                       64 -99999            :     60   60   60   60   60   60    0  360
+  26313 1 5745N 02235E LATVIA                   KOLKA                        4     57            :     72   72   72   72   72   72   72  504
+  26346 1 5726N 02702E LATVIA                   ALUKSNE                    197   1979            :     72   72   72   72   72   72   72  504
+  26406 1 5629N 02101E LATVIA                   LIJEPAJA                     4     49            :     72   72   72   72   72   72   72  504
+  26416 1 5641N 02230E LATVIA                   SALDUS                     112   1137            :     72   72   72   59   70   70   72  487
+  26422 1 5657N 02407E LATVIA                   RIGA                         6    347            :     72   72   72   72   72   72   72  504
+  26424 1 5637N 02319E LATVIA                   DOBELE                      42    432            :     72   72   72   72   72   72   72  504
+  26509 1 5544N 02106E LITHUANIA                KLAIPEDA                     6     73            :     60   60   60   60   60   60   24  384
+  26518 1 5537N 02214E LITHUANIA                LAUKUVA                    165   1658            :     60   60   60   60    0   60   60  360
+  26524 1 5557N 02320E LITHUANIA                SIAULIAI                   106   1074            :     60   60   60   60   60   60   24  384
+  26531 1 5612N 02446E LITHUANIA                BIRZAI                      60    615            :     60   59   60   60   60   60   60  419
+  26544 1 5552N 02637E LATVIA                   DAUGAVPILS                  98    992            :     72   72   72   72   72   72   72  504
+  26554 1 5549N 02734E BELARUS                  VERHNEDVINSK               132   1323            :     36   36   36   36   36   36    0  216
+  26629 1 5453N 02350E LITHUANIA                KAUNAS                      76    773            :     60   60   60   60   60   60   24  384
+  26633 1 5531N 02535E LITHUANIA                UTENA                      105   1057            :     60   60   60   60   60   60   60  420
+  26643 1 5521N 02716E BELARUS                  SHARCOVSCHINA              130   1310            :     36   36   36   36   36   36    0  216
+  26645 1 5502N 02611E BELARUS                  LYNTUPY                    208   2116            :     36   36   36   36   36   36    0  216
+  26653 1 5528N 02827E BELARUS                  POLOTSK                    132   1325            :     36   36   36   36   36   36    0  216
+  26657 1 5453N 02727E BELARUS                  DOKSHITSY                  193   1933            :     36   36   36   36   36   36    0  216
+  26659 1 5452N 02825E BELARUS                  LEPEL                      173   1742            :     36   36   36   36   36   36    0  216
+  26666 1 5515N 03008E BELARUS                  VITEBSK                    174   1758            :     36   36   36   36   36   36    0  216
+  26668 1 5448N 02925E BELARUS                  SENNO                      173   1755            :     36   36   36   36   36   36    0  216
+  26730 1 5438N 02506E LITHUANIA                VILNIUS                    162   1559            :     60   60   60   60   60   60   24  384
+  26759 1 5415N 02817E BELARUS                  BORISOV                    188   1885            :     36   36   36   36   36   36    0  216
+  26763 1 5430N 03016E BELARUS                  ORSHA                      186   1851            :     36   36   36   36   36   36    0  216
+  26774 1 5418N 03034E BELARUS                  GORKI                      200   2015            :     36   36   36   36   36   36    0  216
+  26825 1 5336N 02402E BELARUS                  GRODNO                     133   1492            :     36   36   36   36   36   36    0  216
+  26832 1 5354N 02511E BELARUS                  LIDA                       154   1566            :     36   36   36   36   36   36    0  216
+  26850 1 5355N 02723E BELARUS                  MINSK                      222   2247            :     36   36   36   36   36   36    0  216
+  26853 1 5329N 02835E BELARUS                  BEREZINO                   153   1544            :     36   36   36   36   36   36    0  216
+  26855 1 5329N 02805E BELARUS                  MARIYNA GORKA              175   1771            :     36   36   36   36   36   36    0  216
+  26863 1 5357N 03003E BELARUS                  MOGILEV                    192   1925            :     36   36   36   36   36   36    0  216
+  26864 1 5329N 02911E BELARUS                  KLICHEV                    154   1551            :     36   36   36   36   36   36    0  216
+  26878 1 5327N 03100E BELARUS                  SLAVGOROD                  171   1695            :     36   36   36   36   36   36    0  216
+  26887 1 5321N 03202E BELARUS                  KOSTUCKOVICHI              168   1672            :     36   36   36   36   36   36    0  216
+  26941 1 5307N 02535E BELARUS                  BARANOVICHI                192   1934            :     36   36   36   36   36   36    0  216
+  26951 1 5303N 02720E BELARUS                  SLUTSK                     159   1620            :     36   36   36   36   36   36    0  216
+  26961 1 5312N 02904E BELARUS                  BOBRUISK                   156   1564            :     36   36   36   36   36   36    0  216
+  26966 1 5253N 03001E BELARUS                  ZHLOBIN                    140   1418            :     36   36   36   36   36   36    0  216
+  28679 1 5450N 06909E KAZAKHSTAN               PETROPAVLOVSK              100   1010            :     71   72   72   72   72   72    0  431
+  28766 1 5422N 06658E KAZAKHSTAN               BLAGOVESHENKA              150   1513            :     72   72   71   72   72   71    0  430
+  28867 1 5319N 06533E KAZAKHSTAN               URITSKY                    215   2162            :     72   72   72   72   71   72    0  431
+  28879 1 5317N 06923E KAZAKHSTAN               KOKSHETAY                  228   2298            :     72   72   70   72   70   70    0  426
+  28952 1 5313N 06337E KAZAKHSTAN               KOSTANAY                   151   1564            :     72   72   72   72   72   72    0  432
+  28966 1 5249N 06658E KAZAKHSTAN               RUZAEVKA                   227   2273            :     72   72   72   72   70   72    0  430
+  28978 1 5232N 06845E KAZAKHSTAN               BALKASINO                  398   3979            :     70   70   71   72   72   71    0  426
+  28984 1 5257N 07013E KAZAKHSTAN               SUCINSK                    393   3942            :     72   72   72   48   72   72    0  408
+  29802 1 5349N 07632E KAZAKHSTAN               MIKHAILOVKA                113   1137            :     72   72   70   72   69   71    0  426
+  29807 1 5321N 07527E KAZAKHSTAN               ERTIS                       93    938            :     72   72   72   72   72   72    0  432
+  33008 1 5207N 02325E BELARUS                  BREST                      142   1459            :     36   36   36   36   36   36    0  216
+  33019 1 5207N 02604E BELARUS                  PINSK                      140   1421            :     36   36   36   36   36   36    0  216
+  33027 1 5212N 02731E BELARUS                  ZHITCKOVICHI               136   1368            :     36   36   36   36   36   36    0  216
+  33036 1 5202N 02907E BELARUS                  MOZYR                      189   1895            :     36   36   36   36   36   36    0  216
+  33038 1 5215N 02930E BELARUS                  VASILEVICHI                139   1424            :     36   36   36   36   36   36    0  216
+  33041 1 5224N 03034E BELARUS                  GOMEL                      125   1263            :     36   36   36   36   36   36    0  216
+  33088 1 5118N 02618E UKRAINE                  SARNY                      154   1559            :     36   36   36   36   36   36    0  216
+  33124 1 5147N 03008E BELARUS                  BRAGIN                     115   1162            :     36   36   36   36   36   36    0  216
+  33135 1 5123N 03118E UKRAINE                  CHERNIHIV                  139   1454            :     36   36   36   36   36   36    0  216
+  33173 1 5113N 02441E UKRAINE                  KOVEL                      173   1742            :     36   36   36   36   36   36    0  216
+  33187 1 5043N 02524E UKRAINE                  LUTSK                      195   1966            :     36   36   36   36   36   36    0  216
+  33213 1 5119N 02847E UKRAINE                  OVRUCH                     168   1699            :     36   36   36   36   36   36    0  216
+  33268 1 5046N 03327E UKRAINE                  ROMNY                      168   1699            :     36   36   36   36   36   36    0  216
+  33275 1 5043N 03447E UKRAINE                  SUMY                       180   1814            :     36   36   36   36   36   36    0  216
+  33301 1 5035N 02608E UKRAINE                  RIVNE                      227   2311            :     36   36   36   36   36   36    0  216
+  33325 1 5017N 02844E UKRAINE                  ZHYTOMYR                   219   2243            :     36   36   36   36   36   36    0  216
+  33345 1 5024N 03032E UKRAINE                  KYIV                       166   1674            :     36   36   36   36   36   36    0  216
+  33377 1 5001N 03300E UKRAINE                  LUBNY                      156   1577            :     36   36   36   36   36   36    0  216
+  33393 1 4949N 02357E UKRAINE                  LVIV                       319   3227            :     36   36   36   36   36   36    0  216
+  33415 1 4932N 02540E UKRAINE                  TERNOPIL                   327   3288            :     36   36   36   36   36   36    0  216
+  33429 1 4924N 02659E UKRAINE                  KHMELNYTSKYI               350   3498            :     36   36   36   36   36   36    0  216
+  33484 1 4941N 03202E UKRAINE                  ZOLOTONOSHA                 94    960            :     36   36   36   36   36   36    0  216
+  33506 1 4936N 03433E UKRAINE                  POLTAVA                    160   1601            :     36   36   36   36   36   36    0  216
+  33526 1 4853N 02441E UKRAINE                  IVANO-FRANKIVSK            275   2797            :     36   36   36   36   36   36    0  216
+  33562 1 4914N 02835E UKRAINE                  VINNYTSIA                  296   2975            :     36   36   36   36   36   36    0  216
+  33587 1 4846N 03014E UKRAINE                  UMAN                       214   2155            :     36   36   36   36   36   36    0  216
+  33609 1 4844N 03242E UKRAINE                  ZNAMIANKA                  180   1809            :     36   36   36   36   36   36    0  216
+  33631 1 4838N 02216E UKRAINE                  UZHHOROD                   115   1172            :     36   36   36   36   36   36    0  216
+  33658 1 4816N 02558E UKRAINE                  CHERNIVTSI                 242   2460            :     36   36   36   36   36   36    0  216
+  33686 1 4821N 02951E UKRAINE                  GAJVORON                   150   1509            :     36   36   36   36   36   36    0  216
+  33711 1 4833N 03217E UKRAINE                  KIROVOHRAD                 170   1713            :     36   36   36   36   36   36    0  216
+  33723 1 4826N 03354E UKRAINE                  KOMISARIVKA                118   1189            :     36   36   36   36   36   36    0  216
+  33761 1 4751N 03016E UKRAINE                  LIUBASHIVKA                181   1826            :     36   36   36   36   36   36    0  216
+  33791 1 4801N 03313E UKRAINE                  KRYVYI RIH                 123   1243            :     36   36   36   36   36   36    0  216
+  33805 1 4735N 03424E UKRAINE                  NIKOPOL                     53    548            :     36   36   36   36   36   36    0  216
+  33834 1 4651N 03005E UKRAINE                  ROZDILNA                   146   1477            :     36   36   36   36   36   36    0  216
+  33837 1 4628N 03046E UKRAINE                  ODESA                       42    421            :     36   36   36   36   36   36    0  216
+  33889 1 4522N 02851E UKRAINE                  IZMAIL                      28    301            :     36   36   36   36   36   36    0  216
+  33896 1 4601N 02940E UKRAINE                  SARATA                      12    136            :     36   36   36   36   36   36    0  216
+  33902 1 4638N 03234E UKRAINE                  KHERSON                     47    538            :     36   36   36   36   36   36    0  216
+  33910 1 4610N 03449E UKRAINE                  HENICHESK                   14    148            :     36   36   36   36   36   36    0  216
+  33915 1 4627N 03353E UKRAINE                  ASKANIIA-NOVA               28    299            :     36   36   36   36   36   36    0  216
+  33939 1 4532N 03412E UKRAINE                  KLEPININO                   37    368            :     36   35   36   36   36   36    0  215
+  33946 1 4502N 03358E UKRAINE                  SIMFEROPOL                 180   1807            :     36   36   36   36   36   36    0  216
+  33976 1 4502N 03523E UKRAINE                  FEODOSIIA                   22    260            :     36   36   36   36   36   36    0  216
+  33990 1 4429N 03410E UKRAINE                  YALTA                       66    718            :     36   36   36   36   36   36    0  216
+  33998 1 4428N 03405E UKRAINE                  AI-PETRI                  1180  11799            :     36    0   36   36   36   36    0  180
+  34300 1 4956N 03617E UKRAINE                  KHARKIV                    154   1549            :     36   36   36   36   36   36    0  216
+  34398 1 4940N 04929E KAZAKHSTAN               ZHALPAKTAL               -9999 -99999            :     72   72   71   72   72   71    0  430
+  34409 1 4854N 03619E UKRAINE                  LOZOVA                     175   1767            :     36   36   36   36   36   36    0  216
+  34504 1 4822N 03503E UKRAINE                  DNIPROPETROVSK             142   1449            :     36   36   36   36   36   36    0  216
+  34519 1 4804N 03746E UKRAINE                  DONETSK                    224   2250            :     36   36   36   36   36   36    0  216
+  34523 1 4834N 03915E UKRAINE                  LUHANSK                     59    616            :     36   36   36   36   36   36    0  216
+  34601 1 4752N 03505E UKRAINE                  ZAPORIZHZHIA                59    608            :     36   36   36   36   36   36    0  216
+  34609 1 4720N 03620E UKRAINE                  KYRYLIVKA                  221   2212            :     36   36   36   36   36   36    0  216
+  34691 1 4754N 04848E KAZAKHSTAN               NOVYI USHTOGAN             -11    -99            :     72   72   72   72   72   72    0  432
+  34798 1 4636N 04916E KAZAKHSTAN               GANJUSHKINO                -25   -238            :     71   71   72   72   24   24    0  334
+  35067 1 5153N 06620E KAZAKHSTAN               ESIL                       219   2210            :     72   72   72   72   72   72    0  432
+  35078 1 5149N 06822E KAZAKHSTAN               ATBASAR                    302   3040            :     70   70   72   72   72   72    0  428
+  35085 1 5200N 07057E KAZAKHSTAN               AKKOL                      383   3835            :     72   72   72   72   71   72    0  431
+  35108 1 5115N 05117E KAZAKHSTAN               URALSK                      35    364            :     72   72   71   72   71   71    0  429
+  35173 1 5137N 06948E KAZAKHSTAN               ZHALTYR                    304   3052            :     71   71   61   71   67   65    0  406
+  35188 1 5108N 07122E KAZAKHSTAN               ASTANA                     347   3500            :     72   72   72   72   72   72    0  432
+  35217 1 5015N 05234E KAZAKHSTAN               DJAMBEITY                   31    319            :     72   72   72   72   72   72    0  432
+  35229 1 5017N 05709E KAZAKHSTAN               AKTOBE                     219   2193            :     72   72   72   72   72   72    0  432
+  35302 1 5012N 05110E KAZAKHSTAN               CHAPAEVO                    15    170            :     72   72   72   72   72   72    0  432
+  35358 1 4938N 06330E KAZAKHSTAN               TORGAI                     133   1353            :     72   72   72   72   72   72    0  432
+  35394 1 4948N 07309E KAZAKHSTAN               KARAGANDA                  552   5531            :     72   72   72   72   72   72    0  432
+  35406 1 4930N 05152E KAZAKHSTAN               TAIPAK                       2     17            :     71   71   72   72   72   72    0  430
+  35416 1 4904N 05441E KAZAKHSTAN               UIL                         95   1026            :     71   71   71   71   71   71    0  426
+  35426 1 4909N 05707E KAZAKHSTAN               TEMIR                      234   2338            :     72   72   63   72   69   66    0  414
+  35497 1 4851N 07252E KAZAKHSTAN               ZHARYK                     655   6560            :     72   72   72   72   72   72    0  432
+  35532 1 4838N 05830E KAZAKHSTAN               MUGODZARSKAJA              397   3982            :     72   72   72   72   72   72    0  432
+  35576 1 4818N 06939E KAZAKHSTAN               KYZYLZHAR                  361   3621            :     72   72   72   72   72   72    0  432
+  35671 1 4748N 06743E KAZAKHSTAN               ZHEZKAZGAN                 345   3463            :     72   72   71   72   72   71    0  430
+  35699 1 4727N 07449E KAZAKHSTAN               BEKTAUATA                  619   6200            :     72   72   71   72   71   72    0  430
+  35700 1 4707N 05155E KAZAKHSTAN               ATYRAU                     -22   -221            :     72   72   72   72   72   72    0  432
+  35746 1 4647N 06139E KAZAKHSTAN               ARALSKOE MORE               62    639            :     70   69   72   72   72   72    0  427
+  35796 1 4648N 07505E KAZAKHSTAN               BALHASH                    347   3505            :     72   72   70   72   72   72    0  430
+  35849 1 4546N 06207E KAZAKHSTAN               KAZALINSK                   66    679            :     72   72   72   70   72   72    0  430
+  35925 1 4514N 05604E KAZAKHSTAN               SAM                         86    884            :     72   72   71   70   71   72    0  428
+  35953 1 4518N 06403E KAZAKHSTAN               DZHUSALY                   101   1028            :     72   72   72   70   72   72    0  430
+  35969 1 4509N 06702E KAZAKHSTAN               ZLIKHA                     138   1380            :     68   68   69   68   69   69    0  411
+  36003 1 5218N 07656E KAZAKHSTAN               PAVLODAR                   120   1220            :     72   72   71   72   69   71    0  427
+  36152 1 5052N 07821E KAZAKHSTAN               SEMIJARKA                  148   1493            :     72   72   72   72   68   71    0  427
+  36177 1 5025N 08018E KAZAKHSTAN               SEMIPALATINSK              195   1958            :     72   72   71   72   71   71    0  429
+  36208 1 5020N 08333E KAZAKHSTAN               RIDDER                     809   8111            :     72   72   72   72   72   72    0  432
+  36428 1 4912N 08431E KAZAKHSTAN               ULKEN NARYN                402   4032            :     72   72   72   72   71   72    0  431
+  36535 1 4845N 08222E KAZAKHSTAN               KOKPEKTY                   511   5117            :     70   70   70   72   69   70    0  421
+  36639 1 4707N 08137E KAZAKHSTAN               URDZHAR                    489   4906            :     72   72   72   72   72   72    0  432
+  36686 1 4633N 07652E KAZAKHSTAN               ALGAZY OSTROV              349   3470            :     48   48   48   47   48   48    0  287
+  36821 1 4400N 07600E KAZAKHSTAN               BAKANAS                    396   3960            :     24   24   24   24   24   24    0  144
+  36859 1 4410N 08004E KAZAKHSTAN               ZHARKENT                   643   6445            :     72   72   70   72   71   70    0  427
+  36864 1 4332N 07515E KAZAKHSTAN               OTAR                       742   7430            :     72   72   71   72   72   71    0  430
+  36870 1 4314N 07656E KAZAKHSTAN               ALMATY                     847   8507            :     72   72   68   72   70   69    0  423
+  37609 1 4100N 04354E ARMENIAN                 ASHOTSK                  -9999 -99999            :     21    0   20   20    0    0    0   61
+  37618 1 4107N 04417E ARMENIAN                 TASHIR                   -9999 -99999            :     21    0   21   21    0    0    0   63
+  37626 1 4118N 04448E ARMENIAN                 BAGRATASHEN              -9999 -99999            :     21   16   21   21    0    0    0   79
+  37627 1 4103N 04438E ARMENIAN                 ODZUN                    -9999 -99999            :     21    0   21   21    0    0    0   63
+  37682 1 4057N 04347E ARMENIA                  AMASIA                    1876  18782            :     69    0   66   69   57   57    0  318
+  37686 1 4047N 04350E ARMENIAN                 GYUMRI                   -9999 -99999            :     21    0   21   21    0    0    0   63
+  37689 1 4036N 04400E ARMENIAN                 ARTIK                    -9999 -99999            :     21    0   21   21    0    0    0   63
+  37690 1 4038N 04413E ARMENIAN                 TSAGHKAHOVIT             -9999 -99999            :     21    0   21   21    0    0    0   63
+  37693 1 4100N 04422E ARMENIAN                 STEPANAVAN               -9999 -99999            :     21    0   21   21    0    0    0   63
+  37694 1 4054N 04424E ARMENIAN                 PUSHKIN PASS             -9999 -99999            :     21    0   21   21    0    0    0   63
+  37698 1 4036N 04430E ARMENIAN                 ANQAVAN                  -9999 -99999            :     21    0   21   21    0    0    0   63
+  37699 1 4032N 04423E ARMENIAN                 APARAN                   -9999 -99999            :     21    0   21   21    0    0    0   63
+  37704 1 4049N 04430E ARMENIAN                 VANADZOR                 -9999 -99999            :     21    0   21   21    0    0    0   63
+  37706 1 4045N 04452E ARMENIAN                 DILIJAN                  -9999 -99999            :     21    0   21   21    0    0    0   63
+  37708 1 4042N 04454E ARMENIAN                 SEMYONOVKA               -9999 -99999            :     21    0   21   21    0    0    0   63
+  37711 1 4052N 04509E ARMENIAN                 IJEVAN                   -9999 -99999            :     21   19   21   21    0    0    0   82
+  37717 1 4034N 04501E ARMENIA                  SEVAN LAKE                1917  19143            :     69    0   69   69   72   72    0  351
+  37719 1 4036N 04521E ARMENIAN                 TCHAMBARAK               -9999 -99999            :     21    0   21   21    0    0    0   63
+  37772 1 4024N 04354E ARMENIAN                 TALIN                    -9999 -99999            :     21    0   21   21    0    0    0   63
+  37781 1 4028N 04411E ARMENIA                  ARAGAC H/M                3227  32292            :     69    0   69   69   72   72    0  351
+  37782 1 4024N 04418E ARMENIAN                 AMBERD                   -9999 -99999            :     21    0   21   21    0    0    0   63
+  37783 1 4011N 04424E ARMENIAN                 YEREVAN/AGRO             -9999 -99999            :     21   16   21    9    0    0    0   67
+  37785 1 4018N 04424E ARMENIAN                 ASHTARAK                 -9999 -99999            :     21    0   21   21    0    0    0   63
+  37786 1 4018N 04430E ARMENIAN                 EGVARD                   -9999 -99999            :     21    0   21   21    0    0    0   63
+  37787 1 4008N 04403E ARMENIAN                 ARMAVIR                  -9999 -99999            :     21   19   21   21    0    0    0   82
+  37789 1 4013N 04432E ARMENIA                  YEREVAN                   1113  11112            :     69    0   69   69   60   60    0  327
+  37791 1 4024N 04441E ARMENIAN                 FANTAN                   -9999 -99999            :     21    0   21   21    0    0    0   63
+  37792 1 4029N 04445E ARMENIAN                 HRAZDAN                  -9999 -99999            :     21    0   21   21    0    0    0   63
+  37801 1 4021N 04508E ARMENIAN                 GAVAR                    -9999 -99999            :     21    0   21   21    0    0    0   63
+  37802 1 4030N 04518E ARMENIAN                 SHORJA                   -9999 -99999            :     21    0   21   21    0    0    0   63
+  37808 1 4030N 04518E ARMENIAN                 MARTUNI                  -9999 -99999            :     21    0   21   21    0    0    0   63
+  37815 1 4012N 04545E ARMENIAN                 MASRIK                   -9999 -99999            :     21    0   21   21    0    0    0   63
+  37871 1 3956N 04431E ARMENIAN                 ARTASHAT                 -9999 -99999            :     21   19   21   21    0    0    0   82
+  37872 1 3954N 04454E ARMENIAN                 URTSADZOR                -9999 -99999            :     21    0   21   21    0    0    0   63
+  37873 1 4000N 04514E ARMENIAN                 YANIKH                   -9999 -99999            :     11    0   11   11    0    0    0   33
+  37874 1 3949N 04434E ARMENIAN                 ARARAT                   -9999 -99999            :     21   19   21   21    0    0    0   82
+  37875 1 3942N 04512E ARMENIAN                 ARENI                    -9999 -99999            :      0    0   21   21    0    0    0   42
+  37878 1 3948N 04500E ARMENIAN                 ANANUN PASS              -9999 -99999            :     21    0   21   21    0    0    0   63
+  37880 1 3942N 04542E ARMENIAN                 VORATAN PASS             -9999 -99999            :     21    0   21   21    0    0    0   63
+  37882 1 3950N 04540E ARMENIAN                 JERMUK                   -9999 -99999            :     21    0   21   21    0    0    0   63
+  37953 1 3931N 04621E ARMENIAN                 GORIS                    -9999 -99999            :      0    0   21   21    0    0    0   42
+  38001 1 4433N 05015E KAZAKHSTAN               FORT SHEVCHENKO            -25   -228            :     72   72   63   71   65   64    0  407
+  38062 1 4451N 06530E KAZAKHSTAN               KYZYLORDA                  120   1300            :     72   72   71   72   72   71    0  430
+  38069 1 4410N 06645E KAZAKHSTAN               CHIILI                     152   1532            :     70   70   72   66   72   72    0  422
+  38196 1 4333N 06854E KAZAKHSTAN               ACHISAY                    821   8196            :     69   69   72   71   72   72    0  425
+  38198 1 4316N 06813E KAZAKHSTAN               TURKESTAN                  206   2067            :     72   72   72   71   72   72    0  431
+  38222 1 4342N 07347E KAZAKHSTAN               TOLE BI                    455   4562            :     69   69   72   71   72   72    0  425
+  38232 1 4258N 05407E KAZAKHSTAN               AKKUDUK                     77    780            :     71   72   72   69   72   72    0  428
+  38328 1 4219N 06942E KAZAKHSTAN               SHYMKENT                   597   6044            :     70   70   71   71   72   71    0  425
+  38334 1 4229N 07018E KAZAKHSTAN               AUL TURARA RYSKULOVA       809 807490            :     70   70   71   71   72   71    0  425
+  38341 1 4251N 07123E KAZAKHSTAN               TARAZ                      650   6520            :     71   71   72   70   72   72    0  428
+  38343 1 4257N 07245E KAZAKHSTAN               KULAN                      700   7001            :     69   69   72   72   72   72    0  426
+  38439 1 4122N 06800E KAZAKHSTAN               CHARDARA                   271   2749            :     72   72   71   68   72   71    0  426
+  40179 1 3200N 03448E ISRAEL                   BETDAGAN                    31 -99999            :     36   36   36   36   36   36    0  216
+  40184 1 3146N 03513E ISRAEL                   JERUSALEMCENTRE            810 -99999            :     36    0   36   36   36   36    0  180
+  40199 1 2933N 03457E ISRAEL                   ELAT                        22 -99999            :     36   36   36   36   36   36    0  216
+  40250 1 3230N 03812E JORDAN                   RWAISHED (H4)              683   6830            :     72   72   72   72   72   72   72  504
+  40255 1 3232N 03551E JORDAN                   IRBED                      616   6160            :     71   71   71   72   71   71   71  498
+  40260 1 3210N 03709E JORDAN                   SAFAWI (H5)                674   6740            :     72   72   72   72   72   72   72  504
+  40265 1 3221N 03615E JORDAN                   MAFRAQ                     686   6860            :     72   72   72   72   72   72   72  504
+  40270 1 3158N 03559E JORDAN                   AMMAN AIRPORT              781   7810            :     72   71   72   72   72   72   72  503
+  40272 1 3144N 03559E JORDAN                   Q.A.I.AIRPORT              722   7220            :     72   72   72   72   72   72   72  504
+  40288 1 3150N 03647E JORDAN                   AZRAQ SOUTH                521   5210            :     72   72   72   72   72   72   72  504
+  40305 1 3021N 03609E JORDAN                   AL JAFER                   865   8650            :     72   71   72   72   72   72   72  503
+  40340 1 2936N 03501E JORDAN                   KING HUSSIEN INTERNATION    55    550            :     72   72   72   72   72   72   72  504

@@ -1,0 +1,200 @@
+        R                                                                                             Total No. Monthly Obs by Element |     
+        e                                                                Statn  Barom  Local         Mean Mean Mean      Mean Mean Mean|Totl 
+        c                                                                 Elev   Elev  Statn     :    Stn Slvl  Dly Totl  Max  Min     |  #  
+  Wmo#  #  Lat   Lon   Country Name             Station Name               (m)  (.1m)    #       :   Pres Pres Temp Prec Temp Temp   RH| Obs 
+ 
+  60001 1 2749N 01753W SPAIN                    HIERRO/AEROPUERTO           32    320            :     59   58   60   60   60   60   58  415
+  60005 1 2838N 01745W SPAIN                    LA PALMA/AEROPUERTO         33    310            :     60   60   60   58   60   60   60  418
+  60007 1 2802N 01713W SPAIN                    LA GOMERA/AEROPUERTO       219   2250            :     60   60   60   60   60   60   60  420
+  60010 1 2819N 01630W SPAIN                    IZA�A                     2371  23680            :     60   60   60   60   60   60   60  420
+  60015 1 2829N 01620W SPAIN                    TENERIFE/LOS RODEOS        632   6170            :     60   60   60   60   60   60   60  420
+  60018 1 2819N 01623W SPAIN                    TENERIFE-G�IMAR            105   1050            :      0    0   36   36   36   36    0  144
+  60020 1 2828N 01615W SPAIN                    STA.CRUZ DE TENERIFE        35    360            :     60   60   60   60   60   60   60  420
+  60025 1 2803N 01634W SPAIN                    TENERIFE/SUR                64    770            :     60   60   60   60   60   60   60  420
+  60030 1 2755N 01523W SPAIN                    GRAN CANARIA/AEROPUERTO     24    470            :     60   60   60   60   60   60   60  420
+  60033 1 2710N 01313W MOROCCO                  LAAYOUNE                    64 -99999            :      0    0   48   48   48   48   48  240
+  60035 1 2827N 01352W SPAIN                    FUERTEVENTURA/AEROPUERTO    25    300            :     59   59   59   59   59   59   59  413
+  60040 1 2857N 01336W SPAIN                    LANZAROTE/AEROPUERTO        14    210            :     60   60   60   60   60   60   60  420
+  60060 1 2922N 01011W MOROCCO                  SIDI IFNI                   50 -99999            :      0    0   24   24   24   24    0   96
+  60100 1 3547N 00548W MOROCCO                  TANGER-PORT                 15 -99999            :      0    0   72   72   72   72   47  335
+  60101 1 3543N 00554W MOROCCO                  TANGER-AERO                 15 -99999            :      0    0   72   72   72   72   47  335
+  60105 1 3511N 00608W MOROCCO                  LARACHE                     47 -99999            :      0    0   24   24   24   24    0   96
+  60106 1 3505N 00518W MOROCCO                  CHEFCHAOUEN                300 -99999            :      0    0   24   24   24   24    0   96
+  60107 1 3511N 00351W MOROCCO                  AL-HOUCEIMA                 12 -99999            :      0    0   70   72   70   71   48  331
+  60115 1 3447N 00156W MOROCCO                  OUJDA                      465 -99999            :      0    0   72   72   72   72   48  336
+  60120 1 3418N 00636W MOROCCO                  KENITRA                      5 -99999            :      0    0   71   72   71   72   48  334
+  60127 1 3413N 00400W MOROCCO                  TAZA                       509 -99999            :      0    0   72   72   72   72   47  335
+  60128 1 3423N 00254W MOROCCO                  TAOURIRT                   415 -99999            :      0    0    0   24    0    0    0   24
+  60135 1 3403N 00646W MOROCCO                  RABAT-SALE                  75 -99999            :      0    0   24   24   24   24    0   96
+  60136 1 3414N 00603W MOROCCO                  SIDI SLIMANE                52 -99999            :      0    0   24   24   24   24    0   96
+  60141 1 3356N 00459W MOROCCO                  FES-SAIS                   571 -99999            :      0    0   72   71   71   71   48  333
+  60146 1 3343N 00724W MOROCCO                  MOHAMMEDIA                   4 -99999            :      0    0   24   24   24   24    0   96
+  60150 1 3353N 00532W MOROCCO                  MEKNES                     548 -99999            :      0    0   23   24   24   23    0   94
+  60155 1 3334N 00740W MOROCCO                  CASABLANCA-ANFA             56 -99999            :      0    0   72   72   72   72   47  335
+  60156 1 3322N 00734W MOROCCO                  NOUASSEUR                  200 -99999            :      0    0   24   24   22   22    0   92
+  60160 1 3330N 00510W MOROCCO                  IFRANE                    1663 -99999            :      0    0   24   24   24   24    0   96
+  60165 1 3314N 00831W MOROCCO                  ELJADIDA                    27 -99999            :      0    0   24   24   24   24    0   96
+  60177 1 3257N 00737W MOROCCO                  SETTAT                     407 -99999            :      0    0   24   24   24   24    0   96
+  60178 1 3252N 00658W MOROCCO                  KHOURIBGA                  770 -99999            :      0    0   24   24   24   24    0   96
+  60185 1 3217N 00914W MOROCCO                  SAFI                        43 -99999            :      0    0   72   72   72   72   47  335
+  60190 1 3252N 00616W MOROCCO                  KASBA TADLA                507 -99999            :      0    0   24   24   24   24    0   96
+  60191 1 3222N 00624W MOROCCO                  BENI MELLAL                468 -99999            :      0    0   24   24   24   24    0   96
+  60195 1 3241N 00444W MOROCCO                  MIDELT                    1508 -99999            :      0    0   72   72   72   72   48  336
+  60200 1 3234N 00157W MOROCCO                  BOUARFA                   1142 -99999            :      0    0   24   24   24   24    0   96
+  60210 1 3156N 00424W MOROCCO                  ERRACHIDIA                1037 -99999            :      0    0   69   69   72   72   36  318
+  60220 1 3131N 00947W MOROCCO                  ESSAOUIRA                    7 -99999            :      0    0   69   72   72   72   36  321
+  60230 1 3137N 00802W MOROCCO                  MARRAKECH                  464 -99999            :      0    0   69   72   72   72   36  321
+  60250 1 3023N 00934W MOROCCO                  AGADIR INEZGANNE            23 -99999            :      0    0   69   72   72   72   36  321
+  60252 1 3019N 00924W MOROCCO                  AGADIR AL MASSIRA           74 -99999            :      0    0   24   24   24   24    0   96
+  60253 1 3030N 00849W MOROCCO                  TAROUDANT                  264 -99999            :      0    0   24   24   24   24    0   96
+  60265 1 3056N 00654W MOROCCO                  OUARZAZATE                1136 -99999            :      0    0   72   72   72   72   48  336
+  60270 1 2941N 00944W MOROCCO                  TIZNIT                     260 -99999            :      0    0   24   24   24   24    0   96
+  60280 1 2901N 01003W MOROCCO                  GUELMIM                    300 -99999            :      0    0   24   24   24   24    0   96
+  60285 1 2810N 01056W MOROCCO                  TAN-TAN                     45 -99999            :      0    0   24   24   24   24    0   96
+  60318 1 3535N 00520W MOROCCO                  TETOUAN                      5 -99999            :      0    0   24   24   24   24    0   96
+  60320 1 3553N 00521W SPAIN                    CEUTA                       87    880            :     60   59   60   59   60   60   59  417
+  60335 1 2640N 01140W MOROCCO                  SMARA                      110 -99999            :      0    0   24   24   24   24    0   96
+  60338 1 3517N 00257W SPAIN                    MELILLA                     52    550            :     60   60   60   60   60   60   60  420
+  60340 1 3459N 00301W MOROCCO                  NADOR-AROUI                178 -99999            :      0    0   24   24   24   24    0   96
+  60355 1 3653N 00656E ALGERIA                  SKIKDA                       2     50            :     60   60   60   60   60   60    0  360
+  60360 1 3650N 00748E ALGERIA                  ANNABA                       7     80            :     60   60   60   60   60   60    0  360
+  60390 1 3641N 00313E ALGERIA                  DAR EL BEIDA                25    290            :     60   60   60   60   60   60    0  360
+  60402 1 3643N 00504E ALGERIA                  BEJAIA                       2     70            :     60   60   60   60   60   60    0  360
+  60419 1 3616N 00637E ALGERIA                  CONSTANTINE                685   6916            :     60   60   60   60   60   60    0  360
+  60425 1 3613N 00119E ALGERIA                  CHLEF                      159   1630            :     60   60   60   60   60   60    0  360
+  60430 1 3618N 00214E ALGERIA                  MILIANA                    715   7210            :     60   60   60   60   60   60    0  360
+  60468 1 3545N 00619E ALGERIA                  BATNA                      822   8260            :     60    0   60   60   60   60    0  300
+  60475 1 3528N 00807E ALGERIA                  TEBESSA                    813   8200            :     60    0   60   60   60   60    0  300
+  60490 1 3538N 00036W ALGERIA                  ORAN ES SENIA               90    910            :     60   60   60   60   60   60    0  360
+  60511 1 3521N 00128E ALGERIA                  TIARET                     977   9780            :     60    0   60   60   60   60    0  300
+  60525 1 3448N 00544E ALGERIA                  BISKRA                      82    890            :     60   60   60   60   60   60    0  360
+  60531 1 3501N 00128W ALGERIA                  TLEMCEN ZENATA             246   2469            :     60   60   60   60   60   60    0  360
+  60535 1 3420N 00323E ALGERIA                  DJELFA                    1180  11850            :     60    0   60   60   60   60    0  300
+  60550 1 3340N 00100E ALGERIA                  EL BAYADH                 1341  13470            :     60    0   60   60   60   60    0  300
+  60559 1 3330N 00647E ALGERIA                  EL OUED                     63    687            :     60   60   60   60   60   60    0  360
+  60566 1 3224N 00348E ALGERIA                  GHARDAIA                   466   4707            :     60   60   60   60   60   60    0  360
+  60571 1 3138N 00215W ALGERIA                  BECHAR                     807   8163            :     60    0   60   60   60   60    0  300
+  60581 1 3140N 00609E ALGERIA                  HASSI MESSAOUD             140   1460            :     60   60   60   60   60   60    0  360
+  60590 1 3034N 00252E ALGERIA                  EL GOLEA                   397   4030            :     49   49   49   49   49   49    0  294
+  60602 1 3008N 00210W ALGERIA                  BENI ABBES                 499   5046            :     60   60   60   60   60   60    0  360
+  60607 1 2915N 00017E ALGERIA                  TIMIMOUN                   312   3170            :     60   60   60   60   60   60    0  360
+  60611 1 2803N 00938E ALGERIA                  IN AMENAS                  561   5620            :     60   60   60   60   44   60    0  344
+  60620 1 2749N 00011W ALGERIA                  ADRAR                      279   2835            :     60   60   60   60   60   60    0  360
+  60630 1 2714N 00230E ALGERIA                  IN SALAH                   268   2690            :     60   60   60   60   60   60    0  360
+  61017 1 1825N 01233E NIGER                    BILMA                      355   3568            :     24   24   24   24   23   23    0  142
+  61024 1 1635N 00735E NIGER                    AGADEZ AERO                501   5024            :     18   18   19   24   19   19    0  117
+  61036 1 1407N 00116E NIGER                    TILLABERY                  209   2110            :     22   24   24   24   24   24    0  142
+  61043 1 1432N 00509E NIGER                    TAHOUA AERO                390   3909            :     23   23   24   24   23   24    0  141
+  61045 1 1335N 01011E NIGER                    GOURE                      431   4408            :     23   24   24   24   24   24    0  143
+  61049 1 1408N 01304E NIGER                    N'GUIGMI                   286   2865            :     23   23   24   24   24   24    0  142
+  61052 1 1317N 00206E NIGER                    NIAMEY AERO                222   2230            :     24   24   24   24   24   24    0  144
+  61075 1 1329N 00510E NIGER                    BIRNI N'KONNI              272   2726            :     24   24   24   24    0   24    0  120
+  61080 1 1317N 00703E NIGER                    MARADI AERO                272   2725            :     24   24   24   24   24   24    0  144
+  61090 1 1328N 00835E NIGER                    ZINDER AERO                452   4531            :     24   23   24   24   24   24    0  143
+  61091 1 1235N 00834E NIGER                    MAGARIA                    402   4032            :     24   24   24   24   24   24    0  144
+  61096 1 1308N 01135E NIGER                    MAINE SOROA                337   3380            :     22   23   24   24   23   23    0  139
+  61099 1 1132N 00316E NIGER                    GAYA                       202   2036            :      0    0   23   24   23   24    0   94
+  61202 1 2012N 00059E MALI                     TéSSALIT                -9999 -99999            :      0   10    0   10    0   10    0   30
+  61223 1 1643N 00300W MALI                     TOMBOUCTOU               -9999 -99999            :      0    0   14    0    0   14    0   28
+  61226 1 1616N 00003W MALI                     GAO                      -9999 -99999            :      0    0    0    8    0    0    0    8
+  61230 1 1514N 00935W MALI                     NIORO DU SAHEL           -9999 -99999            :      0    0   71    0   71   71    0  213
+  61233 1 1510N 00717W MALI                     MOPTI                    -9999 -99999            :      0    0   47    0   61   48    0  156
+  61235 1 1505N 01035W MALI                     YéLIMANé               -9999 -99999            :      0    0   69    0   70   71    0  210
+  61240 1 1517N 00142W MALI                     HOMBORI                  -9999 -99999            :      0   13    0   13   13   13    0   52
+  61257 1 1426N 01126W MALI                     KAYES                    -9999 -99999            :      0   68   67   69   67   68    0  339
+  61265 1 1431N 00406W MALI                     MOPTI                    -9999 -99999            :      0    0   70    0   69   70    0  209
+  61270 1 1304N 00928W MALI                     KITA                     -9999 -99999            :      0   41   67   72   68   68    0  316
+  61272 1 1324N 00609W MALI                     SEGOU                    -9999 -99999            :      0   50   70   72   71   70    0  333
+  61277 1 1317N 00454W MALI                     SAN                      -9999 -99999            :      0    0   70    0   24   70    0  164
+  61285 1 1251N 01114W MALI                     KéNIEBA                 -9999 -99999            :      0   72   71   72   72   72    0  359
+  61291 1 1232N 00756W MALI                     BAMAKO SENO              -9999 -99999            :      0   67   67   71   71   72    0  348
+  61293 1 1223N 00528W MALI                     KOUTIALA                 -9999 -99999            :      0    0   69   72   70   69    0  280
+  61296 1 1125N 00730W MALI                     BOUGOUNI                 -9999 -99999            :      0    0   72    0   72   72    0  216
+  61297 1 1121N 00541W MALI                     SIKASSO                  -9999 -99999            :      0   54   69   71   69   70    0  333
+  61701 1 1321N 01638W GAMBIA                   YUNDUM                      33 -99999            :      0    0   72   72   72   72   72  360
+  61705 1 1313N 01612W GAMBIA                   SIBANOR                     21 -99999            :      0    0   67   68   67   68   70  340
+  61707 1 1328N 01534W GAMBIA                   JENOI                       20 -99999            :      0    0   66   72   71   68   71  348
+  61711 1 1327N 01646W GAMBIA                   BANJUL                       2 -99999            :      0    0   66   71   67   66   68  338
+  61712 1 1330N 01606W GAMBIA                   KEREWAN                     15 -99999            :      0    0   54   72   67   39   72  304
+  61717 1 1343N 01515W GAMBIA                   KAUR                        11 -99999            :      0    0   71   72   71   72   71  357
+  61721 1 1332N 01446W GAMBIA                   GEORGETOWN                   1 -99999            :      0    0   59   72   58   72   72  333
+  61722 1 1333N 01556W GAMBIA                   SAPU                         3 -99999            :      0    0   66   72   66   67   72  343
+  61731 1 1319N 01413W GAMBIA                   BASSE                        4 -99999            :      0    0   72   72   72   72   72  360
+  61733 1 1324N 01428W GAMBIA                   FATOTO                      18 -99999            :      0    0   72   72   72   72   72  360
+  61901 1 1556S 00540W OCEAN ISLANDS            ST. HELENA ISLAND          436   4360            :      0   65   67   65    0    0    0  197
+  61902 1 0758S 01424W OCEAN ISLANDS            WIDE AWAKE FIELD (AS        79    790            :      0   42   42   42    0    0    0  126
+  61968 1 1134S 04717E FRANCE                   GLORIEUSES                   3     40            :      0   70   70   39   70   70   70  389
+  61970 1 1703S 04242E FRANCE                   JUAN DE NOVA                 9    100            :      0   50   52   27   52   52   52  285
+  61972 1 2220S 04020E FRANCE                   EUROPA                       6     60            :      0   71   71   38   71   71   71  393
+  61974 1 1022S 05636E MAURITIUS                AGALEGA                      3     50            :     24   24   24   24   24   24   24  168
+  61976 1 1553S 05431E FRANCE                   TROMELIN                     7     80            :      0   69   69   54   65   65   68  390
+  61980 1 2053S 05531E FRANCE                   GILLOT-AEROPORT              8    130            :      0   72   72   72   72   72   72  432
+  61986 1 1627S 05936E MAURITIUS                ST BRANDON                   4     60            :     24   24   24   24   24   24   24  168
+  61988 1 1941S 06325E MAURITIUS                POINTE CANON                60    620            :     24   24   24   24   24   24   24  168
+  61989 1 1945S 06322E MAURITIUS                PLAINE CORAIL               33    350            :     24   24   24   24   24   24   24  168
+  61990 1 2026S 05741E MAURITIUS                PLAISANCE                   50    520            :     24   24   24   24   24   24   24  168
+  61995 1 2017S 05712E MAURITIUS                VACOAS                     425   4270            :     24    0   24   24   24   24   24  144
+  61996 1 3747S 07734E FRANCE                   NOUVELLE AMSTERDAM          27    290            :      0   72   72   72   72   72   70  430
+  61997 1 4625S 05151E FRANCE                   CROZET                     146   1460            :      0   72   72   72   72   72   71  431
+  61998 1 4921S 07014E FRANCE                   KERGUELEN                   29    300            :      0   72   72   72   72   72   72  432
+  62306 1 3137N 02713E EGYPT                    MERSA MATRUH                27 -99999            :     36   36   36   36   36   36   36  252
+  62318 1 3113N 02957E EGYPT                    ALEXANDRIA/NOUZHA            2 -99999            :     36   36   36   36   36   36   36  252
+  62337 1 3102N 03348E EGYPT                    EL ARISH (A.P.)             31 -99999            :     36   36   36   36   36   36   36  252
+  62378 1 2943N 03121E EGYPT                    HELWAN                      27 -99999            :     34   36   36   36   36   36   36  250
+  62387 1 2805N 03044E EGYPT                    MINYA                       38 -99999            :     36   36   36   36   36   36   36  252
+  62403 1 2611N 03244E EGYPT                    SOUTH OF WADI               78 -99999            :     36   36   36   36   36   36   36  252
+  62414 1 2358N 03247E EGYPT                    ASSWAN                     200 -99999            :     16   36   36   36   36   36   36  232
+  62417 1 2933N 02536E EGYPT                    SIWA                       133 -99999            :     36   36   36   36   36   36   36  252
+  62420 1 2820N 02854E EGYPT                    BAHARIA                    127 -99999            :     36   36   36   36   36   36   36  252
+  62432 1 2527N 02858E EGYPT                    DAKHLA                      54 -99999            :     36   36   36   36   36   36   36  252
+  62435 1 2527N 03032E EGYPT                    KHARGA (AGM)                78 -99999            :     36   36   36   36   36   36   36  252
+  62453 1 3056N 03346E EGYPT                    ELHASNA                    126 -99999            :      9   36   36   36   36   36   36  225
+  62463 1 2711N 03348E EGYPT                    HURGHADA (A.P.)              8 -99999            :     36   36   36   36   36   36   36  252
+  62476 1 2308N 03535E EGYPT                    SHALATEEN                   19 -99999            :     36   36   36   36   36   36   36  252
+  63784 1 0339S 03325E TANZANIA                 SHINYANGA                 1000 -99999            :      0    0    0   36   36   36    0  108
+  63789 1 0320S 03637E TANZANIA                 ARUSHA                    1387 -99999            :      0    0    0   36   33   33    0  102
+  63790 1 0321S 03720E TANZANIA                 MOSHI                      813 -99999            :      0    0    0   36   31   31    0   98
+  63791 1 0325S 03704E TANZANIA                 KILIMANJARO (KIA)          890 -99999            :      0    0    0   36   36   36    0  108
+  63801 1 0453S 02938E TANZANIA                 KIGOMA                     819 -99999            :      0    0    0   35   36   36    0  107
+  63810 1 0448S 03443E TANZANIA                 SINGIDA                   1529 -99999            :      0    0    0   36   36   36    0  108
+  63816 1 0405S 03744E TANZANIA                 SAME                       860 -99999            :      0    0    0   33   35   34    0  102
+  63832 1 0505S 03250E TANZANIA                 TABORA                    1182 -99999            :      0    0    0   36   36   35    0  107
+  63840 1 0526S 03802E TANZANIA                 HANDENI                    756 -99999            :      0    0    0   36   35   35    0  106
+  63887 1 0738S 03546E TANZANIA                 IRINGA                    1428 -99999            :      0    0    0   34   35   35    0  104
+  63894 1 0652S 03912E TANZANIA                 DAR ES SALAAM (JNIA)        53 -99999            :      0    0    0   36   36   36    0  108
+  63932 1 0856S 03328E TANZANIA                 MBEYA                     1758 -99999            :      0    0    0   33   34   34    0  101
+  63936 1 0840S 03643E TANZANIA                 MAHENGE                   1097 -99999            :      0    0    0   36   36   36    0  108
+  63962 1 1041S 03535E TANZANIA                 SONGEA                    1067 -99999            :      0    0    0    0   35   30    0   65
+  63971 1 1016S 04011E TANZANIA                 MTWARA                     113 -99999            :      0    0    0   36   31   31    0   98
+  63980 1 0424S 05519E SEYCHELLES               SEYCHELLES INTERNATIONAL     3      4            :     72   72   72   72   72   72   72  504
+  64108 1 0318S 01721E CONGO                    BANDUNDU                   324 -99999            :     24    0    0   24   24   24    0   96
+  64204 1 0551S 01306E CONGO                    BOMA                         8 -99999            :      8    0    0   12   13   13    0   46
+  64206 1 0540S 01339E CONGO                    INGA                       300 -99999            :      0    0    0    2   14    7    0   23
+  64207 1 0548S 01328E CONGO                    MATADI                     340 -99999            :     13    0    0   15   18   30    0   76
+  64210 1 0423S 01526E CONGO                    KINSHASA - NDJILI          311 -99999            :     40    0    0   47   47   40    0  174
+  64211 1 0419S 01518E CONGO                    KINSHASA - NDOLO           279 -99999            :      0    0    0    6    3    3    0   12
+  64220 1 0422S 01515E CONGO                    KINSHASA - BINZA           445 -99999            :      0    0    0   48   48   48    0  144
+  64222 1 0502S 01848E CONGO                    KIKWIT                     449 -99999            :      0    0    0   12    0    0    0   12
+  64235 1 0553S 02225E CONGO                    KANANGA                    657 -99999            :      0    0    0    0    0    0    0    0
+  64360 1 1140S 02729E CONGO                    LUBUMBASHI                1298 -99999            :     10    0    0   22   22   21    0   75
+  64400 1 0449S 01154E CONGO                    POINTE-NOIRE                16   1700            :     22   22   22   22   22   22    0  132
+  64401 1 0412S 01242E CONGO                    DOLISIE                    330   3310            :     23   22   23   23   23   23    0  137
+  64402 1 0400S 01357E CONGO                    MUOYONOZI                  512   5130            :      0    0    0   24    0   22    0   46
+  64450 1 0415S 01515E CONGO                    BRAZZAVILLE                313   3149            :     24   24   24   24   24   24    0  144
+  64452 1 0237S 01613E CONGO                    MPOUYA                     312   3130            :      0    0    0   22   22   22    0   66
+  64453 1 0232S 01441E CONGO                    DJAMBALA                   789   7900            :      0    0   24   24   24   24    0   96
+  64454 1 0154S 01551E CONGO                    GAMBOMA                    376   3770            :     24    0   24   24   23   13    0  108
+  64456 1 0001S 01535E CONGO                    MAKOUA                     379   3800            :      0    0    0   20    9    0    0   29
+  64458 1 0137N 01603E CONGO                    OUESSO                     351   3520            :     19   19   20   20   20    0    0   98
+  64459 1 0135N 01803E CONGO                    IMPFONDO                   326   3270            :     24   24   24    0   16    9    0   97
+  64650 1 0424N 01831E CENTRAL AFRICAN REPUBLIC BANGUI M'POKO              365   3660            :     72    0   72   72   71   72    0  359
+  65501 1 1402N 00002W BURKINA FASO             DORI                       276   2773            :     72   72   72   72   72   72   72  504
+  65502 1 1335N 00226W BURKINA FASO             OUAHIGOUYA                 335   3350            :     72   68   72   72   72   72   72  500
+  65503 1 1221N 00131W BURKINA FASO             OUAGADOUGOU AERO           303   3055            :     72   72   72   72   72   72   72  504
+  65505 1 1228N 00329W BURKINA FASO             DEDOUGOU                   299   3000            :     71   72   72   72   72   72   72  503
+  65507 1 1204N 00021E BURKINA FASO             FADA N'GOURMA              308   3093            :     72   72   72   72   72   72   72  504
+  65510 1 1110N 00418W BURKINA FASO             BOBO-DIOULASSO             459   4604            :     72   72   72   72   72   72   72  504
+  65516 1 1144N 00255W BURKINA FASO             BOROMO                     270   2711            :     72   72   72   72   72   72   72  504
+  65518 1 1110N 00109W BURKINA FASO             PO                         321   3224            :     72   72   72   72   72   72   72  504
+  65522 1 1020N 00311W BURKINA FASO             GAOUA                      292   2927            :     72   72   72   72   72   72   72  504
+  67005 1 1248S 04516E FRANCE                   PAMANDZI                     7     70            :      0   72   72   72   72   72   72  432

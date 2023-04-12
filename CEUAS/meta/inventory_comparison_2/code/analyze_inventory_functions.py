@@ -137,8 +137,15 @@ class Analyze():
         self.wigos = { 'IGRA2'    :'0-20300-0-',
                        'CHUAN'    :'0-20400-0-',                       
                        'WBAN'     :'0-20500-0-',
+                       
 	               'SCHROEDER':'0-20600-0-',
+                       
 	               'WMO'      :'0-20700-0-',
+                       
+                       'AMMA' : '0-20800-0-',
+                       'GIUB' : '0-20900-0-' ,
+                       
+                       'HARA' : '0-20111-0-' ,
         }
         
         self.best_match = ''
@@ -219,7 +226,10 @@ class Analyze():
         
         # skimming the inventory with close by stations only, to avoid useless calculation of distances
         df = self.inv
-        red_inv = df.loc [  (abs(df['latitude'] - self.data.lats[-1]) < 2 ) & (abs(df['longitude'] - self.data.lons[-1]) < 2) ] 
+        df['latitude'] = df['latitude'].astype(float)
+        df['longitude'] = df['longitude'].astype(float)
+        
+        red_inv = df.loc [  (abs(df['latitude']- self.data.lats[-1]) < 2 ) & (abs(df['longitude'] - self.data.lons[-1]) < 2) ] 
         
         # i.e. at least one station found whihc si reasonably close
         if len(red_inv) >0:
@@ -270,7 +280,7 @@ class Analyze():
         
         print("*** Find MatchingId ***")
         
-        if self.inv.name in ['CHUAN', 'WBAN', 'SCHROEDER', 'WMO']:
+        if self.inv.name in ['CHUAN', 'WBAN', 'SCHROEDER', 'WMO', 'AMMA', 'GIUB', "HARA"]:
             stats = 'WMO_id'
      
         else:
@@ -396,10 +406,11 @@ class Data():
          - BUFR 
          """
     
-    def __init__(self, dataset='', utils = ''):
+    def __init__(self, dataset='', utils = '', inv=''):
         
         self.dataset = dataset
         self.utils = utils 
+        self.inventory=inv
         """
         self.datasets = { 'era5_1': '/mnt/users/scratch/leo/scratch/era5/odbs/1' ,
                                    'era5_2': '/mnt/users/scratch/leo/scratch/era5/odbs/2',
@@ -491,8 +502,10 @@ class Data():
 
         f = 'temp_data/' + self.dataset + '/' + self.file.split('/')[-1] + '.csv'
         
+        # NB DOES NOT WORK WELL WITH HARA, REDO TEMP FILES !!! 
+        
         if os.path.isfile( f ):         # read file if csv already exists in temp_data directory 
-            df = pd.read_csv(f,  sep='\t', converters={'statid': str}  )
+            df = pd.read_csv(f,  sep='\t', converters={'statid': str}  ).astype('str')
             
             stat_id =  df['statid'].astype('str')
             
@@ -505,21 +518,40 @@ class Data():
                 stat_id = [stat_id]
                 
             self.statid = stat_id
-                
-            if type(eval(df['lats'].astype('str').values[0])) == list:
-                self.lats = eval(df['lats'].astype('str').values[0]) 
-                self.lons = eval(df['lons'].astype('str').values[0]) 
+            
+            """
+            # fixing weird lats, lons values with point without digit 
+            Lats, Lons =[],[]
+            for lat,lon in zip( df['lats'].values, df['lons'].values ) :
+                try:
+                    l = float(lat)
+                except:
+                    lat = float(str(lat).replace('.','.0') )
+                try:
+                    a = float(lo)
+                except:
+                    lon = float(str(lon).replace('.','.0') )                    
+                Lats.append(lat)
+                Lons.append(lon)
+            df['lats'] = Lats
+            df['lons'] = Lons 
+            """
+            
+            
+            if type(eval(df['lats'].values[0])) == list:
+                self.lats = eval(df['lats'].values[0]) 
+                self.lons = eval(df['lons'].values[0]) 
             else:
-                self.lats = [eval(df['lats'].astype('str').values[0]) ]   
-                self.lons = [eval(df['lons'].astype('str').values[0]) ]
+                self.lats = [eval(df['lats'].values[0]) ]   
+                self.lons = [eval(df['lons'].values[0]) ]
                 
             if 'lats_all' in df.columns:
-                if type(eval(df['lats_all'].astype('str').values[0])) == list:
-                        self.lats_all = eval(df['lats_all'].astype('str').values[0]) 
-                        self.lons_all = eval(df['lons_all'].astype('str').values[0]) 
+                if type(eval(df['lats_all'].values[0])) == list:
+                        self.lats_all = eval(df['lats_all'].values[0]) 
+                        self.lons_all = eval(df['lons_all'].values[0]) 
                 else:
-                        self.lats_all = [eval(df['lats_all'].astype('str').values[0]) ]   
-                        self.lons_all = [eval(df['lons_all'].astype('str').values[0]) ]
+                        self.lats_all = [eval(df['lats_all'].values[0]) ]   
+                        self.lons_all = [eval(df['lons_all'].values[0]) ]
                     
                     
             if self.file.split("/")[-1] in self.test_era5_1759_lat_mismatch_all:
@@ -541,10 +573,19 @@ class Data():
                 self.read_odb()
             elif 'ncar' in self.dataset:
                 self.read_ncar()
-            elif 'bufr' in self.dataset or 'amma' in self.dataset:
+            elif 'bufr' in self.dataset :
                 self.read_bufr()
+            elif 'amma' in self.dataset:
+                self.read_amma()
+            elif 'giub' in self.dataset:
+                self.read_giub()
             elif 'igra2' in self.dataset:
                 self.read_igra2()
+            elif 'hara' in self.dataset:
+                self.read_hara()
+            elif 'npsound' in self.dataset:
+                self.read_npsound()
+                
         
     def read_odb(self):
         """ Extract data from a single ODB file 
@@ -622,7 +663,6 @@ class Data():
             
             frac = sum(compatible_coord['size'].values) / sum(grouped['size'].values )
 
-            frac = len(compatible_coord) / len(lats_all)
             if frac >= 0.99:
                 self.consistent_coord = True
                 pass
@@ -765,6 +805,213 @@ class Data():
             else:
                 self.consistent_coord = False
 
+    def read_giub(self):
+                
+        lines = open(self.file,'r').readlines()
+        dates = [l.split('\t')[1] for l in lines if 'date' not in l]
+        dates = np.unique(dates)        
+        
+        # must grab the lat and lon from the inventory file CHUAN 
+        statid = self.file.split('/')[-1].split('.txt')[0]
+        if 'A' in statid or 'B' in statid:
+            statid = statid.replace('A','').replace('B','')
+            
+        statIds = [  statid ]
+        
+        chuan = self.inventory.inv['chuan'].astype(str)
+        loc = chuan.loc[chuan.station_id == statid ]
+        lats = [float(loc.latitude.values[0])]
+        lons = [float(loc.longitude.values[0])]
+
+    
+        dic = { 'max_date': max(dates), 
+                 'min_date': min(dates), 
+                 'statid': str(statIds), # needed in case multiple ids 
+                 'lats': [lats], 
+                 'lons': [lons], 
+
+                 'lats_all': [lats], 
+                 'lons_all': [lons], 
+                 
+                 'file': self.file.split('/')[-1] , 
+                 'file_path': self.file , 
+                 'db': self.dataset,
+                 'variables': str( ['126','137','106','107','137', '138', '139', '140', '117'] ),
+                 'frequency': [1],
+                 'consistent_coord': 'True' }
+        
+        # set consistent_coord 
+        self.consistent_coord = True
+        
+        pd.DataFrame(dic).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        self.statid = statIds
+        self.lats = lats
+        self.lons = lons 
+        self.min_date = min(dates)
+        self.max_date = max(dates)
+        self.variables = dic['variables']
+        return 0    
+            
+        
+        
+    def read_amma(self):
+        """ Reading AMMA station files writeen into csv station files """
+        
+        amma_file = self.file 
+        
+        # reading data via csv 
+        data =pd.read_csv(self.file, sep='\t')
+        dates = np.unique(data.typicalDate)        
+        lats = np.unique(data.latitude.values)
+        lons = np.unique(data.longitude.values)
+        
+        
+        df = pd.DataFrame( {'lat': lats , 'lon' : lons } )
+        df = df.drop_duplicates().reset_index(drop=True) 
+         
+        statIds = [ np.unique(data.statid.values)[0]  ]
+          
+        lats, lons = list(df.lat.values), list(df.lon.values)
+        a = self.check_consistent_coords(lats, lons)
+    
+        dic = { 'max_date': max(dates), 
+                 'min_date': min(dates), 
+                 'statid': str(statIds), # needed in case multiple ids 
+                 'lats': [lats], 
+                 'lons': [lons], 
+
+                 'lats_all': [lats], 
+                 'lons_all': [lons], 
+                 
+                 'file': self.file.split('/')[-1] , 
+                 'file_path': self.file , 
+                 'db': self.dataset,
+                 'variables': str( ['126','137','106','107','117'] ),
+                 'frequency': self.frequency,
+                 'consistent_coord': str(self.consistent_coord) }
+
+        
+        pd.DataFrame(dic).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        self.statid = statIds
+        self.lats = lats
+        self.lons = lons 
+        self.min_date = min(dates)
+        self.max_date = max(dates)
+        self.variables = dic['variables']
+        return 0    
+    
+    
+    
+    def read_hara(self):
+        """ Reading HARA station files written into csv station files """
+        
+        hara_file = self.file 
+        
+        # reading data via csv 
+        data =pd.read_csv(self.file, sep='\t')
+        dates = np.unique(data.date_time)     
+        dates = [ ''.join(f.split('_')) for f in dates ]
+        lats = data.lat.values
+        lons = data.lon.values
+        
+        del data
+        
+        lats = [float(str(l).replace('\t','')) for l in lats ]
+        lons = [float(str(l).replace('\t','')) for l in lons ]
+        
+        lats_all = np.unique(lats)
+        lons_all = np.unique(lons)
+        
+        df = pd.DataFrame( {'lat': lats , 'lon' : lons } )
+        df = df.drop_duplicates().reset_index(drop=True) 
+         
+        statIds = [ hara_file.split('/')[-1].split('_')[0] ]
+          
+        #lats, lons = list(df.lat.values), list(df.lon.values)
+        
+        a = self.check_consistent_coords(lats, lons)
+    
+        dic = { 'max_date': max(dates), 
+                 'min_date': min(dates), 
+                 'statid': str(statIds), # needed in case multiple ids 
+                 'lats': [list(df.lat.values)], 
+                 'lons': [list(df.lon.values)], 
+
+                 'lats_all': [list(lats_all)], 
+                 'lons_all': [list(lons_all)],   # actually the same thing...
+                 
+                 'file': self.file.split('/')[-1] , 
+                 'file_path': self.file , 
+                 'db': self.dataset,
+                 'variables': str( ['126','137','106','107','117'] ),
+                 'frequency': self.frequency,
+                 'consistent_coord': str(self.consistent_coord) }
+
+        
+        pd.DataFrame(dic).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        self.statid = statIds
+        self.lats = lats
+        self.lons = lons 
+        self.min_date = min(dates)
+        self.max_date = max(dates)
+        self.variables = dic['variables']
+        return 0    
+
+
+    def read_npsound(self):
+        """ Reading HARA station files written into csv station files """
+               
+        # reading data via csv 
+        data =pd.read_csv(self.file, sep='\t')
+        dates = np.unique(data.date_time)     
+        dates = [ ''.join(f.split('_')) for f in dates ]
+        lats = data.latitude.values
+        lons = data.longitude.values
+        
+        del data
+        
+        lats = [float(str(l).replace('\t','')) for l in lats ]
+        lons = [float(str(l).replace('\t','')) for l in lons ]
+        
+        lats_all = np.unique(lats)
+        lons_all = np.unique(lons)
+        
+        df = pd.DataFrame( {'lat': lats , 'lon' : lons } )
+        df = df.drop_duplicates().reset_index(drop=True) 
+         
+        statIds = [ self.file.split('/')[-1].split('_')[0] ]
+          
+        #lats, lons = list(df.lat.values), list(df.lon.values)
+        
+        a = self.check_consistent_coords(lats, lons)
+    
+        dic = { 'max_date': max(dates), 
+                 'min_date': min(dates), 
+                 'statid': str(statIds), # needed in case multiple ids 
+                 'lats': [list(df.lat.values)], 
+                 'lons': [list(df.lon.values)], 
+
+                 'lats_all': [list(lats_all)], 
+                 'lons_all': [list(lons_all)],   # actually the same thing...
+                 
+                 'file': self.file.split('/')[-1] , 
+                 'file_path': self.file , 
+                 'db': self.dataset,
+                 'variables': str( ['126','137','106','107','117'] ),
+                 'frequency': self.frequency,
+                 'consistent_coord': str(self.consistent_coord) }
+
+        
+        pd.DataFrame(dic).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        self.statid = statIds
+        self.lats = lats
+        self.lons = lons 
+        self.min_date = min(dates)
+        self.max_date = max(dates)
+        self.variables = dic['variables']
+        return 0  
+    
+    
         
     def read_bufr(self):
         """ Extract data from a single BUFR file """
@@ -1018,6 +1265,8 @@ class Inventory():
                  chuan = '',
                  schroeder='',
                  wmo='',
+                 amma='',
+                 hara='',
                  utils='' ):
         #self.datadir = datadir + '/' + datadir # TO DO why this ?
         self.datadir = datadir + '/'      
@@ -1027,6 +1276,8 @@ class Inventory():
         self.chuan = datadir + '/' + chuan
         self.schroeder = datadir + '/' + schroeder
         self.wmo = datadir + '/' + wmo
+        self.amma = datadir + '/' + amma 
+        self.hara = datadir + '/' + hara
         self.utils = utils 
         self.tables_dir = tablesdir
         self.inv = {}
@@ -1085,8 +1336,40 @@ class Inventory():
         wmo.name='WMO'
         #wmo.sch['elevation'] = '' ### TO DO implement !!! it is available
 
+ 
+        #############################################
+        ### Reading AMMA data
+        #############################################
         
+        amma = pd.read_csv(self.amma, sep='\t') # columns:  'wmo', 'lat', 'lon', 'station', 'date_min', 'date_max'
+        amma = amma.rename(columns = {'WMO station No.':'station_id','Station name':'station_name',
+                                    'Lon':'longitude', 'Lat':'latitude'})
+        amma['WMO_id'] = amma.station_id
+        amma['isRadio'] = True
+        amma = amma.reset_index(drop=True)
+        amma.name='AMMA'
+        amma['latitude'] = amma['conv_lat']
+        amma['longitude'] = amma['conv_lon']
+        #wmo.sch['elevation'] = '' ### TO DO implement !!! it is available
+  
+  
+  
+        #############################################
+        ### Reading HARA data
+        #############################################
         
+        hara = pd.read_csv(self.hara, sep='\t') # columns:  'wmo', 'lat', 'lon', 'station', 'date_min', 'date_max'
+        hara = hara.rename(columns = {'STATION_ID':'WMO_id','NAME':'station_name',
+                                    'LON_(DEG_E)':'longitude', 'LAT_(DEG_N)':'latitude'})
+        hara['WMO_id'] = hara.WMO_id.astype(str)
+        ids = ['0'+ str(i) if len(str(i)) == 4 else i for i in hara.WMO_id ]
+        hara['WMO_id'] = ids
+        hara['station_id'] = ids       
+        hara['isRadio'] = True
+        hara = hara.reset_index(drop=True)
+        hara.name='HARA'
+        #wmo.sch['elevation'] = '' ### TO DO implement !!! it is available
+
         #############################################
         ### Reading WBAN data
         #############################################        
@@ -1165,9 +1448,10 @@ class Inventory():
                                           'Lon_DegE':'longitude', 'Lat_DegN':'latitude', 'Alt_masl':'elevation'})
 
             # filtering missing values for coordinates
-            chuan = chuan.loc[ (chuan['latitude'] > -90) & (chuan['longitude'] > -90)]
+            chuan = chuan.loc[ (chuan['latitude'] > -90) & (chuan['longitude'] > -180)]
             chuan = chuan.reset_index(drop=True)
             chuan['station_id']= chuan['station_id'].astype('int')
+            #chuan['station_id']= chuan['station_id'].astype('int')
 
             d = dict( zip( [ str(m) for m in range(1,10)] , [ '0'+ str(d) for d in range (1,10)   ] )  )
             chuan = chuan.replace( {'StartStationMonth': d} )
@@ -1197,6 +1481,8 @@ class Inventory():
         self.inv["chuan"] = chuan
         self.inv["schroeder"] = sch
         self.inv["wmo"] = wmo
+        self.inv["amma"] = amma
+        self.inv["hara"] = hara 
                 
         
 
@@ -1210,7 +1496,9 @@ inventory = Inventory( datadir ='../data/tables',
                  wban = "WBAN.TXT-2006jan"  , 
                  chuan = "Inventory_ERACLIM_upperair_2.1.txt",
                  schroeder='schroeder_metadata.csv',
-                 wmo='wmo_metadata.csv',                 
+                 wmo='wmo_metadata.csv',        
+                 amma = 'AMMA_campaign_digitized_metadata_extended.csv',
+                 hara = 'HARA_metadata.csv',
                  utils = utils )
 
 inventory.readInventory()
@@ -1233,27 +1521,23 @@ def wrapper(data, file):
         elif 'bfr' in file:
             #dataset = 'bufr'
             name_s = file
-        elif 'TEMP' in file or "PILOT" in file or 'DRIFT' in file:
+        #elif 'TEMP' in file or "PILOT" in file or 'DRIFT' in file:
+        #    dataset = 'amma'
+        #    name_s = file
+        elif 'amma' in file:
             dataset = 'amma'
-            name_s = file
+            name_s = file            
         else:
             #dataset = 'era5_' + file.split('/')[-2]
             name_s = file            
-  
         dataset = data.dataset 
         if isinstance(file, pd.Series):
             #dataset = 'igra2'
             name_s = file.station_id_igra
         else:
             name_s = file
-
-                    
-            
-            
     print("Doing file: " , name_s )
-    
-
-
+ 
     """
     ### creating inventories directory
     out_dir_inv = 'inventories/' + dataset 
@@ -1264,7 +1548,9 @@ def wrapper(data, file):
         os.mkdir(out_dir_inv + '/logs' )
     """
     try:
+        print("Reading file::: " , file )
         d = data.read_file(file=file)
+        print("Done Reading file::: " , file )
       
         if data.dataset == 'igra2':
             file_name = file.station_id_igra
@@ -1280,7 +1566,7 @@ def wrapper(data, file):
         #    os.mkdir(out_dir + '/logs')
             
         matching_inv = {}        
-        for i in ["oscar","igra2","wban","chuan", 'schroeder', 'wmo'] :        
+        for i in ["oscar","igra2","wban","chuan", 'schroeder', 'wmo', 'amma', 'hara'] :        
             print(' *** Analizing the inventory: ', i )
             analyze = Analyze( data = data, inv = inventory.inv[i], 
                                cities= inventory.cities, utils = utils)
@@ -1378,7 +1664,7 @@ def wrapper(data, file):
         
         # Extracting the best wigos id 
         best_wigos = ''
-        for i in ['OSCAR', 'IGRA2', 'WBAN', 'CHUAN', 'SCHROEDER', 'WMO']:
+        for i in ['OSCAR', 'IGRA2', 'WBAN', 'CHUAN', 'SCHROEDER', 'WMO', 'AMMA', 'HARA', 'GIUB']:
             if not best_wigos:
                 d=df_red.loc[df_red.inventory == i ] 
                 if not d.empty:
@@ -1496,6 +1782,7 @@ test_era5_1759_lat_mismatch_all = ['era5.1759.conv.2:82606', 'era5.1759.conv.2:8
                                    'era5.1759.conv.2:80705', 'era5.1759.conv.2:81604']
 
 
+
 ### Directory containing the databases 
 basedir = '/mnt/users/scratch/leo/scratch/era5/odbs/'
 datasets = { 'era5_1': basedir + '/1' ,
@@ -1505,106 +1792,121 @@ datasets = { 'era5_1': basedir + '/1' ,
                                'era5_1761': basedir + '/1761',
                                'bufr': basedir + '/ai_bfr/',                                   
                                'ncar': '/scratch/das/federico/databases_service2/UADB_25012022/',
-                               'amma': '/scratch/das/federico/databases_service2/AMMA_BUFR' ,
+                               'amma': '/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/' ,
                                'igra2': '', # dummy, use the igra2 station list file 
+                               'hara': '/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/',
                                
+                               'giub': '/scratch/das/federico/databases_service2/giub2.1_ERA5_3188_14032023/',
+                               'npsound' : '/scratch/das/federico/databases_service2/NPSOUND-NSIDC0060/NPSOUND_csv_converted' ,
                                } 
 
+
+def get_flist(db):
+    """ Extarcts the list of files to be processed according to the dataset """
+    
+    if db == 'era5_1':
+        if not os.path.isfile('era5_1_files_list.txt'):  ### TODO, this is to speed ud reading the file names which take a lot of time
+            flist=glob.glob(datasets[db] + "/era5.conv._*") # takes too long 
+            flist =[f for f in flist if '_40179' not in f  and '42147' not in f] # thse files cause problems ???
+            a = open( 'era5_1_files_list.txt','w')
+            for l in flist:
+                a.write(l + '\n')
+            a.close()
+            
+        else:
+            flist = [ f.replace('\n','') for f in open(db + '_files_list.txt').readlines() ]
+            
+    elif db == 'era5_2':
+        if not os.path.isfile('era5_2_files_list.txt'):  ### TODO, this is to speed ud reading the file names which take a lot of time
+            flist=glob.glob(datasets[db] + "/era5.conv._*") # takes too long 
+            flist = [f for f in flist if '.gz' not in f ]
+            a = open( 'era5_2_files_list.txt','w')
+            for l in flist:
+                a.write(l + '\n')
+            a.close()
+            
+        else:
+            flist = [ f.replace('\n','') for f in open(db + '_files_list.txt').readlines() ]
+            
+        flist=[f for f in flist if '.gz' not in f and '.nc' not in f ]
+        
+    elif db == 'era5_1759':
+        flist=glob.glob("/mnt/users/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.*")
+        
+    elif db == 'era5_1761':
+        flist=glob.glob("/mnt/users/scratch/leo/scratch/era5/odbs/1761/era5.1761.conv.*")
+        
+    elif db == 'era5_3188':
+        flist=glob.glob("/mnt/users/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.*")
+        
+    elif db == 'ncar':
+        flist=glob.glob( datasets[db] + '/uadb*')
+        
+    elif db== 'igra2':
+        f = inventory.inv['igra2']
+        flist = [ f.iloc[n] for n in range(len(f)) ]
+        
+    elif 'bufr' in db:
+        flist=glob.glob(datasets[db] + '/'+'era5.*.bfr')
+        flist=[f for f in flist if 'undef' not in f ]
+        
+    elif 'amma' in db:
+        flist=glob.glob(datasets[db] + '/'+'*')
+        
+    elif 'hara' in db:
+        flist=glob.glob(datasets[db] + '/'+'*')         
+        
+    elif 'giub' in db:
+        flist=glob.glob(datasets[db] + '/'+'*')         
+        
+    elif 'npsound' in db:
+        flist=glob.glob(datasets[db] + '/'+'*')         
+        flist = [f for f in flist if '28' not in f and '31' not in f ]
+    return flist 
+        
+        
+    
 if __name__ == '__main__':
     """ Parameters:
           - POOL: runs multiprocesses (default=30)
           - CHECK_MISSING: only runs missing files, otherwise will rerun and replace existing files """
 
-    alldb = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1', 'amma']
+    alldb = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1', 'amma', 'hara', 'npsound']
     era5_block = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188']
 
-    databases = ['igra2']
-    databases = [ 'era5_1', ]
-    databases = [ 'amma', ]
-
-
-    databases = ['era5_2'] #     databases = ['igra2']
+    databases = ['amma'] #     databases = ['igra2']
 
     databases = alldb #     databases = ['igra2']
-
-    #databases = ['amma' , 'igra2' , 'era5_3188'] #     databases = ['igra2']
+    databases = ['amma']
+    
+    databases = ['npsound']
+    
+    #databases = ['giub']
     
     # enable multiprocesing
-    POOL = True
-    n_pool = 40
-    # only process missing files 
+    POOL = False 
+    n_pool = 30
     CHECK_MISSING = False  
     CHECK_FAILED = False
     # loop through each of the databases
     for db in databases:
         
+        if db == 'igra2':
+            CHECK_MISSING = False
+            
         ### Preparing directories 
         if not os.path.isdir( 'inventories/' + db + '/logs'):
             os.makedirs( 'inventories/' + db + '/logs' )
         if not os.path.isdir( 'temp_data/' + db + '/logs'):
                 os.makedirs( 'temp_data/' + db + '/logs' )            
                                          
-        # getting only missing files, option CHECK_MISSING s
-        if db == 'era5_1':
-            if not os.path.isfile('era5_1_files_list.txt'):  ### TODO, this is to speed ud reading the file names which take a lot of time
-                flist=glob.glob(datasets[db] + "/era5.conv._*") # takes too long 
-                flist =[f for f in flist if '_40179' not in f  and '42147' not in f] # this file causes problems ???
-                a = open( 'era5_1_files_list.txt','w')
-                for l in flist:
-                    a.write(l + '\n')
-                a.close()
-                
-            else:
-                flist = [ f.replace('\n','') for f in open(db + '_files_list.txt').readlines() ]
-            
-            #flist = ['/mnt/users/scratch/leo/scratch/era5/odbs/1/era5.conv._72271']
-            #flist = [ f.replace('\n','') for f in open('inventories/logs/1_failed_files.txt').readlines() ]
-            
-        elif db == 'era5_2':
-            if not os.path.isfile('era5_2_files_list.txt'):  ### TODO, this is to speed ud reading the file names which take a lot of time
-                flist=glob.glob(datasets[db] + "/era5.conv._*") # takes too long 
-                flist = [f for f in flist if '.gz' not in f ]
-                a = open( 'era5_2_files_list.txt','w')
-                for l in flist:
-                    a.write(l + '\n')
-                a.close()
-                
-            else:
-                flist = [ f.replace('\n','') for f in open(db + '_files_list.txt').readlines() ]
-                
-            flist=[f for f in flist if '.gz' not in f and '.nc' not in f ]
-            
-        elif db == 'era5_1759':
-            flist=glob.glob("/mnt/users/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.*")
-            
-        elif db == 'era5_1761':
-            flist=glob.glob("/mnt/users/scratch/leo/scratch/era5/odbs/1761/era5.1761.conv.*")
-            
-        elif db == 'era5_3188':
-            flist=glob.glob("/mnt/users/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv.*")
-            
-        elif db == 'ncar':
-            flist=glob.glob( datasets[db] + '/uadb*')
-            
-        elif db== 'igra2':
-            f = inventory.inv['igra2']
-            flist = [ f.iloc[n] for n in range(len(f)) ]
-            CHECK_MISSING = False
-            
-        elif 'bufr' in db:
-            flist=glob.glob(datasets[db] + '/'+'era5.*.bfr')
-            flist=[f for f in flist if 'undef' not in f ]
-            
-        elif 'amma' in db:
-            flist=glob.glob(datasets[db] + '/'+'*')
-            
-                    
-        #comb = glob.glob(datasets[db] + '/'+'*.conv.19*') # removing wrong combined files per year _> NOW IMPOSSIBLE TO RUN LIKE THIS, due to 1.5 M files in the directory...
-        #flist = [f for f in flist if f not in comb ]
+        ### Extracting files list to process 
+        flist = get_flist(db)
         
         flist = [f for f in flist if '.gz' not in f and '.nc' not in f ]
         flist = [f for f in flist if '00000' not in f and '99999' not in f and '-1e+100' not in f ]
                 
+        #flist = [f for f in flist if '60720' in f ]
         if CHECK_FAILED:
             failed = open(db.replace('era5_','') + '_failed_files.txt','r').readlines()
             flist = a
@@ -1613,10 +1915,11 @@ if __name__ == '__main__':
             if CHECK_MISSING:
                 flist_c = [f.split('/')[-1] for f in flist ]
                 try: 
-                    processed = [f.replace("_inventories_identified.csv","") for f in os.listdir('inventories/'+db) if 'reduced' not in f ] + [f.replace("_inventories_unidentified.csv","") for f in os.listdir('inventories/'+db) if 'reduced' not in f  ] 
+                    #processed = [f.replace("_inventories_identified.csv","") for f in os.listdir('inventories/'+db) if 'reduced' not in f ] + [f.replace("_inventories_unidentified.csv","") for f in os.listdir('inventories/'+db) if 'reduced' not in f  ] 
+                    processed = [f.replace(".csv","") for f in os.listdir('temp_data/'+db)] 
                 except:
                     processed = []
-                missing_stat = [f for f in flist_c if f not in processed ]
+                missing_stat = [f for f in flist_c if f.replace('.csv','') not in processed ]
                 flist = [datasets[db] + '/' + f for f in missing_stat ]
                 
             # sort files from smallest 
@@ -1630,7 +1933,7 @@ if __name__ == '__main__':
             pairs.sort(key=lambda s: s[0])
             flist = [ s[1] for s in pairs ]
         
-        data = Data(dataset=db, utils = utils )
+        data = Data(dataset=db, utils = utils, inv=inventory )
         
         ######  TODO edit here to possibly filter file list
         
@@ -1645,20 +1948,15 @@ if __name__ == '__main__':
         #unidentified = open('inventories/' + db.replace('era5_','') + '_unidentified.txt','r').readlines()
         #unidentified = [f.replace('\n','') for f in unidentified]
         
-        #flist = [f for f in flist if f not in unidentified ]
-    
-        #flist = [flist[0]]
-        #flist = [f for f in flist if '_03151' in f ]
+        #flist = [f for f in flist if  '4493A' in f ]
         
-        #flist = [f for f in flist if 'WTKD' in f ]
-        #flist = [f for f in flist if 'era5.conv._1:72253' in f ]
-        #flist = [f for f in flist if 'HRT2006103112' in f ]
-        # removing combined month data                                                                                                                                                                                                                                                                                           
         if db != 'igra2':
             skipped = [ 'era5.1759.conv.xxx'.replace('xxx', str(i))  for i in range(1900,2020,1) ]
             skipped = skipped + [ 'era5.1761.conv.xxx'.replace('xxx', str(i))  for i in range(1900,2020,1) ]
             flist = [f for f in flist if f.split('/')[-1] not in skipped ]
         
+        #flist = [f for f in flist if '21358' in f  ]
+        #flist = flist[:1]
         if len(flist) ==1:
             POOL = False
             
@@ -1817,8 +2115,6 @@ Problematic files:
 /scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE028-data.txt
 /scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE030-data.txt
 /scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE031-data.txt
-
-
 """
 
 
@@ -1829,11 +2125,8 @@ Problematic files:
 """
 Distances between the station coordinates and the inventories are calculated only if the lat and lon difference are below 2 degrees.
 If no inventory station satisfies this condition, distances are not calculated.
-
-
 The file: logs/
 """
-
 
 ### to try
 # inconsistent coordinates

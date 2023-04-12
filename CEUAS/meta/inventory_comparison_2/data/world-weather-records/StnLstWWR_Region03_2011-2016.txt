@@ -1,0 +1,184 @@
+        R                                                                                             Total No. Monthly Obs by Element |     
+        e                                                                Statn  Barom  Local         Mean Mean Mean      Mean Mean Mean|Totl 
+        c                                                                 Elev   Elev  Statn     :    Stn Slvl  Dly Totl  Max  Min     |  #  
+  Wmo#  #  Lat   Lon   Country Name             Station Name               (m)  (.1m)    #       :   Pres Pres Temp Prec Temp Temp   RH| Obs 
+ 
+  80403 1 1125N 06941W VENEZUELA                CORO                        16    160            :     56   49   68   67   68   68    0  376
+  80407 1 1034N 07143W VENEZUELA                MARACAIBO                   66    660            :     45    0   60   54   51   51    0  261
+  80410 1 1003N 06922W VENEZUELA                BARQUISIMETO                 6     60            :     56   57   67   47   67   67    0  361
+  80413 1 1015N 06739W VENEZUELA                MARACAY                    436   4360            :      0   61   67   68   67   67    0  330
+  80415 1 1036N 06659W VENEZUELA                MAIQUETIA                   43    430            :     50   56   60   65   61   60    0  352
+  80416 1 1026N 06651W VENEZUELA                CARACAS-LA CARLOTA         835   8350            :     34   12   49   50   51   49    0  245
+  80419 1 1006N 06441W VENEZUELA                BARCELONA                    7     70            :     49   49   62   62   62   62    0  346
+  80420 1 1027N 06409W VENEZUELA                CUMANA                       4     30            :     57   62   61   64   72   60    0  376
+  80421 1 1055N 06358W VENEZUELA                PORLAMAR                    24    240            :     48   18   59   37   58   56    0  276
+  80423 1 1034N 06219W VENEZUELA                GUIRIA                      13    130            :      0   55   53   66   54   54    0  282
+  80425 1 0949N 07056W VENEZUELA                MENE GRANDE                 27    270            :     45   56   60   60   60   60    0  341
+  80426 1 0920N 07035W VENEZUELA                VALERA                     628   5810            :     48   48   56   60   62   63    0  337
+  80427 1 0933N 06914W VENEZUELA                ACARIGUA                   226   2260            :     44   40   66   56   59   59    0  324
+  80428 1 0902N 06945W VENEZUELA                GUANARE                    163   1630            :     56   49   56   46   68   12    0  287
+  80431 1 0955N 06723W VENEZUELA                SAN JUAN DE LOS MORROS     429   4290            :     43   52   55   55   54   47    0  306
+  80434 1 0913N 06600W VENEZUELA                VALLE DE LA PASCUA         125   1250            :     42   53   55   60   55   55    0  320
+  80435 1 0945N 06310W VENEZUELA                MATURIN                     65    680            :     49   60   12   58   62   62    0  303
+  80437 1 0837N 07140W VENEZUELA                EL VIGIA                   103   1030            :     55   11    0    0    0    0    0   66
+  81001 1 0649N 05810W GUYANA                   GEORGETOWN BOTANIC GARDE     1 -99999            :      0    0   48   48   48   48   12  204
+  81002 1 0629N 05815W GUYANA                   CHEDDIE  JAGAN INT. AIRP    28 -99999            :     47   47   48   12   48   48   11  261
+  81003 1 0649N 05806W GUYANA                   EUGENE CORREIA INT.AIRPO     1     10            :      0   12   12   12   12   12   12   72
+  81005 1 0552N 06031W GUYANA                   KAMARANG                   488 -99999            :      0    0   48   48   48   48   12  204
+  81006 1 0322N 05948W GUYANA                   LETHEM  AIRSTRIP           107 -99999            :      0    0   48   48   48   48   12  204
+  81010 1 0534N 05747W GUYANA                   EBINI LIVESTOCK STATION     46 -99999            :      0    0   44   44   44   44   12  188
+  81058 1 0615N 05731W GUYANA                   NEW AMSTERDAM TECHNICAL      1 -99999            :      0    0   10   48   48   48   12  166
+  81080 1 0511N 05929W GUYANA                   KAIETURE FALLS             457 -99999            :      0    0    0   12   12    0   11   35
+  81100 1 0812N 05947W GUYANA                   MABARUMA SYNOPTIC STATIO    31 -99999            :      0    0   11   12   12   12   12   59
+  81200 1 0548N 05511W SURINAME                 ZORG                         4 -99999            :      0    0   34   36   33   34    0  137
+  81201 1 0550N 05509W SURINAME                 CULTUURTUIN                  2 -99999            :      0    0   23   36   22   22    0  103
+  81202 1 0557N 05702W SURINAME                 NICKERIE                     2 -99999            :      0    0   22   36   22   22    0  102
+  81225 1 0526N 05512W SURINAME                 ZANDERY                     16 -99999            :      0    0   21   36   21   21    0   99
+  81401 1 0529N 05401W FRANCE                   SAINT LAURENT                5     50            :      0   72   72   72   72   72   72  432
+  81403 1 0512N 05244W FRANCE                   KOUROU                      12    170            :      0   48   48   48   48   48   48  288
+  81405 1 0449N 05221W FRANCE                   CAYENNE-MATOURY              4     90            :      0   72   72   72   72   72   72  432
+  81408 1 0353N 05148W FRANCE                   SAINT GEORGES                6     70            :      0   72   72   72   72   72   72  432
+  81415 1 0338N 05401W FRANCE                   MARIPASOULA                106   1070            :      0   72   72   72   72   72   72  432
+  84008 1 0055S 08937W ECUADOR                  SAN CRISTOBAL - GALAPAGO -9999 -99999            :      0    0    0   36    0    0    0   36
+  84088 1 0021S 07833W ECUADOR                  IZOBAMBA-PICHINCHA       -9999 -99999            :      0    0    0   36    0    0    0   36
+  84140 1 0106S 07928W ECUADOR                  PICHILINGUE-LOS RIOS     -9999 -99999            :      0    0    0   36    0    0    0   36
+  84270 1 0402S 07912W ECUADOR                  LOJA - LA ARGELIA        -9999 -99999            :      0    0    0   36    0    0    0   36
+  84370 1 0333S 08023W PERU                     TUMBES                      27    250            :      9   57   58   60   59   60    0  303
+  84377 1 0347S 07318W PERU                     IQUITOS                    126   1250            :      8   57   60   54   60   60    0  299
+  84390 1 0434S 08115W PERU                     TALARA                      90    850            :      0   48   58   60   59   59    0  284
+  84401 1 0512S 08036W PERU                     PIURA                       55    490            :     10   58   58   60   59   60    0  305
+  84410 1 0535S 07846W PERU                     JAEN                       755   7550            :      0    0    9   12   12    9    0   42
+  84420 1 0536S 07846W PERU                     JAEN                       756 -99999            :      0    0   36   34   36   36    0  142
+  84425 1 0553S 07607W PERU                     YURIMAGUAS                 184   1790            :      0   48   60   60   60   60    0  288
+  84444 1 0612S 07751W PERU                     CHACHAPOYAS               2540  24350            :      0   48   60   48   60   60    0  276
+  84452 1 0647S 07949W PERU                     CHICLAYO                    30    290            :     11   59   58   60   59   60    0  307
+  84455 1 0630S 07622W PERU                     TARAPOTO                   282   2810            :     10   58   60   60   60   60    0  308
+  84472 1 0708S 07829W PERU                     CAJAMARCA                 2622  26200            :      0   48   60   60   60   60    0  288
+  84474 1 0710S 07643W PERU                     JUANJUI                    363   3500            :      0   48   60   60   60   60    0  288
+  84501 1 0805S 07906W PERU                     TRUJILLO                    30    260            :      7   55   58   60   59   60    0  299
+  84515 1 0822S 07434W PERU                     PUCALLPA                   149   1480            :     10   58   60   60   60   60    0  308
+  84531 1 0908S 07831W PERU                     CHIMBOTE                    27    200            :      0   48   58   49   59   59    0  273
+  84534 1 0917S 07600W PERU                     TINGO MARIA                665   6640            :      0   48   58   59   58   60    0  283
+  84542 1 0921S 07736W PERU                     ANTA/HUARAZ               2760  27590            :      0   48   48   60   48   60    0  264
+  84564 1 0952S 07612W PERU                     HUANUCO                   1860  18590            :      0   48   57   51   60   57    0  273
+  84580 1 1120S 07432W PERU                     MAZAMARI                   685 -99999            :      0    0    9   12    9   12    0   42
+  84593 1 1043S 07346W PERU                     ATALAYA                    275   2740            :      0    0   49   44   49   49    0  191
+  84605 1 1146S 07528W PERU                     JAUJA                     3325  33240            :      0    0   12   12   12   12    0   48
+  84610 1 1147S 07528W PERU                     JAUJA                     3357 -99999            :      0    0   36   35   36   36    0  143
+  84625 1 1150S 07256W PERU                     MALVINAS                   382 -99999            :      0    0   35   35   35   35    0  140
+  84628 1 1201S 07707W PERU                     LIMA/CALLAO                 13    120            :     10   58   58   60   59   60    0  305
+  84658 1 1236S 06913W PERU                     PUERTO MALDONADO           201   2000            :      0   48   60   60   60   60    0  288
+  84673 1 1309S 07412W PERU                     AYACUCHO                  2741  27400            :      0   48   60   60   60   60    0  288
+  84686 1 1332S 07156W PERU                     CUSCO                     3249  32480            :      8   48   60   60   60   60    0  296
+  84688 1 1342S 07321W PERU                     ANDAHUAYLAS               3445  34440            :      0   48   59   60   59   60    0  286
+  84691 1 1344S 07613W PERU                     PISCO                        7     60            :     10   58   58   60   59   60    0  305
+  84720 1 1451S 07457W PERU                     NAZCA                      567   5670            :      0   48   60   59   60   60    0  287
+  84735 1 1528S 07009W PERU                     JULIACA                   3827  38260            :      7   48   60   60   60   60    0  295
+  84752 1 1620S 07134W PERU                     AREQUIPA                  2539  25390            :     10   48   60   60   60   60    0  298
+  84773 1 1741S 07121W PERU                     ILO                          9     90            :      0   48   60   46   60   60    0  274
+  84782 1 1803S 07016W PERU                     TACNA                      469   4680            :      8   56   60   60   60   60    0  304
+  85406 1 1821S 07020W CHILE                    ARICA                       55 -99999            :     72   72   72   72   72   72    0  432
+  85418 1 2032S 07010W CHILE                    IQUIQUE                     48 -99999            :     72   72   72   72   72   72    0  432
+  85432 1 2229S 06854W CHILE                    CALAMA                    2282 -99999            :     62    0   65   72   71   71    0  341
+  85442 1 2327S 07026W CHILE                    ANTOFAGASTA                113 -99999            :     72   72   72   72   72   72    0  432
+  85469 1 2709S 10925W CHILE                    ISLA DE PASCUA             172 -99999            :     72   72   72   72   72   72    0  432
+  85488 1 2955S 07112W CHILE                    LA SERENA                  142 -99999            :     72   72   72   72   72   72    0  432
+  85574 1 3323S 07047W CHILE                    PUDAHUEL                   481 -99999            :     72   72   72   72   72   72    0  432
+  85577 1 3326S 07040W CHILE                    QUINTA NORMAL              520 -99999            :     72   72   72   72   72   72    0  432
+  85585 1 3338S 07850W CHILE                    JUAN FERNANDEZ              29 -99999            :     71   71   67   71   67   67    0  414
+  85629 1 3457S 07113W CHILE                    CURICO                     228 -99999            :     44   42   67   72   72   72    0  369
+  85672 1 3635S 07202W CHILE                    CHILLAN                    124 -99999            :     31   31   56   72   72   72    0  334
+  85682 1 3646S 07303W CHILE                    CONCEPCION                  15 -99999            :     72   72   72   72   72   72    0  432
+  85743 1 3846S 07238W CHILE                    TEMUCO                      92 -99999            :     66   66   66   66   67   66    0  397
+  85766 1 3939S 07205W CHILE                    VALDIVIA                    18 -99999            :     33   33   62   72   72   72    0  344
+  85782 1 4036S 07303W CHILE                    OSORNO                      61 -99999            :     61   68   57   72   72   72    0  402
+  85799 1 4126S 07305W CHILE                    PUERTO MONTT                84 -99999            :     72   72   72   71   72   72    0  431
+  85864 1 4535S 07306W CHILE                    COYHAIQUE                  302 -99999            :     72   72   72   72   72   72    0  432
+  85874 1 4554S 07141W CHILE                    BALMACEDA                  516 -99999            :     70   71   72   72   72   72    0  429
+  85886 1 4634S 07141W CHILE                    CHILE CHICO                305 -99999            :      0    0   45   72   57   58    0  232
+  85892 1 4714S 07235W CHILE                    COCHRANE                   182 -99999            :      0    0   55   72   72   71    0  270
+  85934 1 5300S 07050W CHILE                    PUNTA ARENAS                38 -99999            :     72   72   72   72   72   72    0  432
+  87007 1 2206S 06536W ARGENTINA                LA QUIACA OBS             3459  34590            :     72    0   72   72   72   72   72  432
+  87016 1 2309S 06419W ARGENTINA                ORAN AERO                  357   3570            :     72   72   72   72   72   72   72  504
+  87022 1 2239S 06349W ARGENTINA                TARTAGAL AERO              450   4500            :     72   72   72   72   72   72   72  504
+  87046 1 2423S 06505W ARGENTINA                JUJUY AERO                 905   9050            :     72    0   72   72   72   72   48  408
+  87047 1 2451S 06529W ARGENTINA                SALTA AERO                1221  12210            :     72    0   72   72   72   72   48  408
+  87065 1 2410S 06254W ARGENTINA                RIVADAVIA                  205   2050            :     69   11   69   62   49   30   69  359
+  87078 1 2442S 06035W ARGENTINA                LAS LOMITAS                130   1300            :     72   72   72   72   72   72   72  504
+  87097 1 2544S 05428W ARGENTINA                IGUAZU AERO                270   2700            :     72   72   72   72   72   72   72  504
+  87121 1 2651S 06506W ARGENTINA                TUCUMAN AERO               450   4500            :     72   72   72   72   72   72   48  480
+  87129 1 2746S 06418W ARGENTINA                SANTIAGO DEL ESTERO AERO   199   1990            :     72   72   72   72   72   72   48  480
+  87148 1 2645S 06024W ARGENTINA                PCIA. ROQUE SAENZ PENA A    93    930            :     72   72   72   72   70   62   72  492
+  87155 1 2727S 05903W ARGENTINA                RESISTENCIA AERO            52    520            :     72   72   72   72   72   72   48  480
+  87162 1 2612S 05814W ARGENTINA                FORMOSA AERO                60    600            :     72   72   72   72   72   72   48  480
+  87163 1 2615S 05339W ARGENTINA                BERNARDO DE IRIGOYEN AER   815   8150            :     72    0   72   72   72   72   72  432
+  87166 1 2727S 05846W ARGENTINA                CORRIENTES AERO             62    620            :     72   72   72   72   72   72   48  480
+  87178 1 2722S 05558W ARGENTINA                POSADAS AERO               125   1250            :     72   72   72   72   72   71   48  479
+  87211 1 2804S 06734W ARGENTINA                TINOGASTA                 1201  12010            :     72    0   72   66   72   72   72  426
+  87217 1 2923S 06649W ARGENTINA                LA RIOJA AERO              429   4290            :     72   72   72   72   72   70   48  478
+  87222 1 2836S 06546W ARGENTINA                CATAMARCA AERO             454   4540            :     72   72   72   72   72   72   48  480
+  87244 1 2954S 06341W ARGENTINA                VILLA MARIA DEL RIO SECO   341   3410            :     72   36   72   71   72   46   70  439
+  87257 1 2953S 06157W ARGENTINA                CERES AERO                  88    880            :     72   72   72   72   72   72   72  504
+  87270 1 2911S 05942W ARGENTINA                RECONQUISTA AERO            42    420            :     72   72   72   72   72   72   72  504
+  87289 1 2941S 05709W ARGENTINA                PASO DE LOS LIBRES AERO     70    700            :     72   72   72   72   72   68   72  500
+  87311 1 3134S 06825W ARGENTINA                SAN JUAN AERO              598   5980            :     72   72   72   72   72   72   48  480
+  87320 1 3022S 06617W ARGENTINA                CHAMICAL AERO              461   4610            :     72   72   72   72   71   71   72  502
+  87328 1 3157S 06508W ARGENTINA                VILLA DOLORES AERO         566   5660            :     72   72   72   72   72   72   72  504
+  87344 1 3118S 06412W ARGENTINA                CORDOBA AERO               493   4950            :     68   68   72   72   72   72   48  472
+  87345 1 3124S 06411W ARGENTINA                CORDOBA OBSERVATORIO       425   4250            :     72   72   72   72   72   72   72  504
+  87349 1 3140S 06353W ARGENTINA                PILAR OBS.                 338   3380            :     72   72   72   72   72   72   72  504
+  87356 1 3058S 06120W ARGENTINA                SUNCHALES AERO              92    920            :     72   72   72   72   72   72   72  504
+  87371 1 3142S 06049W ARGENTINA                SAUCE VIEJO AERO            18    180            :     72   72   72   72   72   72   48  480
+  87374 1 3147S 06029W ARGENTINA                PARANA AERO                 78    780            :     72   72   72   71   72   72   48  479
+  87393 1 3016S 05739W ARGENTINA                MONTE CASEROS AERO          54    540            :     72   72   72   72   72   72   72  504
+  87395 1 3118S 05801W ARGENTINA                CONCORDIA AERO              38    380            :     72   72   72   72   72   72   72  504
+  87416 1 3305S 06825W ARGENTINA                SAN MARTIN (MZA)           653   6530            :     72   72   72   72   72   72   72  504
+  87418 1 3250S 06847W ARGENTINA                MENDOZA AERO               704   7040            :     72   72   72   72   72   72   48  480
+  87420 1 3253S 06851W ARGENTINA                MENDOZA OBSERVATORIO       827   8270            :     71    0   72   72   54   72   72  413
+  87436 1 3316S 06621W ARGENTINA                SAN LUIS AERO              713   7130            :     72   72   72   72   72   72   48  480
+  87448 1 3344S 06523W ARGENTINA                VILLA REYNOLDS AERO        486   4860            :     72   72   72   72   72   72   72  504
+  87453 1 3307S 06414W ARGENTINA                RIO CUARTO AERO            421   4210            :     72   72   72   72   72   72   72  504
+  87467 1 3242S 06209W ARGENTINA                MARCOS JUAREZ AERO         114   1140            :     72   72   72   72   72   72   72  504
+  87480 1 3255S 06047W ARGENTINA                ROSARIO AERO                25    250            :     72   72   72   72   69   72   48  477
+  87497 1 3300S 05837W ARGENTINA                GUALEGUAYCHU AERO           23    230            :     72   72   72   72   72   72   72  504
+  87506 1 3530S 06935W ARGENTINA                MALARGUE AERO             1425  14250            :     72    0   72   72   72   72   72  432
+  87509 1 3435S 06824W ARGENTINA                SAN RAFAEL AERO            748   7480            :     72   72   72   72   72   72   72  504
+  87532 1 3542S 06345W ARGENTINA                GENERAL PICO AERO          145   1450            :     72   72   72   72   72   72   72  504
+  87534 1 3408S 06322W ARGENTINA                LABOULAYE AERO             137   1370            :     72   72   72   72   72   72   72  504
+  87544 1 3552S 06154W ARGENTINA                PEHUAJO AERO                87    870            :     72   72   72   71   72   71   72  502
+  87548 1 3433S 06055W ARGENTINA                JUNIN AERO                  81    810            :     72   72   72   72   72   72   72  504
+  87550 1 3527S 06053W ARGENTINA                NUEVE DE JULIO              76    760            :     72   70   72   72   72   71   72  501
+  87553 1 3427S 05835W ARGENTINA                SAN FERNANDO                 3     30            :     72   72   72   72   72   72   72  504
+  87576 1 3449S 05832W ARGENTINA                EZEIZA AERO                 20    200            :     72   72   72   72   72   72   48  480
+  87582 1 3434S 05825W ARGENTINA                AEROPARQUE AERO              6     60            :     72   72   72   72   72   72   48  480
+  87585 1 3435S 05829W ARGENTINA                BUENOS AIRES                25    250            :     72   72   72   72   72   72   48  480
+  87593 1 3458S 05754W ARGENTINA                LA PLATA AERO               23    230            :     72   72   72   72   72   67   72  499
+  87623 1 3634S 06416W ARGENTINA                SANTA ROSA AERO            191   1910            :     72   72   72   72   72   72   48  480
+  87637 1 3726S 06153W ARGENTINA                CORONEL SUAREZ AERO        233   2330            :     61   61   61   66   69   69   61  448
+  87640 1 3612S 06104W ARGENTINA                BOLIVAR AERO                94    940            :     72   69   72   72   69   72   72  498
+  87641 1 3650S 05953W ARGENTINA                AZUL AERO                  147   1470            :     72   72   72   72   72   72   72  504
+  87643 1 3653S 06013W ARGENTINA                OLAVARRIA                  166   1660            :     71   71   71   72   72   72   71  500
+  87645 1 3714S 05915W ARGENTINA                TANDIL AERO                175   1750            :     72   72   72   72   72   72   72  504
+  87648 1 3621S 05744W ARGENTINA                DOLORES AERO                 9     90            :     72   72   72   72   72   72   72  504
+  87649 1 3743S 05947W ARGENTINA                BENITO JUAREZ AERO         207   2070            :     72   72   72   72   72   72   72  504
+  87679 1 3736S 06223W ARGENTINA                PIGUE AERO                 304   3040            :     72   72   72   72   72   72   72  504
+  87683 1 3801S 06120W ARGENTINA                CORONEL PRINGLES AERO      247   2470            :     72   72   72   72   72   72   72  504
+  87688 1 3820S 06015W ARGENTINA                TRES ARROYOS               115   1150            :     72   72   72   72   72   65   72  497
+  87692 1 3756S 05735W ARGENTINA                MAR DEL PLATA AERO          21    210            :     72   72   72   72   72   72   48  480
+  87715 1 3857S 06808W ARGENTINA                NEUQUEN AERO               271   2710            :     72   72   72   72   72   72   48  480
+  87750 1 3844S 06210W ARGENTINA                BAHIA BLANCA AERO           83    830            :     72   72   72   72   72   63   72  495
+  87765 1 4109S 07110W ARGENTINA                BARILOCHE AERO             840   8400            :     72    0   72   72   71   72   72  431
+  87774 1 4115S 06844W ARGENTINA                MAQUINCHAO                 888   8880            :     72    0   72   72   71   72   72  431
+  87784 1 4047S 06506W ARGENTINA                SAN ANTONIO OESTE AERO      20    200            :     72   72   72   72   72   72   72  504
+  87791 1 4051S 06301W ARGENTINA                VIEDMA AERO                  7     70            :     72   72   72   72   71   72   48  479
+  87803 1 4256S 07109W ARGENTINA                ESQUEL AERO                797   7970            :     72   72   72   72   65   72   72  497
+  87828 1 4312S 06516W ARGENTINA                TRELEW AERO                 43    430            :     72   72   72   72   64   72   72  496
+  87852 1 4631S 07101W ARGENTINA                PERITO MORENO AERO         429   4290            :     72   72   72   72   70   71   72  501
+  87860 1 4547S 06730W ARGENTINA                COMODORO RIVADAVIA AERO     46    460            :     72   72   72   72   72   72   48  480
+  87896 1 4744S 06555W ARGENTINA                PUERTO DESEADO AERO         80    800            :     72   72   72   63   70   51   72  472
+  87904 1 5016S 07203W ARGENTINA                EL CALAFATE AERO           204   2040            :     72   72   72   72   72   72   72  504
+  87909 1 4919S 06747W ARGENTINA                SAN JULIAN AERO             62    620            :     72   72   72   72   70   72   72  502
+  87925 1 5137S 06917W ARGENTINA                RIO GALLEGOS AERO           19    190            :     72   72   72   72   72   72   48  480
+  87934 1 5348S 06745W ARGENTINA                RIO GRANDE B.A.             22    220            :     72   72   72   72   72   72   72  504
+  87938 1 5448S 06819W ARGENTINA                USHUAIA AERO                57    570            :     72   72   72   72   72   68   48  476
+  88889 1 5149S 05826W ISLANDS                  MOUNT PLEASANT AIRPO        74    740            :      0   60   61   21    0    0    0  142
