@@ -23,7 +23,7 @@ def write_trj(stat):
     test_counter = 0
     try:
         # check if output already exists:
-        targetfile = '/mnt/users/staff/uvoggenberger/scratch/converted_v11/trajectory_files_new/trajectory_'+str(stat.split('/')[-1])
+        targetfile = '/mnt/users/staff/uvoggenberger/scratch/converted_v11/trajectory_files_20230418/trajectory_'+str(stat.split('/')[-1])
         checkfile = glob.glob(targetfile)
         # if target file already exists
         if len(checkfile) > 0:
@@ -97,6 +97,13 @@ def write_trj(stat):
                 z_coordinate_t = file.observations_table.z_coordinate[t_idx_s:t_idx_e]
                 z_coordinate_u = file.observations_table.z_coordinate[u_idx_s:u_idx_e]
                 z_coordinate_v = file.observations_table.z_coordinate[v_idx_s:v_idx_e]
+                
+                # check for right z_coordinate sorting
+                # if z_coordinate_t[0] < z_coordinate_t[-1]:
+                #     continue
+                checksorting = (lambda zc: np.all(zc[:-1] >= zc[1:]))
+                if not checksorting(np.array(z_coordinate_t)):
+                    continue
 
                 # find shortest array
                 z_coords = [z_coordinate_t, z_coordinate_u, z_coordinate_v]
@@ -207,6 +214,8 @@ def write_trj(stat):
 
                 # calculate trajectory
                 phys_model = trj.trajectory(lat=slat, lon=slon, temperature=np.array(input_df.t), u=np.array(input_df.u), v=np.array(input_df.v), pressure=np.array(input_df.p))
+                if phys_model == (None, None, None, None, None):
+                    continue
 
                 # helper knows where to write the data
                 helper = list(input_df.idx)
@@ -256,36 +265,38 @@ def write_trj(stat):
 
         # writing to input file
 
-    #     targetfile = '/mnt/users/staff/uvoggenberger/scratch/hum_adj_2022/'+str(stat.split('/')[-1])
-    #     mode='r+'
-    #     group = 'advanced_homogenisation'
+#         try:
+#             mode='r+'
+#             group = 'advanced_homogenisation'
 
-    #     i = 'latitude_displacement'
-    #     ov_vars = latd
-    #     alldict = pd.DataFrame({i:ov_vars})
-    #     write_dict_h5(targetfile, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
+#             i = 'latitude_displacement'
+#             ov_vars = latd
+#             alldict = pd.DataFrame({i:ov_vars})
+#             write_dict_h5(stat, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
 
-    #     i = 'longitude_displacement'
-    #     ov_vars = lond
-    #     alldict = pd.DataFrame({i:ov_vars})
-    #     write_dict_h5(targetfile, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
+#             i = 'longitude_displacement'
+#             ov_vars = lond
+#             alldict = pd.DataFrame({i:ov_vars})
+#             write_dict_h5(stat, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
 
-    #     i = 'time_since_launch'
-    #     ov_vars = timed
-    #     alldict = pd.DataFrame({i:ov_vars})
-    #     write_dict_h5(targetfile, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
+#             i = 'time_since_launch'
+#             ov_vars = timed
+#             alldict = pd.DataFrame({i:ov_vars})
+#             write_dict_h5(stat, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
 
-    #     i = 'true_time'
-    #     ov_vars = ttime
-    #     alldict = pd.DataFrame({i:ov_vars})
-    #     write_dict_h5(targetfile, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
+#             i = 'true_time'
+#             ov_vars = ttime
+#             alldict = pd.DataFrame({i:ov_vars})
+#             write_dict_h5(stat, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
+#         except:
+#             pass
 
 
 
         return 0 
     except Exception as e:
         print(e)
-        return 3
+        return stat
 
         
 if __name__ == '__main__':

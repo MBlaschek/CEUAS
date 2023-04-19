@@ -190,7 +190,7 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
     # check if sorted correctly
     if pressure[0] < pressure[-1]:
         print("Please resort the input data - ascending order is necessary!")
-        return 0,0,0,0
+        return None, None, None, None, None
         
     z = calc_height(temperature, pressure) # m from K and Pa
     
