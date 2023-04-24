@@ -963,7 +963,163 @@ def read_amma_csv(file=''):
     
     
     
+def read_mauritius_csv(file=''):
+    """ Read the Mauritius intercomparison data for Vaisala and Maisei sondes 
+        Args:
+             file (str): path to the intercomparison file
+        Returns:
+             Pandas DataFrame with cdm compliant column names
+             
+        
+        
+    """    
+    # column names standardized:  ['source_id', 'report_id', 'observation_id', 'record_timestamp', 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 
+    # 'vertco_reference_1@body', 'obsvalue@body', 'varno@body', 'units', 'number_of_pressure_levels', 'vertco_type@body']
+
+    #col =Index(['date_time', 'gph', 'temp', 'dew', 'windsp', 'winddir', 'lat', 'lon',
+    #   'pressure', 'month', 'day', 'year', 'hour', 'elev'], 
     
+    df = pd.read_csv( file, sep = ',' ).astype(str)
+    
+    statid = file.split('/')[-1].split('_')[0] + '_mauritius'
+    """
+    MEISEI
+    Index(['Unnamed: 0', 'Temperature 0', 'Observation Time', 'Wind Direction',
+       'Wind Speed', 'Humidity 0', 'Barometric Pressure 0',
+       'Positioning latitude', 'Positioning Longitude'],
+      dtype='object')
+      
+    VAISALA
+    Index(['Unnamed: 0', 'number', 'pressure', 'temperature', 'relative_humidity',
+       'geopotential', 'wdir', 'wspeed', 'height', 'date_time'],
+      dtype='object')
+    
+    """
+    if 'meisei' in file:
+        lat, lon = 'Positioning latitude' , 'Positioning Longitude' 
+        relhum, temp = 'Humidity 0', 'Temperature 0' 
+        wspeed, wdir = 'Wind Speed' , 'Wind Direction' 
+        datetime ='Observation Time'
+        product = 'MEISEI'
+        z_coordinate =  'Barometric Pressure 0' 
+        date = 'Date'
+        z_type=1
+        
+    elif 'vaisala' in file:
+        lat, lon = 'number' , 'number' 
+        relhum, temp = 'relative_humidity', 'temperature' 
+        wspeed, wdir = 'wspeed' , 'wdir' 
+        press, datetime = 'pressure' , 'date_time'
+        product = 'VAISALA'
+        z_coordinate =  'pressure' 
+        z_type=1
+        
+    # dictionary placeholder 
+    all_standard_variables =  ['source_id', 'report_id', 'observation_id', 'report_timestamp', 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 
+    'vertco_reference_1@body', 'obsvalue@body', 'varno@body', 'units', 'number_of_pressure_levels', 'vertco_type@body'] 
+    
+    all_data = {}
+    for v in all_standard_variables:
+        all_data[v] = []
+    # data placeholder  
+    read_data = []
+    proc_dates = []
+    
+    obs_id = 0
+    report_id = 0 
+    
+    for i in range(len(df)):
+        date_time_v = df[datetime].values[i]
+
+        # z_coordinate
+        z_coordinate_v = df[z_coordinate].values[i]
+        try:    
+            z_coordinate_v = float(z_coordinate_v)  *100 # P in hPa
+        except:
+            continue
+        
+        # dates, timestamps 
+        if 'meisei' in file:    
+            date_v = df[date].values[i]
+            time = date_time_v.split(':')
+            # TODO DUMMY date for now 
+            timestamp = pd.Timestamp(year=int(date_v[0:4]), month=int(date_v[4:6]), day=int(date_v[6:8]) , hour=int(time[0]), minute=int(time[1]) , second=int(time[2])  ) 
+        elif 'vaisala' in file:
+            date_v = df[datetime].values[i]
+            date = date_v.split('-')            
+            day = int(date[0])
+            month = int(date[1])
+            year = int(date[2][0:4])
+            
+            hour = int(date[2][5:7])
+            minute = int(date[2][8:10])
+            sec = int(date[2][11:13])
+            timestamp = pd.Timestamp(year=year, month= month, day= day , hour= hour, minute= minute , second= sec  ) 
+            date_v = str(timestamp.date()).replace('-','')
+ 
+        # lat, lon 
+        try:
+            lat_v = float(df[lat].values[i])
+            lon_v = float(df[lon].values[i])
+        except:
+            lat_v = -20.2972  # using values from MAISEI +> NEED To FIX THIS for VAISALA 
+            lon_v = 57.49692
+        # TO DO FIX CONVENTION 
+        if lon_v > 180:
+            lon_v = -180.0 + (lon_v - 180)
+            
+        # temp, wind speed, wind dir 
+        temp_v = df[temp].values[i] # 
+        try:
+            temp_v = float(temp_v) + 273.15 # temp is given in degree Celsius -> convert to Kelvin
+        except:
+            temp_v = np.nan
+            
+        relhum_v = df[relhum].values[i] # 
+        try:
+            relhum_v = float(relhum_v)/100.0 # normalize to [0,1] range 
+        except:
+            relhum_v = np.nan
+                
+        wind_sp_v = df[wspeed].values[i]  # 
+        try:
+            wind_sp_v = float(wind_sp_v)
+        except:
+            wind_sp_v = np.nan
+
+        wind_dir_v = df[wdir].values[i]  
+        try:
+            wind_dir_v = float(wind_dir_v)
+        except:
+            wind_dir_v = np.nan
+
+        # to remove duplicates
+        if timestamp not in proc_dates:
+            proc_dates.append(timestamp)
+            report_id = report_id + 1
+        
+        for value,var in zip([ temp_v, relhum_v, wind_sp_v, wind_dir_v],  [ 'temperature', 'relative_humidity', 'wind_speed', 'wind_direction' ] ):
+            obs_id = obs_id +1
+            read_data.append( ( product.rjust(20), int(obs_id), report_id,  timestamp, int(date_v), statid, lat_v, lon_v, z_coordinate_v, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), z_type) )
+ 
+    column_names = [ 'product_code', 'observation_id', 'report_id', 'report_timestamp' , 'iday', 'station_id', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body', 'obsvalue@body', 'varno@body' ,  'units', 'vertco_type@body'  ]    
+
+    df = pd.DataFrame(data= read_data, columns=column_names )       
+        
+    df['observation_id']  = np.chararray.zfill( (df['observation_id'].astype(int)) .astype('S'+str(id_string_length ) ), id_string_length  )  #converting to fixed length bite objects 
+    df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
+    
+    df['record_timestamp'] = df['report_timestamp'] 
+    df['vertco_type@body'] = df['vertco_type@body'].astype(float)
+    
+    #df['vertco_reference_1@body'] = df['vertco_reference_1@body'].astype(float)
+    df = df.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] ) 
+    
+    print('Done reading DF')
+    return df , statid 
+
+
+
 def read_hara_csv(file=''):
     """ Read HARA station files, which were previously created via jupyter notebook 
         Args:
@@ -2071,7 +2227,9 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
             elif 'shipsound' in dataset:
                 df, stations_id = read_shipsound_csv(fn)
             elif 'npsound' in dataset:
-                df, stations_id = read_npsound_csv(fn)                
+                df, stations_id = read_npsound_csv(fn)   
+            elif 'mauritius' in dataset:
+                df, stations_id = read_mauritius_csv(fn)   
             else:
                 #print('Unidentified file is: ', fn)
                 raise ValueError('Cannot identify the type of file to be analized!!! ')
@@ -2116,9 +2274,12 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
                 primary_id = '20999-coordinateIssue-'
                 
             if dataset == 'shipsound':
-                    primary_id = '20999-shipsound-'
-                    correct_data = True 
-                    
+                primary_id = '20999-shipsound-'
+                correct_data = True 
+            if dataset =='mauritius':
+                correct_data = True 
+                stat_conf_check = True
+                
             if not correct_data:
                 primary_id = primary_id.replace('-1_', '0-20999-').replace('-20000-','-20999-').replace('-20300-','-20999-') .replace("-20001-","-20999-")
                 primary_id = primary_id.replace('-20400-', '0-20999-').replace('-20500-','-20999-').replace('-20600-','-20999-')  
@@ -2317,18 +2478,16 @@ def get_station_configuration_cuon(stations_id='', station_configuration='', lat
             return None
         elif  db == 'npsound':
             return None
-        
+        elif db =='mauritius':
+            return station_configuration
+                
     d = station_configuration.loc[station_configuration['file'] == fname ]
-        
-    #print(0) # there must always be a matching stat conf since we are checking the file name now 
-    
+    #print(0) # there must always be a matching stat conf since we are checking the file name now
     if  d.empty:
         a = open( 'logs/' + db + "_wrong_stat_conf.dat" , "a+")
         a.write(fn+'\n')
-        
         #print('must check wrong coordinates' )
         return None
-    
     return d
 
 
@@ -3795,6 +3954,8 @@ db = { 'era5_1': '/mnt/users/scratch/leo/scratch/era5/odbs/1' ,
        'npsound' : '/scratch/das/federico/databases_service2/NPSOUND-NSIDC0060/NPSOUND_csv_converted',
        'shipsound' : '/scratch/das/federico/databases_service2/SHIPSOUND-NSIDC-0054/' ,
        
+       'mauritius': '/scratch/das/federico/databases_service2/mauritius_2005/'
+       
 } 
 
 
@@ -3822,14 +3983,18 @@ if __name__ == '__main__':
 
     vlist= ['era5_1', 'era5_2', 'era5_3188', 'era5_1759', 'era5_1761', 
             'bufr', 'igra2', 'ncar', 
-            'nasa','ubern', 
+
             'amma',
             'era5_1_mobile',
             'era5_2_mobile',
             'giub' ,
             'hara',
             'npsound',
-            'shipsound']
+            'shipsound' ,
+            
+            'mauritius',
+            'ubern',
+            'nasa']
     
     
     if dataset not in vlist:
@@ -3850,6 +4015,9 @@ if __name__ == '__main__':
     stat_conf_path = '../data/station_configurations/'     
     if 'mobile' in dataset:
         stat_conf_file = stat_conf_path +   '/era5_1_station_configuration_extended.csv'    
+    elif 'mauritius' in dataset:
+        stat_conf_file = stat_conf_path +   '/station_configuration_mauritius.dat'    
+        
     else:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
         stat_conf_file = stat_conf_path +   '/' + dataset + '_station_configuration_extended.csv'    
 
@@ -3975,6 +4143,10 @@ NPSOUND
 SHIPSOUND (only one file)
 -f /scratch/das/federico/databases_service2/SHIPSOUND-NSIDC-0054/shipsound7696.csv -d shipsound -o COP2
 
+
+MAURITIUS
+-f /scratch/das/federico/databases_service2/mauritius_2005/vaisala_ascents.csv  -d mauritius -o COP2 
+-f /scratch/das/federico/databases_service2/mauritius_2005/meisel_ascents.csv  -d mauritius -o COP2 
 
 """
 
