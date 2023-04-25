@@ -529,7 +529,7 @@ def bufr_to_dataframe(file=''):
               
     df_new['report_timestamp'] = np.nan 
          
-    df_new = df_new.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
+    #df_new = df_new.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
         
     return df_new, stations_id
     
@@ -687,7 +687,7 @@ def uadb_ascii_to_dataframe(file=''):
     
     #df['observations_id'] =numpy.char.zfill(numpy.arange(ivar.shape[0]).astype('S10'), 10)
     df_new['record_timestamp'] = df_new['report_timestamp'] 
-    df_new = df_new.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] ) 
+    #df_new = df_new.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] ) 
     
     print('Done reading DF')
     return df_new , stations_id 
@@ -861,7 +861,7 @@ def read_giub(file=''):
     df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
     
     df['record_timestamp'] = df['report_timestamp'] 
-    df = df.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] ) 
+    #df = df.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] ) 
     
     print('Done reading DF')
     return df , statid 
@@ -956,7 +956,7 @@ def read_amma_csv(file=''):
     df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
     
     df['record_timestamp'] = df['report_timestamp'] 
-    df = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] ) 
+    #df = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] ) 
     
     print('Done reading DF')
     return df , statid 
@@ -1113,7 +1113,7 @@ def read_mauritius_csv(file=''):
     df['vertco_type@body'] = df['vertco_type@body'].astype(float)
     
     #df['vertco_reference_1@body'] = df['vertco_reference_1@body'].astype(float)
-    df = df.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] ) 
+    #df = df.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] ) 
     
     print('Done reading DF')
     return df , statid 
@@ -1235,7 +1235,7 @@ def read_hara_csv(file=''):
     df['vertco_type@body'] = df['vertco_type@body'].astype(float)
     
     #df['vertco_reference_1@body'] = df['vertco_reference_1@body'].astype(float)
-    df = df.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] ) 
+    #df = df.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] ) 
     
     print('Done reading DF')
     return df , statid 
@@ -1354,11 +1354,7 @@ def read_shipsound_csv(file=''):
     df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
     
     df['record_timestamp'] = df['report_timestamp']
-    df['vertco_type@body'] = df['vertco_type@body'].astype(float)
-    
-    #df['vertco_reference_1@body'] = df['vertco_reference_1@body'].astype(float)
-    df = df.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] ) 
-    
+
     print('Done reading DF')
     return df , '20999' 
 
@@ -1475,12 +1471,7 @@ def read_npsound_csv(file=''):
         
     df['observation_id']  = np.chararray.zfill( (df['observation_id'].astype(int)) .astype('S'+str(id_string_length ) ), id_string_length  )  #converting to fixed length bite objects 
     df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
-    
-    df['vertco_type@body'] = df['vertco_type@body'].astype(float)
-    
-    #df['vertco_reference_1@body'] = df['vertco_reference_1@body'].astype(float)
-    df = df.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] ) 
-    
+
     print('Done reading DF')
     return df , statid 
 
@@ -1665,7 +1656,7 @@ def igra2_ascii_to_dataframe(file=''):
     for c in ['observation_id', 'report_id']:
         df_new[c] = df[c]
         
-    df_new = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    # FF check here !!!! 
+    #df_new = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    # FF check here !!!! 
     
     return df_new, stations_id
 
@@ -2237,6 +2228,8 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
             # save = ['correct', 'wrong']                                                                                                                                                                              
             correct_data, df, most_freq_lat, most_freq_lon = check_lat_lon(df, fn, save='correct')
             df = df.reset_index()
+            df['vertco_reference_1@body'] = df['vertco_reference_1@body'].astype(float)
+            df = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
 
             station_configuration_retrieved = get_station_configuration_cuon(stations_id=stations_id, 
                                                                              station_configuration = cdm['station_configuration'],
@@ -2651,6 +2644,10 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn, change
             print('FAILED   ' , fn )
             return None
         fbds = fbds.reset_index()
+        fbds['vertco_reference_1@body'] = fbds['vertco_reference_1@body'].astype(float)
+        fbds = fbds.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
+
+        
         #fbds = fbds.replace( -2147483648 , np.nan ) 
         
         """ Read the station_id, getting the station_configuration from the table list, extracting primary_id """      
@@ -4147,7 +4144,7 @@ SHIPSOUND (only one file)
 MAURITIUS
 -f /scratch/das/federico/databases_service2/mauritius_2005/vaisala_ascents.csv  -d mauritius -o COP2 
 -f /scratch/das/federico/databases_service2/mauritius_2005/meisel_ascents.csv  -d mauritius -o COP2 
-
+-f /scratch/das/federico/databases_service2/mauritius_2005/meisei_ascents.csv  -d mauritius -o /scratch/das/federico/INTERCOMPARISON_MAURITIUS 
 """
 
 #mobile
