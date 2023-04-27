@@ -23,7 +23,7 @@ def write_trj(stat):
     test_counter = 0
     try:
         # check if output already exists:
-        targetfile = '/mnt/users/staff/uvoggenberger/scratch/converted_v11/trajectory_files_20230418/trajectory_'+str(stat.split('/')[-1])
+        targetfile = '/mnt/users/staff/uvoggenberger/scratch/converted_v11/trajectory_files_20230426/trajectory_'+str(stat.split('/')[-1])
         checkfile = glob.glob(targetfile)
         # if target file already exists
         if len(checkfile) > 0:
