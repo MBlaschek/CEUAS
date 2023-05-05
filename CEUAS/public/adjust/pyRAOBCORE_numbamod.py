@@ -41,7 +41,7 @@ def break_simulator(x):
                                                count,tmean,tsquare)
             imax[im,ip]=np.argmax(tsas[im,ip,:])
             rmax[im,ip]=np.max(tsas[im,ip,:])
-        print(im)
+        #print(im)
     
     return imax,rmax,tsas  
     
@@ -53,8 +53,8 @@ def goodmon(var,idx,out):
     for i in range(len(idx)-1):
         if idx[i+1]>idx[i]:
             l+=1
-    if l==0:
-        print('idx not valid')
+    #if l==0:
+        #print('idx not valid')
     for ih in range(var.shape[0]):
         for ip in range(var.shape[1]):
             l=0
@@ -76,8 +76,8 @@ def monmean(var,idx,out,thresh=0,goodmon=goodmon):
     for i in range(len(idx)-1):
         if idx[i+1]>idx[i]:
             l+=1
-    if l==0:
-        print('idx not valid')
+    #if l==0:
+        #print('idx not valid')
     out[:]=np.nan
     for ih in range(var.shape[0]):
         for ip in range(var.shape[1]):

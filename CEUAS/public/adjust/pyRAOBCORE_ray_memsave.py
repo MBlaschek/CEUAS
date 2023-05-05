@@ -62,7 +62,7 @@ def RC_ini(RCfile):
     
     try:
         
-        with open(RCfile) as f:
+        with open(os.path.expandvars(RCfile)) as f:
             RC = json.load(f)
     except Exception as e:
         
@@ -97,13 +97,13 @@ def RC_ini(RCfile):
         RC['goodsondes']=[141,142,123,124,125,113,114,79,80,81,70,152,177,183] # from WMO manual on codes, 2019 edition
         RC['apriori_prob_default']=0.01
         RC['exp']='exp00'
-        RC['CUON'] = 'converted_v10/'
+        RC['CUON'] = 'converted_v11/'
         RC['fgdepname'] = 'era5_fgdep'
         RC['version'] = '1.8' #1.9.0'
         RC['add_solelev'] = False
         RC['write_to_backend'] = False
         
-        with open(RCfile,'w') as f:
+        with open(os.path.expandvars(RCfile),'w') as f:
             json.dump(RC,f, indent=4, sort_keys=True)
             
     refdate=datetime.datetime(*RC['refdate'])
@@ -397,10 +397,10 @@ def bilin(hadmeddict,temperatures,rcy,rcm,days,lat,lon):
     
     
 #@ifray(ray.remote,RC['findfuture'])
-def RAOB_findbreaks(method,fnorig):
+def RAOB_findbreaks(hadmeddict, method,fnorig):
 
-    from utils import rmeanw
     tt=time.time()
+    from utils import rmeanw
     finfo={}
     
     variable = 'temperature'
@@ -414,7 +414,7 @@ def RAOB_findbreaks(method,fnorig):
             
     if not cache:
     
-        with eua.CDMDataset(fnorig) as iofile:
+        with h5py.File(fnorig) as iofile:
             if '126' not in iofile['recordindices'].keys():
                     return None
             if np.unique(iofile['recordindices']['126'][:]).shape[0] < 365:
@@ -422,11 +422,12 @@ def RAOB_findbreaks(method,fnorig):
             
             try:
                 
-                x = iofile.station_configuration.station_name[:]
+                x = iofile['station_configuration/station_name'][:]
                 sn = x.view('S'+str(x.shape[1]))[0][0].decode()
             except:
                 sn = 'missing'
 
+        with eua.CDMDataset(fnorig) as iofile:
             dq=iofile.read_data_to_3dcube(['temperature'], 
                     dates=None,
                     plevs=(RC['stdplevs']*100.).astype(int),
@@ -477,13 +478,17 @@ def RAOB_findbreaks(method,fnorig):
 
     try:
         
-        ndays = RC['months'].shape[0]
+        #print('before read', time.time() - tt)
         with h5py.File(fn,'r') as f:
             if f['datum'].shape[0]<RC['snht_maxlen']:
                 return finfo
             finfo['ifile'] = fn
             finfo['ifileorig'] = fnorig
-            finfo['days']=f['datum'][:ndays] - 1
+            finfo['days']=f['datum'][:] - 1
+            ndays = finfo['days'].shape[0]
+            while  finfo['days'][ndays - 1] >= RC['months'].shape[0] and ndays > 0:
+                ndays -= 1
+            finfo['days'] = finfo['days'][:ndays]
             #print(fn.split('/')[-1],finfo['days'].shape)
             finfo['fg_dep']=-f['era5_fgdep'][:,np.array(RC['pidx']),:ndays]
             finfo['era5bc']=-f['bias_estimate'][:,np.array(RC['pidx']),:ndays] # ERA5 bias correction - to be used for adjusting most recent part of some series
@@ -551,7 +556,7 @@ def RAOB_findbreaks(method,fnorig):
             finfo['tsas'],finfo['tsarad'],finfo['tsahad']=do_test(finfo['fg_dep'],finfo['temperatures'],finfo['anomalies'],finfo['hadcrut_dep'],RC['months'][finfo['days']],
                                                   RC['snht_maxlen'],RC['snht_min_sampsize'],RC['miss_val'])  
             
-            #print('before analyze: {:6.4f}'.format(time.time()-tt))  
+            print('before analyze: {:6.4f}'.format(time.time()-tt))  
             #print(version_info)
             finfo['breaklist']=np.sort(break_analyze(finfo))
         elif method=='Binseg':
@@ -567,7 +572,8 @@ def RAOB_findbreaks(method,fnorig):
         
         print(finfo['sid']+' findbreaks: found {:d}, {:6.4f}'.format(len(finfo['breaklist']), time.time()-tt))  
         obj_ref= ray.put(finfo)
-    except Exception as e:
+        #print('after put', time.time()-tt)
+    except MemoryError as e:
         print(fnorig, e)
         return None
     
@@ -757,7 +763,7 @@ def RAOB_adjust(finfo):
         istop=np.min((fb[ib]+RC['mean_maxlen'],s[2]))
         count=np.sum(~np.isnan(finfo['fg_dep'][:,11,fb[ib]:istop]),axis=1)
         stops=np.zeros(2,dtype=np.int32)+istop
-        rcss=np.int(3*RC['snht_min_sampsize'])
+        rcss=int(3*RC['snht_min_sampsize'])
         for j in range(2):
             if count[j]<rcss and np.sum(~np.isnan(finfo['fg_dep'][j,11,fb[ib]:]))>rcss:
                 i=istop
@@ -2084,9 +2090,9 @@ def add_adj(fi, mode='r'):
                                                  #attributes={'version':RC['version']}
                                                 #)
                     print('write:',time.time()-tt)
-                except Exception as e:
+                except MemoryError as e:
                     print('could not write', k,e)
-    except Exception as e:
+    except MemoryError as e:
         print('could not write '+outfile, e)
 
 ray_add_adj=ray.remote(add_adj)
@@ -2119,31 +2125,60 @@ if __name__ == '__main__':
         RCdir = sys.argv[1]
         pkl='RAOBx'
     else:
-        pattern=''
+        pattern='v1'
         RCdir = 'exp00'
         pkl='RAOBx'
     tt=time.time()
     process = psutil.Process(os.getpid())
     #files = glob.glob('/users/staff/leo/fastscratch/rise/1.0/'+RC['exp']+'/[01]*/feedbackmerged'+pattern+'*.nc')[:]
-    RCfile = os.path.expandvars('$FSCRATCH/rise/1.0/')+RCdir+'/RC.json'
+    RCfile = os.path.expandvars('/users/staff/leo/fastscratch/rise/1.0/')+RCdir+'/RC.json'
+
+#    ray.init(num_cpus=RC['CPUs'], object_store_memory=1024*1024*1024*50)
+    ray.init(num_cpus=25, object_store_memory=1024*1024*1024*50)
+
     RC = RC_ini(RCfile)
                                 
     filesorig = glob.glob('/mnt/users/scratch/leo/scratch/'+RC['CUON']+'/*'+pattern+'*.nc')[:]
     filesorig.sort()
     lats = [];lons = []; wigos = []; wshort = [];statids = []
     goodfilesorig = []
+    lold = 0
+    llold = 0
     for fn in filesorig:
         if '00000' in fn:
             continue
 
         #lats.append(f['observations_table']['latitude'][-1])
         #lons.append(f['observations_table']['longitude'][-1])
-        wigos.append(fn.split('_CEUAS')[0].split('/')[-1]) 
-        wshort.append(fn.split('_CEUAS')[0].split('-')[-1][:5])
-        l = 0
-        while str(l) + wshort[-1] in statids:
-            l += 1
-        statids.append(str(l)+wshort[-1])
+        if 'orphan' not in fn:
+            wigos.append(fn.split('_CEUAS')[0].split('/')[-1]) 
+            wshort.append(fn.split('_CEUAS')[0].split('-')[-1][:5])
+        else:
+            wigos.append(fn.split('_CEUAS')[0].split('/')[-1]) 
+            wshort.append('orpha')
+            print(wigos[-1], wshort[-1])
+                         
+        if wshort[-1] == 'orpha':
+            wshort[-1] = 'or'
+            l = lold
+            while '{:0>4}'.format(l) + wshort[-1] in statids:
+                l += 1
+            wshort[-1] = '{:0>4}'.format(l) + wshort[-1]
+            lold = l
+            statids.append(wshort[-1])
+        else:
+            if 'data' in wshort[-1]:
+                print(wshort[-1], wigos[-1])
+                
+            while len(wshort[-1]) < 5:
+                print(wshort[-1], wigos[-1])
+                wshort[-1] = '0' + wshort[-1]
+                print('')
+            ll = llold
+            while str(ll) + wshort[-1] in statids:
+                ll += 1
+            statids.append(str(ll)+wshort[-1])
+            llold = ll
         goodfilesorig.append(fn)
         print(statids[-1])
     RC['filesorig'] = goodfilesorig
@@ -2153,14 +2188,14 @@ if __name__ == '__main__':
     RC['cdict'] ={'temperature':'temperatures','fg_depar@body':'era5_fgdep','biascorr@body':'bias_estimate','lat':'lat','lon':'lon','hours':'hours'}
     print(time.time() -tt)
     hadmeddict= read_hadCRUT5('/users/staff/leo/fastscratch/rise/1.0/common/','HadCRUT.5.0.1.0',RC['refdate'])
+    hadmeddict_ref = ray.put(hadmeddict)
 
     
-    ray.init(num_cpus=RC['CPUs'], object_store_memory=1024*1024*1024*50)
     #ray.init(address='131.130.157.11:49705', _redis_password='5241590000000000')
 
     
     if not RC['findfuture']:  
-        func=partial(RAOB_findbreaks,'SNHT') # Binseg
+        func=partial(RAOB_findbreaks,hadmeddict, 'SNHT') # Binseg
         obj_ref=list(map(func,RC['filesorig']))
         obj_ref = [i for i in obj_ref if i]
         finfo=ray.get(obj_ref)
@@ -2168,7 +2203,7 @@ if __name__ == '__main__':
     else:
         futures = []
         for fn in RC['filesorig']:
-            futures.append(ray_RAOB_findbreaks.remote('SNHT',fn))
+            futures.append(ray_RAOB_findbreaks.remote(hadmeddict_ref, 'SNHT', fn))
         obj_ref  = ray.get(futures)
         #futures = []
         #for o in obj_ref:
@@ -2187,6 +2222,13 @@ if __name__ == '__main__':
         
     obj_ref = [i for i in obj_ref if i]
     
+    if False and RC['write_to_backend']:
+        
+        futures = []
+        for o in obj_ref:
+            futures.append(ray_add_adj.remote(o, mode='r'))
+        ray.get(futures)
+        print('wrote to backend files',time.time()-tt)
     
     break_sum=np.sum([len(l['breaklist']) for l in ray.get(obj_ref)])
     if RC['plot']:
@@ -2236,7 +2278,7 @@ if __name__ == '__main__':
 
     
     if pattern=='':
-        pattern='91413'
+        pattern='01001'
         
     lx= sids.index('feedbackmerged0'+pattern)
     
@@ -2334,9 +2376,18 @@ if __name__ == '__main__':
         futures=[]
         for l in range(len(obj_ref)):
             futures.append(ray_add_solelev.remote(obj_ref[l], RC))
+            #add_solelev(ray.get(obj_ref[l]), RC)
         x = ray.get(futures)
         add_adj(ray.get(obj_ref[0]), mode='r')
         print('after addsolelev',time.time()-tt)
+
+    #if RC['write_to_backend']:
+        
+        #futures = []
+        #for o in obj_ref:
+            #futures.append(ray_add_adj.remote(o, mode='r'))
+        #ray.get(futures)
+        #print('wrote to backend files',time.time()-tt)
 
     #func=partial(save_monmean,files[0])
     #res=list(map(func, [obj_ref[l]], [results_ref[l]]))
@@ -2366,13 +2417,23 @@ if __name__ == '__main__':
     
     #if not RC['richfuture']:    
         #RC['richfuture']=True
+    sodr = ray.get(ray.get(single_rich_ref0))
+    l = -1
+    for s in sodr:
+        l += 1
+        sob = s[24]['obs']['break_profiles']
+        for ib in range(len(sob)):
+            for ih in range(2):
+                if np.any(np.abs(sob[ib][ih]) >1.e4):
+                    print(l,ib,ih, ray.get(obj_ref[l])['ifile'],sob[ib][ih] )
+                    
     if True:
         rich_ref00=rich_adjust(lx,single_obj_ref,0)
-        #breakplot(lx,obj_ref,obj_rich_ref0=[rich_ref00])
+        breakplot(lx,obj_ref,obj_rich_ref0=[rich_ref00])
         #save_monmean(ifile,0,exper=RC['exp'],fi=[obj_ref[lx]],rich_ref1=[rich_ref00])
     if True:
         rich_ref2=rich_adjust(lx,single_obj_ref,1,obj_rich_ref=single_rich_ref0)  
-        #breakplot(lx,obj_ref,obj_rich_ref0=[rich_ref0[lx]],obj_rich_ref1=[rich_ref2])
+        breakplot(lx,obj_ref,obj_rich_ref0=[rich_ref0[lx]],obj_rich_ref1=[rich_ref2])
         #save_monmean(ifile,0,exper=RC['exp'],fi=[obj_ref[lx]],rich_ref0=[rich_ref0[lx]],rich_ref1=[rich_ref2])
 
     print('before second RICH iteration',time.time()-tt)
