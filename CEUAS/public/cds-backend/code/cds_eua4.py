@@ -959,7 +959,8 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
 #                             pass
                     else:   
 #                         print('entering n_dim > 1')
-                        if v == 'station_name':
+                        # if v == 'station_name':
+                        if v == 'primary_id':
                             s1 = fin[group][v].shape[1]
                             hilf = np.array([fin[group][v][0]]*np.where(mask)[0].shape[0])
 #                             print('hilf: ', hilf)
@@ -3218,7 +3219,7 @@ class CDMDataset:
                     fout['variable']=np.array([glamod_cdm_codes[cdm_codes[request['variable']]]]*len(fout['z_coordinate']))
                     groups.append('observations_table')
                     wigos_primid = b''.join(self.file['station_configuration']['primary_id'][0]).decode('UTF-8')
-                    fout['primary_id']=np.array([wigos_primid]*len(fout['z_coordinate'])) #self.filename.split('/')[-1].split('_CEU')[0]
+                    fout['station_id']=np.array([wigos_primid]*len(fout['z_coordinate'])) #self.filename.split('/')[-1].split('_CEU')[0]
                     groups.append('station_configuration')
                 else:
                     #
@@ -3228,7 +3229,7 @@ class CDMDataset:
                         igroup = 'station_configuration'
                         cfcstationcon = {'station_name': 
                                          {
-                                             'cdmname': 'station_configuration/station_name',
+                                             'cdmname': 'station_configuration/primary_id',
                                              'units': 'NA',
                                              'shortname': 'station_id',
                                              'coordinates': 'lat lon time plev',
@@ -3591,9 +3592,9 @@ class CDMDataset:
                 # station_configuration
                 if 'station_configuration' in self.groups:
                     igroup = 'station_configuration'
-                    cfcstationcon = {'station_name': 
+                    cfcstationcon = {'primary_id': 
                                      {
-                                         'cdmname': 'station_configuration/station_name',
+                                         'cdmname': 'station_configuration/primary_id',
                                          'units': 'NA',
                                          'shortname': 'station_id',
                                          'coordinates': 'lat lon time plev',
@@ -3601,7 +3602,7 @@ class CDMDataset:
                                      }
                                     } 
                     do_cfcopy(fout, self.file, igroup, base_idx, cfcstationcon, 'obs', compression,
-                              var_selection=['station_name'], mask=mask)
+                              var_selection=['primary_id'], mask=mask)
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
 
                 #
