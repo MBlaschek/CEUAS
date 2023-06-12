@@ -77,6 +77,12 @@ from multiprocessing import set_start_method, Pool
 #              'u_component_of_wind': ipar[104],'v_component_of_wind': ipar[105],
 #              'specific_humidity': ipar[39]}
 
+try:
+    config_file = 'hug.default.config.json'
+    config = json.load(open(config_file, 'r'))
+except:
+    print('no config found')
+
 restriction_active = False
 
 glamod_cdm_codes = {34:'dew_point_depression',
@@ -3333,7 +3339,7 @@ class CDMDataset:
                         f.write('#     - igra-data-policy \n')
                         f.write('# This is a CSV file following the CDS convention cdm-obs \n')
                         f.write('# Data source: CUON \n')
-                        f.write('# Version: v1 \n')
+                        f.write('# Version: '+config['cuon_version']+' - ' + datetime.now().strftime("%d-%b-%Y %H:%M:%S") + ' \n')
                         
                         if len(request['date']) == 1:
                             f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) +' \n')
@@ -3372,7 +3378,7 @@ class CDMDataset:
                         f.write('#     - igra-data-policy \n')
                         f.write('# This is a CSV file following the CDS convention cdm-obs \n')
                         f.write('# Data source: CUON \n')
-                        f.write('# Version: v1 \n')
+                        f.write('# Version: '+config['cuon_version']+', ' + datetime.now().strftime("%d-%b-%Y %H:%M:%S") + ' \n')
                         
                         # f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) + ' - ' + 
                         #         str(request['date'][1][:4])+'.'+str(request['date'][1][4:6])+'.'+str(request['date'][1][6:8]) +' \n')
@@ -3614,7 +3620,7 @@ class CDMDataset:
                     fout.attrs[a] = np.string_(v)
 
                 fout.attrs['history'] = np.string_(
-                    'Created by Copernicus Early Upper Air Service Version 0, ' + datetime.now().strftime(
+                    'Created by Copernicus Early Upper Air Service Version '+str(config['cuon_version'])+', ' + datetime.now().strftime(
                         "%d-%b-%Y %H:%M:%S"))
                 fout.attrs['license'] = np.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
 
