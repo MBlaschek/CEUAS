@@ -93,8 +93,8 @@ glamod_cdm_codes = {34:'dew_point_depression',
                     126:'air_temperature',
                     137:'air_dewpoint',
                     138:'relative_humidity',
-                    139:'eastward_wind_speed',
-                    140:'northward_wind_speed',  
+                    139:'eastward_wind',
+                    140:'northward_wind',  
                    }
 
 cdm_codes = {'temperature': 126, 'air_temperature': 126, 
