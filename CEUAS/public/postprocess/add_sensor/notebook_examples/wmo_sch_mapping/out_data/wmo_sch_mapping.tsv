@@ -1,0 +1,83 @@
+wmo_id	wmo_comments	sch_id	sch_comments
+52	Vaisala RS80-57H                 	VU4	 VU4 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell, corrected elapsed time {2003} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3
+52	Vaisala RS80-57H                 	VU3	 VU3 Vaisala RS80-57H or RS80-57 1680 MHz RDF H-Humicap NWS radiosonde, pressure cell {1998} 31313=45202^ (W3=52, T=039) (RDF, 1680+-3 MHz AM)
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MA3	 MA3 Mixed Australia Philips MK III carbon hygristor (AP3) and Vaisala RS80 Omega DigiCORA (VCv)^
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VDl	 VDl Vaisala RS80 PC Cora auto solar corr, LoRAN wind 31313=56206^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VDU	 VDU Vaisala RS80 PC Cora auto corr, Loran or GPS 31313=46270^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L or G>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VDL	 VDL Vaisala RS80 PC Cora auto corr, LoRAN wind 31313=46206^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VCv	 VCv Vaisala RS80 DigiCORA I, II, or Marwin auto solar corr, Omega wind 31313=56105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VCl	 VCl Vaisala RS80 DigiCORA I, II, or Marwin auto solar corr, LoRAN wind 31313=56106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VCg	 VCg Vaisala RS80 DigiCORA I, II, or Marwin auto solar corr, GPS wind 31313=56108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VCX	 VCX Vaisala RS80 DigiCORA I, II, or Marwin auto corr, composite VLF wind, may be 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=V>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VEL	 VEL Vaisala RS80 Star auto corr, LoRAN wind 31313=46306^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VCV	 VCV Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Omega wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VCU	 VCU Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Loran or GPS 31313=46170^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L or G>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	Vcl	 Vcl Vaisala RS80 DigiCORA I, II, or Marwin country solar corr, Omega wind 31313=76105^
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VCR	 VCR Vaisala RS80 DigiCORA I, II, or Marwin auto corr, RDF wind 31313=46102^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VCO	 VCO Vaisala RS80 DigiCORA I, II, or Marwin auto corr, optical wind 31313=46101^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=O>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VC_	 VC_ Vaisala RS80 DigiCORA I, II, or Marwin base case 31313=96199^ (W3=61) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VEl	 VEl Vaisala RS80 Star auto solar corr, LoRAN wind 31313=56306^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VFL	 VFL Vaisala RS80 Autosonde auto corr, LoRAN wind 31313=46606^ <F=T403FL,P=Ac,T=CB,U=A,N=L>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VGG	 VGG Vaisala RS80G or RS80-GH DigiCORA III auto corr, GPS wind 31313=46708^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VGL	 VGL Vaisala RS80 DigiCORA III auto corr, LoRAN wind 31313=46706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VGN	 VGN Vaisala RS80 DigiCORA III auto corr, no wind 31313=46700^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=none>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VGR	 VGR Vaisala RS80 DigiCORA III auto corr, RDF wind 31313=46702^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VGT	 VGT Vaisala RS80 DigiCORA III auto corr, ranging wind 31313=46703^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VGU	 VGU Vaisala RS80 DigiCORA III auto corr, Loran or GPS 31313=46770^ <F=T403FL or 1680AL,P=Ac,T=CB,U=AN=L or G>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VG_	 VG_ Vaisala RS80 DigiCORA III radiosonde base case 31313=96799^ (W3=67) <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VHL	 VHL Vaisala RS80-15L or RS80-15LA LoRAN radiosonde^ (T=022) <F=T403FL,P=Ac,T=CB,U=A,N=L>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VHe	 VHe Vaisala RS80-15LE LoRAN radiosonde with special interface^ <F=T403FL,P=Ac,T=CB,U=A,N=L>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VHl	 VHl Vaisala RS80-15LH H-Humicap LoRAN radiosonde^ <F=T403FL,P=Ac,T=CB,U=A,N=L>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VJL	 VJL Vaisala RS80-18L or RS80-18LA LoRAN radiosonde^ <F=T403FL,P=Ac,T=CB,U=A,N=L>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VJl	 VJl Vaisala RS80-18LH H-Humicap LoRAN radiosonde^ <F=T403FL,P=Ac,T=CB,U=A,N=L>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VcV	 VcV Vaisala RS80 DigiCORA I, II, or Marwin unknown corr, Omega wind 31313=96105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	Vcg	 Vcg Vaisala RS80 DigiCORA I, II, or Marwin unknown corr, GPS wind 31313=96108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VCN	 VCN Vaisala RS80 DigiCORA I, II, or Marwin auto corr, no wind 31313=46100^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=none>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VCL	 VCL Vaisala RS80 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=46106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VCT	 VCT Vaisala RS80 DigiCORA I, II, or Marwin auto corr, ranging wind 31313=46103^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ta>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VCA	 VCA Vaisala RS80 DigiCORA I, II, or Marwin auto corr, Russia VLF wind 31313=46105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=A (Russian Alpha VLF)> 
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MVH	 MVH Mixed Vaisala RS80 LoRAN (VGL, 31313=46706) and GPS (VGG, 31313=46708)^
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MVF	 MVF Mixed Vaisala RS80 DigiCORA I, II, or Marwin Omega (VCV, 31313=46105) and RS80 PCCORA Omega (VDV, 46205)^
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VCG	 VCG Vaisala RS80 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=46108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MVB	 MVB Mixed Vaisala RS80 DigiCORA no wind (VCN, 31313=46100) and RS80 DigiCORA LoRAN wind (VCL, 31313=46106)^ Actually, usually 31313=46105 with sfc wind only after Omega is discontinued
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MV9	 MV9 Mixed Vaisala RS80-GH DigiCORA III (VGG, 31313=46708) and RS92-SGP (VNg, 31313=48008)^
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MV8	 MV8 Mixed Vaisala RS80 DigiCORA I, II, or Marwin LoRAN (VCL, 31313=46106) and RS90 LoRAN (V9l, 31313=47106), mostly V9l^
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MVN	 MVN Mixed Vaisala RS92 DigiCORA III LoRAN (VNl, 31313=48006) and RS80 LoRAN (VGL, 31313=46706), mostly VNl^
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MV5	 MV5 Mixed Vaisala RS80 (VC_) and RS90 DigiCORA (V9-)^ Station 26038 in 1997-1998, assumed that DP to T above -40 is RS90 and DP to T above -60 is RS80;
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MV3	 MV3 Mixed Vaisala RS80 MicroCora (VB_) and DigiCORA (VC_)^ Station 02836 and others, based on 31313, Vaisala RS80 MicroCora (60=VB_) with complete dew point, RS80 DigiCORA (61=VC_)
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MV2	 MV2 Mixed Vaisala RS80 (V8A) and RS80 DigiCORA (VC_)^ Canada 1994, mixed Vaisala RS80 unspecified (V8A, no 31313) and RS80 DigiCORA or Marwin (61=VC_ in 31313)
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MV1	 MV1 Mixed Vaisala RS80 DigiCORA (VC_) and PCCora (VD_)^ Based on 31313, mixed DigiCORA (VC_=61) and PCCora (VD_=62), but if 31313 is missing assume VD_
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MRV	 MRV Mixed Russia MARS-2-2 (RRB) and Vaisala RS80 LoRAN (VHL)^ both with DP to T around -40 but VHL averages drier than RRB
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MC4	 MC4 Mixed Canada Valcom (CVA) and Vaisala RS80 DigiCORA (VC_^ Canada mid-1990s, mixed Valcom (31=CV2) and Vaisala RS80 DigiCORA or Marwin (61=VC_), missing 31313 may be CV2
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MB1	 MB1 Mixed Czech Vinohrady (BCV) and Vaisala RS80 DigiCORA (VC_)^ Station 11520 in early 1992, mixed WMO=61 (VC_, Vaisala RS80 DigiCORA, reported by 31313 or with complete DP) and
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MV4	 MV4 Mixed Vaisala RS80 DigiCORA I/II/Marwin Omega (VCV, 31313=46105) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106) through 19970930 1100^
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MVQ	 MVQ Mixed Vaisala RS80 DigiCORA I, II, or Marwin GPS (VCG, 31313=46108) and RS90 LoRAN (V9l, 31313=47106)^
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MVC	 MVC Mixed Vaisala RS80 DigiCORA no wind (VCN, 31313=46100) and RS80 DigiCORA GPS wind (VCG, 31313=46108)^ Station 48615 in 1999 after Omega is discontinued, 31313=46100 reported as
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VAL	 VAL Vaisala RS80 MicroCora radiosonde auto corr, LoRAN wind 31313=43706^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VC6	 VC6 Vaisala RS80 DigiCORA I, II, or Marwin no corr, LoRAN wind 31313=06106^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=L>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VC8	 VC8 Vaisala RS80 DigiCORA I, II, or Marwin no corr, GPS wind 31313=06108^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=G>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MVS	 MVS Mixed Vaisala RS80 DigiCORA I, II, or Marwin LoRAN (VCL, 31313=46106) and GPS (VCG, 31313=46108)^
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VC5	 VC5 Vaisala RS80 DigiCORA I, II, or Marwin no corr, Omega wind 31313=06105^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,N=O>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	VC2	 VC2 Vaisala RS80 DigiCORA I, II, or Marwin no corr, RDF wind 31313=06102^ <F=T403FL or 1680AL,P=Ac,T=CB,U=A,W=Ra>
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MrV	 MrV Mixed Russia MARS-2-2 (RRB, 31313=92903 or 02903, night, 0000Z) and Vaisala RS80 LoRAN (VCV, 31313=46105, day, 1200Z)^
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	MVT	 MVT Mixed Vaisala RS80 Digi I/II/Marwin LoRAN (VCL, 31313=46106) and GPS (VCG, 46108), RS90 (V9l, 47106 and V9g, 47108)^
+61	Vaisala RS80/Loran/Digicora I, II or Marwin (Finland)            	Mv4	 Mv4 Mixed Vaisala RS80 DigiCORA I/II/Marwin VLF (VCA, 31313=46105 with wind starting 19970930 1200) and RS80 DigiCORA I/II/Marwin LoRAN (VCL, 31313=46106)^
+72	Vaisala RS90/PC-Cora (Finland)                	V9b	 V9b Vaisala RS90 PC Cora auto corr, LoRAN wind 31313=47206^ <F=T403DL,P=Sc,T=Wc,U=2Ah,N=L>
+72	Vaisala RS90/PC-Cora (Finland)                	V9=	 V9= Vaisala RS90 PC Cora radiosonde base case {1995} 31313=97299^ (W3=72) <F=T403DL,P=Sc,T=Wc,U=2Ah>
+72	Vaisala RS90/PC-Cora (Finland)                	V9h	 V9h Vaisala RS90 PC Cora auto corr, ranging wind 31313=47203^ <F=T403DL,P=Sc,T=Wc,U=2Ah,W=Ta>
+73	Vaisala RS90/Autosonde (Finland)                	V9U	 V9U Vaisala RS90 Autosonde^ (W3=73) <F=T403DL,P=Sc,T=Wc,U=2Ah>
+74	Vaisala RS90/Star (Finland)                	V9*	 V9* Vaisala RS90 Star radiosonde base case 31313=97499^ (W3=74) <F=T403DL,P=Sc,T=Wc,U=2Ah>
+74	Vaisala RS90/Star (Finland)                	V9d	 V9d Vaisala RS90 Star auto corr, GPS wind 31313=47408^ <F=T403DL,P=Sc,T=Wc,U=2Ah,N=G>
+74	Vaisala RS90/Star (Finland)                	V9c	 V9c Vaisala RS90 Star auto corr, LoRAN wind 31313=47406^ <F=T403DL,P=Sc,T=Wc,U=2Ah,N=L>
+79	Vaisala RS92/Digicora I, II or Marwin (Finland)            	VNG	 VNG Vaisala RS92 DigiCORA I, II, or Marwin auto corr, GPS wind 31313=47908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+79	Vaisala RS92/Digicora I, II or Marwin (Finland)            	VNL	 VNL Vaisala RS92 DigiCORA I, II, or Marwin auto corr, LoRAN wind 31313=47906^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>
+79	Vaisala RS92/Digicora I, II or Marwin (Finland)            	VNN	 VNN Vaisala RS92 DigiCORA I, II, or Marwin auto corr, no wind 31313=47900^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=none>
+79	Vaisala RS92/Digicora I, II or Marwin (Finland)            	VNO	 VNO Vaisala RS92 DigiCORA I, II, or Marwin auto corr, optical wind 31313=47901^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,W=O>
+79	Vaisala RS92/Digicora I, II or Marwin (Finland)            	VNT	 VNT Vaisala RS92 DigiCORA I, II, or Marwin country corr, ranging wind 31313=67903^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>
+79	Vaisala RS92/Digicora I, II or Marwin (Finland)            	VN-	 VN- Vaisala RS92 DigiCORA I, II, or Marwin radiosonde base case {2003} 31313=97999^ (W3=79) <F=T400-406DL,P=Sc,T=Wc,U=2Ah>
+79	Vaisala RS92/Digicora I, II or Marwin (Finland)            	VnG	 VnG Vaisala RS92 DigiCORA I, II, or Marwin country corr, GPS wind 31313=67908^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+81	Vaisala RS92/Autosonde (Finland)                	MVP	 MVP Mixed Vaisala RS92 Autosonde LoRAN (VN6, 31313=48106) and GPS (VN8, 31313=48108)^
+81	Vaisala RS92/Autosonde (Finland)                	VN8	 VN8 Vaisala RS92 Autosonde auto corr, GPS wind 31313=48108^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=G>
+81	Vaisala RS92/Autosonde (Finland)                	VN6	 VN6 Vaisala RS92 Autosonde auto corr, LoRAN wind 31313=48106^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=L>
+81	Vaisala RS92/Autosonde (Finland)                	VNU	 VNU Vaisala RS92 Autosonde base case {2003} 31313=98199^ (W3=81) <F=T400-406DL,P=Sc,T=Wc,U=2Ah>
+81	Vaisala RS92/Autosonde (Finland)                	VN0	 VN0 Vaisala RS92 Autosonde auto corr, no wind 31313=48100^ <F=T400-406DL,P=Sc,T=Wc,U=2Ah,N=0>
