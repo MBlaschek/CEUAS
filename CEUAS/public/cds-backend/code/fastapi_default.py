@@ -329,12 +329,12 @@ def pkl_initialize(config,slist=[]):
     imem=0
     
     try:
-
+        logger.info('reading h5link: '+str(fout))
         with open(fout, 'rb') as f:
             rtskeys,rtsidx,rtsarr=pickle.load(f)
     except: 
-        print('cannot read '+fout)
-        print('creating new h5link')
+        logger.info('cannot read '+fout)
+        logger.info('creating new h5link')
         #with h5py.File(fout,'r') as f:
         l=0
         #with Pool(10) as p:
@@ -372,7 +372,7 @@ def pkl_initialize(config,slist=[]):
         x=0
     
     
-    print('ready read',time.time()-tt) ; tt=time.time()
+    logger.info('ready read')
     return rtskeys,rtsidx,rtsarr,fout
     
 
@@ -1227,11 +1227,12 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                 elif statid[:2] == '0-' and statid in slnum:
                     valid_id = statid
                 else:
-                    for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
-                        l = s + statid
-                        if l in slnum:
-                            valid_id = l
-                            break
+                    valid_id = [s for s in sids if statid in s]
+                    # for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-', '0-20999-0-',]:
+                    #     l = s + statid
+                    #     if l in slnum:
+                    #         valid_id = l
+                    #         break
 
             if valid_id == None:
                 raise ValueError('statid not available - please select an area, country or check your statid')
@@ -1273,11 +1274,12 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                     if k[:3] == '0-2' and k in slnum:
                         valid_id = k
                     else:
-                        for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
-                            l = s + k
-                            if l in slnum:
-                                valid_id = l
-                                break
+                        valid_id = [s for s in sids if statid in s]
+                        # for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
+                        #     l = s + k
+                        #     if l in slnum:
+                        #         valid_id = l
+                        #         break
 
                 # if wildcard was used, valid_id is already a list so it can be directly given to new_statid:
                 logger.info('final newstatid: %s   and valid_id: %s',new_statid, valid_id)
@@ -1800,7 +1802,6 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
                     var_ll.append(rows[10][0])
             var_ll = ", ".join(np.unique(var_ll))
             geo_ll = np.array(geo_ll)
-#             results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+body['single_csv_target']+".csv.gz", '')]
             results = [(''.join([i+'/' for i in rfile.split('/')[:-1]])+body['single_csv_target']+".csv", '')]
 
 #             with gzip.open(results[0][0], 'w') as file:
