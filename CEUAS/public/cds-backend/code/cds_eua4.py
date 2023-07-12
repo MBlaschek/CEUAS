@@ -2230,6 +2230,20 @@ class CDMDatasetList(dict):
             data[name] = CDMDataset(filename=ifile)
         super().__init__(data)
         self.__dict__ = self
+        
+    def __enter__(self):
+        return self
+    
+    def close(self):
+        """ Close H5py file
+        """
+        for i in self.keys():
+            logger.debug("[CLOSED] %s", self[i].filename)
+            self[i].close()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+        
     def __repr__(self):
         text = "CDMDatasetList <{}>".format(len(self.keys()))
         for ikey in self.keys():
@@ -4481,7 +4495,7 @@ class CDMDataset:
             if ivar == date_time_name and decode_datetime:
                 data[ivar] = seconds_to_datetime(data[ivar])
                 
-        return pd.DataFrame(data)
+        return pd.DataFrame(data).copy()
 
     def read_data_to_cube(self, variables: list, dates: list = None, plevs: list = None, feedback = None,
                           feedback_group = 'era5fb', **kwargs) -> dict:
