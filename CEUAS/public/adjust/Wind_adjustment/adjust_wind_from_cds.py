@@ -22,7 +22,8 @@ import json
 import h5py
 import copy
 from functools import partial
-from multiprocessing import Pool
+#from multiprocessing import Pool
+import ray
 
 @njit(boundscheck=True)
 def add_winddirbias(xyzu,xyzv,xyzd,xyzt,press,atime0,adj,adjpress):
@@ -96,7 +97,7 @@ def select_breaks(tsa,tsaint,thresh):
         istop=argabsmax+tsaint//3
         if istop>tsamax.shape[0]:
             istop=tsamax.shape[0]
-        print(argabsmax,tsamax[argabsmax])
+        #print(argabsmax,tsamax[argabsmax])
         tsamax[istart:istop]=0.
         argabsmax=nanargmax(tsamax)
         j+=1
@@ -118,7 +119,11 @@ def calc_dirshifts(ddeps,cdict,breakidx,tsaint,delta):
            
     #strongddeps=copy.deepcopy(ddeps)
     #ddeps[ff<0.5]=np.nan
-    ddeps[np.isnan(ff)]=np.nan
+    try: # should not be necessary
+        
+        ddeps[np.isnan(ff)]=np.nan
+    except:
+        pass
     ds=cdict['d']['xrdq']['winddirection'].values[:]
     #ds[ds>360]=np.nan
     #ds[ds<0]=np.nan
@@ -196,62 +201,6 @@ def getpindex(press,plist):
     
     return oindex[:l],pindex[:l]
     
-
-def homogenize_winddir(via_backend=False, fns=[]):
-    
-    lplot=False
-#     with open(os.path.expanduser('~leo/python/hug2/config/active.json')) as f:
-#         active=json.load(f)
-#     ids=list(active.keys())
-#     lats=np.asarray([active[x][2] for x in active.keys()])   
-#     lons=np.asarray([active[x][3] for x in active.keys()])
-#     starts=np.asarray([active[x][0] for x in active.keys()])   
-#     stops=np.asarray([active[x][1] for x in active.keys()])
-#     l=0
-#     for i in range(lats.shape[0],lats.shape[0]):
-#         idx=np.where(np.logical_and(np.abs(lats[i]-lats)<0.1,np.abs(lons[i]-lons)<0.1))[0]
-#         if len(idx)>1:
-#             fak=86400*365.25
-#             print('duplicate {:s},{:s},{:4.0f},{:4.0f},{:4.0f},{:4.0f}'.format(ids[idx[0]],ids[idx[1]],
-#                                                                                starts[idx[0]]/fak,starts[idx[1]]/fak,stops[idx[0]]/fak,stops[idx[1]]/fak))
-#             try:
-                
-#                 with h5py.File('/raid60/scratch/leo/scratch/converted_v5/'+ids[idx[0]]+'_CEUAS_merged_v1.nc','r') as f:
-#                     with h5py.File('/raid60/scratch/leo/scratch/converted_v5/'+ids[idx[1]]+'_CEUAS_merged_v1.nc','r') as g:
-#                         try:
-#                             print(f['observations_table']['latitude'][0],f['observations_table']['longitude'][0],
-#                                   g['observations_table']['latitude'][1],g['observations_table']['longitude'][1])
-#                             l+=1
-#                         except:
-                            
-#                             print('table read error')
-#             except:
-#                 print('file open error')
-                
-#     print(l,' duplicates')
-            
-    
-#     http = urllib3.PoolManager()
-#     r = http.request('GET', 'http://early-upper-air.copernicus-climate.eu/statlist/?mindate=1900-01-01&enddate=2020-12-31')
-# #     r = http.request('GET', 'http://srvx8.img.univie.ac.at:8002/statlist/?mindate=1900-01-01&enddate=2020-12-31')
-#     fns=r.data.split(b'\n')
-#     for i in range(len(fns)):
-#         fns[i]=fns[i].split(b',')[0].decode()
-    opath=os.path.expandvars('./')
-    os.chdir(opath)
-#     #fns=glob.glob('0?????/')
-#     #fns=[fns[fns.index('0-20000-0-35229')]]
-    tt=time.time()
-    print(os.getcwd())
-    if via_backend:
-        func=partial(homogenize_station,opath,via_backend)
-        adjusted=list(map(func,fns))
-    else:    
-        p=Pool(40)
-        func=partial(homogenize_station,opath,via_backend)
-        adjusted=list(p.map(func,fns))
-        
-    print(time.time()-tt,len(adjusted))
 
 def homogenize_station(opath,via_backend,fnf):
     
@@ -348,6 +297,12 @@ def homogenize_station(opath,via_backend,fnf):
         except:
             return
     
+        try:
+            hlen = data.advanced_homogenisation.wind_bias_estimate.shape[0]
+            return
+        except:
+            pass
+
         ndata=copy.deepcopy(cdict)
         for para in ['d','u','v']:
             #xyz = data.read_observed_variable(varnos[para], 
@@ -373,11 +328,16 @@ def homogenize_station(opath,via_backend,fnf):
                 print(fnf,'no pressure on standard levels')
                 return
             
-            ndata[para]['observation_value']=data['observations_table']['observation_value'][istart:istop][oindex]
-            ndata[para]['obs_minus_bg']=data['era5fb']['fg_depar@body'][istart:istop][oindex]
-            ndata[para]['date_time']=data['observations_table']['date_time'][istart:istop][oindex]
-            
-            out=eua.daysx2(ndata[para]['date_time'],pindex,len(plist),ndata[para]['observation_value'])
+            try:
+                
+                ndata[para]['observation_value']=data['observations_table']['observation_value'][istart:istop][oindex]
+                ndata[para]['obs_minus_bg']=data['era5fb']['fg_depar@body'][istart:istop][oindex]
+                ndata[para]['date_time']=data['observations_table']['date_time'][istart:istop][oindex]
+                
+                out=eua.daysx2(ndata[para]['date_time'],pindex,len(plist),ndata[para]['observation_value'])
+            except Exception as e:
+                print(fnf, e)
+                return
     
             ndata[para]['xrdq']=xr.Dataset()
             ndims={'hour':2,'press':len(plist),'datum':len(out[5])}
@@ -454,18 +414,27 @@ def homogenize_station(opath,via_backend,fnf):
                         idy = np.where(ff[idx]<2.0)[0]
                         if len(idy) > 0:        
                             v[idx[idy]]=np.nan # wind directions for small wind speeds too uncertain
+                            fd[idx[idy]]=np.nan # wind directions for small wind speeds too uncertain
+                            o2[idx[idy]]=np.nan # wind directions for small wind speeds too uncertain
                           
-                    ddeps[ih,ip,:]=v[:]
+                    try:
+                        ddeps[ih,ip,:v.shape[0]]=v[:] # needs to be fixed
+                    except:
+                        pass
                     tsa[ih,ip,:]=np.nan
-                    snhtmov2(v, tsa[ih,ip,:], snhtparas, index, count, tmean, tsquare)    
-                    if lplot and ip==10:
+                    snhtmov2(v[:tsa.shape[2]], tsa[ih,ip,:], snhtparas, index, count, tmean, tsquare)    
+                    if lplot and ip==11:
                         
                         plt.subplot(3,1,1)
                         plt.plot(cdict['d']['xrdq'].datum.values[:]/365.25,tsa[ih,ip,:],
                                  label='{} {} {:5.0f}'.format(ih,ip,np.nanmax(tsa[ih,ip,:])))
                         plt.subplot(3,1,2)
-                        plt.plot(cdict['d']['xrdq'].datum.values[:]/365.25,rmeanw(vu,30),
-                                 label='{} {} {:5.2f}'.format(ih,ip,np.nanstd(vu)))
+                        #plt.plot(cdict['d']['xrdq'].datum.values[:]/365.25,rmeanw(ddeps[ih, ip, :],30),
+                                 #label='{} {} {:5.2f}'.format(ih,ip,np.nanstd(ddeps[ih, ip, :])))
+                        plt.plot(cdict['d']['xrdq'].datum.values[:]/365.25,rmeanw(o2,365),
+                                 label='{} {} {:5.2f}'.format(ih,ip,np.nanstd(o2)))
+                        plt.plot(cdict['d']['xrdq'].datum.values[:]/365.25,rmeanw(fd,365),
+                                 label='{} {} {:5.2f}'.format(ih,ip,np.nanstd(fd)))
                     
                     #hilf=xrdq['bias_estimate'].values[ih,ip,:]
                     #hilf[np.isnan(hilf)]=0.
@@ -555,13 +524,79 @@ def homogenize_station(opath,via_backend,fnf):
                     
             print('write:',time.time()-tt)
             
-            print('wrote '+fo)
+            print('wrote '+ifile)
         except Exception as e:
             print('writing back to merged file failed', e)
             failedfiles.append(fnf+'-merged')
     
     return fnf
     #print(dimsize_errors,failedfiles)
+
+ray_homogenize_station = ray.remote(homogenize_station)
+
+def homogenize_winddir(via_backend=False, fns=[]):
+    
+    lplot=False
+#     with open(os.path.expanduser('~leo/python/hug2/config/active.json')) as f:
+#         active=json.load(f)
+#     ids=list(active.keys())
+#     lats=np.asarray([active[x][2] for x in active.keys()])   
+#     lons=np.asarray([active[x][3] for x in active.keys()])
+#     starts=np.asarray([active[x][0] for x in active.keys()])   
+#     stops=np.asarray([active[x][1] for x in active.keys()])
+#     l=0
+#     for i in range(lats.shape[0],lats.shape[0]):
+#         idx=np.where(np.logical_and(np.abs(lats[i]-lats)<0.1,np.abs(lons[i]-lons)<0.1))[0]
+#         if len(idx)>1:
+#             fak=86400*365.25
+#             print('duplicate {:s},{:s},{:4.0f},{:4.0f},{:4.0f},{:4.0f}'.format(ids[idx[0]],ids[idx[1]],
+#                                                                                starts[idx[0]]/fak,starts[idx[1]]/fak,stops[idx[0]]/fak,stops[idx[1]]/fak))
+#             try:
+                
+#                 with h5py.File('/raid60/scratch/leo/scratch/converted_v5/'+ids[idx[0]]+'_CEUAS_merged_v1.nc','r') as f:
+#                     with h5py.File('/raid60/scratch/leo/scratch/converted_v5/'+ids[idx[1]]+'_CEUAS_merged_v1.nc','r') as g:
+#                         try:
+#                             print(f['observations_table']['latitude'][0],f['observations_table']['longitude'][0],
+#                                   g['observations_table']['latitude'][1],g['observations_table']['longitude'][1])
+#                             l+=1
+#                         except:
+                            
+#                             print('table read error')
+#             except:
+#                 print('file open error')
+                
+#     print(l,' duplicates')
+            
+    
+#     http = urllib3.PoolManager()
+#     r = http.request('GET', 'http://early-upper-air.copernicus-climate.eu/statlist/?mindate=1900-01-01&enddate=2020-12-31')
+# #     r = http.request('GET', 'http://srvx8.img.univie.ac.at:8002/statlist/?mindate=1900-01-01&enddate=2020-12-31')
+#     fns=r.data.split(b'\n')
+#     for i in range(len(fns)):
+#         fns[i]=fns[i].split(b',')[0].decode()
+    opath=os.path.expandvars('./')
+    os.chdir(opath)
+#     #fns=glob.glob('0?????/')
+#     #fns=[fns[fns.index('0-20000-0-35229')]]
+    tt=time.time()
+    print(os.getcwd())
+    if via_backend:
+        func=partial(homogenize_station,opath,via_backend)
+        adjusted=list(map(func,fns))
+    else:    
+        #p=Pool(40)
+        #func=partial(homogenize_station,opath,via_backend)
+        #adjusted=list(p.map(func,fns))
+        
+        futures = []
+        adjusted = []
+        for fn in fns:
+            futures.append(ray_homogenize_station.remote(opath, via_backend, fn))
+            #adjusted.append(homogenize_station(opath, via_backend, fn))
+        adjusted = ray.get(futures)
+        
+        
+    print(time.time()-tt,len(adjusted))
 
 
 
@@ -573,12 +608,13 @@ if __name__ == "__main__":
     version='1.0'
     os.chdir(os.path.expandvars('$RSCRATCH/tmp'))
     via_backend=False
-    fns=glob.glob(os.path.expandvars('$RSCRATCH/converted_v11/long/*v1.nc'))
+    fns=glob.glob(os.path.expandvars('$RSCRATCH/converted_v13/long/*v1.nc'))
     fns.sort(key=os.path.getmtime)
     #fstart=fns.index('/raid60/scratch/leo/scratch//converted_v7/0-20000-0-41517_CEUAS_merged_v1.nc')
     #for i in range(len(fns[:fstart])):
         #fns[i]=fns[i].split('/')[-1].split('_CEUAS_merged_v1.nc')[0]
     #fns=['0-20000-0-35229']
+    ray.init(num_cpus=40)
     homogenize_winddir(via_backend,fns=fns)
     
 
