@@ -1,4 +1,5 @@
 
+import hdf5plugin
 import h5py
 import os,glob
 import numpy as np
@@ -73,7 +74,7 @@ def make_vrindex(vridx,ridx): # this function is similar to np.unique with retur
                 l += 1
     vridx[ridx[i] + 1 :]=l #len(idx) # next record for the last element is the len of the data
 
-def pwrite_variable(fno, fns, rdict, ridict, tup):       
+def pwrite_variable(fno, fps, rdict, ridict, tup):       
 
     tt = time.time()
     gname, vname = tup
@@ -92,8 +93,11 @@ def pwrite_variable(fno, fns, rdict, ridict, tup):
     l = 0
     for k, rs in sorted(rstarts.items()):
         irel = 0
-        for ifn in range(len(fns[:])):
-            with h5py.File(fns[ifn],'r') as f:
+        #for ifn in range(len(fns[:])):
+            #with h5py.File(fns[ifn],'r') as f:
+        for ifn in range(len(fps)):
+                f = fps[ifn]
+            
                 if var is None:
                     if f[gname][vname].ndim == 1:
                         
@@ -103,13 +107,35 @@ def pwrite_variable(fno, fns, rdict, ridict, tup):
                         else:
                             var[:] = np.nan
                     else:
-                        var = np.empty_like(f[gname][vname][:], shape=(csum, f[gname][vname].shape[1]))
+                        if vname == 'sensor_id':                    
+                            var = np.empty_like(f[gname][vname][:], shape=(csum, 4))
+                        else:
+                            var = np.empty_like(f[gname][vname][:], shape=(csum, f[gname][vname].shape[1]))
                         var[:] = b''
                         
                 if rdict[k][ifn]:   #not none
-                    chunk = f[gname][vname][rdict[k][ifn]]
+                    try:
+                        
+                        chunk = f[gname][vname][rdict[k][ifn]]
+                    except:
+                        print('ERROR ', fno)
                     #print(f['observations_table']['observed_variable'][rdict[k][ifn].stop])
-                    var[rs+irel:rs+irel+chunk.shape[0]] = chunk
+                    if vname == 'sensor_id':
+                        
+                        var[rs+irel:rs+irel+chunk.shape[0], :chunk.shape[1]] = chunk
+                    else:
+                        try:
+                            
+                            var[rs+irel:rs+irel+chunk.shape[0]] = chunk
+                        except:
+                            if chunk.shape[1] < var.shape[1]:
+                                print( 'warning, var wider than chunk ...', fps[ifn], vname, k, var[0], chunk[0])
+                                var[rs+irel:rs+irel+chunk.shape[0], :chunk.shape[1]] = chunk
+                            else:                                
+                                print( 'warning, cut chunk in width ...', fps[ifn], vname, k, var[0], chunk[0])
+                                var[rs+irel:rs+irel+chunk.shape[0]] = chunk[:, :var.shape[1]]
+                                print('cut chunk succeeded')
+
                     irel += chunk.shape[0] 
                     #if np.any(f['observations_table']['observed_variable'][rdict[k][ifn]]!=k):
                         #print(fns[ifn], k, ifn, f['observations_table']['observed_variable'][rdict[k][ifn]])
@@ -174,22 +200,40 @@ def dim_attach(g, k):
             print(g.filename.split('/')[-1],k, e)
             pass
 
-def h5concatenate(fkey) :
+def h5concatenate(fkey, h=None) :
     
+    tt = time.time()
     fns=glob.glob(os.path.expandvars(fkey))
     fns.sort()
     fnl=len(fns)
     
     dirs = fns[0].split('/')
     dirs[-2] = 'long'
-    fno=os.path.expandvars('/'.join(dirs))    
+    fno=os.path.expandvars('/'.join(dirs))
+    if os.path.exists(fno+'.txt'):
+        print(fno, 'already exists')
+        wtime = os.path.getmtime(fno+'.txt')
+        rtimes = np.array([os.path.getmtime(fn) for fn in fns])
+        if np.any(rtimes>wtime):
+            print(fno, 'older than some input')
+        else:
+            return
     
     vdict={'observations_table': ['observed_variable','observation_value', 'z_coordinate','date_time', 'index'],
             'recordindices': ['126', 'index', 'recordtimestamp']}
     vset = set()
-    for fn in fns[:]:
-        with h5py.File(fn,'r') as f:
+    fps = []
+    try:
+        
+        for fn in fns[:]:
+            fps.append(h5py.File(fn,'r'))
+            f = fps[-1]
+    #        with h5py.File(fn,'r') as f:
             vset = vset.union(set(list(f['recordindices'].keys())[:-2]))
+        sh = f['recordindices']['recordtimestamp'].shape[0] # just to check if recordtimestamp exists
+    except Exception as e:
+        print(fn, e)
+        return
     ivset = np.array(list(vset), dtype=int)
     ivset.sort()
     rdict = {ivset[i]: [] for i in range(len(ivset))}
@@ -201,9 +245,12 @@ def h5concatenate(fkey) :
     rts = []
     ris = []
     isum = 0
-    for fn in fns[:]:
-        with h5py.File(fn,'r') as f:
-                    
+    #for fn in fns[:]:
+        #with h5py.File(fn,'r') as f:
+    for f in fps:
+        #with h5py.File(fn,'r') as f:
+        try:
+            
             for i in ivset:
                 rdict[i].append(None) 
                 rdict2[i].append(None) 
@@ -234,8 +281,17 @@ def h5concatenate(fkey) :
                 #if np.any(rdict2[i][-1] != rdict[i][-1]):
                     #print('x')
 
-
-            print(fn.split('/')[-2])
+        except Exception as e:
+            if(os.path.exists('err.log')):
+                mode = 'a'
+            else:
+                mode = 'w'
+            with open('err.log', mode) as fe:
+                fe.write(f.filename+', no recordtimestamp')
+                print(f.filename+' no recordtimestamp', e)
+            return
+                
+            #print(fn.split('/')[-2])
         
     csum =0
     rt = np.zeros(np.sum([i.shape[0] for i in rts]), dtype=int)
@@ -264,15 +320,15 @@ def h5concatenate(fkey) :
                     else:
                         ri[k][irel:irel+rts[i].shape[0]] = ival
                     irel += rts[i].shape[0]
-                if np.any(h['recordindices'][str(k)][:irel]!=ri[k][:irel]):
-                    print(k,l,irel,ival, h['recordindices'][str(k)][:irel],ri[k][:irel])
-                    raise AssertionError
-                    #plt.plot(h['recordindices'][str(k)][:irel]-ri[k][:irel], label='h')
-                    ##plt.plot(ri[k][:irel], label='ri')
-                    #plt.title(str((k, l, irel)))
-                    #plt.legend()
-                    #plt.show()
-                    l = l
+                if h is not None:
+                    if np.any(h['recordindices'][str(k)][:irel]!=ri[k][:irel]):
+                        print(k,l,irel,ival, h['recordindices'][str(k)][:irel],ri[k][:irel])
+                        raise AssertionError
+                        #plt.plot(h['recordindices'][str(k)][:irel]-ri[k][:irel], label='h')
+                        ##plt.plot(ri[k][:irel], label='ri')
+                        #plt.title(str((k, l, irel)))
+                        #plt.legend()
+                        #plt.show()
                 
                 l+=1
         if ri[k][-1] == 0:
@@ -282,28 +338,39 @@ def h5concatenate(fkey) :
     ridict['recordtimestamp'] = np.concatenate(rts)
     ridict['index'] = np.concatenate(ris+[np.array([b''], dtype='S1')])
     
-    for k in h['recordindices'].keys():
-        if k not in ('index', 'recordtimestamp'):          
-            print(k, np.where(h['recordindices'][k][:]-ri[int(k)][:]!=0)[0])
-        else:
-            print(k, np.where(h['recordindices'][k][:]!=ridict[k][:])[0])
+    if h is not None:
+        for k in h['recordindices'].keys():
+            if k not in ('index', 'recordtimestamp'):          
+                print(k, np.where(h['recordindices'][k][:]-ri[int(k)][:]!=0)[0])
+            else:
+                print(k, np.where(h['recordindices'][k][:]!=ridict[k][:])[0])
             
     #rstarts = {s: 0 for s in sorted(rsave.keys())} #rvars[i]: np.sum(rdict[rvars[i]]) for i in range(len(rvars))}
     #s = list(rsave.keys())
-
-    vars = {'observations_table':list(h['observations_table'].keys()) ,
-            'era5fb': list(h['era5fb'].keys()),}
+    with h5py.File(fn, 'r') as g:
+        
+        vars = {'observations_table':list(g['observations_table'].keys()) ,
+                'era5fb': list(g['era5fb'].keys()),}
     #vlist = [(k, i) for i in vars[k] for k in vars.keys()]
     gvlist = []
     for k,v in vars.items():
         for i in v:
             gvlist.append((k, i))
     
+    print(fno, 'before write', time.time()-tt)
     #func = partial(pwrite_variable,fno, fns, rdict, ridict )
-    #list(map(func, gvlist))
-    futures = [ray_pwrite_variable.remote( fno, fns, rdict, ridict, gv) for gv in gvlist]
-    obj_ref = ray.get(futures)
+    func = partial(pwrite_variable,fno, fps, rdict, ridict )
+    list(map(func, gvlist))
+    for f in fps:
+        f.close()
+    #futures = [ray_pwrite_variable.remote( fno, fns, rdict, ridict, gv) for gv in gvlist]
+    #obj_ref = ray.get(futures)
     
+    print(fno, 'before copy', time.time() - tt)
+    try:       
+        os.remove(fno+'.txt') # this ensures that the file fno is regenerated in case something went wrong during write.
+    except:
+        pass
     # copy variable files to final file
     with h5py.File(fno, 'w') as g:
         for gv in gvlist:
@@ -356,6 +423,18 @@ def h5concatenate(fkey) :
                             noindex = False
                         
                 start = stop
+                
+            if gr == 'header_table':
+                # to satisfy need for second primary key relation to station_configuration table
+                g[gr]['station_record_number'][:] = np.arange(ridict['recordtimestamp'].shape[0]) 
+                # to fix missing or zero report_timestamp
+                repts = g[gr]['report_timestamp'][:]
+                invalid = np.where(repts<=0)
+                if len(invalid[0]) > 0:
+                    repts[invalid] = g[gr]['record_timestamp'][:][invalid]
+                    print(fno, 'fixed', len(invalid[0]), 'timestamps')
+                
+                
             if noindex:
                 #grlist = list(g[gr].keys())
                 g[gr].create_dataset('index', data=np.full(ridict['recordtimestamp'].shape, b'', dtype='S1'))
@@ -404,6 +483,8 @@ def h5concatenate(fkey) :
                     continue                    
                 if gr not in g.keys():
                     f.copy(gr, g, gr, without_attrs=True)
+                    if gr == 'station_configuration' and 'record_number' not in g[gr].keys():
+                        g[gr].create_dataset('record_number', data=np.arange(ridict['recordtimestamp'].shape[0]), dtype=ridict['recordtimestamp'].dtype)
                     grlist = list(f[gr].keys())
                     if 'index' not in grlist:
                         g[gr].create_dataset('index', data=np.array([b'']*f[gr][grlist[0]].shape[0], dtype='S1'))
@@ -412,49 +493,58 @@ def h5concatenate(fkey) :
         print('')
                     
            
-                
-    with h5py.File(fno, 'r') as g:
-        for gr in h.keys():
-            if gr in 'dateindex':
-                continue
-            for k in h[gr].keys():
-                if k not in ['0', '34', '39', '106', '107', '126', '139', 'observation_value', 'fg_depar@body', 'date_time', 'report_id']:
+        
+    if h is not None:
+        with h5py.File(fno, 'r') as g:
+            for gr in h.keys():
+                if gr in 'dateindex':
                     continue
-                if h[gr][k].dtype != np.dtype('S1'):
-                    
-                    idx = np.where(np.logical_and(~np.isnan(h[gr][k]), ~np.isnan(g[gr][k])))[0]
-                    if idx.shape[0] == 0:
-                        print(gr, k)
+                for k in h[gr].keys():
+                    if k not in ['0', '34', '39', '106', '107', '126', '139', 'observation_value', 'fg_depar@body', 'date_time', 'report_id']:
                         continue
-                else:
-                    idx = np.arange(h[gr][k].shape[0])
-                if idx[-1] +1 > g[gr][k].shape[0] or  idx[-1] +1 > h[gr][k].shape[0]:
-                    print(g, k, 'x')
-                ggri = g[gr][k][:][idx]
-                hgri = h[gr][k][:][idx]
-                if g[gr][k].dtype == np.dtype('S1'):
-                    crit = np.any(ggri != hgri)
-                else:
-                    crit = np.any(np.abs(ggri - hgri) > 1.e-30)
-                if crit:
-                    idy = np.where(ggri!=hgri)[0]
-                    if g[gr][k].dtype != np.dtype('S1'):
-                        iargmax = np.argmax(np.abs(ggri[idy] - hgri[idy]))
-                        eps = 1.e-4
-                        if np.abs(ggri[idy[iargmax]] - hgri[idy[iargmax]]) > eps * np.abs(ggri[idy[iargmax]]) or \
-                           np.abs(ggri[idy[iargmax]] - hgri[idy[iargmax]]) > eps * np.abs(hgri[idy[iargmax]]):
-                            print(os.path.basename(g.filename), gr, k, 'not equal', idx[idy[iargmax]], ggri[idy[iargmax]], hgri[idy[iargmax]])
-                            plt.plot(g['observations_table']['date_time'][:][idx[idy]]/365.25/86400, np.array((ggri[idy[:]], hgri[idy[:]])).T)
-                            plt.title(','.join((os.path.basename(fn), gr, k, str(g['observations_table']['observed_variable'][idx[idy[iargmax]]]))))
-                            plt.savefig('_'.join((fn, gr, k, '.png')))
-                            plt.close()
+                    if h[gr][k].dtype != np.dtype('S1'):
+                        
+                        idx = np.where(np.logical_and(~np.isnan(h[gr][k]), ~np.isnan(g[gr][k])))[0]
+                        if idx.shape[0] == 0:
+                            print(gr, k)
+                            continue
                     else:
-                        print(os.path.basename(g.filename), gr, k, 'not equal', idx[idy[:2]], ggri[idy[:2]], hgri[idy[:2]])
-                    x = 0
-                print(gr, k)
-       
+                        idx = np.arange(h[gr][k].shape[0])
+                    if idx[-1] +1 > g[gr][k].shape[0] or  idx[-1] +1 > h[gr][k].shape[0]:
+                        print(g, k, 'x')
+                    ggri = g[gr][k][:][idx]
+                    hgri = h[gr][k][:][idx]
+                    if g[gr][k].dtype == np.dtype('S1'):
+                        crit = np.any(ggri != hgri)
+                    else:
+                        crit = np.any(np.abs(ggri - hgri) > 1.e-30)
+                    if crit:
+                        idy = np.where(ggri!=hgri)[0]
+                        if g[gr][k].dtype != np.dtype('S1'):
+                            iargmax = np.argmax(np.abs(ggri[idy] - hgri[idy]))
+                            eps = 1.e-4
+                            if np.abs(ggri[idy[iargmax]] - hgri[idy[iargmax]]) > eps * np.abs(ggri[idy[iargmax]]) or \
+                               np.abs(ggri[idy[iargmax]] - hgri[idy[iargmax]]) > eps * np.abs(hgri[idy[iargmax]]):
+                                print(os.path.basename(g.filename), gr, k, 'not equal', idx[idy[iargmax]], ggri[idy[iargmax]], hgri[idy[iargmax]])
+                                plt.plot(g['observations_table']['date_time'][:][idx[idy]]/365.25/86400, np.array((ggri[idy[:]], hgri[idy[:]])).T)
+                                plt.title(','.join((os.path.basename(fn), gr, k, str(g['observations_table']['observed_variable'][idx[idy[iargmax]]]))))
+                                plt.savefig('_'.join((fn, gr, k, '.png')))
+                                plt.close()
+                        else:
+                            print(os.path.basename(g.filename), gr, k, 'not equal', idx[idy[:2]], ggri[idy[:2]], hgri[idy[:2]])
+                        x = 0
+                    print(gr, k)
+    
+    vars =glob.glob(fno[:-2]+'*.nc')
+    for v in vars:
+        os.remove(v)
+    with open(fno+'.txt', 'w') as f:
+        f.write('done')
+    print(fno, 'after copy', time.time() - tt)
         
     return
+
+ray_h5concatenate = ray.remote(h5concatenate)
 
 if __name__ == "__main__":
 
