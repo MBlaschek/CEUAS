@@ -350,8 +350,13 @@ def metadata_analysis(sonde_type):
     return apriori_probs,lastsonde
 #@njit
 def bilin(hadmeddict,temperatures,rcy,rcm,days,lat,lon):
-    ilat=int(np.floor((lat+90)/5))
-    ilon=int(np.floor((180+lon)/5))
+    try:
+        
+        ilat=int(np.floor((lat+90)/5))
+        ilon=int(np.floor((180+lon)/5))
+    except:
+        ilat = hadmeddict['hadmed'].shape[1] // 2
+        ilon = hadmeddict['hadmed'].shape[2] // 2
     if ilon>=hadmeddict['hadmed'].shape[2]:
         ilon-=hadmeddict['hadmed'].shape[2]
     t850=np.zeros((2,len(days)))
@@ -511,8 +516,12 @@ def RAOB_findbreaks(hadmeddict, method,fnorig):
         if RC['rharm'] in ('rharmc', 'rcuon'):
             
             try:
-                
-                fnrharm_h = '/'.join(fn.split('/')[:-3]) + '/exp01/' + finfo['sid'][-6:] + '/rharm_h_' + finfo['sid'][-6:] +'.nc'
+                fnrharm_h = glob.glob('/users/staff/uvoggenberger/scratch/RHARM_2/*' + finfo['sid'][-6:] +'.nc')
+                if len(fnrharm_h) > 0:
+                    fnrharm_h = fnrharm_h[0]
+                else:
+                    fnrharm_h = 'xxxx'
+                #fnrharm_h = '/'.join(fn.split('/')[:-3]) + '/exp01/' + finfo['sid'][-6:] + '/rharm_h_' + finfo['sid'][-6:] +'.nc'
                 #fnrharm = '/'.join(fn.split('/')[:-3]) + '/exp01/' + finfo['sid'][-6:] + '/rharm_' + finfo['sid'][-6:] +'.nc'
                 with h5py.File(fnrharm_h,'r') as f:
                 
@@ -1138,7 +1147,7 @@ def save_monmean(l,exper='exp02',fi={},rich_ref0=None,rich_ref1=None,initial_adj
     fi['obs']={}
     fi['tau']={}
     
-    tidx=np.where(RC['days']==0)[0] + 1
+    tidx=np.concatenate((np.where(RC['days']==0)[0] , [RC['days'].shape[0]-1])) + 1
     #ipath=fi['sid'][-6:].join(os.path.dirname(tfile).split(tfile[-9:-3]))
     plist=['temperatures','ini_adjusted_temperatures','fg']
     if rich_ref0:
@@ -1930,7 +1939,14 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
             ini2 = np.zeros_like(ini)
             rharmini = np.zeros_like(ini)
             rawini = np.zeros_like(ini)
-            rharmini = ndnanmean2(ref[l]['rharmbc'][:,:,start:],ini,RC['snht_min_sampsize'])[:]
+            try:
+                
+                rharmini = ndnanmean2(ref[l]['rharmbc'][:,:,start:],ini,RC['snht_min_sampsize'])[:]
+                print('rharmbc found')
+            except:
+                rharmini = np.zeros_like(ini)
+                print('rharmbc not found')
+                
             rawini = ndnanmean2(ref[l]['adjusted_fg_dep'][:,:,start:],ini.copy(),RC['snht_min_sampsize'])[:]
             RAOBini['initial_adjustments']= rawini - rharmini
             RAOBini['initial_adjustments'][np.isnan(RAOBini['initial_adjustments'])]=0.
@@ -2090,9 +2106,9 @@ def add_adj(fi, mode='r'):
                                                  #attributes={'version':RC['version']}
                                                 #)
                     print('write:',time.time()-tt)
-                except MemoryError as e:
-                    print('could not write', k,e)
-    except MemoryError as e:
+                except FileNotFoundError as e:
+                    print('no adjustments found', k,e)
+    except Exception as e:
         print('could not write '+outfile, e)
 
 ray_add_adj=ray.remote(add_adj)
@@ -2134,9 +2150,10 @@ if __name__ == '__main__':
     RCfile = os.path.expandvars('/users/staff/leo/fastscratch/rise/1.0/')+RCdir+'/RC.json'
 
 #    ray.init(num_cpus=RC['CPUs'], object_store_memory=1024*1024*1024*50)
-    ray.init(num_cpus=25, object_store_memory=1024*1024*1024*50)
 
     RC = RC_ini(RCfile)
+    
+    ray.init(num_cpus=RC['CPUs'], object_store_memory=1024*1024*1024*150)
                                 
     filesorig = glob.glob('/mnt/users/scratch/leo/scratch/'+RC['CUON']+'/*'+pattern+'*.nc')[:]
     filesorig.sort()
@@ -2279,8 +2296,13 @@ if __name__ == '__main__':
     
     if pattern=='':
         pattern='01001'
+    
+    try:
         
-    lx= sids.index('feedbackmerged0'+pattern)
+        lx= sids.index('feedbackmerged0'+pattern)
+    except:
+        lx = 0
+        print('no pattern match found, using first file', sids[0])
     
     single_obj_ref=ray.put(obj_ref) 
     #single_results_ref=ray.put(results_ref)
@@ -2370,13 +2392,13 @@ if __name__ == '__main__':
     x = ray.get(futures)
     print('after write',time.time()-tt)
     
-    if RC['add_solelev']:  # zum Testen
+    if False and RC['add_solelev']:  # zum Testen
         print('before addsolelev',time.time()-tt)
         add_solelev(ray.get(obj_ref[lx]), RC)
         futures=[]
         for l in range(len(obj_ref)):
-            futures.append(ray_add_solelev.remote(obj_ref[l], RC))
-            #add_solelev(ray.get(obj_ref[l]), RC)
+            #futures.append(ray_add_solelev.remote(obj_ref[l], RC))
+            add_solelev(ray.get(obj_ref[l]), RC)
         x = ray.get(futures)
         add_adj(ray.get(obj_ref[0]), mode='r')
         print('after addsolelev',time.time()-tt)
@@ -2536,7 +2558,9 @@ if __name__ == '__main__':
         
         futures = []
         for o in obj_ref:
+            #add_adj(ray.get(o), mode='r')
             futures.append(ray_add_adj.remote(o, mode='r'))
+            
         ray.get(futures)
         print('wrote to backend files',time.time()-tt)
 
