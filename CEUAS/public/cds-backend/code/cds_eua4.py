@@ -77,6 +77,12 @@ from multiprocessing import set_start_method, Pool
 #              'u_component_of_wind': ipar[104],'v_component_of_wind': ipar[105],
 #              'specific_humidity': ipar[39]}
 
+try:
+    config_file = 'hug.default.config.json'
+    config = json.load(open(config_file, 'r'))
+except:
+    print('no config found')
+
 restriction_active = False
 
 glamod_cdm_codes = {34:'dew_point_depression',
@@ -87,8 +93,8 @@ glamod_cdm_codes = {34:'dew_point_depression',
                     126:'air_temperature',
                     137:'air_dewpoint',
                     138:'relative_humidity',
-                    139:'eastward_wind_speed',
-                    140:'northward_wind_speed',  
+                    139:'eastward_wind',
+                    140:'northward_wind',  
                    }
 
 cdm_codes = {'temperature': 126, 'air_temperature': 126, 
@@ -959,7 +965,8 @@ def do_cfcopy(fout, fin, group, idx, cf, dim0, compression, var_selection=None, 
 #                             pass
                     else:   
 #                         print('entering n_dim > 1')
-                        if v == 'station_name':
+                        # if v == 'station_name':
+                        if v == 'primary_id':
                             s1 = fin[group][v].shape[1]
                             hilf = np.array([fin[group][v][0]]*np.where(mask)[0].shape[0])
 #                             print('hilf: ', hilf)
@@ -2223,6 +2230,20 @@ class CDMDatasetList(dict):
             data[name] = CDMDataset(filename=ifile)
         super().__init__(data)
         self.__dict__ = self
+        
+    def __enter__(self):
+        return self
+    
+    def close(self):
+        """ Close H5py file
+        """
+        for i in self.keys():
+            logger.debug("[CLOSED] %s", self[i].filename)
+            self[i].close()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+        
     def __repr__(self):
         text = "CDMDatasetList <{}>".format(len(self.keys()))
         for ikey in self.keys():
@@ -3218,7 +3239,7 @@ class CDMDataset:
                     fout['variable']=np.array([glamod_cdm_codes[cdm_codes[request['variable']]]]*len(fout['z_coordinate']))
                     groups.append('observations_table')
                     wigos_primid = b''.join(self.file['station_configuration']['primary_id'][0]).decode('UTF-8')
-                    fout['primary_id']=np.array([wigos_primid]*len(fout['z_coordinate'])) #self.filename.split('/')[-1].split('_CEU')[0]
+                    fout['station_id']=np.array([wigos_primid]*len(fout['z_coordinate'])) #self.filename.split('/')[-1].split('_CEU')[0]
                     groups.append('station_configuration')
                 else:
                     #
@@ -3228,7 +3249,7 @@ class CDMDataset:
                         igroup = 'station_configuration'
                         cfcstationcon = {'station_name': 
                                          {
-                                             'cdmname': 'station_configuration/station_name',
+                                             'cdmname': 'station_configuration/primary_id',
                                              'units': 'NA',
                                              'shortname': 'station_id',
                                              'coordinates': 'lat lon time plev',
@@ -3332,7 +3353,7 @@ class CDMDataset:
                         f.write('#     - igra-data-policy \n')
                         f.write('# This is a CSV file following the CDS convention cdm-obs \n')
                         f.write('# Data source: CUON \n')
-                        f.write('# Version: v1 \n')
+                        f.write('# Version: '+config['cuon_version']+' - ' + datetime.now().strftime("%d-%b-%Y %H:%M:%S") + ' \n')
                         
                         if len(request['date']) == 1:
                             f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) +' \n')
@@ -3371,7 +3392,7 @@ class CDMDataset:
                         f.write('#     - igra-data-policy \n')
                         f.write('# This is a CSV file following the CDS convention cdm-obs \n')
                         f.write('# Data source: CUON \n')
-                        f.write('# Version: v1 \n')
+                        f.write('# Version: '+config['cuon_version']+', ' + datetime.now().strftime("%d-%b-%Y %H:%M:%S") + ' \n')
                         
                         # f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) + ' - ' + 
                         #         str(request['date'][1][:4])+'.'+str(request['date'][1][4:6])+'.'+str(request['date'][1][6:8]) +' \n')
@@ -3591,9 +3612,9 @@ class CDMDataset:
                 # station_configuration
                 if 'station_configuration' in self.groups:
                     igroup = 'station_configuration'
-                    cfcstationcon = {'station_name': 
+                    cfcstationcon = {'primary_id': 
                                      {
-                                         'cdmname': 'station_configuration/station_name',
+                                         'cdmname': 'station_configuration/primary_id',
                                          'units': 'NA',
                                          'shortname': 'station_id',
                                          'coordinates': 'lat lon time plev',
@@ -3601,7 +3622,7 @@ class CDMDataset:
                                      }
                                     } 
                     do_cfcopy(fout, self.file, igroup, base_idx, cfcstationcon, 'obs', compression,
-                              var_selection=['station_name'], mask=mask)
+                              var_selection=['primary_id'], mask=mask)
                     logger.debug('Group %s copied [%5.2f s]', igroup, time.time() - time0)
 
                 #
@@ -3613,7 +3634,7 @@ class CDMDataset:
                     fout.attrs[a] = np.string_(v)
 
                 fout.attrs['history'] = np.string_(
-                    'Created by Copernicus Early Upper Air Service Version 0, ' + datetime.now().strftime(
+                    'Created by Copernicus Early Upper Air Service Version '+str(config['cuon_version'])+', ' + datetime.now().strftime(
                         "%d-%b-%Y %H:%M:%S"))
                 fout.attrs['license'] = np.string_('https://apps.ecmwf.int/datasets/licences/copernicus/')
 
@@ -4474,7 +4495,7 @@ class CDMDataset:
             if ivar == date_time_name and decode_datetime:
                 data[ivar] = seconds_to_datetime(data[ivar])
                 
-        return pd.DataFrame(data)
+        return pd.DataFrame(data).copy()
 
     def read_data_to_cube(self, variables: list, dates: list = None, plevs: list = None, feedback = None,
                           feedback_group = 'era5fb', **kwargs) -> dict:
