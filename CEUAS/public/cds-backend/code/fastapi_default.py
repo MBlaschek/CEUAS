@@ -312,6 +312,7 @@ def read_tstamps(fn):
     except:
         print('ERROR read_tstamps: ', fn)
         rts=[0]
+        fk=fn.split('/')[-1].split('_CEUAS_merged')[0]
     return fk,rts
 
 def pkl_initialize(config,slist=[]):
