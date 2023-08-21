@@ -12,7 +12,9 @@ import time
 from multiprocessing import Pool
 from netCDF4 import Dataset
 import gzip
-import pandas as pd    
+import pandas as pd   
+pd.options.mode.chained_assignment = None
+
 import zipfile
 from functools import partial
 from numba import njit
@@ -23,6 +25,8 @@ import warnings
 import numpy
 from numba import njit
 from eccodes import *
+
+from harvester_yearsplit_parameters import *
 
 pv=sys.version.split('.')
 if pv[1]<'8':
@@ -758,7 +762,10 @@ def read_giub(file=''):
         lat, lon = -999, -999 
         
     for i in range(len(df)):
+        
         temp_v = df['temp'].values[i]
+        if 'temp' in temp_v:
+            continue
         
         if '999' in temp_v:
             temp_v = np.nan 
@@ -2454,12 +2461,19 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
         if k not in ('observations_table') :   
             if k in ['id_scheme', 'observed_variable']:
                 continue                        
-            groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') #
+            groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') 
 
                 
     del df
+    
+    #print(0)
+    log_name = fno.replace('_'+str(year),'').replace('.nc', '_correctly_processed_year.txt')
+    a = open(log_name, 'a+')
+    a.write(year+ '\n')
+    a.close()
+    
+    return log_name
           
-    return 0
           
 def get_station_configuration_cuon(stations_id='', station_configuration='', lat='', lon='', fn = '', db='', change_lat=False):
 
@@ -2853,8 +2867,14 @@ def write_odb_to_cdm(fbds, cdm, cdmd, output_dir, dataset, dic_obstab_attributes
     np.save('groups_encodings',  groupencodings)
     np.save('station_configuration_encodings',  sc)
     np.save('era5fb_encodings',  fbencodings)
-
-    return 0
+    
+    #print(0)
+    log_name = fno.replace('_'+str(year),'').replace('.nc', '_correctly_processed_year.txt')
+    a = open(log_name, 'a+')
+    a.write(str(year)+ '\n')
+    a.close()
+    
+    return log_name
  
     
         
@@ -2922,7 +2942,7 @@ def read_odb_to_cdm(output_dir, dataset, dic_obstab_attributes, fn, fns):
     fbds['vertco_reference_1@body'] = fbds['vertco_reference_1@body'].astype(float)
     fbds = fbds.sort_values(by = ['date@hdr', 'time@hdr', 'vertco_reference_1@body' ] )    
 
-    fbds = fbds[:1000]
+    #fbds = fbds[:1000]
     years = [str(s)[:4] for s in fbds['date@hdr'] ]
     fbds['year'] = years
     #fbds = fbds.replace( -2147483648 , np.nan ) 
@@ -3911,8 +3931,6 @@ def filelist_cleaner(lista, dataset=''):
     return cleaned
    
 
-
-
 def clean_station_configuration(cdm_tab ):
     """ Replace wrong characters from the station configuration tables """
     subs={'o':[240,242,243,244,245,246,248],'O':[210,211,212,213,214,216],
@@ -3946,34 +3964,6 @@ def clean_station_configuration(cdm_tab ):
 
 
 # on srvx1, srvx8 
-
-db = { 'era5_1': '/mnt/users/scratch/leo/scratch/era5/odbs/1' ,
-       'era5_2': '/mnt/users/scratch/leo/scratch/era5/odbs/2',
-       'era5_3188': '/mnt/users/scratch/leo/scratch/era5/odbs/3188',
-       'era5_1759': '/mnt/users/scratch/leo/scratch/era5/odbs/1759',
-       'era5_1761': '/mnt/users/scratch/leo/scratch/era5/odbs/1761',
-       'bufr': '/mnt/users/scratch/leo/scratch/era5/odbs/ai_bfr/',                                   
-       'ncar': '/scratch/das/federico/databases_service2/UADB_20230109/', # check if extra '/' needed 
-
-       'igra2': '/scratch/das/federico/databases_service2/IGRA2_20230106',
-
-       'era5_1_mobile': '/mnt/users/scratch/leo/scratch/era5/odbs/1_mobile' ,
-       'era5_2_mobile': '',
-       
-       'amma': '/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/',
-       
-       # pre ERA5 3188
-       'giub': "/scratch/das/federico/redo_GIUB_07072023_reduced",
-       # ARCTIC datasets
-       'hara':'/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/',
-       'npsound' : '/scratch/das/federico/databases_service2/NPSOUND-NSIDC0060/NPSOUND_csv_converted',
-       'shipsound' : '/scratch/das/federico/databases_service2/SHIPSOUND-NSIDC-0054/' ,
-       
-       'mauritius': '/scratch/das/federico/databases_service2/mauritius_2005/'
-       
-} 
-
-
 if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Make CDM compliant netCDFs")
@@ -3991,10 +3981,27 @@ if __name__ == '__main__':
                         default = '',
                         type = str)    
          
+    parser.add_argument('--run_missing' , '-r',
+                    help = "Only run missing year"  ,
+                        default = 'False',
+                        type = str)    
+
+    parser.add_argument('--max_year' , '-maxy',
+                    help = "Most recent correctly harvested year"  ,
+                        default = '2025',
+                        type = str)    
+    
     args = parser.parse_args()
     dataset = args.dataset 
     out_dir = args.output
     Files = args.files
+    max_year = args.max_year
+    run_missing = args.run_missing
+    
+    if run_missing in ['False', 'false', 'FALSE']:
+        run_missing = False
+    else:
+        run_missing = True        
 
     vlist= ['era5_1', 'era5_2', 'era5_3188', 'era5_1759', 'era5_1761', 
             'bufr', 'igra2', 'ncar', 
@@ -4027,8 +4034,10 @@ if __name__ == '__main__':
             os.system('mkdir ' + output_dir )
     
     stat_conf_path = '../data/station_configurations/'     
+    
     if 'mobile' in dataset:
         stat_conf_file = stat_conf_path +   '/era5_1_station_configuration_extended.csv'    
+        
     elif 'mauritius' in dataset:
         stat_conf_file = stat_conf_path +   '/station_configuration_mauritius.dat'    
         
@@ -4045,38 +4054,37 @@ if __name__ == '__main__':
         clean_station_configuration(cdm_tab)              
             
             
-    """ Leo run         
-    Files=glob.glob(Files)
-    print( blue + '*** Processing the database ' + dataset + ' ***  \n \n *** file: ' + Files[0] + '\n'  + cend)
-    stat_conf_path = '../data/station_configurations/'     
-    stat_conf_file = stat_conf_path +   '/station_configuration_' + dataset + '.dat'
-    # adding the station configuration to the cdm tables      
-    cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
-    clean_station_configuration(cdm_tab)             
-    p=Pool(12)
-    if 'era5' in dataset and 'bufr' not in dataset:   
-        func=partial(odb_to_cdm,cdm_tab, cdm_tabdef, output_dir, dataset)
-        out=list(map(func,Files))
-    else:
-        func=partial(df_to_cdm,cdm_tab, cdm_tabdef, output_dir, dataset)
-        out=list(map(func, Files))
-    print('*** CONVERTED: ' , Files[-1] )      
-    print(' ***** Convertion of  ' , Files,  '  completed ! ***** ')
-    """
-    
+
+    ### splitting files from input string 
     Files = Files.split(',')
-    for File in Files:
-             
-        if not os.path.isdir(out_dir):
-            os.system('mkdir ' + out_dir ) 
-            
-        output_dir = out_dir + '/' + dataset      
-        if not os.path.isdir(output_dir):
-            os.system('mkdir ' + output_dir )
-                    
-        #print( blue + '*** Processing the database ' + dataset + ' ***  \n \n *** file: ' + File + '\n'  + cend)
+    
+    if not os.path.isdir(out_dir):
+        os.system('mkdir ' + out_dir ) 
         
-        tt=time.time()                            
+    output_dir = out_dir + '/' + dataset      
+    if not os.path.isdir(output_dir):
+            os.system('mkdir ' + output_dir )
+            
+    for File in Files:
+        if dataset in [ 'era5_1759' , 'era5_1761']:
+            File = File.replace('.conv.', '.conv._')+'.gz'
+            
+        elif dataset in ['era5_1', 'era5_1_mobile']:
+            File = File.replace('.conv._','.conv.??????.')+'.txt.gz'
+            
+        elif dataset in ['igra2']:
+            File = File + '-data.txt'
+            
+        elif dataset in ['igra2']:
+            File = File + '-data.txt'
+            
+        elif dataset in ['era5_2', 'era5_2_mobile']:
+            File = File + '.gz'
+            
+        File = datasets_path[dataset] + '/' + File 
+        tt=time.time()              
+        
+        ### ERA5 BLOCK 
         if 'era5' in dataset:   
             change_lat = False
             if '1759' in dataset:  # oading the files list to apply the WBAN latitude correction (missing minus sign)
@@ -4097,22 +4105,26 @@ if __name__ == '__main__':
             fnl[-1]='ch'+fnl[-1]
             fns=sorted(glob.glob(File))
                 
-            if dataset in ['era5_1', 'era5_1_mobile']:
-                for year in range(1900, 2030):                
-                    year = str(year)
-                    ff = [f for f in fns if year in  f.split('/')[-1].split('.')[2] ]  #here: pre-selecting the files already split by year 
-                    if len(ff) > 0:
-                        fbds, min_year = read_odb_to_cdm(output_dir, dataset,  dic_obstab_attributes, File, ff)
-                        dummy_writing = write_odb_to_cdm( fbds, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File, ff, change_lat, year)
-                        print('DONE --- ' , year )
+            if dataset in ['era5_1', 'era5_1_mobile']:  # these are already split by year int he original files 
+                for year in range(1900, 2025):            
+                    if run_missing and year <= int(max_year):
+                        print('Skipping already processed year: ' , year )
                     else:
-                        print("No files for year " , year )   
+                        year = str(year)
+                        ff = [f for f in fns if year in  f.split('/')[-1].split('.')[2] ]  #here: pre-selecting the files already split by year 
+                        if len(ff) > 0:
+                            fbds, min_year = read_odb_to_cdm(output_dir, dataset,  dic_obstab_attributes, File, ff)
+                            dummy_writing = write_odb_to_cdm( fbds, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File, ff, change_lat, year)
+                            print('DONE --- ' , year )
+                        else:
+                            print("No files for year " , year )   
             else:
                 fbds, min_year = read_odb_to_cdm(output_dir, dataset,  dic_obstab_attributes, File, fns)
-                for year in range(1900, 2030):                
-                    if year < int(min_year):
-                        continue                    
+                for year in range(1900, 2025):       
+                    if run_missing and year <= int(max_year):
+                        print('Skipping already processed year: ' , year )                    
                     dummy_writing = write_odb_to_cdm( fbds, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File, fns, change_lat, year)
+                    
             
         elif 'nasa' in dataset:   
                 ir_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)
@@ -4122,9 +4134,9 @@ if __name__ == '__main__':
         else:
             #try:
             df, stat_conf_check, station_configuration_retrieved, primary_id, min_year= read_df_to_cdm(cdm_tab, dataset, File)
-            for year in range(1900, 2030):                
-                if year < int(min_year):
-                    continue
+            for year in range(1900, 2025):                
+                if run_missing and year <= int(max_year):
+                    print('Skipping already processed year: ' , year )       
                 dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File, year) 
             #except:
         print(' ***** Convertion of  ' , File ,  '  completed after {:5.2f} seconds! ***** '.format(time.time()-tt))   
@@ -4146,10 +4158,6 @@ small file
 
 -f /mnt/users/scratch/leo/scratch/era5/odbs/2_mobile/era5.conv.195212 -d era5_2_mobile -o COP2
 
-
-
-
-
 era5.conv._71831
 -f /mnt/users/scratch/leo/scratch/era5/odbs/2/era5.conv._71831.gz  -d era5_2 -o COP2
 
@@ -4166,7 +4174,7 @@ era5.conv._71831
 # era5.conv._57707 
 
 -f /mnt/users/scratch/leo/scratch/era5/odbs/2/era5.conv._57707.gz  -d era5_2 -o COP2
-
+# era5.conv._1:48379
 -f  /mnt/users/scratch/leo/scratch/era5/odbs/ai_bfr/era5.10106.bfr -d bufr -o COP2
 
 -f /scratch/das/federico/databases_service2/UADB_25012022/uadb_windc_82930.txt -d ncar -o COP2 
