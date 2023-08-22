@@ -454,7 +454,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         func = partial(makedaterange, vola, debug=debug)
         #slist=[slist[3380]]
         #slnum=[slnum[3380]]
-        if False:
+        if True:
 #             with Pool(10) as p:
 #                 sklist=list(p.map(func,zip(slist,slnum)))
 #             with multiprocessing.get_context('spawn').Pool(10) as p:
@@ -1696,7 +1696,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     # Smaller request?
     #
     
-    elif debug or len(body['variable']) * len(body['statid'])<10:
+    elif debug or len(body['variable']) * len(body['statid'])<2:
         #
         # Single Threading
         #
