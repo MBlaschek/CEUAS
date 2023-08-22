@@ -1275,7 +1275,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                     if k[:3] == '0-2' and k in slnum:
                         valid_id = k
                     else:
-                        valid_id = [s for s in slnum if statid in s]
+                        valid_id = [s for s in slnum if k in s]
                         # for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
                         #     l = s + k
                         #     if l in slnum:
