@@ -2,7 +2,7 @@
 
 
 ### Path to harvested file directory
-harvested_base_dir = '/scratch/das/federico/HARVEST_YEARLY_17AUG2023'
+harvested_base_dir = '/scratch/das/federico/HARVEST_YEARLY_18SEP2023/'
 
 # can be changed singularly if needed 
 data_directories   = { 'era5_1'       : harvested_base_dir + '/era5_1' ,
@@ -22,7 +22,7 @@ data_directories   = { 'era5_1'       : harvested_base_dir + '/era5_1' ,
 
 
 ### Output merged directory (create if does not exist)
-merged_out_dir = '/scratch/das/federico/MERGED_YEARLY_SEPT2023'
+merged_out_dir = '/scratch/das/federico/MERGED_YEARLY_20SEPT2023'
 
 ### Years to be merged; default: all available years 
 year = []

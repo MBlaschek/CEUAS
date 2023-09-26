@@ -49,6 +49,22 @@ def replace_global(replaced_indices, replaced_vector, replacing_vector):
 """    
 
         
+"""
+PRIORITY
+- ERA5 over all IF LEN >=
+- GIUB over ERA5 pre 1950
+- IGRA over ERA5 if max(plevel_igra) > max(plevel_era5)
+- longest record if ERA5 and IGRA not available
+- what to do with NCAR => set as lowest priority, only select if only one available
+"""
+
+
+
+
+
+
+
+
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning) # deactivates Pandas warnings 
 
@@ -142,7 +158,7 @@ class Merger():
 
     def initialize_data(self , station = '', datasets = {} ):
         """ Initialize dataset; store relevant data as attributes.
-                   Args ::     dic{}  datasets (dictionary where keys are the dataset names e.g. bufr, igra2 etc. , and the value is the path to the corresponding netCDF file 
+                   Args ::     dic{}  datasets (dataframe with year, dataset and file path 
                                    e.g. tateno = { 'ncar'    : 'example_stations/ncar/chuadb_trhc_47646.txt.nc'   ,
                                                            'igra2'   : 'example_stations/igra2/chJAM00047646-data.txt.nc'  } 
         """       
@@ -152,6 +168,8 @@ class Merger():
         
         self.counting_record = 1 # will be used to build record_id in header table
         self.counting_observations = 1
+        
+        # list of meaningful variables in the observations_table, all others are empty/nans filled
         
         self.observations_table_vars = ['date_time', 'z_coordinate' , 'z_coordinate_type', 'observed_variable' , 
                                                            'observation_value' , 'report_id' , 'observation_id' , 'latitude' , 'longitude',
@@ -173,7 +191,9 @@ class Merger():
         self.obstab_nans_filled = False      
         self.obs_in_header = {} # dic placeholder for data from obs_tab to be kept for header_table
         
-        data['cdm_tables'] = {}              
+    def fill_cdm(self):
+            
+        self.data['cdm_tables'] = {}              
 
         """ Loop over all the datasets                                                                                                                                     
                 k: name of the dataset                                                                                                                    
@@ -204,40 +224,75 @@ class Merger():
         else:
             #sc = clean_station_configuration(s)  ### FIX THIS, dont knwo why it happens 
             sc = s 
-            
+        
+        # dropping false columns
         for c in sc.columns:
             if 'Unnamed' in c:
                 sc = sc.drop(columns=c)
             
-        data['station_configuration'] = sc
-                        
+        self.data['station_configuration'] = sc
         self.statconf_columns = sc.keys()
+
+        """ Reading the CDM tables that do not depend on specific stations or observations (fixed values), for the first file only """
+        for t in self.standard_cdm: # [ 'crs' , 'observed_variable', 'units' , 'z_coordinate_type' , 'station_type', 'station_configuration_codes']              
+            if t not in self.data['cdm_tables'].keys():
+                #data['cdm_tables'][t] = ''
+                cdm = xr.open_dataset(F , engine = 'h5netcdf' , group = t )
+                data['cdm_tables'][t] = cdm 
+                
+                
         
+    def extract_file_per_year(self):
+        """ Extract each unique year, and files for each dataset """
+        years = np.unique( self.datasets.year)
+        
+        all_data = {}
+        
+        df = self.datasets
+        for y in years:
+            all_data[y] = {}
+            
+            df_r = df.loc[df.year == y ]
+            datasets = np.unique(df_r.dataset)
+            for ds in datasets:
+                df_r_ds = df_r.loc[df_r.dataset == ds ]
+                all_data[y][ds] = list(df_r_ds.files)
+            
+        return all_data
+        
+        
+        
+    '''
+    def read_obs_data(self):
+        """ Reading observations and header table data """
+            
+        ### Observations_table
         for k,v in self.datasets.items() :
-            data[k] = {}
-            for F in v:
+                data[k] = {}
+                for F in v:
+    
+                    logging.info(' Dataset ::: *** %s %s ' , k , F   )                  
+    
+                    data[k][F] = {}
+    
+                    h5py_file = h5py.File(F, 'r')
+                    data[k][F]['h5py_file'] = h5py_file 
+    
+                    a = h5py_file['recordtimestamp']
+    
+                    data[k][F]['recordtimestamp'] = pd.to_datetime( a[:], unit='s',  origin=pd.Timestamp('1900-01-01') )
+                    data[k][F]['recordindex']         = h5py_file['recordindex']
+                    data[k][F]['dateindex']            = h5py_file['dateindex']
+                    
+                    data[k][F]['observations_table'] = h5py_file['observations_table']
+                    data[k][F]['header_table']           = h5py_file['header_table']
+                    
+                    a = h5py_file['recordtimestamp']
+                    data[k][F]['max_date'] = max(a)
+                    data[k][F]['min_date']  = min(a)
+    
+                    data[k][F]['counter'] = 0
 
-                logging.info(' Dataset ::: *** %s %s ' , k , F   )                  
-
-                data[k][F] = {}
-
-                h5py_file = h5py.File(F, 'r')
-                data[k][F]['h5py_file'] = h5py_file 
-
-                a = h5py_file['recordtimestamp']
-
-                data[k][F]['recordtimestamp'] = pd.to_datetime( a[:], unit='s',  origin=pd.Timestamp('1900-01-01') )
-                data[k][F]['recordindex']         = h5py_file['recordindex']
-                data[k][F]['dateindex']            = h5py_file['dateindex']
-                
-                data[k][F]['observations_table'] = h5py_file['observations_table']
-                data[k][F]['header_table']           = h5py_file['header_table']
-                
-                a = h5py_file['recordtimestamp']
-                data[k][F]['max_date'] = max(a)
-                data[k][F]['min_date']  = min(a)
-
-                data[k][F]['counter'] = 0
 
                 #######
                 # HEADER TABLE
@@ -252,6 +307,7 @@ class Merger():
                     except:
                         print('failed convertion type header' , k , ' ' , F , ' ' ,  var )
 
+
                 #######                                                                                    
                 # SOURCE CONFIGURATION                                             
                 #######      
@@ -259,22 +315,11 @@ class Merger():
                 data[k][F]['source_configuration'] = d
                 logging.debug('Done with %s source_configuration' , str(k) )
                 d.close()
-
-            data['cdm_tables'] = {}
-            """ Reading the CDM tables that do not depend on specific stations or observations (fixed values), for the first file only """
-            for t in self.standard_cdm: # [ 'crs' , 'observed_variable', 'units' , 'z_coordinate_type' , 'station_type', 'station_configuration_codes']              
-                if t not in data['cdm_tables'].keys():
-                    #data['cdm_tables'][t] = ''
-                    cdm = xr.open_dataset(F , engine = 'h5netcdf' , group = t )
-                    data['cdm_tables'][t] = cdm 
-
-        print(blue + 'Memory used after reading data: ', process.memory_info().rss/1000000000 , cend)
-
         self.data = data
+        
+    '''
 
-        """ Making all date_times  """
-        self.make_unique_datetime()
-
+    '''
     def make_quick_df(self, ds, file, ind_low, ind_sup, indices=None ):
         """ Quickly create pandas dataframe (debug purpose) """
         
@@ -292,9 +337,10 @@ class Merger():
         df = pd.DataFrame.from_dict( data_dic )
         
         return df
+    '''
         
     def get_null(self, tipo = ''):
-        ''' Simply returns the proper format for ''null' value '''        
+        """ Simply returns the proper format for ''null' value """        
         if tipo in  [np.int32, np.int64]  :
             void = -2147483648
         elif tipo == np.float32 :
@@ -306,11 +352,34 @@ class Merger():
         return void
         
         
+    def open_data(self, data):
+        """ Open each file with hyp5, store in dictionary
+        
+        data=
+        {'era5_1759': ['/scratch/das/federico/HARVEST_YEARLY_17AUG2023/era5_1759/0-20000-0-71879_1962_era5_1759_harvested_era5.1759.conv._1:71879.gz.nc'],
+        'ncar': ['scratch/das/federico/HARVEST_YEARLY_17AUG2023/ncar/0-20000-0-71879_1962_ncar_harvested_uadb_trhc_71879.txt.nc'],
+        }
+        """
+        
+        dic = {}
+        for ds in data.keys():
+            dic[ds]={}
+            for file in data[ds]:
+                dic[ds][file]  = h5py.File(file, 'r')
+            
+        self.dic_h5py = dic
+        
+        
+        
     def make_unique_datetime(self):
         """ Building the global set of date_times and indices from the various datasets. 
               The datetimeindex is read from the original netCDF file. 
               Will compare the unique date_time of each dataset and extract the global unique date_times
-              """
+              
+              Return a dictionary with the dataset as key, then file and 
+              {1966028400 : { 'era5_1759': {'/scratch/das/federico/HARVEST_YEARLY_17AUG2023/era5_1759/0-20000-0-71879/0-20000-0-71879_1962_era5_1759_harvested_era5.1759.conv._1:71879.gz.nc': [1966028400, 0, 90]}, 
+              'ncar': {'/scratch/das/federico/HARVEST_YEARLY_17AUG2023/ncar/0-20000-0-71879/0-20000-0-71879_1962_ncar_harvested_uadb_trhc_71879.txt.nc': [1966028400, 598, 235]}} }
+        """
 
         logging.info('\n *** Running make_all_datetime ' )
 
@@ -319,19 +388,49 @@ class Merger():
                 v: list of file paths,    eg 'era5_1':[filepath_1, filepath_2 ]"""
 
         all_timestamps = []
+        all_timestamps_dic = {}
         
-        for ds,files in self.datasets.items() :
+        # containing all files and h5py open file (per year)
+        dic= self.dic_h5py
+        
+        for ds,files in dic.items() :
             k,v = ds, files #rename
-            self.unique_dates[k] = {}
+            self.unique_dates[k] = {}  # unique dates for each file per dataset 
             
             #last_index = 0
-            for F in v: 
+            for F in v:                 
                 print('FILE ' , F )
-                data = self.data[k][F]
+                data = dic[k][F]  # h5py open file 
                 self.unique_dates[k][F] = {}
                 self.unique_dates[k][F]['datetimes'] = {}
                 
-                timestamps = data['recordtimestamp']
+                timestamps = data['recordtimestamp'][:]
+                #indices = data['recordindex'][:]
+                indices_inf = data['recordindex'][:] # starting index of the record
+                indices_sup = [ indices_inf[1:][i] for i in  range(len(indices_inf[:-1])) ] # ending index of the record
+                indices_sup.append(999999) # dummy high value, to be used with last record of the list 
+                
+                # quick check
+                df_check = pd.DataFrame( {'ts':timestamps , 'inf': indices_inf, 'sup':indices_sup } ) 
+                
+                for ts,inf,sup in zip(timestamps, indices_inf, indices_sup):
+                    if ts not in all_timestamps_dic.keys():
+                        all_timestamps_dic[ts] = {}
+                    if ds not in all_timestamps_dic[ts].keys():
+                        all_timestamps_dic[ts][ds] = {}   
+                              
+                    all_timestamps_dic[ts][ds][F] = [inf, sup]
+                        
+    
+                
+                #timestamps_conv = pd.to_datetime( timestamps, unit='s',  origin=pd.Timestamp('1900-01-01') )
+                 
+        #unique_timestamps = list(np.unique(list(all_timestamps_dic.keys() ))).sort()
+        self.all_timestamps_dic = all_timestamps_dic
+
+
+        """
+                indices = data['recordindex']
                 ind_inf = data['recordindex']
                 
                 # inf and sup indices used when using list slices. It will not work if you try the access the last index as in "vector[last_index]" since it is out of boud. 
@@ -391,130 +490,423 @@ class Merger():
                     #filtered = self.make_quick_df(  k, F, inf, sup, indices=None )
                     #last_index = last_index + len(inserting_indices) 
                     all_timestamps.append(dt)
-
-        logging.info('\n *** Done calculating reduced indices ' )
+        """
                     
-        # Storing all the info per timestamp, dataset, file 
-        all_timestamps_dic = {} 
-        all_timestamps = np.unique( all_timestamps )  
-        all_timestamps.sort()
+                    
+    
+    def reduce_timestamps(self):
+        """ Simplify/reduce all timestamps by flagging possible duplicates """
         
-        ### build intermediate dictionary with dates 
-        logging.info('\n *** Build intermediate dictionary with dates ' )
+        #1 check duplicates 
+        time_delta = self.hour_time_delta * 60*60 # timestamps are still in seconds, so must convert hours in self.hour_time_delta to seconds 
+        all_ts = self.all_timestamps_dic
+        unique_timestamps = list(np.unique(list(self.all_timestamps_dic.keys() )))
+        unique_timestamps.sort()
+        
+        duplicated_ts = []
+        unique_ts = [] 
+        for i in range(1, len(unique_timestamps)):
+            if (unique_timestamps[i] - unique_timestamps[i-1]) < time_delta :
+                print('Must check duplicated timestamps',  unique_timestamps[i] )
+                duplicated_ts.append( [unique_timestamps[i-1] ,  unique_timestamps[i] ] )
+                unique_ts.pop()
+                #duplicated_ts.append( unique_timestamps[i-1] )                                      
+                #duplicated_ts.append( unique_timestamps[i]    )
+            else:
+                if i ==1:  # since loop starts from 2nd item, must add the 1st timestamp if the 2nd is not duplicated 
+                    unique_ts.append( unique_timestamps[i-1]  )
+                unique_ts.append( unique_timestamps[i]  )
+        if len(duplicated_ts) >0:
+            0
+            ### Here must apply duplicate removal 
 
-        # CHECK TIMESTAMP Timestamp('1979-06-20 12:00:00') 
-        for dt in all_timestamps: # <- loop over all possible timestamps 
-            all_timestamps_dic[dt] = {}
-            for  ds,files in self.datasets.items():  # v is a list of files from the dataset
-                k,v = ds, files #rename
-                for F in v:
-                    if dt in self.unique_dates[k][F]['datetimes'].keys():
-                        
-                        if k not in all_timestamps_dic[dt].keys():
-                            all_timestamps_dic[dt][k]= {}
-                        all_timestamps_dic[dt][k][F] = self.unique_dates[k][F]['datetimes'][dt]['indices']
-                             
-        logging.info('\n *** Done build intermediate dictionary with dates ' )
+        # update dic
+        #reduced_all_timestamps_dic = all_timestamps_dic
+        a =0
+        #self.all_timestamps_dic = reduced_all_timestamps_dic 
+        return unique_ts, duplicated_ts
+    
+        # loop over 
+    
+    
+    #def get_data(self):
+    #    """ Extract the temperature and wind speed data for valid pressure level """
+    #    a = 0
         
-        ### flag for public data, extract duplicates
+    #def extract_file_data(self, dt, ds):
+    #    """ Extract the data for temperature and wind speed for a given ds, file and timestamp """
+    #    a = 0
+
+        
+    def extract_record_data(self, dt, ds, file ):
+        
+        """ Extracting the length of the temp and wind valid observations, and the maximum height (or min pressure) 
+        TODO must check what happens with z_coordinate type in height or gph """
+        
+        ###TO DO CAN LOAD OBS TAB adnd HEAD TAB in memory so you only slice and not read everytime 
+        
+        h5_file = self.dic_h5py[ds][file]
+        ind_min, ind_max = self.all_timestamps_dic[dt][ds][file][0] ,  self.all_timestamps_dic[dt][ds][file][1] 
+        
+        ot = h5_file['observations_table']
+        
+        temp_ind = np.where(ot['observed_variable'][ind_min:ind_max] == 126)[0] # temperature
+        wind_ind = np.where(ot['observed_variable'][ind_min:ind_max]  == 107)[0] # wind speed 
+        gph_ind = np.where(ot['observed_variable'][ind_min:ind_max]  == 117)[0] # geopotential 
+        
+        # length of valid data for temp and wind 
+        temp_values = ot['observation_value'][ind_min:ind_max][temp_ind]
+        num_valid_temp = len(np.unique(temp_values[~np.isnan(temp_values)]))
+        
+        wind_values = ot['observation_value'][ind_min:ind_max][wind_ind]
+        num_valid_wind = len(np.unique(wind_values[~np.isnan(wind_values)]))
+        
+        #checking pressure or height or gph 
+        press_temp_ind = ot['z_coordinate'][ind_min:ind_max][temp_ind]
+        press_wind_ind = ot['z_coordinate'][ind_min:ind_max][wind_ind]
+        
+        max_gph = max( ot['observation_value'][ind_min:ind_max][gph_ind] )
+        
+        min_press_temp, min_press_wind = min(press_temp_ind) , min(press_wind_ind)     
+        max_press_temp, max_press_wind = max(press_temp_ind) , max(press_wind_ind)     
+        
+        pressure_ind = np.where(ot['z_coordinate_type'][ind_min:ind_max] == 1 )[0] #
+        if len(pressure_ind) >0:
+            max_pressure = max( ot['observation_value'][ind_min:ind_max][pressure_ind] )
+            min_pressure = min( ot['observation_value'][ind_min:ind_max][pressure_ind] )
+            
+        else:
+            max_pressure = 0
+            min_pressure = 999999
+            
+        height_ind = np.where(ot['z_coordinate_type'][ind_min:ind_max] == 0 )[0] #        
+        if len(height_ind) >0:
+            max_height = max( ot['observation_value'][ind_min:ind_max][height_ind] )
+            min_height = min( ot['observation_value'][ind_min:ind_max][height_ind] )
+            
+        else:
+            max_height = 0
+            min_height = 999999
+            
+        if len(gph_ind) >0:
+            max_gph = max( ot['observation_value'][ind_min:ind_max][gph_ind] )
+            min_gph = min( ot['observation_value'][ind_min:ind_max][gph_ind] )
+            
+        else:
+            max_gph = 0                    
+            min_gph = 999999
+            
+        return [num_valid_temp, num_valid_wind], [min_press_temp, min_press_wind, max_press_temp, max_press_wind], [min_pressure, min_gph, min_height], [max_pressure, max_gph, max_height]
+    
+    
+    
+    
+    
+    
+    def find_best_record(self, ts, datasets, extract_record_data =True):
+        """ Effective merging procedure, applying hierarchical selection rules 
+                   ts: timestamp in seconds after 1900 
+                   datasets: list of datasets per record e.g. ['era5_1', 'igra2' , 'ncar', ... ] """
+        
+        ### Variable placeholders
+        best_ds = ''
+        best_file = ''
+        
+        
+        ### Setting data policy (might be redundant)
+        ### see https://github.com/glamod/common_data_model/blob/master/tables/data_policy_licence.dat
+        if 'ncar' in datasets or  'igra2' in datasets or  'era5_1759' in datasets or 'era5_1761' in datasets or 'giub' in datasets:
+            data_policy = 0
+        else:
+            data_policy = 4        
+        
+        # list of all era5 datasets to be preferred except special cases 
+        era5_ds = [ f for f in datasets if f in ['era5_1', 'era5_1_mobile' , 'era5_2' , 'era5_2_mobile'] ]
+
+        
+        '''
+        ### 1) giub over era5 if year < 1950
+        ###  1950-01-01-00:00:00 = 1577836800 seconds
+        ###  pd.to_datetime( a[:], unit='s',  origin=pd.Timestamp('1900-01-01') )
+        '''
+        
+        ### placeholder for best data 
+        extracted_best_record = {}
+        
+        ### only one dataset available 
+        if len(datasets) == 1:
+            best_ds = datasets[0]
+            files =  list(self.all_timestamps_dic[ts][best_ds].keys() )
+            if len(files) ==1:
+                best_file = files[0]
+                if extract_record_data:
+                    # [num_valid_temp, num_valid_wind], [min_press_temp, min_press_wind, max_press_temp, max_press_wind], [max_gph, max_pressure, max_height]
+                    valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph  = self.extract_record_data(ts, best_ds, best_file)  # TO REMOVE, not needed 
+                    extracted_best_record[best_file] = [valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph]
+            else:
+                
+                sum_records = 0
+                max_height = 0
+                min_pressure = 0
+                
+                for f in files:
+                    valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph  = self.extract_record_data(ts, best_ds, best_file)  # TO REMOVE, not needed 
+                    extracted_best_record[f] = [ valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph] 
+                    
+                    ### first update is always valid 
+                    if (valid_t_w[0]+valid_t_w[1] > sum_records):
+                        best_file = f
+                        sum_records = valid_t_w[0]+valid_t_w[1]
+                    if min_p_h_gph[0] < min_pressure:  # current pressure is lower than previous
+                        best_file = f 
+                        min_pressure = min_p_h_gph[0]
+                    if  max_p_h_gph[1] > max_height: # current pressure higher than previous (pressure and height should go together)
+                        best_file = f 
+                        max_height =  max_p_h_gph[1]
+            
+            
+        else:  # hierarchical choices, according to datasets and files 
+            extract_record_data = True
+            ### first find best datasets, then check length of files 
+            if ts < 1577836800:
+                if 'giub' in datasets:
+                    best_ds = 'giub'
+                
+            else:
+                if len(era5_ds) >0 and 'igra' not in datasets:
+                    best_ds = era5_ds[0]
+                elif len(era5_ds) ==0 and 'igra' in datasets:
+                    best_ds = 'igra2'
+                elif len(era5_ds) >0 and 'igra' in datasets:  #mucht check highest level in igra, and compare with era5 
+                    best_ds = 'era5_or_igra2' 
+                else:
+                    best_ds = 'other' #to be determined  
+                
+                #else:  # no era5, no igra => must check length of files EXCEPT ncar to be taken as last resort due to wind problem (some data in knots, some other in m/s without clear rule )
+                #     valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph = self.extract_record_data(ts, best_ds, f)
+                    
+                    
+                    
+                files =  list(self.all_timestamps_dic[ts][best_ds].keys() )
+                
+                if len(files) ==1:
+                    best_file = files[0]
+                else:
+                    for f in files:
+                        valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph = self.extract_record_data(ts, best_ds, f)
+                        a =0                
+            
+
+
+
+        #return best_ds, best_file, data_policy, highest_level, total_temp_records, total_wind_records 
+        if extract_record_data or len(datasets) >1 :
+            self.all_timestamps_dic[ts]['extract_record_data'] = extracted_best_record[best_file] 
+            
+        return best_ds, best_file, data_policy 
+        
+        
+        
+    def merge_timestamp(self):
+        """ Apply merging selection criteria to each reduced timestamp (no more duplicated timestamp)"""
+        
+        # unique ts without duplicates, duplicated timestamps
+        unique_ts, duplicated_ts = self.reduce_timestamps()
+        # all available ts (unique or possibly duplicated)
+        all_timestamps = list(self.all_timestamps_dic.keys())
+        all_timestamps.sort()
+
+        # container for processed ts 
         processed_timestamps = []
+
         all_combined_timestamps ={}        
+        
+        # looping over all timestamps 
+        # must remove duplicates 
+        
+        time_delta = self.hour_time_delta*60*60 # timestamps are still in seconds, so must convert hours in self.hour_time_delta to seconds 
+        
+        # dictionary holding all the data for a given timestamp 
+        keys = [ 'timestamp' , 'policy' , 'all_duplicated_dt', 'all_duplicated_datasets', 'all_duplicated_files', 'best_ds' , 'best_file', 'ind_inf', 'ind_sup'] 
+        all_combined_timestamp_data = {}
+        for k in keys:
+            all_combined_timestamp_data[k] = []
+            
         
         for dt,index in zip(all_timestamps, range(len(all_timestamps)) ) :
             
-            # will keep lowest timestamp of all possible duplicates i.e. only dt 
-            
-            #if dt == pd.Timestamp('1979-06-03 12:00:00'):
-            #    print(0)
-
-            if dt in processed_timestamps:
+            # already processed timestamp 
+            if dt in processed_timestamps[:-5]:   # all timestamps are sorted so should not check the entire list 
                 continue 
-
-            # temporary dictionary
+            # temporary dictionary holding info on duplicates 
+            
+            
             all_combined_timestamps[dt]= {}
             all_combined_timestamps[dt]['real_time']= ''
             
             all_combined_timestamps[dt]['policy'] = 0
             all_combined_timestamps[dt]['all_duplicated_dt'] = []
             all_combined_timestamps[dt]['all_duplicated_datasets'] = []
+            
             all_combined_timestamps[dt]['best_ds'] = ''  
             all_combined_timestamps[dt]['best_file'] = ''  
+            
             all_combined_timestamps[dt]['all_duplicated_files'] = []
             all_combined_timestamps[dt]['all_duplicated_records'] = []
+            
             all_combined_timestamps[dt]['indices'] = []
-            all_combined_timestamps[dt]['index_header'] = []
+            #NO all_combined_timestamps[dt]['index_header'] = []
+            
+            
             
             # if the time delta is less than the specified limit in self.hour_time_delta
-            possible_duplicate_timestamps = [d for d in all_timestamps[index+1:index+3] if d >=dt and abs(d-dt)< pd.Timedelta(hours= self.hour_time_delta)  ] 
-            for t in possible_duplicate_timestamps:
-                processed_timestamps.append(t)
-            all_combined_timestamps[dt]['all_duplicated_dt'].extend(possible_duplicate_timestamps)
             
-            # list with all possible duplicated date_times 
-            possible_duplicate_timestamps.append(dt)
-            all_datasets =  [ list(all_timestamps_dic[g].keys())[0] for g in possible_duplicate_timestamps ]
-
-            all_combined_timestamps[dt]['all_duplicated_datasets'].append( np.bytes_([''.join(d) for d in all_datasets ][0]))
+            # here: remove duplicated timestamps 
             
-            if 'ncar' in all_datasets or  'igra2' in all_datasets or  'era5_1759' in all_datasets or 'era5_1761' in all_datasets:
-                    all_combined_timestamps[dt]['policy'] = 4
             
-            era5 = [ f for f in all_datasets if f == 'era5_1' or f== 'era5_1_mobile' or f=='era5_2' or f== 'era5_2_mobile' ]
-            
-            if len(era5) >0:
-                best_ds = era5[0]  # only one case can happen, not more than 1 since era5 datasets are mutually excluding 
-            elif 'igra2' in all_datasets:
-                best_ds = 'igra2'
-            elif 'ncar' in all_datasets:
-                best_ds = 'ncar'
+            if dt in unique_ts: # no time duplicate detected, apply standard merging procedure 
+                
+                datasets = list(self.all_timestamps_dic[dt].keys() )   # might remove the datasets as a variable since it is in an attirbute of the class already. Think about it....
+                best_ds, best_file, policy = self.find_best_record(dt, datasets)
+                
+                processed_timestamps.append(dt)
+                
             else:
-                best_ds = False # must look for longest records 
-                
+                possible_duplicates = [ p for p in duplicated_ts if p[0] == dt or p[1] == dt ][0]
+                # apply hierarchical selection 
+                for t in possible_duplicates:
+                    
+                    #two possible timestamps, analyze each then compare best ds and best file of each 
+                    ### earlier timestamp
+                    low_ts = possible_duplicates[0]
+                    datasets_low = list(self.all_timestamps_dic[low_ts].keys() ) 
+                    best_ds_low, best_file_low, policy = self.find_best_record(low_ts, datasets_low)
+                    
+                    ### later timestamp
+                    high_ts = possible_duplicates[1]
+                    datasets_high = list(self.all_timestamps_dic[high_ts].keys() ) 
+                    best_ds_high, best_file_high, policy = self.find_best_record(high_ts, datasets_high)
+                    
+                                        
+                    ### valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph
+                    ### example: 
+                    ### self.all_timestamps_dic[low_ts]['extract_record_data'] = [[0, 2], [1961.33, 1961.33, 3432.3274, 3432.3274], [999999, 1961.33, 999999], [0, 3432.3274, 0]]
+                    
+                    #1. check total temp+wind record length
+                    l_low =  self.all_timestamps_dic[low_ts]['extract_record_data'][0][0] + self.all_timestamps_dic[low_ts]['extract_record_data'][0][0]
+                    l_high =  self.all_timestamps_dic[high_ts]['extract_record_data'][0][0] + self.all_timestamps_dic[high_ts]['extract_record_data'][0][0]
+                    
+                    min_p_low =  self.all_timestamps_dic[low_ts]['extract_record_data'][2][0] # minimum pressure
+                    min_p_high = self.all_timestamps_dic[high_ts]['extract_record_data'][2][0]
+                    
+                    max_h_low =  self.all_timestamps_dic[low_ts]['extract_record_data'][3][1] # maximum height
+                    max_h_high = self.all_timestamps_dic[high_ts]['extract_record_data'][3][1]
+                    
+                    
+                    if ( l_low > l_high ):
+                        best_ds = best_ds_low
+                        best_file = best_file_low
+                    else:
+                        best_ds = best_ds_high
+                        best_file = best_file_high                        
+                    
+                    
+                    if min_p_low < min_p_high:
+                        best_ds = best_ds_low
+                        best_file = best_file_low                        
+                    else:
+                        best_ds = best_ds_high
+                        best_file = best_file_high                                  
 
-            for time in possible_duplicate_timestamps:
-                best_dt, best_file, best_record = time,'',0        
-                
-                if best_ds and best_ds not in all_timestamps_dic[time].keys():
-                    continue
-                
-                elif  best_ds and best_ds in all_timestamps_dic[time].keys():
+
+                    if  max_h_low > max_h_high: # current pressure higher than previous (pressure and height should go together)
+                        best_ds = best_ds_low
+                        best_file = best_file_low                  
                     
-                    files = list(all_timestamps_dic[time][best_ds].keys())
-                    all_combined_timestamps[dt]['all_duplicated_files'].extend(files)  
+                    else:
+                        best_ds = best_ds_high
+                        best_file = best_file_high                           
+                                        
+                                        
+                    processed_timestamps.append(low_ts)
+                    processed_timestamps.append(high_ts)
                     
-                    for file in files:
-                        records = all_timestamps_dic[time][best_ds][file][4]
-                        if records >= best_record:
-                            best_dt = time
-                            best_file = file
-                            best_record = records 
-                            all_combined_timestamps[dt]['all_duplicated_records'].append(records)
-                            all_combined_timestamps[dt]['all_duplicated_files'].append(file)  
-                                
-                elif not best_ds:
-                    datasets = all_timestamps_dic[time].keys()
-                    for ds in datasets:
-                        files = all_timestamps_dic[time][ds]
+                    a = 0
+                
+                a = 0
+                 
+                '''
+                dt in timestamps_to_check_duplicates:
+                
+                possible_duplicate_timestamps = [d for d in all_timestamps[index+1:index+3] if d >=dt and abs(d-dt)<  time_delta  ] 
+                for t in possible_duplicate_timestamps:
+                    processed_timestamps.append(t)
+                all_combined_timestamps[dt]['all_duplicated_dt'].extend(possible_duplicate_timestamps)
+            
+                # list with all possible duplicated date_times 
+                possible_duplicate_timestamps.append(dt)
+                all_datasets =  [ list(all_timestamps_dic[g].keys())[0] for g in possible_duplicate_timestamps ]
+
+                all_combined_timestamps[dt]['all_duplicated_datasets'].append( np.bytes_([''.join(d) for d in all_datasets ][0]))
+                '
+                for time in possible_duplicate_timestamps:
+                    best_dt, best_file, best_record = time,'',0        
+                    
+                    if best_ds and best_ds not in all_timestamps_dic[time].keys():
+                        continue
+                    
+                    elif  best_ds and best_ds in all_timestamps_dic[time].keys():
+                        
+                        files = list(all_timestamps_dic[time][best_ds].keys())
                         all_combined_timestamps[dt]['all_duplicated_files'].extend(files)  
                         
                         for file in files:
-                            records = all_timestamps_dic[time][ds][file][4]
+                            records = all_timestamps_dic[time][best_ds][file][4]
                             if records >= best_record:
                                 best_dt = time
                                 best_file = file
                                 best_record = records 
-                                best_ds = ds 
                                 all_combined_timestamps[dt]['all_duplicated_records'].append(records)
                                 all_combined_timestamps[dt]['all_duplicated_files'].append(file)  
-
-                all_combined_timestamps[dt]['best_ds'] = best_ds  
-                all_combined_timestamps[dt]['best_file'] = best_file  
-                all_combined_timestamps[dt]['real_time'] = best_dt # might not coincide 
-                all_combined_timestamps[dt]['indices'] = all_timestamps_dic[best_dt][best_ds][best_file] # might not coincide 
-                #if dt == pd.Timestamp('1979-07-27 11:00:00') or best_dt == pd.Timestamp('1979-07-27 11:00:00'):
-                #    print(0)
-                all_combined_timestamps[dt]['index_header'] = list(self.unique_dates[best_ds][best_file]['datetimes'].keys()).index(best_dt) # index of this merged time in the original file, for constructing the header table 
-   
+                                    
+                    elif not best_ds:
+                        datasets = all_timestamps_dic[time].keys()
+                        for ds in datasets:
+                            files = all_timestamps_dic[time][ds]
+                            all_combined_timestamps[dt]['all_duplicated_files'].extend(files)  
+                            
+                            for file in files:
+                                records = all_timestamps_dic[time][ds][file][4]
+                                if records >= best_record:
+                                    best_dt = time
+                                    best_file = file
+                                    best_record = records 
+                                    best_ds = ds 
+                                    all_combined_timestamps[dt]['all_duplicated_records'].append(records)
+                                    all_combined_timestamps[dt]['all_duplicated_files'].append(file)  
+    
+                    all_combined_timestamps[dt]['best_ds'] = best_ds  
+                    all_combined_timestamps[dt]['best_file'] = best_file  
+                    all_combined_timestamps[dt]['real_time'] = best_dt # might not coincide 
+                    all_combined_timestamps[dt]['indices'] = all_timestamps_dic[best_dt][best_ds][best_file] # might not coincide 
+                    #if dt == pd.Timestamp('1979-07-27 11:00:00') or best_dt == pd.Timestamp('1979-07-27 11:00:00'):
+                    #    print(0)
+                    all_combined_timestamps[dt]['index_header'] = list(self.unique_dates[best_ds][best_file]['datetimes'].keys()).index(best_dt) # index of this merged time in the original file, for constructing the header table 
+                '''
+                
+                
+                
+                
+            all_combined_timestamps[dt]['policy'] = policy
+            all_combined_timestamps[dt]['best_ds'] = best_ds
+            all_combined_timestamps[dt]['best_file'] = best_file
+            all_combined_timestamps[dt]['all_duplicated_files'] = 0
+            all_combined_timestamps[dt]['all_duplicated_records'] = 0
+        
+        self.merged_timestamp = all_combined_timestamps
+        
+        
+        '''
         # reloop to select candidates, duplicates 
         all_unique_dates = np.unique( list(all_combined_timestamps.keys()) )
         self.all_unique_dates = all_unique_dates
@@ -526,7 +918,7 @@ class Merger():
         self.all_years = all_years
         
         logging.debug('*** make_all_datetime finished ')         
-        
+        '''
         
     def get_null(self, tipo = ''):
         ''' Simply returns the proper format for ''null' value '''        
@@ -870,13 +1262,45 @@ class Merger():
         obs_offset = 0
         head_offset = 0
         
-        #for this_year in self.all_years:   # loop over all available years in the date_times 
-        for this_year in [1980,1981]:   # loop over all available years in the date_times 
-            
+        ### here: extract all available years
+        
+        #for this_year in self.all_years:   # loop over all available years in the date_times
+        a = 0
+        data_all_years = self.extract_file_per_year()
+        all_years = list(data_all_years.keys() )
+        
+        #a = self.initialize_all_data(data_per_year)
+        
+        for this_year in all_years:   # loop over all available years in the date_times 
             print('=== Running year ::: ' , this_year )
             self.current_year = this_year 
-            selected_timestamps_this_year = [f for f in self.all_unique_dates if f.year == this_year ]
             
+            data_this_year = data_all_years[this_year]
+            
+            following_year = str(int(this_year) + 1) 
+            if following_year in all_years:
+                data_following_year = data_all_years[following_year]
+            else:
+                data_following_year = ''
+            
+            
+            dummy = self.open_data(data_this_year)
+            
+            dummy = self.make_unique_datetime()            
+
+            
+            """ Making all date_time for the selected year  """
+            self.make_unique_datetime()            
+            #self.reduce_timestamps()
+            
+            # principal merging algoritm, applying selection rules 
+            merge = self.merge_timestamp() # selection of the best data 
+            
+            a = 'HERE'  # TO DO HERE
+            
+            
+        
+            """
             # extract all indices per file, create aggregated vectors with proper lenght
             a = self.merge_all_timestamps(selected_timestamps_this_year)
             
@@ -984,69 +1408,8 @@ class Merger():
             else:
                 pass
             
-            for a in [1,2]:
-                print(a)
-                ### era5fb table 
-                
-                # write the obstab variable immediately 
-                ### write the data immediately 
 
-                '''
-                ### Station configuration table 
-                if '20999' in self.station:
-                    primary, name = self.station, np.bytes_('UNKNOWN')
-                else:
-                    primary, name = self.data['station_configuration']['primary_id'].values[0] , self.data['station_configuration']['station_name'].values[0] 
-                
-                combined_head_tab['primary_station_id'] = np.array( [primary] )
-                combined_head_tab['station_name']         = np.array( [name] )
-                   
-                """ New merged recordindex and recordtimestamps indices """
-                combined_indices.append(len(combined_obs_tab['date_time']))                 
-                combined_date_time.append(dt)
-    
-                del cleaned_df_container 
-            
-                #print(blue + 'Memory used after deleting the cleaned_df_container: ', process.memory_info().rss/1000000000 , cend)
-        
-            ### STATION CONFIGURATION 
-            
-            if '20999' not in self.station:
-                stat_conf = pd.DataFrame(np.repeat(self.data['station_configuration'].values , len(all_combined_head) , axis=0), columns=self.data['station_configuration'].columns)                  
-        
-            else:
-                #stat_conf = self.stat_conf_CUON 
-                for v in self.data['station_configuration'].columns:
-                        a = self.get_null( tipo = self.dic_type_attributes['station_configuration'][v]['type'])
-                        print(v,  '   ' ,  self.dic_type_attributes['station_configuration'][v]['type'] , '   ' , a )
-                        print(0)
-                        
-                stat_conf = pd.DataFrame(np.repeat(self.data['station_configuration'].values , len(all_combined_head) , axis=0), columns=self.data['station_configuration'].columns)  
-                stat_conf['primary_id'] = np.bytes_(self.station)
-                stat_conf['primary_id'] = stat_conf['primary_id'].astype('|S15')
-                stat_conf['platform_type'] = 2
-                stat_conf['platform_type'] = 2
-                metadata_contact = 'L.Haimberger'
-                metadata_contact_role = '0'
-        
-            # check other variables !!! 
-            stat_conf.latitude = [i['latitude'][0] for i in all_combined_head ]
-            stat_conf.longitude = [i['longitude'][0] for i in all_combined_head ]
-            stat_conf.record_number = np.array ( range(len(all_combined_head) ) )
-            
-            stat_conf = clean_station_configuration(stat_conf)        
-            
-            self.data['station_configuration'] = stat_conf 
-                
-            for k in self.data['station_configuration'].columns: # try writing only one entry
-
-                a =np.array( self.data['station_configuration'][k])
-                self.write_merged(content = 'station_configuration', table= {k:a})
-                logging.info('*** Written station_configuration %s             ', k)
-                        
-            '''
-
-
+        """
 
 
     def write_merged_new(self, var='', table = '', data=''):
@@ -1249,9 +1612,8 @@ def create_stat_summary(stat_id, data_directories):
                     
                     #if y not in station_dic.keys():
                     #    station_dic = {'year':[], 'dataset':[] , 'files': [] }
-
                     
-                    station_dic['files'].append(i+'/' + ','.join(harvested_files)  ) 
+                    station_dic['files'].append(i+'/' +stat_id + '/' + ','.join(harvested_files)  ) 
                     station_dic['year'].append(y) 
                     station_dic['dataset'].append(d) 
                 
@@ -1294,7 +1656,7 @@ if __name__ == '__main__':
 
     
     # here: must create stations list 
-    stations = ['0-20000-0-71879']  # 0-20000-0-71879 , 0-20000-0-82900
+    stations = ['0-20001-0-11035']  # 0-20000-0-71879 , 0-20000-0-82900
     """
      for g in os.listdir('.'):
     ...:     files = os.listdir(g)
@@ -1340,3 +1702,6 @@ if __name__ == '__main__':
 
 # 0-20999-0-99007 
 ### 34737
+
+
+### MAURITIUS /users/staff/uvoggenberger/scratch/mauritius_data/temp 
