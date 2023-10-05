@@ -2,7 +2,7 @@
 
 
 ### Path to harvested file directory
-harvested_base_dir = '/scratch/das/federico/HARVEST_YEARLY_18SEP2023/'
+harvested_base_dir ='/scratch/das/federico/HARVEST_YEARLY_1OCT2023_Vienna/'
 
 # can be changed singularly if needed 
 data_directories   = { 'era5_1'       : harvested_base_dir + '/era5_1' ,
