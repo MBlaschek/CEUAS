@@ -224,7 +224,8 @@ if __name__ == '__main__':
     stdplevs = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500]
     diff = True
     show_date = False
-    for year in [1960, 1970, 1980, 1990, 2000, 2010, 2020]:
+    # for year in [1960, 1970, 1980, 1990, 2000, 2010, 2020]:
+    for year in [2000]:
         file_list = []
         for i in glob.glob('/mnt/users/scratch/leo/scratch/converted_v9/*.nc')[:]:
             print(i)
@@ -255,9 +256,9 @@ if __name__ == '__main__':
 
                 outlier_drop = np.nanpercentile(rmse_sum_shbase_sonde[k], limit)
                 rmse_sum_shbase_sonde[k]  = np.array(rmse_sum_shbase_sonde[k])
-                print(len(rmse_sum_shbase_sonde[k][~numpy.isnan(rmse_sum_shbase_sonde[k])]))
+                print(len(rmse_sum_shbase_sonde[k][~np.isnan(rmse_sum_shbase_sonde[k])]))
                 rmse_sum_shbase_sonde[k][np.logical_and(rmse_sum_shbase_sonde[k] < outlier_drop[0], rmse_sum_shbase_sonde[k] > outlier_drop[1])] = np.nan
-                print(len(rmse_sum_shbase_sonde[k][~numpy.isnan(rmse_sum_shbase_sonde[k])]))
+                print(len(rmse_sum_shbase_sonde[k][~np.isnan(rmse_sum_shbase_sonde[k])]))
 
                 outlier_drop = np.nanpercentile(rmse_sum_shbase_adjsonde[k], limit)
                 rmse_sum_shbase_adjsonde[k]  = np.array(rmse_sum_shbase_adjsonde[k])
@@ -343,19 +344,19 @@ if __name__ == '__main__':
             ax1 = ax[0]
             ax2 = ax[1] 
             ax2.sharey(ax1)
-            ax1.plot(np.array(rmse_shbase_sonde),stdplevs,color='orange', label='rmse_shbase_sonde')
-            ax1.plot(np.array(rmse_shdisp_sonde),stdplevs, color='red', label='rmse_shdisp_sonde')
+            ax1.plot(np.array(rmse_shbase_sonde),stdplevs,color='orange', label='RMSE Undisplaced Sonde')
+            ax1.plot(np.array(rmse_shdisp_sonde),stdplevs, color='red', label='RMSE Displaced Sonde')
 
             ax1_4 = ax1.twiny()
             ax1_4.axvline(x=0, color='black', alpha=0.8, ls='--', lw=0.5)
             if diff:
-                ax1_4.plot(np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde),stdplevs,color='purple', label='diff')
-            ax1_4.plot(np.array(rms_dispmbase),stdplevs, color='green', alpha=0.3, ls='--', label='rms_disp_minus_base')
+                ax1_4.plot(np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde),stdplevs,color='purple', label='Difference')
+            # ax1_4.plot(np.array(rms_dispmbase),stdplevs, color='green', alpha=0.3, ls='--', label='rms_disp_minus_base')
 
             ax1_4.legend(loc='upper right')
             ax1.set_ylim(ax1.get_ylim()[::-1])
             ax1.set_ylabel('pressure (Pa)')
-            ax1.set_xlabel('specific humidity RMSE')
+            ax1.set_xlabel('relative humidity RMSE [1]')
             ax1.legend(loc='lower right')
             ax1.grid()
 
@@ -370,7 +371,7 @@ if __name__ == '__main__':
             ax2.grid()
 
         #         maplt.title(str(year)+' Temperature RMSE \n' + str(len(results)) + ' stations    ' +str(len(rms_sum_shdisp[50000])) +' valid ascents')
-            maplt.title(str(year)+' Specific Humidity RMSE \n' +str(len(rms_sum_shdisp[50000])) +' valid ascents')
+            maplt.title(str(year)+' Relative Humidity RMSE \n' +str(len(rms_sum_shdisp[50000])) +' valid ascents')
             maplt.tight_layout()
             maplt.savefig(str(year)+'_era5_fc_outlier_cleaned_world_rmse_plot_humidity.png')
 #             maplt.show()

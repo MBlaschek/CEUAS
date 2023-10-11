@@ -14,7 +14,13 @@ import pickle
 import matplotlib
 import matplotlib.pylab as plt
 import matplotlib.pyplot as maplt
+from matplotlib import ticker
 matplotlib.rcParams.update({'font.size': 20})
+matplotlib.rcParams["figure.figsize"] = (20, 10)
+
+sys.path.insert(0, os.getcwd() + "/../resort/rasotools-master/")
+import rasotools
+
 
 plt.rcParams['lines.linewidth'] = 3
 
@@ -44,7 +50,7 @@ def calc_station(sid, year, var, selected_mons = None):
     # year = 2000
     # selected_mons = None
 
-    varsel_dict = {'eastward windspeed':'u', 'northward windspeed':'v', 'air temperature':'t'}
+    varsel_dict = {'eastward windspeed':'u', 'northward windspeed':'v', 'air temperature':'t', 'specific humidity':'q'}
     varsel = varsel_dict[var]
     era_dict = {'t':'130','u':'131','v':'132','q':'133'}
     varsel_era = era_dict[varsel]
@@ -67,6 +73,7 @@ def calc_station(sid, year, var, selected_mons = None):
     conv_file = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/igra2/*' + stat + '*.nc')[0]
     df_dict = {}
     df_dict_w = {}
+    df_dict_h = {}
 
     stdplevs = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500]
     rmse_sum_shbase_sonde={}
@@ -101,6 +108,7 @@ def calc_station(sid, year, var, selected_mons = None):
             mask_t = np.logical_and(np.isin(p_mask,plevs), np.isin(v_mask, [126]))
             mask_wd = np.logical_and(np.isin(p_mask,plevs), np.isin(v_mask, [106]))
             mask_ws = np.logical_and(np.isin(p_mask,plevs), np.isin(v_mask, [107]))
+            mask_rh = np.logical_and(np.isin(p_mask,plevs), np.isin(v_mask, [138]))
             t_len = len(mask_t[mask_t == True])
 
             # wind data
@@ -111,6 +119,13 @@ def calc_station(sid, year, var, selected_mons = None):
             df_dict_w['ws'] = list(file['observations_table']['observation_value'][t_idx[0]:t_idx[-1]][mask_ws])
             df_dict_w['u'] = - np.abs(df_dict_w['ws']) * np.sin(np.radians(df_dict_w['wd']))
             df_dict_w['v'] = - np.abs(df_dict_w['ws']) * np.cos(np.radians(df_dict_w['wd']))
+            
+            if varsel == 'q':
+                # humidity data
+                df_dict_h['z_coordinate'] = list(file['observations_table']['z_coordinate'][t_idx[0]:t_idx[-1]][mask_rh])
+                df_dict_h['date_time'] = list(file['observations_table']['date_time'][t_idx[0]:t_idx[-1]][mask_rh])
+                df_dict_h['date_time'] = seconds_to_datetime(df_dict_h['date_time'])
+                df_dict_h['rh'] = list(file['observations_table']['observation_value'][t_idx[0]:t_idx[-1]][mask_rh])
 
             #temperature data
             df_dict['z_coordinate'] = list(file['observations_table']['z_coordinate'][t_idx[0]:t_idx[-1]][mask_t])
@@ -126,11 +141,16 @@ def calc_station(sid, year, var, selected_mons = None):
 
             df_t = pd.DataFrame.from_dict(df_dict)
             df_w = pd.DataFrame.from_dict(df_dict_w)
+            if varsel == 'q':
+                df_h = pd.DataFrame.from_dict(df_dict_h)
 
             df = pd.merge(df_t, df_w[['z_coordinate', 'date_time', 'u', 'v']], on=['z_coordinate', 'date_time'], how='inner')
-            
+            if varsel == 'q':
+                df = pd.merge(df, df_h[['z_coordinate', 'date_time', 'rh']], on=['z_coordinate', 'date_time'], how='inner')
+                df['q'] = rasotools.met.humidity.vap2sh(rasotools.met.humidity.rh2vap(df.rh, df.t), df.z_coordinate)
+
             lat_disp, lon_disp, sec_disp = np.array([np.nan]*len(df)),np.array([np.nan]*len(df)),np.array([np.nan]*len(df))
-            
+
             for rid in df.report_id.drop_duplicates():
                 df_j = df[df.report_id == rid].copy()
                 df_j_cleanded = df_j.sort_values(by='z_coordinate', ascending=False).dropna(subset=['t', 'u', 'v'])
@@ -151,13 +171,12 @@ def calc_station(sid, year, var, selected_mons = None):
             df['longitude_displacement'] = lon_disp
             df['time_displacement'] = sec_disp
 
-
-
     except:
         print('NO DATA FOUND IN IGRA: ', sid)
         return [rmse_sum_shbase_sonde, rmse_sum_shdisp_sonde,
                 rms_sum_shbase, rms_sum_sonde,
                 rms_sum_shdisp, rms_sum_dispminusbase]
+    
     df = df.dropna()
     if len(df) == 0:
         print('NO DATA FOUND IN IGRA: ', sid)
@@ -241,13 +260,14 @@ def calc_station(sid, year, var, selected_mons = None):
 
 if __name__ == '__main__':
 #     year = 1990
-    save_dict = {'eastward windspeed':'u', 'northward windspeed':'v', 'air temperature':'temperature'}
+    save_dict = {'eastward windspeed':'u', 'northward windspeed':'v', 'air temperature':'temperature', 'specific humidity':'q'}
+    units_dict = {'eastward windspeed':'m/s', 'northward windspeed':'m/s', 'air temperature':'K', 'specific humidity':'1'}
     stdplevs = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500]
     diff = True
     show_date = False
-    for var in ['eastward windspeed', 'northward windspeed', 'air temperature']: #['eastward windspeed', 'northward windspeed', 'air temperature']:
-        for year in [1960, 1970, 1980, 1990, 2000, 2010, 2020]: # [1960, 1970, 1980, 1990, 2000, 2010, 2020]:
-            for i in glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/igra2/*70219*.nc')[:]:
+    for var in ['eastward windspeed', 'northward windspeed', 'air temperature', 'specific humidity']: #['eastward windspeed', 'northward windspeed', 'air temperature', 'specific humidity']:
+        for year in [1970, 2000]: # [1960, 1970, 1980, 1990, 2000, 2010, 2020]:
+            for i in glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/igra2/*70219*.nc')[:]: # 70219
                 sid = i.split('/')[-1].split('.')[0]
                 results = calc_station(sid,year,var)
                 with open(sid.split('-')[3][:5]+'_era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'wb') as file:
@@ -291,27 +311,38 @@ if __name__ == '__main__':
                 fig, ax = maplt.subplots(1, 2, gridspec_kw={'width_ratios': [4, 1]}, figsize = (15,10))
                 ax1 = ax[0]
                 ax2 = ax[1] 
+                ax1.set_yscale('log')
+                ax2.set_yscale('log')
                 ax2.sharey(ax1)
-                ax1.plot(np.array(rmse_shbase_sonde),stdplevs,color='orange', label='RMSE undisplaced')
-                ax1.plot(np.array(rmse_shdisp_sonde),stdplevs, color='red', label='RMSE displaced')
+                if var == 'specific humidity':
+                    ax1.plot(100000*np.array(rmse_shbase_sonde),stdplevs,color='orange', label=r'RMSE undisplaced $\times 10^{-5}$')
+                    ax1.plot(100000*np.array(rmse_shdisp_sonde),stdplevs, color='red', label=r'RMSE displaced $\times 10^{-5}$')
+                else:
+                    ax1.plot(np.array(rmse_shbase_sonde),stdplevs,color='orange', label='RMSE undisplaced')
+                    ax1.plot(np.array(rmse_shdisp_sonde),stdplevs, color='red', label='RMSE displaced')
 
                 ax1_4 = ax1.twiny()
                 ax1_4.axvline(x=0, color='black', alpha=0.8, ls='--', lw=0.5)
-                if diff:
-                    ax1_4.plot(np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde),stdplevs,color='purple', label='RMSE difference displaced - undisplaced')
-                ax1_4.plot(np.array(rms_dispmbase),stdplevs, color='green', alpha=0.3, ls='--', label='RMS dispalced - undisplaced')
-
-                ax1_4.legend(loc='upper right', prop={'size':14})
+                if var == 'specific humidity':
+                    if diff:
+                        plt_diff = ax1_4.plot(100000*(np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde)),stdplevs,color='purple', label=r'RMSE difference undisplaced - displaced $\times 10^{-5}$')
+                        plt_rms = ax1_4.plot(np.array(rms_dispmbase)*100000,stdplevs, color='green', alpha=0.3, ls='--', label=r'RMS undisplaced - displaced $\times 10^{-5}$')
+                else:
+                    if diff:
+                        plt_diff = ax1_4.plot((np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde)),stdplevs,color='purple', label=r'RMSE difference undisplaced - displaced')
+                    plt_rms = ax1_4.plot(np.array(rms_dispmbase),stdplevs, color='green', alpha=0.3, ls='--', label=r'RMS undisplaced - displaced')
+                ax1_4.legend(loc='upper right', prop={'size':14})                
+                
                 ax1.set_ylim(ax1.get_ylim()[::-1])
                 ax1.set_ylabel('pressure (Pa)')
-                ax1.set_xlabel(var+' RMSE')
+                ax1.set_xlabel(var+' RMSE (' +str(units_dict[var]) + ')')
                 ax1.legend(loc='lower left', prop={'size':14})
                 ax1.grid()
 
                 value_nr = []
                 for i in rmse_sum_shbase_sonde:
                     value_nr.append(len(np.asarray(rmse_sum_shbase_sonde[i])[~np.isnan(rmse_sum_shbase_sonde[i])]))
-                ax2.barh(stdplevs, value_nr, 2000, color='g', alpha = 0.4, align='center')
+                ax2.barh(stdplevs, value_nr, np.array(stdplevs)/7, color='g', alpha = 0.4, align='center')
                 ax2.set_xlabel('Observations')
                 ax2.tick_params(labelleft=False)
                 ax2.grid()

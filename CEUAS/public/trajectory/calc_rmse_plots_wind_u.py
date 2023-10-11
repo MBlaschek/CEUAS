@@ -4,6 +4,7 @@
 import h5py
 import trajectory as trj
 import numpy as np
+import numpy
 import pandas as pd
 import os,sys,glob
 import copy
@@ -224,7 +225,7 @@ if __name__ == '__main__':
     stdplevs = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500]
     diff = True
     show_date = False
-    for year in [1960, 1970, 1980, 1990, 2000, 2010, 2020]:
+    for year in [2000]: #[1960, 1970, 1980, 1990, 2000, 2010, 2020]:
         file_list = []
         #################################
         ################################# set to all STATIONS
@@ -346,14 +347,14 @@ if __name__ == '__main__':
             ax1 = ax[0]
             ax2 = ax[1] 
             ax2.sharey(ax1)
-            ax1.plot(np.array(rmse_shbase_sonde),stdplevs,color='orange', label='rmse_shbase_sonde')
-            ax1.plot(np.array(rmse_shdisp_sonde),stdplevs, color='red', label='rmse_shdisp_sonde')
+            ax1.plot(np.array(rmse_shbase_sonde),stdplevs,color='orange', label='RMSE Undisplaced Sonde')
+            ax1.plot(np.array(rmse_shdisp_sonde),stdplevs, color='red', label='RMSE Displaced Sonde')
 
             ax1_4 = ax1.twiny()
             ax1_4.axvline(x=0, color='black', alpha=0.8, ls='--', lw=0.5)
             if diff:
-                ax1_4.plot(np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde),stdplevs,color='purple', label='diff')
-            ax1_4.plot(np.array(rms_dispmbase),stdplevs, color='green', alpha=0.3, ls='--', label='rms_disp_minus_base')
+                ax1_4.plot(np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde),stdplevs,color='purple', label='Difference')
+            # ax1_4.plot(np.array(rms_dispmbase),stdplevs, color='green', alpha=0.3, ls='--', label='rms_disp_minus_base')
 
             ax1_4.legend(loc='upper right')
             ax1.set_ylim(ax1.get_ylim()[::-1])
@@ -380,5 +381,6 @@ if __name__ == '__main__':
             maplt.close()
             print('RMSE calculation: ', time.time()-t0)
 
-        except:
+        except Exception as e: 
+            print(e)
             pass
