@@ -17,3 +17,5 @@ CEUAS/public/adjust/cds_eua3.py
 rik_kernel*.json
 CEUAS/.vscode/settings.json
 CEUAS/public/adjust/logs/*.log
+CEUAS/public/trajectory/era5_humidity_fc_2000_rmse_data.p.old
+CEUAS/public/trajectory/era5_u_fc_1980_rmse_data_500_only.p
