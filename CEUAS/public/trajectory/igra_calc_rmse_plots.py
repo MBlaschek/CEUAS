@@ -16,7 +16,7 @@ import matplotlib.pylab as plt
 import matplotlib.pyplot as maplt
 matplotlib.rcParams.update({'font.size': 20})
 
-sys.path.insert(0, os.getcwd() + "/../resort/rasotools-master/")
+sys.path.insert(0, "/users/staff/uvoggenberger/uvpy/rasotools-master/")
 import rasotools
 
 plt.rcParams['lines.linewidth'] = 3
@@ -48,7 +48,7 @@ def calc_station(sid, year, var, selected_mons = None):
     # year = 2000
     # selected_mons = None
     
-    sys.path.insert(0, os.getcwd() + "/../resort/rasotools-master/")
+    sys.path.insert(0, "/users/staff/uvoggenberger/uvpy/rasotools-master/")
     import rasotools
 
     varsel_dict = {'eastward windspeed':'u', 'northward windspeed':'v', 'air temperature':'t', 'specific humidity': 'q'}
@@ -260,10 +260,11 @@ def calc_station(sid, year, var, selected_mons = None):
 if __name__ == '__main__':
 #     year = 1990
     save_dict = {'eastward windspeed':'u', 'northward windspeed':'v', 'air temperature':'temperature', 'specific humidity':'q'}
+    units_dict = {'eastward windspeed':'m/s', 'northward windspeed':'m/s', 'air temperature':'K', 'specific humidity':'1'}
     stdplevs = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500]
     diff = True
     show_date = False
-    for var in ['eastward windspeed', 'northward windspeed', 'air temperature', 'specific humidity']:
+    for var in ['eastward windspeed', 'northward windspeed', 'air temperature', 'specific humidity']: # ['eastward windspeed', 'northward windspeed', 'air temperature', 'specific humidity']
         for year in [2000]: # [1960, 1970, 1980, 1990, 2000, 2010, 2020]:
             file_list = []
             # for i in glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/igra2/*.nc')[:]:
@@ -273,7 +274,7 @@ if __name__ == '__main__':
             # results = ray.get(file_list)
             # with open('era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'wb') as file:
             #     pickle.dump(results, file)
-            with open('./igra/world/era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'rb') as file:
+            with open('/users/staff/uvoggenberger/scratch/displacement_data/igra/world/era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'rb') as file:
                 results = pickle.load(file)
 
             rmse_sum_shbase_sonde, rmse_sum_shdisp_sonde, rms_sum_shbase, rms_sum_sonde, rms_sum_shdisp, rms_sum_dispminusbase = copy.deepcopy(results[0])
@@ -323,29 +324,42 @@ if __name__ == '__main__':
             fig, ax = maplt.subplots(1, 2, gridspec_kw={'width_ratios': [4, 1]}, figsize = (15,10))
             ax1 = ax[0]
             ax2 = ax[1] 
-            ax1.set_yscale('log')
-            ax2.set_yscale('log')
+            if var != 'specific humidity':
+                ax1.set_yscale('log')
+                ax2.set_yscale('log')
             ax2.sharey(ax1)
-            ax1.plot(np.array(rmse_shbase_sonde),stdplevs,color='orange', label='RMSE undisplaced')
-            ax1.plot(np.array(rmse_shdisp_sonde),stdplevs, color='red', label='RMSE displaced')
+            if var == 'specific humidity':
+                ax1.plot(100000*np.array(rmse_shbase_sonde),stdplevs,color='orange', label=r'RMSE vertical $\times 10^{-5}$')
+                ax1.plot(100000*np.array(rmse_shdisp_sonde),stdplevs, color='red', label=r'RMSE slanted $\times 10^{-5}$')
+            else:
+                ax1.plot(np.array(rmse_shbase_sonde),stdplevs,color='orange', label='RMSE vertical')
+                ax1.plot(np.array(rmse_shdisp_sonde),stdplevs, color='red', label='RMSE slanted')
 
             ax1_4 = ax1.twiny()
             ax1_4.axvline(x=0, color='black', alpha=0.8, ls='--', lw=0.5)
-            if diff:
-                ax1_4.plot(np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde),stdplevs,color='purple', label='RMSE difference displaced - undisplaced')
-            ax1_4.plot(np.array(rms_dispmbase),stdplevs, color='green', alpha=0.3, ls='--', label='RMS displaced - undisplaced')
+            if var == 'specific humidity':
+                if diff:
+                    ax1_4.plot(100000*(np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde)),stdplevs,color='purple', label=r'RMSE difference vertical - slanted $\times 10^{-5}$')
+                    ax1_4.plot(np.array(rms_dispmbase)*100000,stdplevs, color='green', alpha=0.3, ls='--', label=r'RMS vertical - slanted $\times 10^{-5}$')
+            else:
+                if diff:
+                    ax1_4.plot(np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde),stdplevs,color='purple', label='RMSE difference slanted - vertical')
+                    ax1_4.plot(np.array(rms_dispmbase),stdplevs, color='green', alpha=0.3, ls='--', label='RMS slanted - vertical')
 
             ax1_4.legend(loc='upper right', prop={'size':14})
             ax1.set_ylim(ax1.get_ylim()[::-1])
             ax1.set_ylabel('pressure (Pa)')
-            ax1.set_xlabel(var+' RMSE')
+            ax1.set_xlabel(var+' RMSE (' +str(units_dict[var]) + ')')
             ax1.legend(loc='lower left', prop={'size':14})
             ax1.grid()
 
             value_nr = []
             for i in rmse_sum_shbase_sonde:
                 value_nr.append(len(np.asarray(rmse_sum_shbase_sonde[i])[~np.isnan(rmse_sum_shbase_sonde[i])]))
-            ax2.barh(stdplevs, value_nr, np.array(stdplevs)/7, color='g', alpha = 0.4, align='center')
+            if var == 'specific humidity':
+                ax2.barh(stdplevs, value_nr, 3000, color='g', alpha = 0.4, align='center')
+            else:
+                ax2.barh(stdplevs, value_nr, np.array(stdplevs)/7, color='g', alpha = 0.4, align='center')
             ax2.set_xlabel('Observations')
             ax2.tick_params(labelleft=False)
             ax2.grid()

@@ -18,7 +18,7 @@ from matplotlib import ticker
 matplotlib.rcParams.update({'font.size': 20})
 matplotlib.rcParams["figure.figsize"] = (20, 10)
 
-sys.path.insert(0, os.getcwd() + "/../resort/rasotools-master/")
+sys.path.insert(0, "/users/staff/uvoggenberger/uvpy/rasotools-master/")
 import rasotools
 
 
@@ -265,8 +265,8 @@ if __name__ == '__main__':
     stdplevs = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500]
     diff = True
     show_date = False
-    for var in ['eastward windspeed', 'northward windspeed', 'air temperature', 'specific humidity']: #['eastward windspeed', 'northward windspeed', 'air temperature', 'specific humidity']:
-        for year in [1970, 2000]: # [1960, 1970, 1980, 1990, 2000, 2010, 2020]:
+    for var in ['specific humidity']: #['eastward windspeed', 'northward windspeed', 'air temperature', 'specific humidity']:
+        for year in [2000]: # [1960, 1970, 1980, 1990, 2000, 2010, 2020]:
             for i in glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/igra2/*70219*.nc')[:]: # 70219
                 sid = i.split('/')[-1].split('.')[0]
                 results = calc_station(sid,year,var)
@@ -311,26 +311,27 @@ if __name__ == '__main__':
                 fig, ax = maplt.subplots(1, 2, gridspec_kw={'width_ratios': [4, 1]}, figsize = (15,10))
                 ax1 = ax[0]
                 ax2 = ax[1] 
-                ax1.set_yscale('log')
-                ax2.set_yscale('log')
+                if var != 'specific humidity':
+                    ax1.set_yscale('log')
+                    ax2.set_yscale('log')
                 ax2.sharey(ax1)
                 if var == 'specific humidity':
-                    ax1.plot(100000*np.array(rmse_shbase_sonde),stdplevs,color='orange', label=r'RMSE undisplaced $\times 10^{-5}$')
-                    ax1.plot(100000*np.array(rmse_shdisp_sonde),stdplevs, color='red', label=r'RMSE displaced $\times 10^{-5}$')
+                    ax1.plot(100000*np.array(rmse_shbase_sonde),stdplevs,color='orange', label=r'RMSE vertical $\times 10^{-5}$')
+                    ax1.plot(100000*np.array(rmse_shdisp_sonde),stdplevs, color='red', label=r'RMSE slanted $\times 10^{-5}$')
                 else:
-                    ax1.plot(np.array(rmse_shbase_sonde),stdplevs,color='orange', label='RMSE undisplaced')
-                    ax1.plot(np.array(rmse_shdisp_sonde),stdplevs, color='red', label='RMSE displaced')
+                    ax1.plot(np.array(rmse_shbase_sonde),stdplevs,color='orange', label='RMSE vertical')
+                    ax1.plot(np.array(rmse_shdisp_sonde),stdplevs, color='red', label='RMSE slanted')
 
                 ax1_4 = ax1.twiny()
                 ax1_4.axvline(x=0, color='black', alpha=0.8, ls='--', lw=0.5)
                 if var == 'specific humidity':
                     if diff:
-                        plt_diff = ax1_4.plot(100000*(np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde)),stdplevs,color='purple', label=r'RMSE difference undisplaced - displaced $\times 10^{-5}$')
-                        plt_rms = ax1_4.plot(np.array(rms_dispmbase)*100000,stdplevs, color='green', alpha=0.3, ls='--', label=r'RMS undisplaced - displaced $\times 10^{-5}$')
+                        plt_diff = ax1_4.plot(100000*(np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde)),stdplevs,color='purple', label=r'RMSE difference vertical - slanted $\times 10^{-5}$')
+                        plt_rms = ax1_4.plot(np.array(rms_dispmbase)*100000,stdplevs, color='green', alpha=0.3, ls='--', label=r'RMS vertical - slanted $\times 10^{-5}$')
                 else:
                     if diff:
-                        plt_diff = ax1_4.plot((np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde)),stdplevs,color='purple', label=r'RMSE difference undisplaced - displaced')
-                    plt_rms = ax1_4.plot(np.array(rms_dispmbase),stdplevs, color='green', alpha=0.3, ls='--', label=r'RMS undisplaced - displaced')
+                        plt_diff = ax1_4.plot((np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde)),stdplevs,color='purple', label=r'RMSE difference vertical - slanted')
+                    plt_rms = ax1_4.plot(np.array(rms_dispmbase),stdplevs, color='green', alpha=0.3, ls='--', label=r'RMS vertical - slanted')
                 ax1_4.legend(loc='upper right', prop={'size':14})                
                 
                 ax1.set_ylim(ax1.get_ylim()[::-1])
@@ -342,7 +343,10 @@ if __name__ == '__main__':
                 value_nr = []
                 for i in rmse_sum_shbase_sonde:
                     value_nr.append(len(np.asarray(rmse_sum_shbase_sonde[i])[~np.isnan(rmse_sum_shbase_sonde[i])]))
-                ax2.barh(stdplevs, value_nr, np.array(stdplevs)/7, color='g', alpha = 0.4, align='center')
+                if var == 'specific humidity':
+                    ax2.barh(stdplevs, value_nr, 3000, color='g', alpha = 0.4, align='center')
+                else:
+                    ax2.barh(stdplevs, value_nr, np.array(stdplevs)/7, color='g', alpha = 0.4, align='center')
                 ax2.set_xlabel('Observations')
                 ax2.tick_params(labelleft=False)
                 ax2.grid()
