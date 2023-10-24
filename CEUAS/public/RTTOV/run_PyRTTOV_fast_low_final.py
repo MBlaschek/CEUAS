@@ -8,12 +8,8 @@ print(sys.executable)
 print(sys.version_info)
 import pandas as pd
 import pandas
-pd.set_option('display.max_columns', None)
-# pd.set_option('display.max_rows', None)
-pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', -1)
-sys.path.append(os.getcwd()+'/../cds-backend/code/')
-import cds_eua3 as eua
+sys.path.append('/users/staff/uvoggenberger/CEUAS/CEUAS/public/cds-backend/code/')
+import cds_eua4 as eua
 import pickle
 import multiprocessing
 from functools import partial
@@ -698,26 +694,16 @@ if __name__ == '__main__':
     statlist = []
 #     statlist = glob.glob('/mnt/ssdraid/scratch/leo/rise/1.0/exp02/*85469*/feedbackglobbincorrmon0*.nc')
 #     statlist = glob.glob('/mnt/ssdraid/scratch/leo/rise/1.0/exp02/*17095*/feedbackglobbincorrmon0*.nc')
-
-    statlist = glob.glob('/mnt/ssdraid/scratch/leo/rise/1.0/exp02/*/feedbackglobbincorrmon0*.nc')
-
-
+#     statlist = glob.glob('/mnt/ssdraid/scratch/leo/rise/1.0/exp02/*/feedbackglobbincorrmon0*.nc')
 #     statlist = glob.glob('/mnt/ssdraid/scratch/leo/rise/1.0/exp01/*11035*/feedbackmerged*.nc')
-#     stats = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*68842*_CEUAS_merged_v1.nc')
-#     for i in stats:
-#         statlist.append(i.split('-')[-1][:5])
+    stats = glob.glob('/mnt/users/scratch/leo/scratch/converted_v13/long/*11035*_CEUAS_merged_v1.nc')
+    for i in stats:
+        statlist.append(i.split('-')[-1][:5])
 #     calc_station(statlist[0])
 #     for i in ["RISE", "RASE"]: #[None, "RAOBCORE", "RICH", "RISE", "RASE"]:
     i = None
     
-#     for j in statlist:
-#         print(j)
-# #         try:
-#         calc_station(j, chum = consthum, adj = i, odir = odir)
-# #             print('done')
-# #         except:
-# #             print('failed')
-    for i in [None, 'raobcore', 'rio', 'rit']:# [None, 'raobcore', 'rio', 'rit']:
+    for i in [None]:# [None, 'raobcore', 'rio', 'rit']:
         if i == None:
             odir = "rttov_out_unadj_testing"
         elif i == 'raobcore':
@@ -731,7 +717,7 @@ if __name__ == '__main__':
         except:
             pass
         
-        pool = multiprocessing.Pool(processes=40)
+        pool = multiprocessing.Pool(processes=20)
         func=partial(calc_station, chum = consthum, adj = i, odir = odir)
         result_list = list(map(func, statlist[:1]))
         print(result_list)
