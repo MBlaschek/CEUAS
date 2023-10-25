@@ -2081,6 +2081,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
                 request_filename = 'out.nc'
         
         if not os.path.isfile(request_filename) or overwrite:
+            t0 = time.time()
             r = requests.post('http://early-upper-air.copernicus-climate.eu' if vm_url is None else vm_url,
                               headers={'content-type': 'application/json'},
                               json=request,
@@ -2090,6 +2091,7 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
 
             with open(request_filename, 'wb') as f:
                 f.write(r.content)
+            print('request took: ', time.time()-t0, ' seconds')
 
         idir = os.path.dirname(request_filename) if '/' in request_filename else '.'
         os.makedirs(idir, exist_ok=True)
@@ -2898,12 +2900,12 @@ class CDMDataset:
         # - trange      - datetime slice
         # - mask        - logical array applied after trange for time, plev, variable
         #
-        print((cdmnum,
-               request.get('date', None),
-               request.get('pressure_level', None),
-               request.get('time', None),
-               request.get('rtsidx',None)
-               ))
+        # print((cdmnum,
+        #        request.get('date', None),
+        #        request.get('pressure_level', None),
+        #        request.get('time', None),
+        #        request.get('rtsidx',None)
+        #        ))
         
         report_timestamp = False
         opts = request.get('optional', None)
@@ -2929,10 +2931,9 @@ class CDMDataset:
                                                              )
         logger.debug('Datetime selection: %d - %d [%5.2f s] %s', trange.start,
                      trange.stop, time.time() - time0, self.name)
-        tt=time.time() - time0
-        print(tt)
-        print('MASK', mask)
-        print()
+        # tt=time.time() - time0
+        # print(tt)
+        # print()
         base_idx = np.where(base_mask)[0] + trange.start  # absolute integer index
         idx = np.where(mask)[0] + trange.start  # absolute integer index
         if restriction_active:
@@ -2965,8 +2966,8 @@ class CDMDataset:
         #
         # Dimensions and Global Attributes
         #
-        tt=time.time() - time0
-        print(tt)
+        # tt=time.time() - time0
+        # print(tt)
 
         dims = {'obs': np.zeros(idx.shape[0], dtype=np.int32)}# ,
 #                 'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
@@ -3027,8 +3028,8 @@ class CDMDataset:
         # End Definition of Variables to write
         #
         logger.debug('Writing: %s', filename_out)
-        tt=time.time() - time0
-        print(tt)
+        # tt=time.time() - time0
+        # print(tt)
         
 #         rstcd = self.file['observations_table']['data_policy_licence'][idx[0]:idx[-1] + 1] == 4
 #         zrstcd=recordindex[zidx+1]-idx[0]
@@ -3104,7 +3105,7 @@ class CDMDataset:
                     for grpsnew in range((len(fout)-foutlen_old)):
                         groups.append(igroup)
                     foutlen_old = len(fout)
-                    print(groups)
+                    # print(groups)
                 fout['date_time'] = seconds_to_str(fout['date_time'])
 #                 fout['data_policy_licence'] = np.array(fout['data_policy_licence']).astype(float)
                 
@@ -3156,7 +3157,7 @@ class CDMDataset:
                             varsel.append(o)
                 except:
                     pass
-                print('varsel',varsel)
+                # print('varsel',varsel)
                 if varsel:       
                     try:
                         do_csvcopy(fout, self.file, igroup, base_idx, cfcopy, 'obs', compression,
@@ -3217,7 +3218,7 @@ class CDMDataset:
                         formatstr = formatstr+'"%.'+sd[2:]+'s",'
                         #formatstr = formatstr+'%.'+''+'s,
                 
-                print(time.time()-time0)
+                # print(time.time()-time0)
                 formatstrn=formatstr[:-1]+'\n'
                 formatall=formatstrn*fout[dtype['names'][0]].shape[0]
 #                formatall=formatstrn*lfout[0].shape[0]
@@ -3273,8 +3274,8 @@ class CDMDataset:
                 for i_element in sorted(fout.keys()):
                     if not i_element in ['observation_value','variable']:
                         fout_sorted[i_element] = fout[i_element]
-                print('unsorted', fout.keys())
-                print('sorted', fout_sorted.keys())
+                # print('unsorted', fout.keys())
+                # print('sorted', fout_sorted.keys())
                 if request['single_csv']:
                     fout_sorted['variable'] = fout['variable']
                 fout_sorted['observation_value'] = fout['observation_value']

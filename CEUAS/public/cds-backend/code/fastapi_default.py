@@ -312,6 +312,7 @@ def read_tstamps(fn):
     except:
         print('ERROR read_tstamps: ', fn)
         rts=[0]
+        fk=fn.split('/')[-1].split('_CEUAS_merged')[0]
     return fk,rts
 
 def pkl_initialize(config,slist=[]):
@@ -453,7 +454,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         func = partial(makedaterange, vola, debug=debug)
         #slist=[slist[3380]]
         #slnum=[slnum[3380]]
-        if False:
+        if True:
 #             with Pool(10) as p:
 #                 sklist=list(p.map(func,zip(slist,slnum)))
 #             with multiprocessing.get_context('spawn').Pool(10) as p:
@@ -1274,7 +1275,7 @@ def check_body(observed_variable: list = None, variable: list = None, statid: li
                     if k[:3] == '0-2' and k in slnum:
                         valid_id = k
                     else:
-                        valid_id = [s for s in slnum if statid in s]
+                        valid_id = [s for s in slnum if k in s]
                         # for s in ['0-20000-0-', '0-20001-0-', '0-20100-0-', '0-20200-0-', '0-20300-0-']:
                         #     l = s + k
                         #     if l in slnum:
@@ -1695,7 +1696,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     # Smaller request?
     #
     
-    elif debug or len(body['variable']) * len(body['statid'])<10:
+    elif debug or len(body['variable']) * len(body['statid'])<2:
         #
         # Single Threading
         #

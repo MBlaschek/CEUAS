@@ -14,24 +14,22 @@ import trajectory as trj
 from harvest_convert_to_netCDF import write_dict_h5
 
 import ray
-ray.init(num_cpus=30)
+ray.init(num_cpus=80)
 
 
 
 @ray.remote
 def write_trj(stat):
     test_counter = 0
-    try:
-        # check if output already exists:
-        targetfile = '/mnt/users/staff/uvoggenberger/scratch/converted_v11/trajectory_files_20230426/trajectory_'+str(stat.split('/')[-1])
-        checkfile = glob.glob(targetfile)
-        # if target file already exists
-        if len(checkfile) > 0:
-            # if input is older than target
-            if os.path.getmtime(stat) < os.path.getmtime(targetfile):
-                return 1
-        
-        
+    # check if output already exists:
+    targetfile = '/mnt/users/staff/uvoggenberger/scratch/converted_v13/trajectory_files_20230816/trajectory_'+str(stat.split('/')[-1])
+    checkfile = glob.glob(targetfile)
+    # if target file already exists
+    if len(checkfile) > 0:
+        # if input is older than target
+        # if os.path.getmtime(stat) < os.path.getmtime(targetfile):
+        return 1
+    try:    
 
         # read converted file and open it
         file = eua.CDMDataset(filename = stat)
@@ -98,12 +96,12 @@ def write_trj(stat):
                 z_coordinate_u = file.observations_table.z_coordinate[u_idx_s:u_idx_e]
                 z_coordinate_v = file.observations_table.z_coordinate[v_idx_s:v_idx_e]
                 
-                # check for right z_coordinate sorting
-                # if z_coordinate_t[0] < z_coordinate_t[-1]:
+                # # check for right z_coordinate sorting
+                # # if z_coordinate_t[0] < z_coordinate_t[-1]:
+                # #     continue
+                # checksorting = (lambda zc: np.all(zc[:-1] <= zc[1:]))
+                # if not checksorting(np.array(z_coordinate_t)):
                 #     continue
-                checksorting = (lambda zc: np.all(zc[:-1] >= zc[1:]))
-                if not checksorting(np.array(z_coordinate_t)):
-                    continue
 
                 # find shortest array
                 z_coords = [z_coordinate_t, z_coordinate_u, z_coordinate_v]
@@ -223,8 +221,8 @@ def write_trj(stat):
                 # filling output variables with calculated data
                 latd[helper] = np.array(phys_model[0])
                 lond[helper] = np.array(phys_model[1])
-                timed[helper] = np.array(phys_model[4])
-                ttime[helper] = np.array(phys_model[4])+date_time
+                timed[helper] = np.array(phys_model[2])
+                ttime[helper] = np.array(phys_model[2])+date_time
 
                 # # stopper for some tests:
                 # if test_counter > 100:
@@ -265,32 +263,47 @@ def write_trj(stat):
 
         # writing to input file
 
-#         try:
-#             mode='r+'
-#             group = 'advanced_homogenisation'
+        try:
+            mode='r+'
+            group = 'advanced_homogenisation'
 
-#             i = 'latitude_displacement'
-#             ov_vars = latd
-#             alldict = pd.DataFrame({i:ov_vars})
-#             write_dict_h5(stat, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
+            i = 'latitude_displacement'
+            ov_vars = latd
+            alldict = pd.DataFrame({i:ov_vars})
+            write_dict_h5(stat, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
 
-#             i = 'longitude_displacement'
-#             ov_vars = lond
-#             alldict = pd.DataFrame({i:ov_vars})
-#             write_dict_h5(stat, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
+            i = 'longitude_displacement'
+            ov_vars = lond
+            alldict = pd.DataFrame({i:ov_vars})
+            write_dict_h5(stat, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
 
-#             i = 'time_since_launch'
-#             ov_vars = timed
-#             alldict = pd.DataFrame({i:ov_vars})
-#             write_dict_h5(stat, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
+            i = 'time_since_launch'
+            ov_vars = timed
+            alldict = pd.DataFrame({i:ov_vars})
+            write_dict_h5(stat, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
 
-#             i = 'true_time'
-#             ov_vars = ttime
-#             alldict = pd.DataFrame({i:ov_vars})
-#             write_dict_h5(stat, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
-#         except:
-#             pass
+            i = 'true_time'
+            ov_vars = ttime
+            alldict = pd.DataFrame({i:ov_vars})
+            write_dict_h5(stat, alldict, group, {i: { 'compression': 'gzip' } }, [i]) 
+        except:
+            pass
+        
+        try:
+            mode='a'
+            group = 'header_table'
+            i = 'product_version'
 
+            with h5py.File(stat,  "a") as file:
+                ov_vars = [1.4] * len(file[group][i][:])
+                alldict = pd.DataFrame({i:ov_vars})
+
+            with h5py.File(stat,  "a") as f:
+                del f[group][i]
+
+            write_dict_h5(stat, alldict, group, {i: { 'compression': 'gzip' } }, [i])
+        except:
+            print('error while versioning', stat)
 
 
         return 0 
@@ -303,7 +316,7 @@ if __name__ == '__main__':
     
     file_list = []
     result_ids = []
-    for i in glob.glob('/mnt/users/scratch/leo/scratch/converted_v11/long/*.nc')[:]:
+    for i in glob.glob('/mnt/users/staff/uvoggenberger/scratch/converted_v13/*.nc')[:]:
         # file_list.append(i.split('_CEUAS_merged_v1.nc')[0][-5:])
         file_list.append(i)
         result_ids.append(write_trj.remote(file_list[-1]))

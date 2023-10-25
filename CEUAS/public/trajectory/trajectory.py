@@ -104,7 +104,7 @@ def inverse_haversine(lat, lon, distance, direction):
     lat                actual latitude [°] [float]
     lon                actual longitude [°] [float]
     distance           distance to move [km] [float]
-    direction          direction to move ['NORTH', 'EAST']
+    direction          direction to move [float/int degree, 'NORTH', 'EAST', 'SOUTH', 'WEST']
     
     returns:
         new_latitude, new_longitude
@@ -116,10 +116,16 @@ def inverse_haversine(lat, lon, distance, direction):
     lon = numpy.radians(lon)
     d = numpy.array(distance)
     r = 6371 #[km]
-    if direction == "NORTH":
+    if isinstance(direction, int) or isinstance(direction, float):
+        brng = numpy.radians(direction)
+    elif direction == "NORTH":
         brng = numpy.radians(0)
     elif direction == "EAST":
         brng = numpy.radians(90)
+    elif direction == "SOUTH":
+        brng = numpy.radians(180)
+    elif direction == "WEST":
+        brng = numpy.radians(270)
     else:
         return "error - not a valid direction"
     return_lat = numpy.arcsin(numpy.sin(lat) * numpy.cos(d / r) + numpy.cos(lat) * numpy.sin(d / r) * numpy.cos(brng))
@@ -190,7 +196,7 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
     # check if sorted correctly
     if pressure[0] < pressure[-1]:
         print("Please resort the input data - ascending order is necessary!")
-        return None, None, None, None, None
+        return None, None, None #, None, None
         
     z = calc_height(temperature, pressure) # m from K and Pa
     
@@ -234,7 +240,7 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
                 lat_displacement.append(new_lat)
                 lon_displacement.append(new_lon)
 
-    return lat_displacement, lon_displacement, np.array(u_shear), np.array(v_shear), rts
+    return lat_displacement, lon_displacement, rts # , np.array(u_shear), np.array(v_shear),
 
 
 def trajectory_height(lat, lon, u, v, height, w_rs = 5.0, wind = 'mean', output='degree', transport_type='ellipsoid'):

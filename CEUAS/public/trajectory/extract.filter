@@ -1,0 +1,16 @@
+transient originalNumberOfSubsets = numberOfSubsets;
+set unpack=1;
+set extractAreaNorthLatitude=49.0;
+set extractAreaSouthLatitude=47.0;
+set extractAreaWestLongitude=15.0;
+set extractAreaEastLongitude=17.0;
+set extractAreaLongitudeRank=1;
+ 
+set doExtractArea=1; # This does an implicit 'pack'
+ 
+if (extractedAreaNumberOfSubsets != 0) {
+  write;
+}
+ 
+print "extracted [extractedAreaNumberOfSubsets] of [originalNumberOfSubsets] subsets";
+SUBTYPE
