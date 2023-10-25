@@ -8,10 +8,11 @@ print(sys.executable)
 print(sys.version_info)
 import pandas as pd
 import pandas
+import datetime
 pd.set_option('display.max_columns', None)
 # pd.set_option('display.max_rows', None)
 pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', -1)
+#pd.set_option('display.max_colwidth', -1)
 sys.path.append(os.getcwd()+'/../cds-backend/code/')
 import cds_eua3 as eua
 import pickle
@@ -20,6 +21,7 @@ from functools import partial
 import time
 import h5py
 import netCDF4
+import matplotlib.pylab as plt
 # import ray
 # import time
 # ray.init(num_cpus=40)
@@ -375,115 +377,29 @@ def rttov_calc(tadata, humdata, pressdata, eradata, datedata, chan):
 #                                                   msuRttov.BtRefl[p, c]))
 #         print
     return chan_list_msu, msuRttov.BtRefl
-
-
-def calc_station(tup, chum, odir, adj = None):
-#     print('')
-#     print(glob.glob('/rttov/rtcoef_rttov12/rttov7pred54L/*ssmt2*'))
-#     print('')
-    statid=tup[0]
-    era_input=tup[1]
-    statlist = statid
-#     adjstatlist = glob.glob(statlist.split('feedbackmerged')[0]+'feedbackglobbincorrsave_rio24_0*.nc')
-#     adjstatlist = glob.glob(statlist.split('feedbackmerged')[0]+'feedbackglobbincorrsave_rit24_0*.nc')
-#     adjstatlist = glob.glob(statlist.split('feedbackmerged')[0]+'feedbackglobbincorrsave0*.nc')
-#     feedbackglobbincorrmon
-
-#     print(statlist.split('feedbackmerged')[0]+'feedbackglobbincorrsave0*.nc', adjstatlist)
-#     if len(adjstatlist) == 0:
-# #         print('no adj')
-#         return
-#     else:
-#         adjstatlist = adjstatlist[0]
-        
-    statid = statlist.split('.nc')[0][-5:]
-#     if len(glob.glob("./"+odir+"/"+statid)) > 0:
-#         print('skipped', glob.glob("./"+odir+"/"+statid))
-#         return
-    try:
-        os.makedirs("./"+odir+"/"+statid+"/")
-    except:
-        pass
-    print(statid)
-
-    try:
-
-        adjstatlist = None
-        if adj == 'bg':
-            statlist = 'bg'.join(statlist.split('bincorr'))
-        elif adj == 'rio':
-            adjstatlist = glob.glob(statlist.split('feedback')[0]+'feedbackglobbincorrsave_rio24_0*.nc')
-        elif adj == 'rit':
-            adjstatlist = glob.glob(statlist.split('feedback')[0]+'feedbackglobbincorrsave_rit24_0*.nc')
-        if adjstatlist != None:
-            if len(adjstatlist)>0:
+def monmean(data,days):
+    sdays=pd.date_range(start='1900-01-01',end='2023-02-01',freq='MS')
+    idays=np.array([(sdays[i]-sdays[0]).days for i in range(len(sdays))])
+    montemp=[]
+    good=[]
+    gdays=[]
+    for i in range(len(idays)-1):
+        start,stop=np.searchsorted(days,idays[i:i+2]+1)
+        if stop>start+1:
+            d=data[:,:,start:stop]
+            x=np.sum(~np.isnan(d),axis=2).reshape((data.shape[0],data.shape[1],1))
+            if np.sum(x)>0:
                 
-                adjstatlist=adjstatlist[0]
-                with h5py.File(adjstatlist) as h:
-                    adj_time=pd.to_datetime(h['datum'][0,:]-1,unit='d',origin='19000101').values
-                    adj_corr=h['rasocorr'][:]
-            else:
-                print(statlist.split('feedback')[0]+'feedbackglobbincorrsave_rio24_0*.nc'+' : no match found')
-                return
-                
-            #adj_df = xr.open_dataset(adjstatlist).to_dataframe()
-            #adj_df.press = adj_df.press * 100.
-            #adj_df = adj_df[adj_df.press.isin([3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000])]
+                good.append(x.reshape((data.shape[0],data.shape[1],1)))
+                montemp.append(np.nanmean(d,axis=2).reshape((data.shape[0],data.shape[1],1)))
+                gdays.append(idays[i])
+    
+    return np.concatenate(montemp,axis=2),np.concatenate(good,axis=2),np.array(gdays)+1
 
-        print(statlist)
-        try:
-            
-            with h5py.File(statlist) as h:
-                station_name=h.attrs['Stationname']
-                df_time=pd.to_datetime(h['datum'][0,:]-1,unit='d',origin='19000101').values
-                df_days=h['datum'][0,:]
-                df_temp=h['montemp'][:]
-                try:
-                    
-                    df_corr=h['rasocorrmon'][:]
-                except:
-                    df_corr=np.zeros_like(df_temp)
-                    
-                df_press=h['press'][:]
-                df_good=h['goodmon'][:]
-                df_temp[df_temp>400]=np.nan
-                df_lat=h['lat'][:]
-                df_lon=h['lon'][:]
-                mask=np.zeros((2,3,df_time.shape[0]),dtype=bool)
-        except:
-            print('file not found: ',statlist)
-            return
-
-
-        #
-        ##
-        ###
-        ####
-        #####
-        if adj in [None, 'bg','rio', 'rit']:
-            df_temp += df_corr
-        elif adj == 'raobcore':
-            pass
-        else:
-            print('not a valid adjustment: ', adj)
-            return
-        #####
-        ####
-        ###
-        ##
-        #
-
-    #     print('adj_df: ', adj_df)
-    #     print('df: ',df)
-        if adjstatlist != None:
-            for it in range(1,adj_time.shape[0]-1):
-                idb=np.searchsorted(df_time,adj_time[it-1:it+1])
-                for ih in [0,1]:
-                    for ip in range(df_press.shape[0]):
-                        #print('adjusting: ', ip)
-                        df_temp[ih,ip,idb[0]:idb[1]]-=adj_corr[ih,ip,it]
-
-
+def do_rt(era_input,df_temp,df_press,df_time,df_good,chum,mask):
+    
+        tt = time.time()
+    
         tadata = []
         daydata = []
         datedata = []
@@ -507,8 +423,6 @@ def calc_station(tup, chum, odir, adj = None):
         ngoodmon = []
         dgoodmon = []
 
-    #     print(all_dfta)
-
         shpsave=-1
         ei34=dict()
         ei=dict()
@@ -517,9 +431,6 @@ def calc_station(tup, chum, odir, adj = None):
                 ei34[k]=None
                 ei[k]=None
         
-        indices=[[],[]]        
-        indices2=[[],[]]        
-        indices34=[[],[]]    
         for ih in [0,1]:
 
             tt=time.time()
@@ -532,10 +443,7 @@ def calc_station(tup, chum, odir, adj = None):
                     mon=str(yr*100+imon)
 
                     x=np.datetime64('{}-{:0>2}-{:0>2}'.format(yr,imon,1))
-                    #if imon<12:
-                        #y=np.datetime64('{}-{:0>2}-{:0>2}'.format(yr,imon+1,1))-np.timedelta64(1,'s')
-                    #else:
-                        #y=np.datetime64('{}-{:0>2}-{:0>2}'.format(yr+1,1,1))-np.timedelta64(1,'s')
+
                     idx=np.searchsorted(df_time,x)
                     if idx==df_time.shape[0]:
                         continue
@@ -543,13 +451,11 @@ def calc_station(tup, chum, odir, adj = None):
                     if df_time[idx]!=x:
                         continue
 
-                    indices[ih].append(idx)
                     if df_good[ih,3,idx] >= 3 and era_input['sp'][l]>0:                                
 
                         prof=df_temp[ih,2:13,idx]
                                 
                         if not any(np.isnan(prof)):
-                            #high_reduced_sh = reduced_sh[reduced_sh.index.isin(high_mon_mean.plev)]
                             tadata34.append(prof)
                             humdata34.append(chum[0:11])
                             pressdata34.append(df_press[2:13])
@@ -583,19 +489,25 @@ def calc_station(tup, chum, odir, adj = None):
                             daydata.append(ih)
                             mondata.append(mon)
                             mask[ih,0,idx]=True
+                    #else:
+                        #print(l,ih,idx,era_input['sp'][l])
+                        #print('not found')
             
-
+                    else:
+                        pass
+                        #print(l,ih,idx,df_good[ih,3,idx],era_input['sp'][l])
             print(ih,len(tadata))
         if len(tadata34)==0 or len(tadata)==0:
-            print('nans found, returning',statid)
+            print('nans found, returning')
             return
-        print('before 34 c',statid)
+        print('before 34 c')
         #if statid!='91413':
             #return
 
-        for ih in 0,1:
+        #for ih in 0,1:
             
-            indices[ih]=np.sort(np.array(list(set(indices34[0]+indices2[0]))))
+            #indices[ih]=np.sort(np.array(list(set(indices34[0]+indices2[0]))))
+        print(time.time()-tt)
 
         a34,b34 = rttov_calc(
             np.array(tadata34),
@@ -617,12 +529,317 @@ def calc_station(tup, chum, odir, adj = None):
             [1,2]
         )
 
-        #middle_index = len(wholemon)//2    
+        #middle_index = len(wholemon)//2
+        print(time.time()-tt)
+        return a2,b2,a34,b34
 
-        #testb2 =b2[np.array(daydata)[np.array(chandata) == 2] == True]
-        #testb34 = b34[np.array(daydata34)[np.array(chandata34) == 34] == True]
-        #date_out2 = np.array(mondata)[np.array(chandata) == 2][np.array(daydata)[np.array(chandata) == 2] == True]
-        #date_out34 = np.array(mondata34)[np.array(chandata34) == 34][np.array(daydata34)[np.array(chandata34) == 34] == True]
+def calc_gridded(era_input,npzdict, chum, odir, pool,adj = None):
+
+    try:
+        tt=time.time()
+        tups=[]
+        df_press=npzdict['ps'][:]
+        df_time=pd.to_datetime(npzdict['days'][:]-1,unit='D',origin='19000101').values
+        df_time=df_time[600:600+npzdict['CR20v372'][0,0,600:,0,0].shape[0]]
+        for j in range(era_input['t2m'].shape[1]):
+            for i in range(era_input['t2m'].shape[2]):
+                hilf=npzdict['CR20v372'][0,:,600:,j,i]
+                ei=dict()
+                for s in era_input.keys():
+                    ei[s]=era_input[s][:852,j,i]
+                ei['latitude']=-88.75+j*2.5
+                ei['longitude']=1.25+i*2.5
+                
+                tups.append((i,j,np.concatenate((hilf.reshape((1,hilf.shape[0],hilf.shape[1])),hilf.reshape((1,hilf.shape[0],hilf.shape[1]))),axis=0),ei))
+        df_good=~np.isnan(tups[0][2])*20
+        func=partial(grid_rt,df_press,df_time,df_good,chum)
+        print(time.time()-tt)
+        result=list(pool.map(func,tups))
+        print(time.time()-tt)
+        bigarr=np.empty((1,result[0].shape[0],npzdict['CR20v372'].shape[2],era_input['t2m'].shape[1],era_input['t2m'].shape[2]))
+        l=-1
+        for j in range(era_input['t2m'].shape[1]):
+            for i in range(era_input['t2m'].shape[2]):
+                l+=1
+                bigarr[0,:,600:600+result[0].shape[1]//2,j,i]=result[l][:,:result[0].shape[1]//2]
+        print(time.time()-tt)
+        
+    except MemoryError:
+        pass
+    
+    return bigarr
+
+def grid_rt(df_press,df_time,df_good,chum,tup):
+    
+    i,j,df_temp,ei=tup        
+    print(i, j)
+    mask=np.zeros((2,3,df_time.shape[0]),dtype=bool)
+    try:
+        
+        a2,b2,a34,b34 = do_rt(ei,df_temp,df_press,df_time,df_good,chum,mask)
+    #def do_rt(era_input,df_temp,df_press,df_time,df_good,chum,mask):
+
+    except MemoryError:
+        print(i,j,'failed')
+        return
+
+    return np.concatenate((b2.T,b34.T),axis=0)
+
+def calc_station(tup, chum, odir, adj = None,npzdict=None):
+#     print(')
+#     print(glob.glob('/rttov/rtcoef_rttov12/rttov7pred54L/*ssmt2*'))
+#     print('')
+    tt = time.time()
+    statid=tup[0]
+    era_input=tup[1]
+    statlist = statid
+    if type(statlist)==np.ndarray:
+        pass
+    else:
+        
+        
+        statid = statlist.split('.nc')[0][-5:]
+
+        try:
+            os.makedirs("./"+odir+"/"+statid+"/")
+        except:
+            pass
+        print(statid)
+
+    try:
+
+        adjstatlist = None
+        mt='montemp'
+        if adj == 'bg':
+            statlist = 'bg'.join(statlist.split('bincorr'))
+        elif adj in ('rharm', 'rharm_h'):
+            statlist = (adj+'_').join(statlist.split('feedbackglobbincorrmon'))
+            mt='ta' + adj.split('rharm')[1]
+        elif adj in ('suny','sunyhom'):
+            try:   
+                statlist = '/users/staff/leo/fastscratch/SUNY/UA-HRD_stations_homo+raw-monthly-anomalyT_00-12Z_195801-202008.nc'
+                with netCDF4.Dataset(statlist,'r') as h:
+                    siteids=np.asarray(h['SiteID'][:].T.flatten().view('S11').astype('U11'))
+                    slats=np.array(h['lat'])
+                    slons=np.array(h['lon'])
+                ssiteids=np.array([s.rstrip()[-5:] for s in siteids])
+                try:
+                    
+                    idx=np.where(statid==ssiteids)[0][0]
+                except:
+                    try:
+                        with netCDF4.Dataset(tup[0],'r') as h:
+                            lon=np.array(h['lon'])[-1]
+                            lat=np.array(h['lat'])[-1]
+                        
+                        idx=np.where(np.logical_and(np.abs(slats-lat)<2.0,np.abs(slons-lon)<2.0))[0][0]
+                    except:
+                        print(statid,' no IGRA match found')
+                        return
+                    
+                
+                statlist = '/users/staff/leo/fastscratch/SUNY/homo-raw-subdaily-station/'+siteids[idx].strip()+'.nc'
+                if not os.path.isfile(statlist):
+                    print(siteids[idx],' not found in daily files directory')
+                    return
+            except:
+                print('suny file '+statid+' not found')
+                return
+            mt='rawT' if adj=='suny' else 'homoT'
+        elif adj == 'rio':
+            adjstatlist = glob.glob(statlist.split('feedback')[0]+'feedbackglobbincorrsave_rio24_0*.nc')
+        elif adj == 'rit':
+            adjstatlist = glob.glob(statlist.split('feedback')[0]+'feedbackglobbincorrsave_rit24_0*.nc')
+        if adjstatlist != None:
+            if len(adjstatlist)>0:
+                
+                adjstatlist=adjstatlist[0]
+                with h5py.File(adjstatlist) as h:
+                    adj_time=pd.to_datetime(h['datum'][0,:]-1,unit='D',origin='19000101').values
+                    adj_corr=h['rasocorr'][:]
+            else:
+                print(statlist.split('feedback')[0]+'feedbackglobbincorrsave_rio24_0*.nc'+' : no match found')
+                return
+                
+                
+        print(statlist)
+        try:
+            
+            if adj in ('suny','sunyhom'):
+                spress=np.array((10.,20,30,50,70,100,150,200,250,300,400,500,700,850,925,1000))
+                if 'monthly' in statlist:
+                    with netCDF4.Dataset(statlist,'r') as h:
+                        station_name=''
+                        df_press=h['pres'][:]
+                        idx=np.searchsorted(df_press,spress*100)
+                        idx[idx==df_press.shape[0]]=df_press.shape[0]-1
+                        
+                        refdate=datetime.datetime(1900,1,1)
+                        siteids=np.asarray(h['SiteID'][:].T.flatten().view('S11').astype('U11'))
+                        slats=np.array(h['lat'])
+                        slons=np.array(h['lon'])
+                        ipx=np.arange(16,dtype='int')
+                        ipx[15]=14
+                        itxy=(h['time'][:]-190000)//100
+                        itym=(h['time'][:]-190000)%100-1
+                        itx=np.array(itxy*12+itym)
+#                        itxfinal=np.searchsorted(itx,tasks[ishs[0]]['data'].shape[4])
+#                        idx=np.zeros(siteids.shape[0],dtype=int)-999
+                        T=np.array(h[mt][:])
+                        T[T==-9999.]=np.nan
+                        T=T+273.15
+                        j=0
+                        jj=0
+                            
+                        for ih in range(2):
+                            if tasks[ish]['data'].shape[3]>pindex[-1]:
+                                tasks[ish]['data'][idx[i],0,ih,pindex,itx[0]:itx[0]+itxfinal]=T[i,:itxfinal,ipx[pindex],ih]
+                            else:
+                                tasks[ish]['data'][idx[i],0,ih,:len(pindex),itx[0]:itx[0]+itxfinal]=T[i,:itxfinal,ipx[pindex],ih]
+                else:
+                    with h5py.File(statlist) as h:
+                        station_name=''
+                        df_press=h['pressure'][:]
+                        idx=np.searchsorted(df_press,spress*100)
+                        idx[idx==df_press.shape[0]]=df_press.shape[0]-1
+                        
+                        if df_press[0]>5000:
+                            print(statid,' not enough pressure levels')
+                            print(df_press)
+                            return
+                        refdate=datetime.datetime(1900,1,1)
+                        hty=h['time'][:]//10000
+                        htm=(h['time'][:]%10000)//100
+                        htd=h['time'][:]%100
+                        df_time=[datetime.datetime(hty[i],htm[i],htd[i]) for i in range(hty.shape[0])]
+                        df_days=np.array([(df_time[i]-refdate).days for i in range(hty.shape[0])])+1
+                        df_time=pd.to_datetime(df_days-1,unit='D',origin='19000101').values
+                        
+                        x=np.einsum('kli->ilk', h[mt][:])
+                        x[x==-9999.]=np.nan
+                        df_temp,df_good,df_days=monmean(x,df_days)
+                        df_time=pd.to_datetime(df_days-1,unit='D',origin='19000101').values
+                        df_temp=df_temp[:,idx,:]
+                        df_temp=df_temp*0.1+273.15
+                        df_good=df_good[:,idx,:]
+                        for i in range(len(idx)):
+                            if not any(df_press==spress[i]*100):
+                                df_temp[:,i,:]=np.nan
+                                df_good[:,i,:]=0
+                        
+                        df_press=spress
+                        try:
+                            
+                            df_corr=h['rasocorrmon'][:]
+                        except:
+                            df_corr=np.zeros_like(df_temp)
+                            
+                        df_temp[df_temp>400]=np.nan
+                    with h5py.File(tup[0]) as o:
+                        
+                        df_lat=o['lat'][:]
+                        df_lon=o['lon'][:]
+                    mask=np.zeros((2,3,df_time.shape[0]),dtype=bool)
+            else:
+                try:
+                    
+                    with h5py.File(statlist) as h:
+                        station_name=h.attrs['Stationname']
+                        df_press=h['press'][:]
+                        x=h[mt][:]
+                        if np.sum(~np.isnan(x))==0:
+                            print(statlist,'only nans found')
+                            return
+                        if b'seconds' in h['datum'].attrs['units']:  
+                            df_temp,df_good,df_days=monmean(x,np.asarray(h['datum'][0,:]/86400,dtype='int'))
+                            df_time=pd.to_datetime(df_days-1,unit='D',origin='19000101').values
+                            df_press/=100
+                        else:
+                            df_time=pd.to_datetime(h['datum'][0,:]-1,unit='D',origin='19000101').values
+                            df_days=h['datum'][0,:]
+                            df_temp=h[mt][:]
+                            df_good=h['goodmon'][:]
+                        try:
+                            
+                            df_corr=h['rasocorrmon'][:]
+                        except:
+                            df_corr=np.zeros_like(df_temp)
+                        
+                        if len(tup)==3:
+                            idx=np.searchsorted(npzdict['days'],df_days)
+                            idx[idx>=tup[2].shape[0]]=-1
+                            df_hilf=df_temp.copy()
+                            df_hilf=tup[2][:,:,idx]
+                            for i in range(len(idx)):
+                                if idx[i]==-1:
+                                    df_hilf[:,:,i]=np.nan
+                            df_hilf[np.isnan(df_temp)]=np.nan
+                            df_temp=df_hilf[:]
+                        df_temp[df_temp>400]=np.nan
+                        df_lat=h['lat'][:]
+                        df_lon=h['lon'][:]
+                        mask=np.zeros((2,3,df_time.shape[0]),dtype=bool)
+                except FileNotFoundError:
+                    print(statlist,'not found')
+                    return
+                
+        except MemoryError:
+            print('file not found: ',statlist)
+            return
+
+
+        #
+        ##
+        ###
+        ####
+        #####
+        if adj in [None, 'rharm','rio', 'rit','suny','sunyhom']:
+            df_temp += df_corr
+        elif adj in ['raobcore', 'bg', 'rharm_h']:
+            pass
+        else:
+            print('not a valid adjustment: ', adj)
+            return
+        #####
+        ####
+        ###
+        ##
+        #
+
+    #     print('adj_df: ', adj_df)
+    #     print('df: ',df)
+        debug = False
+        if adjstatlist != None:
+            if debug:
+                df_temp_orig = df_temp.copy()
+            for it in range(0, adj_time.shape[0]-1):
+                idb=np.searchsorted(df_time,adj_time[it:it+2])
+                for ih in [0,1]:
+                    for ip in range(df_press.shape[0]):
+                        #print('adjusting: ', ip)
+                        df_temp[ih,ip,idb[0]:idb[1]]-=adj_corr[ih,ip,it]
+
+            if(debug):
+                plt.subplot(1, 2, 1)    
+                #plt.plot(df_time, df_temp_orig[0, 3, :])
+                #plt.plot(df_time, df_temp[0, 3, :])
+                #plt.plot(df_time, df_temp_orig[0, 3, :]-df_temp[0, 3, :])
+                for i in range(2, 7):
+                    
+                    plt.plot(df_time, df_temp_orig[0, i, :]-df_temp[0, i, :])
+                    pmask = (df_time >np.datetime64('1978-12-31')) & (df_time < np.datetime64('2007-01-01'))& ( ~np.isnan(df_temp[0, i, :]))
+                    z = np.polyfit(np.float64(df_time[pmask])/1.e9/86400/365.25, df_temp[0, i, pmask], 1)
+                    print(f'Trend 1979-2006:{i},{z[0] * 10:5.3f} K/10a')
+                    if i == 3:
+                        
+                        plt.title(f'Trend 1979-2006:{z[0] * 10:5.3f} K/10a')
+            
+        try:
+            
+            a2,b2,a34,b34 = do_rt(era_input,df_temp,df_press,df_time,df_good,chum,mask)
+        except:
+            print('nans found',statid,'returning')
+            return
 
         try:
             os.makedirs("./"+odir+"/"+statid+"/")
@@ -634,16 +851,22 @@ def calc_station(tup, chum, odir, adj = None):
                 fno=adjstatlist[:-9]+'_bt2_'+adjstatlist[-9:]
                 fno='_'.join(fno.split('__'))
                 fno='mon'.join(fno.split('save'))
-            elif adj=='raobcore':
+            elif adj in ('raobcore','bg','rharm','rharm_h'):
                 fno=statlist[:-9]+'_bt2_'+statlist[-9:]
-            elif adj=='bg':
-                fno=statlist[:-9]+'_bt2_'+statlist[-9:]
+                fno='_'.join(fno.split('__'))
+            elif adj in ('suny','sunyhom'):
+                fno='/'.join(tup[0].split('/')[:-1])+'/'+adj+'_bt2_'+tup[0][-9:]
             else:
                 fno=''.join(statlist.split('corr'))[:-9]+'_bt2_'+statlist[-9:]
             with netCDF4.Dataset(fno,'w') as g:
                 for attname in f.ncattrs():
                     if attname == 'Stationname':
-                        setattr(g,attname,station_name)
+                        try:
+                            
+                            setattr(g,attname,station_name)
+                        except:
+                            setattr(g,attname,b'unknown')
+                            
                     else:
                         setattr(g,attname,getattr(f,attname))
             
@@ -690,57 +913,71 @@ def calc_station(tup, chum, odir, adj = None):
                 hilf[1,0,xmask[1,0,:]]=b2[vals[0,0]:,1]
                 hilf[1,1,xmask[1,1,:]]=b34[vals[0,1]:,0]
                 hilf[1,2,xmask[1,2,:]]=b34[vals[0,2]:,1]
-                    
+                
+                if np.nanmax(hilf)>400. or np.nanmin(hilf)<150.:
+                    print('spurious:',np.nanmax(hilf),np.nanmin(hilf)<150.)
                 g['montemp'][:]=hilf[:]
                 g['goodmon'][:]=0
                 for ih in 0,1:
                     g['goodmon'][ih,0,:]=df_good[ih,3,gmask]
                     g['goodmon'][ih,1,:]=df_good[ih,2,gmask]
                     g['goodmon'][ih,2,:]=df_good[ih,2,gmask]
+                
+                if debug:    
+                    plt.subplot(1, 2, 2)
+                    mask = (g['datum'][0,:]/365.25 > 78) & (g['datum'][0,:]/365.25 < 107)& ( ~np.isnan(g['montemp'][0, 2, :]))
+                    plt.plot(g['datum'][0,:]/365.25, g['montemp'][0, 2, :])
+                    z = np.polyfit(g['datum'][0,mask]/365.25, g['montemp'][0, 2, mask], 1)
+                    plt.title(f'Trend 1979-2006:{z[0] * 10:5.3f} K/10a')
+                    plt.show()
             
 
-        #b_final = []
-        #for i in wholemon[:middle_index]:
-            #b = [[np.nan, np.nan, np.nan, np.nan]]
-            #if i in date_out2:
-                #b[0][0] = testb2[date_out2 == i][0][0]
-                #b[0][1] = testb2[date_out2 == i][0][1]
-            #if i in date_out34:
-                #b[0][2] = testb34[date_out34 == i][0][0]
-                #b[0][3] = testb34[date_out34 == i][0][1]
-            #b_final.append(b)
 
-
-        #pickle.dump( b_final, open( odir+"/"+statid+"/"+statid+"_day_refl.p", "wb" ) )
-        #pickle.dump( dgoodmon, open( odir+"/"+statid+"/"+statid+"_day_goodmon.p", "wb" ) )
-        #pickle.dump( wholemon[:middle_index], open( odir+"/"+statid+"/"+statid+"_day_dates.p", "wb" ) )
-        print('day done: '+statid)
-
-
-        #testb2 =b2[np.array(daydata)[np.array(chandata) == 2] == False]
-        #testb34 = b34[np.array(daydata34)[np.array(chandata34) == 34] == False]
-        #date_out2 = np.array(mondata)[np.array(chandata) == 2][np.array(daydata)[np.array(chandata) == 2] == False]
-        #date_out34 = np.array(mondata34)[np.array(chandata34) == 34][np.array(daydata34)[np.array(chandata34) == 34] == False]
-
-        #b_final = []
-        #for i in wholemon[middle_index:]:
-            #b = [[np.nan, np.nan, np.nan, np.nan]]
-            #if i in date_out2:
-                #b[0][0] = testb2[date_out2 == i][0][0]
-                #b[0][1] = testb2[date_out2 == i][0][1]
-            #if i in date_out34:
-                #b[0][2] = testb34[date_out34 == i][0][0]
-                #b[0][3] = testb34[date_out34 == i][0][1]
-            #b_final.append(b)
-
-        #pickle.dump( b_final, open( odir+"/"+statid+"/"+statid+"_night_refl.p", "wb" ) )
-        #pickle.dump( ngoodmon, open( odir+"/"+statid+"/"+statid+"_night_goodmon.p", "wb" ) )
-        #pickle.dump( wholemon[middle_index:], open( odir+"/"+statid+"/"+statid+"_night_dates.p", "wb" ) )
-        print('night done: '+statid,time.time()-tt)
+        print('done: '+statid,time.time()-tt)
     except MemoryError as e:
         print(e,'nothing to calculate: '+statid)
         return
     return
+
+def read_npz(statlist,shortname):
+    
+    ipath=os.path.dirname(statlist[0])[:-6]
+    rdict={}
+    with np.load(ipath+'allsave.npz') as d:
+        for k,v in d.items():
+            rdict[k]=v[:]
+        rdict['istat']=rdict['lats'].shape[0]
+    with np.load(ipath+shortname+'_1900_2020.npz') as d:
+        for k,v in d.items():
+            try:
+                
+                rdict[k]=v[:]
+            except:
+                pass
+
+    return rdict
+            
+    rdict['data']=[np.empty((2,16,rdict['CR20v372'].shape[2]),dtype=np.float32) for i in range(rdict['lats'].shape[0])]
+    
+    l=-1
+    for s in statlist:
+        l+=1
+        with h5py.File(s,'r') as f:
+            
+            rdict['data'][l].fill(np.nan)
+            lati=int((f['lat'][-1]-90.)/(360/rdict['CR20v372'].shape[3]))
+            loni=int((f['lon'][-1]+1.25)/(360/rdict['CR20v372'].shape[4]))
+            rdict['lats'][l]=f['lat'][-1]
+            rdict['lons'][l]=f['lon'][-1]
+            if loni<0:
+                loni+=rdict['CR20v372'].shape[4]
+            rdict['data'][l][0,:,:]=rdict['CR20v372'][0,:,:,lati,loni].reshape((1,16,rdict['CR20v372'].shape[2]))
+            rdict['data'][l][1,:,:]=rdict['data'][l][0,:,:]
+            print(l)
+        
+                    #tasks[k]["msudata"]=d["msudata"].astype(np.float32)
+                    #d.close()
+    return rdict #lats,lons,days,ps,stnames,istat,data,index
 
 if __name__ == '__main__': 
 #     [3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000]
@@ -752,11 +989,12 @@ if __name__ == '__main__':
 #     statlist = glob.glob('/mnt/ssdraid/scratch/leo/rise/1.0/exp02/*85469*/feedbackglobbincorrmon0*.nc')
 #     statlist = glob.glob('/mnt/ssdraid/scratch/leo/rise/1.0/exp02/*17095*/feedbackglobbincorrmon0*.nc')
 
-    statlist = glob.glob('/mnt/ssdraid/scratch/leo/rise/1.0/exp01/*/feedbackglobbincorrmon[01]*.nc')
+    statlist = glob.glob(os.path.expandvars('$FSCRATCH/rise/1.0/exp04/*/feedbackglobbincorrmon[0]*.nc'))
 
     i = None
     
-
+    
+    
     def eraseries(statlist,yr):
         
         era_input={}
@@ -788,23 +1026,75 @@ if __name__ == '__main__':
             print(yr,time.time()-tt)
         return era_input
     
-    pool = multiprocessing.Pool(processes=40)
+    def era1836(yr):
+        
+        era_input={}
+        hh={}
+        tt=time.time()
+        with netCDF4.Dataset('./era/era_'+str(yr)+'.nc') as h:
+            hlat=np.array(h['latitude'][:])
+            hlon=np.array(h['longitude'][:])
+            
+            cosj=np.cos(h['latitude'][:]*np.pi/180.)
+            for k in 'u10', 'v10', 'd2m', 't2m', 'skt', 'sp':
+                era_input[k]=np.zeros((h[k].shape[0],72,144))
+                hh=np.flip(np.array(h[k][:]),axis=1)
+                hh[hh==h[k].getncattr('missing_value')]=np.nan
+                for j in range(len(cosj)):
+                    hh[:,j,:]*=cosj[j]
+                #print(k,np.mean(hh[k])/np.mean(cosj))        
+            
+                rfak=h['u10'].shape[2]//era_input['u10'].shape[2]
+                cosm=np.zeros(era_input[k].shape[1])
+                for j in range(era_input[k].shape[1]):
+                    cosm[j]=np.mean(cosj[j*rfak+1:(j+1)*rfak+1])
+                    for i in range(era_input[k].shape[2]):                          
+                        era_input[k][:,j,i]=np.mean(hh[:,j*rfak+1:(j+1)*rfak+1,i*rfak:(i+1)*rfak],axis=(1,2))/cosm[j]
+                        
+                print(k,np.mean(era_input[k]))        
+                        
+            print(yr,time.time()-tt)
+        return era_input
     
-    func=partial(eraseries, statlist[:])
+    pool = multiprocessing.Pool(processes=80)
+    
     tt=time.time()
-    result_list = list(pool.map(func,range(1950,2022)))
-    era_input={}
-    for s in result_list[0].keys():
-        era_input[s]={}
-        for k in result_list[0][s].keys():
-            if k in ['latitude','longitude']:
-                era_input[s][k]=result_list[0][s][k]
-            else:
-                era_input[s][k]=np.concatenate([result_list[i][s][k] for i in range(len(result_list))])
+    try:
+        with open('era_input1836.pkl','rb') as f:
+            era_input1836=pickle.load(f)
+    except:
+        #func=partial(era1836, statlist[:])
+        result_list = list(map(era1836,range(1950,2022)))
+        era_input1836={}
+        for s in result_list[0].keys():
+            era_input1836[s]=np.concatenate([result_list[i][s] for i in range(len(result_list))])
+        
+        with open('era_input1836.pkl','wb') as f:
+            pickle.dump(era_input1836,f)
+            
+        
+    try:
+        with open('era_input.pkl','rb') as f:
+            era_input=pickle.load(f)
+            
+    except:
+        func=partial(eraseries, statlist[:])
+        result_list = list(pool.map(func,range(1950,2022)))
+        era_input={}
+        for s in result_list[0].keys():
+            era_input[s]={}
+            for k in result_list[0][s].keys():
+                if k in ['latitude','longitude']:
+                    era_input[s][k]=result_list[0][s][k]
+                else:
+                    era_input[s][k]=np.concatenate([result_list[i][s][k] for i in range(len(result_list))])
+        
+        with open('era_input.pkl','wb') as f:
+            pickle.dump(era_input,f)
     print(time.time()-tt)
 
     odir='./'
-    for i in ['bg',None, 'raobcore', 'rio', 'rit']:# [None, 'raobcore', 'rio', 'rit']:
+    for i in [ 'rharm_h'] :#,'rharm','sunyhom','20CRv3','suny']: #,'20CRv3',[None, 'raobcore', 'rio', 'rit']:
         if i == None:
             odir = "rttov_out_unadj_testing"
         elif i == 'raobcore':
@@ -818,28 +1108,43 @@ if __name__ == '__main__':
         except:
             pass
         skeys=list(era_input.keys())
-        func=partial(calc_station, chum = consthum, adj = i, odir = odir)
-        tt=time.time()
-        result_list = list(pool.map(func, zip(statlist[:],[era_input[k] for k in skeys[:]])))
-        print(time.time()-tt)
-        print('finished')
         
-    '''
-    ['/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_8_msu.dat', 
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_17_amsub.dat',
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_16_amsub.dat',
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_18_amsua.dat', 
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_15_amsub.dat', 
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_16_amsua.dat', 
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_9_msu.dat',
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_11_msu.dat',
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_6_msu.dat', 
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_14_msu.dat', 
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_7_msu.dat', 
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_19_amsua.dat',
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_15_amsua.dat',
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_12_msu.dat',
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_17_amsua.dat',
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_10_msu.dat', 
-    '/rttov/rtcoef_rttov12/rttov7pred54L/rtcoef_noaa_5_msu.dat']
-    '''
+        
+        tt=time.time()
+        
+        if i == '20CRv3':
+            npzdict=read_npz(statlist,i)
+            #era_input=list(map(era1836,range(1950,2022)))
+            #func=partial()#,npzdict=dict((k,npzdict[k]) for k in ('lats','lons','days','ps')))
+            #result_list = list(map(func, zip(statlist[:],[era_input[k] for k in skeys[:]],npzdict['data'][:],npzdict['lats'][:],npzdict['lons'][:])))
+            result_list = calc_gridded( era_input1836, npzdict, chum = consthum, adj = i, odir = odir,pool=pool)#list(map(func, [k].flatten() for k in skeys[:]],npzdict['data'][:],npzdict['lats'][:],npzdict['lons'][:])))
+            npzdict['msuCR20v372']=result_list
+            ipath=os.path.dirname(statlist[0])[:-6]
+            np.savez(ipath+'/20CRv3_bt_1900_2020.npz', **npzdict)
+            
+        else:
+        
+            func=partial(calc_station, chum = consthum, adj = i, odir = odir)
+            if len(statlist) == 1:
+                key = skeys[skeys.index(statlist[0][-9:-3])]
+                results_list = list(map(func, zip(statlist[:],[era_input[key] for k in skeys[:]])))
+            if len(statlist) != len(skeys):
+                newkeys = []
+                newstats = []
+                for s in statlist:
+                    try:
+                        
+                        newkeys.append(skeys[skeys.index(s[-9:-3])])
+                        newstats.append(s)
+                    except:
+                        print(s[-9:-3])
+                #key = skeys[skeys.index(statlist[0][-9:-3])]
+                results_list = list(map(func, zip(newstats[:],[era_input[k] for k in newkeys[:]])))
+            else:
+                
+                func=partial(calc_station, chum = consthum, adj = i, odir = odir)
+                result_list = list(pool.map(func, zip(statlist[:],[era_input[k] for k in skeys[:]])))
+            
+        print(time.time()-tt)
+print('finished')
+        
