@@ -25,7 +25,7 @@ import warnings
 import numpy
 from numba import njit
 from eccodes import *
-
+from tqdm import tqdm 
 from harvester_yearsplit_parameters import *
 
 pv=sys.version.split('.')
@@ -290,7 +290,7 @@ cdmfb_noodb={'observation_value':'obsvalue@body',
                           'observed_variable':'varno@body',
                           'z_coordinate_type':'vertco_type@body',
                           'z_coordinate':'vertco_reference_1@body',
-                          'date_time': 'record_timestamp', 
+                          'date_time': 'report_timestamp', 
                           'report_timestamp': 'report_timestamp' , # only available for igra2 
                           'longitude':'lon@hdr',
                           'latitude':'lat@hdr',
@@ -302,12 +302,12 @@ cdmfb_noodb={'observation_value':'obsvalue@body',
                           'units' : 'units',
                           'source_id': 'source_id',
                           'primary_id' : 'statid@hdr' ,                  # station_configuration
-                          'primary_station_id':'statid@hdr'}        # header_table 
+                          'primary_station_id':'statid@hdr',
+                          'sensor_id':'sensor_id'}        # header_table 
 
 ## NB CONVENTIONS FOR TIMESTAMPS
-# report_timestamp = time stamp of the 1st obersvations
-# record_timestamp = exact release time OR standardized time (e.g. 18:00 )
-
+# report_timestamp = time stamp of the 1st observations => all datasets have this
+# record_timestamp = exact release time OR standardized time (e.g. 18:00 ) 
 
 ### NB CONVENTION FOR z_coordinate
 # according to the official glamod table, height is in meters with a code 0 
@@ -315,7 +315,7 @@ cdmfb_noodb={'observation_value':'obsvalue@body',
 # We use:
 # 0 -> height in meters
 # 1 -> Pressure [Pa]
-# 2 -> geopotential i.e. heihgt * 9.8...
+# 2 -> geopotential i.e. height * 9.8...
 
 
 def check_read_file(file='', read= False):
@@ -459,12 +459,9 @@ def bufr_to_dataframe(file=''):
                 
         if report_id == 0:
             ''' Check again but these values should remain the same for all cnt, so it makes no sense to read them every time '''
-            
             try:
-                
                 lat                     = codes_get(bufr, "latitude")
                 lon                    = codes_get(bufr, "longitude")
-
             except:
                 continue
             try:
@@ -532,7 +529,7 @@ def bufr_to_dataframe(file=''):
     for c in ['observation_id', 'report_id']:
         df_new[c] = df[c]
               
-    df_new['report_timestamp'] = np.nan 
+    df_new['record_timestamp'] = df_new['report_timestamp'] 
          
     #df_new = df_new.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
         
@@ -556,7 +553,7 @@ def uadb_ascii_to_dataframe(file=''):
     if debug:
         print("Running uadb_ascii_to_dataframe for: ", file)    
          
-    data = check_read_file(file=file, read=True) # TODO
+    data = check_read_file(file=file, read=True) 
     
     nmiss = 0
     search_h = False   
@@ -694,6 +691,7 @@ def uadb_ascii_to_dataframe(file=''):
     df_new['record_timestamp'] = df_new['report_timestamp'] 
     #df_new = df_new.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] ) 
     
+    #df_new = df_new[:5000]
     print('Done reading DF')
     return df_new , stations_id 
 
@@ -971,6 +969,191 @@ def read_amma_csv(file=''):
     return df , statid 
     
     
+def read_yangjiang_csv(file='', metadata=''):
+    """ Read the Yangjiang intercomparison """
+    
+    # '/scratch/das/federico/databases_service2/YANGJIANG/intercomparison_yangjiang_2010//Graw'
+
+    files = glob.glob(file + '/*')
+    files.sort()
+    
+    # extracting names of columns 
+    df = pd.read_csv(files[0], nrows=1)
+    cols = [ c for c in list(df.columns)[0].split('\t') if c ]    
+    
+
+    
+    all_df = []
+    
+    ### Extracting the sensor from the file name 
+    ### ['3therm', 'CFH', 'Changf', 'Daqiao', 'Graw', 'Huayun', 'IntermSA', 'Jinyang', 'LM', 'ML', 'ML_SW', 'Meis_REF', 'Meisei', 'Modem', 'Vais_ref', 'Vaisala']
+
+
+    sensors = [ file.split('/')[-1] ]     
+    
+    ### List of available variable 
+    variables = ['Humidity' , 'Direction', 'Velocity' , 'Temperature']
+    
+    yang_sensor_map = { '3therm' : '3therm_y',
+                    'CFH': 'CFH_y',
+                    'Changf' : 'HCB' ,
+                    'Daqiao' : '143',
+                    'Graw' : '117',
+                    'Huayun' : 'HY1', 
+                    'IntermSA' : 'BfA',
+                    'Jinyang' : '112',
+                    'LM' : '111' , # lock head martin sippican 
+                    'ML' : 'SGR' ,  # meteolabor
+                    'ML_SW' : 'SRQ' , #meteolabor snow white 
+                    'Meisei': '130',
+                    'Modem': 'FGD',
+                    'Vaisala' : 'VNH',                       
+
+                    'Vais_ref' : 'Vais_ref_y',
+                    'Meis_REF' : 'Meis_REF_y',
+            
+                        }
+    
+    
+    def create_df(files, cols= '', variables='',  variable='Humidity', sensor=''):
+        """ Extract data from each single file and combine """
+        
+        dic_map = { 'Humidity':'relative_humidity' , 
+                              'Temperature' : 'temperature' , 
+                              'Direction' : 'wind_direction', 
+                              'Velocity': 'wind_speed',
+                              'Dew_point': 'dew_point',
+                              }
+        
+        temp_df = []
+        
+        for record,f in enumerate(files):  # keeping humidity data 
+            record = int( f.split('.')[1] )
+            
+            timestamp_record = metadata.iloc[record-1].Date_Time 
+            ts = pd.to_datetime(timestamp_record)
+            # entries are spaced by empty characters ' ' with variable length, so cannot really use pandas 
+            df = pd.read_csv(f, skiprows=1, names= cols, header=None ,  delim_whitespace=True )        
+
+            
+            df = df.loc[df[variable] != 'NODATA']        
+            
+            if variable == 'Humidity':
+                df['Humidity'] = df['Humidity'].astype(float)/ 100
+                
+            if variable == 'Dew_point':
+                    df['Dew_point'] = df['Dew_point'].astype(float) + 273.15
+                    
+            if variable == 'Temperature':
+                    df['Temperature'] = df['Temperature'].astype(float) + 273.15
+                            
+            df['observed_variable'] = cdmvar_dic[dic_map[variable]]['cdm_var'] 
+            df['unit'] = int(cdmvar_dic[dic_map[variable]]['cdm_unit'])
+            df['varno@body'] = cdmvar_dic[dic_map[variable]]['cdm_var']         
+            df['obsvalue@body'] = df[variable]
+            
+            if 'Lat' in cols:
+                df['lat@hdr'] = df['Lat']
+                df['lon@hdr'] = df['Long']
+                
+                df = df.loc[df['lon@hdr'] != 'NODATA']        
+                df = df.loc[df['lat@hdr'] != 'NODATA']        
+
+            
+            df['iday'] =  str(ts.date()).replace('-','').replace('-','')
+            
+
+            if sensor != 'Meis_REF':
+                df = df.loc[df['Pressure'] != 'NODATA']        
+                df['Pressure'] =  [float(p) * 100 for p in df['Pressure'].values ]  # converting from [hPa] to [Pa]                
+                df['vertco_reference_1@body'] = df['Pressure']
+                df['vertco_type@body'] = 1
+            else:
+                df['vertco_reference_1@body'] = df['Height']
+                df['vertco_type@body'] = 0
+                
+            sd = yang_sensor_map[s]  #mapping the sensor id to Schroeder/WMO entries 
+            
+            df['sensor_id']  = np.full(  len(df), sd.rjust(10)).astype('S'+str(id_string_length )  ) 
+            df['source_id']  = np.full(  len(df), 'YANGJIANG').astype('S'+str(id_string_length )  )             
+            df['report_timestamp'] = ts 
+            
+            
+            df = df.loc[df['vertco_reference_1@body'] != 'NODATA']
+            df = df.loc[df[variable] != 'NODATA']
+            
+            to_drop = [v for v in variables if v != variable ]
+            to_drop.extend(cols)
+            
+            to_drop = [c for c in  to_drop if c in df.columns ]
+            df = df.drop(columns=to_drop )
+            if not df.empty:
+                temp_df.append(df)
+                
+        try:
+            
+            df = pd.concat(temp_df)
+        except:
+            for i in range(len(temp_df)):
+                try:
+                    
+                    a = pd.concat(temp_df[:i])
+                    print(i, '  works ')
+                except:
+                    print(i , ' does not work ')
+        return df 
+        
+        
+        
+    ### DO RECORD ID 
+    
+    variables = ['Humidity' , 'Direction', 'Velocity' , 'Temperature']
+    if 'Dew_point' in cols:
+        variables.append('Dew_point')
+    for s in sensors:
+        for v in variables:
+            if s=='Meis_REF' and v != 'Temperature':
+                continue
+            df_var =  create_df(files, variables= variables, cols=cols, variable=v, sensor=s)
+            all_df.append(df_var)
+            
+    df_res = pd.concat(all_df)
+
+
+    
+    #read_data.append( ( product.rjust(20), int(obs_id), report_id,  timestamp, int(date_v), statid, lat_v, lon_v, z_coordinate_v, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), z_type) )
+              
+              
+    ### Adding coordinates from station configuration 
+    if 'Lat' not in cols:
+        df_res['lat@hdr'] = cdm_tab['station_configuration'].latitude.values[0]
+        df_res['lon@hdr'] = cdm_tab['station_configuration'].longitude.values[0] 
+
+        
+    df_res['product_code'] = np.full(  len(df_res), 'YANGJIANG').astype('S'+str(id_string_length )  ) 
+
+    ### sorting by date-time 
+    df_res = df_res.sort_values(by=['report_timestamp', 'vertco_reference_1@body'])
+    
+    ### creating report_id i.e. same for
+    ts,counts = np.unique(df_res.report_timestamp , return_counts=True )
+    
+    report_id = []
+    for index,c in enumerate(counts):
+        report_id.extend( [index]*c)  # report id 
+        
+    df_res['report_id'] = report_id
+    df_res['observation_id'] = list(range(len(df_res)))
+    df_res['observation_id']  = np.chararray.zfill( (df_res['observation_id'].astype(int)) .astype('S'+str(id_string_length ) ), id_string_length  )  #converting to fixed length bite objects 
+    df_res['report_id']           = np.chararray.zfill( (df_res['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
+    
+    df_res['record_timestamp'] = df_res['report_timestamp'] 
+    
+    statid = 'YANGJIANG'
+    
+    print('Done reading DF')
+    return df_res , statid 
+
     
 def read_mauritius_csv(file=''):
     """ Read the Mauritius intercomparison data for Vaisala and Maisei sondes 
@@ -978,9 +1161,6 @@ def read_mauritius_csv(file=''):
              file (str): path to the intercomparison file
         Returns:
              Pandas DataFrame with cdm compliant column names
-             
-        
-        
     """    
     # column names standardized:  ['source_id', 'report_id', 'observation_id', 'record_timestamp', 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 
     # 'vertco_reference_1@body', 'obsvalue@body', 'varno@body', 'units', 'number_of_pressure_levels', 'vertco_type@body']
@@ -1051,7 +1231,7 @@ def read_mauritius_csv(file=''):
         if 'meisei' in file:    
             date_v = df[date].values[i]
             time = date_time_v.split(':')
-            # TODO DUMMY date for now 
+            # TODO DUMMY date for now CHECK ???
             timestamp = pd.Timestamp(year=int(date_v[0:4]), month=int(date_v[4:6]), day=int(date_v[6:8]) , hour=int(time[0]), minute=int(time[1]) , second=int(time[2])  ) 
         elif 'vaisala' in file:
             date_v = df[datetime].values[i]
@@ -1126,6 +1306,138 @@ def read_mauritius_csv(file=''):
     
     print('Done reading DF')
     return df , statid 
+
+
+def read_mauritius_csv_digitized(direc=''):
+    """ Read the Mauritius intercomparison data for Vaisala and Maisei sondes 
+        Args:
+             file (str): path to the intercomparison file
+             sensors list: list of sensor to process. 
+        Returns:
+             Pandas DataFrame with cdm compliant column names
+    """    
+    sensors = list( np.unique( [ s.split('_')[1].replace('.csv','') for s in os.listdir(direc +'/temp') ] ) )     
+    def make_dt(dt):
+        """ Internal utility to create pd datetime objects """
+        
+        date = dt.split(' ')[0]
+        time = dt.split(' ')[1]
+        
+        day = int(date.split('-')[0])
+        month =  int(date.split('-')[1])
+        year =  int(date.split('-')[2])
+        
+        hour = int(time.split(':')[0])
+        minute =  int(time.split(':')[1])
+        sec =  int(time.split(':')[2].split('.')[0])
+        
+        timestamp = pd.Timestamp(year=year, month= month, day= day , hour= hour, minute= minute , second= sec  ) 
+        date_v = str(timestamp.date()).replace('-','')
+        
+        return timestamp, date_v
+
+    all_df = []
+    #sensors = sensors[:3]  ### TO DO TODO HERE 
+    
+    sensor_map = { 'Graw' : 'DGL',
+                   'Meisei' : 'J0A',
+                   
+                   'Graw-GPS' : '',
+                   'MKII' : '',
+                   
+                   'Vaisala' : 'VN2' ,
+                   
+                   'Modem' : '',
+                   
+                   'Sip' : '110' ,  # Sippican LMS5
+                   'Sip' : '110' ,  # Sippican multitheristor ?
+                   
+                   'SRS' : '' ,
+                   
+                   }
+    for s in sensors: 
+        print('Harvesting Sensor::: ' , s)
+        files = [direc+'/hum/'+f for f in os.listdir(direc+'/hum') if s == f.split('/')[-1].split('_')[1].replace('.csv','')]
+        
+        files.extend( [direc+'/temp/' + f for f in os.listdir(direc+'/temp') if s==f.split('/')[-1].split('_')[1].replace('.csv','') ])
+
+        for f in tqdm(files, miniters=10):
+            
+            df = pd.read_csv( f, sep = ',' ).astype(str)
+            
+            if 'hum' in f:
+                df['hum'] = df['hum'].astype(float)/ 100
+                df['observed_variable'] = cdmvar_dic['relative_humidity']['cdm_var'] 
+                
+                df['unit'] = int(cdmvar_dic['relative_humidity']['cdm_unit'])
+                df['varno@body'] = cdmvar_dic['relative_humidity']['cdm_var']              
+                df['obsvalue@body'] = df['hum']
+                
+            elif 'temp' in f:
+                df['temp'] = df['temp'].astype(float)
+            
+                df['unit'] = int(cdmvar_dic['temperature']['cdm_unit'])
+                df['varno@body'] = cdmvar_dic['temperature']['cdm_var']  # HERE 
+                df['obsvalue@body'] = df['temp']
+    
+            # creating timestamps 
+            dt = df['datetime'][0]
+            timestamp,date = make_dt(dt)
+            
+            df['iday'] = date 
+            df['observation_id'] = list(range(len(df)))
+            df['vertco_reference_1@body'] = df['press']
+            df['vertco_type@body'] = 1
+            df['report_timestamp'] = timestamp
+    
+            #df['sensor_id'] = np.bytes_(s)
+            df['sensor_id']  = np.full(  len(df), s.rjust(10)).astype('S'+str(id_string_length )  ) 
+            
+            df['source_id']  = np.full(  len(df), 'MAURITIUS_DIGITIZED').astype('S'+str(id_string_length )  ) 
+            
+            #converting to fixed length bite objects 
+            
+            all_df.append(df)
+    
+        
+    df_res = pd.concat(all_df)
+    print(np.unique(df_res.sensor_id))
+    cols = [c for c in df.columns if c not in ['datetime', 'press', 'hum', 'temp']]
+    df_res = df_res[cols]
+    
+    #df_res = df_res[0:2000] ### TO DO TODO HERE 
+    ts = np.unique( df_res.iday)
+    dt_map = {}
+    for i,t in enumerate(ts):
+        dt_map[int(t)] = i
+        
+    df_res['iday'] = df_res['iday'].astype(int)
+    df_res['report_id'] = df_res['iday'].astype(int)
+    
+    lat_v = -20.2972  # using values from MAISEI  
+    lon_v = 57.49692
+    
+    df_res['lat@hdr'] = lat_v
+    df_res['lon@hdr'] = lon_v
+    
+    df_res = df_res.replace({"report_id": dt_map}) 
+        
+    #rep_ids = [dt_map[i] for i in df_res.report_id ]    
+    
+    df_res['product_code'] = np.full(  len(df_res), 'MAURITIUS_DIGITIZED').astype('S'+str(id_string_length )  ) 
+
+    df_res['observation_id']  = np.chararray.zfill( (df_res['observation_id'].astype(int)) .astype('S'+str(id_string_length ) ), id_string_length  )  #converting to fixed length bite objects 
+    df_res['report_id']           = np.chararray.zfill( (df_res['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
+    
+    df_res['record_timestamp'] = df_res['report_timestamp'] 
+    
+    statid = 'MAURITIUS_DIGITIZED'
+    #print(len(df_res))
+
+    #df_res = df_res[:10000] ### TO DO TODO HERE
+    
+    return df_res , statid 
+
 
 
 
@@ -1529,7 +1841,7 @@ def igra2_ascii_to_dataframe(file=''):
         release_m = int(release[2:4])
         
         if release_h == 99:
-            return  0 #largest integer number int 64 
+            return  False #largest integer number int 64 
         
         else:
             if release_m == 99:
@@ -1548,6 +1860,7 @@ def igra2_ascii_to_dataframe(file=''):
     
         
     for i, line in enumerate(data):
+
         if line[0] == '#':
             head_count = head_count +1 
             # Info from the Header line of each ascent                                                                                                                                                                                                                   
@@ -1578,7 +1891,9 @@ def igra2_ascii_to_dataframe(file=''):
             idate = datetime.strptime(year + month + day + time, '%Y%m%d%H%M%S') # constructed according to CDM
             
             release_time = make_release_time(idate, hour, reltime) # making the release time 
-
+            if not release_time:
+                release_time = idate
+                
             iday =  int(year + month + day)
             count = count + 1
         else:
@@ -2024,24 +2339,38 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
         slist=[]
 
         for v in var_selection:
-            #variables_dic[v] = ''
+            #if v == 'sensor_id':
+            #    a = 0
+            if v in [ 'report_event1@hdr' , 'report_rdbflag@hdr' , 'datum_anflag@body', 'datum_event1@body', 'datum_rdbflag@body']:
+                continue 
+            
             if type(f[v]) == pd.core.series.Series:
                 fvv=f[v].values
             else:
                 fvv=f[v]
                 
-            if type(fvv[0]) not in [str,bytes,numpy.bytes_]:
+            try:
+                if fvv.dtype ==pd.Int64Dtype(): ### TO DO 
+                        continue
+            except:
+                    pass
+            
+                        
+            if type(fvv[0]) not in [str,bytes,numpy.bytes_]:  ### HORRIBLE HANDLING of types, dtypes, strings, bytes... 
                 #print(v, '  ', type(fvv[0]) , '  ' , fvv.dtype )
+     
                 if fvv.dtype !='S1':
                     #if fvv.dtype == "Int64":
                     #    0
                     #vtype = np.int32
                     #else:
                     #    vtype = fvv.dtype
+                        
                     try:
                         fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
                     except:
-                        fd[k].create_dataset(v,fvv.shape,'int32',compression=fbencodings[v]['compression'], chunks=True)
+                        #fd[k].create_dataset(v,fvv.shape,'int32',compression=fbencodings[v]['compression'], chunks=True)  TODO CHECK
+                        fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression='gzip', chunks=True)
                         
                     try:
                         fd[k][v][:]=fvv[:]
@@ -2080,7 +2409,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                 try:
                     slen=int(fvv.dtype.descr[0][1].split('S')[1])
                 except:  
-                    pass
+                    slen=15
 
                 sdict[v]=slen
                 if slen not in slist:
@@ -2089,8 +2418,12 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                         fd[k].create_dataset( 'string{}'.format(slen),  data=string10[:slen]  )
                     except:
                         pass               
-                        
-                fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)
+                try:
+                    
+                    fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)
+                except KeyError:
+                    fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression='gzip',chunks=True)
+                    
                 if v in attrs.keys():
                     fd[k][v].attrs['description']     =numpy.bytes_(attrs[v]['description'])
                     fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])                
@@ -2197,7 +2530,7 @@ def datetime_toseconds(date_time):
     #date_times_seconds  =  [ i.total_seconds() for i in deltas ] 
     #return np.array(date_times_seconds).astype(np.int64) # replacing with seconds from 1900-01-01 00:00:00 
     
-def read_df_to_cdm(cdm, dataset, fn):
+def read_df_to_cdm(cdm, dataset, fn, metadata='' ):
     # era5 analysis feedback is read from compressed netcdf files era5.conv._?????.nc.gz in $RSCRATCH/era5/odbs/1
     """ Reading the odb and convert to xarray """  
     if  'bufr' in dataset :
@@ -2216,8 +2549,12 @@ def read_df_to_cdm(cdm, dataset, fn):
         df, stations_id = read_shipsound_csv(fn)
     elif 'npsound' in dataset:
         df, stations_id = read_npsound_csv(fn)   
-    elif 'mauritius' in dataset:
+    elif dataset == 'mauritius' in dataset :
         df, stations_id = read_mauritius_csv(fn)   
+    elif dataset == 'mauritius_digitized':
+            df, stations_id = read_mauritius_csv_digitized(fn)   # here fn is the name of the directory containing the files for each hum/temp sensor 
+    elif dataset =='yangjiang':
+        df, stations_id = read_yangjiang_csv(fn, metadata=metadata)   # here fn is the name of the directory containing the files for each hum/temp sensor 
     else:
         #print('Unidentified file is: ', fn)
         raise ValueError('Cannot identify the type of file to be analized!!! ')
@@ -2231,11 +2568,10 @@ def read_df_to_cdm(cdm, dataset, fn):
     if 'record_timestamp' not in df.columns:
         df['record_timestamp'] = df['report_timestamp']
         
-    df = df.sort_values(by = ['vertco_reference_1@body' ] )    
     
     station_configuration_retrieved = get_station_configuration_cuon(stations_id=stations_id, 
                                                                      station_configuration = cdm['station_configuration'],
-                                                                      lat=df['lat@hdr'][0],  lon=df['lon@hdr'][0], 
+                                                                      lat=df['lat@hdr'].values[0],  lon=df['lon@hdr'].values[0], 
                                                                       fn=fn, 
                                                                       db=dataset,
                                                                       change_lat=False )              
@@ -2248,7 +2584,6 @@ def read_df_to_cdm(cdm, dataset, fn):
         a.write(fn + '\n')
         sc_lat, sc_lon = 999 , 999
         #return None                
-    
     # checking that coordinates in the retrieved stat_conf and file are compatible 
     stat_conf_check = True          
     
@@ -2261,25 +2596,24 @@ def read_df_to_cdm(cdm, dataset, fn):
             else:
                 stat_conf_check = False
 
-
     try:
         primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')                
     except:
         out =open('logs/' + dataset + "_wrong_ids.txt" , 'a+')
         out.write(fn + '\n')
         primary_id = '0-20999-0-' + str(stations_id[0]) + '-coordinateIssue-'
-
-        
+     
     if dataset == 'shipsound':
         primary_id = '20999-shipsound-'
         correct_data = True 
-    if dataset =='mauritius':
+    if dataset in ['mauritius', 'mauritius_digitized' , 'yangjiang' ]:
         correct_data = True 
         stat_conf_check = True
         
     if not correct_data:
         primary_id = primary_id.replace('-1_', '0-20999-').replace('-20000-','-20999-').replace('-20300-','-20999-') .replace("-20001-","-20999-")
         primary_id = primary_id.replace('-20400-', '0-20999-').replace('-20500-','-20999-').replace('-20600-','-20999-')  
+        
     if not stat_conf_check and '999' not in primary_id:
         primary_id = 'stat_conf_inconsistentCoord_' + primary_id
         
@@ -2293,33 +2627,60 @@ def read_df_to_cdm(cdm, dataset, fn):
     for d in df.columns:
             if d not in ['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body', 'lon@hdr','lat@hdr','seqno@hdr',
                                'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv',  'record_timestamp' , 'report_timestamp',
-                               'observation_id', 'report_id' , 'units' , 'vertco_type@body' , 'year' , 'iday' ] :
+                               'observation_id', 'report_id' , 'units' , 'vertco_type@body' , 'year' , 'iday',  'sensor_id'] :
                  
                 dcols.append(d)
+                
     df.drop(columns=dcols,inplace=True)
     
+    # removing duplicated observations within one single record (same z coordinate, variable number)
+    df = df.drop_duplicates(subset=['report_timestamp', 'vertco_reference_1@body', 'varno@body'] )
     
+    # dropping NANS
+    df = df.dropna(subset=['obsvalue@body'] )    
+    
+    # sorting values 
+    df = df.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] )    
+    
+    if dataset == 'mauritius_digitized':
+        df.sensors = sensors 
     return df, stat_conf_check, station_configuration_retrieved, primary_id, min(years)
     
 
     
-def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn, year):
+def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn, year, sensor=False):
     """ Convert the  pandas dataframe from the file into cdm compliant netCDF files. Use with bufr, igra2 and ncar databases.
         According to each file type, it will use the appropriate reading function to extract a Pandas DataFrame
         input:
               fn       :: odb file name (e.g. era5.conv._10393)
               cdm   :: cdm tables (read with pandas)
               cdmd :: cdm tables definitions ("")  """    
+    
+    #if dataset == 'mauritius_digitized':
+    #    sensor = df.sensor 
         
     # chunking year 
     year = str(year)
     df =df.loc[df['year'] == year ]
-    if df.empty:
-        print('No data for year === ' , year )
-        return None
     
     fno,  source_file = initialize_output(fn, output_dir, primary_id, dataset, year)   
+    log_name = fno.replace('_'+str(year),'').replace('.nc', '_correctly_processed_year.txt')
+    
+    # splitting sensor
+    #if sensor:
+    #   ss = sensor.rjust(10)
+    #    df = df.loc[df.sensor_id == np.bytes_(ss )]
+        
+    if df.empty:
+        print('No data for year === ' , year )
+        return log_name
+    
+    #fno,  source_file = initialize_output(fn, output_dir, primary_id, dataset, year)   
+    #log_name = fno.replace('_'+str(year),'').replace('.nc', '_correctly_processed_year.txt')
 
+
+    if dataset in ['mauritius_digitized', 'yangjiang'] and sensor:
+        fno = fno.replace('intercomparison' , 'intercomparison_' + sensor )
     """ Extract the unique indices of each date observation, one for only dates, one for date_time (i.e. record index). 
         Converts the time variables in seconds since 1900-01-01 00:00:00 """  
     di=xr.Dataset() 
@@ -2330,7 +2691,8 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
     indices, day, counts = make_datetime_indices( df['iday'].values )   #only date information
     di['dateindex']  = ( { 'dateindex' :  day.shape } , indices )          
     
-    indices, date_times , counts  = make_datetime_indices( df['record_timestamp'].values ) #date_time plus indices           
+    # TODO CHECK HERE
+    indices, date_times , counts  = make_datetime_indices( df['report_timestamp'].values ) #date_time plus indices           
     di['recordindex']          = ( {'recordindex' : indices.shape }, indices )
     di['recordtimestamp']  = ( {'recordtimestamp' : date_times.shape }, date_times  )
 
@@ -2360,7 +2722,6 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
     fbencodings['index']={'compression': 'gzip'}
 
 
-  
     groups={}
     groupencodings={}
     for k in cdmd.keys(): # loop over all the table definitions 
@@ -2372,11 +2733,16 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
   
         for i in range(len(cdmd[k])):
             d=cdmd[k].iloc[i] 
-            
+            if(d.element_name == 'date_time'):
+                a = 0
+            if(d.element_name == 'sensor_id'):
+                a = 0            
             """ Filling the observations_table """
             if k in ('observations_table'):
                 groups[k]=pd.DataFrame()  # creating dataframes that will be written to netcdf via h5py methods by the write_dict_h5() method 
-                
+                if k =='sensor_id':
+                    a = 0
+                    
                 try:         
                     groups[k][d.element_name]= fromfb_l(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=okinds))                                                       
                 except KeyError:
@@ -2451,7 +2817,12 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
                     groupencodings[k][d.element_name]={'compression': 'gzip'}
                 
                 if k in ('observations_table'):
+                    if d.element_name == 'sensor_id':
+                        a=0
+                    if d.element_name == 'source_id':
+                            a=0                        
                     write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs= dic_obstab_attributes )
+                    #write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[d.element_name],mode='a', attrs= dic_obstab_attributes )
                     
             except:
                 #print('bad:',k,d.element_name)
@@ -2462,7 +2833,6 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
             if k in ['id_scheme', 'observed_variable']:
                 continue                        
             groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') 
-
                 
     del df
     
@@ -2472,6 +2842,7 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
     a.write(year+ '\n')
     a.close()
     
+    print(' Finished writing ' , fno )
     return log_name
           
           
@@ -2502,7 +2873,7 @@ def get_station_configuration_cuon(stations_id='', station_configuration='', lat
             return None
         elif  db == 'npsound':
             return None
-        elif db =='mauritius':
+        elif 'mauritius' in db or 'yangjiang' in db :
             return station_configuration
                 
     d = station_configuration.loc[station_configuration['file'] == fname ]
@@ -2602,7 +2973,7 @@ def write_odb_to_cdm(fbds, cdm, cdmd, output_dir, dataset, dic_obstab_attributes
     tt=time.time()
 
 
-    if dataset not in ['era5_1' , 'era5_1_mobile' , 'era5_2' , 'era5_2_mobile']:
+    if dataset not in ['era5_1' , 'era5_1_mobile']:
         fbds = fbds.loc[fbds['year'].astype(int) == year ]
         if fbds.empty:
             return None
@@ -2918,6 +3289,8 @@ def read_odb_to_cdm(output_dir, dataset, dic_obstab_attributes, fn, fns):
     #for f in fns:
     #    d = read_all_odbsql_stn_withfeedback(dataset, f )
     
+    #fns =[f for f in fns if '202212' in f ]
+    
     if len(fns)==0:
         #a = open('missing_gzipped_files_era5_2.txt' , 'a')
         #a.write(fn + '\n' )
@@ -2926,6 +3299,10 @@ def read_odb_to_cdm(output_dir, dataset, dic_obstab_attributes, fn, fns):
         return 
     
     func=partial(read_all_odbsql_stn_withfeedback,dataset)
+    
+    #fns = [ fns[0] ] # TO DO HERE TODO
+    print('Reading ' + str(len(fns)) + ' ODB files ')
+
     
     if len(fns)==1:       
         fbds=list(map(func,fns))
@@ -2947,6 +3324,16 @@ def read_odb_to_cdm(output_dir, dataset, dic_obstab_attributes, fn, fns):
     fbds['year'] = years
     #fbds = fbds.replace( -2147483648 , np.nan ) 
 
+    # dropping NANS
+    fbds = fbds.dropna(subset=['obsvalue@body'] )    
+    
+    # removing duplicated observations within one single record (same z coordinate, variable number)
+    fbds = fbds.drop_duplicates(subset=['date@hdr', 'time@hdr', 'vertco_reference_1@body', 'varno@body'] )
+    
+    # sorting values 
+    fbds = fbds.sort_values(by = ['date@hdr', 'time@hdr', 'vertco_reference_1@body' ] )   
+    
+    print('+++ Created pandas dataframe ')
     return fbds, min(years)
  
     
@@ -3475,7 +3862,6 @@ def ir_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                         x.fill(numpy.nan)
                         groups[k][d.element_name]=x
                         
-                        
                 elif k in ('header_table'):
                     try:
                         groups[k]={d.element_name:fdict['header_table'][d.element_name]} 
@@ -3515,7 +3901,6 @@ def ir_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                 
                 try:
                     
-                    
                     if type(groups[k]) is dict:
                         idx=np.where(cdmd[k].element_name==d.element_name)[0][0]
                         if len(groups[k][d.element_name])>0:   
@@ -3545,7 +3930,6 @@ def ir_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
                 except KeyError:
                     #print('bad:',k,d.element_name)
                     pass
-        
         
                 print(k,d.element_name,time.time()-tt,' mem:',process.memory_info().rss//1024//1024)
     
@@ -3835,7 +4219,6 @@ def ubern_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn):
     return 0
 
 
-
 def load_cdm_tables():
     """ Load the cdm tables into Panda DataFrames, reading the tables from the cdm GitHub page FF To do 
 
@@ -3872,7 +4255,6 @@ def load_cdm_tables():
         else:
             cdm_tab[key]=pd.read_csv(f,delimiter='\t',quoting=3,dtype=tdict,na_filter=False, nrows=150)  # TO DO FIX, latest update broke compatibility, cannot read last lines
             
-
     """ Adding the  tables that currently only have the definitions but not the implementation in the CDM, OR    need extensions """  
     cdm_tabdef['header_table']          = pd.read_csv(tpath+'/table_definitions/header_table.csv',delimiter='\t',quoting=3,comment='#')
     #cdm_tabdef['observations_table'] = pd.read_csv(tpath+'/table_definitions/observations_table.csv',delimiter='\t',quoting=3,comment='#')
@@ -3914,7 +4296,6 @@ def csvListFromUrls(url=''):
     return csv_files_list
 
 
-
 def filelist_cleaner(lista, dataset=''):
     """ Removes unwanted files that might be present in the dataset directories """
     if dataset == 'ncar':
@@ -3927,7 +4308,6 @@ def filelist_cleaner(lista, dataset=''):
         cleaned = [ l for l in lista if '.nc' not in l and '.conv.' in l ]
     else:
         cleaned = lista
-    
     return cleaned
    
 
@@ -3990,19 +4370,33 @@ if __name__ == '__main__':
                     help = "Most recent correctly harvested year"  ,
                         default = '2025',
                         type = str)    
+  
+    parser.add_argument('--primary_id' , '-p',
+                    help = "Primary id of the station"  ,
+                        default = '',
+                        type = str)    
+    
     
     args = parser.parse_args()
     dataset = args.dataset 
     out_dir = args.output
     Files = args.files
-    max_year = args.max_year
-    run_missing = args.run_missing
+    #max_year = args.max_year
+    #primary_id = args.primary_id 
     
+    
+    
+    # TO DO see if needed 
+
+    """
+    run_missing = args.run_missing    
     if run_missing in ['False', 'false', 'FALSE']:
         run_missing = False
     else:
         run_missing = True        
-
+    """
+    
+    
     vlist= ['era5_1', 'era5_2', 'era5_3188', 'era5_1759', 'era5_1761', 
             'bufr', 'igra2', 'ncar', 
 
@@ -4014,13 +4408,18 @@ if __name__ == '__main__':
             'npsound',
             'shipsound' ,
             
+            
+            # intercomparisons
             'mauritius',
+            'mauritius_digitized',
+            'yangjiang',
+            
             'ubern',
             'nasa']
     
     if dataset not in vlist:
         print('wrong dataset', dataset)
-        raise ValueError(" The selected dataset is not valid. Please choose from ['era5_1', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'igra2', 'ncar', 'amma', 'giub', 'hara', 'npsound', 'shipsound' , 'era5_1_mobile', 'era5_2_mobile']  ")    
+        raise ValueError(" The selected dataset is not valid. Please choose from ['era5_1', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'igra2', 'ncar', 'amma', 'giub', 'hara', 'npsound', 'shipsound' , 'era5_1_mobile', 'era5_2_mobile' , 'yangjiang']  ")    
                         
     """ Loading the CDM tables into pandas dataframes """
     cdm_tabdef  , cdm_tab, tdict , dic_obstab_attributes= load_cdm_tables()
@@ -4041,6 +4440,14 @@ if __name__ == '__main__':
     elif 'mauritius' in dataset:
         stat_conf_file = stat_conf_path +   '/station_configuration_mauritius.dat'    
         
+    elif 'yangjiang' in dataset:
+        if not os.path.isfile( stat_conf_path +   '/station_configuration_yangjiang.csv' ):
+            df = pd.read_csv(  stat_conf_path + '/CUON_station_configuration_extended.csv', sep = '\t') 
+            stat_conf_file = df.loc[df['station_name'] == 'YANGJIANG']
+            stat_conf_file.to_csv( stat_conf_path+'/station_configuration_yangjiang.csv' , sep = '\t')
+        else:
+            stat_conf_file =  stat_conf_path + '/station_configuration_yangjiang.csv'
+            
     else:                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
         stat_conf_file = stat_conf_path +   '/' + dataset + '_station_configuration_extended.csv'    
 
@@ -4054,7 +4461,6 @@ if __name__ == '__main__':
         clean_station_configuration(cdm_tab)              
             
             
-
     ### splitting files from input string 
     Files = Files.split(',')
     
@@ -4066,11 +4472,18 @@ if __name__ == '__main__':
             os.system('mkdir ' + output_dir )
             
     for File in Files:
+        
+        primary_id = File.split('/')[0]
+        
+        File = File.split('/')[1]
+        original_file_name = File
+        
         if dataset in [ 'era5_1759' , 'era5_1761']:
             File = File.replace('.conv.', '.conv._')+'.gz'
             
         elif dataset in ['era5_1', 'era5_1_mobile']:
             File = File.replace('.conv._','.conv.??????.')+'.txt.gz'
+            original_file_name = original_file_name.replace('.conv._','.conv.??????.')
             
         elif dataset in ['igra2']:
             File = File + '-data.txt'
@@ -4080,11 +4493,34 @@ if __name__ == '__main__':
             
         elif dataset in ['era5_2', 'era5_2_mobile']:
             File = File + '.gz'
+            #File = File
             
         File = datasets_path[dataset] + '/' + File 
         tt=time.time()              
+
+        from harvester_yearsplit_parameters import run_only_missing_stations  # will run only missing station and year; if False, will rerun the whole station 
+        from harvester_yearsplit_parameters import max_year_to_process, min_year_to_process # min and max year to harvest (independent of the station data)
         
+        ### here: check if a file exists for a specific year and skip rerunning
+        if run_only_missing_stations:
+            out_d = out_dir + '/' + dataset + '/' + primary_id 
+            if os.path.isdir(out_d):
+                
+                file = [out_d+'/' + f for f in os.listdir(out_d) if 'correctly' in f and original_file_name in f ] ### check if file with the correctly processed years exists 
+                if len(file) > 0:
+                    print('::: Found existing data for station/file ')
+                    try:
+                        years = open(file[0]).readlines()
+                        last_year = max([ int(y.replace('\n','')) for y in years ])
+                        min_year_to_process = last_year
+                    except:
+                        pass 
+            else:
+                pass
+                
         ### ERA5 BLOCK 
+        print(' Starting harvesting from the YEAR::: ' , min_year_to_process )
+        out_dir = ''
         if 'era5' in dataset:   
             change_lat = False
             if '1759' in dataset:  # oading the files list to apply the WBAN latitude correction (missing minus sign)
@@ -4105,40 +4541,88 @@ if __name__ == '__main__':
             fnl[-1]='ch'+fnl[-1]
             fns=sorted(glob.glob(File))
                 
-            if dataset in ['era5_1', 'era5_1_mobile']:  # these are already split by year int he original files 
-                for year in range(1900, 2025):            
-                    if run_missing and year <= int(max_year):
+            #if dataset in ['era5_1', 'era5_1_mobile', 'era5_2']:  # these are already split by year in the original files 
+            if dataset in ['era5_1', 'era5_1_mobile']:  # these are already split by year in the original files 
+                
+                for year in range(min_year_to_process, max_year_to_process):        
+
+                    if run_only_missing_stations and year <= int(min_year_to_process):
                         print('Skipping already processed year: ' , year )
                     else:
                         year = str(year)
-                        ff = [f for f in fns if year in  f.split('/')[-1].split('.')[2] ]  #here: pre-selecting the files already split by year 
+                        if  'era5_1' in dataset:
+                            ff = [f for f in fns if year in  f.split('/')[-1].split('.')[2][0:4] ]  #here: pre-selecting the files already split by year 
+
                         if len(ff) > 0:
-                            fbds, min_year = read_odb_to_cdm(output_dir, dataset,  dic_obstab_attributes, File, ff)
+                            fbds, min_year_data = read_odb_to_cdm(output_dir, dataset,  dic_obstab_attributes, File, ff)
                             dummy_writing = write_odb_to_cdm( fbds, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File, ff, change_lat, year)
                             print('DONE --- ' , year )
                         else:
-                            print("No files for year " , year )   
+                            print("No ERA5 1 files for year " , year )   
+                a=open(dummy_writing, 'a+')
+                a.write('completed\n')
+                a.close()
+                
             else:
-                fbds, min_year = read_odb_to_cdm(output_dir, dataset,  dic_obstab_attributes, File, fns)
-                for year in range(1900, 2025):       
-                    if run_missing and year <= int(max_year):
-                        print('Skipping already processed year: ' , year )                    
+                fbds, min_year_data = read_odb_to_cdm(output_dir, dataset,  dic_obstab_attributes, File, fns)
+                for year in range(min_year_to_process, max_year_to_process):                
+                    if year < min_year_to_process:
+                        print('Year ' + year + ' but no data before ' + str(min_year_data) )
+                        continue
+                    if run_only_missing_stations and year <= int(min_year_to_process):
+                        print('Skipping already processed year: ' , year )   
+                        
                     dummy_writing = write_odb_to_cdm( fbds, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File, fns, change_lat, year)
+                    a=open(dummy_writing, 'a+')
+                    a.write('completed\n')
+                    a.close()                
                     
-            
         elif 'nasa' in dataset:   
                 ir_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)
                 
         elif 'ubern' in dataset:   
-                ubern_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)                
+                ubern_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)      
+                
+        elif 'yangjiang' in dataset:
+            sensors = list( np.unique( [ s for s in os.listdir(datasets_path['yangjiang'] ) if '.' not in s  ] ) )
+            timestamps_df = pd.read_csv(datasets_path['yangjiang'] + '/intercomparison_2010_meta_data.csv')
+            timestamps_df = timestamps_df[['FlightNo.' , 'Date_Time']]
+
+            #write combined file TO DO TODO HERE to implement 
+            #dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, 'mauritius_2005_intercomparison', '2005', sensor=False)             
+            
+            for s in sensors:
+                #if s != 'Modem':
+                #    continue 
+                #if s in ['Changf' , '3therm' , 'CFH', 'Daqiao' , 'Graw' , 'Huayun' ,  'IntermSA' , 'Jinyang' , 'LM' , 'ML' , 'ML_SW' , 'Meis_REF' , 'Meisei' , 'Modem' , ]: ### TO DO TODO HERE
+                #    continue 
+                df, stat_conf_check, station_configuration_retrieved, primary_id, min_year = read_df_to_cdm(cdm_tab, dataset, datasets_path['yangjiang']+'/' + s , metadata= timestamps_df )                    
+                dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, 'yangjiang_2010_intercomparison', '2010', sensor=s) 
+                
+        elif 'mauritius_digitized' in dataset:
+            sensors = list( np.unique( [ s.split('_')[1].replace('.csv','') for s in os.listdir(datasets_path['mauritius_digitized'] +'/temp') ] ) )
+            df, stat_conf_check, station_configuration_retrieved, primary_id, min_year_data = read_df_to_cdm(cdm_tab, dataset, datasets_path['mauritius_digitized'])
+
+            #write combined file 
+            dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, 'mauritius_2005_intercomparison', '2005', sensor=False) 
+            
+            # write single sensor file
+            for s in sensors:
+                dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, 'mauritius_2005_intercomparison', '2005', sensor=s) 
+
         else:
             #try:
-            df, stat_conf_check, station_configuration_retrieved, primary_id, min_year= read_df_to_cdm(cdm_tab, dataset, File)
-            for year in range(1900, 2025):                
-                if run_missing and year <= int(max_year):
+            df, stat_conf_check, station_configuration_retrieved, primary_id, min_year_data= read_df_to_cdm(cdm_tab, dataset, File)
+            for year in range(min_year_to_process, max_year_to_process):                
+                if year < min_year_to_process:
+                    print('Year ' + year + ' but no data before ' + str(min_year_data) )
+                if run_only_missing_stations and year <= int(min_year_to_process):
                     print('Skipping already processed year: ' , year )       
                 dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File, year) 
             #except:
+            a=open(dummy_writing, 'a+')
+            a.write('completed\n')
+            a.close()            
         print(' ***** Convertion of  ' , File ,  '  completed after {:5.2f} seconds! ***** '.format(time.time()-tt))   
 
 """ Examples for running 
@@ -4152,63 +4636,58 @@ small file
 
 -f '/mnt/users/scratch/leo/scratch/era5/odbs/1_mobile/era5.conv.??????.__FNPH.txt.gz' -d era5_1_mobile  -o COP2
 
-
 -f '/mnt/users/scratch/leo/scratch/era5/odbs/2/era5.conv._UMEY.txt.gz' -d era5_2 -o COP2
-
-
 -f /mnt/users/scratch/leo/scratch/era5/odbs/2_mobile/era5.conv.195212 -d era5_2_mobile -o COP2
-
-era5.conv._71831
--f /mnt/users/scratch/leo/scratch/era5/odbs/2/era5.conv._71831.gz  -d era5_2 -o COP2
-
-
-# era5.1759.conv._6:99024
-
--f /mnt/users/scratch/leo/scratch/era5/odbs/1761/era5.1761.conv._1:41675.gz -d era5_1761 -o COP2
--f /mnt/users/scratch/leo/scratch/era5/odbs/3188/era5.3188.conv._C:4879.gz -d era5_3188 -o COP2
--f /mnt/users/scratch/leo/scratch/era5/odbs/2/era5.conv._00856.gz  -d era5_2 -o COP2
 
 # /mnt/users/scratch/leo/scratch/era5/odbs/2/era5.conv._00856.gz
 
-
 # era5.conv._57707 
+# era5.conv._82930 
 
--f /mnt/users/scratch/leo/scratch/era5/odbs/2/era5.conv._57707.gz  -d era5_2 -o COP2
 # era5.conv._1:48379
 -f  /mnt/users/scratch/leo/scratch/era5/odbs/ai_bfr/era5.10106.bfr -d bufr -o COP2
-
 -f /scratch/das/federico/databases_service2/UADB_25012022/uadb_windc_82930.txt -d ncar -o COP2 
-
--f /scratch/das/federico/databases_service2/UADB_25012022/uadb_windc_67666.txt -d ncar -o COP2 
-
-
--f /scratch/das/federico/databases_service2/IGRA2_20230106/USM00072232-data.txt -d igra2 -o COP2 
-
--f /mnt/users/scratch/leo/scratch/era5/odbs/2_mobile/era5.conv.195212 -d era5_2_mobile -o COP2
 
 AMMA
 -f /scratch/das/federico/databases_service2/AMMA_BUFR/HRT2006071606 OLD , read_BUFR
--f /scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61902_amma.csv  -d amma -o COP2 
 
 GIUB
--f /scratch/das/federico/COP2_HARVEST_JAN2023/TRY_GIUB_22062023_PROVA_FULL_reduced/6121.txt_converted_csv_reduced.csv -d giub -o COP2 
-
--f /scratch/das/federico/COP2_HARVEST_JAN2023/GIUB_22062023_reduced/6121.txt_converted_csv_reduced.csv -d giub -o COP2
-
 # /scratch/das/federico/COP2_HARVEST_JAN2023/GIUB_22062023_reduced//5382A.txt_converted_csv.csv
+# -f 0-20000-0-01025/5628.txt_converted_csv.csv  -d giub -o COP2 
+
+
+# 0-20000-0-38987/5194A.txt_converted_csv.csv
+
+
+
+
 
 HARA
 -f /scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22165_stationfile.csv -d hara -o COP2
+
 NPSOUND
 -f /scratch/das/federico/databases_service2/NPSOUND-NSIDC0060/NPSOUND_csv_converted/np_11sound.dat_converted.csv -d npsound -o COP2
+
 SHIPSOUND (only one file)
 -f /scratch/das/federico/databases_service2/SHIPSOUND-NSIDC-0054/shipsound7696.csv -d shipsound -o COP2
 
+MAURITIUS original excel files from vendors 0-20000-0-61995
+-f 0-20000-0-61995/scratch/das/federico/databases_service2/mauritius_2005/vaisala_ascents.csv  -d mauritius -o COP2 
+-f 0-20000-0-61995/scratch/das/federico/databases_service2/mauritius_2005/meisei_ascents.csv  -d mauritius -o /scratch/das/federico/INTERCOMPARISON_MAURITIUS 
 
-MAURITIUS
--f /scratch/das/federico/databases_service2/mauritius_2005/vaisala_ascents.csv  -d mauritius -o COP2 
--f /scratch/das/federico/databases_service2/mauritius_2005/meisei_ascents.csv  -d mauritius -o /scratch/das/federico/INTERCOMPARISON_MAURITIUS 
+MAURITIUS digitized by Ulrich 0-20000-0-61995
+-f 0-20000-0-61995/dummy  -d mauritius_digitized -o COP2 
+
+YANGJIANG # 0-20000-0-59663 
+/users/staff/uvoggenberger/scratch/intercomparison_2010
+-f dummy  -d yangjiang -o COP2 
+
+-f 0-20000-0-59663/dummy -d yangjiang -o COP2
 """
 
 #mobile
 # -f '/mnt/users/scratch/leo/scratch/era5/odbs/1_mobile/era5.conv.??????._4DC8UUK.txt.gz'  -d era5_1_mobile  -o COP2
+
+
+# -f era5.62423.bfr  -d bufr -o /scratch/das/federico/HARVEST_YEARLY_20OCT2023_  -p 0-20000-0-62423
+
