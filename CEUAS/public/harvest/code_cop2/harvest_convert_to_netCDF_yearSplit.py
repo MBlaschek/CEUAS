@@ -1011,7 +1011,6 @@ def read_yangjiang_csv(file='', metadata=''):
 
                     'Vais_ref' : 'Vais_ref_y',
                     'Meis_REF' : 'Meis_REF_y',
-            
                         }
     
     
@@ -1184,6 +1183,14 @@ def read_mauritius_csv(file=''):
       dtype='object')
     
     """
+    
+    
+    sensor_map = { 
+                   'Meisei' : 'J0A',
+                   'Vaisala' : 'VN2' ,
+                   'Vaisala-GPS' : 'VN2' ,
+                   }
+    
     if 'meisei' in file:
         lat, lon = 'Positioning latitude' , 'Positioning Longitude' 
         relhum, temp = 'Humidity 0', 'Temperature 0' 
@@ -1193,6 +1200,7 @@ def read_mauritius_csv(file=''):
         z_coordinate =  'Barometric Pressure 0' 
         date = 'Date'
         z_type=1
+        sensor = sensor_map['Meisei']
         
     elif 'vaisala' in file:
         lat, lon = 'number' , 'number' 
@@ -1202,6 +1210,7 @@ def read_mauritius_csv(file=''):
         product = 'VAISALA'
         z_coordinate =  'pressure' 
         z_type=1
+        sensor = sensor_map['Vaisala']
         
     # dictionary placeholder 
     all_standard_variables =  ['source_id', 'report_id', 'observation_id', 'report_timestamp', 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 
@@ -1217,7 +1226,10 @@ def read_mauritius_csv(file=''):
     obs_id = 0
     report_id = 0 
     
-    for i in range(len(df)):
+    
+    #for i in range(10000):  # TO DO TODO HERE     
+    for i in tqdm(range(len(df)),  miniters=int(len(df)/10000) ):
+        
         date_time_v = df[datetime].values[i]
 
         # z_coordinate
@@ -1232,10 +1244,22 @@ def read_mauritius_csv(file=''):
             date_v = df[date].values[i]
             time = date_time_v.split(':')
             # TODO DUMMY date for now CHECK ???
-            timestamp = pd.Timestamp(year=int(date_v[0:4]), month=int(date_v[4:6]), day=int(date_v[6:8]) , hour=int(time[0]), minute=int(time[1]) , second=int(time[2])  ) 
+            
+            year =  int(date_v[0:4]) 
+            month = int(date_v[4:6])
+            day = int(date_v[6:8]) 
+            
+            hour = int(time[0])
+            minute = int(time[1]) 
+            sec = int(time[2])
+            
+            timestamp = pd.Timestamp(year=year, month=month, day=day , hour=hour, minute=minute, second=sec  ) 
+            
         elif 'vaisala' in file:
             date_v = df[datetime].values[i]
+            
             date = date_v.split('-')            
+            
             day = int(date[0])
             month = int(date[1])
             year = int(date[2][0:4])
@@ -1259,6 +1283,7 @@ def read_mauritius_csv(file=''):
             
         # temp, wind speed, wind dir 
         temp_v = df[temp].values[i] # 
+        
         try:
             temp_v = float(temp_v) + 273.15 # temp is given in degree Celsius -> convert to Kelvin
         except:
@@ -1291,7 +1316,9 @@ def read_mauritius_csv(file=''):
             obs_id = obs_id +1
             read_data.append( ( product.rjust(20), int(obs_id), report_id,  timestamp, int(date_v), statid, lat_v, lon_v, z_coordinate_v, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), z_type) )
  
+ 
     column_names = [ 'product_code', 'observation_id', 'report_id', 'report_timestamp' , 'iday', 'station_id', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body', 'obsvalue@body', 'varno@body' ,  'units', 'vertco_type@body'  ]    
+
 
     df = pd.DataFrame(data= read_data, columns=column_names )       
         
@@ -1305,6 +1332,41 @@ def read_mauritius_csv(file=''):
     #df = df.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] ) 
     
     print('Done reading DF')
+    
+    
+    
+    # need to extract record timestamps 
+    print(' === Creating record_timestamps === ')
+    if 'meisei' in file:
+        record_ts = []
+        report_id = []
+        
+        for t in  tqdm(range(len(df)),  miniters=int(len(df)/100) ): 
+            ts = df.report_timestamp.values[t] 
+            
+            previous = df.report_timestamp.values[t-1]
+            
+            if t ==0:
+                record_ts.append(ts)
+                report_id.append(0)
+                continue
+            timedelta = pd.Timedelta(4, unit='h')
+                    
+            if (ts - previous) <  timedelta:
+                record_ts.append(record_ts[-1])
+                report_id.append(report_id[-1])
+                
+            else:
+                record_ts.append(ts)
+                report_id.append(report_id[-1]+1)
+            
+        df['report_id'] = np.chararray.zfill( ( np.array(report_id).astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
+        df['record_timestamp'] = record_ts
+    
+    
+    # Adding sensor id 
+    df['sensor_id'] = np.full(  len(df), sensor.rjust(10)).astype('S'+str(id_string_length )  ) 
+    
     return df , statid 
 
 
@@ -1339,22 +1401,23 @@ def read_mauritius_csv_digitized(direc=''):
     all_df = []
     #sensors = sensors[:3]  ### TO DO TODO HERE 
     
-    sensor_map = { 'Graw' : 'DGL',
+    sensor_map = { 
+                   'Graw' : 'DGL',
+                   'Graw-GPS' : 'DGL',
+                   
                    'Meisei' : 'J0A',
-                   
-                   'Graw-GPS' : '',
-                   'MKII' : '',
-                   
+                                      
                    'Vaisala' : 'VN2' ,
+                   'Vaisala-GPS' : 'VN2' ,
                    
-                   'Modem' : '',
+                   'Modem' : 'FG2',
                    
                    'Sip' : '110' ,  # Sippican LMS5
-                   'Sip' : '110' ,  # Sippican multitheristor ?
+                   'MKII' : 'ZSm' ,  # Sippican multithermistor, see official report
                    
-                   'SRS' : '' ,
-                   
+                   'SRS' : 'SRd' , #Meteolabor
                    }
+    
     for s in sensors: 
         print('Harvesting Sensor::: ' , s)
         files = [direc+'/hum/'+f for f in os.listdir(direc+'/hum') if s == f.split('/')[-1].split('_')[1].replace('.csv','')]
@@ -1391,7 +1454,9 @@ def read_mauritius_csv_digitized(direc=''):
             df['report_timestamp'] = timestamp
     
             #df['sensor_id'] = np.bytes_(s)
-            df['sensor_id']  = np.full(  len(df), s.rjust(10)).astype('S'+str(id_string_length )  ) 
+            
+            ss = sensor_map[s]
+            df['sensor_id']  = np.full(  len(df), ss.rjust(10)).astype('S'+str(id_string_length )  ) 
             
             df['source_id']  = np.full(  len(df), 'MAURITIUS_DIGITIZED').astype('S'+str(id_string_length )  ) 
             
@@ -1436,6 +1501,7 @@ def read_mauritius_csv_digitized(direc=''):
 
     #df_res = df_res[:10000] ### TO DO TODO HERE
     
+
     return df_res , statid 
 
 
@@ -2559,8 +2625,12 @@ def read_df_to_cdm(cdm, dataset, fn, metadata='' ):
         #print('Unidentified file is: ', fn)
         raise ValueError('Cannot identify the type of file to be analized!!! ')
     
+    if df.empty:
+        return None, None, None, None, None 
+        
+        
     # save = ['correct', 'wrong']                                                                                                                                                                              
-    correct_data, df, most_freq_lat, most_freq_lon = check_lat_lon(df, fn, save='correct')
+
     df = df.reset_index()
     df['vertco_reference_1@body'] = df['vertco_reference_1@body'].astype(float)
     
@@ -2577,6 +2647,8 @@ def read_df_to_cdm(cdm, dataset, fn, metadata='' ):
                                                                       change_lat=False )              
     #primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')      
     
+    correct_data, df, most_freq_lat, most_freq_lon = check_lat_lon(df, fn, save='correct')
+        
     try:
         sc_lat, sc_lon = station_configuration_retrieved.latitude , station_configuration_retrieved.longitude 
     except:
@@ -2662,6 +2734,8 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
     # chunking year 
     year = str(year)
     df =df.loc[df['year'] == year ]
+    
+    primary_id = station_configuration_retrieved.primary_id.values[0].decode('utf-8')
     
     fno,  source_file = initialize_output(fn, output_dir, primary_id, dataset, year)   
     log_name = fno.replace('_'+str(year),'').replace('.nc', '_correctly_processed_year.txt')
@@ -2967,19 +3041,35 @@ def check_lat_lon(fbds, fn, save= 'correct'):
 
 
 
-def write_odb_to_cdm(fbds, cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn, fns, change_lat, year):
+def write_odb_to_cdm(fbds, cdm, cdmd, output_dir,  dataset, dic_obstab_attributes, fn, fns, change_lat, year):
     """ Write the data to file 
     If coming from era5_1/ era5_2 + mobile, no need for year selection, otherwise must split """
     tt=time.time()
 
+    """ Read the station_id, getting the station_configuration from the table list, extracting primary_id """      
+    station_id =  [ fbds['statid@hdr'].values[0][1:-1].decode('utf-8') ]
+    
+    # TO DO verify it still works with igra, ncar etc. 
+    #station_configuration_retrieved = stations_id='', station_configuration='', lat='', lon='', fn = '', db='', change_lat=False          
+    station_configuration_retrieved = get_station_configuration_cuon(stations_id=station_id, 
+                                                                     station_configuration = cdm['station_configuration'],
+                                                                      lat=fbds['lat@hdr'].values[0],  lon=fbds['lon@hdr'].values[0], 
+                                                                      fn=fn, 
+                                                                      db=dataset,
+                                                                      change_lat=change_lat  )       
+    
+    primary_id = station_configuration_retrieved.primary_id.values[0].decode('utf-8')
 
+    fno,  source_file = initialize_output(fn, output_dir, primary_id, dataset, year)         
+    
+    log_name = fno.replace('_'+str(year),'').replace('.nc', '_correctly_processed_year.txt')
+    
     if dataset not in ['era5_1' , 'era5_1_mobile']:
         fbds = fbds.loc[fbds['year'].astype(int) == year ]
         if fbds.empty:
-            return None
+            return log_name
         
-    """ Read the station_id, getting the station_configuration from the table list, extracting primary_id """      
-    station_id =  [ fbds['statid@hdr'].values[0][1:-1].decode('utf-8') ]
+
     
     # checking for missing minus sign from era5 1759
     if change_lat:
@@ -2993,14 +3083,7 @@ def write_odb_to_cdm(fbds, cdm, cdmd, output_dir, dataset, dic_obstab_attributes
     
     fbds = fbds.reset_index()
     fbds = fbds.drop(columns = ["index", "level_0"])
-    # TO DO verify it still works with igra, ncar etc. 
-    #station_configuration_retrieved = stations_id='', station_configuration='', lat='', lon='', fn = '', db='', change_lat=False          
-    station_configuration_retrieved = get_station_configuration_cuon(stations_id=station_id, 
-                                                                     station_configuration = cdm['station_configuration'],
-                                                                      lat=fbds['lat@hdr'][0],  lon=fbds['lon@hdr'][0], 
-                                                                      fn=fn, 
-                                                                      db=dataset,
-                                                                      change_lat=change_lat  )            
+     
     
     # check if retireved station inventory lat and lon are compatible with file 
     stat_conf_check = True
@@ -3038,7 +3121,8 @@ def write_odb_to_cdm(fbds, cdm, cdmd, output_dir, dataset, dic_obstab_attributes
     if not stat_conf_check and '999' not in primary_id:
         primary_id = 'stat_conf_inconsistent_' + primary_id
             
-    fno,  source_file = initialize_output(fn, output_dir, primary_id, dataset, year)         
+
+    
     
     fno='.'.join(fno.split('.')[:2]+fno.split('.')[2:])
 
@@ -4554,7 +4638,7 @@ if __name__ == '__main__':
                             ff = [f for f in fns if year in  f.split('/')[-1].split('.')[2][0:4] ]  #here: pre-selecting the files already split by year 
 
                         if len(ff) > 0:
-                            fbds, min_year_data = read_odb_to_cdm(output_dir, dataset,  dic_obstab_attributes, File, ff)
+                            fbds, min_year_data  = read_odb_to_cdm(output_dir, dataset,  dic_obstab_attributes, File, ff)
                             dummy_writing = write_odb_to_cdm( fbds, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File, ff, change_lat, year)
                             print('DONE --- ' , year )
                         else:
@@ -4564,7 +4648,7 @@ if __name__ == '__main__':
                 a.close()
                 
             else:
-                fbds, min_year_data = read_odb_to_cdm(output_dir, dataset,  dic_obstab_attributes, File, fns)
+                fbds, min_year_data  = read_odb_to_cdm(output_dir, dataset,  dic_obstab_attributes, File, fns)
                 for year in range(min_year_to_process, max_year_to_process):                
                     if year < min_year_to_process:
                         print('Year ' + year + ' but no data before ' + str(min_year_data) )
@@ -4573,9 +4657,9 @@ if __name__ == '__main__':
                         print('Skipping already processed year: ' , year )   
                         
                     dummy_writing = write_odb_to_cdm( fbds, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File, fns, change_lat, year)
-                    a=open(dummy_writing, 'a+')
-                    a.write('completed\n')
-                    a.close()                
+                a=open(dummy_writing, 'a+')
+                a.write('completed\n')
+                a.close()                
                     
         elif 'nasa' in dataset:   
                 ir_to_cdm( cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File)
@@ -4613,6 +4697,14 @@ if __name__ == '__main__':
         else:
             #try:
             df, stat_conf_check, station_configuration_retrieved, primary_id, min_year_data= read_df_to_cdm(cdm_tab, dataset, File)
+            
+            if not isinstance(df, pd.DataFrame):
+                print("=== Found an empty file " + File + "     ==>  nothing to harvest ")
+                a=open(output_dir + '/' + dataset + '_empty_files.dat', 'a+')
+                a.write(File + '\n')
+                a.close()
+                continue
+                
             for year in range(min_year_to_process, max_year_to_process):                
                 if year < min_year_to_process:
                     print('Year ' + year + ' but no data before ' + str(min_year_data) )
@@ -4623,7 +4715,7 @@ if __name__ == '__main__':
             a=open(dummy_writing, 'a+')
             a.write('completed\n')
             a.close()            
-        print(' ***** Convertion of  ' , File ,  '  completed after {:5.2f} seconds! ***** '.format(time.time()-tt))   
+        print(' ***** Convertion of  ' , File ,  '    ' , dummy_writing , '    completed after {:5.2f} seconds! ***** '.format(time.time()-tt))   
 
 """ Examples for running 
 
@@ -4647,6 +4739,10 @@ small file
 # era5.conv._1:48379
 -f  /mnt/users/scratch/leo/scratch/era5/odbs/ai_bfr/era5.10106.bfr -d bufr -o COP2
 -f /scratch/das/federico/databases_service2/UADB_25012022/uadb_windc_82930.txt -d ncar -o COP2 
+
+ERA5 2
+
+-f 0-20000-0-72575/era5.conv._2:24126 -o COP2 -d era5_2
 
 AMMA
 -f /scratch/das/federico/databases_service2/AMMA_BUFR/HRT2006071606 OLD , read_BUFR
@@ -4672,10 +4768,10 @@ SHIPSOUND (only one file)
 -f /scratch/das/federico/databases_service2/SHIPSOUND-NSIDC-0054/shipsound7696.csv -d shipsound -o COP2
 
 MAURITIUS original excel files from vendors 0-20000-0-61995
--f 0-20000-0-61995/scratch/das/federico/databases_service2/mauritius_2005/vaisala_ascents.csv  -d mauritius -o COP2 
--f 0-20000-0-61995/scratch/das/federico/databases_service2/mauritius_2005/meisei_ascents.csv  -d mauritius -o /scratch/das/federico/INTERCOMPARISON_MAURITIUS 
+-f 0-20000-0-61995/vaisala_ascents.csv  -d mauritius -o COP2 
+-f 0-20000-0-61995/meisei_ascents.csv  -d mauritius -o COP2
 
-MAURITIUS digitized by Ulrich 0-20000-0-61995
+MAURITIUS digitized by Ulrich 0-20000-0-61995 
 -f 0-20000-0-61995/dummy  -d mauritius_digitized -o COP2 
 
 YANGJIANG # 0-20000-0-59663 
