@@ -443,7 +443,9 @@ def do_rt_gpsro(era_input,df_temp,df_press,df_time,df_good,chum,mask):
                     continue
                 
                 #pressure threshold check
-                if np.nanmin(df_press) > 30 or np.nanmax(df_press) < 850:
+                if np.nanmin(df_press) > 30 or np.nanmax(df_press) < 700:
+                    print('pressure out of range!')
+                    print(np.nanmin(df_press), np.nanmax(df_press))
                     continue
 
                 if era_input['sp'][l]>0:  
@@ -1132,7 +1134,7 @@ def read_npz(statlist,shortname):
 
 def eragridded(yr):
 
-        fill_values = {
+    fill_values = {
         'u10': -0.4824346,
         'v10': 0.3942312,
         'd2m': 261.6807,
@@ -1503,7 +1505,7 @@ statlist = glob.glob(os.path.expandvars('/jetfs/scratch/uvoggenberger/RO_OPSv5.6
 
 i = None
 
-pool = multiprocessing.Pool(processes=30)
+pool = multiprocessing.Pool(processes=60)
 
 tt=time.time()
 
