@@ -441,6 +441,10 @@ def do_rt_gpsro(era_input,df_temp,df_press,df_time,df_good,chum,mask):
                 #print(df_time[idx],x)
                 if df_time[idx]!=x:
                     continue
+                
+                #pressure threshold check
+                if np.nanmin(df_press) > 30 or np.nanmax(df_press) < 850:
+                    continue
 
                 if era_input['sp'][l]>0:  
 
@@ -1128,6 +1132,15 @@ def read_npz(statlist,shortname):
 
 def eragridded(yr):
 
+        fill_values = {
+        'u10': -0.4824346,
+        'v10': 0.3942312,
+        'd2m': 261.6807,
+        't2m': 268.16467,
+        'skt': 267.5933,
+        'sp': 88436.48,
+    }
+
     era_input={}
     tt=time.time()
     print(yr,time.time()-tt)
@@ -1153,6 +1166,7 @@ def eragridded(yr):
                 era_input[s]['longitude']=hlon[idxlon]
                 for k in 'u10', 'v10', 'd2m', 't2m', 'skt', 'sp':
                     era_input[s][k]=h[k][:,idxlat,idxlon]
+                    era_input[s][k] = era_input[s][k].filled(fill_values[k])
                 era_input[s]['mon']=yr*100+np.arange(1,13)
         print(yr,time.time()-tt)
     return era_input
