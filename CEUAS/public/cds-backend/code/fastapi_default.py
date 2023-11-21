@@ -222,6 +222,7 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False, orphan=False) ->
         dict : File Information:
             [ID] = [1.Date, last.Date, Lat, Lon, Country Code]
     """
+    print('entering makedaterange')
     s, skey = itup  # filename, ID
     print(skey)
     active = {}
@@ -233,8 +234,13 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False, orphan=False) ->
     try:
 
         with h5py.File(s, 'r') as f:
+<<<<<<< HEAD
+            print("SKEY %s", skey)
+            logger.info("SKEY %s", skey)
+=======
             logger.info("SKEY %s", skey)
             logger.debug("SKEY %s", skey)
+>>>>>>> 556a1389cf270b8d1e712cbfd9a86a3feb8c6863
             try:
 
                 # funits=f['recordtimestamp'].attrs['units']
@@ -321,6 +327,7 @@ def pkl_initialize(config,slist=[]):
 
     slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-*_CEUAS_merged_v1.nc'))
     slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
+    slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v1.nc'))
     slist += glob.glob(os.path.expandvars(config['data_dir'] + '/20999-*_CEUAS_merged_v1.nc'))
 
     #flist=glob.glob(os.path.expandvars(rpath+'*.nc'))
@@ -393,6 +400,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
     import json
     import urllib.request
 
+    logger.info("Entering init_server")
     # os.chdir(os.path.expandvars('$RSCRATCH/era5/odbs/merged'))
     # wroot = os.path.expandvars('$RSCRATCH/era5/odbs/merged/tmp')
     # os.makedirs(wroot, exist_ok=True)
@@ -408,10 +416,11 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
     # [WIGOS ID] = [start time in seconds, end time in seconds, lat, lon, datadir]
     # seconds since 1900-01-01
     #
+    logger.info("Before active check")
     active_file = config['config_dir'] + '/active.json'
     namelist_file  = config['config_dir'] + '/namelist.json'
     
-    
+    logger.info("Active File: [%s]", active_file)
     namelist = None
     active = None
     if os.path.isfile(active_file) and not force_reload:
@@ -436,12 +445,19 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
             namelist = None
 
     if active is None:
+<<<<<<< HEAD
+        logger.info('Active File not found, start creating')
+=======
         print("active is none!")
+>>>>>>> 556a1389cf270b8d1e712cbfd9a86a3feb8c6863
         #
         # find Merged Netcdf files and intercomparison files
         #
         slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-*_CEUAS_merged_v1.nc'))
         slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
+        slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v1.nc'))
+        print('comps: ', config['comp_dir']) 
+        print('slist: ', slist)
         slnum = [i.split('/')[-1].split('_')[0].replace('.nc','') for i in slist]
         volapath = 'https://oscar.wmo.int/oscar/vola/vola_legacy_report.txt'
         f = urllib.request.urlopen(volapath)
@@ -454,19 +470,27 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         # print (vola.iloc[0])
         # exit()
         active = {}
+<<<<<<< HEAD
+        func = partial(makedaterange, vola, debug=True)
+        #slist=[slist[3380]]
+        #slnum=[slnum[3380]]
+        if False:
+            logger.info('opening active pool')
+=======
         print("prepping makedaterange")
         func = partial(makedaterange, vola, debug=debug)
         #slist=[slist[3380]]
         #slnum=[slnum[3380]]
         if False:
+>>>>>>> 556a1389cf270b8d1e712cbfd9a86a3feb8c6863
 #             with Pool(10) as p:
 #                 sklist=list(p.map(func,zip(slist,slnum)))
-#             with multiprocessing.get_context('spawn').Pool(10) as p:
+#             with multiprocessing.get_context('spawn').Pool(9) as p:
             with Pool(9) as p:
                 sklist=list(p.map(func,zip(slist,slnum)))
         else:
             sklist = list(map(func, zip(slist, slnum)))
-        
+        logger.info('sklist done')
         # orphans are added to the active list
         orphan_slist = glob.glob(os.path.expandvars(config['data_dir'] + '/20999-*_CEUAS_merged_v1.nc'))
         if len(orphan_slist) > 0:
@@ -477,7 +501,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
             sklist += orphan_sklist
             slist += orphan_slist
         
-        
+        logger.info('orphans added')
         short_slist=[]
         for s,sl in zip(sklist,slist):
             if s:
