@@ -223,6 +223,7 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False, orphan=False) ->
             [ID] = [1.Date, last.Date, Lat, Lon, Country Code]
     """
     s, skey = itup  # filename, ID
+    print(skey)
     active = {}
     # creating a list for conversion between alpha_2 and alpha_3 countrycodes
     countrycodes = {}
@@ -232,6 +233,7 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False, orphan=False) ->
     try:
 
         with h5py.File(s, 'r') as f:
+            logger.info("SKEY %s", skey)
             logger.debug("SKEY %s", skey)
             try:
 
@@ -434,6 +436,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
             namelist = None
 
     if active is None:
+        print("active is none!")
         #
         # find Merged Netcdf files and intercomparison files
         #
@@ -451,10 +454,11 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         # print (vola.iloc[0])
         # exit()
         active = {}
+        print("prepping makedaterange")
         func = partial(makedaterange, vola, debug=debug)
         #slist=[slist[3380]]
         #slnum=[slnum[3380]]
-        if True:
+        if False:
 #             with Pool(10) as p:
 #                 sklist=list(p.map(func,zip(slist,slnum)))
 #             with multiprocessing.get_context('spawn').Pool(10) as p:
