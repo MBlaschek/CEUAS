@@ -20,6 +20,7 @@ from . import met
 from . import grid
 from . import bp
 from . import plot
+from . import additions
 
 
 def _getlibs():

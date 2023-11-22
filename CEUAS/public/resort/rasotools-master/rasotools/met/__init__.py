@@ -7,4 +7,5 @@ from . import std
 from . import time
 from . import us_standard
 from . import winds
+from . import allrasotrends
 from .__wrapper__ import *
