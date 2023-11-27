@@ -234,13 +234,8 @@ def makedaterange(vola: pd.DataFrame, itup: tuple, debug=False, orphan=False) ->
     try:
 
         with h5py.File(s, 'r') as f:
-<<<<<<< HEAD
-            print("SKEY %s", skey)
-            logger.info("SKEY %s", skey)
-=======
             logger.info("SKEY %s", skey)
             logger.debug("SKEY %s", skey)
->>>>>>> 556a1389cf270b8d1e712cbfd9a86a3feb8c6863
             try:
 
                 # funits=f['recordtimestamp'].attrs['units']
@@ -445,11 +440,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
             namelist = None
 
     if active is None:
-<<<<<<< HEAD
         logger.info('Active File not found, start creating')
-=======
-        print("active is none!")
->>>>>>> 556a1389cf270b8d1e712cbfd9a86a3feb8c6863
         #
         # find Merged Netcdf files and intercomparison files
         #
@@ -470,19 +461,11 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         # print (vola.iloc[0])
         # exit()
         active = {}
-<<<<<<< HEAD
-        func = partial(makedaterange, vola, debug=True)
-        #slist=[slist[3380]]
-        #slnum=[slnum[3380]]
-        if False:
-            logger.info('opening active pool')
-=======
         print("prepping makedaterange")
         func = partial(makedaterange, vola, debug=debug)
         #slist=[slist[3380]]
         #slnum=[slnum[3380]]
         if False:
->>>>>>> 556a1389cf270b8d1e712cbfd9a86a3feb8c6863
 #             with Pool(10) as p:
 #                 sklist=list(p.map(func,zip(slist,slnum)))
 #             with multiprocessing.get_context('spawn').Pool(9) as p:
