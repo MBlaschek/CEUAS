@@ -2015,31 +2015,20 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
         sdict={}
         slist=[]
 
+        #groupencodings     
+        
         for v in var_selection:          
             #variables_dic[v] = ''
+            
             if type(f[v]) == pd.core.series.Series:
                 fvv=f[v].values
             else:
                 fvv=f[v]
-                
             if type(fvv[0]) not in [str,bytes,numpy.bytes_]:
-                #print(v, '  ', type(fvv[0]) , '  ' , fvv.dtype )
                 if fvv.dtype !='S1':
-                    #if fvv.dtype == "Int64":
-                    #    0
-                    #vtype = np.int32
-                    #else:
-                    #    vtype = fvv.dtype
-                    try:
-                        fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
-                    except:
-                        fd[k].create_dataset(v,fvv.shape,'int32',compression=fbencodings[v]['compression'], chunks=True)
-                        
-                    try:
-                        fd[k][v][:]=fvv[:]
-                    except:
-                        fd[k][v][:] = np.empty( (len( fvv)) )
-                        
+                    
+                    fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
+                    fd[k][v][:]=fvv[:]
                     if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
                         if v in attrs.keys():
                             for kk,vv in attrs[v].items():
@@ -2048,7 +2037,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                                 else:
                                     fd[k][v].attrs[kk]=vv
                                                                 
-                    if v in ['date_time','report_timestamp','record_timestamp']:
+                    if v == 'date_time':
                         fd[k][v].attrs['units']=numpy.bytes_('seconds since 1900-01-01 00:00:00')                            #print (  fk, ' ' , v , ' ' ,   ) 
                                 
                 else:
@@ -2069,31 +2058,34 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
             else:
                 sleno=len(fvv[0])
                 slen=sleno
+                #x=numpy.array(fvv,dtype='S').view('S1')
+                #slen=x.shape[0]//fvv.shape[0]
                 try:
+                    
                     slen=int(fvv.dtype.descr[0][1].split('S')[1])
-                except:  
+                except:  # byte string?
                     pass
 
                 sdict[v]=slen
                 if slen not in slist:
                     slist.append(slen)
+                 
+                    
                     try:
                         fd[k].create_dataset( 'string{}'.format(slen),  data=string10[:slen]  )
                     except:
                         pass               
-                        
+                    
+                #x=x.reshape(fvv.shape[0],slen)
                 fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)
                 if v in attrs.keys():
-                    fd[k][v].attrs['description']     =numpy.bytes_(attrs[v]['description'])
+                    fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
                     fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])                
-
-                        
+                    
             #variables_dic[v] = f[v].values.dtype
              
         for v in fd[k].keys(): #var_selection:
-            l=0      
-            if 'string'  in v or 'index' in v :                    
-                continue 
+            l=0            
             try:
                 if type(f[v]) == pd.core.series.Series:
                     fvv=f[v].values
@@ -2101,7 +2093,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                     fvv=f[v]
                 if 'string' not in v and v!='index':                    
                     fd[k][v].dims[l].attach_scale(fd[k]['index'])
-                    #print(v,fvv.ndim,type(fvv[0]))
+                    print(v,fvv.ndim,type(fvv[0]))
                     if fvv.ndim==2 or type(fvv[0]) in [str,bytes,numpy.bytes_]:
                         slen=sdict[v]
                         #slen=10
@@ -2111,13 +2103,13 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
             
             
             
-        #i=4        
+        i=4        
         for v in slist:
             s='string{}'.format(v)
             for a in ['NAME']:
                 fd[k][s].attrs[a]=numpy.bytes_('This is a netCDF dimension but not a netCDF variable.')
             
-            #i+=1
+            i+=1
         
     return
 
