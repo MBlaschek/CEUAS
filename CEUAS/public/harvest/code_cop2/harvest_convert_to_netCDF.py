@@ -712,6 +712,10 @@ def read_giub(file=''):
     #       'heightOfStation']    
     
     df = pd.read_csv( file, sep = '\t').astype(str)
+    
+    names = ["index"  , "date"   , "time"   , "temp"  ,  "gph"   , 'wspeed'  ,"wdir" ,   'uwind'   ,"vwind"  , "rh"    ,  "sh"    ,  'z_coordinate'  ,  'z_coordinate_type'       ,'days'  ,  'months'  ,"geopotential" ]
+    df = pd.read_csv( file, sep = '\t', names = names).astype(str)
+    
     statid = file.split('/')[-1].split('_')[0].replace('.txt','')
     
     all_standard_variables =  ['source_id', 'report_id', 'observation_id', 'record_timestamp', 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 
@@ -755,6 +759,9 @@ def read_giub(file=''):
     for i in range(len(df)):
         temp_v = df['temp'].values[i]
         
+        if 'temp' in temp_v:
+            continue
+        
         if '999' in temp_v:
             temp_v = np.nan 
         else:
@@ -774,7 +781,7 @@ def read_giub(file=''):
             gph_v = np.nan 
                 
         rh_v = df['rh'].values[i]
-        if '999' in rh_v or '-' in rh_v:
+        if '999' in rh_v or '-' in rh_v or float(rh_v) < 0:
             rh_v = np.nan 
 
         wind_sp_v = df['wspeed'].values[i]
@@ -791,10 +798,7 @@ def read_giub(file=''):
         
         wind_v_v = df['uwind'].values[i]   
         if '999' in wind_v_v or '-' in wind_v_v:
-            wind_v_v = np.nan        
-            
-        rh_v = df['rh'].values[i]
-        
+            wind_v_v = np.nan                
         
         z_coord = df['z_coordinate'].values[i]
         if '999' in z_coord or '-' in z_coord:
@@ -1472,7 +1476,10 @@ def read_npsound_csv(file=''):
     df['observation_id']  = np.chararray.zfill( (df['observation_id'].astype(int)) .astype('S'+str(id_string_length ) ), id_string_length  )  #converting to fixed length bite objects 
     df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
 
+    df =df.sort_values( by=['report_timestamp', 'record_timestamp'] )
+    
     print('Done reading DF')
+    
     return df , statid 
 
 
@@ -1538,7 +1545,6 @@ def igra2_ascii_to_dataframe(file=''):
         
         return release_date_time 
     
-        
     for i, line in enumerate(data):
         if line[0] == '#':
             head_count = head_count +1 
@@ -1573,6 +1579,7 @@ def igra2_ascii_to_dataframe(file=''):
 
             iday =  int(year + month + day)
             count = count + 1
+            
         else:
            # Data of each ascent
             lvltyp1 = int(line[0])            # 1-  1   integer major level type indicator
@@ -1656,7 +1663,7 @@ def igra2_ascii_to_dataframe(file=''):
     for c in ['observation_id', 'report_id']:
         df_new[c] = df[c]
         
-    #df_new = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    # FF check here !!!! 
+    df_new = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    # FF check here !!!! 
     
     return df_new, stations_id
 
@@ -2015,10 +2022,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
         sdict={}
         slist=[]
 
-        #groupencodings     
-        
-        for v in var_selection:          
-            #variables_dic[v] = ''
+        for v in var_selection:
             
             if type(f[v]) == pd.core.series.Series:
                 fvv=f[v].values
@@ -2223,12 +2227,14 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
             df['vertco_reference_1@body'] = df['vertco_reference_1@body'].astype(float)
             df = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
 
+
             station_configuration_retrieved = get_station_configuration_cuon(stations_id=stations_id, 
                                                                              station_configuration = cdm['station_configuration'],
                                                                               lat=df['lat@hdr'][0],  lon=df['lon@hdr'][0], 
                                                                               fn=fn, 
                                                                               db=dataset,
                                                                               change_lat=False )              
+            
             #primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')      
             
             try:
@@ -2425,7 +2431,7 @@ def df_to_cdm(cdm, cdmd, out_dir, dataset, dic_obstab_attributes, fn):
                 
             for k in groups.keys():            
                 if k not in ('observations_table') :   
-                    if k in ['id_scheme']:
+                    if k in ['id_scheme', 'observed_variable']:
                         continue                        
                     groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') #
 
@@ -2637,7 +2643,7 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn, change
             return None
         fbds = fbds.reset_index()
         fbds['vertco_reference_1@body'] = fbds['vertco_reference_1@body'].astype(float)
-        fbds = fbds.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    
+        fbds = fbds.sort_values(by = [ 'vertco_reference_1@body' ] )    
 
         
         #fbds = fbds.replace( -2147483648 , np.nan ) 
@@ -2845,7 +2851,6 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn, change
 
                 elif k in ('source_configuration'): # storing the source configuration info, e.g. original file name, 
                     if d.element_name=='source_file':
-                        #  groups[k][d.element_name] = ( {'hdrlen':fbds.variables['date@hdr'].shape[0] } ,  np.full( fbds.variables['date@hdr'].shape[0] , source_file  ) ) 
                         groups[k][d.element_name]=({'hdrlen': 1 },   np.full( 1 , source_file) )
                     else:
                         try:   
@@ -2872,8 +2877,6 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn, change
                     except:
                         pass
                 try:
-                    #if k in ('observations_table'):
-                    #    print('obs')
                     if type(groups[k]) is dict:
                         gkev=groups[k][d.element_name]
                     else:
@@ -2886,9 +2889,9 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn, change
                     
                     if k in ('observations_table'):
                         #print(k,d.element_name,time.time()-tt,' mem:',process.memory_info().rss//1024//1024)
-                        if d.element_name=='z_coordinate' or  d.element_name=='z_coordinate_type':
-                            print('adjustment_id')
-                        write_dict_h5(fno, groups, k, groupencodings[k], var_selection=[],mode='a', attrs= dic_obstab_attributes  )
+                        #write_dict_h5(fno, fbds, 'era5fb', fbencodings, var_selection=[],mode='a')
+
+                        write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs= dic_obstab_attributes  )
                 except:
                     #print('bad:',k,d.element_name)
                     pass
@@ -2896,7 +2899,9 @@ def odb_to_cdm(cdm, cdmd, output_dir, dataset, dic_obstab_attributes, fn, change
                 #    print(k,d.element_name,time.time()-tt,' mem:',process.memory_info().rss//1024//1024)
         for k in groups.keys():            
             ##this appends group by group to the netcdf file
-            if k not in ['observations_table'] :                               
+            if k not in ['observations_table'] :  
+                if k in ['observed_variable']:
+                    continue
                 groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') #
         ##print('sizes: in: {:6.2f} out: {:6.2f}'.format(os.path.getsize(fn+'.gz')/1024/1024, os.path.getsize(fno)/1024/1024))
         del fbds
@@ -3823,8 +3828,11 @@ def load_cdm_tables():
         col_names=pd.read_csv(f,delimiter='\t',quoting=3,nrows=0)
         f=urllib.request.urlopen(cdmpath+key+'.dat')
         tdict={col: str for col in col_names}
-        cdm_tab[key]=pd.read_csv(f,delimiter='\t',quoting=3,dtype=tdict,na_filter=False)
-
+        if key != 'observed_variable':
+            cdm_tab[key]=pd.read_csv(f,delimiter='\t',quoting=3,dtype=tdict,na_filter=False)
+        else:
+            cdm_tab[key]=pd.read_csv(f,delimiter='\t',quoting=3,dtype=tdict,na_filter=False, nrows=150)  # TO DO FIX, latest update broke compatibility, cannot read last lines
+            
 
     """ Adding the  tables that currently only have the definitions but not the implementation in the CDM, OR    need extensions """  
     cdm_tabdef['header_table']          = pd.read_csv(tpath+'/table_definitions/header_table.csv',delimiter='\t',quoting=3,comment='#')
@@ -3936,8 +3944,7 @@ db = { 'era5_1': '/mnt/users/scratch/leo/scratch/era5/odbs/1' ,
        'amma': '/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/',
        
        # pre ERA5 3188
-       'giub':'/scratch/das/federico/databases_service2/giub2.1_ERA5_3188_02042023',
-       
+       'giub': "/scratch/das/federico/redo_GIUB_07072023_reduced",
        # ARCTIC datasets
        'hara':'/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/',
        'npsound' : '/scratch/das/federico/databases_service2/NPSOUND-NSIDC0060/NPSOUND_csv_converted',
@@ -4112,30 +4119,36 @@ small file
 -f /mnt/users/scratch/leo/scratch/era5/odbs/2/era5.conv._57707.gz  -d era5_2 -o COP2
 -f  /mnt/users/scratch/leo/scratch/era5/odbs/ai_bfr/era5.10106.bfr -d bufr -o COP2
 -f /scratch/das/federico/databases_service2/UADB_25012022/uadb_windc_82930.txt -d ncar -o COP2 
+
 -f /scratch/das/federico/databases_service/IGRA2_20211231/USM00072232-data.txt -d igra2 -o COP2 
--f /mnt/users/scratch/leo/scratch/era5/odbs/2_mobile/era5.conv.195212 -d era5_2_mobile -o COP2
+-f /scratch/das/federico/databases_service2/IGRA2_20230106/AUM00011035-data.txt -d igra2 -o COP2 
+
+
+# AUM00011035-data.txt
+
+
 
 AMMA
 -f /scratch/das/federico/databases_service2/AMMA_BUFR/HRT2006071606 OLD , read_BUFR
 -f /scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61902_amma.csv  -d amma -o COP2 
 
 GIUB
--f /scratch/das/federico/databases_service2/giub2.1_ERA5_3188_02042023/6121.txt_converted_csv.csv -d giub -o COP2 
+-f /scratch/das/federico/COP2_HARVEST_JAN2023/TRY_GIUB_22062023_PROVA_FULL_reduced/6121.txt_converted_csv_reduced.csv -d giub -o COP2 
 
-4806
+-f /scratch/das/federico/COP2_HARVEST_JAN2023/GIUB_22062023_reduced/6121.txt_converted_csv_reduced.csv -d giub -o COP2
 
+# /scratch/das/federico/COP2_HARVEST_JAN2023/GIUB_22062023_reduced//5382A.txt_converted_csv.csv
 
 HARA
 -f /scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22165_stationfile.csv -d hara -o COP2
 NPSOUND
--f /scratch/das/federico/databases_service2/NPSOUND-NSIDC0060/NPSOUND_csv_converted/np_11sound.dat_converted.csv -d npsound -o COP2
+-f /scratch/das/federico/databases_service2/NPSOUND-NSIDC0060/NPSOUND_csv_converted/np_05sound.dat_converted.csv -d npsound -o COP2
 SHIPSOUND (only one file)
 -f /scratch/das/federico/databases_service2/SHIPSOUND-NSIDC-0054/shipsound7696.csv -d shipsound -o COP2
 
 
 MAURITIUS
 -f /scratch/das/federico/databases_service2/mauritius_2005/vaisala_ascents.csv  -d mauritius -o COP2 
--f /scratch/das/federico/databases_service2/mauritius_2005/meisel_ascents.csv  -d mauritius -o COP2 
 -f /scratch/das/federico/databases_service2/mauritius_2005/meisei_ascents.csv  -d mauritius -o /scratch/das/federico/INTERCOMPARISON_MAURITIUS 
 """
 
