@@ -56,30 +56,34 @@ def fdpd(T,ew,rh):
        q1 = mukodiff(p1,e)
        
 
-T=numpy.arange(1000)/10.+233.15
-ew=numpy.log(muko(T))
+###############################################################
+        
+if __name__ == '__main__':
 
-#plt.plot(T,muko(T))
-print(muko(273.15))
-#print dpd(T,0.4)
-#plt.show()
-rh=numpy.arange(96)+5
-rh=numpy.log(rh/100.)
-dpds=numpy.empty((T.shape[0],rh.shape[0]))
-n=10
-for irh in range(0,rh.shape[0]):
-   print(irh)
-   for it in range(0,T.shape[0]):
-      dpds[it,irh]=fdpd(T[it],ew[it],rh[irh])
-
-plt.subplot(1,2,1)
-rh=numpy.exp(rh)
-plt.contourf(rh,T,dpds,levels=numpy.arange(400)/10.)
-plt.colorbar()
-plt.subplot(1,2,2)
-plt.plot(rh,dpds[600])
-plt.plot(rh,dpds[300])
-plt.plot(rh,dpds[200])
-plt.show()
-print('')
-      
+   T=numpy.arange(1000)/10.+233.15
+   ew=numpy.log(muko(T))
+   
+   #plt.plot(T,muko(T))
+   print(muko(273.15))
+   #print dpd(T,0.4)
+   #plt.show()
+   rh=numpy.arange(96)+5
+   rh=numpy.log(rh/100.)
+   dpds=numpy.empty((T.shape[0],rh.shape[0]))
+   n=10
+   for irh in range(0,rh.shape[0]):
+      print(irh)
+      for it in range(0,T.shape[0]):
+         dpds[it,irh]=fdpd(T[it],ew[it],rh[irh])
+   
+   plt.subplot(1,2,1)
+   rh=numpy.exp(rh)
+   plt.contourf(rh,T,dpds,levels=numpy.arange(400)/10.)
+   plt.colorbar()
+   plt.subplot(1,2,2)
+   plt.plot(rh,dpds[600])
+   plt.plot(rh,dpds[300])
+   plt.plot(rh,dpds[200])
+   plt.show()
+   print('')
+         
