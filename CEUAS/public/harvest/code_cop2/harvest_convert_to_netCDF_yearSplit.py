@@ -2477,45 +2477,20 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
         sdict={}
         slist=[]
 
-        for v in var_selection:
-            #if v == 'sensor_id':
-            #    a = 0
-            if v in [ 'report_event1@hdr' , 'report_rdbflag@hdr' , 'datum_anflag@body', 'datum_event1@body', 'datum_rdbflag@body']:
-                continue 
+        #groupencodings     
+        
+        for v in var_selection:          
+            #variables_dic[v] = ''
             
             if type(f[v]) == pd.core.series.Series:
                 fvv=f[v].values
             else:
                 fvv=f[v]
-                
-            try:
-                if fvv.dtype ==pd.Int64Dtype(): ### TO DO 
-                        continue
-            except:
-                    pass
-            
-                        
-            if type(fvv[0]) not in [str,bytes,numpy.bytes_]:  ### HORRIBLE HANDLING of types, dtypes, strings, bytes... 
-                #print(v, '  ', type(fvv[0]) , '  ' , fvv.dtype )
-     
+            if type(fvv[0]) not in [str,bytes,numpy.bytes_]:
                 if fvv.dtype !='S1':
-                    #if fvv.dtype == "Int64":
-                    #    0
-                    #vtype = np.int32
-                    #else:
-                    #    vtype = fvv.dtype
-                        
-                    try:
-                        fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
-                    except:
-                        #fd[k].create_dataset(v,fvv.shape,'int32',compression=fbencodings[v]['compression'], chunks=True)  TODO CHECK
-                        fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression='gzip', chunks=True)
-                        
-                    try:
-                        fd[k][v][:]=fvv[:]
-                    except:
-                        fd[k][v][:] = np.empty( (len( fvv)) )
-                        
+                    
+                    fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
+                    fd[k][v][:]=fvv[:]
                     if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
                         if v in attrs.keys():
                             for kk,vv in attrs[v].items():
@@ -2524,7 +2499,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                                 else:
                                     fd[k][v].attrs[kk]=vv
                                                                 
-                    if v in ['date_time','report_timestamp','record_timestamp']:
+                    if v == 'date_time':
                         fd[k][v].attrs['units']=numpy.bytes_('seconds since 1900-01-01 00:00:00')                            #print (  fk, ' ' , v , ' ' ,   ) 
                                 
                 else:
@@ -2545,57 +2520,61 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
             else:
                 sleno=len(fvv[0])
                 slen=sleno
+                #x=numpy.array(fvv,dtype='S').view('S1')
+                #slen=x.shape[0]//fvv.shape[0]
                 try:
+                    
                     slen=int(fvv.dtype.descr[0][1].split('S')[1])
-                except:  
-                    slen=15
+                except:  # byte string?
+                    pass
 
                 sdict[v]=slen
                 if slen not in slist:
                     slist.append(slen)
+                 
+                    
                     try:
                         fd[k].create_dataset( 'string{}'.format(slen),  data=string10[:slen]  )
                     except:
                         pass               
-                try:
                     
-                    fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)
-                except KeyError:
-                    fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression='gzip',chunks=True)
-                    
+                #x=x.reshape(fvv.shape[0],slen)
+                fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)
                 if v in attrs.keys():
-                    fd[k][v].attrs['description']     =numpy.bytes_(attrs[v]['description'])
+                    fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
                     fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])                
-
-                        
+                    
             #variables_dic[v] = f[v].values.dtype
              
         for v in fd[k].keys(): #var_selection:
-            l=0      
-            if 'string'  in v or v== 'index' :                    
-                continue 
+            l=0            
             try:
                 if type(f[v]) == pd.core.series.Series:
                     fvv=f[v].values
                 else:
                     fvv=f[v]
-                fd[k][v].dims[l].attach_scale(fd[k]['index'])
-                #print(v,fvv.ndim,type(fvv[0]))
-                if fvv.ndim==2 or type(fvv[0]) in [str,bytes,numpy.bytes_]:
-                    slen=sdict[v]
-                    #slen=10
-                    fd[k][v].dims[1].attach_scale(fd[k]['string{}'.format(slen)])
+                if 'string' not in v and v!='index':                    
+                    fd[k][v].dims[l].attach_scale(fd[k]['index'])
+                    print(v,fvv.ndim,type(fvv[0]))
+                    if fvv.ndim==2 or type(fvv[0]) in [str,bytes,numpy.bytes_]:
+                        slen=sdict[v]
+                        #slen=10
+                        fd[k][v].dims[1].attach_scale(fd[k]['string{}'.format(slen)])
             except:
                 pass
-
-        #i=4        
+            
+            
+            
+        i=4        
         for v in slist:
             s='string{}'.format(v)
             for a in ['NAME']:
                 fd[k][s].attrs[a]=numpy.bytes_('This is a netCDF dimension but not a netCDF variable.')
-            #i+=1
+            
+            i+=1
         
     return
+
 
 def initialize_output(fn, output_dir, station_id, dataset, year):
     """ Simple initializer for writing the output netCDF file """
