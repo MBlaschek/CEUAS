@@ -68,7 +68,7 @@ if __name__ == "__main__":
     dpds=numpy.empty((T.shape[0],rh.shape[0]))
     n=10
     for irh in range(0,rh.shape[0]):
-    print(irh)
+        print(irh)
     for it in range(0,T.shape[0]):
         dpds[it,irh]=fdpd(T[it],ew[it],rh[irh])
 
