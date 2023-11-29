@@ -7,6 +7,7 @@ import psutil
 import subprocess
 import urllib.request
 import xarray as xr
+import hdf5plugin
 import h5py
 from datetime import date, datetime,timedelta
 import time
@@ -37,7 +38,7 @@ warnings.simplefilter(action='ignore', category=FutureWarning) # deactivates Pan
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', -1)
+pd.set_option('display.max_colwidth', None)
 
 debug = False
 
@@ -55,7 +56,7 @@ green  = '\033[92m'
 yellow = '\033[33m'
 
 long_string_len = 100  # maximum allowed length of strings in header and observations_table
-fixed_string_len = 20  # maximum allowed length of strings in header and observations_table
+fixed_string_len = 32  # maximum allowed length of strings in header and observations_table
 id_string_length = 10 # maximum allowed length of strings for observation_id and report_id in header and observations_table
 
     
@@ -1165,25 +1166,56 @@ def find_recordindex_l(y,x):
 
 # write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')})
 
-def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}): 
+def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}, chunksize=100000): 
     """ Writes each separate variable from the observation or feedback tables inot netcdf using h5py.
           f is a pandas dataframe with one column, one for each variable
           k is either 'era5fb' or 'observations_table'
-          fbencodings is the encodings of variable types, e.g. {'observations_id': { 'compression': 'gzip' } }
+          fbencodings is the encodings of variable types, e.g. {'observations_id': { 'compression': 'gzip' } ,'compression_opts': 4 }} or
+          {'observations_id': { 'compression': 32015 } ,'compression_opts': 3 }}
+          attrs to set variable attributes
+          mode can be 'a' or 'w'
+          chunksize is set by default to 100000. Auto is not a good choice especially for character variables. Those have chunksize (chunksize,strlen)
     """
 
     #attrs=  {'date_time':('units','seconds since 1900-01-01 00:00:00')}
     #attrs = {'observation_id': ('description', 'unique ID for observation'), 'report_id': ('description', 'Link to header information') , 'date_time':('units','seconds since 1900-01-01 00:00:00') }
     
-    with h5py.File(dfile,mode) as fd:
-        try:
-            fd.create_group(k)
-            index=numpy.zeros (f[list(f.keys())[0]].shape[0], dtype='S1')
-            fd[k].create_dataset('index', data=index)
-        except:
-            pass
+    #tt = time.time()
+    if isinstance(dfile, h5py._hl.files.File):
+        fd = dfile
+    else:
+        os.makedirs(os.path.dirname(dfile), exist_ok=True)
+        fd = h5py.File(dfile,mode)
+            
+            
+            
+#    with h5py.File(dfile,mode) as fd:
+    if(fbencodings):
+        for v in fbencodings.values():
+            if 'compression' in v.keys():
+                comp = v['compression']
+            else:
+                comp = None
+            if 'compression_opts' in v.keys():
+                compopt = v['compression_opts']
+            else:
+                compopt = None
+    else:
+        comp = None
+        compopt = None
+        
+    if fd:
         if not var_selection:
             var_selection=list(f.keys())
+
+        try:
+            # variable 'index' is needed only to attach a scale to it (needed for netCDF compatibility)
+            fd.create_group(k)
+            idl = f[list(f.keys())[0]].shape[0]
+            index=numpy.zeros (idl, dtype=np.int8)
+            fd[k].create_dataset('index', data=index, compression=comp,compression_opts=compopt, chunks=True)
+        except:
+            pass
         
         string10=numpy.zeros(fixed_string_len,dtype='S1')
         sdict={}
@@ -1191,6 +1223,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
 
         #groupencodings     
         
+        #print('start', time.time() - tt)
         for v in var_selection:          
             #variables_dic[v] = ''
             if type(f[v]) == pd.core.series.Series:
@@ -1203,11 +1236,18 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                 if fvv.dtype !='S1':
                     try:
                         
-                        fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
+                        #fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
+                        if fvv.shape[0] > chunksize:                       
+                            fd[k].create_dataset(v,data=fvv,compression=comp,compression_opts=compopt,
+                                                 chunks=(chunksize, ))
+                                                 #chunks=(np.int32(np.sqrt(fvv.shape[0]))*10, ))
+                        else:    
+                            fd[k].create_dataset(v,data=fvv)
                     except:
-                        fd[k].create_dataset(v,fvv.shape,fvv.dtype, chunks=True)
+                        print('except',dfile, k, v, fd[k].keys())
+                        fd[k].create_dataset(v,data=fvv, chunks=True)
                         
-                    fd[k][v][:]=fvv[:]
+                    #fd[k][v][:]=fvv[:]
                     if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
                         if v in attrs.keys():
                             for kk,vv in attrs[v].items():
@@ -1220,8 +1260,15 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                         fd[k][v].attrs['units']=numpy.bytes_('seconds since 1900-01-01 00:00:00')                            #print (  fk, ' ' , v , ' ' ,   ) 
                                 
                 else:
-                    fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
-                    fd[k][v][:]=fvv[:]
+                    #fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
+                    #fd[k][v][:]=fvv[:]
+                    if fvv.shape[0] > chunksize:                       
+                        fd[k].create_dataset(v,data=fvv,compression=comp,compression_opts=compopt,
+                                             chunks=(chunksize, fvv.shape[1]))
+                    else:
+                        fd[k].create_dataset(v,data=fvv)
+                        
+                    #fd[k][v][:]=fvv[:]
                     slen=fvv.shape[1]
                     sdict[v]=slen
                     if slen not in slist:
@@ -1251,7 +1298,8 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                         pass               
                 try:
                     
-                    fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)
+                    fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=comp,
+                                         compression_opts=compopt, chunks=(chunksize, slen))
                 except:
                     #fd[k].create_dataset(v,data=np.bytes_(fvv).view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)                    
                     pass
@@ -1262,14 +1310,19 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                         
             #variables_dic[v] = f[v].values.dtype
              
+            #print('v', time.time() - tt)
         for v in fd[k].keys(): #var_selection:
             l=0      
         
             try:
-                if type(f[v]) == pd.core.series.Series:
-                    fvv=f[v].values
+                if v in f.keys():
+                    
+                    if type(f[v]) == pd.core.series.Series:
+                        fvv=f[v].values
+                    else:
+                        fvv=f[v]
                 else:
-                    fvv=f[v]
+                    continue
                 if 'string' not in v and v!='index':                    
                     fd[k][v].dims[l].attach_scale(fd[k]['index'])
                     #print(v,fvv.ndim,type(fvv[0]))
@@ -1289,7 +1342,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                 fd[k][s].attrs[a]=numpy.bytes_('This is a netCDF dimension but not a netCDF variable.')
             
             i+=1
-        
+        #print('el', time.time() - tt)
     return
 
 
