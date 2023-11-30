@@ -128,14 +128,21 @@ class MergedFile(object):
         
         
         #cdm_tables = ['crs', 'observed_variable', 'sensor_configuration', 'station_configuration_codes', 'station_type', 'units', 'z_coordinate_type']
-        cdm_tables = ['crs', 'observed_variable', 'station_configuration_codes', 'station_type', 'units', 'z_coordinate_type'] ## TODO FIC observed_variable
-        cdm_tables = ['crs', 'station_configuration_codes', 'station_type', 'units', 'z_coordinate_type']
+        cdm_tables = ['crs', 'observed_variable', 'station_configuration_codes', 'station_type', 'units', 'z_coordinate_type']
         
         h5py_file = h5py.File(self.file, 'r+')
 
         data['h5py_file'] = h5py_file 
         data['station_id'] = self.station_id 
         
+        ### TODO CHANGE
+        #data['recordtimestamp']               = xr.open_dataset (self.file, engine = 'h5netcdf' , decode_times = False )['recordtimestamp']
+        #data['recordtimestampdecoded'] = xr.open_dataset (self.file, engine = 'h5netcdf' , decode_times = True )['recordtimestamp'].values
+        
+        ''' # before years splitting version
+        data['recordindex']         = xr.open_dataset (self.file, engine = 'h5netcdf' , decode_times = False )['recordindex'].values
+        data['dateindex']            = h5py_file['dateindex']
+        '''
         
         recordtimestamp, indices = np.unique(h5py_file['observations_table']['date_time'], return_index=True )
 
@@ -143,9 +150,7 @@ class MergedFile(object):
         data['recordindex']  = indices
         data['recordtimestampdecoded'] = pd.to_datetime( recordtimestamp ,  unit='s',  origin=pd.Timestamp('1900-01-01') ) 
         
-        
-        
-         
+
         #data['sensor_id'] = h5py_file['observations_table']['sensor_id']
         data['length_max'] = len(h5py_file['observations_table']['date_time'] )
 
@@ -157,27 +162,6 @@ class MergedFile(object):
             table.close()
             
         self.data = data 
-    
-    
-    def load_obstab_era5fb(self, era5fb=False, obs_tab=True):
-        """ Loading era5fb and observations_table if necessary """
-
-        if obs_tab:
-            obs_tab = xr.open_dataset (self.file, engine = 'h5netcdf'      , group = 'observations_table', decode_times = True )
-            #obs_tab_vars = ['z_coordinate_type' , 'z_coordinate' , 'observation_value' , 'observed_variable', 'date_time', 'sensor_id']
-            self.data['obs_tab'] = obs_tab
-            attr_dic = self.retrieve_attributes(obs_tab)
-            self.attr_dic = attr_dic 
-            
-            self.fixed_columns            = ['observed_variable' , 'observation_value', 'z_coordinate' , 'z_coordinate_type', 'secondary_value' , 'value_significance' , 'original_precision', 'date_time'] # to be defined explicitly                     
-            self.unavailable_columns = ['observation_id' , 'report_id' , 'source_id'] 
-            self.other_columns           = [c for c in self.data['obs_tab'].keys() if c not in self.fixed_columns and c not in self.unavailable_columns] # to be calculated by averaging 
-            
-        if era5fb:
-            #era5fb_tab = xr.open_dataset (file, engine = 'h5netcdf' , group = 'era5fb', decode_times = True ,  drop_variables=None ) # biascorr@body ,  biascorr_fg@body 
-            era5fb_tab = xr.open_dataset (self.file, engine = 'h5netcdf' , group = 'era5fb', decode_times = True )
-            
-            self.data['era5fb'] = era5fb_tab
 
     
     def write_summary(self, what = '', done = False):
@@ -265,7 +249,7 @@ class Sensor(MergedFile):
         
         def make_wmo_dates(wmo):
             """ Build dates for the wmo df.
-            Corresponds to the starting date of the validity of the sensor id from era5 fb. """
+            Corresponds to the starting date of the validity of the sensor id taken from the era5 fb. """
             
             dates_n = []
             for d in wmo.date.values:
@@ -303,8 +287,10 @@ class Sensor(MergedFile):
         sensor_conf.to_csv('sensor_configuration_all.csv', sep = '\t')
         self.cdm = cdm # saving the tables
         self.wmo = wmo # (converted to CDM convention )
+
         
     def write_sensorconfig(self):
+        
         cdmd = self.cdm_tabdef
         cdm = self.cdm
         
@@ -347,7 +333,7 @@ class Sensor(MergedFile):
         try:
             station_id = int(self.data['station_id'])
         except:
-            station_id = 99999999 # dummy station id that does not exist in Schroeder's table
+            station_id = 99999999 # dummy station id whcih does not exist in Schroeder's table
         # select the data from the Schroeder's DF for this station_id
         
         sch_df = self.cdm['metadata_schroeder']
@@ -540,7 +526,7 @@ class Sensor(MergedFile):
             return era5_sensors
         
         ### only use ERA5:
-        # dump the whole content as sensor_id from ERA5, before correcitng the ids from the WMO table witht he correct date update
+        # dump the whole content as sensor_id from ERA5, before correcting the ids from the WMO table witht he correct date update
         if index_add_era5 == 0:
             sensor_list_combined = update_wmo(self.wmo_sensor_update, 
                                               self.data['h5py_file']['era5fb']['sonde_type@conv'][:].astype(int).astype('|S4'),
@@ -600,7 +586,7 @@ class Sensor(MergedFile):
             
     def run(self):
 
-        if self.copy: # if Ttue, then I create a copy of the file before adding the sensor id to avoid possible corruptions of the merged file
+        if self.copy: # if True, then I create a copy of the file before adding the sensor id to avoid possible corruptions of the merged file
             os.system('cp  ' + self.MergedFile.file + '   ' +  self.MergedFile.file.replace('.nc', '_beforeSensor.nc') )
             
         cdm_tables = self.load_cdm_tables()      

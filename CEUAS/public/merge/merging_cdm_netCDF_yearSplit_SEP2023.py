@@ -43,7 +43,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
 
-from add_sensor_to_merged import Sensor, datetime_toseconds, wrapper, MergedFile
+from add_sensor_to_merged_OCT2023 import Sensor, datetime_toseconds, wrapper, MergedFile
 from harvest_convert_to_netCDF_yearSplit import write_dict_h5, clean_station_configuration 
 
 # nan int = -2147483648 
@@ -115,7 +115,7 @@ data = {}
 class Merger():
     """ Main class for the merging of the data from different netCDF files. """
 
-    def __init__(self, out_dir = 'output'  ):
+    def __init__(self, add_sensor = '',  out_dir = 'output'  ):
         """ Define the attributes (some will be defined in other parts of the code) . 
         Attr :: 
                 self.data : read the dictionary mapping the dataset and the netCDF cdm file for each observation station  
@@ -361,8 +361,6 @@ class Merger():
                 # df_check = pd.DataFrame( {'ts':timestamps , 'inf': indices_inf, 'sup':indices_sup } ) 
                 
                 for ts,inf,sup, index in zip(timestamps, indices_inf, indices_sup, range(len(timestamps)) ) :
-                    if ts == 3755328319:
-                        a = 0
                     if ts not in all_timestamps_dic.keys():
                         all_timestamps_dic[ts] = {}
                     if ds not in all_timestamps_dic[ts].keys():
@@ -432,7 +430,9 @@ class Merger():
 
         return unique_ts, duplicated_ts    
     
-        
+
+    
+    
     def extract_record_data(self, dt, ds, file ):
         
         """ Extracting the length of the temp and wind valid observations, and the maximum height (or min pressure) 
@@ -448,16 +448,29 @@ class Merger():
         
         ot = h5_file['observations_table']
         
-        # indices where data is in pressure level 
-        pressure_ind = np.where(ot['z_coordinate_type'][ind_min:ind_max] == 1 )[0] #
-
-        ### TO DO HEREEEE HERE TODO
+        ### Data on Pressure 
+        pressure_ind = np.where(ot['z_coordinate_type'][ind_min:ind_max] == 1 )[0] #        
+        ### Data on Height 
+        height_ind = np.where(ot['z_coordinate_type'][ind_min:ind_max] == 0 )[0] #   
         
-        temp_ind = np.where(ot['observed_variable'][ind_min:ind_max] == 126)[0] # temperature
-        wind_ind = np.where(ot['observed_variable'][ind_min:ind_max]  == 107)[0] # wind speed 
-        gph_ind = np.where(ot['observed_variable'][ind_min:ind_max]  == 117)[0] # geopotential 
+        if len(pressure_ind) >0:
+            z_ind = pressure_ind
+            z = 'pressure'
+        else:
+            z_ind = height_ind
+            z= 'height'
 
-        ### devi mettere un intersect fra le zcocoridnate =1 e gli indici della variabile o P e altezza si mescolano 
+
+        # subset of indices with pressure / height 
+        temp_ind = np.where(ot['observed_variable'][ind_min:ind_max] == 126)[0] # temperature
+        temp_ind = [i for i in temp_ind if i in z_ind ]
+        
+        wind_ind = np.where(ot['observed_variable'][ind_min:ind_max]  == 107)[0] # wind speed 
+        wind_ind = [i for i in wind_ind if i in z_ind ]
+        
+        gph_ind = np.where(ot['observed_variable'][ind_min:ind_max]  == 117)[0] # geopotential 
+        gph_ind = [i for i in gph_ind if i in z_ind ]
+
         
         # length of valid data for temp and wind 
         temp_values = ot['observation_value'][ind_min:ind_max][temp_ind]
@@ -467,10 +480,10 @@ class Merger():
         num_valid_wind = len(np.unique(wind_values[~np.isnan(wind_values)]))
         
         values_dict = {'temp' :  temp_values , 
-                                'temp_pressure' : ot['z_coordinate'][ind_min:ind_max][temp_ind] ,
-                                
+                                'temp_z' : ot['z_coordinate'][ind_min:ind_max][temp_ind] ,
+                                'z_type' : z ,
                                 'wspeed' : wind_values , 
-                                'wind_pressure':  ot['z_coordinate'][ind_min:ind_max][wind_ind] } 
+                                'wind_z':  ot['z_coordinate'][ind_min:ind_max][wind_ind] } 
         
         self.observed_ts_values[file] = values_dict
         
@@ -478,36 +491,30 @@ class Merger():
         #press_temp_ind = ot['z_coordinate'][ind_min:ind_max][temp_ind]
         #press_wind_ind = ot['z_coordinate'][ind_min:ind_max][wind_ind]
         
-        if len(gph_ind) > 0:
-            max_gph = max( ot['observation_value'][ind_min:ind_max][gph_ind] )
-        else:
-            max_gph = -999999
             
         if len(temp_ind) >0:
-            min_press_temp = min( ot['z_coordinate'][ind_min:ind_max][temp_ind] )  
-            max_press_temp =  max( ot['z_coordinate'][ind_min:ind_max][temp_ind] ) 
+            min_temp = min( ot['z_coordinate'][ind_min:ind_max][temp_ind] )  
+            max_temp =  max( ot['z_coordinate'][ind_min:ind_max][temp_ind] ) 
         else:
-            min_press_temp, max_press_temp = 999999, -999999 
+            min_temp, max_temp = 999999, -999999 
             
         if len(wind_ind) >0:
-            min_press_wind =  min( ot['z_coordinate'][ind_min:ind_max][wind_ind] ) 
-            max_press_wind =  max( ot['z_coordinate'][ind_min:ind_max][wind_ind] )
+            min_wind =  min( ot['z_coordinate'][ind_min:ind_max][wind_ind] ) 
+            max_wind =  max( ot['z_coordinate'][ind_min:ind_max][wind_ind] )
             
         else:
-            min_press_wind, max_press_wind = 999999, -999999        
+            min_wind, max_wind = 999999, -999999        
 
-        
+
+        ### min, MAX pressure
         if len(pressure_ind) >0:
             max_pressure = max( ot['z_coordinate'][ind_min:ind_max][pressure_ind] )
             min_pressure = min( ot['z_coordinate'][ind_min:ind_max][pressure_ind] )
-            
         else:
             max_pressure = -999999
             min_pressure = 999999
             
-            
-        ### Data on Height 
-        height_ind = np.where(ot['z_coordinate_type'][ind_min:ind_max] == 0 )[0] #        
+        ### min, MAX height
         if len(height_ind) >0:
             max_height = max( ot['z_coordinate'][ind_min:ind_max][height_ind] )
             min_height = min( ot['z_coordinate'][ind_min:ind_max][height_ind] )
@@ -524,103 +531,11 @@ class Merger():
             max_gph = -999999                    
             min_gph = 999999
             
-        return [num_valid_temp, num_valid_wind], [min_press_temp, min_press_wind, max_press_temp, max_press_wind], [min_pressure, min_gph, min_height], [max_pressure, max_gph, max_height]
+        return [num_valid_temp, num_valid_wind], [min_temp, min_wind, max_temp, max_wind], [min_pressure, min_gph, min_height], [max_pressure, max_gph, max_height]
     
     
-    
-    
-    def plot_profile(self, all_times, real_time = '', best_file=''):
-        """ Create a simple plot of the temperature and wind profile for a specific timestamp (including the duplicated possibilities).
-        Save a png file with matplolib and an interactive HTML file from plotly """
         
-        # output directory 
-        plot_dir = self.out_dir + '/' + self.station + '/merging_plots/' 
-        if not os.path.isdir(plot_dir):
-            os.makedirs(plot_dir) 
-            
-        ### MATPLOTLIB
-        
-        '''
-        fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(15,8))
-        
-        for dt in all_times:
-            dic_dataset = self.all_timestamps_dic[dt] 
-            ds = [d for d in dic_dataset if 'data' not in d and 'record' not in d ]
-            
-            all_files = []
-            for d in ds:
-                all_files.extend ( list(dic_dataset[d].keys()) ) 
-                
-            date = pd.to_datetime( dt, unit='s',  origin=pd.Timestamp('1900-01-01') )
-            data= self.observed_ts_values
-                
-            for file in list(all_files):
-                label = str(date) + ' / ' + file.split('/')[-1]
-                if file == best_file:
-                    s = 4
-                    label = 'BEST ' + label
-                else:
-                    s = 2
-                try:
-                    ax[0].plot(  data[file]['temp']     , data[file]['temp_pressure'] , label = label + '  [' + str(min(data[file]['temp_pressure'] ) ) + ']' , lw=s ) #row=0, col=0
-                except:
-                    pass
-                try:
-                    ax[1].plot(  data[file]['wspeed'] , data[file]['wind_pressure'] , label = label + '  [' + str(min(data[file]['wind_pressure'] ) ) + ']' , lw=s ) #row=0, col=0
-                except:
-                    pass
-        ax[0].grid(color='lightgray' , ls=':')
-        ax[1].grid(color='lightgray' , ls=':')        
-        ax[0].legend(fontsize=8)
-        ax[1].legend(fontsize=8)
     
-        #plt.show()
-
-        #plt.savefig(plot_dir + str(date) + '_profiles.png' , dpi=150)
-        #plt.close()
-        '''
-        
-        ### PLOTLY
-        import plotly.graph_objects as go
-        fig_t = go.Figure()   
-        fig_w = go.Figure()
-        
-        for dt in all_times:
-            dic_dataset = self.all_timestamps_dic[dt] 
-            ds = [d for d in dic_dataset if 'data' not in d and 'record' not in d ]
-            
-            all_files = []
-            for d in ds:
-                all_files.extend ( list(dic_dataset[d].keys()) ) 
-                
-            date = pd.to_datetime( dt, unit='s',  origin=pd.Timestamp('1900-01-01') )
-            data= self.observed_ts_values
-                
-            for file in list(all_files):
-                label = str(date) + ' / ' + file.split('/')[-1]
-                if file == best_file:
-                    label = 'BEST ' + label
-                    
-                fig_t.add_trace(go.Scatter(x=data[file]['temp'] , y=data[file]['temp_pressure'],
-                                    mode='lines',
-                                    name=label,
-                                    ))
-                
-                fig_w.add_trace(go.Scatter(x=data[file]['wspeed'] , y=data[file]['wind_pressure'],
-                                    mode='lines',
-                                    name=label ))
-                
-    
-        for f, v, title in zip( [fig_w, fig_t] , ['wind' , 'temp'], ['Wind Speed' , 'Temperature']) :      
-            f.update_layout( yaxis = dict(autorange="reversed"),
-                             title= title + ' ' + str(date),
-                             width=1500,
-                             height=1500,                             
-                             )
-            f.update_yaxes(tickformat="f")
-            f.write_html(self.out_dir + '/' + self.station + '/merging_plots/' + str(date).replace(' ','--') + '_' + v + '_profiles.html')
-            
-        plt.close()
         
  
     def plot_profile_extended(self, all_times, real_time = '', best_file=''):
@@ -654,11 +569,11 @@ class Merger():
                 else:
                     s = 2
                 try:
-                    ax[0].plot(  data[file]['temp']     , data[file]['temp_pressure'] , label = label + '  [' + str(min(data[file]['temp_pressure'] ) ) + ']' , lw=s ) #row=0, col=0
+                    ax[0].plot(  data[file]['temp']     , data[file]['temp_z'] , label = label + '  [' + str(min(data[file]['temp_z'] ) ) + ']' , lw=s ) #row=0, col=0
                 except:
                     pass
                 try:
-                    ax[1].plot(  data[file]['wspeed'] , data[file]['wind_pressure'] , label = label + '  [' + str(min(data[file]['wind_pressure'] ) ) + ']' , lw=s ) #row=0, col=0
+                    ax[1].plot(  data[file]['wspeed'] , data[file]['wind_z'] , label = label + '  [' + str(min(data[file]['wind_z'] ) ) + ']' , lw=s ) #row=0, col=0
                 except:
                     pass
         ax[0].grid(color='lightgray' , ls=':')
@@ -714,13 +629,13 @@ class Merger():
                 else:
                     label_v = label
                     
-                fig.add_trace(go.Scatter(x=data[file]['temp'] , y=data[file]['temp_pressure'],
+                fig.add_trace(go.Scatter(x=data[file]['temp'] , y=data[file]['temp_z'],
                                     mode='lines',
                                     name=label_v, ),
                                 row=1, col=1,
                                     )
                 
-                fig.add_trace(go.Scatter(x=data[file]['wspeed'] , y=data[file]['wind_pressure'],
+                fig.add_trace(go.Scatter(x=data[file]['wspeed'] , y=data[file]['wind_z'],
                                     mode='lines',
                                     name=label_v ),
                               row=1, col=2,
@@ -732,14 +647,14 @@ class Merger():
                 dic_data['Best'].append( isBest )
                 
                 try:
-                    dic_data['Min P Temp'].append(  '%.2f'%(min(data[file]['temp_pressure'] )  ) ) 
-                    dic_data['Max P Temp'].append( '%.2f'%(max(data[file]['temp_pressure'] ) ) )
+                    dic_data['Min P Temp'].append(  '%.2f'%(min(data[file]['temp_z'] )  ) ) 
+                    dic_data['Max P Temp'].append( '%.2f'%(max(data[file]['temp_z'] ) ) )
                 except:
                     dic_data['Min P Temp'].append( 'NA' ) 
                     dic_data['Max P Temp'].append( 'NA' )
                 try:
-                    dic_data['Min P Wind'].append( '%.2f'%(min(data[file]['wind_pressure']) ) )
-                    dic_data['Max P Wind'].append('%.2f'%(max(data[file]['wind_pressure']) ) )
+                    dic_data['Min P Wind'].append( '%.2f'%(min(data[file]['wind_z']) ) )
+                    dic_data['Max P Wind'].append('%.2f'%(max(data[file]['wind_z']) ) )
                 except:
                     dic_data['Min P Wind'].append( 'NA' )
                     dic_data['Max P Wind'].append( 'NA' )                    
@@ -760,7 +675,7 @@ class Merger():
                 row=1, col=3,
                            )
 
-        fig.update_layout( title= self.station + '  -  Profile for Record @ ' + str(date),
+        fig.update_layout( title= self.station + '  -  Profile for Record @ ' + str(date) + ' ' + str(dt),
                                  width=2200,
                                  height=1100,                             
                                  )
@@ -817,25 +732,21 @@ class Merger():
         ### placeholder for best data 
         extracted_best_record = {}
         
-        if ts == 3755328319:
+
+        if ts == 3760556520:
             a=0
             
         ### only one dataset available 
         if len(datasets) == 1:
             best_ds = datasets[0]
             files =  list(self.all_timestamps_dic[ts][best_ds].keys() )
-            if len(files) ==1:  ### must only loop over all files 
+            if len(files) ==1:  ### must only loop over all files   => only one dataset, only one file available easiest case 
                 best_file = files[0]
                 # [num_valid_temp, num_valid_wind], [min_press_temp, min_press_wind, max_press_temp, max_press_wind], [max_gph, max_pressure, max_height]
-                valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph  = self.extract_record_data(ts, best_ds, best_file)   
-                extracted_best_record[best_file] = [best_ds, valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph]
-                
-            else:
-                for f in files:
+            for f in files:
                     valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph  = self.extract_record_data(ts, best_ds, f)   
                     extracted_best_record[f] = [ best_ds, valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph] 
-                
-            
+
         else:  # hierarchical choices, according to datasets and files 
             ### first find best datasets, then check length of files 
             if ts < 1577836800 and  'giub' in datasets :
@@ -867,7 +778,8 @@ class Merger():
                 
             else:  # loop and determine best record 
                 
-                max_height = -1
+                max_height = -999999
+                min_height = 999999
                 min_pressure = 999999
                 max_pressure = -999999
                 best_file = ''
@@ -877,38 +789,86 @@ class Merger():
                     # [num_valid_temp, num_valid_wind], [min_press_temp, min_press_wind, max_press_temp, max_press_wind], [min_pressure, min_gph, min_height], [max_pressure, max_gph, max_height]
                     # where [dataset, valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph]
                     #current_sum = extracted_best_record[file][1][0] + extracted_best_record[file][1][1]  # [d, valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph] 
-                    current_max_height = extracted_best_record[file][4][1]
+                    current_min_height = extracted_best_record[file][3][2]                    
+                    current_max_height = extracted_best_record[file][4][2]
+                    
                     current_min_pressure = extracted_best_record[file][3][0]
                     current_max_pressure = extracted_best_record[file][4][0]
+                    
                     current_ds =  extracted_best_record[file][0]
                     current_file = file 
                     
-                    if  current_min_pressure < min_pressure or current_max_pressure > max_pressure :  # current pressure is lower than previous OR max pressure higher than previous
-                        best_file = current_file
-                        best_ds = current_ds
-                        min_pressure = current_min_pressure
-                        max_pressure = current_max_pressure
-                                                
-                    else:
+                    
+                    more_data = bool(current_min_pressure < min_pressure or current_max_pressure> max_pressure or  current_max_height > max_height or current_min_height < min_height) # boolean variable for more available data 
+                    
+                    if  more_data :  # current pressure is lower than previous OR max pressure higher than previous
                         
-                        if current_ds in ['era5_1' , 'era5_2' , 'era5_1_mobile' , 'era5_2_mobile']:
-                            best_file = current_file
-                            best_ds = current_ds
-                            min_pressure = current_min_pressure    
+                        max_dist_level = max ( abs(current_min_pressure-min_pressure) , abs(current_max_pressure-max_pressure) , abs(current_max_height-max_height) , abs(current_min_height- min_height) )
+    
+                        if max_dist_level < 10: # very little difference (pascal or meters) 
                             
-                        elif current_ds == 'igra2' and best_ds not in ['era5_1' , 'era5_2' , 'era5_1_mobile' , 'era5_2_mobile']:
-                            best_file = current_file
-                            best_ds = 'igra2'
-                            min_pressure = current_min_pressure                                
-                            
-                        else:
-                            if best_ds in  ['era5_1' , 'era5_2' , 'era5_1_mobile' , 'era5_2_mobile', 'igra2']:
+                            if best_ds in era5_ds:  # preference to era5 
                                 continue
                             
                             else:
+                                if current_ds in era5_ds or current_ds == 'igra2':  # preference to era5 or igra2 
+                                    best_file = current_file
+                                    best_ds = current_ds
+                                    min_pressure = current_min_pressure
+                                    max_pressure = current_max_pressure        
+                                    min_height = current_min_height
+                                    max_height = current_max_height
+                                    
+                                else:
+                                    if current_ds == 'ncar' and best_ds:  # discard ncar as much as possible 
+                                        continue
+                                    
+                                    else:
+                                        best_file = current_file
+                                        best_ds = current_ds
+                                        min_pressure = current_min_pressure
+                                        max_pressure = current_max_pressure                                           
+                                        min_height = current_min_height
+                                        max_height = current_max_height                                            
+                                                
+                        elif max_dist_level >= 10: # significantly more data
+                            best_file = current_file
+                            best_ds = current_ds
+                            min_pressure = current_min_pressure
+                            max_pressure = current_max_pressure   
+                            min_height = current_min_height
+                            max_height = current_max_height                            
+                            
+                    else:
+                        if current_ds in era5_ds:  # preference to era5  
+                            best_file = current_file
+                            best_ds = current_ds
+                            min_pressure = current_min_pressure
+                            max_pressure = current_max_pressure    
+                            min_height = current_min_height
+                            max_height = current_max_height
+                            
+                        elif current_ds == 'igra2' and best_ds in era5_ds: # preference to era5
+                            continue
+                        
+                        elif current_ds == 'igra2' and best_ds not in era5_ds:  # preference to igra if era5 not available
+                            best_file = current_file
+                            best_ds = current_ds
+                            min_pressure = current_min_pressure
+                            max_pressure = current_max_pressure         
+                            min_height = current_min_height
+                            max_height = current_max_height
+
+                        else:
+                            if current_ds == 'ncar' and best_ds and best_ds != 'ncar':  # discard ncar as much as possible 
+                                        continue
+                            else:
                                 best_file = current_file
-                                best_ds = current_ds 
-                                min_pressure = current_min_pressure                                      
+                                best_ds = current_ds
+                                min_pressure = current_min_pressure
+                                max_pressure = current_max_pressure   
+                                min_height = current_min_height
+                                max_height = current_max_height                                
                      
                         
                         
@@ -924,8 +884,8 @@ class Merger():
         #if best_ds == 'bufr':
         #    a = 0 
             
-        self.all_timestamps_dic[ts]['extract_record_data'] =  extracted_best_record[best_file]
-        self.all_timestamps_dic[ts]['extract_record_data_all'] =  extracted_best_record
+        self.all_timestamps_dic[ts]['extract_record_data'] = extracted_best_record[best_file]
+        self.all_timestamps_dic[ts]['extract_record_data_all'] = extracted_best_record
         self.all_timestamps_dic[ts]['best_record'] = [ best_ds , best_file ]
         
         #dummy = self.plot_profile(ts)
@@ -958,13 +918,17 @@ class Merger():
             
         ### TO DO
         all_timestamps = [ f for f in all_timestamps if f != self.last_timestamp ] # TODO it has to do with the duplicate check from previous year! see Lindenberg dt=1988060400 (1962-1963)
-        
-        
+        all_era5 = ['era5_1', 'era5_1_mobile' , 'era5_2' , 'era5_2_mobile'] 
+
         for dt,index in zip( all_timestamps, range(len(all_timestamps)) ) :
-            if dt == 3755328319:
-                a = 0
-            # already processed timestamp 
             
+            if dt == 3760556520:
+                a = 0
+            if dt == 3760560000:
+                a = 0
+            if dt == 1704078000:
+                a=0
+                
             self.observed_ts_values = {} # restore empty dic 
             
             if dt in processed_timestamps[-5:]:   # all timestamps are sorted so should not check the entire list 
@@ -972,7 +936,6 @@ class Merger():
 
             if dt in unique_ts: # no time duplicate detected, apply standard merging procedure 
                 real_time = dt 
-                duplicated_time = dt 
                 all_times = [dt] # used for plotting 
                 
                 best_ds, best_file, policy = self.find_best_record(dt)
@@ -988,97 +951,123 @@ class Merger():
                     print('Check inconsistency with dt , might be due to merging of different years ')
                     continue
                 # apply hierarchical selection 
+                
+                duplicates_dic={}
                 for t in possible_duplicates:
                     
-                    duplicate_data = {}
+                    #duplicate_data = {}  # becomign unecessary 
                     
-                    if len(possible_duplicates) >2: ### here: must decide which two to compare 
-                        for ddt in possible_duplicates:
+                    if len(possible_duplicates) >=2: ### (should always be true...)
+                     
+                        for dt in possible_duplicates:
+                            best_ds_low, best_file_low, policy    = self.find_best_record(dt)   
+                            duplicates_dic[dt] = [best_ds_low, best_file_low, policy]  # must extract data also for non selected dt to make plots 
                             
-                            best_ds, best_file, policy = self.find_best_record(ddt)
-                            if best_ds == 'ncar':
-                                continue
                             
-                            duplicate_data[ddt] = [ best_ds, best_file, policy ]
-                            
-                        low_ts = min( duplicate_data.keys() ) 
-                        high_ts = max( duplicate_data.keys() )       
-                        
-                    else:
                         low_ts, high_ts = min( possible_duplicates ) , max( possible_duplicates )   
+                            
+                            
+                        #datasets_low = list(self.all_timestamps_dic[low_ts].keys() ) 
+                        best_ds_low, best_file_low, policy    =   duplicates_dic[low_ts][0] , duplicates_dic[low_ts][1]  , duplicates_dic[low_ts][2] 
+                        best_ds_high, best_file_high, policy =   duplicates_dic[high_ts][0] , duplicates_dic[high_ts][1]  , duplicates_dic[high_ts][2] 
+               
+                        ### [ best_ds, valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph ]
+                        ### example: 
+                        ### self.all_timestamps_dic[low_ts]['extract_record_data'] = ['igra2', [0, 2], [1961.33, 1961.33, 3432.3274, 3432.3274], [999999, 1961.33, 999999], [0, 3432.3274, 0]]
                         
-                        best_ds, best_file, policy = self.find_best_record(low_ts)                        
-                        duplicate_data[low_ts] = [ best_ds, best_file, policy ]
-
-                        best_ds, best_file, policy = self.find_best_record(high_ts)                                                
-                        duplicate_data[high_ts] = [ best_ds, best_file, policy ]
+                        #1. check total temp+wind record length
+                        l_low =  self.all_timestamps_dic[low_ts]['extract_record_data'][1][0] + self.all_timestamps_dic[low_ts]['extract_record_data'][1][0]
+                        l_high =  self.all_timestamps_dic[high_ts]['extract_record_data'][1][0] + self.all_timestamps_dic[high_ts]['extract_record_data'][1][0]
                         
-                    
-                    #datasets_low = list(self.all_timestamps_dic[low_ts].keys() ) 
-                    best_ds_low, best_file_low, policy = duplicate_data[low_ts]
-                    best_ds_high, best_file_high, policy = duplicate_data[high_ts]
-                    
-                    
-                    ### later timestamp
-                    #high_ts = possible_duplicates[1]
-                    #datasets_high = list(self.all_timestamps_dic[high_ts].keys() ) 
-                    #best_ds_high, best_file_high, policy = self.find_best_record(high_ts)
-                    
+                        min_p_low =  self.all_timestamps_dic[low_ts]['extract_record_data'][3][0] # minimum pressure
+                        min_p_high = self.all_timestamps_dic[high_ts]['extract_record_data'][3][0]
+                        
+                        max_p_low =  self.all_timestamps_dic[low_ts]['extract_record_data'][4][0] # maximum pressure
+                        max_p_high = self.all_timestamps_dic[high_ts]['extract_record_data'][4][0]
+                        
+                        max_h_low =  self.all_timestamps_dic[low_ts]['extract_record_data'][4][1] # maximum height
+                        max_h_high = self.all_timestamps_dic[high_ts]['extract_record_data'][4][1]
+                        
+                        
+                        if max ( abs(min_p_low - min_p_high) ,  (max_p_low - max_p_high) ) < 10:  # small negligible difference, get ERA5 over IGRA over rest
+                            
+                            if best_ds_low in all_era5 and best_ds_high not in all_era5:
+                                best_ds = best_ds_low
+                                best_file = best_file_low
+                                real_time = low_ts
+                                
+                            elif best_ds_high in all_era5 and best_ds_low not in all_era5:
+                                best_ds = best_ds_high
+                                best_file = best_file_high                                  
+                                real_time = high_ts
+                                
+                            elif best_ds_high == 'igra2':
+                                best_ds = best_ds_high
+                                best_file = best_file_high                                  
+                                real_time = high_ts            
+                            
+                            elif best_ds_low == 'igra2':
+                                best_ds = best_ds_low
+                                best_file = best_file_low
+                                real_time = low_ts      
+                                
+                            elif best_ds_low in all_era5 and best_ds_high in all_era5: # take longest records within era5
+                                
+                                if ( l_low >= l_high ):
+                                    best_ds = best_ds_low
+                                    best_file = best_file_low
+                                    real_time = low_ts
+                                else:
+                                    best_ds = best_ds_high
+                                    best_file = best_file_high                        
+                                    real_time = high_ts                                
+                                
+                        else:
+                            # selecting best ds by number of records 
+                            if ( l_low >= l_high ):
+                                best_ds = best_ds_low
+                                best_file = best_file_low
+                                real_time = low_ts
+                            else:
+                                best_ds = best_ds_high
+                                best_file = best_file_high                        
+                                real_time = high_ts
+                            # selecting best ds by lowest pressure          
+                            if abs(min_p_low-min_p_high) <10:
+                                continue
+                            else:
+                                if min_p_low < min_p_high:
+                                    best_ds = best_ds_low
+                                    best_file = best_file_low   
+                                    real_time = low_ts
+                                else:
+                                    best_ds = best_ds_high
+                                    best_file = best_file_high                                  
+                                    real_time = high_ts
+                            # selecting best ds by highest height   
+                            if abs(max_h_low-max_h_high) <10:
+                                continue
+                            else:
+                                if  max_h_low > max_h_high: # current pressure higher than previous (pressure and height should go together)
+                                    best_ds = best_ds_low
+                                    best_file = best_file_low    
+                                    real_time = low_ts
+                                else:
+                                    best_ds = best_ds_high
+                                    best_file = best_file_high                           
+                                    real_time = high_ts
                                         
-                    ### valid_t_w, min_t_w_max_t_w, min_p_h_gph, max_p_h_gph
-                    ### example: 
-                    ### self.all_timestamps_dic[low_ts]['extract_record_data'] = ['igra2', [0, 2], [1961.33, 1961.33, 3432.3274, 3432.3274], [999999, 1961.33, 999999], [0, 3432.3274, 0]]
-                    
-                    #1. check total temp+wind record length
-                    l_low =  self.all_timestamps_dic[low_ts]['extract_record_data'][1][0] + self.all_timestamps_dic[low_ts]['extract_record_data'][1][0]
-                    l_high =  self.all_timestamps_dic[high_ts]['extract_record_data'][1][0] + self.all_timestamps_dic[high_ts]['extract_record_data'][1][0]
-                    
-                    min_p_low =  self.all_timestamps_dic[low_ts]['extract_record_data'][3][0] # minimum pressure
-                    min_p_high = self.all_timestamps_dic[high_ts]['extract_record_data'][3][0]
-                    
-                    max_h_low =  self.all_timestamps_dic[low_ts]['extract_record_data'][4][1] # maximum height
-                    max_h_high = self.all_timestamps_dic[high_ts]['extract_record_data'][4][1]
-                    
-                    # selecting best ds by number of records 
-                    if ( l_low > l_high ):
-                        best_ds = best_ds_low
-                        best_file = best_file_low
-                        real_time = low_ts
-                    else:
-                        best_ds = best_ds_high
-                        best_file = best_file_high                        
-                        real_time = high_ts
-                    
-                    # selecting best ds by lowest pressure                      
-                    if min_p_low < min_p_high:
-                        best_ds = best_ds_low
-                        best_file = best_file_low   
-                        real_time = low_ts
-                        
-                    else:
-                        best_ds = best_ds_high
-                        best_file = best_file_high                                  
-                        real_time = high_ts
-
-                    # selecting best ds by highest height            
-                    if  max_h_low > max_h_high: # current pressure higher than previous (pressure and height should go together)
-                        best_ds = best_ds_low
-                        best_file = best_file_low    
-                        real_time = low_ts
-                    
-                    else:
-                        best_ds = best_ds_high
-                        best_file = best_file_high                           
-                        real_time = high_ts
                                         
-                    duplicated_time = [t for t in possible_duplicates if t != real_time ][0]
-                    all_times = possible_duplicates
-
+                duplicated_time = [t for t in possible_duplicates if t != real_time ][0]
+                all_times = possible_duplicates
                     
-                    processed_timestamps.append(low_ts)
-                    processed_timestamps.append(high_ts)
+                    
+            processed_timestamps.extend(all_times)
 
             ### Producing check plots 
+            if int(self.current_year) > 2004 and  int(self.current_year) < 2011 and  index % 50 == 0 :
+                dummy = self.plot_profile_extended(all_times, real_time = real_time, best_file= best_file )
+                
             if int(self.current_year) < 1950 and  index % 50 == 0:
                 dummy = self.plot_profile_extended(all_times, real_time = real_time, best_file= best_file )
             else:
@@ -1095,7 +1084,7 @@ class Merger():
             all_combined_timestamps[real_time]['all_duplicated_files'] = 0
             all_combined_timestamps[real_time]['all_duplicated_records'] = 0
             all_combined_timestamps[real_time]['real_time'] = real_time
-            all_combined_timestamps[real_time]['duplicated_time'] = duplicated_time
+            all_combined_timestamps[real_time]['duplicated_time'] = all_times
             
         self.last_timestamp = dt # last timestamp updated in the loop 
         self.merged_timestamp = all_combined_timestamps
@@ -1128,9 +1117,8 @@ class Merger():
         #for this_year in self.all_years:   # loop over all available years in the date_times
         data_all_years = self.extract_file_per_year()
         all_years = list(data_all_years.keys() )
-
-        #all_years = [y for y in all_years if int(y) > 2018]  ### TO DO TODO HERE
         
+        all_years = [y for y in all_years if int(y) > 1950  ]  ### TO DO TODO HERE
         
         for this_year in all_years:   # loop over all available years in the date_times 
             print('=== Running year ::: ' , this_year )
@@ -1174,28 +1162,16 @@ class Merger():
             
             a = 'HERE'  # TO DO HERE
         
-            """
-            ### WRITING STATION CONFIGURATION TABLE 
-            #for d in self.statconf_columns:
-            for d in self.statconf_columns:
-                try:
-                    data = self.make_statconf_var(tab='station_configuration', var=d)
-                    self.write_merged_new(var = d, table = 'station_configuration', data=data )    
-                    #print('done with station_configuration variable ' , d )
-                except:
-                    pass
-                    #print('wrong variable ' , d )
-            
             ### Adding sensor_id to observations_table 
             if self.add_sensor:
-                print('*** Adding sensor *** ')            
-                add_sensor = wrapper(out_dir = self.out_dir , station_id = self.station.split('-')[-1] , file = self.out_name , copy = self.copy )
+                print('*** Adding sensor *** ')        
+                                
+                add_sensor = wrapper(out_dir = self.out_dir , station_id = self.station.split('-')[-1] , file = self.out_file , copy = self.copy )
                 print('*** Added sensor *** ')
             else:
                 pass
             
 
-        """
 
     def initialize_out_file(self):
         """ Create output directory, initialize out file """
@@ -1404,7 +1380,7 @@ class Merger():
         
         for ts in all_ts :  ### TO DO might reuce the double loops over ths
             
-            if ts == 1893283200:
+            if ts == 3760556520:
                 a = 0 
                 
             best_file = res[ts]['best_file']
@@ -1456,8 +1432,8 @@ class Merger():
         
             for ts in all_ts :
                 
-                if ts == 1893283200:
-                    a = 0 
+                #if ts == 1893283200:
+                #    a = 0 
                     
                 best_file = res[ts]['best_file']
                 best_ds = res[ts]['best_ds']
@@ -1656,6 +1632,7 @@ class Merger():
             #logging.info('*** Finished merging, now writing the output netCDF file ***' )         
             #a = self.write_merged_file()
             #logging.info('*** Done writing the output ! ***')
+
             self.write_merging_summary()
             return True
 
@@ -1668,6 +1645,7 @@ class Merger():
                 #logging.info('*** Done writing the output ! ***')
                 self.write_merging_summary()                        
                 return True          
+            
             except MemoryError:
                 o = open("FAILED_MERGING_LIST.txt", 'a+')                          
                 print('Failed: ' , station )
@@ -1755,7 +1733,7 @@ def create_stat_summary(data_directories, stat_id):
 
 
 #from merging_yearly_parameters import harvested_base_dir, merged_out_dir, data_directories, run_exception 
-from merging_yearly_parameters import  merged_out_dir, data_directories, run_exception, POOL, pool_number
+from merging_yearly_parameters import  merged_out_dir, data_directories, run_exception, POOL, pool_number, add_sensor
 
 kind = ''
 run_mode = ''
@@ -1790,44 +1768,33 @@ if __name__ == '__main__':
     if kind == 'mobile':
         merged_out_dir = merged_out_dir + '_mobile'
         
-    Merging = Merger(merged_out_dir)
+    Merging = Merger(add_sensor=add_sensor, out_dir = merged_out_dir)
 
     run_exception = False
     print('run exception is ', run_exception )
 
     
-    # here: must create stations list 
-    # stations = ['0-20001-0-10393']  # 0-20000-0-71879 , 0-20000-0-82900
-    # stations = ['0-20001-0-11035', '0-20001-0-10393' , '0-20000-0-70219']  # 0-20000-0-71879 , 0-20000-0-82900                                                                                                                 
-    # stations = ['0-20001-0-11035']  # 0-20000-0-71879 , 0-20000-0-82900                                                                                                                 
-
-
-    """
-     for g in os.listdir('.'):
-    ...:     files = os.listdir(g)
-    ...:     for f in files:
-    ...:         if f not in a.keys():
-    ...:             a[f] = []
-    ...:         a[f].append(g)
-
-    find stations in multiple datasets in harvested directory
-    """
-    
+    ### Here: must create a list of stations 
     stations = ['0-20001-0-11035', '0-20001-0-10393' , '0-20000-0-70219']  # 0-20000-0-71879 , 0-20000-0-82900                                                                                                                 
+
     
     #POOL = False ## TODO TO DO HERE remember to set POOL = False for debugging 
     POOL = True
+
+    #stations = ['0-20000-0-70219' ]  # 0-20000-0-71879 , 0-20000-0-82900                                                                                                                 
+    stations = ['0-20001-0-11035',]  # 0-20000-0-71879 , 0-20000-0-82900                                                                                                                 
     
+    
+    if len(stations)== 1:
+        POOL = False
+        
     if POOL:
         p=Pool(pool_number)
         func=partial(run_wrapper, data_directories,  run_exception )
         dummy=p.map(func,stations)
-        
-        a=0
-        
+                
     else:
         for station in stations:
-            
             dummy=run_wrapper(data_directories, run_exception, station)
     '''
     else:

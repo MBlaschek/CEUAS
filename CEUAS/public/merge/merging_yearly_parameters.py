@@ -35,13 +35,16 @@ merged_out_dir = '/scratch/das/federico/MERGED_YEARLY_20NOV_FULL_VIENNA'
 merged_out_dir = '/scratch/das/federico/MERGED_YEARLY_20NOV_FULL_VIENNA_newplots'
 
 
-merged_out_dir = '/scratch/das/federico/MERGED_YEARLY_22NOV_FULL_checkDimensions'
+merged_out_dir = '/scratch/das/federico/MERGED_YEARLY_30NOV_FULL_SENSORS'
 
 ### Years to be merged; default: all available years 
 year = []
 
 ### Runing exception
 run_exception = False
+
+### Adding sensor id
+add_sensor = True
 
 ### Multiprocesses run
 POOL = True

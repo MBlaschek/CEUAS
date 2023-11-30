@@ -9,13 +9,13 @@ import xarray as xr
 import h5py
 from datetime import date, datetime,timedelta
 import time
+from multiprocessing import Pool
 from netCDF4 import Dataset
 import gzip
 import pandas as pd   
 pd.options.mode.chained_assignment = None
 
 import zipfile
-from multiprocessing import Pool
 from functools import partial
 from numba import njit
 import argparse
@@ -63,50 +63,6 @@ fixed_string_len = 20  # maximum allowed length of strings in header and observa
 id_string_length = 10 # maximum allowed length of strings for observation_id and report_id in header and observations_table
 
     
-    
-import socket
-print(socket.gethostname())
-
-
-    
-def save_run_configuration(out_dir):
-    """ Will create a copy of the parameters used for the run and log files """
-    
-    try:
-        os.mkdir('logs')
-    except:
-        pass
-
-    import socket
-    machine = socket.gethostname()
-    
-    import datetime
-    now = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M")
-    
-
-    if not os.path.isdir(out_dir + '/logs'):
-        os.makedirs(out_dir + '/logs')
-        
-    out = open(out_dir + '/logs/' + machine + '_harvesting_run_' + now , 'w')
-    out.write('#===== imported harvester_yearsplit_parameters.py file\n\n')
-    out.write( machine + '\n\n')
-        
-    par = open('harvester_yearsplit_parameters.py' , 'r').readlines()
-    for l in par:
-        out.write(l)
-    
-    out.close()
-    
-        
-    
-    
-    
-# savign parameters to output directory     
-try:
-    dummy = save_run_configuration(out_dir)
-except:
-    pass
-
 """ Possible variable types as listed int he CMD tables """
 okinds={'varchar (pk)':np.dtype('|S' + str(fixed_string_len) ),
                'varchar':np.dtype('|S' + str(fixed_string_len) ), 
@@ -1024,7 +980,9 @@ def read_yangjiang_csv(file='', metadata=''):
     # extracting names of columns 
     df = pd.read_csv(files[0], nrows=1)
     cols = [ c for c in list(df.columns)[0].split('\t') if c ]    
+    
 
+    
     all_df = []
     
     ### Extracting the sensor from the file name 
@@ -1115,11 +1073,7 @@ def read_yangjiang_csv(file='', metadata=''):
                 
             sd = yang_sensor_map[s]  #mapping the sensor id to Schroeder/WMO entries 
             
-            if '_y' in s:
-                df['sensor_id']  = np.full(  len(df), sd.rjust(10)).astype('S'+str(id_string_length )  ) 
-            else:
-                df['sensor_id']  = np.full(  len(df), sd.rjust(3)).astype('S'+str(id_string_length )  ) 
-                
+            df['sensor_id']  = np.full(  len(df), sd.rjust(10)).astype('S'+str(id_string_length )  ) 
             df['source_id']  = np.full(  len(df), 'YANGJIANG').astype('S'+str(id_string_length )  )             
             df['report_timestamp'] = ts 
             
@@ -1249,7 +1203,7 @@ def read_mauritius_csv(file=''):
         sensor = sensor_map['Meisei']
         
     elif 'vaisala' in file:
-        lat, lon = 'val' , 'val' 
+        lat, lon = 'number' , 'number' 
         relhum, temp = 'relative_humidity', 'temperature' 
         wspeed, wdir = 'wspeed' , 'wdir' 
         press, datetime = 'pressure' , 'date_time'
@@ -1267,14 +1221,17 @@ def read_mauritius_csv(file=''):
         all_data[v] = []
     # data placeholder  
     read_data = []
-    proc_dates = []  # to create report_id for VAISALA. MEISEI requires a special treatment 
+    proc_dates = []
     
     obs_id = 0
     report_id = 0 
     
     
     #for i in range(10000):  # TO DO TODO HERE     
-    for i in tqdm(range(len(df)),  miniters=int(len(df)/10000) ):    
+    for i in tqdm(range(len(df)),  miniters=int(len(df)/10000) ):
+        
+        date_time_v = df[datetime].values[i]
+
         # z_coordinate
         z_coordinate_v = df[z_coordinate].values[i]
         try:    
@@ -1284,23 +1241,19 @@ def read_mauritius_csv(file=''):
         
         # dates, timestamps 
         if 'meisei' in file:    
-            time_v = df[datetime].values[i]
             date_v = df[date].values[i]
-            
-            time = time_v.split(':')
+            time = date_time_v.split(':')
             # TODO DUMMY date for now CHECK ???
             
             year =  int(date_v[0:4]) 
             month = int(date_v[4:6])
             day = int(date_v[6:8]) 
             
-            h = int(time[0])
-            mi = int(time[1]) 
+            hour = int(time[0])
+            minute = int(time[1]) 
             sec = int(time[2])
             
-            #timestamp = pd.Timestamp(year=year, month=month, day=day , hour=hour, minute=minute, second=sec  ) 
-            timestamp = pd.Timestamp(year=year, month=month, day=day , hour=h, minute=mi, second=sec  ) 
-            #timestamp = pd.Timestamp(year=2000, month=12, day=1 , hour=12, minute=12, second=12  ) 
+            timestamp = pd.Timestamp(year=year, month=month, day=day , hour=hour, minute=minute, second=sec  ) 
             
         elif 'vaisala' in file:
             date_v = df[datetime].values[i]
@@ -1318,18 +1271,15 @@ def read_mauritius_csv(file=''):
             date_v = str(timestamp.date()).replace('-','')
  
         # lat, lon 
-        if 'vaisala' in file:
-            lat_v = -20.2972  # using values taken from MEISEI  excel file 
-            lon_v = 57.49692            
-        elif 'meisei' in file:
-            try:
-                
-                lat_v = float(df[lat].values[i])
-                lon_v = float(df[lon].values[i])
-            except:
-                lat_v =  np.nan # using values taken from MEISEI  excel file 
-                lon_v = np.nan            
-                
+        try:
+            lat_v = float(df[lat].values[i])
+            lon_v = float(df[lon].values[i])
+        except:
+            lat_v = -20.2972  # using values from MAISEI +> NEED To FIX THIS for VAISALA 
+            lon_v = 57.49692
+        # TO DO FIX CONVENTION 
+        if lon_v > 180:
+            lon_v = -180.0 + (lon_v - 180)
             
         # temp, wind speed, wind dir 
         temp_v = df[temp].values[i] # 
@@ -1358,29 +1308,14 @@ def read_mauritius_csv(file=''):
             wind_dir_v = np.nan
 
         # to remove duplicates
-        if 'vaisala' in file:
-            if timestamp not in proc_dates:
-                proc_dates.append(timestamp)
-                report_id = report_id + 1
-                
-            # only Vaisala has gph 
-            try:
-                gph_v = float(df['geopotential'].values[i]) *  9.80665
-            except:
-                gph_v = np.nan 
-        else:
-            report_id = 0
+        if timestamp not in proc_dates:
+            proc_dates.append(timestamp)
+            report_id = report_id + 1
         
-        if 'meisei' in file:
-            for value,var in zip([ temp_v, relhum_v, wind_sp_v, wind_dir_v],  [ 'temperature', 'relative_humidity', 'wind_speed', 'wind_direction' ] ):
-                obs_id = obs_id +1
-                read_data.append( ( product.rjust(20), int(obs_id), report_id,  timestamp, int(date_v), statid, lat_v, lon_v, z_coordinate_v, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), z_type) )
-                column_names = [ 'product_code', 'observation_id', 'report_id', 'report_timestamp' , 'iday', 'station_id', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body', 'obsvalue@body', 'varno@body' ,  'units', 'vertco_type@body'  ]    
-        
-        else:
-            for value,var in zip([ temp_v, relhum_v, wind_sp_v, wind_dir_v, gph_v],  [ 'temperature', 'relative_humidity', 'wind_speed', 'wind_direction' , 'gph' ] ):
-                obs_id = obs_id +1
-                read_data.append( ( product.rjust(20), int(obs_id), report_id,  timestamp, int(date_v), statid, lat_v, lon_v, z_coordinate_v, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), z_type) )      
+        for value,var in zip([ temp_v, relhum_v, wind_sp_v, wind_dir_v],  [ 'temperature', 'relative_humidity', 'wind_speed', 'wind_direction' ] ):
+            obs_id = obs_id +1
+            read_data.append( ( product.rjust(20), int(obs_id), report_id,  timestamp, int(date_v), statid, lat_v, lon_v, z_coordinate_v, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), z_type) )
+ 
  
     column_names = [ 'product_code', 'observation_id', 'report_id', 'report_timestamp' , 'iday', 'station_id', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body', 'obsvalue@body', 'varno@body' ,  'units', 'vertco_type@body'  ]    
 
@@ -1400,10 +1335,9 @@ def read_mauritius_csv(file=''):
     
     
     
-    # need to extract record timestamps for MEISEI
+    # need to extract record timestamps 
+    print(' === Creating record_timestamps === ')
     if 'meisei' in file:
-        print(' === Creating record_timestamps and report_id for MEISEI === ')
-        
         record_ts = []
         report_id = []
         
@@ -1428,17 +1362,15 @@ def read_mauritius_csv(file=''):
             
         df['report_id'] = np.chararray.zfill( ( np.array(report_id).astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
         df['record_timestamp'] = record_ts
-        df = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] ) 
     
     
     # Adding sensor id 
-    df['sensor_id'] = np.full(  len(df), sensor.rjust(3)).astype('S'+str(id_string_length )  ) 
-    
+    df['sensor_id'] = np.full(  len(df), sensor.rjust(10)).astype('S'+str(id_string_length )  ) 
     
     return df , statid 
 
 
-def read_mauritius_csv_digitized(direc='', sensors=''):
+def read_mauritius_csv_digitized(direc=''):
     """ Read the Mauritius intercomparison data for Vaisala and Maisei sondes 
         Args:
              file (str): path to the intercomparison file
@@ -1446,9 +1378,7 @@ def read_mauritius_csv_digitized(direc='', sensors=''):
         Returns:
              Pandas DataFrame with cdm compliant column names
     """    
-    #sensors = list( np.unique( [ s.split('_')[1].replace('.csv','') for s in os.listdir(direc +'/temp') ] ) )     
-    
-    #sensors=[]
+    sensors = list( np.unique( [ s.split('_')[1].replace('.csv','') for s in os.listdir(direc +'/temp') ] ) )     
     def make_dt(dt):
         """ Internal utility to create pd datetime objects """
         
@@ -1490,12 +1420,10 @@ def read_mauritius_csv_digitized(direc='', sensors=''):
     
     for s in sensors: 
         print('Harvesting Sensor::: ' , s)
+        files = [direc+'/hum/'+f for f in os.listdir(direc+'/hum') if s == f.split('/')[-1].split('_')[1].replace('.csv','')]
         
-        temp = [direc+'/hum/'+f for f in os.listdir(direc+'/hum')     if s == f.split('/')[-1].split('_')[1].replace('.csv','')]
-        hum =  [direc+'/temp/' + f for f in os.listdir(direc+'/temp') if s==f.split('/')[-1].split('_')[1].replace('.csv','') ]
+        files.extend( [direc+'/temp/' + f for f in os.listdir(direc+'/temp') if s==f.split('/')[-1].split('_')[1].replace('.csv','') ])
 
-        files = temp + hum 
-        a=0
         for f in tqdm(files, miniters=10):
             
             df = pd.read_csv( f, sep = ',' ).astype(str)
@@ -1528,15 +1456,14 @@ def read_mauritius_csv_digitized(direc='', sensors=''):
             #df['sensor_id'] = np.bytes_(s)
             
             ss = sensor_map[s]
-            df['sensor_id']  = np.full(  len(df), ss.rjust(3)).astype('S'+str(id_string_length )  ) 
+            df['sensor_id']  = np.full(  len(df), ss.rjust(10)).astype('S'+str(id_string_length )  ) 
             
             df['source_id']  = np.full(  len(df), 'MAURITIUS_DIGITIZED').astype('S'+str(id_string_length )  ) 
             
             #converting to fixed length bite objects 
             
             all_df.append(df)
-            
-            
+    
         
     df_res = pd.concat(all_df)
     print(np.unique(df_res.sensor_id))
@@ -2477,20 +2404,45 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
         sdict={}
         slist=[]
 
-        #groupencodings     
-        
-        for v in var_selection:          
-            #variables_dic[v] = ''
+        for v in var_selection:
+            #if v == 'sensor_id':
+            #    a = 0
+            if v in [ 'report_event1@hdr' , 'report_rdbflag@hdr' , 'datum_anflag@body', 'datum_event1@body', 'datum_rdbflag@body']:
+                continue 
             
             if type(f[v]) == pd.core.series.Series:
                 fvv=f[v].values
             else:
                 fvv=f[v]
-            if type(fvv[0]) not in [str,bytes,numpy.bytes_]:
+                
+            try:
+                if fvv.dtype ==pd.Int64Dtype(): ### TO DO 
+                        continue
+            except:
+                    pass
+            
+                        
+            if type(fvv[0]) not in [str,bytes,numpy.bytes_]:  ### HORRIBLE HANDLING of types, dtypes, strings, bytes... 
+                #print(v, '  ', type(fvv[0]) , '  ' , fvv.dtype )
+     
                 if fvv.dtype !='S1':
-                    
-                    fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
-                    fd[k][v][:]=fvv[:]
+                    #if fvv.dtype == "Int64":
+                    #    0
+                    #vtype = np.int32
+                    #else:
+                    #    vtype = fvv.dtype
+                        
+                    try:
+                        fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
+                    except:
+                        #fd[k].create_dataset(v,fvv.shape,'int32',compression=fbencodings[v]['compression'], chunks=True)  TODO CHECK
+                        fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression='gzip', chunks=True)
+                        
+                    try:
+                        fd[k][v][:]=fvv[:]
+                    except:
+                        fd[k][v][:] = np.empty( (len( fvv)) )
+                        
                     if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
                         if v in attrs.keys():
                             for kk,vv in attrs[v].items():
@@ -2499,7 +2451,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                                 else:
                                     fd[k][v].attrs[kk]=vv
                                                                 
-                    if v == 'date_time':
+                    if v in ['date_time','report_timestamp','record_timestamp']:
                         fd[k][v].attrs['units']=numpy.bytes_('seconds since 1900-01-01 00:00:00')                            #print (  fk, ' ' , v , ' ' ,   ) 
                                 
                 else:
@@ -2520,61 +2472,57 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
             else:
                 sleno=len(fvv[0])
                 slen=sleno
-                #x=numpy.array(fvv,dtype='S').view('S1')
-                #slen=x.shape[0]//fvv.shape[0]
                 try:
-                    
                     slen=int(fvv.dtype.descr[0][1].split('S')[1])
-                except:  # byte string?
-                    pass
+                except:  
+                    slen=15
 
                 sdict[v]=slen
                 if slen not in slist:
                     slist.append(slen)
-                 
-                    
                     try:
                         fd[k].create_dataset( 'string{}'.format(slen),  data=string10[:slen]  )
                     except:
                         pass               
+                try:
                     
-                #x=x.reshape(fvv.shape[0],slen)
-                fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)
+                    fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)
+                except KeyError:
+                    fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression='gzip',chunks=True)
+                    
                 if v in attrs.keys():
-                    fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
+                    fd[k][v].attrs['description']     =numpy.bytes_(attrs[v]['description'])
                     fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])                
-                    
+
+                        
             #variables_dic[v] = f[v].values.dtype
              
         for v in fd[k].keys(): #var_selection:
-            l=0            
+            l=0      
+            if 'string'  in v or v== 'index' :                    
+                continue 
             try:
                 if type(f[v]) == pd.core.series.Series:
                     fvv=f[v].values
                 else:
                     fvv=f[v]
-                if 'string' not in v and v!='index':                    
-                    fd[k][v].dims[l].attach_scale(fd[k]['index'])
-                    print(v,fvv.ndim,type(fvv[0]))
-                    if fvv.ndim==2 or type(fvv[0]) in [str,bytes,numpy.bytes_]:
-                        slen=sdict[v]
-                        #slen=10
-                        fd[k][v].dims[1].attach_scale(fd[k]['string{}'.format(slen)])
+                fd[k][v].dims[l].attach_scale(fd[k]['index'])
+                #print(v,fvv.ndim,type(fvv[0]))
+                if fvv.ndim==2 or type(fvv[0]) in [str,bytes,numpy.bytes_]:
+                    slen=sdict[v]
+                    #slen=10
+                    fd[k][v].dims[1].attach_scale(fd[k]['string{}'.format(slen)])
             except:
                 pass
-            
-            
-            
-        i=4        
+
+        #i=4        
         for v in slist:
             s='string{}'.format(v)
             for a in ['NAME']:
                 fd[k][s].attrs[a]=numpy.bytes_('This is a netCDF dimension but not a netCDF variable.')
-            
-            i+=1
+            #i+=1
         
     return
-
 
 def initialize_output(fn, output_dir, station_id, dataset, year):
     """ Simple initializer for writing the output netCDF file """
@@ -2670,7 +2618,7 @@ def read_df_to_cdm(cdm, dataset, fn, metadata='' ):
     elif dataset == 'mauritius' in dataset :
         df, stations_id = read_mauritius_csv(fn)   
     elif dataset == 'mauritius_digitized':
-            df, stations_id = read_mauritius_csv_digitized(fn, sensors=metadata)   # here fn is the name of the directory containing the files for each hum/temp sensor 
+            df, stations_id = read_mauritius_csv_digitized(fn)   # here fn is the name of the directory containing the files for each hum/temp sensor 
     elif dataset =='yangjiang':
         df, stations_id = read_yangjiang_csv(fn, metadata=metadata)   # here fn is the name of the directory containing the files for each hum/temp sensor 
     else:
@@ -2764,8 +2712,7 @@ def read_df_to_cdm(cdm, dataset, fn, metadata='' ):
     df = df.dropna(subset=['obsvalue@body'] )    
     
     # sorting values 
-    if 'meisei' not in fn:
-        df = df.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] )    
+    df = df.sort_values(by = ['report_timestamp', 'vertco_reference_1@body' ] )    
     
     if dataset == 'mauritius_digitized':
         df.sensors = sensors 
@@ -2812,21 +2759,14 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
         Converts the time variables in seconds since 1900-01-01 00:00:00 """  
     di=xr.Dataset() 
 
-
     df['report_timestamp'] = datetime_toseconds( df['report_timestamp'] )  #  
-    df['record_timestamp'] = datetime_toseconds( df['record_timestamp'] ) # replacing with seconds from 1900-01-01 00:00:00 
-    
+    df['record_timestamp'] =  datetime_toseconds( df['record_timestamp'] ) # replacing with seconds from 1900-01-01 00:00:00 
 
     indices, day, counts = make_datetime_indices( df['iday'].values )   #only date information
     di['dateindex']  = ( { 'dateindex' :  day.shape } , indices )          
     
     # TODO CHECK HERE
-    if dataset == 'mauritius':
-        indices, date_times , counts  = make_datetime_indices( df['record_timestamp'].values ) #date_time plus indices           
-    else:
-        indices, date_times , counts  = make_datetime_indices( df['report_timestamp'].values ) #date_time plus indices           
-    
-    
+    indices, date_times , counts  = make_datetime_indices( df['report_timestamp'].values ) #date_time plus indices           
     di['recordindex']          = ( {'recordindex' : indices.shape }, indices )
     di['recordtimestamp']  = ( {'recordtimestamp' : date_times.shape }, date_times  )
 
@@ -3441,7 +3381,9 @@ def read_odb_to_cdm(output_dir, dataset, dic_obstab_attributes, fn, fns):
         #a.close()
         #print('COULD NOT FIND file ++++ ' , fn )
         return 
-        
+    
+    func=partial(read_all_odbsql_stn_withfeedback,dataset)
+    
     #fns = [ fns[0] ] # TO DO HERE TODO
     print('Reading ' + str(len(fns)) + ' ODB files ')
 
@@ -4602,6 +4544,7 @@ if __name__ == '__main__':
         cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
         clean_station_configuration(cdm_tab)              
             
+            
     ### splitting files from input string 
     Files = Files.split(',')
     
@@ -4700,11 +4643,8 @@ if __name__ == '__main__':
                             print('DONE --- ' , year )
                         else:
                             print("No ERA5 1 files for year " , year )   
-                            
                 a=open(dummy_writing, 'a+')
-                lines = a.readlines()
-                if not 'completed\n' in lines:
-                    a.write('completed\n')
+                a.write('completed\n')
                 a.close()
                 
             else:
@@ -4718,9 +4658,7 @@ if __name__ == '__main__':
                         
                     dummy_writing = write_odb_to_cdm( fbds, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File, fns, change_lat, year)
                 a=open(dummy_writing, 'a+')
-                lines = a.readlines()
-                if not 'completed\n' in lines:
-                    a.write('completed\n')                
+                a.write('completed\n')
                 a.close()                
                     
         elif 'nasa' in dataset:   
@@ -4744,19 +4682,17 @@ if __name__ == '__main__':
                 #    continue 
                 df, stat_conf_check, station_configuration_retrieved, primary_id, min_year = read_df_to_cdm(cdm_tab, dataset, datasets_path['yangjiang']+'/' + s , metadata= timestamps_df )                    
                 dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, 'yangjiang_2010_intercomparison', '2010', sensor=s) 
-                            
+                
         elif 'mauritius_digitized' in dataset:
             sensors = list( np.unique( [ s.split('_')[1].replace('.csv','') for s in os.listdir(datasets_path['mauritius_digitized'] +'/temp') ] ) )
-            #df, stat_conf_check, station_configuration_retrieved, primary_id, min_year_data = read_df_to_cdm(cdm_tab, dataset, datasets_path['mauritius_digitized'], metadata=sensors)
+            df, stat_conf_check, station_configuration_retrieved, primary_id, min_year_data = read_df_to_cdm(cdm_tab, dataset, datasets_path['mauritius_digitized'])
 
             #write combined file 
-            #dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, 'mauritius_2005_intercomparison', '2005', sensor=False) 
+            dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, 'mauritius_2005_intercomparison', '2005', sensor=False) 
             
             # write single sensor file
             for s in sensors:
-                df, stat_conf_check, station_configuration_retrieved, primary_id, min_year_data = read_df_to_cdm(cdm_tab, dataset, datasets_path['mauritius_digitized'], metadata= [s] )       
-                print(s, ' ', np.unique(df.sensor_id))
-                dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, 'mauritius_2005_intercomparison', '2005', sensor=s)   # TO DO TODO HERE 
+                dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, 'mauritius_2005_intercomparison', '2005', sensor=s) 
 
         else:
             #try:
@@ -4777,10 +4713,8 @@ if __name__ == '__main__':
                 dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File, year) 
             #except:
             a=open(dummy_writing, 'a+')
-            lines = a.readlines()
-            if not 'completed\n' in lines:
-                a.write('completed\n')
-            a.close()    
+            a.write('completed\n')
+            a.close()            
         print(' ***** Convertion of  ' , File ,  '    ' , dummy_writing , '    completed after {:5.2f} seconds! ***** '.format(time.time()-tt))   
 
 """ Examples for running 
@@ -4833,7 +4767,6 @@ NPSOUND
 SHIPSOUND (only one file)
 -f /scratch/das/federico/databases_service2/SHIPSOUND-NSIDC-0054/shipsound7696.csv -d shipsound -o COP2
 
-
 MAURITIUS original excel files from vendors 0-20000-0-61995
 -f 0-20000-0-61995/vaisala_ascents.csv  -d mauritius -o COP2 
 -f 0-20000-0-61995/meisei_ascents.csv  -d mauritius -o COP2
@@ -4842,7 +4775,9 @@ MAURITIUS digitized by Ulrich 0-20000-0-61995
 -f 0-20000-0-61995/dummy  -d mauritius_digitized -o COP2 
 
 YANGJIANG # 0-20000-0-59663 
-### /users/staff/uvoggenberger/scratch/intercomparison_2010
+/users/staff/uvoggenberger/scratch/intercomparison_2010
+-f dummy  -d yangjiang -o COP2 
+
 -f 0-20000-0-59663/dummy -d yangjiang -o COP2
 """
 
