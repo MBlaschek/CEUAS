@@ -382,7 +382,7 @@ def rttov_calc(tadata, humdata, pressdata, eradata, datedata, chan):
 
 def calc_station(statid, chum, adj = 'RISE'):
     print(statid)
-    statlist = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*' + statid + '*_CEUAS_merged_v1.nc')
+    statlist = glob.glob('/mnt/users/scratch/leo/scratch/converted_v11/long/*' + statid + '*_CEUAS_merged_v1.nc')
 
     try:
 ###
@@ -516,16 +516,16 @@ def calc_station(statid, chum, adj = 'RISE'):
             b_final.append(b)
 
         try:
-            os.makedirs("./rttov_out_hum/"+statid+"/")
+            os.makedirs("./_202312_202312/"+statid+"/")
         except:
             pass
 
         if adj == None:
-            pickle.dump( b_final, open( "rttov_out_hum/"+statid+"/"+statid+"_day_refl.p", "wb" ) )
-            pickle.dump( wholemon[:middle_index], open( "rttov_out_hum/"+statid+"/"+statid+"_day_dates.p", "wb" ) )
+            pickle.dump( b_final, open( "rttov_out_hum_202312/"+statid+"/"+statid+"_day_refl.p", "wb" ) )
+            pickle.dump( wholemon[:middle_index], open( "rttov_out_hum_202312/"+statid+"/"+statid+"_day_dates.p", "wb" ) )
         else:
-            pickle.dump( b_final, open( "rttov_out_hum/"+statid+"/"+adj+"_"+statid+"_day_refl.p", "wb" ) )
-            pickle.dump( wholemon[:middle_index], open( "rttov_out_hum/"+statid+"/"+adj+"_"+statid+"_day_dates.p", "wb" ) )
+            pickle.dump( b_final, open( "rttov_out_hum_202312/"+statid+"/"+adj+"_"+statid+"_day_refl.p", "wb" ) )
+            pickle.dump( wholemon[:middle_index], open( "rttov_out_hum_202312/"+statid+"/"+adj+"_"+statid+"_day_dates.p", "wb" ) )
         print('day done: '+statid)
 
 
@@ -540,11 +540,11 @@ def calc_station(statid, chum, adj = 'RISE'):
             b_final.append(b)
 
         if adj == None:
-            pickle.dump( b_final, open( "rttov_out_hum/"+statid+"/"+statid+"_night_refl.p", "wb" ) )
-            pickle.dump( wholemon[middle_index:], open( "rttov_out_hum/"+statid+"/"+statid+"_night_dates.p", "wb" ) )
+            pickle.dump( b_final, open( "rttov_out_hum_202312/"+statid+"/"+statid+"_night_refl.p", "wb" ) )
+            pickle.dump( wholemon[middle_index:], open( "rttov_out_hum_202312/"+statid+"/"+statid+"_night_dates.p", "wb" ) )
         else:
-            pickle.dump( b_final, open( "rttov_out_hum/"+statid+"/"+adj+"_"+statid+"_night_refl.p", "wb" ) )
-            pickle.dump( wholemon[middle_index:], open( "rttov_out_hum/"+statid+"/"+adj+"_"+statid+"_night_dates.p", "wb" ) )
+            pickle.dump( b_final, open( "rttov_out_hum_202312/"+statid+"/"+adj+"_"+statid+"_night_refl.p", "wb" ) )
+            pickle.dump( wholemon[middle_index:], open( "rttov_out_hum_202312/"+statid+"/"+adj+"_"+statid+"_night_dates.p", "wb" ) )
         print('night done: '+statid)
     except:
         print('nothing to calculate: '+statid)
@@ -567,7 +567,7 @@ def calc_station(statid, chum, adj = 'RISE'):
 
 if __name__ == '__main__': 
     try:
-        os.makedirs("./rttov_out_hum/")
+        os.makedirs("./rttov_out_hum_202312/")
     except:
         pass
 #     [3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000]
@@ -578,9 +578,7 @@ if __name__ == '__main__':
     statlist = []
     stats = []
 #     for i in ['11035', '10393', '72357', '50527']:
-#         stats.append(glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*'+i+'*_CEUAS_merged_v1.nc')[0])
-    stats = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*_CEUAS_merged_v1.nc')
-#     stats = glob.glob('/mnt/users/scratch/leo/scratch/converted_v7/*58362*_CEUAS_merged_v1.nc')
+    stats = glob.glob('/mnt/users/scratch/leo/scratch/converted_v11/long/*_CEUAS_merged_v1.nc')
 
     for i in stats:
         statlist.append(i.split('-')[-1][:5])
