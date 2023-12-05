@@ -1399,7 +1399,6 @@ def read_mauritius_csv_digitized(direc=''):
         return timestamp, date_v
 
     all_df = []
-    #sensors = sensors[:3]  ### TO DO TODO HERE 
     
     sensor_map = { 
                    'Graw' : 'DGL',
@@ -1470,7 +1469,6 @@ def read_mauritius_csv_digitized(direc=''):
     cols = [c for c in df.columns if c not in ['datetime', 'press', 'hum', 'temp']]
     df_res = df_res[cols]
     
-    #df_res = df_res[0:2000] ### TO DO TODO HERE 
     ts = np.unique( df_res.iday)
     dt_map = {}
     for i,t in enumerate(ts):
@@ -1498,8 +1496,6 @@ def read_mauritius_csv_digitized(direc=''):
     
     statid = 'MAURITIUS_DIGITIZED'
     #print(len(df_res))
-
-    #df_res = df_res[:10000] ### TO DO TODO HERE
     
 
     return df_res , statid 
@@ -2171,9 +2167,9 @@ def read_all_odbsql_stn_withfeedback(dataset, odbfile):
             
         if 'mobile' not in dataset:
             # mobile dataset have no column names, so you have to assign them manually
-            alldict=pd.read_csv(f,delimiter='\t', usecols=columns, quoting=3,comment='#', skipinitialspace=True, dtype=tdict) #nrows=1000000) # TODO remove dtype !!!
+            alldict=pd.read_csv(f,delimiter='\t', usecols=columns, quoting=3,comment='#', skipinitialspace=True, dtype=tdict) #nrows=1000000) # 
         else:
-            alldict=pd.read_csv(f,delimiter='\t', names=columns, quoting=3,comment='#', skipinitialspace=True, dtype=tdict, skiprows=1) #nrows=1000000) # TODO remove dtype !!!
+            alldict=pd.read_csv(f,delimiter='\t', names=columns, quoting=3,comment='#', skipinitialspace=True, dtype=tdict, skiprows=1) #nrows=1000000) #
            
         """ Case where erafb is not available """
         if 'fg_depar@body' not in columns:
@@ -2380,7 +2376,193 @@ def find_recordindex_l(y,x):
 
 # write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')})
 
-def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}): 
+def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}, chunksize=100000): 
+    """ Writes each separate variable from the observation or feedback tables inot netcdf using h5py.
+          f is a pandas dataframe with one column, one for each variable
+          k is either 'era5fb' or 'observations_table'
+          fbencodings is the encodings of variable types, e.g. {'observations_id': { 'compression': 'gzip' } ,'compression_opts': 4 }} or
+          {'observations_id': { 'compression': 32015 } ,'compression_opts': 3 }}
+          attrs to set variable attributes
+          mode can be 'a' or 'w'
+          chunksize is set by default to 100000. Auto is not a good choice especially for character variables. Those have chunksize (chunksize,strlen)
+    """
+
+    if isinstance(dfile, h5py._hl.files.File):
+        fd = dfile
+    else:
+        os.makedirs(os.path.dirname(dfile), exist_ok=True)
+        fd = h5py.File(dfile,mode)
+        
+        if(fbencodings):
+            for v in fbencodings.values():
+                if 'compression' in v.keys():
+                    comp = v['compression']
+                else:
+                    comp = None
+                if 'compression_opts' in v.keys():
+                    compopt = v['compression_opts']
+                else:
+                    compopt = None
+        else:
+            comp = None
+            compopt = None
+            
+        if fd:
+            if not var_selection:
+                var_selection=list(f.keys())
+    
+            try:
+                # variable 'index' is needed only to attach a scale to it (needed for netCDF compatibility)
+                fd.create_group(k)
+                idl = f[list(f.keys())[0]].shape[0]
+                index=numpy.zeros (idl, dtype=np.int8)
+                fd[k].create_dataset('index', data=index, compression=comp,compression_opts=compopt, chunks=True)
+            except:
+                pass
+            
+            sdict={}
+            slist=[]
+                
+            for v in var_selection:
+                
+                if v in ['source_file', 'observation_id', 'report_id']:
+                    string_length = numpy.zeros(200,dtype='S1')
+                
+                else:
+                    string_length =numpy.zeros(fixed_string_len,dtype='S1')
+
+                #if v == 'sensor_id':
+                #    a = 0
+                if v in [ 'report_event1@hdr' , 'report_rdbflag@hdr' , 'datum_anflag@body', 'datum_event1@body', 'datum_rdbflag@body']:
+                    continue 
+                
+                if v in ['source_file']:
+                    a = 0
+                    
+                if type(f[v]) == pd.core.series.Series:
+                    fvv=f[v].values
+                else:
+                    fvv=f[v]
+                    
+                try:
+                    if fvv.dtype ==pd.Int64Dtype(): ### TO DO 
+                            continue
+                except:
+                        pass
+                            
+                if type(fvv[0]) not in [str,bytes,numpy.bytes_]:  ### HORRIBLE HANDLING of types, dtypes, strings, bytes...          
+                    if fvv.dtype !='S1':
+                        try:
+                            if fvv.shape[0] > chunksize:
+                                fd[k].create_dataset(v,data=fvv,compression=comp,compression_opts=compopt,
+                                                     chunks=(chunksize, ))                            
+                            else:
+                                fd[k].create_dataset(v,data=fvv)
+                        except:
+                            #print('except',dfile, k, v, fd[k].keys())
+                            fd[k].create_dataset(v,data=fvv, chunks=True)
+                            
+                        '''
+                        try:
+                            fd[k][v][:]=fvv[:]
+                        except:
+                            fd[k][v][:] = np.empty( (len( fvv)) )
+                        '''    
+                        if attrs:   
+                            if v in attrs.keys():
+                                for kk,vv in attrs[v].items():
+                                    if type(vv) is str:  
+                                        fd[k][v].attrs[kk]=numpy.bytes_(vv)
+                                    else:
+                                        fd[k][v].attrs[kk]=vv
+                                                                    
+                        if v in ['date_time','report_timestamp','record_timestamp']:
+                            fd[k][v].attrs['units']=numpy.bytes_('seconds since 1900-01-01 00:00:00')                            
+                                    
+                    else:
+                        if fvv.shape[0] > chunksize:                       
+                            fd[k].create_dataset(v,data=fvv,compression=comp,compression_opts=compopt,
+                                                                   chunks=(chunksize, fvv.shape[1]))
+                        else:
+                            fd[k].create_dataset(v,data=fvv)
+
+                        slen=fvv.shape[1]
+                        sdict[v]=slen
+                        if slen not in slist:
+                            slist.append(slen)
+                            try:
+                                fd[k].create_dataset( 'string{}'.format(slen),  data=string_length[:slen]  )
+                            except:
+                                pass               
+                        if v in attrs.keys():
+                            fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
+                            fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])
+                            
+                else:
+                    sleno=len(fvv[0])
+                    slen=sleno
+                    try:
+                        slen=int(fvv.dtype.descr[0][1].split('S')[1])
+                    except:  
+                        slen=15
+    
+                    sdict[v]=slen
+                    if slen not in slist:
+                        slist.append(slen)
+                        
+                        try:
+                            fd[k].create_dataset( 'string{}'.format(slen),  data=string_length[:slen]  )
+                        except:
+                            pass          
+                        
+                    try:
+                        if fvv.shape[0] > chunksize:
+                            fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=comp,
+                                                                 compression_opts=compopt, chunks=(chunksize, slen))
+                        else:
+                            fd[k].create_dataset(v,data=fvv)
+                            
+                    except:
+                        #fd[k].create_dataset(v,data=np.bytes_(fvv).view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)                    
+                        pass
+                    if v in attrs.keys():
+                        fd[k][v].attrs['description']     =numpy.bytes_(attrs[v]['description'])
+                        fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])                
+    
+                                         
+                for v in fd[k].keys(): #var_selection:
+                    if 'string'  in v or v== 'index' :                    
+                        continue 
+                    if v not in  f.keys():
+                        continue
+                    
+                    try:
+                        if type(f[v]) == pd.core.series.Series:
+                            fvv=f[v].values
+                        else:
+                            fvv=f[v]
+                            
+                        fd[k][v].dims[0].attach_scale(fd[k]['index'])
+
+                        if fvv.ndim==2 or type(fvv[0]) in [str,bytes,numpy.bytes_]:
+                            slen=sdict[v]
+                            #slen=10
+                            fd[k][v].dims[1].attach_scale(fd[k]['string{}'.format(slen)])
+                            
+                    except:
+                        pass
+
+        for v in slist:
+            s='string{}'.format(v)
+            for a in ['NAME']:
+                fd[k][s].attrs[a]=numpy.bytes_('This is a netCDF dimension but not a netCDF variable.')
+        
+    return
+
+
+
+
+def write_dict_h5_old(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}): 
     """ Writes each separate variable from the observation or feedback tables inot netcdf using h5py.
           f is a pandas dataframe with one column, one for each variable
           k is either 'era5fb' or 'observations_table'
@@ -2435,7 +2617,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                     try:
                         fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
                     except:
-                        #fd[k].create_dataset(v,fvv.shape,'int32',compression=fbencodings[v]['compression'], chunks=True)  TODO CHECK
+                        #fd[k].create_dataset(v,fvv.shape,'int32',compression=fbencodings[v]['compression'], chunks=True)  
                         fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression='gzip', chunks=True)
                         
                     try:
@@ -2765,7 +2947,7 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
     indices, day, counts = make_datetime_indices( df['iday'].values )   #only date information
     di['dateindex']  = ( { 'dateindex' :  day.shape } , indices )          
     
-    # TODO CHECK HERE
+
     indices, date_times , counts  = make_datetime_indices( df['report_timestamp'].values ) #date_time plus indices           
     di['recordindex']          = ( {'recordindex' : indices.shape }, indices )
     di['recordtimestamp']  = ( {'recordtimestamp' : date_times.shape }, date_times  )
@@ -2798,6 +2980,9 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
 
     groups={}
     groupencodings={}
+    
+    
+    
     for k in cdmd.keys(): # loop over all the table definitions 
         if k in ('observations_table'):
             pass #groups[k]=pd.DataFrame()
@@ -2977,7 +3162,7 @@ def check_lat_lon(fbds, fn, save= 'correct'):
           NB
           The check for consistency is made based on valued of distance in km [30km] and not coordinates in the inventory,
           so the two methods might give slightly different results.
-          TODO FIX with distance checking """
+          """
 
     import operator
     
@@ -3176,6 +3361,7 @@ def write_odb_to_cdm(fbds, cdm, cdmd, output_dir,  dataset, dic_obstab_attribute
     fbds = fbds.drop(columns=['year'])
     write_dict_h5(fno, fbds, 'era5fb', fbencodings, var_selection=[],mode='a')
     
+        
     dcols=[]
     for d in fbds.columns:
         if d not in ['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body', 'lon@hdr','lat@hdr','seqno@hdr',
@@ -3384,7 +3570,6 @@ def read_odb_to_cdm(output_dir, dataset, dic_obstab_attributes, fn, fns):
     
     func=partial(read_all_odbsql_stn_withfeedback,dataset)
     
-    #fns = [ fns[0] ] # TO DO HERE TODO
     print('Reading ' + str(len(fns)) + ' ODB files ')
 
     
