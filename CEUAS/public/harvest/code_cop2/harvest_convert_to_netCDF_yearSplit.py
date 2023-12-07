@@ -2386,6 +2386,12 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
           mode can be 'a' or 'w'
           chunksize is set by default to 100000. Auto is not a good choice especially for character variables. Those have chunksize (chunksize,strlen)
     """
+    
+    
+    """
+    TO DO 
+    write_dict_h5(dfile, f, k, fbencodings={'observations_id': { 'compression': 32015 } ,'compression_opts': 3 }}...)
+    """
 
     if isinstance(dfile, h5py._hl.files.File):
         fd = dfile
@@ -2416,7 +2422,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                 fd.create_group(k)
                 idl = f[list(f.keys())[0]].shape[0]
                 index=numpy.zeros (idl, dtype=np.int8)
-                fd[k].create_dataset('index', data=index, compression=comp,compression_opts=compopt, chunks=True)
+                fd[k].create_dataset('index', data=index, compression=comp, compression_opts=compopt, chunks=True)
             except:
                 pass
             
