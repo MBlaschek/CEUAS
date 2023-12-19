@@ -57,7 +57,7 @@ inventory_to_statConf = { 'WIGOS_best' : 'primary_id' ,
 
 statConf_to_inventory = dict( zip( inventory_to_statConf.values(), inventory_to_statConf.keys()) )
 
-### supplementary columsn to fill in CUON
+### supplementary columns to fill in CUON
 metadata_contact = 'L.Haimberger'
 metadata_contact_role = '0'
 
@@ -96,6 +96,45 @@ special_columns = {'primary_id_scheme':primary_id_scheme,
 
 # initialize empty dic as the stat_conf table 
 
+def extract_inventory(ids):
+    """ Converts primary_id to inventory list by checking the pseudo wigos ids
+            self.wigos = { 'IGRA2'    :'0-20300-0-',
+                       'CHUAN'    :'0-20400-0-',                       
+                       'WBAN'     :'0-20500-0-',           
+                       'SCHROEDER':'0-20600-0-',                    
+                       'WMO'      :'0-20700-0-',
+                       
+                       'AMMA' : '0-20800-0-',
+                       'GIUB' : '0-20900-0-' ,
+                       
+                       'HARA' : '0-20111-0-' ,
+        }
+    """ 
+    
+    invs = []
+    for i in ids:
+        
+        if '-20300-' in i:
+            inv = 'IGRA2'
+        elif '-20400-' in i:
+            inv = 'CHUAN'
+        elif '-20500-' in i:
+            inv = 'WBAN'
+        elif '-20600-' in i:
+            inv = 'SCHROEDER'
+        elif '-20700-' in i:
+            inv = 'WMO'            
+        elif '-20800-' in i:
+            inv = 'AMMA'
+        elif '-20111-' in i:
+            inv = 'HARA'
+        else:
+            inv = 'OSCAR'
+        invs.append(inv)
+        
+    return invs
+
+
 def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_regions = '', file = ''):
     """ Extract the iso code / country from given lat and lon.
     Taken from: https://stackoverflow.com/questions/20169467/how-to-convert-from-longitude-and-latitude-to-country-or-city.
@@ -103,7 +142,8 @@ def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_re
     Converts then the code to the CDM table convention 
     https://github.com/glamod/common_data_model/blob/master/tables/sub_region.dat
     
-    So first check the country with the script, then convert the proper name according to the CDM table sub_region.dat
+    So first check the country with the script, 
+    then convert the proper name according to the CDM table sub_region.dat
     """
 
     countries = {}
@@ -223,7 +263,6 @@ def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_re
             alpha_3 = 'CYP'
         else:
             alpha_3 = pycountry.countries.get(name=retrieve_country).alpha_3
-        
         if alpha_3 == "UZB":
             alpha_3 = "USB"
             
@@ -249,13 +288,17 @@ def get_best_inventory(df):
         return df_best[:1]
     
     else: 
-        for i in ['OSCAR', 'IGRA2', 'WBAN' , 'CHUAN', 'WMO', 'SCHROEDER']:
+        for i in ['OSCAR', 'IGRA2', 'WBAN' , 'CHUAN', 'WMO', 'SCHROEDER', 'AMMA', 'HARA']:
             dfr = df[ df.inventory == i ]        
             #dfr = dfr.dropna( subset = ['latitude','longitude'])  
             if dfr.empty:
                 continue
             if i=="OSCAR":         
                 dfr_radio = dfr[dfr.isRadio == True ] # check if upperAir/radiosonde station flag 
+                
+                # select OSCAR radio station,
+                # otherwise generic OSCAR station
+                
                 if not dfr_radio.empty:
                     return dfr_radio
                 else:
@@ -303,7 +346,6 @@ def make_inventory(v):
                             'elevation':[],
                             'file': [] }
     
-    
     if os.path.isfile('inventories/territory_code.npy'):
         terr_dic = np.load('inventories/territory_code.npy' , allow_pickle=True ).item()
         
@@ -330,12 +372,10 @@ def make_inventory(v):
         #    continue
         
         for e in extra_vars.keys():
-
                 if e != "elevation":
                     extra_vars[e].append(best_inv[e].values[0])                    
                 else:
                     try:
-                        
                         df['elevation'] = df['elevation'].astype(float)
                     except:
                         df['elevation'] =  [str(i).replace(',', '.') for i in df.elevation.values]
@@ -415,6 +455,12 @@ def make_inventory(v):
     for c in extra_vars.keys():
         statconf_df[c] = extra_vars[c]
     
+    # adding the inventory name as source of the pseudo WIGOS id
+    inv = extract_inventory(statconf_df.primary_id.values)
+    statconf_df['inventory'] = inv     
+
+
+
     statconf_df.to_csv('station_configuration/' + v + '_station_configuration_extended.csv' , sep= '\t' )           
     statconf_df.to_excel('station_configuration/' + v + '_station_configuration_extended.xlsx' )
 
@@ -549,7 +595,74 @@ def make_CUON():
     d = pd.DataFrame(combined_cuon)
     combined_cuon['record_number'] = list(range(len(    combined_cuon['latitude'] ) ))
     d.to_csv('station_configuration/CUON_station_configuration_extended.csv', sep='\t')
-    df.to_excel('station_configuration/CUON_station_configuration.xlsx' )
+    d.to_excel('station_configuration/CUON_station_configuration.xlsx' )
+
+
+def make_inventory_orphans(v):
+    """ Special case of mobile or oprhans station, where we will collect only the id given in the original file and extract the set of changing lat and lon,
+    since it is not possible to identify an actual station; all other fields in the station_inventory will be neglected """
+
+    print(' *** Creating the inventory for Dataset ' , v )
+
+            
+    inv_path = 'inventories/' 
+    
+    files = glob.glob(inv_path + '/' + v + '/' + '*')
+    files = [f for f in files if 'inventories_iden' not in f and 'reduced' not in f and 'logs' not in f ]
+    a = 0
+    
+    # dic holding data
+    stat_conf_dic = {}
+    stat_conf_dic['file'] = []
+    stat_conf_dic['kind'] = []
+    
+    for file in tqdm(files):    
+        
+        if '88888' in file:  # wrong file 
+            continue 
+        df = pd.read_csv(file, sep = '\t', header = 0)
+
+
+        ### 
+        if '0-20999-0' in df.WIGOS_best.values[0]:
+            kind = 'MOBILE'
+        elif '0-20888-0'in df.WIGOS_best.values[0]:
+            kind = 'ORPHAN'
+        elif '0-20777-0'in df.WIGOS_best.values[0]:
+            kind = 'MATCHING_ID_NONMATCHING_COORD'
+        elif '0-20666-0'in df.WIGOS_best.values[0]:
+            kind = 'COORDINATE_ISSUES'
+            
+    
+        # restric the columns, all the others will be empty
+        stat_conf_columns_red =  ['primary_id' , 'secondary_id' , 'longitude' , 'latitude' , 'start_date' , 'end_date', 'observed_variables'] 
+        # ['primary_id' , 'secondary_id' , 'longitude' , 'latitude' , 'start_date' , 'end_date' ]
+        for c in stat_conf_columns:
+            if c not in stat_conf_dic.keys():
+                stat_conf_dic[c] = []
+            if c not in stat_conf_columns_red:
+                stat_conf_dic[c].append(' ')    
+            
+        stat_conf_dic['primary_id'].append (str(df.WIGOS_best.values[0]) ) 
+        stat_conf_dic['secondary_id'].append( str(df.file_statid.values[0]).replace('\n','')  )
+        
+        stat_conf_dic['start_date'].append( str(df['file_min_date'].values[0]) )
+        stat_conf_dic['end_date'].append( str(df['file_max_date'].values[0]) )
+        
+        stat_conf_dic['latitude'].append( str(df['lat_file'].values[0]) )
+        stat_conf_dic['longitude'].append( str(df['lon_file'].values[0]) )
+        stat_conf_dic['observed_variables'].append( str(df['variables'].values[0]) )
+
+        stat_conf_dic['kind'].append( kind )
+        stat_conf_dic['file'].append( str(df['file'].values[0]))
+    statconf_df = pd.DataFrame(stat_conf_dic)
+    # adding record number
+    statconf_df['record_number'] = list(range(1,len(statconf_df)+1))
+    statconf_df.to_csv('station_configuration/' + v + '_station_configuration_extended.csv' , sep= '\t' )           
+    statconf_df.to_excel('station_configuration/' + v + '_station_configuration_extended.xlsx' )
+        
+        
+    
 
 
 def merge_inventories():
@@ -575,7 +688,7 @@ def merge_inventories():
     # combining all the inventories
     combining_all = {}
     for c in inventory_cuon.columns:
-        if c in  'index' or 'Unnamed' in c or c in 'record_index':
+        if c in  ['index','Unnamed: 0','record_index','record_number']:
             continue     
         combining_all[c] = []
         
@@ -589,7 +702,7 @@ def merge_inventories():
         gruan = gruan.reset_index()
         
         for c in inventory_cuon.columns:
-            if c in ['index', 'Unnamed: 0', 'record_index']:
+            if c in ['index', 'Unnamed: 0', 'record_index','record_number']:
                 continue
                 
             # renumbering and adding observed variables common to all datasets 
@@ -686,7 +799,9 @@ def merge_inventories():
         for c in combining_all.keys():
             if c in ['index', 'Unnamed: 0', 'record_index']:
                 continue
-            if c == 'start_date' or c == 'end_date':
+            elif c in ['elevation']: # remember, elevation is not a proper field in the station configuration table, I added it artifically to my station configs
+                s = np.nan 
+            elif c in ['start_date', 'end_date']:
                 s = df[c].dt.strftime('%Y%m%d').values[0]
             else:
                 s = df[c].values[0]
@@ -695,9 +810,14 @@ def merge_inventories():
                 s = s.replace(' ','')
             combining_all[c].append(s)
         
-    # Saving the complete dataframe 
-    df = pd.DataFrame(combining_all)
+    # Saving the complete dataframe
+    for c in combining_all.keys():
+        print(c, len(combining_all[c] ) )
+        
+    # check record_number, elevation 
+    df = pd.DataFrame(combining_all)    
     df = df.sort_values( by = 'primary_id' )  # sorting by primary_id
+    
     
     df.insert(2, 'record_number', list(range(len(df))) )
     df.to_csv('station_configuration/all_combined_station_configuration.csv' , sep='\t')
@@ -710,7 +830,7 @@ def merge_inventories():
 # define a list of operation to perform between  [ 'INVENTORY', CUON', 'MERGE']
 TODO = ['INVENTORY', 'CUON', "MERGE"]
 POOL = False
-n_pool = 50
+n_pool = 1
 
 
 parser = argparse.ArgumentParser(description="Crete station configuration table")
@@ -724,13 +844,16 @@ args = parser.parse_args()
 v                = args.dataset
 
 
+
 if v in  [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1', 'amma', 'hara', 'giub']:
     WHAT = 'INVENTORY'
     
 elif v in ['CUON', 'MERGE']:
     WHAT = v
-
-
+    
+elif v in ['npsound' , 'era5_1_mobile' , 'era5_2_mobile']:
+    WHAT = 'MOBILE'
+    
 if WHAT == 'INVENTORY':
         # inventories to process
         #inventories_all = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1']
@@ -740,16 +863,26 @@ if WHAT == 'INVENTORY':
         
         if not POOL:
             for v in inventories:
-                dummy = make_inventory(v)
+                #dummy = make_inventory(v) # regular identified stations
+                dummy = make_inventory_orphans(v) # orphans 
         else:
             p = Pool(n_pool)                
-            func = partial(make_inventory)
+            func = partial(make_inventory) # regular identified stations
+            out = p.map(func, inventories)  # orphans     
+            
+            func = partial(make_inventory_orphans)
             out = p.map(func, inventories)       
-                
+            
+            
 elif WHAT == 'CUON':
         dummy = make_CUON()
     
 elif WHAT== 'MERGE':
         dummy = merge_inventories()
+        
+elif WHAT == 'MOBILE':
+    dummy = make_inventory_orphans(v)
+
+    
 
 
