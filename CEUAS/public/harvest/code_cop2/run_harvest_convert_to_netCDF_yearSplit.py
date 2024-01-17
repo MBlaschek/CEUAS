@@ -3,6 +3,7 @@ import glob
 from harvester_yearsplit_parameters import *  # datasets
 from run_harvester_yearsplit_utils import *
 from tqdm import tqdm
+import random
 
 #from check_correct import *
 
@@ -25,11 +26,6 @@ REMEMBER
 ### make list of stations to run 
 
 all_stations  ={}
-
-#out_dir = '/scratch/das/federico/HARVEST_YEARLY_20OCT2023_Vienna/'
-
-#datasets = ['era5_2']
-
 
 for db in datasets:
 
@@ -57,8 +53,11 @@ for db in datasets:
                                    lines = open(out_dir+'/' + db  + '/' + s + '/' + f , 'r').readlines()
                                    if lines[-1] == 'completed\n':
                                           fname = f_name.replace('.gz','')
-                                          if db == 'era5_1':
+                                          if db  =='era5_1':
                                                  fname = fname.replace('??????.','_').replace('.txt','')
+                                          if db == 'era5_1_mobile':
+                                                 fname = fname.replace('??????.','').replace('.txt','')
+                                                 
                                           if db == 'era5_1761':
                                                  fname = fname.replace('._', '_').replace('.txt','')
                                                  
@@ -84,11 +83,12 @@ for db in datasets:
        #files = [f for f in files if '11035' in f or '10393' in f or '9393' in f or '10395' in f or '06610' in f or '82930' in f ]
 
        #files = [f for f in all_f if '06610' in f  ]
-       #import random
-       #random.shuffle(files)       
-       #files=files[:10]
+       #random.shuffle(station_file)       
+       #station_file=station_file[:10]
 
-       print(' ===== Running dataset ' + db + ' with ' + str(len(files) ) ) 
+       #station_file = [ s for s in station_file if '10393' in s ]
+       
+       print(' ===== Running dataset ' + db + ' with ' + str(len(station_file) ) ) 
        #station_file = station_file[:20]
        chunks = chunk_it(station_file, processes)
        
@@ -97,5 +97,6 @@ for db in datasets:
               c = str(','.join(c)).replace('#','')
               command = 'python3.8  harvest_convert_to_netCDF_yearSplit.py' 
               os.system( command + ' -d ' + db + ' -o ' + out_dir + ' -f ' + c + '  -r ' + str(run_only_missing_stations) +   '   & ' )
+              
               
        a=0

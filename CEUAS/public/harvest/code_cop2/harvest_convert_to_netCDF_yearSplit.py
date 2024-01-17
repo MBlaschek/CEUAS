@@ -266,6 +266,8 @@ cdmfb={'observation_value':'obsvalue@body',
        }
 
 
+# dic containig all the variables which are present in the header or obervations table, but not in the era5fb table 
+
 cdmfb_noodb={'observation_value':'obsvalue@body',
                           'observed_variable':'varno@body',
                           'z_coordinate_type':'vertco_type@body',
@@ -277,6 +279,7 @@ cdmfb_noodb={'observation_value':'obsvalue@body',
                           'observation_id':'observation_id' ,
                           'source_file':'source_file',
                           #'product_code': 'product_code' ,
+                          'report_meaning_of_timestamp': 'report_meaning_of_timestamp',
                           'report_id':'report_id' ,
                           'number_of_pressure_levels' : 'num_lev',  # this entry does not exist in CDM header_table 
                           'units' : 'units',
@@ -1195,7 +1198,6 @@ def read_mauritius_csv(file=''):
     obs_id = 0
     report_id = 0 
     
-    #for i in range(10000):  # TO DO TODO HERE     
     for i in tqdm(range(len(df)),  miniters=int(len(df)/10000) ):
         
         date_time_v = df[datetime].values[i]
@@ -1211,7 +1213,6 @@ def read_mauritius_csv(file=''):
         if 'meisei' in file:    
             date_v = df[date].values[i]
             time = date_time_v.split(':')
-            # TODO DUMMY date for now CHECK ???
             
             year =  int(date_v[0:4]) 
             month = int(date_v[4:6])
@@ -1245,7 +1246,6 @@ def read_mauritius_csv(file=''):
         except:
             lat_v = -20.2972  # using values from MAISEI +> NEED To FIX THIS for VAISALA 
             lon_v = 57.49692
-        # TO DO FIX CONVENTION 
         if lon_v > 180:
             lon_v = -180.0 + (lon_v - 180)
             
@@ -1522,7 +1522,6 @@ def read_hara_csv(file=''):
         lat_v = df['lat'].values[i]
         
         lon_v = float(df['lon'].values[i])
-        # TO DO FIX CONVENTION 
         if lon_v > 180:
             lon_v = -180.0 + (lon_v - 180)
             
@@ -1636,7 +1635,6 @@ def read_shipsound_csv(file=''):
         lat_v = df['latitude'].values[i]
         lon_v = float(df['longitude'].values[i])
         
-        # TO DO FIX CONVENTION 
         if lon_v > 180:
             lon_v = -180.0 + (lon_v - 180)
             
@@ -1748,9 +1746,6 @@ def read_npsound_csv(file=''):
         
         release_time = df['release_time'].values[i]
         release_time = pd.Timestamp(release_time)
-
-        if date_time != release_time:
-            a = 0
             
         press_v = df['pressure'].values[i]
         if  '99999' in press_v:
@@ -1764,7 +1759,6 @@ def read_npsound_csv(file=''):
         lat_v = df['latitude'].values[i]
         
         lon_v = float(df['longitude'].values[i])
-        # TO DO FIX CONVENTION 
         if lon_v > 180:
             lon_v = -180.0 + (lon_v - 180)
             
@@ -1819,7 +1813,8 @@ def read_npsound_csv(file=''):
         
         for value,var in zip([ gph_v, temp_v, wind_sp_v, wind_dir_v, dp_v, rh_v],  [ 'gph', 'temperature', 'wind_speed', 'wind_direction' , 'dew_point_depression', 'relative_humidity'] ):
             obs_id = obs_id +1
-            read_data.append( ( 'NPSOUND'.rjust(10), int(obs_id), report_id,   release_time, int(str(release_time.date()).replace('-','')), statid, lat_v, lon_v, z_coordinate, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), z_type, date_time , 1 ) )
+            read_data.append( ( 'NPSOUND'.rjust(10), int(obs_id), report_id,   release_time, int(str(release_time.date()).replace('-','')), statid, lat_v, lon_v, 
+	                        z_coordinate, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), z_type, date_time , 1 ) )
  
     column_names = [ 'product_code', 'observation_id', 'report_id', 'report_timestamp' , 'iday', 'station_id', 'lat@hdr', 'lon@hdr', 
                      'vertco_reference_1@body', 'obsvalue@body', 'varno@body' ,  'units', 'vertco_type@body' , 'record_timestamp' , 'report_meaning_of_timestamp'   ]    
@@ -1898,9 +1893,11 @@ def igra2_ascii_to_dataframe(file=''):
         
         return release_date_time, timestamp_flag 
     
-        
+    #data = data[3706329:]  # TO DO HERE TO DO CHANGE!!!
+    #for i, line in enumerate(data):
+    #      print(i , '  ' ,  line[0] )
+    
     for i, line in enumerate(data):
-
         if line[0] == '#':
             head_count = head_count +1 
             # Info from the Header line of each ascent                                                                                                                                                                                                                   
@@ -1932,10 +1929,15 @@ def igra2_ascii_to_dataframe(file=''):
             
             ### making release time and its flag
             release_time , report_timeflag = make_release_time(idate, hour, reltime) # making the release time 
-                
-                
+
+            ### report_meaning_of_timestamp	int	meaning_of_time_stamp:meaning	Report time - beginning, middle or end of reporting period
+            ### 1	beginning	Date / time specified indicates the start of the period over which the observation was made.
+	    ### end	Date / time specified indicates the end of the period over which the observation was made.
+	    ### middle	Date / time specified indicates the middle of the period over which the observation was made.
+
             iday =  int(year + month + day)
             count = count + 1
+	    
         else:
            # Data of each ascent
             lvltyp1 = int(line[0])            # 1-  1   integer major level type indicator
@@ -1998,18 +2000,23 @@ def igra2_ascii_to_dataframe(file=''):
             for value,var in zip([gph, temp, wspd, wdir, rh, dpdp],  ['gph', 'temperature', 'wind_speed', 'wind_direction', 'relative_humidity' , 'dew_point_depression'] ):
                 obs_id = obs_id +1 
                 if not np.isnan(press):     # when pressure is available, z_coord== pressure and z_type==1  
-                    z_type = 1                                        
-                    read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, release_time ) )
+                    z_type = 1            
+                    z_value = press
+                    #read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, release_time ) )
                 elif  (np.isnan(press) and  not np.isnan(gph) ) :  # when pressure is not available, z_coord== gph and z_type==2 
-                    z_type = 2              
-                    read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, gph, value, cdmvar_dic[var]['cdm_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, release_time ) )
+                    z_type = 2       
+                    z_value = gph
+                    #read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, gph, value, cdmvar_dic[var]['cdm_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, release_time ) )
                 else:
-                    z_type = -2147483648              
-                    read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, release_time ) )
+                    z_type = -2147483648     
+                    z_value = press
+                    #read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, release_time ) )
+                read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, z_value, value, cdmvar_dic[var]['cdm_var'], int(cdmvar_dic[var]['cdm_unit']), 
+                                     numlev, z_type, release_time, report_timeflag  ) )
 
     
     column_names_igra2 = [ 'source_id', 'report_id',  'observation_id', 'record_timestamp' , 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body',
-                                     'obsvalue@body', 'varno@body' , 'units',  'number_of_pressure_levels', 'vertco_type@body', 'report_timestamp']
+                                     'obsvalue@body', 'varno@body' , 'units',  'number_of_pressure_levels', 'vertco_type@body', 'report_timestamp', 'report_meaning_of_timestamp']
                     
     df = pd.DataFrame(data= read_data, columns= column_names_igra2)
         
@@ -2024,6 +2031,9 @@ def igra2_ascii_to_dataframe(file=''):
         
     #df_new = df.sort_values(by = ['record_timestamp', 'vertco_reference_1@body' ] )    # FF check here !!!! 
     
+    print(np.unique(df_new['report_meaning_of_timestamp'] ) )
+    
+    #df_new = df_new[:5000]  # TO DO HERE TO DO CHANGE!!!
     return df_new, stations_id
 
 
@@ -2363,6 +2373,12 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
           k is either 'era5fb' or 'observations_table'
           fbencodings is the encodings of variable types, e.g. {'observations_id': { 'compression': 'gzip' } ,'compression_opts': 4 }} or
           {'observations_id': { 'compression': 32015 } ,'compression_opts': 3 }}
+          
+          I THINK IT IS WRONG...SHOULD BE          
+          {'observations_id': { 'compression': 32015 ,'compression_opts': 3 }}
+          ...
+          
+          
           attrs to set variable attributes
           mode can be 'a' or 'w'
           chunksize is set by default to 100000. Auto is not a good choice especially for character variables. Those have chunksize (chunksize,strlen)
@@ -2824,15 +2840,16 @@ def read_df_to_cdm(cdm, dataset, fn, metadata='' ):
         #return None                
     # checking that coordinates in the retrieved stat_conf and file are compatible 
     stat_conf_check = True          
+    if dataset not in ['npsound' , 'shipsound']:
+        
+        if isinstance(station_configuration_retrieved, pd.DataFrame):
+            if not station_configuration_retrieved.empty:
+                sc_lat, sc_lon = station_configuration_retrieved.latitude.values[0] , station_configuration_retrieved.longitude.values[0]
     
-    if isinstance(station_configuration_retrieved, pd.DataFrame):
-        if not station_configuration_retrieved.empty:
-            sc_lat, sc_lon = station_configuration_retrieved.latitude.values[0] , station_configuration_retrieved.longitude.values[0]
-
-            if abs(sc_lat - most_freq_lat ) < 1.0 and  abs(sc_lon - most_freq_lon ) < 1.0 :
-                stat_conf_check = True
-            else:
-                stat_conf_check = False
+                if abs(sc_lat - most_freq_lat ) < 1.0 and  abs(sc_lon - most_freq_lon ) < 1.0 :
+                    stat_conf_check = True
+                else:
+                    stat_conf_check = False
 
     try:
         primary_id = station_configuration_retrieved['primary_id'].values[0].decode('utf-8')                
@@ -2841,8 +2858,8 @@ def read_df_to_cdm(cdm, dataset, fn, metadata='' ):
         out.write(fn + '\n')
         primary_id = '0-20999-0-' + str(stations_id[0]) + '-coordinateIssue-'
      
-    if dataset == 'shipsound':
-        primary_id = '20999-shipsound-'
+    if dataset in ['shipsound', 'npsound']:
+        #primary_id = '20999-shipsound-'
         correct_data = True 
     if dataset in ['mauritius', 'mauritius_digitized' , 'yangjiang' ]:
         correct_data = True 
@@ -2865,7 +2882,7 @@ def read_df_to_cdm(cdm, dataset, fn, metadata='' ):
     for d in df.columns:
             if d not in ['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body', 'lon@hdr','lat@hdr','seqno@hdr',
                                'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv',  'record_timestamp' , 'report_timestamp',
-                               'observation_id', 'report_id' , 'units' , 'vertco_type@body' , 'year' , 'iday',  'sensor_id'] :
+                               'observation_id', 'report_id' , 'units' , 'vertco_type@body' , 'year' , 'iday',  'sensor_id', 'report_meaning_of_timestamp'] :
                  
                 dcols.append(d)
                 
@@ -2940,8 +2957,10 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
 
     di.to_netcdf( fno, format='netCDF4', engine='h5netcdf', mode='w' )
 
+
     """ Storing the variable encodings """
-    fbencodings={}
+    '''
+    fbencodings={}    # useless for non -odb files 
     for d,v in df.items():              
         if v.dtype==numpy.dtype('float64'):
                 fbencodings[d]={'dtype':numpy.dtype('float32'), 'compression': 'gzip'}  
@@ -2959,27 +2978,33 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
                 fbencodings[d]={'compression': 'gzip', 'chunksizes': ( min( [10000,v.shape[0] ] ), 10 ) }#,'chunksizes':(10000,10)
         else:
                 fbencodings[d]={'compression': 'gzip'}
-    fbencodings['index']={'compression': 'gzip'}
-
+    '''
+    
+    # {'observations_id': { 'compression': 'gzip' } ,'compression_opts': 4 }} or
+    #      {'observations_id': { 'compression': 32015 } ,'compression_opts': 3 }}
+    
+    '''
+    for d,v in df.items():              
+        fbencodings[d] = { d : { 'compression': 32015 } ,'compression_opts': 3 } 
+        
+    fbencodings['index']={'index' : { 'compression': 'gzip' } ,'compression_opts': 4 } 
+    '''
 
     groups={}
     groupencodings={}
     
-    
-    
+    #for k in ['observations_table']:
+        
     for k in cdmd.keys(): # loop over all the table definitions 
-        if k in ('observations_table'):
-            pass #groups[k]=pd.DataFrame()
-        else:
+        if k not in ('observations_table'):
             groups[k]=xr.Dataset() # create an  xarray
         groupencodings[k]={} # create a dict of group econding
   
         for i in range(len(cdmd[k])):
-            d=cdmd[k].iloc[i] 
-            if(d.element_name == 'date_time'):
-                a = 0
-            if(d.element_name == 'sensor_id'):
-                a = 0            
+            d=cdmd[k].iloc[i]
+            if d.element_name == 'report_meaning_of_timestamp':
+                a=0
+    
             """ Filling the observations_table """
             if k in ('observations_table'):
                 groups[k]=pd.DataFrame()  # creating dataframes that will be written to netcdf via h5py methods by the write_dict_h5() method 
@@ -2987,8 +3012,15 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
                 try:         
                     groups[k][d.element_name]= fromfb_l(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=okinds))                                                       
                 except KeyError:
-                    #print('Failin obsTab' , d.element_name )
-                    x=numpy.zeros( df['report_timestamp'].shape[0], dtype=numpy.dtype(ttrans(d.kind,kinds=okinds) ) )
+                    #if d.element_name == "processing_code":
+                    #    a=0
+                    d_type = numpy.dtype(ttrans(d.kind,kinds=okinds) ) 
+                    print('Missing::: ' ,  d.element_name , ' in the  obsTab' , '  ' ,  d_type   )
+                    
+                    if d_type == np.dtype('O'):
+                        print(d.element_name , '  ' , d_type )
+                        d_type = np.int32
+                    x=numpy.zeros( df['report_timestamp'].shape[0], dtype= d_type  )
                     x.fill(numpy.nan)
                     groups[k][d.element_name]=x
 
@@ -2997,8 +3029,14 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
                     groups[k][d.element_name]= ( {'hdrlen':di['recordindex'].shape[0]} , np.take(df[d.element_name], di['recordindex'] ) )
                     groups[k][d.element_name].attrs['units'] = 'seconds since 1900-01-01 00:00:00'    
                     
+                elif d.element_name  == 'report_meaning_of_timestamp':
+                    groups[k][d.element_name]= ( {'hdrlen':di['recordindex'].shape[0]} , np.take(df[d.element_name], di['recordindex'] ) )                     
                 else:
-                    try:
+                    try:  # WHY IS THIS (SO MESSY)
+			# basically no variable in the header table is truly set with the exception og the ones above OR with the ones already present in the station_configuration
+			# so you have to fill them as empty
+			# it is very badly coded... 
+			
                         if d.element_name not in station_configuration_retrieved.columns: # variables might be from the df (input file) or from the retrieved station configuration  
                             try:          
                             #  groups[k][d.element_name] = ({'hdrlen':di['recordindex'].shape[0]}, hdrfromfb(df,di._variables, cdmfb[d.element_name],ttrans(d.kind,kinds=gkinds) ) )
@@ -3049,29 +3087,76 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
             except:
                 pass
             try:  
-                if type(groups[k][d.element_name].values[0])==str:
-                    s=groups[k][d.element_name].values.shape
-                    groupencodings[k][d.element_name]={'dtype':numpy.dtype('S80'),'compression': 'gzip','chunksizes':(min(100000,s[0]),80)}
-                else:
-                    groupencodings[k][d.element_name]={'compression': 'gzip'}
+                # TO DO TODO the new writ_dic does not work, I dont have time to debug it now and I dont need it right now, do it later 
                 
-                if k in ('observations_table'):
-                    if d.element_name == 'sensor_id':
-                        a=0
-                    if d.element_name == 'source_id':
-                            a=0                        
-                    write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs= dic_obstab_attributes )
-                    #write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[d.element_name],mode='a', attrs= dic_obstab_attributes )
+                OLD = True
+                if OLD:
+                    # OLD nonsense
+                    if type(groups[k][d.element_name].values[0])==str:
+                        s=groups[k][d.element_name].values.shape
+                        groupencodings[k][d.element_name]={'dtype':numpy.dtype('S80'),'compression': 'gzip','chunksizes':(min(100000,s[0]),80)}  ### OLD VERSION WORKING with the old write_dict   
+                    else:
+                        groupencodings[k][d.element_name]={'compression': 'gzip'}
+                
+                    if k in ('observations_table'):           
+                        #if d.element_name =='processing_code':
+                        #    a=0
+                        write_dict_h5_old(fno, groups[k], k, groupencodings[k], var_selection=[d.element_name],mode='a', attrs= dic_obstab_attributes )
+                            
+                else:
+                    
+                    ### new version, does not work 
+                    if d.element_name != 'index':
+                        groupencodings[k][d.element_name]= { 'compression': 32015  ,'compression_opts': 3 } 
+                    else:
+                        groupencodings[k]['index']= { 'compression': 'gzip' ,'compression_opts': 4 } 
+                        
+                    # {'observations_id': { 'compression': 'gzip' } ,'compression_opts': 4 }} or
+                    #      {'observations_id': { 'compression': 32015 } ,'compression_opts': 3 }} 
+                
+                    if k in ('observations_table'):                
+                        write_dict_h5(fno, groups[k], k, groupencodings[k], mode='a', attrs= dic_obstab_attributes ) 
                     
             except:
-                #print('bad:',k,d.element_name)
+                print('bad:',k,d.element_name)
                 pass
         
+    """
+                        if type(groups[k]) is dict:
+                        gkev=groups[k][d.element_name]
+                    else:
+                        gkev=groups[k][d.element_name].values
+                    if type(gkev[0])==str:
+                        s=gkev.shape
+                        groupencodings[k][d.element_name]={'dtype':numpy.dtype('S80'),'compression': 'gzip','chunksizes':(min(100000, s[0] ) , 80 ) }
+                    else: 
+                        groupencodings[k][d.element_name]={'compression': 'gzip'}
+                    
+                    if k in ('observations_table'):
+                        #print(k,d.element_name,time.time()-tt,' mem:',process.memory_info().rss//1024//1024)
+                        write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs= dic_obstab_attributes  )
+                except:
+                    #print('bad:',k,d.element_name)
+                    pass
+                #if k=='observations_table':
+                #    print(k,d.element_name,time.time()-tt,' mem:',process.memory_info().rss//1024//1024)
+                
+    for k in groups.keys():            
+            ##this appends group by group to the netcdf file
+            if k not in ['observations_table'] :   
+                try:
+                    groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') #
+                except:
+                    pass
+    
+    """
     for k in groups.keys():            
         if k not in ('observations_table') :   
-            if k in ['id_scheme', 'observed_variable']:
-                continue                        
+            if k in ['id_scheme', 'observed_variable', 'crs']:
+                continue      
+            #write_dict_h5(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs= dic_obstab_attributes )
             groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') 
+            #old groups[k].to_netcdf(fno,format='netCDF4',engine='h5netcdf',encoding=groupencodings[k],group=k,mode='a') 
                 
     del df
     
@@ -3109,10 +3194,8 @@ def get_station_configuration_cuon(stations_id='', station_configuration='', lat
             fname = str.encode(stations_id[0])
         elif db in ["bufr", 'amma', 'giub', 'hara']:
             fname = str.encode(fn.split('/')[-1] )
-        elif db == 'shipsound':
-            return None
-        elif  db == 'npsound':
-            return None
+        elif db in ['shipsound', 'npsound']:
+            fname = str.encode(fn.split('/')[-1] )
         elif 'mauritius' in db or 'yangjiang' in db :
             return station_configuration
                 
@@ -4691,12 +4774,16 @@ if __name__ == '__main__':
     tdict['primary_id'] = np.bytes_
     tdict['secondary_id'] = np.bytes_    
     
+    '''
     if dataset == 'shipsound' or dataset == 'npsound': # there is no station_configuration for this one 
         cdm_tab['station_configuration'] = []
     else:
         cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
         clean_station_configuration(cdm_tab)              
-            
+    '''
+    cdm_tab['station_configuration']=pd.read_csv(stat_conf_file,  delimiter='\t', quoting=3, dtype=tdict, na_filter=False, comment='#')
+    clean_station_configuration(cdm_tab)       
+    a=0
             
     ### splitting files from input string 
     Files = Files.split(',')
@@ -4831,13 +4918,10 @@ if __name__ == '__main__':
             timestamps_df = pd.read_csv(datasets_path['yangjiang'] + '/intercomparison_2010_meta_data.csv')
             timestamps_df = timestamps_df[['FlightNo.' , 'Date_Time']]
 
-            #write combined file TO DO TODO HERE to implement 
             #dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, 'mauritius_2005_intercomparison', '2005', sensor=False)             
             
             for s in sensors:
                 #if s != 'Modem':
-                #    continue 
-                #if s in ['Changf' , '3therm' , 'CFH', 'Daqiao' , 'Graw' , 'Huayun' ,  'IntermSA' , 'Jinyang' , 'LM' , 'ML' , 'ML_SW' , 'Meis_REF' , 'Meisei' , 'Modem' , ]: ### TO DO TODO HERE
                 #    continue 
                 df, stat_conf_check, station_configuration_retrieved, primary_id, min_year = read_df_to_cdm(cdm_tab, dataset, datasets_path['yangjiang']+'/' + s , metadata= timestamps_df )                    
                 dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, 'yangjiang_2010_intercomparison', '2010', sensor=s) 
@@ -4902,6 +4986,9 @@ small file
 ERA5 1
 -f  0-20000-0-38475/era5.conv._38475 -d era5_1
 
+IGRA2
+-f  0-20000-0-82930/BRM00082930  -d igra2 -o COP3
+-f 0-20000-0-72230/USM00072230 -d igra2 -o COP3
 ERA5 1 MOBILE
 -f  0-20999-0-DBDK/era5.conv._DBDK  -d era5_1_mobile  
 ERA5 2
@@ -4920,15 +5007,13 @@ GIUB
 
 
 HARA
--f /scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22165_stationfile.csv -d hara -o COP2
+-f 0-20000-0-22235/22165_stationfile.csv -d hara -o COP3
 
 NPSOUND
--f /scratch/das/federico/databases_service2/NPSOUND-NSIDC0060/NPSOUND_csv_converted/np_11sound.dat_converted.csv -d npsound -o COP2
--f dummy/np_11sound.dat_converted.csv -d npsound -o COP2
-
+-f dummy/np_11sound.dat_converted.csv -d npsound -o COP3
 
 SHIPSOUND (only one file)
--f /scratch/das/federico/databases_service2/SHIPSOUND-NSIDC-0054/shipsound7696.csv -d shipsound -o COP2
+-f dummy/shipsound7696.csv -d shipsound -o COP2
 
 MAURITIUS original excel files from vendors 0-20000-0-61995
 -f 0-20000-0-61995/vaisala_ascents.csv  -d mauritius -o COP2 
@@ -4944,15 +5029,7 @@ YANGJIANG # 0-20000-0-59663
 -f 0-20000-0-59663/dummy -d yangjiang -o COP2
 """
 
-#mobile
-# -f '/mnt/users/scratch/leo/scratch/era5/odbs/1_mobile/era5.conv.??????._4DC8UUK.txt.gz'  -d era5_1_mobile  -o COP2
-
-
-# -f era5.62423.bfr  -d bufr -o /scratch/das/federico/HARVEST_YEARLY_20OCT2023_  -p 0-20000-0-62423
-
-
 
 # MOBILE ERA5 1 weird character
-
 # -f 0-20999-0-E§ML7/era5.conv._E§ML7 
 
