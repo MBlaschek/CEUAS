@@ -189,11 +189,13 @@ def calc_station(sid, year, var, selected_mons = None):
             # df = df.dropna(subset=['t', 'u', 'v'])
             df.fg_depar_t = np.nan_to_num(df.fg_depar_t)
             df.fg_depar_ws = np.nan_to_num(df.fg_depar_ws)            
-
+            
+            #####
             t_pc01 = np.nanpercentile(df.fg_depar_t, 1)
             t_pc99 = np.nanpercentile(df.fg_depar_t, 99)
             ws_pc01 = np.nanpercentile(df.fg_depar_ws, 1)
             ws_pc99 = np.nanpercentile(df.fg_depar_ws, 99)
+            #####
 
             lat_disp, lon_disp, sec_disp = np.array([np.nan]*len(df)),np.array([np.nan]*len(df)),np.array([np.nan]*len(df))
 

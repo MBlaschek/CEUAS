@@ -72,6 +72,33 @@ def calc_station(sid, year, var, selected_mons = None):
     dt_to = datetime_to_seconds(np.datetime64(str(year)+'-12-31'))
 
     conv_file = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/igra2/*' + stat + '*.nc')[0]
+
+    #######
+    # use era_2 for everything before 2006
+    
+    if len(conv_file) > 0:
+        print(year)
+        if year > 1979:
+            print('chose era5_1')
+            conv_file_era5 = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/era5_1/*' + conv_file.split('/')[-1].split('_')[0] + '*.nc')
+        else:#
+            print('chose era5_1')
+            conv_file_era5 = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/era5_2/*' + conv_file.split('/')[-1].split('_')[0] + '*.nc')
+
+    if len(conv_file_era5) > 1:
+        try:
+            for cfi in conv_file_era5:
+                if len(cfi.split(conv_file.split('/')[-1].split('_')[0].split('-')[-1])) > 2:
+                    conv_file = cfi
+        except:
+            print(conv_file_era5, len(conv_file_era5))
+            conv_file = conv_file_era5[0]
+    else:
+        conv_file = conv_file_era5
+
+    #######
+        
+    
     df_dict = {}
     df_dict_w = {}
     df_dict_h = {}
@@ -118,6 +145,13 @@ def calc_station(sid, year, var, selected_mons = None):
             df_dict_w['date_time'] = seconds_to_datetime(df_dict_w['date_time'])
             df_dict_w['wd'] = list(file['observations_table']['observation_value'][t_idx[0]:t_idx[-1]][mask_wd])
             df_dict_w['ws'] = list(file['observations_table']['observation_value'][t_idx[0]:t_idx[-1]][mask_ws])
+            df_dict_w['wd_fg_depar'] = list(file['era5fb']['observation_value'][t_idx[0]:t_idx[-1]][mask_wd])
+            df_dict_w['ws_fg_depar'] = list(file['era5fb']['observation_value'][t_idx[0]:t_idx[-1]][mask_ws])
+
+            #####
+            df_dict_w['fg_depar_ws'] = list(file['era5fb']['fg_depar@body'][t_idx[0]:t_idx[-1]][mask_ws])
+            #####
+
             df_dict_w['u'] = - np.abs(df_dict_w['ws']) * np.sin(np.radians(df_dict_w['wd']))
             df_dict_w['v'] = - np.abs(df_dict_w['ws']) * np.cos(np.radians(df_dict_w['wd']))
             
@@ -133,6 +167,10 @@ def calc_station(sid, year, var, selected_mons = None):
             df_dict['date_time'] = seconds_to_datetime(df_dict['date_time'])
             df_dict['t'] = list(file['observations_table']['observation_value'][t_idx[0]:t_idx[-1]][mask_t])
 
+            #####
+            df_dict['fg_depar_t'] = list(file['era5fb']['fg_depar@body'][t_idx[0]:t_idx[-1]][mask_t])
+            #####
+
             #meta data
             df_dict['latitude'] = list(file['observations_table']['latitude'][t_idx[0]:t_idx[-1]][mask_t])
             df_dict['longitude'] = list(file['observations_table']['longitude'][t_idx[0]:t_idx[-1]][mask_t])
@@ -142,15 +180,33 @@ def calc_station(sid, year, var, selected_mons = None):
             df_t = pd.DataFrame.from_dict(df_dict)
             df_w = pd.DataFrame.from_dict(df_dict_w)
             df_h = pd.DataFrame.from_dict(df_dict_h)
-            
-            df = pd.merge(df_t, df_w[['z_coordinate', 'date_time', 'u', 'v']], on=['z_coordinate', 'date_time'], how='inner')
+
+            #####
+            df = pd.merge(df_t, df_w[['z_coordinate', 'date_time', 'u', 'v', 'fg_depar_ws']], on=['z_coordinate', 'date_time'], how='inner')
+            #####
+
             df = pd.merge(df, df_h[['z_coordinate', 'date_time', 'rh']], on=['z_coordinate', 'date_time'], how='inner')
             df['q'] = rasotools.met.humidity.vap2sh(rasotools.met.humidity.rh2vap(df.rh, df.t), df.z_coordinate)
             
+            #####
+            t_pc01 = np.nanpercentile(df.fg_depar_t, 1)
+            t_pc99 = np.nanpercentile(df.fg_depar_t, 99)
+            ws_pc01 = np.nanpercentile(df.fg_depar_ws, 1)
+            ws_pc99 = np.nanpercentile(df.fg_depar_ws, 99)
+            #####
+
             lat_disp, lon_disp, sec_disp = np.array([np.nan]*len(df)),np.array([np.nan]*len(df)),np.array([np.nan]*len(df))
             
             for rid in df.report_id.drop_duplicates():
                 df_j = df[df.report_id == rid].copy()
+
+                #####
+                # remove this if no bg threshold check should be done
+                df_j = df_j[np.logical_and(np.logical_and(df_j.fg_depar_t < t_pc99, df_j.fg_depar_t > t_pc01), 
+                                        np.logical_and(df_j.fg_depar_ws < ws_pc99, df.fg_depar_ws > ws_pc01)
+                                        )]
+                #####
+
                 df_j_cleanded = df_j.sort_values(by='z_coordinate', ascending=False).dropna(subset=['t', 'u', 'v'])
                 if len(df_j_cleanded) > 3:
 
@@ -264,18 +320,18 @@ if __name__ == '__main__':
     stdplevs = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500]
     diff = True
     show_date = False
-    for var in ['eastward windspeed', 'northward windspeed', 'air temperature', 'specific humidity']: # ['eastward windspeed', 'northward windspeed', 'air temperature', 'specific humidity']
+    for var in ['air temperature', 'eastward windspeed', 'northward windspeed', 'specific humidity']: # ['eastward windspeed', 'northward windspeed', 'air temperature', 'specific humidity']: # ['eastward windspeed', 'northward windspeed', 'air temperature', 'specific humidity']
         for year in [2000]: # [1960, 1970, 1980, 1990, 2000, 2010, 2020]:
             file_list = []
-            # for i in glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/igra2/*.nc')[:]:
-            #     sid = i.split('/')[-1].split('.')[0]
-            #     print(sid)
-            #     file_list.append(calc_station.remote(sid,year,var))
-            # results = ray.get(file_list)
-            # with open('era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'wb') as file:
-            #     pickle.dump(results, file)
-            with open('/users/staff/uvoggenberger/scratch/displacement_data/igra/world/era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'rb') as file:
-                results = pickle.load(file)
+            for i in glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/igra2/*.nc')[:]:
+                sid = i.split('/')[-1].split('.')[0]
+                print(sid)
+                file_list.append(calc_station.remote(sid,year,var))
+            results = ray.get(file_list)
+            with open('era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'wb') as file:
+                pickle.dump(results, file)
+            # with open('/users/staff/uvoggenberger/scratch/displacement_data/igra/world/era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'rb') as file:
+            #     results = pickle.load(file)
 
             rmse_sum_shbase_sonde, rmse_sum_shdisp_sonde, rms_sum_shbase, rms_sum_sonde, rms_sum_shdisp, rms_sum_dispminusbase = copy.deepcopy(results[0])
             for i in results[1:]:

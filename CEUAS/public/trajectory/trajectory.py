@@ -172,7 +172,7 @@ def transport_geod(lat, lon, u_dist, v_dist):
     return new_lat, new_lon
 
 
-def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean', output='degree', transport_type='ellipsoid'):
+def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean', output='degree', transport_type='ellipsoid', zorig=None):
     '''
     main function to calculate trajectories
     
@@ -198,7 +198,12 @@ def trajectory(lat, lon, u, v, pressure, temperature, w_rs = 5.0, wind = 'mean',
         print("Please resort the input data - ascending order is necessary!")
         return None, None, None #, None, None
         
-    z = calc_height(temperature, pressure) # m from K and Pa
+    if zorig is None:
+        z = calc_height(temperature, pressure) # m from K and Pa
+    else:
+        if zorig.shape[0] != pressure.shape[0]:
+            raise ValueError
+        z = zorig.copy()
     
     new_lat = lat
     new_lon = lon
