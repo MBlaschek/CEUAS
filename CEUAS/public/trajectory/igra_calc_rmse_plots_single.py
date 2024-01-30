@@ -70,28 +70,12 @@ def calc_station(sid, year, var, selected_mons = None):
     dt_from = datetime_to_seconds(np.datetime64(str(year)+'-01-01'))
     dt_to = datetime_to_seconds(np.datetime64(str(year)+'-12-31'))
 
-    conv_file_igra = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/igra2/*' + stat + '*.nc')[0]
-    
-    #######
-    # use era_2 for everything before 2006
-    
-    if len(conv_file_igra) > 0:
-        print(year)
-        if year > 1979:
-            print('chose era5_1')
-            conv_file_era5 = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/era5_1/*' + conv_file_igra.split('/')[-1].split('_')[0] + '*.nc')
-        else:#
-            print('chose era5_1')
-            conv_file_era5 = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/era5_2/*' + conv_file_igra.split('/')[-1].split('_')[0] + '*.nc')
-
-    if len(conv_file_era5) > 1:
-        for cfi in conv_file_era5:
-            if len(cfi.split(conv_file_igra.split('/')[-1].split('_')[0].split('-')[-1])) > 2:
-                conv_file_igra = cfi
+    #####
+    if year > 1979:
+        conv_file_igra = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/era5_1/*'+ stat +'.txt.gz.nc')
     else:
-        conv_file_igra = conv_file_era5
-
-    #######
+        conv_file_igra = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/era5_2/*'+ stat +'.txt.gz.nc')
+    #####
 
     df_dict = {}
     df_dict_w = {}
@@ -187,10 +171,11 @@ def calc_station(sid, year, var, selected_mons = None):
                 df = pd.merge(df, df_h[['z_coordinate', 'date_time', 'rh']], on=['z_coordinate', 'date_time'], how='inner')
                 df['q'] = rasotools.met.humidity.vap2sh(rasotools.met.humidity.rh2vap(df.rh, df.t), df.z_coordinate)
             # df = df.dropna(subset=['t', 'u', 'v'])
+
+            #####    
             df.fg_depar_t = np.nan_to_num(df.fg_depar_t)
             df.fg_depar_ws = np.nan_to_num(df.fg_depar_ws)            
             
-            #####
             t_pc01 = np.nanpercentile(df.fg_depar_t, 1)
             t_pc99 = np.nanpercentile(df.fg_depar_t, 99)
             ws_pc01 = np.nanpercentile(df.fg_depar_ws, 1)
@@ -248,20 +233,17 @@ def calc_station(sid, year, var, selected_mons = None):
         if compare_to == 'fc':
             files = glob.glob('/mnt/scratch/scratch/leo/scratch/era5/gridded/era5fct.' + str(year) + str(mon).zfill(2) + '*.' + varsel_era + '.nc')[0]
         else:
-            files = glob.glob('/mnt/scratch/scratch/leo/scratch/era5/gridded/era5t.' + str(year) + str(mon).zfill(2) + '*.' + varsel_era + '.nc')[0]
+            files = glob.glob('/mnt/scratch/scratch/leo/scratch/era5/gridded/era5.0.25t.' + str(year) + str(mon).zfill(2) + '*.' + varsel_era + '.nc')[0]
         ds_fc = xr.load_dataset(files)
         print('loading era5 data: ', time.time() - t0)
         t0 = time.time()
 
         t0 = time.time()     
-        ##
-        ## change to report id
-        ##
+
         for day in df_mon.date_time.drop_duplicates()[:]:
 
             input_data = df_mon[df_mon.date_time == day]
             ds_fc_time = ds_fc.sel(time=day, method='nearest')
-    #             print(day, pd.Timestamp(ds_fc_time.time.values))
             if (pd.Timestamp(ds_fc_time.time.values) - day) > maxtimediff:
                 continue
             t_list = []
@@ -324,9 +306,9 @@ if __name__ == '__main__':
     diff = True
     show_date = False
     for var in ['air temperature']: #['eastward windspeed', 'northward windspeed', 'air temperature', 'specific humidity']:
-        for year in [2000]: # [1960, 1970, 1980, 1990, 2000, 2010, 2020]:
+        for year in [1970, 2000]: # [1960, 1970, 1980, 1990, 2000, 2010, 2020]:
             for i in glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/igra2/*11035*.nc')[:]: # 70219
-                sid = i.split('/')[-1].split('.')[0]
+                sid = i.split('-data')[-2][-5:]
                 results = calc_station(sid,year,var)
                 with open(sid.split('-')[3][:5]+'_era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'wb') as file:
                     pickle.dump(results, file)
@@ -349,7 +331,6 @@ if __name__ == '__main__':
                     rmse_shdisp_sonde.append(np.sqrt(np.nanmean((np.array(rmse_sum_shdisp_sonde[stdplevs[i]])**2))))
                     if show_date:    
                         print('rmse_shdisp_sonde - plev: ', stdplevs[i], ' RMSE: ', rmse_shdisp_sonde[-1])
-
                     rms_shbase.append(np.sqrt(np.nanmean((np.array(rms_sum_shbase[stdplevs[i]])**2))))
                     if show_date:    
                         print('rms_shbase - plev: ', stdplevs[i], ' RMS: ', rms_shbase[-1])
