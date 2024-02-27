@@ -965,7 +965,7 @@ class Merger():
         all_timestamps = [ f for f in all_timestamps if f != self.last_timestamp ] # TODO it has to do with the duplicate check from previous year! see Lindenberg dt=1988060400 (1962-1963)
         all_era5 = ['era5_1', 'era5_1_mobile' , 'era5_2' , 'era5_2_mobile'] 
 
-        for dt,index in zip( tqdm(all_timestamps[:100]), range(len(all_timestamps)) ) :  #TODO CHANGE HERE !!!! 
+        for dt,index in zip( tqdm(all_timestamps[:100]), range(len(all_timestamps)) ) :  #TODO TO DO WRONG CHANGE HERE !!!! 
             
             #if dt == 2492985600:
             #    a = 0
@@ -973,6 +973,8 @@ class Merger():
             
             if dt in processed_timestamps[-5:]:   # all timestamps are sorted so should not check the entire list 
                 continue 
+
+            duplicates_dic={}
 
             if dt in unique_ts: # no time duplicate detected, apply standard merging procedure 
                 real_time = dt 
@@ -992,7 +994,6 @@ class Merger():
                     continue
                 # apply hierarchical selection 
                 
-                duplicates_dic={}
                 for t in possible_duplicates:
                     
                     #duplicate_data = {}  # becomign unecessary 
@@ -1140,14 +1141,18 @@ class Merger():
             all_combined_timestamps[real_time]['best_file'] = best_file
             
             # duplicated sources
-            all_ds = np.unique([duplicates_dic[k][0] for k in duplicates_dic.keys() ])            
-            duplicated = ','.join(all_ds) 
-            all_combined_timestamps[real_time]['all_duplicated_records'] = duplicated
-            
-            # duplicated status
-            status = 1  if  len(all_ds)>1 else 0   
-            all_combined_timestamps[real_time]['duplicated_status'] = status
+            if len(duplicates_dic.keys()) >1 :
+                all_ds = np.unique([duplicates_dic[k][0] for k in duplicates_dic.keys() ])            
+                duplicated = ','.join(all_ds) 
+                all_combined_timestamps[real_time]['all_duplicated_records'] = duplicated
+                status=0
+            else:
+                duplicated = best_ds
+                status =1
+                all_combined_timestamps[real_time]['all_duplicated_records'] = duplicated
 
+            # duplicated status
+            all_combined_timestamps[real_time]['duplicated_status'] = status
             
             all_combined_timestamps[real_time]['real_time'] = real_time
             all_combined_timestamps[real_time]['duplicated_time'] = all_times
@@ -2150,7 +2155,7 @@ if __name__ == '__main__':
             
     #stations = ['0-20000-0-31977']
         
-    stations = stations[4501:]
+    #stations = stations[4501:]
     Merging = Merger(add_sensor=add_sensor, 
                      out_dir = merged_out_dir,
                      min_year= min_year,
@@ -2163,9 +2168,11 @@ if __name__ == '__main__':
     ### Here: must create a list of stations 
     # stations = ['0-20001-0-11035', '0-20001-0-10393' , '0-20000-0-70219' , '0-20000-0-06610']  # 0-20000-0-71879 , 0-20000-0-82900                                                                                                                 
     # stations = ['0-20001-0-10393']
-    stations = [s for s in stations if s in os.listdir('/scratch/das/federico/HARVEST_YEARLY_22FEB2024_amma/amma')]
-    #stations = [s for s in stations if '0-20999-0-00630' in s ]
+    #stations = [s for s in stations if s in os.listdir('/scratch/das/federico/HARVEST_YEARLY_22FEB2024_amma/amma')]
+    stations = [s for s in stations if '0-20001-0-11035' in s ]
+    
     POOL = False
+    
     if len(stations)== 1:
         POOL = False
         
