@@ -245,7 +245,7 @@ class Merger():
         
         if s.empty:
             a = open('logs/failed_stat_conf.txt' , 'a+')
-            a.write(self.station + '\n')
+            a.write('Cannot_find_station_configuration_for_' + self.station + '\n')
         else:
             for k in s.columns:
                 if pd.isnull(s[k].values[0]):
@@ -270,14 +270,14 @@ class Merger():
         self.statconf_columns = sc.keys()
 
         """ Reading the CDM tables that do not depend on specific stations or observations (fixed values), for the first file only """
-        for t in self.standard_cdm: # [ 'crs' , 'observed_variable', 'units' , 'z_coordinate_type' , 'station_type', 'station_configuration_codes']         
+        for t in self.standard_cdm: # [ 'crs' , 'observed_variable', 'units' , 'z_coordinate_type' , 'station_type', 'station_configuration_codes']   
             try:
-                
                 if t not in self.data['cdm_tables'].keys():
                     #data['cdm_tables'][t] = ''
-                    cdm = xr.open_dataset(self.datasets.files.values[0] , engine = 'h5netcdf' , group = t )
+                    cdm = xr.open_dataset('example_standard_cdm_tables.nc'  , engine = 'h5netcdf' , group = t )
                     self.data['cdm_tables'][t] = cdm 
             except:
+                print("FAIL standard cdm group " , t )
                 pass
                 
         
@@ -965,7 +965,7 @@ class Merger():
         all_timestamps = [ f for f in all_timestamps if f != self.last_timestamp ] # TODO it has to do with the duplicate check from previous year! see Lindenberg dt=1988060400 (1962-1963)
         all_era5 = ['era5_1', 'era5_1_mobile' , 'era5_2' , 'era5_2_mobile'] 
 
-        for dt,index in zip( tqdm(all_timestamps[:100]), range(len(all_timestamps)) ) :  #TODO TO DO WRONG CHANGE HERE !!!! 
+        for dt,index in zip( tqdm(all_timestamps), range(len(all_timestamps)) ) :  #TODO TO DO WRONG CHANGE HERE !!!! 
             
             #if dt == 2492985600:
             #    a = 0
@@ -1045,8 +1045,7 @@ class Merger():
                         
                         max_h_low =  self.all_timestamps_dic[low_ts]['extract_record_data'][4][1] # maximum height
                         max_h_high = self.all_timestamps_dic[high_ts]['extract_record_data'][4][1]
-                        
-                        
+
                         if max ( abs(min_p_low - min_p_high) ,  abs(max_p_low - max_p_high) ) < 10:  # small negligible difference, get ERA5 over IGRA over rest
                             
                             if best_ds_low in all_era5 and best_ds_high not in all_era5:
@@ -1078,8 +1077,13 @@ class Merger():
                                 else:
                                     best_ds = best_ds_high
                                     best_file = best_file_high                        
-                                    real_time = high_ts                                
-                                
+                                    real_time = high_ts           
+                                    
+                            elif best_ds_low == best_ds_high:
+                                best_ds = best_ds_high
+                                best_file = best_file_high
+                                real_time = high_ts                                
+                            
                         else:
                             # selecting best ds by number of records 
                             if ( l_low >= l_high ):
@@ -1201,67 +1205,73 @@ class Merger():
             if 'completed' in self.processed_stats[self.station]:
                 all_years = []
         
-        
-        for this_year in all_years:   # loop over all available years in the date_times 
-            print('=== Running year ::: ' , this_year )
-            self.current_year = this_year 
+        if len(all_years) ==0:
+            print('+++ WARNING: no file checked the selection criteria, check if correct! ')
+            return
+        else:
             
-            data_this_year = data_all_years[this_year]
-            
-            #following_year = str(int(this_year) + 1) 
-            #if following_year in all_years:
-            #    data_following_year = data_all_years[following_year]
-            #else:
-            #    data_following_year = ''
-            
-            dummy = self.open_data(data_this_year)
-            """ Making all date_time for the selected year  """
-
-            dummy = self.make_unique_datetime()            
-            
-            # principal merging algoritm, applying selection rules 
-            merge = self.merge_timestamp() # selection of the best data 
-            
-            dummy = self.initialize_out_file()
-            
-            print('=== Making and writing observations_table')
-            dummy = self.make_merged_observation_table()
-            
-            print('=== Making and writing recordindex')
-            dummy = self.make_merged_recordindex()
-            
-            print('=== Making and writing feedback_table')                        
-            dummy = self.make_merged_feedback_table()  ### TODO TO DO HERE 
-            
-            print('=== Making and writing source_conf table')                                    
-            dummy = self.make_sourceconf_table()
-            
-            print('=== Making and writing header_table')                                    
-            dummy = self.make_merged_header_table()
-            
-            
-            print('=== Making and writing standard fixed CDM tables')                                    
-            dummy = self.make_standard_cdm_table()
-            
-            a = 'HERE'  # TO DO HERE
-        
-            ### Adding sensor_id to observations_table 
-            if self.add_sensor:
-                print('*** Adding sensor *** ')        
-                add_sensor = wrapper(out_dir = self.out_dir , station_id = self.station.split('-')[-1] , file = self.out_file , copy = self.copy )
-                print('*** DONE Adding sensor *** ')
-            else:
-                pass
-            
-            ### Writing log of completed year
-            a = open(self.out_dir+'/'+ self.station  + '/completed.txt' , 'a+')
-            if str(this_year)+'\n' not in a.readlines():
-                a.write(this_year + '\n')
+            for this_year in all_years:   # loop over all available years in the date_times 
+                print('=== Running year ::: ' , this_year )
+                self.current_year = this_year 
                 
-        a = open(self.out_dir+'/'+ self.station  + '/completed.txt' , 'a+')
-        lines = a.readlines()
-        if 'completed\n' not in lines:        
-            a.write('completed\n')
+                data_this_year = data_all_years[this_year]
+                
+                #following_year = str(int(this_year) + 1) 
+                #if following_year in all_years:
+                #    data_following_year = data_all_years[following_year]
+                #else:
+                #    data_following_year = ''
+                
+                dummy = self.open_data(data_this_year)
+                """ Making all date_time for the selected year  """
+    
+                dummy = self.make_unique_datetime()            
+                
+                # principal merging algoritm, applying selection rules 
+                merge = self.merge_timestamp() # selection of the best data 
+                
+                dummy = self.initialize_out_file()
+                
+                print('=== Making and writing observations_table')
+                dummy = self.make_merged_observation_table()
+                
+                print('=== Making and writing recordindex')
+                dummy = self.make_merged_recordindex()
+                
+                print('=== Making and writing feedback_table')                        
+                dummy = self.make_merged_feedback_table()  ### TODO TO DO HERE 
+                
+                print('=== Making and writing source_conf table')                                    
+                dummy = self.make_sourceconf_table()
+                
+                print('=== Making and writing header_table')                                    
+                dummy = self.make_merged_header_table()
+                
+                print('=== Making and writing standard fixed CDM tables')                                    
+                dummy = self.make_standard_cdm_table()
+                
+                a = 'HERE'  # TO DO HERE
+            
+                ### Adding sensor_id to observations_table 
+                if self.add_sensor:
+                    print('*** Adding sensor *** ')        
+                    add_sensor = wrapper(out_dir = self.out_dir , station_id = self.station.split('-')[-1] , file = self.out_file , copy = self.copy )
+                    print('*** DONE Adding sensor *** ')
+                else:
+                    pass
+                
+                ### Writing log of completed year
+                a = open(self.out_dir+'/'+ self.station  + '/completed.txt' , 'a+')
+                if str(this_year)+'\n' not in a.readlines():
+                    a.write(this_year + '\n')
+                    
+        try:
+            a = open(self.out_dir+'/'+ self.station  + '/completed.txt' , 'a+')
+            lines = a.readlines()
+            if 'completed\n' not in lines:        
+                a.write('completed\n')
+        except:
+            pass
 
     def initialize_out_file(self):
         """ Create output directory, initialize out file """
@@ -1752,15 +1762,7 @@ class Merger():
                 except:
                     ext_tab = bytes( 'missing' , 'utf-8' )
                     #print(' FFF FAILING WITH EXTERNAL TABLE : ', var )                                                         
-                    
-                '''
-                try:
-                    
-                    var_type = self.dic_type_attributes[table][var]['type']
-                except:
-                    var_type = np.int32
-                '''
-                
+
                 
                 ''' trying to convert the variable types to the correct types stored as attribute, read from the numpy dic file '''
                 try:
@@ -1777,7 +1779,6 @@ class Merger():
         
                 dic = {var: np.array(data)}  # making a 1 colum dictionary to write 
                 #print('SHAPE IS FFF ', table[k].shape )
-                #print('variable: ' , var )
                 try:
                     #write_dict_h5(out_name, dic , table, self.encodings[table], var_selection=[], mode='a', attrs = {'description':descr, 'external_table':ext_tab}  )  # TO DO HERE TODO CHANGE write_dict_h5_old or write_dict_h5
                     write_dict_h5_old(out_name, dic , table, self.encodings[table], var_selection=[], mode='a', attrs = {'description':descr, 'external_table':ext_tab}  )  
@@ -1790,7 +1791,7 @@ class Merger():
             for k in self.data['cdm_tables'].keys():
                 table = self.data['cdm_tables'][k]
                 table.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a', group = k)
-                
+                #a=0
                 #logging.info('Writing the cdm table %s to the netCDF output ', k)
 
         #elif table == 'source_configuration':  
@@ -2018,8 +2019,21 @@ def create_stat_summary(data_directories, stat_id):
                 continue
             else:
                 harvested_files = [f for f in os.listdir(i+'/'+stat_id) if '.nc' in f and y in f.split(stat_id+'_')[1].split('_')[0]  ]                
+                
+                
+                ### filter giub wrong files
+
+                    
+                
                 if len(harvested_files) >0:
                     
+                    
+                    if d == 'giub':
+                        
+                        black_list_giub = open( 'giub_problematic_file.txt' , 'r').readlines()
+                        black_list_giub = [ l.replace('\n','').split('/')[-1] for l in black_list_giub ] 
+                        harvested_files = [f for f in harvested_files if f not in black_list_giub ]
+                        a=0
                     #if y not in station_dic.keys():
                     #    station_dic = {'year':[], 'dataset':[] , 'files': [] }
                     
@@ -2169,7 +2183,7 @@ if __name__ == '__main__':
     # stations = ['0-20001-0-11035', '0-20001-0-10393' , '0-20000-0-70219' , '0-20000-0-06610']  # 0-20000-0-71879 , 0-20000-0-82900                                                                                                                 
     # stations = ['0-20001-0-10393']
     #stations = [s for s in stations if s in os.listdir('/scratch/das/federico/HARVEST_YEARLY_22FEB2024_amma/amma')]
-    stations = [s for s in stations if '0-20001-0-11035' in s ]
+    stations = [s for s in stations if '0-20000-0-96749' in s ]
     
     POOL = False
     
