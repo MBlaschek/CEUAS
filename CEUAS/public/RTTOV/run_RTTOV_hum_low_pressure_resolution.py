@@ -1,3 +1,6 @@
+# run on Jet2:
+# module load rttov/v13.2-gcc-8.5.0
+# /jetfs/home/uvoggenberger/rttov-launcher /jetfs/home/uvoggenberger/CEUAS/CEUAS/public/RTTOV/run_RTTOV_hum_low_pressure_resolution.py
 # System information
 import pyrttov
 import numpy as np

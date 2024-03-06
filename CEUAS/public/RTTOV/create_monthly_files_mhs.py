@@ -191,7 +191,7 @@ for yr in [2010]: #range(2009,2018):
 ######
     lats = np.array(range(-8875,+9125, 250))/100.
     print(len(lats), lats)
-    lons = np.array(range(125, 36000, 250))/100.
+    lons = np.array(range(-17875, 18125, 250))/100.
     print(len(lons), lons)
 
     time_series = {}
