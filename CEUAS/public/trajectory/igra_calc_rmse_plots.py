@@ -16,6 +16,8 @@ import matplotlib.pylab as plt
 import matplotlib.pyplot as maplt
 matplotlib.rcParams.update({'font.size': 20})
 
+from numba import jit
+
 sys.path.insert(0, "/users/staff/uvoggenberger/uvpy/rasotools-master/")
 import rasotools
 
@@ -24,9 +26,11 @@ plt.rcParams['lines.linewidth'] = 3
 import warnings
 warnings.filterwarnings('ignore')
 
-import ray
-ray.init(num_cpus=60)
+# import ray
+# ray.init(num_cpus=60)
 
+
+@jit(nopython=True)
 def find_nearest(array, value):
     array = np.asarray(array)
     idx = (np.abs(array - value)).argmin()
@@ -42,8 +46,9 @@ def seconds_to_datetime(seconds, ref='1900-01-01'):
     return pd.to_datetime(seconds, unit='s', origin=ref)
 
 
-@ray.remote
+# @ray.remote
 def calc_station(sid, year, var, ds_fc_store, selected_mons = None, input_file = 'ERA5', bg_depar_check = True):
+    start_time = time.time()
     import rs_drift.drift as trj
     sys.path.insert(0, "/users/staff/uvoggenberger/uvpy/rasotools-master/")
     import rasotools
@@ -72,7 +77,7 @@ def calc_station(sid, year, var, ds_fc_store, selected_mons = None, input_file =
         if year > 1979:
             conv_file_igra = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/era5_1/*'+ stat +'.txt.gz.nc')
         else:
-            conv_file_igra = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/era5_2/*'+ stat +'.txt.gz.nc')
+            conv_file_igra = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/era5_2/*' + '_' + stat +'.gz.nc')
     else:
         conv_file_igra = glob.glob('/mnt/users/scratch/leo/scratch/converted_v13/long/*'+ stat +'*CEUAS_merged_v1.nc')
     
@@ -96,6 +101,8 @@ def calc_station(sid, year, var, ds_fc_store, selected_mons = None, input_file =
         rms_sum_shdisp[i] = []
         rms_sum_dispminusbase[i] = []
 
+    print("Setup finished --- %s seconds ---" % (time.time() - start_time))
+    start_time = time.time()
 
     try:
         
@@ -208,83 +215,89 @@ def calc_station(sid, year, var, ds_fc_store, selected_mons = None, input_file =
                 # #####
 
                 
-
-
-
             #meta data
             df_dict['latitude'] = list(file['observations_table']['latitude'][t_idx[0]:t_idx[-1]][mask_t])
             df_dict['longitude'] = list(file['observations_table']['longitude'][t_idx[0]:t_idx[-1]][mask_t])
             repid = np.asarray(file['observations_table']['report_id'][t_idx[0]:t_idx[-1]][mask_t])
             df_dict['report_id'] = list(repid.view('|S{}'.format(repid.shape[1])).flatten().astype(str))
 
-            df_t = pd.DataFrame.from_dict(df_dict)
-            df_w = pd.DataFrame.from_dict(df_dict_w)
-            df_h = pd.DataFrame.from_dict(df_dict_h)
+        print("Loading data finished --- %s seconds ---" % (time.time() - start_time))
+        start_time = time.time()
+
+        df_t = pd.DataFrame.from_dict(df_dict)
+        df_w = pd.DataFrame.from_dict(df_dict_w)
+        df_h = pd.DataFrame.from_dict(df_dict_h)
+
+        #####
+        if bg_depar_check:
+            df = pd.merge(df_t, df_w[['z_coordinate', 'date_time', 'u', 'v', 'fg_depar_ws']], on=['z_coordinate', 'date_time'], how='inner')
+        else:
+            df = pd.merge(df_t, df_w[['z_coordinate', 'date_time', 'u', 'v']], on=['z_coordinate', 'date_time'], how='inner')
+        #####
+
+        df = pd.merge(df, df_h[['z_coordinate', 'date_time', 'rh']], on=['z_coordinate', 'date_time'], how='inner')
+        df['q'] = rasotools.met.humidity.vap2sh(rasotools.met.humidity.rh2vap(df.rh, df.t), df.z_coordinate)
+        
+        #####
+        if bg_depar_check:
+            t_pc01 = {}
+            t_pc99 = {}
+            ws_pc01 = {}
+            ws_pc99 = {}
+
+            for i in stdplevs:
+                t_pc01[i] = np.nanpercentile(df[df.z_coordinate == i].fg_depar_t, 1)
+                t_pc99[i] = np.nanpercentile(df[df.z_coordinate == i].fg_depar_t, 99)
+                ws_pc01[i] = np.nanpercentile(df[df.z_coordinate == i].fg_depar_ws, 1)
+                ws_pc99[i] = np.nanpercentile(df[df.z_coordinate == i].fg_depar_ws, 99)
+        #####
+
+        print("Organizing data finished --- %s seconds ---" % (time.time() - start_time))
+        start_time = time.time()
+
+        lat_disp, lon_disp, sec_disp = np.array([np.nan]*len(df)),np.array([np.nan]*len(df)),np.array([np.nan]*len(df))
+        
+        for rid in df.report_id.drop_duplicates():
+            df_j = df[df.report_id == rid].copy()
 
             #####
             if bg_depar_check:
-                df = pd.merge(df_t, df_w[['z_coordinate', 'date_time', 'u', 'v', 'fg_depar_ws']], on=['z_coordinate', 'date_time'], how='inner')
-            else:
-                df = pd.merge(df_t, df_w[['z_coordinate', 'date_time', 'u', 'v']], on=['z_coordinate', 'date_time'], how='inner')
+                # remove this if no bg threshold check should be done
+                filter_j = []
+                for i in df_j.z_coordinate:
+                    i = int(i)
+                    df_j_i = df_j[df_j.z_coordinate == i]
+                    if df_j_i.fg_depar_ws.iloc[0] > ws_pc99[i] or df_j_i.fg_depar_ws.iloc[0] < ws_pc01[i]:
+                        filter_j.append(False)
+                    elif df_j_i.fg_depar_t.iloc[0] > t_pc99[i] or df_j_i.fg_depar_t.iloc[0] < t_pc01[i]:
+                        filter_j.append(False)
+                    else:
+                        filter_j.append(True)
+                
+                # remove all the outliers
+                df_j = df_j[filter_j]        
             #####
 
-            df = pd.merge(df, df_h[['z_coordinate', 'date_time', 'rh']], on=['z_coordinate', 'date_time'], how='inner')
-            df['q'] = rasotools.met.humidity.vap2sh(rasotools.met.humidity.rh2vap(df.rh, df.t), df.z_coordinate)
-            
-            #####
-            if bg_depar_check:
-                t_pc01 = {}
-                t_pc99 = {}
-                ws_pc01 = {}
-                ws_pc99 = {}
+            df_j_cleanded = df_j.sort_values(by='z_coordinate', ascending=False).dropna(subset=['t', 'u', 'v'])
+            if len(df_j_cleanded) > 3:
 
-                for i in stdplevs:
-                    t_pc01[i] = np.nanpercentile(df[df.z_coordinate == i].fg_depar_t, 1)
-                    t_pc99[i] = np.nanpercentile(df[df.z_coordinate == i].fg_depar_t, 99)
-                    ws_pc01[i] = np.nanpercentile(df[df.z_coordinate == i].fg_depar_ws, 1)
-                    ws_pc99[i] = np.nanpercentile(df[df.z_coordinate == i].fg_depar_ws, 99)
-            #####
+                idx =  df_j_cleanded.index.values
+                lat_i, lon_i, sec_i = trj.trajectory(df_j_cleanded.latitude.iloc[0], 
+                                                        df_j_cleanded.longitude.iloc[0], 
+                                                        df_j_cleanded.u.values, 
+                                                        df_j_cleanded.v.values, 
+                                                        df_j_cleanded.z_coordinate.values, 
+                                                        df_j_cleanded.t.values
+                                                    )
+                lat_disp[idx] = lat_i
+                lon_disp[idx] = lon_i
+                sec_disp[idx] = sec_i
+        df['latitude_displacement'] = lat_disp
+        df['longitude_displacement'] = lon_disp
+        df['time_displacement'] = sec_disp
 
-            lat_disp, lon_disp, sec_disp = np.array([np.nan]*len(df)),np.array([np.nan]*len(df)),np.array([np.nan]*len(df))
-            
-            for rid in df.report_id.drop_duplicates():
-                df_j = df[df.report_id == rid].copy()
-
-                #####
-                if bg_depar_check:
-                    # remove this if no bg threshold check should be done
-                    filter_j = []
-                    for i in df_j.z_coordinate:
-                        i = int(i)
-                        df_j_i = df_j[df_j.z_coordinate == i]
-                        if df_j_i.fg_depar_ws.iloc[0] > ws_pc99[i] or df_j_i.fg_depar_ws.iloc[0] < ws_pc01[i]:
-                            filter_j.append(False)
-                        elif df_j_i.fg_depar_t.iloc[0] > t_pc99[i] or df_j_i.fg_depar_t.iloc[0] < t_pc01[i]:
-                            filter_j.append(False)
-                        else:
-                            filter_j.append(True)
-                    
-                    # remove all the outliers
-                    df_j = df_j[filter_j]        
-                #####
-
-                df_j_cleanded = df_j.sort_values(by='z_coordinate', ascending=False).dropna(subset=['t', 'u', 'v'])
-                if len(df_j_cleanded) > 3:
-
-                    idx =  df_j_cleanded.index.values
-                    lat_i, lon_i, sec_i = trj.trajectory(df_j_cleanded.latitude.iloc[0], 
-                                                            df_j_cleanded.longitude.iloc[0], 
-                                                            df_j_cleanded.u.values, 
-                                                            df_j_cleanded.v.values, 
-                                                            df_j_cleanded.z_coordinate.values, 
-                                                            df_j_cleanded.t.values
-                                                        )
-                    lat_disp[idx] = lat_i
-                    lon_disp[idx] = lon_i
-                    sec_disp[idx] = sec_i
-            df['latitude_displacement'] = lat_disp
-            df['longitude_displacement'] = lon_disp
-            df['time_displacement'] = sec_disp
+        print("Calculating displacement finished --- %s seconds ---" % (time.time() - start_time))
+        start_time = time.time()
 
     except:
         print('NO DATA FOUND IN IGRA: ', sid)
@@ -310,20 +323,24 @@ def calc_station(sid, year, var, ds_fc_store, selected_mons = None, input_file =
         print('calculating month: ', mon,  time.time() - t0)
         t0 = time.time()
 
-        t0 = time.time()     
+             
         ##
         ## change to report id
         ##
         for day in df_mon.date_time.drop_duplicates()[:]:
-
+            t1 = time.time()
             input_data = df_mon[df_mon.date_time == day]
+            print("Select from Input --- %s seconds ---" % (time.time() - t1))
+            t1 = time.time()
             ds_fc_time = ds_fc.sel(time=day, method='nearest')
+            print("Select from ERA5 --- %s seconds ---" % (time.time() - t1))
     #             print(day, pd.Timestamp(ds_fc_time.time.values))
             if (pd.Timestamp(ds_fc_time.time.values) - day) > maxtimediff:
                 continue
             t_list = []
+            start_time_2 = time.time()
             for i in np.array(ds_fc_time.level): #10,20,...,1000
-                step = find_nearest(input_data.z_coordinate, i*100)
+                step = find_nearest(np.array(input_data.z_coordinate), i*100)
                 ###
                 input_data_step = input_data[input_data.z_coordinate == step]
                 station_lat = input_data.latitude.iloc[0] + np.array(input_data_step.latitude_displacement)[0]
@@ -331,17 +348,41 @@ def calc_station(sid, year, var, ds_fc_store, selected_mons = None, input_file =
                 lon = station_lon
                 if lon < 0:
                     lon = 360.+lon
+                t1 = time.time()
                 ds_now = ds_fc_time.interp(latitude=[station_lat], longitude=[lon], method="linear")
                 t = ds_now[varsel].sel(level = i)
+                print("Interpolating --- %s seconds ---" % (time.time() - t1))
                 t_list.append(float(t))
+            print("Matching to ERA5 --- %s seconds ---" % (time.time() - start_time_2))
 
-            p_ml = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000]
+            # interp_lat = []
+            # interp_lon = []
+            # for i in np.array(ds_fc_time.level): #10,20,...,1000
+            #     step = find_nearest(np.array(input_data.z_coordinate), i*100)
+            #     ###
+            #     input_data_step = input_data[input_data.z_coordinate == step]
+            #     station_lat = input_data.latitude.iloc[0] + np.array(input_data_step.latitude_displacement)[0]
+            #     station_lon = input_data.longitude.iloc[0] + np.array(input_data_step.longitude_displacement)[0]
+            #     lon = station_lon
+            #     if lon < 0:
+            #         lon = 360.+lon
+            #     interp_lat.append(station_lat)
+            #     interp_lon.append(station_lon)
+                
+            # ds_now = ds_fc_time.interp(latitude=[station_lat], longitude=[lon], method="linear")
+            # t = ds_now[varsel].sel(level = i)
+            # for interp_i in range(len(interp_lat)):
+            #     t_list.append(float(t.sel(latitude = interp_lat[interp_i], longitude = interp_lon[interp_i], method='nearest')))
+            # print("Matching to ERA5 --- %s seconds ---" % (time.time() - start_time_2))
+
+            start_time_2 = time.time()
+            p_ml = np.array([1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000])
             lon = input_data.longitude.iloc[0]
             if lon < 0:
                 lon = 360.+lon
             base_t = np.array(ds_fc_time.interp(latitude=[input_data.latitude.iloc[0]], longitude=[lon], method="linear")[varsel])
             for i in range(len(stdplevs)):
-                if np.abs(stdplevs[i] - find_nearest(input_data.z_coordinate,stdplevs[i])) > 500:
+                if np.abs(stdplevs[i] - find_nearest(np.array(input_data.z_coordinate),stdplevs[i])) > 500:
                     rmse_sum_shbase_sonde[stdplevs[i]].append(np.nan)
                     rmse_sum_shdisp_sonde[stdplevs[i]].append(np.nan)
                     rms_sum_shbase[stdplevs[i]].append(np.nan)
@@ -353,7 +394,7 @@ def calc_station(sid, year, var, ds_fc_store, selected_mons = None, input_file =
                     sq_t = np.squeeze(base_t)
                     t_base = float(sq_t[p_ml == find_nearest(p_ml,stdplevs[i])])
                     t_disp = float(np.array(t_list)[p_ml == find_nearest(p_ml,stdplevs[i])])
-                    input_data_step = input_data[input_data.z_coordinate == find_nearest(input_data.z_coordinate, stdplevs[i])]
+                    input_data_step = input_data[input_data.z_coordinate == find_nearest(np.array(input_data.z_coordinate), stdplevs[i])]
                     try:
                         t_sonde = float(input_data_step[varsel])
                         rmse_sum_shbase_sonde[stdplevs[i]].append(t_base - t_sonde)
@@ -369,10 +410,11 @@ def calc_station(sid, year, var, ds_fc_store, selected_mons = None, input_file =
                         rms_sum_sonde[stdplevs[i]].append(np.nan)
                         rms_sum_shdisp[stdplevs[i]].append(np.nan)
                         rms_sum_dispminusbase[stdplevs[i]].append(np.nan)
-
-                    
-
+        print("Storing RMSEs --- %s seconds ---" % (time.time() - start_time_2))
         print('calculating mon: ',mon, time.time() - t0)
+
+    print("RMSE finished --- %s seconds ---" % (time.time() - start_time))
+    start_time = time.time()                
 
     return [rmse_sum_shbase_sonde, rmse_sum_shdisp_sonde,
             rms_sum_shbase, rms_sum_sonde,
@@ -399,27 +441,29 @@ if __name__ == '__main__':
                 varsel_era = era_dict[varsel]
                 files = glob.glob('/mnt/scratch/scratch/leo/scratch/era5/gridded/era5fct.' + str(year) + str(mon).zfill(2) + '*.' + varsel_era + '.nc')[0]
                 ds_fc_store[mon] = xr.load_dataset(files)
-            ds_fc_id = ray.put(ds_fc_store) 
+
+            # ds_fc_id = ray.put(ds_fc_store) 
 
             ###
 
             file_list = []
-            for i in glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/igra2/*.nc')[:]:
+            for i in glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/igra2/*11035*.nc')[:]:
                 sid = i.split('-data')[-2][-5:]
                 print(sid)
-                # results = calc_station(sid,year,var, ds_fc_id)
-                # break
-                file_list.append(calc_station.remote(sid,year,var, ds_fc_id))
-            results = ray.get(file_list)
-            with open('/users/staff/uvoggenberger/CEUAS/CEUAS/public/trajectory/era5source_newbgcheck_era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'wb') as file:
-                pickle.dump(results, file)
+                results = calc_station(sid,year,var, ds_fc_store)
+                break
+            #     file_list.append(calc_station.remote(sid,year,var, ds_fc_id))
+            # results = ray.get(file_list)
+            # with open('/users/staff/uvoggenberger/CEUAS/CEUAS/public/trajectory/era5source_newbgcheck_era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'wb') as file:
+            #     pickle.dump(results, file)
 
-            ###
-
-            # with open('/users/staff/uvoggenberger/scratch/displacement_data/igra/world/era5_source_bgcheck/era5source_bgcheck_era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'rb') as file: # 'qc_era5_temperature_fc_2000_rmse_data.p' 
+            # ##
+            
+            # with open('/users/staff/uvoggenberger/CEUAS/CEUAS/public/trajectory/era5source_newbgcheck_era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'rb') as file: # 'qc_era5_temperature_fc_2000_rmse_data.p' 
+            # # with open('/users/staff/uvoggenberger/scratch/displacement_data/igra/world/era5_source_bgcheck/era5source_bgcheck_era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'rb') as file: # 'qc_era5_temperature_fc_2000_rmse_data.p' 
             #     results = pickle.load(file)
 
-            ###
+            # ##
 
             # rmse_sum_shbase_sonde, rmse_sum_shdisp_sonde, rms_sum_shbase, rms_sum_sonde, rms_sum_shdisp, rms_sum_dispminusbase = copy.deepcopy(results[0])
             # for i in results[1:]:
@@ -504,6 +548,8 @@ if __name__ == '__main__':
             # value_nr = []
             # for i in rmse_sum_shbase_sonde:
             #     value_nr.append(len(np.asarray(rmse_sum_shbase_sonde[i])[~np.isnan(rmse_sum_shbase_sonde[i])]))
+            # if len(value_nr) > 15:
+            #     value_nr = value_nr[:-1]
             # if var == 'specific humidity':
             #     ax2.barh(stdplevs, value_nr, 3000, color='g', alpha = 0.4, align='center')
             # else:
@@ -514,6 +560,6 @@ if __name__ == '__main__':
 
             # #         maplt.title(str(year)+' Temperature RMSE \n' + str(len(results)) + ' stations    ' +str(len(rms_sum_shdisp[50000])) +' valid ascents')
             # maplt.title(str(year)+' '+var+' RMSE \n' +str(len(rms_sum_shdisp[50000])) +' valid ascents')
-            # maplt.savefig(str(year)+'_'+save_dict[var]+'_era5_fc_world_rmse_plot_era5_log_bg_check.png')
+            # maplt.savefig(str(year)+'_'+save_dict[var]+'_era5_fc_world_rmse_plot_era5_log_new_bg_check.png')
             # maplt.close()
             # print('RMSE calculation: ', time.time()-t0)

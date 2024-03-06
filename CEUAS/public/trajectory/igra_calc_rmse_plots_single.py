@@ -45,7 +45,7 @@ def seconds_to_datetime(seconds, ref='1900-01-01'):
     return pd.to_datetime(seconds, unit='s', origin=ref)
 
 
-def calc_station(sid, year, var, selected_mons = None):
+def calc_station(sid, year, var, selected_mons = None, input_file = 'ERA5', bg_depar_check = True):
     # sid = '11035'
     # year = 2000
     # selected_mons = None
@@ -71,17 +71,20 @@ def calc_station(sid, year, var, selected_mons = None):
     dt_to = datetime_to_seconds(np.datetime64(str(year)+'-12-31'))
 
     #####
-    if year > 1979:
-        conv_file_igra = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/era5_1/*'+ stat +'.txt.gz.nc')
+    if input_file == 'ERA5':
+        if year > 1979:
+            conv_file_igra = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/era5_1/*'+ stat +'.txt.gz.nc')
+        else:
+            conv_file_igra = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/era5_2/*' + '_' + stat +'.gz.nc')
     else:
-        conv_file_igra = glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/era5_2/*'+ stat +'.txt.gz.nc')
+        conv_file_igra = glob.glob('/mnt/users/scratch/leo/scratch/converted_v13/long/*'+ stat +'*CEUAS_merged_v1.nc')
     #####
 
     df_dict = {}
     df_dict_w = {}
     df_dict_h = {}
 
-    stdplevs = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500]
+    stdplevs = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000]
     rmse_sum_shbase_sonde={}
     rmse_sum_shdisp_sonde={}
     rms_sum_shbase={}
@@ -96,127 +99,146 @@ def calc_station(sid, year, var, selected_mons = None):
         rms_sum_sonde[i] = []
         rms_sum_shdisp[i] = []
         rms_sum_dispminusbase[i] = []
-    try:
-        with h5py.File(conv_file_igra, 'r') as file:
-            print(file.keys())
-            rts = file['recordtimestamp'][:]
-            idx = np.where(np.logical_and((rts >= dt_from), (rts <= dt_to)))[0]
-            if len(idx) == 0:
-                print('NO DATA FOUND IN IGRA: ', sid)
-                return [rmse_sum_shbase_sonde, rmse_sum_shdisp_sonde,
-                        rms_sum_shbase, rms_sum_sonde,
-                        rms_sum_shdisp, rms_sum_dispminusbase]
 
-            t_idx = file['recordindex'][idx]
-            plevs = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000]
+    # try:
 
-            p_mask = file['observations_table']['z_coordinate'][t_idx[0]:t_idx[-1]]
-            v_mask = file['observations_table']['observed_variable'][t_idx[0]:t_idx[-1]]
-            mask_t = np.logical_and(np.isin(p_mask,plevs), np.isin(v_mask, [126]))
-            mask_wd = np.logical_and(np.isin(p_mask,plevs), np.isin(v_mask, [106]))
-            mask_ws = np.logical_and(np.isin(p_mask,plevs), np.isin(v_mask, [107]))
-            mask_rh = np.logical_and(np.isin(p_mask,plevs), np.isin(v_mask, [138]))
-            t_len = len(mask_t[mask_t == True])
+    with h5py.File(conv_file_igra[0], 'r') as file:
 
-            # wind data
-            df_dict_w['z_coordinate'] = list(file['observations_table']['z_coordinate'][t_idx[0]:t_idx[-1]][mask_wd])
-            df_dict_w['date_time'] = list(file['observations_table']['date_time'][t_idx[0]:t_idx[-1]][mask_wd])
-            df_dict_w['date_time'] = seconds_to_datetime(df_dict_w['date_time'])
-            df_dict_w['wd'] = list(file['observations_table']['observation_value'][t_idx[0]:t_idx[-1]][mask_wd])
-            df_dict_w['ws'] = list(file['observations_table']['observation_value'][t_idx[0]:t_idx[-1]][mask_ws])
+        rts = file['recordtimestamp'][:]
+        idx = np.where(np.logical_and((rts >= dt_from), (rts <= dt_to)))[0]
+        if len(idx) == 0:
+            print('NO DATA FOUND IN IGRA: ', sid)
+            return [rmse_sum_shbase_sonde, rmse_sum_shdisp_sonde,
+                    rms_sum_shbase, rms_sum_sonde,
+                    rms_sum_shdisp, rms_sum_dispminusbase]
 
-            #####
-            df_dict_w['fg_depar_ws'] = list(file['era5fb']['fg_depar@body'][t_idx[0]:t_idx[-1]][mask_ws])
-            #####
+        t_idx = file['recordindex'][idx]
+        plevs = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000]
 
-            df_dict_w['u'] = - np.abs(df_dict_w['ws']) * np.sin(np.radians(df_dict_w['wd']))
-            df_dict_w['v'] = - np.abs(df_dict_w['ws']) * np.cos(np.radians(df_dict_w['wd']))
-            
-            if varsel == 'q':
-                # humidity data
-                df_dict_h['z_coordinate'] = list(file['observations_table']['z_coordinate'][t_idx[0]:t_idx[-1]][mask_rh])
-                df_dict_h['date_time'] = list(file['observations_table']['date_time'][t_idx[0]:t_idx[-1]][mask_rh])
-                df_dict_h['date_time'] = seconds_to_datetime(df_dict_h['date_time'])
-                df_dict_h['rh'] = list(file['observations_table']['observation_value'][t_idx[0]:t_idx[-1]][mask_rh])
+        p_mask = file['observations_table']['z_coordinate'][t_idx[0]:t_idx[-1]]
+        v_mask = file['observations_table']['observed_variable'][t_idx[0]:t_idx[-1]]
+        mask_t = np.logical_and(np.isin(p_mask,plevs), np.isin(v_mask, [126]))
+        mask_wd = np.logical_and(np.isin(p_mask,plevs), np.isin(v_mask, [106]))
+        mask_ws = np.logical_and(np.isin(p_mask,plevs), np.isin(v_mask, [107]))
+        mask_rh = np.logical_and(np.isin(p_mask,plevs), np.isin(v_mask, [138]))
+        t_len = len(mask_t[mask_t == True])
 
-            #temperature data
-            df_dict['z_coordinate'] = list(file['observations_table']['z_coordinate'][t_idx[0]:t_idx[-1]][mask_t])
-            df_dict['date_time'] = list(file['observations_table']['date_time'][t_idx[0]:t_idx[-1]][mask_t])
-            df_dict['date_time'] = seconds_to_datetime(df_dict['date_time'])
-            df_dict['t'] = list(file['observations_table']['observation_value'][t_idx[0]:t_idx[-1]][mask_t])
+        # wind data
+        df_dict_w['z_coordinate'] = list(file['observations_table']['z_coordinate'][t_idx[0]:t_idx[-1]][mask_wd])
+        df_dict_w['date_time'] = list(file['observations_table']['date_time'][t_idx[0]:t_idx[-1]][mask_wd])
+        df_dict_w['date_time'] = seconds_to_datetime(df_dict_w['date_time'])
+        df_dict_w['wd'] = list(file['observations_table']['observation_value'][t_idx[0]:t_idx[-1]][mask_wd])
+        df_dict_w['ws'] = list(file['observations_table']['observation_value'][t_idx[0]:t_idx[-1]][mask_ws])
 
-            #####
-            df_dict['fg_depar_t'] = list(file['era5fb']['fg_depar@body'][t_idx[0]:t_idx[-1]][mask_t])
-            #####
+        #####
+        df_dict_w['fg_depar_ws'] = list(file['era5fb']['fg_depar@body'][t_idx[0]:t_idx[-1]][mask_ws])
+        #####
 
-            #meta data
-            df_dict['latitude'] = list(file['observations_table']['latitude'][t_idx[0]:t_idx[-1]][mask_t])
-            df_dict['longitude'] = list(file['observations_table']['longitude'][t_idx[0]:t_idx[-1]][mask_t])
-            repid = np.asarray(file['observations_table']['report_id'][t_idx[0]:t_idx[-1]][mask_t])
-            df_dict['report_id'] = list(repid.view('|S{}'.format(repid.shape[1])).flatten().astype(str))
+        df_dict_w['u'] = - np.abs(df_dict_w['ws']) * np.sin(np.radians(df_dict_w['wd']))
+        df_dict_w['v'] = - np.abs(df_dict_w['ws']) * np.cos(np.radians(df_dict_w['wd']))
+        
+        if varsel == 'q':
+            # humidity data
+            df_dict_h['z_coordinate'] = list(file['observations_table']['z_coordinate'][t_idx[0]:t_idx[-1]][mask_rh])
+            df_dict_h['date_time'] = list(file['observations_table']['date_time'][t_idx[0]:t_idx[-1]][mask_rh])
+            df_dict_h['date_time'] = seconds_to_datetime(df_dict_h['date_time'])
+            df_dict_h['rh'] = list(file['observations_table']['observation_value'][t_idx[0]:t_idx[-1]][mask_rh])
 
-            df_t = pd.DataFrame.from_dict(df_dict)
-            df_w = pd.DataFrame.from_dict(df_dict_w)
-            if varsel == 'q':
-                df_h = pd.DataFrame.from_dict(df_dict_h)
-            
-            #####
-            # df = pd.merge(df_t, df_w[['z_coordinate', 'date_time', 'u', 'v']], on=['z_coordinate', 'date_time'], how='inner')
+        #temperature data
+        df_dict['z_coordinate'] = list(file['observations_table']['z_coordinate'][t_idx[0]:t_idx[-1]][mask_t])
+        df_dict['date_time'] = list(file['observations_table']['date_time'][t_idx[0]:t_idx[-1]][mask_t])
+        df_dict['date_time'] = seconds_to_datetime(df_dict['date_time'])
+        df_dict['t'] = list(file['observations_table']['observation_value'][t_idx[0]:t_idx[-1]][mask_t])
+
+        #####
+        df_dict['fg_depar_t'] = list(file['era5fb']['fg_depar@body'][t_idx[0]:t_idx[-1]][mask_t])
+        #####
+
+        #meta data
+        df_dict['latitude'] = list(file['observations_table']['latitude'][t_idx[0]:t_idx[-1]][mask_t])
+        df_dict['longitude'] = list(file['observations_table']['longitude'][t_idx[0]:t_idx[-1]][mask_t])
+        repid = np.asarray(file['observations_table']['report_id'][t_idx[0]:t_idx[-1]][mask_t])
+        df_dict['report_id'] = list(repid.view('|S{}'.format(repid.shape[1])).flatten().astype(str))
+
+        df_t = pd.DataFrame.from_dict(df_dict)
+        df_w = pd.DataFrame.from_dict(df_dict_w)
+        if varsel == 'q':
+            df_h = pd.DataFrame.from_dict(df_dict_h)
+        
+        #####
+        if bg_depar_check:
             df = pd.merge(df_t, df_w[['z_coordinate', 'date_time', 'u', 'v', 'fg_depar_ws']], on=['z_coordinate', 'date_time'], how='inner')
+        else:
+            df = pd.merge(df_t, df_w[['z_coordinate', 'date_time', 'u', 'v']], on=['z_coordinate', 'date_time'], how='inner')
+        #####
+
+        print('df len',  len(df))
+
+        if varsel == 'q':
+            df = pd.merge(df, df_h[['z_coordinate', 'date_time', 'rh']], on=['z_coordinate', 'date_time'], how='inner')
+            df['q'] = rasotools.met.humidity.vap2sh(rasotools.met.humidity.rh2vap(df.rh, df.t), df.z_coordinate)
+        # df = df.dropna(subset=['t', 'u', 'v'])
+
+        #####
+        if bg_depar_check:
+            t_pc01 = {}
+            t_pc99 = {}
+            ws_pc01 = {}
+            ws_pc99 = {}
+
+            for i in stdplevs:
+                t_pc01[i] = np.nanpercentile(df[df.z_coordinate == i].fg_depar_t, 1)
+                t_pc99[i] = np.nanpercentile(df[df.z_coordinate == i].fg_depar_t, 99)
+                ws_pc01[i] = np.nanpercentile(df[df.z_coordinate == i].fg_depar_ws, 1)
+                ws_pc99[i] = np.nanpercentile(df[df.z_coordinate == i].fg_depar_ws, 99)
+        #####
+
+        lat_disp, lon_disp, sec_disp = np.array([np.nan]*len(df)),np.array([np.nan]*len(df)),np.array([np.nan]*len(df))
+
+        for rid in df.report_id.drop_duplicates():
+            df_j = df[df.report_id == rid].copy()
+
             #####
-
-            print('df len',  len(df))
-
-            if varsel == 'q':
-                df = pd.merge(df, df_h[['z_coordinate', 'date_time', 'rh']], on=['z_coordinate', 'date_time'], how='inner')
-                df['q'] = rasotools.met.humidity.vap2sh(rasotools.met.humidity.rh2vap(df.rh, df.t), df.z_coordinate)
-            # df = df.dropna(subset=['t', 'u', 'v'])
-
-            #####    
-            df.fg_depar_t = np.nan_to_num(df.fg_depar_t)
-            df.fg_depar_ws = np.nan_to_num(df.fg_depar_ws)            
-            
-            t_pc01 = np.nanpercentile(df.fg_depar_t, 1)
-            t_pc99 = np.nanpercentile(df.fg_depar_t, 99)
-            ws_pc01 = np.nanpercentile(df.fg_depar_ws, 1)
-            ws_pc99 = np.nanpercentile(df.fg_depar_ws, 99)
-            #####
-
-            lat_disp, lon_disp, sec_disp = np.array([np.nan]*len(df)),np.array([np.nan]*len(df)),np.array([np.nan]*len(df))
-
-            for rid in df.report_id.drop_duplicates():
-                df_j = df[df.report_id == rid].copy()
-
-                #####
+            if bg_depar_check:
                 # remove this if no bg threshold check should be done
-                df_j = df_j[np.logical_and(np.logical_and(df_j.fg_depar_t < t_pc99, df_j.fg_depar_t > t_pc01), 
-                                        np.logical_and(df_j.fg_depar_ws < ws_pc99, df.fg_depar_ws > ws_pc01)
-                                        )]
-                #####
+                filter_j = []
+                for i in df_j.z_coordinate:
+                    i = int(i)
+                    df_j_i = df_j[df_j.z_coordinate == i]
+                    if df_j_i.fg_depar_ws.iloc[0] > ws_pc99[i] or df_j_i.fg_depar_ws.iloc[0] < ws_pc01[i]:
+                        filter_j.append(False)
+                    elif df_j_i.fg_depar_t.iloc[0] > t_pc99[i] or df_j_i.fg_depar_t.iloc[0] < t_pc01[i]:
+                        filter_j.append(False)
+                    else:
+                        filter_j.append(True)
+                
+                # remove all the outliers
+                df_j = df_j[filter_j]        
+            #####
 
-                df_j_cleanded = df_j.sort_values(by='z_coordinate', ascending=False).dropna(subset=['t', 'u', 'v'])
-                if len(df_j_cleanded) > 3:
+            df_j_cleanded = df_j.sort_values(by='z_coordinate', ascending=False).dropna(subset=['t', 'u', 'v'])
+            if len(df_j_cleanded) > 3:
 
-                    idx =  df_j_cleanded.index.values
-                    lat_i, lon_i, sec_i = trj.trajectory(df_j_cleanded.latitude.iloc[0], 
-                                                            df_j_cleanded.longitude.iloc[0], 
-                                                            df_j_cleanded.u.values, 
-                                                            df_j_cleanded.v.values, 
-                                                            df_j_cleanded.z_coordinate.values, 
-                                                            df_j_cleanded.t.values
-                                                        )
-                    lat_disp[idx] = lat_i
-                    lon_disp[idx] = lon_i
-                    sec_disp[idx] = sec_i
-            df['latitude_displacement'] = lat_disp
-            df['longitude_displacement'] = lon_disp
-            df['time_displacement'] = sec_disp
+                idx =  df_j_cleanded.index.values
+                lat_i, lon_i, sec_i = trj.trajectory(df_j_cleanded.latitude.iloc[0], 
+                                                        df_j_cleanded.longitude.iloc[0], 
+                                                        df_j_cleanded.u.values, 
+                                                        df_j_cleanded.v.values, 
+                                                        df_j_cleanded.z_coordinate.values, 
+                                                        df_j_cleanded.t.values
+                                                    )
+                lat_disp[idx] = lat_i
+                lon_disp[idx] = lon_i
+                sec_disp[idx] = sec_i
+        df['latitude_displacement'] = lat_disp
+        df['longitude_displacement'] = lon_disp
+        df['time_displacement'] = sec_disp
 
-    except:
-        print('NO DATA FOUND IN IGRA: ', sid)
-        return [rmse_sum_shbase_sonde, rmse_sum_shdisp_sonde,
-                rms_sum_shbase, rms_sum_sonde,
-                rms_sum_shdisp, rms_sum_dispminusbase]
+    # except:
+    #     print('NO DATA FOUND IN IGRA: ', sid)
+    #     return [rmse_sum_shbase_sonde, rmse_sum_shdisp_sonde,
+    #             rms_sum_shbase, rms_sum_sonde,
+    #             rms_sum_shdisp, rms_sum_dispminusbase]
     
     df = df.dropna()
     if len(df) == 0:
@@ -302,96 +324,101 @@ if __name__ == '__main__':
 #     year = 1990
     save_dict = {'eastward windspeed':'u', 'northward windspeed':'v', 'air temperature':'temperature', 'specific humidity':'q'}
     units_dict = {'eastward windspeed':'m/s', 'northward windspeed':'m/s', 'air temperature':'K', 'specific humidity':'1'}
-    stdplevs = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500]
+    stdplevs = [1000,2000,3000,5000,7000,10000,15000,20000,25000,30000,40000,50000,70000,85000,92500,100000]
     diff = True
     show_date = False
     for var in ['air temperature']: #['eastward windspeed', 'northward windspeed', 'air temperature', 'specific humidity']:
         for year in [1970, 2000]: # [1960, 1970, 1980, 1990, 2000, 2010, 2020]:
-            for i in glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/igra2/*11035*.nc')[:]: # 70219
-                sid = i.split('-data')[-2][-5:]
-                results = calc_station(sid,year,var)
-                with open(sid.split('-')[3][:5]+'_era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'wb') as file:
-                    pickle.dump(results, file)
+            for bg_check in [True, False]:
+                for i in glob.glob('/scratch/das/federico/COP2_HARVEST_JAN2023/igra2/*11035*.nc')[:]: # 70219
+                    sid = i.split('-data')[-2][-5:]
+                    results = calc_station(sid,year,var, bg_depar_check=bg_check)
+                    with open(sid+'_era5_' + save_dict[var] + '_fc_'+str(year)+'_rmse_data.p', 'wb') as file:
+                        pickle.dump(results, file)
 
-                rmse_sum_shbase_sonde, rmse_sum_shdisp_sonde, rms_sum_shbase, rms_sum_sonde, rms_sum_shdisp, rms_sum_dispminusbase = results
-                print('valid ascents: ', len(rms_sum_shdisp[50000]))
-                t0 = time.time()
-                rmse_shbase_sonde=[]
-                rmse_shdisp_sonde=[]
+                    rmse_sum_shbase_sonde, rmse_sum_shdisp_sonde, rms_sum_shbase, rms_sum_sonde, rms_sum_shdisp, rms_sum_dispminusbase = results
+                    print('valid ascents: ', len(rms_sum_shdisp[50000]))
+                    t0 = time.time()
+                    rmse_shbase_sonde=[]
+                    rmse_shdisp_sonde=[]
 
-                rms_shbase=[]
-                rms_sonde=[]
-                rms_shdisp=[]
-                rms_dispmbase=[]
+                    rms_shbase=[]
+                    rms_sonde=[]
+                    rms_shdisp=[]
+                    rms_dispmbase=[]
 
-                for i in range(len(stdplevs)):
-                    rmse_shbase_sonde.append(np.sqrt(np.nanmean((np.array(rmse_sum_shbase_sonde[stdplevs[i]])**2))))
-                    if show_date:    
-                        print('rmse_shbase_sonde - plev: ', stdplevs[i], ' RMSE: ', rmse_shbase_sonde[-1])
-                    rmse_shdisp_sonde.append(np.sqrt(np.nanmean((np.array(rmse_sum_shdisp_sonde[stdplevs[i]])**2))))
-                    if show_date:    
-                        print('rmse_shdisp_sonde - plev: ', stdplevs[i], ' RMSE: ', rmse_shdisp_sonde[-1])
-                    rms_shbase.append(np.sqrt(np.nanmean((np.array(rms_sum_shbase[stdplevs[i]])**2))))
-                    if show_date:    
-                        print('rms_shbase - plev: ', stdplevs[i], ' RMS: ', rms_shbase[-1])
-                    rms_sonde.append(np.sqrt(np.nanmean((np.array(rms_sum_sonde[stdplevs[i]])**2))))
-                    if show_date:    
-                        print('rms_sonde - plev: ', stdplevs[i], ' RMS: ', rms_sonde[-1])
-                    rms_shdisp.append(np.sqrt(np.nanmean((np.array(rms_sum_shdisp[stdplevs[i]])**2))))
-                    if show_date:
-                        print('rms_shdisp - plev: ', stdplevs[i], ' RMS: ', rms_shdisp[-1])
-                    rms_dispmbase.append(np.sqrt(np.nanmean((np.array(rms_sum_dispminusbase[stdplevs[i]])**2))))
-                    if show_date:
-                        print('rms_dispmbase - plev: ', stdplevs[i], ' RMS: ', rms_shdisp[-1])
+                    for i in range(len(stdplevs)):
+                        rmse_shbase_sonde.append(np.sqrt(np.nanmean((np.array(rmse_sum_shbase_sonde[stdplevs[i]])**2))))
+                        if show_date:    
+                            print('rmse_shbase_sonde - plev: ', stdplevs[i], ' RMSE: ', rmse_shbase_sonde[-1])
+                        rmse_shdisp_sonde.append(np.sqrt(np.nanmean((np.array(rmse_sum_shdisp_sonde[stdplevs[i]])**2))))
+                        if show_date:    
+                            print('rmse_shdisp_sonde - plev: ', stdplevs[i], ' RMSE: ', rmse_shdisp_sonde[-1])
+                        rms_shbase.append(np.sqrt(np.nanmean((np.array(rms_sum_shbase[stdplevs[i]])**2))))
+                        if show_date:    
+                            print('rms_shbase - plev: ', stdplevs[i], ' RMS: ', rms_shbase[-1])
+                        rms_sonde.append(np.sqrt(np.nanmean((np.array(rms_sum_sonde[stdplevs[i]])**2))))
+                        if show_date:    
+                            print('rms_sonde - plev: ', stdplevs[i], ' RMS: ', rms_sonde[-1])
+                        rms_shdisp.append(np.sqrt(np.nanmean((np.array(rms_sum_shdisp[stdplevs[i]])**2))))
+                        if show_date:
+                            print('rms_shdisp - plev: ', stdplevs[i], ' RMS: ', rms_shdisp[-1])
+                        rms_dispmbase.append(np.sqrt(np.nanmean((np.array(rms_sum_dispminusbase[stdplevs[i]])**2))))
+                        if show_date:
+                            print('rms_dispmbase - plev: ', stdplevs[i], ' RMS: ', rms_shdisp[-1])
 
 
-                print('')
+                    print('')
 
-                fig, ax = maplt.subplots(1, 2, gridspec_kw={'width_ratios': [4, 1]}, figsize = (15,10))
-                ax1 = ax[0]
-                ax2 = ax[1] 
-                if var != 'specific humidity':
-                    ax1.set_yscale('log')
-                    ax2.set_yscale('log')
-                ax2.sharey(ax1)
-                if var == 'specific humidity':
-                    ax1.plot(100000*np.array(rmse_shbase_sonde),stdplevs,color='orange', label=r'RMSE vertical $\times 10^{-5}$')
-                    ax1.plot(100000*np.array(rmse_shdisp_sonde),stdplevs, color='red', label=r'RMSE slanted $\times 10^{-5}$')
-                else:
-                    ax1.plot(np.array(rmse_shbase_sonde),stdplevs,color='orange', label='RMSE vertical')
-                    ax1.plot(np.array(rmse_shdisp_sonde),stdplevs, color='red', label='RMSE slanted')
+                    fig, ax = maplt.subplots(1, 2, gridspec_kw={'width_ratios': [4, 1]}, figsize = (15,10))
+                    ax1 = ax[0]
+                    ax2 = ax[1] 
+                    if var != 'specific humidity':
+                        ax1.set_yscale('log')
+                        ax2.set_yscale('log')
+                    ax2.sharey(ax1)
+                    if var == 'specific humidity':
+                        ax1.plot(100000*np.array(rmse_shbase_sonde),stdplevs,color='orange', label=r'RMSE vertical $\times 10^{-5}$')
+                        ax1.plot(100000*np.array(rmse_shdisp_sonde),stdplevs, color='red', label=r'RMSE slanted $\times 10^{-5}$')
+                    else:
+                        ax1.plot(np.array(rmse_shbase_sonde),stdplevs,color='orange', label='RMSE vertical')
+                        ax1.plot(np.array(rmse_shdisp_sonde),stdplevs, color='red', label='RMSE slanted')
 
-                ax1_4 = ax1.twiny()
-                ax1_4.axvline(x=0, color='black', alpha=0.8, ls='--', lw=0.5)
-                if var == 'specific humidity':
-                    if diff:
-                        plt_diff = ax1_4.plot(100000*(np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde)),stdplevs,color='purple', label=r'RMSE difference vertical - slanted $\times 10^{-5}$')
-                        plt_rms = ax1_4.plot(np.array(rms_dispmbase)*100000,stdplevs, color='green', alpha=0.3, ls='--', label=r'RMS vertical - slanted $\times 10^{-5}$')
-                else:
-                    if diff:
-                        plt_diff = ax1_4.plot((np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde)),stdplevs,color='purple', label=r'RMSE difference vertical - slanted')
-                    plt_rms = ax1_4.plot(np.array(rms_dispmbase),stdplevs, color='green', alpha=0.3, ls='--', label=r'RMS vertical - slanted')
-                ax1_4.legend(loc='upper right', prop={'size':14})                
-                
-                ax1.set_ylim(ax1.get_ylim()[::-1])
-                ax1.set_ylabel('pressure (Pa)')
-                ax1.set_xlabel(var+' RMSE (' +str(units_dict[var]) + ')')
-                ax1.legend(loc='lower left', prop={'size':14})
-                ax1.grid()
+                    ax1_4 = ax1.twiny()
+                    ax1_4.axvline(x=0, color='black', alpha=0.8, ls='--', lw=0.5)
+                    if var == 'specific humidity':
+                        if diff:
+                            plt_diff = ax1_4.plot(100000*(np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde)),stdplevs,color='purple', label=r'RMSE difference vertical - slanted $\times 10^{-5}$')
+                            plt_rms = ax1_4.plot(np.array(rms_dispmbase)*100000,stdplevs, color='green', alpha=0.3, ls='--', label=r'RMS vertical - slanted $\times 10^{-5}$')
+                    else:
+                        if diff:
+                            plt_diff = ax1_4.plot((np.array(rmse_shbase_sonde)-np.array(rmse_shdisp_sonde)),stdplevs,color='purple', label=r'RMSE difference vertical - slanted')
+                        plt_rms = ax1_4.plot(np.array(rms_dispmbase),stdplevs, color='green', alpha=0.3, ls='--', label=r'RMS vertical - slanted')
+                    ax1_4.legend(loc='upper right', prop={'size':14})                
+                    
+                    ax1.set_ylim(ax1.get_ylim()[::-1])
+                    ax1.set_ylabel('pressure (Pa)')
+                    ax1.set_xlabel(var+' RMSE (' +str(units_dict[var]) + ')')
+                    ax1.legend(loc='lower left', prop={'size':14})
+                    ax1.grid()
 
-                value_nr = []
-                for i in rmse_sum_shbase_sonde:
-                    value_nr.append(len(np.asarray(rmse_sum_shbase_sonde[i])[~np.isnan(rmse_sum_shbase_sonde[i])]))
-                if var == 'specific humidity':
-                    ax2.barh(stdplevs, value_nr, 3000, color='g', alpha = 0.4, align='center')
-                else:
-                    ax2.barh(stdplevs, value_nr, np.array(stdplevs)/7, color='g', alpha = 0.4, align='center')
-                ax2.set_xlabel('Observations')
-                ax2.tick_params(labelleft=False)
-                ax2.grid()
+                    value_nr = []
+                    for i in rmse_sum_shbase_sonde:
+                        value_nr.append(len(np.asarray(rmse_sum_shbase_sonde[i])[~np.isnan(rmse_sum_shbase_sonde[i])]))
+                    if var == 'specific humidity':
+                        ax2.barh(stdplevs, value_nr, 3000, color='g', alpha = 0.4, align='center')
+                    else:
+                        ax2.barh(stdplevs, value_nr, np.array(stdplevs)/7, color='g', alpha = 0.4, align='center')
+                    ax2.set_xlabel('Observations')
+                    ax2.tick_params(labelleft=False)
+                    ax2.grid()
 
-                #         maplt.title(str(year)+' Temperature RMSE \n' + str(len(results)) + ' stations    ' +str(len(rms_sum_shdisp[50000])) +' valid ascents')
-                maplt.title(str(sid.split('-')[3][:5]) + ' ' + str(year)+' '+var+' RMSE \n' +str(len(rms_sum_shdisp[50000])) +' valid ascents')
-                maplt.savefig(str(sid.split('-')[3][:5]) + '_' + str(year)+'_'+save_dict[var]+'_era5_fc_world_rmse_plot_igra.png')
-                maplt.close()
-                print('RMSE calculation: ', time.time()-t0)
+                    #         maplt.title(str(year)+' Temperature RMSE \n' + str(len(results)) + ' stations    ' +str(len(rms_sum_shdisp[50000])) +' valid ascents')
+                    maplt.title(sid + ' ' + str(year)+' '+var+' RMSE \n' +str(len(rms_sum_shdisp[50000])) +' valid ascents')
+                    if bg_check:
+                        maplt.savefig('era5source_bg_check_' + sid + '_' + str(year)+'_'+save_dict[var]+'_era5_fc_world_rmse_plot_igra.png')
+                    else:
+                        maplt.savefig('era5source_no_check_' + sid + '_' + str(year)+'_'+save_dict[var]+'_era5_fc_world_rmse_plot_igra.png')
+
+                    maplt.close()
+                    print('RMSE calculation: ', time.time()-t0)
