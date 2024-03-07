@@ -46,7 +46,7 @@ import matplotlib.colors as mcolors
 import numpy
 
 import ray
-ray.init(num_cpus=40)
+ray.init(num_cpus=15)
 
 def rgb(r,g,b):
     return tuple(numpy.asarray([r,g,b],dtype=float))
@@ -178,16 +178,16 @@ def plot_world_map(file, mission_channel, marker_size = 510, marker_shape = 's',
 
 @ray.remote
 def calc(df_mon, lat_range, lon_range, targetlat, targetlon):
-    target_df = df_mon[np.logical_and(np.logical_and(df_mon.latitude >= lat_range[0], df_mon.latitude < lat_range[1]),np.logical_and(df_mon.longitude >= lon_range[0], df_mon.longitude < lon_range[1]))]
-    r00 = np.nanmean(target_df['Ch3_BT'])
-    r01 = np.nanmean(target_df['Ch4_BT'])
-    r02 = np.nanmean(target_df['Ch5_BT'])
-    r03 = len(target_df['Ch3_BT'])
-    r04 = str(df_mon.iloc[0].Time.year) + '-' + str(df_mon.iloc[0].Time.month)
+    mask = np.logical_and(np.logical_and(df_mon["latitude"] >= lat_range[0], df_mon["latitude"] < lat_range[1]),np.logical_and(df_mon["longitude"] >= lon_range[0], df_mon["longitude"] < lon_range[1]))
+    r00 = np.nanmean(df_mon['Ch3_BT'][mask])
+    r01 = np.nanmean(df_mon['Ch4_BT'][mask])
+    r02 = np.nanmean(df_mon['Ch5_BT'][mask])
+    r03 = len(df_mon['Ch3_BT'][mask])
+    r04 = str(df_mon['Time'][0].astype('datetime64[Y]').astype(int) + 1970) + '-' + str(df_mon["Time"][0].astype('datetime64[M]').astype(int) % 12 + 1).zfill(2)
     return r00, r01, r02, r03, r04, targetlat, targetlon
 
 ######
-for yr in [2010]: #range(2009,2018):
+for yr in range(2010,2018):
 ######
     lats = np.array(range(-8875,+9125, 250))/100.
     print(len(lats), lats)
@@ -200,7 +200,7 @@ for yr in [2010]: #range(2009,2018):
             time_series[str(targetlat) + '_' + str(targetlon)] = [[],[],[],[],[]]
 
     ######
-    for imon in [1]: # range(1,13):
+    for imon in range(1,13):
     ######
         print("Month: ", imon)
         fidu_files = glob.glob('/users/staff/uvoggenberger/scratch/fiduceo/dap.ceda.ac.uk/neodc/fiduceo/data/fcdr/microwave/v4.1/mhs/noaa19/'+str(yr)+'/'+str(imon).zfill(2)+'/*/*.0.1.nc')
@@ -228,7 +228,10 @@ for yr in [2010]: #range(2009,2018):
             df.Time = pd.to_datetime(df.Time, unit='s')
             to_concat.append(df)
 
-        df_mon = pd.concat(to_concat)
+        df_conced = pd.concat(to_concat)
+        df_mon = {}
+        for var in ["Ch3_BT", "Ch4_BT", "Ch5_BT", "latitude", "longitude", "Time"]:
+            df_mon[var] = np.array(df_conced[var])
         ray_df_mon = ray.put(df_mon)
         result_ids = []
         for targetlon in lats:

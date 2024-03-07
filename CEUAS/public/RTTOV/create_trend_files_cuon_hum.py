@@ -70,8 +70,8 @@ def calc_trend(file):
     trends_adj = {}
     trends_uadj = {}   
     start = datetime_to_seconds(pd.to_datetime(['1999-01-01']))[0] 
-    end = datetime_to_seconds(pd.to_datetime(['2011-01-01']))[0]
-    level = 30000
+    end = datetime_to_seconds(pd.to_datetime(['2010-01-01']))[0]
+    level = 50000
 
     with h5py.File(file, 'r') as file:
         if '138' in list(file['recordindices'].keys()):                                                                                 # check if there is humidity data for this station
@@ -102,7 +102,7 @@ def calc_trend(file):
         trends_uadj[lat_lon] = float(rasotools.met.time.trend(xdf.adj_hums,only_slopes=True)*3650)
     return trends_adj, trends_uadj
 
-level = 30000
+level = 50000
 files = glob.glob('/mnt/users/scratch/leo/scratch/converted_v13/long/*v1.nc')
 
 result_ids = []
@@ -118,5 +118,5 @@ for i in results:
         trends_adj[j] = i[0][j] 
         trends_uadj[j] = i[1][j] 
 
-pickle.dump( trends_adj, open( "/users/staff/uvoggenberger/scratch/RTTOV_output/hum_worldmap/adj/hum_adj_"+str(level)+"cuonv13.p", "wb" ) )
-pickle.dump( trends_uadj, open( "/users/staff/uvoggenberger/scratch/RTTOV_output/hum_worldmap/adj/hum_uadj_"+str(level)+"cuonv13.p", "wb" ) )
+pickle.dump( trends_adj, open( "/users/staff/uvoggenberger/scratch/RTTOV_output/hum_worldmap/hum_adj_"+str(level)+"cuonv13.p", "wb" ) )
+pickle.dump( trends_uadj, open( "/users/staff/uvoggenberger/scratch/RTTOV_output/hum_worldmap/hum_uadj_"+str(level)+"cuonv13.p", "wb" ) )
