@@ -1317,7 +1317,7 @@ class Merger():
         # all date_time for this year 
         all_ts = list(res.keys() )
         
-        # variables to read from the observations_table of each file 
+        # variables to read from the era5fb. Note that the effective variables contained in each era5fb table is not fixed, it depends on the exact year
         variables = self.dic_type_attributes['era5fb'].keys()
                 
         # here, only extract files that are actually selected as best_file (will not pre-load the others) ( I dont remember why this, check! )
@@ -1325,11 +1325,16 @@ class Merger():
         all_files_to_preload = list( [ f for f in files if f.split('/')[-3] in ['era5_1',  'era5_1_mobile' , 'era5_2' , 'era5_2_mobile'] ]  )
         
         #era5_vars =  list( h5py.File(all_files[0], 'r')['era5fb'].keys() )
+        if 'datum_sfc_event@surfbody_feedback' not in variables:
+            variables.append('datum_sfc_event@surfbody_feedback')
+            
         for v in variables:
             
-            if v in ['datum_anflag@body','datum_event1@body','datum_rdbflag@body','report_event1@hdr','report_rdbflag@hdr', 'varbc_ix@body' ]:
-                a=0
+            #if v in ['datum_anflag@body','datum_event1@body','datum_rdbflag@body','report_event1@hdr','report_rdbflag@hdr', 'varbc_ix@body' ]:
+            #    a=0
             
+            if v == 'source_id':
+                continue
             
             '''
             if v in ['collection_identifier@conv', 'expver', 'source@hdr', 'source_id' , 'statid@hdr']:
@@ -1343,7 +1348,7 @@ class Merger():
             #print("        Variable " , v )
             load_full_data = {}
             for f in all_files_to_preload:
-                file_era5fb_variables = list(h5py.File(f, 'r')['era5fb'].keys() )
+                file_era5fb_variables = list(h5py.File(f, 'r')['era5fb'].keys() ) # this list changes with the year 
                 
                 if v in file_era5fb_variables:
                     data_v = h5py.File(f, 'r')['era5fb'][v][:]
@@ -1363,9 +1368,15 @@ class Merger():
                 ind_min = self.all_timestamps_dic[ts][best_ds][best_file][0]
                 ind_max = self.all_timestamps_dic[ts][best_ds][best_file][1]
             
-                if best_ds in ['era5_1' , 'era5_1_mobile' , 'era5_2' , 'era5_2_mobile']:
+                if best_ds in ['era5_1' , 'era5_1_mobile' , 'era5_2' , 'era5_2_mobile']: #only for these datasets the feedback exists
                     sliced_data = load_full_data[best_file][ind_min:ind_max]
-                else:
+                    if v in ['collection_identifier@conv', 'expver', 'source@hdr' , 'statid@hdr']:
+                        if type(sliced_data[0]) in [np.int32 , np.int64, np.float64]:
+                            pass
+                        else:
+                            sliced_data = np.array( [ b''. join(d) if isinstance(d, np.ndarray) else np.bytes_(d) for d in sliced_data ] )
+                        
+                else: # must write a dummz feedback
                     a = self.get_null(tipo= self.dic_type_attributes['era5fb'][v]['type'])
                     sliced_data = np.full( (ind_max-ind_min ) , a )
                     #print('************' , v , '  ' , self.dic_type_attributes['era5fb'][v]['type'] , '  ' ,   sliced_data[:2] , '  ' , a )
@@ -1380,9 +1391,15 @@ class Merger():
                 #print(size, len(sliced_data))
                 
             d = np.array(data)
-            if v in ['collection_identifier@conv', 'expver', 'source@hdr', 'source_id' , 'statid@hdr']:
+            
+            '''
+            if v in ['collection_identifier@conv', 'expver', 'source@hdr' , 'statid@hdr']:
+                if type(d[0]) in [np.int32 , np.int64]:
+                    continue
+                
                 d = np.array( [ b''. join(d) if isinstance(d, np.ndarray) else np.bytes_(d) for d in data ] )
-
+            '''
+            
             dummy_write = self.write_merged_new( var=v, table = 'era5fb', data=d)
                                                  
         for v in ['datum_anflag@body','datum_event1@body','datum_rdbflag@body','report_event1@hdr','report_rdbflag@hdr', 'varbc_ix@body' ]:
@@ -1777,6 +1794,8 @@ class Merger():
                     #print ('FAILED converting column ' , var, ' type ', type(data[0]) , )
                     
         
+                if 'collection' in var:
+                    a=0
                 dic = {var: np.array(data)}  # making a 1 colum dictionary to write 
                 #print('SHAPE IS FFF ', table[k].shape )
                 try:
@@ -2157,7 +2176,10 @@ if __name__ == '__main__':
 
     # select from parameters file or extracted list
     if not stations:
-        stations = all_stat 
+        stations = all_stat
+        
+    pool_number = 15
+    stations = stations[0:500]
  
     skip_completed = True ### set to FALSE to rerun the station, will check each year afterwards
     
@@ -2183,9 +2205,9 @@ if __name__ == '__main__':
     # stations = ['0-20001-0-11035', '0-20001-0-10393' , '0-20000-0-70219' , '0-20000-0-06610']  # 0-20000-0-71879 , 0-20000-0-82900                                                                                                                 
     # stations = ['0-20001-0-10393']
     #stations = [s for s in stations if s in os.listdir('/scratch/das/federico/HARVEST_YEARLY_22FEB2024_amma/amma')]
-    stations = [s for s in stations if '0-20000-0-96749' in s ]
+    # stations = [s for s in stations if '0-20001-0-11035' in s ]
     
-    POOL = False
+    POOL = True
     
     if len(stations)== 1:
         POOL = False

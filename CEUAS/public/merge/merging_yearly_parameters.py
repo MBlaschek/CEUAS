@@ -6,10 +6,8 @@
 harvested_base_dir = '/scratch/das/federico/HARVEST_YEARLY_16JAN2024_full_harvest'
 
 ### Output merged directory (create if does not exist)
-merged_out_dir = '/scratch/das/federico/MERGED_YEARLY_14FEB2024'
-merged_out_dir = '/scratch/das/federico/MERGED_YEARLY_20FEB2024'
-
-merged_out_dir = '/scratch/das/federico/MERGED_YEARLY_26FEB2024_TEST_AMMA'
+#merged_out_dir = '/scratch/das/federico/MERGED_YEARLY_06MAR2024_TEST'
+merged_out_dir = '/scratch/das/federico/MERGED_YEARLY_0MAR2024_REGULAR'
 
 ### Kind of stations to merge ['regular' , 'orphans', 'mobile'] (if set to 'mobile', will run only mobile stations, otherwise will run all types )
 station_kind = 'regular'
@@ -32,10 +30,8 @@ data_directories   = { 'era5_1'       : harvested_base_dir + '/era5_1' ,
                                    'ncar'           : harvested_base_dir + '/ncar' ,
                                    'igra2'          : harvested_base_dir + '/igra2' ,
                                    'bufr'            : harvested_base_dir + '/bufr' , 
-                                   #'amma'        : harvested_base_dir + '/amma' ,
-                                   
-                                   'amma': '/scratch/das/federico/HARVEST_YEARLY_22FEB2024_amma/amma', 
-                                   
+                                   'amma'        : harvested_base_dir + '/amma' ,
+
                                    'giub'           : harvested_base_dir + '/giub' ,
 
                                    'hara'           : harvested_base_dir + '/hara' ,
@@ -61,5 +57,5 @@ check_missing_stations = True
 
 ### Multiprocesses run
 POOL = True
-pool_number = 20
+pool_number = 50
 
