@@ -128,6 +128,7 @@ elif config['cds_eua_version'] == 5:
     CDS_EUA_VERSION = 5
     
 print('CDS_EUA_VERSION: ', CDS_EUA_VERSION)
+print('CUON VERSION: ', config['cuon_version'], type(config['cuon_version']))
     
 os.makedirs(config['logger_dir'], exist_ok=True)
 os.makedirs(config['config_dir'], exist_ok=True)
@@ -320,10 +321,10 @@ def read_tstamps(fn):
 
 def pkl_initialize(config,slist=[]):
 
-    slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-*_CEUAS_merged_v1.nc'))
-    slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
-    slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v1.nc'))
-    slist += glob.glob(os.path.expandvars(config['data_dir'] + '/20999-*_CEUAS_merged_v1.nc'))
+    slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-*_CEUAS_merged_v?.nc'))
+    slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v?.nc'))
+    slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v?.nc'))
+    slist += glob.glob(os.path.expandvars(config['data_dir'] + '/20999-*_CEUAS_merged_v?.nc'))
 
     #flist=glob.glob(os.path.expandvars(rpath+'*.nc'))
     fout=os.path.expandvars(config['config_dir']+'/h5link.pkl')
@@ -355,7 +356,7 @@ def pkl_initialize(config,slist=[]):
         #for fn in flist:
             #with h5py.File(fn,'r') as f:
             ##print(f[fk]['recordindices'].keys())
-                #fk=fn.split('/')[-1].split('_CEUAS_merged_v1.nc')[0]
+                #fk=fn.split('/')[-1].split('_CEUAS_merged_v3.nc')[0]
                 #rtsdict[fk]=f['recordindices']['recordtimestamp'][:]
                 #print(fk,l)
                 #l+=1
@@ -444,9 +445,9 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
         #
         # find Merged Netcdf files and intercomparison files
         #
-        slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-*_CEUAS_merged_v1.nc'))
-        slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v0.nc'))
-        slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v1.nc'))
+        slist = glob.glob(os.path.expandvars(config['data_dir'] + '/0-*_CEUAS_merged_v?.nc'))
+        slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v?.nc'))
+        slist += glob.glob(os.path.expandvars(config['comp_dir'] + '/0-20?00-0-?????_CEUAS_merged_v?.nc'))
         print('comps: ', config['comp_dir']) 
         print('slist: ', slist)
         slnum = [i.split('/')[-1].split('_')[0].replace('.nc','') for i in slist]

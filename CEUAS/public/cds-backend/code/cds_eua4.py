@@ -525,19 +525,35 @@ def read_standardnames(url: str = None) -> dict:
 
     cdmnames += 10 * ['observations_table/observation_value']
     # todo at the moment this is hard coded here, what if JRA55 is requested?
-    cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body',
-                 'observations_table/sensor_id',
-                 'observations_table/secondary_value', 'observations_table/original_precision',
-                 'observations_table/report_id', 'observations_table/reference_sensor_id', 'observations_table/station_elevation',
-                 'station_configuration/station_name', 
-                 'advanced_homogenisation/RISE_bias_estimate', 'advanced_homogenisation/RICH_bias_estimate',
-                 'advanced_homogenisation/RASE_bias_estimate', 'advanced_homogenisation/RAOBCORE_bias_estimate',
-                 'advanced_homogenisation/latitude_displacement', 'advanced_homogenisation/longitude_displacement',
-                 'advanced_homogenisation/time_since_launch', 'advanced_homogenisation/true_time',
-                 'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
-                 'advanced_homogenisation/wind_bias_estimate', 
-                 'advanced_homogenisation/humidity_bias_estimate',
-                ]
+    
+    if config['cuon_version'] <= 16:
+        cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body',
+                    'observations_table/sensor_id',
+                    'observations_table/secondary_value', 'observations_table/original_precision',
+                    'observations_table/report_id', 'observations_table/reference_sensor_id', 'observations_table/station_elevation',
+                    'station_configuration/station_name', 
+                    'advanced_homogenisation/RISE_bias_estimate', 'advanced_homogenisation/RICH_bias_estimate',
+                    'advanced_homogenisation/RASE_bias_estimate', 'advanced_homogenisation/RAOBCORE_bias_estimate',
+                    'advanced_homogenisation/latitude_displacement', 'advanced_homogenisation/longitude_displacement',
+                    'advanced_homogenisation/time_since_launch', 'advanced_homogenisation/true_time',
+                    'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
+                    'advanced_homogenisation/wind_bias_estimate', 
+                    'advanced_homogenisation/humidity_bias_estimate',
+                    ]
+    else:
+        cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body',
+                    'observations_table/sensor_id',
+                    'observations_table/secondary_value', 'observations_table/original_precision',
+                    'observations_table/report_id', 'observations_table/reference_sensor_id', 'observations_table/station_elevation',
+                    'station_configuration/station_name', 
+                    'observations_table/RISE_bias_estimate', 'observations_table/RICH_bias_estimate',
+                    'observations_table/RASE_bias_estimate', 'observations_table/RAOBCORE_bias_estimate',
+                    'observations_table/latd', 'observations_table/lond',
+                    'observations_table/timed', 'observations_table/true_time',
+                    'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180', # advanced_uncertainty ? 
+                    'observations_table/wind_bias_estimate', 
+                    'observations_table/humidity_bias_estimate',
+                    ]
     cf = {}
     for c, cdm in zip(snames, cdmnames):
         cf[c] = {'cdmname': cdm, 'units': 'NA', 'shortname': c}
@@ -648,6 +664,12 @@ def read_standardnames(url: str = None) -> dict:
     cf['longitude_displacement']['description'] = 'trajectory meta data'
     cf['time_since_launch']['shortname'] = 'time_since_launch'
     cf['time_since_launch']['description'] = 'trajectory meta data'
+    # cf['latd']['shortname'] = 'latd'
+    # cf['latd']['description'] = 'trajectory meta data'
+    # cf['lond']['shortname'] = 'lond'
+    # cf['lond']['description'] = 'trajectory meta data'
+    # cf['timed']['shortname'] = 'timed'
+    # cf['timed']['description'] = 'trajectory meta data'
     cf['true_time']['shortname'] = 'true_time'
     cf['true_time']['description'] = 'trajectory meta data'
     cf['wind_bias_estimate']['shortname'] = 'wind_bias_estimate'
@@ -2999,8 +3021,10 @@ class CDMDataset:
                          'dew_point_depression', 'dewpoint_departure','dewpoint_depression', 'dew_point_departure']
         
         for alv in allowed_variables:
-            varseldict[alv]=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate', 'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time', 'wind_bias_estimate', 'humidity_bias_estimate', 'station_elevation']
-
+            if config['cuon_version'] <= 16:
+                varseldict[alv]=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate', 'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time', 'wind_bias_estimate', 'humidity_bias_estimate', 'station_elevation']
+            else:
+                varseldict[alv]=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate', 'latd', 'lond', 'timed', 'true_time', 'wind_bias_estimate', 'humidity_bias_estimate', 'station_elevation']
         
         # added report_id -> in observations_table, not to be confused with report_id from header_table -> trajectory_label
         logger.debug('Request-keys: %s', str(request.keys()))
@@ -3089,7 +3113,7 @@ class CDMDataset:
 
             if 'observations_table' in self.groups:
                 igroup = 'observations_table'
-                varselcfcopy = ['observation_id', 'latitude', 'longitude', 'z_coordinate',
+                varselcfcopy = ['observation_id', 'latitude', 'longitude', 'z_coordinate', 'latd', 'lond', 'timed',
                                     'observation_value', 'date_time', 'sensor_id', 'secondary_value',
                                     'original_precision', 'reference_sensor_id', 'report_id', 'data_policy_licence', 'station_elevation'] #  
                 for co in cdm_obstab:
@@ -3519,7 +3543,7 @@ class CDMDataset:
                 #
 #                 print('cfcopy: ', cfcopy)
                 if 'observations_table' in self.groups:
-                    varselcfcopy = ['observation_id', 'latitude', 'longitude', 'z_coordinate',
+                    varselcfcopy = ['observation_id', 'latitude', 'longitude', 'z_coordinate', 'latd', 'lond', 'timed',
                                     'observation_value', 'date_time', 'sensor_id', 'secondary_value',
                                     'original_precision', 'reference_sensor_id', 'report_id', 'data_policy_licence', 'station_elevation'] # 
                     for co in cdm_obstab:
