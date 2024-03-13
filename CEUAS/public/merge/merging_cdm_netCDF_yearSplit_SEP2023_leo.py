@@ -1533,10 +1533,11 @@ class Merger():
                 if len(self.merged_timestamp) == 0:
                     continue
                     
+                print('=== Making and writing standard fixed CDM tables')                                    
+                dummy = self.make_standard_cdm_table()
+
                 print('=== Making and writing observations_table')
-                tt = time.time()
                 dummy = self.make_merged_observation_table()
-                print(time.time()-tt)
                 
                 print('=== Making and writing recordindex')
                 dummy = self.make_merged_recordindex()
@@ -1550,8 +1551,6 @@ class Merger():
                 print('=== Making and writing header_table')                                    
                 dummy = self.make_merged_header_table()
                 
-                print('=== Making and writing standard fixed CDM tables')                                    
-                dummy = self.make_standard_cdm_table()
                 
                 a = 'HERE'  # TO DO HERE
             
@@ -1617,6 +1616,7 @@ class Merger():
     def make_merged_feedback_table(self, out_file='' ):
         """ Create merged era5fb table """
         ### FEEDBACK TABLE
+        tt = time.time()
         res = self.merged_timestamp
         
         # all date_time for this year 
@@ -1665,7 +1665,6 @@ class Merger():
 
                 load_full_data[f] = data_v     
             
-            tt = time.time()
             data = []
         
             for ts, size in zip(all_ts, self.record_size):
@@ -1713,13 +1712,14 @@ class Merger():
                 
                 d = np.array( [ b''. join(d) if isinstance(d, np.ndarray) else np.bytes_(d) for d in data ] )
             '''
-            print(v,d.dtype,d.shape, time.time()-tt)
+            #print(v,d.dtype,d.shape, time.time()-tt)
             dummy_write = self.write_merged_new( var=v, table = 'era5fb', data=d)
                                                  
         for v in ['datum_anflag@body','datum_event1@body','datum_rdbflag@body','report_event1@hdr','report_rdbflag@hdr', 'varbc_ix@body' ]:
             if v not in variables:
                 data_v = np.full( len( h5py.File(f, 'r')['observations_table']['date_time']), np.nan )  
                 dummy_write = self.write_merged_new( var=v, table = 'era5fb', data=data_v)
+        print(time.time()-tt)
 
 
     def make_merged_header_table(self, out_file='' ):
@@ -1880,6 +1880,7 @@ class Merger():
     def  make_merged_observation_table(self, out_file='' ):
         """ Create merged observations,header tables """
         
+        tt = time.time()
         res = self.merged_timestamp
         
         # all date_time for this year 
@@ -1961,7 +1962,6 @@ class Merger():
             for f in all_files:
                 load_full_data[f] = h5py.File(f, 'r')['observations_table'][v][:]
             
-            tt = time.time()
             data = []
         
             for ts in all_ts :
@@ -2015,7 +2015,7 @@ class Merger():
                     ##    a = 0
                         
             #d = np.array(data)
-            print(time.time()-tt)            
+            #print(time.time()-tt)            
             dummy_write = self.write_merged_new( var=v, table = 'observations_table', data=d)
             
             ### writing RECORD INDEX 
@@ -2028,7 +2028,6 @@ class Merger():
         #obs_id = range(len(data))
         year = self.current_year
         ref = int(year) * 10000000000000000
-        tt = time.time()
         obs_id_resized = np.array(np.arange(len(data), dtype=np.int64) + ref, dtype='S')
         #obs_id_resized = []
         #tt = time.time()
@@ -2036,7 +2035,7 @@ class Merger():
             #zeroes = fixed_size - len(year) - len(str(i))
             #obs_id = year+ '0'*zeroes +str(i)
             #obs_id_resized.append(np.bytes_(obs_id))
-        print(time.time()-tt)
+        #print(time.time()-tt)
         
         dummy_write = self.write_merged_new( var='observation_id', table = 'observations_table', data=obs_id_resized)
         all_variables.extend(['observation_id'])
@@ -2113,10 +2112,11 @@ class Merger():
                 n = self.get_null( self.encodings['observations_table'][v]['type']  )
             except:
                 n = np.nan 
-            da = np.full( len(data), n) 
+            da = np.full( len(d), n) 
             dummy_write = self.write_merged_new( var=v, table = 'observations_table', data=np.array(da))                    
         
-        self.record_size = sizes 
+        self.record_size = sizes
+        print(time.time()-tt)
         
     def write_merged_new(self, var='', table = '', data=''):
         """ Module to write the output file as netCDF.
@@ -2177,7 +2177,9 @@ class Merger():
         elif table == 'cdm_tables':
             for k in self.data['cdm_tables'].keys():
                 table = self.data['cdm_tables'][k]
-                table.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a', group = k)
+                if len(table) > 0:
+                    
+                    table.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a', group = k)
                 #a=0
                 #logging.info('Writing the cdm table %s to the netCDF output ', k)
 
@@ -2588,6 +2590,8 @@ if __name__ == '__main__':
     for bad in ['0-20000-0-40648', '0-20000-0-78970']:
         del stations[stations.index(bad)]
     
+    stations = ['0-20000-0-06610']
+    
     if len(stations)== 1:
         POOL = False
         
@@ -2603,7 +2607,7 @@ if __name__ == '__main__':
         ray.shutdown()
                 
     else:
-        for station in stations[163:]:
+        for station in stations:
             dummy=run_wrapper(data_directories, run_exception, station)
     '''
     else:
