@@ -2028,7 +2028,7 @@ class Merger():
         #obs_id = range(len(data))
         year = self.current_year
         ref = int(year) * 10000000000000000
-        obs_id_resized = np.array(np.arange(len(data), dtype=np.int64) + ref, dtype='S')
+        obs_id_resized = np.array(np.arange(len(d), dtype=np.int64) + ref, dtype='S')
         #obs_id_resized = []
         #tt = time.time()
         #for i in obs_id:
@@ -2084,14 +2084,14 @@ class Merger():
         
         # all_variables.extend(['value_significance'])
         all_variables.extend(['value_significance'])        
-        sig = np.full (  len(data), 12 ) 
+        sig = np.full (  len(d), 12 ) 
         dummy_write = self.write_merged_new( var='value_significance', table = 'observations_table', data=np.array(sig))
         
         ### build conversion_flag, method  ## TO DO TODO can be implemented in harvester already 
         variables.extend(['conversion_flag' , 'conversion_method'])
-        conv = np.full (  len(data), 2 ) 
+        conv = np.full (  len(d), 2 ) 
         dummy_write = self.write_merged_new( var='conversion_flag', table = 'observations_table', data=np.array(conv))
-        meth = np.full (len(data), np.nan) 
+        meth = np.full (len(d), np.nan) 
         dummy_write = self.write_merged_new( var='conversion_method', table = 'observations_table', data=np.array(meth))
         
         all_variables.extend(['conversion_flag','conversion_method'])
