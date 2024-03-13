@@ -46,7 +46,7 @@ import matplotlib.colors as mcolors
 import numpy
 
 import ray
-ray.init(num_cpus=15)
+ray.init(num_cpus=40)
 
 def rgb(r,g,b):
     return tuple(numpy.asarray([r,g,b],dtype=float))
@@ -187,7 +187,7 @@ def calc(df_mon, lat_range, lon_range, targetlat, targetlon):
     return r00, r01, r02, r03, r04, targetlat, targetlon
 
 ######
-for yr in range(2010,2018):
+for yr in range(2011,2018):
 ######
     lats = np.array(range(-8875,+9125, 250))/100.
     print(len(lats), lats)
@@ -195,8 +195,8 @@ for yr in range(2010,2018):
     print(len(lons), lons)
 
     time_series = {}
-    for targetlon in lats:
-        for targetlat in lons:
+    for targetlon in lons:
+        for targetlat in lats:
             time_series[str(targetlat) + '_' + str(targetlon)] = [[],[],[],[],[]]
 
     ######
@@ -234,8 +234,8 @@ for yr in range(2010,2018):
             df_mon[var] = np.array(df_conced[var])
         ray_df_mon = ray.put(df_mon)
         result_ids = []
-        for targetlon in lats:
-            for targetlat in lons:
+        for targetlat in lats:
+            for targetlon in lons:
                 lat_range = [targetlat - 1.25, targetlat + 1.25]
                 lon_range = [targetlon - 1.25, targetlon + 1.25]
                 result_ids.append(calc.remote(ray_df_mon, lat_range, lon_range, targetlat, targetlon))

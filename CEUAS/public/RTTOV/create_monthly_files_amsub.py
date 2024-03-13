@@ -176,18 +176,28 @@ def plot_world_map(file, mission_channel, marker_size = 510, marker_shape = 's',
 
 ### Convert amsub. data to gridded mean without interpolation
 
+# @ray.remote
+# def calc(df_mon, lat_range, lon_range, targetlat, targetlon):
+#     target_df = df_mon[np.logical_and(np.logical_and(df_mon.latitude >= lat_range[0], df_mon.latitude < lat_range[1]),np.logical_and(df_mon.longitude >= lon_range[0], df_mon.longitude < lon_range[1]))]
+#     r00 = np.nanmean(target_df['Ch18_BT'])
+#     r01 = np.nanmean(target_df['Ch19_BT'])
+#     r02 = np.nanmean(target_df['Ch20_BT'])
+#     r03 = len(target_df['Ch18_BT'])
+#     r04 = str(df_mon.iloc[0].Time.year) + '-' + str(df_mon.iloc[0].Time.month)
+#     return r00, r01, r02, r03, r04, targetlat, targetlon
+
 @ray.remote
 def calc(df_mon, lat_range, lon_range, targetlat, targetlon):
-    target_df = df_mon[np.logical_and(np.logical_and(df_mon.latitude >= lat_range[0], df_mon.latitude < lat_range[1]),np.logical_and(df_mon.longitude >= lon_range[0], df_mon.longitude < lon_range[1]))]
-    r00 = np.nanmean(target_df['Ch18_BT'])
-    r01 = np.nanmean(target_df['Ch19_BT'])
-    r02 = np.nanmean(target_df['Ch20_BT'])
-    r03 = len(target_df['Ch18_BT'])
-    r04 = str(df_mon.iloc[0].Time.year) + '-' + str(df_mon.iloc[0].Time.month)
+    mask = np.logical_and(np.logical_and(df_mon["latitude"] >= lat_range[0], df_mon["latitude"] < lat_range[1]),np.logical_and(df_mon["longitude"] >= lon_range[0], df_mon["longitude"] < lon_range[1]))
+    r00 = np.nanmean(df_mon['Ch18_BT'][mask])
+    r01 = np.nanmean(df_mon['Ch19_BT'][mask])
+    r02 = np.nanmean(df_mon['Ch20_BT'][mask])
+    r03 = len(df_mon['Ch18_BT'][mask])
+    r04 = str(df_mon['Time'][0].astype('datetime64[Y]').astype(int) + 1970) + '-' + str(df_mon["Time"][0].astype('datetime64[M]').astype(int) % 12 + 1).zfill(2)
     return r00, r01, r02, r03, r04, targetlat, targetlon
 
 
-for yr in range(1999,2011):
+for yr in range(2010,2011):
     lats = np.array(range(-8875,+9125, 250))/100.
     print(len(lats), lats)
     lons = np.array(range(-17875, 18125, 250))/100.
@@ -198,7 +208,7 @@ for yr in range(1999,2011):
         for targetlat in lats:
             time_series[str(targetlat) + '_' + str(targetlon)] = [[],[],[],[],[]]
 
-    for imon in range(1,13):
+    for imon in range(1,10):
         print("Month: ", imon)
         fidu_files = glob.glob('/users/staff/uvoggenberger/scratch/fiduceo/dap.ceda.ac.uk/neodc/fiduceo/data/fcdr/microwave/v4.1/amsub/noaa15/'+str(yr)+'/'+str(imon).zfill(2)+'/*/*.0.1.nc')
 
@@ -225,7 +235,10 @@ for yr in range(1999,2011):
             df.Time = pd.to_datetime(df.Time, unit='s')
             to_concat.append(df)
 
-        df_mon = pd.concat(to_concat)
+        df_conced = pd.concat(to_concat)
+        df_mon = {}
+        for var in ["Ch18_BT", "Ch19_BT", "Ch20_BT", "latitude", "longitude", "Time"]:
+            df_mon[var] = np.array(df_conced[var])
         ray_df_mon = ray.put(df_mon)
         result_ids = []
         for targetlon in lons:
