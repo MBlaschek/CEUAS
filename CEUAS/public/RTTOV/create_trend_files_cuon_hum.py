@@ -74,12 +74,16 @@ def calc_trend(file):
     level = 50000
 
     with h5py.File(file, 'r') as file:
-        if '138' in list(file['recordindices'].keys()):                                                                                 # check if there is humidity data for this station
+        if '39' in list(file['recordindices'].keys()):                                                                                 # check if there is humidity data for this station
             input = {}                                                                                                                  # setup input var for trend calculation
             lat_lon = str(file['observations_table']['latitude'][-1]) + '_' + str(file['observations_table']['longitude'][-1])          # create station identifier out of lat lon
             ts = file['recordindices']['recordtimestamp'][:]                                                                            # whole timestamp 
-            idx = file['recordindices']['138'][:-1]                                                                                     # 138 for relative humidity
-            idx = idx[np.logical_and(ts >= start, ts < end)]                                                                            # reduce to data between start and end
+            try:
+                idx = file['recordindices']['39'][:-1]                                                                                  # 138 for relative humidity || 39 for specific humidity
+                idx = idx[np.logical_and(ts >= start, ts < end)]                                                                        # reduce to data between start and end
+            except:
+                idx = file['recordindices']['39'][:]                                                                                    # 138 for relative humidity || 39 for specific humidity
+                idx = idx[np.logical_and(ts >= start, ts < end)]                                                                        # reduce to data between start and end
             if len(idx) < 1000:
                 return trends_adj, trends_uadj
             z_coord = file['observations_table']['z_coordinate'][idx[0]:idx[-1]]                                                        # get pressure data
@@ -87,7 +91,8 @@ def calc_trend(file):
             input['hums'] = file['observations_table']['observation_value'][zidx]                                                       # select relative humidity data
             try:
                 input['adj_hums'] = input['hums'] - file['advanced_homogenisation']['humidity_bias_estimate'][zidx]                     # subtract adjustments for adjusted relative humidity
-            except: return trends_adj, trends_uadj
+            except: 
+                input['adj_hums'] = [0] * input['hums']
             input['time'] = seconds_to_datetime(file['observations_table']['date_time'][zidx])                                          # convert time
         else:
             return trends_adj, trends_uadj                                                                                              # skip if no humidity data available
@@ -103,7 +108,7 @@ def calc_trend(file):
     return trends_adj, trends_uadj
 
 level = 50000
-files = glob.glob('/mnt/users/scratch/leo/scratch/converted_v13/long/*v1.nc')
+files = glob.glob('/mnt/users/scratch/leo/scratch/converted_v13/long/*v1.nc')[:]
 
 result_ids = []
 for i in files[:]:
@@ -118,5 +123,5 @@ for i in results:
         trends_adj[j] = i[0][j] 
         trends_uadj[j] = i[1][j] 
 
-pickle.dump( trends_adj, open( "/users/staff/uvoggenberger/scratch/RTTOV_output/hum_worldmap/hum_adj_"+str(level)+"cuonv13.p", "wb" ) )
-pickle.dump( trends_uadj, open( "/users/staff/uvoggenberger/scratch/RTTOV_output/hum_worldmap/hum_uadj_"+str(level)+"cuonv13.p", "wb" ) )
+pickle.dump( trends_adj, open( "/users/staff/uvoggenberger/scratch/RTTOV_output/hum_worldmap/shum_adj_"+str(level)+"cuonv13.p", "wb" ) )
+pickle.dump( trends_uadj, open( "/users/staff/uvoggenberger/scratch/RTTOV_output/hum_worldmap/shum_uadj_"+str(level)+"cuonv13.p", "wb" ) )
