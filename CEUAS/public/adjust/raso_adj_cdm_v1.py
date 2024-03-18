@@ -1504,20 +1504,20 @@ date: {}
         # BACKEND File
         #
         #run_backend_file(args, **kwargs)
-        fns = glob.glob(os.path.expandvars('$RSCRATCH/converted_v13/long/*v1.nc'))
+        fns = glob.glob(os.path.expandvars('$RSCRATCH/converted_v17/long/*v3.nc'))
         #fns = glob.glob(os.path.expandvars('$RSCRATCH/converted_v11/long/*v1.nc'))
         tt = time.time()
         #run_backend_file(copy.copy(args), **kwargs)
         #print(time.time() - tt)
         #exit()
 
-        ray.init(num_cpus=60)
+        #ray.init(num_cpus=60)
         futures = []
         for fn in fns[:]:
             fargs = copy.copy(args)
             fargs.backend = fn
-            #run_backend_file(fargs, **kwargs)
-            futures.append(ray_run_backend_file.remote(fargs, **kwargs))
+            run_backend_file(fargs, **kwargs)
+            #futures.append(ray_run_backend_file.remote(fargs, **kwargs))
         ray.get(futures)
         print('finished', time.time() - tt)
 # FIN
