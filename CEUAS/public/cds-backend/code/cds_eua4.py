@@ -3021,7 +3021,7 @@ class CDMDataset:
                          'dew_point_depression', 'dewpoint_departure','dewpoint_depression', 'dew_point_departure']
         
         for alv in allowed_variables:
-            if config['cuon_version'] <= 16:
+            if float(config['cuon_version']) <= 1.16:
                 varseldict[alv]=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate', 'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time', 'wind_bias_estimate', 'humidity_bias_estimate', 'station_elevation']
             else:
                 varseldict[alv]=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate', 'latd', 'lond', 'timed', 'true_time', 'wind_bias_estimate', 'humidity_bias_estimate', 'station_elevation']
