@@ -2,8 +2,6 @@
 Contain utilities for running the new version of the harvester with year_split 
 """
 
-
-
 import os,sys
 import pandas as pd
 import numpy as np
@@ -55,13 +53,39 @@ def chunk_it(seq, num):
     return out
 
 
-def get_all_stations_files(db):
+def get_all_stations_files(db, station_kind):
     """ Read the extended station configuration, to obtain the primary_id and the file name lists """
-    sc = pd.read_csv( '../data/station_configurations/' + db + '_station_configuration_extended.csv', sep = '\t' )
-    sc = sc[['primary_id' , 'file', 'latitude', 'longitude']]
+    
+    if 'mobile' in db:
+        station_kind = 'mobile'
+        db = db.replace('_mobile' , '')
+    if db in ['npsound' , 'shipsound']:
+        station_kind = ''
+        
+    if station_kind in ['orphan' , 'mobile']:
+        sc = pd.read_csv( '../data/station_configurations/' + db + '_orphans_station_configuration_extended.csv', sep = '\t' )
+    else:
+        sc = pd.read_csv( '../data/station_configurations/' + db + '_station_configuration_extended.csv', sep = '\t' )
+        
+    if not sc.empty:
+        sc = sc[['primary_id' , 'file', 'latitude', 'longitude']]
+        if db == 'giub':
+            files = [f.replace('_reduced','') for f in sc.file ]
+            sc['file'] = files
+
+    ### filtering
+    if station_kind == 'mobile':
+        ids = [p for p in sc.primary_id.values if '20999' in p ]
+        sc =sc.loc[sc.primary_id.isin(ids)]
+    elif station_kind == 'orphan':
+        ids = [p for p in sc.primary_id.values if '20999' in p ]
+        sc =sc.loc[~sc.primary_id.isin(ids)]
+        a =0        
+        
     return sc
 
 
+a = get_all_stations_files('era5_1', 'regular')
 
 def check_processed_stations(db, out_dir):
     """ Extract the list of stations that have already been processed with the list of years """
@@ -89,8 +113,7 @@ def check_processed_stations(db, out_dir):
         
     return processed
 
-out_dir = '/scratch/das/federico/HARVEST_YEARLY_17AUG2023/'
-db = 'igra2'
+
 
 '''
 p = check_processed_stations(db, out_dir)

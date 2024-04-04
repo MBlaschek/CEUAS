@@ -73,7 +73,7 @@ datasets_big = ['era5_1', 'era5_2',
 datasets = ['era5_1_mobile' , 'era5_2_mobile']
 datasets = ['era5_2_mobile' ]
 
-datasets = ['amma' ]
+datasets = ['hara' ]
 
 out_dir = '/scratch/das/federico/HARVEST_YEARLY_22FEB2024_amma/'
 station_kind = 'regular'
@@ -102,6 +102,6 @@ run_only_missing_stations = False
 check_missing_year = False
 
 ### Time range for harvesting
-min_year_to_process = 1880 
-max_year_to_process = 2024
+min_year_to_process = 2016
+max_year_to_process = 2017
 
