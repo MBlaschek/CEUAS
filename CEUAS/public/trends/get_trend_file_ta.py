@@ -11,6 +11,7 @@ import pickle
 import pandas as pd
 import h5py
 import ray
+import hdf5plugin
 from tqdm import tqdm
 
 warnings.filterwarnings("ignore")
@@ -33,6 +34,7 @@ def trend_station(i, dt_from, dt_to, adjustment):
 
     sys.path.append(os.getcwd() + "/../resort/rasotools-master/")
     import rasotools
+    import hdf5plugin
 
     df_dict = {}
     sout = []
@@ -176,7 +178,7 @@ def to_iterator(obj_ids):
 # files =  glob.glob('/users/staff/uvoggenberger/scratch/humtest/*.nc')
 # trend_station(files[0])
 
-files = glob.glob("/mnt/users/scratch/leo/scratch/converted_v13/long/*.nc")
+files = glob.glob("/mnt/users/scratch/leo/scratch/converted_v19/long/*.nc")
 # files =  glob.glob('/users/staff/uvoggenberger/scratch/humtest/*.nc')
 
 
@@ -185,7 +187,7 @@ files = glob.glob("/mnt/users/scratch/leo/scratch/converted_v13/long/*.nc")
 # dt_from = datetime_to_seconds(np.datetime64("1958-01-01"))
 # dt_to = datetime_to_seconds(np.datetime64("1987-12-31"))
 for adj in ['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate']:
-    for dts, dte in [("1993-01-01", "2022-12-31"), ("1973-01-01", "2002-12-31"), ("1958-01-01", "1987-12-31")]:
+    for dts, dte in [("1994-01-01", "2023-12-31"), ("1973-01-01", "2002-12-31"), ("1958-01-01", "1987-12-31")]:
 
         print(dts, dte)
         print('----')
@@ -194,7 +196,7 @@ for adj in ['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate'
         dt_to = datetime_to_seconds(np.datetime64(dte))
 
         test_r = ray.remote(trend_station)
-        ray.init(num_cpus=20)
+        ray.init(num_cpus=40)
         results = []
         obj_ids = [test_r.remote(i,dt_from,dt_to, adj) for i in files]
         for x in tqdm(to_iterator(obj_ids), total=len(obj_ids)):
@@ -202,5 +204,5 @@ for adj in ['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate'
 
         # pickle.dump(results, open("polyfit_trends_dewpoint_700hPa_1958_1988_Trend_20230717.p", "wb"))
         # pickle.dump(results, open("polyfit_trends_dewpoint_700hPa_1973_2003_Trend_20230717.p", "wb"))
-        pickle.dump(results, open("polyfit_trends_temperature_100hPa_"+dts+"_"+dte+"_"+adj+"_Trend_20230817.p", "wb"))
+        pickle.dump(results, open("/users/staff/uvoggenberger/scratch/CUON_trends/polyfit_trends_temperature_100hPa_"+dts+"_"+dte+"_"+adj+"_Trend_20240422.p", "wb"))
         ray.shutdown()

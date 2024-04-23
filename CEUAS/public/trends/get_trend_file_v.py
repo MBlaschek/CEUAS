@@ -11,6 +11,7 @@ import pickle
 import pandas as pd
 import h5py
 import ray
+import hdf5plugin
 from tqdm import tqdm
 
 warnings.filterwarnings("ignore")
@@ -33,6 +34,7 @@ def trend_station(i, dt_from, dt_to):
 
     sys.path.append(os.getcwd() + "/../resort/rasotools-master/")
     import rasotools
+    import hdf5plugin
 
     df_dict = {}
     sout = []
@@ -176,7 +178,7 @@ def to_iterator(obj_ids):
 # files =  glob.glob('/users/staff/uvoggenberger/scratch/humtest/*.nc')
 # trend_station(files[0])
 
-files = glob.glob("/mnt/users/scratch/leo/scratch/converted_v13/long/*.nc")
+files = glob.glob("/mnt/users/scratch/leo/scratch/converted_v19/long/*.nc")
 # files =  glob.glob('/users/staff/uvoggenberger/scratch/humtest/*.nc')
 
 
@@ -184,7 +186,7 @@ files = glob.glob("/mnt/users/scratch/leo/scratch/converted_v13/long/*.nc")
 # dt_to = datetime_to_seconds(np.datetime64("2002-12-31"))
 # dt_from = datetime_to_seconds(np.datetime64("1958-01-01"))
 # dt_to = datetime_to_seconds(np.datetime64("1987-12-31"))
-for dts, dte in [("1940-01-01", "1959-12-31"),("1993-01-01", "2022-12-31"), ("1973-01-01", "2002-12-31"), ("1958-01-01", "1987-12-31")]:
+for dts, dte in [("1940-01-01", "1959-12-31"),("1994-01-01", "2023-12-31"), ("1973-01-01", "2002-12-31"), ("1958-01-01", "1987-12-31")]:
     
     print(dts, dte)
     print('----')
@@ -201,5 +203,5 @@ for dts, dte in [("1940-01-01", "1959-12-31"),("1993-01-01", "2022-12-31"), ("19
 
     # pickle.dump(results, open("polyfit_trends_dewpoint_700hPa_1958_1988_Trend_20230717.p", "wb"))
     # pickle.dump(results, open("polyfit_trends_dewpoint_700hPa_1973_2003_Trend_20230717.p", "wb"))
-    pickle.dump(results, open("polyfit_trends_v_700hPa_"+dts+"_"+dte+"_Trend_20230824_2_sub.p", "wb"))
+    pickle.dump(results, open("polyfit_trends_v_700hPa_"+dts+"_"+dte+"_Trend_20240422.p", "wb"))
     ray.shutdown()
