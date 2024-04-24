@@ -333,7 +333,7 @@ if __name__ == '__main__':
     trend_notebook_info = {}
     trend_notebook_info['file'] = write_data_to
     trend_notebook_info['variable'] = variable
-    trend_notebook_info['label'] = variable
+    trend_notebook_info['label'] = variable + ' ' + str(pressure)
     trend_notebook_info['c_bar'] = '['+units[variable]+']/10a'
     trend_notebook_info['c_bar_red_top'] = cbar_red_equals_negative[variable]
     
