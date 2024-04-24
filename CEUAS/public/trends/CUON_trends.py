@@ -24,12 +24,12 @@ import uvtests as uvt
 
 warnings.filterwarnings("ignore")
 
-def show_trend_map(file,label, c_bar, multiplier = 1, c_bar_red_top = True):
+def show_trend_map(file,label, c_bar, multiplier = 1, c_bar_red_top = True, cbar_limit = 2, save_at=''):
     sys.path.append(os.getcwd()+'/../resort/rasotools-master/')
     import rasotools
     import hdf5plugin
     
-    plev = file.split('_')[-5]
+    plev = file.split('_')[-7]
     sdate = file.split('_')[-4]
     edate = file.split('_')[-3]
     good_results = {}
@@ -38,11 +38,6 @@ def show_trend_map(file,label, c_bar, multiplier = 1, c_bar_red_top = True):
     good_results['st'] = []
     good_results['at'] = []
     good_results['label'] = []
-    
-    if c_bar_red_top:
-        cs = 'RdBu_r'
-    else:
-        cs = 'RdBu'
     
     results = pickle.load(open(file, 'rb'))
     for i in results:
@@ -64,11 +59,15 @@ def show_trend_map(file,label, c_bar, multiplier = 1, c_bar_red_top = True):
 
     a = rasotools.plot._helpers.cost(np.asarray(da.lon), np.asarray(da.lat), np.asarray(da.st))
     cost = np.sum(a)/len(a)
-    fig1 = uvp.world_map_mpl(da.lat, da.lon, da['st'], label + ' trend unadjusted \n '+str(plev)+'_'+sdate+'_'+edate+' \n heterogeneity cost: ' + str(cost), inp_vmin=-2, inp_vmax=2, invert_cbar=True, cbar_label = c_bar)
+    ua_save_at = save_at[:-4]  + '_unadjusted.png'
+    print(ua_save_at)
+    fig1 = uvp.world_map_mpl(da.lat, da.lon, da['st'], label + ' trend unadjusted \n '+str(plev)+'_'+sdate+'_'+edate+' \n heterogeneity cost: ' + str(cost), inp_vmin=-cbar_limit, inp_vmax=cbar_limit, invert_cbar=c_bar_red_top, cbar_label = c_bar,save_at = ua_save_at)
 
     a = rasotools.plot._helpers.cost(np.asarray(da.lon), np.asarray(da.lat), np.asarray(da['at']))
     cost = np.sum(a)/len(a)
-    fig1 = uvp.world_map_mpl(da.lat, da.lon, da['at'], label + ' trend adjusted \n '+str(plev)+'_'+sdate+'_'+edate+' \n heterogeneity cost: ' + str(cost), inp_vmin=-2, inp_vmax=2, invert_cbar=True, cbar_label = c_bar)
+    a_save_at = save_at[:-4] + '_adjusted.png'
+    print(a_save_at)
+    fig1 = uvp.world_map_mpl(da.lat, da.lon, da['at'], label + ' trend adjusted \n '+str(plev)+'_'+sdate+'_'+edate+' \n heterogeneity cost: ' + str(cost), inp_vmin=-cbar_limit, inp_vmax=cbar_limit, invert_cbar=c_bar_red_top, cbar_label = c_bar, save_at = a_save_at)
 
 
 
@@ -170,7 +169,7 @@ def trend_station(i, dt_from, dt_to, variable, adjustment, pressure):
                     ).to_dataframe(
                         name="out"
                     )  # leave methode empty for default -> robust Theil–Sen estimator for trend
-                    sout.append(float(out.iloc[-1]) * 3650)
+                    sout.append(float(out.out.iloc[-1]) * 3650)
                     # print('trend ua: ', time.time() - t3, ' s')
                     # t4 = time.time()
                     out_adj = rasotools.met.time.trend(
@@ -178,7 +177,7 @@ def trend_station(i, dt_from, dt_to, variable, adjustment, pressure):
                     ).to_dataframe(
                         name="out_adj"
                     )  # leave methode empty for default -> robust Theil–Sen estimator for trend
-                    aout.append(float(out_adj.iloc[-1]) * 3650)
+                    aout.append(float(out_adj.out_adj.iloc[-1]) * 3650)
                     # print('trend adj: ', time.time() - t4, ' s')
                     # t5 = time.time()
                 else:
@@ -254,6 +253,21 @@ if __name__ == '__main__':
                         help = "Select the pressure in Pa on which the trends should be calculated. Default = 10000"  ,
                         default = 10000,
                         type = int)
+
+    parser.add_argument('--cbar_limit' , '-cbl',
+                        help = "Select the integer limit for the colorbar. Default = 2"  ,
+                        default = 2,
+                        type = float)
+    
+    parser.add_argument('--force_rerun' , '-fr',
+                        help = "Force a rerun, even if data with same timecode exists. Set to 1 for forced rerun. Default = 0"  ,
+                        default = 0,
+                        type = int)
+    
+    parser.add_argument('--version' , '-vr',
+                        help = "Version to keep track of trends. Default = 0"  ,
+                        default = "V0",
+                        type = str)
     
     args = parser.parse_args()
     input = args.input 
@@ -264,6 +278,9 @@ if __name__ == '__main__':
     threads = args.threads
     adjustment = args.adjustment
     pressure = args.pressure
+    cbl = args.cbar_limit
+    fr = args.force_rerun
+    version = args.version
 
 
     ## Input files:
@@ -279,19 +296,18 @@ if __name__ == '__main__':
         adjustment = default_adjustment[variable]
 
     ## add identifier for creation:
-    today = datetime.today().strftime('%Y-%m-%d')
     write_data_to = out_dir
     if write_data_to[-1] != '/':
         write_data_to += '/'
-    for add_path in ['polyfit_trends', '_', variable, '_', str(pressure), '_', adjustment, '_', start_date, '_', end_date, '_', 'trendfile', '_', today, '.p']:
+    for add_path in ['polyfit_trends', '_', variable, '_', str(pressure), '_', adjustment, '_', start_date, '_', end_date, '_', 'trendfile', '_', version, '.p']:
         write_data_to += add_path
 
     ## run trend calculation if file not already there
-    if not os.path.isfile(write_data_to):
-
-        print(start_date, end_date)
-        print(variable, adjustment)
-        print(pressure, out_dir)
+    print(start_date, end_date)
+    print(variable, adjustment)
+    print(pressure, out_dir)
+    if not os.path.isfile(write_data_to) or fr == 1:
+        print('creating files')
 
         dt_from = datetime_to_seconds(np.datetime64(start_date))
         dt_to = datetime_to_seconds(np.datetime64(end_date))
@@ -307,16 +323,24 @@ if __name__ == '__main__':
         pickle.dump(results, open(write_data_to, "wb"))
         ray.shutdown()
 
-        print('----')
+        
     else:
         print('trend file already exists')
-
+    print('----')
     units = {'ta':'K', 'rh':'1', 'u':'m/s', 'v':'m/s', 'dp': 'K', 'sh':'g/kg', 'wd':'°'}
+    cbar_red_equals_negative = {'ta':False, 'rh':True, 'u':False, 'v':False, 'dp': True, 'sh':True, 'wd':False}
 
     trend_notebook_info = {}
     trend_notebook_info['file'] = write_data_to
     trend_notebook_info['variable'] = variable
     trend_notebook_info['label'] = variable
     trend_notebook_info['c_bar'] = '['+units[variable]+']/10a'
-    with open("trend_notebook_info.json", "w") as write_file:
-        json.dump(trend_notebook_info, write_file)
+    trend_notebook_info['c_bar_red_top'] = cbar_red_equals_negative[variable]
+    
+
+    # with open("trend_notebook_info.json", "w") as write_file:
+    #     json.dump(trend_notebook_info, write_file)
+
+    save_at = write_data_to[:-2] + '.png'
+    show_trend_map(trend_notebook_info['file'], trend_notebook_info['label'], trend_notebook_info['c_bar'], c_bar_red_top=trend_notebook_info['c_bar_red_top'], cbar_limit = cbl, save_at=save_at)
+
