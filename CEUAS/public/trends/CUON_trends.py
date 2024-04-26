@@ -61,13 +61,13 @@ def show_trend_map(file,label, c_bar, multiplier = 1, c_bar_red_top = True, cbar
     cost = np.sum(a)/len(a)
     ua_save_at = save_at[:-4]  + '_unadjusted.png'
     print(ua_save_at)
-    fig1 = uvp.world_map_mpl(da.lat, da.lon, da['st'], label + ' trend unadjusted \n '+str(plev)+'_'+sdate+'_'+edate+' \n heterogeneity cost: ' + str(cost), inp_vmin=-cbar_limit, inp_vmax=cbar_limit, invert_cbar=c_bar_red_top, cbar_label = c_bar,save_at = ua_save_at)
+    fig1 = uvp.world_map_mpl(da.lat, da.lon, da['st'], label + ' trend unadjusted \n '+str(plev)+'_'+sdate+'_'+edate+' \n number of stations: ' + str(len(a)) + ' heterogeneity cost: ' + "{:.2f}".format(cost), inp_vmin=-cbar_limit, inp_vmax=cbar_limit, invert_cbar=c_bar_red_top, cbar_label = c_bar,save_at = ua_save_at)
 
     a = rasotools.plot._helpers.cost(np.asarray(da.lon), np.asarray(da.lat), np.asarray(da['at']))
     cost = np.sum(a)/len(a)
     a_save_at = save_at[:-4] + '_adjusted.png'
     print(a_save_at)
-    fig1 = uvp.world_map_mpl(da.lat, da.lon, da['at'], label + ' trend adjusted \n '+str(plev)+'_'+sdate+'_'+edate+' \n heterogeneity cost: ' + str(cost), inp_vmin=-cbar_limit, inp_vmax=cbar_limit, invert_cbar=c_bar_red_top, cbar_label = c_bar, save_at = a_save_at)
+    fig1 = uvp.world_map_mpl(da.lat, da.lon, da['at'], label + ' trend adjusted \n '+str(plev)+'_'+sdate+'_'+edate+' \n number of stations: ' + str(len(a)) + ' heterogeneity cost: ' + "{:.2f}".format(cost), inp_vmin=-cbar_limit, inp_vmax=cbar_limit, invert_cbar=c_bar_red_top, cbar_label = c_bar, save_at = a_save_at)
 
 
 
