@@ -66,6 +66,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi import Response
 from fastapi import Request
+from fastapi import HTTPException
 app = FastAPI()
 import subprocess
 
@@ -1623,8 +1624,11 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     print('gdict2: ', gdict2)
     for k in range(len(bodies)):
         key=bodies[k]['statid']
-        bodies[k]['filename']=active[key][5]
-        bodies[k]['rtsidx']=gdict2[key]    #
+        try:
+            bodies[k]['filename']=active[key][5]
+            bodies[k]['rtsidx']=gdict2[key]    #
+        except:
+            raise HTTPException(status_code=512, detail="No selected station has data in specified date range.")
     # Check all requests if dates are within active station limits
     #
     #activekeys=list(active.keys())
