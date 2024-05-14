@@ -528,7 +528,7 @@ def read_standardnames(url: str = None) -> dict:
     cdmnames += 10 * ['observations_table/observation_value']
     # todo at the moment this is hard coded here, what if JRA55 is requested?
     
-    if config['cuon_version'] <= 16:
+    if float(config['cuon_version']) <= 16:
         cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body',
                     'observations_table/sensor_id',
                     'observations_table/secondary_value', 'observations_table/original_precision',
