@@ -401,10 +401,10 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
     # os.chdir(os.path.expandvars('$RSCRATCH/era5/odbs/merged'))
     # wroot = os.path.expandvars('$RSCRATCH/era5/odbs/merged/tmp')
     # os.makedirs(wroot, exist_ok=True)
-    z = numpy.zeros(1, dtype=numpy.int32)
-    zidx = numpy.zeros(1, dtype=numpy.int)
-    idx = numpy.zeros(1, dtype=numpy.int)
-    trajectory_index = numpy.zeros(1, dtype=numpy.int)
+    z = numpy.zeros(1, dtype='int32')
+    zidx = numpy.zeros(1, dtype='int32')
+    idx = numpy.zeros(1, dtype='int32')
+    trajectory_index = numpy.zeros(1, dtype='int32')
     # What get's updated here?
     zz = eua.calc_trajindexfast(z, zidx, idx, trajectory_index)
     os.makedirs(config['config_dir'], exist_ok=True)
@@ -2114,7 +2114,7 @@ def station_configuration(response=None):
 
 def datetime_to_seconds(dates, ref='1900-01-01T00:00:00'):
     """ from datetime64 to seconds since 1900-01-01 00:00:00"""
-    return ((numpy.datetime64(dates) - numpy.datetime64(ref)) / numpy.timedelta64(1, 's')).astype(numpy.int64)
+    return ((numpy.datetime64(dates) - numpy.datetime64(ref)) / numpy.timedelta64(1, 's')).astype('int64')
 
 @app.get('/maplist/', response_class=FileResponse)
 def mapdata(date=None, enddate=None, var=85, response=None,):
