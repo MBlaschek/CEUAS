@@ -1780,7 +1780,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     else:
 #     if not body['hdf']: 
         if wpath == '':
-            raise RuntimeError('Error: %s (%s)' % (results[0][1], str(body)))
+            raise HTTPException(status_code=513, detail="Record found, but no valid data. Try different pressure levels or parameters.")
         else:
             rfile = os.path.dirname(wpath) + '/download.zip'
             print(rfile)
