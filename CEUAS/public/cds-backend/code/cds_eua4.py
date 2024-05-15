@@ -135,7 +135,7 @@ logger = logging.getLogger('upperair.cdm')
 def searchdate(rtsidx,rtsarr,istart,istop=0):
     if istop==0:
         istop=istart
-    gdict=np.zeros((rtsidx.shape[0],np.int(2)),dtype='int')
+    gdict=np.zeros((rtsidx.shape[0], int(2)), dtype='int')
     lidx=np.zeros_like(rtsidx)
     l=0
     for i in range(len(rtsidx)-1):
