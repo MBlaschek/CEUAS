@@ -4167,12 +4167,12 @@ class CDMDataset:
 
         if False:
             # not really faster ?
-            logic = np.ones(trange.stop - trange.start, dtype=np.bool)
+            logic = np.ones(trange.stop - trange.start, dtype='bool')
             andisin(logic, self[dimgroup][observed_variable_name][trange], np.asarray([varnum], dtype='int32'))
         elif 'recordindex' in self.groups:
             logic = (self[dimgroup][observed_variable_name][trange] == varnum)
         else:
-            logic = np.ones(trange.stop-trange.start, dtype=np.bool)
+            logic = np.ones(trange.stop-trange.start, dtype='bool')
             # todo apply trange before, to make a subset 
         if return_base_index:
             base_index = copy.copy(logic)
@@ -4342,7 +4342,7 @@ class CDMDataset:
             xdates = self.load_variable_from_file(date_time_name, return_data=True)[0]
         # trange = slice(None)
         # xdates = None
-        # logic = np.ones(self[name].shape, dtype=np.bool)  # all True
+        # logic = np.ones(self[name].shape, dtype='bool')  # all True
         # if dates is not None:
         #     timestamp = self[date_time_name][()]
         #     d_attrs = self.read_attributes(date_time_name)
@@ -4375,7 +4375,7 @@ class CDMDataset:
                 logic = np.in1d(xplevs, plevs)
             logger.info('[READ] %s : %s [%s]', z_coordinate_name, str(plevs), p_units)
         else:
-            logic = np.ones(xdates.size, dtype=np.bool)
+            logic = np.ones(xdates.size, dtype='bool')
 
         if times is not None:
             # todo add time selection
@@ -5153,7 +5153,7 @@ class CDMDataset:
             #
             # logic / match_index are useless now (replace with dummys)
             #
-            logic = np.ones(values.shape[0], dtype=np.bool)
+            logic = np.ones(values.shape[0], dtype='bool')
             match_index = np.arange(values.shape[0], dtype='int32')
 
         else:
@@ -5468,7 +5468,7 @@ class CDMDataset:
             #
             # logic / match_index are useless now (replace with dummys)
             #
-            logic = np.ones(values.shape[0], dtype=np.bool)
+            logic = np.ones(values.shape[0], dtype='bool')
             match_index = np.arange(values.shape[0], dtype='int32')
         else:
             mask = np.where(logic)[0]
