@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	cairns	323.1	-16.92304	145.766251						[-14.4, -14.4]	[144.25, 144.25]	era5.81412.bfr	bufr	19640115	19640724	81412	0-20500-0-81412	[36, 85, 106, 107]
-0	0															0-20300-0-nan	IGRA2	cairns	323.1	-16.92304	145.766251						[-14.4, -14.4]	[144.25, 144.25]	era5.81412.bfr	bufr	19640115	19640724	81412	0-20500-0-81412	[36, 85, 106, 107]
-0	0		PRINCESS CHARLOTTE B	-14.4	144.25	262.128				81412.0	19640101.0	19640731.0		0.0		0-20500-0-81412	WBAN	cairns	323.1	-16.92304	145.766251						[-14.4, -14.4]	[144.25, 144.25]	era5.81412.bfr	bufr	19640115	19640724	81412	0-20500-0-81412	[36, 85, 106, 107]
-0	0															0-20400-0-nan	CHUAN	cairns	323.1	-16.92304	145.766251						[-14.4, -14.4]	[144.25, 144.25]	era5.81412.bfr	bufr	19640115	19640724	81412	0-20500-0-81412	[36, 85, 106, 107]
-0	0															0-20600-0-nan	SCHROEDER	cairns	323.1	-16.92304	145.766251						[-14.4, -14.4]	[144.25, 144.25]	era5.81412.bfr	bufr	19640115	19640724	81412	0-20500-0-81412	[36, 85, 106, 107]
-0	0															0-20700-0-nan	WMO	cairns	323.1	-16.92304	145.766251						[-14.4, -14.4]	[144.25, 144.25]	era5.81412.bfr	bufr	19640115	19640724	81412	0-20500-0-81412	[36, 85, 106, 107]

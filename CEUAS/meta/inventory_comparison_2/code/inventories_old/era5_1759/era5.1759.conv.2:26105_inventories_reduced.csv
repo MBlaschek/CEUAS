@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:26105									[61.25, 61.25]	[-118.63, -118.63]	OSCAR				19440510	19440815				0-20500-0-26105	yellowknife	[106, 107]
-2:26105									[61.25, 61.25]	[-118.63, -118.63]	IGRA2			0-20300-0-nan	19440510	19440815				0-20500-0-26105	yellowknife	[106, 107]
-2:26105	26105.0	MILLS LAKE	61.25	-118.63	148.1328			0.0	[61.25, 61.25]	[-118.63, -118.63]	WBAN			0-20500-0-26105	19440510	19440815	19440101.0	19440831.0		0-20500-0-26105	yellowknife	[106, 107]
-2:26105									[61.25, 61.25]	[-118.63, -118.63]	CHUAN			0-20400-0-nan	19440510	19440815				0-20500-0-26105	yellowknife	[106, 107]
-2:26105									[61.25, 61.25]	[-118.63, -118.63]	SCHROEDER			0-20600-0-nan	19440510	19440815				0-20500-0-26105	yellowknife	[106, 107]
-2:26105									[61.25, 61.25]	[-118.63, -118.63]	WMO			0-20700-0-nan	19440510	19440815				0-20500-0-26105	yellowknife	[106, 107]

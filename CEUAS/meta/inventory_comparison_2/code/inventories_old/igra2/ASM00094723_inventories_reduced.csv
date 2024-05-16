@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-94723	94723	WELLINGTON (AGROWPLOW)	-32.56361111111111	148.95027777777776	305.0	32 33 49S	148 57 01E	0.3	[-32.5667, -32.5667]	[148.95, 148.95]	OSCAR	0-20000-0-94723		0-20000-0-94723	1947	1950	999.0	999.0	False	0-20000-0-94723	dubbo	['85', '38', '106', '107']
-94723	94723	WELLINGTON	-32.5667	148.95	304.0			0.0	[-32.5667, -32.5667]	[148.95, 148.95]	IGRA2			0-20300-0-94723	1947	1950	1947.0	1950.0	True	0-20000-0-94723	dubbo	['85', '38', '106', '107']
-94723									[-32.5667, -32.5667]	[148.95, 148.95]	WBAN			0-20500-0-nan	1947	1950				0-20000-0-94723	dubbo	['85', '38', '106', '107']
-94723									[-32.5667, -32.5667]	[148.95, 148.95]	CHUAN			0-20400-0-nan	1947	1950				0-20000-0-94723	dubbo	['85', '38', '106', '107']
-94723	94723	Wellington Research Centre, New South Wales, Australia	-32.51	148.97	-999.0			6.6	[-32.5667, -32.5667]	[148.95, 148.95]	SCHROEDER		94723.0	0-20600-0-94723	1947	1950				0-20000-0-94723	dubbo	['85', '38', '106', '107']
-94723									[-32.5667, -32.5667]	[148.95, 148.95]	WMO			0-20700-0-nan	1947	1950				0-20000-0-94723	dubbo	['85', '38', '106', '107']

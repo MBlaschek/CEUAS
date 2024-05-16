@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:36535	36535	KOKPEKTY	48.75	82.36666666666666	512.0	48 45 00N	082 22 00E	0.2	[48.75, 48.75]	[82.37, 82.37]	OSCAR	0-20000-0-36535		0-20000-0-36535	19680120	19680429	999.0	999.0	False	0-20000-0-36535	serebryansk	[106, 107]
-1:36535									[48.75, 48.75]	[82.37, 82.37]	IGRA2			0-20300-0-nan	19680120	19680429				0-20000-0-36535	serebryansk	[106, 107]
-1:36535									[48.75, 48.75]	[82.37, 82.37]	WBAN			0-20500-0-nan	19680120	19680429				0-20000-0-36535	serebryansk	[106, 107]
-1:36535									[48.75, 48.75]	[82.37, 82.37]	CHUAN			0-20400-0-nan	19680120	19680429				0-20000-0-36535	serebryansk	[106, 107]
-1:36535									[48.75, 48.75]	[82.37, 82.37]	SCHROEDER			0-20600-0-nan	19680120	19680429				0-20000-0-36535	serebryansk	[106, 107]
-1:36535	36535	KOKPEKTY                 	48.75	82.36666666666666	-999.0			0.2	[48.75, 48.75]	[82.37, 82.37]	WMO		36535	0-20700-0-36535	19680120	19680429				0-20000-0-36535	serebryansk	[106, 107]

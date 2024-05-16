@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-67793	AWSLUCHENZA	LUCHENZA	-16.010833333333334	35.291666666666664		16 00 39S	035 17 30E	17.2	[-16.15, -16.15]	[35.22, 35.22]	OSCAR	0-454-2-AWSLUCHENZA		0-454-2-AWSLUCHENZA	19871206	19910718	999.0	999.0	False	0-454-2-AWSLUCHENZA	luchenza	[104, 105, 106, 107, 117]
-67793									[-16.15, -16.15]	[35.22, 35.22]	IGRA2			0-20300-0-nan	19871206	19910718				0-454-2-AWSLUCHENZA	luchenza	[104, 105, 106, 107, 117]
-67793									[-16.15, -16.15]	[35.22, 35.22]	WBAN			0-20500-0-nan	19871206	19910718				0-454-2-AWSLUCHENZA	luchenza	[104, 105, 106, 107, 117]
-67793									[-16.15, -16.15]	[35.22, 35.22]	CHUAN			0-20400-0-nan	19871206	19910718				0-454-2-AWSLUCHENZA	luchenza	[104, 105, 106, 107, 117]
-67793									[-16.15, -16.15]	[35.22, 35.22]	SCHROEDER			0-20600-0-nan	19871206	19910718				0-454-2-AWSLUCHENZA	luchenza	[104, 105, 106, 107, 117]
-67793									[-16.15, -16.15]	[35.22, 35.22]	WMO			0-20700-0-nan	19871206	19910718				0-454-2-AWSLUCHENZA	luchenza	[104, 105, 106, 107, 117]

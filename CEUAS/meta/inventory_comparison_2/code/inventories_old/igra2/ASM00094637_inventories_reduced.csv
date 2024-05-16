@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-94637	94637	KALGOORLIE-BOULDER AIRPORT	-30.784722222222225	121.45333333333333	366.0	30 47 05S	121 27 12E	0.0	[-30.7847, -30.7847]	[121.4533, 121.4533]	OSCAR	0-20000-0-94637		0-20000-0-94637	1950	2021	999.0	999.0	True	0-20000-0-94637	albany	['85', '38', '106', '107']
-94637	94637	KALGOORLIE-BOULDER AIRPORT	-30.7847	121.4533	366.7			0.0	[-30.7847, -30.7847]	[121.4533, 121.4533]	IGRA2			0-20300-0-94637	1950	2021	1950.0	2021.0	True	0-20000-0-94637	albany	['85', '38', '106', '107']
-94637									[-30.7847, -30.7847]	[121.4533, 121.4533]	WBAN			0-20500-0-nan	1950	2021				0-20000-0-94637	albany	['85', '38', '106', '107']
-94637									[-30.7847, -30.7847]	[121.4533, 121.4533]	CHUAN			0-20400-0-nan	1950	2021				0-20000-0-94637	albany	['85', '38', '106', '107']
-94637	94637	YPKG Kalgoorlie (Boulder AP), Western Australia, Australia	-30.77	121.45	-999.0			1.7	[-30.7847, -30.7847]	[121.4533, 121.4533]	SCHROEDER		94637	0-20600-0-94637	1950	2021				0-20000-0-94637	albany	['85', '38', '106', '107']
-94637	94637	KALGOORLIE               	-30.78333333333333	121.45	370.0			0.4	[-30.7847, -30.7847]	[121.4533, 121.4533]	WMO		94637	0-20700-0-94637	1950	2021				0-20000-0-94637	albany	['85', '38', '106', '107']

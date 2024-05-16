@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:33124	33124	BRAGIN	51.79666666666667	30.247500000000002	116.25	51 47 48N	030 14 51E	2092.7	[37.1, 37.1]	[13.6, 13.6]	OSCAR	0-20000-0-33124		0-20000-0-33124	19430801	19430824	999.0	999.0	False	0-20500-0-33124	palma di montechiaro	[104, 105, 106, 107]
-2:33124									[37.1, 37.1]	[13.6, 13.6]	IGRA2			0-20300-0-nan	19430801	19430824				0-20500-0-33124	palma di montechiaro	[104, 105, 106, 107]
-2:33124	33124	LICATA	37.1	13.6	132.2832			0.0	[37.1, 37.1]	[13.6, 13.6]	WBAN			0-20500-0-33124	19430801	19430824	19430801.0	19430831.0		0-20500-0-33124	palma di montechiaro	[104, 105, 106, 107]
-2:33124									[37.1, 37.1]	[13.6, 13.6]	CHUAN			0-20400-0-nan	19430801	19430824				0-20500-0-33124	palma di montechiaro	[104, 105, 106, 107]
-2:33124									[37.1, 37.1]	[13.6, 13.6]	SCHROEDER			0-20600-0-nan	19430801	19430824				0-20500-0-33124	palma di montechiaro	[104, 105, 106, 107]
-2:33124	33124	BRAGIN                   	51.78333333333333	30.133333333333333	-999.0			2086.1	[37.1, 37.1]	[13.6, 13.6]	WMO		33124	0-20700-0-33124	19430801	19430824				0-20500-0-33124	palma di montechiaro	[104, 105, 106, 107]
-2:33124									[37.1, 37.1]	[13.6, 13.6]	AMMA			0-20800-0-nan	19430801	19430824				0-20500-0-33124	palma di montechiaro	[104, 105, 106, 107]
-2:33124									[37.1, 37.1]	[13.6, 13.6]	HARA			0-20111-0-nan	19430801	19430824				0-20500-0-33124	palma di montechiaro	[104, 105, 106, 107]

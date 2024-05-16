@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	narragansett	69.1	41.45	-71.45						[40.83, 40.83]	[-71.38, -71.38]	era5.1761.conv.2:14719	era5_1761	19431018	19451014	2:14719		[106, 107]
-0	0		WESTHAMPTON SUFFOLK COUNTY AAF	40.85	-72.6333	17.7				14719	1943.0	1945.0	True	105.7		0-20300-0-14719	IGRA2	narragansett	69.1	41.45	-71.45	USW00014719					[40.83, 40.83]	[-71.38, -71.38]	era5.1761.conv.2:14719	era5_1761	19431018	19451014	2:14719		[106, 107]
-0	0															0-20500-0-nan	WBAN	narragansett	69.1	41.45	-71.45						[40.83, 40.83]	[-71.38, -71.38]	era5.1761.conv.2:14719	era5_1761	19431018	19451014	2:14719		[106, 107]
-0	0															0-20400-0-nan	CHUAN	narragansett	69.1	41.45	-71.45						[40.83, 40.83]	[-71.38, -71.38]	era5.1761.conv.2:14719	era5_1761	19431018	19451014	2:14719		[106, 107]
-0	0															0-20600-0-nan	SCHROEDER	narragansett	69.1	41.45	-71.45						[40.83, 40.83]	[-71.38, -71.38]	era5.1761.conv.2:14719	era5_1761	19431018	19451014	2:14719		[106, 107]
-0	0															0-20700-0-nan	WMO	narragansett	69.1	41.45	-71.45						[40.83, 40.83]	[-71.38, -71.38]	era5.1761.conv.2:14719	era5_1761	19431018	19451014	2:14719		[106, 107]

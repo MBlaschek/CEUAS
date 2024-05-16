@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-10832	10832	TUERKHEIM (RADAR)	48.58527777777778	9.78277777777778		48 35 07N	009 46 58E	2139.5	[52.4, 52.2]	[-20.0, -20.0]	OSCAR	0-20000-0-10832		0-20000-0-10832	19710819	19711026	999.0	999.0	False	0-20300-0-99015	None	[36, 85, 106, 107]
-10832	99015	OCEAN WEATHER SHIP J	52.5	-20.0	0.0			11.1	[52.4, 52.2]	[-20.0, -20.0]	IGRA2			0-20300-0-99015	19710819	19711026	1968.0	1972.0	True	0-20300-0-99015	None	[36, 85, 106, 107]
-10832									[52.4, 52.2]	[-20.0, -20.0]	WBAN			0-20500-0-nan	19710819	19711026				0-20300-0-99015	None	[36, 85, 106, 107]
-10832									[52.4, 52.2]	[-20.0, -20.0]	CHUAN			0-20400-0-nan	19710819	19711026				0-20300-0-99015	None	[36, 85, 106, 107]
-10832									[52.4, 52.2]	[-20.0, -20.0]	SCHROEDER			0-20600-0-nan	19710819	19711026				0-20300-0-99015	None	[36, 85, 106, 107]
-10832									[52.4, 52.2]	[-20.0, -20.0]	WMO			0-20700-0-nan	19710819	19711026				0-20300-0-99015	None	[36, 85, 106, 107]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:26204									[60.27, 60.27]	[-121.8, -121.8]	OSCAR				19440401	19450301				0-20500-0-26204	fort saint john	[106, 107]
-2:26204									[60.27, 60.27]	[-121.8, -121.8]	IGRA2			0-20300-0-nan	19440401	19450301				0-20500-0-26204	fort saint john	[106, 107]
-2:26204	26204.0	TROUT LAKE	60.27	-121.8	503.2248			0.0	[60.27, 60.27]	[-121.8, -121.8]	WBAN			0-20500-0-26204	19440401	19450301	19440401.0	19451031.0		0-20500-0-26204	fort saint john	[106, 107]
-2:26204									[60.27, 60.27]	[-121.8, -121.8]	CHUAN			0-20400-0-nan	19440401	19450301				0-20500-0-26204	fort saint john	[106, 107]
-2:26204									[60.27, 60.27]	[-121.8, -121.8]	SCHROEDER			0-20600-0-nan	19440401	19450301				0-20500-0-26204	fort saint john	[106, 107]
-2:26204									[60.27, 60.27]	[-121.8, -121.8]	WMO			0-20700-0-nan	19440401	19450301				0-20500-0-26204	fort saint john	[106, 107]

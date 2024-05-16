@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-23955	23955	ALEKSANDROVSKOE	60.43333333333333	77.86666666666666	48.53	60 26 00N	077 52 00E	0.4	[60.43, 60.43]	[77.87, 77.87]	OSCAR	0-20000-0-23955		0-20000-0-23955	20180101	20211231	999.0	999.0	True	0-20000-0-23955	strezhevoy	['38', '85', '106', '107']
-23955	23955	ALEKSANDROVSKOE	60.4333	77.8667	47.0			0.4	[60.43, 60.43]	[77.87, 77.87]	IGRA2			0-20300-0-23955	20180101	20211231	1949.0	2021.0	True	0-20000-0-23955	strezhevoy	['38', '85', '106', '107']
-23955									[60.43, 60.43]	[77.87, 77.87]	WBAN			0-20500-0-nan	20180101	20211231				0-20000-0-23955	strezhevoy	['38', '85', '106', '107']
-23955									[60.43, 60.43]	[77.87, 77.87]	CHUAN			0-20400-0-nan	20180101	20211231				0-20000-0-23955	strezhevoy	['38', '85', '106', '107']
-23955	23955	Aleksandrovskoe, Russia	60.43	77.87	-999.0			0.0	[60.43, 60.43]	[77.87, 77.87]	SCHROEDER		23955.0	0-20600-0-23955	20180101	20211231				0-20000-0-23955	strezhevoy	['38', '85', '106', '107']
-23955									[60.43, 60.43]	[77.87, 77.87]	WMO			0-20700-0-nan	20180101	20211231				0-20000-0-23955	strezhevoy	['38', '85', '106', '107']

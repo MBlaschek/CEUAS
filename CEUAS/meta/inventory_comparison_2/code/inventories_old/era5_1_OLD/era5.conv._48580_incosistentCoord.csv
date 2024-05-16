@@ -1,3 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0	0-20000-0-48580	PATTANI	6.79	101.14694444444446	6.01	Surface land meteorological station (SYNOP), GOS	06 47 24N	101 08 49E	48580	999.0	999.0	False	2.8		OSCAR	0-20000-0-48580	nong chik	7.7	6.843556	101.178028					
-0	0		PATTANI A                	6.783333333333333	101.15	6.0				48580				2.2		WMO	0-20700-0-48580	nong chik	7.7	6.843556	101.178028		48580	2591.0		

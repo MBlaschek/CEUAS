@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-20667	20667	IM. M.V. POPOVA	73.33277777777778	70.06638888888888	5.6	73 19 58N	070 03 59E	1.2	[73.33, 73.33]	[70.03, 70.03]	OSCAR	0-20000-0-20667		0-20000-0-20667	19610312	19781231	999.0	999.0	False	0-20000-0-20667	None	[36, 85, 106, 107]
-20667	20667	IM POPOVA	73.33	70.03	6.0			0.0	[73.33, 73.33]	[70.03, 70.03]	IGRA2			0-20300-0-20667	19610312	19781231	1953.0	1995.0	True	0-20000-0-20667	None	[36, 85, 106, 107]
-20667									[73.33, 73.33]	[70.03, 70.03]	WBAN			0-20500-0-nan	19610312	19781231				0-20000-0-20667	None	[36, 85, 106, 107]
-20667									[73.33, 73.33]	[70.03, 70.03]	CHUAN			0-20400-0-nan	19610312	19781231				0-20000-0-20667	None	[36, 85, 106, 107]
-20667	20667	Stanciya Im. Popova, Belyy Island, Russia	73.33	70.03	-999.0			0.0	[73.33, 73.33]	[70.03, 70.03]	SCHROEDER		20667.0	0-20600-0-20667	19610312	19781231				0-20000-0-20667	None	[36, 85, 106, 107]
-20667									[73.33, 73.33]	[70.03, 70.03]	WMO			0-20700-0-nan	19610312	19781231				0-20000-0-20667	None	[36, 85, 106, 107]

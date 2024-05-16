@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:3116									[37.33, 37.33]	[-115.7, -115.7]	OSCAR				19511119	19511130				0-20500-0-3116	pahrump	[106, 107]
-2:3116									[37.33, 37.33]	[-115.7, -115.7]	IGRA2			0-20300-0-nan	19511119	19511130				0-20500-0-3116	pahrump	[106, 107]
-2:3116	3116.0	GROOM MINE	37.33	-115.7	1599.8952000000002			0.0	[37.33, 37.33]	[-115.7, -115.7]	WBAN			0-20500-0-3116	19511119	19511130	19511101.0	19511130.0		0-20500-0-3116	pahrump	[106, 107]
-2:3116									[37.33, 37.33]	[-115.7, -115.7]	CHUAN			0-20400-0-nan	19511119	19511130				0-20500-0-3116	pahrump	[106, 107]
-2:3116									[37.33, 37.33]	[-115.7, -115.7]	SCHROEDER			0-20600-0-nan	19511119	19511130				0-20500-0-3116	pahrump	[106, 107]
-2:3116									[37.33, 37.33]	[-115.7, -115.7]	WMO			0-20700-0-nan	19511119	19511130				0-20500-0-3116	pahrump	[106, 107]

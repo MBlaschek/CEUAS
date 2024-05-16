@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-29846	29842	Novokuznetsk	53.89527777777778	87.10166666666666		53 53 43N	087 06 06E	18.8	[53.7333, 53.7333]	[87.1833, 87.1833]	OSCAR	0-20000-2-29842		0-20000-2-29842	1955	1956	999.0	999.0	False	0-20000-2-29842	novokuznetsk	['85', '38', '106', '107']
-29846	29846	ABAGUR	53.7333	87.1833	215.0			0.0	[53.7333, 53.7333]	[87.1833, 87.1833]	IGRA2			0-20300-0-29846	1955	1956	1955.0	1956.0	True	0-20000-2-29842	novokuznetsk	['85', '38', '106', '107']
-29846									[53.7333, 53.7333]	[87.1833, 87.1833]	WBAN			0-20500-0-nan	1955	1956				0-20000-2-29842	novokuznetsk	['85', '38', '106', '107']
-29846									[53.7333, 53.7333]	[87.1833, 87.1833]	CHUAN			0-20400-0-nan	1955	1956				0-20000-2-29842	novokuznetsk	['85', '38', '106', '107']
-29846	29846	Novokuznetsk, Russia	53.77	87.23	-999.0			5.1	[53.7333, 53.7333]	[87.1833, 87.1833]	SCHROEDER		29846.0	0-20600-0-29846	1955	1956				0-20000-2-29842	novokuznetsk	['85', '38', '106', '107']
-29846									[53.7333, 53.7333]	[87.1833, 87.1833]	WMO			0-20700-0-nan	1955	1956				0-20000-2-29842	novokuznetsk	['85', '38', '106', '107']

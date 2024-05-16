@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:5174	38875	KARAKUL'	39.016666666666666	73.55	3930.0	39 01 00N	073 33 00E	9.6	[39.1, 39.1]	[73.52, 73.52]	OSCAR	0-20000-0-38875		0-20000-0-38875	19280717	19280719	999	999	False	0-20000-0-38875	ozgon	[106, 107]
-C:5174									[39.1, 39.1]	[73.52, 73.52]	IGRA2			0-20300-0-nan	19280717	19280719				0-20000-0-38875	ozgon	[106, 107]
-C:5174									[39.1, 39.1]	[73.52, 73.52]	WBAN			0-20500-0-nan	19280717	19280719				0-20000-0-38875	ozgon	[106, 107]
-C:5174	5174	Kara-Kul	39.1	73.52	3960			0.0	[39.1, 39.1]	[73.52, 73.52]	CHUAN		-999	0-20400-0-5174	19280717	19280719	-999-999	-999-999		0-20000-0-38875	ozgon	[106, 107]
-C:5174									[39.1, 39.1]	[73.52, 73.52]	SCHROEDER			0-20600-0-nan	19280717	19280719				0-20000-0-38875	ozgon	[106, 107]
-C:5174									[39.1, 39.1]	[73.52, 73.52]	WMO			0-20700-0-nan	19280717	19280719				0-20000-0-38875	ozgon	[106, 107]

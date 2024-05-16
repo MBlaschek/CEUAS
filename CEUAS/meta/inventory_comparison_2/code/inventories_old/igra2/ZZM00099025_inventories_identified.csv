@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	nichinan	453.0	31.6	131.366667						[29.0, 29.0]	[135.0, 135.0]	ZZM00099025	igra2	1950	1972	99025	0-20300-0-99025	['85', '38', '106', '107']
-0	0		OCEAN WEATHER SHIP T	29.0	135.0	0.0				99025	1950.0	1972.0	True	0.0		0-20300-0-99025	IGRA2	nichinan	453.0	31.6	131.366667	ZZM00099025					[29.0, 29.0]	[135.0, 135.0]	ZZM00099025	igra2	1950	1972	99025	0-20300-0-99025	['85', '38', '106', '107']
-0	0															0-20500-0-nan	WBAN	nichinan	453.0	31.6	131.366667						[29.0, 29.0]	[135.0, 135.0]	ZZM00099025	igra2	1950	1972	99025	0-20300-0-99025	['85', '38', '106', '107']
-0	0															0-20400-0-nan	CHUAN	nichinan	453.0	31.6	131.366667						[29.0, 29.0]	[135.0, 135.0]	ZZM00099025	igra2	1950	1972	99025	0-20300-0-99025	['85', '38', '106', '107']
-0	0															0-20600-0-nan	SCHROEDER	nichinan	453.0	31.6	131.366667						[29.0, 29.0]	[135.0, 135.0]	ZZM00099025	igra2	1950	1972	99025	0-20300-0-99025	['85', '38', '106', '107']
-0	0															0-20700-0-nan	WMO	nichinan	453.0	31.6	131.366667						[29.0, 29.0]	[135.0, 135.0]	ZZM00099025	igra2	1950	1972	99025	0-20300-0-99025	['85', '38', '106', '107']

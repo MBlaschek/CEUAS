@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	uhersky brod	0.7	49.025539	17.646646						[49.02, 49.02]	[17.65, 17.65]	era5.3188.conv.C:5372	era5_3188	19250414	19250817	C:5372	0-20400-0-5372	[106, 107]
-0	0															0-20300-0-nan	IGRA2	uhersky brod	0.7	49.025539	17.646646						[49.02, 49.02]	[17.65, 17.65]	era5.3188.conv.C:5372	era5_3188	19250414	19250817	C:5372	0-20400-0-5372	[106, 107]
-0	0															0-20500-0-nan	WBAN	uhersky brod	0.7	49.025539	17.646646						[49.02, 49.02]	[17.65, 17.65]	era5.3188.conv.C:5372	era5_3188	19250414	19250817	C:5372	0-20400-0-5372	[106, 107]
-0	0		Uhersky Brod	49.02	17.65	256				5372.0	-999-999	-999-999		0.0		0-20400-0-5372	CHUAN	uhersky brod	0.7	49.025539	17.646646		-999				[49.02, 49.02]	[17.65, 17.65]	era5.3188.conv.C:5372	era5_3188	19250414	19250817	C:5372	0-20400-0-5372	[106, 107]
-0	0															0-20600-0-nan	SCHROEDER	uhersky brod	0.7	49.025539	17.646646						[49.02, 49.02]	[17.65, 17.65]	era5.3188.conv.C:5372	era5_3188	19250414	19250817	C:5372	0-20400-0-5372	[106, 107]
-0	0															0-20700-0-nan	WMO	uhersky brod	0.7	49.025539	17.646646						[49.02, 49.02]	[17.65, 17.65]	era5.3188.conv.C:5372	era5_3188	19250414	19250817	C:5372	0-20400-0-5372	[106, 107]

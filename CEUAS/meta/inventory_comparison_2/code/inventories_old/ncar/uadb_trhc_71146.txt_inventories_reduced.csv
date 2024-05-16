@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-71146									[53.73, 53.73]	[-105.27000000000001, -105.27000000000001]	OSCAR				19940326	20141128				0-20600-0-71146	prince albert	['38', '85', '106', '107']
-71146									[53.73, 53.73]	[-105.27000000000001, -105.27000000000001]	IGRA2			0-20300-0-nan	19940326	20141128				0-20600-0-71146	prince albert	['38', '85', '106', '107']
-71146									[53.73, 53.73]	[-105.27000000000001, -105.27000000000001]	WBAN			0-20500-0-nan	19940326	20141128				0-20600-0-71146	prince albert	['38', '85', '106', '107']
-71146									[53.73, 53.73]	[-105.27000000000001, -105.27000000000001]	CHUAN			0-20400-0-nan	19940326	20141128				0-20600-0-71146	prince albert	['38', '85', '106', '107']
-71146	71146.0	Candle Lake - Sno-Drifters Lodge BOREAS site (NE of Prince Albert), Saskatchewan, Canada	53.73	-105.27	-999.0			0.0	[53.73, 53.73]	[-105.27000000000001, -105.27000000000001]	SCHROEDER		71146.0	0-20600-0-71146	19940326	20141128				0-20600-0-71146	prince albert	['38', '85', '106', '107']
-71146									[53.73, 53.73]	[-105.27000000000001, -105.27000000000001]	WMO			0-20700-0-nan	19940326	20141128				0-20600-0-71146	prince albert	['38', '85', '106', '107']

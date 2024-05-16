@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:32813									[23.47, 23.47]	[87.45, 87.45]	OSCAR				19441215	19460131				0-20500-0-32813	durgapur	[106, 107]
-2:32813									[23.47, 23.47]	[87.45, 87.45]	IGRA2			0-20300-0-nan	19441215	19460131				0-20500-0-32813	durgapur	[106, 107]
-2:32813	32813.0	PANAGARH	23.47	87.45	74.0664			0.0	[23.47, 23.47]	[87.45, 87.45]	WBAN			0-20500-0-32813	19441215	19460131	19440101.0	19460228.0		0-20500-0-32813	durgapur	[106, 107]
-2:32813	32810.0	MADHAIGANJ	23.63	87.35	94.1832			20.5	[23.47, 23.47]	[87.45, 87.45]	WBAN			0-20500-0-32810	19441215	19460131	19440101.0	19441231.0		0-20500-0-32813	durgapur	[106, 107]
-2:32813									[23.47, 23.47]	[87.45, 87.45]	CHUAN			0-20400-0-nan	19441215	19460131				0-20500-0-32813	durgapur	[106, 107]
-2:32813									[23.47, 23.47]	[87.45, 87.45]	SCHROEDER			0-20600-0-nan	19441215	19460131				0-20500-0-32813	durgapur	[106, 107]
-2:32813									[23.47, 23.47]	[87.45, 87.45]	WMO			0-20700-0-nan	19441215	19460131				0-20500-0-32813	durgapur	[106, 107]

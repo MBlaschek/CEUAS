@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	americus	28.9	32.0722222	-84.2327778						[32.2, 32.2]	[-84.5, -84.5]	era5.10855.bfr	bufr	19710115	19710115	10855	0-20500-0-53807	[36, 85, 106, 107]
-0	0															0-20300-0-nan	IGRA2	americus	28.9	32.0722222	-84.2327778						[32.2, 32.2]	[-84.5, -84.5]	era5.10855.bfr	bufr	19710115	19710115	10855	0-20500-0-53807	[36, 85, 106, 107]
-0	0		PLAINS PETERSON FIEL	32.08	-84.37	160.6296				53807.0	19770104.0	19810731.0		18.1		0-20500-0-53807	WBAN	americus	28.9	32.0722222	-84.2327778						[32.2, 32.2]	[-84.5, -84.5]	era5.10855.bfr	bufr	19710115	19710115	10855	0-20500-0-53807	[36, 85, 106, 107]
-0	0															0-20400-0-nan	CHUAN	americus	28.9	32.0722222	-84.2327778						[32.2, 32.2]	[-84.5, -84.5]	era5.10855.bfr	bufr	19710115	19710115	10855	0-20500-0-53807	[36, 85, 106, 107]
-0	0															0-20600-0-nan	SCHROEDER	americus	28.9	32.0722222	-84.2327778						[32.2, 32.2]	[-84.5, -84.5]	era5.10855.bfr	bufr	19710115	19710115	10855	0-20500-0-53807	[36, 85, 106, 107]
-0	0															0-20700-0-nan	WMO	americus	28.9	32.0722222	-84.2327778						[32.2, 32.2]	[-84.5, -84.5]	era5.10855.bfr	bufr	19710115	19710115	10855	0-20500-0-53807	[36, 85, 106, 107]

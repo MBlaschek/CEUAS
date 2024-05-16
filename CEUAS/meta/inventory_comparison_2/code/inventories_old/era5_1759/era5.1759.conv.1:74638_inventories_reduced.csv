@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:74638	74638	MELROSE GUNNERY RANGE, NM.	34.3	-103.8		34 18 00N	103 48 00W	0.0	[34.3, 34.3]	[-103.8, -103.8]	OSCAR	0-20000-0-74638		0-20000-0-74638	19700212	19721229	999.0	999.0	False	0-20000-0-74638	portales	[106, 107]
-1:74638	74638	MELROSE GUNNERY RAN	34.3	-103.8	1326.0			0.0	[34.3, 34.3]	[-103.8, -103.8]	IGRA2			0-20300-0-74638	19700212	19721229	1973.0	1973.0	True	0-20000-0-74638	portales	[106, 107]
-1:74638	93064	MELROSE GUNRY RNG AF	34.3	-103.8	1325.88			0.0	[34.3, 34.3]	[-103.8, -103.8]	WBAN		74638.0	0-20500-0-93064	19700212	19721229	19630701.0	19730731.0		0-20000-0-74638	portales	[106, 107]
-1:74638									[34.3, 34.3]	[-103.8, -103.8]	CHUAN			0-20400-0-nan	19700212	19721229				0-20000-0-74638	portales	[106, 107]
-1:74638	74638	Melrose Gunnery Range (operated by US Army), NM	34.3	-103.8	-999.0			0.0	[34.3, 34.3]	[-103.8, -103.8]	SCHROEDER		74638.0	0-20600-0-74638	19700212	19721229				0-20000-0-74638	portales	[106, 107]
-1:74638									[34.3, 34.3]	[-103.8, -103.8]	WMO			0-20700-0-nan	19700212	19721229				0-20000-0-74638	portales	[106, 107]

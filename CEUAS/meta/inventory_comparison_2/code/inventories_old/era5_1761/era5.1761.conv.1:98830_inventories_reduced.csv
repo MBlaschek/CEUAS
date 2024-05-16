@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:98830	98830	JOLO	6.05	121.0		06 03 00N	121 00 00E	0.0	[6.05, 6.05]	[121.0, 121.0]	OSCAR	0-20000-0-98830		0-20000-0-98830	19490302	19670730	999.0	999.0	False	0-20000-0-98830	jolo	[106, 107]
-1:98830									[6.05, 6.05]	[121.0, 121.0]	IGRA2			0-20300-0-nan	19490302	19670730				0-20000-0-98830	jolo	[106, 107]
-1:98830									[6.05, 6.05]	[121.0, 121.0]	WBAN			0-20500-0-nan	19490302	19670730				0-20000-0-98830	jolo	[106, 107]
-1:98830									[6.05, 6.05]	[121.0, 121.0]	CHUAN			0-20400-0-nan	19490302	19670730				0-20000-0-98830	jolo	[106, 107]
-1:98830	98830	Jolo, Sulu Archipelago, Philippines	6.05	121.0	-999.0			0.0	[6.05, 6.05]	[121.0, 121.0]	SCHROEDER		98830.0	0-20600-0-98830	19490302	19670730				0-20000-0-98830	jolo	[106, 107]
-1:98830									[6.05, 6.05]	[121.0, 121.0]	WMO			0-20700-0-nan	19490302	19670730				0-20000-0-98830	jolo	[106, 107]

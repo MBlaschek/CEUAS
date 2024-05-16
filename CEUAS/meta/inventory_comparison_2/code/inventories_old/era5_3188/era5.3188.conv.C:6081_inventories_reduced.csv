@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:6081	10156	LUEBECK-BLANKENSEE	53.802499999999995	10.69888888888889	15.97	53 48 09N	010 41 56E	2.4	[53.82, 53.82]	[10.72, 10.72]	OSCAR	0-20000-0-10156		0-20000-0-10156	19210703	19210925	999	999	False	0-20000-0-10156	lubeck	[106, 107]
-C:6081									[53.82, 53.82]	[10.72, 10.72]	IGRA2			0-20300-0-nan	19210703	19210925				0-20000-0-10156	lubeck	[106, 107]
-C:6081									[53.82, 53.82]	[10.72, 10.72]	WBAN			0-20500-0-nan	19210703	19210925				0-20000-0-10156	lubeck	[106, 107]
-C:6081	6081	Blankensee	53.82	10.72	16			0.0	[53.82, 53.82]	[10.72, 10.72]	CHUAN		-999	0-20400-0-6081	19210703	19210925	-999-999	-999-999		0-20000-0-10156	lubeck	[106, 107]
-C:6081									[53.82, 53.82]	[10.72, 10.72]	SCHROEDER			0-20600-0-nan	19210703	19210925				0-20000-0-10156	lubeck	[106, 107]
-C:6081									[53.82, 53.82]	[10.72, 10.72]	WMO			0-20700-0-nan	19210703	19210925				0-20000-0-10156	lubeck	[106, 107]

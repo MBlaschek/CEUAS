@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-31770	31770	SOVETSKAYA GAVAN'	49.0	140.3	23.81	49 00 00N	140 18 00E	2.2	[49.0, 48.97]	[140.28, 140.27]	OSCAR	0-20000-0-31770		0-20000-0-31770	19590103	19781228	999.0	999.0	True	0-20000-0-31770	sovetskaya gavan	[36, 85, 106, 107]
-31770	31770	SOVETSKAYA GAVAN	49.0	140.3	20.5			2.2	[49.0, 48.97]	[140.28, 140.27]	IGRA2			0-20300-0-31770	19590103	19781228	1964.0	2021.0	True	0-20000-0-31770	sovetskaya gavan	[36, 85, 106, 107]
-31770									[49.0, 48.97]	[140.28, 140.27]	WBAN			0-20500-0-nan	19590103	19781228				0-20000-0-31770	sovetskaya gavan	[36, 85, 106, 107]
-31770									[49.0, 48.97]	[140.28, 140.27]	CHUAN			0-20400-0-nan	19590103	19781228				0-20000-0-31770	sovetskaya gavan	[36, 85, 106, 107]
-31770	31770	Oktyabr'skiy / Sovetskaya Gavan', Russia	49.0	140.27	-999.0			0.0	[49.0, 48.97]	[140.28, 140.27]	SCHROEDER		31770.0	0-20600-0-31770	19590103	19781228				0-20000-0-31770	sovetskaya gavan	[36, 85, 106, 107]
-31770									[49.0, 48.97]	[140.28, 140.27]	WMO			0-20700-0-nan	19590103	19781228				0-20000-0-31770	sovetskaya gavan	[36, 85, 106, 107]

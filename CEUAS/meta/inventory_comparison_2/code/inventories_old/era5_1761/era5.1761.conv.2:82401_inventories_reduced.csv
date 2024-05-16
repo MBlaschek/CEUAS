@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:82401	94356	CHARTERS TOWERS AIRPORT	-20.04638888888889	146.27083333333334	291.0	20 02 47S	146 16 15E	14.8	[-20.03, -20.03]	[146.13, 146.13]	OSCAR	0-20000-0-94356		0-20000-0-94356	19420710	19441210	999.0	999.0	False	0-20000-0-94356	townsville	[106, 107]
-2:82401									[-20.03, -20.03]	[146.13, 146.13]	IGRA2			0-20300-0-nan	19420710	19441210				0-20000-0-94356	townsville	[106, 107]
-2:82401	82401	CHARTERS TOWERS	-20.03	146.13	299.0088			0.0	[-20.03, -20.03]	[146.13, 146.13]	WBAN			0-20500-0-82401	19420710	19441210	19420601.0	19441231.0		0-20000-0-94356	townsville	[106, 107]
-2:82401									[-20.03, -20.03]	[146.13, 146.13]	CHUAN			0-20400-0-nan	19420710	19441210				0-20000-0-94356	townsville	[106, 107]
-2:82401									[-20.03, -20.03]	[146.13, 146.13]	SCHROEDER			0-20600-0-nan	19420710	19441210				0-20000-0-94356	townsville	[106, 107]
-2:82401									[-20.03, -20.03]	[146.13, 146.13]	WMO			0-20700-0-nan	19420710	19441210				0-20000-0-94356	townsville	[106, 107]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-03091	03091	DYCE	57.205000000000005	-2.205277777777778	65.5	57 12 18N	002 12 19W	0.6	[57.2, 57.2]	[-2.2, -2.22]	OSCAR	0-20000-0-03091		0-20000-0-03091	19880602	20001216	999	999	False	0-20000-0-03091	aberdeen	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-03091	03091	ABERDEEN/DYCE AIRPO	57.2	-2.217	65.0			1.0	[57.2, 57.2]	[-2.2, -2.22]	IGRA2			0-20300-0-03091	19880602	20001216	1989	1999	True	0-20000-0-03091	aberdeen	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-03091									[57.2, 57.2]	[-2.2, -2.22]	WBAN			0-20500-0-nan	19880602	20001216				0-20000-0-03091	aberdeen	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-03091	5021	Aberdeen	57.17	-2.1	11			6.9	[57.2, 57.2]	[-2.2, -2.22]	CHUAN		-999	0-20400-0-5021	19880602	20001216	-999-999	-999-999		0-20000-0-03091	aberdeen	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-03091	3091	Aberdeen - Cromwell Tower Observatory, King's College / University of Aberdeen, Scotland, UK	57.1641	-2.1	-999			7.2	[57.2, 57.2]	[-2.2, -2.22]	SCHROEDER		3091	0-20600-0-3091	19880602	20001216				0-20000-0-03091	aberdeen	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-03091	03091	ABERDEEN/DYCE APT        	57.2	-2.2	-999.0			0.0	[57.2, 57.2]	[-2.2, -2.22]	WMO		03091	0-20700-0-03091	19880602	20001216				0-20000-0-03091	aberdeen	[36, 38, 39, 85, 104, 105, 106, 107, 117]

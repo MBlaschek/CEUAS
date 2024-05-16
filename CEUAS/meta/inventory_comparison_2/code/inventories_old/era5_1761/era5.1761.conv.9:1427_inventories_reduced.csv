@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-9:1427									[37.55, 37.55]	[121.37, 121.37]	OSCAR				19570303	19591231				0-20600-0-54765	yantai	[106, 107]
-9:1427									[37.55, 37.55]	[121.37, 121.37]	IGRA2			0-20300-0-nan	19570303	19591231				0-20600-0-54765	yantai	[106, 107]
-9:1427									[37.55, 37.55]	[121.37, 121.37]	WBAN			0-20500-0-nan	19570303	19591231				0-20600-0-54765	yantai	[106, 107]
-9:1427									[37.55, 37.55]	[121.37, 121.37]	CHUAN			0-20400-0-nan	19570303	19591231				0-20600-0-54765	yantai	[106, 107]
-9:1427	54765.0	Yantai / Chefoo (pibals made by US Navy), China	37.54	121.4	-999.0			2.9	[37.55, 37.55]	[121.37, 121.37]	SCHROEDER		54765.0	0-20600-0-54765	19570303	19591231				0-20600-0-54765	yantai	[106, 107]
-9:1427									[37.55, 37.55]	[121.37, 121.37]	WMO			0-20700-0-nan	19570303	19591231				0-20600-0-54765	yantai	[106, 107]

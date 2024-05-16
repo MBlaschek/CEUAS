@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-42779	42779	PENDRA ROAD	22.766666666666666	81.9	625.0	22 46 00N	081 54 00E	0.4	[22.77, 22.77]	[81.9, 81.9]	OSCAR	0-20000-0-42779		0-20000-0-42779	19820520	20011012	999.0	999.0	False	0-20000-0-42779	gaurela	['38', '85', '106', '107']
-42779	42779	PENDRA ROAD	22.767	81.9	625.0			0.3	[22.77, 22.77]	[81.9, 81.9]	IGRA2			0-20300-0-42779	19820520	20011012	1981.0	1993.0	True	0-20000-0-42779	gaurela	['38', '85', '106', '107']
-42779									[22.77, 22.77]	[81.9, 81.9]	WBAN			0-20500-0-nan	19820520	20011012				0-20000-0-42779	gaurela	['38', '85', '106', '107']
-42779									[22.77, 22.77]	[81.9, 81.9]	CHUAN			0-20400-0-nan	19820520	20011012				0-20000-0-42779	gaurela	['38', '85', '106', '107']
-42779	42779	Gaurela - Pendra Road, Madhya Pradesh, India	22.77	81.9	-999.0			0.0	[22.77, 22.77]	[81.9, 81.9]	SCHROEDER		42779.0	0-20600-0-42779	19820520	20011012				0-20000-0-42779	gaurela	['38', '85', '106', '107']
-42779									[22.77, 22.77]	[81.9, 81.9]	WMO			0-20700-0-nan	19820520	20011012				0-20000-0-42779	gaurela	['38', '85', '106', '107']

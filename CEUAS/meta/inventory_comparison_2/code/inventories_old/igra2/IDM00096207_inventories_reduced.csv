@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-96207	96207	KERINCI/DEPATI PARBO	-2.7666666666666666	101.36666666666666	782.0	02 46 00S	101 22 00E	75.3	[-2.0939, -2.0939]	[101.4698, 101.4698]	OSCAR	0-20000-0-96207		0-20000-0-96207	2007	2021	999.0	999.0	False	0-20300-0-96207	sungaipenuh	['85', '38', '106', '107']
-96207	96207	KERINCI/DEPATI PARBO	-2.0939	101.4698	782.0			0.0	[-2.0939, -2.0939]	[101.4698, 101.4698]	IGRA2			0-20300-0-96207	2007	2021	2007.0	2021.0	True	0-20300-0-96207	sungaipenuh	['85', '38', '106', '107']
-96207									[-2.0939, -2.0939]	[101.4698, 101.4698]	WBAN			0-20500-0-nan	2007	2021				0-20300-0-96207	sungaipenuh	['85', '38', '106', '107']
-96207									[-2.0939, -2.0939]	[101.4698, 101.4698]	CHUAN			0-20400-0-nan	2007	2021				0-20300-0-96207	sungaipenuh	['85', '38', '106', '107']
-96207									[-2.0939, -2.0939]	[101.4698, 101.4698]	SCHROEDER			0-20600-0-nan	2007	2021				0-20300-0-96207	sungaipenuh	['85', '38', '106', '107']
-96207									[-2.0939, -2.0939]	[101.4698, 101.4698]	WMO			0-20700-0-nan	2007	2021				0-20300-0-96207	sungaipenuh	['85', '38', '106', '107']

@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	alpena	56.3	45.0616667	-83.4327778						[45.3, 45.3]	[-82.8, -82.8]	ZZM00099223	igra2	1960	1963	99223	0-20300-0-99223	['85', '38', '106', '107']
-0	0		ENVIRONM BUOY 45003	45.3	-82.8	3.0				99223	1960.0	1963.0	True	0.0		0-20300-0-99223	IGRA2	alpena	56.3	45.0616667	-83.4327778	ZZM00099223					[45.3, 45.3]	[-82.8, -82.8]	ZZM00099223	igra2	1960	1963	99223	0-20300-0-99223	['85', '38', '106', '107']
-0	0															0-20500-0-nan	WBAN	alpena	56.3	45.0616667	-83.4327778						[45.3, 45.3]	[-82.8, -82.8]	ZZM00099223	igra2	1960	1963	99223	0-20300-0-99223	['85', '38', '106', '107']
-0	0															0-20400-0-nan	CHUAN	alpena	56.3	45.0616667	-83.4327778						[45.3, 45.3]	[-82.8, -82.8]	ZZM00099223	igra2	1960	1963	99223	0-20300-0-99223	['85', '38', '106', '107']
-0	0															0-20600-0-nan	SCHROEDER	alpena	56.3	45.0616667	-83.4327778						[45.3, 45.3]	[-82.8, -82.8]	ZZM00099223	igra2	1960	1963	99223	0-20300-0-99223	['85', '38', '106', '107']
-0	0															0-20700-0-nan	WMO	alpena	56.3	45.0616667	-83.4327778						[45.3, 45.3]	[-82.8, -82.8]	ZZM00099223	igra2	1960	1963	99223	0-20300-0-99223	['85', '38', '106', '107']

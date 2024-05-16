@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:22011									[26.92, 26.92]	[-101.05, -101.05]	OSCAR				19530814	19581230				0-20500-0-22011	monclova	[106, 107]
-2:22011									[26.92, 26.92]	[-101.05, -101.05]	IGRA2			0-20300-0-nan	19530814	19581230				0-20500-0-22011	monclova	[106, 107]
-2:22011	22011.0	MONCLOVA	26.92	-101.05	604.1136			0.0	[26.92, 26.92]	[-101.05, -101.05]	WBAN			0-20500-0-22011	19530814	19581230	19440701.0	19730531.0		0-20500-0-22011	monclova	[106, 107]
-2:22011									[26.92, 26.92]	[-101.05, -101.05]	CHUAN			0-20400-0-nan	19530814	19581230				0-20500-0-22011	monclova	[106, 107]
-2:22011									[26.92, 26.92]	[-101.05, -101.05]	SCHROEDER			0-20600-0-nan	19530814	19581230				0-20500-0-22011	monclova	[106, 107]
-2:22011									[26.92, 26.92]	[-101.05, -101.05]	WMO			0-20700-0-nan	19530814	19581230				0-20500-0-22011	monclova	[106, 107]

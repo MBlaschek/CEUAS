@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-87860	87860	COMODORO RIVADAVIA AERO	-45.79222222222222	-67.46194444444444	46.0	45 47 32S	067 27 43W	1.6	[-45.78, -45.78]	[-67.45, -67.45]	OSCAR	0-20000-0-87860		0-20000-0-87860	19580101	19781231	999.0	999.0	True	0-20000-0-87860	comodoro rivadavia	[36, 85, 106, 107]
-87860	87860	COMODORO RIVADAVIA AERO	-45.7833	-67.5	58.0			3.9	[-45.78, -45.78]	[-67.45, -67.45]	IGRA2			0-20300-0-87860	19580101	19781231	1958.0	2021.0	True	0-20000-0-87860	comodoro rivadavia	[36, 85, 106, 107]
-87860									[-45.78, -45.78]	[-67.45, -67.45]	WBAN			0-20500-0-nan	19580101	19781231				0-20000-0-87860	comodoro rivadavia	[36, 85, 106, 107]
-87860									[-45.78, -45.78]	[-67.45, -67.45]	CHUAN			0-20400-0-nan	19580101	19781231				0-20000-0-87860	comodoro rivadavia	[36, 85, 106, 107]
-87860	87860	Comodoro Rivadavia AP, Argentina	-45.78	-67.5	-999.0			3.9	[-45.78, -45.78]	[-67.45, -67.45]	SCHROEDER		87860	0-20600-0-87860	19580101	19781231				0-20000-0-87860	comodoro rivadavia	[36, 85, 106, 107]
-87860	87860	COMODORO RIVADAVIA AERO  	-45.78333333333333	-67.5	46.0			3.9	[-45.78, -45.78]	[-67.45, -67.45]	WMO		87860	0-20700-0-87860	19580101	19781231				0-20000-0-87860	comodoro rivadavia	[36, 85, 106, 107]

@@ -1,3 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0		SEYCHELLES INTER. AIRPORT	-4.6833	55.5167	4.0				63985	1973.0	2021.0	True	29.5		IGRA2	0-20300-0-63985	victoria	11.3	-4.6166667000000015	55.45	SEM00063985				
-0	0	0-20000-0-63985	SEYCHELLES INTER. AIRPORT (RAWINSONDE STATION)	-4.683333333333334	55.516666666666666		Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS, GUAN	04 41 00S	055 31 00E	63985	999.0	999.0	True	29.5		OSCAR	0-20000-0-63985	victoria	11.3	-4.6166667000000015	55.45					

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:5360									[41.72, 41.72]	[44.3, 44.3]	OSCAR				19271014	19280331				0-20400-0-5360	kaspi	[106, 107, 117]
-C:5360									[41.72, 41.72]	[44.3, 44.3]	IGRA2			0-20300-0-nan	19271014	19280331				0-20400-0-5360	kaspi	[106, 107, 117]
-C:5360									[41.72, 41.72]	[44.3, 44.3]	WBAN			0-20500-0-nan	19271014	19280331				0-20400-0-5360	kaspi	[106, 107, 117]
-C:5360	5360.0	Tiflis	41.72	44.3	404			0.0	[41.72, 41.72]	[44.3, 44.3]	CHUAN		-999	0-20400-0-5360	19271014	19280331	-999-999	-999-999		0-20400-0-5360	kaspi	[106, 107, 117]
-C:5360									[41.72, 41.72]	[44.3, 44.3]	SCHROEDER			0-20600-0-nan	19271014	19280331				0-20400-0-5360	kaspi	[106, 107, 117]
-C:5360									[41.72, 41.72]	[44.3, 44.3]	WMO			0-20700-0-nan	19271014	19280331				0-20400-0-5360	kaspi	[106, 107, 117]

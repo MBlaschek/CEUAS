@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-9:2138	61995	VACOAS (MAURITIUS)	-20.297500000000003	57.49472222222222	425.0	20 17 51S	057 29 41E	22.6	[-20.1, -20.1]	[57.55, 57.55]	OSCAR	0-20000-0-61995		0-20000-0-61995	19530105	19561231	999	999	True	0-20000-0-61995	le hochet	[106, 107]
-9:2138	61995	VACOAS (MAURITIUS)	-20.2975	57.4947	423.0			22.6	[-20.1, -20.1]	[57.55, 57.55]	IGRA2			0-20300-0-61995	19530105	19561231	1966	2021	True	0-20000-0-61995	le hochet	[106, 107]
-9:2138									[-20.1, -20.1]	[57.55, 57.55]	WBAN			0-20500-0-nan	19530105	19561231				0-20000-0-61995	le hochet	[106, 107]
-9:2138	5378	Vacoas	-20.28	57.48	430			21.2	[-20.1, -20.1]	[57.55, 57.55]	CHUAN		-999	0-20400-0-5378	19530105	19561231	-999-999	-999-999		0-20000-0-61995	le hochet	[106, 107]
-9:2138	61995	Vacoas, Mauritius	-20.3	57.5	-999			22.7	[-20.1, -20.1]	[57.55, 57.55]	SCHROEDER		61995	0-20600-0-61995	19530105	19561231				0-20000-0-61995	le hochet	[106, 107]
-9:2138									[-20.1, -20.1]	[57.55, 57.55]	WMO			0-20700-0-nan	19530105	19561231				0-20000-0-61995	le hochet	[106, 107]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-10122	10126	WITTMUNDHAVEN	53.55027777777777	7.667222222222223	11.8	53 33 01N	007 40 02E	14.3	[53.53, 53.53]	[7.88, 7.88]	OSCAR	0-20000-0-10126		0-20000-0-10126	19490405	19520804	999	999	False	0-20000-0-10126	schortens	['38', '85', '106', '107']
-10122	10122	JEVER	53.5333	7.8833	7.0			0.4	[53.53, 53.53]	[7.88, 7.88]	IGRA2			0-20300-0-10122	19490405	19520804	1949	1952	True	0-20000-0-10126	schortens	['38', '85', '106', '107']
-10122									[53.53, 53.53]	[7.88, 7.88]	WBAN			0-20500-0-nan	19490405	19520804				0-20000-0-10126	schortens	['38', '85', '106', '107']
-10122	5763	Wilhelmshaven	53.52	8.12	0			16.0	[53.53, 53.53]	[7.88, 7.88]	CHUAN		-999	0-20400-0-5763	19490405	19520804	-999-999	-999-999		0-20000-0-10126	schortens	['38', '85', '106', '107']
-10122									[53.53, 53.53]	[7.88, 7.88]	SCHROEDER			0-20600-0-nan	19490405	19520804				0-20000-0-10126	schortens	['38', '85', '106', '107']
-10122									[53.53, 53.53]	[7.88, 7.88]	WMO			0-20700-0-nan	19490405	19520804				0-20000-0-10126	schortens	['38', '85', '106', '107']

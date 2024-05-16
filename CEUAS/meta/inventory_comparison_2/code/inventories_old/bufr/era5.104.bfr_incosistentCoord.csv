@@ -1,3 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0	0-20000-0-10004	UFS TW EMS	54.165	6.346111111111111	0.0	Automatic weather station (AWS), Surface marine meteorological station (SYNOP), GOS, RBSN(S)	54 09 54N	006 20 46E	10004	999.0	999.0	False	5622.0		OSCAR	0-20000-0-10004	buchanan	141.1	5.8808333	-10.0466667					
-0	0		GREENVILLE	5.05	-9.08	15.24				10004	19671101.0	19680331.0		0.0		WBAN	0-20500-0-10004	buchanan	141.1	5.8808333	-10.0466667					

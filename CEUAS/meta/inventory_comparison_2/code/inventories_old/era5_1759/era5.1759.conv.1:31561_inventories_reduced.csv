@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:31561	31561	KOMSOMOLSK-NA-AMURE	50.53333333333333	137.03333333333333	21.8	50 32 00N	137 02 00E	8.8	[50.6, 50.6]	[137.1, 137.08]	OSCAR	0-20000-0-31561		0-20000-0-31561	19550320	19791231	999.0	999.0	False	0-20000-0-31561	solnechnyy	[38, 85, 106, 107, 117]
-1:31561	31561	KOMSOMOLSK-ON-AMUR	50.6	137.0333	19.0			4.7	[50.6, 50.6]	[137.1, 137.08]	IGRA2			0-20300-0-31561	19550320	19791231	1940.0	2010.0	True	0-20000-0-31561	solnechnyy	[38, 85, 106, 107, 117]
-1:31561									[50.6, 50.6]	[137.1, 137.08]	WBAN			0-20500-0-nan	19550320	19791231				0-20000-0-31561	solnechnyy	[38, 85, 106, 107, 117]
-1:31561									[50.6, 50.6]	[137.1, 137.08]	CHUAN			0-20400-0-nan	19550320	19791231				0-20000-0-31561	solnechnyy	[38, 85, 106, 107, 117]
-1:31561	31561	Komsomol'sk-na-Amure, Russia	50.53	136.98	-999.0			11.5	[50.6, 50.6]	[137.1, 137.08]	SCHROEDER		31561.0	0-20600-0-31561	19550320	19791231				0-20000-0-31561	solnechnyy	[38, 85, 106, 107, 117]
-1:31561									[50.6, 50.6]	[137.1, 137.08]	WMO			0-20700-0-nan	19550320	19791231				0-20000-0-31561	solnechnyy	[38, 85, 106, 107, 117]

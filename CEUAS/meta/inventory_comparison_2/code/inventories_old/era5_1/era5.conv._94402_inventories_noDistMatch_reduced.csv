@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-94402	94402	DENHAM	-25.926111111111112	113.53194444444445	9.8	25 55 34S	113 31 55E	44.8	[-26.25, -26.25]	[113.8, 113.8]	OSCAR	0-20000-0-94402		0-20000-0-94402	19810317	19810317	999.0	999.0	False		geraldton	[104, 105, 106, 107, 117]
-94402									[-26.25, -26.25]	[113.8, 113.8]	IGRA2			0-20300-0-nan	19810317	19810317					geraldton	[104, 105, 106, 107, 117]
-94402									[-26.25, -26.25]	[113.8, 113.8]	WBAN			0-20500-0-nan	19810317	19810317					geraldton	[104, 105, 106, 107, 117]
-94402									[-26.25, -26.25]	[113.8, 113.8]	CHUAN			0-20400-0-nan	19810317	19810317					geraldton	[104, 105, 106, 107, 117]
-94402									[-26.25, -26.25]	[113.8, 113.8]	SCHROEDER			0-20600-0-nan	19810317	19810317					geraldton	[104, 105, 106, 107, 117]
-94402									[-26.25, -26.25]	[113.8, 113.8]	WMO			0-20700-0-nan	19810317	19810317					geraldton	[104, 105, 106, 107, 117]
-94402									[-26.25, -26.25]	[113.8, 113.8]	AMMA			0-20800-0-nan	19810317	19810317					geraldton	[104, 105, 106, 107, 117]
-94402									[-26.25, -26.25]	[113.8, 113.8]	HARA			0-20111-0-nan	19810317	19810317					geraldton	[104, 105, 106, 107, 117]

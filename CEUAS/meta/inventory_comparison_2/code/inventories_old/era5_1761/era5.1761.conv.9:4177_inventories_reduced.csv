@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-9:4177	02095	PAJALA	67.20361111111112	23.39	165.9	67 12 13N	023 23 24E	0.6	[67.2, 67.2]	[23.38, 23.38]	OSCAR	0-20000-0-02095		0-20000-0-02095	19400313	19400514	999.0	999.0	False	0-20000-0-02095	rovaniemi	[85, 117]
-9:4177									[67.2, 67.2]	[23.38, 23.38]	IGRA2			0-20300-0-nan	19400313	19400514				0-20000-0-02095	rovaniemi	[85, 117]
-9:4177									[67.2, 67.2]	[23.38, 23.38]	WBAN			0-20500-0-nan	19400313	19400514				0-20000-0-02095	rovaniemi	[85, 117]
-9:4177									[67.2, 67.2]	[23.38, 23.38]	CHUAN			0-20400-0-nan	19400313	19400514				0-20000-0-02095	rovaniemi	[85, 117]
-9:4177	2054	Pajala, Sweden	67.2	23.42	-999.0			1.7	[67.2, 67.2]	[23.38, 23.38]	SCHROEDER		2054	0-20600-0-2054	19400313	19400514				0-20000-0-02095	rovaniemi	[85, 117]
-9:4177	02095	Pajala A                 	67.2	23.4	-999.0			0.9	[67.2, 67.2]	[23.38, 23.38]	WMO		02095	0-20700-0-02095	19400313	19400514				0-20000-0-02095	rovaniemi	[85, 117]

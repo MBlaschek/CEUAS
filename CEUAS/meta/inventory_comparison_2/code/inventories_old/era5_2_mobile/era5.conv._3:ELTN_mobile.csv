@@ -1,2 +1,0 @@
-lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	variables	kind	WIGOS_best
-		era5.conv._3:ELTN	era5_2_mobile	197201	197201	3:ELTN	nan	mobile	0-20999-0-3:ELTN

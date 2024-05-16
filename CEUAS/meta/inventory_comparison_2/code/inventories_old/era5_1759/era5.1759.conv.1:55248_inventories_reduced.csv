@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:55248									[32.07, 32.07]	[84.13, 84.13]	OSCAR				19760126	19791216				0-20600-0-55248	baglung	[38, 85, 106, 107, 117]
-1:55248									[32.07, 32.07]	[84.13, 84.13]	IGRA2			0-20300-0-nan	19760126	19791216				0-20600-0-55248	baglung	[38, 85, 106, 107, 117]
-1:55248									[32.07, 32.07]	[84.13, 84.13]	WBAN			0-20500-0-nan	19760126	19791216				0-20600-0-55248	baglung	[38, 85, 106, 107, 117]
-1:55248									[32.07, 32.07]	[84.13, 84.13]	CHUAN			0-20400-0-nan	19760126	19791216				0-20600-0-55248	baglung	[38, 85, 106, 107, 117]
-1:55248	55248.0	Lumaringbo / Gerze / Kai-tse, China	32.07	84.13	-999.0			0.0	[32.07, 32.07]	[84.13, 84.13]	SCHROEDER		55248.0	0-20600-0-55248	19760126	19791216				0-20600-0-55248	baglung	[38, 85, 106, 107, 117]
-1:55248	55249.0	(made up station ID) Gerze area, China	32.09	84.25	-999.0			11.5	[32.07, 32.07]	[84.13, 84.13]	SCHROEDER		55249.0	0-20600-0-55249	19760126	19791216				0-20600-0-55248	baglung	[38, 85, 106, 107, 117]
-1:55248									[32.07, 32.07]	[84.13, 84.13]	WMO			0-20700-0-nan	19760126	19791216				0-20600-0-55248	baglung	[38, 85, 106, 107, 117]

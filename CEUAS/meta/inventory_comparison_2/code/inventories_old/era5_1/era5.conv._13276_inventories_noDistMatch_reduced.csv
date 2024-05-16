@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-13276									[44.3, 44.3]	[20.53, 20.53]	OSCAR				19820517	19820517					arandelovac	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-13276	13276	BEOGRAD/SELENO BRD	44.7833	20.5333	243.0			53.7	[44.3, 44.3]	[20.53, 20.53]	IGRA2			0-20300-0-13276	19820517	19820517	1955.0	1971.0	True		arandelovac	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-13276									[44.3, 44.3]	[20.53, 20.53]	WBAN			0-20500-0-nan	19820517	19820517					arandelovac	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-13276									[44.3, 44.3]	[20.53, 20.53]	CHUAN			0-20400-0-nan	19820517	19820517					arandelovac	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-13276									[44.3, 44.3]	[20.53, 20.53]	SCHROEDER			0-20600-0-nan	19820517	19820517					arandelovac	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-13276									[44.3, 44.3]	[20.53, 20.53]	WMO			0-20700-0-nan	19820517	19820517					arandelovac	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-13276									[44.3, 44.3]	[20.53, 20.53]	AMMA			0-20800-0-nan	19820517	19820517					arandelovac	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-13276									[44.3, 44.3]	[20.53, 20.53]	HARA			0-20111-0-nan	19820517	19820517					arandelovac	[36, 38, 39, 85, 104, 105, 106, 107, 117]

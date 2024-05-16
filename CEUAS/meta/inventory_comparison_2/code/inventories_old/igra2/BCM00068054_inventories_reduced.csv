@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-68054	68054	FRANCISTOWN	-21.323888888888888	27.469166666666666	1009.43	21 19 26S	027 28 09E	12.3	[-21.217, -21.217]	[27.5, 27.5]	OSCAR	0-20000-0-68054		0-20000-0-68054	1988	1992	999.0	999.0	False	0-20000-0-68054	francistown	['85', '38', '106', '107']
-68054	68054	FRANCISTOWN	-21.217	27.5	1001.0			0.0	[-21.217, -21.217]	[27.5, 27.5]	IGRA2			0-20300-0-68054	1988	1992	1988.0	1992.0	True	0-20000-0-68054	francistown	['85', '38', '106', '107']
-68054									[-21.217, -21.217]	[27.5, 27.5]	WBAN			0-20500-0-nan	1988	1992				0-20000-0-68054	francistown	['85', '38', '106', '107']
-68054									[-21.217, -21.217]	[27.5, 27.5]	CHUAN			0-20400-0-nan	1988	1992				0-20000-0-68054	francistown	['85', '38', '106', '107']
-68054									[-21.217, -21.217]	[27.5, 27.5]	SCHROEDER			0-20600-0-nan	1988	1992				0-20000-0-68054	francistown	['85', '38', '106', '107']
-68054	68054	FRANCISTOWN              	-21.216666666666665	27.5	-999.0			0.0	[-21.217, -21.217]	[27.5, 27.5]	WMO		68054	0-20700-0-68054	1988	1992				0-20000-0-68054	francistown	['85', '38', '106', '107']

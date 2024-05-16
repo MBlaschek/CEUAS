@@ -1,5 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0		BAGDARIN	54.4667	113.5833	995.4				30554	1951.0	2018.0	True	33.9		IGRA2	0-20300-0-30554	taksimo	221.6	56.344444	114.879444	RSM00030554				
-1	1	0-20000-0-30555	TROICKIJ PRIISK	54.61666666666667	113.13333333333334	1314.1	Surface land meteorological station (SYNOP), GOS	54 37 00N	113 08 00E	30555	999.0	999.0	False	0.4		OSCAR	0-20000-0-30555	taksimo	221.6	56.344444	114.879444					
-0	0	0-20000-0-30554	BAGDARIN (30554-0)	54.44166666666666	113.58055555555555	902.43	Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), GSN, RBSN(S), GOS, RBCN	54 26 30N	113 34 50E	30554	999.0	999.0	False	35.3		OSCAR	0-20000-0-30554	taksimo	221.6	56.344444	114.879444					
-0	0		TROICKIJ PRIISK          	54.61666666666667	113.13333333333334	-999.0				30555				0.4		WMO	0-20700-0-30555	taksimo	221.6	56.344444	114.879444		30555	782.0		

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-07037	07037	ROUEN-BOOS	49.38305555555556	1.1816666666666666	152.0	49 22 59N	001 10 54E	0.4	[49.38, 49.38]	[1.18, 1.18]	OSCAR	0-20000-0-07037		0-20000-0-07037	19811123	19941014	999.0	999.0	False	0-20000-0-07037	saint-etienne-du-rouvray	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-07037									[49.38, 49.38]	[1.18, 1.18]	IGRA2			0-20300-0-nan	19811123	19941014				0-20000-0-07037	saint-etienne-du-rouvray	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-07037									[49.38, 49.38]	[1.18, 1.18]	WBAN			0-20500-0-nan	19811123	19941014				0-20000-0-07037	saint-etienne-du-rouvray	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-07037									[49.38, 49.38]	[1.18, 1.18]	CHUAN			0-20400-0-nan	19811123	19941014				0-20000-0-07037	saint-etienne-du-rouvray	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-07037									[49.38, 49.38]	[1.18, 1.18]	SCHROEDER			0-20600-0-nan	19811123	19941014				0-20000-0-07037	saint-etienne-du-rouvray	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-07037	07037	ROUEN-BOOS               	49.36666666666667	1.1666666666666667	-999.0			1.8	[49.38, 49.38]	[1.18, 1.18]	WMO		07037	0-20700-0-07037	19811123	19941014				0-20000-0-07037	saint-etienne-du-rouvray	[36, 38, 39, 85, 104, 105, 106, 107, 117]

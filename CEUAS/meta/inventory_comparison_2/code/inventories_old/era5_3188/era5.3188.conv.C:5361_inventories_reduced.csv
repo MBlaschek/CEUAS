@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:5361									[50.62, 50.62]	[31.3, 31.3]	OSCAR				19260509	19271028				0-20400-0-5361	bobrovytsya	[106, 107]
-C:5361									[50.62, 50.62]	[31.3, 31.3]	IGRA2			0-20300-0-nan	19260509	19271028				0-20400-0-5361	bobrovytsya	[106, 107]
-C:5361									[50.62, 50.62]	[31.3, 31.3]	WBAN			0-20500-0-nan	19260509	19271028				0-20400-0-5361	bobrovytsya	[106, 107]
-C:5361	5361	Timky	50.62	31.3	140			0.0	[50.62, 50.62]	[31.3, 31.3]	CHUAN		-999	0-20400-0-5361	19260509	19271028	-999-999	-999-999		0-20400-0-5361	bobrovytsya	[106, 107]
-C:5361									[50.62, 50.62]	[31.3, 31.3]	SCHROEDER			0-20600-0-nan	19260509	19271028				0-20400-0-5361	bobrovytsya	[106, 107]
-C:5361	07015	LILLE-LESQUIN            	50.56666666666667	30.916666666666668	-999.0			27.8	[50.62, 50.62]	[31.3, 31.3]	WMO		07015	0-20700-0-07015	19260509	19271028				0-20400-0-5361	bobrovytsya	[106, 107]

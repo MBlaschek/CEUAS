@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	balkhash	147.2	46.848056	74.995						[46.55, 46.55]	[76.87, 76.87]	era5.conv._36686	era5_1	19851024	19851024	36686		[104, 105, 106, 107, 117]
-0	0															0-20300-0-nan	IGRA2	balkhash	147.2	46.848056	74.995						[46.55, 46.55]	[76.87, 76.87]	era5.conv._36686	era5_1	19851024	19851024	36686		[104, 105, 106, 107, 117]
-0	0															0-20500-0-nan	WBAN	balkhash	147.2	46.848056	74.995						[46.55, 46.55]	[76.87, 76.87]	era5.conv._36686	era5_1	19851024	19851024	36686		[104, 105, 106, 107, 117]
-0	0															0-20400-0-nan	CHUAN	balkhash	147.2	46.848056	74.995						[46.55, 46.55]	[76.87, 76.87]	era5.conv._36686	era5_1	19851024	19851024	36686		[104, 105, 106, 107, 117]
-0	0															0-20600-0-nan	SCHROEDER	balkhash	147.2	46.848056	74.995						[46.55, 46.55]	[76.87, 76.87]	era5.conv._36686	era5_1	19851024	19851024	36686		[104, 105, 106, 107, 117]
-0	0		ALGAZY OSTROV            	46.0	76.01666666666667	-999.0				36686				89.8		0-20700-0-36686	WMO	balkhash	147.2	46.848056	74.995		36686	4157.0			[46.55, 46.55]	[76.87, 76.87]	era5.conv._36686	era5_1	19851024	19851024	36686		[104, 105, 106, 107, 117]

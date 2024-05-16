@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-47123									[37.1, 37.1]	[128.8667, 128.8667]	OSCAR				1987	2000				0-20300-0-47123	seoul	['85', '38', '106', '107']
-47123	47123	SANGDONG	37.1	128.8667	703.6			0.0	[37.1, 37.1]	[128.8667, 128.8667]	IGRA2			0-20300-0-47123	1987	2000	1987.0	2000.0	True	0-20300-0-47123	seoul	['85', '38', '106', '107']
-47123									[37.1, 37.1]	[128.8667, 128.8667]	WBAN			0-20500-0-nan	1987	2000				0-20300-0-47123	seoul	['85', '38', '106', '107']
-47123									[37.1, 37.1]	[128.8667, 128.8667]	CHUAN			0-20400-0-nan	1987	2000				0-20300-0-47123	seoul	['85', '38', '106', '107']
-47123	47123	Sangdong, South Korea	37.1	128.87	-999.0			0.3	[37.1, 37.1]	[128.8667, 128.8667]	SCHROEDER		47123.0	0-20600-0-47123	1987	2000				0-20300-0-47123	seoul	['85', '38', '106', '107']
-47123									[37.1, 37.1]	[128.8667, 128.8667]	WMO			0-20700-0-nan	1987	2000				0-20300-0-47123	seoul	['85', '38', '106', '107']

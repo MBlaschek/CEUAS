@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:34072	34072	KARABULAK	52.333333333333336	46.36666666666667	301.72	52 20 00N	046 22 00E	2925.7	[49.15, 49.15]	[4.63, 4.63]	OSCAR	0-20000-0-34072		0-20000-0-34072	19600208	19650114	999	999	False	0-20500-0-34072	chalons-en-champagne	[106, 107]
-2:34072									[49.15, 49.15]	[4.63, 4.63]	IGRA2			0-20300-0-nan	19600208	19650114				0-20500-0-34072	chalons-en-champagne	[106, 107]
-2:34072	34072	SUIPPES GUN RANGE	49.15	4.63	193.2432			0.0	[49.15, 49.15]	[4.63, 4.63]	WBAN			0-20500-0-34072	19600208	19650114	19600201	19670228		0-20500-0-34072	chalons-en-champagne	[106, 107]
-2:34072	5248	Mourmelon	49.12	4.35	131			20.7	[49.15, 49.15]	[4.63, 4.63]	CHUAN		-999	0-20400-0-5248	19600208	19650114	-999-999	-999-999		0-20500-0-34072	chalons-en-champagne	[106, 107]
-2:34072	7165	Chalons-en-Champagne / Chalons-sur-Marne - Caserne Chanzy, France	48.96	4.36	-999			28.9	[49.15, 49.15]	[4.63, 4.63]	SCHROEDER		7165	0-20600-0-7165	19600208	19650114				0-20500-0-34072	chalons-en-champagne	[106, 107]
-2:34072									[49.15, 49.15]	[4.63, 4.63]	WMO			0-20700-0-nan	19600208	19650114				0-20500-0-34072	chalons-en-champagne	[106, 107]

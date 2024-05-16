@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-10419	10418	LUEDENSCHEID	51.24527777777778	7.642499999999999	389.4	51 14 43N	007 38 33E	3.3	[51.2333, 51.2333]	[7.6, 7.6]	OSCAR	0-20000-0-10418		0-20000-0-10418	1949	1952	999.0	999.0	False	0-20000-0-10418	ludenscheid	['85', '38', '106', '107']
-10419	10419	LUDENSCHEID	51.2333	7.6	458.0			0.0	[51.2333, 51.2333]	[7.6, 7.6]	IGRA2			0-20300-0-10419	1949	1952	1949.0	1952.0	True	0-20000-0-10418	ludenscheid	['85', '38', '106', '107']
-10419	35004	MUNSTER	51.0	7.73	53.0352			27.5	[51.2333, 51.2333]	[7.6, 7.6]	WBAN			0-20500-0-35004	1949	1952	19450601.0	19450630.0		0-20000-0-10418	ludenscheid	['85', '38', '106', '107']
-10419									[51.2333, 51.2333]	[7.6, 7.6]	CHUAN			0-20400-0-nan	1949	1952				0-20000-0-10418	ludenscheid	['85', '38', '106', '107']
-10419									[51.2333, 51.2333]	[7.6, 7.6]	SCHROEDER			0-20600-0-nan	1949	1952				0-20000-0-10418	ludenscheid	['85', '38', '106', '107']
-10419									[51.2333, 51.2333]	[7.6, 7.6]	WMO			0-20700-0-nan	1949	1952				0-20000-0-10418	ludenscheid	['85', '38', '106', '107']

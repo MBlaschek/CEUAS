@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:63799									[-3.22, -3.23]	[40.1, 40.1]	OSCAR				19611220	19791227				0-20300-0-63799	malindi	[38, 85, 106, 107, 117]
-1:63799	63799	MALINDI	-3.217	40.1	19.0			0.3	[-3.22, -3.23]	[40.1, 40.1]	IGRA2			0-20300-0-63799	19611220	19791227	1973.0	1988.0	True	0-20300-0-63799	malindi	[38, 85, 106, 107, 117]
-1:63799	70401	MALINDI	-3.23	40.1	23.1648			1.1	[-3.22, -3.23]	[40.1, 40.1]	WBAN		63799.0	0-20500-0-70401	19611220	19791227	19730101.0	99991231.0		0-20300-0-63799	malindi	[38, 85, 106, 107, 117]
-1:63799									[-3.22, -3.23]	[40.1, 40.1]	CHUAN			0-20400-0-nan	19611220	19791227				0-20300-0-63799	malindi	[38, 85, 106, 107, 117]
-1:63799	63799	Malindi, Kenya	-3.22	40.1	-999.0			0.0	[-3.22, -3.23]	[40.1, 40.1]	SCHROEDER		63799	0-20600-0-63799	19611220	19791227				0-20300-0-63799	malindi	[38, 85, 106, 107, 117]
-1:63799	63798	(made up station ID) Malindi (San Marco Station) SHADOZ ozonesonde site, Kenya	-2.99	40.19	-999.0			27.3	[-3.22, -3.23]	[40.1, 40.1]	SCHROEDER		63798	0-20600-0-63798	19611220	19791227				0-20300-0-63799	malindi	[38, 85, 106, 107, 117]
-1:63799	63799	MALINDI                  	-3.2333333333333334	40.1	20.0			1.5	[-3.22, -3.23]	[40.1, 40.1]	WMO		63799	0-20700-0-63799	19611220	19791227				0-20300-0-63799	malindi	[38, 85, 106, 107, 117]

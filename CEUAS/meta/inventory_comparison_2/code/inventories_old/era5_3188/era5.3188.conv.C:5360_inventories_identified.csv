@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	kaspi	24.1	41.9161111	44.4241667						[41.72, 41.72]	[44.3, 44.3]	era5.3188.conv.C:5360	era5_3188	19271014	19280331	C:5360	0-20400-0-5360	[106, 107, 117]
-0	0															0-20300-0-nan	IGRA2	kaspi	24.1	41.9161111	44.4241667						[41.72, 41.72]	[44.3, 44.3]	era5.3188.conv.C:5360	era5_3188	19271014	19280331	C:5360	0-20400-0-5360	[106, 107, 117]
-0	0															0-20500-0-nan	WBAN	kaspi	24.1	41.9161111	44.4241667						[41.72, 41.72]	[44.3, 44.3]	era5.3188.conv.C:5360	era5_3188	19271014	19280331	C:5360	0-20400-0-5360	[106, 107, 117]
-0	0		Tiflis	41.72	44.3	404				5360.0	-999-999	-999-999		0.0		0-20400-0-5360	CHUAN	kaspi	24.1	41.9161111	44.4241667		-999				[41.72, 41.72]	[44.3, 44.3]	era5.3188.conv.C:5360	era5_3188	19271014	19280331	C:5360	0-20400-0-5360	[106, 107, 117]
-0	0															0-20600-0-nan	SCHROEDER	kaspi	24.1	41.9161111	44.4241667						[41.72, 41.72]	[44.3, 44.3]	era5.3188.conv.C:5360	era5_3188	19271014	19280331	C:5360	0-20400-0-5360	[106, 107, 117]
-0	0															0-20700-0-nan	WMO	kaspi	24.1	41.9161111	44.4241667						[41.72, 41.72]	[44.3, 44.3]	era5.3188.conv.C:5360	era5_3188	19271014	19280331	C:5360	0-20400-0-5360	[106, 107, 117]

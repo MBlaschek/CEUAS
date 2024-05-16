@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:5114									[51.8, 51.8]	[12.2, 12.2]	OSCAR				19270217	19270217				0-20300-0-10468	dessau	[106, 107]
-C:5114	10468	OPPIN	51.55	12.0667	106.0			29.3	[51.8, 51.8]	[12.2, 12.2]	IGRA2			0-20300-0-10468	19270217	19270217	2000	2006	True	0-20300-0-10468	dessau	[106, 107]
-C:5114									[51.8, 51.8]	[12.2, 12.2]	WBAN			0-20500-0-nan	19270217	19270217				0-20300-0-10468	dessau	[106, 107]
-C:5114	5114	Dessau	51.8	12.2	58			0.0	[51.8, 51.8]	[12.2, 12.2]	CHUAN		-999	0-20400-0-5114	19270217	19270217	-999-999	-999-999		0-20300-0-10468	dessau	[106, 107]
-C:5114	5585	Dessau	51.83	12.25	60			4.8	[51.8, 51.8]	[12.2, 12.2]	CHUAN		-999	0-20400-0-5585	19270217	19270217	-999-999	-999-999		0-20300-0-10468	dessau	[106, 107]
-C:5114	10468	(assigned station ID) Bitterfeld, Germany	51.63	12.3	-999			20.1	[51.8, 51.8]	[12.2, 12.2]	SCHROEDER		10468	0-20600-0-10468	19270217	19270217				0-20300-0-10468	dessau	[106, 107]
-C:5114									[51.8, 51.8]	[12.2, 12.2]	WMO			0-20700-0-nan	19270217	19270217				0-20300-0-10468	dessau	[106, 107]

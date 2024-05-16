@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-62338	40233	GAZA	31.5	34.45		31 30 00N	034 27 00E	0.0	[31.5, 31.5]	[34.45, 34.45]	OSCAR	0-20000-0-40233		0-20000-0-40233	19640621	19670424	999.0	999.0	False	0-20000-0-40233	sederot	[36, 85, 106, 107]
-62338									[31.5, 31.5]	[34.45, 34.45]	IGRA2			0-20300-0-nan	19640621	19670424				0-20000-0-40233	sederot	[36, 85, 106, 107]
-62338									[31.5, 31.5]	[34.45, 34.45]	WBAN			0-20500-0-nan	19640621	19670424				0-20000-0-40233	sederot	[36, 85, 106, 107]
-62338									[31.5, 31.5]	[34.45, 34.45]	CHUAN			0-20400-0-nan	19640621	19670424				0-20000-0-40233	sederot	[36, 85, 106, 107]
-62338	40229	(made up station ID) Kelab, Palestine (Gaza)	31.34	34.3	-999.0			22.8	[31.5, 31.5]	[34.45, 34.45]	SCHROEDER		40229.0	0-20600-0-40229	19640621	19670424				0-20000-0-40233	sederot	[36, 85, 106, 107]
-62338	40187	(made up station ID) Ruchama, Israel	31.5	34.7	-999.0			23.8	[31.5, 31.5]	[34.45, 34.45]	SCHROEDER		40187.0	0-20600-0-40187	19640621	19670424				0-20000-0-40233	sederot	[36, 85, 106, 107]
-62338	40185	(made up station ID) Nizanim, Israel	31.73	34.57	-999.0			27.9	[31.5, 31.5]	[34.45, 34.45]	SCHROEDER		40185.0	0-20600-0-40185	19640621	19670424				0-20000-0-40233	sederot	[36, 85, 106, 107]
-62338									[31.5, 31.5]	[34.45, 34.45]	WMO			0-20700-0-nan	19640621	19670424				0-20000-0-40233	sederot	[36, 85, 106, 107]

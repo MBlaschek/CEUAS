@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-43319	43321	COIMBATORE/PEELAMEDU	11.033333333333333	77.05	400.0	11 02 00N	077 03 00E	10.5	[11.0, 11.0]	[76.96, 76.96]	OSCAR	0-20000-0-43321		0-20000-0-43321	19790815	19790815	999.0	999.0	False	0-20000-0-43321	singanallur	[104, 105, 106, 107, 117]
-43319									[11.0, 11.0]	[76.96, 76.96]	IGRA2			0-20300-0-nan	19790815	19790815				0-20000-0-43321	singanallur	[104, 105, 106, 107, 117]
-43319									[11.0, 11.0]	[76.96, 76.96]	WBAN			0-20500-0-nan	19790815	19790815				0-20000-0-43321	singanallur	[104, 105, 106, 107, 117]
-43319									[11.0, 11.0]	[76.96, 76.96]	CHUAN			0-20400-0-nan	19790815	19790815				0-20000-0-43321	singanallur	[104, 105, 106, 107, 117]
-43319									[11.0, 11.0]	[76.96, 76.96]	SCHROEDER			0-20600-0-nan	19790815	19790815				0-20000-0-43321	singanallur	[104, 105, 106, 107, 117]
-43319									[11.0, 11.0]	[76.96, 76.96]	WMO			0-20700-0-nan	19790815	19790815				0-20000-0-43321	singanallur	[104, 105, 106, 107, 117]
-43319									[11.0, 11.0]	[76.96, 76.96]	AMMA			0-20800-0-nan	19790815	19790815				0-20000-0-43321	singanallur	[104, 105, 106, 107, 117]
-43319									[11.0, 11.0]	[76.96, 76.96]	HARA			0-20111-0-nan	19790815	19790815				0-20000-0-43321	singanallur	[104, 105, 106, 107, 117]

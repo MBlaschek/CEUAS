@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-96380									[-2.7, -2.7]	[110.7, 110.7]	OSCAR				19880502	19880502				0-20600-0-96645	pangkalanbuun	[104, 105, 106, 107, 117]
-96380									[-2.7, -2.7]	[110.7, 110.7]	IGRA2			0-20300-0-nan	19880502	19880502				0-20600-0-96645	pangkalanbuun	[104, 105, 106, 107, 117]
-96380									[-2.7, -2.7]	[110.7, 110.7]	WBAN			0-20500-0-nan	19880502	19880502				0-20600-0-96645	pangkalanbuun	[104, 105, 106, 107, 117]
-96380									[-2.7, -2.7]	[110.7, 110.7]	CHUAN			0-20400-0-nan	19880502	19880502				0-20600-0-96645	pangkalanbuun	[104, 105, 106, 107, 117]
-96380	96645.0	WRBI Pangkalan Bun - Iskandar AP, Kalimantan, Indonesia	-2.7	110.7	-999.0			0.0	[-2.7, -2.7]	[110.7, 110.7]	SCHROEDER		96645.0	0-20600-0-96645	19880502	19880502				0-20600-0-96645	pangkalanbuun	[104, 105, 106, 107, 117]
-96380									[-2.7, -2.7]	[110.7, 110.7]	WMO			0-20700-0-nan	19880502	19880502				0-20600-0-96645	pangkalanbuun	[104, 105, 106, 107, 117]

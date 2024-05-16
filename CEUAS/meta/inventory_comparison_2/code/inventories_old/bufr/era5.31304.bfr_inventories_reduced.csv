@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-31304									[15.13, 15.13]	[36.7, 36.7]	OSCAR				19640524	19641202				0-20500-0-31304	kassala	[36, 85, 106, 107]
-31304									[15.13, 15.13]	[36.7, 36.7]	IGRA2			0-20300-0-nan	19640524	19641202				0-20500-0-31304	kassala	[36, 85, 106, 107]
-31304	31304.0	TESSENEI	15.13	36.7	615.0864			0.0	[15.13, 15.13]	[36.7, 36.7]	WBAN			0-20500-0-31304	19640524	19641202	19640501.0	19641231.0		0-20500-0-31304	kassala	[36, 85, 106, 107]
-31304									[15.13, 15.13]	[36.7, 36.7]	CHUAN			0-20400-0-nan	19640524	19641202				0-20500-0-31304	kassala	[36, 85, 106, 107]
-31304									[15.13, 15.13]	[36.7, 36.7]	SCHROEDER			0-20600-0-nan	19640524	19641202				0-20500-0-31304	kassala	[36, 85, 106, 107]
-31304									[15.13, 15.13]	[36.7, 36.7]	WMO			0-20700-0-nan	19640524	19641202				0-20500-0-31304	kassala	[36, 85, 106, 107]

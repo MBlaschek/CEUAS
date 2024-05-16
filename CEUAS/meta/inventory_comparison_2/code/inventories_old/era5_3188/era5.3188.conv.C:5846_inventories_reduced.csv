@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:5846									[71.18, 71.18]	[-51.13, -51.13]	OSCAR				19310523	19310719				0-20400-0-5846	None	[106, 107]
-C:5846									[71.18, 71.18]	[-51.13, -51.13]	IGRA2			0-20300-0-nan	19310523	19310719				0-20400-0-5846	None	[106, 107]
-C:5846									[71.18, 71.18]	[-51.13, -51.13]	WBAN			0-20500-0-nan	19310523	19310719				0-20400-0-5846	None	[106, 107]
-C:5846	5846.0	Weststation	71.18	-51.13	940			0.0	[71.18, 71.18]	[-51.13, -51.13]	CHUAN		-999	0-20400-0-5846	19310523	19310719	-999-999	-999-999		0-20400-0-5846	None	[106, 107]
-C:5846	4209.0	(made up station ID) Weststation, Greenland (Denmark)	71.18	-51.13	-999			0.0	[71.18, 71.18]	[-51.13, -51.13]	SCHROEDER		4209	0-20600-0-4209	19310523	19310719				0-20400-0-5846	None	[106, 107]
-C:5846									[71.18, 71.18]	[-51.13, -51.13]	WMO			0-20700-0-nan	19310523	19310719				0-20400-0-5846	None	[106, 107]

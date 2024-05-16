@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:61499	61499	AIOUN EL ATROUSS	16.7	-9.6	223.0	16 42 00N	009 36 00W	0.0	[16.73, 16.7]	[-9.6, -9.63]	OSCAR	0-20000-0-61499		0-20000-0-61499	19570701	19701027	999.0	999.0	False	0-20000-0-61499	nioro	[38, 106, 107]
-1:61499	W1499	AIOUN ELATROUSS	16.7333	-9.6333	235.0			5.1	[16.73, 16.7]	[-9.6, -9.63]	IGRA2			0-20300-0-W1499	19570701	19701027	1952.0	1957.0	True	0-20000-0-61499	nioro	[38, 106, 107]
-1:61499									[16.73, 16.7]	[-9.6, -9.63]	WBAN			0-20500-0-nan	19570701	19701027				0-20000-0-61499	nioro	[38, 106, 107]
-1:61499									[16.73, 16.7]	[-9.6, -9.63]	CHUAN			0-20400-0-nan	19570701	19701027				0-20000-0-61499	nioro	[38, 106, 107]
-1:61499									[16.73, 16.7]	[-9.6, -9.63]	SCHROEDER			0-20600-0-nan	19570701	19701027				0-20000-0-61499	nioro	[38, 106, 107]
-1:61499	61499	AIOUN EL ATROUSS         	16.7	-9.6	-999.0			0.0	[16.73, 16.7]	[-9.6, -9.63]	WMO		61499	0-20700-0-61499	19570701	19701027				0-20000-0-61499	nioro	[38, 106, 107]

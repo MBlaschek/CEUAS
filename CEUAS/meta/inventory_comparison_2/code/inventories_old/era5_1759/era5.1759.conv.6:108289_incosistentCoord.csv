@@ -1,2 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0		OCEAN WEATHER SHIP I	59.0	-19.0	0.0				99014	1967.0	1972.0	True	12.5		0-20300-0-99014	IGRA2	None	None	None	None	ZZM00099014				

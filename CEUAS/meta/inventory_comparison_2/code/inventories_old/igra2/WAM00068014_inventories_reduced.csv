@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-68014	68014	GROOTFONTEIN	-19.59861111111111	18.116111111111113	1400.0	19 35 55S	018 06 58E	0.2	[-19.6, -19.6]	[18.117, 18.117]	OSCAR	0-20000-0-68014		0-20000-0-68014	1970	1989	999.0	999.0	False	0-20000-0-68014	grootfontein	['85', '38', '106', '107']
-68014	68014	GROOTFONTEIN	-19.6	18.117	1400.0			0.0	[-19.6, -19.6]	[18.117, 18.117]	IGRA2			0-20300-0-68014	1970	1989	1970.0	1989.0	True	0-20000-0-68014	grootfontein	['85', '38', '106', '107']
-68014									[-19.6, -19.6]	[18.117, 18.117]	WBAN			0-20500-0-nan	1970	1989				0-20000-0-68014	grootfontein	['85', '38', '106', '107']
-68014									[-19.6, -19.6]	[18.117, 18.117]	CHUAN			0-20400-0-nan	1970	1989				0-20000-0-68014	grootfontein	['85', '38', '106', '107']
-68014	68014	Grootfontein, Namibia	-19.6	18.13	-999.0			1.4	[-19.6, -19.6]	[18.117, 18.117]	SCHROEDER		68014	0-20600-0-68014	1970	1989				0-20000-0-68014	grootfontein	['85', '38', '106', '107']
-68014	68014	GROOTFONTEIN             	-19.6	18.116666666666667	-999.0			0.0	[-19.6, -19.6]	[18.117, 18.117]	WMO		68014	0-20700-0-68014	1970	1989				0-20000-0-68014	grootfontein	['85', '38', '106', '107']

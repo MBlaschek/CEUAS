@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:80517									[-5.27, -5.27]	[154.58, 154.58]	OSCAR				19621106	19630110				0-20500-0-80517	arawa	[38, 85, 106, 107, 117]
-2:80517									[-5.27, -5.27]	[154.58, 154.58]	IGRA2			0-20300-0-nan	19621106	19630110				0-20500-0-80517	arawa	[38, 85, 106, 107, 117]
-2:80517	80517.0	BUKA ISLAND	-5.27	154.58	4.2672			0.0	[-5.27, -5.27]	[154.58, 154.58]	WBAN			0-20500-0-80517	19621106	19630110	19621101.0	19630131.0		0-20500-0-80517	arawa	[38, 85, 106, 107, 117]
-2:80517									[-5.27, -5.27]	[154.58, 154.58]	CHUAN			0-20400-0-nan	19621106	19630110				0-20500-0-80517	arawa	[38, 85, 106, 107, 117]
-2:80517									[-5.27, -5.27]	[154.58, 154.58]	SCHROEDER			0-20600-0-nan	19621106	19630110				0-20500-0-80517	arawa	[38, 85, 106, 107, 117]
-2:80517									[-5.27, -5.27]	[154.58, 154.58]	WMO			0-20700-0-nan	19621106	19630110				0-20500-0-80517	arawa	[38, 85, 106, 107, 117]

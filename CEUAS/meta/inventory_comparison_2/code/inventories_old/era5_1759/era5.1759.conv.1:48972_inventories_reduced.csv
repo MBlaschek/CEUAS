@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:48972	48972	STUNG TRENG	13.516666666666667	105.96666666666667	54.0	13 31 00N	105 58 00E	0.5	[13.52, 13.52]	[105.97, 105.97]	OSCAR	0-20000-0-48972		0-20000-0-48972	19691021	19700127	999.0	999.0	False	0-20000-0-48972	lumphat	[106, 107]
-1:48972									[13.52, 13.52]	[105.97, 105.97]	IGRA2			0-20300-0-nan	19691021	19700127				0-20000-0-48972	lumphat	[106, 107]
-1:48972									[13.52, 13.52]	[105.97, 105.97]	WBAN			0-20500-0-nan	19691021	19700127				0-20000-0-48972	lumphat	[106, 107]
-1:48972									[13.52, 13.52]	[105.97, 105.97]	CHUAN			0-20400-0-nan	19691021	19700127				0-20000-0-48972	lumphat	[106, 107]
-1:48972									[13.52, 13.52]	[105.97, 105.97]	SCHROEDER			0-20600-0-nan	19691021	19700127				0-20000-0-48972	lumphat	[106, 107]
-1:48972	48972	STUNG TRENG              	13.516666666666667	105.96666666666668	-999.0			0.5	[13.52, 13.52]	[105.97, 105.97]	WMO		48972	0-20700-0-48972	19691021	19700127				0-20000-0-48972	lumphat	[106, 107]

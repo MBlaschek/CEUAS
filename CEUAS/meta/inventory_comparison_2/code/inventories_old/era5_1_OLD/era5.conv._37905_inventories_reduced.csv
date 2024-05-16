@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-37905	37905	BEYLAGAN AERODROME	39.766666666666666	47.75	71.0	39 46 00N	047 45 00E	22.2	[39.82, 39.82]	[47.5, 47.5]	OSCAR	0-20000-0-37905		0-20000-0-37905	19820225	19820225	999.0	999.0	False	0-20000-0-37905	parsabad	[104, 105, 106, 107, 117]
-37905									[39.82, 39.82]	[47.5, 47.5]	IGRA2			0-20300-0-nan	19820225	19820225				0-20000-0-37905	parsabad	[104, 105, 106, 107, 117]
-37905									[39.82, 39.82]	[47.5, 47.5]	WBAN			0-20500-0-nan	19820225	19820225				0-20000-0-37905	parsabad	[104, 105, 106, 107, 117]
-37905									[39.82, 39.82]	[47.5, 47.5]	CHUAN			0-20400-0-nan	19820225	19820225				0-20000-0-37905	parsabad	[104, 105, 106, 107, 117]
-37905									[39.82, 39.82]	[47.5, 47.5]	SCHROEDER			0-20600-0-nan	19820225	19820225				0-20000-0-37905	parsabad	[104, 105, 106, 107, 117]
-37905									[39.82, 39.82]	[47.5, 47.5]	WMO			0-20700-0-nan	19820225	19820225				0-20000-0-37905	parsabad	[104, 105, 106, 107, 117]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-67197	67197	TAOLAGNARO	-25.033333333333335	46.95	9.0	25 02 00S	046 57 00E	0.4	[-25.03, -25.03]	[46.95, 46.95]	OSCAR	0-20000-0-67197		0-20000-0-67197	19660524	19781230	999.0	999.0	True	0-20000-0-67197	taolanaro	[36, 85, 106, 107]
-67197	67197	TAOLAGNARO	-25.0333	46.95	8.0			0.4	[-25.03, -25.03]	[46.95, 46.95]	IGRA2			0-20300-0-67197	19660524	19781230	1972.0	2019.0	True	0-20000-0-67197	taolanaro	[36, 85, 106, 107]
-67197									[-25.03, -25.03]	[46.95, 46.95]	WBAN			0-20500-0-nan	19660524	19781230				0-20000-0-67197	taolanaro	[36, 85, 106, 107]
-67197									[-25.03, -25.03]	[46.95, 46.95]	CHUAN			0-20400-0-nan	19660524	19781230				0-20000-0-67197	taolanaro	[36, 85, 106, 107]
-67197	67197	FMSD Tolanaro / Ft. Dauphin / Farodofay - Tolagnaro AP, Madagascar	-25.03	46.97	-999.0			2.0	[-25.03, -25.03]	[46.95, 46.95]	SCHROEDER		67197	0-20600-0-67197	19660524	19781230				0-20000-0-67197	taolanaro	[36, 85, 106, 107]
-67197	67197	FORT DAUPHIN             	-25.03333333333333	46.95	-999.0			0.4	[-25.03, -25.03]	[46.95, 46.95]	WMO		67197	0-20700-0-67197	19660524	19781230				0-20000-0-67197	taolanaro	[36, 85, 106, 107]

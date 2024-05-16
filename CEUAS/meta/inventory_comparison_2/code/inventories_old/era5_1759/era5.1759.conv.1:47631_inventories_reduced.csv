@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:47631	47631	TSURUGA	35.65333333333333	136.06222222222223	12.4	35 39 12N	136 03 44E	0.8	[35.65, 35.65]	[136.07, 136.07]	OSCAR	0-20000-0-47631		0-20000-0-47631	19380803	19410610	999.0	999.0	False	0-20000-0-47631	tsuruga	[38, 106, 107]
-1:47631									[35.65, 35.65]	[136.07, 136.07]	IGRA2			0-20300-0-nan	19380803	19410610				0-20000-0-47631	tsuruga	[38, 106, 107]
-1:47631									[35.65, 35.65]	[136.07, 136.07]	WBAN			0-20500-0-nan	19380803	19410610				0-20000-0-47631	tsuruga	[38, 106, 107]
-1:47631									[35.65, 35.65]	[136.07, 136.07]	CHUAN			0-20400-0-nan	19380803	19410610				0-20000-0-47631	tsuruga	[38, 106, 107]
-1:47631									[35.65, 35.65]	[136.07, 136.07]	SCHROEDER			0-20600-0-nan	19380803	19410610				0-20000-0-47631	tsuruga	[38, 106, 107]
-1:47631									[35.65, 35.65]	[136.07, 136.07]	WMO			0-20700-0-nan	19380803	19410610				0-20000-0-47631	tsuruga	[38, 106, 107]

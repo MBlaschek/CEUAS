@@ -1,3 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0		WALTERBORO AAF	32.9167	-80.6333	29.0				13859	1943.0	1945.0	True	120.0		0-20300-0-13859	IGRA2	mount pleasant	50.0	32.7938889	-79.86277779999998	USW00013859				
-0	0		MCCLELLANVILLE 7 NE	33.15	-79.36	4.2672				3728	20020815.0	99991231.0		25.5		0-20500-0-3728	WBAN	mount pleasant	50.0	32.7938889	-79.86277779999998					

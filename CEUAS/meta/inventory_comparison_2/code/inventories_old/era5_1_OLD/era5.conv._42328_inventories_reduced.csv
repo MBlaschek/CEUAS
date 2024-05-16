@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-42328	42328	JAISALMER	26.9	70.91666666666667	257.0	26 54 00N	070 55 00E	0.3	[26.9, 26.9]	[70.92, 70.92]	OSCAR	0-20000-0-42328		0-20000-0-42328	19790501	20211231	999.0	999.0	False	0-20000-0-42328	jaisalmer	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-42328	42328	JAISALMER	26.9	70.9167	231.0			0.3	[26.9, 26.9]	[70.92, 70.92]	IGRA2			0-20300-0-42328	19790501	20211231	2015.0	2021.0	True	0-20000-0-42328	jaisalmer	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-42328									[26.9, 26.9]	[70.92, 70.92]	WBAN			0-20500-0-nan	19790501	20211231				0-20000-0-42328	jaisalmer	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-42328									[26.9, 26.9]	[70.92, 70.92]	CHUAN			0-20400-0-nan	19790501	20211231				0-20000-0-42328	jaisalmer	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-42328	42328	VIJR Jaisalmer Indian Air Force Base, Rajasthan, India	26.9	70.92	-999.0			0.0	[26.9, 26.9]	[70.92, 70.92]	SCHROEDER		42328.0	0-20600-0-42328	19790501	20211231				0-20000-0-42328	jaisalmer	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-42328									[26.9, 26.9]	[70.92, 70.92]	WMO			0-20700-0-nan	19790501	20211231				0-20000-0-42328	jaisalmer	[36, 38, 39, 85, 104, 105, 106, 107, 117]

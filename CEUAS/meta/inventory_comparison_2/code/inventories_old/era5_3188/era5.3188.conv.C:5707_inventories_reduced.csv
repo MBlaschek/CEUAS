@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:5707	10361	MAGDEBURG	52.10277777777778	11.582777777777778	85.0	52 06 10N	011 34 58E	4.0	[52.13, 52.13]	[11.62, 11.62]	OSCAR	0-20000-0-10361		0-20000-0-10361	19280213	19340623	999	999	False	0-20000-0-10361	magdeburg	[106, 107]
-C:5707									[52.13, 52.13]	[11.62, 11.62]	IGRA2			0-20300-0-nan	19280213	19340623				0-20000-0-10361	magdeburg	[106, 107]
-C:5707									[52.13, 52.13]	[11.62, 11.62]	WBAN			0-20500-0-nan	19280213	19340623				0-20000-0-10361	magdeburg	[106, 107]
-C:5707	5707	Magdeburg	52.13	11.62	80			0.0	[52.13, 52.13]	[11.62, 11.62]	CHUAN		-999	0-20400-0-5707	19280213	19340623	-999-999	-999-999		0-20000-0-10361	magdeburg	[106, 107]
-C:5707	10361	Magdeburg, Germany	52.13	11.63	-999			0.7	[52.13, 52.13]	[11.62, 11.62]	SCHROEDER		10361	0-20600-0-10361	19280213	19340623				0-20000-0-10361	magdeburg	[106, 107]
-C:5707	10361	MAGDEBURG               0	52.1	11.583333333333334	84.0			4.2	[52.13, 52.13]	[11.62, 11.62]	WMO		10361	0-20700-0-10361	19280213	19340623				0-20000-0-10361	magdeburg	[106, 107]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-82965	82965	ALTA FLORESTA (AERO)	-9.866666666666667	-56.1	288.0	09 52 00S	056 06 00W	0.6	[-9.85, -9.87]	[-56.1, -56.104]	OSCAR	0-20000-0-82965		0-20000-0-82965	19870905	20211231	999.0	999.0	True	0-20000-0-82965	alta floresta	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-82965	82965	ALTA FLORESTA (AERO)	-9.8667	-56.1	288.0			0.6	[-9.85, -9.87]	[-56.1, -56.104]	IGRA2			0-20300-0-82965	19870905	20211231	1987.0	2021.0	True	0-20000-0-82965	alta floresta	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-82965									[-9.85, -9.87]	[-56.1, -56.104]	WBAN			0-20500-0-nan	19870905	20211231				0-20000-0-82965	alta floresta	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-82965									[-9.85, -9.87]	[-56.1, -56.104]	CHUAN			0-20400-0-nan	19870905	20211231				0-20000-0-82965	alta floresta	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-82965	82965	Alta Floresta AP, Brazil	-9.87	-56.1	-999.0			0.4	[-9.85, -9.87]	[-56.1, -56.104]	SCHROEDER		82965.0	0-20600-0-82965	19870905	20211231				0-20000-0-82965	alta floresta	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-82965									[-9.85, -9.87]	[-56.1, -56.104]	WMO			0-20700-0-nan	19870905	20211231				0-20000-0-82965	alta floresta	[36, 38, 39, 85, 104, 105, 106, 107, 117]

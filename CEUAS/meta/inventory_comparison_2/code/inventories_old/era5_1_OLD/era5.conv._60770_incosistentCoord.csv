@@ -1,3 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0	0-20000-0-60770	MEDENINE	33.35	10.483333333333333	117.0	Climatological station, Surface land meteorological station (SYNOP), GOS, RBCN, RBSN(S)	33 21 00N	010 29 00E	60770	999.0	999.0	False	46.2		OSCAR	0-20000-0-60770	jarjis	21.0	33.503981	11.112155					
-0	0		Medenine, Tunisia	33.35	10.98	-999.0				60770				0.0		SCHROEDER	0-20600-0-60770	jarjis	21.0	33.503981	11.112155		60770.0	1837.0	1980-02-14 00:00:00	1980-02-14 00:00:00

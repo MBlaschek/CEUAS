@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-21358									[76.15, 76.15]	[152.83, 152.83]	OSCAR				1958	1991				0-20300-0-21358	None	['85', '38', '106', '107']
-21358	21358	OSTROV ZOHOVA	76.15	152.83	14.0			0.0	[76.15, 76.15]	[152.83, 152.83]	IGRA2			0-20300-0-21358	1958	1991	1958.0	1991.0	True	0-20300-0-21358	None	['85', '38', '106', '107']
-21358									[76.15, 76.15]	[152.83, 152.83]	WBAN			0-20500-0-nan	1958	1991				0-20300-0-21358	None	['85', '38', '106', '107']
-21358									[76.15, 76.15]	[152.83, 152.83]	CHUAN			0-20400-0-nan	1958	1991				0-20300-0-21358	None	['85', '38', '106', '107']
-21358	21358	Ostrov Zhokhova, Russia	76.15	152.83	-999.0			0.0	[76.15, 76.15]	[152.83, 152.83]	SCHROEDER		21358.0	0-20600-0-21358	1958	1991				0-20300-0-21358	None	['85', '38', '106', '107']
-21358									[76.15, 76.15]	[152.83, 152.83]	WMO			0-20700-0-nan	1958	1991				0-20300-0-21358	None	['85', '38', '106', '107']

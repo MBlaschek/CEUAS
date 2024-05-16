@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-81403	81406	CAYENNE	5.17	-52.69	9.0	05 10 12N	052 41 24W	1.1	[5.17, 5.17]	[-52.68, -52.68]	OSCAR	0-20000-0-81406		0-20000-0-81406	19661108	19691228	999.0	999.0	False	0-20000-0-81406	kourou	[36, 85, 106, 107]
-81403									[5.17, 5.17]	[-52.68, -52.68]	IGRA2			0-20300-0-nan	19661108	19691228				0-20000-0-81406	kourou	[36, 85, 106, 107]
-81403									[5.17, 5.17]	[-52.68, -52.68]	WBAN			0-20500-0-nan	19661108	19691228				0-20000-0-81406	kourou	[36, 85, 106, 107]
-81403									[5.17, 5.17]	[-52.68, -52.68]	CHUAN			0-20400-0-nan	19661108	19691228				0-20000-0-81406	kourou	[36, 85, 106, 107]
-81403	81403	Kourou, French Guiana	5.2	-52.75	-999.0			8.4	[5.17, 5.17]	[-52.68, -52.68]	SCHROEDER		81403	0-20600-0-81403	19661108	19691228				0-20000-0-81406	kourou	[36, 85, 106, 107]
-81403	81403	KOUROU                   	5.2	-52.75	8.0			8.4	[5.17, 5.17]	[-52.68, -52.68]	WMO		81403	0-20700-0-81403	19661108	19691228				0-20000-0-81406	kourou	[36, 85, 106, 107]

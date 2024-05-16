@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:81410									[-10.93, -10.93]	[142.48, 142.48]	OSCAR				19441005	19450110				0-20500-0-81410	daru	[106, 107]
-2:81410									[-10.93, -10.93]	[142.48, 142.48]	IGRA2			0-20300-0-nan	19441005	19450110				0-20500-0-81410	daru	[106, 107]
-2:81410	81410.0	HIGGIN	-10.93	142.48	14.020800000000001			0.0	[-10.93, -10.93]	[142.48, 142.48]	WBAN			0-20500-0-81410	19441005	19450110	19440901.0	19450131.0		0-20500-0-81410	daru	[106, 107]
-2:81410									[-10.93, -10.93]	[142.48, 142.48]	CHUAN			0-20400-0-nan	19441005	19450110				0-20500-0-81410	daru	[106, 107]
-2:81410									[-10.93, -10.93]	[142.48, 142.48]	SCHROEDER			0-20600-0-nan	19441005	19450110				0-20500-0-81410	daru	[106, 107]
-2:81410									[-10.93, -10.93]	[142.48, 142.48]	WMO			0-20700-0-nan	19441005	19450110				0-20500-0-81410	daru	[106, 107]

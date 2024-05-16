@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:50402									[-2.9, -2.9]	[-40.87, -40.87]	OSCAR				19440603	19450913				0-20500-0-50402	camocim	[106, 107]
-2:50402									[-2.9, -2.9]	[-40.87, -40.87]	IGRA2			0-20300-0-nan	19440603	19450913				0-20500-0-50402	camocim	[106, 107]
-2:50402	50402.0	PANAIR	-2.9	-40.87	7.010400000000001			0.0	[-2.9, -2.9]	[-40.87, -40.87]	WBAN			0-20500-0-50402	19440603	19450913	19430501.0	19450930.0		0-20500-0-50402	camocim	[106, 107]
-2:50402									[-2.9, -2.9]	[-40.87, -40.87]	CHUAN			0-20400-0-nan	19440603	19450913				0-20500-0-50402	camocim	[106, 107]
-2:50402									[-2.9, -2.9]	[-40.87, -40.87]	SCHROEDER			0-20600-0-nan	19440603	19450913				0-20500-0-50402	camocim	[106, 107]
-2:50402									[-2.9, -2.9]	[-40.87, -40.87]	WMO			0-20700-0-nan	19440603	19450913				0-20500-0-50402	camocim	[106, 107]

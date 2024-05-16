@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-03039	03039	BEALACH NA BA NO 2	57.418055555555554	-5.688611111111111		57 25 05N	005 41 19W	84.1	[56.7, 56.7]	[-6.12, -6.12]	OSCAR	0-20000-0-03039		0-20000-0-03039	19891124	19891124	999.0	999.0	False		helensburgh	[104, 105, 106, 107, 117]
-03039									[56.7, 56.7]	[-6.12, -6.12]	IGRA2			0-20300-0-nan	19891124	19891124					helensburgh	[104, 105, 106, 107, 117]
-03039									[56.7, 56.7]	[-6.12, -6.12]	WBAN			0-20500-0-nan	19891124	19891124					helensburgh	[104, 105, 106, 107, 117]
-03039									[56.7, 56.7]	[-6.12, -6.12]	CHUAN			0-20400-0-nan	19891124	19891124					helensburgh	[104, 105, 106, 107, 117]
-03039									[56.7, 56.7]	[-6.12, -6.12]	SCHROEDER			0-20600-0-nan	19891124	19891124					helensburgh	[104, 105, 106, 107, 117]
-03039									[56.7, 56.7]	[-6.12, -6.12]	WMO			0-20700-0-nan	19891124	19891124					helensburgh	[104, 105, 106, 107, 117]
-03039									[56.7, 56.7]	[-6.12, -6.12]	AMMA			0-20800-0-nan	19891124	19891124					helensburgh	[104, 105, 106, 107, 117]
-03039									[56.7, 56.7]	[-6.12, -6.12]	HARA			0-20111-0-nan	19891124	19891124					helensburgh	[104, 105, 106, 107, 117]

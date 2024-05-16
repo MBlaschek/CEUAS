@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:48904									[10.37, 10.37]	[107.1, 107.1]	OSCAR				19630217	19670731				0-20300-0-48902	vung tau	[38, 106, 107]
-1:48904	48902	BARIA (PHUOC LE)	10.5	107.1667	2.0			16.1	[10.37, 10.37]	[107.1, 107.1]	IGRA2			0-20300-0-48902	19630217	19670731	1970.0	1971.0	True	0-20300-0-48902	vung tau	[38, 106, 107]
-1:48904	41004	VUNG TAU	10.37	107.1	4.2672			0.0	[10.37, 10.37]	[107.1, 107.1]	WBAN			0-20500-0-41004	19630217	19670731	19611101.0	19700831.0		0-20300-0-48902	vung tau	[38, 106, 107]
-1:48904									[10.37, 10.37]	[107.1, 107.1]	CHUAN			0-20400-0-nan	19630217	19670731				0-20300-0-48902	vung tau	[38, 106, 107]
-1:48904	48902	Ba Ria / Phuoc Le, Vietnam	10.5	107.17	-999.0			16.3	[10.37, 10.37]	[107.1, 107.1]	SCHROEDER		48902.0	0-20600-0-48902	19630217	19670731				0-20300-0-48902	vung tau	[38, 106, 107]
-1:48904									[10.37, 10.37]	[107.1, 107.1]	WMO			0-20700-0-nan	19630217	19670731				0-20300-0-48902	vung tau	[38, 106, 107]

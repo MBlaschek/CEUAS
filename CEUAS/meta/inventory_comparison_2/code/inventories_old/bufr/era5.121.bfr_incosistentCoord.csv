@@ -1,2 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0	0-20000-0-12001	PETROBALTIC BETA	55.48083333333334	18.1825	46.0	Surface land meteorological station (SYNOP), GOS	55 28 51N	018 10 57E	12001	999.0	999.0	False	7569.1		OSCAR	0-20000-0-12001	vrangel	50.9	42.729722	133.083889					

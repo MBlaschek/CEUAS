@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-80234	80234	VILLAVICENCIO/VANGUARDIA	4.166666666666667	-73.61666666666666	431.0	04 10 00N	073 37 00W	4.1	[4.2, 4.2]	[-73.6, -73.6]	OSCAR	0-20000-0-80234		0-20000-0-80234	19740920	19740920	999.0	999.0	False	0-20000-0-80234	villavicencio	[104, 105, 106, 107, 117]
-80234									[4.2, 4.2]	[-73.6, -73.6]	IGRA2			0-20300-0-nan	19740920	19740920				0-20000-0-80234	villavicencio	[104, 105, 106, 107, 117]
-80234									[4.2, 4.2]	[-73.6, -73.6]	WBAN			0-20500-0-nan	19740920	19740920				0-20000-0-80234	villavicencio	[104, 105, 106, 107, 117]
-80234									[4.2, 4.2]	[-73.6, -73.6]	CHUAN			0-20400-0-nan	19740920	19740920				0-20000-0-80234	villavicencio	[104, 105, 106, 107, 117]
-80234	80236	(made up station ID) SKAP Apiay - Gomez Nino Apiay Air Base PACS-SONET pibal site (operated by FAC = Colombian Air Force), Colombia	4.08	-73.56	-999.0			14.0	[4.2, 4.2]	[-73.6, -73.6]	SCHROEDER		80236	0-20600-0-80236	19740920	19740920				0-20000-0-80234	villavicencio	[104, 105, 106, 107, 117]
-80234	80234	VILLAVICENCIO/VNGDIA. A  	4.166666666666667	-73.61666666666666	-999.0			4.1	[4.2, 4.2]	[-73.6, -73.6]	WMO		80234	0-20700-0-80234	19740920	19740920				0-20000-0-80234	villavicencio	[104, 105, 106, 107, 117]
-80234									[4.2, 4.2]	[-73.6, -73.6]	AMMA			0-20800-0-nan	19740920	19740920				0-20000-0-80234	villavicencio	[104, 105, 106, 107, 117]
-80234									[4.2, 4.2]	[-73.6, -73.6]	HARA			0-20111-0-nan	19740920	19740920				0-20000-0-80234	villavicencio	[104, 105, 106, 107, 117]

@@ -1,8 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-1	1		TUMEREMO	7.3	-61.45	181.0				80453	1975.0	1984.0	True	0.0		IGRA2	0-20300-0-80453	upata	130.8	8.0086111	-62.3988889	VEM00080453				
-0	0		MARACAY - B.A. SUCRE	10.25	-67.65	436.0				80413	1966.0	2014.0	True	756.1		IGRA2	0-20300-0-80413	upata	130.8	8.0086111	-62.3988889	VEM00080413				
-1	1	0-20000-0-80453	TUMEREMO	7.3	-61.45	181.0	Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), GSN, RBSN(S), GOS, RBCN	07 18 00N	061 27 00W	80453	999.0	999.0	False	0.0		OSCAR	0-20000-0-80453	upata	130.8	8.0086111	-62.3988889					
-0	0	0-20000-0-80413	MARACAY - B.A. SUCRE	10.25	-67.65	437.0	Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS, RBSN(ST), CLIMAT(C), RBCN	10 15 00N	067 39 00W	80413	999.0	999.0	True	756.1		OSCAR	0-20000-0-80413	upata	130.8	8.0086111	-62.3988889					
-0	0		Tumeremo, Venezuela	7.3	-61.45	-999.0				80453				0.0		SCHROEDER	0-20600-0-80453	upata	130.8	8.0086111	-62.3988889		80453	3448.0	1976-01-20 00:00:00	1976-01-20 00:00:00
-1	1		TUMEREMO                 	7.3	-61.45	180.0				80453				0.0		WMO	0-20700-0-80453	upata	130.8	8.0086111	-62.3988889		80453	1594.0		
-0	0		MARACAY                  	10.25	-67.65	436.0				80413				756.1		WMO	0-20700-0-80413	upata	130.8	8.0086111	-62.3988889		80413	1587.0		

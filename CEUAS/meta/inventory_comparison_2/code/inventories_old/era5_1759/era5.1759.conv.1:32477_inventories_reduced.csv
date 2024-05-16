@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:32477	32477	SOBOLEVO	54.3	155.91666666666666	25.0	54 18 00N	155 55 00E	5.4	[54.3, 54.3]	[156.0, 155.97]	OSCAR	0-20000-0-32477		0-20000-0-32477	19670227	19791231	999.0	999.0	True	0-20000-0-32477	yelizovo	[38, 85, 106, 107, 117]
-1:32477	32477	SOBOLEVO	54.3	155.9167	25.0			5.4	[54.3, 54.3]	[156.0, 155.97]	IGRA2			0-20300-0-32477	19670227	19791231	1967.0	2021.0	True	0-20000-0-32477	yelizovo	[38, 85, 106, 107, 117]
-1:32477									[54.3, 54.3]	[156.0, 155.97]	WBAN			0-20500-0-nan	19670227	19791231				0-20000-0-32477	yelizovo	[38, 85, 106, 107, 117]
-1:32477									[54.3, 54.3]	[156.0, 155.97]	CHUAN			0-20400-0-nan	19670227	19791231				0-20000-0-32477	yelizovo	[38, 85, 106, 107, 117]
-1:32477	32477	Sobolevo, Russia	54.3	155.97	-999.0			2.0	[54.3, 54.3]	[156.0, 155.97]	SCHROEDER		32477.0	0-20600-0-32477	19670227	19791231				0-20000-0-32477	yelizovo	[38, 85, 106, 107, 117]
-1:32477									[54.3, 54.3]	[156.0, 155.97]	WMO			0-20700-0-nan	19670227	19791231				0-20000-0-32477	yelizovo	[38, 85, 106, 107, 117]

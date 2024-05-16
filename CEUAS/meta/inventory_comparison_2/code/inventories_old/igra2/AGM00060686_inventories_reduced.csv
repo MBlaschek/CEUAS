@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-60686	60686	BORDJ-BADJ-MOKHTAR	21.333333333333332	0.95	399.0	21 20 00N	000 57 00E	0.0	[21.3333, 21.3333]	[0.95, 0.95]	OSCAR	0-20000-0-60686		0-20000-0-60686	2011	2012	999.0	999.0	False	0-20000-0-60686	kidal	['85', '38', '106', '107']
-60686	60686	BORDJ-BADJ-MOKHTAR	21.3333	0.95	398.0			0.0	[21.3333, 21.3333]	[0.95, 0.95]	IGRA2			0-20300-0-60686	2011	2012	2011.0	2012.0	True	0-20000-0-60686	kidal	['85', '38', '106', '107']
-60686									[21.3333, 21.3333]	[0.95, 0.95]	WBAN			0-20500-0-nan	2011	2012				0-20000-0-60686	kidal	['85', '38', '106', '107']
-60686									[21.3333, 21.3333]	[0.95, 0.95]	CHUAN			0-20400-0-nan	2011	2012				0-20000-0-60686	kidal	['85', '38', '106', '107']
-60686	60686	Bordj Badji Mokhtar AP - FENNEC Project, Algeria	21.376	0.926	-999.0			5.3	[21.3333, 21.3333]	[0.95, 0.95]	SCHROEDER		60686.0	0-20600-0-60686	2011	2012				0-20000-0-60686	kidal	['85', '38', '106', '107']
-60686									[21.3333, 21.3333]	[0.95, 0.95]	WMO			0-20700-0-nan	2011	2012				0-20000-0-60686	kidal	['85', '38', '106', '107']

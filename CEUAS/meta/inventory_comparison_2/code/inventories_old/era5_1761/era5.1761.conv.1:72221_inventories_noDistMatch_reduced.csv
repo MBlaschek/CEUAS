@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:72221	72221	VALPARAISO/EGLIN AFB, FL.	30.483333333333334	-86.51666666666667	29.0	30 29 00N	086 31 00W	99.5	[30.48, 30.48]	[-85.48, -85.48]	OSCAR	0-20000-0-72221		0-20000-0-72221	19381101	19641231	999.0	999.0	True		lynn haven	[106, 107]
-1:72221	72221	VALPARAISO/EGLIN AFB	30.4833	-86.5167	29.0			99.5	[30.48, 30.48]	[-85.48, -85.48]	IGRA2			0-20300-0-72221	19381101	19641231	1938.0	2021.0	True		lynn haven	[106, 107]
-1:72221									[30.48, 30.48]	[-85.48, -85.48]	WBAN			0-20500-0-nan	19381101	19641231					lynn haven	[106, 107]
-1:72221									[30.48, 30.48]	[-85.48, -85.48]	CHUAN			0-20400-0-nan	19381101	19641231					lynn haven	[106, 107]
-1:72221									[30.48, 30.48]	[-85.48, -85.48]	SCHROEDER			0-20600-0-nan	19381101	19641231					lynn haven	[106, 107]
-1:72221									[30.48, 30.48]	[-85.48, -85.48]	WMO			0-20700-0-nan	19381101	19641231					lynn haven	[106, 107]

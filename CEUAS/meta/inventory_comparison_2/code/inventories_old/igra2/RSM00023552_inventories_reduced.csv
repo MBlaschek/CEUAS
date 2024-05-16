@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-23552	23552	TARKO-SALE	64.9113888888889	77.77083333333333	27.1	64 54 41N	077 46 15E	2.3	[64.917, 64.917]	[77.817, 77.817]	OSCAR	0-20000-0-23552		0-20000-0-23552	1955	1998	999	999	False	0-20000-0-23552	tarko-sale	['85', '38', '106', '107']
-23552	23552	TARKO-SALE	64.917	77.817	27.0			0.0	[64.917, 64.917]	[77.817, 77.817]	IGRA2			0-20300-0-23552	1955	1998	1955	1998	True	0-20000-0-23552	tarko-sale	['85', '38', '106', '107']
-23552									[64.917, 64.917]	[77.817, 77.817]	WBAN			0-20500-0-nan	1955	1998				0-20000-0-23552	tarko-sale	['85', '38', '106', '107']
-23552	6135	Tarko-Sale	64.92	77.82	25			0.4	[64.917, 64.917]	[77.817, 77.817]	CHUAN		-999	0-20400-0-6135	1955	1998	-999-999	-999-999		0-20000-0-23552	tarko-sale	['85', '38', '106', '107']
-23552	23552	Tarko-Sale, Russia	64.92	77.82	-999			0.4	[64.917, 64.917]	[77.817, 77.817]	SCHROEDER		23552	0-20600-0-23552	1955	1998				0-20000-0-23552	tarko-sale	['85', '38', '106', '107']
-23552									[64.917, 64.917]	[77.817, 77.817]	WMO			0-20700-0-nan	1955	1998				0-20000-0-23552	tarko-sale	['85', '38', '106', '107']

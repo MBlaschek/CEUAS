@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-30812	30815	HAMAR-DABAN	51.53333333333333	103.6	1442.0	51 32 00N	103 36 00E	10.2	[51.6, 51.6]	[103.7, 103.7]	OSCAR	0-20000-0-30815		0-20000-0-30815	19620809	19680616	999.0	999.0	False	0-20000-0-30815	slyudyanka	[36, 85, 106, 107]
-30812									[51.6, 51.6]	[103.7, 103.7]	IGRA2			0-20300-0-nan	19620809	19680616				0-20000-0-30815	slyudyanka	[36, 85, 106, 107]
-30812									[51.6, 51.6]	[103.7, 103.7]	WBAN			0-20500-0-nan	19620809	19680616				0-20000-0-30815	slyudyanka	[36, 85, 106, 107]
-30812									[51.6, 51.6]	[103.7, 103.7]	CHUAN			0-20400-0-nan	19620809	19680616				0-20000-0-30815	slyudyanka	[36, 85, 106, 107]
-30812									[51.6, 51.6]	[103.7, 103.7]	SCHROEDER			0-20600-0-nan	19620809	19680616				0-20000-0-30815	slyudyanka	[36, 85, 106, 107]
-30812									[51.6, 51.6]	[103.7, 103.7]	WMO			0-20700-0-nan	19620809	19680616				0-20000-0-30815	slyudyanka	[36, 85, 106, 107]

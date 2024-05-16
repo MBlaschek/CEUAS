@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-48551	48551	SURAT THANI	9.134166666666665	99.15194444444445	6.95	09 08 03N	099 09 07E	21.8	[9.12, 9.12]	[99.35, 99.35]	OSCAR	0-20000-0-48551		0-20000-0-48551	20180116	20211207	999.0	999.0	False	0-20000-0-48551	surat thani	['38', '85', '106', '107']
-48551	48551	SURAT THANI	9.1342	99.1519	5.0			21.8	[9.12, 9.12]	[99.35, 99.35]	IGRA2			0-20300-0-48551	20180116	20211207	1973.0	2021.0	True	0-20000-0-48551	surat thani	['38', '85', '106', '107']
-48551									[9.12, 9.12]	[99.35, 99.35]	WBAN			0-20500-0-nan	20180116	20211207				0-20000-0-48551	surat thani	['38', '85', '106', '107']
-48551									[9.12, 9.12]	[99.35, 99.35]	CHUAN			0-20400-0-nan	20180116	20211207				0-20000-0-48551	surat thani	['38', '85', '106', '107']
-48551	48551	Bandon / Surat Thani, Thailand	9.13	99.3	-999.0			5.6	[9.12, 9.12]	[99.35, 99.35]	SCHROEDER		48551	0-20600-0-48551	20180116	20211207				0-20000-0-48551	surat thani	['38', '85', '106', '107']
-48551	48551	SURAT THANI              	9.116666666666667	99.35	7.0			0.4	[9.12, 9.12]	[99.35, 99.35]	WMO		48551	0-20700-0-48551	20180116	20211207				0-20000-0-48551	surat thani	['38', '85', '106', '107']

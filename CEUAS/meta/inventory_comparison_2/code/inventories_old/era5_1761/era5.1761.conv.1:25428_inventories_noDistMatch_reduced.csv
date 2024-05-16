@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:25428	25428	OMOLON	65.23333333333333	160.53333333333333	260.4	65 14 00N	160 32 00E	47.0	[65.0, 65.0]	[159.7, 159.7]	OSCAR	0-20000-0-25428		0-20000-0-25428	19571111	19790520	999.0	999.0	True		None	[85, 117]
-1:25428	25428	OMOLON	65.2333	160.5333	260.0			47.0	[65.0, 65.0]	[159.7, 159.7]	IGRA2			0-20300-0-25428	19571111	19790520	1957.0	2021.0	True		None	[85, 117]
-1:25428									[65.0, 65.0]	[159.7, 159.7]	WBAN			0-20500-0-nan	19571111	19790520					None	[85, 117]
-1:25428									[65.0, 65.0]	[159.7, 159.7]	CHUAN			0-20400-0-nan	19571111	19790520					None	[85, 117]
-1:25428									[65.0, 65.0]	[159.7, 159.7]	SCHROEDER			0-20600-0-nan	19571111	19790520					None	[85, 117]
-1:25428									[65.0, 65.0]	[159.7, 159.7]	WMO			0-20700-0-nan	19571111	19790520					None	[85, 117]

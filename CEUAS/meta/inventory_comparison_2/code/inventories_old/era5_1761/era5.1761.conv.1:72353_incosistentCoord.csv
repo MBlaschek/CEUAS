@@ -1,5 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0		OKLAHOMA CITY/W. RO	35.383	-97.6	398.0				72353	1926.0	1989.0	True	109.0		IGRA2	0-20300-0-72353	shawnee	48.1	35.3272222	-96.925	USM00072353				
-0	0	0-20000-0-72353	OKLAHOMA CITY/W. ROGERS WORLD, OK.	35.38333333333333	-97.6	398.0	Climatological station, Surface land meteorological station (SYNOP), GSN, RBSN(S), RBCN, GOS	35 23 00N	097 36 00W	72353	999.0	999.0	False	109.0		OSCAR	0-20000-0-72353	shawnee	48.1	35.3272222	-96.925					
-0	0		(made up station ID) Okemah, OK - NSSP 1961 special pibal site	35.43	-96.3	-999.0				73004				10.6		SCHROEDER	0-20600-0-73004	shawnee	48.1	35.3272222	-96.925		73004	2729.0	1961-04-29 00:00:00	1961-04-29 00:00:00
-0	0		OKLAHOMA CITY            	35.4	-97.6	-999.0				72353				109.0		WMO	0-20700-0-72353	shawnee	48.1	35.3272222	-96.925		72353	1365.0		

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-03396	03385	DONNA NOOK NO 2	53.474722222222226	0.15277777777777776	8.0	53 28 29N	000 09 10E	10.8	[53.57, 53.57]	[0.12, 0.12]	OSCAR	0-20000-0-03385		0-20000-0-03385	19841210	19841210	999.0	999.0	False	0-20000-0-03385	cleethorpes	[104, 105, 106, 107, 117]
-03396									[53.57, 53.57]	[0.12, 0.12]	IGRA2			0-20300-0-nan	19841210	19841210				0-20000-0-03385	cleethorpes	[104, 105, 106, 107, 117]
-03396									[53.57, 53.57]	[0.12, 0.12]	WBAN			0-20500-0-nan	19841210	19841210				0-20000-0-03385	cleethorpes	[104, 105, 106, 107, 117]
-03396									[53.57, 53.57]	[0.12, 0.12]	CHUAN			0-20400-0-nan	19841210	19841210				0-20000-0-03385	cleethorpes	[104, 105, 106, 107, 117]
-03396									[53.57, 53.57]	[0.12, 0.12]	SCHROEDER			0-20600-0-nan	19841210	19841210				0-20000-0-03385	cleethorpes	[104, 105, 106, 107, 117]
-03396									[53.57, 53.57]	[0.12, 0.12]	WMO			0-20700-0-nan	19841210	19841210				0-20000-0-03385	cleethorpes	[104, 105, 106, 107, 117]

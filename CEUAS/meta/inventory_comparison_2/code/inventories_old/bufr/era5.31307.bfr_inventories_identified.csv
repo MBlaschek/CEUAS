@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	asosa	1.5	10.066667	34.533333						[10.07, 10.07]	[34.52, 34.52]	era5.31307.bfr	bufr	19660220	19670227	31307	0-20500-0-31307	[36, 85, 106, 107]
-0	0															0-20300-0-nan	IGRA2	asosa	1.5	10.066667	34.533333						[10.07, 10.07]	[34.52, 34.52]	era5.31307.bfr	bufr	19660220	19670227	31307	0-20500-0-31307	[36, 85, 106, 107]
-0	0		ASOSA	10.07	34.52	1603.248				31307.0	19660401.0	19670228.0		0.0		0-20500-0-31307	WBAN	asosa	1.5	10.066667	34.533333						[10.07, 10.07]	[34.52, 34.52]	era5.31307.bfr	bufr	19660220	19670227	31307	0-20500-0-31307	[36, 85, 106, 107]
-0	0															0-20400-0-nan	CHUAN	asosa	1.5	10.066667	34.533333						[10.07, 10.07]	[34.52, 34.52]	era5.31307.bfr	bufr	19660220	19670227	31307	0-20500-0-31307	[36, 85, 106, 107]
-0	0															0-20600-0-nan	SCHROEDER	asosa	1.5	10.066667	34.533333						[10.07, 10.07]	[34.52, 34.52]	era5.31307.bfr	bufr	19660220	19670227	31307	0-20500-0-31307	[36, 85, 106, 107]
-0	0															0-20700-0-nan	WMO	asosa	1.5	10.066667	34.533333						[10.07, 10.07]	[34.52, 34.52]	era5.31307.bfr	bufr	19660220	19670227	31307	0-20500-0-31307	[36, 85, 106, 107]

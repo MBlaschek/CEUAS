@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-85268	85268	ROBORE	-18.316666666666666	-59.766666666666666	276.0	18 19 00S	059 46 00W	0.0	[-18.3167, -18.3167]	[-59.7667, -59.7667]	OSCAR	0-20000-0-85268		0-20000-0-85268	2002	2003	999.0	999.0	False	0-20000-0-85268	puerto suarez	['85', '38', '106', '107']
-85268	85268	ROBORE	-18.3167	-59.7667	276.0			0.0	[-18.3167, -18.3167]	[-59.7667, -59.7667]	IGRA2			0-20300-0-85268	2002	2003	2002.0	2003.0	True	0-20000-0-85268	puerto suarez	['85', '38', '106', '107']
-85268									[-18.3167, -18.3167]	[-59.7667, -59.7667]	WBAN			0-20500-0-nan	2002	2003				0-20000-0-85268	puerto suarez	['85', '38', '106', '107']
-85268									[-18.3167, -18.3167]	[-59.7667, -59.7667]	CHUAN			0-20400-0-nan	2002	2003				0-20000-0-85268	puerto suarez	['85', '38', '106', '107']
-85268	85268	Robore PACS-SONET pibal site (operated by AASANA = Administration of Airports and Aerial Navigation Services), Bolivia	-18.33	-59.76	-999.0			1.6	[-18.3167, -18.3167]	[-59.7667, -59.7667]	SCHROEDER		85268	0-20600-0-85268	2002	2003				0-20000-0-85268	puerto suarez	['85', '38', '106', '107']
-85268	85268	ROBORE                   	-18.33333333333333	-59.75	-999.0			2.6	[-18.3167, -18.3167]	[-59.7667, -59.7667]	WMO		85268	0-20700-0-85268	2002	2003				0-20000-0-85268	puerto suarez	['85', '38', '106', '107']

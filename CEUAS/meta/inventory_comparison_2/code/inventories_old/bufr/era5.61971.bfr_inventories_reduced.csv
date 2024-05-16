@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-61971	63995	ALDABRA	-9.35	46.53333333333333	4.0	09 21 00S	046 32 00E	6.6	[-9.4, -9.4]	[46.5, 46.5]	OSCAR	0-20000-0-63995		0-20000-0-63995	19740611	19740910	999.0	999.0	False	0-20000-0-63995	domoni	[36, 85, 106, 107]
-61971	63995	ALDABRA	-9.35	46.533	4.0			6.6	[-9.4, -9.4]	[46.5, 46.5]	IGRA2			0-20300-0-63995	19740611	19740910	1979.0	1981.0	True	0-20000-0-63995	domoni	[36, 85, 106, 107]
-61971									[-9.4, -9.4]	[46.5, 46.5]	WBAN			0-20500-0-nan	19740611	19740910				0-20000-0-63995	domoni	[36, 85, 106, 107]
-61971									[-9.4, -9.4]	[46.5, 46.5]	CHUAN			0-20400-0-nan	19740611	19740910				0-20000-0-63995	domoni	[36, 85, 106, 107]
-61971	63995	Aldabra, Seychelles	-9.35	46.53	-999.0			6.4	[-9.4, -9.4]	[46.5, 46.5]	SCHROEDER		63995.0	0-20600-0-63995	19740611	19740910				0-20000-0-63995	domoni	[36, 85, 106, 107]
-61971									[-9.4, -9.4]	[46.5, 46.5]	WMO			0-20700-0-nan	19740611	19740910				0-20000-0-63995	domoni	[36, 85, 106, 107]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-80425	80425	MENE GRANDE	9.816666666666666	-70.93333333333334	28.0	09 49 00N	070 56 00W	0.5	[9.82, 9.82]	[-70.93, -70.93]	OSCAR	0-20000-0-80425		0-20000-0-80425	19700204	19740923	999.0	999.0	False	0-20000-0-80425	bachaquero	[36, 85, 106, 107]
-80425	80425	MENE GRANDE	9.817	-70.933	28.0			0.5	[9.82, 9.82]	[-70.93, -70.93]	IGRA2			0-20300-0-80425	19700204	19740923	1974.0	1984.0	True	0-20000-0-80425	bachaquero	[36, 85, 106, 107]
-80425									[9.82, 9.82]	[-70.93, -70.93]	WBAN			0-20500-0-nan	19700204	19740923				0-20000-0-80425	bachaquero	[36, 85, 106, 107]
-80425									[9.82, 9.82]	[-70.93, -70.93]	CHUAN			0-20400-0-nan	19700204	19740923				0-20000-0-80425	bachaquero	[36, 85, 106, 107]
-80425	80425	Mene Grande, Venezuela	9.82	-70.93	-999.0			0.0	[9.82, 9.82]	[-70.93, -70.93]	SCHROEDER		80425	0-20600-0-80425	19700204	19740923				0-20000-0-80425	bachaquero	[36, 85, 106, 107]
-80425	80425	MENE GRANDE              	9.816666666666666	-70.93333333333334	27.0			0.5	[9.82, 9.82]	[-70.93, -70.93]	WMO		80425	0-20700-0-80425	19700204	19740923				0-20000-0-80425	bachaquero	[36, 85, 106, 107]

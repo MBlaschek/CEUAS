@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:98653	98653	SURIGAO	9.78277777777778	125.48944444444444		09 46 58N	125 29 22E	2.2	[9.8, 9.8]	[125.5, 125.5]	OSCAR	0-20000-0-98653		0-20000-0-98653	19490307	19670731	999.0	999.0	False	0-20000-0-98653	surigao	[106, 107]
-1:98653	98653	SURIGAO	9.8	125.5	55.0			0.0	[9.8, 9.8]	[125.5, 125.5]	IGRA2			0-20300-0-98653	19490307	19670731	1973.0	1979.0	True	0-20000-0-98653	surigao	[106, 107]
-1:98653									[9.8, 9.8]	[125.5, 125.5]	WBAN			0-20500-0-nan	19490307	19670731				0-20000-0-98653	surigao	[106, 107]
-1:98653									[9.8, 9.8]	[125.5, 125.5]	CHUAN			0-20400-0-nan	19490307	19670731				0-20000-0-98653	surigao	[106, 107]
-1:98653	98653	Surigao, Mindanao, Philippines	9.8	125.5	-999.0			0.0	[9.8, 9.8]	[125.5, 125.5]	SCHROEDER		98653	0-20600-0-98653	19490307	19670731				0-20000-0-98653	surigao	[106, 107]
-1:98653	98653	SURIGAO                  	9.8	125.5	39.0			0.0	[9.8, 9.8]	[125.5, 125.5]	WMO		98653	0-20700-0-98653	19490307	19670731				0-20000-0-98653	surigao	[106, 107]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-08084	08084	LOGRONO/AGONCILLO	42.452222222222225	-2.331111111111111	363.0	42 27 08N	002 19 52W	0.3	[42.45, 42.45]	[-2.333, -2.333]	OSCAR	0-20000-0-08084		0-20000-0-08084	1973	1977	999.0	999.0	False	0-20000-0-08084	logrono	['85', '38', '106', '107']
-08084	08084	LOGRONO/AGONCILLO	42.45	-2.333	363.0			0.0	[42.45, 42.45]	[-2.333, -2.333]	IGRA2			0-20300-0-08084	1973	1977	1973.0	1977.0	True	0-20000-0-08084	logrono	['85', '38', '106', '107']
-08084									[42.45, 42.45]	[-2.333, -2.333]	WBAN			0-20500-0-nan	1973	1977				0-20000-0-08084	logrono	['85', '38', '106', '107']
-08084									[42.45, 42.45]	[-2.333, -2.333]	CHUAN			0-20400-0-nan	1973	1977				0-20000-0-08084	logrono	['85', '38', '106', '107']
-08084	8084	Logrono, Spain	42.45	-2.33	-999.0			0.2	[42.45, 42.45]	[-2.333, -2.333]	SCHROEDER		8084	0-20600-0-8084	1973	1977				0-20000-0-08084	logrono	['85', '38', '106', '107']
-08084	08084	LOGRONO/AGONCILLO        	42.45	-2.333333333333333	-999.0			0.0	[42.45, 42.45]	[-2.333, -2.333]	WMO		08084	0-20700-0-08084	1973	1977				0-20000-0-08084	logrono	['85', '38', '106', '107']

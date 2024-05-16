@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:30521	30521	ZHIGALOVO	54.8	105.16666666666667	418.95	54 48 00N	105 10 00E	0.2	[54.8, 54.8]	[105.17, 105.17]	OSCAR	0-20000-0-30521		0-20000-0-30521	19501224	19791231	999.0	999.0	False	0-20000-0-30521	zheleznogorsk-ilimskiy	[85, 117]
-1:30521	30521	ZHIGALOVO	54.8	105.167	418.0			0.2	[54.8, 54.8]	[105.17, 105.17]	IGRA2			0-20300-0-30521	19501224	19791231	1950.0	1996.0	True	0-20000-0-30521	zheleznogorsk-ilimskiy	[85, 117]
-1:30521									[54.8, 54.8]	[105.17, 105.17]	WBAN			0-20500-0-nan	19501224	19791231				0-20000-0-30521	zheleznogorsk-ilimskiy	[85, 117]
-1:30521									[54.8, 54.8]	[105.17, 105.17]	CHUAN			0-20400-0-nan	19501224	19791231				0-20000-0-30521	zheleznogorsk-ilimskiy	[85, 117]
-1:30521	30521	Zhigalovo, Russia	54.82	105.17	-999.0			2.2	[54.8, 54.8]	[105.17, 105.17]	SCHROEDER		30521.0	0-20600-0-30521	19501224	19791231				0-20000-0-30521	zheleznogorsk-ilimskiy	[85, 117]
-1:30521									[54.8, 54.8]	[105.17, 105.17]	WMO			0-20700-0-nan	19501224	19791231				0-20000-0-30521	zheleznogorsk-ilimskiy	[85, 117]

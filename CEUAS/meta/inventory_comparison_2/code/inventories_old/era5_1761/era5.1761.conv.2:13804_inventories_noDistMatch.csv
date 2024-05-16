@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	fort thomas	34.1	39.075	-84.44722220000001						[38.93, 38.93]	[-84.1, -84.1]	era5.1761.conv.2:13804	era5_1761	19430501	19450512	2:13804		[106, 107]
-0	0		SEYMOUR FREEMAN FIELD	38.9333	-85.9167	176.5				13804	1943.0	1944.0	True	157.5		0-20300-0-13804	IGRA2	fort thomas	34.1	39.075	-84.44722220000001	USW00013804					[38.93, 38.93]	[-84.1, -84.1]	era5.1761.conv.2:13804	era5_1761	19430501	19450512	2:13804		[106, 107]
-0	0															0-20500-0-nan	WBAN	fort thomas	34.1	39.075	-84.44722220000001						[38.93, 38.93]	[-84.1, -84.1]	era5.1761.conv.2:13804	era5_1761	19430501	19450512	2:13804		[106, 107]
-0	0															0-20400-0-nan	CHUAN	fort thomas	34.1	39.075	-84.44722220000001						[38.93, 38.93]	[-84.1, -84.1]	era5.1761.conv.2:13804	era5_1761	19430501	19450512	2:13804		[106, 107]
-0	0															0-20600-0-nan	SCHROEDER	fort thomas	34.1	39.075	-84.44722220000001						[38.93, 38.93]	[-84.1, -84.1]	era5.1761.conv.2:13804	era5_1761	19430501	19450512	2:13804		[106, 107]
-0	0															0-20700-0-nan	WMO	fort thomas	34.1	39.075	-84.44722220000001						[38.93, 38.93]	[-84.1, -84.1]	era5.1761.conv.2:13804	era5_1761	19430501	19450512	2:13804		[106, 107]

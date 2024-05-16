@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-71075	71075	COLLINS BAY, SASK	58.22916666666667	-103.67805555555556	412.6	58 13 45N	103 40 41W	5.5	[58.18, 58.18]	[-103.68, -103.68]	OSCAR	0-20000-0-71075		0-20000-0-71075	19810823	19851222	999.0	999.0	False	0-20000-0-71075	prince albert	[104, 105, 106, 107, 117]
-71075									[58.18, 58.18]	[-103.68, -103.68]	IGRA2			0-20300-0-nan	19810823	19851222				0-20000-0-71075	prince albert	[104, 105, 106, 107, 117]
-71075	25038	COLLINE BAY	58.18	-103.68	492.252			0.0	[58.18, 58.18]	[-103.68, -103.68]	WBAN			0-20500-0-25038	19810823	19851222	19720901.0	99991231.0		0-20000-0-71075	prince albert	[104, 105, 106, 107, 117]
-71075									[58.18, 58.18]	[-103.68, -103.68]	CHUAN			0-20400-0-nan	19810823	19851222				0-20000-0-71075	prince albert	[104, 105, 106, 107, 117]
-71075									[58.18, 58.18]	[-103.68, -103.68]	SCHROEDER			0-20600-0-nan	19810823	19851222				0-20000-0-71075	prince albert	[104, 105, 106, 107, 117]
-71075									[58.18, 58.18]	[-103.68, -103.68]	WMO			0-20700-0-nan	19810823	19851222				0-20000-0-71075	prince albert	[104, 105, 106, 107, 117]

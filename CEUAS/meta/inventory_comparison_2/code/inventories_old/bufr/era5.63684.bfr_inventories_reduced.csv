@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-63684	63684	TORORO	0.6833333333333333	34.166666666666664	1171.0	00 41 00N	034 10 00E	0.5	[0.68, 0.68]	[34.17, 34.17]	OSCAR	0-20000-0-63684		0-20000-0-63684	19651205	19740929	999.0	999.0	False	0-20000-0-63684	tororo	[36, 85, 106, 107]
-63684	63684	TORORO	0.683	34.167	1171.0			0.5	[0.68, 0.68]	[34.17, 34.17]	IGRA2			0-20300-0-63684	19651205	19740929	1973.0	1977.0	True	0-20000-0-63684	tororo	[36, 85, 106, 107]
-63684									[0.68, 0.68]	[34.17, 34.17]	WBAN			0-20500-0-nan	19651205	19740929				0-20000-0-63684	tororo	[36, 85, 106, 107]
-63684									[0.68, 0.68]	[34.17, 34.17]	CHUAN			0-20400-0-nan	19651205	19740929				0-20000-0-63684	tororo	[36, 85, 106, 107]
-63684									[0.68, 0.68]	[34.17, 34.17]	SCHROEDER			0-20600-0-nan	19651205	19740929				0-20000-0-63684	tororo	[36, 85, 106, 107]
-63684									[0.68, 0.68]	[34.17, 34.17]	WMO			0-20700-0-nan	19651205	19740929				0-20000-0-63684	tororo	[36, 85, 106, 107]

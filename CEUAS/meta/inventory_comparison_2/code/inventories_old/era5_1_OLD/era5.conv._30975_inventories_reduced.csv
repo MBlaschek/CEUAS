@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-30975	30975	PRIARGUNSK	50.333333333333336	119.06666666666666	521.1	50 20 00N	119 04 00E	8.3	[50.4, 50.4]	[119.12, 119.12]	OSCAR	0-20000-0-30975		0-20000-0-30975	19810214	19910501	999.0	999.0	False	0-20000-0-30975	krasnokamensk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-30975									[50.4, 50.4]	[119.12, 119.12]	IGRA2			0-20300-0-nan	19810214	19910501				0-20000-0-30975	krasnokamensk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-30975									[50.4, 50.4]	[119.12, 119.12]	WBAN			0-20500-0-nan	19810214	19910501				0-20000-0-30975	krasnokamensk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-30975									[50.4, 50.4]	[119.12, 119.12]	CHUAN			0-20400-0-nan	19810214	19910501				0-20000-0-30975	krasnokamensk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-30975									[50.4, 50.4]	[119.12, 119.12]	SCHROEDER			0-20600-0-nan	19810214	19910501				0-20000-0-30975	krasnokamensk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-30975									[50.4, 50.4]	[119.12, 119.12]	WMO			0-20700-0-nan	19810214	19910501				0-20000-0-30975	krasnokamensk	[36, 38, 39, 85, 104, 105, 106, 107, 117]

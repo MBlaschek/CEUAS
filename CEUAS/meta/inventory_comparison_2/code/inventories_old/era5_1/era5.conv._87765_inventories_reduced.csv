@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-87765	87765	BARILOCHE AERO	-41.1475	-71.16416666666667	840.0	41 08 51S	071 09 51W	0.6	[-41.15, -41.15]	[-71.17, -71.17]	OSCAR	0-20000-0-87765		0-20000-0-87765	19840219	19841025	999.0	999.0	False	0-20000-0-87765	san carlos de bariloche	[104, 105, 106, 107, 117]
-87765									[-41.15, -41.15]	[-71.17, -71.17]	IGRA2			0-20300-0-nan	19840219	19841025				0-20000-0-87765	san carlos de bariloche	[104, 105, 106, 107, 117]
-87765									[-41.15, -41.15]	[-71.17, -71.17]	WBAN			0-20500-0-nan	19840219	19841025				0-20000-0-87765	san carlos de bariloche	[104, 105, 106, 107, 117]
-87765									[-41.15, -41.15]	[-71.17, -71.17]	CHUAN			0-20400-0-nan	19840219	19841025				0-20000-0-87765	san carlos de bariloche	[104, 105, 106, 107, 117]
-87765									[-41.15, -41.15]	[-71.17, -71.17]	SCHROEDER			0-20600-0-nan	19840219	19841025				0-20000-0-87765	san carlos de bariloche	[104, 105, 106, 107, 117]
-87765	87765	BARILOCHE AERO           	-41.15	-71.16666666666667	-999.0			0.3	[-41.15, -41.15]	[-71.17, -71.17]	WMO		87765	0-20700-0-87765	19840219	19841025				0-20000-0-87765	san carlos de bariloche	[104, 105, 106, 107, 117]
-87765									[-41.15, -41.15]	[-71.17, -71.17]	AMMA			0-20800-0-nan	19840219	19841025				0-20000-0-87765	san carlos de bariloche	[104, 105, 106, 107, 117]
-87765									[-41.15, -41.15]	[-71.17, -71.17]	HARA			0-20111-0-nan	19840219	19841025				0-20000-0-87765	san carlos de bariloche	[104, 105, 106, 107, 117]

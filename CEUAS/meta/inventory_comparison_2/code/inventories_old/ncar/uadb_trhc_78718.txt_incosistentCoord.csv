@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0		SOTO CANO AB	14.3667	-87.6167	628.0				78721	2008.0	2012.0	True	1.5		IGRA2	0-20300-0-78721	esquipulas	23.8	14.566667	-89.35	HOM00078721				
-1	1	0-20000-0-78721	SOTO CANO AB	14.366666666666667	-87.61666666666666		Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS	14 22 00N	087 37 00W	78721	999.0	999.0	True	1.5		OSCAR	0-20000-0-78721	esquipulas	23.8	14.566667	-89.35					
-0	0	0-20000-0-78718	NUEVA OCOTEPEQUE	14.433333333333334	-89.18333333333334	626.0	Surface land meteorological station (SYNOP), RBSN(S), GOS	14 26 00N	089 11 00W	78718	999.0	999.0	False	168.7		OSCAR	0-20000-0-78718	esquipulas	23.8	14.566667	-89.35					
-0	0		Nueva Ocotepeque, Honduras	14.38	-87.62	-999.0				78718				0.0		SCHROEDER	0-20600-0-78718	esquipulas	23.8	14.566667	-89.35		78718	3379.0	2000-06-23 00:00:00	2000-06-23 00:00:00
-1	1		Tegucigalpa - Soto Cano Air Base, Honduras	14.37	-87.62	-999.0				78721				1.1		SCHROEDER	0-20600-0-78721	esquipulas	23.8	14.566667	-89.35		78721	3381.0	2008-10-08 00:00:00	2008-10-08 00:00:00
-0	0		OCOTEPEQUE               	14.433333333333334	-89.2	-999.0				78718				170.5		WMO	0-20700-0-78718	esquipulas	23.8	14.566667	-89.35		78718	5186.0		

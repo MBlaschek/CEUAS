@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:4878	71271	ATHABASCA AGCM, ALTA	54.63472222222222	-113.38194444444444	635.0	54 38 05N	113 22 55W	3.7	[54.62, 54.62]	[-113.33, -113.33]	OSCAR	0-20000-0-71271		0-20000-0-71271	19320901	19330720	999.0	999.0	False	0-20000-0-71271	edmonton	[106, 107]
-C:4878	04878	MEANOOK	54.62	-113.33	745.0			0.0	[54.62, 54.62]	[-113.33, -113.33]	IGRA2			0-20300-0-04878	19320901	19330720	1933.0	1933.0	True	0-20000-0-71271	edmonton	[106, 107]
-C:4878									[54.62, 54.62]	[-113.33, -113.33]	WBAN			0-20500-0-nan	19320901	19330720				0-20000-0-71271	edmonton	[106, 107]
-C:4878									[54.62, 54.62]	[-113.33, -113.33]	CHUAN			0-20400-0-nan	19320901	19330720				0-20000-0-71271	edmonton	[106, 107]
-C:4878									[54.62, 54.62]	[-113.33, -113.33]	SCHROEDER			0-20600-0-nan	19320901	19330720				0-20000-0-71271	edmonton	[106, 107]
-C:4878									[54.62, 54.62]	[-113.33, -113.33]	WMO			0-20700-0-nan	19320901	19330720				0-20000-0-71271	edmonton	[106, 107]

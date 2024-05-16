@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	None	None	None	None						[74.67, 74.67]	[112.93, 112.93]	RSM00021504	igra2	1958	1996	21504	0-20300-0-21504	['85', '38', '106', '107']
-0	0		OSTROV PREOBRAZHENIA	74.67	112.93	60.0				21504	1958.0	1996.0	True	0.0		0-20300-0-21504	IGRA2	None	None	None	None	RSM00021504					[74.67, 74.67]	[112.93, 112.93]	RSM00021504	igra2	1958	1996	21504	0-20300-0-21504	['85', '38', '106', '107']
-0	0															0-20500-0-nan	WBAN	None	None	None	None						[74.67, 74.67]	[112.93, 112.93]	RSM00021504	igra2	1958	1996	21504	0-20300-0-21504	['85', '38', '106', '107']
-0	0															0-20400-0-nan	CHUAN	None	None	None	None						[74.67, 74.67]	[112.93, 112.93]	RSM00021504	igra2	1958	1996	21504	0-20300-0-21504	['85', '38', '106', '107']
-0	0		Ostrov Preobrazheniya, Russia	74.67	112.93	-999.0				21504				0.0		0-20600-0-21504	SCHROEDER	None	None	None	None		21504.0	646.0	1958-03-01 00:00:00	1995-11-11 00:00:00	[74.67, 74.67]	[112.93, 112.93]	RSM00021504	igra2	1958	1996	21504	0-20300-0-21504	['85', '38', '106', '107']
-0	0															0-20700-0-nan	WMO	None	None	None	None						[74.67, 74.67]	[112.93, 112.93]	RSM00021504	igra2	1958	1996	21504	0-20300-0-21504	['85', '38', '106', '107']

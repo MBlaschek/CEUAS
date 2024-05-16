@@ -1,3 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0	0-20000-0-16759	TYMBAKION (AIRPORT)	35.06638888888889	24.76222222222222	7.0	Precipitation station, Surface land meteorological station (SYNOP), GOS	35 03 59N	024 45 44E	16759	999.0	999.0	False	9.3		OSCAR	0-20000-0-16759	rethimnon	42.1	35.3647222	24.4713889					
-0	0		TYMPAKI                  	35.06666666666667	24.766666666666666	-999.0				16759				9.6		WMO	0-20700-0-16759	rethimnon	42.1	35.3647222	24.4713889		16759	4053.0		

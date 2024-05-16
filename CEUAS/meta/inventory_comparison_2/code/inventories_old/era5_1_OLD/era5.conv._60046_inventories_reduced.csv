@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-60046	60770	MEDENINE	33.35	10.483333333333333	117.0	33 21 00N	010 29 00E	0.3	[33.35, 33.35]	[10.48, 10.48]	OSCAR	0-20000-0-60770		0-20000-0-60770	19931009	19931009	999.0	999.0	False	0-20000-0-60770	tatawin	[104, 105, 106, 107, 117]
-60046									[33.35, 33.35]	[10.48, 10.48]	IGRA2			0-20300-0-nan	19931009	19931009				0-20000-0-60770	tatawin	[104, 105, 106, 107, 117]
-60046									[33.35, 33.35]	[10.48, 10.48]	WBAN			0-20500-0-nan	19931009	19931009				0-20000-0-60770	tatawin	[104, 105, 106, 107, 117]
-60046									[33.35, 33.35]	[10.48, 10.48]	CHUAN			0-20400-0-nan	19931009	19931009				0-20000-0-60770	tatawin	[104, 105, 106, 107, 117]
-60046									[33.35, 33.35]	[10.48, 10.48]	SCHROEDER			0-20600-0-nan	19931009	19931009				0-20000-0-60770	tatawin	[104, 105, 106, 107, 117]
-60046									[33.35, 33.35]	[10.48, 10.48]	WMO			0-20700-0-nan	19931009	19931009				0-20000-0-60770	tatawin	[104, 105, 106, 107, 117]

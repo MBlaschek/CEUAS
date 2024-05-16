@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-53701									[-32.78, -32.78]	[-71.51, -71.53]	OSCAR				19580117	19781231				0-20300-0-85543	vina del mar	[36, 85, 106, 107]
-53701	85543	QUINTERO (MIL)	-32.78	-71.51	8.0			0.0	[-32.78, -32.78]	[-71.51, -71.53]	IGRA2			0-20300-0-85543	19580117	19781231	1957.0	1999.0	True	0-20300-0-85543	vina del mar	[36, 85, 106, 107]
-53701	53701	QUINTERO	-32.78	-71.53	2.1336			1.9	[-32.78, -32.78]	[-71.51, -71.53]	WBAN			0-20500-0-53701	19580117	19781231	10101.0	99991231.0		0-20300-0-85543	vina del mar	[36, 85, 106, 107]
-53701									[-32.78, -32.78]	[-71.51, -71.53]	CHUAN			0-20400-0-nan	19580117	19781231				0-20300-0-85543	vina del mar	[36, 85, 106, 107]
-53701	85543	Santiago (Quintero - Base Aerea de Quintero), Chile	-32.78	-71.53	-999.0			1.9	[-32.78, -32.78]	[-71.51, -71.53]	SCHROEDER		85543	0-20600-0-85543	19580117	19781231				0-20300-0-85543	vina del mar	[36, 85, 106, 107]
-53701	85558	VALPARAISO/PUNTA ANGELES 	-33.016666666666666	-71.63333333333334	-999.0			28.7	[-32.78, -32.78]	[-71.51, -71.53]	WMO		85558	0-20700-0-85558	19580117	19781231				0-20300-0-85543	vina del mar	[36, 85, 106, 107]

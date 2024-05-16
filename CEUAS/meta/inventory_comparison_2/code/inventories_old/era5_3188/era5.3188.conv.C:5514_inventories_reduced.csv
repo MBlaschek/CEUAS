@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:5514									[69.53, 69.53]	[31.22, 31.22]	OSCAR				19320804	19330824				0-20400-0-5514	zapolyarnyy	[106, 107, 117]
-C:5514									[69.53, 69.53]	[31.22, 31.22]	IGRA2			0-20300-0-nan	19320804	19330824				0-20400-0-5514	zapolyarnyy	[106, 107, 117]
-C:5514									[69.53, 69.53]	[31.22, 31.22]	WBAN			0-20500-0-nan	19320804	19330824				0-20400-0-5514	zapolyarnyy	[106, 107, 117]
-C:5514	5514.0	Petsamo	69.53	31.22	15			0.0	[69.53, 69.53]	[31.22, 31.22]	CHUAN		-999	0-20400-0-5514	19320804	19330824	-999-999	-999-999		0-20400-0-5514	zapolyarnyy	[106, 107, 117]
-C:5514	4794.0	Alauostari (Petsamo)	69.53	31.25	6			1.2	[69.53, 69.53]	[31.22, 31.22]	CHUAN		-999	0-20400-0-4794	19320804	19330824	-999-999	-999-999		0-20400-0-5514	zapolyarnyy	[106, 107, 117]
-C:5514	4795.0	Alauostari (Petsamo)	69.53	31.25	6			1.2	[69.53, 69.53]	[31.22, 31.22]	CHUAN		-999	0-20400-0-4795	19320804	19330824	-999-999	-999-999		0-20400-0-5514	zapolyarnyy	[106, 107, 117]
-C:5514	22006.0	Petsamo, Finland / Pechenga, Russia	69.53	31.22	-999			0.0	[69.53, 69.53]	[31.22, 31.22]	SCHROEDER		22006	0-20600-0-22006	19320804	19330824				0-20400-0-5514	zapolyarnyy	[106, 107, 117]
-C:5514									[69.53, 69.53]	[31.22, 31.22]	WMO			0-20700-0-nan	19320804	19330824				0-20400-0-5514	zapolyarnyy	[106, 107, 117]

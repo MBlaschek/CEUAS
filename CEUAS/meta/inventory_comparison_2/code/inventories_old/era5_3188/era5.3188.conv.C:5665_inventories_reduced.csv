@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:5665	10424	WERL	51.57638888888889	7.888055555555555	86.18	51 34 35N	007 53 17E	29.7	[51.52, 51.52]	[7.47, 7.47]	OSCAR	0-20000-0-10424		0-20000-0-10424	19260107	19340623	999	999	False	0-20000-0-10424	dortmund	[106, 107]
-C:5665									[51.52, 51.52]	[7.47, 7.47]	IGRA2			0-20300-0-nan	19260107	19340623				0-20000-0-10424	dortmund	[106, 107]
-C:5665									[51.52, 51.52]	[7.47, 7.47]	WBAN			0-20500-0-nan	19260107	19340623				0-20000-0-10424	dortmund	[106, 107]
-C:5665	5665	Dortmund	51.52	7.47	110			0.0	[51.52, 51.52]	[7.47, 7.47]	CHUAN		-999	0-20400-0-5665	19260107	19340623	-999-999	-999-999		0-20000-0-10424	dortmund	[106, 107]
-C:5665	10416	Dortmund, Germany	51.5	7.5	-999			3.0	[51.52, 51.52]	[7.47, 7.47]	SCHROEDER		10416	0-20600-0-10416	19260107	19340623				0-20000-0-10424	dortmund	[106, 107]
-C:5665									[51.52, 51.52]	[7.47, 7.47]	WMO			0-20700-0-nan	19260107	19340623				0-20000-0-10424	dortmund	[106, 107]

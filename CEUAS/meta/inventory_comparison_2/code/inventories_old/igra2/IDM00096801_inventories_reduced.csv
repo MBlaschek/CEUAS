@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-96801									[-7.333, -7.333]	[108.25, 108.25]	OSCAR				1976	1994				0-20300-0-96801	tasikmalaya	['85', '38', '106', '107']
-96801	96801	CIBEUREM/TASIK(AFB)	-7.333	108.25	335.0			0.0	[-7.333, -7.333]	[108.25, 108.25]	IGRA2			0-20300-0-96801	1976	1994	1976.0	1994.0	True	0-20300-0-96801	tasikmalaya	['85', '38', '106', '107']
-96801									[-7.333, -7.333]	[108.25, 108.25]	WBAN			0-20500-0-nan	1976	1994				0-20300-0-96801	tasikmalaya	['85', '38', '106', '107']
-96801									[-7.333, -7.333]	[108.25, 108.25]	CHUAN			0-20400-0-nan	1976	1994				0-20300-0-96801	tasikmalaya	['85', '38', '106', '107']
-96801	96801	WICM Tasikmalaya - Cibeureum AP, Java, Indonesia	-7.33	108.25	-999.0			0.3	[-7.333, -7.333]	[108.25, 108.25]	SCHROEDER		96801	0-20600-0-96801	1976	1994				0-20300-0-96801	tasikmalaya	['85', '38', '106', '107']
-96801	96801	TASIKMALAYA              	-7.333333333333333	108.25	-999.0			0.0	[-7.333, -7.333]	[108.25, 108.25]	WMO		96801	0-20700-0-96801	1976	1994				0-20300-0-96801	tasikmalaya	['85', '38', '106', '107']

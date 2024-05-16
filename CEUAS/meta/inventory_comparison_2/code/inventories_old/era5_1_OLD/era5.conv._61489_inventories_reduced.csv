@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-61489	61489	ROSSO	16.5	-15.816666666666666	6.0	16 30 00N	015 49 00W	0.4	[16.5, 16.5]	[-15.82, -15.82]	OSCAR	0-20000-0-61489		0-20000-0-61489	19800118	19870922	999.0	999.0	False	0-20000-0-61489	richard toll	[104, 105, 106, 107, 117]
-61489									[16.5, 16.5]	[-15.82, -15.82]	IGRA2			0-20300-0-nan	19800118	19870922				0-20000-0-61489	richard toll	[104, 105, 106, 107, 117]
-61489									[16.5, 16.5]	[-15.82, -15.82]	WBAN			0-20500-0-nan	19800118	19870922				0-20000-0-61489	richard toll	[104, 105, 106, 107, 117]
-61489									[16.5, 16.5]	[-15.82, -15.82]	CHUAN			0-20400-0-nan	19800118	19870922				0-20000-0-61489	richard toll	[104, 105, 106, 107, 117]
-61489									[16.5, 16.5]	[-15.82, -15.82]	SCHROEDER			0-20600-0-nan	19800118	19870922				0-20000-0-61489	richard toll	[104, 105, 106, 107, 117]
-61489	61489	ROSSO                    	16.5	-15.816666666666666	-999.0			0.4	[16.5, 16.5]	[-15.82, -15.82]	WMO		61489	0-20700-0-61489	19800118	19870922				0-20000-0-61489	richard toll	[104, 105, 106, 107, 117]

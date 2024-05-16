@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-7607	07607	MONT-DE-MARSAN	43.90972222222222	-0.5002777777777778	59.0	43 54 35N	000 30 01W	1.1	[43.92, 43.92]	[-0.5, -0.5]	OSCAR	0-20000-0-07607		0-20000-0-07607	19691113	19960709	999.0	999.0	False	0-20000-0-07607	mont-de-marsan	['38', '85', '106', '107']
-7607	07607	MONT-DE-MARSAN	43.917	-0.5	60.0			0.3	[43.92, 43.92]	[-0.5, -0.5]	IGRA2			0-20300-0-07607	19691113	19960709	1974.0	1976.0	True	0-20000-0-07607	mont-de-marsan	['38', '85', '106', '107']
-7607									[43.92, 43.92]	[-0.5, -0.5]	WBAN			0-20500-0-nan	19691113	19960709				0-20000-0-07607	mont-de-marsan	['38', '85', '106', '107']
-7607									[43.92, 43.92]	[-0.5, -0.5]	CHUAN			0-20400-0-nan	19691113	19960709				0-20000-0-07607	mont-de-marsan	['38', '85', '106', '107']
-7607	7607	Mont-de-Marsan, France	43.92	-0.5	-999.0			0.0	[43.92, 43.92]	[-0.5, -0.5]	SCHROEDER		7607	0-20600-0-7607	19691113	19960709				0-20000-0-07607	mont-de-marsan	['38', '85', '106', '107']
-7607	07607	MONT-DE-MARSAN           	43.9	-0.5	-999.0			2.2	[43.92, 43.92]	[-0.5, -0.5]	WMO		07607	0-20700-0-07607	19691113	19960709				0-20000-0-07607	mont-de-marsan	['38', '85', '106', '107']

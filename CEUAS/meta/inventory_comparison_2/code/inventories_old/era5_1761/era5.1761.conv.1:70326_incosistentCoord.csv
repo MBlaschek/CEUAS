@@ -1,4 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0		KING SALMON	58.6794	-156.6683	8.4				70326	1953.0	2021.0	True	76.5		IGRA2	0-20300-0-70326	None	None	None	None	USM00070326				
-0	0	0-20000-0-70326	KING SALMON, AK	58.67944444444444	-156.66833333333332	16.1	Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GSN, GOS, CLIMAT(C), RBCN, RBSN(ST)	58 40 46N	156 40 06W	70326	999.0	999.0	True	76.5		OSCAR	0-20000-0-70326	None	None	None	None					
-0	0		KING SALMON              	58.68333333333333	-156.65	-999.0				70326				75.4		WMO	0-20700-0-70326	None	None	None	None		70326	1206.0		

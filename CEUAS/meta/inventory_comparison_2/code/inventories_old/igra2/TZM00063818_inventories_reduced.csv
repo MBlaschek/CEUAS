@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-63818									[-4.883, -4.883]	[38.283, 38.283]	OSCAR				1973	1974				0-20300-0-63818	matui	['85', '38', '106', '107']
-63818	63818	MOMBO	-4.883	38.283	511.0			0.0	[-4.883, -4.883]	[38.283, 38.283]	IGRA2			0-20300-0-63818	1973	1974	1973.0	1974.0	True	0-20300-0-63818	matui	['85', '38', '106', '107']
-63818									[-4.883, -4.883]	[38.283, 38.283]	WBAN			0-20500-0-nan	1973	1974				0-20300-0-63818	matui	['85', '38', '106', '107']
-63818									[-4.883, -4.883]	[38.283, 38.283]	CHUAN			0-20400-0-nan	1973	1974				0-20300-0-63818	matui	['85', '38', '106', '107']
-63818	63818	HTMO Mombo, Tanzania	-4.9	38.23	-999.0			6.2	[-4.883, -4.883]	[38.283, 38.283]	SCHROEDER		63818.0	0-20600-0-63818	1973	1974				0-20300-0-63818	matui	['85', '38', '106', '107']
-63818									[-4.883, -4.883]	[38.283, 38.283]	WMO			0-20700-0-nan	1973	1974				0-20300-0-63818	matui	['85', '38', '106', '107']

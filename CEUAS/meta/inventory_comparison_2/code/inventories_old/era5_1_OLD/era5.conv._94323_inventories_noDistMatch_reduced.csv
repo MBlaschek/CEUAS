@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-94323	94323	WATARRKA	-24.29138888888889	131.54888888888888	612.5	24 17 29S	131 32 56E	90.0	[-24.38, -24.38]	[132.43, 132.43]	OSCAR	0-20000-0-94323		0-20000-0-94323	19790601	19790601	999.0	999.0	False		alice springs	[104, 105, 106, 107, 117]
-94323									[-24.38, -24.38]	[132.43, 132.43]	IGRA2			0-20300-0-nan	19790601	19790601					alice springs	[104, 105, 106, 107, 117]
-94323									[-24.38, -24.38]	[132.43, 132.43]	WBAN			0-20500-0-nan	19790601	19790601					alice springs	[104, 105, 106, 107, 117]
-94323									[-24.38, -24.38]	[132.43, 132.43]	CHUAN			0-20400-0-nan	19790601	19790601					alice springs	[104, 105, 106, 107, 117]
-94323									[-24.38, -24.38]	[132.43, 132.43]	SCHROEDER			0-20600-0-nan	19790601	19790601					alice springs	[104, 105, 106, 107, 117]
-94323									[-24.38, -24.38]	[132.43, 132.43]	WMO			0-20700-0-nan	19790601	19790601					alice springs	[104, 105, 106, 107, 117]

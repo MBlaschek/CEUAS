@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-67109	67109	ARIVONIMAMO	-18.979999999999997	47.19		18 58 48S	047 11 24E	5.9	[-19.03, -19.03]	[47.17, 47.16]	OSCAR	0-450-0-67109		0-450-0-67109	19790212	19801103	999.0	999.0	False	0-450-0-67109	arivonimamo	[104, 105, 106, 107, 117]
-67109									[-19.03, -19.03]	[47.17, 47.16]	IGRA2			0-20300-0-nan	19790212	19801103				0-450-0-67109	arivonimamo	[104, 105, 106, 107, 117]
-67109									[-19.03, -19.03]	[47.17, 47.16]	WBAN			0-20500-0-nan	19790212	19801103				0-450-0-67109	arivonimamo	[104, 105, 106, 107, 117]
-67109									[-19.03, -19.03]	[47.17, 47.16]	CHUAN			0-20400-0-nan	19790212	19801103				0-450-0-67109	arivonimamo	[104, 105, 106, 107, 117]
-67109									[-19.03, -19.03]	[47.17, 47.16]	SCHROEDER			0-20600-0-nan	19790212	19801103				0-450-0-67109	arivonimamo	[104, 105, 106, 107, 117]
-67109									[-19.03, -19.03]	[47.17, 47.16]	WMO			0-20700-0-nan	19790212	19801103				0-450-0-67109	arivonimamo	[104, 105, 106, 107, 117]

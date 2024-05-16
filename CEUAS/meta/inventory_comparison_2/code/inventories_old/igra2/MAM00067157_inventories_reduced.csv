@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-67157	67157	FARAFANGANA	-22.8	47.833333333333336	6.0	22 48 00S	047 50 00E	0.0	[-22.8, -22.8]	[47.833, 47.833]	OSCAR	0-20000-0-67157		0-20000-0-67157	1973	1981	999.0	999.0	False	0-20000-0-67157	farafangana	['85', '38', '106', '107']
-67157	67157	FARAFANGANA	-22.8	47.833	8.0			0.0	[-22.8, -22.8]	[47.833, 47.833]	IGRA2			0-20300-0-67157	1973	1981	1973.0	1981.0	True	0-20000-0-67157	farafangana	['85', '38', '106', '107']
-67157									[-22.8, -22.8]	[47.833, 47.833]	WBAN			0-20500-0-nan	1973	1981				0-20000-0-67157	farafangana	['85', '38', '106', '107']
-67157									[-22.8, -22.8]	[47.833, 47.833]	CHUAN			0-20400-0-nan	1973	1981				0-20000-0-67157	farafangana	['85', '38', '106', '107']
-67157	67157	Farafangana, Madagascar	-22.8	47.83	-999.0			0.3	[-22.8, -22.8]	[47.833, 47.833]	SCHROEDER		67157.0	0-20600-0-67157	1973	1981				0-20000-0-67157	farafangana	['85', '38', '106', '107']
-67157									[-22.8, -22.8]	[47.833, 47.833]	WMO			0-20700-0-nan	1973	1981				0-20000-0-67157	farafangana	['85', '38', '106', '107']

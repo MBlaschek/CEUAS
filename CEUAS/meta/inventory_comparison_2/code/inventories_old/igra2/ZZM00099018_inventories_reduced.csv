@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-99018									[66.0, 66.0]	[2.0, 2.0]	OSCAR				1967	1972				0-20300-0-99018	None	['85', '38', '106', '107']
-99018	99018	OCEAN WEATHER SHIP M	66.0	2.0	0.0			0.0	[66.0, 66.0]	[2.0, 2.0]	IGRA2			0-20300-0-99018	1967	1972	1967.0	1972.0	True	0-20300-0-99018	None	['85', '38', '106', '107']
-99018	36001	POLARFRONT AIR SAMPL	66.0	2.0	7.010400000000001			0.0	[66.0, 66.0]	[2.0, 2.0]	WBAN			0-20500-0-36001	1967	1972	19830429.0	99991231.0		0-20300-0-99018	None	['85', '38', '106', '107']
-99018									[66.0, 66.0]	[2.0, 2.0]	CHUAN			0-20400-0-nan	1967	1972				0-20300-0-99018	None	['85', '38', '106', '107']
-99018									[66.0, 66.0]	[2.0, 2.0]	SCHROEDER			0-20600-0-nan	1967	1972				0-20300-0-99018	None	['85', '38', '106', '107']
-99018									[66.0, 66.0]	[2.0, 2.0]	WMO			0-20700-0-nan	1967	1972				0-20300-0-99018	None	['85', '38', '106', '107']

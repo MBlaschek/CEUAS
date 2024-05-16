@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-71111	71111	SANDSPIT, BC	53.25416666666667	-131.8138888888889	6.4	53 15 15N	131 48 50W	360.1	[50.78, 50.78]	[-128.43, -128.43]	OSCAR	0-20000-0-71111		0-20000-0-71111	19820221	19820221	999.0	999.0	False	0-20500-0-25250	campbell river	[106, 107, 117]
-71111									[50.78, 50.78]	[-128.43, -128.43]	IGRA2			0-20300-0-nan	19820221	19820221				0-20500-0-25250	campbell river	[106, 107, 117]
-71111	25250	CAPE SCOTT	50.78	-128.42	72.2376			0.7	[50.78, 50.78]	[-128.43, -128.43]	WBAN			0-20500-0-25250	19820221	19820221	19651201.0	99991231.0		0-20500-0-25250	campbell river	[106, 107, 117]
-71111									[50.78, 50.78]	[-128.43, -128.43]	CHUAN			0-20400-0-nan	19820221	19820221				0-20500-0-25250	campbell river	[106, 107, 117]
-71111									[50.78, 50.78]	[-128.43, -128.43]	SCHROEDER			0-20600-0-nan	19820221	19820221				0-20500-0-25250	campbell river	[106, 107, 117]
-71111									[50.78, 50.78]	[-128.43, -128.43]	WMO			0-20700-0-nan	19820221	19820221				0-20500-0-25250	campbell river	[106, 107, 117]

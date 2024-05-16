@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:57922	57922	DUSHAN	25.833333333333332	107.55	1015.5	25 50 00N	107 33 00E	2.0	[25.83, 25.83]	[107.53, 107.53]	OSCAR	0-20000-0-57922		0-20000-0-57922	19580628	19591231	999.0	999.0	False	0-20000-0-57922	xiaoweizhai	[38, 106, 107]
-1:57922									[25.83, 25.83]	[107.53, 107.53]	IGRA2			0-20300-0-nan	19580628	19591231				0-20000-0-57922	xiaoweizhai	[38, 106, 107]
-1:57922	42023	TUSHAN	25.83	107.75	1010.1072			22.1	[25.83, 25.83]	[107.53, 107.53]	WBAN			0-20500-0-42023	19580628	19591231	19450401.0	19450831.0		0-20000-0-57922	xiaoweizhai	[38, 106, 107]
-1:57922									[25.83, 25.83]	[107.53, 107.53]	CHUAN			0-20400-0-nan	19580628	19591231				0-20000-0-57922	xiaoweizhai	[38, 106, 107]
-1:57922									[25.83, 25.83]	[107.53, 107.53]	SCHROEDER			0-20600-0-nan	19580628	19591231				0-20000-0-57922	xiaoweizhai	[38, 106, 107]
-1:57922	57922	DUSHAN                   	25.83333333333333	107.55	-999.0			2.0	[25.83, 25.83]	[107.53, 107.53]	WMO		57922	0-20700-0-57922	19580628	19591231				0-20000-0-57922	xiaoweizhai	[38, 106, 107]

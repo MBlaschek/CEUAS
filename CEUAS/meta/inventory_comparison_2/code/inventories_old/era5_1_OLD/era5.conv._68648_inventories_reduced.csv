@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-68648	68647	QUEENSTOWN	-31.91777777777778	26.878055555555555	1104.0	31 55 04S	026 52 41E	2.1	[-31.9, -31.9]	[26.87, 26.87]	OSCAR	0-20000-0-68647		0-20000-0-68647	19990604	19990604	999.0	999.0	False	0-20000-0-68647	queenstown	[104, 105, 106, 107, 117]
-68648									[-31.9, -31.9]	[26.87, 26.87]	IGRA2			0-20300-0-nan	19990604	19990604				0-20000-0-68647	queenstown	[104, 105, 106, 107, 117]
-68648									[-31.9, -31.9]	[26.87, 26.87]	WBAN			0-20500-0-nan	19990604	19990604				0-20000-0-68647	queenstown	[104, 105, 106, 107, 117]
-68648									[-31.9, -31.9]	[26.87, 26.87]	CHUAN			0-20400-0-nan	19990604	19990604				0-20000-0-68647	queenstown	[104, 105, 106, 107, 117]
-68648									[-31.9, -31.9]	[26.87, 26.87]	SCHROEDER			0-20600-0-nan	19990604	19990604				0-20000-0-68647	queenstown	[104, 105, 106, 107, 117]
-68648									[-31.9, -31.9]	[26.87, 26.87]	WMO			0-20700-0-nan	19990604	19990604				0-20000-0-68647	queenstown	[104, 105, 106, 107, 117]

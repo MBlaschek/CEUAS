@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-30526	30526	TYRKA	54.483333333333334	107.06666666666666	650.8	54 29 00N	107 04 00E	4.5	[54.5, 54.5]	[107.13, 107.13]	OSCAR	0-20000-0-30526		0-20000-0-30526	19810512	19940527	999.0	999.0	False	0-20000-0-30526	severobaykalsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-30526									[54.5, 54.5]	[107.13, 107.13]	IGRA2			0-20300-0-nan	19810512	19940527				0-20000-0-30526	severobaykalsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-30526									[54.5, 54.5]	[107.13, 107.13]	WBAN			0-20500-0-nan	19810512	19940527				0-20000-0-30526	severobaykalsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-30526									[54.5, 54.5]	[107.13, 107.13]	CHUAN			0-20400-0-nan	19810512	19940527				0-20000-0-30526	severobaykalsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-30526									[54.5, 54.5]	[107.13, 107.13]	SCHROEDER			0-20600-0-nan	19810512	19940527				0-20000-0-30526	severobaykalsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-30526									[54.5, 54.5]	[107.13, 107.13]	WMO			0-20700-0-nan	19810512	19940527				0-20000-0-30526	severobaykalsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-96607	96607	SAMARINDA/TEMINDUNG	-0.4827777777777778	117.1563888888889	230.0	00 28 58S	117 09 23E	0.5	[-0.48, -0.62]	[117.16, 117.15]	OSCAR	0-20000-0-96607		0-20000-0-96607	19921223	20211230	999.0	999.0	False	0-20000-0-96607	loa janan	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-96607	96607	SAMARINDA/TEMINDUNG	-0.4844	117.1569	3.0			0.6	[-0.48, -0.62]	[117.16, 117.15]	IGRA2			0-20300-0-96607	19921223	20211230	1993.0	2021.0	True	0-20000-0-96607	loa janan	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-96607									[-0.48, -0.62]	[117.16, 117.15]	WBAN			0-20500-0-nan	19921223	20211230				0-20000-0-96607	loa janan	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-96607									[-0.48, -0.62]	[117.16, 117.15]	CHUAN			0-20400-0-nan	19921223	20211230				0-20000-0-96607	loa janan	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-96607	96607	WRLS Samarinda - Temindung AP, Kalimantan, Indonesia	-0.62	117.15	-999.0			15.5	[-0.48, -0.62]	[117.16, 117.15]	SCHROEDER		96607.0	0-20600-0-96607	19921223	20211230				0-20000-0-96607	loa janan	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-96607									[-0.48, -0.62]	[117.16, 117.15]	WMO			0-20700-0-nan	19921223	20211230				0-20000-0-96607	loa janan	[36, 38, 39, 85, 104, 105, 106, 107, 117]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-42273	42273	BAHRAICH	27.566666666666666	81.6	124.0	27 34 00N	081 36 00E	3.7	[27.6, 27.57]	[81.6, 81.6]	OSCAR	0-20000-0-42273		0-20000-0-42273	19630303	20191007	999.0	999.0	False	0-20000-0-42273	bahraich	['38', '85', '106', '107']
-42273	42273	BAHRAICH	27.5667	81.6	123.0			3.7	[27.6, 27.57]	[81.6, 81.6]	IGRA2			0-20300-0-42273	19630303	20191007	1973.0	2019.0	True	0-20000-0-42273	bahraich	['38', '85', '106', '107']
-42273									[27.6, 27.57]	[81.6, 81.6]	WBAN			0-20500-0-nan	19630303	20191007				0-20000-0-42273	bahraich	['38', '85', '106', '107']
-42273									[27.6, 27.57]	[81.6, 81.6]	CHUAN			0-20400-0-nan	19630303	20191007				0-20000-0-42273	bahraich	['38', '85', '106', '107']
-42273	42273	Bahraich, Uttar Pradesh, India	27.57	81.6	-999.0			3.3	[27.6, 27.57]	[81.6, 81.6]	SCHROEDER		42273.0	0-20600-0-42273	19630303	20191007				0-20000-0-42273	bahraich	['38', '85', '106', '107']
-42273									[27.6, 27.57]	[81.6, 81.6]	WMO			0-20700-0-nan	19630303	20191007				0-20000-0-42273	bahraich	['38', '85', '106', '107']

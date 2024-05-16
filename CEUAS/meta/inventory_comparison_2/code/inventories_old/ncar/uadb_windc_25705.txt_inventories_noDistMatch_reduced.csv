@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-25705	25705	SREDNIKAN	62.45	152.31666666666666	260.0	62 27 00N	152 19 00E	68.1	[62.5, 62.5]	[151.0, 151.0]	OSCAR	0-20000-0-25705		0-20000-0-25705	19620326	19630707	999.0	999.0	False		magadan	['38', '85', '106', '107']
-25705									[62.5, 62.5]	[151.0, 151.0]	IGRA2			0-20300-0-nan	19620326	19630707					magadan	['38', '85', '106', '107']
-25705									[62.5, 62.5]	[151.0, 151.0]	WBAN			0-20500-0-nan	19620326	19630707					magadan	['38', '85', '106', '107']
-25705									[62.5, 62.5]	[151.0, 151.0]	CHUAN			0-20400-0-nan	19620326	19630707					magadan	['38', '85', '106', '107']
-25705									[62.5, 62.5]	[151.0, 151.0]	SCHROEDER			0-20600-0-nan	19620326	19630707					magadan	['38', '85', '106', '107']
-25705									[62.5, 62.5]	[151.0, 151.0]	WMO			0-20700-0-nan	19620326	19630707					magadan	['38', '85', '106', '107']

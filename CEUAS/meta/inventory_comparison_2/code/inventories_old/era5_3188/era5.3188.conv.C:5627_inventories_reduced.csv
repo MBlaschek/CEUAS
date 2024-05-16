@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:5627	07240	TOURS	47.44444444444444	0.7275	112.0	47 26 40N	000 43 39E	6.1	[47.4, 47.4]	[0.68, 0.68]	OSCAR	0-20000-0-07240		0-20000-0-07240	19201127	19300222	999	999	False	0-20000-0-07240	saint-cyr-sur-loire	[106, 107]
-C:5627									[47.4, 47.4]	[0.68, 0.68]	IGRA2			0-20300-0-nan	19201127	19300222				0-20000-0-07240	saint-cyr-sur-loire	[106, 107]
-C:5627									[47.4, 47.4]	[0.68, 0.68]	WBAN			0-20500-0-nan	19201127	19300222				0-20000-0-07240	saint-cyr-sur-loire	[106, 107]
-C:5627	5627	Tours	47.4	0.68	55			0.0	[47.4, 47.4]	[0.68, 0.68]	CHUAN		-999	0-20400-0-5627	19201127	19300222	-999-999	-999-999		0-20000-0-07240	saint-cyr-sur-loire	[106, 107]
-C:5627	4519	Tours-Parçay Meslay	47.433	0.7	110			4.0	[47.4, 47.4]	[0.68, 0.68]	CHUAN		-999	0-20400-0-4519	19201127	19300222	192101	196409		0-20000-0-07240	saint-cyr-sur-loire	[106, 107]
-C:5627	7240	Tours / St. Symphorien, France	47.45	0.72	-999			6.3	[47.4, 47.4]	[0.68, 0.68]	SCHROEDER		7240	0-20600-0-7240	19201127	19300222				0-20000-0-07240	saint-cyr-sur-loire	[106, 107]
-C:5627	07240	TOURS                    	47.43333333333333	0.7166666666666667	-999.0			4.6	[47.4, 47.4]	[0.68, 0.68]	WMO		07240	0-20700-0-07240	19201127	19300222				0-20000-0-07240	saint-cyr-sur-loire	[106, 107]

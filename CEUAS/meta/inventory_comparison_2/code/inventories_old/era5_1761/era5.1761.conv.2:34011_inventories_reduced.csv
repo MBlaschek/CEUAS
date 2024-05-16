@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:34011	07491	CHAMBERY-AIX-LES-BAINS	45.64138888888889	5.878055555555556	235.0	45 38 29N	005 52 41E	29.8	[45.6, 45.6]	[5.5, 5.5]	OSCAR	0-20000-0-07491		0-20000-0-07491	19440906	19440906	999.0	999.0	False	0-20000-0-07491	voiron	[106, 107]
-2:34011									[45.6, 45.6]	[5.5, 5.5]	IGRA2			0-20300-0-nan	19440906	19440906				0-20000-0-07491	voiron	[106, 107]
-2:34011	34011	HAUT BIOL	45.6	5.5	762.0			0.0	[45.6, 45.6]	[5.5, 5.5]	WBAN			0-20500-0-34011	19440906	19440906	19440901.0	19441130.0		0-20000-0-07491	voiron	[106, 107]
-2:34011									[45.6, 45.6]	[5.5, 5.5]	CHUAN			0-20400-0-nan	19440906	19440906				0-20000-0-07491	voiron	[106, 107]
-2:34011	7491	"(assigned station ID) ""FRAIX"" LFLB Chambery (Aix-les-Bains AP), France"	45.63	5.87	-999.0			29.1	[45.6, 45.6]	[5.5, 5.5]	SCHROEDER		7491	0-20600-0-7491	19440906	19440906				0-20000-0-07491	voiron	[106, 107]
-2:34011	07491	CHAMBERY-AIX             	45.63333333333333	5.866666666666667	-999.0			28.8	[45.6, 45.6]	[5.5, 5.5]	WMO		07491	0-20700-0-07491	19440906	19440906				0-20000-0-07491	voiron	[106, 107]

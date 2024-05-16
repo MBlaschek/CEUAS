@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	gien	37.4	47.693316	2.630939						[47.42, 47.42]	[2.92, 2.92]	era5.3188.conv.C:6082	era5_3188	19201204	19210111	C:6082	0-20400-0-6082	[106, 107]
-0	0															0-20300-0-nan	IGRA2	gien	37.4	47.693316	2.630939						[47.42, 47.42]	[2.92, 2.92]	era5.3188.conv.C:6082	era5_3188	19201204	19210111	C:6082	0-20400-0-6082	[106, 107]
-0	0															0-20500-0-nan	WBAN	gien	37.4	47.693316	2.630939						[47.42, 47.42]	[2.92, 2.92]	era5.3188.conv.C:6082	era5_3188	19201204	19210111	C:6082	0-20400-0-6082	[106, 107]
-0	0		Cosne	47.42	2.92	150				6082.0	-999-999	-999-999		0.0		0-20400-0-6082	CHUAN	gien	37.4	47.693316	2.630939		-999				[47.42, 47.42]	[2.92, 2.92]	era5.3188.conv.C:6082	era5_3188	19201204	19210111	C:6082	0-20400-0-6082	[106, 107]
-0	0															0-20600-0-nan	SCHROEDER	gien	37.4	47.693316	2.630939						[47.42, 47.42]	[2.92, 2.92]	era5.3188.conv.C:6082	era5_3188	19201204	19210111	C:6082	0-20400-0-6082	[106, 107]
-0	0															0-20700-0-nan	WMO	gien	37.4	47.693316	2.630939						[47.42, 47.42]	[2.92, 2.92]	era5.3188.conv.C:6082	era5_3188	19201204	19210111	C:6082	0-20400-0-6082	[106, 107]

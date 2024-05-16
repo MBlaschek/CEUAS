@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-76370									[25.617, 25.617]	[-109.05, -109.05]	OSCAR				2005	2006				0-20300-0-76370	los mochis	['85', '38', '106', '107']
-76370	76370	TOPOLOBAMPO	25.617	-109.05	12.0			0.0	[25.617, 25.617]	[-109.05, -109.05]	IGRA2			0-20300-0-76370	2005	2006	2005.0	2006.0	True	0-20300-0-76370	los mochis	['85', '38', '106', '107']
-76370									[25.617, 25.617]	[-109.05, -109.05]	WBAN			0-20500-0-nan	2005	2006				0-20300-0-76370	los mochis	['85', '38', '106', '107']
-76370									[25.617, 25.617]	[-109.05, -109.05]	CHUAN			0-20400-0-nan	2005	2006				0-20300-0-76370	los mochis	['85', '38', '106', '107']
-76370	76370	Los Mochis (Topolobampo - Estacion de Investigacion Oceanografica) PACS-SONET pibal site (operated by SMAM = Secretaria de Marina Armada de Mexico [Mexican Navy]), Sinaloa, Mexico	25.62	-109.05	-999.0			0.3	[25.617, 25.617]	[-109.05, -109.05]	SCHROEDER		76370.0	0-20600-0-76370	2005	2006				0-20300-0-76370	los mochis	['85', '38', '106', '107']
-76370	76371	"(made up station ID) ""MLMM"" Los Mochis (Topolobampo AP NAME radiosonde site), Sinaloa, Mexico"	25.69	-109.08	-999.0			8.6	[25.617, 25.617]	[-109.05, -109.05]	SCHROEDER		76371.0	0-20600-0-76371	2005	2006				0-20300-0-76370	los mochis	['85', '38', '106', '107']
-76370	76361	Los Mochis, Sinaloa, Mexico	25.8	-108.99	-999.0			21.1	[25.617, 25.617]	[-109.05, -109.05]	SCHROEDER		76361.0	0-20600-0-76361	2005	2006				0-20300-0-76370	los mochis	['85', '38', '106', '107']
-76370									[25.617, 25.617]	[-109.05, -109.05]	WMO			0-20700-0-nan	2005	2006				0-20300-0-76370	los mochis	['85', '38', '106', '107']

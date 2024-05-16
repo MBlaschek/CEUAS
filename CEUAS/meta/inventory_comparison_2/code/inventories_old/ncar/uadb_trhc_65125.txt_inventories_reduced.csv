@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-65125	65125	ABUJA	9.25	7.0	343.1	09 15 00N	007 00 00E	0.0	[9.25, 9.25]	[7.0, 7.0]	OSCAR	0-20000-0-65125		0-20000-0-65125	20060725	20180302	999.0	999.0	True	0-20000-0-65125	abuja	['38', '85', '106', '107']
-65125	65125	ABUJA	9.25	7.0	343.1			0.0	[9.25, 9.25]	[7.0, 7.0]	IGRA2			0-20300-0-65125	20060725	20180302	2006.0	2018.0	True	0-20000-0-65125	abuja	['38', '85', '106', '107']
-65125									[9.25, 9.25]	[7.0, 7.0]	WBAN			0-20500-0-nan	20060725	20180302				0-20000-0-65125	abuja	['38', '85', '106', '107']
-65125									[9.25, 9.25]	[7.0, 7.0]	CHUAN			0-20400-0-nan	20060725	20180302				0-20000-0-65125	abuja	['38', '85', '106', '107']
-65125									[9.25, 9.25]	[7.0, 7.0]	SCHROEDER			0-20600-0-nan	20060725	20180302				0-20000-0-65125	abuja	['38', '85', '106', '107']
-65125									[9.25, 9.25]	[7.0, 7.0]	WMO			0-20700-0-nan	20060725	20180302				0-20000-0-65125	abuja	['38', '85', '106', '107']

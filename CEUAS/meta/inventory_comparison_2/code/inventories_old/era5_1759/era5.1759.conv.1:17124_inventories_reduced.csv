@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:17124	17124	ESKISEHIR HAVALIMANI	39.78111111111111	30.579722222222223	786.0	39 46 52N	030 34 47E	5.3	[39.77, 39.77]	[30.52, 30.52]	OSCAR	0-20000-0-17124		0-20000-0-17124	19670513	19680222	999.0	999.0	False	0-20000-0-17124	eskisehir	[106, 107]
-1:17124									[39.77, 39.77]	[30.52, 30.52]	IGRA2			0-20300-0-nan	19670513	19680222				0-20000-0-17124	eskisehir	[106, 107]
-1:17124									[39.77, 39.77]	[30.52, 30.52]	WBAN			0-20500-0-nan	19670513	19680222				0-20000-0-17124	eskisehir	[106, 107]
-1:17124									[39.77, 39.77]	[30.52, 30.52]	CHUAN			0-20400-0-nan	19670513	19680222				0-20000-0-17124	eskisehir	[106, 107]
-1:17124									[39.77, 39.77]	[30.52, 30.52]	SCHROEDER			0-20600-0-nan	19670513	19680222				0-20000-0-17124	eskisehir	[106, 107]
-1:17124									[39.77, 39.77]	[30.52, 30.52]	WMO			0-20700-0-nan	19670513	19680222				0-20000-0-17124	eskisehir	[106, 107]

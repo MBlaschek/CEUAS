@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-41264	41264	ADAM AIRPORT	22.499722222222225	57.37	328.0	22 29 59N	057 22 12E	20.4	[22.38, 22.38]	[57.52, 57.52]	OSCAR	0-20000-0-41264		0-20000-0-41264	20060312	20060312	999.0	999.0	False	0-20000-0-41264	nizwa	[104, 105, 106, 107, 117]
-41264									[22.38, 22.38]	[57.52, 57.52]	IGRA2			0-20300-0-nan	20060312	20060312				0-20000-0-41264	nizwa	[104, 105, 106, 107, 117]
-41264									[22.38, 22.38]	[57.52, 57.52]	WBAN			0-20500-0-nan	20060312	20060312				0-20000-0-41264	nizwa	[104, 105, 106, 107, 117]
-41264									[22.38, 22.38]	[57.52, 57.52]	CHUAN			0-20400-0-nan	20060312	20060312				0-20000-0-41264	nizwa	[104, 105, 106, 107, 117]
-41264									[22.38, 22.38]	[57.52, 57.52]	SCHROEDER			0-20600-0-nan	20060312	20060312				0-20000-0-41264	nizwa	[104, 105, 106, 107, 117]
-41264									[22.38, 22.38]	[57.52, 57.52]	WMO			0-20700-0-nan	20060312	20060312				0-20000-0-41264	nizwa	[104, 105, 106, 107, 117]

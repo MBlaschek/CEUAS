@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-67025	67025	ANTALAHA	-14.883333333333333	50.25	88.0	14 53 00S	050 15 00E	15.7	[-15.0, -15.0]	[50.333, 50.333]	OSCAR	0-20000-0-67025		0-20000-0-67025	1973	1999	999.0	999.0	False	0-20000-0-67025	antalaha	['85', '38', '106', '107']
-67025	67025	ANTALAHA	-15.0	50.333	6.0			0.0	[-15.0, -15.0]	[50.333, 50.333]	IGRA2			0-20300-0-67025	1973	1999	1973.0	1999.0	True	0-20000-0-67025	antalaha	['85', '38', '106', '107']
-67025									[-15.0, -15.0]	[50.333, 50.333]	WBAN			0-20500-0-nan	1973	1999				0-20000-0-67025	antalaha	['85', '38', '106', '107']
-67025									[-15.0, -15.0]	[50.333, 50.333]	CHUAN			0-20400-0-nan	1973	1999				0-20000-0-67025	antalaha	['85', '38', '106', '107']
-67025	67025	Antalaha, Madagascar	-15.0	50.33	-999.0			0.3	[-15.0, -15.0]	[50.333, 50.333]	SCHROEDER		67025	0-20600-0-67025	1973	1999				0-20000-0-67025	antalaha	['85', '38', '106', '107']
-67025	67025	ANTALAHA                 	-15.0	50.333333333333336	-999.0			0.0	[-15.0, -15.0]	[50.333, 50.333]	WMO		67025	0-20700-0-67025	1973	1999				0-20000-0-67025	antalaha	['85', '38', '106', '107']

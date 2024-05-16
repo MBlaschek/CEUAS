@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-16164									[43.4, 43.4]	[10.87, 10.87]	OSCAR				20060720	20070516				0-20400-0-5286	volterra	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-16164									[43.4, 43.4]	[10.87, 10.87]	IGRA2			0-20300-0-nan	20060720	20070516				0-20400-0-5286	volterra	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-16164									[43.4, 43.4]	[10.87, 10.87]	WBAN			0-20500-0-nan	20060720	20070516				0-20400-0-5286	volterra	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-16164	5286.0	Pontedera	43.48	10.62	14			22.1	[43.4, 43.4]	[10.87, 10.87]	CHUAN		-999	0-20400-0-5286	20060720	20070516	-999-999	-999-999		0-20400-0-5286	volterra	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-16164									[43.4, 43.4]	[10.87, 10.87]	SCHROEDER			0-20600-0-nan	20060720	20070516				0-20400-0-5286	volterra	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-16164									[43.4, 43.4]	[10.87, 10.87]	WMO			0-20700-0-nan	20060720	20070516				0-20400-0-5286	volterra	[36, 38, 39, 85, 104, 105, 106, 107, 117]

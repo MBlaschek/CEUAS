@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:30404									[6.67, 6.67]	[43.83, 43.83]	OSCAR				19650721	19650904				0-20500-0-30404	xuddur	[38, 85, 106, 107, 117]
-2:30404									[6.67, 6.67]	[43.83, 43.83]	IGRA2			0-20300-0-nan	19650721	19650904				0-20500-0-30404	xuddur	[38, 85, 106, 107, 117]
-2:30404	30404.0	CAPE TI NAK TEAM 6	6.67	43.83	453.23760000000004			0.0	[6.67, 6.67]	[43.83, 43.83]	WBAN			0-20500-0-30404	19650721	19650904	19650701.0	19650930.0		0-20500-0-30404	xuddur	[38, 85, 106, 107, 117]
-2:30404									[6.67, 6.67]	[43.83, 43.83]	CHUAN			0-20400-0-nan	19650721	19650904				0-20500-0-30404	xuddur	[38, 85, 106, 107, 117]
-2:30404									[6.67, 6.67]	[43.83, 43.83]	SCHROEDER			0-20600-0-nan	19650721	19650904				0-20500-0-30404	xuddur	[38, 85, 106, 107, 117]
-2:30404									[6.67, 6.67]	[43.83, 43.83]	WMO			0-20700-0-nan	19650721	19650904				0-20500-0-30404	xuddur	[38, 85, 106, 107, 117]

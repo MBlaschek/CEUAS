@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-9:1392	01452	KRISTIANSAND/KJEVIK	58.2	8.076666666666666	17.37	58 12 00N	008 04 36E	0.2	[58.2, 58.2]	[8.08, 8.08]	OSCAR	0-20000-0-01452		0-20000-0-01452	19401210	19420318	999.0	999.0	False	0-20000-0-01452	kristiansand	[85, 117]
-9:1392	01448	OKSOY LH	58.073055555555555	8.053055555555556	8.0	58 04 23N	008 03 11E	14.2	[58.2, 58.2]	[8.08, 8.08]	OSCAR	0-20000-0-01448		0-20000-0-01448	19401210	19420318	999.0	999.0	False	0-20000-0-01452	kristiansand	[85, 117]
-9:1392									[58.2, 58.2]	[8.08, 8.08]	IGRA2			0-20300-0-nan	19401210	19420318				0-20000-0-01452	kristiansand	[85, 117]
-9:1392									[58.2, 58.2]	[8.08, 8.08]	WBAN			0-20500-0-nan	19401210	19420318				0-20000-0-01452	kristiansand	[85, 117]
-9:1392									[58.2, 58.2]	[8.08, 8.08]	CHUAN			0-20400-0-nan	19401210	19420318				0-20000-0-01452	kristiansand	[85, 117]
-9:1392	1452	ENCN Kristiansand (Kjevik AP), Norway	58.2	8.08	-999.0			0.0	[58.2, 58.2]	[8.08, 8.08]	SCHROEDER		1452.0	0-20600-0-1452	19401210	19420318				0-20000-0-01452	kristiansand	[85, 117]
-9:1392									[58.2, 58.2]	[8.08, 8.08]	WMO			0-20700-0-nan	19401210	19420318				0-20000-0-01452	kristiansand	[85, 117]

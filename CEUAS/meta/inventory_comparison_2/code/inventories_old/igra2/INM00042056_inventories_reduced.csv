@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-42056	42056	JAMMU	32.666666666666664	74.83333333333333	323.0	32 40 00N	074 50 00E	0.0	[32.6667, 32.6667]	[74.8333, 74.8333]	OSCAR	0-20000-0-42056		0-20000-0-42056	2015	2021	999.0	999.0	False	0-20000-0-42056	bishna	['85', '38', '106', '107']
-42056	42056	JAMMU	32.6667	74.8333	318.0			0.0	[32.6667, 32.6667]	[74.8333, 74.8333]	IGRA2			0-20300-0-42056	2015	2021	2015.0	2021.0	True	0-20000-0-42056	bishna	['85', '38', '106', '107']
-42056									[32.6667, 32.6667]	[74.8333, 74.8333]	WBAN			0-20500-0-nan	2015	2021				0-20000-0-42056	bishna	['85', '38', '106', '107']
-42056									[32.6667, 32.6667]	[74.8333, 74.8333]	CHUAN			0-20400-0-nan	2015	2021				0-20000-0-42056	bishna	['85', '38', '106', '107']
-42056	42055	VIJU Jammu Indian Air Force Base, Jammu and Kashmir, India	32.7	74.83	-999.0			3.7	[32.6667, 32.6667]	[74.8333, 74.8333]	SCHROEDER		42055.0	0-20600-0-42055	2015	2021				0-20000-0-42056	bishna	['85', '38', '106', '107']
-42056									[32.6667, 32.6667]	[74.8333, 74.8333]	WMO			0-20700-0-nan	2015	2021				0-20000-0-42056	bishna	['85', '38', '106', '107']

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-67401									[-79.25, -79.25]	[-147.5, -147.5]	OSCAR				19601105	19620206				0-20300-0-67401	None	[36, 85, 106, 107]
-67401	67401	LITTLE ROCKFORD	-79.25	-147.5	651.1			0.0	[-79.25, -79.25]	[-147.5, -147.5]	IGRA2			0-20300-0-67401	19601105	19620206	1960.0	1962.0	True	0-20300-0-67401	None	[36, 85, 106, 107]
-67401	67401	LITTLE ROCKFORD	-79.25	-147.5	651.0528			0.0	[-79.25, -79.25]	[-147.5, -147.5]	WBAN			0-20500-0-67401	19601105	19620206	19601001.0	19620228.0		0-20300-0-67401	None	[36, 85, 106, 107]
-67401									[-79.25, -79.25]	[-147.5, -147.5]	CHUAN			0-20400-0-nan	19601105	19620206				0-20300-0-67401	None	[36, 85, 106, 107]
-67401									[-79.25, -79.25]	[-147.5, -147.5]	SCHROEDER			0-20600-0-nan	19601105	19620206				0-20300-0-67401	None	[36, 85, 106, 107]
-67401									[-79.25, -79.25]	[-147.5, -147.5]	WMO			0-20700-0-nan	19601105	19620206				0-20300-0-67401	None	[36, 85, 106, 107]

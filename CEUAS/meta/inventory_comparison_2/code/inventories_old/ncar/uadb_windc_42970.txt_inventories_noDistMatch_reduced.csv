@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-42970	42970	CUTTACK	20.466666666666665	85.93333333333334	26.5	20 28 00N	085 56 00E	36.9	[20.8, 20.8]	[85.93, 85.93]	OSCAR	0-20000-0-42970		0-20000-0-42970	19531231	19600623	999.0	999.0	False		bhuban	['38', '85', '106', '107']
-42970	42970	CUTTACK	20.48	85.87	26.0			36.0	[20.8, 20.8]	[85.93, 85.93]	IGRA2			0-20300-0-42970	19531231	19600623	1945.0	1946.0	True		bhuban	['38', '85', '106', '107']
-42970									[20.8, 20.8]	[85.93, 85.93]	WBAN			0-20500-0-nan	19531231	19600623					bhuban	['38', '85', '106', '107']
-42970									[20.8, 20.8]	[85.93, 85.93]	CHUAN			0-20400-0-nan	19531231	19600623					bhuban	['38', '85', '106', '107']
-42970									[20.8, 20.8]	[85.93, 85.93]	SCHROEDER			0-20600-0-nan	19531231	19600623					bhuban	['38', '85', '106', '107']
-42970	42970	CUTTACK                  	20.466666666666665	85.93333333333334	26.0			36.9	[20.8, 20.8]	[85.93, 85.93]	WMO		42970	0-20700-0-42970	19531231	19600623					bhuban	['38', '85', '106', '107']

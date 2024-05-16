@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-78061	78061	WEST END, GRAND BAHAMA	26.7	-78.96666666666667	4.0	26 42 00N	078 58 00W	0.3	[26.7, 26.7]	[-78.97, -78.97]	OSCAR	0-20000-0-78061		0-20000-0-78061	19880228	20000428	999.0	999.0	False	0-20000-0-78061	freeport	[104, 105, 106, 107, 117]
-78061									[26.7, 26.7]	[-78.97, -78.97]	IGRA2			0-20300-0-nan	19880228	20000428				0-20000-0-78061	freeport	[104, 105, 106, 107, 117]
-78061									[26.7, 26.7]	[-78.97, -78.97]	WBAN			0-20500-0-nan	19880228	20000428				0-20000-0-78061	freeport	[104, 105, 106, 107, 117]
-78061									[26.7, 26.7]	[-78.97, -78.97]	CHUAN			0-20400-0-nan	19880228	20000428				0-20000-0-78061	freeport	[104, 105, 106, 107, 117]
-78061									[26.7, 26.7]	[-78.97, -78.97]	SCHROEDER			0-20600-0-nan	19880228	20000428				0-20000-0-78061	freeport	[104, 105, 106, 107, 117]
-78061									[26.7, 26.7]	[-78.97, -78.97]	WMO			0-20700-0-nan	19880228	20000428				0-20000-0-78061	freeport	[104, 105, 106, 107, 117]

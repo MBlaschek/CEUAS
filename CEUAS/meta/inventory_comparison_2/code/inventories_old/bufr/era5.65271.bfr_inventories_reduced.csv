@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-65271	65271	MAKURDI	7.733333333333333	8.533333333333333	112.9	07 44 00N	008 32 00E	8.2	[7.7, 7.7]	[8.6, 8.6]	OSCAR	0-20000-0-65271		0-20000-0-65271	19641226	19740928	999.0	999.0	False	0-20000-0-65271	makurdi	[36, 85, 106, 107]
-65271									[7.7, 7.7]	[8.6, 8.6]	IGRA2			0-20300-0-nan	19641226	19740928				0-20000-0-65271	makurdi	[36, 85, 106, 107]
-65271									[7.7, 7.7]	[8.6, 8.6]	WBAN			0-20500-0-nan	19641226	19740928				0-20000-0-65271	makurdi	[36, 85, 106, 107]
-65271									[7.7, 7.7]	[8.6, 8.6]	CHUAN			0-20400-0-nan	19641226	19740928				0-20000-0-65271	makurdi	[36, 85, 106, 107]
-65271									[7.7, 7.7]	[8.6, 8.6]	SCHROEDER			0-20600-0-nan	19641226	19740928				0-20000-0-65271	makurdi	[36, 85, 106, 107]
-65271	65271	MAKURDI                  	7.683333333333334	8.616666666666667	-999.0			2.6	[7.7, 7.7]	[8.6, 8.6]	WMO		65271	0-20700-0-65271	19641226	19740928				0-20000-0-65271	makurdi	[36, 85, 106, 107]

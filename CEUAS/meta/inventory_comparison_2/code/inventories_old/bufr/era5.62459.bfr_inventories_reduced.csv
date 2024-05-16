@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-62459	62459	EL TOR	28.20888888888889	33.64555555555555	14.0	28 12 32N	033 38 44E	3.4	[28.23, 28.23]	[33.62, 33.62]	OSCAR	0-20000-0-62459		0-20000-0-62459	19650430	19670430	999.0	999.0	False	0-20000-0-62459	hurghada	[36, 85, 106, 107]
-62459									[28.23, 28.23]	[33.62, 33.62]	IGRA2			0-20300-0-nan	19650430	19670430				0-20000-0-62459	hurghada	[36, 85, 106, 107]
-62459									[28.23, 28.23]	[33.62, 33.62]	WBAN			0-20500-0-nan	19650430	19670430				0-20000-0-62459	hurghada	[36, 85, 106, 107]
-62459									[28.23, 28.23]	[33.62, 33.62]	CHUAN			0-20400-0-nan	19650430	19670430				0-20000-0-62459	hurghada	[36, 85, 106, 107]
-62459									[28.23, 28.23]	[33.62, 33.62]	SCHROEDER			0-20600-0-nan	19650430	19670430				0-20000-0-62459	hurghada	[36, 85, 106, 107]
-62459	62459	EL-TOR                   	28.23333333333333	33.61666666666667	-999.0			0.5	[28.23, 28.23]	[33.62, 33.62]	WMO		62459	0-20700-0-62459	19650430	19670430				0-20000-0-62459	hurghada	[36, 85, 106, 107]

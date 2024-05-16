@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:89022	89022	HALLEY	-75.57138888888889	-25.503888888888888	30.0	75 34 17S	025 30 14W	31.1	[-75.52, -75.52]	[-26.6, -26.6]	OSCAR	0-20000-0-89022		0-20000-0-89022	19570701	19621029	999.0	999.0	True	0-20300-0-89022	None	[85, 117]
-1:89022	89022	HALLEY	-75.445	-26.2181	30.0			13.6	[-75.52, -75.52]	[-26.6, -26.6]	IGRA2			0-20300-0-89022	19570701	19621029	1957.0	2021.0	True	0-20300-0-89022	None	[85, 117]
-1:89022									[-75.52, -75.52]	[-26.6, -26.6]	WBAN			0-20500-0-nan	19570701	19621029				0-20300-0-89022	None	[85, 117]
-1:89022									[-75.52, -75.52]	[-26.6, -26.6]	CHUAN			0-20400-0-nan	19570701	19621029				0-20300-0-89022	None	[85, 117]
-1:89022	89022	Halley Bay (operated by UK), Antarctica	-75.52	-26.6	-999.0			0.0	[-75.52, -75.52]	[-26.6, -26.6]	SCHROEDER		89022	0-20600-0-89022	19570701	19621029				0-20300-0-89022	None	[85, 117]
-1:89022	89023	(made up station ID) Halley Bay ozonesondes (operated by UK), Antarctica	-75.5	-26.6	-999.0			2.2	[-75.52, -75.52]	[-26.6, -26.6]	SCHROEDER		89023	0-20600-0-89023	19570701	19621029				0-20300-0-89022	None	[85, 117]
-1:89022	89022	HALLEY BAY               	-75.5	-26.65	-999.0			2.6	[-75.52, -75.52]	[-26.6, -26.6]	WMO		89022	0-20700-0-89022	19570701	19621029				0-20300-0-89022	None	[85, 117]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-64156	64156	KALIMA	-2.6	26.55		02 36 00S	026 33 00E	5.6	[-2.6, -2.6]	[26.6, 26.6]	OSCAR	0-20000-0-64156		0-20000-0-64156	19740926	19740926	999.0	999.0	False	0-20000-0-64156	kindu	[36, 85, 106, 107]
-64156									[-2.6, -2.6]	[26.6, 26.6]	IGRA2			0-20300-0-nan	19740926	19740926				0-20000-0-64156	kindu	[36, 85, 106, 107]
-64156									[-2.6, -2.6]	[26.6, 26.6]	WBAN			0-20500-0-nan	19740926	19740926				0-20000-0-64156	kindu	[36, 85, 106, 107]
-64156									[-2.6, -2.6]	[26.6, 26.6]	CHUAN			0-20400-0-nan	19740926	19740926				0-20000-0-64156	kindu	[36, 85, 106, 107]
-64156									[-2.6, -2.6]	[26.6, 26.6]	SCHROEDER			0-20600-0-nan	19740926	19740926				0-20000-0-64156	kindu	[36, 85, 106, 107]
-64156									[-2.6, -2.6]	[26.6, 26.6]	WMO			0-20700-0-nan	19740926	19740926				0-20000-0-64156	kindu	[36, 85, 106, 107]

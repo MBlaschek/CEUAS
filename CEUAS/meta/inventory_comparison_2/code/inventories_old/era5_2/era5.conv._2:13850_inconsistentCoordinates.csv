@@ -1,9 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	GCOS	ASECNA	Frequency per day	SOP frequency	IOP frequency	Upgraded ground station	2006 Success Rate (%)	Best 2006 Monthly success (%)	min_date	max_date	files	conv_lat	conv_lon	COUNTRY	#_OF _SOUNDINGS	YEARS	kind
-0	0		SELMA CRAIG AFB	32.35	-86.9833	63.1				13850	1941.0	1945.0	True	0.3		0-20300-0-13850	IGRA2	selma	7.4	32.4072222	-87.02111109999998	USW00013850																					inconsistentCoordinates
-0	0		CRAIG AFB	32.35	-86.98	49.9872				13850	19410701.0	19540101.0		0.0		0-20500-0-13850	WBAN	selma	7.4	32.4072222	-87.02111109999998																						inconsistentCoordinates
-1	1		CRAIG AFB	32.35	-86.98	49.9872				13850	19670101.0	19760101.0		0.0		0-20500-0-13850	WBAN	selma	7.4	32.4072222	-87.02111109999998																						inconsistentCoordinates
-2	2		CRAIG AFB	32.35	-86.98	63.0936				13850	19540101.0	19670101.0		0.0		0-20500-0-13850	WBAN	selma	7.4	32.4072222	-87.02111109999998																						inconsistentCoordinates
-3	3		CRAIG AFB	32.35	-86.98	49.9872				13850	19410501.0	19410701.0		0.0		0-20500-0-13850	WBAN	selma	7.4	32.4072222	-87.02111109999998																						inconsistentCoordinates
-4	4		CRAIG AFB	32.33	-86.98	49.9872				13850	19770831.0	19771231.0		2.2		0-20500-0-13850	WBAN	selma	7.4	32.4072222	-87.02111109999998																						inconsistentCoordinates
-5	5		CRAIG AFB	32.33	-86.98	49.9872				13850	19760101.0	19770831.0		2.2		0-20500-0-13850	WBAN	selma	7.4	32.4072222	-87.02111109999998																						inconsistentCoordinates
-6	6		SELMA 13WNW	32.46	-87.24	57.912000000000006				63858	20050526.0	99991231.0		27.3		0-20500-0-63858	WBAN	selma	7.4	32.4072222	-87.02111109999998																						inconsistentCoordinates

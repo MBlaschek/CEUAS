@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	dum duma	0.5	27.566667	95.566667						[27.57, 27.57]	[95.57, 95.57]	era5.1761.conv.2:32902	era5_1761	19440221	19450924	2:32902	0-20500-0-32902	[106, 107]
-0	0															0-20300-0-nan	IGRA2	dum duma	0.5	27.566667	95.566667						[27.57, 27.57]	[95.57, 95.57]	era5.1761.conv.2:32902	era5_1761	19440221	19450924	2:32902	0-20500-0-32902	[106, 107]
-0	0		SOOKERATING	27.57	95.57	130.1496				32902.0	19430201.0	19451031.0		0.0		0-20500-0-32902	WBAN	dum duma	0.5	27.566667	95.566667						[27.57, 27.57]	[95.57, 95.57]	era5.1761.conv.2:32902	era5_1761	19440221	19450924	2:32902	0-20500-0-32902	[106, 107]
-0	0															0-20400-0-nan	CHUAN	dum duma	0.5	27.566667	95.566667						[27.57, 27.57]	[95.57, 95.57]	era5.1761.conv.2:32902	era5_1761	19440221	19450924	2:32902	0-20500-0-32902	[106, 107]
-0	0															0-20600-0-nan	SCHROEDER	dum duma	0.5	27.566667	95.566667						[27.57, 27.57]	[95.57, 95.57]	era5.1761.conv.2:32902	era5_1761	19440221	19450924	2:32902	0-20500-0-32902	[106, 107]
-0	0															0-20700-0-nan	WMO	dum duma	0.5	27.566667	95.566667						[27.57, 27.57]	[95.57, 95.57]	era5.1761.conv.2:32902	era5_1761	19440221	19450924	2:32902	0-20500-0-32902	[106, 107]

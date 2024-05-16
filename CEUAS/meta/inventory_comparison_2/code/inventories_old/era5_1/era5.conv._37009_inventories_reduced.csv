@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-37009	37009	DZHUBGA	44.333333333333336	38.71666666666667	22.9	44 20 00N	038 43 00E	0.5	[44.33, 44.33]	[38.72, 38.72]	OSCAR	0-20000-0-37009		0-20000-0-37009	19810801	19810801	999.0	999.0	False	0-20000-0-37009	novomikhaylovskiy	[104, 105, 106, 107, 117]
-37009									[44.33, 44.33]	[38.72, 38.72]	IGRA2			0-20300-0-nan	19810801	19810801				0-20000-0-37009	novomikhaylovskiy	[104, 105, 106, 107, 117]
-37009									[44.33, 44.33]	[38.72, 38.72]	WBAN			0-20500-0-nan	19810801	19810801				0-20000-0-37009	novomikhaylovskiy	[104, 105, 106, 107, 117]
-37009									[44.33, 44.33]	[38.72, 38.72]	CHUAN			0-20400-0-nan	19810801	19810801				0-20000-0-37009	novomikhaylovskiy	[104, 105, 106, 107, 117]
-37009									[44.33, 44.33]	[38.72, 38.72]	SCHROEDER			0-20600-0-nan	19810801	19810801				0-20000-0-37009	novomikhaylovskiy	[104, 105, 106, 107, 117]
-37009									[44.33, 44.33]	[38.72, 38.72]	WMO			0-20700-0-nan	19810801	19810801				0-20000-0-37009	novomikhaylovskiy	[104, 105, 106, 107, 117]
-37009									[44.33, 44.33]	[38.72, 38.72]	AMMA			0-20800-0-nan	19810801	19810801				0-20000-0-37009	novomikhaylovskiy	[104, 105, 106, 107, 117]
-37009									[44.33, 44.33]	[38.72, 38.72]	HARA			0-20111-0-nan	19810801	19810801				0-20000-0-37009	novomikhaylovskiy	[104, 105, 106, 107, 117]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:20274									[77.5, 77.5]	[82.23, 82.23]	OSCAR				19570918	19791231				0-20300-0-20274	None	[38, 85, 106, 107, 117]
-1:20274	20274	OSTROV UEDINENIA	77.5	82.23	23.0			0.0	[77.5, 77.5]	[82.23, 82.23]	IGRA2			0-20300-0-20274	19570918	19791231	1957.0	1991.0	True	0-20300-0-20274	None	[38, 85, 106, 107, 117]
-1:20274									[77.5, 77.5]	[82.23, 82.23]	WBAN			0-20500-0-nan	19570918	19791231				0-20300-0-20274	None	[38, 85, 106, 107, 117]
-1:20274									[77.5, 77.5]	[82.23, 82.23]	CHUAN			0-20400-0-nan	19570918	19791231				0-20300-0-20274	None	[38, 85, 106, 107, 117]
-1:20274	20274	Ostrov Uedineniya, Russia	77.5	82.23	-999.0			0.0	[77.5, 77.5]	[82.23, 82.23]	SCHROEDER		20274	0-20600-0-20274	19570918	19791231				0-20300-0-20274	None	[38, 85, 106, 107, 117]
-1:20274	20274	OSTROV UEDINENIJA        	77.5	82.23333333333333	-999.0			0.1	[77.5, 77.5]	[82.23, 82.23]	WMO		20274	0-20700-0-20274	19570918	19791231				0-20300-0-20274	None	[38, 85, 106, 107, 117]

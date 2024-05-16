@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:23031									[32.33, 32.33]	[-107.3, -107.3]	OSCAR				19280629	19350930					deming	[106, 107]
-2:23031	23031	LORDSBURG AAF	32.3333	-108.7	1300.0			131.8	[32.33, 32.33]	[-107.3, -107.3]	IGRA2			0-20300-0-23031	19280629	19350930	1929.0	1935.0	True		deming	[106, 107]
-2:23031									[32.33, 32.33]	[-107.3, -107.3]	WBAN			0-20500-0-nan	19280629	19350930					deming	[106, 107]
-2:23031									[32.33, 32.33]	[-107.3, -107.3]	CHUAN			0-20400-0-nan	19280629	19350930					deming	[106, 107]
-2:23031									[32.33, 32.33]	[-107.3, -107.3]	SCHROEDER			0-20600-0-nan	19280629	19350930					deming	[106, 107]
-2:23031									[32.33, 32.33]	[-107.3, -107.3]	WMO			0-20700-0-nan	19280629	19350930					deming	[106, 107]

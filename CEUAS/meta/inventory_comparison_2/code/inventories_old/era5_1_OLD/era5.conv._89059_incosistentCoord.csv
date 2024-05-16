@@ -1,2 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0	0-20000-0-89059	BASE BERNARDO O'HIGGINS	-63.32083333333334	-57.89944444444444	10.0	Surface land meteorological station (SYNOP), CLIMAT(C), GOS, ANTON	63 19 15S	057 53 58W	89059	999.0	999.0	False	0.1		OSCAR	0-20000-0-89059	None	None	None	None					

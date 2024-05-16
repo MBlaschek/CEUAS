@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:14924									[48.97, 48.97]	[-96.77, -96.77]	OSCAR				19310820	19340531				0-20500-0-4934	winnipeg	[106, 107]
-2:14924	14924	PEMBINA	48.95	-97.25	241.1			35.2	[48.97, 48.97]	[-96.77, -96.77]	IGRA2			0-20300-0-14924	19310820	19340531	1931.0	1934.0	True	0-20500-0-4934	winnipeg	[106, 107]
-2:14924	4934	HALLOCK MUNICIPAL AIRPORT	48.75	-96.94	249.6312			27.5	[48.97, 48.97]	[-96.77, -96.77]	WBAN			0-20500-0-4934	19310820	19340531	19920401.0	99991231.0		0-20500-0-4934	winnipeg	[106, 107]
-2:14924									[48.97, 48.97]	[-96.77, -96.77]	CHUAN			0-20400-0-nan	19310820	19340531				0-20500-0-4934	winnipeg	[106, 107]
-2:14924									[48.97, 48.97]	[-96.77, -96.77]	SCHROEDER			0-20600-0-nan	19310820	19340531				0-20500-0-4934	winnipeg	[106, 107]
-2:14924									[48.97, 48.97]	[-96.77, -96.77]	WMO			0-20700-0-nan	19310820	19340531				0-20500-0-4934	winnipeg	[106, 107]

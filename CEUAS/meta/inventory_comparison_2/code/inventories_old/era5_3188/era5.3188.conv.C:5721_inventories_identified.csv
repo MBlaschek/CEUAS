@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	kushnarenkovo	16.0	55.105	55.350833						[55.1, 55.1]	[55.1, 55.1]	era5.3188.conv.C:5721	era5_3188	19281106	19281106	C:5721	0-20400-0-5721	[106, 107]
-0	0															0-20300-0-nan	IGRA2	kushnarenkovo	16.0	55.105	55.350833						[55.1, 55.1]	[55.1, 55.1]	era5.3188.conv.C:5721	era5_3188	19281106	19281106	C:5721	0-20400-0-5721	[106, 107]
-0	0															0-20500-0-nan	WBAN	kushnarenkovo	16.0	55.105	55.350833						[55.1, 55.1]	[55.1, 55.1]	era5.3188.conv.C:5721	era5_3188	19281106	19281106	C:5721	0-20400-0-5721	[106, 107]
-0	0		Orenburg	55.1	55.1	120				5721.0	-999-999	-999-999		0.0		0-20400-0-5721	CHUAN	kushnarenkovo	16.0	55.105	55.350833		-999				[55.1, 55.1]	[55.1, 55.1]	era5.3188.conv.C:5721	era5_3188	19281106	19281106	C:5721	0-20400-0-5721	[106, 107]
-0	0															0-20600-0-nan	SCHROEDER	kushnarenkovo	16.0	55.105	55.350833						[55.1, 55.1]	[55.1, 55.1]	era5.3188.conv.C:5721	era5_3188	19281106	19281106	C:5721	0-20400-0-5721	[106, 107]
-0	0															0-20700-0-nan	WMO	kushnarenkovo	16.0	55.105	55.350833						[55.1, 55.1]	[55.1, 55.1]	era5.3188.conv.C:5721	era5_3188	19281106	19281106	C:5721	0-20400-0-5721	[106, 107]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:68438	68438	KIMBERLEY	-28.80611111111111	24.76972222222222	1196.0	28 48 22S	024 46 11E	1.2	[-28.8, -28.8]	[24.76, 24.76]	OSCAR	0-20000-0-68438		0-20000-0-68438	19671205	19721230	999.0	999.0	False	0-20000-0-68438	kimberley	[106, 107]
-1:68438	68438	KIMBERLEY	-28.8	24.767	1196.0			0.7	[-28.8, -28.8]	[24.76, 24.76]	IGRA2			0-20300-0-68438	19671205	19721230	1973.0	1994.0	True	0-20000-0-68438	kimberley	[106, 107]
-1:68438									[-28.8, -28.8]	[24.76, 24.76]	WBAN			0-20500-0-nan	19671205	19721230				0-20000-0-68438	kimberley	[106, 107]
-1:68438									[-28.8, -28.8]	[24.76, 24.76]	CHUAN			0-20400-0-nan	19671205	19721230				0-20000-0-68438	kimberley	[106, 107]
-1:68438	68438	FAKM Kimberley - B. J. Vorster AP, South Africa	-28.8	24.77	-999.0			1.0	[-28.8, -28.8]	[24.76, 24.76]	SCHROEDER		68438	0-20600-0-68438	19671205	19721230				0-20000-0-68438	kimberley	[106, 107]
-1:68438	68438	KIMBERLEY                	-28.8	24.766666666666666	1197.0			0.7	[-28.8, -28.8]	[24.76, 24.76]	WMO		68438	0-20700-0-68438	19671205	19721230				0-20000-0-68438	kimberley	[106, 107]

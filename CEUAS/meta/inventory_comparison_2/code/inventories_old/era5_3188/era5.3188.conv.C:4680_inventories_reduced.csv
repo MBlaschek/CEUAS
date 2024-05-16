@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:4680	38328	SHYMKENT	42.34777777777778	69.71000000000001	604.0	42 20 52N	069 42 36E	10.6	[42.28, 42.28]	[69.62, 69.62]	OSCAR	0-20000-0-38328		0-20000-0-38328	19600902	19600925	999	999	False	0-20000-0-38328	shymkent	[38, 39, 85, 106, 107, 117]
-C:4680									[42.28, 42.28]	[69.62, 69.62]	IGRA2			0-20300-0-nan	19600902	19600925				0-20000-0-38328	shymkent	[38, 39, 85, 106, 107, 117]
-C:4680									[42.28, 42.28]	[69.62, 69.62]	WBAN			0-20500-0-nan	19600902	19600925				0-20000-0-38328	shymkent	[38, 39, 85, 106, 107, 117]
-C:4680	4680	Chimkent	42.28	69.62	-999			0.0	[42.28, 42.28]	[69.62, 69.62]	CHUAN		-999	0-20400-0-4680	19600902	19600925	196009	196009		0-20000-0-38328	shymkent	[38, 39, 85, 106, 107, 117]
-C:4680									[42.28, 42.28]	[69.62, 69.62]	SCHROEDER			0-20600-0-nan	19600902	19600925				0-20000-0-38328	shymkent	[38, 39, 85, 106, 107, 117]
-C:4680									[42.28, 42.28]	[69.62, 69.62]	WMO			0-20700-0-nan	19600902	19600925				0-20000-0-38328	shymkent	[38, 39, 85, 106, 107, 117]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-91541	91541	SANTA CRUZ (91541-0)	-10.7	165.8	24.0	10 42 00S	165 48 00E	0.0	[-10.7, -10.7]	[165.8, 165.8]	OSCAR	0-20000-0-91541		0-20000-0-91541	19921112	19930222	999.0	999.0	False	0-20000-0-91541	luganville	['38', '85', '106', '107']
-91541	91541	SANTA CRUZ ISLAND	-10.7	165.8	24.0			0.0	[-10.7, -10.7]	[165.8, 165.8]	IGRA2			0-20300-0-91541	19921112	19930222	1992.0	1993.0	True	0-20000-0-91541	luganville	['38', '85', '106', '107']
-91541									[-10.7, -10.7]	[165.8, 165.8]	WBAN			0-20500-0-nan	19921112	19930222				0-20000-0-91541	luganville	['38', '85', '106', '107']
-91541									[-10.7, -10.7]	[165.8, 165.8]	CHUAN			0-20400-0-nan	19921112	19930222				0-20000-0-91541	luganville	['38', '85', '106', '107']
-91541									[-10.7, -10.7]	[165.8, 165.8]	SCHROEDER			0-20600-0-nan	19921112	19930222				0-20000-0-91541	luganville	['38', '85', '106', '107']
-91541									[-10.7, -10.7]	[165.8, 165.8]	WMO			0-20700-0-nan	19921112	19930222				0-20000-0-91541	luganville	['38', '85', '106', '107']

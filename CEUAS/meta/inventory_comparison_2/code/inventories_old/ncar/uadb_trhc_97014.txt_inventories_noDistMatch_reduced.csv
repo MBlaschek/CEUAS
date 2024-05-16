@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-97014	97014	MENADO/ SAM RATULANGI	1.5458333333333332	124.92277777777778	80.0	01 32 45N	124 55 22E	222.9	[1.53, 1.53]	[122.92, 122.92]	OSCAR	0-20000-0-97014		0-20000-0-97014	20180101	20211231	999.0	999.0	True		gorontalo	['38', '85', '106', '107']
-97014	97014	MENADO/ SAM RATULANGI	1.5333	124.9167	80.0			222.2	[1.53, 1.53]	[122.92, 122.92]	IGRA2			0-20300-0-97014	20180101	20211231	1973.0	2021.0	True		gorontalo	['38', '85', '106', '107']
-97014									[1.53, 1.53]	[122.92, 122.92]	WBAN			0-20500-0-nan	20180101	20211231					gorontalo	['38', '85', '106', '107']
-97014									[1.53, 1.53]	[122.92, 122.92]	CHUAN			0-20400-0-nan	20180101	20211231					gorontalo	['38', '85', '106', '107']
-97014									[1.53, 1.53]	[122.92, 122.92]	SCHROEDER			0-20600-0-nan	20180101	20211231					gorontalo	['38', '85', '106', '107']
-97014	97014	MENADO                   	1.5333333333333332	124.91666666666669	-999.0			222.2	[1.53, 1.53]	[122.92, 122.92]	WMO		97014	0-20700-0-97014	20180101	20211231					gorontalo	['38', '85', '106', '107']

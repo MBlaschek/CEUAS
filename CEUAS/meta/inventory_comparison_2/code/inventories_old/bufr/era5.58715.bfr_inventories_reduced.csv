@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-58715	58715	NANCHENG	27.583333333333332	116.65	82.0	27 35 00N	116 39 00E	6.2	[27.55, 27.55]	[116.6, 116.6]	OSCAR	0-20000-0-58715		0-20000-0-58715	19580902	19591231	999.0	999.0	False	0-20000-0-58715	linchuan	[36, 85, 106, 107]
-58715									[27.55, 27.55]	[116.6, 116.6]	IGRA2			0-20300-0-nan	19580902	19591231				0-20000-0-58715	linchuan	[36, 85, 106, 107]
-58715									[27.55, 27.55]	[116.6, 116.6]	WBAN			0-20500-0-nan	19580902	19591231				0-20000-0-58715	linchuan	[36, 85, 106, 107]
-58715									[27.55, 27.55]	[116.6, 116.6]	CHUAN			0-20400-0-nan	19580902	19591231				0-20000-0-58715	linchuan	[36, 85, 106, 107]
-58715									[27.55, 27.55]	[116.6, 116.6]	SCHROEDER			0-20600-0-nan	19580902	19591231				0-20000-0-58715	linchuan	[36, 85, 106, 107]
-58715	58715	NANCHENG                 	27.58333333333333	116.65	-999.0			6.2	[27.55, 27.55]	[116.6, 116.6]	WMO		58715	0-20700-0-58715	19580902	19591231				0-20000-0-58715	linchuan	[36, 85, 106, 107]

@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-48650	48650	KUALA LUMPUR INTERNATIONAL AIRPORT (KLIA)	2.716666666666667	101.7	17.0	02 43 00N	101 42 00E	0.0	[2.7167, 2.7167]	[101.7, 101.7]	OSCAR	0-20000-0-48650		0-20000-0-48650	1999	2021	999.0	999.0	True	0-20000-0-48650	sungai pelek	['85', '38', '106', '107']
-48650	48650	KUALA LUMPUR INTERNATIONAL AIR	2.7167	101.7	21.0			0.0	[2.7167, 2.7167]	[101.7, 101.7]	IGRA2			0-20300-0-48650	1999	2021	1999.0	2021.0	True	0-20000-0-48650	sungai pelek	['85', '38', '106', '107']
-48650									[2.7167, 2.7167]	[101.7, 101.7]	WBAN			0-20500-0-nan	1999	2021				0-20000-0-48650	sungai pelek	['85', '38', '106', '107']
-48650									[2.7167, 2.7167]	[101.7, 101.7]	CHUAN			0-20400-0-nan	1999	2021				0-20000-0-48650	sungai pelek	['85', '38', '106', '107']
-48650	48646	(made up station ID) Kuala Lumpur (Sepang - Kuala Lumpur Intl. AP) SHADOZ ozonesonde site, Malaysia	2.73	101.7	-999.0			1.5	[2.7167, 2.7167]	[101.7, 101.7]	SCHROEDER		48646.0	0-20600-0-48646	1999	2021				0-20000-0-48650	sungai pelek	['85', '38', '106', '107']
-48650	48650	WMKK Kuala Lumpur (Sepang - Kuala Lumpur Intl. AP), Malaysia	2.7314	101.7029	-999.0			1.7	[2.7167, 2.7167]	[101.7, 101.7]	SCHROEDER		48650.0	0-20600-0-48650	1999	2021				0-20000-0-48650	sungai pelek	['85', '38', '106', '107']
-48650									[2.7167, 2.7167]	[101.7, 101.7]	WMO			0-20700-0-nan	1999	2021				0-20000-0-48650	sungai pelek	['85', '38', '106', '107']

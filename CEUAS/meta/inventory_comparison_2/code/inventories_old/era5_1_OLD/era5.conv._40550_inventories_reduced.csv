@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-40550	40550	ABDALY	30.065833333333334	47.690555555555555	24.79	30 03 57N	047 41 26E	1.8	[30.08, 30.08]	[47.7, 47.7]	OSCAR	0-20000-0-40550		0-20000-0-40550	19831130	19831130	999.0	999.0	False	0-20000-0-40550	khorramshahr	[104, 105, 106, 107, 117]
-40550									[30.08, 30.08]	[47.7, 47.7]	IGRA2			0-20300-0-nan	19831130	19831130				0-20000-0-40550	khorramshahr	[104, 105, 106, 107, 117]
-40550									[30.08, 30.08]	[47.7, 47.7]	WBAN			0-20500-0-nan	19831130	19831130				0-20000-0-40550	khorramshahr	[104, 105, 106, 107, 117]
-40550									[30.08, 30.08]	[47.7, 47.7]	CHUAN			0-20400-0-nan	19831130	19831130				0-20000-0-40550	khorramshahr	[104, 105, 106, 107, 117]
-40550									[30.08, 30.08]	[47.7, 47.7]	SCHROEDER			0-20600-0-nan	19831130	19831130				0-20000-0-40550	khorramshahr	[104, 105, 106, 107, 117]
-40550									[30.08, 30.08]	[47.7, 47.7]	WMO			0-20700-0-nan	19831130	19831130				0-20000-0-40550	khorramshahr	[104, 105, 106, 107, 117]

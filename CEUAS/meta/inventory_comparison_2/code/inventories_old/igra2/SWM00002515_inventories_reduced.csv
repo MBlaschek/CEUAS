@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-02515	02515	TORPABRON	58.19972222222222	12.154166666666667	20.0	58 11 59N	012 09 15E	1.9	[58.183, 58.183]	[12.15, 12.15]	OSCAR	0-20000-0-02515		0-20000-0-02515	1977	1977	999.0	999.0	False	0-20000-0-02515	trollhattan	['85', '38', '106', '107']
-02515	02515	TORPABRON	58.183	12.15	20.0			0.0	[58.183, 58.183]	[12.15, 12.15]	IGRA2			0-20300-0-02515	1977	1977	1977.0	1977.0	True	0-20000-0-02515	trollhattan	['85', '38', '106', '107']
-02515									[58.183, 58.183]	[12.15, 12.15]	WBAN			0-20500-0-nan	1977	1977				0-20000-0-02515	trollhattan	['85', '38', '106', '107']
-02515									[58.183, 58.183]	[12.15, 12.15]	CHUAN			0-20400-0-nan	1977	1977				0-20000-0-02515	trollhattan	['85', '38', '106', '107']
-02515									[58.183, 58.183]	[12.15, 12.15]	SCHROEDER			0-20600-0-nan	1977	1977				0-20000-0-02515	trollhattan	['85', '38', '106', '107']
-02515	02515	ASBRACKA-TORPABRON V     	58.18333333333333	12.15	-999.0			0.0	[58.183, 58.183]	[12.15, 12.15]	WMO		02515	0-20700-0-02515	1977	1977				0-20000-0-02515	trollhattan	['85', '38', '106', '107']

@@ -1,3 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0	0-20000-0-54324	CHAOYANG	41.55	120.45	176.0	Surface land meteorological station (SYNOP), GOS	41 33 00N	120 27 00E	54324	999.0	999.0	False	3.3		OSCAR	0-20000-0-54324	beipiao	31.4	41.791944	120.779167					
-0	0		CHAOYANG                 	41.55	120.45	-999.0				54324				3.3		WMO	0-20700-0-54324	beipiao	31.4	41.791944	120.779167		54324	4466.0		

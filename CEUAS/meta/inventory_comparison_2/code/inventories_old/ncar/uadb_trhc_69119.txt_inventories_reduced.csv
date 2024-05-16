@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-69119									[33.77, 33.77]	[42.42, 42.42]	OSCAR				20040210	20110905				0-20600-0-69119	hit	['38', '85', '106', '107']
-69119									[33.77, 33.77]	[42.42, 42.42]	IGRA2			0-20300-0-nan	20040210	20110905				0-20600-0-69119	hit	['38', '85', '106', '107']
-69119									[33.77, 33.77]	[42.42, 42.42]	WBAN			0-20500-0-nan	20040210	20110905				0-20600-0-69119	hit	['38', '85', '106', '107']
-69119									[33.77, 33.77]	[42.42, 42.42]	CHUAN			0-20400-0-nan	20040210	20110905				0-20600-0-69119	hit	['38', '85', '106', '107']
-69119	69119.0	ORAA Al Asad Air Base, Iraq (near Khan al Baghdadi)	33.77	42.42	-999.0			0.0	[33.77, 33.77]	[42.42, 42.42]	SCHROEDER		69119.0	0-20600-0-69119	20040210	20110905				0-20600-0-69119	hit	['38', '85', '106', '107']
-69119									[33.77, 33.77]	[42.42, 42.42]	WMO			0-20700-0-nan	20040210	20110905				0-20600-0-69119	hit	['38', '85', '106', '107']

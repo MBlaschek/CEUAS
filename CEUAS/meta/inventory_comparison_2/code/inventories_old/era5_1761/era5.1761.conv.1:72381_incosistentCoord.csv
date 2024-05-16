@@ -1,3 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0		EDWARDS AFB	34.9167	-117.9	705.0				72381	1942.0	2021.0	True	161.8		IGRA2	0-20300-0-72381	barstow	81.5	34.898611100000004	-117.0219444	USM00072381				
-0	0	0-20000-0-72381	EDWARDS AFB, CA.	34.916666666666664	-117.9		Surface land meteorological station (SYNOP), GOS	34 55 00N	117 54 00W	72381	999.0	999.0	False	161.8		OSCAR	0-20000-0-72381	barstow	81.5	34.898611100000004	-117.0219444					

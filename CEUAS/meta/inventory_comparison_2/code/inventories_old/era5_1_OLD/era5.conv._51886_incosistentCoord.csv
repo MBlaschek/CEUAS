@@ -1,5 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0		MANGNAI	38.25	90.85	3139.0				51886	1973.0	2002.0	True	62.7		IGRA2	0-20300-0-51886	korla	508.1	41.759722	86.14694399999998	CHM00051886				
-0	0	0-20000-0-51886	MANGNAI	38.25	90.85	2945.0	Surface land meteorological station (SYNOP), RBSN(S), GOS	38 15 00N	090 51 00E	51886	999.0	999.0	False	62.7		OSCAR	0-20000-0-51886	korla	508.1	41.759722	86.14694399999998					
-0	0		Mangnai Zhen, China	38.35	90.15	-999.0				51886				2.2		SCHROEDER	0-20600-0-51886	korla	508.1	41.759722	86.14694399999998		51886	1527.0	1973-01-01 00:00:00	1987-10-01 00:00:00
-0	0		MANGNAI                  	38.25	90.85	-999.0				51886				62.7		WMO	0-20700-0-51886	korla	508.1	41.759722	86.14694399999998		51886	4391.0		

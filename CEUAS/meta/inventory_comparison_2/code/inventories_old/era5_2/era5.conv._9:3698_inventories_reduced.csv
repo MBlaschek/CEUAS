@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-9:3698									[62.0, 62.0]	[-33.0, -33.0]	OSCAR				19460101	19540630				0-20300-0-99006	None	[85, 117]
-9:3698	99006	OCEAN WEATHER SHIP A	62.0	-33.0	0.0			0.0	[62.0, 62.0]	[-33.0, -33.0]	IGRA2			0-20300-0-99006	19460101	19540630	1946.0	1972.0	True	0-20300-0-99006	None	[85, 117]
-9:3698									[62.0, 62.0]	[-33.0, -33.0]	WBAN			0-20500-0-nan	19460101	19540630				0-20300-0-99006	None	[85, 117]
-9:3698									[62.0, 62.0]	[-33.0, -33.0]	CHUAN			0-20400-0-nan	19460101	19540630				0-20300-0-99006	None	[85, 117]
-9:3698									[62.0, 62.0]	[-33.0, -33.0]	SCHROEDER			0-20600-0-nan	19460101	19540630				0-20300-0-99006	None	[85, 117]
-9:3698									[62.0, 62.0]	[-33.0, -33.0]	WMO			0-20700-0-nan	19460101	19540630				0-20300-0-99006	None	[85, 117]
-9:3698									[62.0, 62.0]	[-33.0, -33.0]	AMMA			0-20800-0-nan	19460101	19540630				0-20300-0-99006	None	[85, 117]
-9:3698									[62.0, 62.0]	[-33.0, -33.0]	HARA			0-20111-0-nan	19460101	19540630				0-20300-0-99006	None	[85, 117]

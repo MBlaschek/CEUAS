@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-94510	94510	CHARLEVILLE AERO	-26.413888888888888	146.25583333333333	303.3	26 24 50S	146 15 21E	0.0	[-26.4139, -26.4139]	[146.2558, 146.2558]	OSCAR	0-20000-0-94510		0-20000-0-94510	1942	2021	999.0	999.0	True	0-20000-0-94510	rockhampton	['85', '38', '106', '107']
-94510	94510	CHARLEVILLE AERO	-26.4139	146.2558	305.7			0.0	[-26.4139, -26.4139]	[146.2558, 146.2558]	IGRA2			0-20300-0-94510	1942	2021	1942.0	2021.0	True	0-20000-0-94510	rockhampton	['85', '38', '106', '107']
-94510	82402	CHARLEVILLE	-26.42	146.27	300.228			1.6	[-26.4139, -26.4139]	[146.2558, 146.2558]	WBAN			0-20500-0-82402	1942	2021	19420701.0	19430331.0		0-20000-0-94510	rockhampton	['85', '38', '106', '107']
-94510									[-26.4139, -26.4139]	[146.2558, 146.2558]	CHUAN			0-20400-0-nan	1942	2021				0-20000-0-94510	rockhampton	['85', '38', '106', '107']
-94510	94510	Charleville Royal Australian Air Force Base, Queensland, Australia	-26.41	146.26	-999.0			0.6	[-26.4139, -26.4139]	[146.2558, 146.2558]	SCHROEDER		94510	0-20600-0-94510	1942	2021				0-20000-0-94510	rockhampton	['85', '38', '106', '107']
-94510	94510	CHARLEVILLE              	-26.416666666666668	146.28333333333333	303.0			2.8	[-26.4139, -26.4139]	[146.2558, 146.2558]	WMO		94510	0-20700-0-94510	1942	2021				0-20000-0-94510	rockhampton	['85', '38', '106', '107']

@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:50404									[-1.07, -1.07]	[-47.62, -47.62]	OSCAR				19450516	19450919				0-20500-0-50404	igarape-acu	[106, 107]
-2:50404									[-1.07, -1.07]	[-47.62, -47.62]	IGRA2			0-20300-0-nan	19450516	19450919				0-20500-0-50404	igarape-acu	[106, 107]
-2:50404	50404.0	IGARAPE	-1.07	-47.62	57.302400000000006			0.0	[-1.07, -1.07]	[-47.62, -47.62]	WBAN			0-20500-0-50404	19450516	19450919	19450501.0	19450930.0		0-20500-0-50404	igarape-acu	[106, 107]
-2:50404	50405.0	IGARAPE	-1.07	-47.62	57.302400000000006			0.0	[-1.07, -1.07]	[-47.62, -47.62]	WBAN			0-20500-0-50405	19450516	19450919	19440101.0	19450331.0		0-20500-0-50404	igarape-acu	[106, 107]
-2:50404									[-1.07, -1.07]	[-47.62, -47.62]	CHUAN			0-20400-0-nan	19450516	19450919				0-20500-0-50404	igarape-acu	[106, 107]
-2:50404									[-1.07, -1.07]	[-47.62, -47.62]	SCHROEDER			0-20600-0-nan	19450516	19450919				0-20500-0-50404	igarape-acu	[106, 107]
-2:50404									[-1.07, -1.07]	[-47.62, -47.62]	WMO			0-20700-0-nan	19450516	19450919				0-20500-0-50404	igarape-acu	[106, 107]

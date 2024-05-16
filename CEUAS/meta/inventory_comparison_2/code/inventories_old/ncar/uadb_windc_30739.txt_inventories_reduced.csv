@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-30739	30739	HORINSK	52.166666666666664	109.785	666.09	52 10 00N	109 47 06E	9.4	[52.1, 52.1]	[109.7, 109.7]	OSCAR	0-20000-0-30739		0-20000-0-30739	19620809	19641231	999.0	999.0	False	0-20000-0-30739	khilok	['38', '85', '106', '107']
-30739									[52.1, 52.1]	[109.7, 109.7]	IGRA2			0-20300-0-nan	19620809	19641231				0-20000-0-30739	khilok	['38', '85', '106', '107']
-30739									[52.1, 52.1]	[109.7, 109.7]	WBAN			0-20500-0-nan	19620809	19641231				0-20000-0-30739	khilok	['38', '85', '106', '107']
-30739									[52.1, 52.1]	[109.7, 109.7]	CHUAN			0-20400-0-nan	19620809	19641231				0-20000-0-30739	khilok	['38', '85', '106', '107']
-30739									[52.1, 52.1]	[109.7, 109.7]	SCHROEDER			0-20600-0-nan	19620809	19641231				0-20000-0-30739	khilok	['38', '85', '106', '107']
-30739									[52.1, 52.1]	[109.7, 109.7]	WMO			0-20700-0-nan	19620809	19641231				0-20000-0-30739	khilok	['38', '85', '106', '107']

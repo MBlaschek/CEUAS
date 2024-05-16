@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-40079									[33.5, 33.5]	[36.2, 36.2]	OSCAR				19660424	19690820				0-20700-0-40079	darayya	[36, 85, 106, 107]
-40079									[33.5, 33.5]	[36.2, 36.2]	IGRA2			0-20300-0-nan	19660424	19690820				0-20700-0-40079	darayya	[36, 85, 106, 107]
-40079									[33.5, 33.5]	[36.2, 36.2]	WBAN			0-20500-0-nan	19660424	19690820				0-20700-0-40079	darayya	[36, 85, 106, 107]
-40079									[33.5, 33.5]	[36.2, 36.2]	CHUAN			0-20400-0-nan	19660424	19690820				0-20700-0-40079	darayya	[36, 85, 106, 107]
-40079									[33.5, 33.5]	[36.2, 36.2]	SCHROEDER			0-20600-0-nan	19660424	19690820				0-20700-0-40079	darayya	[36, 85, 106, 107]
-40079	40079	DAMASCUS                 	33.483333333333334	36.23333333333333	-999.0			3.6	[33.5, 33.5]	[36.2, 36.2]	WMO		40079	0-20700-0-40079	19660424	19690820				0-20700-0-40079	darayya	[36, 85, 106, 107]

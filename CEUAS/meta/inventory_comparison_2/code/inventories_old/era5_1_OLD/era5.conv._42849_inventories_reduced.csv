@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-42849	42849	KHARGONE	21.816666666666666	75.61666666666666	252.0	21 49 00N	075 37 00E	1.0	[21.81, 21.81]	[75.61, 75.61]	OSCAR	0-20000-0-42849		0-20000-0-42849	19790815	19790815	999.0	999.0	False	0-20000-0-42849	khargone	[104, 105, 106, 107, 117]
-42849									[21.81, 21.81]	[75.61, 75.61]	IGRA2			0-20300-0-nan	19790815	19790815				0-20000-0-42849	khargone	[104, 105, 106, 107, 117]
-42849									[21.81, 21.81]	[75.61, 75.61]	WBAN			0-20500-0-nan	19790815	19790815				0-20000-0-42849	khargone	[104, 105, 106, 107, 117]
-42849									[21.81, 21.81]	[75.61, 75.61]	CHUAN			0-20400-0-nan	19790815	19790815				0-20000-0-42849	khargone	[104, 105, 106, 107, 117]
-42849									[21.81, 21.81]	[75.61, 75.61]	SCHROEDER			0-20600-0-nan	19790815	19790815				0-20000-0-42849	khargone	[104, 105, 106, 107, 117]
-42849									[21.81, 21.81]	[75.61, 75.61]	WMO			0-20700-0-nan	19790815	19790815				0-20000-0-42849	khargone	[104, 105, 106, 107, 117]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-61600	61600	SAINT-LOUIS	16.05	-16.449722222222224	2.16	16 03 00N	016 26 59W	0.0	[16.05, 16.05]	[-16.45, -16.45]	OSCAR	0-20000-0-61600		0-20000-0-61600	19620304	19740930	999.0	999.0	False	0-20000-0-61600	saint-louis	[36, 85, 106, 107]
-61600	61600	SAINT-LOUIS	16.05	-16.483	4.0			3.5	[16.05, 16.05]	[-16.45, -16.45]	IGRA2			0-20300-0-61600	19620304	19740930	1940.0	2019.0	True	0-20000-0-61600	saint-louis	[36, 85, 106, 107]
-61600									[16.05, 16.05]	[-16.45, -16.45]	WBAN			0-20500-0-nan	19620304	19740930				0-20000-0-61600	saint-louis	[36, 85, 106, 107]
-61600									[16.05, 16.05]	[-16.45, -16.45]	CHUAN			0-20400-0-nan	19620304	19740930				0-20000-0-61600	saint-louis	[36, 85, 106, 107]
-61600	61600	Saint-Louis, Senegal	16.05	-16.47	-999.0			2.1	[16.05, 16.05]	[-16.45, -16.45]	SCHROEDER		61600	0-20600-0-61600	19620304	19740930				0-20000-0-61600	saint-louis	[36, 85, 106, 107]
-61600	61600	SAINT-LOUIS              	16.016666666666666	-16.5	3.0			6.5	[16.05, 16.05]	[-16.45, -16.45]	WMO		61600	0-20700-0-61600	19620304	19740930				0-20000-0-61600	saint-louis	[36, 85, 106, 107]

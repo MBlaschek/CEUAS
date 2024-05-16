@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-78730	78730	PUERTO CABEZAS	14.066666666666666	-83.63333333333334	20.0	14 04 00N	083 38 00W	28.8	[14.067, 14.067]	[-83.367, -83.367]	OSCAR	0-20000-0-78730		0-20000-0-78730	1973	1983	999.0	999.0	True	0-20000-0-78730	puerto cabezas	['85', '38', '106', '107']
-78730	78730	PUERTO CABEZAS	14.067	-83.367	20.0			0.0	[14.067, 14.067]	[-83.367, -83.367]	IGRA2			0-20300-0-78730	1973	1983	1973.0	1983.0	True	0-20000-0-78730	puerto cabezas	['85', '38', '106', '107']
-78730	11810	PUERTO CABEZAS	14.0	-83.4	14.020800000000001			8.2	[14.067, 14.067]	[-83.367, -83.367]	WBAN			0-20500-0-11810	1973	1983	19421201.0	19681231.0		0-20000-0-78730	puerto cabezas	['85', '38', '106', '107']
-78730									[14.067, 14.067]	[-83.367, -83.367]	CHUAN			0-20400-0-nan	1973	1983				0-20000-0-78730	puerto cabezas	['85', '38', '106', '107']
-78730									[14.067, 14.067]	[-83.367, -83.367]	SCHROEDER			0-20600-0-nan	1973	1983				0-20000-0-78730	puerto cabezas	['85', '38', '106', '107']
-78730	78730	PUERTO CABEZAS           	12.033333333333331	-83.41666666666667	-999.0			225.1	[14.067, 14.067]	[-83.367, -83.367]	WMO		78730	0-20700-0-78730	1973	1983				0-20000-0-78730	puerto cabezas	['85', '38', '106', '107']

@@ -1,2 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0		Fuxin, China	42.03	121.67	-999.0				54237.0				3.3		0-20600-0-54237	SCHROEDER	fuxin	43.3	42.015556	121.658889		54237.0	1585.0	1973-01-02 00:00:00	1980-02-04 00:00:00

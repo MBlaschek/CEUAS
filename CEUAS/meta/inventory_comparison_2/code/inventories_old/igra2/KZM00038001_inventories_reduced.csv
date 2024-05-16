@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-38001	38001	FORT SHEVCHENKO	44.54805555555556	50.24305555555556	-25.0	44 32 53N	050 14 35E	0.6	[44.55, 44.55]	[50.25, 50.25]	OSCAR	0-20000-0-38001		0-20000-0-38001	1953	1982	999.0	999.0	False	0-20000-0-38001	aktau	['85', '38', '106', '107']
-38001	38001	FORT SHEVCHENKO	44.55	50.25	-25.0			0.0	[44.55, 44.55]	[50.25, 50.25]	IGRA2			0-20300-0-38001	1953	1982	1953.0	1982.0	True	0-20000-0-38001	aktau	['85', '38', '106', '107']
-38001									[44.55, 44.55]	[50.25, 50.25]	WBAN			0-20500-0-nan	1953	1982				0-20000-0-38001	aktau	['85', '38', '106', '107']
-38001									[44.55, 44.55]	[50.25, 50.25]	CHUAN			0-20400-0-nan	1953	1982				0-20000-0-38001	aktau	['85', '38', '106', '107']
-38001	38001	Fort Shevchenko, Kazakhstan	44.5	50.28	-999.0			6.0	[44.55, 44.55]	[50.25, 50.25]	SCHROEDER		38001	0-20600-0-38001	1953	1982				0-20000-0-38001	aktau	['85', '38', '106', '107']
-38001	38001	FORT SEVCENKO            	44.55	50.3	-999.0			4.0	[44.55, 44.55]	[50.25, 50.25]	WMO		38001	0-20700-0-38001	1953	1982				0-20000-0-38001	aktau	['85', '38', '106', '107']

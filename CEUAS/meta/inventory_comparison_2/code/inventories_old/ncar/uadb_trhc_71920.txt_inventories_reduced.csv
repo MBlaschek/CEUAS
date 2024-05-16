@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-71920	71920	BACCARO PT, NS	43.450833333333335	-65.47166666666666	5.7	43 27 03N	065 28 18W	3271.6	[57.37, 57.35]	[-107.13, -107.13]	OSCAR	0-20000-0-71920		0-20000-0-71920	19870326	19911028	999.0	999.0	False	0-20500-0-25034	grand centre	['38', '85', '106', '107']
-71920									[57.37, 57.35]	[-107.13, -107.13]	IGRA2			0-20300-0-nan	19870326	19911028				0-20500-0-25034	grand centre	['38', '85', '106', '107']
-71920	25034	CREE LAKE	57.35	-107.13	499.2624			2.2	[57.37, 57.35]	[-107.13, -107.13]	WBAN			0-20500-0-25034	19870326	19911028	19691201.0	99991231.0		0-20500-0-25034	grand centre	['38', '85', '106', '107']
-71920									[57.37, 57.35]	[-107.13, -107.13]	CHUAN			0-20400-0-nan	19870326	19911028				0-20500-0-25034	grand centre	['38', '85', '106', '107']
-71920	71920	Cree Lake, Saskatchewan, Canada	57.35	-107.13	-999.0			2.2	[57.37, 57.35]	[-107.13, -107.13]	SCHROEDER		71920.0	0-20600-0-71920	19870326	19911028				0-20500-0-25034	grand centre	['38', '85', '106', '107']
-71920									[57.37, 57.35]	[-107.13, -107.13]	WMO			0-20700-0-nan	19870326	19911028				0-20500-0-25034	grand centre	['38', '85', '106', '107']

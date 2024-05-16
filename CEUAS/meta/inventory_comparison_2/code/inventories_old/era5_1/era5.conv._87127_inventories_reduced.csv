@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-87127									[-27.45, -27.45]	[-64.88, -64.88]	OSCAR				19840626	19941117				0-20600-0-87127	santiago del estero	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-87127									[-27.45, -27.45]	[-64.88, -64.88]	IGRA2			0-20300-0-nan	19840626	19941117				0-20600-0-87127	santiago del estero	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-87127									[-27.45, -27.45]	[-64.88, -64.88]	WBAN			0-20500-0-nan	19840626	19941117				0-20600-0-87127	santiago del estero	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-87127									[-27.45, -27.45]	[-64.88, -64.88]	CHUAN			0-20400-0-nan	19840626	19941117				0-20600-0-87127	santiago del estero	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-87127	87127.0	Termas de Rio Hondo, Argentina	-27.45	-64.88	-999.0			0.0	[-27.45, -27.45]	[-64.88, -64.88]	SCHROEDER		87127.0	0-20600-0-87127	19840626	19941117				0-20600-0-87127	santiago del estero	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-87127									[-27.45, -27.45]	[-64.88, -64.88]	WMO			0-20700-0-nan	19840626	19941117				0-20600-0-87127	santiago del estero	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-87127									[-27.45, -27.45]	[-64.88, -64.88]	AMMA			0-20800-0-nan	19840626	19941117				0-20600-0-87127	santiago del estero	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-87127									[-27.45, -27.45]	[-64.88, -64.88]	HARA			0-20111-0-nan	19840626	19941117				0-20600-0-87127	santiago del estero	[36, 38, 39, 85, 104, 105, 106, 107, 117]

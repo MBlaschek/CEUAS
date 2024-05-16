@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-08055	08055	LEON/VIRGEN DEL CAMINO	42.58833333333334	-5.651111111111112	914.0	42 35 18N	005 39 04W	0.9	[42.58, 42.58]	[-5.65, -5.65]	OSCAR	0-20000-0-08055		0-20000-0-08055	19700401	19770615	999.0	999.0	False	0-20000-0-08055	san andres del rabanedo	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-08055	08055	LEON/VIRGEN DEL CAM	42.583	-5.65	914.0			0.3	[42.58, 42.58]	[-5.65, -5.65]	IGRA2			0-20300-0-08055	19700401	19770615	1973.0	1976.0	True	0-20000-0-08055	san andres del rabanedo	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-08055									[42.58, 42.58]	[-5.65, -5.65]	WBAN			0-20500-0-nan	19700401	19770615				0-20000-0-08055	san andres del rabanedo	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-08055									[42.58, 42.58]	[-5.65, -5.65]	CHUAN			0-20400-0-nan	19700401	19770615				0-20000-0-08055	san andres del rabanedo	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-08055	8055	Leon, Spain	42.58	-5.65	-999.0			0.0	[42.58, 42.58]	[-5.65, -5.65]	SCHROEDER		8055	0-20600-0-8055	19700401	19770615				0-20000-0-08055	san andres del rabanedo	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-08055	08055	LEON  VIRGEN DEL CAMINO  	42.583333333333336	-5.633333333333333	-999.0			1.4	[42.58, 42.58]	[-5.65, -5.65]	WMO		08055	0-20700-0-08055	19700401	19770615				0-20000-0-08055	san andres del rabanedo	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-08055									[42.58, 42.58]	[-5.65, -5.65]	AMMA			0-20800-0-nan	19700401	19770615				0-20000-0-08055	san andres del rabanedo	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-08055									[42.58, 42.58]	[-5.65, -5.65]	HARA			0-20111-0-nan	19700401	19770615				0-20000-0-08055	san andres del rabanedo	[36, 38, 39, 85, 104, 105, 106, 107, 117]

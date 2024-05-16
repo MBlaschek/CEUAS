@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-6:60069	60291	Tarfaya	27.938333333333333	-12.931111111111111		27 56 18N	012 55 52W	1.4	[27.93, 27.93]	[-12.92, -12.92]	OSCAR	0-504-1-60291		0-504-1-60291	19520119	19540830	999.0	999.0	False	0-504-1-60291	puerto del rosario	[38, 106, 107]
-6:60069									[27.93, 27.93]	[-12.92, -12.92]	IGRA2			0-20300-0-nan	19520119	19540830				0-504-1-60291	puerto del rosario	[38, 106, 107]
-6:60069	12102	CABO JUBY RIO DE ORO	27.93	-13.0	5.1816			7.9	[27.93, 27.93]	[-12.92, -12.92]	WBAN			0-20500-0-12102	19520119	19540830	19450801.0	19451031.0		0-504-1-60291	puerto del rosario	[38, 106, 107]
-6:60069									[27.93, 27.93]	[-12.92, -12.92]	CHUAN			0-20400-0-nan	19520119	19540830				0-504-1-60291	puerto del rosario	[38, 106, 107]
-6:60069									[27.93, 27.93]	[-12.92, -12.92]	SCHROEDER			0-20600-0-nan	19520119	19540830				0-504-1-60291	puerto del rosario	[38, 106, 107]
-6:60069									[27.93, 27.93]	[-12.92, -12.92]	WMO			0-20700-0-nan	19520119	19540830				0-504-1-60291	puerto del rosario	[38, 106, 107]

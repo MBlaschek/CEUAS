@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-47678	47678	HACHIJOJIMA	33.12166666666667	139.77916666666667	152.6	33 07 18N	139 46 45E	0.2	[33.12, 33.12]	[139.78, 139.78]	OSCAR	0-20000-0-47678		0-20000-0-47678	20180101	20211231	999.0	999.0	False	0-20000-0-47678	shimoda	['38', '85', '106', '107']
-47678	47678	HACHIJOJIMA	33.1217	139.7792	151.2			0.2	[33.12, 33.12]	[139.78, 139.78]	IGRA2			0-20300-0-47678	20180101	20211231	1958.0	2021.0	True	0-20000-0-47678	shimoda	['38', '85', '106', '107']
-47678									[33.12, 33.12]	[139.78, 139.78]	WBAN			0-20500-0-nan	20180101	20211231				0-20000-0-47678	shimoda	['38', '85', '106', '107']
-47678									[33.12, 33.12]	[139.78, 139.78]	CHUAN			0-20400-0-nan	20180101	20211231				0-20000-0-47678	shimoda	['38', '85', '106', '107']
-47678	47701	(made up station ID) Ichiki WINDAS Doppler wind profiler site, Japan	33.1221	139.7792	-999.0			0.2	[33.12, 33.12]	[139.78, 139.78]	SCHROEDER		47701	0-20600-0-47701	20180101	20211231				0-20000-0-47678	shimoda	['38', '85', '106', '107']
-47678	47678	RJTH Okazato - Hachijo Jima AP, Hachijo Island, Japan	33.1	139.78	-999.0			2.2	[33.12, 33.12]	[139.78, 139.78]	SCHROEDER		47678	0-20600-0-47678	20180101	20211231				0-20000-0-47678	shimoda	['38', '85', '106', '107']
-47678	47678	HACHIJOJIMA              	33.1	139.78333333333333	80.0			2.2	[33.12, 33.12]	[139.78, 139.78]	WMO		47678	0-20700-0-47678	20180101	20211231				0-20000-0-47678	shimoda	['38', '85', '106', '107']

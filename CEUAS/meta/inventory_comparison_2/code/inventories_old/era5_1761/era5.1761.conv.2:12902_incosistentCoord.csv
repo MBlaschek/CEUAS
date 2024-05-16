@@ -1,3 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0		SAN ANTONIO FORT SAM HOUSTON	29.45	-98.4667	232.0				12902	1933.0	1935.0	True	90.9		0-20300-0-12902	IGRA2	seguin	44.1	29.5686111	-97.9644444	USW00012902				
-0	0		GONZALES	29.52	-97.38	78.9432				12952	19380501.0	19400630.0		16.5		0-20500-0-12952	WBAN	seguin	44.1	29.5686111	-97.9644444					

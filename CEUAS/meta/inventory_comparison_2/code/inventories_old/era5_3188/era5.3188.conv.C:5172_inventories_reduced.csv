@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:5172	33548	Kamianets-Podilskyi	48.69305555555555	26.608055555555556	222.0	48 41 35N	026 36 29E	3.8	[48.67, 48.67]	[26.57, 26.57]	OSCAR	0-20000-0-33548		0-20000-0-33548	19260507	19271031	999	999	False	0-20000-0-33548	khotyn	[106, 107]
-C:5172									[48.67, 48.67]	[26.57, 26.57]	IGRA2			0-20300-0-nan	19260507	19271031				0-20000-0-33548	khotyn	[106, 107]
-C:5172									[48.67, 48.67]	[26.57, 26.57]	WBAN			0-20500-0-nan	19260507	19271031				0-20000-0-33548	khotyn	[106, 107]
-C:5172	5172	Kamenetz Podilsk	48.67	26.57	236			0.0	[48.67, 48.67]	[26.57, 26.57]	CHUAN		-999	0-20400-0-5172	19260507	19271031	-999-999	-999-999		0-20000-0-33548	khotyn	[106, 107]
-C:5172									[48.67, 48.67]	[26.57, 26.57]	SCHROEDER			0-20600-0-nan	19260507	19271031				0-20000-0-33548	khotyn	[106, 107]
-C:5172									[48.67, 48.67]	[26.57, 26.57]	WMO			0-20700-0-nan	19260507	19271031				0-20000-0-33548	khotyn	[106, 107]

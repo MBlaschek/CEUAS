@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:32939									[23.38, 23.38]	[96.57, 96.57]	OSCAR				19450212	19450331				0-20500-0-32939	mogok	[106, 107]
-2:32939									[23.38, 23.38]	[96.57, 96.57]	IGRA2			0-20300-0-nan	19450212	19450331				0-20500-0-32939	mogok	[106, 107]
-2:32939	32939.0	BAHE	23.38	96.57	126.1872			0.0	[23.38, 23.38]	[96.57, 96.57]	WBAN			0-20500-0-32939	19450212	19450331	19450201.0	19450831.0		0-20500-0-32939	mogok	[106, 107]
-2:32939									[23.38, 23.38]	[96.57, 96.57]	CHUAN			0-20400-0-nan	19450212	19450331				0-20500-0-32939	mogok	[106, 107]
-2:32939									[23.38, 23.38]	[96.57, 96.57]	SCHROEDER			0-20600-0-nan	19450212	19450331				0-20500-0-32939	mogok	[106, 107]
-2:32939									[23.38, 23.38]	[96.57, 96.57]	WMO			0-20700-0-nan	19450212	19450331				0-20500-0-32939	mogok	[106, 107]

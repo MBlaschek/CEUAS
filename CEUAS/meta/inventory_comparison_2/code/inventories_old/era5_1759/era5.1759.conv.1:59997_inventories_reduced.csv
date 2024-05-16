@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:59997	59997	NANSHA DAO	10.383333333333333	114.36666666666666	5.0	10 23 00N	114 22 00E	164.4	[10.72, 10.72]	[115.83, 115.83]	OSCAR	0-20000-0-59997		0-20000-0-59997	19661118	19791211	999.0	999.0	False	0-20300-0-46902	panacan	[38, 85, 106, 107, 117]
-1:59997	46902	NENSHA ISL	10.717	115.833	5.0			0.5	[10.72, 10.72]	[115.83, 115.83]	IGRA2			0-20300-0-46902	19661118	19791211	1973.0	1998.0	True	0-20300-0-46902	panacan	[38, 85, 106, 107, 117]
-1:59997									[10.72, 10.72]	[115.83, 115.83]	WBAN			0-20500-0-nan	19661118	19791211				0-20300-0-46902	panacan	[38, 85, 106, 107, 117]
-1:59997									[10.72, 10.72]	[115.83, 115.83]	CHUAN			0-20400-0-nan	19661118	19791211				0-20300-0-46902	panacan	[38, 85, 106, 107, 117]
-1:59997	46902	Flat Island (operated by Philippines), Spratly Islands (claimed by several countries)	10.72	115.83	-999.0			0.0	[10.72, 10.72]	[115.83, 115.83]	SCHROEDER		46902	0-20600-0-46902	19661118	19791211				0-20300-0-46902	panacan	[38, 85, 106, 107, 117]
-1:59997	59997	Flat Island (occupied by Philippines), Spratly Islands (claimed by several countries)	10.72	115.83	-999.0			0.0	[10.72, 10.72]	[115.83, 115.83]	SCHROEDER		59997	0-20600-0-59997	19661118	19791211				0-20300-0-46902	panacan	[38, 85, 106, 107, 117]
-1:59997	59997	NANSHA DAO               	10.383333333333333	114.36666666666666	-999.0			164.4	[10.72, 10.72]	[115.83, 115.83]	WMO		59997	0-20700-0-59997	19661118	19791211				0-20300-0-46902	panacan	[38, 85, 106, 107, 117]

@@ -1,2 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0	0-20000-0-10124	LEUCHTTURM ALTE WESER	53.86333333333334	8.127500000000001	30.5	Automatic weather station (AWS), Surface land meteorological station (SYNOP), GOS	53 51 48N	008 07 39E	10124	999.0	999.0	False	5343.8		OSCAR	0-20000-0-10124	None	None	None	None					

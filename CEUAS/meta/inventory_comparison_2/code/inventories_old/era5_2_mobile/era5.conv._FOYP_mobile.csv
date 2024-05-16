@@ -1,2 +1,0 @@
-lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	variables	kind	WIGOS_best
-		era5.conv._FOYP	era5_2_mobile	196605	196605	FOYP	nan	mobile	0-20999-0-FOYP

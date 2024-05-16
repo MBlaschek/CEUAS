@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-94205	95205	DERBY AERO	-17.370555555555555	123.66111111111111	6.7	17 22 14S	123 39 40E	9.5	[-17.3, -17.37]	[123.67, 123.61]	OSCAR	0-20000-0-95205		0-20000-0-95205	19720417	19781230	999.0	999.0	False	0-20000-0-95205	broome	[36, 85, 106, 107]
-94205	94205	DERBY	-17.3167	123.6333	8.0			3.1	[-17.3, -17.37]	[123.67, 123.61]	IGRA2			0-20300-0-94205	19720417	19781230	1972.0	1981.0	True	0-20000-0-95205	broome	[36, 85, 106, 107]
-94205									[-17.3, -17.37]	[123.67, 123.61]	WBAN			0-20500-0-nan	19720417	19781230				0-20000-0-95205	broome	[36, 85, 106, 107]
-94205									[-17.3, -17.37]	[123.67, 123.61]	CHUAN			0-20400-0-nan	19720417	19781230				0-20000-0-95205	broome	[36, 85, 106, 107]
-94205	94205	AHDB Derby AP, Western Australia, Australia	-17.3	123.62	-999.0			1.1	[-17.3, -17.37]	[123.67, 123.61]	SCHROEDER		94205.0	0-20600-0-94205	19720417	19781230				0-20000-0-95205	broome	[36, 85, 106, 107]
-94205									[-17.3, -17.37]	[123.67, 123.61]	WMO			0-20700-0-nan	19720417	19781230				0-20000-0-95205	broome	[36, 85, 106, 107]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-35394									[49.48, 49.48]	[73.09, 73.09]	OSCAR				20180101	20211231					abay	['38', '85', '106', '107']
-35394	35394	KARAGANDA	49.8	73.15	553.0			35.9	[49.48, 49.48]	[73.09, 73.09]	IGRA2			0-20300-0-35394	20180101	20211231	1946.0	2021.0	True		abay	['38', '85', '106', '107']
-35394									[49.48, 49.48]	[73.09, 73.09]	WBAN			0-20500-0-nan	20180101	20211231					abay	['38', '85', '106', '107']
-35394									[49.48, 49.48]	[73.09, 73.09]	CHUAN			0-20400-0-nan	20180101	20211231					abay	['38', '85', '106', '107']
-35394									[49.48, 49.48]	[73.09, 73.09]	SCHROEDER			0-20600-0-nan	20180101	20211231					abay	['38', '85', '106', '107']
-35394	35394	KARAGANDA                	49.8	73.13333333333334	-999.0			35.7	[49.48, 49.48]	[73.09, 73.09]	WMO		35394	0-20700-0-35394	20180101	20211231					abay	['38', '85', '106', '107']

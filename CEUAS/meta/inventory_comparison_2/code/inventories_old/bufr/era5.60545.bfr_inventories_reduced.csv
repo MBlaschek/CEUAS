@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-60545									[33.77, 33.77]	[2.93, 2.93]	OSCAR				19670205	19710625				0-20400-0-5697	aflu	[36, 85, 106, 107]
-60545									[33.77, 33.77]	[2.93, 2.93]	IGRA2			0-20300-0-nan	19670205	19710625				0-20400-0-5697	aflu	[36, 85, 106, 107]
-60545									[33.77, 33.77]	[2.93, 2.93]	WBAN			0-20500-0-nan	19670205	19710625				0-20400-0-5697	aflu	[36, 85, 106, 107]
-60545	5697.0	Laghouat	33.8	2.88	760			5.7	[33.77, 33.77]	[2.93, 2.93]	CHUAN		-999	0-20400-0-5697	19670205	19710625	-999-999	-999-999		0-20400-0-5697	aflu	[36, 85, 106, 107]
-60545									[33.77, 33.77]	[2.93, 2.93]	SCHROEDER			0-20600-0-nan	19670205	19710625				0-20400-0-5697	aflu	[36, 85, 106, 107]
-60545									[33.77, 33.77]	[2.93, 2.93]	WMO			0-20700-0-nan	19670205	19710625				0-20400-0-5697	aflu	[36, 85, 106, 107]

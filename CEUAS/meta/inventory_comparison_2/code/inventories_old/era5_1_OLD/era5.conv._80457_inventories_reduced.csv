@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-80457	80457	PUERTO AYACUCHO	5.6	-67.5	74.0	05 36 00N	067 30 00W	0.0	[5.6, 5.6]	[-67.5, -67.5]	OSCAR	0-20000-0-80457		0-20000-0-80457	19790413	19850806	999.0	999.0	False	0-20000-0-80457	puerto ayacucho	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-80457									[5.6, 5.6]	[-67.5, -67.5]	IGRA2			0-20300-0-nan	19790413	19850806				0-20000-0-80457	puerto ayacucho	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-80457									[5.6, 5.6]	[-67.5, -67.5]	WBAN			0-20500-0-nan	19790413	19850806				0-20000-0-80457	puerto ayacucho	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-80457									[5.6, 5.6]	[-67.5, -67.5]	CHUAN			0-20400-0-nan	19790413	19850806				0-20000-0-80457	puerto ayacucho	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-80457	80457	Puerto Ayacucho, Venezuela	5.6	-67.5	-999.0			0.0	[5.6, 5.6]	[-67.5, -67.5]	SCHROEDER		80457	0-20600-0-80457	19790413	19850806				0-20000-0-80457	puerto ayacucho	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-80457	80457	PUERTO AYACUCHO          	5.6	-67.5	73.0			0.0	[5.6, 5.6]	[-67.5, -67.5]	WMO		80457	0-20700-0-80457	19790413	19850806				0-20000-0-80457	puerto ayacucho	[36, 38, 39, 85, 104, 105, 106, 107, 117]

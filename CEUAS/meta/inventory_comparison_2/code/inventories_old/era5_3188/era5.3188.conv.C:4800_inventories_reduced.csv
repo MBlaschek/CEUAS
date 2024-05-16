@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:4800	74466	WOLCOTT, IN.	40.81666666666667	-87.05		40 49 00N	087 03 00W	12.3	[40.88, 40.88]	[-86.93, -86.93]	OSCAR	0-20000-0-74466		0-20000-0-74466	19180712	19181231	999	999	False	0-20000-0-74466	logansport	[38, 85, 106, 107]
-C:4800									[40.88, 40.88]	[-86.93, -86.93]	IGRA2			0-20300-0-nan	19180712	19181231				0-20000-0-74466	logansport	[38, 85, 106, 107]
-C:4800									[40.88, 40.88]	[-86.93, -86.93]	WBAN			0-20500-0-nan	19180712	19181231				0-20000-0-74466	logansport	[38, 85, 106, 107]
-C:4800	4800	Royal Center	40.88	-86.93	225			0.0	[40.88, 40.88]	[-86.93, -86.93]	CHUAN		-999	0-20400-0-4800	19180712	19181231	-999-999	-999-999		0-20000-0-74466	logansport	[38, 85, 106, 107]
-C:4800	74466	Wolcott - NOAA Profiler Network (NPN) 404 MHz wind profiler, IN	40.81	-87.05	-999			12.8	[40.88, 40.88]	[-86.93, -86.93]	SCHROEDER		74466	0-20600-0-74466	19180712	19181231				0-20000-0-74466	logansport	[38, 85, 106, 107]
-C:4800									[40.88, 40.88]	[-86.93, -86.93]	WMO			0-20700-0-nan	19180712	19181231				0-20000-0-74466	logansport	[38, 85, 106, 107]

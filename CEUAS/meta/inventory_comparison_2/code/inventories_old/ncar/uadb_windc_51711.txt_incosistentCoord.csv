@@ -1,4 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0		AKQI	40.933	78.45	1986.0				51711	1973.0	1987.0	True	0.3		IGRA2	0-20300-0-51711	at-bashi	162.4	41.1697222	75.8102778	CHM00051711				
-0	0	0-20000-0-51711	AKQI	40.93333333333333	78.45	1986.0	Surface land meteorological station (SYNOP), GOS	40 56 00N	078 27 00E	51711	999.0	999.0	False	0.4		OSCAR	0-20000-0-51711	at-bashi	162.4	41.1697222	75.8102778					
-0	0		AKQI                     	40.93333333333333	78.45	-999.0				51711				0.4		WMO	0-20700-0-51711	at-bashi	162.4	41.1697222	75.8102778		51711	4383.0		

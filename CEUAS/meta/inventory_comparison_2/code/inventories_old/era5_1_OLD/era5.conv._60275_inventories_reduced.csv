@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-60275	60275	Zagora	30.265833333333333	-5.85		30 15 57N	005 51 00W	6.3	[30.32, 30.32]	[-5.87, -5.87]	OSCAR	0-504-0-60275		0-504-0-60275	19800618	19820720	999.0	999.0	False	0-504-0-60275	marrakesh	[104, 105, 106, 107, 117]
-60275									[30.32, 30.32]	[-5.87, -5.87]	IGRA2			0-20300-0-nan	19800618	19820720				0-504-0-60275	marrakesh	[104, 105, 106, 107, 117]
-60275									[30.32, 30.32]	[-5.87, -5.87]	WBAN			0-20500-0-nan	19800618	19820720				0-504-0-60275	marrakesh	[104, 105, 106, 107, 117]
-60275									[30.32, 30.32]	[-5.87, -5.87]	CHUAN			0-20400-0-nan	19800618	19820720				0-504-0-60275	marrakesh	[104, 105, 106, 107, 117]
-60275									[30.32, 30.32]	[-5.87, -5.87]	SCHROEDER			0-20600-0-nan	19800618	19820720				0-504-0-60275	marrakesh	[104, 105, 106, 107, 117]
-60275									[30.32, 30.32]	[-5.87, -5.87]	WMO			0-20700-0-nan	19800618	19820720				0-504-0-60275	marrakesh	[104, 105, 106, 107, 117]

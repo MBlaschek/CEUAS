@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-62700	62700	SHENDI	16.7	33.43333333333333	360.0	16 42 00N	033 26 00E	3.6	[16.7, 16.7]	[33.4, 33.4]	OSCAR	0-20000-0-62700		0-20000-0-62700	19740619	19740910	999.0	999.0	False	0-20000-0-62700	khartoum	[36, 85, 106, 107]
-62700									[16.7, 16.7]	[33.4, 33.4]	IGRA2			0-20300-0-nan	19740619	19740910				0-20000-0-62700	khartoum	[36, 85, 106, 107]
-62700									[16.7, 16.7]	[33.4, 33.4]	WBAN			0-20500-0-nan	19740619	19740910				0-20000-0-62700	khartoum	[36, 85, 106, 107]
-62700									[16.7, 16.7]	[33.4, 33.4]	CHUAN			0-20400-0-nan	19740619	19740910				0-20000-0-62700	khartoum	[36, 85, 106, 107]
-62700									[16.7, 16.7]	[33.4, 33.4]	SCHROEDER			0-20600-0-nan	19740619	19740910				0-20000-0-62700	khartoum	[36, 85, 106, 107]
-62700	62700	SHENDI                   	16.7	33.43333333333333	-999.0			3.6	[16.7, 16.7]	[33.4, 33.4]	WMO		62700	0-20700-0-62700	19740619	19740910				0-20000-0-62700	khartoum	[36, 85, 106, 107]

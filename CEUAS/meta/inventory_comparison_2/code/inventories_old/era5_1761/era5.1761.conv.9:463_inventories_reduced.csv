@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-9:463	71401	WARFIELD RCS	49.11194444444445	-117.7388888888889	566.9	49 06 43N	117 44 20W	22.7	[48.91, 48.91]	[-117.78, -117.78]	OSCAR	0-20000-0-71401		0-20000-0-71401	19440609	19460124	999.0	999.0	False	0-20000-0-71401	spokane	[106, 107]
-9:463									[48.91, 48.91]	[-117.78, -117.78]	IGRA2			0-20300-0-nan	19440609	19460124				0-20000-0-71401	spokane	[106, 107]
-9:463	94115	OLD GLORY MOUNTAIN	49.15	-117.92	2347.2648			28.6	[48.91, 48.91]	[-117.78, -117.78]	WBAN			0-20500-0-94115	19440609	19460124	19440901.0	19680430.0		0-20000-0-71401	spokane	[106, 107]
-9:463									[48.91, 48.91]	[-117.78, -117.78]	CHUAN			0-20400-0-nan	19440609	19460124				0-20000-0-71401	spokane	[106, 107]
-9:463	72787	(assigned station ID) Northport, WA	48.91	-117.8	-999.0			1.5	[48.91, 48.91]	[-117.78, -117.78]	SCHROEDER		72787.0	0-20600-0-72787	19440609	19460124				0-20000-0-71401	spokane	[106, 107]
-9:463									[48.91, 48.91]	[-117.78, -117.78]	WMO			0-20700-0-nan	19440609	19460124				0-20000-0-71401	spokane	[106, 107]

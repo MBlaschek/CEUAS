@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-34924	34924	SLAVJANSK-NA-KUBANI	45.28333333333333	38.11666666666667	8.93	45 17 00N	038 07 00E	0.5	[45.28, 45.28]	[38.12, 38.12]	OSCAR	0-20000-0-34924		0-20000-0-34924	20120803	20120822	999.0	999.0	False	0-20000-0-34924	slavyansk-na-kubani	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-34924									[45.28, 45.28]	[38.12, 38.12]	IGRA2			0-20300-0-nan	20120803	20120822				0-20000-0-34924	slavyansk-na-kubani	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-34924									[45.28, 45.28]	[38.12, 38.12]	WBAN			0-20500-0-nan	20120803	20120822				0-20000-0-34924	slavyansk-na-kubani	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-34924									[45.28, 45.28]	[38.12, 38.12]	CHUAN			0-20400-0-nan	20120803	20120822				0-20000-0-34924	slavyansk-na-kubani	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-34924									[45.28, 45.28]	[38.12, 38.12]	SCHROEDER			0-20600-0-nan	20120803	20120822				0-20000-0-34924	slavyansk-na-kubani	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-34924									[45.28, 45.28]	[38.12, 38.12]	WMO			0-20700-0-nan	20120803	20120822				0-20000-0-34924	slavyansk-na-kubani	[36, 38, 39, 85, 104, 105, 106, 107, 117]

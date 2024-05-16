@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-27799	27799	DIMITROVGRAD (27799-0)	54.233333333333334	49.6	73.28	54 14 00N	049 36 00E	0.4	[54.23, 54.23]	[49.6, 49.6]	OSCAR	0-20000-0-27799		0-20000-0-27799	19871018	19871018	999.0	999.0	False	0-20000-0-27799	dimitrovgrad	[39, 106, 107, 117]
-27799									[54.23, 54.23]	[49.6, 49.6]	IGRA2			0-20300-0-nan	19871018	19871018				0-20000-0-27799	dimitrovgrad	[39, 106, 107, 117]
-27799									[54.23, 54.23]	[49.6, 49.6]	WBAN			0-20500-0-nan	19871018	19871018				0-20000-0-27799	dimitrovgrad	[39, 106, 107, 117]
-27799									[54.23, 54.23]	[49.6, 49.6]	CHUAN			0-20400-0-nan	19871018	19871018				0-20000-0-27799	dimitrovgrad	[39, 106, 107, 117]
-27799									[54.23, 54.23]	[49.6, 49.6]	SCHROEDER			0-20600-0-nan	19871018	19871018				0-20000-0-27799	dimitrovgrad	[39, 106, 107, 117]
-27799									[54.23, 54.23]	[49.6, 49.6]	WMO			0-20700-0-nan	19871018	19871018				0-20000-0-27799	dimitrovgrad	[39, 106, 107, 117]
-27799									[54.23, 54.23]	[49.6, 49.6]	AMMA			0-20800-0-nan	19871018	19871018				0-20000-0-27799	dimitrovgrad	[39, 106, 107, 117]
-27799									[54.23, 54.23]	[49.6, 49.6]	HARA			0-20111-0-nan	19871018	19871018				0-20000-0-27799	dimitrovgrad	[39, 106, 107, 117]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:64870	64870	NGAOUNDERE	7.35	13.566666666666666	1104.0	07 21 00N	013 34 00E	6.6	[7.4, 7.35]	[13.6, 13.56]	OSCAR	0-20000-0-64870		0-20000-0-64870	19630701	19791230	999.0	999.0	False	0-20000-0-64870	ngaoundere	[38, 85, 106, 107, 117]
-1:64870	64870	NGAOUNDERE	7.35	13.5667	1114.0			6.6	[7.4, 7.35]	[13.6, 13.56]	IGRA2			0-20300-0-64870	19630701	19791230	1973.0	2021.0	True	0-20000-0-64870	ngaoundere	[38, 85, 106, 107, 117]
-1:64870									[7.4, 7.35]	[13.6, 13.56]	WBAN			0-20500-0-nan	19630701	19791230				0-20000-0-64870	ngaoundere	[38, 85, 106, 107, 117]
-1:64870									[7.4, 7.35]	[13.6, 13.56]	CHUAN			0-20400-0-nan	19630701	19791230				0-20000-0-64870	ngaoundere	[38, 85, 106, 107, 117]
-1:64870	64870	Ngaoundere, Cameroon	7.35	13.57	-999.0			6.4	[7.4, 7.35]	[13.6, 13.56]	SCHROEDER		64870	0-20600-0-64870	19630701	19791230				0-20000-0-64870	ngaoundere	[38, 85, 106, 107, 117]
-1:64870	64870	NGAOUNDERE               	7.35	13.566666666666666	-999.0			6.6	[7.4, 7.35]	[13.6, 13.56]	WMO		64870	0-20700-0-64870	19630701	19791230				0-20000-0-64870	ngaoundere	[38, 85, 106, 107, 117]

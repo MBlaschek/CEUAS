@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-22913	22913	LODEJNOE POLE	60.71666666666667	33.55	23.0	60 43 00N	033 33 00E	0.4	[60.72, 60.72]	[33.55, 33.55]	OSCAR	0-20000-0-22913		0-20000-0-22913	19830114	19921231	999.0	999.0	False	0-20000-0-22913	lodeynoye pole	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-22913									[60.72, 60.72]	[33.55, 33.55]	IGRA2			0-20300-0-nan	19830114	19921231				0-20000-0-22913	lodeynoye pole	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-22913									[60.72, 60.72]	[33.55, 33.55]	WBAN			0-20500-0-nan	19830114	19921231				0-20000-0-22913	lodeynoye pole	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-22913									[60.72, 60.72]	[33.55, 33.55]	CHUAN			0-20400-0-nan	19830114	19921231				0-20000-0-22913	lodeynoye pole	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-22913									[60.72, 60.72]	[33.55, 33.55]	SCHROEDER			0-20600-0-nan	19830114	19921231				0-20000-0-22913	lodeynoye pole	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-22913									[60.72, 60.72]	[33.55, 33.55]	WMO			0-20700-0-nan	19830114	19921231				0-20000-0-22913	lodeynoye pole	[36, 38, 39, 85, 104, 105, 106, 107, 117]

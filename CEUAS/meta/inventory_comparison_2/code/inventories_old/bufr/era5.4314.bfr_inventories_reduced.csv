@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-43014	43014	AURANGABAD CHIKALTHANA AERODROME	19.85	75.4	585.0	19 51 00N	075 24 00E	0.0	[19.85, 19.85]	[75.4, 75.4]	OSCAR	0-20000-0-43014		0-20000-0-43014	19640105	19721231	999.0	999.0	True	0-20000-0-43014	aurangabad	[36, 85, 106, 107]
-43014	43014	AURANGABAD CHIKALTHANA AERODRO	19.85	75.4	585.0			0.0	[19.85, 19.85]	[75.4, 75.4]	IGRA2			0-20300-0-43014	19640105	19721231	1973.0	2021.0	True	0-20000-0-43014	aurangabad	[36, 85, 106, 107]
-43014									[19.85, 19.85]	[75.4, 75.4]	WBAN			0-20500-0-nan	19640105	19721231				0-20000-0-43014	aurangabad	[36, 85, 106, 107]
-43014									[19.85, 19.85]	[75.4, 75.4]	CHUAN			0-20400-0-nan	19640105	19721231				0-20000-0-43014	aurangabad	[36, 85, 106, 107]
-43014	43014	VAAU Aurangabad - Chikalthan AP, Maharashtra, India	19.85	75.4	-999.0			0.0	[19.85, 19.85]	[75.4, 75.4]	SCHROEDER		43014	0-20600-0-43014	19640105	19721231				0-20000-0-43014	aurangabad	[36, 85, 106, 107]
-43014	43014	AURANGABAD(A)            	19.85	75.4	-999.0			0.0	[19.85, 19.85]	[75.4, 75.4]	WMO		43014	0-20700-0-43014	19640105	19721231				0-20000-0-43014	aurangabad	[36, 85, 106, 107]

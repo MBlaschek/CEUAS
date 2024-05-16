@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-48910									[10.3, 10.3]	[106.0, 106.0]	OSCAR				19710615	19720126				0-20500-0-41006	vinh long	[36, 85, 106, 107]
-48910									[10.3, 10.3]	[106.0, 106.0]	IGRA2			0-20300-0-nan	19710615	19720126				0-20500-0-41006	vinh long	[36, 85, 106, 107]
-48910	41006.0	VINH LONG	10.25	105.95	5.1816			7.8	[10.3, 10.3]	[106.0, 106.0]	WBAN			0-20500-0-41006	19710615	19720126	19630501.0	19720228.0		0-20500-0-41006	vinh long	[36, 85, 106, 107]
-48910									[10.3, 10.3]	[106.0, 106.0]	CHUAN			0-20400-0-nan	19710615	19720126				0-20500-0-41006	vinh long	[36, 85, 106, 107]
-48910									[10.3, 10.3]	[106.0, 106.0]	SCHROEDER			0-20600-0-nan	19710615	19720126				0-20500-0-41006	vinh long	[36, 85, 106, 107]
-48910									[10.3, 10.3]	[106.0, 106.0]	WMO			0-20700-0-nan	19710615	19720126				0-20500-0-41006	vinh long	[36, 85, 106, 107]

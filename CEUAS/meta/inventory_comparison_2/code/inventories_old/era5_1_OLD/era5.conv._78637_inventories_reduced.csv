@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-78637	78637	PUERTO BARRIOS	15.716666666666667	-88.6	1.0	15 43 00N	088 36 00W	0.4	[15.72, 15.72]	[-88.6, -88.6]	OSCAR	0-20000-0-78637		0-20000-0-78637	19790101	19790311	999.0	999.0	False	0-20000-0-78637	puerto barrios	[104, 105, 106, 107, 117]
-78637	78637	PUERTO BARRIOS	15.717	-88.6	1.0			0.3	[15.72, 15.72]	[-88.6, -88.6]	IGRA2			0-20300-0-78637	19790101	19790311	1974.0	1978.0	True	0-20000-0-78637	puerto barrios	[104, 105, 106, 107, 117]
-78637	11802	PUERTO BARRIOS	15.72	-88.6	7.010400000000001			0.0	[15.72, 15.72]	[-88.6, -88.6]	WBAN			0-20500-0-11802	19790101	19790311	19430601.0	19440430.0		0-20000-0-78637	puerto barrios	[104, 105, 106, 107, 117]
-78637									[15.72, 15.72]	[-88.6, -88.6]	CHUAN			0-20400-0-nan	19790101	19790311				0-20000-0-78637	puerto barrios	[104, 105, 106, 107, 117]
-78637	78637	Puerto Barrios, Guatemala	15.72	-88.6	-999.0			0.0	[15.72, 15.72]	[-88.6, -88.6]	SCHROEDER		78637.0	0-20600-0-78637	19790101	19790311				0-20000-0-78637	puerto barrios	[104, 105, 106, 107, 117]
-78637									[15.72, 15.72]	[-88.6, -88.6]	WMO			0-20700-0-nan	19790101	19790311				0-20000-0-78637	puerto barrios	[104, 105, 106, 107, 117]

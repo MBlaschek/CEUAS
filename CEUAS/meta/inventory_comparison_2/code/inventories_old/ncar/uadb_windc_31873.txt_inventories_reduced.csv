@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-31873	31873	DAL'NERECHENSK	45.86666666666667	133.73333333333332	104.5	45 52 00N	133 44 00E	7.1	[45.93, 45.93]	[133.74, 133.74]	OSCAR	0-20000-0-31873		0-20000-0-31873	20180101	20211231	999.0	999.0	True	0-20000-0-31873	dalnerechensk	['38', '85', '106', '107']
-31873	31873	DAL'NERECHENSK	45.8667	133.7333	100.0			7.1	[45.93, 45.93]	[133.74, 133.74]	IGRA2			0-20300-0-31873	20180101	20211231	1957.0	2021.0	True	0-20000-0-31873	dalnerechensk	['38', '85', '106', '107']
-31873									[45.93, 45.93]	[133.74, 133.74]	WBAN			0-20500-0-nan	20180101	20211231				0-20000-0-31873	dalnerechensk	['38', '85', '106', '107']
-31873									[45.93, 45.93]	[133.74, 133.74]	CHUAN			0-20400-0-nan	20180101	20211231				0-20000-0-31873	dalnerechensk	['38', '85', '106', '107']
-31873	31873	Dal'nerechensk / Iman, Russia	45.92	133.73	-999.0			1.4	[45.93, 45.93]	[133.74, 133.74]	SCHROEDER		31873.0	0-20600-0-31873	20180101	20211231				0-20000-0-31873	dalnerechensk	['38', '85', '106', '107']
-31873									[45.93, 45.93]	[133.74, 133.74]	WMO			0-20700-0-nan	20180101	20211231				0-20000-0-31873	dalnerechensk	['38', '85', '106', '107']

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:32564	32562	BOL' SHERETZK	52.833333333333336	156.3	30.0	52 50 00N	156 18 00E	18.8	[52.67, 52.67]	[156.23, 156.23]	OSCAR	0-20000-0-32562		0-20000-0-32562	19650909	19661228	999.0	999.0	False	0-20000-0-32562	yelizovo	[106, 107]
-1:32564									[52.67, 52.67]	[156.23, 156.23]	IGRA2			0-20300-0-nan	19650909	19661228				0-20000-0-32562	yelizovo	[106, 107]
-1:32564									[52.67, 52.67]	[156.23, 156.23]	WBAN			0-20500-0-nan	19650909	19661228				0-20000-0-32562	yelizovo	[106, 107]
-1:32564									[52.67, 52.67]	[156.23, 156.23]	CHUAN			0-20400-0-nan	19650909	19661228				0-20000-0-32562	yelizovo	[106, 107]
-1:32564									[52.67, 52.67]	[156.23, 156.23]	SCHROEDER			0-20600-0-nan	19650909	19661228				0-20000-0-32562	yelizovo	[106, 107]
-1:32564									[52.67, 52.67]	[156.23, 156.23]	WMO			0-20700-0-nan	19650909	19661228				0-20000-0-32562	yelizovo	[106, 107]

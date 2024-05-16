@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-6:100005	95303	VARANUS ISLAND	-20.656388888888888	115.57583333333334	24.5	20 39 23S	115 34 33E	29.5	[-20.4, -20.4]	[115.5, 115.5]	OSCAR	0-20000-0-95303		0-20000-0-95303	19560413	19560619	999.0	999.0	False	0-20000-0-95303	karratha	[38, 85, 117]
-6:100005									[-20.4, -20.4]	[115.5, 115.5]	IGRA2			0-20300-0-nan	19560413	19560619				0-20000-0-95303	karratha	[38, 85, 117]
-6:100005									[-20.4, -20.4]	[115.5, 115.5]	WBAN			0-20500-0-nan	19560413	19560619				0-20000-0-95303	karratha	[38, 85, 117]
-6:100005									[-20.4, -20.4]	[115.5, 115.5]	CHUAN			0-20400-0-nan	19560413	19560619				0-20000-0-95303	karratha	[38, 85, 117]
-6:100005	95305	(made up station ID) Hermite Island Nuclear Test Area, Monte Bello Islands, Western Australia, Australia	-20.47	115.52	-999.0			8.0	[-20.4, -20.4]	[115.5, 115.5]	SCHROEDER		95305.0	0-20600-0-95305	19560413	19560619				0-20000-0-95303	karratha	[38, 85, 117]
-6:100005									[-20.4, -20.4]	[115.5, 115.5]	WMO			0-20700-0-nan	19560413	19560619				0-20000-0-95303	karratha	[38, 85, 117]

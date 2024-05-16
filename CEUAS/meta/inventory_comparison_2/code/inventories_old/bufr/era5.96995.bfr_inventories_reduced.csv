@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-96995	96995	CHRISTMAS ISLAND AERO	-10.452777777777778	105.6875	262.0	10 27 10S	105 41 15E	0.9	[-10.45, -10.45]	[105.68, 105.68]	OSCAR	0-20000-0-96995		0-20000-0-96995	19590601	19781228	999.0	999.0	False	0-20000-0-96995	palabuhanratu	[36, 85, 106, 107]
-96995	96995	CHRISTMAS ISL (PVT)	-10.45	105.7	279.0			2.2	[-10.45, -10.45]	[105.68, 105.68]	IGRA2			0-20300-0-96995	19590601	19781228	1959.0	1980.0	True	0-20000-0-96995	palabuhanratu	[36, 85, 106, 107]
-96995									[-10.45, -10.45]	[105.68, 105.68]	WBAN			0-20500-0-nan	19590601	19781228				0-20000-0-96995	palabuhanratu	[36, 85, 106, 107]
-96995									[-10.45, -10.45]	[105.68, 105.68]	CHUAN			0-20400-0-nan	19590601	19781228				0-20000-0-96995	palabuhanratu	[36, 85, 106, 107]
-96995	96995	Christmas Island - The Settlement, Australia	-10.42	105.67	-999.0			3.5	[-10.45, -10.45]	[105.68, 105.68]	SCHROEDER		96995	0-20600-0-96995	19590601	19781228				0-20000-0-96995	palabuhanratu	[36, 85, 106, 107]
-96995	96995	CHRISTMAS ISLAND AERO    	-10.45	105.68333333333334	262.0			0.4	[-10.45, -10.45]	[105.68, 105.68]	WMO		96995	0-20700-0-96995	19590601	19781228				0-20000-0-96995	palabuhanratu	[36, 85, 106, 107]

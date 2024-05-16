@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-15410	15410	DROBETA-TURNU SEVERIN	44.62638888888889	22.62611111111111		44 37 35N	022 37 34E	0.5	[44.63, 44.63]	[22.63, 22.63]	OSCAR	0-20000-0-15410		0-20000-0-15410	19790103	19941211	999.0	999.0	False	0-20000-0-15410	drobeta-turnu severin	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-15410	15410	DROBETA TURNU SEVER	44.633	22.633	77.0			0.4	[44.63, 44.63]	[22.63, 22.63]	IGRA2			0-20300-0-15410	19790103	19941211	1974.0	1993.0	True	0-20000-0-15410	drobeta-turnu severin	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-15410									[44.63, 44.63]	[22.63, 22.63]	WBAN			0-20500-0-nan	19790103	19941211				0-20000-0-15410	drobeta-turnu severin	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-15410									[44.63, 44.63]	[22.63, 22.63]	CHUAN			0-20400-0-nan	19790103	19941211				0-20000-0-15410	drobeta-turnu severin	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-15410	15410	Drobeta-Turnu Severin, Romania	44.6	22.6	-999.0			4.1	[44.63, 44.63]	[22.63, 22.63]	SCHROEDER		15410.0	0-20600-0-15410	19790103	19941211				0-20000-0-15410	drobeta-turnu severin	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-15410									[44.63, 44.63]	[22.63, 22.63]	WMO			0-20700-0-nan	19790103	19941211				0-20000-0-15410	drobeta-turnu severin	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-15410									[44.63, 44.63]	[22.63, 22.63]	AMMA			0-20800-0-nan	19790103	19941211				0-20000-0-15410	drobeta-turnu severin	[36, 38, 39, 85, 104, 105, 106, 107, 117]
-15410									[44.63, 44.63]	[22.63, 22.63]	HARA			0-20111-0-nan	19790103	19941211				0-20000-0-15410	drobeta-turnu severin	[36, 38, 39, 85, 104, 105, 106, 107, 117]

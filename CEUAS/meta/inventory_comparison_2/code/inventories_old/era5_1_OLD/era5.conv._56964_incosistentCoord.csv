@@ -1,4 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0		SIMAO	22.7667	100.9833	1303.0				56964	1957.0	2021.0	True	5.9		IGRA2	0-20300-0-56964	simao	2.1	22.788627	100.974807	CHM00056964				
-0	0	0-20000-0-56964	SIMAO	22.816111111111113	100.99111111111111	1417.4	Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), RBSN(ST), CLIMAT(C), RBCN, GOS	22 48 58N	100 59 28E	56964	999.0	999.0	True	0.4		OSCAR	0-20000-0-56964	simao	2.1	22.788627	100.974807					
-0	0		SIMAO                    	22.766666666666666	100.98333333333332	-999.0				56964				5.9		WMO	0-20700-0-56964	simao	2.1	22.788627	100.974807		56964	4556.0		

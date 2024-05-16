@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:10532	10532	GIESSEN-WETTENBERG	50.60166666666667	8.643888888888888	204.05	50 36 06N	008 38 38E	5.3	[50.57, 50.57]	[8.7, 8.7]	OSCAR	0-20000-0-10532		0-20000-0-10532	19730216	19730830	999.0	999.0	False	0-20000-0-10532	langgons	[38, 85, 106, 107, 117]
-1:10532									[50.57, 50.57]	[8.7, 8.7]	IGRA2			0-20300-0-nan	19730216	19730830				0-20000-0-10532	langgons	[38, 85, 106, 107, 117]
-1:10532									[50.57, 50.57]	[8.7, 8.7]	WBAN			0-20500-0-nan	19730216	19730830				0-20000-0-10532	langgons	[38, 85, 106, 107, 117]
-1:10532									[50.57, 50.57]	[8.7, 8.7]	CHUAN			0-20400-0-nan	19730216	19730830				0-20000-0-10532	langgons	[38, 85, 106, 107, 117]
-1:10532	10533	Giessen, West Germany	50.6	8.73	-999.0			4.0	[50.57, 50.57]	[8.7, 8.7]	SCHROEDER		10533.0	0-20600-0-10533	19730216	19730830				0-20000-0-10532	langgons	[38, 85, 106, 107, 117]
-1:10532									[50.57, 50.57]	[8.7, 8.7]	WMO			0-20700-0-nan	19730216	19730830				0-20000-0-10532	langgons	[38, 85, 106, 107, 117]

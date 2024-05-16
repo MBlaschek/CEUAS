@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:10307	10315	MUENSTER/OSNABRUECK	52.13444444444444	7.696944444444445	52.69	52 08 04N	007 41 49E	23.7	[52.27, 52.27]	[7.43, 7.43]	OSCAR	0-20000-0-10315		0-20000-0-10315	19710616	19791228	999.0	999.0	False	0-20000-0-10315	rheine	[38, 85, 106, 107, 117]
-1:10307	10307	NORDHORN	52.267	7.433	78.0			0.4	[52.27, 52.27]	[7.43, 7.43]	IGRA2			0-20300-0-10307	19710616	19791228	1971.0	1985.0	True	0-20000-0-10315	rheine	[38, 85, 106, 107, 117]
-1:10307									[52.27, 52.27]	[7.43, 7.43]	WBAN			0-20500-0-nan	19710616	19791228				0-20000-0-10315	rheine	[38, 85, 106, 107, 117]
-1:10307									[52.27, 52.27]	[7.43, 7.43]	CHUAN			0-20400-0-nan	19710616	19791228				0-20000-0-10315	rheine	[38, 85, 106, 107, 117]
-1:10307	10307	Rheine - Waldhugel, West Germany	52.27	7.43	-999.0			0.0	[52.27, 52.27]	[7.43, 7.43]	SCHROEDER		10307.0	0-20600-0-10307	19710616	19791228				0-20000-0-10315	rheine	[38, 85, 106, 107, 117]
-1:10307									[52.27, 52.27]	[7.43, 7.43]	WMO			0-20700-0-nan	19710616	19791228				0-20000-0-10315	rheine	[38, 85, 106, 107, 117]

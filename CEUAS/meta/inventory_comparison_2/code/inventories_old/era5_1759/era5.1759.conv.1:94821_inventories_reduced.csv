@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:94821	94821	MOUNT GAMBIER AERO	-37.74722222222222	140.7738888888889	69.0	37 44 50S	140 46 26E	0.6	[-37.75, -37.75]	[140.78, 140.78]	OSCAR	0-20000-0-94821		0-20000-0-94821	19460101	19791231	999.0	999.0	True	0-20000-0-94821	mount gambier	[38, 85, 106, 107, 117]
-1:94821	94821	MOUNT GAMBIER AERO	-37.7472	140.7739	64.6			0.6	[-37.75, -37.75]	[140.78, 140.78]	IGRA2			0-20300-0-94821	19460101	19791231	1945.0	2021.0	True	0-20000-0-94821	mount gambier	[38, 85, 106, 107, 117]
-1:94821									[-37.75, -37.75]	[140.78, 140.78]	WBAN			0-20500-0-nan	19460101	19791231				0-20000-0-94821	mount gambier	[38, 85, 106, 107, 117]
-1:94821									[-37.75, -37.75]	[140.78, 140.78]	CHUAN			0-20400-0-nan	19460101	19791231				0-20000-0-94821	mount gambier	[38, 85, 106, 107, 117]
-1:94821	95821	(made up station ID) Mount Gambier AP 44.75 MHz wind profiler, South Australia, Australia	-37.7467	140.7755	-999.0			0.5	[-37.75, -37.75]	[140.78, 140.78]	SCHROEDER		95821	0-20600-0-95821	19460101	19791231				0-20000-0-94821	mount gambier	[38, 85, 106, 107, 117]
-1:94821	94821	Mount Gambier AP, South Australia, Australia	-37.82	140.77	-999.0			7.8	[-37.75, -37.75]	[140.78, 140.78]	SCHROEDER		94821	0-20600-0-94821	19460101	19791231				0-20000-0-94821	mount gambier	[38, 85, 106, 107, 117]
-1:94821	94821	MT GAMBIER               	-37.75	140.78333333333333	69.0			0.3	[-37.75, -37.75]	[140.78, 140.78]	WMO		94821	0-20700-0-94821	19460101	19791231				0-20000-0-94821	mount gambier	[38, 85, 106, 107, 117]

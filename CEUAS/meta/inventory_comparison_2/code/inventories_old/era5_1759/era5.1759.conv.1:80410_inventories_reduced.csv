@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:80410	80410	BARQUISIMETO	10.066666666666666	-69.31666666666666	614.0	10 04 00N	069 19 00W	0.5	[10.07, 10.07]	[-69.32, -69.32]	OSCAR	0-20000-0-80410		0-20000-0-80410	19650613	19720918	999.0	999.0	False	0-20000-0-80410	barquisimeto	[106, 107]
-1:80410	80410	BARQUISIMETO	10.067	-69.317	613.0			0.5	[10.07, 10.07]	[-69.32, -69.32]	IGRA2			0-20300-0-80410	19650613	19720918	1974.0	1984.0	True	0-20000-0-80410	barquisimeto	[106, 107]
-1:80410									[10.07, 10.07]	[-69.32, -69.32]	WBAN			0-20500-0-nan	19650613	19720918				0-20000-0-80410	barquisimeto	[106, 107]
-1:80410									[10.07, 10.07]	[-69.32, -69.32]	CHUAN			0-20400-0-nan	19650613	19720918				0-20000-0-80410	barquisimeto	[106, 107]
-1:80410	80410	Barquisimeto, Venezuela	10.07	-69.32	-999.0			0.0	[10.07, 10.07]	[-69.32, -69.32]	SCHROEDER		80410	0-20600-0-80410	19650613	19720918				0-20000-0-80410	barquisimeto	[106, 107]
-1:80410	80410	BARQUISIMETO             	10.066666666666666	-69.31666666666666	613.0			0.5	[10.07, 10.07]	[-69.32, -69.32]	WMO		80410	0-20700-0-80410	19650613	19720918				0-20000-0-80410	barquisimeto	[106, 107]

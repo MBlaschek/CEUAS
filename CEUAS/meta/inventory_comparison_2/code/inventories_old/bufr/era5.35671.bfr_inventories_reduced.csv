@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-35671									[47.8, 47.8]	[67.72, 67.72]	OSCAR				19600531	19781231				0-20300-0-35671	zhezkazgan	[36, 85, 106, 107]
-35671	35671	ZHEZKAZGAN	47.8	67.7167	346.0			0.2	[47.8, 47.8]	[67.72, 67.72]	IGRA2			0-20300-0-35671	19600531	19781231	1961.0	2021.0	True	0-20300-0-35671	zhezkazgan	[36, 85, 106, 107]
-35671									[47.8, 47.8]	[67.72, 67.72]	WBAN			0-20500-0-nan	19600531	19781231				0-20300-0-35671	zhezkazgan	[36, 85, 106, 107]
-35671									[47.8, 47.8]	[67.72, 67.72]	CHUAN			0-20400-0-nan	19600531	19781231				0-20300-0-35671	zhezkazgan	[36, 85, 106, 107]
-35671	35671	Zhezkazgan, Kazakhstan	47.8	67.72	-999.0			0.0	[47.8, 47.8]	[67.72, 67.72]	SCHROEDER		35671	0-20600-0-35671	19600531	19781231				0-20300-0-35671	zhezkazgan	[36, 85, 106, 107]
-35671	35671	ZHEZKAZGAN               	47.0	67.0	-999.0			104.2	[47.8, 47.8]	[67.72, 67.72]	WMO		35671	0-20700-0-35671	19600531	19781231				0-20300-0-35671	zhezkazgan	[36, 85, 106, 107]

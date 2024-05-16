@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-15145	15145	TARGU-MURES	46.528055555555554	24.522499999999997	311.2	46 31 41N	024 31 21E	0.6	[46.53, 46.53]	[24.53, 24.53]	OSCAR	0-20000-0-15145		0-20000-0-15145	19760125	19961020	999.0	999.0	False	0-20000-0-15145	targu-mures	['38', '85', '106', '107']
-15145	15145	TG. MURES	46.533	24.533	309.0			0.4	[46.53, 46.53]	[24.53, 24.53]	IGRA2			0-20300-0-15145	19760125	19961020	1977.0	1993.0	True	0-20000-0-15145	targu-mures	['38', '85', '106', '107']
-15145									[46.53, 46.53]	[24.53, 24.53]	WBAN			0-20500-0-nan	19760125	19961020				0-20000-0-15145	targu-mures	['38', '85', '106', '107']
-15145									[46.53, 46.53]	[24.53, 24.53]	CHUAN			0-20400-0-nan	19760125	19961020				0-20000-0-15145	targu-mures	['38', '85', '106', '107']
-15145	15145	Tirgu-Mures, Romania	46.53	24.53	-999.0			0.0	[46.53, 46.53]	[24.53, 24.53]	SCHROEDER		15145.0	0-20600-0-15145	19760125	19961020				0-20000-0-15145	targu-mures	['38', '85', '106', '107']
-15145									[46.53, 46.53]	[24.53, 24.53]	WMO			0-20700-0-nan	19760125	19961020				0-20000-0-15145	targu-mures	['38', '85', '106', '107']

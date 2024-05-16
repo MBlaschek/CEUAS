@@ -1,5 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0	0-20000-0-06465	SCHAFFEN	50.996944444444445	5.061944444444444	54.2	Surface land meteorological station (SYNOP), GOS	50 59 49N	005 03 43E	06465	999.0	999.0	False	0.7		OSCAR	0-20000-0-06465	diest	2.3	50.983333	5.05					
-1	2	0-20000-0-06464	RETIE	51.22138888888889	5.027222222222222	21.0	Surface land meteorological station (SYNOP), GOS	51 13 17N	005 01 38E	06464	999.0	999.0	False	24.8		OSCAR	0-20000-0-06464	diest	2.3	50.983333	5.05					
-2	3	0-20000-0-06477	DIEPENBEEK	50.91555555555556	5.450277777777778	39.0	Surface land meteorological station (SYNOP), GOS	50 54 56N	005 27 01E	06477	999.0	999.0	False	28.3		OSCAR	0-20000-0-06477	diest	2.3	50.983333	5.05					
-0	0		Goetsenhoven, Belgium	50.78	4.95	-999.0				6463				25.9		SCHROEDER	0-20600-0-6463	diest	2.3	50.983333	5.05		6463.0	231.0	2009-10-15 00:00:00	2009-10-15 00:00:00

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-63619									[3.533, 3.533]	[39.05, 39.05]	OSCAR				1974	1991				0-20300-0-63619	moyale	['85', '38', '106', '107']
-63619	63619	MOYALE	3.533	39.05	1113.0			0.0	[3.533, 3.533]	[39.05, 39.05]	IGRA2			0-20300-0-63619	1974	1991	1974.0	1991.0	True	0-20300-0-63619	moyale	['85', '38', '106', '107']
-63619									[3.533, 3.533]	[39.05, 39.05]	WBAN			0-20500-0-nan	1974	1991				0-20300-0-63619	moyale	['85', '38', '106', '107']
-63619									[3.533, 3.533]	[39.05, 39.05]	CHUAN			0-20400-0-nan	1974	1991				0-20300-0-63619	moyale	['85', '38', '106', '107']
-63619	63619	Moyale, Kenya	3.53	39.05	-999.0			0.3	[3.533, 3.533]	[39.05, 39.05]	SCHROEDER		63619	0-20600-0-63619	1974	1991				0-20300-0-63619	moyale	['85', '38', '106', '107']
-63619	63619	MOYALE                   	-1.3166666666666669	36.91666666666666	-999.0			586.4	[3.533, 3.533]	[39.05, 39.05]	WMO		63619	0-20700-0-63619	1974	1991				0-20300-0-63619	moyale	['85', '38', '106', '107']

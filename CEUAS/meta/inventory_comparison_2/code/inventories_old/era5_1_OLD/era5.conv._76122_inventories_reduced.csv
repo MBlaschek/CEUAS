@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-76122	76122	NUEVA CASAS GRANDES,  CHIH.	30.37638888888889	-107.93138888888889	1468.0	30 22 35N	107 55 53W	1.9	[30.42, 30.37]	[-107.92, -107.95]	OSCAR	0-20000-0-76122		0-20000-0-76122	19841225	20041026	999.0	999.0	False	0-20000-0-76122	nuevo casas grandes	[104, 105, 106, 107, 117]
-76122									[30.42, 30.37]	[-107.92, -107.95]	IGRA2			0-20300-0-nan	19841225	20041026				0-20000-0-76122	nuevo casas grandes	[104, 105, 106, 107, 117]
-76122									[30.42, 30.37]	[-107.92, -107.95]	WBAN			0-20500-0-nan	19841225	20041026				0-20000-0-76122	nuevo casas grandes	[104, 105, 106, 107, 117]
-76122									[30.42, 30.37]	[-107.92, -107.95]	CHUAN			0-20400-0-nan	19841225	20041026				0-20000-0-76122	nuevo casas grandes	[104, 105, 106, 107, 117]
-76122	76122	Nuevo Casas Grandes, Chihuahua, Mexico	30.42	-107.92	-999.0			6.2	[30.42, 30.37]	[-107.92, -107.95]	SCHROEDER		76122	0-20600-0-76122	19841225	20041026				0-20000-0-76122	nuevo casas grandes	[104, 105, 106, 107, 117]
-76122	76122	NUEVA CASAS GRANDES      	30.416666666666668	-107.91666666666669	-999.0			6.1	[30.42, 30.37]	[-107.92, -107.95]	WMO		76122	0-20700-0-76122	19841225	20041026				0-20000-0-76122	nuevo casas grandes	[104, 105, 106, 107, 117]

@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:5648	10224	BREMEN	53.044999999999995	8.797777777777778	5.35	53 02 42N	008 47 52E	0.6	[53.05, 53.05]	[8.8, 8.8]	OSCAR	0-20000-0-10224		0-20000-0-10224	19201025	19340630	999	999	False	0-20000-0-10224	bremen	[38, 106, 107]
-C:5648									[53.05, 53.05]	[8.8, 8.8]	IGRA2			0-20300-0-nan	19201025	19340630				0-20000-0-10224	bremen	[38, 106, 107]
-C:5648	35001	BREMEN	53.05	8.8	5.1816			0.0	[53.05, 53.05]	[8.8, 8.8]	WBAN			0-20500-0-35001	19201025	19340630	19460401	19480228		0-20000-0-10224	bremen	[38, 106, 107]
-C:5648	5648	Bremen	53.05	8.8	5			0.0	[53.05, 53.05]	[8.8, 8.8]	CHUAN		-999	0-20400-0-5648	19201025	19340630	-999-999	-999-999		0-20000-0-10224	bremen	[38, 106, 107]
-C:5648	10224	Bremen, Germany	53.08	8.78	-999			3.6	[53.05, 53.05]	[8.8, 8.8]	SCHROEDER		10224	0-20600-0-10224	19201025	19340630				0-20000-0-10224	bremen	[38, 106, 107]
-C:5648									[53.05, 53.05]	[8.8, 8.8]	WMO			0-20700-0-nan	19201025	19340630				0-20000-0-10224	bremen	[38, 106, 107]

@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-C:4933									[43.13, 43.13]	[-80.78, -80.78]	OSCAR				19230213	19231017				0-20500-0-94843	woodstock	[85]
-C:4933									[43.13, 43.13]	[-80.78, -80.78]	IGRA2			0-20300-0-nan	19230213	19231017				0-20500-0-94843	woodstock	[85]
-C:4933	94843.0	SUNFLOWER	43.13	-80.75	299.0088			2.4	[43.13, 43.13]	[-80.78, -80.78]	WBAN			0-20500-0-94843	19230213	19231017	19470101	19521231		0-20500-0-94843	woodstock	[85]
-C:4933	4933.0	Woodstock	43.13	-80.78	293			0.0	[43.13, 43.13]	[-80.78, -80.78]	CHUAN		-999	0-20400-0-4933	19230213	19231017	-999-999	-999-999		0-20500-0-94843	woodstock	[85]
-C:4933	6074.0	Woodstock	43.13	-80.75	293			2.4	[43.13, 43.13]	[-80.78, -80.78]	CHUAN		-999	0-20400-0-6074	19230213	19231017	-999-999	-999-999		0-20500-0-94843	woodstock	[85]
-C:4933	71262.0	(made up station ID) Woodstock, ON	43.13	-80.75	-999			2.4	[43.13, 43.13]	[-80.78, -80.78]	SCHROEDER		71262	0-20600-0-71262	19230213	19231017				0-20500-0-94843	woodstock	[85]
-C:4933									[43.13, 43.13]	[-80.78, -80.78]	WMO			0-20700-0-nan	19230213	19231017				0-20500-0-94843	woodstock	[85]

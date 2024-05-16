@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-31168	31168	AYAN	56.45	138.15	7.8	56 27 00N	138 09 00E	0.0	[56.45, 56.45]	[138.15, 138.15]	OSCAR	0-20000-0-31168		0-20000-0-31168	19580102	19781228	999	999	True	0-20000-0-31168	nikolayevsk-na-amure	[36, 85, 106, 107]
-31168	31168	AYAN	56.45	138.15	6.0			0.0	[56.45, 56.45]	[138.15, 138.15]	IGRA2			0-20300-0-31168	19580102	19781228	1950	2020	True	0-20000-0-31168	nikolayevsk-na-amure	[36, 85, 106, 107]
-31168									[56.45, 56.45]	[138.15, 138.15]	WBAN			0-20500-0-nan	19580102	19781228				0-20000-0-31168	nikolayevsk-na-amure	[36, 85, 106, 107]
-31168	4544	Ayan	56.45	138.15	8			0.0	[56.45, 56.45]	[138.15, 138.15]	CHUAN		-999	0-20400-0-4544	19580102	19781228	195405	195409		0-20000-0-31168	nikolayevsk-na-amure	[36, 85, 106, 107]
-31168	4606	Ayan	56.45	138.15	8			0.0	[56.45, 56.45]	[138.15, 138.15]	CHUAN		-999	0-20400-0-4606	19580102	19781228	195410	195504		0-20000-0-31168	nikolayevsk-na-amure	[36, 85, 106, 107]
-31168	31168	Ayan, Russia	56.45	138.15	-999			0.0	[56.45, 56.45]	[138.15, 138.15]	SCHROEDER		31168	0-20600-0-31168	19580102	19781228				0-20000-0-31168	nikolayevsk-na-amure	[36, 85, 106, 107]
-31168									[56.45, 56.45]	[138.15, 138.15]	WMO			0-20700-0-nan	19580102	19781228				0-20000-0-31168	nikolayevsk-na-amure	[36, 85, 106, 107]

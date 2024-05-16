@@ -1,9 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-10828	10827	MESSSTETTEN	48.169444444444444	8.943333333333333	900.4	48 10 10N	008 56 36E	24.1	[48.1, 48.1]	[9.25, 9.25]	OSCAR	0-20000-0-10827		0-20000-0-10827	1995	2007	999.0	999.0	False	0-20000-0-10827	sigmaringen	['85', '38', '106', '107']
-10828	10828	SIGMARINGEN	48.1	9.25	646.0			0.0	[48.1, 48.1]	[9.25, 9.25]	IGRA2			0-20300-0-10828	1995	2007	1995.0	2007.0	True	0-20000-0-10827	sigmaringen	['85', '38', '106', '107']
-10828	10921	NEUHAUSEN OB ECK	47.983	8.9	807.0			29.2	[48.1, 48.1]	[9.25, 9.25]	IGRA2			0-20300-0-10921	1995	2007	1971.0	1994.0	True	0-20000-0-10827	sigmaringen	['85', '38', '106', '107']
-10828									[48.1, 48.1]	[9.25, 9.25]	WBAN			0-20500-0-nan	1995	2007				0-20000-0-10827	sigmaringen	['85', '38', '106', '107']
-10828									[48.1, 48.1]	[9.25, 9.25]	CHUAN			0-20400-0-nan	1995	2007				0-20000-0-10827	sigmaringen	['85', '38', '106', '107']
-10828	10828	Sigmaringen, Germany	48.0923	9.253	-999.0			0.9	[48.1, 48.1]	[9.25, 9.25]	SCHROEDER		10828.0	0-20600-0-10828	1995	2007				0-20000-0-10827	sigmaringen	['85', '38', '106', '107']
-10828	10921	Neuhausen Ob Eck, West Germany	47.98	8.9	-999.0			29.3	[48.1, 48.1]	[9.25, 9.25]	SCHROEDER		10921.0	0-20600-0-10921	1995	2007				0-20000-0-10827	sigmaringen	['85', '38', '106', '107']
-10828									[48.1, 48.1]	[9.25, 9.25]	WMO			0-20700-0-nan	1995	2007				0-20000-0-10827	sigmaringen	['85', '38', '106', '107']

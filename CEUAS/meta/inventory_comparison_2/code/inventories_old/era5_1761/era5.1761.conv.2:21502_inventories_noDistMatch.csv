@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	hilo	120.8	19.7297222	-155.09						[18.92, 18.92]	[-154.32, -154.32]	era5.1761.conv.2:21502	era5_1761	19400305	19401011	2:21502		[106, 107]
-0	0		MORSE FIELD	18.9167	-155.6833	11.9				21502	1940.0	1941.0	True	143.6		0-20300-0-21502	IGRA2	hilo	120.8	19.7297222	-155.09	USW00021502					[18.92, 18.92]	[-154.32, -154.32]	era5.1761.conv.2:21502	era5_1761	19400305	19401011	2:21502		[106, 107]
-0	0															0-20500-0-nan	WBAN	hilo	120.8	19.7297222	-155.09						[18.92, 18.92]	[-154.32, -154.32]	era5.1761.conv.2:21502	era5_1761	19400305	19401011	2:21502		[106, 107]
-0	0															0-20400-0-nan	CHUAN	hilo	120.8	19.7297222	-155.09						[18.92, 18.92]	[-154.32, -154.32]	era5.1761.conv.2:21502	era5_1761	19400305	19401011	2:21502		[106, 107]
-0	0															0-20600-0-nan	SCHROEDER	hilo	120.8	19.7297222	-155.09						[18.92, 18.92]	[-154.32, -154.32]	era5.1761.conv.2:21502	era5_1761	19400305	19401011	2:21502		[106, 107]
-0	0															0-20700-0-nan	WMO	hilo	120.8	19.7297222	-155.09						[18.92, 18.92]	[-154.32, -154.32]	era5.1761.conv.2:21502	era5_1761	19400305	19401011	2:21502		[106, 107]

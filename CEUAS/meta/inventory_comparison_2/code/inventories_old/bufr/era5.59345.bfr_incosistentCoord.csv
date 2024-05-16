@@ -1,8 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
-0	0		TAINAN (TW-AFB)	22.95	120.217	16.0				46743	1977.0	1993.0	True	5.5		IGRA2	0-20300-0-46743	tainan	1.8	22.9933333	120.2036111	TWM00046743				
-1	1	0-20000-0-59358	TAINAN	23.0	120.21666666666667	14.0	Climatological station, Surface land meteorological station (SYNOP), GOS, RBCN, RBSN(S)	23 00 00N	120 13 00E	59358	999.0	999.0	False	0.3		OSCAR	0-20000-0-59358	tainan	1.8	22.9933333	120.2036111					
-0	0	0-20000-0-59345	MAGONG	23.516666666666666	119.56666666666666		Surface land meteorological station (SYNOP), GOS	23 31 00N	119 34 00E	59345	999.0	999.0	False	88.0		OSCAR	0-20000-0-59345	tainan	1.8	22.9933333	120.2036111					
-0	0		Tainan, Taiwan	23.0	120.22	-999.0				46741				0.0		SCHROEDER	0-20600-0-46741	tainan	1.8	22.9933333	120.2036111		46741	1233.0	1998-08-13 00:00:00	1998-08-13 00:00:00
-1	1		RCNN Tainan AP, Taiwan	22.95	120.2	-999.0				46743				5.9		SCHROEDER	0-20600-0-46743	tainan	1.8	22.9933333	120.2036111		46743	1234.0	1985-06-20 00:00:00	1987-06-24 00:00:00
-2	2		"(made up station ID) ""TXN23"" Tsochien, Taiwan - TAMEX pibals"	23.05	120.4	-999.0				46782				19.3		SCHROEDER	0-20600-0-46782	tainan	1.8	22.9933333	120.2036111		46782	1246.0	1987-05-01 00:00:00	1987-05-01 00:00:00
-0	0		TAINAN                   	23.0	120.21666666666668	-999.0				59358				0.3		WMO	0-20700-0-59358	tainan	1.8	22.9933333	120.2036111		59358	5364.0		

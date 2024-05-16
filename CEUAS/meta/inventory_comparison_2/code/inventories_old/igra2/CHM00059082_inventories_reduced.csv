@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-59082	59082	SHAOGUAN	24.666666666666668	113.6	122.0	24 40 00N	113 36 00E	21.0	[24.8333, 24.8333]	[113.5, 113.5]	OSCAR	0-20000-0-59082		0-20000-0-59082	1958	1961	999.0	999.0	False	0-20000-0-59082	shaoguan	['85', '38', '106', '107']
-59082	59082	CHU CHIANG	24.8333	113.5	87.0			0.0	[24.8333, 24.8333]	[113.5, 113.5]	IGRA2			0-20300-0-59082	1958	1961	1958.0	1961.0	True	0-20000-0-59082	shaoguan	['85', '38', '106', '107']
-59082									[24.8333, 24.8333]	[113.5, 113.5]	WBAN			0-20500-0-nan	1958	1961				0-20000-0-59082	shaoguan	['85', '38', '106', '107']
-59082									[24.8333, 24.8333]	[113.5, 113.5]	CHUAN			0-20400-0-nan	1958	1961				0-20000-0-59082	shaoguan	['85', '38', '106', '107']
-59082	59082	Shaoguan / Chuchiang, China	24.83	113.5	-999.0			0.4	[24.8333, 24.8333]	[113.5, 113.5]	SCHROEDER		59082	0-20600-0-59082	1958	1961				0-20000-0-59082	shaoguan	['85', '38', '106', '107']
-59082	59082	SHAOGUAN                 	24.666666666666668	113.6	-999.0			21.0	[24.8333, 24.8333]	[113.5, 113.5]	WMO		59082	0-20700-0-59082	1958	1961				0-20000-0-59082	shaoguan	['85', '38', '106', '107']

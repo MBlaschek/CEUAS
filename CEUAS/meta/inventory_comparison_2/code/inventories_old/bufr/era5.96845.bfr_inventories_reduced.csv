@@ -1,8 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-96845									[-7.87, -7.87]	[110.92, 110.92]	OSCAR				19700805	19720821				0-20600-0-96845	wonogiri	[36, 85, 106, 107]
-96845	96845	SURAKARTA/ADISUMARM	-7.5167	110.75	0.0			43.3	[-7.87, -7.87]	[110.92, 110.92]	IGRA2			0-20300-0-96845	19700805	19720821	1973.0	1989.0	True	0-20600-0-96845	wonogiri	[36, 85, 106, 107]
-96845									[-7.87, -7.87]	[110.92, 110.92]	WBAN			0-20500-0-nan	19700805	19720821				0-20600-0-96845	wonogiri	[36, 85, 106, 107]
-96845									[-7.87, -7.87]	[110.92, 110.92]	CHUAN			0-20400-0-nan	19700805	19720821				0-20600-0-96845	wonogiri	[36, 85, 106, 107]
-96845	96845	Kepek, Java, Indonesia	-7.87	110.92	-999.0			0.0	[-7.87, -7.87]	[110.92, 110.92]	SCHROEDER		96845	0-20600-0-96845	19700805	19720821				0-20600-0-96845	wonogiri	[36, 85, 106, 107]
-96845	96L43	SELOGIRI                 	-7.8	110.91666666666669	-999.0			7.8	[-7.87, -7.87]	[110.92, 110.92]	WMO		96L43	0-20700-0-96L43	19700805	19720821				0-20600-0-96845	wonogiri	[36, 85, 106, 107]
-96845	96K27	WADASLINTANG             	-7.616666666666667	110.91666666666669	-999.0			28.0	[-7.87, -7.87]	[110.92, 110.92]	WMO		96K27	0-20700-0-96K27	19700805	19720821				0-20600-0-96845	wonogiri	[36, 85, 106, 107]

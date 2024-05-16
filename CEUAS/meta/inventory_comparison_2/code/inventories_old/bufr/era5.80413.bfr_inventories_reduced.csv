@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-80413	80413	MARACAY - B.A. SUCRE	10.25	-67.65	437.0	10 15 00N	067 39 00W	0.0	[10.25, 10.25]	[-67.65, -67.65]	OSCAR	0-20000-0-80413		0-20000-0-80413	19651208	19781231	999.0	999.0	True	0-20000-0-80413	maracay	[36, 85, 106, 107]
-80413	80413	MARACAY - B.A. SUCRE	10.25	-67.65	436.0			0.0	[10.25, 10.25]	[-67.65, -67.65]	IGRA2			0-20300-0-80413	19651208	19781231	1966.0	2014.0	True	0-20000-0-80413	maracay	[36, 85, 106, 107]
-80413									[10.25, 10.25]	[-67.65, -67.65]	WBAN			0-20500-0-nan	19651208	19781231				0-20000-0-80413	maracay	[36, 85, 106, 107]
-80413									[10.25, 10.25]	[-67.65, -67.65]	CHUAN			0-20400-0-nan	19651208	19781231				0-20000-0-80413	maracay	[36, 85, 106, 107]
-80413	80413	SVBS Maracay - Base Aerea Mariscal Sucre (operated by Venezuelan Air Force), Venezuela	10.25	-67.65	-999.0			0.0	[10.25, 10.25]	[-67.65, -67.65]	SCHROEDER		80413	0-20600-0-80413	19651208	19781231				0-20000-0-80413	maracay	[36, 85, 106, 107]
-80413	80413	MARACAY                  	10.25	-67.65	436.0			0.0	[10.25, 10.25]	[-67.65, -67.65]	WMO		80413	0-20700-0-80413	19651208	19781231				0-20000-0-80413	maracay	[36, 85, 106, 107]

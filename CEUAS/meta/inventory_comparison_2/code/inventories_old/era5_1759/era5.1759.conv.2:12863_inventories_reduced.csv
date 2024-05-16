@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:12863									[29.97, 29.97]	[-89.38, -89.38]	OSCAR				19500816	19650212				0-20500-0-12890	long beach	[38, 85, 106, 107, 117]
-2:12863	12863	BURRWOOD	28.9833	-89.3667	2.7			109.4	[29.97, 29.97]	[-89.38, -89.38]	IGRA2			0-20300-0-12863	19500816	19650212	1942.0	1946.0	True	0-20500-0-12890	long beach	[38, 85, 106, 107, 117]
-2:12863	12890	MAIN PASS AMOS	30.17	-89.5	644.0424			25.0	[29.97, 29.97]	[-89.38, -89.38]	WBAN			0-20500-0-12890	19500816	19650212	10101.0	99991231.0		0-20500-0-12890	long beach	[38, 85, 106, 107, 117]
-2:12863									[29.97, 29.97]	[-89.38, -89.38]	CHUAN			0-20400-0-nan	19500816	19650212				0-20500-0-12890	long beach	[38, 85, 106, 107, 117]
-2:12863									[29.97, 29.97]	[-89.38, -89.38]	SCHROEDER			0-20600-0-nan	19500816	19650212				0-20500-0-12890	long beach	[38, 85, 106, 107, 117]
-2:12863									[29.97, 29.97]	[-89.38, -89.38]	WMO			0-20700-0-nan	19500816	19650212				0-20500-0-12890	long beach	[38, 85, 106, 107, 117]

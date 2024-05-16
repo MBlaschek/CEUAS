@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-51855									[38.13, 38.13]	[85.53, 85.53]	OSCAR				19580101	19691015				0-20600-0-51855	korla	[36, 85, 106, 107]
-51855									[38.13, 38.13]	[85.53, 85.53]	IGRA2			0-20300-0-nan	19580101	19691015				0-20600-0-51855	korla	[36, 85, 106, 107]
-51855									[38.13, 38.13]	[85.53, 85.53]	WBAN			0-20500-0-nan	19580101	19691015				0-20600-0-51855	korla	[36, 85, 106, 107]
-51855									[38.13, 38.13]	[85.53, 85.53]	CHUAN			0-20400-0-nan	19580101	19691015				0-20600-0-51855	korla	[36, 85, 106, 107]
-51855	51855.0	Qiemo / Qarqan, China	38.15	85.53	-999.0			2.2	[38.13, 38.13]	[85.53, 85.53]	SCHROEDER		51855.0	0-20600-0-51855	19580101	19691015				0-20600-0-51855	korla	[36, 85, 106, 107]
-51855									[38.13, 38.13]	[85.53, 85.53]	WMO			0-20700-0-nan	19580101	19691015				0-20600-0-51855	korla	[36, 85, 106, 107]

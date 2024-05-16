@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-60265	60265	OUARZAZATE	30.933333333333334	-6.9	1140.0	30 56 00N	006 54 00W	0.0	[30.933, 30.933]	[-6.9, -6.9]	OSCAR	0-20000-0-60265		0-20000-0-60265	1973	1983	999.0	999.0	False	0-20000-0-60265	marrakesh	['85', '38', '106', '107']
-60265	60265	OUARZAZATE	30.933	-6.9	1140.0			0.0	[30.933, 30.933]	[-6.9, -6.9]	IGRA2			0-20300-0-60265	1973	1983	1973.0	1983.0	True	0-20000-0-60265	marrakesh	['85', '38', '106', '107']
-60265									[30.933, 30.933]	[-6.9, -6.9]	WBAN			0-20500-0-nan	1973	1983				0-20000-0-60265	marrakesh	['85', '38', '106', '107']
-60265									[30.933, 30.933]	[-6.9, -6.9]	CHUAN			0-20400-0-nan	1973	1983				0-20000-0-60265	marrakesh	['85', '38', '106', '107']
-60265	60265	GMMZ Ouarzazate (Taourirt - Ouarzazate AP), Morocco	30.93	-6.9	-999.0			0.3	[30.933, 30.933]	[-6.9, -6.9]	SCHROEDER		60265	0-20600-0-60265	1973	1983				0-20000-0-60265	marrakesh	['85', '38', '106', '107']
-60265	60265	OUARZAZATE               	30.933333333333334	-6.9	-999.0			0.0	[30.933, 30.933]	[-6.9, -6.9]	WMO		60265	0-20700-0-60265	1973	1983				0-20000-0-60265	marrakesh	['85', '38', '106', '107']

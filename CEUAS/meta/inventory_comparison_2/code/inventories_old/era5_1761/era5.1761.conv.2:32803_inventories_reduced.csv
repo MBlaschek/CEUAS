@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-2:32803									[22.45, 22.45]	[86.7, 86.7]	OSCAR				19430901	19450430				0-20500-0-32803	chakulia	[106, 107]
-2:32803									[22.45, 22.45]	[86.7, 86.7]	IGRA2			0-20300-0-nan	19430901	19450430				0-20500-0-32803	chakulia	[106, 107]
-2:32803	32803.0	CHAKULIA	22.45	86.7	131.064			0.0	[22.45, 22.45]	[86.7, 86.7]	WBAN			0-20500-0-32803	19430901	19450430	19421101.0	19451031.0		0-20500-0-32803	chakulia	[106, 107]
-2:32803									[22.45, 22.45]	[86.7, 86.7]	CHUAN			0-20400-0-nan	19430901	19450430				0-20500-0-32803	chakulia	[106, 107]
-2:32803									[22.45, 22.45]	[86.7, 86.7]	SCHROEDER			0-20600-0-nan	19430901	19450430				0-20500-0-32803	chakulia	[106, 107]
-2:32803									[22.45, 22.45]	[86.7, 86.7]	WMO			0-20700-0-nan	19430901	19450430				0-20500-0-32803	chakulia	[106, 107]

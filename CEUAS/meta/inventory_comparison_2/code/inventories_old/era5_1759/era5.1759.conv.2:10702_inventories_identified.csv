@@ -1,7 +1,0 @@
-level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
-0	0																OSCAR	el coco	32.0	8.8702778	-79.815						[8.6, 8.6]	[-79.92, -79.92]	era5.1759.conv.2:10702	era5_1759	19430425	19461024	2:10702	0-20500-0-10702	[106, 107]
-0	0															0-20300-0-nan	IGRA2	el coco	32.0	8.8702778	-79.815						[8.6, 8.6]	[-79.92, -79.92]	era5.1759.conv.2:10702	era5_1759	19430425	19461024	2:10702	0-20500-0-10702	[106, 107]
-0	0		CHAME	8.6	-79.92	37.1856				10702.0	19420701.0	19461031.0		0.0		0-20500-0-10702	WBAN	el coco	32.0	8.8702778	-79.815						[8.6, 8.6]	[-79.92, -79.92]	era5.1759.conv.2:10702	era5_1759	19430425	19461024	2:10702	0-20500-0-10702	[106, 107]
-0	0															0-20400-0-nan	CHUAN	el coco	32.0	8.8702778	-79.815						[8.6, 8.6]	[-79.92, -79.92]	era5.1759.conv.2:10702	era5_1759	19430425	19461024	2:10702	0-20500-0-10702	[106, 107]
-0	0															0-20600-0-nan	SCHROEDER	el coco	32.0	8.8702778	-79.815						[8.6, 8.6]	[-79.92, -79.92]	era5.1759.conv.2:10702	era5_1759	19430425	19461024	2:10702	0-20500-0-10702	[106, 107]
-0	0															0-20700-0-nan	WMO	el coco	32.0	8.8702778	-79.815						[8.6, 8.6]	[-79.92, -79.92]	era5.1759.conv.2:10702	era5_1759	19430425	19461024	2:10702	0-20500-0-10702	[106, 107]

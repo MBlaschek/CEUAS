@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-64700	64700	NDJAMENA	12.133333333333333	15.033333333333333	295.0	12 08 00N	015 02 00E	0.5	[12.13, 12.13]	[15.03, 15.03]	OSCAR	0-20000-0-64700		0-20000-0-64700	20180114	20211231	999.0	999.0	False	0-20000-0-64700	kousseri	['38', '85', '106', '107']
-64700	64700	NDJAMENA	12.1333	15.0333	295.0			0.5	[12.13, 12.13]	[15.03, 15.03]	IGRA2			0-20300-0-64700	20180114	20211231	1950.0	2021.0	True	0-20000-0-64700	kousseri	['38', '85', '106', '107']
-64700									[12.13, 12.13]	[15.03, 15.03]	WBAN			0-20500-0-nan	20180114	20211231				0-20000-0-64700	kousseri	['38', '85', '106', '107']
-64700									[12.13, 12.13]	[15.03, 15.03]	CHUAN			0-20400-0-nan	20180114	20211231				0-20000-0-64700	kousseri	['38', '85', '106', '107']
-64700	64700	FTTJ Ndjamena / Fort-Lamy - Ndjamena Hassan Djamous AP, Chad	12.13	15.03	-999.0			0.0	[12.13, 12.13]	[15.03, 15.03]	SCHROEDER		64700	0-20600-0-64700	20180114	20211231				0-20000-0-64700	kousseri	['38', '85', '106', '107']
-64700	64700	NDJAMENA                 	12.133333333333333	15.033333333333331	-999.0			0.5	[12.13, 12.13]	[15.03, 15.03]	WMO		64700	0-20700-0-64700	20180114	20211231				0-20000-0-64700	kousseri	['38', '85', '106', '107']

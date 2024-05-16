@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-42734	42734	JAMNAGAR	22.45	70.08333333333333	20.0	22 27 00N	070 05 00E	0.0	[22.45, 22.45]	[70.083, 70.083]	OSCAR	0-20000-0-42734		0-20000-0-42734	1973	1975	999.0	999.0	False	0-20000-0-42734	jamnagar	['85', '38', '106', '107']
-42734	42734	JAMNAGAR	22.45	70.083	20.0			0.0	[22.45, 22.45]	[70.083, 70.083]	IGRA2			0-20300-0-42734	1973	1975	1973.0	1975.0	True	0-20000-0-42734	jamnagar	['85', '38', '106', '107']
-42734									[22.45, 22.45]	[70.083, 70.083]	WBAN			0-20500-0-nan	1973	1975				0-20000-0-42734	jamnagar	['85', '38', '106', '107']
-42734									[22.45, 22.45]	[70.083, 70.083]	CHUAN			0-20400-0-nan	1973	1975				0-20000-0-42734	jamnagar	['85', '38', '106', '107']
-42734	42734	Jamnagar, Gujarat, India	22.48	70.08	-999.0			3.3	[22.45, 22.45]	[70.083, 70.083]	SCHROEDER		42734.0	0-20600-0-42734	1973	1975				0-20000-0-42734	jamnagar	['85', '38', '106', '107']
-42734									[22.45, 22.45]	[70.083, 70.083]	WMO			0-20700-0-nan	1973	1975				0-20000-0-42734	jamnagar	['85', '38', '106', '107']

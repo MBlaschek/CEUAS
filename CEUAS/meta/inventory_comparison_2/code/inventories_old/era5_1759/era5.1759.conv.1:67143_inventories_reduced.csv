@@ -1,7 +1,0 @@
-file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
-1:67143	67143	MANANJARY	-21.2	48.36666666666667	6.0	21 12 00S	048 22 00E	0.7	[-21.2, -21.2]	[48.36, 48.36]	OSCAR	0-20000-0-67143		0-20000-0-67143	19660604	19721231	999.0	999.0	False	0-20000-0-67143	mananjary	[106, 107]
-1:67143	67143	MANANJARY	-21.2	48.367	5.0			0.7	[-21.2, -21.2]	[48.36, 48.36]	IGRA2			0-20300-0-67143	19660604	19721231	1973.0	1995.0	True	0-20000-0-67143	mananjary	[106, 107]
-1:67143									[-21.2, -21.2]	[48.36, 48.36]	WBAN			0-20500-0-nan	19660604	19721231				0-20000-0-67143	mananjary	[106, 107]
-1:67143									[-21.2, -21.2]	[48.36, 48.36]	CHUAN			0-20400-0-nan	19660604	19721231				0-20000-0-67143	mananjary	[106, 107]
-1:67143	67143	Mananjary, Madagascar	-21.2	48.37	-999.0			1.0	[-21.2, -21.2]	[48.36, 48.36]	SCHROEDER		67143	0-20600-0-67143	19660604	19721231				0-20000-0-67143	mananjary	[106, 107]
-1:67143	67143	MANANJARY                	-21.2	48.36666666666667	-999.0			0.7	[-21.2, -21.2]	[48.36, 48.36]	WMO		67143	0-20700-0-67143	19660604	19721231				0-20000-0-67143	mananjary	[106, 107]
