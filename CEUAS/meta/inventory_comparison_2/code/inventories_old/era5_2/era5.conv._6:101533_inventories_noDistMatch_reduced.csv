@@ -1,0 +1,9 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+6:101533	101533	ALAJARVI MOKSY	63.08888888888889	24.260833333333334	171.4	63 05 20N	024 15 39E	6602.2	[33.9, 33.9]	[-63.6, -63.6]	OSCAR	0-246-0-101533		0-246-0-101533	19710620	19710620	999.0	999.0	False		None	[38, 85]
+6:101533									[33.9, 33.9]	[-63.6, -63.6]	IGRA2			0-20300-0-nan	19710620	19710620					None	[38, 85]
+6:101533									[33.9, 33.9]	[-63.6, -63.6]	WBAN			0-20500-0-nan	19710620	19710620					None	[38, 85]
+6:101533									[33.9, 33.9]	[-63.6, -63.6]	CHUAN			0-20400-0-nan	19710620	19710620					None	[38, 85]
+6:101533									[33.9, 33.9]	[-63.6, -63.6]	SCHROEDER			0-20600-0-nan	19710620	19710620					None	[38, 85]
+6:101533									[33.9, 33.9]	[-63.6, -63.6]	WMO			0-20700-0-nan	19710620	19710620					None	[38, 85]
+6:101533									[33.9, 33.9]	[-63.6, -63.6]	AMMA			0-20800-0-nan	19710620	19710620					None	[38, 85]
+6:101533									[33.9, 33.9]	[-63.6, -63.6]	HARA			0-20111-0-nan	19710620	19710620					None	[38, 85]

@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:5590									[48.17, 48.17]	[6.45, 6.45]	OSCAR				19310516	19320305				0-20400-0-5590	epinal	[106, 107]
+C:5590									[48.17, 48.17]	[6.45, 6.45]	IGRA2			0-20300-0-nan	19310516	19320305				0-20400-0-5590	epinal	[106, 107]
+C:5590									[48.17, 48.17]	[6.45, 6.45]	WBAN			0-20500-0-nan	19310516	19320305				0-20400-0-5590	epinal	[106, 107]
+C:5590	5590.0	Epinal	48.17	6.45	345			0.0	[48.17, 48.17]	[6.45, 6.45]	CHUAN		-999	0-20400-0-5590	19310516	19320305	-999-999	-999-999		0-20400-0-5590	epinal	[106, 107]
+C:5590	5127.0	Epinal	48.18	6.47	390			1.9	[48.17, 48.17]	[6.45, 6.45]	CHUAN		-999	0-20400-0-5127	19310516	19320305	-999-999	-999-999		0-20400-0-5590	epinal	[106, 107]
+C:5590									[48.17, 48.17]	[6.45, 6.45]	SCHROEDER			0-20600-0-nan	19310516	19320305				0-20400-0-5590	epinal	[106, 107]
+C:5590									[48.17, 48.17]	[6.45, 6.45]	WMO			0-20700-0-nan	19310516	19320305				0-20400-0-5590	epinal	[106, 107]

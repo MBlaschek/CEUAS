@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+6:20706	47003	SENBONG	42.31666666666667	130.4	3.0	42 19 00N	130 24 00E	0.4	[42.32, 42.32]	[130.4, 130.4]	OSCAR	0-20000-0-47003		0-20000-0-47003	19350706	19430131	999.0	999.0	False	0-20000-0-47003	hunchun	[38, 106, 107]
+6:20706									[42.32, 42.32]	[130.4, 130.4]	IGRA2			0-20300-0-nan	19350706	19430131				0-20000-0-47003	hunchun	[38, 106, 107]
+6:20706									[42.32, 42.32]	[130.4, 130.4]	WBAN			0-20500-0-nan	19350706	19430131				0-20000-0-47003	hunchun	[38, 106, 107]
+6:20706									[42.32, 42.32]	[130.4, 130.4]	CHUAN			0-20400-0-nan	19350706	19430131				0-20000-0-47003	hunchun	[38, 106, 107]
+6:20706									[42.32, 42.32]	[130.4, 130.4]	SCHROEDER			0-20600-0-nan	19350706	19430131				0-20000-0-47003	hunchun	[38, 106, 107]
+6:20706	47003	SENBONG                  	42.31666666666667	130.4	-999.0			0.4	[42.32, 42.32]	[130.4, 130.4]	WMO		47003	0-20700-0-47003	19350706	19430131				0-20000-0-47003	hunchun	[38, 106, 107]

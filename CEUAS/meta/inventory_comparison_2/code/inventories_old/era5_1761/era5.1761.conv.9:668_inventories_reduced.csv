@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+9:668	61075	BIRNI-N'KONNI	13.8	5.25	273.0	13 48 00N	005 15 00E	0.0	[13.8, 13.8]	[5.25, 5.25]	OSCAR	0-20000-0-61075		0-20000-0-61075	19550803	19571231	999.0	999.0	False	0-20000-0-61075	illela	[106, 107]
+9:668	61075	BIRNI-N'KONNI	13.8	5.25	272.0			0.0	[13.8, 13.8]	[5.25, 5.25]	IGRA2			0-20300-0-61075	19550803	19571231	1955.0	2012.0	True	0-20000-0-61075	illela	[106, 107]
+9:668									[13.8, 13.8]	[5.25, 5.25]	WBAN			0-20500-0-nan	19550803	19571231				0-20000-0-61075	illela	[106, 107]
+9:668									[13.8, 13.8]	[5.25, 5.25]	CHUAN			0-20400-0-nan	19550803	19571231				0-20000-0-61075	illela	[106, 107]
+9:668	61075	Birni-N'konni, Niger	13.8	5.25	-999.0			0.0	[13.8, 13.8]	[5.25, 5.25]	SCHROEDER		61075	0-20600-0-61075	19550803	19571231				0-20000-0-61075	illela	[106, 107]
+9:668	61075	BIRNI-N'KONNI            	13.8	5.25	-999.0			0.0	[13.8, 13.8]	[5.25, 5.25]	WMO		61075	0-20700-0-61075	19550803	19571231				0-20000-0-61075	illela	[106, 107]

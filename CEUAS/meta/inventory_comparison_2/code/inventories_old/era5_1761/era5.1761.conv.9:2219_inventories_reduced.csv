@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+9:2219	88881	MOUNT KENT	-51.67361111111111	-58.10805555555556	458.0	51 40 25S	058 06 29W	16.7	[-51.7, -51.7]	[-57.87, -57.87]	OSCAR	0-20000-0-88881		0-20000-0-88881	19530103	19580601	999.0	999.0	False	0-20000-0-88881	None	[106, 107]
+9:2219	88890	STANLEY	-51.7	-57.8667	51.0			0.2	[-51.7, -51.7]	[-57.87, -57.87]	IGRA2			0-20300-0-88890	19530103	19580601	1948.0	1962.0	True	0-20000-0-88881	None	[106, 107]
+9:2219									[-51.7, -51.7]	[-57.87, -57.87]	WBAN			0-20500-0-nan	19530103	19580601				0-20000-0-88881	None	[106, 107]
+9:2219									[-51.7, -51.7]	[-57.87, -57.87]	CHUAN			0-20400-0-nan	19530103	19580601				0-20000-0-88881	None	[106, 107]
+9:2219	88890	Port Stanley, Falkland Islands (United Kingdom)	-51.7	-57.87	-999.0			0.0	[-51.7, -51.7]	[-57.87, -57.87]	SCHROEDER		88890	0-20600-0-88890	19530103	19580601				0-20000-0-88881	None	[106, 107]
+9:2219	88890	STANLEY                  	-51.7	-57.86666666666667	-999.0			0.2	[-51.7, -51.7]	[-57.87, -57.87]	WMO		88890	0-20700-0-88890	19530103	19580601				0-20000-0-88881	None	[106, 107]

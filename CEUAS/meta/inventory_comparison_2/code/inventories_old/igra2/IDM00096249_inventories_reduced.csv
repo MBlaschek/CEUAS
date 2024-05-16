@@ -1,0 +1,9 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+96249	96249	TANJUNG PANDAN/BULUH TUMBANG	-2.75	107.75	44.0	02 45 00S	107 45 00E	0.0	[-2.75, -2.75]	[107.75, 107.75]	OSCAR	0-20000-0-96249		0-20000-0-96249	1975	2021	999.0	999.0	False	0-20000-0-96249	manggar	['85', '38', '106', '107']
+96249	96249	TANJUNG PANDAN/BULUH TUMBANG	-2.75	107.75	44.0			0.0	[-2.75, -2.75]	[107.75, 107.75]	IGRA2			0-20300-0-96249	1975	2021	1975.0	2021.0	True	0-20000-0-96249	manggar	['85', '38', '106', '107']
+96249									[-2.75, -2.75]	[107.75, 107.75]	WBAN			0-20500-0-nan	1975	2021				0-20000-0-96249	manggar	['85', '38', '106', '107']
+96249									[-2.75, -2.75]	[107.75, 107.75]	CHUAN			0-20400-0-nan	1975	2021				0-20000-0-96249	manggar	['85', '38', '106', '107']
+96249	96249	WIKD Tanjungpandan - Buluh Tumbang AP, Sumatra, Indonesia	-2.75	107.75	-999.0			0.0	[-2.75, -2.75]	[107.75, 107.75]	SCHROEDER		96249	0-20600-0-96249	1975	2021				0-20000-0-96249	manggar	['85', '38', '106', '107']
+96249	96249	TANJUNG PANDAN           	-2.75	107.75	-999.0			0.0	[-2.75, -2.75]	[107.75, 107.75]	WMO		96249	0-20700-0-96249	1975	2021				0-20000-0-96249	manggar	['85', '38', '106', '107']
+96249	96F32	BULUH TUMBANG TANJUNG PA 	-2.75	107.75	-999.0			0.0	[-2.75, -2.75]	[107.75, 107.75]	WMO		96F32	0-20700-0-96F32	1975	2021				0-20000-0-96249	manggar	['85', '38', '106', '107']
+96249	96F33	KENTEN                   	-3.0	107.75	-999.0			27.6	[-2.75, -2.75]	[107.75, 107.75]	WMO		96F33	0-20700-0-96F33	1975	2021				0-20000-0-96249	manggar	['85', '38', '106', '107']

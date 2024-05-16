@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+96535	96535	PALOH	1.7666666666666666	109.3	15.0	01 46 00N	109 18 00E	0.0	[1.7667, 1.7667]	[109.3, 109.3]	OSCAR	0-20000-0-96535		0-20000-0-96535	1997	2021	999.0	999.0	False	0-20000-0-96535	pemangkat	['85', '38', '106', '107']
+96535	96535	PALOH	1.7667	109.3	15.0			0.0	[1.7667, 1.7667]	[109.3, 109.3]	IGRA2			0-20300-0-96535	1997	2021	1997.0	2021.0	True	0-20000-0-96535	pemangkat	['85', '38', '106', '107']
+96535									[1.7667, 1.7667]	[109.3, 109.3]	WBAN			0-20500-0-nan	1997	2021				0-20000-0-96535	pemangkat	['85', '38', '106', '107']
+96535									[1.7667, 1.7667]	[109.3, 109.3]	CHUAN			0-20400-0-nan	1997	2021				0-20000-0-96535	pemangkat	['85', '38', '106', '107']
+96535	96535	Paloh, Kalimantan, Indonesia	1.7	109.3	-999.0			7.4	[1.7667, 1.7667]	[109.3, 109.3]	SCHROEDER		96535.0	0-20600-0-96535	1997	2021				0-20000-0-96535	pemangkat	['85', '38', '106', '107']
+96535									[1.7667, 1.7667]	[109.3, 109.3]	WMO			0-20700-0-nan	1997	2021				0-20000-0-96535	pemangkat	['85', '38', '106', '107']

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+62620	62620	STATION NO 6	20.75	32.55		20 45 00N	032 33 00E	0.0	[20.75, 20.75]	[32.55, 32.55]	OSCAR	0-20000-0-62620		0-20000-0-62620	19850427	19860226	999.0	999.0	False	0-20000-0-62620	marawi	[104, 105, 106, 107, 117]
+62620									[20.75, 20.75]	[32.55, 32.55]	IGRA2			0-20300-0-nan	19850427	19860226				0-20000-0-62620	marawi	[104, 105, 106, 107, 117]
+62620									[20.75, 20.75]	[32.55, 32.55]	WBAN			0-20500-0-nan	19850427	19860226				0-20000-0-62620	marawi	[104, 105, 106, 107, 117]
+62620									[20.75, 20.75]	[32.55, 32.55]	CHUAN			0-20400-0-nan	19850427	19860226				0-20000-0-62620	marawi	[104, 105, 106, 107, 117]
+62620									[20.75, 20.75]	[32.55, 32.55]	SCHROEDER			0-20600-0-nan	19850427	19860226				0-20000-0-62620	marawi	[104, 105, 106, 107, 117]
+62620									[20.75, 20.75]	[32.55, 32.55]	WMO			0-20700-0-nan	19850427	19860226				0-20000-0-62620	marawi	[104, 105, 106, 107, 117]

@@ -1,0 +1,4 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		BAINGOIN	31.367	90.017	4701.0				55279	1973.0	1999.0	True	0.4		IGRA2	0-20300-0-55279	lasa	302.2	29.65	91.1	CHM00055279				
+0	0	0-20000-0-55279	BAINGOIN	31.366666666666667	90.01666666666667	4701.0	Surface land meteorological station (SYNOP), GOS, RBSN(S)	31 22 00N	090 01 00E	55279	999.0	999.0	False	0.5		OSCAR	0-20000-0-55279	lasa	302.2	29.65	91.1					
+0	0		BAINGOIN                 	31.366666666666667	90.01666666666667	-999.0				55279				0.5		WMO	0-20700-0-55279	lasa	302.2	29.65	91.1		55279	4502.0		

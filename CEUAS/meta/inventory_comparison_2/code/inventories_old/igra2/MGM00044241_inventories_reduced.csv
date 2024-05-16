@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+44241	44241	BARUUNHARAA	48.913333333333334	106.08972222222222	807.0	48 54 48N	106 05 23E	1.7	[48.917, 48.917]	[106.067, 106.067]	OSCAR	0-20000-0-44241		0-20000-0-44241	1973	1982	999.0	999.0	False	0-20000-0-44241	ulaanbaatar	['85', '38', '106', '107']
+44241	44241	BARUUNHARAA	48.917	106.067	807.0			0.0	[48.917, 48.917]	[106.067, 106.067]	IGRA2			0-20300-0-44241	1973	1982	1973.0	1982.0	True	0-20000-0-44241	ulaanbaatar	['85', '38', '106', '107']
+44241									[48.917, 48.917]	[106.067, 106.067]	WBAN			0-20500-0-nan	1973	1982				0-20000-0-44241	ulaanbaatar	['85', '38', '106', '107']
+44241									[48.917, 48.917]	[106.067, 106.067]	CHUAN			0-20400-0-nan	1973	1982				0-20000-0-44241	ulaanbaatar	['85', '38', '106', '107']
+44241	44241	Baruunharaa, Mongolia	48.9	106.07	-999.0			1.9	[48.917, 48.917]	[106.067, 106.067]	SCHROEDER		44241	0-20600-0-44241	1973	1982				0-20000-0-44241	ulaanbaatar	['85', '38', '106', '107']
+44241	44241	BARUUNKHARAA             	48.91666666666666	106.06666666666666	811.0			0.0	[48.917, 48.917]	[106.067, 106.067]	WMO		44241	0-20700-0-44241	1973	1982				0-20000-0-44241	ulaanbaatar	['85', '38', '106', '107']

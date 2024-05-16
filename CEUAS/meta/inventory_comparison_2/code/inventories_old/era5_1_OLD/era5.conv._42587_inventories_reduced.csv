@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+42587	42587	DALTONGANJ	24.05	84.06666666666666	221.0	24 03 00N	084 04 00E	0.3	[24.05, 24.05]	[84.07, 84.07]	OSCAR	0-20000-0-42587		0-20000-0-42587	20170401	20170401	999.0	999.0	False	0-20000-0-42587	daltenganj	[104, 105, 106, 107, 117]
+42587									[24.05, 24.05]	[84.07, 84.07]	IGRA2			0-20300-0-nan	20170401	20170401				0-20000-0-42587	daltenganj	[104, 105, 106, 107, 117]
+42587									[24.05, 24.05]	[84.07, 84.07]	WBAN			0-20500-0-nan	20170401	20170401				0-20000-0-42587	daltenganj	[104, 105, 106, 107, 117]
+42587									[24.05, 24.05]	[84.07, 84.07]	CHUAN			0-20400-0-nan	20170401	20170401				0-20000-0-42587	daltenganj	[104, 105, 106, 107, 117]
+42587									[24.05, 24.05]	[84.07, 84.07]	SCHROEDER			0-20600-0-nan	20170401	20170401				0-20000-0-42587	daltenganj	[104, 105, 106, 107, 117]
+42587	42587	DALTONGANJ               	24.05	84.06666666666666	-999.0			0.3	[24.05, 24.05]	[84.07, 84.07]	WMO		42587	0-20700-0-42587	20170401	20170401				0-20000-0-42587	daltenganj	[104, 105, 106, 107, 117]

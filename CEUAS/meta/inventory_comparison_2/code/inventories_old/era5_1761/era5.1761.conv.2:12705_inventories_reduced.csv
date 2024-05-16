@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:12705	78348	CAIBARIEN, VILLA CLARA	22.516666666666666	-79.45	6.0	22 31 00N	079 27 00W	25.9	[22.63, 22.63]	[-79.23, -79.23]	OSCAR	0-20000-0-78348		0-20000-0-78348	19440801	19440831	999.0	999.0	False	0-20000-0-78348	caibarien	[106, 107]
+2:12705									[22.63, 22.63]	[-79.23, -79.23]	IGRA2			0-20300-0-nan	19440801	19440831				0-20000-0-78348	caibarien	[106, 107]
+2:12705	12705	CAYO FRANCIS	22.63	-79.23	3.048			0.0	[22.63, 22.63]	[-79.23, -79.23]	WBAN			0-20500-0-12705	19440801	19440831	19440801.0	19440831.0		0-20000-0-78348	caibarien	[106, 107]
+2:12705									[22.63, 22.63]	[-79.23, -79.23]	CHUAN			0-20400-0-nan	19440801	19440831				0-20000-0-78348	caibarien	[106, 107]
+2:12705									[22.63, 22.63]	[-79.23, -79.23]	SCHROEDER			0-20600-0-nan	19440801	19440831				0-20000-0-78348	caibarien	[106, 107]
+2:12705									[22.63, 22.63]	[-79.23, -79.23]	WMO			0-20700-0-nan	19440801	19440831				0-20000-0-78348	caibarien	[106, 107]

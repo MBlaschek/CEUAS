@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+42079	42079	SUNDERNAGAR	31.533333333333335	76.9	875.0	31 32 00N	076 54 00E	0.0	[31.5333, 31.5333]	[76.9, 76.9]	OSCAR	0-20000-0-42079		0-20000-0-42079	2016	2021	999.0	999.0	False	0-20000-0-42079	sundarnagar	['85', '38', '106', '107']
+42079	42078	MANDI	31.716666666666665	76.96666666666667	761.0	31 43 00N	076 58 00E	21.3	[31.5333, 31.5333]	[76.9, 76.9]	OSCAR	0-20000-0-42078		0-20000-0-42078	2016	2021	999.0	999.0	False	0-20000-0-42079	sundarnagar	['85', '38', '106', '107']
+42079	42079	SUNDERNAGAR	31.5333	76.9	874.0			0.0	[31.5333, 31.5333]	[76.9, 76.9]	IGRA2			0-20300-0-42079	2016	2021	2016.0	2021.0	True	0-20000-0-42079	sundarnagar	['85', '38', '106', '107']
+42079									[31.5333, 31.5333]	[76.9, 76.9]	WBAN			0-20500-0-nan	2016	2021				0-20000-0-42079	sundarnagar	['85', '38', '106', '107']
+42079									[31.5333, 31.5333]	[76.9, 76.9]	CHUAN			0-20400-0-nan	2016	2021				0-20000-0-42079	sundarnagar	['85', '38', '106', '107']
+42079	42079	Sundarnagar, Himachal Pradesh, India	31.53	76.88	-999.0			1.9	[31.5333, 31.5333]	[76.9, 76.9]	SCHROEDER		42079.0	0-20600-0-42079	2016	2021				0-20000-0-42079	sundarnagar	['85', '38', '106', '107']
+42079									[31.5333, 31.5333]	[76.9, 76.9]	WMO			0-20700-0-nan	2016	2021				0-20000-0-42079	sundarnagar	['85', '38', '106', '107']

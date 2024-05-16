@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:6105	07166	VATRY-AERO	48.77722222222222	4.164722222222222	167.0	48 46 38N	004 09 53E	5.9	[48.73, 48.73]	[4.2, 4.2]	OSCAR	0-20000-0-07166		0-20000-0-07166	19201201	19211118	999	999	False	0-20000-0-07166	chalons-en-champagne	[106, 107]
+C:6105									[48.73, 48.73]	[4.2, 4.2]	IGRA2			0-20300-0-nan	19201201	19211118				0-20000-0-07166	chalons-en-champagne	[106, 107]
+C:6105									[48.73, 48.73]	[4.2, 4.2]	WBAN			0-20500-0-nan	19201201	19211118				0-20000-0-07166	chalons-en-champagne	[106, 107]
+C:6105	6105	Sommesous	48.73	4.2	160			0.0	[48.73, 48.73]	[4.2, 4.2]	CHUAN		-999	0-20400-0-6105	19201201	19211118	-999-999	-999-999		0-20000-0-07166	chalons-en-champagne	[106, 107]
+C:6105	7165	Chalons-en-Champagne / Chalons-sur-Marne - Caserne Chanzy, France	48.96	4.36	-999			28.1	[48.73, 48.73]	[4.2, 4.2]	SCHROEDER		7165	0-20600-0-7165	19201201	19211118				0-20000-0-07166	chalons-en-champagne	[106, 107]
+C:6105	07166	VATRY-AERO               	48.766666666666666	4.15	-999.0			5.5	[48.73, 48.73]	[4.2, 4.2]	WMO		07166	0-20700-0-07166	19201201	19211118				0-20000-0-07166	chalons-en-champagne	[106, 107]

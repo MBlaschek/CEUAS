@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+61296	61296	BOUGOUNI	11.416666666666666	-7.5	351.0	11 25 00N	007 30 00W	1.8	[11.4, 11.4]	[-7.5, -7.5]	OSCAR	0-20000-0-61296		0-20000-0-61296	19740814	19740921	999.0	999.0	False	0-20000-0-61296	bougouni	[36, 85, 106, 107]
+61296									[11.4, 11.4]	[-7.5, -7.5]	IGRA2			0-20300-0-nan	19740814	19740921				0-20000-0-61296	bougouni	[36, 85, 106, 107]
+61296									[11.4, 11.4]	[-7.5, -7.5]	WBAN			0-20500-0-nan	19740814	19740921				0-20000-0-61296	bougouni	[36, 85, 106, 107]
+61296									[11.4, 11.4]	[-7.5, -7.5]	CHUAN			0-20400-0-nan	19740814	19740921				0-20000-0-61296	bougouni	[36, 85, 106, 107]
+61296									[11.4, 11.4]	[-7.5, -7.5]	SCHROEDER			0-20600-0-nan	19740814	19740921				0-20000-0-61296	bougouni	[36, 85, 106, 107]
+61296	61296	BOUGOUNI                 	11.416666666666666	-7.5	-999.0			1.8	[11.4, 11.4]	[-7.5, -7.5]	WMO		61296	0-20700-0-61296	19740814	19740921				0-20000-0-61296	bougouni	[36, 85, 106, 107]

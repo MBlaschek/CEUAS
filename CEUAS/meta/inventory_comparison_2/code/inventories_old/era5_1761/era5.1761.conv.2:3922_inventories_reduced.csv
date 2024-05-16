@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:3922									[31.37, 31.37]	[-98.67, -98.67]	OSCAR				19520331	19520409				0-20500-0-3922	brownwood	[106, 107]
+2:3922									[31.37, 31.37]	[-98.67, -98.67]	IGRA2			0-20300-0-nan	19520331	19520409				0-20500-0-3922	brownwood	[106, 107]
+2:3922	3922.0	GOLDTHWAITE FRIENDLY	31.37	-98.67	366.0648			0.0	[31.37, 31.37]	[-98.67, -98.67]	WBAN			0-20500-0-3922	19520331	19520409	19520301.0	19520430.0		0-20500-0-3922	brownwood	[106, 107]
+2:3922	3920.0	LOMITA AF	31.25	-98.5	412.0896			21.0	[31.37, 31.37]	[-98.67, -98.67]	WBAN			0-20500-0-3920	19520331	19520409	19520301.0	19520430.0		0-20500-0-3922	brownwood	[106, 107]
+2:3922									[31.37, 31.37]	[-98.67, -98.67]	CHUAN			0-20400-0-nan	19520331	19520409				0-20500-0-3922	brownwood	[106, 107]
+2:3922									[31.37, 31.37]	[-98.67, -98.67]	SCHROEDER			0-20600-0-nan	19520331	19520409				0-20500-0-3922	brownwood	[106, 107]
+2:3922									[31.37, 31.37]	[-98.67, -98.67]	WMO			0-20700-0-nan	19520331	19520409				0-20500-0-3922	brownwood	[106, 107]

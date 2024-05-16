@@ -1,0 +1,2 @@
+lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	variables	kind	WIGOS_best
+		era5.conv._HTXUH4H	era5_1_mobile	201803	202204	HTXUH4H		mobile	0-20999-0-HTXUH4H

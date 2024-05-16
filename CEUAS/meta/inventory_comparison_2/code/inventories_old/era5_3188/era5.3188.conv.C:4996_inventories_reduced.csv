@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:4996									[59.16, 59.16]	[57.6, 57.6]	OSCAR				19310113	19310116				0-20400-0-4996	aleksandrovsk	[85]
+C:4996									[59.16, 59.16]	[57.6, 57.6]	IGRA2			0-20300-0-nan	19310113	19310116				0-20400-0-4996	aleksandrovsk	[85]
+C:4996									[59.16, 59.16]	[57.6, 57.6]	WBAN			0-20500-0-nan	19310113	19310116				0-20400-0-4996	aleksandrovsk	[85]
+C:4996	4996.0	Alexandrovsk	59.16	57.6	280			0.0	[59.16, 59.16]	[57.6, 57.6]	CHUAN		-999	0-20400-0-4996	19310113	19310116	-999-999	-999-999		0-20400-0-4996	aleksandrovsk	[85]
+C:4996									[59.16, 59.16]	[57.6, 57.6]	SCHROEDER			0-20600-0-nan	19310113	19310116				0-20400-0-4996	aleksandrovsk	[85]
+C:4996									[59.16, 59.16]	[57.6, 57.6]	WMO			0-20700-0-nan	19310113	19310116				0-20400-0-4996	aleksandrovsk	[85]

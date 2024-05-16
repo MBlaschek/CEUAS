@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0																OSCAR	brewster	180.5	41.76	-70.08333329999999						[42.7, 42.7]	[-68.3, -68.3]	ZZM00099276	igra2	1961	1963	99276	0-20300-0-99276	['85', '38', '106', '107']
+0	0		ENVIRONM BUOY 44005	42.7	-68.3	3.0				99276	1961.0	1963.0	True	0.0		0-20300-0-99276	IGRA2	brewster	180.5	41.76	-70.08333329999999	ZZM00099276					[42.7, 42.7]	[-68.3, -68.3]	ZZM00099276	igra2	1961	1963	99276	0-20300-0-99276	['85', '38', '106', '107']
+0	0															0-20500-0-nan	WBAN	brewster	180.5	41.76	-70.08333329999999						[42.7, 42.7]	[-68.3, -68.3]	ZZM00099276	igra2	1961	1963	99276	0-20300-0-99276	['85', '38', '106', '107']
+0	0															0-20400-0-nan	CHUAN	brewster	180.5	41.76	-70.08333329999999						[42.7, 42.7]	[-68.3, -68.3]	ZZM00099276	igra2	1961	1963	99276	0-20300-0-99276	['85', '38', '106', '107']
+0	0															0-20600-0-nan	SCHROEDER	brewster	180.5	41.76	-70.08333329999999						[42.7, 42.7]	[-68.3, -68.3]	ZZM00099276	igra2	1961	1963	99276	0-20300-0-99276	['85', '38', '106', '107']
+0	0															0-20700-0-nan	WMO	brewster	180.5	41.76	-70.08333329999999						[42.7, 42.7]	[-68.3, -68.3]	ZZM00099276	igra2	1961	1963	99276	0-20300-0-99276	['85', '38', '106', '107']

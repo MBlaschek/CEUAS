@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:13817									[32.35, 32.35]	[-87.35, -87.35]	OSCAR				19420504	19450327				0-20500-0-63858	selma	[106, 107]
+2:13817	13817	MERIDIAN (KEY FIELD)	32.35	-88.65	92.0			122.4	[32.35, 32.35]	[-87.35, -87.35]	IGRA2			0-20300-0-13817	19420504	19450327	1942.0	1945.0	True	0-20500-0-63858	selma	[106, 107]
+2:13817	63858	SELMA 13WNW	32.46	-87.24	57.912000000000006			16.0	[32.35, 32.35]	[-87.35, -87.35]	WBAN			0-20500-0-63858	19420504	19450327	20050526.0	99991231.0		0-20500-0-63858	selma	[106, 107]
+2:13817									[32.35, 32.35]	[-87.35, -87.35]	CHUAN			0-20400-0-nan	19420504	19450327				0-20500-0-63858	selma	[106, 107]
+2:13817									[32.35, 32.35]	[-87.35, -87.35]	SCHROEDER			0-20600-0-nan	19420504	19450327				0-20500-0-63858	selma	[106, 107]
+2:13817									[32.35, 32.35]	[-87.35, -87.35]	WMO			0-20700-0-nan	19420504	19450327				0-20500-0-63858	selma	[106, 107]

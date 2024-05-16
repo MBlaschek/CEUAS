@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:80433									[-7.75, -7.75]	[147.62, 147.62]	OSCAR				19440401	19440429				0-20500-0-80433	wau	[106, 107]
+2:80433									[-7.75, -7.75]	[147.62, 147.62]	IGRA2			0-20300-0-nan	19440401	19440429				0-20500-0-80433	wau	[106, 107]
+2:80433	80433.0	MOROBE NF	-7.75	147.62	3.048			0.0	[-7.75, -7.75]	[147.62, 147.62]	WBAN			0-20500-0-80433	19440401	19440429	19430801.0	19440430.0		0-20500-0-80433	wau	[106, 107]
+2:80433									[-7.75, -7.75]	[147.62, 147.62]	CHUAN			0-20400-0-nan	19440401	19440429				0-20500-0-80433	wau	[106, 107]
+2:80433									[-7.75, -7.75]	[147.62, 147.62]	SCHROEDER			0-20600-0-nan	19440401	19440429				0-20500-0-80433	wau	[106, 107]
+2:80433									[-7.75, -7.75]	[147.62, 147.62]	WMO			0-20700-0-nan	19440401	19440429				0-20500-0-80433	wau	[106, 107]

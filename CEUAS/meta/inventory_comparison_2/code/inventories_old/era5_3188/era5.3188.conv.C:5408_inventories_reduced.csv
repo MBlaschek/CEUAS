@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:5408									[41.9, 41.9]	[107.75, 107.75]	OSCAR				19310609	19310829				0-20400-0-5408	haibowan	[38, 39, 85, 104, 105, 106, 107]
+C:5408									[41.9, 41.9]	[107.75, 107.75]	IGRA2			0-20300-0-nan	19310609	19310829				0-20400-0-5408	haibowan	[38, 39, 85, 104, 105, 106, 107]
+C:5408									[41.9, 41.9]	[107.75, 107.75]	WBAN			0-20500-0-nan	19310609	19310829				0-20400-0-5408	haibowan	[38, 39, 85, 104, 105, 106, 107]
+C:5408	5408.0	Ikengüng	41.9	107.75	1470			0.0	[41.9, 41.9]	[107.75, 107.75]	CHUAN		-999	0-20400-0-5408	19310609	19310829	-999-999	-999-999		0-20400-0-5408	haibowan	[38, 39, 85, 104, 105, 106, 107]
+C:5408	53325.0	(made up station ID) Ikengung, China	41.9	107.75	-999			0.0	[41.9, 41.9]	[107.75, 107.75]	SCHROEDER		53325	0-20600-0-53325	19310609	19310829				0-20400-0-5408	haibowan	[38, 39, 85, 104, 105, 106, 107]
+C:5408									[41.9, 41.9]	[107.75, 107.75]	WMO			0-20700-0-nan	19310609	19310829				0-20400-0-5408	haibowan	[38, 39, 85, 104, 105, 106, 107]

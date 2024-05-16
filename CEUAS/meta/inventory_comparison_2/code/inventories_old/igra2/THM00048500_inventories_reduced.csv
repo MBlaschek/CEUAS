@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+48500	48500	PRACHUAP KHIRIKHAN	11.835	99.81027777777777	5.9	11 50 06N	099 48 37E	0.0	[11.835, 11.835]	[99.8103, 99.8103]	OSCAR	0-20000-0-48500		0-20000-0-48500	1973	2021	999.0	999.0	False	0-20000-0-48500	prachuap khiri khan	['85', '38', '106', '107']
+48500	48500	PRACHUAP KHIRIKHAN	11.835	99.8103	4.0			0.0	[11.835, 11.835]	[99.8103, 99.8103]	IGRA2			0-20300-0-48500	1973	2021	1973.0	2021.0	True	0-20000-0-48500	prachuap khiri khan	['85', '38', '106', '107']
+48500									[11.835, 11.835]	[99.8103, 99.8103]	WBAN			0-20500-0-nan	1973	2021				0-20000-0-48500	prachuap khiri khan	['85', '38', '106', '107']
+48500									[11.835, 11.835]	[99.8103, 99.8103]	CHUAN			0-20400-0-nan	1973	2021				0-20000-0-48500	prachuap khiri khan	['85', '38', '106', '107']
+48500	48500	Prachuap Khirikhan, Thailand	11.8351	99.8103	-999.0			0.0	[11.835, 11.835]	[99.8103, 99.8103]	SCHROEDER		48500	0-20600-0-48500	1973	2021				0-20000-0-48500	prachuap khiri khan	['85', '38', '106', '107']
+48500	48500	PRACHUAP KHIRIKHAN       	11.8	99.8	5.0			4.0	[11.835, 11.835]	[99.8103, 99.8103]	WMO		48500	0-20700-0-48500	1973	2021				0-20000-0-48500	prachuap khiri khan	['85', '38', '106', '107']

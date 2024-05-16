@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+67194									[-25.55, -25.6]	[45.53, 45.5]	OSCAR				19700309	19711220				0-20300-0-67194	tsihombe	[36, 85, 106, 107]
+67194	67194	FAUX-CAP	-25.55	45.533	22.0			0.3	[-25.55, -25.6]	[45.53, 45.5]	IGRA2			0-20300-0-67194	19700309	19711220	1973.0	1980.0	True	0-20300-0-67194	tsihombe	[36, 85, 106, 107]
+67194									[-25.55, -25.6]	[45.53, 45.5]	WBAN			0-20500-0-nan	19700309	19711220				0-20300-0-67194	tsihombe	[36, 85, 106, 107]
+67194									[-25.55, -25.6]	[45.53, 45.5]	CHUAN			0-20400-0-nan	19700309	19711220				0-20300-0-67194	tsihombe	[36, 85, 106, 107]
+67194									[-25.55, -25.6]	[45.53, 45.5]	SCHROEDER			0-20600-0-nan	19700309	19711220				0-20300-0-67194	tsihombe	[36, 85, 106, 107]
+67194									[-25.55, -25.6]	[45.53, 45.5]	WMO			0-20700-0-nan	19700309	19711220				0-20300-0-67194	tsihombe	[36, 85, 106, 107]

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:5834	42619	SILCHAR	24.75	92.8	21.3	24 45 00N	092 48 00E	10.2	[24.83, 24.83]	[92.85, 92.85]	OSCAR	0-20000-0-42619		0-20000-0-42619	19320913	19350830	999	999	False	0-20000-0-42619	silchar	[106, 107]
+C:5834	05834	SILCHAR	24.83	92.85	40.0			0.0	[24.83, 24.83]	[92.85, 92.85]	IGRA2			0-20300-0-05834	19320913	19350830	1933	1935	True	0-20000-0-42619	silchar	[106, 107]
+C:5834									[24.83, 24.83]	[92.85, 92.85]	WBAN			0-20500-0-nan	19320913	19350830				0-20000-0-42619	silchar	[106, 107]
+C:5834	5834	Silchar	24.83	92.85	40			0.0	[24.83, 24.83]	[92.85, 92.85]	CHUAN		-999	0-20400-0-5834	19320913	19350830	-999-999	-999-999		0-20000-0-42619	silchar	[106, 107]
+C:5834									[24.83, 24.83]	[92.85, 92.85]	SCHROEDER			0-20600-0-nan	19320913	19350830				0-20000-0-42619	silchar	[106, 107]
+C:5834	42619	SILCHAR                  	24.816666666666663	92.8	-999.0			5.3	[24.83, 24.83]	[92.85, 92.85]	WMO		42619	0-20700-0-42619	19320913	19350830				0-20000-0-42619	silchar	[106, 107]

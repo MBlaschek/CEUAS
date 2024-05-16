@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:80704									[-8.07, -8.07]	[178.38, 178.38]	OSCAR				19440114	19440114				0-20500-0-80704	None	[106, 107]
+2:80704									[-8.07, -8.07]	[178.38, 178.38]	IGRA2			0-20300-0-nan	19440114	19440114				0-20500-0-80704	None	[106, 107]
+2:80704	80704.0	NUKUFETAU ELLICE ISL	-8.07	178.38	2.1336			0.0	[-8.07, -8.07]	[178.38, 178.38]	WBAN			0-20500-0-80704	19440114	19440114	19431201.0	19440131.0		0-20500-0-80704	None	[106, 107]
+2:80704									[-8.07, -8.07]	[178.38, 178.38]	CHUAN			0-20400-0-nan	19440114	19440114				0-20500-0-80704	None	[106, 107]
+2:80704									[-8.07, -8.07]	[178.38, 178.38]	SCHROEDER			0-20600-0-nan	19440114	19440114				0-20500-0-80704	None	[106, 107]
+2:80704									[-8.07, -8.07]	[178.38, 178.38]	WMO			0-20700-0-nan	19440114	19440114				0-20500-0-80704	None	[106, 107]

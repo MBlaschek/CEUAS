@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+92047	92047	NADZAB W.O.	-6.566666666666666	146.71666666666667	70.0	06 34 00S	146 43 00E	32.8	[-6.57, -6.57]	[146.42, 146.42]	OSCAR	0-20000-0-92047		0-20000-0-92047	19970108	19970529	999.0	999.0	False		lae	[104, 105, 106, 107, 117]
+92047									[-6.57, -6.57]	[146.42, 146.42]	IGRA2			0-20300-0-nan	19970108	19970529					lae	[104, 105, 106, 107, 117]
+92047									[-6.57, -6.57]	[146.42, 146.42]	WBAN			0-20500-0-nan	19970108	19970529					lae	[104, 105, 106, 107, 117]
+92047									[-6.57, -6.57]	[146.42, 146.42]	CHUAN			0-20400-0-nan	19970108	19970529					lae	[104, 105, 106, 107, 117]
+92047									[-6.57, -6.57]	[146.42, 146.42]	SCHROEDER			0-20600-0-nan	19970108	19970529					lae	[104, 105, 106, 107, 117]
+92047									[-6.57, -6.57]	[146.42, 146.42]	WMO			0-20700-0-nan	19970108	19970529					lae	[104, 105, 106, 107, 117]

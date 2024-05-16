@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+54471	54471	YINGKOU	40.666666666666664	122.16666666666667	5.0	40 40 00N	122 10 00E	5.4	[40.67, 40.67]	[122.23, 122.23]	OSCAR	0-20000-0-54471		0-20000-0-54471	19590920	19591231	999.0	999.0	False	0-20000-0-54471	dashiqiao	[36, 85, 106, 107]
+54471									[40.67, 40.67]	[122.23, 122.23]	IGRA2			0-20300-0-nan	19590920	19591231				0-20000-0-54471	dashiqiao	[36, 85, 106, 107]
+54471									[40.67, 40.67]	[122.23, 122.23]	WBAN			0-20500-0-nan	19590920	19591231				0-20000-0-54471	dashiqiao	[36, 85, 106, 107]
+54471									[40.67, 40.67]	[122.23, 122.23]	CHUAN			0-20400-0-nan	19590920	19591231				0-20000-0-54471	dashiqiao	[36, 85, 106, 107]
+54471									[40.67, 40.67]	[122.23, 122.23]	SCHROEDER			0-20600-0-nan	19590920	19591231				0-20000-0-54471	dashiqiao	[36, 85, 106, 107]
+54471	54471	YINGKOU                  	40.66666666666666	122.16666666666669	-999.0			5.4	[40.67, 40.67]	[122.23, 122.23]	WMO		54471	0-20700-0-54471	19590920	19591231				0-20000-0-54471	dashiqiao	[36, 85, 106, 107]

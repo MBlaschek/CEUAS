@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+06179	06147	VINDEBAEK KYST	54.87888888888889	12.184166666666666	4.63	54 52 44N	012 11 03E	24.8	[54.95, 54.95]	[12.55, 12.55]	OSCAR	0-20000-0-06147		0-20000-0-06147	19810222	19810222	999.0	999.0	False	0-20000-0-06147	nykobing	[104, 105, 106, 107, 117]
+06179									[54.95, 54.95]	[12.55, 12.55]	IGRA2			0-20300-0-nan	19810222	19810222				0-20000-0-06147	nykobing	[104, 105, 106, 107, 117]
+06179									[54.95, 54.95]	[12.55, 12.55]	WBAN			0-20500-0-nan	19810222	19810222				0-20000-0-06147	nykobing	[104, 105, 106, 107, 117]
+06179									[54.95, 54.95]	[12.55, 12.55]	CHUAN			0-20400-0-nan	19810222	19810222				0-20000-0-06147	nykobing	[104, 105, 106, 107, 117]
+06179									[54.95, 54.95]	[12.55, 12.55]	SCHROEDER			0-20600-0-nan	19810222	19810222				0-20000-0-06147	nykobing	[104, 105, 106, 107, 117]
+06179									[54.95, 54.95]	[12.55, 12.55]	WMO			0-20700-0-nan	19810222	19810222				0-20000-0-06147	nykobing	[104, 105, 106, 107, 117]

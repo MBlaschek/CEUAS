@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+48907	48907	RACH GIA	10.016666666666667	105.06666666666666		10 01 00N	105 04 00E	2.4	[10.0, 10.0]	[105.08, 105.08]	OSCAR	0-20000-0-48907		0-20000-0-48907	19650428	19720706	999.0	999.0	False	0-20000-0-48907	rach gia	[36, 85, 106, 107]
+48907									[10.0, 10.0]	[105.08, 105.08]	IGRA2			0-20300-0-nan	19650428	19720706				0-20000-0-48907	rach gia	[36, 85, 106, 107]
+48907									[10.0, 10.0]	[105.08, 105.08]	WBAN			0-20500-0-nan	19650428	19720706				0-20000-0-48907	rach gia	[36, 85, 106, 107]
+48907									[10.0, 10.0]	[105.08, 105.08]	CHUAN			0-20400-0-nan	19650428	19720706				0-20000-0-48907	rach gia	[36, 85, 106, 107]
+48907									[10.0, 10.0]	[105.08, 105.08]	SCHROEDER			0-20600-0-nan	19650428	19720706				0-20000-0-48907	rach gia	[36, 85, 106, 107]
+48907									[10.0, 10.0]	[105.08, 105.08]	WMO			0-20700-0-nan	19650428	19720706				0-20000-0-48907	rach gia	[36, 85, 106, 107]

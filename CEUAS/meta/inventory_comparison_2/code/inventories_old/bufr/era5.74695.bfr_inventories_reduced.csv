@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+74695	74695	DARE COUNTY GUNNERY RANGE, NC.	35.666666666666664	-75.9		35 40 00N	075 54 00W	1.5	[35.68, 35.68]	[-75.9, -75.9]	OSCAR	0-20000-0-74695		0-20000-0-74695	19700212	19721221	999.0	999.0	False	0-20000-0-74695	elizabeth city	[36, 85, 106, 107]
+74695	74695	DARE COUNTY GUNNERY	35.667	-75.9	3.0			1.4	[35.68, 35.68]	[-75.9, -75.9]	IGRA2			0-20300-0-74695	19700212	19721221	1973.0	1991.0	True	0-20000-0-74695	elizabeth city	[36, 85, 106, 107]
+74695	93742	DARE CO GNRY RANGE	35.68	-75.9	3.048			0.0	[35.68, 35.68]	[-75.9, -75.9]	WBAN		74695.0	0-20500-0-93742	19700212	19721221	19760101.0	99991231.0		0-20000-0-74695	elizabeth city	[36, 85, 106, 107]
+74695	93742	DARE CO GNRY RANGE	35.75	-75.87	2.1336			8.2	[35.68, 35.68]	[-75.9, -75.9]	WBAN			0-20500-0-93742	19700212	19721221	19660501.0	19760101.0		0-20000-0-74695	elizabeth city	[36, 85, 106, 107]
+74695									[35.68, 35.68]	[-75.9, -75.9]	CHUAN			0-20400-0-nan	19700212	19721221				0-20000-0-74695	elizabeth city	[36, 85, 106, 107]
+74695	74695	Dare County Gunnery Range (operated by US Air Force), NC	35.68	-75.9	-999.0			0.0	[35.68, 35.68]	[-75.9, -75.9]	SCHROEDER		74695.0	0-20600-0-74695	19700212	19721221				0-20000-0-74695	elizabeth city	[36, 85, 106, 107]
+74695									[35.68, 35.68]	[-75.9, -75.9]	WMO			0-20700-0-nan	19700212	19721221				0-20000-0-74695	elizabeth city	[36, 85, 106, 107]

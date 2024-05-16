@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:87534	87534	LABOULAYE AERO	-34.12777777777778	-63.3675	137.0	34 07 40S	063 22 03W	3.0	[-34.13, -34.13]	[-63.4, -63.4]	OSCAR	0-20000-0-87534		0-20000-0-87534	19570701	19581203	999.0	999.0	False	0-20000-0-87534	venado tuerto	[38, 106, 107]
+1:87534									[-34.13, -34.13]	[-63.4, -63.4]	IGRA2			0-20300-0-nan	19570701	19581203				0-20000-0-87534	venado tuerto	[38, 106, 107]
+1:87534									[-34.13, -34.13]	[-63.4, -63.4]	WBAN			0-20500-0-nan	19570701	19581203				0-20000-0-87534	venado tuerto	[38, 106, 107]
+1:87534									[-34.13, -34.13]	[-63.4, -63.4]	CHUAN			0-20400-0-nan	19570701	19581203				0-20000-0-87534	venado tuerto	[38, 106, 107]
+1:87534									[-34.13, -34.13]	[-63.4, -63.4]	SCHROEDER			0-20600-0-nan	19570701	19581203				0-20000-0-87534	venado tuerto	[38, 106, 107]
+1:87534	87534	LABOULAYE                	-34.13333333333333	-63.36666666666667	-999.0			3.1	[-34.13, -34.13]	[-63.4, -63.4]	WMO		87534	0-20700-0-87534	19570701	19581203				0-20000-0-87534	venado tuerto	[38, 106, 107]

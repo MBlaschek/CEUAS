@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+59981	59981	XISHA DAO	16.833333333333332	112.33333333333333	5.0	16 50 00N	112 20 00E	0.0	[16.8333, 16.8333]	[112.3333, 112.3333]	OSCAR	0-20000-0-59981		0-20000-0-59981	1958	2021	999.0	999.0	True	0-20000-0-59981	wanning	['85', '38', '106', '107']
+59981	59981	XISHA DAO	16.8333	112.3333	5.0			0.0	[16.8333, 16.8333]	[112.3333, 112.3333]	IGRA2			0-20300-0-59981	1958	2021	1958.0	2021.0	True	0-20000-0-59981	wanning	['85', '38', '106', '107']
+59981									[16.8333, 16.8333]	[112.3333, 112.3333]	WBAN			0-20500-0-nan	1958	2021				0-20000-0-59981	wanning	['85', '38', '106', '107']
+59981									[16.8333, 16.8333]	[112.3333, 112.3333]	CHUAN			0-20400-0-nan	1958	2021				0-20000-0-59981	wanning	['85', '38', '106', '107']
+59981	59981	Xisha Island / Yingxing Island / Woody Island, Amphitrite Group, Paracel Islands (occupied by China, claimed by several countries)	16.83	112.33	-999.0			0.5	[16.8333, 16.8333]	[112.3333, 112.3333]	SCHROEDER		59981	0-20600-0-59981	1958	2021				0-20000-0-59981	wanning	['85', '38', '106', '107']
+59981	59981	XISHA DAO                	16.833333333333332	112.33333333333331	-999.0			0.0	[16.8333, 16.8333]	[112.3333, 112.3333]	WMO		59981	0-20700-0-59981	1958	2021				0-20000-0-59981	wanning	['85', '38', '106', '107']

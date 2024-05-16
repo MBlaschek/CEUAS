@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+32099	32099	MYS TERPENIYA	48.65	144.73333333333332	6.0	48 39 00N	144 44 00E	1.2	[48.65, 48.65]	[144.75, 144.75]	OSCAR	0-20000-0-32099		0-20000-0-32099	1955	1970	999.0	999.0	False	0-20000-0-32099	poronaysk	['85', '38', '106', '107']
+32099	32099	M. TERPENIYA (FL)	48.65	144.75	33.0			0.0	[48.65, 48.65]	[144.75, 144.75]	IGRA2			0-20300-0-32099	1955	1970	1955.0	1970.0	True	0-20000-0-32099	poronaysk	['85', '38', '106', '107']
+32099									[48.65, 48.65]	[144.75, 144.75]	WBAN			0-20500-0-nan	1955	1970				0-20000-0-32099	poronaysk	['85', '38', '106', '107']
+32099									[48.65, 48.65]	[144.75, 144.75]	CHUAN			0-20400-0-nan	1955	1970				0-20000-0-32099	poronaysk	['85', '38', '106', '107']
+32099	32099	Mys Terpeniya, Sakhalin, Russia	48.65	144.73	-999.0			1.5	[48.65, 48.65]	[144.75, 144.75]	SCHROEDER		32099.0	0-20600-0-32099	1955	1970				0-20000-0-32099	poronaysk	['85', '38', '106', '107']
+32099									[48.65, 48.65]	[144.75, 144.75]	WMO			0-20700-0-nan	1955	1970				0-20000-0-32099	poronaysk	['85', '38', '106', '107']

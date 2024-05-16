@@ -1,0 +1,9 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:11904	76692	HACIENDA YLANG YLANG VERACRUZ, VER.	19.143055555555556	-96.11138888888888	19.0	19 08 35N	096 06 41W	4.2	[19.18, 19.18]	[-96.12, -96.12]	OSCAR	0-20000-0-76692		0-20000-0-76692	19520125	19791231	999.0	999.0	True	0-20000-0-76692	veracruz	[85, 117]
+2:11904	76692	HACIENDA YLANG YLANG VERACRUZ,	19.15	-96.1333	19.0			3.6	[19.18, 19.18]	[-96.12, -96.12]	IGRA2			0-20300-0-76692	19520125	19791231	1952.0	2021.0	True	0-20000-0-76692	veracruz	[85, 117]
+2:11904	11904	VERA CRUZ	19.15	-96.12	13.1064			3.3	[19.18, 19.18]	[-96.12, -96.12]	WBAN			0-20500-0-11904	19520125	19791231	19520201.0	99991231.0		0-20000-0-76692	veracruz	[85, 117]
+2:11904									[19.18, 19.18]	[-96.12, -96.12]	CHUAN			0-20400-0-nan	19520125	19791231				0-20000-0-76692	veracruz	[85, 117]
+2:11904	76692	Veracruz AP (Operated by Pan American Airways), Veracruz, Mexico	19.164	-96.223	-999.0			11.0	[19.18, 19.18]	[-96.12, -96.12]	SCHROEDER		76692	0-20600-0-76692	19520125	19791231				0-20000-0-76692	veracruz	[85, 117]
+2:11904	76693	(made up station ID) Anton Lizardo - Escuela Naval Militar PACS-SONET pibal site (operated by SMAM = Secretaria de Marina Armada de Mexico [Mexican Navy]), Veracruz, Mexico	19.056	-95.981	-999.0			20.1	[19.18, 19.18]	[-96.12, -96.12]	SCHROEDER		76693	0-20600-0-76693	19520125	19791231				0-20000-0-76692	veracruz	[85, 117]
+2:11904	76692	VERACRUZ                 	19.2	-96.13333333333334	-999.0			2.6	[19.18, 19.18]	[-96.12, -96.12]	WMO		76692	0-20700-0-76692	19520125	19791231				0-20000-0-76692	veracruz	[85, 117]
+2:11904	76691	VERACRUZ                 	19.2	-96.13333333333334	-999.0			2.6	[19.18, 19.18]	[-96.12, -96.12]	WMO		76691	0-20700-0-76691	19520125	19791231				0-20000-0-76692	veracruz	[85, 117]

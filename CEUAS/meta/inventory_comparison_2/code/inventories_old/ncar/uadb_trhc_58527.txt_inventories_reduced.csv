@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+58527	58527	JINGDEZHEN	29.31222222222222	117.16861111111112	94.7	29 18 44N	117 10 07E	3.3	[29.3, 29.3]	[117.2, 117.2]	OSCAR	0-20000-0-58527		0-20000-0-58527	19700103	20020220	999.0	999.0	False	0-20000-0-58527	jingdezhen	['38', '85', '106', '107']
+58527	58527	JINGDEZHEN	29.3	117.2	60.0			0.0	[29.3, 29.3]	[117.2, 117.2]	IGRA2			0-20300-0-58527	19700103	20020220	1973.0	1987.0	True	0-20000-0-58527	jingdezhen	['38', '85', '106', '107']
+58527									[29.3, 29.3]	[117.2, 117.2]	WBAN			0-20500-0-nan	19700103	20020220				0-20000-0-58527	jingdezhen	['38', '85', '106', '107']
+58527									[29.3, 29.3]	[117.2, 117.2]	CHUAN			0-20400-0-nan	19700103	20020220				0-20000-0-58527	jingdezhen	['38', '85', '106', '107']
+58527	58527	Jingdezhen, China	29.33	117.15	-999.0			5.9	[29.3, 29.3]	[117.2, 117.2]	SCHROEDER		58527	0-20600-0-58527	19700103	20020220				0-20000-0-58527	jingdezhen	['38', '85', '106', '107']
+58527	58527	JINGDEZHEN               	29.3	117.2	-999.0			0.0	[29.3, 29.3]	[117.2, 117.2]	WMO		58527	0-20700-0-58527	19700103	20020220				0-20000-0-58527	jingdezhen	['38', '85', '106', '107']

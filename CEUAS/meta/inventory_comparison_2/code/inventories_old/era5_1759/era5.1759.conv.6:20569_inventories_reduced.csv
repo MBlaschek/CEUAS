@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+6:20569	43369	MINICOY	8.3	73.15	1.83	08 18 00N	073 09 00E	16.5	[8.3, 8.3]	[73.0, 73.0]	OSCAR	0-20000-0-43369		0-20000-0-43369	19440101	19551030	999	999	True	0-20000-0-43369	kavaratti	[106, 107]
+6:20569	05455	MALIKU	8.28	73.05	0.0			5.9	[8.3, 8.3]	[73.0, 73.0]	IGRA2			0-20300-0-05455	19440101	19551030	1941	1942	True	0-20000-0-43369	kavaratti	[106, 107]
+6:20569	43369	MINICOY	8.3	73.15	0.9			16.5	[8.3, 8.3]	[73.0, 73.0]	IGRA2			0-20300-0-43369	19440101	19551030	1965	2021	True	0-20000-0-43369	kavaratti	[106, 107]
+6:20569									[8.3, 8.3]	[73.0, 73.0]	WBAN			0-20500-0-nan	19440101	19551030				0-20000-0-43369	kavaratti	[106, 107]
+6:20569	5455	Maliku	8.28	73.05	0			5.9	[8.3, 8.3]	[73.0, 73.0]	CHUAN		-999	0-20400-0-5455	19440101	19551030	-999-999	-999-999		0-20000-0-43369	kavaratti	[106, 107]
+6:20569	43369	Minicoy, Laccadive Islands, India	8.3	73.0	-999			0.0	[8.3, 8.3]	[73.0, 73.0]	SCHROEDER		43369	0-20600-0-43369	19440101	19551030				0-20000-0-43369	kavaratti	[106, 107]
+6:20569	43369	MINICOY                  	8.3	73.0	1.0			0.0	[8.3, 8.3]	[73.0, 73.0]	WMO		43369	0-20700-0-43369	19440101	19551030				0-20000-0-43369	kavaratti	[106, 107]

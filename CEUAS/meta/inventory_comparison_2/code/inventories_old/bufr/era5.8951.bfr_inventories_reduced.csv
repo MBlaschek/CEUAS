@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+89051									[-63.46, -63.47]	[-56.28, -56.28]	OSCAR				19661115	19731210				0-20300-0-89051	None	[36, 85, 106, 107]
+89051	89051	PETREL NAS	-63.4667	-56.2833	18.0			0.8	[-63.46, -63.47]	[-56.28, -56.28]	IGRA2			0-20300-0-89051	19661115	19731210	1969.0	1972.0	True	0-20300-0-89051	None	[36, 85, 106, 107]
+89051									[-63.46, -63.47]	[-56.28, -56.28]	WBAN			0-20500-0-nan	19661115	19731210				0-20300-0-89051	None	[36, 85, 106, 107]
+89051									[-63.46, -63.47]	[-56.28, -56.28]	CHUAN			0-20400-0-nan	19661115	19731210				0-20300-0-89051	None	[36, 85, 106, 107]
+89051									[-63.46, -63.47]	[-56.28, -56.28]	SCHROEDER			0-20600-0-nan	19661115	19731210				0-20300-0-89051	None	[36, 85, 106, 107]
+89051									[-63.46, -63.47]	[-56.28, -56.28]	WMO			0-20700-0-nan	19661115	19731210				0-20300-0-89051	None	[36, 85, 106, 107]

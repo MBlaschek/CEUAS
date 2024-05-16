@@ -1,0 +1,11 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:76361									[25.8, 25.8]	[-109.1, -109.1]	OSCAR				19630301	19650312				0-20300-0-76370	los mochis	[104, 105, 106, 107]
+1:76361	76370	TOPOLOBAMPO	25.617	-109.05	12.0			20.9	[25.8, 25.8]	[-109.1, -109.1]	IGRA2			0-20300-0-76370	19630301	19650312	2005.0	2006.0	True	0-20300-0-76370	los mochis	[104, 105, 106, 107]
+1:76361									[25.8, 25.8]	[-109.1, -109.1]	WBAN			0-20500-0-nan	19630301	19650312				0-20300-0-76370	los mochis	[104, 105, 106, 107]
+1:76361									[25.8, 25.8]	[-109.1, -109.1]	CHUAN			0-20400-0-nan	19630301	19650312				0-20300-0-76370	los mochis	[104, 105, 106, 107]
+1:76361	76361	Los Mochis, Sinaloa, Mexico	25.8	-108.99	-999.0			11.0	[25.8, 25.8]	[-109.1, -109.1]	SCHROEDER		76361.0	0-20600-0-76361	19630301	19650312				0-20300-0-76370	los mochis	[104, 105, 106, 107]
+1:76361	76371	"(made up station ID) ""MLMM"" Los Mochis (Topolobampo AP NAME radiosonde site), Sinaloa, Mexico"	25.69	-109.08	-999.0			12.4	[25.8, 25.8]	[-109.1, -109.1]	SCHROEDER		76371.0	0-20600-0-76371	19630301	19650312				0-20300-0-76370	los mochis	[104, 105, 106, 107]
+1:76361	76370	Los Mochis (Topolobampo - Estacion de Investigacion Oceanografica) PACS-SONET pibal site (operated by SMAM = Secretaria de Marina Armada de Mexico [Mexican Navy]), Sinaloa, Mexico	25.62	-109.05	-999.0			20.6	[25.8, 25.8]	[-109.1, -109.1]	SCHROEDER		76370.0	0-20600-0-76370	19630301	19650312				0-20300-0-76370	los mochis	[104, 105, 106, 107]
+1:76361									[25.8, 25.8]	[-109.1, -109.1]	WMO			0-20700-0-nan	19630301	19650312				0-20300-0-76370	los mochis	[104, 105, 106, 107]
+1:76361									[25.8, 25.8]	[-109.1, -109.1]	AMMA			0-20800-0-nan	19630301	19650312				0-20300-0-76370	los mochis	[104, 105, 106, 107]
+1:76361									[25.8, 25.8]	[-109.1, -109.1]	HARA			0-20111-0-nan	19630301	19650312				0-20300-0-76370	los mochis	[104, 105, 106, 107]

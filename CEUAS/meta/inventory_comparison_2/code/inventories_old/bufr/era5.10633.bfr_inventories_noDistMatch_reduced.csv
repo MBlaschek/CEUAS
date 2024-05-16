@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+10633									[30.0, 30.0]	[-163.1, -163.1]	OSCAR				19711113	19711113					None	[36, 85, 106, 107]
+10633	10633	WIESBADEN	50.05	8.33	139.0			11097.2	[30.0, 30.0]	[-163.1, -163.1]	IGRA2			0-20300-0-10633	19711113	19711113	1946.0	1957.0	True		None	[36, 85, 106, 107]
+10633									[30.0, 30.0]	[-163.1, -163.1]	WBAN			0-20500-0-nan	19711113	19711113					None	[36, 85, 106, 107]
+10633									[30.0, 30.0]	[-163.1, -163.1]	CHUAN			0-20400-0-nan	19711113	19711113					None	[36, 85, 106, 107]
+10633									[30.0, 30.0]	[-163.1, -163.1]	SCHROEDER			0-20600-0-nan	19711113	19711113					None	[36, 85, 106, 107]
+10633									[30.0, 30.0]	[-163.1, -163.1]	WMO			0-20700-0-nan	19711113	19711113					None	[36, 85, 106, 107]

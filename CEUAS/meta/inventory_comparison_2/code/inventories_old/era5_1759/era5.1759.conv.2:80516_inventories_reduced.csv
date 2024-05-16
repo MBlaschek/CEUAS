@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:80516	92076	KAVIENG W.O.	-2.5666666666666664	150.81666666666666	4.0	02 34 00S	150 49 00E	4.0	[-2.58, -2.58]	[150.85, 150.85]	OSCAR	0-20000-0-92076		0-20000-0-92076	19630613	19630709	999.0	999.0	False	0-20000-0-92076	kavieng	[38, 85, 106, 107, 117]
+2:80516									[-2.58, -2.58]	[150.85, 150.85]	IGRA2			0-20300-0-nan	19630613	19630709				0-20000-0-92076	kavieng	[38, 85, 106, 107, 117]
+2:80516	80516	KAVIENG FLT K N IR S	-2.58	150.85	4.2672			0.0	[-2.58, -2.58]	[150.85, 150.85]	WBAN			0-20500-0-80516	19630613	19630709	19630601.0	19630731.0		0-20000-0-92076	kavieng	[38, 85, 106, 107, 117]
+2:80516									[-2.58, -2.58]	[150.85, 150.85]	CHUAN			0-20400-0-nan	19630613	19630709				0-20000-0-92076	kavieng	[38, 85, 106, 107, 117]
+2:80516	94076	Kavieng, Papua New Guinea pibals	-2.57	150.82	-999.0			3.5	[-2.58, -2.58]	[150.85, 150.85]	SCHROEDER		94076.0	0-20600-0-94076	19630613	19630709				0-20000-0-92076	kavieng	[38, 85, 106, 107, 117]
+2:80516	94078	"(made up station ID) ""PSKAV"" Kavieng, Papua New Guinea TOGA COARE radiosondes"	-2.5	150.8	-999.0			10.4	[-2.58, -2.58]	[150.85, 150.85]	SCHROEDER		94078.0	0-20600-0-94078	19630613	19630709				0-20000-0-92076	kavieng	[38, 85, 106, 107, 117]
+2:80516									[-2.58, -2.58]	[150.85, 150.85]	WMO			0-20700-0-nan	19630613	19630709				0-20000-0-92076	kavieng	[38, 85, 106, 107, 117]

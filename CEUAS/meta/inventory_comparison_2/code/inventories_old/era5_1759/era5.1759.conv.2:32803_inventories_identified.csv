@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0																OSCAR	chakulia	4.1	22.483333	86.716667						[22.45, 22.45]	[86.7, 86.7]	era5.1759.conv.2:32803	era5_1759	19430901	19450430	2:32803	0-20500-0-32803	[106, 107]
+0	0															0-20300-0-nan	IGRA2	chakulia	4.1	22.483333	86.716667						[22.45, 22.45]	[86.7, 86.7]	era5.1759.conv.2:32803	era5_1759	19430901	19450430	2:32803	0-20500-0-32803	[106, 107]
+0	0		CHAKULIA	22.45	86.7	131.064				32803.0	19421101.0	19451031.0		0.0		0-20500-0-32803	WBAN	chakulia	4.1	22.483333	86.716667						[22.45, 22.45]	[86.7, 86.7]	era5.1759.conv.2:32803	era5_1759	19430901	19450430	2:32803	0-20500-0-32803	[106, 107]
+0	0															0-20400-0-nan	CHUAN	chakulia	4.1	22.483333	86.716667						[22.45, 22.45]	[86.7, 86.7]	era5.1759.conv.2:32803	era5_1759	19430901	19450430	2:32803	0-20500-0-32803	[106, 107]
+0	0															0-20600-0-nan	SCHROEDER	chakulia	4.1	22.483333	86.716667						[22.45, 22.45]	[86.7, 86.7]	era5.1759.conv.2:32803	era5_1759	19430901	19450430	2:32803	0-20500-0-32803	[106, 107]
+0	0															0-20700-0-nan	WMO	chakulia	4.1	22.483333	86.716667						[22.45, 22.45]	[86.7, 86.7]	era5.1759.conv.2:32803	era5_1759	19430901	19450430	2:32803	0-20500-0-32803	[106, 107]

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+31174	31174	BOL'SHOJ SHANTAR	54.833333333333336	137.53333333333333	9.0	54 50 00N	137 32 00E	4.3	[54.8, 54.8]	[137.5, 137.5]	OSCAR	0-20000-0-31174		0-20000-0-31174	19620314	19630616	999.0	999.0	False	0-20000-0-31174	nikolayevsk-na-amure	[36, 85, 106, 107]
+31174									[54.8, 54.8]	[137.5, 137.5]	IGRA2			0-20300-0-nan	19620314	19630616				0-20000-0-31174	nikolayevsk-na-amure	[36, 85, 106, 107]
+31174									[54.8, 54.8]	[137.5, 137.5]	WBAN			0-20500-0-nan	19620314	19630616				0-20000-0-31174	nikolayevsk-na-amure	[36, 85, 106, 107]
+31174									[54.8, 54.8]	[137.5, 137.5]	CHUAN			0-20400-0-nan	19620314	19630616				0-20000-0-31174	nikolayevsk-na-amure	[36, 85, 106, 107]
+31174									[54.8, 54.8]	[137.5, 137.5]	SCHROEDER			0-20600-0-nan	19620314	19630616				0-20000-0-31174	nikolayevsk-na-amure	[36, 85, 106, 107]
+31174									[54.8, 54.8]	[137.5, 137.5]	WMO			0-20700-0-nan	19620314	19630616				0-20000-0-31174	nikolayevsk-na-amure	[36, 85, 106, 107]

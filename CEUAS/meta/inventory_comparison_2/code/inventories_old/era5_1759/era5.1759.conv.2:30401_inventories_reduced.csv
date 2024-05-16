@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:30401	63471	DIREDAWA	9.6	41.85	1260.0	09 36 00N	041 51 00E	2.2	[9.6, 9.6]	[41.87, 41.87]	OSCAR	0-20000-0-63471		0-20000-0-63471	19650220	19661128	999.0	999.0	False	0-20000-0-63471	dire dawa	[38, 85, 106, 107, 117]
+2:30401									[9.6, 9.6]	[41.87, 41.87]	IGRA2			0-20300-0-nan	19650220	19661128				0-20000-0-63471	dire dawa	[38, 85, 106, 107, 117]
+2:30401	30401	DIREDAWA	9.6	41.87	1162.2024000000001			0.0	[9.6, 9.6]	[41.87, 41.87]	WBAN			0-20500-0-30401	19650220	19661128	19650201.0	19661231.0		0-20000-0-63471	dire dawa	[38, 85, 106, 107, 117]
+2:30401									[9.6, 9.6]	[41.87, 41.87]	CHUAN			0-20400-0-nan	19650220	19661128				0-20000-0-63471	dire dawa	[38, 85, 106, 107, 117]
+2:30401	63471	HADR Dire Dawa AP, Ethiopia	9.6	41.87	-999.0			0.0	[9.6, 9.6]	[41.87, 41.87]	SCHROEDER		63471	0-20600-0-63471	19650220	19661128				0-20000-0-63471	dire dawa	[38, 85, 106, 107, 117]
+2:30401	63471	DIRE DAWA                	9.6	41.86666666666667	-999.0			0.4	[9.6, 9.6]	[41.87, 41.87]	WMO		63471	0-20700-0-63471	19650220	19661128				0-20000-0-63471	dire dawa	[38, 85, 106, 107, 117]

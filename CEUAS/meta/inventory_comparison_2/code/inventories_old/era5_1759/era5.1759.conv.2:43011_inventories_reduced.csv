@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:43011	43011	BIR	19.0	75.71666666666667	519.0	19 00 00N	075 43 00E	3500.0	[35.25, 35.25]	[106.25, 106.25]	OSCAR	0-20000-0-43011		0-20000-0-43011	19451101	19451216	999.0	999.0	False	0-20500-0-43011	pingliang	[106, 107]
+2:43011									[35.25, 35.25]	[106.25, 106.25]	IGRA2			0-20300-0-nan	19451101	19451216				0-20500-0-43011	pingliang	[106, 107]
+2:43011	43011	NINGHSIA	35.25	106.25	1115.2632			0.0	[35.25, 35.25]	[106.25, 106.25]	WBAN			0-20500-0-43011	19451101	19451216	19451101.0	19451231.0		0-20500-0-43011	pingliang	[106, 107]
+2:43011									[35.25, 35.25]	[106.25, 106.25]	CHUAN			0-20400-0-nan	19451101	19451216				0-20500-0-43011	pingliang	[106, 107]
+2:43011									[35.25, 35.25]	[106.25, 106.25]	SCHROEDER			0-20600-0-nan	19451101	19451216				0-20500-0-43011	pingliang	[106, 107]
+2:43011									[35.25, 35.25]	[106.25, 106.25]	WMO			0-20700-0-nan	19451101	19451216				0-20500-0-43011	pingliang	[106, 107]

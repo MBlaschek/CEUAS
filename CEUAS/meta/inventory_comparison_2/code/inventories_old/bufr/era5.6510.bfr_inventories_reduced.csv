@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+65010	65010	SOKOTO	13.016666666666667	5.25	350.8	13 01 00N	005 15 00E	5.7	[13.0, 13.0]	[5.3, 5.3]	OSCAR	0-20000-0-65010		0-20000-0-65010	19740715	19740823	999.0	999.0	False	0-20000-0-65010	sokoto	[36, 85, 106, 107]
+65010									[13.0, 13.0]	[5.3, 5.3]	IGRA2			0-20300-0-nan	19740715	19740823				0-20000-0-65010	sokoto	[36, 85, 106, 107]
+65010									[13.0, 13.0]	[5.3, 5.3]	WBAN			0-20500-0-nan	19740715	19740823				0-20000-0-65010	sokoto	[36, 85, 106, 107]
+65010									[13.0, 13.0]	[5.3, 5.3]	CHUAN			0-20400-0-nan	19740715	19740823				0-20000-0-65010	sokoto	[36, 85, 106, 107]
+65010									[13.0, 13.0]	[5.3, 5.3]	SCHROEDER			0-20600-0-nan	19740715	19740823				0-20000-0-65010	sokoto	[36, 85, 106, 107]
+65010									[13.0, 13.0]	[5.3, 5.3]	WMO			0-20700-0-nan	19740715	19740823				0-20000-0-65010	sokoto	[36, 85, 106, 107]

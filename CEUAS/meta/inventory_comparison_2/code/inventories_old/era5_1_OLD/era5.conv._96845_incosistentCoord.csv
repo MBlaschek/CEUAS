@@ -1,0 +1,5 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		SURAKARTA/ADISUMARM	-7.5167	110.75	0.0				96845	1973.0	1989.0	True	41.9		0-20300-0-96845	IGRA2	wonogiri	6.1	-7.814444	110.920556	IDM00096845				
+0	0		Kepek, Java, Indonesia	-7.87	110.92	-999.0				96845				1.6		0-20600-0-96845	SCHROEDER	wonogiri	6.1	-7.814444	110.920556		96845	4016.0	9999999	9999999
+0	0		SELOGIRI                 	-7.8	110.91666666666669	-999.0				96L43				6.7		0-20700-0-96L43	WMO	wonogiri	6.1	-7.814444	110.920556		96L43	3283.0		
+1	1		WADASLINTANG             	-7.616666666666667	110.91666666666669	-999.0				96K27				26.9		0-20700-0-96K27	WMO	wonogiri	6.1	-7.814444	110.920556		96K27	3261.0		

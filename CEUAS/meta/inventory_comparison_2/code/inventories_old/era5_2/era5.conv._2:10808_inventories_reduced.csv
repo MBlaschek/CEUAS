@@ -1,0 +1,9 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:10808									[9.08, 9.08]	[-80.57, -80.57]	OSCAR				19450407	19450429				0-20500-0-10808	puerto escondido	[104, 105, 106, 107]
+2:10808									[9.08, 9.08]	[-80.57, -80.57]	IGRA2			0-20300-0-nan	19450407	19450429				0-20500-0-10808	puerto escondido	[104, 105, 106, 107]
+2:10808	10808.0	COCLE DEL NORTE	9.08	-80.57				0.0	[9.08, 9.08]	[-80.57, -80.57]	WBAN			0-20500-0-10808	19450407	19450429	19441201.0	19451231.0		0-20500-0-10808	puerto escondido	[104, 105, 106, 107]
+2:10808									[9.08, 9.08]	[-80.57, -80.57]	CHUAN			0-20400-0-nan	19450407	19450429				0-20500-0-10808	puerto escondido	[104, 105, 106, 107]
+2:10808									[9.08, 9.08]	[-80.57, -80.57]	SCHROEDER			0-20600-0-nan	19450407	19450429				0-20500-0-10808	puerto escondido	[104, 105, 106, 107]
+2:10808									[9.08, 9.08]	[-80.57, -80.57]	WMO			0-20700-0-nan	19450407	19450429				0-20500-0-10808	puerto escondido	[104, 105, 106, 107]
+2:10808									[9.08, 9.08]	[-80.57, -80.57]	AMMA			0-20800-0-nan	19450407	19450429				0-20500-0-10808	puerto escondido	[104, 105, 106, 107]
+2:10808									[9.08, 9.08]	[-80.57, -80.57]	HARA			0-20111-0-nan	19450407	19450429				0-20500-0-10808	puerto escondido	[104, 105, 106, 107]

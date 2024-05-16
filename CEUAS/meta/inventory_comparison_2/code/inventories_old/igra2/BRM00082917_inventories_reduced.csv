@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+82917	82917	RIO BRANCO (AERO)	-10.0	-67.8	143.0	10 00 00S	067 48 00W	0.0	[-10.0, -10.0]	[-67.8, -67.8]	OSCAR	0-20000-0-82917		0-20000-0-82917	2004	2021	999.0	999.0	True	0-20000-0-82917	rio branco	['85', '38', '106', '107']
+82917	82915	RIO BRANCO (82915-0)	-9.966666666666667	-67.8	160.0	09 58 00S	067 48 00W	3.7	[-10.0, -10.0]	[-67.8, -67.8]	OSCAR	0-20000-0-82915		0-20000-0-82915	2004	2021	999.0	999.0	False	0-20000-0-82917	rio branco	['85', '38', '106', '107']
+82917	82917	RIO BRANCO (AERO)	-10.0	-67.8	142.0			0.0	[-10.0, -10.0]	[-67.8, -67.8]	IGRA2			0-20300-0-82917	2004	2021	2004.0	2021.0	True	0-20000-0-82917	rio branco	['85', '38', '106', '107']
+82917									[-10.0, -10.0]	[-67.8, -67.8]	WBAN			0-20500-0-nan	2004	2021				0-20000-0-82917	rio branco	['85', '38', '106', '107']
+82917									[-10.0, -10.0]	[-67.8, -67.8]	CHUAN			0-20400-0-nan	2004	2021				0-20000-0-82917	rio branco	['85', '38', '106', '107']
+82917	82917	Rio Branco - Universidade Federal do Acre SALLJEX pibal and radiosonde site (operated by CPTEC = Centro de Previsao de Tempo e Estudos Climaticos), Acre, Brazil	-9.96	-67.87	-999.0			8.9	[-10.0, -10.0]	[-67.8, -67.8]	SCHROEDER		82917.0	0-20600-0-82917	2004	2021				0-20000-0-82917	rio branco	['85', '38', '106', '107']
+82917									[-10.0, -10.0]	[-67.8, -67.8]	WMO			0-20700-0-nan	2004	2021				0-20000-0-82917	rio branco	['85', '38', '106', '107']

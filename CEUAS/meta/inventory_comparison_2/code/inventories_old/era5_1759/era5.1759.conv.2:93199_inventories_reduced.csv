@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:93199									[31.87, 31.87]	[-116.63, -116.63]	OSCAR				19480316	19570123				0-20500-0-93199	ensenada	[106, 107]
+2:93199									[31.87, 31.87]	[-116.63, -116.63]	IGRA2			0-20300-0-nan	19480316	19570123				0-20500-0-93199	ensenada	[106, 107]
+2:93199	93199	ENSENADA	31.87	-116.63	9.144			0.0	[31.87, 31.87]	[-116.63, -116.63]	WBAN			0-20500-0-93199	19480316	19570123	19441001.0	19700930.0		0-20500-0-93199	ensenada	[106, 107]
+2:93199									[31.87, 31.87]	[-116.63, -116.63]	CHUAN			0-20400-0-nan	19480316	19570123				0-20500-0-93199	ensenada	[106, 107]
+2:93199									[31.87, 31.87]	[-116.63, -116.63]	SCHROEDER			0-20600-0-nan	19480316	19570123				0-20500-0-93199	ensenada	[106, 107]
+2:93199	76050	ENSENADA                 	31.883333333333333	-116.63333333333334	-999.0			1.5	[31.87, 31.87]	[-116.63, -116.63]	WMO		76050	0-20700-0-76050	19480316	19570123				0-20500-0-93199	ensenada	[106, 107]

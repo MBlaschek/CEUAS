@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:22522	22522	KEM'	64.95	34.65		64 57 00N	034 39 00E	10395.1	[21.32, 21.32]	[-156.13, -156.13]	OSCAR	0-20001-0-22522		0-20001-0-22522	19460715	19480430	999.0	999.0	True		kahului	[106, 107]
+2:22522	22522	KEM	64.95	34.65	8.0			10395.1	[21.32, 21.32]	[-156.13, -156.13]	IGRA2			0-20300-0-22522	19460715	19480430	1950.0	2021.0	True		kahului	[106, 107]
+2:22522									[21.32, 21.32]	[-156.13, -156.13]	WBAN			0-20500-0-nan	19460715	19480430					kahului	[106, 107]
+2:22522									[21.32, 21.32]	[-156.13, -156.13]	CHUAN			0-20400-0-nan	19460715	19480430					kahului	[106, 107]
+2:22522									[21.32, 21.32]	[-156.13, -156.13]	SCHROEDER			0-20600-0-nan	19460715	19480430					kahului	[106, 107]
+2:22522	22522	KEM'-PORT                	64.98333333333333	34.78333333333333	-999.0			10390.4	[21.32, 21.32]	[-156.13, -156.13]	WMO		22522	0-20700-0-22522	19460715	19480430					kahului	[106, 107]

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+60734	60734	SILIANA	36.06666666666667	9.366666666666667	445.0	36 04 00N	009 22 00E	0.5	[36.07, 36.07]	[9.37, 9.37]	OSCAR	0-20000-0-60734		0-20000-0-60734	19870401	19870401	999.0	999.0	False	0-20000-0-60734	silyanah	[104, 105, 106, 107, 117]
+60734									[36.07, 36.07]	[9.37, 9.37]	IGRA2			0-20300-0-nan	19870401	19870401				0-20000-0-60734	silyanah	[104, 105, 106, 107, 117]
+60734									[36.07, 36.07]	[9.37, 9.37]	WBAN			0-20500-0-nan	19870401	19870401				0-20000-0-60734	silyanah	[104, 105, 106, 107, 117]
+60734									[36.07, 36.07]	[9.37, 9.37]	CHUAN			0-20400-0-nan	19870401	19870401				0-20000-0-60734	silyanah	[104, 105, 106, 107, 117]
+60734									[36.07, 36.07]	[9.37, 9.37]	SCHROEDER			0-20600-0-nan	19870401	19870401				0-20000-0-60734	silyanah	[104, 105, 106, 107, 117]
+60734									[36.07, 36.07]	[9.37, 9.37]	WMO			0-20700-0-nan	19870401	19870401				0-20000-0-60734	silyanah	[104, 105, 106, 107, 117]

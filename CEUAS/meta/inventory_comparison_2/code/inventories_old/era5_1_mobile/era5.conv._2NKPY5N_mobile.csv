@@ -1,0 +1,2 @@
+lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	variables	kind	WIGOS_best
+		era5.conv._2NKPY5N	era5_1_mobile	201803	201803	2NKPY5N		mobile	0-20999-0-2NKPY5N

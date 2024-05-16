@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+38759	38759	GYZYLETREK	37.61666666666667	54.78333333333333	29.0	37 37 00N	054 47 00E	2.2	[37.61, 37.61]	[54.76, 54.76]	OSCAR	0-20000-0-38759		0-20000-0-38759	19790713	19790713	999.0	999.0	False	0-20000-0-38759	gonbad-e qabus	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+38759									[37.61, 37.61]	[54.76, 54.76]	IGRA2			0-20300-0-nan	19790713	19790713				0-20000-0-38759	gonbad-e qabus	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+38759									[37.61, 37.61]	[54.76, 54.76]	WBAN			0-20500-0-nan	19790713	19790713				0-20000-0-38759	gonbad-e qabus	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+38759									[37.61, 37.61]	[54.76, 54.76]	CHUAN			0-20400-0-nan	19790713	19790713				0-20000-0-38759	gonbad-e qabus	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+38759									[37.61, 37.61]	[54.76, 54.76]	SCHROEDER			0-20600-0-nan	19790713	19790713				0-20000-0-38759	gonbad-e qabus	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+38759									[37.61, 37.61]	[54.76, 54.76]	WMO			0-20700-0-nan	19790713	19790713				0-20000-0-38759	gonbad-e qabus	[36, 38, 39, 85, 104, 105, 106, 107, 117]

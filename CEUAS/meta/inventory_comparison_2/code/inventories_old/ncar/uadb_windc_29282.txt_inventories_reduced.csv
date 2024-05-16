@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+29282	29282	BOGUCANY	58.38333333333333	97.45	133.6	58 23 00N	097 27 00E	1.8	[58.38, 58.38]	[97.48, 97.48]	OSCAR	0-20000-0-29282		0-20000-0-29282	20180101	20211231	999.0	999.0	True	0-20000-0-29282	boguchany	['38', '85', '106', '107']
+29282	29282	BOGUCANY	58.3833	97.45	131.0			1.8	[58.38, 58.38]	[97.48, 97.48]	IGRA2			0-20300-0-29282	20180101	20211231	1951.0	2021.0	True	0-20000-0-29282	boguchany	['38', '85', '106', '107']
+29282									[58.38, 58.38]	[97.48, 97.48]	WBAN			0-20500-0-nan	20180101	20211231				0-20000-0-29282	boguchany	['38', '85', '106', '107']
+29282									[58.38, 58.38]	[97.48, 97.48]	CHUAN			0-20400-0-nan	20180101	20211231				0-20000-0-29282	boguchany	['38', '85', '106', '107']
+29282	29282	Boguchany, Russia	58.42	97.5	-999.0			4.6	[58.38, 58.38]	[97.48, 97.48]	SCHROEDER		29282.0	0-20600-0-29282	20180101	20211231				0-20000-0-29282	boguchany	['38', '85', '106', '107']
+29282									[58.38, 58.38]	[97.48, 97.48]	WMO			0-20700-0-nan	20180101	20211231				0-20000-0-29282	boguchany	['38', '85', '106', '107']

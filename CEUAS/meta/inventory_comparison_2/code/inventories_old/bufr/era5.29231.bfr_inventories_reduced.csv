@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+29231	29231	KOLPASEVO	58.31666666666667	82.95	75.12	58 19 00N	082 57 00E	3.5	[58.3, 58.3]	[82.9, 82.9]	OSCAR	0-20000-0-29231		0-20000-0-29231	19580101	19781231	999.0	999.0	True	0-20000-0-29231	kolpashevo	[36, 85, 106, 107]
+29231	29231	KOLPASEVO	58.3167	82.95	72.9			3.5	[58.3, 58.3]	[82.9, 82.9]	IGRA2			0-20300-0-29231	19580101	19781231	1951.0	2021.0	True	0-20000-0-29231	kolpashevo	[36, 85, 106, 107]
+29231									[58.3, 58.3]	[82.9, 82.9]	WBAN			0-20500-0-nan	19580101	19781231				0-20000-0-29231	kolpashevo	[36, 85, 106, 107]
+29231									[58.3, 58.3]	[82.9, 82.9]	CHUAN			0-20400-0-nan	19580101	19781231				0-20000-0-29231	kolpashevo	[36, 85, 106, 107]
+29231	29231	Kolpashevo, Russia	58.32	82.97	-999.0			4.7	[58.3, 58.3]	[82.9, 82.9]	SCHROEDER		29231	0-20600-0-29231	19580101	19781231				0-20000-0-29231	kolpashevo	[36, 85, 106, 107]
+29231	29231	KOLPASEV                 	58.3	82.9	-999.0			0.0	[58.3, 58.3]	[82.9, 82.9]	WMO		29231	0-20700-0-29231	19580101	19781231				0-20000-0-29231	kolpashevo	[36, 85, 106, 107]

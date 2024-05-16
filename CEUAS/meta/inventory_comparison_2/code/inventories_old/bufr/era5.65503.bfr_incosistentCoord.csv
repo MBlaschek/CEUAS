@@ -1,0 +1,5 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		OUAGADOUGOU	12.35	-1.5167	303.0				65503	1940.0	2020.0	True	0.7		IGRA2	0-20300-0-65503	ouagadougou	2.8	12.3702778	-1.5247222	UVM00065503				
+0	0	0-20000-0-65503	OUAGADOUGOU	12.35	-1.5166666666666666	306.0	Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, RBSN(SP), GOS	12 21 00N	001 31 00W	65503	999.0	999.0	False	0.7		OSCAR	0-20000-0-65503	ouagadougou	2.8	12.3702778	-1.5247222					
+0	0		Ouagadougou, Burkina Faso	12.35	-1.52	-999.0				65503				1.1		SCHROEDER	0-20600-0-65503	ouagadougou	2.8	12.3702778	-1.5247222		65503	2078.0	1975-06-27 00:00:00	1995-10-01 00:00:00
+0	0		OUAGADOUGOU AERO         	12.35	-1.5166666666666666	-999.0				65503				0.7		WMO	0-20700-0-65503	ouagadougou	2.8	12.3702778	-1.5247222		65503	174.0		

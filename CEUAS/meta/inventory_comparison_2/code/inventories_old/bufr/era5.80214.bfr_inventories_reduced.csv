@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+80214	80214	IBAGUE/PERALES	4.433333333333334	-75.15	928.0	04 26 00N	075 09 00W	6.7	[4.4, 4.4]	[-75.1, -75.1]	OSCAR	0-20000-0-80214		0-20000-0-80214	19740904	19740904	999.0	999.0	False	0-20000-0-80214	ibague	[36, 85, 106, 107]
+80214									[4.4, 4.4]	[-75.1, -75.1]	IGRA2			0-20300-0-nan	19740904	19740904				0-20000-0-80214	ibague	[36, 85, 106, 107]
+80214									[4.4, 4.4]	[-75.1, -75.1]	WBAN			0-20500-0-nan	19740904	19740904				0-20000-0-80214	ibague	[36, 85, 106, 107]
+80214									[4.4, 4.4]	[-75.1, -75.1]	CHUAN			0-20400-0-nan	19740904	19740904				0-20000-0-80214	ibague	[36, 85, 106, 107]
+80214									[4.4, 4.4]	[-75.1, -75.1]	SCHROEDER			0-20600-0-nan	19740904	19740904				0-20000-0-80214	ibague	[36, 85, 106, 107]
+80214	80214	IBAGUE/PERALES A         	4.433333333333334	-75.15	-999.0			6.7	[4.4, 4.4]	[-75.1, -75.1]	WMO		80214	0-20700-0-80214	19740904	19740904				0-20000-0-80214	ibague	[36, 85, 106, 107]

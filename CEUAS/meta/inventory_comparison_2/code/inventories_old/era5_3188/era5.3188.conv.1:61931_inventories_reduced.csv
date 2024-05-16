@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:61931	61931	S. TOME	0.38333333333333336	6.716666666666667	13.0	00 23 00N	006 43 00E	0.5	[0.38, 0.38]	[6.72, 6.72]	OSCAR	0-20000-0-61931		0-20000-0-61931	19570102	19720930	999	999	False	0-20000-0-61931	port-gentil	[106, 107]
+1:61931	61931	S. TOME	0.383	6.717	13.0			0.5	[0.38, 0.38]	[6.72, 6.72]	IGRA2			0-20300-0-61931	19570102	19720930	1953	1979	True	0-20000-0-61931	port-gentil	[106, 107]
+1:61931									[0.38, 0.38]	[6.72, 6.72]	WBAN			0-20500-0-nan	19570102	19720930				0-20000-0-61931	port-gentil	[106, 107]
+1:61931	4209	São_Tomé	0.38	6.72	9			0.0	[0.38, 0.38]	[6.72, 6.72]	CHUAN		61931	0-20400-0-4209	19570102	19720930	187201	-999-999		0-20000-0-61931	port-gentil	[106, 107]
+1:61931	61931	FPST Salazar / Sao Tome AP, Sao Tome and Principe	0.38	6.72	-999			0.0	[0.38, 0.38]	[6.72, 6.72]	SCHROEDER		61931	0-20600-0-61931	19570102	19720930				0-20000-0-61931	port-gentil	[106, 107]
+1:61931	61931	SAO TOME                 	0.3833333333333333	6.716666666666667	-999.0			0.5	[0.38, 0.38]	[6.72, 6.72]	WMO		61931	0-20700-0-61931	19570102	19720930				0-20000-0-61931	port-gentil	[106, 107]

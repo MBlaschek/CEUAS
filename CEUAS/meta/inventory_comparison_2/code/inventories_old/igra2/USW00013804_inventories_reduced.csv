@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+13804									[38.9333, 38.9333]	[-85.9167, -85.9167]	OSCAR				1943	1944				0-20300-0-13804	seymour	['85', '38', '106', '107']
+13804	13804	SEYMOUR FREEMAN FIELD	38.9333	-85.9167	176.5			0.0	[38.9333, 38.9333]	[-85.9167, -85.9167]	IGRA2			0-20300-0-13804	1943	1944	1943.0	1944.0	True	0-20300-0-13804	seymour	['85', '38', '106', '107']
+13804	13804	SEYMOUR FRMN FD AAF	38.93	-85.9	177.08880000000002			1.5	[38.9333, 38.9333]	[-85.9167, -85.9167]	WBAN			0-20500-0-13804	1943	1944	19430101.0	19461031.0		0-20300-0-13804	seymour	['85', '38', '106', '107']
+13804									[38.9333, 38.9333]	[-85.9167, -85.9167]	CHUAN			0-20400-0-nan	1943	1944				0-20300-0-13804	seymour	['85', '38', '106', '107']
+13804									[38.9333, 38.9333]	[-85.9167, -85.9167]	SCHROEDER			0-20600-0-nan	1943	1944				0-20300-0-13804	seymour	['85', '38', '106', '107']
+13804									[38.9333, 38.9333]	[-85.9167, -85.9167]	WMO			0-20700-0-nan	1943	1944				0-20300-0-13804	seymour	['85', '38', '106', '107']

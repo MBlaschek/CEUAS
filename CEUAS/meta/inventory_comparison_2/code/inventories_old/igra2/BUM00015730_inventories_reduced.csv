@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+15730	15730	KURDJALI	41.65	25.383333333333333	331.0	41 39 00N	025 23 00E	1.4	[41.65, 41.65]	[25.367, 25.367]	OSCAR	0-20000-0-15730		0-20000-0-15730	1966	1991	999.0	999.0	False	0-20000-0-15730	haskovo	['85', '38', '106', '107']
+15730	15730	KURDJALI	41.65	25.367	331.0			0.0	[41.65, 41.65]	[25.367, 25.367]	IGRA2			0-20300-0-15730	1966	1991	1966.0	1991.0	True	0-20000-0-15730	haskovo	['85', '38', '106', '107']
+15730									[41.65, 41.65]	[25.367, 25.367]	WBAN			0-20500-0-nan	1966	1991				0-20000-0-15730	haskovo	['85', '38', '106', '107']
+15730									[41.65, 41.65]	[25.367, 25.367]	CHUAN			0-20400-0-nan	1966	1991				0-20000-0-15730	haskovo	['85', '38', '106', '107']
+15730	15730	Kurdzhali / Kardjali, Bulgaria	41.63	25.4	-999.0			3.5	[41.65, 41.65]	[25.367, 25.367]	SCHROEDER		15730.0	0-20600-0-15730	1966	1991				0-20000-0-15730	haskovo	['85', '38', '106', '107']
+15730									[41.65, 41.65]	[25.367, 25.367]	WMO			0-20700-0-nan	1966	1991				0-20000-0-15730	haskovo	['85', '38', '106', '107']

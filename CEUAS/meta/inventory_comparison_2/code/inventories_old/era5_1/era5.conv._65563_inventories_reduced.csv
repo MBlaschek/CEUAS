@@ -1,0 +1,9 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+65563	65563	YAMOUSSOUKRO	6.9	-5.35	213.0	06 54 00N	005 21 00W	0.0	[6.9, 6.9]	[-5.35, -5.35]	OSCAR	0-20000-0-65563		0-20000-0-65563	19800504	19801103	999.0	999.0	False	0-20000-0-65563	yamoussoukro	[104, 105, 106, 107, 117]
+65563									[6.9, 6.9]	[-5.35, -5.35]	IGRA2			0-20300-0-nan	19800504	19801103				0-20000-0-65563	yamoussoukro	[104, 105, 106, 107, 117]
+65563									[6.9, 6.9]	[-5.35, -5.35]	WBAN			0-20500-0-nan	19800504	19801103				0-20000-0-65563	yamoussoukro	[104, 105, 106, 107, 117]
+65563									[6.9, 6.9]	[-5.35, -5.35]	CHUAN			0-20400-0-nan	19800504	19801103				0-20000-0-65563	yamoussoukro	[104, 105, 106, 107, 117]
+65563									[6.9, 6.9]	[-5.35, -5.35]	SCHROEDER			0-20600-0-nan	19800504	19801103				0-20000-0-65563	yamoussoukro	[104, 105, 106, 107, 117]
+65563	65563	YAMOUSSOUKRO-A           	6.9	-5.35	196.0			0.0	[6.9, 6.9]	[-5.35, -5.35]	WMO		65563	0-20700-0-65563	19800504	19801103				0-20000-0-65563	yamoussoukro	[104, 105, 106, 107, 117]
+65563									[6.9, 6.9]	[-5.35, -5.35]	AMMA			0-20800-0-nan	19800504	19801103				0-20000-0-65563	yamoussoukro	[104, 105, 106, 107, 117]
+65563									[6.9, 6.9]	[-5.35, -5.35]	HARA			0-20111-0-nan	19800504	19801103				0-20000-0-65563	yamoussoukro	[104, 105, 106, 107, 117]

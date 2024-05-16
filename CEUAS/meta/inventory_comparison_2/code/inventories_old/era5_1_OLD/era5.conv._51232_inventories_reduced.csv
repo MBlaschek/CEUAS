@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+51232									[45.97, 45.97]	[82.53, 82.53]	OSCAR				19800205	19941231				0-20600-0-51232	urdzhar	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+51232									[45.97, 45.97]	[82.53, 82.53]	IGRA2			0-20300-0-nan	19800205	19941231				0-20600-0-51232	urdzhar	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+51232									[45.97, 45.97]	[82.53, 82.53]	WBAN			0-20500-0-nan	19800205	19941231				0-20600-0-51232	urdzhar	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+51232									[45.97, 45.97]	[82.53, 82.53]	CHUAN			0-20400-0-nan	19800205	19941231				0-20600-0-51232	urdzhar	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+51232	51232.0	Karabura - Paerhluk'o Mountain, China	45.97	82.53	-999.0			0.0	[45.97, 45.97]	[82.53, 82.53]	SCHROEDER		51232.0	0-20600-0-51232	19800205	19941231				0-20600-0-51232	urdzhar	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+51232									[45.97, 45.97]	[82.53, 82.53]	WMO			0-20700-0-nan	19800205	19941231				0-20600-0-51232	urdzhar	[36, 38, 39, 85, 104, 105, 106, 107, 117]

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+52323	52323	MAZONG SHAN	41.8	97.03333333333333	1770.0	41 48 00N	097 02 00E	0.0	[41.8, 41.8]	[97.0333, 97.0333]	OSCAR	0-20000-0-52323		0-20000-0-52323	1963	2021	999.0	999.0	True	0-20000-0-52323	yumen	['85', '38', '106', '107']
+52323	52323	MAZONG SHAN	41.8	97.0333	1770.0			0.0	[41.8, 41.8]	[97.0333, 97.0333]	IGRA2			0-20300-0-52323	1963	2021	1963.0	2021.0	True	0-20000-0-52323	yumen	['85', '38', '106', '107']
+52323									[41.8, 41.8]	[97.0333, 97.0333]	WBAN			0-20500-0-nan	1963	2021				0-20000-0-52323	yumen	['85', '38', '106', '107']
+52323									[41.8, 41.8]	[97.0333, 97.0333]	CHUAN			0-20400-0-nan	1963	2021				0-20000-0-52323	yumen	['85', '38', '106', '107']
+52323	52323	Mazong Shan / Mazong Mountain Range, China	41.63	96.88	-999.0			22.8	[41.8, 41.8]	[97.0333, 97.0333]	SCHROEDER		52323	0-20600-0-52323	1963	2021				0-20000-0-52323	yumen	['85', '38', '106', '107']
+52323	52323	MAZONG SHAN              	41.8	97.03333333333332	-999.0			0.0	[41.8, 41.8]	[97.0333, 97.0333]	WMO		52323	0-20700-0-52323	1963	2021				0-20000-0-52323	yumen	['85', '38', '106', '107']

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+28908	28908	AVANGARD ZERNOSOVHOZ	52.61666666666667	51.28333333333333	87.67	52 37 00N	051 17 00E	0.4	[52.62, 52.62]	[51.28, 51.28]	OSCAR	0-20000-0-28908		0-20000-0-28908	19841003	19841003	999.0	999.0	False	0-20000-0-28908	neftegorsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+28908									[52.62, 52.62]	[51.28, 51.28]	IGRA2			0-20300-0-nan	19841003	19841003				0-20000-0-28908	neftegorsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+28908									[52.62, 52.62]	[51.28, 51.28]	WBAN			0-20500-0-nan	19841003	19841003				0-20000-0-28908	neftegorsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+28908									[52.62, 52.62]	[51.28, 51.28]	CHUAN			0-20400-0-nan	19841003	19841003				0-20000-0-28908	neftegorsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+28908									[52.62, 52.62]	[51.28, 51.28]	SCHROEDER			0-20600-0-nan	19841003	19841003				0-20000-0-28908	neftegorsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+28908									[52.62, 52.62]	[51.28, 51.28]	WMO			0-20700-0-nan	19841003	19841003				0-20000-0-28908	neftegorsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]

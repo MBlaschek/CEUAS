@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+22408	22408	KALEVALA	65.21666666666667	31.15	120.0	65 13 00N	031 09 00E	2.1	[65.2, 65.2]	[31.17, 31.17]	OSCAR	0-20000-0-22408		0-20000-0-22408	19870802	19870802	999.0	999.0	False	0-20000-0-22408	kostomuksha	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+22408									[65.2, 65.2]	[31.17, 31.17]	IGRA2			0-20300-0-nan	19870802	19870802				0-20000-0-22408	kostomuksha	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+22408									[65.2, 65.2]	[31.17, 31.17]	WBAN			0-20500-0-nan	19870802	19870802				0-20000-0-22408	kostomuksha	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+22408									[65.2, 65.2]	[31.17, 31.17]	CHUAN			0-20400-0-nan	19870802	19870802				0-20000-0-22408	kostomuksha	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+22408									[65.2, 65.2]	[31.17, 31.17]	SCHROEDER			0-20600-0-nan	19870802	19870802				0-20000-0-22408	kostomuksha	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+22408									[65.2, 65.2]	[31.17, 31.17]	WMO			0-20700-0-nan	19870802	19870802				0-20000-0-22408	kostomuksha	[36, 38, 39, 85, 104, 105, 106, 107, 117]

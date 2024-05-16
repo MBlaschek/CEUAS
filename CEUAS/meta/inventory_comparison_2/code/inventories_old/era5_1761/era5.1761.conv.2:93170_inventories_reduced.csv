@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:93170									[34.83, 34.83]	[-117.13, -117.13]	OSCAR				19290901	19320331				0-20500-0-93151	barstow	[106, 107]
+2:93170	93170	LEBEC	34.8333	-118.8667	1090.0			158.9	[34.83, 34.83]	[-117.13, -117.13]	IGRA2			0-20300-0-93170	19290901	19320331	1929.0	1932.0	True	0-20500-0-93151	barstow	[106, 107]
+2:93170	93151	BARSTOW	34.9	-117.02	665.0736			12.7	[34.83, 34.83]	[-117.13, -117.13]	WBAN			0-20500-0-93151	19290901	19320331	19300201.0	19310531.0		0-20500-0-93151	barstow	[106, 107]
+2:93170									[34.83, 34.83]	[-117.13, -117.13]	CHUAN			0-20400-0-nan	19290901	19320331				0-20500-0-93151	barstow	[106, 107]
+2:93170									[34.83, 34.83]	[-117.13, -117.13]	SCHROEDER			0-20600-0-nan	19290901	19320331				0-20500-0-93151	barstow	[106, 107]
+2:93170									[34.83, 34.83]	[-117.13, -117.13]	WMO			0-20700-0-nan	19290901	19320331				0-20500-0-93151	barstow	[106, 107]

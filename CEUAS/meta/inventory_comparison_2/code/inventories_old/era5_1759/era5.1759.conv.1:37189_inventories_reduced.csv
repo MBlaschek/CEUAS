@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:37189									[43.02, 43.02]	[41.02, 41.02]	OSCAR				19470403	19530701				0-20300-0-37260	sukhumi	[38, 85, 106, 107, 117]
+1:37189	37260	SUKHUMI (AGMS)	43.017	41.033	118.0			1.1	[43.02, 43.02]	[41.02, 41.02]	IGRA2			0-20300-0-37260	19470403	19530701	1947	1992	True	0-20300-0-37260	sukhumi	[38, 85, 106, 107, 117]
+1:37189									[43.02, 43.02]	[41.02, 41.02]	WBAN			0-20500-0-nan	19470403	19530701				0-20300-0-37260	sukhumi	[38, 85, 106, 107, 117]
+1:37189	6163	Suhumi	43.02	41.03	5			0.8	[43.02, 43.02]	[41.02, 41.02]	CHUAN		-999	0-20400-0-6163	19470403	19530701	-999-999	-999-999		0-20300-0-37260	sukhumi	[38, 85, 106, 107, 117]
+1:37189	37260	Babushara / Babusheri, Georgia	42.87	41.18	-999			21.2	[43.02, 43.02]	[41.02, 41.02]	SCHROEDER		37260	0-20600-0-37260	19470403	19530701				0-20300-0-37260	sukhumi	[38, 85, 106, 107, 117]
+1:37189									[43.02, 43.02]	[41.02, 41.02]	WMO			0-20700-0-nan	19470403	19530701				0-20300-0-37260	sukhumi	[38, 85, 106, 107, 117]

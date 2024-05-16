@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+29263	29263	ENISEJSK	58.45277777777778	92.20277777777778	78.98	58 27 10N	092 12 10E	2.5	[58.45, 58.45]	[92.16, 92.15]	OSCAR	0-20000-0-29263		0-20000-0-29263	19601221	19781231	999.0	999.0	True	0-20000-0-29263	yeniseysk	[36, 85, 106, 107]
+29263	29263	ENISEJSK	58.4528	92.2028	76.9			2.5	[58.45, 58.45]	[92.16, 92.15]	IGRA2			0-20300-0-29263	19601221	19781231	1964.0	2021.0	True	0-20000-0-29263	yeniseysk	[36, 85, 106, 107]
+29263									[58.45, 58.45]	[92.16, 92.15]	WBAN			0-20500-0-nan	19601221	19781231				0-20000-0-29263	yeniseysk	[36, 85, 106, 107]
+29263									[58.45, 58.45]	[92.16, 92.15]	CHUAN			0-20400-0-nan	19601221	19781231				0-20000-0-29263	yeniseysk	[36, 85, 106, 107]
+29263	29263	Yeniseysk, Russia	58.45	92.17	-999.0			0.6	[58.45, 58.45]	[92.16, 92.15]	SCHROEDER		29263	0-20600-0-29263	19601221	19781231				0-20000-0-29263	yeniseysk	[36, 85, 106, 107]
+29263	29263	ENISEJSK                 	58.45	92.15	-999.0			0.6	[58.45, 58.45]	[92.16, 92.15]	WMO		29263	0-20700-0-29263	19601221	19781231				0-20000-0-29263	yeniseysk	[36, 85, 106, 107]

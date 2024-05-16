@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+96491	96491	SANDAKAN	5.9	118.06666666666666	13.0	05 54 00N	118 04 00E	0.4	[5.9, 5.9]	[118.07, 118.07]	OSCAR	0-20000-0-96491		0-20000-0-96491	19700930	20101213	999.0	999.0	False	0-20000-0-96491	sandakan	['38', '85', '106', '107']
+96491	96491	SANDAKAN	5.9	118.0667	10.0			0.4	[5.9, 5.9]	[118.07, 118.07]	IGRA2			0-20300-0-96491	19700930	20101213	1973.0	2018.0	True	0-20000-0-96491	sandakan	['38', '85', '106', '107']
+96491									[5.9, 5.9]	[118.07, 118.07]	WBAN			0-20500-0-nan	19700930	20101213				0-20000-0-96491	sandakan	['38', '85', '106', '107']
+96491									[5.9, 5.9]	[118.07, 118.07]	CHUAN			0-20400-0-nan	19700930	20101213				0-20000-0-96491	sandakan	['38', '85', '106', '107']
+96491	96491	WBKS Sandakan AP, Sabah, Malaysia	5.9	118.07	-999.0			0.0	[5.9, 5.9]	[118.07, 118.07]	SCHROEDER		96491	0-20600-0-96491	19700930	20101213				0-20000-0-96491	sandakan	['38', '85', '106', '107']
+96491	96491	SANDAKAN                 	5.9	118.06666666666666	-999.0			0.4	[5.9, 5.9]	[118.07, 118.07]	WMO		96491	0-20700-0-96491	19700930	20101213				0-20000-0-96491	sandakan	['38', '85', '106', '107']

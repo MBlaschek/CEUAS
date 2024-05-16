@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+01020	01020	SORKAPPOYA	76.4775	16.548611111111114	10.0	76 28 39N	016 32 55E	400.8	[80.05, 80.05]	[18.3, 18.3]	OSCAR	0-20000-0-01020		0-20000-0-01020	1957	1958	999.0	999.0	False	0-20300-0-01020	None	['85', '38', '106', '107']
+01020	01020	KINNVIKA STATION	80.05	18.3	7.0			0.0	[80.05, 80.05]	[18.3, 18.3]	IGRA2			0-20300-0-01020	1957	1958	1957.0	1958.0	True	0-20300-0-01020	None	['85', '38', '106', '107']
+01020									[80.05, 80.05]	[18.3, 18.3]	WBAN			0-20500-0-nan	1957	1958				0-20300-0-01020	None	['85', '38', '106', '107']
+01020									[80.05, 80.05]	[18.3, 18.3]	CHUAN			0-20400-0-nan	1957	1958				0-20300-0-01020	None	['85', '38', '106', '107']
+01020	1020	(made up station ID) Murchison Bay Swedish-Finnish-Swiss IGY site, Norway	80.06	18.25	-999.0			1.5	[80.05, 80.05]	[18.3, 18.3]	SCHROEDER		1020.0	0-20600-0-1020	1957	1958				0-20300-0-01020	None	['85', '38', '106', '107']
+01020									[80.05, 80.05]	[18.3, 18.3]	WMO			0-20700-0-nan	1957	1958				0-20300-0-01020	None	['85', '38', '106', '107']

@@ -1,0 +1,5 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		TAIYUAN	37.6206	112.5767	776.0				53772	1956.0	2021.0	True	562.8		IGRA2	0-20300-0-53772	taiyuan	9.1	37.726944	112.470833	CHM00053772				
+1	1	0-20001-0-53772	TAIYUAN (53772-1)	37.620555555555555	112.57666666666667		Upper-air / Radiosonde station, GOS, RBSN(T)	37 37 14N	112 34 36E	53772	999.0	999.0	True	562.8		OSCAR	0-20001-0-53772	taiyuan	9.1	37.726944	112.470833					
+0	0	0-20000-0-53772	TAIYUAN (53772-0)	37.61666666666667	112.58333333333333	777.3	Surface land meteorological station (SYNOP), GOS, RBSN(S), CLIMAT(C)	37 37 00N	112 35 00E	53772	999.0	999.0	False	563.4		OSCAR	0-20000-0-53772	taiyuan	9.1	37.726944	112.470833					
+0	0		TAIYUAN                  	37.78333333333333	112.55	778.0				53772				560.2		WMO	0-20700-0-53772	taiyuan	9.1	37.726944	112.470833		53772	497.0		

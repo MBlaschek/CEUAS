@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:10102	65660	ROBERTS FIELD	6.25	-10.35	18.0	06 15 00N	010 21 00W	3.1	[6.23, 6.23]	[-10.37, -10.37]	OSCAR	0-20000-0-65660		0-20000-0-65660	19420907	19470308	999.0	999.0	False	0-20000-0-65660	bensonville	[106, 107]
+2:10102	65660	ROBERTS FIELD	6.25	-10.35	10.0			3.1	[6.23, 6.23]	[-10.37, -10.37]	IGRA2			0-20300-0-65660	19420907	19470308	1977.0	1987.0	True	0-20000-0-65660	bensonville	[106, 107]
+2:10102	10102	MARSHALL ROBERTS FLD	6.23	-10.37				0.0	[6.23, 6.23]	[-10.37, -10.37]	WBAN			0-20500-0-10102	19420907	19470308	19420701.0	19470331.0		0-20000-0-65660	bensonville	[106, 107]
+2:10102									[6.23, 6.23]	[-10.37, -10.37]	CHUAN			0-20400-0-nan	19420907	19470308				0-20000-0-65660	bensonville	[106, 107]
+2:10102	65660	GLRB Monrovia - Roberts AP, Liberia	6.25	-10.35	-999.0			3.1	[6.23, 6.23]	[-10.37, -10.37]	SCHROEDER		65660	0-20600-0-65660	19420907	19470308				0-20000-0-65660	bensonville	[106, 107]
+2:10102	65660	ROBERTS FIELD            	6.25	-10.35	-999.0			3.1	[6.23, 6.23]	[-10.37, -10.37]	WMO		65660	0-20700-0-65660	19420907	19470308				0-20000-0-65660	bensonville	[106, 107]

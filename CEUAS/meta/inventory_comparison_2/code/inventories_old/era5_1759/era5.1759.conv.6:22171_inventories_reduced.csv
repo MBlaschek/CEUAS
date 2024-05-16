@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+6:22171	41933	COMILLA	23.433333333333334	91.18333333333334	10.0	23 26 00N	091 11 00E	4.1	[23.47, 23.47]	[91.18, 91.18]	OSCAR	0-20000-0-41933		0-20000-0-41933	19440101	19461120	999.0	999.0	False	0-20000-0-41933	sonamura	[106, 107]
+6:22171									[23.47, 23.47]	[91.18, 91.18]	IGRA2			0-20300-0-nan	19440101	19461120				0-20000-0-41933	sonamura	[106, 107]
+6:22171									[23.47, 23.47]	[91.18, 91.18]	WBAN			0-20500-0-nan	19440101	19461120				0-20000-0-41933	sonamura	[106, 107]
+6:22171									[23.47, 23.47]	[91.18, 91.18]	CHUAN			0-20400-0-nan	19440101	19461120				0-20000-0-41933	sonamura	[106, 107]
+6:22171									[23.47, 23.47]	[91.18, 91.18]	SCHROEDER			0-20600-0-nan	19440101	19461120				0-20000-0-41933	sonamura	[106, 107]
+6:22171	41933	COMILLA                  	23.433333333333334	91.18333333333334	9.0			4.1	[23.47, 23.47]	[91.18, 91.18]	WMO		41933	0-20700-0-41933	19440101	19461120				0-20000-0-41933	sonamura	[106, 107]

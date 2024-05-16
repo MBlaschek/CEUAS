@@ -1,0 +1,9 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+9:4180									[59.81, 59.81]	[163.4, 163.4]	OSCAR				19400512	19400512				0-20600-0-32247	None	[85, 117]
+9:4180									[59.81, 59.81]	[163.4, 163.4]	IGRA2			0-20300-0-nan	19400512	19400512				0-20600-0-32247	None	[85, 117]
+9:4180									[59.81, 59.81]	[163.4, 163.4]	WBAN			0-20500-0-nan	19400512	19400512				0-20600-0-32247	None	[85, 117]
+9:4180									[59.81, 59.81]	[163.4, 163.4]	CHUAN			0-20400-0-nan	19400512	19400512				0-20600-0-32247	None	[85, 117]
+9:4180	32247.0	(made up station ID) Belorechensk / Kichiga, Russia	59.81	163.4	-999.0			0.0	[59.81, 59.81]	[163.4, 163.4]	SCHROEDER		32247.0	0-20600-0-32247	19400512	19400512				0-20600-0-32247	None	[85, 117]
+9:4180									[59.81, 59.81]	[163.4, 163.4]	WMO			0-20700-0-nan	19400512	19400512				0-20600-0-32247	None	[85, 117]
+9:4180									[59.81, 59.81]	[163.4, 163.4]	AMMA			0-20800-0-nan	19400512	19400512				0-20600-0-32247	None	[85, 117]
+9:4180									[59.81, 59.81]	[163.4, 163.4]	HARA			0-20111-0-nan	19400512	19400512				0-20600-0-32247	None	[85, 117]

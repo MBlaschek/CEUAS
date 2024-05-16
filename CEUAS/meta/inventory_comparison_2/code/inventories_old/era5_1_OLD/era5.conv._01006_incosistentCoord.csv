@@ -1,0 +1,2 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0	0-20000-0-01006	EDGEOYA	78.25055555555555	22.822499999999998	12.5	Surface land meteorological station (SYNOP), GOS	78 15 02N	022 49 21E	01006	999.0	999.0	False	2.5		OSCAR	0-20000-0-01006	None	None	None	None					

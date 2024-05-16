@@ -1,0 +1,9 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		LETICIA/VASQUEZ COBO	-4.1667	-69.95	84.0				80398	1986.0	2021.0	True	3.1		IGRA2	0-20300-0-80398	leticia	5.1	-4.215278	-69.940556	COM00080398				
+1	2		TABATINGA (AERO)	-4.25	-69.9333	81.0				82411	2006.0	2021.0	True	6.3		IGRA2	0-20300-0-82411	leticia	5.1	-4.215278	-69.940556	BRM00082411				
+0	0	0-20000-0-80398	LETICIA/VASQUEZ COBO	-4.166666666666667	-69.95	84.0	Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBSN(ST)	04 10 00S	069 57 00W	80398	999.0	999.0	True	3.1		OSCAR	0-20000-0-80398	leticia	5.1	-4.215278	-69.940556					
+1	2	0-20000-0-82411	TABATINGA (AERO)	-4.25	-69.93333333333334	81.0	Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS	04 15 00S	069 56 00W	82411	999.0	999.0	True	6.3		OSCAR	0-20000-0-82411	leticia	5.1	-4.215278	-69.940556					
+2	3	0-20000-0-82410	BENJAMIN CONSTANT	-4.383333333333334	-70.03333333333333	65.0	Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBCN, GSN, RBSN(S), GOS	04 23 00S	070 02 00W	82410	999.0	999.0	False	23.2		OSCAR	0-20000-0-82410	leticia	5.1	-4.215278	-69.940556					
+0	0		SKLT Leticia - Alfredo Vasquez Cobo AP, Colombia	-4.17	-69.92	-999.0				80398				3.7		SCHROEDER	0-20600-0-80398	leticia	5.1	-4.215278	-69.940556		80398	3431.0	1988-08-01 00:00:00	2008-11-21 00:00:00
+1	1		Tabatinga Airport, Brazil	-4.23	-69.92	-999.0				82411				4.7		SCHROEDER	0-20600-0-82411	leticia	5.1	-4.215278	-69.940556		82411	3485.0	1987-04-27 00:00:00	2007-01-04 00:00:00
+0	0		LA FLORIDA               	2.45	-76.56666666666666	-999.0				80398				1040.5		WMO	0-20700-0-80398	leticia	5.1	-4.215278	-69.940556		80398	1505.0		

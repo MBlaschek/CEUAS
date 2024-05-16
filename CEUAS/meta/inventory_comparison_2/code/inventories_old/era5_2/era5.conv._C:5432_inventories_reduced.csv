@@ -1,0 +1,9 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:5432	43367	CAR NICOBAR	9.166666666666666	92.83333333333333	10.1	09 10 00N	092 50 00E	2.4	[9.15, 9.15]	[92.82, 92.82]	OSCAR	0-20000-0-43367		0-20000-0-43367	19400422	19420227	999	999	False	0-20000-0-43367	port blair	[104, 105, 106, 107]
+C:5432	43368	CAR NICOBAR	9.15	92.81	10.0			1.1	[9.15, 9.15]	[92.82, 92.82]	IGRA2			0-20300-0-43368	19400422	19420227	1940	1990	True	0-20000-0-43367	port blair	[104, 105, 106, 107]
+C:5432									[9.15, 9.15]	[92.82, 92.82]	WBAN			0-20500-0-nan	19400422	19420227				0-20000-0-43367	port blair	[104, 105, 106, 107]
+C:5432	5432	Car Nicobar	9.15	92.82	16			0.0	[9.15, 9.15]	[92.82, 92.82]	CHUAN		-999	0-20400-0-5432	19400422	19420227	-999-999	-999-999		0-20000-0-43367	port blair	[104, 105, 106, 107]
+C:5432	43368	VOCX Malacca - Car Nicobar Indian Air Force Base, Nicobar Islands, India	9.15	92.82	-999			0.0	[9.15, 9.15]	[92.82, 92.82]	SCHROEDER		43368	0-20600-0-43368	19400422	19420227				0-20000-0-43367	port blair	[104, 105, 106, 107]
+C:5432									[9.15, 9.15]	[92.82, 92.82]	WMO			0-20700-0-nan	19400422	19420227				0-20000-0-43367	port blair	[104, 105, 106, 107]
+C:5432									[9.15, 9.15]	[92.82, 92.82]	AMMA			0-20800-0-nan	19400422	19420227				0-20000-0-43367	port blair	[104, 105, 106, 107]
+C:5432									[9.15, 9.15]	[92.82, 92.82]	HARA			0-20111-0-nan	19400422	19420227				0-20000-0-43367	port blair	[104, 105, 106, 107]

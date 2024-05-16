@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:31388	31388	NORSK	52.35	129.91666666666666	207.65	52 21 00N	129 55 00E	5.7	[52.3, 52.3]	[129.9, 129.9]	OSCAR	0-20000-0-31388		0-20000-0-31388	19640904	19680304	999.0	999.0	False	0-20000-0-31388	shimanovsk	[106, 107]
+1:31388									[52.3, 52.3]	[129.9, 129.9]	IGRA2			0-20300-0-nan	19640904	19680304				0-20000-0-31388	shimanovsk	[106, 107]
+1:31388									[52.3, 52.3]	[129.9, 129.9]	WBAN			0-20500-0-nan	19640904	19680304				0-20000-0-31388	shimanovsk	[106, 107]
+1:31388									[52.3, 52.3]	[129.9, 129.9]	CHUAN			0-20400-0-nan	19640904	19680304				0-20000-0-31388	shimanovsk	[106, 107]
+1:31388									[52.3, 52.3]	[129.9, 129.9]	SCHROEDER			0-20600-0-nan	19640904	19680304				0-20000-0-31388	shimanovsk	[106, 107]
+1:31388									[52.3, 52.3]	[129.9, 129.9]	WMO			0-20700-0-nan	19640904	19680304				0-20000-0-31388	shimanovsk	[106, 107]

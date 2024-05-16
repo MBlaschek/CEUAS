@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+91941									[-14.97, -14.97]	[-147.67, -147.67]	OSCAR				19790629	19880205				0-20300-0-91941	mahina	['38', '85', '106', '107']
+91941	91941	RANGIROA	-14.95	-147.659	7.0			2.5	[-14.97, -14.97]	[-147.67, -147.67]	IGRA2			0-20300-0-91941	19790629	19880205	1978.0	1988.0	True	0-20300-0-91941	mahina	['38', '85', '106', '107']
+91941									[-14.97, -14.97]	[-147.67, -147.67]	WBAN			0-20500-0-nan	19790629	19880205				0-20300-0-91941	mahina	['38', '85', '106', '107']
+91941									[-14.97, -14.97]	[-147.67, -147.67]	CHUAN			0-20400-0-nan	19790629	19880205				0-20300-0-91941	mahina	['38', '85', '106', '107']
+91941	91941	NTTG Rangiroa AP, Rangiroa Atoll, Tuamotu Islands, French Polynesia	-14.97	-147.67	-999.0			0.0	[-14.97, -14.97]	[-147.67, -147.67]	SCHROEDER		91941	0-20600-0-91941	19790629	19880205				0-20300-0-91941	mahina	['38', '85', '106', '107']
+91941	91941	RANGIROA                 	-14.966666666666669	-147.66666666666666	-999.0			0.5	[-14.97, -14.97]	[-147.67, -147.67]	WMO		91941	0-20700-0-91941	19790629	19880205				0-20300-0-91941	mahina	['38', '85', '106', '107']

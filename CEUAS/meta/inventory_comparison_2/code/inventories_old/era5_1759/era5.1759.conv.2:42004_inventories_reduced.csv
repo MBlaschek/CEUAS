@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:42004									[25.5, 25.5]	[103.08, 103.08]	OSCAR				19440329	19451031				0-20500-0-42004	kunming	[106, 107]
+2:42004									[25.5, 25.5]	[103.08, 103.08]	IGRA2			0-20300-0-nan	19440329	19451031				0-20500-0-42004	kunming	[106, 107]
+2:42004	42004.0	YANGKAI	25.5	103.08	1955.2920000000001			0.0	[25.5, 25.5]	[103.08, 103.08]	WBAN			0-20500-0-42004	19440329	19451031	19430201.0	19451031.0		0-20500-0-42004	kunming	[106, 107]
+2:42004									[25.5, 25.5]	[103.08, 103.08]	CHUAN			0-20400-0-nan	19440329	19451031				0-20500-0-42004	kunming	[106, 107]
+2:42004									[25.5, 25.5]	[103.08, 103.08]	SCHROEDER			0-20600-0-nan	19440329	19451031				0-20500-0-42004	kunming	[106, 107]
+2:42004									[25.5, 25.5]	[103.08, 103.08]	WMO			0-20700-0-nan	19440329	19451031				0-20500-0-42004	kunming	[106, 107]

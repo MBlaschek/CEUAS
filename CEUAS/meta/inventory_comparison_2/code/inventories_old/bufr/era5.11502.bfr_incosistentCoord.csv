@@ -1,0 +1,2 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0	0-20000-0-11502	USTI NAD LABEM	50.68333333333333	14.04111111111111	378.59	Surface land meteorological station (SYNOP), GOS	50 41 00N	014 02 28E	11502	999.0	999.0	False	6170.7		OSCAR	0-20000-0-11502	None	None	None	None					

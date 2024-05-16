@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+44259	44259	CHOIBALSAN	48.08111111111111	114.5375	747.0	48 04 52N	114 32 15E	3.5	[48.1, 48.07]	[114.5, 114.5]	OSCAR	0-20000-0-44259		0-20000-0-44259	19620328	20131229	999.0	999.0	True	0-20000-0-44259	baruun-urt	['38', '85', '106', '107']
+44259	44259	CHOIBALSAN	48.0833	114.55	747.0			4.2	[48.1, 48.07]	[114.5, 114.5]	IGRA2			0-20300-0-44259	19620328	20131229	1973.0	2013.0	True	0-20000-0-44259	baruun-urt	['38', '85', '106', '107']
+44259									[48.1, 48.07]	[114.5, 114.5]	WBAN			0-20500-0-nan	19620328	20131229				0-20000-0-44259	baruun-urt	['38', '85', '106', '107']
+44259									[48.1, 48.07]	[114.5, 114.5]	CHUAN			0-20400-0-nan	19620328	20131229				0-20000-0-44259	baruun-urt	['38', '85', '106', '107']
+44259	44259	Choybalsan / Choibalsan, Mongolia	48.07	114.5	-999.0			3.3	[48.1, 48.07]	[114.5, 114.5]	SCHROEDER		44259	0-20600-0-44259	19620328	20131229				0-20000-0-44259	baruun-urt	['38', '85', '106', '107']
+44259	44259	CHOIBALSAN               	48.06666666666667	114.5	747.0			3.7	[48.1, 48.07]	[114.5, 114.5]	WMO		44259	0-20700-0-44259	19620328	20131229				0-20000-0-44259	baruun-urt	['38', '85', '106', '107']

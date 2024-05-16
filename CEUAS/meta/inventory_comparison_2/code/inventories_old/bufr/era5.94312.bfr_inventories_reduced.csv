@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+94312	94312	PORT HEDLAND AIRPORT	-20.3725	118.63166666666666	8.4	20 22 21S	118 37 54E	1.5	[-20.38, -20.38]	[118.62, 118.61]	OSCAR	0-20000-0-94312		0-20000-0-94312	19580101	19781231	999.0	999.0	True	0-20000-0-94312	port hedland	[36, 85, 106, 107]
+94312	94312	PORT HEDLAND AIRPORT	-20.3725	118.6317	10.1			1.5	[-20.38, -20.38]	[118.62, 118.61]	IGRA2			0-20300-0-94312	19580101	19781231	1950.0	2021.0	True	0-20000-0-94312	port hedland	[36, 85, 106, 107]
+94312									[-20.38, -20.38]	[118.62, 118.61]	WBAN			0-20500-0-nan	19580101	19781231				0-20000-0-94312	port hedland	[36, 85, 106, 107]
+94312									[-20.38, -20.38]	[118.62, 118.61]	CHUAN			0-20400-0-nan	19580101	19781231				0-20000-0-94312	port hedland	[36, 85, 106, 107]
+94312	94312	Port Hedland Aeronautical Meteorological Office, Western Australia, Australia	-20.38	118.62	-999.0			0.0	[-20.38, -20.38]	[118.62, 118.61]	SCHROEDER		94312	0-20600-0-94312	19580101	19781231				0-20000-0-94312	port hedland	[36, 85, 106, 107]
+94312	94312	PT HEDLAND               	-20.383333333333333	118.61666666666666	8.0			0.5	[-20.38, -20.38]	[118.62, 118.61]	WMO		94312	0-20700-0-94312	19580101	19781231				0-20000-0-94312	port hedland	[36, 85, 106, 107]

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+94430	94430	MEEKATHARRA AIRPORT	-26.613611111111112	118.53722222222223	519.0	26 36 49S	118 32 14E	1.5	[-26.62, -26.62]	[118.55, 118.55]	OSCAR	0-20000-0-94430		0-20000-0-94430	20180101	20211229	999.0	999.0	True	0-20000-0-94430	geraldton	['38', '85', '106', '107']
+94430	94430	MEEKATHARRA AIRPORT	-26.6136	118.5372	522.1			1.5	[-26.62, -26.62]	[118.55, 118.55]	IGRA2			0-20300-0-94430	20180101	20211229	1951.0	2021.0	True	0-20000-0-94430	geraldton	['38', '85', '106', '107']
+94430									[-26.62, -26.62]	[118.55, 118.55]	WBAN			0-20500-0-nan	20180101	20211229				0-20000-0-94430	geraldton	['38', '85', '106', '107']
+94430									[-26.62, -26.62]	[118.55, 118.55]	CHUAN			0-20400-0-nan	20180101	20211229				0-20000-0-94430	geraldton	['38', '85', '106', '107']
+94430	94430	Meekatharra AP, Western Australia, Australia	-26.61	118.55	-999.0			1.1	[-26.62, -26.62]	[118.55, 118.55]	SCHROEDER		94430	0-20600-0-94430	20180101	20211229				0-20000-0-94430	geraldton	['38', '85', '106', '107']
+94430	94430	MEEKATHARRA              	-26.58333333333333	118.5	519.0			6.4	[-26.62, -26.62]	[118.55, 118.55]	WMO		94430	0-20700-0-94430	20180101	20211229				0-20000-0-94430	geraldton	['38', '85', '106', '107']

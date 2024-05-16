@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:23132									[33.63, 33.63]	[-115.83, -115.83]	OSCAR				19430827	19441112				0-20500-0-93119	coachella	[106, 107]
+2:23132	23132	THERMAL (AAF)	33.6333	-116.1667	35.1			31.2	[33.63, 33.63]	[-115.83, -115.83]	IGRA2			0-20300-0-23132	19430827	19441112	1943.0	1944.0	True	0-20500-0-93119	coachella	[106, 107]
+2:23132	93119	SANDY BEACH NF	33.42	-115.83	-74.9808			23.3	[33.63, 33.63]	[-115.83, -115.83]	WBAN			0-20500-0-93119	19430827	19441112	19421201.0	19421231.0		0-20500-0-93119	coachella	[106, 107]
+2:23132									[33.63, 33.63]	[-115.83, -115.83]	CHUAN			0-20400-0-nan	19430827	19441112				0-20500-0-93119	coachella	[106, 107]
+2:23132									[33.63, 33.63]	[-115.83, -115.83]	SCHROEDER			0-20600-0-nan	19430827	19441112				0-20500-0-93119	coachella	[106, 107]
+2:23132									[33.63, 33.63]	[-115.83, -115.83]	WMO			0-20700-0-nan	19430827	19441112				0-20500-0-93119	coachella	[106, 107]

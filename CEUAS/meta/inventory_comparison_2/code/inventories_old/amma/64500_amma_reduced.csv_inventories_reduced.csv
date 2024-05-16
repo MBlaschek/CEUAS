@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+64500	64500	LIBREVILLE	0.45	9.416666666666666	15.0	00 27 00N	009 25 00E	1.2	[0.46, 0.45]	[9.42, 9.41]	OSCAR	0-20000-0-64500		0-20000-0-64500	20060101	20061231	999.0	999.0	True	0-20000-0-64500	libreville	['126', '137', '106', '107', '117']
+64500	64500	LIBREVILLE	0.45	9.4167	12.0			1.2	[0.46, 0.45]	[9.42, 9.41]	IGRA2			0-20300-0-64500	20060101	20061231	1973.0	2021.0	True	0-20000-0-64500	libreville	['126', '137', '106', '107', '117']
+64500									[0.46, 0.45]	[9.42, 9.41]	WBAN			0-20500-0-nan	20060101	20061231				0-20000-0-64500	libreville	['126', '137', '106', '107', '117']
+64500									[0.46, 0.45]	[9.42, 9.41]	CHUAN			0-20400-0-nan	20060101	20061231				0-20000-0-64500	libreville	['126', '137', '106', '107', '117']
+64500	64500	FOOL Libreville - Leon M'Ba AP, Gabon	0.47	9.42	-999.0			1.1	[0.46, 0.45]	[9.42, 9.41]	SCHROEDER		64500	0-20600-0-64500	20060101	20061231				0-20000-0-64500	libreville	['126', '137', '106', '107', '117']
+64500	64500	LIBREVILLE               	0.45	9.416666666666666	-999.0			1.2	[0.46, 0.45]	[9.42, 9.41]	WMO		64500	0-20700-0-64500	20060101	20061231				0-20000-0-64500	libreville	['126', '137', '106', '107', '117']

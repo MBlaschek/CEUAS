@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+80423	80423	GUIRIA	10.583333333333334	-62.31666666666667	14.0	10 35 00N	062 19 00W	0.5	[10.58, 10.58]	[-62.32, -62.32]	OSCAR	0-20000-0-80423		0-20000-0-80423	19941222	19941222	999.0	999.0	False	0-20000-0-80423	point fortin	[104, 105, 106, 107, 117]
+80423									[10.58, 10.58]	[-62.32, -62.32]	IGRA2			0-20300-0-nan	19941222	19941222				0-20000-0-80423	point fortin	[104, 105, 106, 107, 117]
+80423									[10.58, 10.58]	[-62.32, -62.32]	WBAN			0-20500-0-nan	19941222	19941222				0-20000-0-80423	point fortin	[104, 105, 106, 107, 117]
+80423									[10.58, 10.58]	[-62.32, -62.32]	CHUAN			0-20400-0-nan	19941222	19941222				0-20000-0-80423	point fortin	[104, 105, 106, 107, 117]
+80423									[10.58, 10.58]	[-62.32, -62.32]	SCHROEDER			0-20600-0-nan	19941222	19941222				0-20000-0-80423	point fortin	[104, 105, 106, 107, 117]
+80423	80423	GUIRIA                   	10.583333333333334	-62.3	13.0			2.2	[10.58, 10.58]	[-62.32, -62.32]	WMO		80423	0-20700-0-80423	19941222	19941222				0-20000-0-80423	point fortin	[104, 105, 106, 107, 117]

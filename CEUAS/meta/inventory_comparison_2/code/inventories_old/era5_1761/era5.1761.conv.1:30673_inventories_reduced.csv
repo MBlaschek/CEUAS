@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:30673	30673	MOGOCHA	53.75	119.73333333333333	624.9	53 45 00N	119 44 00E	3.8	[53.73, 53.73]	[119.78, 119.78]	OSCAR	0-20000-0-30673		0-20000-0-30673	19570101	19791231	999.0	999.0	True	0-20000-0-30673	mogocha	[85, 117]
+1:30673	30673	MOGOCHA	53.75	119.7333	624.0			3.8	[53.73, 53.73]	[119.78, 119.78]	IGRA2			0-20300-0-30673	19570101	19791231	1953.0	2021.0	True	0-20000-0-30673	mogocha	[85, 117]
+1:30673									[53.73, 53.73]	[119.78, 119.78]	WBAN			0-20500-0-nan	19570101	19791231				0-20000-0-30673	mogocha	[85, 117]
+1:30673									[53.73, 53.73]	[119.78, 119.78]	CHUAN			0-20400-0-nan	19570101	19791231				0-20000-0-30673	mogocha	[85, 117]
+1:30673	30673	Mogocha, Russia	53.75	119.77	-999.0			2.3	[53.73, 53.73]	[119.78, 119.78]	SCHROEDER		30673.0	0-20600-0-30673	19570101	19791231				0-20000-0-30673	mogocha	[85, 117]
+1:30673									[53.73, 53.73]	[119.78, 119.78]	WMO			0-20700-0-nan	19570101	19791231				0-20000-0-30673	mogocha	[85, 117]

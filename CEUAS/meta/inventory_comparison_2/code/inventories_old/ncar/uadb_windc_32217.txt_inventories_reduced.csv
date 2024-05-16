@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+32217									[50.02, 50.0]	[155.4, 155.38]	OSCAR				19530217	19940904				0-20300-0-32217	petropavlovsk-kamchatskiy	['38', '85', '106', '107']
+32217	32217	M. VASILYEV	50.017	155.4	25.0			0.3	[50.02, 50.0]	[155.4, 155.38]	IGRA2			0-20300-0-32217	19530217	19940904	1953	1994	True	0-20300-0-32217	petropavlovsk-kamchatskiy	['38', '85', '106', '107']
+32217									[50.02, 50.0]	[155.4, 155.38]	WBAN			0-20500-0-nan	19530217	19940904				0-20300-0-32217	petropavlovsk-kamchatskiy	['38', '85', '106', '107']
+32217	4571	Mys Vasilieva	50.0	155.38	15			2.6	[50.02, 50.0]	[155.4, 155.38]	CHUAN		-999	0-20400-0-4571	19530217	19940904	195404	195409		0-20300-0-32217	petropavlovsk-kamchatskiy	['38', '85', '106', '107']
+32217	4633	Mys Vasilieva	50.0	155.38	15			2.6	[50.02, 50.0]	[155.4, 155.38]	CHUAN		-999	0-20400-0-4633	19530217	19940904	195411	195504		0-20300-0-32217	petropavlovsk-kamchatskiy	['38', '85', '106', '107']
+32217	32217	Vasil'yevo (O. Paramushir), Kuril Islands, Russia	50.02	155.4	-999			0.0	[50.02, 50.0]	[155.4, 155.38]	SCHROEDER		32217	0-20600-0-32217	19530217	19940904				0-20300-0-32217	petropavlovsk-kamchatskiy	['38', '85', '106', '107']
+32217	32217	MYS VASIL'EVA            	50.0	155.38333333333333	-999.0			2.5	[50.02, 50.0]	[155.4, 155.38]	WMO		32217	0-20700-0-32217	19530217	19940904				0-20300-0-32217	petropavlovsk-kamchatskiy	['38', '85', '106', '107']

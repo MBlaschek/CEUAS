@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+43266	43266	M.O. AGATHI AIRPORT	10.85	72.46666666666667	4.1	10 51 00N	072 28 00E	0.4	[10.85, 10.85]	[72.47, 72.47]	OSCAR	0-20000-0-43266		0-20000-0-43266	20021018	20021018	999.0	999.0	False	0-20000-0-43266	kavaratti	[104, 105, 106, 107, 117]
+43266									[10.85, 10.85]	[72.47, 72.47]	IGRA2			0-20300-0-nan	20021018	20021018				0-20000-0-43266	kavaratti	[104, 105, 106, 107, 117]
+43266									[10.85, 10.85]	[72.47, 72.47]	WBAN			0-20500-0-nan	20021018	20021018				0-20000-0-43266	kavaratti	[104, 105, 106, 107, 117]
+43266									[10.85, 10.85]	[72.47, 72.47]	CHUAN			0-20400-0-nan	20021018	20021018				0-20000-0-43266	kavaratti	[104, 105, 106, 107, 117]
+43266									[10.85, 10.85]	[72.47, 72.47]	SCHROEDER			0-20600-0-nan	20021018	20021018				0-20000-0-43266	kavaratti	[104, 105, 106, 107, 117]
+43266									[10.85, 10.85]	[72.47, 72.47]	WMO			0-20700-0-nan	20021018	20021018				0-20000-0-43266	kavaratti	[104, 105, 106, 107, 117]

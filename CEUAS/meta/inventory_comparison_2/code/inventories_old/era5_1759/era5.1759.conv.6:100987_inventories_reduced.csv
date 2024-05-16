@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+6:100987									[-72.7, -72.7]	[64.4, 64.4]	OSCAR				19731230	19740202				0-20600-0-89566	None	[106, 107]
+6:100987									[-72.7, -72.7]	[64.4, 64.4]	IGRA2			0-20300-0-nan	19731230	19740202				0-20600-0-89566	None	[106, 107]
+6:100987									[-72.7, -72.7]	[64.4, 64.4]	WBAN			0-20500-0-nan	19731230	19740202				0-20600-0-89566	None	[106, 107]
+6:100987									[-72.7, -72.7]	[64.4, 64.4]	CHUAN			0-20400-0-nan	19731230	19740202				0-20600-0-89566	None	[106, 107]
+6:100987	89566.0	(made up station ID) Mount Cresswell (operated by Australia), Antarctica	-72.73	64.38	-999.0			3.4	[-72.7, -72.7]	[64.4, 64.4]	SCHROEDER		89566.0	0-20600-0-89566	19731230	19740202				0-20600-0-89566	None	[106, 107]
+6:100987									[-72.7, -72.7]	[64.4, 64.4]	WMO			0-20700-0-nan	19731230	19740202				0-20600-0-89566	None	[106, 107]

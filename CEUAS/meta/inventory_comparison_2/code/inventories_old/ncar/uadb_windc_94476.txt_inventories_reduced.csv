@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+94476	94476	OODNADATTA AIRPORT	-27.55527777777778	135.44555555555556	117.0	27 33 19S	135 26 44E	3.5	[-27.55, -27.55]	[135.48, 135.48]	OSCAR	0-20000-0-94476		0-20000-0-94476	19480101	19850727	999.0	999.0	False	0-20000-0-94476	alice springs	['38', '85', '106', '107']
+94476	94476	OODNADATTA	-27.55	135.4833	116.0			0.3	[-27.55, -27.55]	[135.48, 135.48]	IGRA2			0-20300-0-94476	19480101	19850727	1948.0	1985.0	True	0-20000-0-94476	alice springs	['38', '85', '106', '107']
+94476									[-27.55, -27.55]	[135.48, 135.48]	WBAN			0-20500-0-nan	19480101	19850727				0-20000-0-94476	alice springs	['38', '85', '106', '107']
+94476									[-27.55, -27.55]	[135.48, 135.48]	CHUAN			0-20400-0-nan	19480101	19850727				0-20000-0-94476	alice springs	['38', '85', '106', '107']
+94476	94476	Oodnadatta AP, South Australia, Australia	-27.55	135.48	-999.0			0.0	[-27.55, -27.55]	[135.48, 135.48]	SCHROEDER		94476	0-20600-0-94476	19480101	19850727				0-20000-0-94476	alice springs	['38', '85', '106', '107']
+94476	94476	OODNADATTA               	-27.55	135.46666666666667	117.0			1.3	[-27.55, -27.55]	[135.48, 135.48]	WMO		94476	0-20700-0-94476	19480101	19850727				0-20000-0-94476	alice springs	['38', '85', '106', '107']

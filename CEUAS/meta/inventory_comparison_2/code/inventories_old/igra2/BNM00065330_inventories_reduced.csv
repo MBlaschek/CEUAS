@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+65330	65330	PARAKOU	9.35	2.6166666666666667	393.0	09 21 00N	002 37 00E	0.0	[9.35, 9.35]	[2.6167, 2.6167]	OSCAR	0-20000-0-65330		0-20000-0-65330	1973	2021	999.0	999.0	False	0-20000-0-65330	parakou	['85', '38', '106', '107']
+65330	65330	PARAKOU	9.35	2.6167	392.0			0.0	[9.35, 9.35]	[2.6167, 2.6167]	IGRA2			0-20300-0-65330	1973	2021	1973.0	2021.0	True	0-20000-0-65330	parakou	['85', '38', '106', '107']
+65330									[9.35, 9.35]	[2.6167, 2.6167]	WBAN			0-20500-0-nan	1973	2021				0-20000-0-65330	parakou	['85', '38', '106', '107']
+65330									[9.35, 9.35]	[2.6167, 2.6167]	CHUAN			0-20400-0-nan	1973	2021				0-20000-0-65330	parakou	['85', '38', '106', '107']
+65330	65330	Parakou, Benin	9.35	2.62	-999.0			0.4	[9.35, 9.35]	[2.6167, 2.6167]	SCHROEDER		65330	0-20600-0-65330	1973	2021				0-20000-0-65330	parakou	['85', '38', '106', '107']
+65330	65330	PARAKOU                  	9.35	2.6	-999.0			1.8	[9.35, 9.35]	[2.6167, 2.6167]	WMO		65330	0-20700-0-65330	1973	2021				0-20000-0-65330	parakou	['85', '38', '106', '107']

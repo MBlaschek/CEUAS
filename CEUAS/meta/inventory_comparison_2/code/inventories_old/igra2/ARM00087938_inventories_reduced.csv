@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+87938	87938	USHUAIA AERO	-54.84	-68.30333333333333	57.0	54 50 24S	068 18 12W	4.5	[-54.8, -54.8]	[-68.3167, -68.3167]	OSCAR	0-20000-0-87938		0-20000-0-87938	1957	1967	999.0	999.0	False	0-20000-0-87938	ushuaia	['85', '38', '106', '107']
+87938	87938	USHUAIA	-54.8	-68.3167	6.0			0.0	[-54.8, -54.8]	[-68.3167, -68.3167]	IGRA2			0-20300-0-87938	1957	1967	1957.0	1967.0	True	0-20000-0-87938	ushuaia	['85', '38', '106', '107']
+87938									[-54.8, -54.8]	[-68.3167, -68.3167]	WBAN			0-20500-0-nan	1957	1967				0-20000-0-87938	ushuaia	['85', '38', '106', '107']
+87938									[-54.8, -54.8]	[-68.3167, -68.3167]	CHUAN			0-20400-0-nan	1957	1967				0-20000-0-87938	ushuaia	['85', '38', '106', '107']
+87938	87938	Ushuaia AP, Argentina	-54.8	-68.32	-999.0			0.2	[-54.8, -54.8]	[-68.3167, -68.3167]	SCHROEDER		87938	0-20600-0-87938	1957	1967				0-20000-0-87938	ushuaia	['85', '38', '106', '107']
+87938	87938	USHUAIA BASE NAVAL AERO  	-54.8	-68.31666666666666	11.0			0.0	[-54.8, -54.8]	[-68.3167, -68.3167]	WMO		87938	0-20700-0-87938	1957	1967				0-20000-0-87938	ushuaia	['85', '38', '106', '107']

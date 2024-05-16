@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+48875									[12.68, 12.68]	[108.08, 108.05]	OSCAR				19660218	20020704				0-20500-0-41025	buon me thuot	['38', '85', '106', '107']
+48875									[12.68, 12.68]	[108.08, 108.05]	IGRA2			0-20300-0-nan	19660218	20020704				0-20500-0-41025	buon me thuot	['38', '85', '106', '107']
+48875	41025	BAN ME THUOT	12.67	108.12	539.1912			4.5	[12.68, 12.68]	[108.08, 108.05]	WBAN			0-20500-0-41025	19660218	20020704	19660201.0	19681130.0		0-20500-0-41025	buon me thuot	['38', '85', '106', '107']
+48875									[12.68, 12.68]	[108.08, 108.05]	CHUAN			0-20400-0-nan	19660218	20020704				0-20500-0-41025	buon me thuot	['38', '85', '106', '107']
+48875									[12.68, 12.68]	[108.08, 108.05]	SCHROEDER			0-20600-0-nan	19660218	20020704				0-20500-0-41025	buon me thuot	['38', '85', '106', '107']
+48875	48875	BANMETHUOT               	12.683333333333334	108.08333333333331	-999.0			0.5	[12.68, 12.68]	[108.08, 108.05]	WMO		48875	0-20700-0-48875	19660218	20020704				0-20500-0-41025	buon me thuot	['38', '85', '106', '107']

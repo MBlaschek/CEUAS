@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:61829	61829	KANKAN	10.383333333333333	-9.3	376.31	10 23 00N	009 18 00W	0.4	[10.38, 10.38]	[-9.3, -9.3]	OSCAR	0-20000-0-61829		0-20000-0-61829	19641205	19680627	999.0	999.0	False	0-20000-0-61829	kankan	[106, 107]
+1:61829	W1829	KANKAN	10.3833	-9.3	377.0			0.4	[10.38, 10.38]	[-9.3, -9.3]	IGRA2			0-20300-0-W1829	19641205	19680627	1945.0	1957.0	True	0-20000-0-61829	kankan	[106, 107]
+1:61829									[10.38, 10.38]	[-9.3, -9.3]	WBAN			0-20500-0-nan	19641205	19680627				0-20000-0-61829	kankan	[106, 107]
+1:61829									[10.38, 10.38]	[-9.3, -9.3]	CHUAN			0-20400-0-nan	19641205	19680627				0-20000-0-61829	kankan	[106, 107]
+1:61829	61829	Kankan, Guinea	10.38	-9.3	-999.0			0.0	[10.38, 10.38]	[-9.3, -9.3]	SCHROEDER		61829	0-20600-0-61829	19641205	19680627				0-20000-0-61829	kankan	[106, 107]
+1:61829	61829	KANKAN                   	10.383333333333333	-9.3	-999.0			0.4	[10.38, 10.38]	[-9.3, -9.3]	WMO		61829	0-20700-0-61829	19641205	19680627				0-20000-0-61829	kankan	[106, 107]

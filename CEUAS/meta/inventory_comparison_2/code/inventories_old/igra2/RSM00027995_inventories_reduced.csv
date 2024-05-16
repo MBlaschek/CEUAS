@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+27995	27995	SAMARA (BEZENCHUK)	52.983333333333334	49.43333333333333	45.47	52 59 00N	049 26 00E	0.0	[52.9833, 52.9833]	[49.4333, 49.4333]	OSCAR	0-20000-0-27995		0-20000-0-27995	1951	2021	999.0	999.0	True	0-20000-0-27995	bezenchuk	['85', '38', '106', '107']
+27995	27995	SAMARA (BEZENCHUK)	52.9833	49.4333	44.7			0.0	[52.9833, 52.9833]	[49.4333, 49.4333]	IGRA2			0-20300-0-27995	1951	2021	1951.0	2021.0	True	0-20000-0-27995	bezenchuk	['85', '38', '106', '107']
+27995									[52.9833, 52.9833]	[49.4333, 49.4333]	WBAN			0-20500-0-nan	1951	2021				0-20000-0-27995	bezenchuk	['85', '38', '106', '107']
+27995									[52.9833, 52.9833]	[49.4333, 49.4333]	CHUAN			0-20400-0-nan	1951	2021				0-20000-0-27995	bezenchuk	['85', '38', '106', '107']
+27995	27995	Samara (Bezencuk), Russia	52.98	49.43	-999.0			0.4	[52.9833, 52.9833]	[49.4333, 49.4333]	SCHROEDER		27995.0	0-20600-0-27995	1951	2021				0-20000-0-27995	bezenchuk	['85', '38', '106', '107']
+27995									[52.9833, 52.9833]	[49.4333, 49.4333]	WMO			0-20700-0-nan	1951	2021				0-20000-0-27995	bezenchuk	['85', '38', '106', '107']

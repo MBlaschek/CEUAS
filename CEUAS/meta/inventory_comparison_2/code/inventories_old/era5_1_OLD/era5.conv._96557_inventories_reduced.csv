@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+96557	96557	NANGAPINOH	-0.35	111.78333333333333	37.0	00 21 00S	111 47 00E	0.4	[-0.35, -0.35]	[111.78, 111.78]	OSCAR	0-20000-0-96557		0-20000-0-96557	19920716	19920716	999.0	999.0	False	0-20000-0-96557	sri aman	[104, 105, 106, 107, 117]
+96557									[-0.35, -0.35]	[111.78, 111.78]	IGRA2			0-20300-0-nan	19920716	19920716				0-20000-0-96557	sri aman	[104, 105, 106, 107, 117]
+96557									[-0.35, -0.35]	[111.78, 111.78]	WBAN			0-20500-0-nan	19920716	19920716				0-20000-0-96557	sri aman	[104, 105, 106, 107, 117]
+96557									[-0.35, -0.35]	[111.78, 111.78]	CHUAN			0-20400-0-nan	19920716	19920716				0-20000-0-96557	sri aman	[104, 105, 106, 107, 117]
+96557									[-0.35, -0.35]	[111.78, 111.78]	SCHROEDER			0-20600-0-nan	19920716	19920716				0-20000-0-96557	sri aman	[104, 105, 106, 107, 117]
+96557									[-0.35, -0.35]	[111.78, 111.78]	WMO			0-20700-0-nan	19920716	19920716				0-20000-0-96557	sri aman	[104, 105, 106, 107, 117]

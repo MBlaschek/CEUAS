@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:78076									[25.27, 25.27]	[-76.3, -76.3]	OSCAR				19630403	19701217				0-20300-0-78076	nassau	[38, 85, 106, 107, 117]
+1:78076	78076	ELEUTHERA ISLAND	25.2667	-76.3	10.1			0.4	[25.27, 25.27]	[-76.3, -76.3]	IGRA2			0-20300-0-78076	19630403	19701217	1952.0	1970.0	True	0-20300-0-78076	nassau	[38, 85, 106, 107, 117]
+1:78076	12713	ELEUTHERA ISLAND	25.27	-76.3	10.0584			0.0	[25.27, 25.27]	[-76.3, -76.3]	WBAN			0-20500-0-12713	19630403	19701217	19520201.0	19710630.0		0-20300-0-78076	nassau	[38, 85, 106, 107, 117]
+1:78076									[25.27, 25.27]	[-76.3, -76.3]	CHUAN			0-20400-0-nan	19630403	19701217				0-20300-0-78076	nassau	[38, 85, 106, 107, 117]
+1:78076									[25.27, 25.27]	[-76.3, -76.3]	SCHROEDER			0-20600-0-nan	19630403	19701217				0-20300-0-78076	nassau	[38, 85, 106, 107, 117]
+1:78076									[25.27, 25.27]	[-76.3, -76.3]	WMO			0-20700-0-nan	19630403	19701217				0-20300-0-78076	nassau	[38, 85, 106, 107, 117]

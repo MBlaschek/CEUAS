@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0																OSCAR	aflu	85.3	34.1088889	2.1019444						[33.77, 33.77]	[2.93, 2.93]	era5.1759.conv.1:60545	era5_1759	19520901	19710625	1:60545	0-20400-0-5697	[38, 106, 107]
+0	0															0-20300-0-nan	IGRA2	aflu	85.3	34.1088889	2.1019444						[33.77, 33.77]	[2.93, 2.93]	era5.1759.conv.1:60545	era5_1759	19520901	19710625	1:60545	0-20400-0-5697	[38, 106, 107]
+0	0															0-20500-0-nan	WBAN	aflu	85.3	34.1088889	2.1019444						[33.77, 33.77]	[2.93, 2.93]	era5.1759.conv.1:60545	era5_1759	19520901	19710625	1:60545	0-20400-0-5697	[38, 106, 107]
+0	0		Laghouat	33.8	2.88	760				5697.0	-999-999	-999-999		5.7		0-20400-0-5697	CHUAN	aflu	85.3	34.1088889	2.1019444		-999				[33.77, 33.77]	[2.93, 2.93]	era5.1759.conv.1:60545	era5_1759	19520901	19710625	1:60545	0-20400-0-5697	[38, 106, 107]
+0	0															0-20600-0-nan	SCHROEDER	aflu	85.3	34.1088889	2.1019444						[33.77, 33.77]	[2.93, 2.93]	era5.1759.conv.1:60545	era5_1759	19520901	19710625	1:60545	0-20400-0-5697	[38, 106, 107]
+0	0															0-20700-0-nan	WMO	aflu	85.3	34.1088889	2.1019444						[33.77, 33.77]	[2.93, 2.93]	era5.1759.conv.1:60545	era5_1759	19520901	19710625	1:60545	0-20400-0-5697	[38, 106, 107]

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:80513									[-8.6, -8.6]	[157.92, 157.92]	OSCAR				19431002	19440328				0-20500-0-80513	honiara	[106, 107]
+2:80513									[-8.6, -8.6]	[157.92, 157.92]	IGRA2			0-20300-0-nan	19431002	19440328				0-20500-0-80513	honiara	[106, 107]
+2:80513	80513.0	SEGI	-8.6	157.92	4.2672			0.0	[-8.6, -8.6]	[157.92, 157.92]	WBAN			0-20500-0-80513	19431002	19440328	19430901.0	19440630.0		0-20500-0-80513	honiara	[106, 107]
+2:80513									[-8.6, -8.6]	[157.92, 157.92]	CHUAN			0-20400-0-nan	19431002	19440328				0-20500-0-80513	honiara	[106, 107]
+2:80513									[-8.6, -8.6]	[157.92, 157.92]	SCHROEDER			0-20600-0-nan	19431002	19440328				0-20500-0-80513	honiara	[106, 107]
+2:80513									[-8.6, -8.6]	[157.92, 157.92]	WMO			0-20700-0-nan	19431002	19440328				0-20500-0-80513	honiara	[106, 107]

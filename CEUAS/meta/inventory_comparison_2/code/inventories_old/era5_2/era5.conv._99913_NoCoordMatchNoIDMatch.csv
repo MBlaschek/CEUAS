@@ -1,0 +1,2 @@
+lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	variables	kind	WIGOS_best
+36.0,36.0,35.9,35.9,36.1,36.2,35.8,36.1,35.9	-69.0,-68.9,-69.0,-68.9,-69.0,-69.2,-68.9,-69.2,-69.1	era5.conv._99913	era5_2	19730101	19731231	99913	[36, 38, 39, 85, 104, 105, 106, 107, 117]	NoCoordMatchNoIDMatch	0-20888-0-99913

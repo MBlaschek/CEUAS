@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+6:100066									[-29.9, -29.9]	[135.2, 135.2]	OSCAR				19641125	19661128				0-20600-0-94478	flinders	[38, 85, 117]
+6:100066									[-29.9, -29.9]	[135.2, 135.2]	IGRA2			0-20300-0-nan	19641125	19661128				0-20600-0-94478	flinders	[38, 85, 117]
+6:100066									[-29.9, -29.9]	[135.2, 135.2]	WBAN			0-20500-0-nan	19641125	19661128				0-20600-0-94478	flinders	[38, 85, 117]
+6:100066									[-29.9, -29.9]	[135.2, 135.2]	CHUAN			0-20400-0-nan	19641125	19661128				0-20600-0-94478	flinders	[38, 85, 117]
+6:100066	94478.0	(made up station ID) Mirikata Nuclear Test Area, South Australia, Australia	-29.88	135.25	-999.0			5.3	[-29.9, -29.9]	[135.2, 135.2]	SCHROEDER		94478.0	0-20600-0-94478	19641125	19661128				0-20600-0-94478	flinders	[38, 85, 117]
+6:100066									[-29.9, -29.9]	[135.2, 135.2]	WMO			0-20700-0-nan	19641125	19661128				0-20600-0-94478	flinders	[38, 85, 117]

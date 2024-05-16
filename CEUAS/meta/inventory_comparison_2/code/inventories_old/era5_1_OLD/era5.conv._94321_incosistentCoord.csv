@@ -1,0 +1,2 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0	0-20000-0-94321	WULUNGURRU	-23.27	129.38	455.3	Surface land meteorological station (SYNOP), GOS	23 16 12S	129 22 48E	94321	999.0	999.0	False	401.1		OSCAR	0-20000-0-94321	alice springs	301.1	-23.697479	133.883621					

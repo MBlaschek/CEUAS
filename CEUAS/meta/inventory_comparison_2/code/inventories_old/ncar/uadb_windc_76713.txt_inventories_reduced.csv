@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+76713									[18.64, 18.64]	[-91.83999999999997, -91.83999999999997]	OSCAR				20020703	20061114				0-20300-0-76713	carmen	['38', '85', '106', '107']
+76713	76713	CUIDAD DEL CARMEN	18.633	-91.833	2.0			1.1	[18.64, 18.64]	[-91.83999999999997, -91.83999999999997]	IGRA2			0-20300-0-76713	20020703	20061114	2005.0	2005.0	True	0-20300-0-76713	carmen	['38', '85', '106', '107']
+76713									[18.64, 18.64]	[-91.83999999999997, -91.83999999999997]	WBAN			0-20500-0-nan	20020703	20061114				0-20300-0-76713	carmen	['38', '85', '106', '107']
+76713									[18.64, 18.64]	[-91.83999999999997, -91.83999999999997]	CHUAN			0-20400-0-nan	20020703	20061114				0-20300-0-76713	carmen	['38', '85', '106', '107']
+76713	76713	Ciudad del Carmen PACS-SONET pibal site (operated by SMAM = Secretaria de Marina Armada de Mexico [Mexican Navy]), Isla del Carmen, Campeche, Mexico	18.65	-91.85	-999.0			1.5	[18.64, 18.64]	[-91.83999999999997, -91.83999999999997]	SCHROEDER		76713.0	0-20600-0-76713	20020703	20061114				0-20300-0-76713	carmen	['38', '85', '106', '107']
+76713	76749	Ciudad del Carmen, Isla del Carmen, Campeche, Mexico	18.65	-91.85	-999.0			1.5	[18.64, 18.64]	[-91.83999999999997, -91.83999999999997]	SCHROEDER		76749.0	0-20600-0-76749	20020703	20061114				0-20300-0-76713	carmen	['38', '85', '106', '107']
+76713									[18.64, 18.64]	[-91.83999999999997, -91.83999999999997]	WMO			0-20700-0-nan	20020703	20061114				0-20300-0-76713	carmen	['38', '85', '106', '107']

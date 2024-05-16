@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+30777	30777	SRETENSK	52.233333333333334	117.7	525.3	52 14 00N	117 42 00E	4.1	[52.27, 52.27]	[117.7, 117.7]	OSCAR	0-20000-0-30777		0-20000-0-30777	19790115	19820327	999.0	999.0	False	0-20000-0-30777	chernyshevsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+30777									[52.27, 52.27]	[117.7, 117.7]	IGRA2			0-20300-0-nan	19790115	19820327				0-20000-0-30777	chernyshevsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+30777									[52.27, 52.27]	[117.7, 117.7]	WBAN			0-20500-0-nan	19790115	19820327				0-20000-0-30777	chernyshevsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+30777									[52.27, 52.27]	[117.7, 117.7]	CHUAN			0-20400-0-nan	19790115	19820327				0-20000-0-30777	chernyshevsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+30777									[52.27, 52.27]	[117.7, 117.7]	SCHROEDER			0-20600-0-nan	19790115	19820327				0-20000-0-30777	chernyshevsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+30777									[52.27, 52.27]	[117.7, 117.7]	WMO			0-20700-0-nan	19790115	19820327				0-20000-0-30777	chernyshevsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]

@@ -1,0 +1,3 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0	0-20000-0-87345	CORDOBA OBSERVATORIO	-31.420833333333334	-64.19833333333334	426.0	Surface land meteorological station (SYNOP), CLIMAT(C), GOS	31 25 15S	064 11 54W	87345	999.0	999.0	False	50.3		OSCAR	0-20000-0-87345	cordoba	1.5	-31.413496	-64.18105200000001					
+0	0		CORDOBA OBSERVATORIO     	-31.4	-64.18333333333334	-999.0				87345				47.7		WMO	0-20700-0-87345	cordoba	1.5	-31.413496	-64.18105200000001		87345	1397.0		

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+42123	42123	GANGANAGAR	29.916666666666668	73.88333333333334	177.0	29 55 00N	073 53 00E	0.0	[29.9167, 29.9167]	[73.8833, 73.8833]	OSCAR	0-20000-0-42123		0-20000-0-42123	2015	2021	999.0	999.0	False	0-20000-0-42123	ganganagar	['85', '38', '106', '107']
+42123	42123	GANGANAGAR	29.9167	73.8833	172.0			0.0	[29.9167, 29.9167]	[73.8833, 73.8833]	IGRA2			0-20300-0-42123	2015	2021	2015.0	2021.0	True	0-20000-0-42123	ganganagar	['85', '38', '106', '107']
+42123									[29.9167, 29.9167]	[73.8833, 73.8833]	WBAN			0-20500-0-nan	2015	2021				0-20000-0-42123	ganganagar	['85', '38', '106', '107']
+42123									[29.9167, 29.9167]	[73.8833, 73.8833]	CHUAN			0-20400-0-nan	2015	2021				0-20000-0-42123	ganganagar	['85', '38', '106', '107']
+42123	42123	Sri Ganganagar, Rajasthan, India	29.92	73.92	-999.0			3.6	[29.9167, 29.9167]	[73.8833, 73.8833]	SCHROEDER		42123.0	0-20600-0-42123	2015	2021				0-20000-0-42123	ganganagar	['85', '38', '106', '107']
+42123									[29.9167, 29.9167]	[73.8833, 73.8833]	WMO			0-20700-0-nan	2015	2021				0-20000-0-42123	ganganagar	['85', '38', '106', '107']

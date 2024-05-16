@@ -1,0 +1,6 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		PRAYA LOMBOK	-8.55	116.0833	3.0				97240	1979.0	2021.0	True	24.0		IGRA2	0-20300-0-97240	mataram	5.3	-8.583333	116.116667	IDM00097240				
+0	0	0-20000-0-97240	PRAYA LOMBOK	-8.560555555555556	116.09388888888888		Climatological station, Surface land meteorological station (SYNOP), GOS, CLIMAT(C), RBCN, GSN	08 33 38S	116 05 38E	97240	999.0	999.0	False	25.4		OSCAR	0-20000-0-97240	mataram	5.3	-8.583333	116.116667					
+1	1		REMBIGA-AMPENAN          	-8.533333333333333	116.06666666666666	-999.0				96W10				21.8		WMO	0-20700-0-96W10	mataram	5.3	-8.583333	116.116667		96W10	3323.0		
+0	0		REMBIGA                  	-8.566666666666666	116.06666666666666	-999.0				97240				25.4		WMO	0-20700-0-97240	mataram	5.3	-8.583333	116.116667		97240	1666.0		
+2	3		PANINJAUAN               	-8.55	116.13333333333334	-999.0				96W69				25.9		WMO	0-20700-0-96W69	mataram	5.3	-8.583333	116.116667		96W69	3327.0		

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+22212	22212	MONCHEGORSK	67.94222222222223	32.924166666666665	131.6	67 56 32N	032 55 27E	3.4	[67.92, 67.92]	[32.87, 32.87]	OSCAR	0-20000-0-22212		0-20000-0-22212	19871207	19900919	999.0	999.0	False	0-20000-0-22212	monchegorsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+22212									[67.92, 67.92]	[32.87, 32.87]	IGRA2			0-20300-0-nan	19871207	19900919				0-20000-0-22212	monchegorsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+22212									[67.92, 67.92]	[32.87, 32.87]	WBAN			0-20500-0-nan	19871207	19900919				0-20000-0-22212	monchegorsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+22212									[67.92, 67.92]	[32.87, 32.87]	CHUAN			0-20400-0-nan	19871207	19900919				0-20000-0-22212	monchegorsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+22212	22212	Monchegorsk / Lumbushi (?), Russia	67.96	32.87	-999.0			4.5	[67.92, 67.92]	[32.87, 32.87]	SCHROEDER		22212.0	0-20600-0-22212	19871207	19900919				0-20000-0-22212	monchegorsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+22212									[67.92, 67.92]	[32.87, 32.87]	WMO			0-20700-0-nan	19871207	19900919				0-20000-0-22212	monchegorsk	[36, 38, 39, 85, 104, 105, 106, 107, 117]

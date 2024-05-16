@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+65028	65028	KATSINA	13.016666666666667	7.683333333333334	517.6	13 01 00N	007 41 00E	0.5	[13.02, 13.02]	[7.68, 7.68]	OSCAR	0-20000-0-65028		0-20000-0-65028	19800318	19800318	999.0	999.0	False	0-20000-0-65028	katsina	[104, 105, 106, 107, 117]
+65028									[13.02, 13.02]	[7.68, 7.68]	IGRA2			0-20300-0-nan	19800318	19800318				0-20000-0-65028	katsina	[104, 105, 106, 107, 117]
+65028									[13.02, 13.02]	[7.68, 7.68]	WBAN			0-20500-0-nan	19800318	19800318				0-20000-0-65028	katsina	[104, 105, 106, 107, 117]
+65028									[13.02, 13.02]	[7.68, 7.68]	CHUAN			0-20400-0-nan	19800318	19800318				0-20000-0-65028	katsina	[104, 105, 106, 107, 117]
+65028									[13.02, 13.02]	[7.68, 7.68]	SCHROEDER			0-20600-0-nan	19800318	19800318				0-20000-0-65028	katsina	[104, 105, 106, 107, 117]
+65028									[13.02, 13.02]	[7.68, 7.68]	WMO			0-20700-0-nan	19800318	19800318				0-20000-0-65028	katsina	[104, 105, 106, 107, 117]

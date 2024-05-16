@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+64901	64901	BETARE-OYA	5.6	14.066666666666666	804.0	05 36 00N	014 04 00E	3.7	[5.6, 5.6]	[14.1, 14.1]	OSCAR	0-20000-0-64901		0-20000-0-64901	19740627	19740908	999.0	999.0	False	0-20000-0-64901	betare oya	[36, 85, 106, 107]
+64901									[5.6, 5.6]	[14.1, 14.1]	IGRA2			0-20300-0-nan	19740627	19740908				0-20000-0-64901	betare oya	[36, 85, 106, 107]
+64901									[5.6, 5.6]	[14.1, 14.1]	WBAN			0-20500-0-nan	19740627	19740908				0-20000-0-64901	betare oya	[36, 85, 106, 107]
+64901									[5.6, 5.6]	[14.1, 14.1]	CHUAN			0-20400-0-nan	19740627	19740908				0-20000-0-64901	betare oya	[36, 85, 106, 107]
+64901									[5.6, 5.6]	[14.1, 14.1]	SCHROEDER			0-20600-0-nan	19740627	19740908				0-20000-0-64901	betare oya	[36, 85, 106, 107]
+64901	64901	BETARE-OYA               	5.6	14.066666666666666	-999.0			3.7	[5.6, 5.6]	[14.1, 14.1]	WMO		64901	0-20700-0-64901	19740627	19740908				0-20000-0-64901	betare oya	[36, 85, 106, 107]

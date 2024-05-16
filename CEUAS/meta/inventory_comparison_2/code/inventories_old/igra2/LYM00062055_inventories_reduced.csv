@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+62055									[30.717, 30.717]	[20.167, 20.167]	OSCAR				1973	1986				0-20300-0-62055	ajdabiya	['85', '38', '106', '107']
+62055	62055	AGEDABIA	30.717	20.167	7.0			0.0	[30.717, 30.717]	[20.167, 20.167]	IGRA2			0-20300-0-62055	1973	1986	1973.0	1986.0	True	0-20300-0-62055	ajdabiya	['85', '38', '106', '107']
+62055									[30.717, 30.717]	[20.167, 20.167]	WBAN			0-20500-0-nan	1973	1986				0-20300-0-62055	ajdabiya	['85', '38', '106', '107']
+62055									[30.717, 30.717]	[20.167, 20.167]	CHUAN			0-20400-0-nan	1973	1986				0-20300-0-62055	ajdabiya	['85', '38', '106', '107']
+62055	62055	Agedabia, Libya	30.72	20.17	-999.0			0.4	[30.717, 30.717]	[20.167, 20.167]	SCHROEDER		62055	0-20600-0-62055	1973	1986				0-20300-0-62055	ajdabiya	['85', '38', '106', '107']
+62055	62055	AGEDABIA                 	30.716666666666665	20.166666666666668	-999.0			0.0	[30.717, 30.717]	[20.167, 20.167]	WMO		62055	0-20700-0-62055	1973	1986				0-20300-0-62055	ajdabiya	['85', '38', '106', '107']

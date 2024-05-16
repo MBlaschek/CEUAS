@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+87509	87509	SAN RAFAEL AERO	-34.590833333333336	-68.40166666666667	748.0	34 35 27S	068 24 06W	1.2	[-34.58, -34.58]	[-68.4, -68.4]	OSCAR	0-20000-0-87509		0-20000-0-87509	19690913	19720420	999.0	999.0	False	0-20000-0-87509	san rafael	[36, 85, 106, 107]
+87509									[-34.58, -34.58]	[-68.4, -68.4]	IGRA2			0-20300-0-nan	19690913	19720420				0-20000-0-87509	san rafael	[36, 85, 106, 107]
+87509									[-34.58, -34.58]	[-68.4, -68.4]	WBAN			0-20500-0-nan	19690913	19720420				0-20000-0-87509	san rafael	[36, 85, 106, 107]
+87509									[-34.58, -34.58]	[-68.4, -68.4]	CHUAN			0-20400-0-nan	19690913	19720420				0-20000-0-87509	san rafael	[36, 85, 106, 107]
+87509									[-34.58, -34.58]	[-68.4, -68.4]	SCHROEDER			0-20600-0-nan	19690913	19720420				0-20000-0-87509	san rafael	[36, 85, 106, 107]
+87509	87509	SAN RAFAEL AERO          	-34.583333333333336	-68.4	-999.0			0.4	[-34.58, -34.58]	[-68.4, -68.4]	WMO		87509	0-20700-0-87509	19690913	19720420				0-20000-0-87509	san rafael	[36, 85, 106, 107]

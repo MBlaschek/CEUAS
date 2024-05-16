@@ -1,0 +1,5 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		Dhubri	26.02	89.99	34				5439	-999-999	-999-999		18.8		CHUAN	0-20400-0-5439	bilasipara	19.1	26.231954	90.234747		-999			
+0	0	0-20000-0-42423	PET JORHAT	26.066666666666666	90.16666666666667	880.0	Surface land meteorological station (SYNOP), GOS	26 04 00N	090 10 00E	42423	999	999	False	0.5		OSCAR	0-20000-0-42423	bilasipara	19.1	26.231954	90.234747					
+1	2	0-20000-0-42404	DHUBRI	26.016666666666666	89.98333333333333	35.1	Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), GOS, RBCN	26 01 00N	089 59 00E	42404	999	999	False	19.6		OSCAR	0-20000-0-42404	bilasipara	19.1	26.231954	90.234747					
+0	0		DHUBRI                   	26.016666666666666	89.98333333333333	-999.0				42404				19.6		WMO	0-20700-0-42404	bilasipara	19.1	26.231954	90.234747		42404	536.0		

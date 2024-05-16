@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+96853									[-7.783, -7.783]	[110.433, 110.433]	OSCAR				1973	1993				0-20300-0-96853	prambanan	['85', '38', '106', '107']
+96853	96853	ADISUCIPTO/JOGYAKAR	-7.783	110.433	107.0			0.0	[-7.783, -7.783]	[110.433, 110.433]	IGRA2			0-20300-0-96853	1973	1993	1973.0	1993.0	True	0-20300-0-96853	prambanan	['85', '38', '106', '107']
+96853									[-7.783, -7.783]	[110.433, 110.433]	WBAN			0-20500-0-nan	1973	1993				0-20300-0-96853	prambanan	['85', '38', '106', '107']
+96853									[-7.783, -7.783]	[110.433, 110.433]	CHUAN			0-20400-0-nan	1973	1993				0-20300-0-96853	prambanan	['85', '38', '106', '107']
+96853	96853	WARJ Yogyakarta - Adi Sutjipto AP, Java, Indonesia	-7.78	110.43	-999.0			0.5	[-7.783, -7.783]	[110.433, 110.433]	SCHROEDER		96853	0-20600-0-96853	1973	1993				0-20300-0-96853	prambanan	['85', '38', '106', '107']
+96853	96M44	WONOCATUR                	-7.8	110.4	-999.0			4.1	[-7.783, -7.783]	[110.433, 110.433]	WMO		96M44	0-20700-0-96M44	1973	1993				0-20300-0-96853	prambanan	['85', '38', '106', '107']
+96853	96M45	UGM JOGJA                	-7.766666666666667	110.38333333333334	-999.0			5.8	[-7.783, -7.783]	[110.433, 110.433]	WMO		96M45	0-20700-0-96M45	1973	1993				0-20300-0-96853	prambanan	['85', '38', '106', '107']

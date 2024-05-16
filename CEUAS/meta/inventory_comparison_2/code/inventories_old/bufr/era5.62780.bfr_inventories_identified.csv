@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0																OSCAR	adre	154.2	13.4666667	22.2						[12.9, 12.9]	[23.5, 23.5]	era5.62780.bfr	bufr	19740805	19740920	62780	0-20700-0-62780	[36, 85, 106, 107]
+0	0															0-20300-0-nan	IGRA2	adre	154.2	13.4666667	22.2						[12.9, 12.9]	[23.5, 23.5]	era5.62780.bfr	bufr	19740805	19740920	62780	0-20700-0-62780	[36, 85, 106, 107]
+0	0															0-20500-0-nan	WBAN	adre	154.2	13.4666667	22.2						[12.9, 12.9]	[23.5, 23.5]	era5.62780.bfr	bufr	19740805	19740920	62780	0-20700-0-62780	[36, 85, 106, 107]
+0	0															0-20400-0-nan	CHUAN	adre	154.2	13.4666667	22.2						[12.9, 12.9]	[23.5, 23.5]	era5.62780.bfr	bufr	19740805	19740920	62780	0-20700-0-62780	[36, 85, 106, 107]
+0	0															0-20600-0-nan	SCHROEDER	adre	154.2	13.4666667	22.2						[12.9, 12.9]	[23.5, 23.5]	era5.62780.bfr	bufr	19740805	19740920	62780	0-20700-0-62780	[36, 85, 106, 107]
+0	0		ZALINGEI                 	12.9	23.48333333333333	-999.0				62780				1.8		0-20700-0-62780	WMO	adre	154.2	13.4666667	22.2		62780	393.0			[12.9, 12.9]	[23.5, 23.5]	era5.62780.bfr	bufr	19740805	19740920	62780	0-20700-0-62780	[36, 85, 106, 107]

@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0																OSCAR	cumberland	42.0	39.6527778	-78.7627778						[39.83, 39.83]	[-78.33, -78.33]	era5.1761.conv.2:13715	era5_1761	19270130	19320922	2:13715		[106, 107]
+0	0		UNIONTOWN BURGESS FIELD	39.8333	-79.75	363.0				13715	1929.0	1932.0	True	121.6		0-20300-0-13715	IGRA2	cumberland	42.0	39.6527778	-78.7627778	USW00013715					[39.83, 39.83]	[-78.33, -78.33]	era5.1761.conv.2:13715	era5_1761	19270130	19320922	2:13715		[106, 107]
+0	0															0-20500-0-nan	WBAN	cumberland	42.0	39.6527778	-78.7627778						[39.83, 39.83]	[-78.33, -78.33]	era5.1761.conv.2:13715	era5_1761	19270130	19320922	2:13715		[106, 107]
+0	0															0-20400-0-nan	CHUAN	cumberland	42.0	39.6527778	-78.7627778						[39.83, 39.83]	[-78.33, -78.33]	era5.1761.conv.2:13715	era5_1761	19270130	19320922	2:13715		[106, 107]
+0	0															0-20600-0-nan	SCHROEDER	cumberland	42.0	39.6527778	-78.7627778						[39.83, 39.83]	[-78.33, -78.33]	era5.1761.conv.2:13715	era5_1761	19270130	19320922	2:13715		[106, 107]
+0	0															0-20700-0-nan	WMO	cumberland	42.0	39.6527778	-78.7627778						[39.83, 39.83]	[-78.33, -78.33]	era5.1761.conv.2:13715	era5_1761	19270130	19320922	2:13715		[106, 107]

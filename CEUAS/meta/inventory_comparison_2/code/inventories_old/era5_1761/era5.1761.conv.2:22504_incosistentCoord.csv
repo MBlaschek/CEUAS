@@ -1,0 +1,2 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		HONOLULU HICKAM FIELD	21.3333	-157.95	8.5				22504	1931.0	1943.0	True	197.1		0-20300-0-22504	IGRA2	kahului	65.0	20.8947222	-156.47	USW00022504				

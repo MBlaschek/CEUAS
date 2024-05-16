@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0																OSCAR	boralday	45.6	43.360278	76.857778						[43.77, 43.77]	[76.88, 76.88]	era5.3188.conv.C:5035	era5_3188	19271014	19271014	C:5035	0-20400-0-5035	[106, 107]
+0	0															0-20300-0-nan	IGRA2	boralday	45.6	43.360278	76.857778						[43.77, 43.77]	[76.88, 76.88]	era5.3188.conv.C:5035	era5_3188	19271014	19271014	C:5035	0-20400-0-5035	[106, 107]
+0	0															0-20500-0-nan	WBAN	boralday	45.6	43.360278	76.857778						[43.77, 43.77]	[76.88, 76.88]	era5.3188.conv.C:5035	era5_3188	19271014	19271014	C:5035	0-20400-0-5035	[106, 107]
+0	0		Alma Ata	43.77	76.88	841				5035.0	-999-999	-999-999		0.0		0-20400-0-5035	CHUAN	boralday	45.6	43.360278	76.857778		-999				[43.77, 43.77]	[76.88, 76.88]	era5.3188.conv.C:5035	era5_3188	19271014	19271014	C:5035	0-20400-0-5035	[106, 107]
+0	0															0-20600-0-nan	SCHROEDER	boralday	45.6	43.360278	76.857778						[43.77, 43.77]	[76.88, 76.88]	era5.3188.conv.C:5035	era5_3188	19271014	19271014	C:5035	0-20400-0-5035	[106, 107]
+0	0															0-20700-0-nan	WMO	boralday	45.6	43.360278	76.857778						[43.77, 43.77]	[76.88, 76.88]	era5.3188.conv.C:5035	era5_3188	19271014	19271014	C:5035	0-20400-0-5035	[106, 107]

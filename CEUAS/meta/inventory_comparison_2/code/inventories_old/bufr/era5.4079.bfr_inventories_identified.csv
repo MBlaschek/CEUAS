@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0																OSCAR	darayya	7.2	33.45	36.25						[33.5, 33.5]	[36.2, 36.2]	era5.4079.bfr	bufr	19660424	19690820	40079	0-20700-0-40079	[36, 85, 106, 107]
+0	0															0-20300-0-nan	IGRA2	darayya	7.2	33.45	36.25						[33.5, 33.5]	[36.2, 36.2]	era5.4079.bfr	bufr	19660424	19690820	40079	0-20700-0-40079	[36, 85, 106, 107]
+0	0															0-20500-0-nan	WBAN	darayya	7.2	33.45	36.25						[33.5, 33.5]	[36.2, 36.2]	era5.4079.bfr	bufr	19660424	19690820	40079	0-20700-0-40079	[36, 85, 106, 107]
+0	0															0-20400-0-nan	CHUAN	darayya	7.2	33.45	36.25						[33.5, 33.5]	[36.2, 36.2]	era5.4079.bfr	bufr	19660424	19690820	40079	0-20700-0-40079	[36, 85, 106, 107]
+0	0															0-20600-0-nan	SCHROEDER	darayya	7.2	33.45	36.25						[33.5, 33.5]	[36.2, 36.2]	era5.4079.bfr	bufr	19660424	19690820	40079	0-20700-0-40079	[36, 85, 106, 107]
+0	0		DAMASCUS                 	33.483333333333334	36.23333333333333	-999.0				40079				3.6		0-20700-0-40079	WMO	darayya	7.2	33.45	36.25		40079	1132.0			[33.5, 33.5]	[36.2, 36.2]	era5.4079.bfr	bufr	19660424	19690820	40079	0-20700-0-40079	[36, 85, 106, 107]

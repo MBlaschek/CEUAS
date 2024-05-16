@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+68938	68939	CAPE ST FRANCIS	-34.21222222222222	24.85777777777778	7.0	34 12 44S	024 51 28E	2.9	[-34.2, -34.2]	[24.83, 24.83]	OSCAR	0-20000-0-68939		0-20000-0-68939	19950815	19961004	999.0	999.0	False	0-20000-0-68939	kruisfontein	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+68938									[-34.2, -34.2]	[24.83, 24.83]	IGRA2			0-20300-0-nan	19950815	19961004				0-20000-0-68939	kruisfontein	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+68938									[-34.2, -34.2]	[24.83, 24.83]	WBAN			0-20500-0-nan	19950815	19961004				0-20000-0-68939	kruisfontein	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+68938									[-34.2, -34.2]	[24.83, 24.83]	CHUAN			0-20400-0-nan	19950815	19961004				0-20000-0-68939	kruisfontein	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+68938									[-34.2, -34.2]	[24.83, 24.83]	SCHROEDER			0-20600-0-nan	19950815	19961004				0-20000-0-68939	kruisfontein	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+68938									[-34.2, -34.2]	[24.83, 24.83]	WMO			0-20700-0-nan	19950815	19961004				0-20000-0-68939	kruisfontein	[36, 38, 39, 85, 104, 105, 106, 107, 117]

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+48089	48089	SHWEGYIN	17.916666666666668	96.86666666666666	14.0	17 55 00N	096 52 00E	0.5	[17.92, 17.92]	[96.87, 96.87]	OSCAR	0-20000-0-48089		0-20000-0-48089	19921126	19921126	999.0	999.0	False	0-20000-0-48089	nyaunglebin	[104, 105, 106, 107, 117]
+48089									[17.92, 17.92]	[96.87, 96.87]	IGRA2			0-20300-0-nan	19921126	19921126				0-20000-0-48089	nyaunglebin	[104, 105, 106, 107, 117]
+48089									[17.92, 17.92]	[96.87, 96.87]	WBAN			0-20500-0-nan	19921126	19921126				0-20000-0-48089	nyaunglebin	[104, 105, 106, 107, 117]
+48089									[17.92, 17.92]	[96.87, 96.87]	CHUAN			0-20400-0-nan	19921126	19921126				0-20000-0-48089	nyaunglebin	[104, 105, 106, 107, 117]
+48089									[17.92, 17.92]	[96.87, 96.87]	SCHROEDER			0-20600-0-nan	19921126	19921126				0-20000-0-48089	nyaunglebin	[104, 105, 106, 107, 117]
+48089									[17.92, 17.92]	[96.87, 96.87]	WMO			0-20700-0-nan	19921126	19921126				0-20000-0-48089	nyaunglebin	[104, 105, 106, 107, 117]

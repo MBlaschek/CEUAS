@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+94240	94238	TENNANT CREEK AIRPORT	-19.642222222222223	134.18333333333334	377.1	19 38 32S	134 11 00E	1.4	[-19.63, -19.63]	[134.18, 134.18]	OSCAR	0-20000-0-94238		0-20000-0-94238	19700211	19700517	999.0	999.0	False	0-20000-0-94238	alice springs	['38', '85', '106', '107']
+94240	94238	TENNANT CREEK AIRPORT	-19.6422	134.1833	376.7			1.4	[-19.63, -19.63]	[134.18, 134.18]	IGRA2			0-20300-0-94238	19700211	19700517	1969.0	2012.0	True	0-20000-0-94238	alice springs	['38', '85', '106', '107']
+94240									[-19.63, -19.63]	[134.18, 134.18]	WBAN			0-20500-0-nan	19700211	19700517				0-20000-0-94238	alice springs	['38', '85', '106', '107']
+94240									[-19.63, -19.63]	[134.18, 134.18]	CHUAN			0-20400-0-nan	19700211	19700517				0-20000-0-94238	alice springs	['38', '85', '106', '107']
+94240	94238	Tennant Creek AP, Northern Territory, Australia	-19.63	134.18	-999.0			0.0	[-19.63, -19.63]	[134.18, 134.18]	SCHROEDER		94238	0-20600-0-94238	19700211	19700517				0-20000-0-94238	alice springs	['38', '85', '106', '107']
+94240	94238	TENNANT CREEK MO         	-19.633333333333333	134.16666666666666	377.0			1.4	[-19.63, -19.63]	[134.18, 134.18]	WMO		94238	0-20700-0-94238	19700211	19700517				0-20000-0-94238	alice springs	['38', '85', '106', '107']

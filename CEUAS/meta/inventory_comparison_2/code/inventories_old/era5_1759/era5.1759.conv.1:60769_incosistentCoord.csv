@@ -1,0 +1,4 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		DJERBA MELLITA	33.867	10.767	3.0				60769	1973.0	2005.0	True	0.4		IGRA2	0-20300-0-60769	jarjis	51.5	33.503981	11.112155	TSM00060769				
+0	0	0-20000-0-60769	DJERBA MELLITA	33.86666666666667	10.766666666666667	4.0	Climatological station, Surface land meteorological station (SYNOP), RBSN(S), GOS, RBCN	33 52 00N	010 46 00E	60769	999.0	999.0	False	0.5		OSCAR	0-20000-0-60769	jarjis	51.5	33.503981	11.112155					
+0	0		DJERBA MELLITA           	33.583333333333336	10.783333333333331	-999.0				60769				31.8		WMO	0-20700-0-60769	jarjis	51.5	33.503981	11.112155		60769	1922.0		

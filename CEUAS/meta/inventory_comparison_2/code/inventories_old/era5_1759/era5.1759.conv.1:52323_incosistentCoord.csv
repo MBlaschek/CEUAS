@@ -1,0 +1,5 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		MAZONG SHAN	41.8	97.0333	1770.0				52323	1963.0	2021.0	True	22.8		IGRA2	0-20300-0-52323	yumen	212.1	39.833333	97.733333	CHM00052323				
+0	0	0-20000-0-52323	MAZONG SHAN	41.8	97.03333333333333	1770.0	Climatological station, Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), RBSN(ST), CLIMAT(C), GOS, RBCN	41 48 00N	097 02 00E	52323	999.0	999.0	True	22.8		OSCAR	0-20000-0-52323	yumen	212.1	39.833333	97.733333					
+0	0		Mazong Shan / Mazong Mountain Range, China	41.63	96.88	-999.0				52323				0.0		SCHROEDER	0-20600-0-52323	yumen	212.1	39.833333	97.733333		52323	1532.0	1963-09-01 00:00:00	2005-10-31 00:00:00
+0	0		MAZONG SHAN              	41.8	97.03333333333332	-999.0				52323				22.8		WMO	0-20700-0-52323	yumen	212.1	39.833333	97.733333		52323	4395.0		

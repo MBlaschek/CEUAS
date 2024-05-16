@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+35406									[49.05, 49.05]	[51.87, 51.87]	OSCAR				19670101	19680714				0-20700-0-35406	inderborskiy	[36, 85, 106, 107]
+35406									[49.05, 49.05]	[51.87, 51.87]	IGRA2			0-20300-0-nan	19670101	19680714				0-20700-0-35406	inderborskiy	[36, 85, 106, 107]
+35406									[49.05, 49.05]	[51.87, 51.87]	WBAN			0-20500-0-nan	19670101	19680714				0-20700-0-35406	inderborskiy	[36, 85, 106, 107]
+35406									[49.05, 49.05]	[51.87, 51.87]	CHUAN			0-20400-0-nan	19670101	19680714				0-20700-0-35406	inderborskiy	[36, 85, 106, 107]
+35406									[49.05, 49.05]	[51.87, 51.87]	SCHROEDER			0-20600-0-nan	19670101	19680714				0-20700-0-35406	inderborskiy	[36, 85, 106, 107]
+35406	35406	TAIPAK (KALMYKOVO)       	49.05	51.86666666666667	-999.0			0.2	[49.05, 49.05]	[51.87, 51.87]	WMO		35406	0-20700-0-35406	19670101	19680714				0-20700-0-35406	inderborskiy	[36, 85, 106, 107]

@@ -1,0 +1,2 @@
+lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	variables	kind	WIGOS_best
+		era5.conv._PGZ76YF	era5_1_mobile	201806	201808	PGZ76YF		mobile	0-20999-0-PGZ76YF

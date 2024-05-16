@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+64900	64900	YOKO	5.55	12.366666666666667	1031.0	05 33 00N	012 22 00E	0.4	[5.55, 5.55]	[12.37, 12.32]	OSCAR	0-20000-0-64900		0-20000-0-64900	19640102	19740922	999.0	999.0	False	0-20000-0-64900	nanga eboko	[36, 85, 106, 107]
+64900	64900	YOKO	5.55	12.367	1027.0			0.3	[5.55, 5.55]	[12.37, 12.32]	IGRA2			0-20300-0-64900	19640102	19740922	1973.0	1987.0	True	0-20000-0-64900	nanga eboko	[36, 85, 106, 107]
+64900									[5.55, 5.55]	[12.37, 12.32]	WBAN			0-20500-0-nan	19640102	19740922				0-20000-0-64900	nanga eboko	[36, 85, 106, 107]
+64900									[5.55, 5.55]	[12.37, 12.32]	CHUAN			0-20400-0-nan	19640102	19740922				0-20000-0-64900	nanga eboko	[36, 85, 106, 107]
+64900	64900	Yoko, Cameroon	5.55	12.37	-999.0			0.0	[5.55, 5.55]	[12.37, 12.32]	SCHROEDER		64900	0-20600-0-64900	19640102	19740922				0-20000-0-64900	nanga eboko	[36, 85, 106, 107]
+64900	64900	YOKO                     	5.55	12.366666666666667	-999.0			0.4	[5.55, 5.55]	[12.37, 12.32]	WMO		64900	0-20700-0-64900	19640102	19740922				0-20000-0-64900	nanga eboko	[36, 85, 106, 107]

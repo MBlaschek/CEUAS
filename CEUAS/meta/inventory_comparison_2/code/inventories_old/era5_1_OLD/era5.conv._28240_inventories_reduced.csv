@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+28240	28240	NIZHNYJ TAGIL	57.88333333333333	60.06666666666667	260.19	57 53 00N	060 04 00E	0.4	[57.88, 57.88]	[60.07, 60.07]	OSCAR	0-20000-0-28240		0-20000-0-28240	19810615	19900716	999.0	999.0	False	0-20000-0-28240	nizhniy tagil	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+28240									[57.88, 57.88]	[60.07, 60.07]	IGRA2			0-20300-0-nan	19810615	19900716				0-20000-0-28240	nizhniy tagil	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+28240									[57.88, 57.88]	[60.07, 60.07]	WBAN			0-20500-0-nan	19810615	19900716				0-20000-0-28240	nizhniy tagil	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+28240									[57.88, 57.88]	[60.07, 60.07]	CHUAN			0-20400-0-nan	19810615	19900716				0-20000-0-28240	nizhniy tagil	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+28240									[57.88, 57.88]	[60.07, 60.07]	SCHROEDER			0-20600-0-nan	19810615	19900716				0-20000-0-28240	nizhniy tagil	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+28240									[57.88, 57.88]	[60.07, 60.07]	WMO			0-20700-0-nan	19810615	19900716				0-20000-0-28240	nizhniy tagil	[36, 38, 39, 85, 104, 105, 106, 107, 117]

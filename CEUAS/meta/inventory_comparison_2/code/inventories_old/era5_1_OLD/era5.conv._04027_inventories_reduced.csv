@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+04027	04027	ASGARDUR	65.23333333333333	-21.75	10.0	65 14 00N	021 45 00W	12.7	[65.12, 65.12]	[-21.77, -21.77]	OSCAR	0-20000-0-04027		0-20000-0-04027	19800725	19810731	999.0	999.0	False	0-20000-0-04027	reykjavik	[104, 105, 106, 107, 117]
+04027									[65.12, 65.12]	[-21.77, -21.77]	IGRA2			0-20300-0-nan	19800725	19810731				0-20000-0-04027	reykjavik	[104, 105, 106, 107, 117]
+04027									[65.12, 65.12]	[-21.77, -21.77]	WBAN			0-20500-0-nan	19800725	19810731				0-20000-0-04027	reykjavik	[104, 105, 106, 107, 117]
+04027									[65.12, 65.12]	[-21.77, -21.77]	CHUAN			0-20400-0-nan	19800725	19810731				0-20000-0-04027	reykjavik	[104, 105, 106, 107, 117]
+04027									[65.12, 65.12]	[-21.77, -21.77]	SCHROEDER			0-20600-0-nan	19800725	19810731				0-20000-0-04027	reykjavik	[104, 105, 106, 107, 117]
+04027									[65.12, 65.12]	[-21.77, -21.77]	WMO			0-20700-0-nan	19800725	19810731				0-20000-0-04027	reykjavik	[104, 105, 106, 107, 117]

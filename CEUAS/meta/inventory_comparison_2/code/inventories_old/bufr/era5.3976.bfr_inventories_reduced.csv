@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+03976	03976	BELMULLET	54.2275	-10.006944444444445	9.73	54 13 39N	010 00 25W	3.1	[54.2, 54.2]	[-10.0, -10.0]	OSCAR	0-20000-0-03976		0-20000-0-03976	19661118	19671118	999.0	999.0	False	0-20000-0-03976	ballina	[36, 85, 106, 107]
+03976									[54.2, 54.2]	[-10.0, -10.0]	IGRA2			0-20300-0-nan	19661118	19671118				0-20000-0-03976	ballina	[36, 85, 106, 107]
+03976									[54.2, 54.2]	[-10.0, -10.0]	WBAN			0-20500-0-nan	19661118	19671118				0-20000-0-03976	ballina	[36, 85, 106, 107]
+03976									[54.2, 54.2]	[-10.0, -10.0]	CHUAN			0-20400-0-nan	19661118	19671118				0-20000-0-03976	ballina	[36, 85, 106, 107]
+03976									[54.2, 54.2]	[-10.0, -10.0]	SCHROEDER			0-20600-0-nan	19661118	19671118				0-20000-0-03976	ballina	[36, 85, 106, 107]
+03976	03976	BELMULLET               0	54.23333333333333	-10.0	-999.0			3.7	[54.2, 54.2]	[-10.0, -10.0]	WMO		03976	0-20700-0-03976	19661118	19671118				0-20000-0-03976	ballina	[36, 85, 106, 107]

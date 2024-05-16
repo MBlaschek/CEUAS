@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+59758	59758	HAIKOU	20.0	110.25	64.0	20 00 00N	110 15 00E	11.0	[20.03, 20.0]	[110.42, 110.35]	OSCAR	0-20000-0-59758		0-20000-0-59758	19580101	19781231	999.0	999.0	True	0-20000-0-59758	qiongshan	[36, 85, 106, 107]
+59758	59758	HAIKOU	20.0	110.25	64.0			11.0	[20.03, 20.0]	[110.42, 110.35]	IGRA2			0-20300-0-59758	19580101	19781231	1956.0	2021.0	True	0-20000-0-59758	qiongshan	[36, 85, 106, 107]
+59758									[20.03, 20.0]	[110.42, 110.35]	WBAN			0-20500-0-nan	19580101	19781231				0-20000-0-59758	qiongshan	[36, 85, 106, 107]
+59758									[20.03, 20.0]	[110.42, 110.35]	CHUAN			0-20400-0-nan	19580101	19781231				0-20000-0-59758	qiongshan	[36, 85, 106, 107]
+59758	59758	Haikou, China	20.0	110.42	-999.0			8.0	[20.03, 20.0]	[110.42, 110.35]	SCHROEDER		59758	0-20600-0-59758	19580101	19781231				0-20000-0-59758	qiongshan	[36, 85, 106, 107]
+59758	59758	HAIKOU                   	20.03333333333333	110.35	-999.0			0.4	[20.03, 20.0]	[110.42, 110.35]	WMO		59758	0-20700-0-59758	19580101	19781231				0-20000-0-59758	qiongshan	[36, 85, 106, 107]

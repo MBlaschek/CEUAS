@@ -1,0 +1,78 @@
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62840_amma.csv	failed
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62840_amma.csv	failed
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62600_amma.csv	failed
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62840_amma.csv	failed
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62840_amma.csv	failed
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62840_amma.csv	failed
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62840_amma.csv	unidentified	
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62600_amma.csv	21.49	31.21	unidentified_nomatch	 
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/67005_amma.csv	-12.8	45.3	identified	0-20000-0-67005
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62641_amma.csv	19.35	37.13	identified	0-20000-0-62641
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/64450_amma.csv	-4.25	15.250000000000002	identified	0-20000-0-64450
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62840_amma.csv	9.33	31.390000000000004	unidentified_nomatch	 
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/64400_amma.csv	-4.82	11.9	identified	0-20000-0-64400
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62721_amma.csv	15.6	32.5	identified	0-20000-0-62721
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/08594_amma.csv	16.73	-22.950000000000003	identified	0-20000-0-08594
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/68032_amma.csv	-19.98	23.42	identified	0-20000-0-68032
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61415_amma.csv	20.930000000000003	-17.03	identified	0-20000-0-61415
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61226_amma.csv	16.27	-0.05	identified	0-20000-0-61226
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62730_amma.csv	15.28	36.24	identified	0-20000-0-62730
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62650_amma.csv	19.16	30.480000000000004	identified	0-20000-0-62650
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62760_amma.csv	13.61	25.33	identified	0-20000-0-62760
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/64458_amma.csv	1.62	16.05	identified	0-20000-0-64458
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62640_amma.csv	19.32	33.190000000000005	identified	0-20000-0-62640
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/67781_amma.csv	-17.43	32.18	identified	0-20000-0-67781
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/67095_amma.csv	-18.07	49.24	identified	0-20000-0-67095
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/64500_amma.csv	0.45	9.41	identified	0-20000-0-64500
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/67774_amma.csv	failed
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/65046_amma.csv	12.05	8.520000000000001	identified	0-20000-0-65046
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61902_amma.csv	-7.970000000000001	-14.4	identified	0-20000-0-61902
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/67002_amma.csv	-11.500000000000002	43.3	identified	0-20000-0-67002
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/67881_amma.csv	-18.53	32.13	identified	0-20000-0-67881
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62010_amma.csv	32.7	13.1	identified	0-20300-0-62010
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61090_amma.csv	13.78	8.98	identified	0-20000-0-61090
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61831_amma.csv	9.56	-13.61	identified	0-20000-0-61831
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/64750_amma.csv	9.15	18.380000000000003	identified	0-20000-0-64750
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/67027_amma.csv	-15.400000000000002	46.21	unidentified_nomatch	 
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/60656_amma.csv	27.67	-8.200000000000001	identified	0-20000-0-60656
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/63894_amma.csv	-6.870000000000001	39.2	identified	0-20000-0-63894
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/65510_amma.csv	11.170000000000002	-4.32	identified	0-20000-0-65510
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/65387_amma.csv	6.170000000000001	1.25	identified	0-20000-0-65387
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/60760_amma.csv	33.92	8.17	identified	0-20000-0-60760
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/60360_amma.csv	36.8	7.800000000000001	identified	0-20000-0-60360
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61901_amma.csv	-15.93	-5.670000000000001	identified	0-20000-0-61901
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/60571_amma.csv	31.500000000000004	-2.3000000000000003	identified	0-20000-0-60571
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/60630_amma.csv	27.200000000000003	2.47	identified	0-20000-0-60630
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/65202_amma.csv	6.6000000000000005	3.3000000000000003	identified	0-20000-0-65202
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62423_amma.csv	27.05	27.980000000000004	identified	0-20000-0-62423
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62403_amma.csv	26.200000000000003	32.75	identified	0-20000-0-62403
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/60155_amma.csv	33.57	-7.670000000000001	identified	0-20000-0-60155
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62306_amma.csv	31.33	27.22	identified	0-20000-0-62306
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/67083_amma.csv	-18.8	47.48	identified	0-20000-0-67083
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62414_amma.csv	23.97	32.78	identified	0-20000-0-62414
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/63450_amma.csv	9.03	38.75	identified	0-20000-0-63450
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/65503_amma.csv	12.35	-1.52	identified	0-20000-0-65503
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62337_amma.csv	31.08	33.830000000000005	identified	0-20000-0-62337
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62378_amma.csv	29.87	31.33	identified	0-20000-0-62378
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/08589_amma.csv	14.93	-23.49	identified	0-20000-0-08589
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61223_amma.csv	16.720000000000002	-3.0000000000000004	identified	0-20000-0-61223
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/60018_amma.csv	28.31	-16.400000000000002	identified	0-20000-0-60018
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/63741_amma.csv	-1.32	36.8	identified	0-20000-0-63741
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/64700_amma.csv	12.13	15.03	identified	0-20000-0-64700
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/60390_amma.csv	36.720000000000006	3.2500000000000004	identified	0-20000-0-60390
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/60680_amma.csv	22.8	5.430000000000001	identified	0-20000-0-60680
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/64650_amma.csv	4.4	18.520000000000003	identified	0-20000-0-64650
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61687_amma.csv	13.77	-13.68	identified	0-20000-0-61687
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/64870_amma.csv	7.35	13.57	identified	0-20000-0-64870
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/65578_amma.csv	5.25	-3.93	identified	0-20000-0-65578
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/60715_amma.csv	36.830000000000005	10.23	identified	0-20000-0-60715
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61291_amma.csv	12.53	-7.950000000000001	identified	0-20000-0-61291
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/65125_amma.csv	9.25	7.000000000000001	identified	0-20000-0-65125
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61442_amma.csv	18.1	-15.95	identified	0-20000-0-61442
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/64910_amma.csv	4.0200000000000005	9.7	identified	0-20001-0-64910
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/65330_amma.csv	9.35	2.62	identified	0-20000-0-65330
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61024_amma.csv	16.970000000000002	7.98	identified	0-20000-0-61024
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/65418_amma.csv	9.5	-0.8500000000000001	identified	0-20000-0-65418
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61641_amma.csv	14.73	-17.5	identified	0-20000-0-61641
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/61052_amma.csv	13.48	2.1700000000000004	identified	0-20000-0-61052
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/65344_amma.csv	6.3500000000000005	2.3800000000000003	identified	0-20000-0-65344

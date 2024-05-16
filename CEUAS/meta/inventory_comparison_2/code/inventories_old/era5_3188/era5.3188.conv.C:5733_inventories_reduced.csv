@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:5733									[61.13, 61.13]	[-21.9, -21.9]	OSCAR				19321026	19330830				0-20400-0-5733	kopavogur	[38, 85, 106, 107]
+C:5733									[61.13, 61.13]	[-21.9, -21.9]	IGRA2			0-20300-0-nan	19321026	19330830				0-20400-0-5733	kopavogur	[38, 85, 106, 107]
+C:5733									[61.13, 61.13]	[-21.9, -21.9]	WBAN			0-20500-0-nan	19321026	19330830				0-20400-0-5733	kopavogur	[38, 85, 106, 107]
+C:5733	5733.0	Reykjavik	61.13	-21.9	61			0.0	[61.13, 61.13]	[-21.9, -21.9]	CHUAN		-999	0-20400-0-5733	19321026	19330830	-999-999	-999-999		0-20400-0-5733	kopavogur	[38, 85, 106, 107]
+C:5733									[61.13, 61.13]	[-21.9, -21.9]	SCHROEDER			0-20600-0-nan	19321026	19330830				0-20400-0-5733	kopavogur	[38, 85, 106, 107]
+C:5733									[61.13, 61.13]	[-21.9, -21.9]	WMO			0-20700-0-nan	19321026	19330830				0-20400-0-5733	kopavogur	[38, 85, 106, 107]

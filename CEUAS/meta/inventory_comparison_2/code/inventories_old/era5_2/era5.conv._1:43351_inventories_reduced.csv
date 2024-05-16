@@ -1,0 +1,9 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:43351	43336	COCHIN INT. AIRPORT NEDUMBASSERY	10.15	76.4	9.13	10 09 00N	076 24 00E	27.3	[9.97, 9.97]	[76.23, 76.23]	OSCAR	0-20000-0-43336		0-20000-0-43336	19540707	19670730	999.0	999.0	False	0-20000-0-43336	kochi	[38, 104, 105, 106, 107]
+1:43351	43353	COCHIN (IN-NAVY)	9.9333	76.2333	1.0			4.1	[9.97, 9.97]	[76.23, 76.23]	IGRA2			0-20300-0-43353	19540707	19670730	1967.0	2021.0	True	0-20000-0-43336	kochi	[38, 104, 105, 106, 107]
+1:43351									[9.97, 9.97]	[76.23, 76.23]	WBAN			0-20500-0-nan	19540707	19670730				0-20000-0-43336	kochi	[38, 104, 105, 106, 107]
+1:43351									[9.97, 9.97]	[76.23, 76.23]	CHUAN			0-20400-0-nan	19540707	19670730				0-20000-0-43336	kochi	[38, 104, 105, 106, 107]
+1:43351	43353	VOCC Kochi / Cochin Indian Navy Airfield, Willingdon Island, Kerala, India	9.93	76.23	-999.0			4.4	[9.97, 9.97]	[76.23, 76.23]	SCHROEDER		43353.0	0-20600-0-43353	19540707	19670730				0-20000-0-43336	kochi	[38, 104, 105, 106, 107]
+1:43351									[9.97, 9.97]	[76.23, 76.23]	WMO			0-20700-0-nan	19540707	19670730				0-20000-0-43336	kochi	[38, 104, 105, 106, 107]
+1:43351									[9.97, 9.97]	[76.23, 76.23]	AMMA			0-20800-0-nan	19540707	19670730				0-20000-0-43336	kochi	[38, 104, 105, 106, 107]
+1:43351									[9.97, 9.97]	[76.23, 76.23]	HARA			0-20111-0-nan	19540707	19670730				0-20000-0-43336	kochi	[38, 104, 105, 106, 107]

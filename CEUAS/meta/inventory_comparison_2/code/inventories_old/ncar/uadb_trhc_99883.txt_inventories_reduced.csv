@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+99883									[31.85, 31.85]	[64.2, 64.2]	OSCAR				20100727	20140205				0-20600-0-69788	geresk	['38', '85', '106', '107']
+99883									[31.85, 31.85]	[64.2, 64.2]	IGRA2			0-20300-0-nan	20100727	20140205				0-20600-0-69788	geresk	['38', '85', '106', '107']
+99883									[31.85, 31.85]	[64.2, 64.2]	WBAN			0-20500-0-nan	20100727	20140205				0-20600-0-69788	geresk	['38', '85', '106', '107']
+99883									[31.85, 31.85]	[64.2, 64.2]	CHUAN			0-20400-0-nan	20100727	20140205				0-20600-0-69788	geresk	['38', '85', '106', '107']
+99883	69788.0	OAZI / EQBH Camp Bastion (operated by United Kingdom), Iraq (?)	31.85	64.2	-999.0			0.0	[31.85, 31.85]	[64.2, 64.2]	SCHROEDER		69788.0	0-20600-0-69788	20100727	20140205				0-20600-0-69788	geresk	['38', '85', '106', '107']
+99883	99883.0	OAZI EQBH Camp Bastion (operated by United Kingdom), Afghanistan	31.85	64.2	-999.0			0.0	[31.85, 31.85]	[64.2, 64.2]	SCHROEDER		99883.0	0-20600-0-99883	20100727	20140205				0-20600-0-69788	geresk	['38', '85', '106', '107']
+99883									[31.85, 31.85]	[64.2, 64.2]	WMO			0-20700-0-nan	20100727	20140205				0-20600-0-69788	geresk	['38', '85', '106', '107']

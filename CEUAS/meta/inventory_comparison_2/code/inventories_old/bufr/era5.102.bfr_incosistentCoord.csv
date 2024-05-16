@@ -1,0 +1,4 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		TALGARNO	-19.28	121.5	3.0				42005	1960.0	1961.0	True	2.2		0-20300-0-42005	IGRA2	broome	168.0	-17.955379	122.23922	ASXUA942005				
+0	0		Talgarno, Western Australia, Australia	-19.28	121.5	-999.0				94200				2.2		0-20600-0-94200	SCHROEDER	broome	168.0	-17.955379	122.23922		94200	3858.0	1960-03-01 00:00:00	1960-03-01 00:00:00
+0	0		TALGARNO                 	-19.28333333333333	121.5	-999.0				94207				1.8		0-20700-0-94207	WMO	broome	168.0	-17.955379	122.23922		94207	1645.0		

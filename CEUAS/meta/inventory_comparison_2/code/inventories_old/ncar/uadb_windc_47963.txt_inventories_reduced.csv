@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+47963									[30.48, 30.48]	[140.3, 140.3]	OSCAR				19520901	19651115				0-20300-0-47963	shimoda	['38', '85', '106', '107']
+47963	47963	TORISHIMA	30.483	140.3	83.0			0.3	[30.48, 30.48]	[140.3, 140.3]	IGRA2			0-20300-0-47963	19520901	19651115	1956.0	1965.0	True	0-20300-0-47963	shimoda	['38', '85', '106', '107']
+47963									[30.48, 30.48]	[140.3, 140.3]	WBAN			0-20500-0-nan	19520901	19651115				0-20300-0-47963	shimoda	['38', '85', '106', '107']
+47963									[30.48, 30.48]	[140.3, 140.3]	CHUAN			0-20400-0-nan	19520901	19651115				0-20300-0-47963	shimoda	['38', '85', '106', '107']
+47963	47963	Torishima, Japan	30.48	140.3	-999.0			0.0	[30.48, 30.48]	[140.3, 140.3]	SCHROEDER		47963	0-20600-0-47963	19520901	19651115				0-20300-0-47963	shimoda	['38', '85', '106', '107']
+47963	47963	TORISHIMA                	30.48333333333333	140.3	-999.0			0.4	[30.48, 30.48]	[140.3, 140.3]	WMO		47963	0-20700-0-47963	19520901	19651115				0-20300-0-47963	shimoda	['38', '85', '106', '107']

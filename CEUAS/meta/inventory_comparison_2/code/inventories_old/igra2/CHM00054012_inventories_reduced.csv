@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+54012	54012	XI UJIMQIN QI	44.583333333333336	117.6	997.0	44 35 00N	117 36 00E	0.0	[44.583, 44.583]	[117.6, 117.6]	OSCAR	0-20000-0-54012		0-20000-0-54012	1973	1988	999.0	999.0	False	0-20000-0-54012	chifeng	['85', '38', '106', '107']
+54012	54012	XI UJIMQIN QI	44.583	117.6	997.0			0.0	[44.583, 44.583]	[117.6, 117.6]	IGRA2			0-20300-0-54012	1973	1988	1973.0	1988.0	True	0-20000-0-54012	chifeng	['85', '38', '106', '107']
+54012									[44.583, 44.583]	[117.6, 117.6]	WBAN			0-20500-0-nan	1973	1988				0-20000-0-54012	chifeng	['85', '38', '106', '107']
+54012									[44.583, 44.583]	[117.6, 117.6]	CHUAN			0-20400-0-nan	1973	1988				0-20000-0-54012	chifeng	['85', '38', '106', '107']
+54012	54012	Bayan Ul Hot / Xi Ujimqin Qi / Wang-kai-miao, China	44.78	117.85	-999.0			29.5	[44.583, 44.583]	[117.6, 117.6]	SCHROEDER		54012	0-20600-0-54012	1973	1988				0-20000-0-54012	chifeng	['85', '38', '106', '107']
+54012	54012	XI UJIMQIN QI            	44.583333333333336	117.6	-999.0			0.0	[44.583, 44.583]	[117.6, 117.6]	WMO		54012	0-20700-0-54012	1973	1988				0-20000-0-54012	chifeng	['85', '38', '106', '107']

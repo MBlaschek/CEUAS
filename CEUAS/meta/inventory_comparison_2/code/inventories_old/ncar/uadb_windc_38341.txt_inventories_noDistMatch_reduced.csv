@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+38341									[42.51, 42.51]	[71.23, 71.23]	OSCAR				20180101	20211231					taraz	['38', '85', '106', '107']
+38341	38341	TARAZ	42.85	71.3	652.0			38.2	[42.51, 42.51]	[71.23, 71.23]	IGRA2			0-20300-0-38341	20180101	20211231	1956.0	2021.0	True		taraz	['38', '85', '106', '107']
+38341									[42.51, 42.51]	[71.23, 71.23]	WBAN			0-20500-0-nan	20180101	20211231					taraz	['38', '85', '106', '107']
+38341									[42.51, 42.51]	[71.23, 71.23]	CHUAN			0-20400-0-nan	20180101	20211231					taraz	['38', '85', '106', '107']
+38341									[42.51, 42.51]	[71.23, 71.23]	SCHROEDER			0-20600-0-nan	20180101	20211231					taraz	['38', '85', '106', '107']
+38341	38341	TARAZ                    	42.016666666666666	71.0	-999.0			58.0	[42.51, 42.51]	[71.23, 71.23]	WMO		38341	0-20700-0-38341	20180101	20211231					taraz	['38', '85', '106', '107']

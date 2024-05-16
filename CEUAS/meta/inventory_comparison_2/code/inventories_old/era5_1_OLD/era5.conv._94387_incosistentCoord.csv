@@ -1,0 +1,3 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0	0-20000-0-94387	BUNDABERG AERO	-24.90694444444444	152.32361111111112	32.0	Climatological station, Surface land meteorological station (SYNOP), RBCN, GOS, CLIMAT(C)	24 54 25S	152 19 25E	94387	999.0	999.0	False	4.1		OSCAR	0-20000-0-94387	bundaberg	1.9	-24.866211	152.3479					
+0	0		BUNDABERG                	-24.866666666666667	152.35	-999.0				94387				2.1		WMO	0-20700-0-94387	bundaberg	1.9	-24.866211	152.3479		94387	1603.0		

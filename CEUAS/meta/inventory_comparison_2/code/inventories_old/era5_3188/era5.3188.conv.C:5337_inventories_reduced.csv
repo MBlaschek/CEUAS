@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:5337	01468	KONGSVINGER	60.19027777777777	12.006666666666666		60 11 25N	012 00 24E	23.4	[59.98, 59.98]	[12.0, 12.0]	OSCAR	0-20000-0-01468		0-20000-0-01468	19270618	19270618	999	999	False	0-20000-0-01468	kongsvinger	[106, 107]
+C:5337	01484	AURSKOG	59.911944444444444	11.58	127.76	59 54 43N	011 34 48E	24.7	[59.98, 59.98]	[12.0, 12.0]	OSCAR	0-20000-0-01484		0-20000-0-01484	19270618	19270618	999	999	False	0-20000-0-01468	kongsvinger	[106, 107]
+C:5337									[59.98, 59.98]	[12.0, 12.0]	IGRA2			0-20300-0-nan	19270618	19270618				0-20000-0-01468	kongsvinger	[106, 107]
+C:5337									[59.98, 59.98]	[12.0, 12.0]	WBAN			0-20500-0-nan	19270618	19270618				0-20000-0-01468	kongsvinger	[106, 107]
+C:5337	5337	Skillingmark	59.98	12.0	215			0.0	[59.98, 59.98]	[12.0, 12.0]	CHUAN		-999	0-20400-0-5337	19270618	19270618	-999-999	-999-999		0-20000-0-01468	kongsvinger	[106, 107]
+C:5337									[59.98, 59.98]	[12.0, 12.0]	SCHROEDER			0-20600-0-nan	19270618	19270618				0-20000-0-01468	kongsvinger	[106, 107]
+C:5337									[59.98, 59.98]	[12.0, 12.0]	WMO			0-20700-0-nan	19270618	19270618				0-20000-0-01468	kongsvinger	[106, 107]

@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+65344	65344	COTONOU	6.35	2.3833333333333333	9.0	06 21 00N	002 23 00E	0.0	[6.35, 6.35]	[2.3833, 2.3833]	OSCAR	0-20000-0-65344		0-20000-0-65344	1940	2021	999.0	999.0	True	0-20000-0-65344	cotonou	['85', '38', '106', '107']
+65344	65344	COTONOU	6.35	2.3833	5.0			0.0	[6.35, 6.35]	[2.3833, 2.3833]	IGRA2			0-20300-0-65344	1940	2021	1940.0	2021.0	True	0-20000-0-65344	cotonou	['85', '38', '106', '107']
+65344									[6.35, 6.35]	[2.3833, 2.3833]	WBAN			0-20500-0-nan	1940	2021				0-20000-0-65344	cotonou	['85', '38', '106', '107']
+65344									[6.35, 6.35]	[2.3833, 2.3833]	CHUAN			0-20400-0-nan	1940	2021				0-20000-0-65344	cotonou	['85', '38', '106', '107']
+65344	65344	Cotonou, Benin	6.35	2.38	-999.0			0.4	[6.35, 6.35]	[2.3833, 2.3833]	SCHROEDER		65344	0-20600-0-65344	1940	2021				0-20000-0-65344	cotonou	['85', '38', '106', '107']
+65344	65345	(made up station ID) Cotenou SHADOZ ozonesonde site, Benin	6.21	2.23	-999.0			23.0	[6.35, 6.35]	[2.3833, 2.3833]	SCHROEDER		65345	0-20600-0-65345	1940	2021				0-20000-0-65344	cotonou	['85', '38', '106', '107']
+65344	65344	COTONOU                  	6.35	2.3833333333333333	-999.0			0.0	[6.35, 6.35]	[2.3833, 2.3833]	WMO		65344	0-20700-0-65344	1940	2021				0-20000-0-65344	cotonou	['85', '38', '106', '107']

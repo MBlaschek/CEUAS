@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+84658	84658	PUERTO MALDONADO	-12.6	-69.21666666666667	201.0	12 36 00S	069 13 00W	3.8	[-12.63, -12.63]	[-69.2, -69.2]	OSCAR	0-20000-0-84658		0-20000-0-84658	20010604	20021129	999.0	999.0	False	0-20000-0-84659	puerto maldonado	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+84658	84659	PUERTO MALDONADO BAMAL	-12.633333333333333	-69.23333333333333		12 38 00S	069 14 00W	3.6	[-12.63, -12.63]	[-69.2, -69.2]	OSCAR	0-20000-0-84659		0-20000-0-84659	20010604	20021129	999.0	999.0	True	0-20000-0-84659	puerto maldonado	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+84658									[-12.63, -12.63]	[-69.2, -69.2]	IGRA2			0-20300-0-nan	20010604	20021129				0-20000-0-84659	puerto maldonado	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+84658									[-12.63, -12.63]	[-69.2, -69.2]	WBAN			0-20500-0-nan	20010604	20021129				0-20000-0-84659	puerto maldonado	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+84658									[-12.63, -12.63]	[-69.2, -69.2]	CHUAN			0-20400-0-nan	20010604	20021129				0-20000-0-84659	puerto maldonado	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+84658	84658	SPTU Puerto Maldonado - Padre Jose Aldamiz AP, Peru	-12.6	-69.22	-999.0			4.0	[-12.63, -12.63]	[-69.2, -69.2]	SCHROEDER		84658	0-20600-0-84658	20010604	20021129				0-20000-0-84659	puerto maldonado	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+84658	84658	PTO.MALDONADO            	-12.633333333333333	-69.2	-999.0			0.4	[-12.63, -12.63]	[-69.2, -69.2]	WMO		84658	0-20700-0-84658	20010604	20021129				0-20000-0-84659	puerto maldonado	[36, 38, 39, 85, 104, 105, 106, 107, 117]

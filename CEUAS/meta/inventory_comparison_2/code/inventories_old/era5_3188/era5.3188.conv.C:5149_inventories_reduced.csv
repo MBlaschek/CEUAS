@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:5149									[31.5, 31.5]	[-96.47, -96.47]	OSCAR				19250820	19280317				0-20300-0-13924	waco	[38, 85, 117]
+C:5149	13924	GROESBECK	31.5	-96.4667	141.1			0.3	[31.5, 31.5]	[-96.47, -96.47]	IGRA2			0-20300-0-13924	19250820	19280317	1918.0	1931.0	True	0-20300-0-13924	waco	[38, 85, 117]
+C:5149	13924	GROESBECK	31.5	-96.47	141.1224			0.0	[31.5, 31.5]	[-96.47, -96.47]	WBAN			0-20500-0-13924	19250820	19280317	19180701.0	19311231.0		0-20300-0-13924	waco	[38, 85, 117]
+C:5149									[31.5, 31.5]	[-96.47, -96.47]	CHUAN			0-20400-0-nan	19250820	19280317				0-20300-0-13924	waco	[38, 85, 117]
+C:5149	72245	(assigned station ID) Groesbeck kite station, TX	31.5	-96.47	-999.0			0.0	[31.5, 31.5]	[-96.47, -96.47]	SCHROEDER		72245.0	0-20600-0-72245	19250820	19280317				0-20300-0-13924	waco	[38, 85, 117]
+C:5149									[31.5, 31.5]	[-96.47, -96.47]	WMO			0-20700-0-nan	19250820	19280317				0-20300-0-13924	waco	[38, 85, 117]

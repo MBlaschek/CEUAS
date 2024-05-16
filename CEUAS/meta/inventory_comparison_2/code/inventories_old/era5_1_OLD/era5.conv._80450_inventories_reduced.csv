@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+80450	80450	SAN FERNANDO DE APURE	7.9	-67.41666666666667	48.0	07 54 00N	067 25 00W	0.4	[7.9, 7.9]	[-67.42, -67.42]	OSCAR	0-20000-0-80450		0-20000-0-80450	19790413	20121101	999.0	999.0	True	0-20000-0-80450	calabozo	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+80450	80450	SAN FERNANDO DE APURE	7.9	-67.4167	47.0			0.4	[7.9, 7.9]	[-67.42, -67.42]	IGRA2			0-20300-0-80450	19790413	20121101	1974.0	2011.0	True	0-20000-0-80450	calabozo	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+80450									[7.9, 7.9]	[-67.42, -67.42]	WBAN			0-20500-0-nan	19790413	20121101				0-20000-0-80450	calabozo	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+80450									[7.9, 7.9]	[-67.42, -67.42]	CHUAN			0-20400-0-nan	19790413	20121101				0-20000-0-80450	calabozo	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+80450	80450	San Fernando de Apure - Las Flecheras AP, Venezuela	7.9	-67.42	-999.0			0.0	[7.9, 7.9]	[-67.42, -67.42]	SCHROEDER		80450	0-20600-0-80450	19790413	20121101				0-20000-0-80450	calabozo	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+80450	80450	SAN FERNANDO DE APURE    	7.9	-67.41666666666667	73.0			0.4	[7.9, 7.9]	[-67.42, -67.42]	WMO		80450	0-20700-0-80450	19790413	20121101				0-20000-0-80450	calabozo	[36, 38, 39, 85, 104, 105, 106, 107, 117]

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+10929	10929	KONSTANZ	47.695277777777775	9.130833333333333	429.56	47 41 43N	009 07 51E	8180.2	[29.0, 29.0]	[-88.0, -88.0]	OSCAR	0-20000-0-10929		0-20000-0-10929	19720730	19730914	999.0	999.0	False		pascagoula	[36, 85, 106, 107]
+10929									[29.0, 29.0]	[-88.0, -88.0]	IGRA2			0-20300-0-nan	19720730	19730914					pascagoula	[36, 85, 106, 107]
+10929									[29.0, 29.0]	[-88.0, -88.0]	WBAN			0-20500-0-nan	19720730	19730914					pascagoula	[36, 85, 106, 107]
+10929									[29.0, 29.0]	[-88.0, -88.0]	CHUAN			0-20400-0-nan	19720730	19730914					pascagoula	[36, 85, 106, 107]
+10929									[29.0, 29.0]	[-88.0, -88.0]	SCHROEDER			0-20600-0-nan	19720730	19730914					pascagoula	[36, 85, 106, 107]
+10929	10929	KONSTANZ                 	47.68333333333333	9.183333333333334	-999.0			8184.3	[29.0, 29.0]	[-88.0, -88.0]	WMO		10929	0-20700-0-10929	19720730	19730914					pascagoula	[36, 85, 106, 107]

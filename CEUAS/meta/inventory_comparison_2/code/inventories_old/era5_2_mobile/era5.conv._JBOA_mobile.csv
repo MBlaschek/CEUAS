@@ -1,0 +1,2 @@
+lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	variables	kind	WIGOS_best
+		era5.conv._JBOA	era5_2_mobile	197102	197810	JBOA	nan	mobile	0-20999-0-JBOA

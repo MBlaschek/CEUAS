@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+48556	48556	PHRASANG	8.57	99.25805555555556	14.05	08 34 12N	099 15 29E	0.9	[8.57, 8.57]	[99.25, 99.25]	OSCAR	0-20000-0-48556		0-20000-0-48556	20011028	20011028	999.0	999.0	False	0-20000-0-48556	wiang sa	[104, 105, 106, 107, 117]
+48556									[8.57, 8.57]	[99.25, 99.25]	IGRA2			0-20300-0-nan	20011028	20011028				0-20000-0-48556	wiang sa	[104, 105, 106, 107, 117]
+48556									[8.57, 8.57]	[99.25, 99.25]	WBAN			0-20500-0-nan	20011028	20011028				0-20000-0-48556	wiang sa	[104, 105, 106, 107, 117]
+48556									[8.57, 8.57]	[99.25, 99.25]	CHUAN			0-20400-0-nan	20011028	20011028				0-20000-0-48556	wiang sa	[104, 105, 106, 107, 117]
+48556									[8.57, 8.57]	[99.25, 99.25]	SCHROEDER			0-20600-0-nan	20011028	20011028				0-20000-0-48556	wiang sa	[104, 105, 106, 107, 117]
+48556	48556	PHRA SANG                	8.566666666666666	99.25	-999.0			0.4	[8.57, 8.57]	[99.25, 99.25]	WMO		48556	0-20700-0-48556	20011028	20011028				0-20000-0-48556	wiang sa	[104, 105, 106, 107, 117]

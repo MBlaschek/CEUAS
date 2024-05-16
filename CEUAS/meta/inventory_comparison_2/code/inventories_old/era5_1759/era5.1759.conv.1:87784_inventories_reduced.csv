@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:87784	87784	SAN ANTONIO OESTE AERO	-40.757222222222225	-65.03083333333333	20.0	40 45 26S	065 01 51W	7.5	[-40.73, -40.73]	[-64.95, -64.95]	OSCAR	0-20000-0-87784		0-20000-0-87784	19460101	19550616	999.0	999.0	False	0-20000-0-87784	viedma	[38, 106, 107]
+1:87784									[-40.73, -40.73]	[-64.95, -64.95]	IGRA2			0-20300-0-nan	19460101	19550616				0-20000-0-87784	viedma	[38, 106, 107]
+1:87784									[-40.73, -40.73]	[-64.95, -64.95]	WBAN			0-20500-0-nan	19460101	19550616				0-20000-0-87784	viedma	[38, 106, 107]
+1:87784									[-40.73, -40.73]	[-64.95, -64.95]	CHUAN			0-20400-0-nan	19460101	19550616				0-20000-0-87784	viedma	[38, 106, 107]
+1:87784									[-40.73, -40.73]	[-64.95, -64.95]	SCHROEDER			0-20600-0-nan	19460101	19550616				0-20000-0-87784	viedma	[38, 106, 107]
+1:87784	87784	SAN ANTONIO OESTE AERO   	-40.73333333333333	-64.95	-999.0			0.4	[-40.73, -40.73]	[-64.95, -64.95]	WMO		87784	0-20700-0-87784	19460101	19550616				0-20000-0-87784	viedma	[38, 106, 107]

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+29649	29649	KRAPIVINO	55.00666666666667	86.81166666666667	151.4	55 00 24N	086 48 42E	1.1	[55.0, 55.0]	[86.8, 86.8]	OSCAR	0-20000-0-29649		0-20000-0-29649	19990705	19990705	999.0	999.0	False	0-20000-0-29649	leninsk-kuznetskiy	[104, 105, 106, 107, 117]
+29649									[55.0, 55.0]	[86.8, 86.8]	IGRA2			0-20300-0-nan	19990705	19990705				0-20000-0-29649	leninsk-kuznetskiy	[104, 105, 106, 107, 117]
+29649									[55.0, 55.0]	[86.8, 86.8]	WBAN			0-20500-0-nan	19990705	19990705				0-20000-0-29649	leninsk-kuznetskiy	[104, 105, 106, 107, 117]
+29649									[55.0, 55.0]	[86.8, 86.8]	CHUAN			0-20400-0-nan	19990705	19990705				0-20000-0-29649	leninsk-kuznetskiy	[104, 105, 106, 107, 117]
+29649									[55.0, 55.0]	[86.8, 86.8]	SCHROEDER			0-20600-0-nan	19990705	19990705				0-20000-0-29649	leninsk-kuznetskiy	[104, 105, 106, 107, 117]
+29649									[55.0, 55.0]	[86.8, 86.8]	WMO			0-20700-0-nan	19990705	19990705				0-20000-0-29649	leninsk-kuznetskiy	[104, 105, 106, 107, 117]

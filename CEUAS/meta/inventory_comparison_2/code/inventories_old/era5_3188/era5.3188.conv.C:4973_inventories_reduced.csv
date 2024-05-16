@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:4973	62417	SIWA	29.2	25.483333333333334	-13.26	29 12 00N	025 29 00E	3.6	[29.2, 29.2]	[25.52, 25.52]	OSCAR	0-20000-0-62417		0-20000-0-62417	19480221	19561030	999	999	False	0-20000-0-62417	marsa matruh	[106, 107]
+C:4973	62417	SIWA	29.183	25.517	-13.0			1.9	[29.2, 29.2]	[25.52, 25.52]	IGRA2			0-20300-0-62417	19480221	19561030	1948	2000	True	0-20000-0-62417	marsa matruh	[106, 107]
+C:4973									[29.2, 29.2]	[25.52, 25.52]	WBAN			0-20500-0-nan	19480221	19561030				0-20000-0-62417	marsa matruh	[106, 107]
+C:4973	4973	Sekhetam, Siwa	29.2	25.52	-14			0.0	[29.2, 29.2]	[25.52, 25.52]	CHUAN		-999	0-20400-0-4973	19480221	19561030	-999-999	-999-999		0-20000-0-62417	marsa matruh	[106, 107]
+C:4973	62417	Siwah / Siwa, Egypt	29.2	25.48	-999			3.9	[29.2, 29.2]	[25.52, 25.52]	SCHROEDER		62417	0-20600-0-62417	19480221	19561030				0-20000-0-62417	marsa matruh	[106, 107]
+C:4973	62417	SIWA                    -	29.2	25.48333333333333	-999.0			3.6	[29.2, 29.2]	[25.52, 25.52]	WMO		62417	0-20700-0-62417	19480221	19561030				0-20000-0-62417	marsa matruh	[106, 107]

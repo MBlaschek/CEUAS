@@ -1,0 +1,9 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+60035	60035	FUERTEVENTURA/AEROPUERTO	28.44472222222222	-13.863055555555555	30.0	28 26 41N	013 51 47W	0.9	[28.45, 28.45]	[-13.87, -13.87]	OSCAR	0-20000-0-60035		0-20000-0-60035	19801128	19801128	999.0	999.0	False	0-20000-0-60035	puerto del rosario	[104, 105, 106, 107, 117]
+60035									[28.45, 28.45]	[-13.87, -13.87]	IGRA2			0-20300-0-nan	19801128	19801128				0-20000-0-60035	puerto del rosario	[104, 105, 106, 107, 117]
+60035									[28.45, 28.45]	[-13.87, -13.87]	WBAN			0-20500-0-nan	19801128	19801128				0-20000-0-60035	puerto del rosario	[104, 105, 106, 107, 117]
+60035									[28.45, 28.45]	[-13.87, -13.87]	CHUAN			0-20400-0-nan	19801128	19801128				0-20000-0-60035	puerto del rosario	[104, 105, 106, 107, 117]
+60035									[28.45, 28.45]	[-13.87, -13.87]	SCHROEDER			0-20600-0-nan	19801128	19801128				0-20000-0-60035	puerto del rosario	[104, 105, 106, 107, 117]
+60035	60035	FUERTEVENTURA/AEROPUERTO 	28.45	-13.866666666666667	-999.0			0.3	[28.45, 28.45]	[-13.87, -13.87]	WMO		60035	0-20700-0-60035	19801128	19801128				0-20000-0-60035	puerto del rosario	[104, 105, 106, 107, 117]
+60035									[28.45, 28.45]	[-13.87, -13.87]	AMMA			0-20800-0-nan	19801128	19801128				0-20000-0-60035	puerto del rosario	[104, 105, 106, 107, 117]
+60035									[28.45, 28.45]	[-13.87, -13.87]	HARA			0-20111-0-nan	19801128	19801128				0-20000-0-60035	puerto del rosario	[104, 105, 106, 107, 117]

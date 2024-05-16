@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+59023	59023	HECHI	24.7	108.03333333333333	261.0	24 42 00N	108 02 00E	0.0	[24.7, 24.7]	[108.0333, 108.0333]	OSCAR	0-20000-0-59023		0-20000-0-59023	1973	2020	999.0	999.0	False	0-20000-0-59023	jinchengjiang	['85', '38', '106', '107']
+59023	59023	HECHI	24.7	108.0333	261.0			0.0	[24.7, 24.7]	[108.0333, 108.0333]	IGRA2			0-20300-0-59023	1973	2020	1973.0	2020.0	True	0-20000-0-59023	jinchengjiang	['85', '38', '106', '107']
+59023									[24.7, 24.7]	[108.0333, 108.0333]	WBAN			0-20500-0-nan	1973	2020				0-20000-0-59023	jinchengjiang	['85', '38', '106', '107']
+59023									[24.7, 24.7]	[108.0333, 108.0333]	CHUAN			0-20400-0-nan	1973	2020				0-20000-0-59023	jinchengjiang	['85', '38', '106', '107']
+59023	59023	Hechi / Jinchengjiang, China	24.7	108.05	-999.0			1.7	[24.7, 24.7]	[108.0333, 108.0333]	SCHROEDER		59023	0-20600-0-59023	1973	2020				0-20000-0-59023	jinchengjiang	['85', '38', '106', '107']
+59023	59023	HECHI                    	24.7	108.03333333333332	-999.0			0.0	[24.7, 24.7]	[108.0333, 108.0333]	WMO		59023	0-20700-0-59023	1973	2020				0-20000-0-59023	jinchengjiang	['85', '38', '106', '107']

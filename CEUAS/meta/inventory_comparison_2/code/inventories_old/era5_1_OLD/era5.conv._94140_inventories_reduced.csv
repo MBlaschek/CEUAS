@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+94140	94140	MILINGIMBI AWS	-12.093055555555557	134.89194444444445	16.5	12 05 35S	134 53 31E	3.1	[-12.12, -12.12]	[134.9, 134.9]	OSCAR	0-20000-0-94140		0-20000-0-94140	20010414	20010414	999.0	999.0	False	0-20000-0-94140	katherine	[104, 105, 106, 107, 117]
+94140									[-12.12, -12.12]	[134.9, 134.9]	IGRA2			0-20300-0-nan	20010414	20010414				0-20000-0-94140	katherine	[104, 105, 106, 107, 117]
+94140									[-12.12, -12.12]	[134.9, 134.9]	WBAN			0-20500-0-nan	20010414	20010414				0-20000-0-94140	katherine	[104, 105, 106, 107, 117]
+94140									[-12.12, -12.12]	[134.9, 134.9]	CHUAN			0-20400-0-nan	20010414	20010414				0-20000-0-94140	katherine	[104, 105, 106, 107, 117]
+94140									[-12.12, -12.12]	[134.9, 134.9]	SCHROEDER			0-20600-0-nan	20010414	20010414				0-20000-0-94140	katherine	[104, 105, 106, 107, 117]
+94140									[-12.12, -12.12]	[134.9, 134.9]	WMO			0-20700-0-nan	20010414	20010414				0-20000-0-94140	katherine	[104, 105, 106, 107, 117]

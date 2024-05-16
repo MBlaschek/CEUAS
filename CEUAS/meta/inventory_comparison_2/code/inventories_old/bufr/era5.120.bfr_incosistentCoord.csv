@@ -1,0 +1,3 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		KINNVIKA STATION	80.05	18.3	7.0				01020	1957.0	1958.0	True	3619.1		IGRA2	0-20300-0-01020	penzance	305.0	50.113611	-5.547778	JNM00001020				
+0	0	0-20000-0-01020	SORKAPPOYA	76.4775	16.548611111111114	10.0	Surface land meteorological station (SYNOP), GOS	76 28 39N	016 32 55E	01020	999.0	999.0	False	3270.4		OSCAR	0-20000-0-01020	penzance	305.0	50.113611	-5.547778					

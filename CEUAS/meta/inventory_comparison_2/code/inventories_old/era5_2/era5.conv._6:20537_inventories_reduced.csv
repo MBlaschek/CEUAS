@@ -1,0 +1,9 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+6:20537	43344	TIRUCHCHIRAPALLI	10.766666666666667	78.71666666666667	94.2	10 46 00N	078 43 00E	6.2	[10.82, 10.82]	[78.7, 78.7]	OSCAR	0-20000-0-43344		0-20000-0-43344	19440101	19481230	999	999	False	0-20000-0-43344	tiruchchirappalli	[104, 105, 106, 107]
+6:20537	43344	TIRUCHCHIRAPALLI	10.7667	78.7167	85.0			6.2	[10.82, 10.82]	[78.7, 78.7]	IGRA2			0-20300-0-43344	19440101	19481230	1938	2009	True	0-20000-0-43344	tiruchchirappalli	[104, 105, 106, 107]
+6:20537									[10.82, 10.82]	[78.7, 78.7]	WBAN			0-20500-0-nan	19440101	19481230				0-20000-0-43344	tiruchchirappalli	[104, 105, 106, 107]
+6:20537	5472	Tiruchirappalli	10.77	78.7	88			5.5	[10.82, 10.82]	[78.7, 78.7]	CHUAN		-999	0-20400-0-5472	19440101	19481230	-999-999	-999-999		0-20000-0-43344	tiruchchirappalli	[104, 105, 106, 107]
+6:20537	43344	VOTR Tiruchchirapalli AP, Tamil Nadu, India	10.77	78.72	-999			5.9	[10.82, 10.82]	[78.7, 78.7]	SCHROEDER		43344	0-20600-0-43344	19440101	19481230				0-20000-0-43344	tiruchchirappalli	[104, 105, 106, 107]
+6:20537									[10.82, 10.82]	[78.7, 78.7]	WMO			0-20700-0-nan	19440101	19481230				0-20000-0-43344	tiruchchirappalli	[104, 105, 106, 107]
+6:20537									[10.82, 10.82]	[78.7, 78.7]	AMMA			0-20800-0-nan	19440101	19481230				0-20000-0-43344	tiruchchirappalli	[104, 105, 106, 107]
+6:20537									[10.82, 10.82]	[78.7, 78.7]	HARA			0-20111-0-nan	19440101	19481230				0-20000-0-43344	tiruchchirappalli	[104, 105, 106, 107]

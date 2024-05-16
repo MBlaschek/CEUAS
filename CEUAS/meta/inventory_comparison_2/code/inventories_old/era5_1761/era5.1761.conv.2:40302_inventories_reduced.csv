@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:40302									[1.08, 1.08]	[131.27, 131.27]	OSCAR				19441208	19450126				0-20500-0-40302	sorong	[106, 107]
+2:40302									[1.08, 1.08]	[131.27, 131.27]	IGRA2			0-20300-0-nan	19441208	19450126				0-20500-0-40302	sorong	[106, 107]
+2:40302	40302.0	FANI ISLAND AAF	1.08	131.27	2.1336			0.0	[1.08, 1.08]	[131.27, 131.27]	WBAN			0-20500-0-40302	19441208	19450126	19441101.0	19441231.0		0-20500-0-40302	sorong	[106, 107]
+2:40302									[1.08, 1.08]	[131.27, 131.27]	CHUAN			0-20400-0-nan	19441208	19450126				0-20500-0-40302	sorong	[106, 107]
+2:40302									[1.08, 1.08]	[131.27, 131.27]	SCHROEDER			0-20600-0-nan	19441208	19450126				0-20500-0-40302	sorong	[106, 107]
+2:40302									[1.08, 1.08]	[131.27, 131.27]	WMO			0-20700-0-nan	19441208	19450126				0-20500-0-40302	sorong	[106, 107]

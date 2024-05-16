@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:82408									[-21.42, -21.42]	[145.23, 145.23]	OSCAR				19420921	19421003				0-20500-0-82408	townsville	[106, 107]
+2:82408									[-21.42, -21.42]	[145.23, 145.23]	IGRA2			0-20300-0-nan	19420921	19421003				0-20500-0-82408	townsville	[106, 107]
+2:82408	82408.0	TORRENS CREEK	-21.42	145.23	396.24			0.0	[-21.42, -21.42]	[145.23, 145.23]	WBAN			0-20500-0-82408	19420921	19421003	19420901.0	19421031.0		0-20500-0-82408	townsville	[106, 107]
+2:82408									[-21.42, -21.42]	[145.23, 145.23]	CHUAN			0-20400-0-nan	19420921	19421003				0-20500-0-82408	townsville	[106, 107]
+2:82408									[-21.42, -21.42]	[145.23, 145.23]	SCHROEDER			0-20600-0-nan	19420921	19421003				0-20500-0-82408	townsville	[106, 107]
+2:82408									[-21.42, -21.42]	[145.23, 145.23]	WMO			0-20700-0-nan	19420921	19421003				0-20500-0-82408	townsville	[106, 107]

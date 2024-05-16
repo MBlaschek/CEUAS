@@ -1,0 +1,4 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		FT GREELY/ALLEN AAF	64.0	-145.733	391.0				70267	1957.0	1993.0	True	44.6		IGRA2	0-20300-0-70267	fairbanks	167.0	64.8377778	-147.7163889	USM00070267				
+0	0	0-20000-0-70267	FORT GREELY/ALLEN AAF, AK	64.0	-145.73333333333332		Surface land meteorological station (SYNOP), RBSN(S), GOS	64 00 00N	145 44 00W	70267	999.0	999.0	False	44.6		OSCAR	0-20000-0-70267	fairbanks	167.0	64.8377778	-147.7163889					
+0	0		BIG DELTA/ALLEN AAF      	64.0	-145.73333333333332	-999.0				70267				44.6		WMO	0-20700-0-70267	fairbanks	167.0	64.8377778	-147.7163889		70267	2915.0		

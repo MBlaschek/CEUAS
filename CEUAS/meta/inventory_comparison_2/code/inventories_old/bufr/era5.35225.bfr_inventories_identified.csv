@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0																OSCAR	aqtobe	68.3	50.298056	57.181389						[50.75, 50.75]	[56.53, 56.53]	era5.35225.bfr	bufr	19740208	19781226	35225	0-20600-0-35225	[36, 85, 106, 107]
+0	0															0-20300-0-nan	IGRA2	aqtobe	68.3	50.298056	57.181389						[50.75, 50.75]	[56.53, 56.53]	era5.35225.bfr	bufr	19740208	19781226	35225	0-20600-0-35225	[36, 85, 106, 107]
+0	0															0-20500-0-nan	WBAN	aqtobe	68.3	50.298056	57.181389						[50.75, 50.75]	[56.53, 56.53]	era5.35225.bfr	bufr	19740208	19781226	35225	0-20600-0-35225	[36, 85, 106, 107]
+0	0															0-20400-0-nan	CHUAN	aqtobe	68.3	50.298056	57.181389						[50.75, 50.75]	[56.53, 56.53]	era5.35225.bfr	bufr	19740208	19781226	35225	0-20600-0-35225	[36, 85, 106, 107]
+0	0		Mortyq / Martuk, Kazakhstan	50.75	56.53	-999.0				35225.0				0.0		0-20600-0-35225	SCHROEDER	aqtobe	68.3	50.298056	57.181389		35225.0	863.0	9999999	9999999	[50.75, 50.75]	[56.53, 56.53]	era5.35225.bfr	bufr	19740208	19781226	35225	0-20600-0-35225	[36, 85, 106, 107]
+0	0															0-20700-0-nan	WMO	aqtobe	68.3	50.298056	57.181389						[50.75, 50.75]	[56.53, 56.53]	era5.35225.bfr	bufr	19740208	19781226	35225	0-20600-0-35225	[36, 85, 106, 107]

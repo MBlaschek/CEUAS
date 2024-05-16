@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+63330	63330	MAKALE	13.5	39.483333333333334	2070.0	13 30 00N	039 29 00E	0.4	[13.5, 13.5]	[39.48, 39.48]	OSCAR	0-20000-0-63330		0-20000-0-63330	19840511	19840511	999.0	999.0	False	0-20000-0-63330	abiy adi	[104, 105, 106, 107, 117]
+63330									[13.5, 13.5]	[39.48, 39.48]	IGRA2			0-20300-0-nan	19840511	19840511				0-20000-0-63330	abiy adi	[104, 105, 106, 107, 117]
+63330									[13.5, 13.5]	[39.48, 39.48]	WBAN			0-20500-0-nan	19840511	19840511				0-20000-0-63330	abiy adi	[104, 105, 106, 107, 117]
+63330									[13.5, 13.5]	[39.48, 39.48]	CHUAN			0-20400-0-nan	19840511	19840511				0-20000-0-63330	abiy adi	[104, 105, 106, 107, 117]
+63330									[13.5, 13.5]	[39.48, 39.48]	SCHROEDER			0-20600-0-nan	19840511	19840511				0-20000-0-63330	abiy adi	[104, 105, 106, 107, 117]
+63330									[13.5, 13.5]	[39.48, 39.48]	WMO			0-20700-0-nan	19840511	19840511				0-20000-0-63330	abiy adi	[104, 105, 106, 107, 117]

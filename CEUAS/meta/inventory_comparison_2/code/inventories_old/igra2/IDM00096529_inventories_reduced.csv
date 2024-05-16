@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+96529	96529	TANJUNG REDEP/KALIMARAU	2.1438888888888887	117.43277777777779	26.0	02 08 38N	117 25 58E	3.6	[2.1167, 2.1167]	[117.45, 117.45]	OSCAR	0-20000-0-96529		0-20000-0-96529	1996	2021	999.0	999.0	False	0-20000-0-96529	tarakan	['85', '38', '106', '107']
+96529	96529	TANJUNG REDEP/KALIMARAU	2.1167	117.45	26.0			0.0	[2.1167, 2.1167]	[117.45, 117.45]	IGRA2			0-20300-0-96529	1996	2021	1996.0	2021.0	True	0-20000-0-96529	tarakan	['85', '38', '106', '107']
+96529									[2.1167, 2.1167]	[117.45, 117.45]	WBAN			0-20500-0-nan	1996	2021				0-20000-0-96529	tarakan	['85', '38', '106', '107']
+96529									[2.1167, 2.1167]	[117.45, 117.45]	CHUAN			0-20400-0-nan	1996	2021				0-20000-0-96529	tarakan	['85', '38', '106', '107']
+96529	96529	WALK Tanjung Redep - Kalimaru AP, Kalimantan, Indonesia	2.12	117.45	-999.0			0.4	[2.1167, 2.1167]	[117.45, 117.45]	SCHROEDER		96529.0	0-20600-0-96529	1996	2021				0-20000-0-96529	tarakan	['85', '38', '106', '107']
+96529									[2.1167, 2.1167]	[117.45, 117.45]	WMO			0-20700-0-nan	1996	2021				0-20000-0-96529	tarakan	['85', '38', '106', '107']

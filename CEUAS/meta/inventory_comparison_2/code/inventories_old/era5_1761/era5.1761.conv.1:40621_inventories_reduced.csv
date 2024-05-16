@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:40621	40621	KIRKUK	35.46666666666667	44.4	331.0	35 28 00N	044 24 00E	0.4	[35.47, 35.47]	[44.4, 44.4]	OSCAR	0-20000-0-40621		0-20000-0-40621	19490303	19530802	999.0	999.0	False	0-20000-0-40621	kirkuk	[106, 107]
+1:40621									[35.47, 35.47]	[44.4, 44.4]	IGRA2			0-20300-0-nan	19490303	19530802				0-20000-0-40621	kirkuk	[106, 107]
+1:40621									[35.47, 35.47]	[44.4, 44.4]	WBAN			0-20500-0-nan	19490303	19530802				0-20000-0-40621	kirkuk	[106, 107]
+1:40621									[35.47, 35.47]	[44.4, 44.4]	CHUAN			0-20400-0-nan	19490303	19530802				0-20000-0-40621	kirkuk	[106, 107]
+1:40621	69792	ORKK Karkuk / Kirkuk - Kirkuk Air Base, Iraq	35.47	44.35	-999.0			4.5	[35.47, 35.47]	[44.4, 44.4]	SCHROEDER		69792	0-20600-0-69792	19490303	19530802				0-20000-0-40621	kirkuk	[106, 107]
+1:40621	40621	KIRKUK                   	35.46666666666667	44.4	-999.0			0.4	[35.47, 35.47]	[44.4, 44.4]	WMO		40621	0-20700-0-40621	19490303	19530802				0-20000-0-40621	kirkuk	[106, 107]

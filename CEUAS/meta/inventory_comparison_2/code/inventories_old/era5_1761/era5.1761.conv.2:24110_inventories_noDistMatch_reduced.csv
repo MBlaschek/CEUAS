@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:24110									[47.2, 47.2]	[-118.68, -118.68]	OSCAR				19440505	19441107					moses lake	[106, 107]
+2:24110	24110	MOSES LAKE (LARSON AFB)	47.1833	-119.3167	361.8			48.3	[47.2, 47.2]	[-118.68, -118.68]	IGRA2			0-20300-0-24110	19440505	19441107	1944.0	1944.0	True		moses lake	[106, 107]
+2:24110									[47.2, 47.2]	[-118.68, -118.68]	WBAN			0-20500-0-nan	19440505	19441107					moses lake	[106, 107]
+2:24110									[47.2, 47.2]	[-118.68, -118.68]	CHUAN			0-20400-0-nan	19440505	19441107					moses lake	[106, 107]
+2:24110									[47.2, 47.2]	[-118.68, -118.68]	SCHROEDER			0-20600-0-nan	19440505	19441107					moses lake	[106, 107]
+2:24110									[47.2, 47.2]	[-118.68, -118.68]	WMO			0-20700-0-nan	19440505	19441107					moses lake	[106, 107]

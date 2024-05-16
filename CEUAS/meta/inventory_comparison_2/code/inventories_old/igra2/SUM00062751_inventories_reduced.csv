@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+62751	62751	WAD MEDANI	14.4	33.483333333333334	408.0	14 24 00N	033 29 00E	0.0	[14.4, 14.4]	[33.483, 33.483]	OSCAR	0-20000-0-62751		0-20000-0-62751	1973	1975	999.0	999.0	False	0-20000-0-62751	wad madani	['85', '38', '106', '107']
+62751	62751	WAD MEDANI	14.4	33.483	408.0			0.0	[14.4, 14.4]	[33.483, 33.483]	IGRA2			0-20300-0-62751	1973	1975	1973.0	1975.0	True	0-20000-0-62751	wad madani	['85', '38', '106', '107']
+62751									[14.4, 14.4]	[33.483, 33.483]	WBAN			0-20500-0-nan	1973	1975				0-20000-0-62751	wad madani	['85', '38', '106', '107']
+62751									[14.4, 14.4]	[33.483, 33.483]	CHUAN			0-20400-0-nan	1973	1975				0-20000-0-62751	wad madani	['85', '38', '106', '107']
+62751	62751	Wad Medani, Sudan	14.4	33.48	-999.0			0.3	[14.4, 14.4]	[33.483, 33.483]	SCHROEDER		62751	0-20600-0-62751	1973	1975				0-20000-0-62751	wad madani	['85', '38', '106', '107']
+62751	62751	WAD MEDANI               	14.383333333333333	33.483333333333334	408.0			1.8	[14.4, 14.4]	[33.483, 33.483]	WMO		62751	0-20700-0-62751	1973	1975				0-20000-0-62751	wad madani	['85', '38', '106', '107']

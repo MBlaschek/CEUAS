@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+84018	84018	ESMERALDAS (TACHINA) AEROPUERTO	0.9786111111111111	-79.62666666666667	10.0	00 58 43N	079 37 36W	2.6	[0.98, 0.97]	[-79.63, -79.65]	OSCAR	0-20000-0-84018		0-20000-0-84018	19790218	19930819	999.0	999.0	False	0-20000-0-84018	esmeraldas	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+84018									[0.98, 0.97]	[-79.63, -79.65]	IGRA2			0-20300-0-nan	19790218	19930819				0-20000-0-84018	esmeraldas	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+84018									[0.98, 0.97]	[-79.63, -79.65]	WBAN			0-20500-0-nan	19790218	19930819				0-20000-0-84018	esmeraldas	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+84018									[0.98, 0.97]	[-79.63, -79.65]	CHUAN			0-20400-0-nan	19790218	19930819				0-20000-0-84018	esmeraldas	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+84018	84018	Esmeraldas - Tachina AP PACS-SONET pibal site (operated by INAMHI = National Meteorological and Hydrographical Institute), Ecuador	0.97	-79.63	-999.0			2.5	[0.98, 0.97]	[-79.63, -79.65]	SCHROEDER		84018	0-20600-0-84018	19790218	19930819				0-20000-0-84018	esmeraldas	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+84018	84018	ESMERALDAS-TACHINA       	-0.9833333333333332	-79.61666666666666	-999.0			217.1	[0.98, 0.97]	[-79.63, -79.65]	WMO		84018	0-20700-0-84018	19790218	19930819				0-20000-0-84018	esmeraldas	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+84018	84027	ESMERALDAS TACHINA       	0.9833333333333332	-79.65	-999.0			0.4	[0.98, 0.97]	[-79.63, -79.65]	WMO		84027	0-20700-0-84027	19790218	19930819				0-20000-0-84018	esmeraldas	[36, 38, 39, 85, 104, 105, 106, 107, 117]

@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+03132	03132	WEST FREUGH	54.85916666666667	-4.935277777777778	11.0	54 51 33N	004 56 07W	0.1	[54.86, 54.85]	[-4.934, -4.95]	OSCAR	0-20000-0-03132		0-20000-0-03132	19930609	20150515	999.0	999.0	False	0-20000-0-03132	stranraer	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+03132									[54.86, 54.85]	[-4.934, -4.95]	IGRA2			0-20300-0-nan	19930609	20150515				0-20000-0-03132	stranraer	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+03132									[54.86, 54.85]	[-4.934, -4.95]	WBAN			0-20500-0-nan	19930609	20150515				0-20000-0-03132	stranraer	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+03132									[54.86, 54.85]	[-4.934, -4.95]	CHUAN			0-20400-0-nan	19930609	20150515				0-20000-0-03132	stranraer	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+03132	3130	West Freugh Range (operated by Ministry of Defence), Scotland, UK	54.85	-4.95	-999.0			1.4	[54.86, 54.85]	[-4.934, -4.95]	SCHROEDER		3130.0	0-20600-0-3130	19930609	20150515				0-20000-0-03132	stranraer	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+03132	3132	West Freugh Range (operated by Ministry of Defence), Scotland, UK	54.85	-4.95	-999.0			1.4	[54.86, 54.85]	[-4.934, -4.95]	SCHROEDER		3132.0	0-20600-0-3132	19930609	20150515				0-20000-0-03132	stranraer	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+03132									[54.86, 54.85]	[-4.934, -4.95]	WMO			0-20700-0-nan	19930609	20150515				0-20000-0-03132	stranraer	[36, 38, 39, 85, 104, 105, 106, 107, 117]

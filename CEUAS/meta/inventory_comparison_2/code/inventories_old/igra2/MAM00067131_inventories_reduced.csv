@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+67131	67131	MOROMBE	-21.75	43.36666666666667	4.0	21 45 00S	043 22 00E	0.0	[-21.75, -21.75]	[43.367, 43.367]	OSCAR	0-20000-0-67131		0-20000-0-67131	1977	1981	999.0	999.0	False	0-20000-0-67131	ankazoabo	['85', '38', '106', '107']
+67131	67131	MOROMBE	-21.75	43.367	4.0			0.0	[-21.75, -21.75]	[43.367, 43.367]	IGRA2			0-20300-0-67131	1977	1981	1977.0	1981.0	True	0-20000-0-67131	ankazoabo	['85', '38', '106', '107']
+67131									[-21.75, -21.75]	[43.367, 43.367]	WBAN			0-20500-0-nan	1977	1981				0-20000-0-67131	ankazoabo	['85', '38', '106', '107']
+67131									[-21.75, -21.75]	[43.367, 43.367]	CHUAN			0-20400-0-nan	1977	1981				0-20000-0-67131	ankazoabo	['85', '38', '106', '107']
+67131	67131	Morombe, Madagascar	-21.75	43.37	-999.0			0.3	[-21.75, -21.75]	[43.367, 43.367]	SCHROEDER		67131.0	0-20600-0-67131	1977	1981				0-20000-0-67131	ankazoabo	['85', '38', '106', '107']
+67131									[-21.75, -21.75]	[43.367, 43.367]	WMO			0-20700-0-nan	1977	1981				0-20000-0-67131	ankazoabo	['85', '38', '106', '107']

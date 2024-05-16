@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+42111	42111	DEHRADUN	30.316666666666666	78.03333333333333	683.0	30 19 00N	078 02 00E	0.5	[30.32, 30.32]	[78.03, 78.03]	OSCAR	0-20000-0-42111		0-20000-0-42111	19640605	19721231	999.0	999.0	False	0-20000-0-42111	dehra dun	[36, 85, 106, 107]
+42111	42111	DEHRADUN	30.3167	78.0333	683.0			0.5	[30.32, 30.32]	[78.03, 78.03]	IGRA2			0-20300-0-42111	19640605	19721231	1973.0	2021.0	True	0-20000-0-42111	dehra dun	[36, 85, 106, 107]
+42111									[30.32, 30.32]	[78.03, 78.03]	WBAN			0-20500-0-nan	19640605	19721231				0-20000-0-42111	dehra dun	[36, 85, 106, 107]
+42111									[30.32, 30.32]	[78.03, 78.03]	CHUAN			0-20400-0-nan	19640605	19721231				0-20000-0-42111	dehra dun	[36, 85, 106, 107]
+42111	42111	Dehra Dun, Uttar Pradesh, India	30.32	78.03	-999.0			0.0	[30.32, 30.32]	[78.03, 78.03]	SCHROEDER		42111.0	0-20600-0-42111	19640605	19721231				0-20000-0-42111	dehra dun	[36, 85, 106, 107]
+42111									[30.32, 30.32]	[78.03, 78.03]	WMO			0-20700-0-nan	19640605	19721231				0-20000-0-42111	dehra dun	[36, 85, 106, 107]

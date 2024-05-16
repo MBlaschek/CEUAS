@@ -1,0 +1,2 @@
+lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	variables	kind	WIGOS_best
+		era5.conv._URET	era5_2_mobile	197803	197803	URET	nan	mobile	0-20999-0-URET

@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0																OSCAR	taraz	44.7	42.9	71.366667						[42.51, 42.51]	[71.23, 71.23]	uadb_windc_38341.txt	ncar	20180101	20211231	38341		['38', '85', '106', '107']
+0	0		TARAZ	42.85	71.3	652.0				38341	1956.0	2021.0	True	38.2		0-20300-0-38341	IGRA2	taraz	44.7	42.9	71.366667	KZM00038341					[42.51, 42.51]	[71.23, 71.23]	uadb_windc_38341.txt	ncar	20180101	20211231	38341		['38', '85', '106', '107']
+0	0															0-20500-0-nan	WBAN	taraz	44.7	42.9	71.366667						[42.51, 42.51]	[71.23, 71.23]	uadb_windc_38341.txt	ncar	20180101	20211231	38341		['38', '85', '106', '107']
+0	0															0-20400-0-nan	CHUAN	taraz	44.7	42.9	71.366667						[42.51, 42.51]	[71.23, 71.23]	uadb_windc_38341.txt	ncar	20180101	20211231	38341		['38', '85', '106', '107']
+0	0															0-20600-0-nan	SCHROEDER	taraz	44.7	42.9	71.366667						[42.51, 42.51]	[71.23, 71.23]	uadb_windc_38341.txt	ncar	20180101	20211231	38341		['38', '85', '106', '107']
+0	0		TARAZ                    	42.016666666666666	71.0	-999.0				38341				58.0		0-20700-0-38341	WMO	taraz	44.7	42.9	71.366667		38341	4209.0			[42.51, 42.51]	[71.23, 71.23]	uadb_windc_38341.txt	ncar	20180101	20211231	38341		['38', '85', '106', '107']

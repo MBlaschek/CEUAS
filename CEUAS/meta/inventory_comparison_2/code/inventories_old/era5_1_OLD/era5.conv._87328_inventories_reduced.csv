@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+87328	87328	VILLA DOLORES AERO	-31.95138888888889	-65.14916666666667	569.0	31 57 05S	065 08 57W	1.8	[-31.95, -31.95]	[-65.13, -65.13]	OSCAR	0-20000-0-87328		0-20000-0-87328	19790714	19790714	999.0	999.0	False	0-20000-0-87328	alta gracia	[104, 105, 106, 107, 117]
+87328									[-31.95, -31.95]	[-65.13, -65.13]	IGRA2			0-20300-0-nan	19790714	19790714				0-20000-0-87328	alta gracia	[104, 105, 106, 107, 117]
+87328									[-31.95, -31.95]	[-65.13, -65.13]	WBAN			0-20500-0-nan	19790714	19790714				0-20000-0-87328	alta gracia	[104, 105, 106, 107, 117]
+87328									[-31.95, -31.95]	[-65.13, -65.13]	CHUAN			0-20400-0-nan	19790714	19790714				0-20000-0-87328	alta gracia	[104, 105, 106, 107, 117]
+87328									[-31.95, -31.95]	[-65.13, -65.13]	SCHROEDER			0-20600-0-nan	19790714	19790714				0-20000-0-87328	alta gracia	[104, 105, 106, 107, 117]
+87328	87328	VILLA DOLORES A          	-31.95	-65.13333333333334	-999.0			0.3	[-31.95, -31.95]	[-65.13, -65.13]	WMO		87328	0-20700-0-87328	19790714	19790714				0-20000-0-87328	alta gracia	[104, 105, 106, 107, 117]

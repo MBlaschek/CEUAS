@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+41678	41678	BAHAWALNAGAR	29.95	73.25	163.0	29 57 00N	073 15 00E	0.0	[29.95, 29.95]	[73.25, 73.25]	OSCAR	0-20000-0-41678		0-20000-0-41678	19980813	20211015	999.0	999.0	False	0-20000-0-41678	bahawalnagar	[104, 105, 106, 107, 117]
+41678	41678	BAHAWALNAGAR	29.95	73.25	162.0			0.0	[29.95, 29.95]	[73.25, 73.25]	IGRA2			0-20300-0-41678	19980813	20211015	1980.0	2020.0	True	0-20000-0-41678	bahawalnagar	[104, 105, 106, 107, 117]
+41678									[29.95, 29.95]	[73.25, 73.25]	WBAN			0-20500-0-nan	19980813	20211015				0-20000-0-41678	bahawalnagar	[104, 105, 106, 107, 117]
+41678									[29.95, 29.95]	[73.25, 73.25]	CHUAN			0-20400-0-nan	19980813	20211015				0-20000-0-41678	bahawalnagar	[104, 105, 106, 107, 117]
+41678	41678	Bahawalnagar, Pakistan	29.97	73.25	-999.0			2.2	[29.95, 29.95]	[73.25, 73.25]	SCHROEDER		41678	0-20600-0-41678	19980813	20211015				0-20000-0-41678	bahawalnagar	[104, 105, 106, 107, 117]
+41678	41678	BAHAWAL NAGAR            	29.95	73.25	-999.0			0.0	[29.95, 29.95]	[73.25, 73.25]	WMO		41678	0-20700-0-41678	19980813	20211015				0-20000-0-41678	bahawalnagar	[104, 105, 106, 107, 117]

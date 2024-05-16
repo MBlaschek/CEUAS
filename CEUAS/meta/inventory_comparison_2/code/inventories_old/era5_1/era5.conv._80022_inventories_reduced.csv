@@ -1,0 +1,9 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+80022	80022	CARTAGENA/RAFAEL NUNEZ	10.45	-75.51666666666667	12.0	10 27 00N	075 31 00W	0.4	[10.45, 10.45]	[-75.52, -75.52]	OSCAR	0-20000-0-80022		0-20000-0-80022	19791114	20120314	999.0	999.0	False	0-20000-0-80022	cartagena	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+80022									[10.45, 10.45]	[-75.52, -75.52]	IGRA2			0-20300-0-nan	19791114	20120314				0-20000-0-80022	cartagena	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+80022									[10.45, 10.45]	[-75.52, -75.52]	WBAN			0-20500-0-nan	19791114	20120314				0-20000-0-80022	cartagena	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+80022									[10.45, 10.45]	[-75.52, -75.52]	CHUAN			0-20400-0-nan	19791114	20120314				0-20000-0-80022	cartagena	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+80022	80022	Cartagena - Rafael Nunez AP PACS-SONET pibal site (operated by Colombian Navy CIOH = Oceanographic and Hydrographic Research Center), Colombia	10.45	-75.52	-999.0			0.0	[10.45, 10.45]	[-75.52, -75.52]	SCHROEDER		80022	0-20600-0-80022	19791114	20120314				0-20000-0-80022	cartagena	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+80022	80022	AEPTO CRESPO             	10.45	-75.51666666666667	-999.0			0.4	[10.45, 10.45]	[-75.52, -75.52]	WMO		80022	0-20700-0-80022	19791114	20120314				0-20000-0-80022	cartagena	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+80022									[10.45, 10.45]	[-75.52, -75.52]	AMMA			0-20800-0-nan	19791114	20120314				0-20000-0-80022	cartagena	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+80022									[10.45, 10.45]	[-75.52, -75.52]	HARA			0-20111-0-nan	19791114	20120314				0-20000-0-80022	cartagena	[36, 38, 39, 85, 104, 105, 106, 107, 117]

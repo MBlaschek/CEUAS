@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+94700	94700	HILLSTON AIRPORT	-33.49138888888889	145.525	120.2	33 29 29S	145 31 30E	1.3	[-33.48, -33.48]	[145.53, 145.53]	OSCAR	0-20000-0-94700		0-20000-0-94700	19790922	19790923	999.0	999.0	False	0-20000-0-94700	griffith	[104, 105, 106, 107, 117]
+94700									[-33.48, -33.48]	[145.53, 145.53]	IGRA2			0-20300-0-nan	19790922	19790923				0-20000-0-94700	griffith	[104, 105, 106, 107, 117]
+94700									[-33.48, -33.48]	[145.53, 145.53]	WBAN			0-20500-0-nan	19790922	19790923				0-20000-0-94700	griffith	[104, 105, 106, 107, 117]
+94700									[-33.48, -33.48]	[145.53, 145.53]	CHUAN			0-20400-0-nan	19790922	19790923				0-20000-0-94700	griffith	[104, 105, 106, 107, 117]
+94700									[-33.48, -33.48]	[145.53, 145.53]	SCHROEDER			0-20600-0-nan	19790922	19790923				0-20000-0-94700	griffith	[104, 105, 106, 107, 117]
+94700									[-33.48, -33.48]	[145.53, 145.53]	WMO			0-20700-0-nan	19790922	19790923				0-20000-0-94700	griffith	[104, 105, 106, 107, 117]

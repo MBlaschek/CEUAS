@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+74631	74631	White Sands Rhodes Canyon	33.16277777777778	-106.48916666666666		33 09 46N	106 29 21W	1.1	[33.167, 33.167]	[-106.5, -106.5]	OSCAR	0-20000-0-74631		0-20000-0-74631	1956	1983	999.0	999.0	False	0-20000-0-74631	alamogordo	['85', '38', '106', '107']
+74631	74631	WHITE SANDS MISSILE	33.167	-106.5	1235.0			0.0	[33.167, 33.167]	[-106.5, -106.5]	IGRA2			0-20300-0-74631	1956	1983	1956.0	1983.0	True	0-20000-0-74631	alamogordo	['85', '38', '106', '107']
+74631	93060	JALLEN SITE	33.18	-106.48	1235.9640000000002			2.4	[33.167, 33.167]	[-106.5, -106.5]	WBAN		74631.0	0-20500-0-93060	1956	1983	19560101.0	19610131.0		0-20000-0-74631	alamogordo	['85', '38', '106', '107']
+74631	93043	WHITE SANDS UP RANGE	33.22	-106.45	1243.8888000000002			7.5	[33.167, 33.167]	[-106.5, -106.5]	WBAN			0-20500-0-93043	1956	1983	19480401.0	19480430.0		0-20000-0-74631	alamogordo	['85', '38', '106', '107']
+74631									[33.167, 33.167]	[-106.5, -106.5]	CHUAN			0-20400-0-nan	1956	1983				0-20000-0-74631	alamogordo	['85', '38', '106', '107']
+74631	74631	White Sands Missile Range - Jallen Site / Site 32, NM (WBAN=93060)	33.18	-106.48	-999.0			2.4	[33.167, 33.167]	[-106.5, -106.5]	SCHROEDER		74631.0	0-20600-0-74631	1956	1983				0-20000-0-74631	alamogordo	['85', '38', '106', '107']
+74631									[33.167, 33.167]	[-106.5, -106.5]	WMO			0-20700-0-nan	1956	1983				0-20000-0-74631	alamogordo	['85', '38', '106', '107']

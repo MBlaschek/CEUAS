@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+10687	10688	WEIDEN	49.66638888888889	12.184444444444445	436.5	49 39 59N	012 11 04E	17.3	[49.7, 49.7]	[11.95, 11.95]	OSCAR	0-20000-0-10688		0-20000-0-10688	1970	1992	999.0	999.0	False	0-20000-0-10688	weiden	['85', '38', '106', '107']
+10687	10687	GRAFENWOEHR	49.7	11.95	414.0			0.0	[49.7, 49.7]	[11.95, 11.95]	IGRA2			0-20300-0-10687	1970	1992	1970.0	1992.0	True	0-20000-0-10688	weiden	['85', '38', '106', '107']
+10687	34189	GRAFENWOHR	49.7	11.93	414.2232			1.4	[49.7, 49.7]	[11.95, 11.95]	WBAN			0-20500-0-34189	1970	1992	19590101.0	99991231.0		0-20000-0-10688	weiden	['85', '38', '106', '107']
+10687									[49.7, 49.7]	[11.95, 11.95]	CHUAN			0-20400-0-nan	1970	1992				0-20000-0-10688	weiden	['85', '38', '106', '107']
+10687	10687	ETIC Grafenwoehr US Army Airfield, West Germany	49.7	11.95	-999.0			0.0	[49.7, 49.7]	[11.95, 11.95]	SCHROEDER		10687.0	0-20600-0-10687	1970	1992				0-20000-0-10688	weiden	['85', '38', '106', '107']
+10687									[49.7, 49.7]	[11.95, 11.95]	WMO			0-20700-0-nan	1970	1992				0-20000-0-10688	weiden	['85', '38', '106', '107']

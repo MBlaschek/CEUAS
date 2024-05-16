@@ -1,0 +1,5 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		GANYU	34.85	119.133	10.0				58040	1973.0	1987.0	True	2.2		IGRA2	0-20300-0-58040	gaogou	29.7	34.0175	119.188611	CHM00058040				
+0	0	0-20000-0-58040	GANYU	34.85	119.13333333333334	10.0	Surface land meteorological station (SYNOP), GOS, RBSN(S)	34 51 00N	119 08 00E	58040	999.0	999.0	False	2.2		OSCAR	0-20000-0-58040	gaogou	29.7	34.0175	119.188611					
+0	0		Xugou, China	34.75	119.35	-999.0				58040				22.0		SCHROEDER	0-20600-0-58040	gaogou	29.7	34.0175	119.188611		58040	1705.0	1973-01-01 00:00:00	1976-01-20 00:00:00
+0	0		GANYU                    	34.85	119.13333333333334	-999.0				58040				2.2		WMO	0-20700-0-58040	gaogou	29.7	34.0175	119.188611		58040	4618.0		

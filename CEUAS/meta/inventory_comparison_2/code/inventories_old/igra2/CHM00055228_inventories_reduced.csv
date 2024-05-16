@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+55228	55228	SHIQUANHE	32.5	80.08333333333333	4280.0	32 30 00N	080 05 00E	1.5	[32.5, 32.5]	[80.067, 80.067]	OSCAR	0-20000-0-55228		0-20000-0-55228	1973	2000	999.0	999.0	False	0-20000-0-55228	joshimath	['85', '38', '106', '107']
+55228	55228	SHIQUANHE	32.5	80.067	4279.0			0.0	[32.5, 32.5]	[80.067, 80.067]	IGRA2			0-20300-0-55228	1973	2000	1973.0	2000.0	True	0-20000-0-55228	joshimath	['85', '38', '106', '107']
+55228									[32.5, 32.5]	[80.067, 80.067]	WBAN			0-20500-0-nan	1973	2000				0-20000-0-55228	joshimath	['85', '38', '106', '107']
+55228									[32.5, 32.5]	[80.067, 80.067]	CHUAN			0-20400-0-nan	1973	2000				0-20000-0-55228	joshimath	['85', '38', '106', '107']
+55228									[32.5, 32.5]	[80.067, 80.067]	SCHROEDER			0-20600-0-nan	1973	2000				0-20000-0-55228	joshimath	['85', '38', '106', '107']
+55228	55228	SHIQUANHE                	32.5	80.08333333333333	-999.0			1.5	[32.5, 32.5]	[80.067, 80.067]	WMO		55228	0-20700-0-55228	1973	2000				0-20000-0-55228	joshimath	['85', '38', '106', '107']

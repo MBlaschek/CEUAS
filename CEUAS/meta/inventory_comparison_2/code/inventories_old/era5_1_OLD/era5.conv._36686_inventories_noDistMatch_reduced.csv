@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+36686									[46.55, 46.55]	[76.87, 76.87]	OSCAR				19851024	19851024					balkhash	[104, 105, 106, 107, 117]
+36686									[46.55, 46.55]	[76.87, 76.87]	IGRA2			0-20300-0-nan	19851024	19851024					balkhash	[104, 105, 106, 107, 117]
+36686									[46.55, 46.55]	[76.87, 76.87]	WBAN			0-20500-0-nan	19851024	19851024					balkhash	[104, 105, 106, 107, 117]
+36686									[46.55, 46.55]	[76.87, 76.87]	CHUAN			0-20400-0-nan	19851024	19851024					balkhash	[104, 105, 106, 107, 117]
+36686									[46.55, 46.55]	[76.87, 76.87]	SCHROEDER			0-20600-0-nan	19851024	19851024					balkhash	[104, 105, 106, 107, 117]
+36686	36686	ALGAZY OSTROV            	46.0	76.01666666666667	-999.0			89.8	[46.55, 46.55]	[76.87, 76.87]	WMO		36686	0-20700-0-36686	19851024	19851024					balkhash	[104, 105, 106, 107, 117]

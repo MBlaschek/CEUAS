@@ -1,0 +1,2 @@
+lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	variables	kind	WIGOS_best
+28.3	-95.1	era5.conv._6:109283	era5_2	19720626	19730213	6:109283	[38, 85]	NoCoordMatchNoIDMatch	0-20888-0-6:109283

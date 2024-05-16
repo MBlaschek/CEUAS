@@ -1,0 +1,2 @@
+lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	variables	kind	WIGOS_best
+		era5.conv._JGZK	era5_2_mobile	196610	197503	JGZK	nan	mobile	0-20999-0-JGZK

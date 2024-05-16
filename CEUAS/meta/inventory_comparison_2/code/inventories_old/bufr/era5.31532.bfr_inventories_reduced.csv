@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+31532	31532	CEKUNDA	50.86666666666667	132.25	271.8	50 52 00N	132 15 00E	7.7	[50.82, 50.82]	[132.17, 132.17]	OSCAR	0-20000-0-31532		0-20000-0-31532	19781202	19781202	999.0	999.0	False	0-20000-0-31532	chegdomyn	[36, 85, 106, 107]
+31532									[50.82, 50.82]	[132.17, 132.17]	IGRA2			0-20300-0-nan	19781202	19781202				0-20000-0-31532	chegdomyn	[36, 85, 106, 107]
+31532									[50.82, 50.82]	[132.17, 132.17]	WBAN			0-20500-0-nan	19781202	19781202				0-20000-0-31532	chegdomyn	[36, 85, 106, 107]
+31532									[50.82, 50.82]	[132.17, 132.17]	CHUAN			0-20400-0-nan	19781202	19781202				0-20000-0-31532	chegdomyn	[36, 85, 106, 107]
+31532									[50.82, 50.82]	[132.17, 132.17]	SCHROEDER			0-20600-0-nan	19781202	19781202				0-20000-0-31532	chegdomyn	[36, 85, 106, 107]
+31532									[50.82, 50.82]	[132.17, 132.17]	WMO			0-20700-0-nan	19781202	19781202				0-20000-0-31532	chegdomyn	[36, 85, 106, 107]

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:22165	22165	KANIN NOS	68.65527777777778	43.2875	48.5	68 39 19N	043 17 15E	0.8	[68.65, 68.65]	[43.3, 43.3]	OSCAR	0-20000-0-22165		0-20000-0-22165	19530302	19621031	999.0	999.0	False	0-20000-0-22165	arkhangelsk	[85, 117]
+1:22165	22165	KANIN NOS	68.65	43.3	48.0			0.0	[68.65, 68.65]	[43.3, 43.3]	IGRA2			0-20300-0-22165	19530302	19621031	1953.0	1962.0	True	0-20000-0-22165	arkhangelsk	[85, 117]
+1:22165									[68.65, 68.65]	[43.3, 43.3]	WBAN			0-20500-0-nan	19530302	19621031				0-20000-0-22165	arkhangelsk	[85, 117]
+1:22165									[68.65, 68.65]	[43.3, 43.3]	CHUAN			0-20400-0-nan	19530302	19621031				0-20000-0-22165	arkhangelsk	[85, 117]
+1:22165	22165	Kanin Nos, Russia	68.65	43.3	-999.0			0.0	[68.65, 68.65]	[43.3, 43.3]	SCHROEDER		22165	0-20600-0-22165	19530302	19621031				0-20000-0-22165	arkhangelsk	[85, 117]
+1:22165	22165	KANIN NOS                	68.65	43.3	-999.0			0.0	[68.65, 68.65]	[43.3, 43.3]	WMO		22165	0-20700-0-22165	19530302	19621031				0-20000-0-22165	arkhangelsk	[85, 117]

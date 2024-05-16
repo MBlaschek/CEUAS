@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:43237	43237	PBO ANANTAPUR	14.583333333333334	77.63333333333334	372.0	14 35 00N	077 38 00E	13.4	[14.7, 14.68]	[77.62, 77.6]	OSCAR	0-20000-0-43237		0-20000-0-43237	19540708	19791226	999.0	999.0	False	0-20000-0-43237	anantapur	[38, 85, 106, 107, 117]
+1:43237	43237	ANANTAPUR	14.6833	77.6167	349.0			2.6	[14.7, 14.68]	[77.62, 77.6]	IGRA2			0-20300-0-43237	19540708	19791226	1973.0	2010.0	True	0-20000-0-43237	anantapur	[38, 85, 106, 107, 117]
+1:43237									[14.7, 14.68]	[77.62, 77.6]	WBAN			0-20500-0-nan	19540708	19791226				0-20000-0-43237	anantapur	[38, 85, 106, 107, 117]
+1:43237									[14.7, 14.68]	[77.62, 77.6]	CHUAN			0-20400-0-nan	19540708	19791226				0-20000-0-43237	anantapur	[38, 85, 106, 107, 117]
+1:43237	43237	Anantapur, Andhra Pradesh, India	14.68	77.62	-999.0			3.1	[14.7, 14.68]	[77.62, 77.6]	SCHROEDER		43237.0	0-20600-0-43237	19540708	19791226				0-20000-0-43237	anantapur	[38, 85, 106, 107, 117]
+1:43237									[14.7, 14.68]	[77.62, 77.6]	WMO			0-20700-0-nan	19540708	19791226				0-20000-0-43237	anantapur	[38, 85, 106, 107, 117]

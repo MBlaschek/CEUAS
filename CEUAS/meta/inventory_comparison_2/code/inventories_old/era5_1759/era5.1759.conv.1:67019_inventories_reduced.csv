@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:67019									[-14.63, -14.63]	[47.77, 47.76]	OSCAR				19660510	19791106				0-20300-0-67019	antsohihy	[38, 85, 106, 107, 117]
+1:67019	67019	ANALALAVA	-14.633	47.767	57.0			0.5	[-14.63, -14.63]	[47.77, 47.76]	IGRA2			0-20300-0-67019	19660510	19791106	1973.0	1980.0	True	0-20300-0-67019	antsohihy	[38, 85, 106, 107, 117]
+1:67019									[-14.63, -14.63]	[47.77, 47.76]	WBAN			0-20500-0-nan	19660510	19791106				0-20300-0-67019	antsohihy	[38, 85, 106, 107, 117]
+1:67019									[-14.63, -14.63]	[47.77, 47.76]	CHUAN			0-20400-0-nan	19660510	19791106				0-20300-0-67019	antsohihy	[38, 85, 106, 107, 117]
+1:67019	67019	Analalava, Madagascar	-14.63	47.77	-999.0			0.0	[-14.63, -14.63]	[47.77, 47.76]	SCHROEDER		67019	0-20600-0-67019	19660510	19791106				0-20300-0-67019	antsohihy	[38, 85, 106, 107, 117]
+1:67019	67019	ANALALAVA                	-14.633333333333333	47.766666666666666	-999.0			0.5	[-14.63, -14.63]	[47.77, 47.76]	WMO		67019	0-20700-0-67019	19660510	19791106				0-20300-0-67019	antsohihy	[38, 85, 106, 107, 117]

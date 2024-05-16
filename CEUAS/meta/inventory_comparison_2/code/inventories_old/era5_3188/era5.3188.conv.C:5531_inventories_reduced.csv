@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:5531									[-78.5, -78.5]	[-163.8, -163.8]	OSCAR				19400425	19410115				0-20300-0-05532	None	[85]
+C:5531	05532	LITTLE AMERICA	-78.5	-163.8	10.0			0.0	[-78.5, -78.5]	[-163.8, -163.8]	IGRA2			0-20300-0-05532	19400425	19410115	1940.0	1940.0	True	0-20300-0-05532	None	[85]
+C:5531	05498	LITTLE AMERICA I	-78.57	-163.93	5.0			8.3	[-78.5, -78.5]	[-163.8, -163.8]	IGRA2			0-20300-0-05498	19400425	19410115	1929.0	1935.0	True	0-20300-0-05532	None	[85]
+C:5531									[-78.5, -78.5]	[-163.8, -163.8]	WBAN			0-20500-0-nan	19400425	19410115				0-20300-0-05532	None	[85]
+C:5531									[-78.5, -78.5]	[-163.8, -163.8]	CHUAN			0-20400-0-nan	19400425	19410115				0-20300-0-05532	None	[85]
+C:5531									[-78.5, -78.5]	[-163.8, -163.8]	SCHROEDER			0-20600-0-nan	19400425	19410115				0-20300-0-05532	None	[85]
+C:5531									[-78.5, -78.5]	[-163.8, -163.8]	WMO			0-20700-0-nan	19400425	19410115				0-20300-0-05532	None	[85]

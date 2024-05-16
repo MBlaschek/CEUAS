@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+91317	91317	WOLEAI ATOLL, CAROLINE IS.	7.383333333333334	143.91666666666666	4.0	07 23 00N	143 55 00E	0.1	[7.383, 7.383]	[143.917, 143.917]	OSCAR	0-20000-0-91317		0-20000-0-91317	1979	1979	999.0	999.0	False	0-20000-0-91317	None	['85', '38', '106', '107']
+91317	91317	WOLEAI ATOLL	7.383	143.917	4.0			0.0	[7.383, 7.383]	[143.917, 143.917]	IGRA2			0-20300-0-91317	1979	1979	1979.0	1979.0	True	0-20000-0-91317	None	['85', '38', '106', '107']
+91317									[7.383, 7.383]	[143.917, 143.917]	WBAN			0-20500-0-nan	1979	1979				0-20000-0-91317	None	['85', '38', '106', '107']
+91317									[7.383, 7.383]	[143.917, 143.917]	CHUAN			0-20400-0-nan	1979	1979				0-20000-0-91317	None	['85', '38', '106', '107']
+91317	91317	Woleai Atoll, Falalap Island, Caroline Islands, Micronesia, USA	7.38	143.92	-999.0			0.5	[7.383, 7.383]	[143.917, 143.917]	SCHROEDER		91317.0	0-20600-0-91317	1979	1979				0-20000-0-91317	None	['85', '38', '106', '107']
+91317									[7.383, 7.383]	[143.917, 143.917]	WMO			0-20700-0-nan	1979	1979				0-20000-0-91317	None	['85', '38', '106', '107']

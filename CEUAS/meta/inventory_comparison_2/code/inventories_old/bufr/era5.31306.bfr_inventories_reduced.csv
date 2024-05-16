@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+31306	63332	BAHAR DAR	11.6	37.416666666666664	1770.0	11 36 00N	037 25 00E	0.4	[11.6, 11.6]	[37.42, 37.42]	OSCAR	0-20000-0-63332		0-20000-0-63332	19640714	19670222	999	999	False	0-20000-0-63332	bahir dar	[36, 85, 106, 107]
+31306									[11.6, 11.6]	[37.42, 37.42]	IGRA2			0-20300-0-nan	19640714	19670222				0-20000-0-63332	bahir dar	[36, 85, 106, 107]
+31306	31306	BAHAR DAR	11.6	37.42	1801.0632			0.0	[11.6, 11.6]	[37.42, 37.42]	WBAN			0-20500-0-31306	19640714	19670222	19640701	19670228		0-20000-0-63332	bahir dar	[36, 85, 106, 107]
+31306	5775	Bahir Dar (Bahrdar Georgis)	11.58	37.38	1790			4.9	[11.6, 11.6]	[37.42, 37.42]	CHUAN		-999	0-20400-0-5775	19640714	19670222	-999-999	-999-999		0-20000-0-63332	bahir dar	[36, 85, 106, 107]
+31306	63332	HABD Bahar Dar, Ethiopia	11.6	37.42	-999			0.0	[11.6, 11.6]	[37.42, 37.42]	SCHROEDER		63332	0-20600-0-63332	19640714	19670222				0-20000-0-63332	bahir dar	[36, 85, 106, 107]
+31306	63332	BAHAR DAR                	11.6	37.4	-999.0			2.2	[11.6, 11.6]	[37.42, 37.42]	WMO		63332	0-20700-0-63332	19640714	19670222				0-20000-0-63332	bahir dar	[36, 85, 106, 107]

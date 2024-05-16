@@ -1,0 +1,2 @@
+lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	variables	kind	WIGOS_best
+		era5.conv._3:PXSA	era5_2_mobile	197406	197409	3:PXSA	nan	mobile	0-20999-0-3:PXSA

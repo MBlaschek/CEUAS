@@ -1,0 +1,9 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+67067	67067	AMBOHITSILAOZANA	-17.633333333333333	48.5	780.0	17 38 00S	048 30 00E	0.4	[-17.63, -17.63]	[48.5, 48.5]	OSCAR	0-20000-0-67067		0-20000-0-67067	20080727	20100629	999.0	999.0	False	0-20000-0-67067	ambatondrazaka	[104, 105, 106, 107, 117]
+67067									[-17.63, -17.63]	[48.5, 48.5]	IGRA2			0-20300-0-nan	20080727	20100629				0-20000-0-67067	ambatondrazaka	[104, 105, 106, 107, 117]
+67067									[-17.63, -17.63]	[48.5, 48.5]	WBAN			0-20500-0-nan	20080727	20100629				0-20000-0-67067	ambatondrazaka	[104, 105, 106, 107, 117]
+67067									[-17.63, -17.63]	[48.5, 48.5]	CHUAN			0-20400-0-nan	20080727	20100629				0-20000-0-67067	ambatondrazaka	[104, 105, 106, 107, 117]
+67067									[-17.63, -17.63]	[48.5, 48.5]	SCHROEDER			0-20600-0-nan	20080727	20100629				0-20000-0-67067	ambatondrazaka	[104, 105, 106, 107, 117]
+67067									[-17.63, -17.63]	[48.5, 48.5]	WMO			0-20700-0-nan	20080727	20100629				0-20000-0-67067	ambatondrazaka	[104, 105, 106, 107, 117]
+67067									[-17.63, -17.63]	[48.5, 48.5]	AMMA			0-20800-0-nan	20080727	20100629				0-20000-0-67067	ambatondrazaka	[104, 105, 106, 107, 117]
+67067									[-17.63, -17.63]	[48.5, 48.5]	HARA			0-20111-0-nan	20080727	20100629				0-20000-0-67067	ambatondrazaka	[104, 105, 106, 107, 117]

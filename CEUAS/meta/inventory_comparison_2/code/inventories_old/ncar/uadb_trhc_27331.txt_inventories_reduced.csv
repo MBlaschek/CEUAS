@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+27331									[57.58, 57.58]	[39.58, 39.58]	OSCAR				19500112	19530215				0-20300-0-27331	yaroslavl	['38', '85', '106', '107']
+27331	27331	JAROSLAVL	57.58	39.58	103.0			0.0	[57.58, 57.58]	[39.58, 39.58]	IGRA2			0-20300-0-27331	19500112	19530215	1950.0	1953.0	True	0-20300-0-27331	yaroslavl	['38', '85', '106', '107']
+27331									[57.58, 57.58]	[39.58, 39.58]	WBAN			0-20500-0-nan	19500112	19530215				0-20300-0-27331	yaroslavl	['38', '85', '106', '107']
+27331									[57.58, 57.58]	[39.58, 39.58]	CHUAN			0-20400-0-nan	19500112	19530215				0-20300-0-27331	yaroslavl	['38', '85', '106', '107']
+27331	27331	Yaroslavl', Russia	57.58	39.92	-999.0			20.3	[57.58, 57.58]	[39.58, 39.58]	SCHROEDER		27331.0	0-20600-0-27331	19500112	19530215				0-20300-0-27331	yaroslavl	['38', '85', '106', '107']
+27331									[57.58, 57.58]	[39.58, 39.58]	WMO			0-20700-0-nan	19500112	19530215				0-20300-0-27331	yaroslavl	['38', '85', '106', '107']

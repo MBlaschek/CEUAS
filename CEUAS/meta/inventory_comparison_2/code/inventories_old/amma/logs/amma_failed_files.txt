@@ -1,0 +1,7 @@
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62840_amma.csv
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62840_amma.csv
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62600_amma.csv
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62840_amma.csv
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62840_amma.csv
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/62840_amma.csv
+/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/67774_amma.csv

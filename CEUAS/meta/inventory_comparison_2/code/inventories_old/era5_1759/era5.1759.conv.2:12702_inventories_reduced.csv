@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:12702									[21.48, 21.48]	[-71.52, -71.52]	OSCAR				19440415	19470830				0-20500-0-12702	monte cristi	[106, 107]
+2:12702									[21.48, 21.48]	[-71.52, -71.52]	IGRA2			0-20300-0-nan	19440415	19470830				0-20500-0-12702	monte cristi	[106, 107]
+2:12702	12702.0	SOUTH CAICOS ISLAND	21.48	-71.52	4.2672			0.0	[21.48, 21.48]	[-71.52, -71.52]	WBAN			0-20500-0-12702	19440415	19470830	19440101.0	19470930.0		0-20500-0-12702	monte cristi	[106, 107]
+2:12702									[21.48, 21.48]	[-71.52, -71.52]	CHUAN			0-20400-0-nan	19440415	19470830				0-20500-0-12702	monte cristi	[106, 107]
+2:12702									[21.48, 21.48]	[-71.52, -71.52]	SCHROEDER			0-20600-0-nan	19440415	19470830				0-20500-0-12702	monte cristi	[106, 107]
+2:12702									[21.48, 21.48]	[-71.52, -71.52]	WMO			0-20700-0-nan	19440415	19470830				0-20500-0-12702	monte cristi	[106, 107]

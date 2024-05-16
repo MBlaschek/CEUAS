@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:94910	94910	WAGGA WAGGA AMO	-35.15833333333333	147.4572222222222	213.0	35 09 30S	147 27 26E	1.7	[-35.16, -35.17]	[147.47, 147.46]	OSCAR	0-20000-0-94910		0-20000-0-94910	19460301	19791230	999.0	999.0	True	0-20000-0-94910	wagga wagga	[38, 85, 106, 107, 117]
+1:94910	94910	WAGGA WAGGA AMO	-35.1583	147.4572	220.7			1.7	[-35.16, -35.17]	[147.47, 147.46]	IGRA2			0-20300-0-94910	19460301	19791230	1946.0	2021.0	True	0-20000-0-94910	wagga wagga	[38, 85, 106, 107, 117]
+1:94910									[-35.16, -35.17]	[147.47, 147.46]	WBAN			0-20500-0-nan	19460301	19791230				0-20000-0-94910	wagga wagga	[38, 85, 106, 107, 117]
+1:94910									[-35.16, -35.17]	[147.47, 147.46]	CHUAN			0-20400-0-nan	19460301	19791230				0-20000-0-94910	wagga wagga	[38, 85, 106, 107, 117]
+1:94910	94910	Wagga Wagga (Forest Hill - Wagga Wagga AP), New South Wales, Australia	-35.16	147.46	-999.0			1.4	[-35.16, -35.17]	[147.47, 147.46]	SCHROEDER		94910	0-20600-0-94910	19460301	19791230				0-20000-0-94910	wagga wagga	[38, 85, 106, 107, 117]
+1:94910	94910	WAGGA                    	-35.166666666666664	147.46666666666667	213.0			0.5	[-35.16, -35.17]	[147.47, 147.46]	WMO		94910	0-20700-0-94910	19460301	19791230				0-20000-0-94910	wagga wagga	[38, 85, 106, 107, 117]

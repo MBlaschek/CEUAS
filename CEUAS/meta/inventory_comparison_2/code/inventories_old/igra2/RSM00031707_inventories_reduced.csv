@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+31707	31707	EKATERINO-NIKOL'SKOE	47.74472222222222	130.97027777777777	72.36	47 44 41N	130 58 13E	1.3	[47.733, 47.733]	[130.967, 130.967]	OSCAR	0-20000-0-31707		0-20000-0-31707	1948	1993	999.0	999.0	False	0-20000-0-31707	hegang	['85', '38', '106', '107']
+31707	31707	EKATERINO-NIKOLSKOE	47.733	130.967	73.0			0.0	[47.733, 47.733]	[130.967, 130.967]	IGRA2			0-20300-0-31707	1948	1993	1948.0	1993.0	True	0-20000-0-31707	hegang	['85', '38', '106', '107']
+31707									[47.733, 47.733]	[130.967, 130.967]	WBAN			0-20500-0-nan	1948	1993				0-20000-0-31707	hegang	['85', '38', '106', '107']
+31707									[47.733, 47.733]	[130.967, 130.967]	CHUAN			0-20400-0-nan	1948	1993				0-20000-0-31707	hegang	['85', '38', '106', '107']
+31707	31707	Yekaterino-Nikol'skoye, Russia	47.73	130.97	-999.0			0.4	[47.733, 47.733]	[130.967, 130.967]	SCHROEDER		31707.0	0-20600-0-31707	1948	1993				0-20000-0-31707	hegang	['85', '38', '106', '107']
+31707									[47.733, 47.733]	[130.967, 130.967]	WMO			0-20700-0-nan	1948	1993				0-20000-0-31707	hegang	['85', '38', '106', '107']

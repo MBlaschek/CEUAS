@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:29122	29122	KARGASOK	59.06527777777777	80.84666666666666	57.35	59 03 55N	080 50 48E	6.2	[59.05, 59.05]	[80.95, 80.95]	OSCAR	0-20000-0-29122		0-20000-0-29122	19650902	19670316	999.0	999.0	False	0-20000-0-29122	kolpashevo	[106, 107]
+1:29122									[59.05, 59.05]	[80.95, 80.95]	IGRA2			0-20300-0-nan	19650902	19670316				0-20000-0-29122	kolpashevo	[106, 107]
+1:29122									[59.05, 59.05]	[80.95, 80.95]	WBAN			0-20500-0-nan	19650902	19670316				0-20000-0-29122	kolpashevo	[106, 107]
+1:29122									[59.05, 59.05]	[80.95, 80.95]	CHUAN			0-20400-0-nan	19650902	19670316				0-20000-0-29122	kolpashevo	[106, 107]
+1:29122									[59.05, 59.05]	[80.95, 80.95]	SCHROEDER			0-20600-0-nan	19650902	19670316				0-20000-0-29122	kolpashevo	[106, 107]
+1:29122									[59.05, 59.05]	[80.95, 80.95]	WMO			0-20700-0-nan	19650902	19670316				0-20000-0-29122	kolpashevo	[106, 107]

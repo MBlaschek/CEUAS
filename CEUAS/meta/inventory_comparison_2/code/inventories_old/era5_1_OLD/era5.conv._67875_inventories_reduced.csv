@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+67875	67875	BUHERA	-19.316666666666666	31.433333333333334	1190.0	19 19 00S	031 26 00E	0.5	[-19.32, -19.32]	[31.43, 31.43]	OSCAR	0-20000-0-67875		0-20000-0-67875	19980308	19980308	999.0	999.0	False	0-20000-0-67875	masvingo	[104, 105, 106, 107, 117]
+67875									[-19.32, -19.32]	[31.43, 31.43]	IGRA2			0-20300-0-nan	19980308	19980308				0-20000-0-67875	masvingo	[104, 105, 106, 107, 117]
+67875									[-19.32, -19.32]	[31.43, 31.43]	WBAN			0-20500-0-nan	19980308	19980308				0-20000-0-67875	masvingo	[104, 105, 106, 107, 117]
+67875									[-19.32, -19.32]	[31.43, 31.43]	CHUAN			0-20400-0-nan	19980308	19980308				0-20000-0-67875	masvingo	[104, 105, 106, 107, 117]
+67875									[-19.32, -19.32]	[31.43, 31.43]	SCHROEDER			0-20600-0-nan	19980308	19980308				0-20000-0-67875	masvingo	[104, 105, 106, 107, 117]
+67875									[-19.32, -19.32]	[31.43, 31.43]	WMO			0-20700-0-nan	19980308	19980308				0-20000-0-67875	masvingo	[104, 105, 106, 107, 117]

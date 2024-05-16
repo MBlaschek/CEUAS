@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+36259	36259	KOSH-AGACH	50.0075	88.67305555555556	1760.44	50 00 27N	088 40 23E	0.9	[50.02, 50.0]	[88.68, 88.67]	OSCAR	0-20000-0-36259		0-20000-0-36259	19690106	19910731	999.0	999.0	False	0-20000-0-36259	ak-dovurak	['38', '85', '106', '107']
+36259	36259	KOS-AGAC	50.0	88.667	1758.0			0.2	[50.02, 50.0]	[88.68, 88.67]	IGRA2			0-20300-0-36259	19690106	19910731	1969.0	1991.0	True	0-20000-0-36259	ak-dovurak	['38', '85', '106', '107']
+36259									[50.02, 50.0]	[88.68, 88.67]	WBAN			0-20500-0-nan	19690106	19910731				0-20000-0-36259	ak-dovurak	['38', '85', '106', '107']
+36259									[50.02, 50.0]	[88.68, 88.67]	CHUAN			0-20400-0-nan	19690106	19910731				0-20000-0-36259	ak-dovurak	['38', '85', '106', '107']
+36259	36259	Kosh-Agach, Russia	50.0	88.67	-999.0			0.0	[50.02, 50.0]	[88.68, 88.67]	SCHROEDER		36259.0	0-20600-0-36259	19690106	19910731				0-20000-0-36259	ak-dovurak	['38', '85', '106', '107']
+36259									[50.02, 50.0]	[88.68, 88.67]	WMO			0-20700-0-nan	19690106	19910731				0-20000-0-36259	ak-dovurak	['38', '85', '106', '107']

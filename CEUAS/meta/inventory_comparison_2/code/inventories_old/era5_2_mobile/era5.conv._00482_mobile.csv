@@ -1,0 +1,2 @@
+lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	variables	kind	WIGOS_best
+		era5.conv._00482	era5_2_mobile	196407	197212	00482	nan	mobile	0-20999-0-00482

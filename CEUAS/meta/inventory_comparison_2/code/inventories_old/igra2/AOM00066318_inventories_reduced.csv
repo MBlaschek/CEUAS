@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+66318	66318	HUAMBO (NOVA LISBOA)	-12.8	15.75	1701.0	12 48 00S	015 45 00E	0.0	[-12.8, -12.8]	[15.75, 15.75]	OSCAR	0-20000-0-66318		0-20000-0-66318	1952	1973	999	999	False	0-20000-0-66318	huambo	['85', '38', '106', '107']
+66318	66318	HUAMBO	-12.8	15.75	1703.0			0.0	[-12.8, -12.8]	[15.75, 15.75]	IGRA2			0-20300-0-66318	1952	1973	1952	1973	True	0-20000-0-66318	huambo	['85', '38', '106', '107']
+66318									[-12.8, -12.8]	[15.75, 15.75]	WBAN			0-20500-0-nan	1952	1973				0-20000-0-66318	huambo	['85', '38', '106', '107']
+66318	5973	Huambo (Nova Lisboa)	-12.77	15.73	1700			4.0	[-12.8, -12.8]	[15.75, 15.75]	CHUAN		-999	0-20400-0-5973	1952	1973	-999-999	-999-999		0-20000-0-66318	huambo	['85', '38', '106', '107']
+66318	66318	FNNL Nova Lisboa AP, Angola	-12.8	15.75	-999			0.0	[-12.8, -12.8]	[15.75, 15.75]	SCHROEDER		66318	0-20600-0-66318	1952	1973				0-20000-0-66318	huambo	['85', '38', '106', '107']
+66318	66318	NOVA LISBOA(HUAMBO)      	-12.8	15.75	-999.0			0.0	[-12.8, -12.8]	[15.75, 15.75]	WMO		66318	0-20700-0-66318	1952	1973				0-20000-0-66318	huambo	['85', '38', '106', '107']

@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+96009	96009	LHOKSEUMAWE/MALIKUSSALEH	5.228611111111111	96.9475	87.0	05 13 43N	096 56 51E	27.0	[5.13, 5.13]	[97.17, 97.17]	OSCAR	0-20000-0-96009		0-20000-0-96009	20180101	20211231	999.0	999.0	False	0-20000-0-96009	lhokseumawe	['38', '85', '106', '107']
+96009	96009	LHOKSEUMAWE/MALIKUSSALEH	5.1833	97.1333	87.0			7.2	[5.13, 5.13]	[97.17, 97.17]	IGRA2			0-20300-0-96009	20180101	20211231	1983.0	2021.0	True	0-20000-0-96009	lhokseumawe	['38', '85', '106', '107']
+96009									[5.13, 5.13]	[97.17, 97.17]	WBAN			0-20500-0-nan	20180101	20211231				0-20000-0-96009	lhokseumawe	['38', '85', '106', '107']
+96009									[5.13, 5.13]	[97.17, 97.17]	CHUAN			0-20400-0-nan	20180101	20211231				0-20000-0-96009	lhokseumawe	['38', '85', '106', '107']
+96009	96009	WITM Lhokseumawe - Malikussaleh AP, Sumatra, Indonesia	5.13	97.17	-999.0			0.0	[5.13, 5.13]	[97.17, 97.17]	SCHROEDER		96009	0-20600-0-96009	20180101	20211231				0-20000-0-96009	lhokseumawe	['38', '85', '106', '107']
+96009	96009	LHOKSEUMAWE ACEH         	5.233333333333333	96.95	-999.0			26.9	[5.13, 5.13]	[97.17, 97.17]	WMO		96009	0-20700-0-96009	20180101	20211231				0-20000-0-96009	lhokseumawe	['38', '85', '106', '107']
+96009	96A00	LHOKSEUMAWE              	5.233333333333333	97.2	-999.0			11.9	[5.13, 5.13]	[97.17, 97.17]	WMO		96A00	0-20700-0-96A00	20180101	20211231				0-20000-0-96009	lhokseumawe	['38', '85', '106', '107']

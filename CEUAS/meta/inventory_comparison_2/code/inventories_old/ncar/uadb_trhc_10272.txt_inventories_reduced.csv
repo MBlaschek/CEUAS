@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+10272									[53.2, 53.2]	[12.52, 12.52]	OSCAR				19971028	19980527				0-20600-0-10272	wittstock	['38', '85', '106', '107']
+10272									[53.2, 53.2]	[12.52, 12.52]	IGRA2			0-20300-0-nan	19971028	19980527				0-20600-0-10272	wittstock	['38', '85', '106', '107']
+10272									[53.2, 53.2]	[12.52, 12.52]	WBAN			0-20500-0-nan	19971028	19980527				0-20600-0-10272	wittstock	['38', '85', '106', '107']
+10272									[53.2, 53.2]	[12.52, 12.52]	CHUAN			0-20400-0-nan	19971028	19980527				0-20600-0-10272	wittstock	['38', '85', '106', '107']
+10272	10272.0	Wittstock, Germany	53.2	12.52	-999.0			0.0	[53.2, 53.2]	[12.52, 12.52]	SCHROEDER		10272.0	0-20600-0-10272	19971028	19980527				0-20600-0-10272	wittstock	['38', '85', '106', '107']
+10272									[53.2, 53.2]	[12.52, 12.52]	WMO			0-20700-0-nan	19971028	19980527				0-20600-0-10272	wittstock	['38', '85', '106', '107']

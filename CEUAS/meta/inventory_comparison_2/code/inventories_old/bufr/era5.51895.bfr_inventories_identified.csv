@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0																OSCAR	hami	570.5	42.8	93.45						[37.85, 37.85]	[91.65, 91.65]	era5.51895.bfr	bufr	19580101	19610226	51895	0-20300-0-51895	[36, 85, 106, 107]
+0	0		MANGYA	37.85	91.65	3060.0				51895	1957.0	1961.0	True	0.0		0-20300-0-51895	IGRA2	hami	570.5	42.8	93.45	CHM00051895					[37.85, 37.85]	[91.65, 91.65]	era5.51895.bfr	bufr	19580101	19610226	51895	0-20300-0-51895	[36, 85, 106, 107]
+0	0															0-20500-0-nan	WBAN	hami	570.5	42.8	93.45						[37.85, 37.85]	[91.65, 91.65]	era5.51895.bfr	bufr	19580101	19610226	51895	0-20300-0-51895	[36, 85, 106, 107]
+0	0															0-20400-0-nan	CHUAN	hami	570.5	42.8	93.45						[37.85, 37.85]	[91.65, 91.65]	era5.51895.bfr	bufr	19580101	19610226	51895	0-20300-0-51895	[36, 85, 106, 107]
+0	0		Mangnai / Mangya, China	37.85	91.65	-999.0				51895				0.0		0-20600-0-51895	SCHROEDER	hami	570.5	42.8	93.45		51895.0	1528.0	1957-03-01 00:00:00	1957-03-01 00:00:00	[37.85, 37.85]	[91.65, 91.65]	era5.51895.bfr	bufr	19580101	19610226	51895	0-20300-0-51895	[36, 85, 106, 107]
+0	0															0-20700-0-nan	WMO	hami	570.5	42.8	93.45						[37.85, 37.85]	[91.65, 91.65]	era5.51895.bfr	bufr	19580101	19610226	51895	0-20300-0-51895	[36, 85, 106, 107]

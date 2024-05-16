@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0																OSCAR	None	None	None	None						[-70.3, -70.3]	[65.1, 65.1]	era5.1098.bfr	bufr	19730102	19740211	10098	0-20600-0-89567	[36, 85, 106, 107]
+0	0															0-20300-0-nan	IGRA2	None	None	None	None						[-70.3, -70.3]	[65.1, 65.1]	era5.1098.bfr	bufr	19730102	19740211	10098	0-20600-0-89567	[36, 85, 106, 107]
+0	0															0-20500-0-nan	WBAN	None	None	None	None						[-70.3, -70.3]	[65.1, 65.1]	era5.1098.bfr	bufr	19730102	19740211	10098	0-20600-0-89567	[36, 85, 106, 107]
+0	0															0-20400-0-nan	CHUAN	None	None	None	None						[-70.3, -70.3]	[65.1, 65.1]	era5.1098.bfr	bufr	19730102	19740211	10098	0-20600-0-89567	[36, 85, 106, 107]
+0	0		Dovers (operated by Australia), Antarctica	-70.25	65.87	-999.0				89567.0				29.5		0-20600-0-89567	SCHROEDER	None	None	None	None		89567.0	3691.0	1990-02-10 00:00:00	1991-12-25 00:00:00	[-70.3, -70.3]	[65.1, 65.1]	era5.1098.bfr	bufr	19730102	19740211	10098	0-20600-0-89567	[36, 85, 106, 107]
+0	0															0-20700-0-nan	WMO	None	None	None	None						[-70.3, -70.3]	[65.1, 65.1]	era5.1098.bfr	bufr	19730102	19740211	10098	0-20600-0-89567	[36, 85, 106, 107]

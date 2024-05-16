@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+94984	94980	FLINDERS ISLAND AIRPORT	-40.09111111111111	148.0025	9.5	40 05 28S	148 00 09E	3.5	[-40.12, -40.12]	[148.02, 148.02]	OSCAR	0-20000-0-94980		0-20000-0-94980	19810510	19810510	999.0	999.0	False	0-20000-0-94980	launceston	[104, 105, 106, 107, 117]
+94984									[-40.12, -40.12]	[148.02, 148.02]	IGRA2			0-20300-0-nan	19810510	19810510				0-20000-0-94980	launceston	[104, 105, 106, 107, 117]
+94984									[-40.12, -40.12]	[148.02, 148.02]	WBAN			0-20500-0-nan	19810510	19810510				0-20000-0-94980	launceston	[104, 105, 106, 107, 117]
+94984									[-40.12, -40.12]	[148.02, 148.02]	CHUAN			0-20400-0-nan	19810510	19810510				0-20000-0-94980	launceston	[104, 105, 106, 107, 117]
+94984									[-40.12, -40.12]	[148.02, 148.02]	SCHROEDER			0-20600-0-nan	19810510	19810510				0-20000-0-94980	launceston	[104, 105, 106, 107, 117]
+94984	94980	PATS RIVER               	-40.1	148.01666666666668	-999.0			2.2	[-40.12, -40.12]	[148.02, 148.02]	WMO		94980	0-20700-0-94980	19810510	19810510				0-20000-0-94980	launceston	[104, 105, 106, 107, 117]

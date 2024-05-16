@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+94376	94376	THANGOOL AIRPORT	-24.49361111111111	150.57083333333333	193.8	24 29 37S	150 34 15E	1.8	[-24.48, -24.48]	[150.58, 150.58]	OSCAR	0-20000-0-94376		0-20000-0-94376	19810328	19810328	999.0	999.0	False	0-20000-0-94376	gladstone	[104, 105, 106, 107, 117]
+94376									[-24.48, -24.48]	[150.58, 150.58]	IGRA2			0-20300-0-nan	19810328	19810328				0-20000-0-94376	gladstone	[104, 105, 106, 107, 117]
+94376									[-24.48, -24.48]	[150.58, 150.58]	WBAN			0-20500-0-nan	19810328	19810328				0-20000-0-94376	gladstone	[104, 105, 106, 107, 117]
+94376									[-24.48, -24.48]	[150.58, 150.58]	CHUAN			0-20400-0-nan	19810328	19810328				0-20000-0-94376	gladstone	[104, 105, 106, 107, 117]
+94376									[-24.48, -24.48]	[150.58, 150.58]	SCHROEDER			0-20600-0-nan	19810328	19810328				0-20000-0-94376	gladstone	[104, 105, 106, 107, 117]
+94376									[-24.48, -24.48]	[150.58, 150.58]	WMO			0-20700-0-nan	19810328	19810328				0-20000-0-94376	gladstone	[104, 105, 106, 107, 117]

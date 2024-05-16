@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+41607									[11.52, 11.52]	[165.55, 165.55]	OSCAR				19580708	19580802				0-20300-0-91254	None	[36, 85, 106, 107]
+41607	91254	BIKINI	11.52	165.55	3.0			0.0	[11.52, 11.52]	[165.55, 165.55]	IGRA2			0-20300-0-91254	19580708	19580802	1952.0	1958.0	True	0-20300-0-91254	None	[36, 85, 106, 107]
+41607	41607	BIKINI AAF	11.52	165.55	4.2672			0.0	[11.52, 11.52]	[165.55, 165.55]	WBAN			0-20500-0-41607	19580708	19580802	19520901.0	19580831.0		0-20300-0-91254	None	[36, 85, 106, 107]
+41607									[11.52, 11.52]	[165.55, 165.55]	CHUAN			0-20400-0-nan	19580708	19580802				0-20300-0-91254	None	[36, 85, 106, 107]
+41607	91254	Bikini Atoll, Marshall Islands, USA	11.52	165.55	-999.0			0.0	[11.52, 11.52]	[165.55, 165.55]	SCHROEDER		91254.0	0-20600-0-91254	19580708	19580802				0-20300-0-91254	None	[36, 85, 106, 107]
+41607									[11.52, 11.52]	[165.55, 165.55]	WMO			0-20700-0-nan	19580708	19580802				0-20300-0-91254	None	[36, 85, 106, 107]

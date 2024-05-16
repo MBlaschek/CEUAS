@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+42409	42409	TANGLA	26.65	91.91666666666667	77.7	26 39 00N	091 55 00E	0.3	[26.65, 26.65]	[91.92, 91.92]	OSCAR	0-20000-0-42409		0-20000-0-42409	20160605	20160605	999.0	999.0	False	0-20000-0-42409	udalguri	[104, 105, 106, 107, 117]
+42409									[26.65, 26.65]	[91.92, 91.92]	IGRA2			0-20300-0-nan	20160605	20160605				0-20000-0-42409	udalguri	[104, 105, 106, 107, 117]
+42409									[26.65, 26.65]	[91.92, 91.92]	WBAN			0-20500-0-nan	20160605	20160605				0-20000-0-42409	udalguri	[104, 105, 106, 107, 117]
+42409									[26.65, 26.65]	[91.92, 91.92]	CHUAN			0-20400-0-nan	20160605	20160605				0-20000-0-42409	udalguri	[104, 105, 106, 107, 117]
+42409									[26.65, 26.65]	[91.92, 91.92]	SCHROEDER			0-20600-0-nan	20160605	20160605				0-20000-0-42409	udalguri	[104, 105, 106, 107, 117]
+42409									[26.65, 26.65]	[91.92, 91.92]	WMO			0-20700-0-nan	20160605	20160605				0-20000-0-42409	udalguri	[104, 105, 106, 107, 117]

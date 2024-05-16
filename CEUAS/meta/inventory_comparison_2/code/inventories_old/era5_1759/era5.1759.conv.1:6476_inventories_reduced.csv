@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:6476	06476	ST-HUBERT	50.038888888888884	5.403888888888889	557.03	50 02 20N	005 24 14E	4.3	[50.03, 50.0]	[5.4, 5.4]	OSCAR	0-20000-0-06476		0-20000-0-06476	19490113	19791231	999.0	999.0	False	0-20000-0-06476	marche-en-famenne	[38, 85, 106, 107, 117]
+1:6476	06472	HUMAIN	50.19361111111111	5.2555555555555555	296.0	50 11 37N	005 15 20E	23.9	[50.03, 50.0]	[5.4, 5.4]	OSCAR	0-20000-0-06472		0-20000-0-06472	19490113	19791231	999.0	999.0	False	0-20000-0-06476	marche-en-famenne	[38, 85, 106, 107, 117]
+1:6476	06476	ST-HUBERT	50.033	5.4	558.0			3.7	[50.03, 50.0]	[5.4, 5.4]	IGRA2			0-20300-0-06476	19490113	19791231	1964.0	2006.0	True	0-20000-0-06476	marche-en-famenne	[38, 85, 106, 107, 117]
+1:6476									[50.03, 50.0]	[5.4, 5.4]	WBAN			0-20500-0-nan	19490113	19791231				0-20000-0-06476	marche-en-famenne	[38, 85, 106, 107, 117]
+1:6476									[50.03, 50.0]	[5.4, 5.4]	CHUAN			0-20400-0-nan	19490113	19791231				0-20000-0-06476	marche-en-famenne	[38, 85, 106, 107, 117]
+1:6476	6476	St. Hubert, Belgium	50.03	5.4	-999.0			3.3	[50.03, 50.0]	[5.4, 5.4]	SCHROEDER		6476.0	0-20600-0-6476	19490113	19791231				0-20000-0-06476	marche-en-famenne	[38, 85, 106, 107, 117]
+1:6476									[50.03, 50.0]	[5.4, 5.4]	WMO			0-20700-0-nan	19490113	19791231				0-20000-0-06476	marche-en-famenne	[38, 85, 106, 107, 117]

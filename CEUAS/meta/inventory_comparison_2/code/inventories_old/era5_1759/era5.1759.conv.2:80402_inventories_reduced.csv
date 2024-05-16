@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:80402									[-8.77, -8.77]	[148.37, 148.37]	OSCAR				19421107	19450814				0-20500-0-80402	popondetta	[106, 107]
+2:80402									[-8.77, -8.77]	[148.37, 148.37]	IGRA2			0-20300-0-nan	19421107	19450814				0-20500-0-80402	popondetta	[106, 107]
+2:80402	80402.0	HORANDA AAF	-8.77	148.37	57.302400000000006			0.0	[-8.77, -8.77]	[148.37, 148.37]	WBAN			0-20500-0-80402	19421107	19450814	19421001.0	19450831.0		0-20500-0-80402	popondetta	[106, 107]
+2:80402									[-8.77, -8.77]	[148.37, 148.37]	CHUAN			0-20400-0-nan	19421107	19450814				0-20500-0-80402	popondetta	[106, 107]
+2:80402									[-8.77, -8.77]	[148.37, 148.37]	SCHROEDER			0-20600-0-nan	19421107	19450814				0-20500-0-80402	popondetta	[106, 107]
+2:80402									[-8.77, -8.77]	[148.37, 148.37]	WMO			0-20700-0-nan	19421107	19450814				0-20500-0-80402	popondetta	[106, 107]

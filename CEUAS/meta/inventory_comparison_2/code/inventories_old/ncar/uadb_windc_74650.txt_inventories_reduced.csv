@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+74650	74648	HASKELL, OK.	35.8	-95.78333333333333		35 48 00N	095 47 00W	15.5	[35.68, 35.68]	[-95.87, -95.87]	OSCAR	0-20000-0-74648		0-20000-0-74648	19970401	20020615	999.0	999.0	False	0-20000-0-74648	okmulgee	['38', '85', '106', '107']
+74650									[35.68, 35.68]	[-95.87, -95.87]	IGRA2			0-20300-0-nan	19970401	20020615				0-20000-0-74648	okmulgee	['38', '85', '106', '107']
+74650	53949	OKMULGEE MUNICIPAL AIRPORT	35.67	-95.95	219.45600000000002			7.3	[35.68, 35.68]	[-95.87, -95.87]	WBAN			0-20500-0-53949	19970401	20020615	10101.0	99991231.0		0-20000-0-74648	okmulgee	['38', '85', '106', '107']
+74650									[35.68, 35.68]	[-95.87, -95.87]	CHUAN			0-20400-0-nan	19970401	20020615				0-20000-0-74648	okmulgee	['38', '85', '106', '107']
+74650	74650	Morris ARM site Boundary Facility 5 or BF5, OK	35.68	-95.87	-999.0			0.0	[35.68, 35.68]	[-95.87, -95.87]	SCHROEDER		74650.0	0-20600-0-74650	19970401	20020615				0-20000-0-74648	okmulgee	['38', '85', '106', '107']
+74650	74648	Haskell - NOAA Profiler Network (NPN) 404 MHz wind profiler, OK	35.68	-95.86	-999.0			0.9	[35.68, 35.68]	[-95.87, -95.87]	SCHROEDER		74648.0	0-20600-0-74648	19970401	20020615				0-20000-0-74648	okmulgee	['38', '85', '106', '107']
+74650									[35.68, 35.68]	[-95.87, -95.87]	WMO			0-20700-0-nan	19970401	20020615				0-20000-0-74648	okmulgee	['38', '85', '106', '107']

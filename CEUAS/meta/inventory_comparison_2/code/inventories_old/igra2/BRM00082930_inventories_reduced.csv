@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+82930	82930	CACHIMBO (AERO)	-9.333333333333334	-54.96666666666667		09 20 00S	054 58 00W	0.1	[-9.333, -9.333]	[-54.967, -54.967]	OSCAR	0-20000-0-82930		0-20000-0-82930	1973	1986	999.0	999.0	False	0-20000-0-82930	alta floresta	['85', '38', '106', '107']
+82930	82930	CACHIMBO AERO	-9.333	-54.967	537.0			0.0	[-9.333, -9.333]	[-54.967, -54.967]	IGRA2			0-20300-0-82930	1973	1986	1973.0	1986.0	True	0-20000-0-82930	alta floresta	['85', '38', '106', '107']
+82930									[-9.333, -9.333]	[-54.967, -54.967]	WBAN			0-20500-0-nan	1973	1986				0-20000-0-82930	alta floresta	['85', '38', '106', '107']
+82930									[-9.333, -9.333]	[-54.967, -54.967]	CHUAN			0-20400-0-nan	1973	1986				0-20000-0-82930	alta floresta	['85', '38', '106', '107']
+82930	82930	SBXI Cachimbo AP, Brazil	-9.37	-54.9	-999.0			8.4	[-9.333, -9.333]	[-54.967, -54.967]	SCHROEDER		82930.0	0-20600-0-82930	1973	1986				0-20000-0-82930	alta floresta	['85', '38', '106', '107']
+82930									[-9.333, -9.333]	[-54.967, -54.967]	WMO			0-20700-0-nan	1973	1986				0-20000-0-82930	alta floresta	['85', '38', '106', '107']

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:34021	07482	AMBERIEU	45.97638888888889	5.329444444444444	252.0	45 58 35N	005 19 46E	0.7	[45.97, 45.97]	[5.33, 5.33]	OSCAR	0-20000-0-07482		0-20000-0-07482	19440911	19440920	999.0	999.0	False	0-20000-0-07482	amberieu-en-bugey	[106, 107]
+2:34021									[45.97, 45.97]	[5.33, 5.33]	IGRA2			0-20300-0-nan	19440911	19440920				0-20000-0-07482	amberieu-en-bugey	[106, 107]
+2:34021	34021	AMBERIEU EN BUGRY	45.97	5.33	305.1048			0.0	[45.97, 45.97]	[5.33, 5.33]	WBAN			0-20500-0-34021	19440911	19440920	19440901.0	19440930.0		0-20000-0-07482	amberieu-en-bugey	[106, 107]
+2:34021									[45.97, 45.97]	[5.33, 5.33]	CHUAN			0-20400-0-nan	19440911	19440920				0-20000-0-07482	amberieu-en-bugey	[106, 107]
+2:34021									[45.97, 45.97]	[5.33, 5.33]	SCHROEDER			0-20600-0-nan	19440911	19440920				0-20000-0-07482	amberieu-en-bugey	[106, 107]
+2:34021	07482	AMBERIEU                 	45.96666666666667	5.316666666666666	-999.0			1.1	[45.97, 45.97]	[5.33, 5.33]	WMO		07482	0-20700-0-07482	19440911	19440920				0-20000-0-07482	amberieu-en-bugey	[106, 107]

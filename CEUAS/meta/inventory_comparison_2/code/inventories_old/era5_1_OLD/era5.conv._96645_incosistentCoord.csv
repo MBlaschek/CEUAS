@@ -1,0 +1,4 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		PANGKALAN BUN/ISKANDAR	-2.7	111.7	25.0				96645	1983.0	2021.0	True	3.4		IGRA2	0-20300-0-96645	pangkalanbuun	9.4	-2.683333	111.616667	IDM00096645				
+0	0	0-20000-0-96645	PANGKALAN BUN/ISKANDAR	-2.7	111.7	25.0	Upper-air / Radiosonde station, Surface land meteorological station (SYNOP), GOS, RBSN(S)	02 42 00S	111 42 00E	96645	999.0	999.0	True	3.4		OSCAR	0-20000-0-96645	pangkalanbuun	9.4	-2.683333	111.616667					
+0	0		PANGKALAN BUN / ISKA     	-2.7	111.66666666666669	-999.0				96645				0.6		WMO	0-20700-0-96645	pangkalanbuun	9.4	-2.683333	111.616667		96645	4906.0		

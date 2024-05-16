@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+34858	34858	DIVNOE	45.916666666666664	43.35	86.41	45 55 00N	043 21 00E	0.4	[45.92, 45.92]	[43.35, 43.35]	OSCAR	0-20000-0-34858		0-20000-0-34858	19580102	19781231	999.0	999.0	True	0-20000-0-34858	divnoye	[36, 85, 106, 107]
+34858	34858	DIVNOE	45.9167	43.35	85.9			0.4	[45.92, 45.92]	[43.35, 43.35]	IGRA2			0-20300-0-34858	19580102	19781231	1957.0	2021.0	True	0-20000-0-34858	divnoye	[36, 85, 106, 107]
+34858									[45.92, 45.92]	[43.35, 43.35]	WBAN			0-20500-0-nan	19580102	19781231				0-20000-0-34858	divnoye	[36, 85, 106, 107]
+34858									[45.92, 45.92]	[43.35, 43.35]	CHUAN			0-20400-0-nan	19580102	19781231				0-20000-0-34858	divnoye	[36, 85, 106, 107]
+34858	34858	Divnoye, Russia	45.92	43.35	-999.0			0.0	[45.92, 45.92]	[43.35, 43.35]	SCHROEDER		34858.0	0-20600-0-34858	19580102	19781231				0-20000-0-34858	divnoye	[36, 85, 106, 107]
+34858									[45.92, 45.92]	[43.35, 43.35]	WMO			0-20700-0-nan	19580102	19781231				0-20000-0-34858	divnoye	[36, 85, 106, 107]

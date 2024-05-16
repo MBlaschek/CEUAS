@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+84120	84135	PORTOVIEJO	-1.0375	-80.45944444444444	60.0	01 02 15S	080 27 34W	9.6	[-1.1, -1.1]	[-80.4, -80.4]	OSCAR	0-20000-0-84135		0-20000-0-84135	19740619	19740711	999.0	999.0	False	0-20000-0-84135	portoviejo	[36, 85, 106, 107]
+84120	84137	PORTOVIEJO AEROPUERTO	-1.0416666666666667	-80.47222222222223	40.0	01 02 30S	080 28 20W	10.3	[-1.1, -1.1]	[-80.4, -80.4]	OSCAR	0-20000-0-84137		0-20000-0-84137	19740619	19740711	999.0	999.0	False	0-20000-0-84135	portoviejo	[36, 85, 106, 107]
+84120									[-1.1, -1.1]	[-80.4, -80.4]	IGRA2			0-20300-0-nan	19740619	19740711				0-20000-0-84135	portoviejo	[36, 85, 106, 107]
+84120									[-1.1, -1.1]	[-80.4, -80.4]	WBAN			0-20500-0-nan	19740619	19740711				0-20000-0-84135	portoviejo	[36, 85, 106, 107]
+84120									[-1.1, -1.1]	[-80.4, -80.4]	CHUAN			0-20400-0-nan	19740619	19740711				0-20000-0-84135	portoviejo	[36, 85, 106, 107]
+84120	84137	Porto Viejo PACS-SONET pibal site (operated by INAMHI = National Meteorological and Hydrological Institute), Ecuador	-1.04	-80.47	-999.0			10.2	[-1.1, -1.1]	[-80.4, -80.4]	SCHROEDER		84137	0-20600-0-84137	19740619	19740711				0-20000-0-84135	portoviejo	[36, 85, 106, 107]
+84120	84135	PORTOVIEJO               	-1.0666666666666669	-80.43333333333334	-999.0			5.2	[-1.1, -1.1]	[-80.4, -80.4]	WMO		84135	0-20700-0-84135	19740619	19740711				0-20000-0-84135	portoviejo	[36, 85, 106, 107]

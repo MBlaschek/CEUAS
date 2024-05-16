@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+43181	43181	VIJAYAWADA /GANNAVARAM	16.533333333333335	80.8	25.1	16 32 00N	080 48 00E	0.0	[16.533, 16.533]	[80.8, 80.8]	OSCAR	0-20000-0-43181		0-20000-0-43181	1973	1982	999.0	999.0	False	0-20000-0-43181	gannavaram	['85', '38', '106', '107']
+43181	43181	VIJAYAWADA/GANNAVA	16.533	80.8	24.0			0.0	[16.533, 16.533]	[80.8, 80.8]	IGRA2			0-20300-0-43181	1973	1982	1973.0	1982.0	True	0-20000-0-43181	gannavaram	['85', '38', '106', '107']
+43181									[16.533, 16.533]	[80.8, 80.8]	WBAN			0-20500-0-nan	1973	1982				0-20000-0-43181	gannavaram	['85', '38', '106', '107']
+43181									[16.533, 16.533]	[80.8, 80.8]	CHUAN			0-20400-0-nan	1973	1982				0-20000-0-43181	gannavaram	['85', '38', '106', '107']
+43181	43181	VOBZ Vijayawada - Gannavarim AP, Andhra Pradesh, India	16.53	80.8	-999.0			0.3	[16.533, 16.533]	[80.8, 80.8]	SCHROEDER		43181.0	0-20600-0-43181	1973	1982				0-20000-0-43181	gannavaram	['85', '38', '106', '107']
+43181									[16.533, 16.533]	[80.8, 80.8]	WMO			0-20700-0-nan	1973	1982				0-20000-0-43181	gannavaram	['85', '38', '106', '107']

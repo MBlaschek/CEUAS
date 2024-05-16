@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+16021	16021	PASSO ROLLE	46.297777777777775	11.786666666666667	2006.0	46 17 52N	011 47 12E	0.6	[46.3, 46.3]	[11.78, 11.78]	OSCAR	0-20000-0-16021		0-20000-0-16021	19851220	19861120	999.0	999.0	False	0-20000-0-16021	feltre	[104, 105, 106, 107, 117]
+16021									[46.3, 46.3]	[11.78, 11.78]	IGRA2			0-20300-0-nan	19851220	19861120				0-20000-0-16021	feltre	[104, 105, 106, 107, 117]
+16021									[46.3, 46.3]	[11.78, 11.78]	WBAN			0-20500-0-nan	19851220	19861120				0-20000-0-16021	feltre	[104, 105, 106, 107, 117]
+16021									[46.3, 46.3]	[11.78, 11.78]	CHUAN			0-20400-0-nan	19851220	19861120				0-20000-0-16021	feltre	[104, 105, 106, 107, 117]
+16021									[46.3, 46.3]	[11.78, 11.78]	SCHROEDER			0-20600-0-nan	19851220	19861120				0-20000-0-16021	feltre	[104, 105, 106, 107, 117]
+16021									[46.3, 46.3]	[11.78, 11.78]	WMO			0-20700-0-nan	19851220	19861120				0-20000-0-16021	feltre	[104, 105, 106, 107, 117]

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+50603	50603	XIN BARAG YOUQI	48.678888888888885	116.81	556.7	48 40 44N	116 48 36E	1.4	[48.667, 48.667]	[116.817, 116.817]	OSCAR	0-20000-0-50603		0-20000-0-50603	1973	1997	999.0	999.0	False	0-20000-0-50603	manzhouli	['85', '38', '106', '107']
+50603	50603	XIN BARAG YOUQI	48.667	116.817	556.0			0.0	[48.667, 48.667]	[116.817, 116.817]	IGRA2			0-20300-0-50603	1973	1997	1973.0	1997.0	True	0-20000-0-50603	manzhouli	['85', '38', '106', '107']
+50603									[48.667, 48.667]	[116.817, 116.817]	WBAN			0-20500-0-nan	1973	1997				0-20000-0-50603	manzhouli	['85', '38', '106', '107']
+50603									[48.667, 48.667]	[116.817, 116.817]	CHUAN			0-20400-0-nan	1973	1997				0-20000-0-50603	manzhouli	['85', '38', '106', '107']
+50603	50603	Xin Barag Youqi, China	48.75	117.0	-999.0			16.3	[48.667, 48.667]	[116.817, 116.817]	SCHROEDER		50603	0-20600-0-50603	1973	1997				0-20000-0-50603	manzhouli	['85', '38', '106', '107']
+50603	50603	XIN BARAG YOUQI          	48.66666666666666	116.81666666666666	-999.0			0.0	[48.667, 48.667]	[116.817, 116.817]	WMO		50603	0-20700-0-50603	1973	1997				0-20000-0-50603	manzhouli	['85', '38', '106', '107']

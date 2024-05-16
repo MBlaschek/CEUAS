@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0																OSCAR	magaria	2.9	12.9975	8.9105556						[12.98, 12.98]	[8.93, 8.93]	era5.conv._61091	era5_1	19810829	19911003	61091		[104, 105, 106, 107, 117]
+0	0															0-20300-0-nan	IGRA2	magaria	2.9	12.9975	8.9105556						[12.98, 12.98]	[8.93, 8.93]	era5.conv._61091	era5_1	19810829	19911003	61091		[104, 105, 106, 107, 117]
+0	0															0-20500-0-nan	WBAN	magaria	2.9	12.9975	8.9105556						[12.98, 12.98]	[8.93, 8.93]	era5.conv._61091	era5_1	19810829	19911003	61091		[104, 105, 106, 107, 117]
+0	0															0-20400-0-nan	CHUAN	magaria	2.9	12.9975	8.9105556						[12.98, 12.98]	[8.93, 8.93]	era5.conv._61091	era5_1	19810829	19911003	61091		[104, 105, 106, 107, 117]
+0	0															0-20600-0-nan	SCHROEDER	magaria	2.9	12.9975	8.9105556						[12.98, 12.98]	[8.93, 8.93]	era5.conv._61091	era5_1	19810829	19911003	61091		[104, 105, 106, 107, 117]
+0	0		MAGARIA                  	12.583333333333334	8.566666666666666	-999.0				61091				59.0		0-20700-0-61091	WMO	magaria	2.9	12.9975	8.9105556		61091	4729.0			[12.98, 12.98]	[8.93, 8.93]	era5.conv._61091	era5_1	19810829	19911003	61091		[104, 105, 106, 107, 117]

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+94334	94334	BEDOURIE POLICE STATION	-24.359722222222224	139.4713888888889	93.4	24 21 35S	139 28 17E	1.1	[-24.37, -24.37]	[139.47, 139.47]	OSCAR	0-20000-0-94334		0-20000-0-94334	20040713	20040715	999.0	999.0	False	0-20000-0-94334	mount isa	[104, 105, 106, 107, 117]
+94334									[-24.37, -24.37]	[139.47, 139.47]	IGRA2			0-20300-0-nan	20040713	20040715				0-20000-0-94334	mount isa	[104, 105, 106, 107, 117]
+94334									[-24.37, -24.37]	[139.47, 139.47]	WBAN			0-20500-0-nan	20040713	20040715				0-20000-0-94334	mount isa	[104, 105, 106, 107, 117]
+94334									[-24.37, -24.37]	[139.47, 139.47]	CHUAN			0-20400-0-nan	20040713	20040715				0-20000-0-94334	mount isa	[104, 105, 106, 107, 117]
+94334									[-24.37, -24.37]	[139.47, 139.47]	SCHROEDER			0-20600-0-nan	20040713	20040715				0-20000-0-94334	mount isa	[104, 105, 106, 107, 117]
+94334									[-24.37, -24.37]	[139.47, 139.47]	WMO			0-20700-0-nan	20040713	20040715				0-20000-0-94334	mount isa	[104, 105, 106, 107, 117]

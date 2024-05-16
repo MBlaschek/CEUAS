@@ -1,0 +1,6 @@
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23130_stationfile.csv
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/70192_stationfile.csv
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23162_stationfile.csv
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23130_stationfile.csv
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/70192_stationfile.csv
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23162_stationfile.csv

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:94403	94403	GERALDTON AIRPORT	-28.804444444444446	114.69888888888889	30.2	28 48 16S	114 41 56E	0.5	[-28.8, -28.8]	[114.7, 114.7]	OSCAR	0-20000-0-94403		0-20000-0-94403	19500101	19791231	999.0	999.0	True	0-20000-0-94403	geraldton	[106, 107]
+1:94403	94403	GERALDTON AIRPORT	-28.8044	114.6989	36.9			0.5	[-28.8, -28.8]	[114.7, 114.7]	IGRA2			0-20300-0-94403	19500101	19791231	1950.0	2021.0	True	0-20000-0-94403	geraldton	[106, 107]
+1:94403									[-28.8, -28.8]	[114.7, 114.7]	WBAN			0-20500-0-nan	19500101	19791231				0-20000-0-94403	geraldton	[106, 107]
+1:94403									[-28.8, -28.8]	[114.7, 114.7]	CHUAN			0-20400-0-nan	19500101	19791231				0-20000-0-94403	geraldton	[106, 107]
+1:94403	94403	Geraldton AP, Western Australia, Australia	-28.8	114.7	-999.0			0.0	[-28.8, -28.8]	[114.7, 114.7]	SCHROEDER		94403	0-20600-0-94403	19500101	19791231				0-20000-0-94403	geraldton	[106, 107]
+1:94403	94403	GERALDTON                	-28.8	114.7	35.0			0.0	[-28.8, -28.8]	[114.7, 114.7]	WMO		94403	0-20700-0-94403	19500101	19791231				0-20000-0-94403	geraldton	[106, 107]

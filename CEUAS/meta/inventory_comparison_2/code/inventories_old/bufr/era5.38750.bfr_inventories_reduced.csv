@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+38750	38750	ESENGULY	37.46666666666667	53.96666666666667	-22.0	37 28 00N	053 58 00E	0.5	[37.47, 37.47]	[53.97, 53.97]	OSCAR	0-20000-0-38750		0-20000-0-38750	19580101	19781231	999.0	999.0	False	0-20000-0-38750	bandar-e torkaman	[36, 85, 106, 107]
+38750	38750	ESENGYLY	37.467	53.967	-22.0			0.4	[37.47, 37.47]	[53.97, 53.97]	IGRA2			0-20300-0-38750	19580101	19781231	1950.0	1993.0	True	0-20000-0-38750	bandar-e torkaman	[36, 85, 106, 107]
+38750									[37.47, 37.47]	[53.97, 53.97]	WBAN			0-20500-0-nan	19580101	19781231				0-20000-0-38750	bandar-e torkaman	[36, 85, 106, 107]
+38750									[37.47, 37.47]	[53.97, 53.97]	CHUAN			0-20400-0-nan	19580101	19781231				0-20000-0-38750	bandar-e torkaman	[36, 85, 106, 107]
+38750	38750	Esengyly / Gasan-Kuli, Turkmenistan	37.47	53.97	-999.0			0.0	[37.47, 37.47]	[53.97, 53.97]	SCHROEDER		38750	0-20600-0-38750	19580101	19781231				0-20000-0-38750	bandar-e torkaman	[36, 85, 106, 107]
+38750	38750	ESENGULY                 	37.46666666666667	53.98333333333333	-999.0			1.2	[37.47, 37.47]	[53.97, 53.97]	WMO		38750	0-20700-0-38750	19580101	19781231				0-20000-0-38750	bandar-e torkaman	[36, 85, 106, 107]

@@ -1,0 +1,4 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0	0-20000-0-40420	AL-AHSA	25.3	49.483333333333334	178.0	Climatological station, Surface land meteorological station (SYNOP), CLIMAT(C), RBSN(S), RBCN, GOS	25 18 00N	049 29 00E	40420	999.0	999.0	False	2.2		OSCAR	0-20000-0-40420	buqayq	75.5	25.937103	49.677613					
+1	2	0-20000-0-40421	HAFOOF-A.W.S.	25.3	49.65	151.0	Surface land meteorological station (SYNOP), GOS	25 18 00N	049 39 00E	40421	999.0	999.0	False	17.3		OSCAR	0-20000-0-40421	buqayq	75.5	25.937103	49.677613					
+0	0		AL-AHSA                  	25.28333333333333	49.48333333333333	178.0				40420				0.5		WMO	0-20700-0-40420	buqayq	75.5	25.937103	49.677613		40420	2777.0		

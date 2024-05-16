@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:6095	07015	LILLE-LESQUIN	50.57	3.0975	47.0	50 34 12N	003 05 51E	7.5	[50.63, 50.63]	[3.05, 3.05]	OSCAR	0-20000-0-07015		0-20000-0-07015	19241018	19260205	999	999	False	0-20000-0-07015	lille	[106, 107]
+C:6095									[50.63, 50.63]	[3.05, 3.05]	IGRA2			0-20300-0-nan	19241018	19260205				0-20000-0-07015	lille	[106, 107]
+C:6095	35014	MERVILLE PAS DE CALA	50.63	2.63	18.288			29.7	[50.63, 50.63]	[3.05, 3.05]	WBAN			0-20500-0-35014	19241018	19260205	19450201	19451031		0-20000-0-07015	lille	[106, 107]
+C:6095	6095	Lille	50.63	3.05	26			0.0	[50.63, 50.63]	[3.05, 3.05]	CHUAN		-999	0-20400-0-6095	19241018	19260205	-999-999	-999-999		0-20000-0-07015	lille	[106, 107]
+C:6095									[50.63, 50.63]	[3.05, 3.05]	SCHROEDER			0-20600-0-nan	19241018	19260205				0-20000-0-07015	lille	[106, 107]
+C:6095									[50.63, 50.63]	[3.05, 3.05]	WMO			0-20700-0-nan	19241018	19260205				0-20000-0-07015	lille	[106, 107]

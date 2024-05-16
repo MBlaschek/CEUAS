@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+42705	42705	PURULIA	23.333333333333332	86.41666666666667	255.0	23 20 00N	086 25 00E	9699.7	[63.43, 63.43]	[-51.18, -51.18]	OSCAR	0-20000-0-42705		0-20000-0-42705	1947	1948	999.0	999.0	False	0-20300-0-42705	nuuk	['85', '38', '106', '107']
+42705	42705	MARRAK POINT	63.43	-51.18	41.0			0.0	[63.43, 63.43]	[-51.18, -51.18]	IGRA2			0-20300-0-42705	1947	1948	1947.0	1948.0	True	0-20300-0-42705	nuuk	['85', '38', '106', '107']
+42705	16503	MARRAK POINT	63.43	-51.18	41.148			0.0	[63.43, 63.43]	[-51.18, -51.18]	WBAN			0-20500-0-16503	1947	1948	19430101.0	19480930.0		0-20300-0-42705	nuuk	['85', '38', '106', '107']
+42705									[63.43, 63.43]	[-51.18, -51.18]	CHUAN			0-20400-0-nan	1947	1948				0-20300-0-42705	nuuk	['85', '38', '106', '107']
+42705	4255	(made up station ID) Marrak Point (operated by US Air Force), Greenland (Denmark)	63.43	-51.18	-999.0			0.0	[63.43, 63.43]	[-51.18, -51.18]	SCHROEDER		4255.0	0-20600-0-4255	1947	1948				0-20300-0-42705	nuuk	['85', '38', '106', '107']
+42705									[63.43, 63.43]	[-51.18, -51.18]	WMO			0-20700-0-nan	1947	1948				0-20300-0-42705	nuuk	['85', '38', '106', '107']

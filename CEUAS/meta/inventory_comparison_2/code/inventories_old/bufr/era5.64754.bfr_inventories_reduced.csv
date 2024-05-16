@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+64754	64754	AM-TIMAN	11.033333333333333	20.283333333333335	436.0	11 02 00N	020 17 00E	4.1	[11.0, 11.0]	[20.3, 20.3]	OSCAR	0-20000-0-64754		0-20000-0-64754	19740623	19740918	999.0	999.0	False	0-20000-0-64754	am timan	[36, 85, 106, 107]
+64754									[11.0, 11.0]	[20.3, 20.3]	IGRA2			0-20300-0-nan	19740623	19740918				0-20000-0-64754	am timan	[36, 85, 106, 107]
+64754									[11.0, 11.0]	[20.3, 20.3]	WBAN			0-20500-0-nan	19740623	19740918				0-20000-0-64754	am timan	[36, 85, 106, 107]
+64754									[11.0, 11.0]	[20.3, 20.3]	CHUAN			0-20400-0-nan	19740623	19740918				0-20000-0-64754	am timan	[36, 85, 106, 107]
+64754									[11.0, 11.0]	[20.3, 20.3]	SCHROEDER			0-20600-0-nan	19740623	19740918				0-20000-0-64754	am timan	[36, 85, 106, 107]
+64754	64754	AM-TIMAN                 	11.033333333333331	20.28333333333333	-999.0			4.1	[11.0, 11.0]	[20.3, 20.3]	WMO		64754	0-20700-0-64754	19740623	19740918				0-20000-0-64754	am timan	[36, 85, 106, 107]

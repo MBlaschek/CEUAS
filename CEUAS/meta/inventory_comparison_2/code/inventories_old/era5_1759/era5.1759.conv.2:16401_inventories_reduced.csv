@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:16401									[63.18, 63.18]	[-41.33, -41.33]	OSCAR				19421206	19450930				0-20500-0-16401	None	[106, 107]
+2:16401									[63.18, 63.18]	[-41.33, -41.33]	IGRA2			0-20300-0-nan	19421206	19450930				0-20500-0-16401	None	[106, 107]
+2:16401	16401.0	SKJOLDUNGEN	63.18	-41.33	91.1352			0.0	[63.18, 63.18]	[-41.33, -41.33]	WBAN			0-20500-0-16401	19421206	19450930	19421201.0	19460930.0		0-20500-0-16401	None	[106, 107]
+2:16401									[63.18, 63.18]	[-41.33, -41.33]	CHUAN			0-20400-0-nan	19421206	19450930				0-20500-0-16401	None	[106, 107]
+2:16401									[63.18, 63.18]	[-41.33, -41.33]	SCHROEDER			0-20600-0-nan	19421206	19450930				0-20500-0-16401	None	[106, 107]
+2:16401									[63.18, 63.18]	[-41.33, -41.33]	WMO			0-20700-0-nan	19421206	19450930				0-20500-0-16401	None	[106, 107]

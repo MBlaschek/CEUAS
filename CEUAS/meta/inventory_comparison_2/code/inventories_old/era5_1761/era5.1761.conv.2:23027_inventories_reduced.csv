@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:23027									[31.52, 31.52]	[-102.87, -102.87]	OSCAR				19431003	19451027				0-20300-0-23027	west odessa	[106, 107]
+2:23027	23027	PYOTE (AFB)	31.5167	-103.1333	796.1			25.0	[31.52, 31.52]	[-102.87, -102.87]	IGRA2			0-20300-0-23027	19431003	19451027	1943.0	1945.0	True	0-20300-0-23027	west odessa	[106, 107]
+2:23027	3047	MONAHANS 6 ENE	31.62	-102.81	848.2584			12.5	[31.52, 31.52]	[-102.87, -102.87]	WBAN			0-20500-0-3047	19431003	19451027	20030521.0	99991231.0		0-20300-0-23027	west odessa	[106, 107]
+2:23027	23027	PYOTE AAF	31.52	-103.13	797.9664			24.7	[31.52, 31.52]	[-102.87, -102.87]	WBAN			0-20500-0-23027	19431003	19451027	19430101.0	19460331.0		0-20300-0-23027	west odessa	[106, 107]
+2:23027									[31.52, 31.52]	[-102.87, -102.87]	CHUAN			0-20400-0-nan	19431003	19451027				0-20300-0-23027	west odessa	[106, 107]
+2:23027									[31.52, 31.52]	[-102.87, -102.87]	SCHROEDER			0-20600-0-nan	19431003	19451027				0-20300-0-23027	west odessa	[106, 107]
+2:23027									[31.52, 31.52]	[-102.87, -102.87]	WMO			0-20700-0-nan	19431003	19451027				0-20300-0-23027	west odessa	[106, 107]

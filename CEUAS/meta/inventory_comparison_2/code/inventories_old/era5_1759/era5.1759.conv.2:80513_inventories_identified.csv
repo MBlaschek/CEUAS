@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0																OSCAR	honiara	241.5	-9.4333333	159.95						[-8.6, -8.6]	[157.92, 157.92]	era5.1759.conv.2:80513	era5_1759	19431002	19440328	2:80513	0-20500-0-80513	[106, 107]
+0	0															0-20300-0-nan	IGRA2	honiara	241.5	-9.4333333	159.95						[-8.6, -8.6]	[157.92, 157.92]	era5.1759.conv.2:80513	era5_1759	19431002	19440328	2:80513	0-20500-0-80513	[106, 107]
+0	0		SEGI	-8.6	157.92	4.2672				80513.0	19430901.0	19440630.0		0.0		0-20500-0-80513	WBAN	honiara	241.5	-9.4333333	159.95						[-8.6, -8.6]	[157.92, 157.92]	era5.1759.conv.2:80513	era5_1759	19431002	19440328	2:80513	0-20500-0-80513	[106, 107]
+0	0															0-20400-0-nan	CHUAN	honiara	241.5	-9.4333333	159.95						[-8.6, -8.6]	[157.92, 157.92]	era5.1759.conv.2:80513	era5_1759	19431002	19440328	2:80513	0-20500-0-80513	[106, 107]
+0	0															0-20600-0-nan	SCHROEDER	honiara	241.5	-9.4333333	159.95						[-8.6, -8.6]	[157.92, 157.92]	era5.1759.conv.2:80513	era5_1759	19431002	19440328	2:80513	0-20500-0-80513	[106, 107]
+0	0															0-20700-0-nan	WMO	honiara	241.5	-9.4333333	159.95						[-8.6, -8.6]	[157.92, 157.92]	era5.1759.conv.2:80513	era5_1759	19431002	19440328	2:80513	0-20500-0-80513	[106, 107]

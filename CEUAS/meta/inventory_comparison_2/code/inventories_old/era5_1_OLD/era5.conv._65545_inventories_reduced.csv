@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+65545	65545	BONDOUKOU	8.05	-2.783333333333333	370.0	08 03 00N	002 47 00W	0.4	[8.05, 8.05]	[-2.78, -2.78]	OSCAR	0-20000-0-65545		0-20000-0-65545	19800229	19820426	999.0	999.0	False	0-20000-0-65545	bondoukou	[104, 105, 106, 107, 117]
+65545									[8.05, 8.05]	[-2.78, -2.78]	IGRA2			0-20300-0-nan	19800229	19820426				0-20000-0-65545	bondoukou	[104, 105, 106, 107, 117]
+65545									[8.05, 8.05]	[-2.78, -2.78]	WBAN			0-20500-0-nan	19800229	19820426				0-20000-0-65545	bondoukou	[104, 105, 106, 107, 117]
+65545									[8.05, 8.05]	[-2.78, -2.78]	CHUAN			0-20400-0-nan	19800229	19820426				0-20000-0-65545	bondoukou	[104, 105, 106, 107, 117]
+65545									[8.05, 8.05]	[-2.78, -2.78]	SCHROEDER			0-20600-0-nan	19800229	19820426				0-20000-0-65545	bondoukou	[104, 105, 106, 107, 117]
+65545	65545	BONDOUKOU                	8.05	-2.8	368.0			2.2	[8.05, 8.05]	[-2.78, -2.78]	WMO		65545	0-20700-0-65545	19800229	19820426				0-20000-0-65545	bondoukou	[104, 105, 106, 107, 117]

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+64401	64401	DOLISIE	-4.2	12.7	331.0	04 12 00S	012 42 00E	4.0	[-4.22, -4.22]	[12.67, 12.66]	OSCAR	0-20000-0-64401		0-20000-0-64401	19660524	19740929	999.0	999.0	False	0-20000-0-64401	loubomo	[36, 85, 106, 107]
+64401	64401	DOLISIE	-4.217	12.667	329.0			0.5	[-4.22, -4.22]	[12.67, 12.66]	IGRA2			0-20300-0-64401	19660524	19740929	1949.0	1994.0	True	0-20000-0-64401	loubomo	[36, 85, 106, 107]
+64401									[-4.22, -4.22]	[12.67, 12.66]	WBAN			0-20500-0-nan	19660524	19740929				0-20000-0-64401	loubomo	[36, 85, 106, 107]
+64401									[-4.22, -4.22]	[12.67, 12.66]	CHUAN			0-20400-0-nan	19660524	19740929				0-20000-0-64401	loubomo	[36, 85, 106, 107]
+64401	64401	Dolisie, Congo	-4.22	12.67	-999.0			0.0	[-4.22, -4.22]	[12.67, 12.66]	SCHROEDER		64401	0-20600-0-64401	19660524	19740929				0-20000-0-64401	loubomo	[36, 85, 106, 107]
+64401	64401	LOUBOMO/DOLISIE          	-4.2	12.7	303.0			4.0	[-4.22, -4.22]	[12.67, 12.66]	WMO		64401	0-20700-0-64401	19660524	19740929				0-20000-0-64401	loubomo	[36, 85, 106, 107]

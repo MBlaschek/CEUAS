@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+96055									[2.95, 2.95]	[99.07, 99.07]	OSCAR				19821023	19821023				0-20700-0-96B01	tebingtinggi	[104, 105, 106, 107, 117]
+96055									[2.95, 2.95]	[99.07, 99.07]	IGRA2			0-20300-0-nan	19821023	19821023				0-20700-0-96B01	tebingtinggi	[104, 105, 106, 107, 117]
+96055									[2.95, 2.95]	[99.07, 99.07]	WBAN			0-20500-0-nan	19821023	19821023				0-20700-0-96B01	tebingtinggi	[104, 105, 106, 107, 117]
+96055									[2.95, 2.95]	[99.07, 99.07]	CHUAN			0-20400-0-nan	19821023	19821023				0-20700-0-96B01	tebingtinggi	[104, 105, 106, 107, 117]
+96055									[2.95, 2.95]	[99.07, 99.07]	SCHROEDER			0-20600-0-nan	19821023	19821023				0-20700-0-96B01	tebingtinggi	[104, 105, 106, 107, 117]
+96055	96B01	MARIHAT ST               	2.9166666666666665	99.08333333333331	-999.0			4.0	[2.95, 2.95]	[99.07, 99.07]	WMO		96B01	0-20700-0-96B01	19821023	19821023				0-20700-0-96B01	tebingtinggi	[104, 105, 106, 107, 117]

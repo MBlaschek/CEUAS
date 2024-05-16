@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+94659	94659	WOOMERA AERODROME	-31.15583333333333	136.8052777777778	168.5	31 09 21S	136 48 19E	1.5	[-31.15, -31.15]	[136.82, 136.82]	OSCAR	0-20000-0-94659		0-20000-0-94659	20180101	20211230	999.0	999.0	True	0-20000-0-94659	port augusta	['38', '85', '106', '107']
+94659	94659	WOOMERA AERODROME	-31.1558	136.8053	167.0			1.5	[-31.15, -31.15]	[136.82, 136.82]	IGRA2			0-20300-0-94659	20180101	20211230	1949.0	2021.0	True	0-20000-0-94659	port augusta	['38', '85', '106', '107']
+94659									[-31.15, -31.15]	[136.82, 136.82]	WBAN			0-20500-0-nan	20180101	20211230				0-20000-0-94659	port augusta	['38', '85', '106', '107']
+94659									[-31.15, -31.15]	[136.82, 136.82]	CHUAN			0-20400-0-nan	20180101	20211230				0-20000-0-94659	port augusta	['38', '85', '106', '107']
+94659	94659	Woomera AP, South Australia, Australia	-31.15	136.8	-999.0			1.9	[-31.15, -31.15]	[136.82, 136.82]	SCHROEDER		94659	0-20600-0-94659	20180101	20211230				0-20000-0-94659	port augusta	['38', '85', '106', '107']
+94659	94659	WOOMERA                  	-31.15	136.81666666666666	168.0			0.3	[-31.15, -31.15]	[136.82, 136.82]	WMO		94659	0-20700-0-94659	20180101	20211230				0-20000-0-94659	port augusta	['38', '85', '106', '107']

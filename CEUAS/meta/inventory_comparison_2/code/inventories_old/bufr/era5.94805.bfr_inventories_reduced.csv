@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+94805	95805	CAPE BORDA	-35.755	136.59583333333333	158.3	35 45 18S	136 35 45E	5.0	[-35.8, -35.8]	[136.6, 136.6]	OSCAR	0-20000-0-95805		0-20000-0-95805	19710616	19721228	999.0	999.0	False	0-20000-0-95805	port lincoln	[36, 85, 106, 107]
+94805									[-35.8, -35.8]	[136.6, 136.6]	IGRA2			0-20300-0-nan	19710616	19721228				0-20000-0-95805	port lincoln	[36, 85, 106, 107]
+94805									[-35.8, -35.8]	[136.6, 136.6]	WBAN			0-20500-0-nan	19710616	19721228				0-20000-0-95805	port lincoln	[36, 85, 106, 107]
+94805									[-35.8, -35.8]	[136.6, 136.6]	CHUAN			0-20400-0-nan	19710616	19721228				0-20000-0-95805	port lincoln	[36, 85, 106, 107]
+94805									[-35.8, -35.8]	[136.6, 136.6]	SCHROEDER			0-20600-0-nan	19710616	19721228				0-20000-0-95805	port lincoln	[36, 85, 106, 107]
+94805	94805	CAPE BORDA               	-35.75	136.58333333333334	144.0			5.7	[-35.8, -35.8]	[136.6, 136.6]	WMO		94805	0-20700-0-94805	19710616	19721228				0-20000-0-95805	port lincoln	[36, 85, 106, 107]
+94805	95805	CAPE BORDA               	-35.75	136.6	-999.0			5.5	[-35.8, -35.8]	[136.6, 136.6]	WMO		95805	0-20700-0-95805	19710616	19721228				0-20000-0-95805	port lincoln	[36, 85, 106, 107]

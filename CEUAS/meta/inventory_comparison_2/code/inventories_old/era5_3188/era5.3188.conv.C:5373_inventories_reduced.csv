@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:5373	03649	BRIZE NORTON	51.75833333333333	-1.5780555555555555	82.0	51 45 30N	001 34 41W	29.6	[51.93, 51.93]	[-1.25, -1.25]	OSCAR	0-20000-0-03649		0-20000-0-03649	19280314	19281117	999	999	True	0-20000-0-03649	bicester	[106, 107]
+C:5373									[51.93, 51.93]	[-1.25, -1.25]	IGRA2			0-20300-0-nan	19280314	19281117				0-20000-0-03649	bicester	[106, 107]
+C:5373	15037	UPPER HEYFORD	51.93	-1.25	133.1976			0.0	[51.93, 51.93]	[-1.25, -1.25]	WBAN			0-20500-0-15037	19280314	19281117	19511101	99991231		0-20000-0-03649	bicester	[106, 107]
+C:5373	5373	Upper Heyford	51.93	-1.25	125			0.0	[51.93, 51.93]	[-1.25, -1.25]	CHUAN		-999	0-20400-0-5373	19280314	19281117	-999-999	-999-999		0-20000-0-03649	bicester	[106, 107]
+C:5373	5754	Upper Heyford	51.93	-1.25	125			0.0	[51.93, 51.93]	[-1.25, -1.25]	CHUAN		-999	0-20400-0-5754	19280314	19281117	-999-999	-999-999		0-20000-0-03649	bicester	[106, 107]
+C:5373									[51.93, 51.93]	[-1.25, -1.25]	SCHROEDER			0-20600-0-nan	19280314	19281117				0-20000-0-03649	bicester	[106, 107]
+C:5373									[51.93, 51.93]	[-1.25, -1.25]	WMO			0-20700-0-nan	19280314	19281117				0-20000-0-03649	bicester	[106, 107]

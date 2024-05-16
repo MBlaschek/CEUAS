@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+61976	61976	SERGE-FROLOW (ILE TROMELIN)	-15.887777777777778	54.52055555555555	13.0	15 53 16S	054 31 14E	0.9	[-15.88, -15.88]	[54.52, 54.52]	OSCAR	0-20000-0-61976		0-20000-0-61976	19680419	20110609	999.0	999.0	False	0-20000-0-61976	antalaha	['38', '85', '106', '107']
+61976	61976	SERGE-FROLOW (ILE TROMELIN)	-15.8878	54.5206	7.0			0.9	[-15.88, -15.88]	[54.52, 54.52]	IGRA2			0-20300-0-61976	19680419	20110609	1973.0	2011.0	True	0-20000-0-61976	antalaha	['38', '85', '106', '107']
+61976									[-15.88, -15.88]	[54.52, 54.52]	WBAN			0-20500-0-nan	19680419	20110609				0-20000-0-61976	antalaha	['38', '85', '106', '107']
+61976									[-15.88, -15.88]	[54.52, 54.52]	CHUAN			0-20400-0-nan	19680419	20110609				0-20000-0-61976	antalaha	['38', '85', '106', '107']
+61976	61976	Serge-Frolow, Tromelin Island (France)	-15.888	54.521	-999.0			0.9	[-15.88, -15.88]	[54.52, 54.52]	SCHROEDER		61976	0-20600-0-61976	19680419	20110609				0-20000-0-61976	antalaha	['38', '85', '106', '107']
+61976	61976	SERGE FROLOW             	-15.883333333333333	54.516666666666666	-999.0			0.5	[-15.88, -15.88]	[54.52, 54.52]	WMO		61976	0-20700-0-61976	19680419	20110609				0-20000-0-61976	antalaha	['38', '85', '106', '107']

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+9:2224	88963	BASE ESPERANZA	-63.39888888888889	-56.99777777777778	24.0	63 23 56S	056 59 52W	0.9	[-63.4, -63.4]	[-56.98, -56.98]	OSCAR	0-20000-0-88963		0-20000-0-88963	19530114	19580617	999.0	999.0	False	0-20000-0-88963	None	[106, 107]
+9:2224									[-63.4, -63.4]	[-56.98, -56.98]	IGRA2			0-20300-0-nan	19530114	19580617				0-20000-0-88963	None	[106, 107]
+9:2224									[-63.4, -63.4]	[-56.98, -56.98]	WBAN			0-20500-0-nan	19530114	19580617				0-20000-0-88963	None	[106, 107]
+9:2224									[-63.4, -63.4]	[-56.98, -56.98]	CHUAN			0-20400-0-nan	19530114	19580617				0-20000-0-88963	None	[106, 107]
+9:2224	88940	Hope Bay (operated by UK)	-63.4	-56.98	-999.0			0.0	[-63.4, -63.4]	[-56.98, -56.98]	SCHROEDER		88940	0-20600-0-88940	19530114	19580617				0-20000-0-88963	None	[106, 107]
+9:2224	88963	ESPERANZA BASE EJERCITO  	-63.4	-56.98333333333333	-999.0			0.2	[-63.4, -63.4]	[-56.98, -56.98]	WMO		88963	0-20700-0-88963	19530114	19580617				0-20000-0-88963	None	[106, 107]

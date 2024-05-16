@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+6:101267	101267	PORI TAHKOLUOTO HARBOUR	61.63055555555555	21.37611111111111	4.6	61 37 50N	021 22 34E	8847.6	[20.0, 20.0]	[126.7, 126.7]	OSCAR	0-246-0-101267		0-246-0-101267	19710724	19710724	999.0	999.0	False		ishigaki	[38, 85]
+6:101267									[20.0, 20.0]	[126.7, 126.7]	IGRA2			0-20300-0-nan	19710724	19710724					ishigaki	[38, 85]
+6:101267									[20.0, 20.0]	[126.7, 126.7]	WBAN			0-20500-0-nan	19710724	19710724					ishigaki	[38, 85]
+6:101267									[20.0, 20.0]	[126.7, 126.7]	CHUAN			0-20400-0-nan	19710724	19710724					ishigaki	[38, 85]
+6:101267									[20.0, 20.0]	[126.7, 126.7]	SCHROEDER			0-20600-0-nan	19710724	19710724					ishigaki	[38, 85]
+6:101267									[20.0, 20.0]	[126.7, 126.7]	WMO			0-20700-0-nan	19710724	19710724					ishigaki	[38, 85]

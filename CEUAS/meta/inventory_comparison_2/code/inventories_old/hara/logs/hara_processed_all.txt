@@ -1,0 +1,206 @@
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23383_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22235_stationfile.csv	67.37	37.03	identified	0-20000-0-22235
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/72948_stationfile.csv	unidentified	
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22408_stationfile.csv	65.2	31.1	identified	0-20000-0-22408
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23130_stationfile.csv	68.4	65.0	unidentified_nomatch	 
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25248_stationfile.csv	67.3	168.2	identified	0-20000-0-25248
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/70192_stationfile.csv	65.12	212.52	unidentified_nomatch	 
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21825_stationfile.csv	71.53	129.92	identified	0-20111-0-21825
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20406_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22205_stationfile.csv	67.6	31.17	identified	0-20111-0-22205
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21908_stationfile.csv	70.13	113.97	identified	0-20000-0-21908
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04231_stationfile.csv	67.0	309.2	identified	0-20000-0-04231
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04330_stationfile.csv	74.3	339.8	identified	0-20000-0-04330
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/72914_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04230_stationfile.csv	66.9	306.3	identified	0-20111-0-04230
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04210_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23338_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23162_stationfile.csv	68.0	65.0	unidentified_nomatch	 
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01010_stationfile.csv	69.3	16.1	identified	0-20001-0-01010
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01005_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25282_stationfile.csv	67.85	184.17	identified	0-20000-0-25282
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23552_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23074_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01020_stationfile.csv	80.05	18.29	identified	0-20300-0-01020
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22165_stationfile.csv	68.65	43.3	identified	0-20000-0-22165
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23274_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22522_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20047_stationfile.csv	80.44	52.8	identified	0-20300-0-20047
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04310_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25042_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/02057_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01004_stationfile.csv	78.92	11.93	identified	0-20001-0-01004
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20667_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01030_stationfile.csv	69.69	19.02	identified	0-20000-0-01025
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21946_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25399_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04340_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25400_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25428_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20107_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23146_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71090_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/70133_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20891_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20274_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71918_stationfile.csv	73.0	274.7	identified	0-20111-0-71918
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/24125_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21358_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/24266_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20069_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20744_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20353_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21504_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25123_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71968_stationfile.csv	68.2	225.0	identified	0-20300-0-71968
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22217_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20046_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21647_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20674_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21965_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/80000_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22271_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21982_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23022_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21432_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/24343_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20292_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23078_stationfile.csv	69.32	88.22	identified	0-20000-0-23078
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23330_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23205_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21824_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23472_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23418_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04220_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01152_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01001_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25173_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04320_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01028_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22113_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04360_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71051_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71925_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/70086_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/02836_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71957_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71938_stationfile.csv	67.8	244.9	identified	0-20000-0-71938
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71081_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04202_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/70026_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71082_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71043_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71917_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71924_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71072_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04339_stationfile.csv	70.48	338.03	identified	0-20000-0-04339
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/02185_stationfile.csv	65.55	22.13	identified	0-20000-0-02185
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71074_stationfile.csv	78.8	256.5	identified	0-20000-0-71074
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21358_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21358_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21358_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21358_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21358_stationfile.csv	76.15	152.84	identified	0-20300-0-21358
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21358_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21358_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21358_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21358_stationfile.csv	failed
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21358_stationfile.csv	76.15	152.84	identified	0-20300-0-21358
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22235_stationfile.csv	67.37	37.03	identified	0-20000-0-22235
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23383_stationfile.csv	66.8	93.7	identified	0-20000-0-23383
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/72948_stationfile.csv	unidentified	
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22408_stationfile.csv	65.2	31.1	identified	0-20000-0-22408
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23130_stationfile.csv	68.4	65.0	unidentified_nomatch	 
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25248_stationfile.csv	67.3	168.2	identified	0-20000-0-25248
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/70192_stationfile.csv	65.12	212.52	unidentified_nomatch	 
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21825_stationfile.csv	71.53	129.92	identified	0-20111-0-21825
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22205_stationfile.csv	67.6	31.17	identified	0-20111-0-22205
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21908_stationfile.csv	70.13	113.97	identified	0-20000-0-21908
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04231_stationfile.csv	67.0	309.2	identified	0-20000-0-04231
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20406_stationfile.csv	80.62	58.05	inconsistent_coord
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04330_stationfile.csv	74.3	339.8	identified	0-20000-0-04330
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04230_stationfile.csv	66.9	306.3	identified	0-20111-0-04230
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/72914_stationfile.csv	unidentified	
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04210_stationfile.csv	72.7	303.9	identified	0-20700-0-04210
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23162_stationfile.csv	68.0	65.0	unidentified_nomatch	 
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01010_stationfile.csv	69.3	16.1	identified	0-20001-0-01010
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23338_stationfile.csv	66.23	66.62	inconsistent_coord
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25282_stationfile.csv	67.85	184.17	identified	0-20000-0-25282
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01005_stationfile.csv	78.04	346.62	identified	0-20000-0-01013
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23552_stationfile.csv	64.92	77.82	identified	0-20000-0-23552
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01020_stationfile.csv	80.05	18.29	identified	0-20300-0-01020
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22165_stationfile.csv	68.65	43.3	identified	0-20000-0-22165
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20047_stationfile.csv	80.44	52.8	identified	0-20300-0-20047
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23074_stationfile.csv	69.4	86.17	identified	0-20300-0-23074
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01004_stationfile.csv	78.92	11.93	identified	0-20001-0-01004
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01030_stationfile.csv	69.69	19.02	identified	0-20000-0-01025
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23274_stationfile.csv	67.47	86.57	identified	0-20000-0-23274
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04310_stationfile.csv	81.6	343.33	identified	0-20300-0-04310
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22522_stationfile.csv	64.98	34.78	identified	0-20001-0-22522
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71918_stationfile.csv	73.0	274.7	identified	0-20111-0-71918
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25042_stationfile.csv	69.75	167.67	identified	0-20000-0-25042
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/02057_stationfile.csv	65.5	22.1	identified	0-20000-0-02185
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20667_stationfile.csv	73.33	70.04	identified	0-20000-0-20667
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71968_stationfile.csv	68.2	225.0	identified	0-20300-0-71968
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21358_stationfile.csv	76.15	152.84	identified	0-20300-0-21358
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21946_stationfile.csv	70.62	147.88	identified	0-20000-0-21946
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25399_stationfile.csv	66.17	190.2	identified	0-20000-0-25399
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23078_stationfile.csv	69.32	88.22	identified	0-20000-0-23078
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04340_stationfile.csv	70.42	338.03	identified	0-20300-0-04340
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25400_stationfile.csv	65.7	150.8	identified	0-20000-0-25400
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25428_stationfile.csv	65.08	160.62	inconsistent_coord
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20107_stationfile.csv	78.07	14.22	identified	0-20000-0-20107
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23146_stationfile.csv	68.47	73.6	identified	0-20300-0-23146
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71938_stationfile.csv	67.8	244.9	identified	0-20000-0-71938
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71090_stationfile.csv	70.5	291.4	identified	0-20000-0-71090
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/70133_stationfile.csv	66.8	197.4	identified	0-20000-0-70133
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20891_stationfile.csv	71.98	102.47	identified	0-20000-0-20891
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20274_stationfile.csv	77.5	82.23	identified	0-20300-0-20274
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20069_stationfile.csv	79.5	76.98	identified	0-20000-0-20069
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/24266_stationfile.csv	67.55	133.38	identified	0-20000-0-24266
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20744_stationfile.csv	72.37	52.73	identified	0-20001-0-20744
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21504_stationfile.csv	74.65	112.83	identified	0-20300-0-21504
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20353_stationfile.csv	76.94	68.58	inconsistent_coord
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22217_stationfile.csv	67.12	32.43	identified	0-20000-0-22217
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25123_stationfile.csv	68.8	161.28	identified	0-20000-0-25123
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/24125_stationfile.csv	68.5	112.43	identified	0-20000-0-24125
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/02185_stationfile.csv	65.55	22.13	identified	0-20000-0-02185
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20046_stationfile.csv	80.62	58.05	identified	0-20000-0-20046
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21982_stationfile.csv	70.97	181.47	identified	0-20000-0-21982
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04339_stationfile.csv	70.48	338.03	identified	0-20000-0-04339
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20674_stationfile.csv	73.5	80.23	identified	0-20000-0-20674
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22271_stationfile.csv	67.8	44.1	identified	0-20000-0-22271
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21432_stationfile.csv	76.0	137.89	identified	0-20000-0-21432
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21647_stationfile.csv	73.18	143.23	identified	0-20300-0-21647
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/24343_stationfile.csv	66.76	123.4	identified	0-20000-0-24343
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21965_stationfile.csv	70.62	162.39	identified	0-20300-0-21965
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/20292_stationfile.csv	77.72	104.28	identified	0-20000-0-20292
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23330_stationfile.csv	66.53	66.53	identified	0-20000-0-23330
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23022_stationfile.csv	69.76	61.68	identified	0-20000-0-23022
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/80000_stationfile.csv	66.0	2.0	inconsistent_coord
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23205_stationfile.csv	67.65	53.02	identified	0-20000-0-23205
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/21824_stationfile.csv	71.58	128.92	identified	0-20000-0-21824
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04220_stationfile.csv	68.69	307.13	identified	0-20000-0-04220
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04360_stationfile.csv	65.62	322.35	identified	0-20000-0-04360
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01152_stationfile.csv	67.26	14.37	identified	0-20000-0-01152
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23418_stationfile.csv	65.12	57.1	identified	0-20000-0-23415
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01028_stationfile.csv	74.51	19.02	identified	0-20001-0-01028
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71051_stationfile.csv	72.0	235.3	identified	0-20300-0-71051
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/22113_stationfile.csv	68.97	33.05	identified	0-20000-0-22113
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04320_stationfile.csv	76.76	341.23	identified	0-20000-0-04320
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/23472_stationfile.csv	65.78	87.95	identified	0-20000-0-23472
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/25173_stationfile.csv	68.92	180.5	identified	0-20300-0-25173
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71074_stationfile.csv	78.8	256.5	identified	0-20000-0-71074
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/01001_stationfile.csv	71.01	354.72	inconsistent_coord
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71957_stationfile.csv	68.3	226.5	identified	0-20001-0-71957
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/70086_stationfile.csv	70.13	216.43	identified	0-20000-0-70086
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71081_stationfile.csv	68.8	278.8	identified	0-20001-0-71081
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71925_stationfile.csv	69.1	255.0	identified	0-20001-0-71925
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/02836_stationfile.csv	67.37	26.65	identified	0-20000-0-02836
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/04202_stationfile.csv	76.52	291.25	identified	0-20000-0-04202
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/70026_stationfile.csv	71.28	203.23	identified	0-20000-0-70026
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71082_stationfile.csv	82.5	297.7	identified	0-20001-0-71082
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71043_stationfile.csv	65.3	233.2	identified	0-20001-0-71043
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71917_stationfile.csv	80.2	273.8	identified	0-20001-0-71917
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71072_stationfile.csv	76.2	240.7	identified	0-20300-0-71072
+/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/71924_stationfile.csv	74.7	265.0	identified	0-20001-0-71924

@@ -1,0 +1,9 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+10535	10537	NEU ULRICHSTEIN	50.75138888888889	9.0225	351.65	50 45 05N	009 01 21E	10.8	[50.82, 50.82]	[9.13, 9.13]	OSCAR	0-20000-0-10537		0-20000-0-10537	19830522	19850214	999.0	999.0	False	0-20000-0-10537	stadtallendorf	[104, 105, 106, 107, 117]
+10535									[50.82, 50.82]	[9.13, 9.13]	IGRA2			0-20300-0-nan	19830522	19850214				0-20000-0-10537	stadtallendorf	[104, 105, 106, 107, 117]
+10535									[50.82, 50.82]	[9.13, 9.13]	WBAN			0-20500-0-nan	19830522	19850214				0-20000-0-10537	stadtallendorf	[104, 105, 106, 107, 117]
+10535									[50.82, 50.82]	[9.13, 9.13]	CHUAN			0-20400-0-nan	19830522	19850214				0-20000-0-10537	stadtallendorf	[104, 105, 106, 107, 117]
+10535									[50.82, 50.82]	[9.13, 9.13]	SCHROEDER			0-20600-0-nan	19830522	19850214				0-20000-0-10537	stadtallendorf	[104, 105, 106, 107, 117]
+10535									[50.82, 50.82]	[9.13, 9.13]	WMO			0-20700-0-nan	19830522	19850214				0-20000-0-10537	stadtallendorf	[104, 105, 106, 107, 117]
+10535									[50.82, 50.82]	[9.13, 9.13]	AMMA			0-20800-0-nan	19830522	19850214				0-20000-0-10537	stadtallendorf	[104, 105, 106, 107, 117]
+10535									[50.82, 50.82]	[9.13, 9.13]	HARA			0-20111-0-nan	19830522	19850214				0-20000-0-10537	stadtallendorf	[104, 105, 106, 107, 117]

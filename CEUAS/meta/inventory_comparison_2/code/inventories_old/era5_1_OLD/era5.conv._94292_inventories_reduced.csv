@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+94292	94292	CARDWELL MARINE PDE	-18.255277777777778	146.01972222222224	8.1	18 15 19S	146 01 11E	2.0	[-18.27, -18.27]	[146.03, 146.03]	OSCAR	0-20000-0-94292		0-20000-0-94292	19811004	19811004	999.0	999.0	False	0-20000-0-94292	innisfail	[104, 105, 106, 107, 117]
+94292									[-18.27, -18.27]	[146.03, 146.03]	IGRA2			0-20300-0-nan	19811004	19811004				0-20000-0-94292	innisfail	[104, 105, 106, 107, 117]
+94292									[-18.27, -18.27]	[146.03, 146.03]	WBAN			0-20500-0-nan	19811004	19811004				0-20000-0-94292	innisfail	[104, 105, 106, 107, 117]
+94292									[-18.27, -18.27]	[146.03, 146.03]	CHUAN			0-20400-0-nan	19811004	19811004				0-20000-0-94292	innisfail	[104, 105, 106, 107, 117]
+94292									[-18.27, -18.27]	[146.03, 146.03]	SCHROEDER			0-20600-0-nan	19811004	19811004				0-20000-0-94292	innisfail	[104, 105, 106, 107, 117]
+94292									[-18.27, -18.27]	[146.03, 146.03]	WMO			0-20700-0-nan	19811004	19811004				0-20000-0-94292	innisfail	[104, 105, 106, 107, 117]

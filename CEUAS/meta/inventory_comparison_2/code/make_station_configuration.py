@@ -113,7 +113,7 @@ def extract_inventory(ids):
     
     invs = []
     for i in ids:
-        
+        i = str(i)
         if '-20300-' in i:
             inv = 'IGRA2'
         elif '-20400-' in i:
@@ -399,8 +399,11 @@ def make_inventory(v):
 
             elif c == "operating_territory":
                 ### TO DO !!! remove comment 
+                fname = file.split('/')[-1].split('_inventories')[0]  
+                
                 try: # try to use lookup table
-                    terr = terr_dic[ file.split('/')[-1].split('_inventories')[0]  ]
+                    terr = terr_dic[ fname ]
+                    #print(' Extracted terrytory' , fname )
                 except:
                     # this is slow due to the implementation of the function below
                     print('Calculating territory --- ')
@@ -408,7 +411,7 @@ def make_inventory(v):
                                                           cdm_sub_regions=cdm_sub_regions,
                                                           json_data = json_data, file = file)      
                     
-                    terr_dic[file.split('/')[-1].split('_inventories')[0] ] = terr
+                    terr_dic[  fname ] = terr
                     
                 stat_conf_dic[c].append(terr) 
                 
@@ -419,8 +422,9 @@ def make_inventory(v):
                     
                 elif c == 'start_date' or c == 'end_date':
                     a = best_inv[ statConf_to_inventory[c] ].values[0]
-                    if '-' in a:
-                        a = ''.join(a.split('-'))
+                    if type(a) == str:
+                        if '-' in a:
+                            a = ''.join(a.split('-'))
                     try:
                         b = float(a)
                     except:
@@ -598,7 +602,132 @@ def make_CUON():
     d.to_excel('station_configuration/CUON_station_configuration.xlsx' )
 
 
-def make_inventory_orphans(v):
+def make_ORPHAN():
+    ''' Create combined inventory for all orphans, mobile and problematic stations  '''
+    
+    inv = []
+    for s in glob.glob('station_configuration/*orphans_station_configuration_extended*'):
+        if 'CUON' in s or 'xl' in s or 'all'  in s:
+            continue
+        df = pd.read_csv(s, sep='\t')
+        print(s , ' ' , len(df))
+        inv.append(df)
+        
+    # first I clean and extract the unique primary ids, then I will loop through them to extrac the combined information from them all 
+    inventory_cuon = pd.concat(inv)
+    inventory_cuon = inventory_cuon[ [ c for c in inventory_cuon.columns if c != 'record_number'  ] ] # remove record_number column 
+    inventory_cuon = inventory_cuon.dropna(subset = ['primary_id']) # drop missing primary ids
+    inventory_cuon = inventory_cuon.reset_index()
+    
+    all_ids = np.unique(inventory_cuon['primary_id'].astype(str))
+    
+    # storing combined CUON dictionary 
+    combined_cuon= {}
+    # reading all station configuration columns
+    station_conf_columns = pd.read_csv('station_configuration/era5_1_orphans_station_configuration_extended.csv', sep='\t').columns
+    
+    for c in station_conf_columns:
+        if c in  'index' or 'Unnamed' in c :
+            continue     
+        combined_cuon[c] = []
+    
+    combined_cuon['elevation'] = []
+    # looping through all the unique ids and combining data
+    
+    #all_ids = ['0-20001-0-10393']
+    for index, stat in tqdm(enumerate(all_ids)):
+        indices = np.where( inventory_cuon['primary_id'].astype(str) == stat )[0]
+        df_i = inventory_cuon.iloc[indices]
+    
+        for c in list(station_conf_columns):
+            if c in  'index' or 'Unnamed' in c :
+                continue 
+
+            if c == 'record_number':
+                combined_cuon[c].append(index)
+                index = index+1 
+                continue
+            
+            values = [f.replace('[','').replace(']','') for f in df_i[c].astype(str).values if isinstance(f,str) ]
+            #if c == 'observed_variables':
+            #   values = np.unique( [f.split(',') for f in values ] ) 
+            cleaned = []
+                
+            # extracting min and max date 
+            if c == 'start_date':
+                values = [v.replace('-','') for v in values ]
+                try:
+                    values = [ int ( min ( [float(s) for s in values if float(s) > 2021 ] ) ) ]
+                except:
+                    values = [ int ( min ( [float(s) for s in values ] ) ) ]
+                    
+            if c == 'end_date':
+                values = [v.replace('-','') for v in values ]                
+                try:
+                    values = [ int ( max ( [float(s) for s in values ]) ) ]
+                except:                    
+                    values = [ int ( max ( [float(s) for s in values ] ) ) ]            
+            #if c == 'observed_variables':
+            #    print(0)
+            for v in values:
+                if c in ['observed_variables']:
+                    lista = v.split(',')
+                    for val in lista:
+                        val = val.replace(' ', '')
+                        try:
+                            vv = str(literal_eval(val))
+                        except:
+                            vv =  str(val)          
+                            
+                        # converting old numberinf scheme for observed variables to new ones form the CDM (i.e. using profile observations)
+                        if vv == '38': # relative humidity
+                            vv = '138'
+                        if vv == '85': # temperature
+                            vv = '126'          
+                        if vv == '104':  # eastward wind
+                            vv = '139'  
+                        if vv == '105': # northward wind
+                                vv = '140'  
+                        if vv == '36': # dew point
+                            vv = '137'  
+                                        
+                        if vv not in cleaned:
+                            cleaned.append( vv )
+                            
+                else:
+                    try:
+                        v =  str(literal_eval(v))
+                    except:
+                        pass
+                    
+                    if v is not None and v not in cleaned:
+                        cleaned.append(str(v))
+                    
+            cleaned.sort()
+           
+            values = [f for f in cleaned if f is not None ]
+    
+            if isinstance(values, list):
+                values = ','.join(values)
+            elif isinstance(values, str):
+                pass
+            if values == 'nan':
+                values = ''
+                
+            combined_cuon[c].append(values)
+            #print(0)
+        
+                    
+        combined_cuon['elevation'].append(np.nan)
+        
+    d = pd.DataFrame(combined_cuon)
+    combined_cuon['record_number'] = list(range(len(    combined_cuon['latitude'] ) ))
+    d.to_csv('station_configuration/CUON_orphans_station_configuration_extended.csv', sep='\t')
+    d.to_excel('station_configuration/CUON_orphans_station_configuration.xlsx' )
+
+
+
+def make_inventory_orphans_mobile(v):
     """ Special case of mobile or oprhans station, where we will collect only the id given in the original file and extract the set of changing lat and lon,
     since it is not possible to identify an actual station; all other fields in the station_inventory will be neglected """
 
@@ -609,7 +738,12 @@ def make_inventory_orphans(v):
     
     files = glob.glob(inv_path + '/' + v + '/' + '*')
     files = [f for f in files if 'inventories_iden' not in f and 'reduced' not in f and 'logs' not in f ]
-    a = 0
+    
+    if v in ['era5_1' , 'era5_2']:
+        files_m = glob.glob(inv_path + '/' + v + '_mobile' + '/' + '*')
+        files_m = [f for f in files_m if 'inventories_iden' not in f and 'reduced' not in f and 'logs' not in f ]
+        files.extend(files_m)
+    
     
     # dic holding data
     stat_conf_dic = {}
@@ -648,9 +782,14 @@ def make_inventory_orphans(v):
         
         stat_conf_dic['start_date'].append( str(df['file_min_date'].values[0]) )
         stat_conf_dic['end_date'].append( str(df['file_max_date'].values[0]) )
-        
-        stat_conf_dic['latitude'].append( str(df['lat_file'].values[0]) )
-        stat_conf_dic['longitude'].append( str(df['lon_file'].values[0]) )
+        try:
+            
+            stat_conf_dic['latitude'].append( str(df['lat_file'].values[0]) )
+            stat_conf_dic['longitude'].append( str(df['lon_file'].values[0]) )
+        except:
+            stat_conf_dic['latitude'].append( np.nan )
+            stat_conf_dic['longitude'].append( np.nan  )            
+            
         stat_conf_dic['observed_variables'].append( str(df['variables'].values[0]) )
 
         stat_conf_dic['kind'].append( kind )
@@ -658,8 +797,8 @@ def make_inventory_orphans(v):
     statconf_df = pd.DataFrame(stat_conf_dic)
     # adding record number
     statconf_df['record_number'] = list(range(1,len(statconf_df)+1))
-    statconf_df.to_csv('station_configuration/' + v + '_station_configuration_extended.csv' , sep= '\t' )           
-    statconf_df.to_excel('station_configuration/' + v + '_station_configuration_extended.xlsx' )
+    statconf_df.to_csv('station_configuration/' + v + '_orphans_station_configuration_extended.csv' , sep= '\t' )           
+    statconf_df.to_excel('station_configuration/' + v + '_orphans_station_configuration_extended.xlsx' )
         
         
     
@@ -829,9 +968,8 @@ def merge_inventories():
 
 # define a list of operation to perform between  [ 'INVENTORY', CUON', 'MERGE']
 TODO = ['INVENTORY', 'CUON', "MERGE"]
-POOL = False
-n_pool = 1
-
+POOL = False  # NB when running the first time, it might be necessary tot urn off the POOL due to the function that extracts the territory which has another POOL inside
+n_pool = 40
 
 parser = argparse.ArgumentParser(description="Crete station configuration table")
 
@@ -848,12 +986,13 @@ v                = args.dataset
 if v in  [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1', 'amma', 'hara', 'giub']:
     WHAT = 'INVENTORY'
     
-elif v in ['CUON', 'MERGE']:
+elif v in ['CUON', 'MERGE', 'ORPHAN']:
     WHAT = v
     
-elif v in ['npsound' , 'era5_1_mobile' , 'era5_2_mobile']:
+elif v in ['npsound' , 'era5_1_mobile' , 'era5_2_mobile', 'shipsound']:
     WHAT = 'MOBILE'
     
+
 if WHAT == 'INVENTORY':
         # inventories to process
         #inventories_all = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1']
@@ -863,8 +1002,8 @@ if WHAT == 'INVENTORY':
         
         if not POOL:
             for v in inventories:
-                #dummy = make_inventory(v) # regular identified stations
-                dummy = make_inventory_orphans(v) # orphans 
+                dummy = make_inventory(v) # regular identified stations  ### TO DO the oprhans will replace the extended stat conf file! need to be fixed! 
+                dummy = make_inventory_orphans_mobile(v) # orphans 
         else:
             p = Pool(n_pool)                
             func = partial(make_inventory) # regular identified stations
@@ -876,7 +1015,10 @@ if WHAT == 'INVENTORY':
             
 elif WHAT == 'CUON':
         dummy = make_CUON()
-    
+
+elif WHAT == 'ORPHAN':
+        dummy = make_ORPHAN()
+        
 elif WHAT== 'MERGE':
         dummy = merge_inventories()
         

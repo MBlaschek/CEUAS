@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+47584	47584	MORIOKA	39.698611111111106	141.16583333333335	155.4	39 41 55N	141 09 57E	0.4	[39.7, 39.7]	[141.17, 141.17]	OSCAR	0-20000-0-47584		0-20000-0-47584	19361001	19490714	999.0	999.0	False	0-20000-0-47584	shizukuishi	['38', '85', '106', '107']
+47584									[39.7, 39.7]	[141.17, 141.17]	IGRA2			0-20300-0-nan	19361001	19490714				0-20000-0-47584	shizukuishi	['38', '85', '106', '107']
+47584									[39.7, 39.7]	[141.17, 141.17]	WBAN			0-20500-0-nan	19361001	19490714				0-20000-0-47584	shizukuishi	['38', '85', '106', '107']
+47584									[39.7, 39.7]	[141.17, 141.17]	CHUAN			0-20400-0-nan	19361001	19490714				0-20000-0-47584	shizukuishi	['38', '85', '106', '107']
+47584									[39.7, 39.7]	[141.17, 141.17]	SCHROEDER			0-20600-0-nan	19361001	19490714				0-20000-0-47584	shizukuishi	['38', '85', '106', '107']
+47584	47584	MORIOKA                  	39.7	141.16666666666666	-999.0			0.3	[39.7, 39.7]	[141.17, 141.17]	WMO		47584	0-20700-0-47584	19361001	19490714				0-20000-0-47584	shizukuishi	['38', '85', '106', '107']

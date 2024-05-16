@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+60625									[26.9667, 26.9667]	[1.0833, 1.0833]	OSCAR				1949	1962				0-20300-0-60625	adrar	['85', '38', '106', '107']
+60625	60625	AOULEF	26.9667	1.0833	309.0			0.0	[26.9667, 26.9667]	[1.0833, 1.0833]	IGRA2			0-20300-0-60625	1949	1962	1949.0	1962.0	True	0-20300-0-60625	adrar	['85', '38', '106', '107']
+60625									[26.9667, 26.9667]	[1.0833, 1.0833]	WBAN			0-20500-0-nan	1949	1962				0-20300-0-60625	adrar	['85', '38', '106', '107']
+60625									[26.9667, 26.9667]	[1.0833, 1.0833]	CHUAN			0-20400-0-nan	1949	1962				0-20300-0-60625	adrar	['85', '38', '106', '107']
+60625	60625	Aoulef, Algeria	27.07	1.1	-999.0			11.6	[26.9667, 26.9667]	[1.0833, 1.0833]	SCHROEDER		60625.0	0-20600-0-60625	1949	1962				0-20300-0-60625	adrar	['85', '38', '106', '107']
+60625									[26.9667, 26.9667]	[1.0833, 1.0833]	WMO			0-20700-0-nan	1949	1962				0-20300-0-60625	adrar	['85', '38', '106', '107']

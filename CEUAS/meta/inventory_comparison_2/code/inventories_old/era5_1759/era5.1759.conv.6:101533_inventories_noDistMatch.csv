@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0	0-246-0-101533	ALAJARVI MOKSY	63.08888888888889	24.260833333333334	171.4	Surface land meteorological station (SYNOP), GOS	63 05 20N	024 15 39E	101533	999.0	999.0	False	6602.2		OSCAR	0-246-0-101533	None	None	None	None						[33.9, 33.9]	[-63.6, -63.6]	era5.1759.conv.6:101533	era5_1759	19710620	19710620	6:101533		[38, 85]
+0	0															IGRA2	0-20300-0-nan	None	None	None	None						[33.9, 33.9]	[-63.6, -63.6]	era5.1759.conv.6:101533	era5_1759	19710620	19710620	6:101533		[38, 85]
+0	0															WBAN	0-20500-0-nan	None	None	None	None						[33.9, 33.9]	[-63.6, -63.6]	era5.1759.conv.6:101533	era5_1759	19710620	19710620	6:101533		[38, 85]
+0	0															CHUAN	0-20400-0-nan	None	None	None	None						[33.9, 33.9]	[-63.6, -63.6]	era5.1759.conv.6:101533	era5_1759	19710620	19710620	6:101533		[38, 85]
+0	0															SCHROEDER	0-20600-0-nan	None	None	None	None						[33.9, 33.9]	[-63.6, -63.6]	era5.1759.conv.6:101533	era5_1759	19710620	19710620	6:101533		[38, 85]
+0	0															WMO	0-20700-0-nan	None	None	None	None						[33.9, 33.9]	[-63.6, -63.6]	era5.1759.conv.6:101533	era5_1759	19710620	19710620	6:101533		[38, 85]

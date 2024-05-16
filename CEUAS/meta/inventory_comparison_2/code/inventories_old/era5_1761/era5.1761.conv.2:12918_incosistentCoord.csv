@@ -1,0 +1,2 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		ANAHUAC	29.77	-94.67	7.010400000000001				12949.0	19301201.0	19370430.0		14.2		0-20500-0-12949	WBAN	baytown	26.6	29.7352778	-94.9772222					

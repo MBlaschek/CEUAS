@@ -1,0 +1,7 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max	lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	WIGOS_best	variables
+0	0																OSCAR	nuuk	222.9	64.1833333	-51.75						[66.03, 66.03]	[-53.57, -53.57]	era5.1761.conv.2:16501	era5_1761	19430528	19480410	2:16501	0-20500-0-16501	[106, 107]
+0	0															0-20300-0-nan	IGRA2	nuuk	222.9	64.1833333	-51.75						[66.03, 66.03]	[-53.57, -53.57]	era5.1761.conv.2:16501	era5_1761	19430528	19480410	2:16501	0-20500-0-16501	[106, 107]
+0	0		CRUNCHER ISLAND	66.03	-53.57	13.1064				16501.0	19420901.0	19480831.0		0.0		0-20500-0-16501	WBAN	nuuk	222.9	64.1833333	-51.75						[66.03, 66.03]	[-53.57, -53.57]	era5.1761.conv.2:16501	era5_1761	19430528	19480410	2:16501	0-20500-0-16501	[106, 107]
+0	0															0-20400-0-nan	CHUAN	nuuk	222.9	64.1833333	-51.75						[66.03, 66.03]	[-53.57, -53.57]	era5.1761.conv.2:16501	era5_1761	19430528	19480410	2:16501	0-20500-0-16501	[106, 107]
+0	0															0-20600-0-nan	SCHROEDER	nuuk	222.9	64.1833333	-51.75						[66.03, 66.03]	[-53.57, -53.57]	era5.1761.conv.2:16501	era5_1761	19430528	19480410	2:16501	0-20500-0-16501	[106, 107]
+0	0															0-20700-0-nan	WMO	nuuk	222.9	64.1833333	-51.75						[66.03, 66.03]	[-53.57, -53.57]	era5.1761.conv.2:16501	era5_1761	19430528	19480410	2:16501	0-20500-0-16501	[106, 107]

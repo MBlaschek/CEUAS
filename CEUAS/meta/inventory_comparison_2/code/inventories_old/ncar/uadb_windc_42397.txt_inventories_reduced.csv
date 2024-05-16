@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+42397	42398	SILIGURI (42398-0)	26.633333333333333	88.31666666666666	131.0	26 38 00N	088 19 00E	6.7	[26.67, 26.6]	[88.37, 88.3]	OSCAR	0-20000-0-42398		0-20000-0-42398	19540101	20151025	999.0	999.0	False	0-20000-0-42398	baghdogra	['38', '85', '106', '107']
+42397	42397	SILIGURI	26.6667	88.3667	123.0			0.5	[26.67, 26.6]	[88.37, 88.3]	IGRA2			0-20300-0-42397	19540101	20151025	1973.0	2015.0	True	0-20000-0-42398	baghdogra	['38', '85', '106', '107']
+42397									[26.67, 26.6]	[88.37, 88.3]	WBAN			0-20500-0-nan	19540101	20151025				0-20000-0-42398	baghdogra	['38', '85', '106', '107']
+42397									[26.67, 26.6]	[88.37, 88.3]	CHUAN			0-20400-0-nan	19540101	20151025				0-20000-0-42398	baghdogra	['38', '85', '106', '107']
+42397	42397	Shiliguri / Siliguri, West Bengal, India	26.67	88.37	-999.0			0.0	[26.67, 26.6]	[88.37, 88.3]	SCHROEDER		42397.0	0-20600-0-42397	19540101	20151025				0-20000-0-42398	baghdogra	['38', '85', '106', '107']
+42397	42398	VEBD Siliguri - Baghdogra IAF Base, West Bengal, India	26.63	88.32	-999.0			6.7	[26.67, 26.6]	[88.37, 88.3]	SCHROEDER		42398.0	0-20600-0-42398	19540101	20151025				0-20000-0-42398	baghdogra	['38', '85', '106', '107']
+42397									[26.67, 26.6]	[88.37, 88.3]	WMO			0-20700-0-nan	19540101	20151025				0-20000-0-42398	baghdogra	['38', '85', '106', '107']

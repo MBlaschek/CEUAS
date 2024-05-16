@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+50834									[46.5, 46.5]	[121.36, 121.36]	OSCAR				1982	2000				0-20300-0-50834	wulanhaote	['85', '38', '106', '107']
+50834	50834	TE-PO-SU-K/-MIAO	46.5	121.36	427.0			0.0	[46.5, 46.5]	[121.36, 121.36]	IGRA2			0-20300-0-50834	1982	2000	1982.0	2000.0	True	0-20300-0-50834	wulanhaote	['85', '38', '106', '107']
+50834									[46.5, 46.5]	[121.36, 121.36]	WBAN			0-20500-0-nan	1982	2000				0-20300-0-50834	wulanhaote	['85', '38', '106', '107']
+50834									[46.5, 46.5]	[121.36, 121.36]	CHUAN			0-20400-0-nan	1982	2000				0-20300-0-50834	wulanhaote	['85', '38', '106', '107']
+50834	50834	Solon, China	46.6	121.23	-999.0			14.9	[46.5, 46.5]	[121.36, 121.36]	SCHROEDER		50834.0	0-20600-0-50834	1982	2000				0-20300-0-50834	wulanhaote	['85', '38', '106', '107']
+50834									[46.5, 46.5]	[121.36, 121.36]	WMO			0-20700-0-nan	1982	2000				0-20300-0-50834	wulanhaote	['85', '38', '106', '107']

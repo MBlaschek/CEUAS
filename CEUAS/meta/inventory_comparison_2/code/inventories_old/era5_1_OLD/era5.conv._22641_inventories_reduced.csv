@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+22641	22641	ONEGA	63.9	38.11666666666667	12.7	63 54 00N	038 07 00E	0.2	[63.9, 63.9]	[38.12, 38.12]	OSCAR	0-20000-0-22641		0-20000-0-22641	19841002	19841002	999.0	999.0	False	0-20000-0-22641	onega	[104, 105, 106, 107, 117]
+22641									[63.9, 63.9]	[38.12, 38.12]	IGRA2			0-20300-0-nan	19841002	19841002				0-20000-0-22641	onega	[104, 105, 106, 107, 117]
+22641									[63.9, 63.9]	[38.12, 38.12]	WBAN			0-20500-0-nan	19841002	19841002				0-20000-0-22641	onega	[104, 105, 106, 107, 117]
+22641									[63.9, 63.9]	[38.12, 38.12]	CHUAN			0-20400-0-nan	19841002	19841002				0-20000-0-22641	onega	[104, 105, 106, 107, 117]
+22641									[63.9, 63.9]	[38.12, 38.12]	SCHROEDER			0-20600-0-nan	19841002	19841002				0-20000-0-22641	onega	[104, 105, 106, 107, 117]
+22641									[63.9, 63.9]	[38.12, 38.12]	WMO			0-20700-0-nan	19841002	19841002				0-20000-0-22641	onega	[104, 105, 106, 107, 117]

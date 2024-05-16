@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+28900	28900	SAMARA (OGMS)	53.25	50.21666666666667	139.35	53 15 00N	050 13 00E	15.6	[53.25, 53.2]	[50.45, 50.2]	OSCAR	0-20000-0-28900		0-20000-0-28900	19580101	19781231	999.0	999.0	False	0-20000-0-28900	samara	[36, 85, 106, 107]
+28900	28900	SAMARA	53.25	50.45	40.0			0.0	[53.25, 53.2]	[50.45, 50.2]	IGRA2			0-20300-0-28900	19580101	19781231	1939.0	1994.0	True	0-20000-0-28900	samara	[36, 85, 106, 107]
+28900									[53.25, 53.2]	[50.45, 50.2]	WBAN			0-20500-0-nan	19580101	19781231				0-20000-0-28900	samara	[36, 85, 106, 107]
+28900									[53.25, 53.2]	[50.45, 50.2]	CHUAN			0-20400-0-nan	19580101	19781231				0-20000-0-28900	samara	[36, 85, 106, 107]
+28900	28900	Samara / Kuybyshev (Bezenchuk), Russia	53.25	50.45	-999.0			0.0	[53.25, 53.2]	[50.45, 50.2]	SCHROEDER		28900.0	0-20600-0-28900	19580101	19781231				0-20000-0-28900	samara	[36, 85, 106, 107]
+28900	28901	Samara / Kuybyshev (observatory), Russia	53.23	50.17	-999.0			18.8	[53.25, 53.2]	[50.45, 50.2]	SCHROEDER		28901.0	0-20600-0-28901	19580101	19781231				0-20000-0-28900	samara	[36, 85, 106, 107]
+28900									[53.25, 53.2]	[50.45, 50.2]	WMO			0-20700-0-nan	19580101	19781231				0-20000-0-28900	samara	[36, 85, 106, 107]

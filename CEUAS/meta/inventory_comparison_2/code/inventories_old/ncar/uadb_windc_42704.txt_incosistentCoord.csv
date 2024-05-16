@@ -1,0 +1,4 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	WIGOS_calc	inventory	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0		PANAGARH	23.47	87.45	74.0664				32813.0	19440101.0	19460228.0		2.0		0-20500-0-32813	WBAN	asansol	0.5	23.683333	86.983333					
+1	1		MADHAIGANJ	23.63	87.35	94.1832				32810.0	19440101.0	19441231.0		19.5		0-20500-0-32810	WBAN	asansol	0.5	23.683333	86.983333					
+2	2		ONDAL	23.62	87.2	86.25840000000001				32808.0	19430601.0	19451231.0		28.8		0-20500-0-32808	WBAN	asansol	0.5	23.683333	86.983333					

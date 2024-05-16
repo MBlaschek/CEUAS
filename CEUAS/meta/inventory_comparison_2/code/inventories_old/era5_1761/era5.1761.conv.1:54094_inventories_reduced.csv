@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:54094	54094	MUDANJIANG	44.5	129.66666666666666	306.5	44 30 00N	129 40 00E	10.3	[44.58, 44.58]	[129.6, 129.6]	OSCAR	0-20000-0-54094		0-20000-0-54094	19570301	19591231	999.0	999.0	False	0-20000-0-54094	mudanjiang	[106, 107]
+1:54094	54094	MUDANJIANG	44.567	129.6	242.0			1.4	[44.58, 44.58]	[129.6, 129.6]	IGRA2			0-20300-0-54094	19570301	19591231	1973.0	1987.0	True	0-20000-0-54094	mudanjiang	[106, 107]
+1:54094									[44.58, 44.58]	[129.6, 129.6]	WBAN			0-20500-0-nan	19570301	19591231				0-20000-0-54094	mudanjiang	[106, 107]
+1:54094									[44.58, 44.58]	[129.6, 129.6]	CHUAN			0-20400-0-nan	19570301	19591231				0-20000-0-54094	mudanjiang	[106, 107]
+1:54094	54094	Mudanjiang, China	44.52	129.57	-999.0			7.1	[44.58, 44.58]	[129.6, 129.6]	SCHROEDER		54094	0-20600-0-54094	19570301	19591231				0-20000-0-54094	mudanjiang	[106, 107]
+1:54094	54094	MUDANJIANG               	44.56666666666667	129.6	-999.0			1.5	[44.58, 44.58]	[129.6, 129.6]	WMO		54094	0-20700-0-54094	19570301	19591231				0-20000-0-54094	mudanjiang	[106, 107]

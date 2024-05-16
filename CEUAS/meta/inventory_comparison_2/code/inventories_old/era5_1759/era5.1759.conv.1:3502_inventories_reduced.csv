@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:3502	03502	ABERPORTH	52.13944444444444	-4.571111111111111	133.0	52 08 22N	004 34 16W	4.8	[52.13, 52.1]	[-4.56, -4.6]	OSCAR	0-20000-0-03502		0-20000-0-03502	19661025	19791219	999.0	999.0	True	0-20000-0-03502	carmarthen	[38, 85, 106, 107, 117]
+1:3502	03502	ABERPORTH	52.1394	-4.5711	133.0			4.8	[52.13, 52.1]	[-4.56, -4.6]	IGRA2			0-20300-0-03502	19661025	19791219	1969.0	2021.0	True	0-20000-0-03502	carmarthen	[38, 85, 106, 107, 117]
+1:3502									[52.13, 52.1]	[-4.56, -4.6]	WBAN			0-20500-0-nan	19661025	19791219				0-20000-0-03502	carmarthen	[38, 85, 106, 107, 117]
+1:3502									[52.13, 52.1]	[-4.56, -4.6]	CHUAN			0-20400-0-nan	19661025	19791219				0-20000-0-03502	carmarthen	[38, 85, 106, 107, 117]
+1:3502	3502	Aberporth Range (operated by Ministry of Defence), Wales, UK	52.13	-4.57	-999.0			3.9	[52.13, 52.1]	[-4.56, -4.6]	SCHROEDER		3502	0-20600-0-3502	19661025	19791219				0-20000-0-03502	carmarthen	[38, 85, 106, 107, 117]
+1:3502	03502	ABERPORTH                	52.13333333333333	-4.566666666666666	-999.0			4.4	[52.13, 52.1]	[-4.56, -4.6]	WMO		03502	0-20700-0-03502	19661025	19791219				0-20000-0-03502	carmarthen	[38, 85, 106, 107, 117]

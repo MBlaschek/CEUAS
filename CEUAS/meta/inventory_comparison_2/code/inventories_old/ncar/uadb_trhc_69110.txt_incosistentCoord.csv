@@ -1,0 +1,6 @@
+level_0	index	WIGOS	station_name	latitude	longitude	elevation	ObsRems	original_lat	original_lon	station_id	start_date	end_date	isRadio	distance_km	distance_km_minusLat	inventory	WIGOS_calc	city	city_dist_km	city_lat	city_lon	station_id_igra	WMO_id	Unnamed: 0	date_min	date_max
+0	0	0-20000-0-13610	KUKES	42.03333333333333	20.416666666666668	354.0	Surface land meteorological station (SYNOP), GOS	42 02 00N	020 25 00E	13610	999.0	999.0	False	11.1		OSCAR	0-20000-0-13610	prizren	10.8	42.213889	20.739722					
+1	1	0-20000-0-13477	PRIZREN	42.21666666666667	20.733333333333334	403.0	Surface land meteorological station (SYNOP), RBSN(S), GOS	42 13 00N	020 44 00E	13477	999.0	999.0	False	25.3		OSCAR	0-20000-0-13477	prizren	10.8	42.213889	20.739722					
+0	0		Prizren, Yugoslavia	42.22	20.75	-999.0				13477				26.7		SCHROEDER	0-20600-0-13477	prizren	10.8	42.213889	20.739722		13477	533.0	9999999	9999999
+1	1		Prizren - German Contingency Kosovo Force (GECONKFOR) Prizren Multinational Brigade - South, Serbia and Montenegro	42.22	20.75	-999.0				99911				26.7		SCHROEDER	0-20600-0-99911	prizren	10.8	42.213889	20.739722		99911	4087.0	2004-06-30 00:00:00	2007-09-04 00:00:00
+0	0		KUKES                    	42.03333333333333	20.416666666666668	-999.0				13610				11.1		WMO	0-20700-0-13610	prizren	10.8	42.213889	20.739722		13610	2324.0		

@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:5096	07143	CHARTRES	48.46027777777778	1.501111111111111	156.0	48 27 37N	001 30 04E	1.1	[48.45, 48.45]	[1.5, 1.5]	OSCAR	0-20000-0-07143		0-20000-0-07143	19271003	19281112	999	999	False	0-20000-0-07143	chartres	[106, 107]
+C:5096									[48.45, 48.45]	[1.5, 1.5]	IGRA2			0-20300-0-nan	19271003	19281112				0-20000-0-07143	chartres	[106, 107]
+C:5096									[48.45, 48.45]	[1.5, 1.5]	WBAN			0-20500-0-nan	19271003	19281112				0-20000-0-07143	chartres	[106, 107]
+C:5096	5096	Chartres	48.45	1.5	153			0.0	[48.45, 48.45]	[1.5, 1.5]	CHUAN		-999	0-20400-0-5096	19271003	19281112	-999-999	-999-999		0-20000-0-07143	chartres	[106, 107]
+C:5096									[48.45, 48.45]	[1.5, 1.5]	SCHROEDER			0-20600-0-nan	19271003	19281112				0-20000-0-07143	chartres	[106, 107]
+C:5096	07143	CHARTRES                 	48.45	1.5	-999.0			0.0	[48.45, 48.45]	[1.5, 1.5]	WMO		07143	0-20700-0-07143	19271003	19281112				0-20000-0-07143	chartres	[106, 107]

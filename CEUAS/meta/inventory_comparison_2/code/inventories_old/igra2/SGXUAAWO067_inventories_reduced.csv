@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+WO067	61660	DAKAR-DIASS-AIBD	14.670833333333333	-17.06722222222222		14 40 15N	017 04 02W	14.3	[14.8, 14.8]	[-17.0667, -17.0667]	OSCAR	0-686-0-61660		0-686-0-61660	1945	1954	999.0	999.0	True	0-686-0-61660	pout	['85', '38', '106', '107']
+WO067	WO067	THIES	14.8	-17.0667	71.0			0.0	[14.8, 14.8]	[-17.0667, -17.0667]	IGRA2			0-20300-0-WO067	1945	1954	1945.0	1954.0	True	0-686-0-61660	pout	['85', '38', '106', '107']
+WO067	11101	DAKAR EKNES FIELD	14.72	-17.23	22.250400000000003			19.7	[14.8, 14.8]	[-17.0667, -17.0667]	WBAN			0-20500-0-11101	1945	1954	19430201.0	19440531.0		0-686-0-61660	pout	['85', '38', '106', '107']
+WO067									[14.8, 14.8]	[-17.0667, -17.0667]	CHUAN			0-20400-0-nan	1945	1954				0-686-0-61660	pout	['85', '38', '106', '107']
+WO067	61650	(made up station ID) Kawsara, Senegal	14.6564	-17.0981	-999.0			16.2	[14.8, 14.8]	[-17.0667, -17.0667]	SCHROEDER		61650.0	0-20600-0-61650	1945	1954				0-686-0-61660	pout	['85', '38', '106', '107']
+WO067									[14.8, 14.8]	[-17.0667, -17.0667]	WMO			0-20700-0-nan	1945	1954				0-686-0-61660	pout	['85', '38', '106', '107']

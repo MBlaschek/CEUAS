@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+1:89596									[-74.08, -74.08]	[97.48, 97.48]	OSCAR				19571128	19580109				0-20600-0-89596	None	[38, 85, 106, 107, 117]
+1:89596									[-74.08, -74.08]	[97.48, 97.48]	IGRA2			0-20300-0-nan	19571128	19580109				0-20600-0-89596	None	[38, 85, 106, 107, 117]
+1:89596									[-74.08, -74.08]	[97.48, 97.48]	WBAN			0-20500-0-nan	19571128	19580109				0-20600-0-89596	None	[38, 85, 106, 107, 117]
+1:89596									[-74.08, -74.08]	[97.48, 97.48]	CHUAN			0-20400-0-nan	19571128	19580109				0-20600-0-89596	None	[38, 85, 106, 107, 117]
+1:89596	89596.0	Komsomolskaya (operated by USSR), Antarctica	-74.08	97.48	-999.0			0.0	[-74.08, -74.08]	[97.48, 97.48]	SCHROEDER		89596.0	0-20600-0-89596	19571128	19580109				0-20600-0-89596	None	[38, 85, 106, 107, 117]
+1:89596									[-74.08, -74.08]	[97.48, 97.48]	WMO			0-20700-0-nan	19571128	19580109				0-20600-0-89596	None	[38, 85, 106, 107, 117]

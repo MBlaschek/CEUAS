@@ -1,0 +1,8 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+07588	07588	ST-AUBAN-SUR-DURANCE	44.06222222222222	5.989722222222222	461.0	44 03 44N	005 59 23E	1.2	[44.07, 44.07]	[6.0, 6.0]	OSCAR	0-20000-0-07588		0-20000-0-07588	19801115	19931118	999.0	999.0	False	0-20000-0-07588	manosque	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+07588									[44.07, 44.07]	[6.0, 6.0]	IGRA2			0-20300-0-nan	19801115	19931118				0-20000-0-07588	manosque	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+07588									[44.07, 44.07]	[6.0, 6.0]	WBAN			0-20500-0-nan	19801115	19931118				0-20000-0-07588	manosque	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+07588									[44.07, 44.07]	[6.0, 6.0]	CHUAN			0-20400-0-nan	19801115	19931118				0-20000-0-07588	manosque	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+07588	7655	(made up station ID) Observatoire de Haute Provence (OHP) 72.5 MHz wind profiler, Saint-Michel-l'Observatoire, France	43.95	5.71	-999.0			26.8	[44.07, 44.07]	[6.0, 6.0]	SCHROEDER		7655	0-20600-0-7655	19801115	19931118				0-20000-0-07588	manosque	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+07588	7659	(made up station ID) Observatoire de Haute Provence (OHP) ozonesonde site, Saint-Michel-l'Observatoire, France	43.93	5.72	-999.0			27.3	[44.07, 44.07]	[6.0, 6.0]	SCHROEDER		7659	0-20600-0-7659	19801115	19931118				0-20000-0-07588	manosque	[36, 38, 39, 85, 104, 105, 106, 107, 117]
+07588	07588	ST AUBAN                 	44.05	5.983333333333333	-999.0			2.6	[44.07, 44.07]	[6.0, 6.0]	WMO		07588	0-20700-0-07588	19801115	19931118				0-20000-0-07588	manosque	[36, 38, 39, 85, 104, 105, 106, 107, 117]

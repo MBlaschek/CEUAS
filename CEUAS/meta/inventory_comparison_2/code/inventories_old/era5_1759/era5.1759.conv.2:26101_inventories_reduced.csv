@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+2:26101									[61.17, 61.17]	[-113.68, -113.68]	OSCAR				19431001	19440217				0-20500-0-26101	yellowknife	[106, 107]
+2:26101									[61.17, 61.17]	[-113.68, -113.68]	IGRA2			0-20300-0-nan	19431001	19440217				0-20500-0-26101	yellowknife	[106, 107]
+2:26101	26101.0	FORT RESOLUTION	61.17	-113.68	167.03040000000001			0.0	[61.17, 61.17]	[-113.68, -113.68]	WBAN			0-20500-0-26101	19431001	19440217	19340101.0	19471231.0		0-20500-0-26101	yellowknife	[106, 107]
+2:26101									[61.17, 61.17]	[-113.68, -113.68]	CHUAN			0-20400-0-nan	19431001	19440217				0-20500-0-26101	yellowknife	[106, 107]
+2:26101									[61.17, 61.17]	[-113.68, -113.68]	SCHROEDER			0-20600-0-nan	19431001	19440217				0-20500-0-26101	yellowknife	[106, 107]
+2:26101									[61.17, 61.17]	[-113.68, -113.68]	WMO			0-20700-0-nan	19431001	19440217				0-20500-0-26101	yellowknife	[106, 107]

@@ -1,0 +1,2 @@
+lat_file	lon_file	file	file_dataset	file_min_date	file_max_date	file_statid	variables	kind	WIGOS_best
+		era5.conv._EREX0	era5_1_mobile	198005	198102	EREX0		mobile	0-20999-0-EREX0

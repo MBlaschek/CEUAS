@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+94325	94325	ALI CURUNG	-21.0025	134.40277777777777	376.2	21 00 09S	134 24 10E	79.7	[-21.53, -21.53]	[133.88, 133.88]	OSCAR	0-20000-0-94325		0-20000-0-94325	19810905	19810913	999.0	999.0	False		alice springs	[104, 105, 106, 107, 117]
+94325									[-21.53, -21.53]	[133.88, 133.88]	IGRA2			0-20300-0-nan	19810905	19810913					alice springs	[104, 105, 106, 107, 117]
+94325									[-21.53, -21.53]	[133.88, 133.88]	WBAN			0-20500-0-nan	19810905	19810913					alice springs	[104, 105, 106, 107, 117]
+94325									[-21.53, -21.53]	[133.88, 133.88]	CHUAN			0-20400-0-nan	19810905	19810913					alice springs	[104, 105, 106, 107, 117]
+94325									[-21.53, -21.53]	[133.88, 133.88]	SCHROEDER			0-20600-0-nan	19810905	19810913					alice springs	[104, 105, 106, 107, 117]
+94325									[-21.53, -21.53]	[133.88, 133.88]	WMO			0-20700-0-nan	19810905	19810913					alice springs	[104, 105, 106, 107, 117]

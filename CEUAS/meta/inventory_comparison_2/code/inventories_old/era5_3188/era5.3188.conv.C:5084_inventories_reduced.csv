@@ -1,0 +1,7 @@
+file_statid	station_id	station_name	latitude	longitude	elevation	original_lat	original_lon	distance_km	lat_file	lon_file	inventory	WIGOS	WMO_id	WIGOS_calc	file_min_date	file_max_date	start_date	end_date	isRadio	WIGOS_best	city	variables
+C:5084	07785	CAP CORSE	43.00388888888889	9.359444444444444	113.0	43 00 14N	009 21 34E	1.9	[43.02, 43.02]	[9.35, 9.35]	OSCAR	0-20000-0-07785		0-20000-0-07785	19271004	19271004	999	999	False	0-20000-0-07785	bastia	[106, 107]
+C:5084									[43.02, 43.02]	[9.35, 9.35]	IGRA2			0-20300-0-nan	19271004	19271004				0-20000-0-07785	bastia	[106, 107]
+C:5084									[43.02, 43.02]	[9.35, 9.35]	WBAN			0-20500-0-nan	19271004	19271004				0-20000-0-07785	bastia	[106, 107]
+C:5084	5084	Cap Corse	43.02	9.35	127			0.0	[43.02, 43.02]	[9.35, 9.35]	CHUAN		-999	0-20400-0-5084	19271004	19271004	-999-999	-999-999		0-20000-0-07785	bastia	[106, 107]
+C:5084									[43.02, 43.02]	[9.35, 9.35]	SCHROEDER			0-20600-0-nan	19271004	19271004				0-20000-0-07785	bastia	[106, 107]
+C:5084	07785	CAP CORSE                	43.0	9.35	-999.0			2.2	[43.02, 43.02]	[9.35, 9.35]	WMO		07785	0-20700-0-07785	19271004	19271004				0-20000-0-07785	bastia	[106, 107]
