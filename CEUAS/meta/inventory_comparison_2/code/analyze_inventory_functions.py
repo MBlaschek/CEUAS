@@ -16,10 +16,10 @@ import glob
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-pd.set_option('display.max_columns', None)
-pd.set_option('display.max_rows', None)
-pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', -1)
+# pd.set_option('display.max_columns', None)
+# pd.set_option('display.max_rows', None)
+# pd.set_option('display.width', None)
+# pd.set_option('display.max_colwidth', -1)
 
 from multiprocessing import Pool
 from functools  import partial
@@ -204,7 +204,7 @@ class Analyze():
         """ Find the closest city within a 100 km radius """
         
         print('*** Find CIty *** ')
-        if not self.data.lats:
+        if len(self.data.lats) < 1: # edit form "if not self.data.lats:""
             self.best_match['city'] = 'None'
             self.best_match['city_dist_km'] = 'None'
             self.best_match['city_lat'] = 'None'
@@ -344,13 +344,13 @@ class Analyze():
         lats = self.data.lats
         lons = self.data.lons
         
-        if lats:
+        if len(lats) > 0: # edit from "if lats:"
             distances = [ round( self.utils.distance( lats[-1], lons[-1] , inv_matchingId['latitude'][i] , inv_matchingId['longitude'][i] ), 1 ) for i in range(len(inv_matchingId['latitude']) ) ]
     
             inv_matchingId['distance_km'] = distances
             inv_matchingId['distance_km_minusLat'] = ['' for i in range(len(inv_matchingId))]  # must add to keep dataframes compatible in all cases
         
-        else:
+        else: # edit from "else:"
             
             inv_matchingId['distance_km'] = ['' for i in range(len(inv_matchingId))]
             
@@ -623,6 +623,8 @@ class Data():
                 self.read_era5_1_mobile()                
             elif 'ncar' in self.dataset:
                 self.read_ncar()
+            elif 'bufr_cnr' in self.dataset :
+                self.read_bufr_cnr()
             elif 'bufr' in self.dataset :
                 self.read_bufr()
             elif 'amma' in self.dataset:
@@ -1059,6 +1061,60 @@ class Data():
         return 0    
 
 
+    def read_bufr_cnr(self):
+        """ Reading BURF CNR station files written into csv station files """
+        
+        bufr_cnr_file = self.file 
+        
+        # reading data via csv 
+        data =pd.read_csv(self.file, sep='\t')
+        dates = pd.to_datetime(data['date'].astype('string') + data['time'].astype('string').str.zfill(6), format='%Y%m%d%H%M%S')
+        dates = np.unique(dates)     
+        lats = data.latitude.values
+        lons = data.longitude.values
+        
+        del data
+                
+        lats_all = np.unique(lats)
+        lons_all = np.unique(lons)
+        
+        df = pd.DataFrame( {'lat': lats , 'lon' : lons } )
+        df = df.drop_duplicates().reset_index(drop=True) 
+         
+        statIds = [ bufr_cnr_file.split('/')[-1].split('_')[0] ]
+          
+        #lats, lons = list(df.lat.values), list(df.lon.values)
+        
+        a = self.check_consistent_coords(lats, lons)
+    
+        dic = { 'max_date': max(dates), 
+                 'min_date': min(dates), 
+                 'statid': str(statIds), # needed in case multiple ids 
+                 'lats': [list(df.lat.values)], 
+                 'lons': [list(df.lon.values)], 
+
+                 'lats_all': [list(lats_all)], 
+                 'lons_all': [list(lons_all)],   # actually the same thing...
+                 
+                 'file': self.file.split('/')[-1] , 
+                 'file_path': self.file , 
+                 'db': self.dataset,
+                 'variables': str( ['126','137','106','107','117'] ),
+                 'frequency': self.frequency,
+                 'consistent_coord': str(self.consistent_coord) }
+
+        
+        pd.DataFrame(dic).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        self.statid = statIds
+        self.lats = lats
+        self.lons = lons 
+        self.min_date = min(dates)
+        self.max_date = max(dates)
+        self.variables = dic['variables']
+        return 0    
+
+
+
     def read_shipsound_npsound(self):
         """ Reading SHIPSOUND files written into csv station files """
                
@@ -1428,7 +1484,7 @@ class Inventory():
     the OSCAR, IGRA2, WBAN and CHUAN inventories.
     For OSCAR and WBAN will convert lat and lon to decimal format. """
     
-    def __init__(self, datadir ='', tablesdir = '../data/tables/',
+    def __init__(self, datadir ='', tablesdir = '/users/staff/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/data/tables/',
                  oscar ="",
                  igra2= "",
                  wban = '',
@@ -1482,7 +1538,7 @@ class Inventory():
         igra2['isRadio'] = 'True'
         igra2.name = 'IGRA2'
 
-        out = open('file_list/igra2_files_list.txt' , 'w')
+        out = open('/users/staff/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/code/file_list/igra2_files_list.txt' , 'w')
         
         for i in range(len(igra2)):
             stat = igra2.loc[i, 'station_id_igra' ] 
@@ -1684,7 +1740,7 @@ class Inventory():
 utils = Utils()
 
 # Initialize inventory
-inventory = Inventory( datadir ='../data/tables',  
+inventory = Inventory( datadir ='/users/staff/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/data/tables',  
                  oscar = "vola_legacy_report.txt" , 
                  igra2 = "igra2-station-list.txt"  , 
                  wban = "WBAN.TXT-2006jan"  , 
@@ -1745,7 +1801,7 @@ def wrapper(data, file):
         print("Reading file::: " , file )
         d = data.read_file(file=file)
         print("Done Reading file::: " , file )
-      
+        
         if data.dataset == 'igra2':
             file_name = file.station_id_igra
         else:
@@ -1755,7 +1811,7 @@ def wrapper(data, file):
         for i in ["oscar","igra2","wban","chuan", 'schroeder', 'wmo', 'amma', 'hara'] :        
             print(' *** Analyzing the inventory: ', i )
             analyze = Analyze( data = data, inv = inventory.inv[i], 
-                               cities= inventory.cities, utils = utils)
+                                cities= inventory.cities, utils = utils)
             
             analyze.AddDistance()
             
@@ -1784,7 +1840,7 @@ def wrapper(data, file):
             
         if data.dataset in ['igra2'] and not data.consistent_coord: # special case where igra2 has mobile stations
             df_red = pd.DataFrame (columns = df_red.columns )           
-         
+            
         if df_red.empty or data.dataset in ['npsound', 'era5_1_mobile' , 'era5_2_mobile' , 'shipsound' ] :
             
             if data.dataset in ['npsound', 'era5_1_mobile' , 'era5_2_mobile' , 'shipsound', 'igra2']:
@@ -1879,7 +1935,7 @@ def wrapper(data, file):
                                 
                                 st = "\t". join( [ str(eval(data.statid[0])[0]) , str( int(df.station_id.values[0])) , str(data.lats[0]) ,  str(df['latitude'].values[0])  ,  str(data.lons[0]) , str(df['longitude'].values[0]) ,  file_name ,  flag , '\n'] ) 
                                 a.write(st)
-   
+
                         
                 except:
                     print("PROBLEM==========" , file_name )
@@ -1976,7 +2032,7 @@ def wrapper(data, file):
         a.write(name_s + '\t' + str(data.lats[0]) + '\t' + str(data.lons[0]) + '\t' + flag + '\n' )       
         
         print("Done :::" , file_name )
-    
+
 
     except:
         print("*** Cannot read file! ***" , name_s )
@@ -2016,6 +2072,7 @@ test_era5_1759_lat_mismatch_all = ['era5.1759.conv.2:82606', 'era5.1759.conv.2:8
 
 ### Directory containing the databases 
 basedir = '/mnt/users/scratch/leo/scratch/era5/odbs/'
+uvdir = '/mnt/users/staff/uvoggenberger/scratch/'
 datasets = {  'era5_1': basedir + '/1' ,
              'era5_1_mobile' : basedir + '1_mobile' ,
             'era5_2': basedir + '/2',
@@ -2024,10 +2081,13 @@ datasets = {  'era5_1': basedir + '/1' ,
             'era5_3188': basedir +'/3188',
             'era5_1759': basedir +'/1759',
             'era5_1761': basedir + '/1761',
-            'bufr': basedir + '/ai_bfr/',                                   
+            'bufr': basedir + '/ai_bfr/',  
+            'bufr_cnr': uvdir + 'bufr_cnr/concated',                                  
             'ncar': '/scratch/das/federico/databases_service2/UADB_22012024/',
             'amma': '/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/' ,
             'igra2': '', # dummy, use the igra2 station list file 
+            'igra2_mobile': '', # dummy, use the igra2 station list file 
+
             'hara': '/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/',
             
             'giub': '/scratch/das/federico/databases_service2/GIUB_07072023/',
@@ -2146,6 +2206,9 @@ def get_flist(db):
         f = inventory.inv['igra2']
         flist = [ f.iloc[n] for n in range(len(f)) ]
         
+    elif 'bufr_cnr' in db:
+        flist=glob.glob(datasets[db] + '/*') 
+
     elif 'bufr' in db:
         flist=glob.glob(datasets[db] + '/'+'era5.*.bfr')
         flist=[f for f in flist if 'undef' not in f ]
@@ -2154,8 +2217,8 @@ def get_flist(db):
         flist=glob.glob(datasets[db] + '/'+'*')
         
     elif 'hara' in db:
-        flist=glob.glob(datasets[db] + '/'+'*')         
-        
+        flist=glob.glob(datasets[db] + '/'+'*')      
+
     elif 'giub' in db:
         flist=glob.glob(datasets[db] + '/'+'*')         
         
@@ -2184,7 +2247,7 @@ if __name__ == '__main__':
     all_db = [ 'era5_1', 'era5_2', 
                'era5_1759', 'era5_1761', 'era5_3188', 
                'bufr', 'ncar', 
-               'igra2',  
+               'igra2', 'igra2_mobile', 
                'amma', 
                'hara', 'npsound', 'shipsound',
                'giub', 
@@ -2195,16 +2258,16 @@ if __name__ == '__main__':
     databases = all_db
     
     databases = ['era5_1759', 'era5_1761', 'era5_3188', 
-               'bufr', 'ncar', 
-               'igra2',  
+               'bufr', 'bufr_cnr', 'ncar', 
+               'igra2', 'igra2_mobile', 
                'amma', 
                'hara', 'npsound', 'shipsound',
                'giub', ]
     
-    databases = ['era5_1']  
+    databases = ['bufr_cnr']  
     
     # enable multiprocesing
-    POOL = True 
+    POOL = False 
     n_pool = 40
     CHECK_MISSING = False  
     CHECK_FAILED = False
@@ -2229,9 +2292,9 @@ if __name__ == '__main__':
         flist = [f for f in flist if f.split('/')[-1] in flist_n  ]
         '''
         
-        ### filtering mobile igra
-        if db == 'igra2':
-            mobile_igra_list = pd.read_csv('file_list/igra2_files_list.txt' , sep = '\t', names = ['station', 'kind'] )
+        # ### filtering mobile igra
+        if db == 'igra2_mobile':
+            mobile_igra_list = pd.read_csv('/users/staff/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/code/file_list/igra2_files_list.txt' , sep = '\t', names = ['station', 'kind'] )
             mobile_igra_list = mobile_igra_list.loc[mobile_igra_list.kind == 'mobile']
             flist = [f for f in flist if f.station_id_igra in list(mobile_igra_list.station) ]
         
@@ -2265,14 +2328,17 @@ if __name__ == '__main__':
         
 
         ######  TODO edit here to possibly filter file list
-        flist = [f for f in flist if '94146' in f ]  # inconsitentCoord era5_1
+        # flist = [f for f in flist if '94146' in f ]  # inconsitentCoord era5_1
         
         if db != 'igra2':
             skipped = [ 'era5.1759.conv.xxx'.replace('xxx', str(i))  for i in range(1900,2020,1) ]
             skipped = skipped + [ 'era5.1761.conv.xxx'.replace('xxx', str(i))  for i in range(1900,2020,1) ]
             flist = [f for f in flist if f.split('/')[-1] not in skipped ]
         
-        #flist = flist[:1]
+        # remove 0 size files:
+        flist = [f for f in flist if os.path.getsize(f) != 0]
+    
+        # flist = flist[:100] ## edit! 
         if len(flist) ==1:
             POOL = False
             
