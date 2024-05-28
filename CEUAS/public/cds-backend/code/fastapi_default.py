@@ -67,6 +67,7 @@ from fastapi.responses import FileResponse
 from fastapi import Response
 from fastapi import Request
 from fastapi import HTTPException
+from fastapi.encoders import jsonable_encoder
 app = FastAPI()
 import subprocess
 
@@ -661,7 +662,7 @@ def status_test(command=None) -> dict:
         status_msg = {"version": __version__, "status": hproc.status(), "running": hproc.is_running(),
                       "available": str(elapsed), "memory": hproc.memory_percent(), "cpu": hproc.cpu_percent(),
                       "num_stations": len(slnum), "active": active}
-        return status_msg
+        return jsonable_encoder(status_msg)
 
         # psutil.disk_usage('/tmp/')  # '/data/private/',
         # if command == config['reload_pwd']:
@@ -705,7 +706,7 @@ def status_test(command=None) -> dict:
 
         # return status_msg
 
-    return {'error': "Can't find me....? :("}
+    return {'error': "Not running right now."}
 
 
 def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
