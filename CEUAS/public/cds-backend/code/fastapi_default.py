@@ -642,10 +642,18 @@ def to_valid_datetime(idate: str, as_string: bool = False) -> Union[str, datetim
         return idate.strftime('%Y%m%d')
     return idate
 
+@app.get('/')
+def first_response(command=None) -> dict:
+    """ Return the first response of the fastapi server
+
+    Returns:
+
+    """
+    return jsonable_encoder({'FastAPI': 'Comprehensive Upper-air Observation Network','Status':'http://136.156.140.94/status', 'Documentation:':'https://github.com/MBlaschek/CEUAS' })
 
 @app.get('/status')
 def status_test(command=None) -> dict:
-    """ Return the status of the hug server
+    """ Return the status of the fastapi server
 
     Returns:
 
