@@ -657,10 +657,12 @@ def status_test(command=None) -> dict:
             break
 
     if hproc is not None:
-        elapsed = datetime.now() - datetime.fromtimestamp(hproc.create_time())
+        elapsed = datetime.datetime.now() - datetime.datetime.fromtimestamp(hproc.create_time())
         status_msg = {"version": __version__, "status": hproc.status(), "running": hproc.is_running(),
                       "available": str(elapsed), "memory": hproc.memory_percent(), "cpu": hproc.cpu_percent(),
                       "num_stations": len(slnum), "active": active}
+        return {status_msg}
+
         # psutil.disk_usage('/tmp/')  # '/data/private/',
         # if command == config['reload_pwd']:
         #     if elapsed.total_seconds() > 120:
