@@ -661,7 +661,7 @@ def status_test(command=None) -> dict:
         status_msg = {"version": __version__, "status": hproc.status(), "running": hproc.is_running(),
                       "available": str(elapsed), "memory": hproc.memory_percent(), "cpu": hproc.cpu_percent(),
                       "num_stations": len(slnum), "active": active}
-        return {status_msg}
+        return status_msg
 
         # psutil.disk_usage('/tmp/')  # '/data/private/',
         # if command == config['reload_pwd']:
