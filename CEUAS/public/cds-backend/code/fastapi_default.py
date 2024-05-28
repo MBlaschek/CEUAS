@@ -662,46 +662,46 @@ def status_test(command=None) -> dict:
                       "available": str(elapsed), "memory": hproc.memory_percent(), "cpu": hproc.cpu_percent(),
                       "num_stations": len(slnum), "active": active}
         # psutil.disk_usage('/tmp/')  # '/data/private/',
-        if command == config['reload_pwd']:
-            if elapsed.total_seconds() > 120:
-                # todo run this in background and wait until a request is finished before restarting
-                init_server(force_reload=True, force_download=False)
-                hproc.kill()  # this should end the hug server and cron should restart it
-            else:
-                status_msg['command'] = 'Sorry restarted only %d seconds ago [120 s]' % elapsed.total_seconds()
-            return status_msg
-        if command == 'restart':
-            # raise RuntimeError("Restart requested ... killing myself softly.")
-            hproc.kill()
+        # if command == config['reload_pwd']:
+        #     if elapsed.total_seconds() > 120:
+        #         # todo run this in background and wait until a request is finished before restarting
+        #         init_server(force_reload=True, force_download=False)
+        #         hproc.kill()  # this should end the hug server and cron should restart it
+        #     else:
+        #         status_msg['command'] = 'Sorry restarted only %d seconds ago [120 s]' % elapsed.total_seconds()
+        #     return status_msg
+        # if command == 'restart':
+        #     # raise RuntimeError("Restart requested ... killing myself softly.")
+        #     hproc.kill()
             
-        if command == 'cleanup':
-            # search for request directories and results / remove them and report back
-            pass
+        # if command == 'cleanup':
+        #     # search for request directories and results / remove them and report back
+        #     pass
 
-        if command == 'failed_requests':
-            messages = {}
-            with open(config['logger_dir'] + '/failed_requests.log', 'r') as f:
-                tmp = f.read().splitlines()
-                for iline in tmp:
-                    idate = iline.split(' [')[0]
-                    iline = iline.replace(idate, '').split('Message:')
-                    messages[idate] = {'request': eval(iline[0].strip()[1:-1]), 'message': iline[1].strip()}
-            status_msg["failed_requests"] = messages
+        # if command == 'failed_requests':
+        #     messages = {}
+        #     with open(config['logger_dir'] + '/failed_requests.log', 'r') as f:
+        #         tmp = f.read().splitlines()
+        #         for iline in tmp:
+        #             idate = iline.split(' [')[0]
+        #             iline = iline.replace(idate, '').split('Message:')
+        #             messages[idate] = {'request': eval(iline[0].strip()[1:-1]), 'message': iline[1].strip()}
+        #     status_msg["failed_requests"] = messages
 
-        if command == 'finished_requests':
-            messages = {}
-            with open(config['logger_dir'] + '/finished_requests.log', 'r') as f:
-                tmp = f.read().splitlines()
-                for iline in tmp:
-                    idate = iline.split(' [')[0]
-                    iline = iline.replace(idate, '')
-                    messages[idate] = {'request': eval(iline.strip()[1:-1])}
-            status_msg["finsihed_requests"] = messages
+        # if command == 'finished_requests':
+        #     messages = {}
+        #     with open(config['logger_dir'] + '/finished_requests.log', 'r') as f:
+        #         tmp = f.read().splitlines()
+        #         for iline in tmp:
+        #             idate = iline.split(' [')[0]
+        #             iline = iline.replace(idate, '')
+        #             messages[idate] = {'request': eval(iline.strip()[1:-1])}
+        #     status_msg["finsihed_requests"] = messages
 
-        if command == 'running':
-            return {'running': hproc.is_running()}
+        # if command == 'running':
+        #     return {'running': hproc.is_running()}
 
-        return status_msg
+        # return status_msg
 
     return {'error': "Can't find me....? :("}
 
