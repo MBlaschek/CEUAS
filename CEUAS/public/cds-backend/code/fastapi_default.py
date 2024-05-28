@@ -661,7 +661,7 @@ def status_test(command=None) -> dict:
         elapsed = datetime.now() - datetime.fromtimestamp(hproc.create_time())
         status_msg = {"version": __version__, "status": hproc.status(), "running": hproc.is_running(),
                       "available": str(elapsed), "memory": hproc.memory_percent(), "cpu": hproc.cpu_percent(),
-                      "num_stations": len(slnum), "active": active}
+                      "num_stations": len(slnum)}
         return jsonable_encoder(status_msg)
 
         # psutil.disk_usage('/tmp/')  # '/data/private/',
