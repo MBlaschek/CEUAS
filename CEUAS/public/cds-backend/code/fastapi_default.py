@@ -471,7 +471,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
 #             with Pool(10) as p:
 #                 sklist=list(p.map(func,zip(slist,slnum)))
 #             with multiprocessing.get_context('spawn').Pool(9) as p:
-            with Pool(9) as p:
+            with Pool(28) as p:
                 sklist=list(p.map(func,zip(slist,slnum)))
         else:
             sklist = list(map(func, zip(slist, slnum)))
@@ -593,7 +593,7 @@ active, wmo_regions, cf = init_server()
 # Active Station Numbers
 slnum = list(active.keys())
 
-with Pool(9) as P:
+with Pool(28) as P:
     x=P.map(np.sin,np.arange(16))
 print(x)
 
@@ -652,7 +652,7 @@ def status_test(command=None) -> dict:
     import psutil
     hproc = None
     for proc in psutil.process_iter():
-        if 'bin/hug' in " ".join(proc.cmdline()):
+        if 'fastapi' in " ".join(proc.cmdline()):
             hproc = proc
             break
 
@@ -1734,7 +1734,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         #b2=[]
         #for b in reversed(bidx):
             #b2.append(bodies[b])
-        with Pool(9) as Pl:
+        with Pool(28) as Pl:
             results = list(Pl.map(func, bodies,chunksize=3))
         #results = list(map(func, bodies))
             # results = list(p.starmap(func, zip(input_dirs, [debug]*len(bodies), bodies), chunksize=1))
