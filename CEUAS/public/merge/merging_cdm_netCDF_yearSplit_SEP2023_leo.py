@@ -216,6 +216,8 @@ class Merger():
         for k in self.encodings.keys():
             for kk in self.encodings[k].keys():
                 
+                if 'dtype' in self.encodings[k][kk].keys():
+                    del self.encodings[k][kk]['dtype']
                 if 'chunksizes' in self.encodings[k][kk].keys():
                     del self.encodings[k][kk]['chunksizes']
                 if 'compression' in self.encodings[k][kk].keys():
@@ -385,13 +387,15 @@ class Merger():
                 timestamps = data['recordtimestamp'][:]
                 #indices = data['recordindex'][:]
                 indices_inf = data['recordindex'][:] # starting index of the record
-                indices_sup = [ indices_inf[1:][i] for i in  range(len(indices_inf[:-1])) ] # ending index of the record
-                indices_sup.append(len(h5py.File(F, 'r')['observations_table']['date_time'] ) ) # dummy high value, to be used with last record of the list 
+                indices_sup = np.concatenate((data['recordindex'][:][1:], [data['observations_table']['index'].shape[0]]))
+                
+                #data.[ indices_inf[1:][i] for i in  range(len(indices_inf[:-1])) ] # ending index of the record
+                #indices_sup.append(len(h5py.File(F, 'r')['observations_table']['date_time'] ) ) # dummy high value, to be used with last record of the list 
                 
                 ### quick check
                 # df_check = pd.DataFrame( {'ts':timestamps , 'inf': indices_inf, 'sup':indices_sup } ) 
                 
-                for ts,inf,sup, index in zip(timestamps, indices_inf, indices_sup, range(len(timestamps)) ) :
+                for ts,inf,sup, index in zip(timestamps, indices_inf, indices_sup, range(len(indices_inf)) ) :
                     if ts not in all_timestamps_dic.keys():
                         all_timestamps_dic[ts] = {}
                     if ds not in all_timestamps_dic[ts].keys():
@@ -402,7 +406,12 @@ class Merger():
                 #timestamps_conv = pd.to_datetime( timestamps, unit='s',  origin=pd.Timestamp('1900-01-01') )
                  
         #unique_timestamps = list(np.unique(list(all_timestamps_dic.keys() ))).sort()
+        #if hasattr(self, 'all_timestamps_dic') :
+            
+            #self.all_timestamps_dic = self.all_timestamps_dic | all_timestamps_dic
+        #else:
         self.all_timestamps_dic = all_timestamps_dic
+            
                     
     
     def reduce_timestamps(self):
@@ -461,7 +470,94 @@ class Merger():
 
         return unique_ts, duplicated_ts    
     
+    def reduce_timestamps_u(self):
+        """ Simplify/reduce all timestamps by flagging possible duplicates """
+        
+        #1 check duplicates 
+        time_delta = self.hour_time_delta * 60*60 # timestamps are still in seconds, so must convert hours in self.hour_time_delta to seconds 
+        unique_timestamps = np.unique(list(self.all_timestamps_dic.keys() ))
+        
+        duplicated_ts = []
+        for i in range(0, len(unique_timestamps)):
+            duplicated_ts.append([])
+            for k in range(-5, 6):
+                if i + k >= 0 and i + k < unique_timestamps.shape[0]:
+                    if np.abs(unique_timestamps[i+k] - unique_timestamps[i]) < time_delta:
+                        duplicated_ts[-1].append(unique_timestamps[i+k])
+                
+        
+        #d = 1988064000 # 658335600
+        
+        #if self.last_timestamp: # this is the last timestamp from previous year i.e. previous file 
+            #if unique_timestamps[0] - self.last_timestamp < time_delta:
+                ## remove first entry from new timestamps -> easy way to remove duplicate 
+                #duplicated_ts[0].append(self.last_timestamp)
+        #else:
+            #pass
+        
+        unique_ts = []
 
+        return unique_ts, duplicated_ts, list(unique_timestamps)   
+    
+
+    def reduce_timestamps_u_old(self):
+        """ Simplify/reduce all timestamps by flagging possible duplicates """
+        
+        #1 check duplicates 
+        time_delta = self.hour_time_delta * 60*60 # timestamps are still in seconds, so must convert hours in self.hour_time_delta to seconds 
+        unique_timestamps = list(np.unique(list(self.all_timestamps_dic.keys() )))
+        unique_timestamps.sort()
+        
+        #d = 1988064000 # 658335600
+        
+        #if self.last_timestamp: # this is the last timestamp from previous year i.e. previous file 
+            #if unique_timestamps[0] - self.last_timestamp < time_delta:
+                ## remove first entry from new timestamps -> easy way to remove duplicate 
+                #unique_timestamps = unique_timestamps[1:]
+        #else:
+            #pass
+        
+        duplicated_ts = []
+        unique_ts = [] 
+        
+        if len(unique_timestamps) ==1: #only one timestamp 
+            unique_ts.append(unique_timestamps[0] )
+            
+        else:
+            for i in range(1, len(unique_timestamps)):
+                current = unique_timestamps[i] 
+                previous = unique_timestamps[i-1]
+                
+                a= current - previous < time_delta 
+                #print('index: ' , i, 'previous: ' , previous, 'current: ' , current  ,  '  ' , str(a) + ' is duplicate')
+                
+                if (current - previous) < time_delta :  #here: found duplicated 
+                    #print('Must check duplicated timestamps', current , previous, current - previous )
+                    if len(duplicated_ts) > 0: # check for triple duplicates
+                        if current - duplicated_ts[-1][0] < time_delta:
+                            if previous in duplicated_ts[-1]:
+                                duplicated_ts[-1].append(current)
+                            else:
+                                duplicated_ts.append( [previous, current] )
+                        else:
+                            duplicated_ts.append( [previous, current] )
+                    else:
+                        duplicated_ts.append( [previous, current] )
+
+                else:
+                    if i==len(unique_timestamps)-1:
+                         # last record, will not be looped over again
+                        unique_ts.append(previous)
+                        unique_ts.append(current)
+                        
+                    else:
+                        if len(duplicated_ts) > 0:
+                            if previous not in duplicated_ts[-1]:
+                                unique_ts.append(previous)
+                        else:
+                            unique_ts.append(previous)                        
+
+        return unique_ts, duplicated_ts, unique_timestamps    
     
     
     def extract_record_data(self, dt, ds, file ):
@@ -644,8 +740,10 @@ class Merger():
                     pass
         ax[0].grid(color='lightgray' , ls=':')
         ax[1].grid(color='lightgray' , ls=':')        
-        ax[0].legend(fontsize=8)
-        ax[1].legend(fontsize=8)
+        if not ax[0].get_legend_handles_labels() == ([], []):
+            ax[0].legend(fontsize=8)
+        if not ax[1].get_legend_handles_labels() == ([], []):
+            ax[1].legend(fontsize=8)
     
         #plt.show()
 
@@ -969,12 +1067,13 @@ class Merger():
         
         print('=== Merging all time stamps ')
         # unique ts without duplicates, duplicated timestamps
-        unique_ts, duplicated_ts = self.reduce_timestamps()
+        #unique_ts2, duplicated_ts2 = self.reduce_timestamps()
+        unique_ts, duplicated_ts,all_timestamps = self.reduce_timestamps_u()
         # all available ts (unique or possibly duplicated)
-        all_timestamps = list(self.all_timestamps_dic.keys())
+        #all_timestamps = list(self.all_timestamps_dic.keys())
         
         #all_timestamps = all_timestamps[:300]  # speed it up TO DO CHANGE !!!!! 
-        all_timestamps.sort()
+        #all_timestamps.sort()
 
         # container for processed ts 
         processed_timestamps = []
@@ -987,74 +1086,108 @@ class Merger():
         ##    all_combined_timestamp_data[k] = []
             
         ### TO DO
-        all_timestamps = [ f for f in all_timestamps if f != self.last_timestamp ] # TODO it has to do with the duplicate check from previous year! see Lindenberg dt=1988060400 (1962-1963)
+        all_timestamps = [ f for f in all_timestamps ] #if f != self.last_timestamp ] # TODO it has to do with the duplicate check from previous year! see Lindenberg dt=1988060400 (1962-1963)
         all_era5 = ['era5_1', 'era5_1_mobile' , 'era5_2' , 'era5_2_mobile'] 
 
+        i = -1
+        duplicates_dic={}
         for dt,index in zip( tqdm(all_timestamps), range(len(all_timestamps)) ) :  #TODO TO DO WRONG CHANGE HERE !!!! 
             
+            i += 1
             #if dt == 2492985600:
             #    a = 0
             self.observed_ts_values = {} # restore empty dic 
             
-            if dt in processed_timestamps[-5:]:   # all timestamps are sorted so should not check the entire list 
-                continue 
+            #if dt == 3339824820 or index == 746:
+                #x = 0
+            #if dt in processed_timestamps[-5:]:   # all timestamps are sorted so should not check the entire list 
+                #continue 
 
-            duplicates_dic={}
             dtsave = dt
 
             x = 1
-            if dt in unique_ts: # no time duplicate detected, apply standard merging procedure 
+            if len(duplicated_ts[i]) == 1: # no time duplicate detected, apply standard merging procedure 
                 real_time = dt 
                 all_times = [dt] # used for plotting 
                 
                 best_ds, best_file, policy = self.find_best_record(dt)
                 
                 processed_timestamps.append(dt)
-                    
+                
+                sel = {'unique': True}
+                duplicates_dic[real_time] = [best_ds, best_file, 0, 0, False]
+#if dt == 3339824820:
+                    #x = 0
+                   
             else:
-                possible_duplicates = [ p for p in duplicated_ts if dt in p ]
-                
-                if len(possible_duplicates) >0:
-                    possible_duplicates2= [p for p in possible_duplicates[0] if np.abs(p-dtsave) <= 10800]
-                    possible_duplicates= possible_duplicates[0] #[p for p in possible_duplicates[0] if np.abs(p-dtsave) <= 7200]
-                else:
-                    print('Check inconsistency with dt , might be due to merging of different years ')
-                    continue
-                # apply hierarchical selection 
-                
-                if len(possible_duplicates) >=5: ### (should always be true...)
+                if dt == 3689434800:
                     x = 0
+                possible_duplicates = duplicated_ts[i] #[ p for p in duplicated_ts if dt in p ]
+                
+                #if len(possible_duplicates) >0:
+##                    possible_duplicates2= [p for p in possible_duplicates[0] if np.abs(p-dtsave) <= 10800]
+                    #possible_duplicates2= [p for p in possible_duplicates[0]]
+                    #possible_duplicates= possible_duplicates[0] #[p for p in possible_duplicates[0] if np.abs(p-dtsave) <= 7200]
+                #else:
+                    #print('Check inconsistency with dt , might be due to merging of different years ')
+                    #continue
+                ## apply hierarchical selection 
+                
+                #if len(possible_duplicates) >=5: ### (should always be true...)
+                    #x = 0
                 for t in possible_duplicates:
                     
-                    if np.abs(t-dt) > 10800:    
-                        continue
+                    #if np.abs(t-dt) > 10800:    
+                        #continue
                     #duplicate_data = {}  # becomign unecessary
                     
                     
                     if len(possible_duplicates) >=2: ### (should always be true...)
                      
                         max_length = 0
-                        for dt in possible_duplicates2:
-                            best_ds_low, best_file_low, policy    = self.find_best_record(dt)   
-                            total_length = self.all_timestamps_dic[dt]['extract_record_data'][1][0] + self.all_timestamps_dic[dt]['extract_record_data'][1][0]  # wind plus temperature observations
-                            if total_length > max_length:
-                                max_length = total_length
-                            duplicates_dic[dt] = [best_ds_low, best_file_low, policy, total_length ]  # must extract data also for non selected dt to make plots 
+                        for dt2 in possible_duplicates:
+                            if dt2 not in duplicates_dic.keys():
+                                
+                                best_ds_low, best_file_low, policy    = self.find_best_record(dt2)   
+                                total_length = self.all_timestamps_dic[dt2]['extract_record_data'][1][0] + self.all_timestamps_dic[dt2]['extract_record_data'][1][0]  # wind plus temperature observations
+                                if total_length > max_length:
+                                    max_length = total_length
+                                duplicates_dic[dt2] = [best_ds_low, best_file_low, policy, total_length,False ]  # must extract data also for non selected dt to make plots
+                            else:
+                                if duplicates_dic[dt2][3] > max_length:
+                                    max_length = duplicates_dic[dt2][3]
+                                
 
                             
                         ### skip ncar if multiple available...
                         
-                        high_ts = [t for t in possible_duplicates2 if  duplicates_dic[t][3] == max_length ][0]
+                        high_ts = [t for t in possible_duplicates if  duplicates_dic[t][3] == max_length and not duplicates_dic[t][4]]
+                        if len(high_ts) > 1:
+                            valid = [ np.sum(self.all_timestamps_dic[t]['extract_record_data'][1]) for t in high_ts ]
+                            high_ts = high_ts[np.argmax(valid)]
+                        else:
+                            if len(high_ts) > 0:
+                                high_ts = high_ts[0]
+                            else:
+                                continue
+                            
                         
-                        all_datasets = np.unique ( [ duplicates_dic[k][0] for k in possible_duplicates2 ] )
+                        all_datasets = np.unique ( [ duplicates_dic[k][0] for k in possible_duplicates ] )
                         
                         if len(all_datasets) >2:  # skipping ncar as much as possible 
                             
-                            low_ts = min( [i for i in possible_duplicates2 if duplicates_dic[i][0] != 'ncar'  and i != high_ts ]  )
+                            try:
+                                low_ts = min( [i for i in possible_duplicates if duplicates_dic[i][0] != 'ncar'  and i != high_ts and not duplicates_dic[i][4]]  )
+                            except:
+                                low_ts = high_ts
                             #high_ts = max( [i for i in possible_duplicates if duplicates_dic[i][0] != 'ncar' ])   
                             
-                        else:  # worst case, maximum is equal to minimum 
-                            low_ts = min( [i for i in possible_duplicates2 if i != high_ts ]  )
+                        else:  # worst case, maximum is equal to minimum
+                            try:
+                                
+                                low_ts = min( [i for i in possible_duplicates if i != high_ts and not duplicates_dic[i][4]]  )
+                            except:
+                                low_ts = high_ts
 
 
                             
@@ -1079,84 +1212,85 @@ class Merger():
                         max_h_low =  self.all_timestamps_dic[low_ts]['extract_record_data'][4][1] # maximum height
                         max_h_high = self.all_timestamps_dic[high_ts]['extract_record_data'][4][1]
 
+                        sel = {'unique': False,}
                         if max ( abs(min_p_low - min_p_high) ,  abs(max_p_low - max_p_high) ) < 10:  # small negligible difference, get ERA5 over IGRA over rest
                             
                             if best_ds_low in all_era5 and best_ds_high not in all_era5:
-                                best_ds = best_ds_low
-                                best_file = best_file_low
-                                real_time = low_ts
+                                high = False
                                 
                             elif best_ds_high in all_era5 and best_ds_low not in all_era5:
-                                best_ds = best_ds_high
-                                best_file = best_file_high                                  
-                                real_time = high_ts
+                                high = True
                                 
                             elif best_ds_high == 'igra2':
-                                best_ds = best_ds_high
-                                best_file = best_file_high                                  
-                                real_time = high_ts            
+                                high = True
                             
                             elif best_ds_low == 'igra2':
-                                best_ds = best_ds_low
-                                best_file = best_file_low
-                                real_time = low_ts      
+                                high = False
                                 
                             elif best_ds_low in all_era5 and best_ds_high in all_era5: # take longest records within era5
                                 
                                 if ( l_low >= l_high ):
-                                    best_ds = best_ds_low
-                                    best_file = best_file_low
-                                    real_time = low_ts
+                                    high = False
                                 else:
-                                    best_ds = best_ds_high
-                                    best_file = best_file_high                        
-                                    real_time = high_ts           
+                                    high = True
                                     
                             elif best_ds_low == best_ds_high:
+                                high = True
+                            else:
+                                
+                                if ( l_low >= l_high ):
+                                    high = False
+                                else:
+                                    high = True
+                            
+                        else:
+                            # selecting best ds by number of records
+                            if ( l_low >= l_high ):
+                                high = False
+                            else:
+                                high = True
+                            # selecting best ds by lowest pressure          
+                            if abs(min_p_low-min_p_high) <10:
+                                pass
+                            else:
+                                if min_p_low < min_p_high:
+                                    high = False
+                                else:
+                                    high = True
+                            # selecting best ds by highest height   
+                            if abs(max_h_low-max_h_high) <10:
+                                pass
+                            else:
+                                if  max_h_low > max_h_high: # current pressure higher than previous (pressure and height should go together)
+                                    high = False
+                                else:
+                                    high = True
+                                        
+                
+                        try:
+                            
+                            if high:
                                 best_ds = best_ds_high
                                 best_file = best_file_high
                                 real_time = high_ts                                
-                            
-                        else:
-                            # selecting best ds by number of records 
-                            if ( l_low >= l_high ):
+                                sel['l'] = l_high
+                                sel['min_p'] = min_p_high
+                                sel['max_h'] = max_h_high
+                            else:
                                 best_ds = best_ds_low
                                 best_file = best_file_low
                                 real_time = low_ts
-                            else:
-                                best_ds = best_ds_high
-                                best_file = best_file_high                        
-                                real_time = high_ts
-                            # selecting best ds by lowest pressure          
-                            if abs(min_p_low-min_p_high) <10:
-                                continue
-                            else:
-                                if min_p_low < min_p_high:
-                                    best_ds = best_ds_low
-                                    best_file = best_file_low   
-                                    real_time = low_ts
-                                else:
-                                    best_ds = best_ds_high
-                                    best_file = best_file_high                                  
-                                    real_time = high_ts
-                            # selecting best ds by highest height   
-                            if abs(max_h_low-max_h_high) <10:
-                                continue
-                            else:
-                                if  max_h_low > max_h_high: # current pressure higher than previous (pressure and height should go together)
-                                    best_ds = best_ds_low
-                                    best_file = best_file_low    
-                                    real_time = low_ts
-                                else:
-                                    best_ds = best_ds_high
-                                    best_file = best_file_high                           
-                                    real_time = high_ts
-                                        
-                                        
+                                sel['l'] = l_low
+                                sel['min_p'] = min_p_low
+                                sel['max_h'] = max_h_low
+                        except Exception as e:
+                            raise ValueError(self.dic_h5py)
+                            
                 if 'real_time' not in locals():
                     continue
-                    real_time = possible_duplicates[0] +1   # dirty fix
-                duplicated_time = [t for t in possible_duplicates if t != real_time ][0]
+                duplicated_time = [t for t in possible_duplicates if t != real_time ]
+                for d in duplicated_time:
+                    duplicates_dic[d][4] = True
                 all_times = possible_duplicates
                     
                     
@@ -1178,12 +1312,33 @@ class Merger():
                 
                 print('could not plot')
                 
-            ### Saving the extracted data             
-            all_combined_timestamps[real_time]= {}            
-            all_combined_timestamps[real_time]['policy'] = policy
-
-            all_combined_timestamps[real_time]['best_ds'] = best_ds
-            all_combined_timestamps[real_time]['best_file'] = best_file
+            ### Saving the extracted data
+            replace = True
+            if real_time in  all_combined_timestamps.keys() :
+                #if all_combined_timestamps[real_time]['best_ds'] != best_ds:                   
+                #print(f'DUPLICATE {real_time} !')
+                replace = False
+                if sel['min_p'] < all_combined_timestamps[real_time]['sel']['min_p']:
+                    replace = True
+                elif  sel['min_p'] == all_combined_timestamps[real_time]['sel']['min_p']:                   
+                    if sel['l'] > all_combined_timestamps[real_time]['sel']['l']:
+                        replace = True
+                if sel['max_h'] > all_combined_timestamps[real_time]['sel']['max_h']:
+                    replace = True
+                elif  sel['max_h'] == all_combined_timestamps[real_time]['sel']['max_h']:                   
+                    if sel['l'] > all_combined_timestamps[real_time]['sel']['l']:
+                        replace = True
+                        
+            if replace:
+                all_combined_timestamps[real_time]= {}
+                all_combined_timestamps[real_time]['sel'] = copy.deepcopy(sel)
+                if not duplicates_dic[real_time][4]:
+                    all_combined_timestamps[real_time]['policy'] = policy
+        
+                    all_combined_timestamps[real_time]['best_ds'] = best_ds
+                    all_combined_timestamps[real_time]['best_file'] = best_file
+                    #all_combined_timestamps[real_time]['sel'] = copy.deepcopy(sel)
+            #print(real_time, all_combined_timestamps[real_time]['sel'])
             
             # duplicated sources
             if len(duplicates_dic.keys()) >1 :
@@ -1202,8 +1357,17 @@ class Merger():
             all_combined_timestamps[real_time]['real_time'] = real_time
             all_combined_timestamps[real_time]['duplicated_time'] = all_times
             
-        self.last_timestamp = dt # last timestamp updated in the loop 
-        self.merged_timestamp = all_combined_timestamps
+        if 'dt' in locals():        
+            #self.last_timestamp = dt # last timestamp updated in the loop
+            self.merged_timestamp = {}
+            for k, v in  all_combined_timestamps.items():
+                if not duplicates_dic[k][4]:
+                    self.merged_timestamp[k] = v
+                    self.last_timestamp = k # last timestamp updated in the loop
+            #self.merged_timestamp = [all_combined_timestamps[t] for t in  all_combined_timestamps.keys() if not duplicates_dic[t][4]] 
+        else:
+            print('ERROR, no dt exists')
+            raise ValueError(self.dic_h5py)
         
         print("DONE Merging all timestamps ")
         
@@ -1521,12 +1685,8 @@ class Merger():
                 dummy = self.make_unique_datetime()            
                 
                 # principal merging algoritm, applying selection rules
-                try:
                     
-                    merged = self.merge_timestamp_u() # selection of the best data
-                except MemoryError:
-                    print('ERROR', self.dic_h5py)
-                    continue
+                merged = self.merge_timestamp_u() # selection of the best data
                 
                 dummy = self.initialize_out_file()
                 
@@ -1634,7 +1794,10 @@ class Merger():
             variables.append('datum_sfc_event@surfbody_feedback')
         if 'source_id' not in variables:
             variables.append('source_id')
-            
+        
+        fps =[]    
+        for f in all_files_to_preload:
+            fps.append(h5py.File(f, 'r'))
         for v in variables:
             
             #if v in ['datum_anflag@body','datum_event1@body','datum_rdbflag@body','report_event1@hdr','report_rdbflag@hdr', 'varbc_ix@body' ]:
@@ -1654,16 +1817,17 @@ class Merger():
             # keep full data in memory, for better efficiency
             #print("        Variable " , v )
             load_full_data = {}
-            for f in all_files_to_preload:
-                file_era5fb_variables = list(h5py.File(f, 'r')['era5fb'].keys() ) # this list changes with the year 
-                
+            for fp in fps:
+                fpe = fp['era5fb']
+                file_era5fb_variables = list(fpe.keys() ) # this list changes with the year 
+            
                 if v in file_era5fb_variables:
-                    data_v = h5py.File(f, 'r')['era5fb'][v][:]
+                    data_v = fpe[v][:]
                 else:
                     n = self.get_null( self.encodings['era5fb'][v]['type']  )
-                    data_v = np.full( len( h5py.File(f, 'r')['observations_table']['date_time']), n)                          
+                    data_v = np.full( len( fp['observations_table']['date_time']), n)                          
 
-                load_full_data[f] = data_v     
+                load_full_data[fp.filename] = data_v     
             
             data = []
         
@@ -1691,7 +1855,12 @@ class Merger():
                         
                 else: # must write a dummz feedback
                     a = self.get_null(tipo= self.dic_type_attributes['era5fb'][v]['type'])
-                    sliced_data = np.full( (ind_max-ind_min ) , a )
+                    try:
+                        
+                        sliced_data = np.full( (ind_max-ind_min ) , a )
+                    except:
+                        #return
+                        raise ValueError(f'{files[0]},{ind_max},{ind_min}' )
                     #print('************' , v , '  ' , self.dic_type_attributes['era5fb'][v]['type'] , '  ' ,   sliced_data[:2] , '  ' , a )
                     
                 if ts in self.no_duplicated_indices.keys():
@@ -1742,19 +1911,23 @@ class Merger():
 
         lats, lons = [],[]
         
-        
+        fps = []
+        for f in all_files:
+            fps.append(h5py.File(f, 'r'))
+            
         for v in variables:
             #if v == 'report_meaning_of_timestamp':
             #    a=0
             # keep full data in memory, for better efficiency 
             load_full_data = {}
-            for f in all_files:
-                load_full_data[f] = {}
-                if v in h5py.File(f, 'r')['header_table'].keys():
-                    load_full_data[f][v] = h5py.File(f, 'r')['header_table'][v][:]
+            for fp in fps:
+                fpn = fp.filename
+                load_full_data[fpn] = {}
+                if v in fp['header_table'].keys():
+                    load_full_data[fpn][v] = fp['header_table'][v][:]
                 else:
                     n = self.get_null( self.encodings['header_table'][v]['type']  )
-                    load_full_data[f][v] = np.full( len( h5py.File(f, 'r')['header_table']['report_timestamp']), n)      
+                    load_full_data[fpn][v] = np.full( len( fp['header_table']['report_timestamp']), n)      
             
             data = []
             source_files = []
@@ -1838,11 +2011,20 @@ class Merger():
             data = np.array(sc_all_df[v].values )
             
             if v in variables_str:
-                if sc_all_df[v].values.dtype in [np.float64, np.float32, np.dtype('O') and type(sc_all_df[v].values[0] is not str)]:
+                if sc_all_df[v].values.dtype in [np.float64, np.float32, np.dtype('O')] and type(sc_all_df[v].values[0] is not str):
                     data = [ str(val) for val in sc_all_df[v].values ]
                 else:    
                     data = [ val.encode('utf8') for val in sc_all_df[v].values ]
-                data = np.array(data).astype('|S30')
+                try:
+                    data = np.array(data).astype('|S30')
+                except:
+                    try:
+                        
+                        data = [ val.encode('utf8') for val in sc_all_df[v].values ]
+                        data = np.array(data).astype('|S30')
+                    except Exception as e:
+                        raise ValueError(self.station)
+                    
             elif v in variables_int:
                 try:
                     data = []
@@ -1900,11 +2082,17 @@ class Merger():
         temp_data = { 'observed_variable':'', 
                     'z_coordinate_type':'' }
         
+        fps = []
         for f in all_files:
-            temp_data[f] = { 'observed_variable':'', 
+            fps.append(h5py.File(f, 'r'))
+
+        for fp in fps:
+            temp_data[fp.filename] = { 'observed_variable':'', 
                     'z_coordinate_type':'' }
-            temp_data[f]['observed_variable']= h5py.File(f, 'r')['observations_table']['observed_variable'][:]
-            temp_data[f]['z_coordinate']= h5py.File(f, 'r')['observations_table']['z_coordinate'][:]
+            #with  h5py.File(f, 'r') as fp:
+                
+            temp_data[fp.filename]['observed_variable']= fp['observations_table']['observed_variable'][:]
+            temp_data[fp.filename]['z_coordinate']= fp['observations_table']['z_coordinate'][:]
             
         # pre-loop to check if there are duplicated pressure values within one record
         
@@ -1937,14 +2125,17 @@ class Merger():
                     pass
                 else:
                     is_duplicate = True
+                    print(np.where(z_coord[obs_var_ind][1:]-z_coord[obs_var_ind][:-1]==0))
                     
             if is_duplicate:  # If I find at least one, then I check with pandas and remove the duplicates 
                 dic = {}
                 ### in this case, there are internal dupliacted entries.
                 ### only int his case I create pandas df to easily check duplicated,
-                ### then extract the indices to be kept when building the merged observations and feedback tables 
-                for v in ['observed_variable' , 'date_time' , 'z_coordinate_type' , 'z_coordinate']:
-                    dic[v] = h5py.File(best_file, 'r')['observations_table'][v][ind_min:ind_max]
+                ### then extract the indices to be kept when building the merged observations and feedback tables
+                with  h5py.File(best_file, 'r') as fp:
+                    
+                    for v in ['observed_variable' , 'date_time' , 'z_coordinate_type' , 'z_coordinate']:
+                        dic[v] = fp['observations_table'][v][ind_min:ind_max]
                 df = pd.DataFrame.from_dict(dic)
                 no_dupl = df.drop_duplicates()
                 no_duplicated_indices[ts] = list(no_dupl.index)
@@ -1959,8 +2150,10 @@ class Merger():
             #print("      Variable " , v )  
             # keep full data in memory, for better efficiency 
             load_full_data = {}
-            for f in all_files:
-                load_full_data[f] = h5py.File(f, 'r')['observations_table'][v][:]
+            #for f in all_files:
+                #load_full_data[f] = h5py.File(f, 'r')['observations_table'][v][:]
+            for f in fps:
+                load_full_data[f.filename] = f['observations_table'][v][:]
             
             data = []
         
@@ -2070,7 +2263,7 @@ class Merger():
         del rep_id_obs
         
         ### build source_id
-        dummy_write = self.write_merged_new( var='source_id', table = 'observations_table', data=np.array(source_ids))
+        dummy_write = self.write_merged_new( var='source_id', table = 'observations_table', data=np.array(source_ids).astype(np.bytes_))
         all_variables.extend(['source_id'])
         
         ### build data policy license 
@@ -2167,7 +2360,7 @@ class Merger():
                 #print('SHAPE IS FFF ', table[k].shape )
                 try:
                     #write_dict_h5(out_name, dic , table, self.encodings[table], var_selection=[], mode='a', attrs = {'description':descr, 'external_table':ext_tab}  )  # TO DO HERE TODO CHANGE write_dict_h5_old or write_dict_h5
-                    write_dict_h5_old(out_name, dic , table, self.encodings[table], var_selection=[], mode='a', attrs = {'description':descr, 'external_table':ext_tab}  )  
+                    write_dict_h5_old(out_name, dic , table, self.encodings[table], var_selection=[], mode='a', attrs = {var: {'description':descr, 'external_table':ext_tab}}  )  
                     
                 except:
                     print("+++ FAILED table " ,  table , '  ' , var )
@@ -2179,6 +2372,16 @@ class Merger():
                 table = self.data['cdm_tables'][k]
                 if len(table) > 0:
                     
+                    for t in table.keys():
+                        table[t]['description'] = np.string_(table[t].description)
+                        try:
+                            
+                            if table[t].external_table == ' ':
+                            
+                                del table[t].attrs['external_table']
+                        except:
+                            pass
+
                     table.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a', group = k)
                 #a=0
                 #logging.info('Writing the cdm table %s to the netCDF output ', k)
@@ -2332,11 +2535,12 @@ def make_merge_list(data_directories, merged_out_dir, kind=''):
     if kind == 'mobile':
         datasets = [ f for f in data_directories.keys() if f in ['era5_1_mobile' , 'era5_2_mobile' , 'npsound', 'igra2', 'shipsound'] ]
     else:
-        datasets = [  f for f in data_directories.keys() if f in ['era5_1' , 'era5_2' ,
-                                                                  'era5_1759' , 'era5_1761',
-                                                                  'igra2',
-                                                                  'ncar',
-                                                                  'hara' , 'giub' , 'amma' , ]  ]
+        datasets = [ f for f in data_directories.keys() if f not in ['era5_1_mobile' , 'era5_2_mobile' , 'npsound', 'igra2', 'shipsound'] ]
+        #datasets = [  f for f in data_directories.keys() if f in ['era5_1' , 'era5_2' ,
+                                                                  #'era5_1759' , 'era5_1761',
+                                                                  #'igra2',
+                                                                  #'ncar',
+                                                                  #'hara' , 'giub' , 'amma' , ]  ]
         
     for db in tqdm( datasets ) :
         if not os.path.isdir( data_directories[db] ):
@@ -2369,12 +2573,21 @@ def make_merge_list(data_directories, merged_out_dir, kind=''):
             for f in files:
 
                 #station = f.split(db)[0][-4:]
-                station = f.split(db)[0][:-6]
+                if 'restored' in db:
+                    station = f.split('_')[0]
+                else:
+                    station = f.split(db)[0][:-6]
+                
                 year = f.split('_')[1].replace('_','') 
                 years.append(year)
 
-                file_size = os.stat( data_directories[db]  + '/' + station +'/' + f).st_size / (1000*1000)  ### bytes to MB
-                sizes.append(file_size)
+                try:
+                    
+                    file_size = os.stat( data_directories[db]  + '/' + station +'/' + f).st_size / (1000*1000)  ### bytes to MB
+                    sizes.append(file_size)
+                except:
+                    print (data_directories[db]  + '/' + station +'/' + f, 'not found')
+                    sizes.append(0)
                 
             dic['station'].append(station)
             dic['years'].append( ','.join(years) )
@@ -2401,13 +2614,18 @@ def create_stat_summary(data_directories, stat_id):
         y = str(y)    
         
         for d,i in data_directories.items():
+            print(d, i)
             if not os.path.isdir(i):
                 continue
             stations = os.listdir(i) 
             if stat_id not in stations:
                 continue
             else:
-                harvested_files = [f for f in os.listdir(i+'/'+stat_id) if '.nc' in f and y in f.split(stat_id+'_')[1].split('_')[0]  ]                
+                try:
+                    
+                    harvested_files = [f for f in os.listdir(i+'/'+stat_id) if '.nc' in f and y in f.split(stat_id+'_')[1].split('_')[0]  ]
+                except:
+                    harvested_files = []
                 
                 
                 ### filter giub wrong files
@@ -2472,7 +2690,8 @@ def run_wrapper(data_directories, run_exception, station):
         try:
             
             a = Merging.merge(station_df, station ) # single station dictionary
-        except:
+        except MemoryError as e:
+            print(e)
             raise ValueError(station)
         
 ray_run_wrapper = ray.remote(run_wrapper)
@@ -2535,6 +2754,16 @@ if __name__ == '__main__':
         merged_out_dir = merged_out_dir + '_' + station_kind 
     
     
+    #import glob
+    #xstations = glob.glob('/users/staff/uvoggenberger/scratch/harvest_20240403/hara/*')
+    #stations = [x.split('/')[-1] for x in xstations]
+    #for s in stations:
+        #try:
+            
+            #os.remove('/mnt/users/scratch/leo/scratch/FH/MERGED_YEARLY_0MAR2024_REGULAR/'+s+'/completed.txt')
+            #print(s, 'removed')
+        #except:
+            #print(s, 'not found')
 
     
     ### Saving list of file to merge, create list of stations 
@@ -2555,17 +2784,16 @@ if __name__ == '__main__':
         stations = all_stat
         
     pool_number = 50
-    stations = stations[0:500]
+    #stations = stations[0:500]
  
-    skip_completed = True ### set to FALSE to rerun the station, will check each year afterwards
+    skip_completed = False ### set to FALSE to rerun the station, will check each year afterwards
     
     if check_missing_stations:
         processed_stats, fully_completed = check_missing(merged_out_dir, skip_completed=skip_completed)
         stations = [p for p in all_stat if p not in fully_completed ]
     else:
-        processed_stats = []
+        processed_stats = {}
             
-    #stations = ['0-20000-0-31977']
         
     #stations = stations[4501:]
     Merging = Merger(add_sensor=add_sensor, 
@@ -2583,15 +2811,58 @@ if __name__ == '__main__':
     #stations = [s for s in stations if s in os.listdir('/scratch/das/federico/HARVEST_YEARLY_22FEB2024_amma/amma')]
     #stations = ['0-20000-0-45004']
     
-    ray.init(num_cpus=50) # runtime_env={"working_dir": "/users/staff/uvoggenberger/CEUAS/CEUAS/public/merge"}, 
+    ray.init(num_cpus=20) # runtime_env={"working_dir": "/users/staff/uvoggenberger/CEUAS/CEUAS/public/merge"}, 
 
     POOL = True
     #stations = stations[0:1]
-    for bad in ['0-20000-0-40648', '0-20000-0-78970']:
-        del stations[stations.index(bad)]
+    #for bad in ['0-20000-0-78970', '0-20000-0-93891']:
+       #del stations[stations.index(bad)]
     
-    stations = ['0-20000-0-06610']
+    #stations = ['0-20001-0-11035']
+    #stations = ['0-20666-0-20353',  '0-20666-0-25428']
     
+    #import glob
+    #xstations = glob.glob('/users/staff/uvoggenberger/scratch/harvest_20240403/hara/*')
+    #stations = [x.split('/')[-1] for x in xstations]
+    #for s in stations:
+        #os.remove('/mnt/users/scratch/leo/scratch/FH/MERGED_YEARLY_0MAR2024_REGULAR/s/completed.txt')
+    
+    #stations = ['0-20000-0-71938']
+    if False:
+        import glob
+        rstations = glob.glob('/mnt/users/scratch/leo/scratch/FH_orphan/*/restored/*')
+        stations = [os.path.basename(r) for r in rstations]
+        
+    if False:
+        import glob
+        if 'fixedgiub' in data_directories['giub']:
+            fixeddirs = glob.glob(data_directories['giub']+'/*/*.nc')
+            if len(fixeddirs) != 0:
+                import reharvest_giub
+                #reharvest_giub.fix(data_directories['igra2'].split('igra2')[0]+'giub')
+                fixeddirs = glob.glob(data_directories['igra2'].split('igra2')[0]+'giub'+'/*/*.nc')
+                print('fixed', len(fixeddirs), 'giub files')
+            for d in fixeddirs:
+                sid = d.split('/')[-2]
+                yr = d.split(sid)[-1][1:5]
+
+                x = glob.glob(merged_out_dir+'/'+sid+'/*.txt')
+                if len(x) == 1:     
+                    os.remove(x[0])
+                    print(sid, yr)
+                else:
+                    print(yr)
+                    #print('old giub', sid, 'not deleted')
+    #i = stations.index('0-200data_directories['giub']00-0-80413')
+    #del stations[i]
+    stations = ['0-20000-0-60769']
+    try :
+        
+        import glob
+        os.remove(glob.glob(merged_out_dir+'/'+stations[0]+'/*.txt')[0])
+    except:
+        pass
+    POOL = True
     if len(stations)== 1:
         POOL = False
         
@@ -2607,7 +2878,7 @@ if __name__ == '__main__':
         ray.shutdown()
                 
     else:
-        for station in stations:
+        for station in stations[:1]:
             dummy=run_wrapper(data_directories, run_exception, station)
     '''
     else:
