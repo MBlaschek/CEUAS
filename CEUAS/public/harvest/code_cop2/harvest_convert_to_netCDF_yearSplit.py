@@ -1548,16 +1548,18 @@ def read_hara_csv(file=''):
     #   'pressure', 'month', 'day', 'year', 'hour', 'elev'], 
 
     df = pd.read_csv( file, sep = '\t').astype(str)
+    df = df.replace( { '999.0': np.nan , '999' : np.nan , '9999.0': np.nan , '9999' : np.nan , '99999': np.nan , '99999.0': np.nan , '99999 ': np.nan , '-999.0': np.nan } ) 
+    
     statid = file.split('/')[-1].split('_')[0]
 
-    # dictionary placeholder 
-    """ Not used? 
-    all_standard_variables =  ['source_id', 'report_id', 'observation_id', 'record_timestamp', 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 
-    'vertco_reference_1@body', 'obsvalue@body', 'varno@body', 'units', 'number_of_pressure_levels', 'vertco_type@body'] 
-    all_data = {}
-    for v in all_standard_variables:
-        all_data[v] = []
-    """
+    # check that this eliminates all problems
+    
+    for v in ['date_time', 'gph', 'temp', 'dew', 'windsp', 'winddir', 'lat', 'lon',
+       'pressure', 'month', 'day', 'year', 'hour', 'elev']:
+        
+        values = [ val for val in df[v] if not pd.isna(val) and '999' in val  ]
+        print(v , values)
+    
 
     # data placeholder  
     read_data = []
@@ -1571,12 +1573,10 @@ def read_hara_csv(file=''):
         h = df['hour'][i] 
 
         press_v = df['pressure'].values[i]
-        if  '99999' in press_v:
-            press_v = np.nan 
-        else:
-            try:    
+
+        try:    
                 press_v = float(press_v) * 1000 # Pressure is tenth of millibar, 1 millibar = 100 Pa = 1 hPa hence I multiply by 1000
-            except:
+        except:
                 continue
 
         lat_v = df['lat'].values[i]
@@ -1586,16 +1586,13 @@ def read_hara_csv(file=''):
             lon_v = -180.0 + (lon_v - 180)
 
         temp_v = df['temp'].values[i] # temp is given in tenth of degree Celsius 
-        if '9999' in temp_v:
-            temp_v = np.nan
-        else:
-            temp_v = float(temp_v) * 10 # temp is given in tenth of degree Celsius 
+
+
+        temp_v = float(temp_v) * 10 # temp is given in tenth of degree Celsius 
 
         gph_v = df['gph'][i]      
-        if '9999' in gph_v:
-            gph_v = np.nan
-        else:
-            gph_v = float(gph_v)  * 9.80665 # geopotential height in meters 
+
+        gph_v = float(gph_v)  * 9.80665 # geopotential height in meters 
 
         if not np.isnan(press_v):
             z_type = 1
@@ -1608,18 +1605,11 @@ def read_hara_csv(file=''):
 
 
         dp_v = df['dew'].values[i]      
-        if '9999' in dp_v:
-            dp_v=np.nan
-        else:
-            dp_v = float(dp_v) * 10 
+        dp_v = float(dp_v) * 10 
 
         wind_sp_v = df['windsp'].values[i]  # meter per second 
-        if '9999' in wind_sp_v:
-            wind_sp_v = np.nan
 
         wind_dir_v = df['winddir'].values[i]  # Wind direction, 0 to 360 degrees, measured clockwise from north (e.g., 90 degrees is east).
-        if '9999' in wind_dir_v:
-            wind_dir_v = np.nan        
 
         #timestamp = pd.Timestamp(date_v[0:4] + '-'  + date_v[4:6] + '-' + date_v[6:8] + '-' + time_v )
         date_v = dt.replace('-','')
@@ -2106,13 +2096,22 @@ def make_odb_header(odbfile, dataset):
     if 'mobile' in dataset:
         dataset = dataset.replace('_mobile', '')
 
+    #if dataset in ('era5_1', 'era5_2'):
+    #    year = odbfile.split('.conv.')[1][0:4]
+            
+            
     header = 'headers/' + dataset + '_header.dat'
-
+    
+    if dataset in ('era5_1'):
+        year = odbfile.split('.conv.')[1][0:4]
+        header = header.replace('.dat' , '_'+year+'.dat')
+        
+        
     if not os.path.isfile ( header ):
         print(' Creating the header file for the dataset: ', dataset )
-        if dataset in ('era5_1','era5_2'):
+        if dataset in ('era5_1'):
 
-            odbfile = odbfile.replace('.gz','')
+            odbfile = odbfile.replace('.gz','').replace('.txt','')
         else:
             odbfile = odbfile.replace('.gz','').replace('.conv._','.conv.')
 
@@ -2160,7 +2159,6 @@ def make_odb_header(odbfile, dataset):
           So the following call alldict=pd.read_csv(f,delimiter='\t', usecols=columns, quoting=3,comment='#', skipinitialspace=True, dtype=tdict) breaks  """    
     for t in tdict.keys():
         if t not in columns:
-            #print("Removing non appearing fb column: " , c)          
             del tdict[t]
 
     """ These values must be removed rom the fb, since they have NULL values and it creates problem with 
@@ -2190,32 +2188,23 @@ def read_all_odbsql_stn_withfeedback(dataset, odbfile):
             print(odbfile, 'The zipped ODB file was not found !')
             return
 
-
-
         tdict['sensor@hdr']=numpy.float32
         tdict['ppcode@conv_body']=numpy.float32
-
-        '''
-        d=['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body','lon@hdr','lat@hdr','seqno@hdr',
-                         'obsvalue@body','source@hdr' , 'vertco_type@body']
-
-        if 'fg_depar@body' in columns:  # creating the colkumns for era5fb 
-            d=d+['fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv','reportype','andate','antime']
-        '''
 
         # restrict feedback to certain columns        
         #for c in columns:
         #    if c not in d:
         #        del tdict[c]
 
-        #columns=d.copy()
-
         if 'mobile' not in dataset:
             # mobile dataset have no column names, so you have to assign them manually
             alldict=pd.read_csv(f,delimiter='\t', usecols=columns, quoting=3,comment='#', skipinitialspace=True, dtype=tdict) #nrows=1000000) # 
+            alldict.to_csv('prova_stat_74005.csv', sep = '\t')
+            
         else:
             alldict=pd.read_csv(f,delimiter='\t', names=columns, quoting=3,comment='#', skipinitialspace=True, dtype=tdict, skiprows=1) #nrows=1000000) #
 
+            
         """ Case where erafb is not available """
         if 'fg_depar@body' not in columns:
             alldict['fg_depar@body']=numpy.float32(numpy.NaN)
@@ -2264,8 +2253,7 @@ def read_all_odbsql_stn_withfeedback(dataset, odbfile):
                     alldict[c]=numpy.float32(alldict[c])
                 except:
                     pass
-
-
+                
         #print('after odb:',time.time()-t)
 
     #except MemoryError:
@@ -2274,7 +2262,6 @@ def read_all_odbsql_stn_withfeedback(dataset, odbfile):
         return None
 
     #print(odbfile,time.time()-t)#, sys.getsizeof(alldict))
-
     return alldict
 
 
@@ -2636,9 +2623,7 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
     return
 
 
-
-
-def write_dict_h5_old(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}): 
+def write_dict_h5_old_leo(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}): 
     """ Writes each separate variable from the observation or feedback tables inot netcdf using h5py.
           f is a pandas dataframe with one column, one for each variable
           k is either 'era5fb' or 'observations_table'
@@ -2679,8 +2664,164 @@ def write_dict_h5_old(dfile, f, k, fbencodings, var_selection=[], mode='a', attr
                     continue
             except:
                 pass
+            
+            if v == 'source_id':
+                x = 0
 
 
+            if type(fvv[0]) not in [str,bytes,numpy.bytes_]:  ### HORRIBLE HANDLING of types, dtypes, strings, bytes... 
+                #print(v, '  ', type(fvv[0]) , '  ' , fvv.dtype )
+
+                if fvv.dtype !='S1':
+                    #if fvv.dtype == "Int64":
+                    #    0
+                    #vtype = np.int32
+                    #else:
+                    #    vtype = fvv.dtype
+
+                    try:
+                        fd[k].create_dataset(v,fvv.shape,fvv.dtype, **fbencodings[v])
+                    except:
+                        #fd[k].create_dataset(v,fvv.shape,'int32',compression=fbencodings[v]['compression'], chunks=True)  
+                        fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression='gzip', chunks=True)
+
+                    try:
+                        fd[k][v][:]=fvv[:]
+                    except:
+                        fd[k][v][:] = np.empty( (len( fvv)) )
+
+                    if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
+                        if v in attrs.keys():
+                            for kk,vv in attrs[v].items():
+                                if type(vv) is str:  
+                                    fd[k][v].attrs[kk]=numpy.bytes_(vv)
+                                else:
+                                    fd[k][v].attrs[kk]=vv
+
+                    if v in ['date_time','report_timestamp','record_timestamp']:
+                        fd[k][v].attrs['units']=numpy.bytes_('seconds since 1900-01-01 00:00:00')                            #print (  fk, ' ' , v , ' ' ,   ) 
+
+                else:
+                    fd[k].create_dataset(v,fvv.shape,fvv.dtype, **fbencodings[v])
+                    fd[k][v][:]=fvv[:]
+                    slen=fvv.shape[1]
+                    sdict[v]=slen
+                    if slen not in slist:
+                        slist.append(slen)
+                        try:
+                            fd[k].create_dataset( 'string{}'.format(slen),  data=string10[:slen]  )
+                        except:
+                            pass               
+                    if v in attrs.keys():
+                        fd[k][v].attrs['description']=numpy.bytes_(attrs[v]['description'])
+                        fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])
+
+            else:
+                sleno=len(fvv[0])
+                slen=sleno
+                try:
+                    slen=int(fvv.dtype.descr[0][1].split('S')[1])
+                except:  
+                    slen=15
+
+                sdict[v]=slen
+                if slen not in slist:
+                    slist.append(slen)
+                    try:
+                        fd[k].create_dataset( 'string{}'.format(slen),  data=string10[:slen]  )
+                    except:
+                        pass               
+                try:
+
+                    fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),**fbencodings[v])
+                except KeyError:
+                    fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression='gzip',chunks=True)
+
+                if v in attrs.keys():
+                    fd[k][v].attrs['description']     =numpy.bytes_(attrs[v]['description'])
+                    fd[k][v].attrs['external_table']=numpy.bytes_(attrs[v]['external_table'])                
+
+
+            #variables_dic[v] = f[v].values.dtype
+
+        for v in fd[k].keys(): #var_selection:
+            l=0      
+            if 'string'  in v or v== 'index' :                    
+                continue 
+            try:
+                if type(f[v]) == pd.core.series.Series:
+                    fvv=f[v].values
+                else:
+                    fvv=f[v]
+                fd[k][v].dims[l].attach_scale(fd[k]['index'])
+                #print(v,fvv.ndim,type(fvv[0]))
+                if fvv.ndim==2 or type(fvv[0]) in [str,bytes,numpy.bytes_]:
+                    slen=sdict[v]
+                    #slen=10
+                    fd[k][v].dims[1].attach_scale(fd[k]['string{}'.format(slen)])
+            except:
+                pass
+
+        #i=4        
+        for v in slist:
+            s='string{}'.format(v)
+            for a in ['NAME']:
+                fd[k][s].attrs[a]=numpy.bytes_('This is a netCDF dimension but not a netCDF variable.')
+            #i+=1
+
+    return
+    
+    
+
+
+def write_dict_h5_old(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}): 
+    """ Writes each separate variable from the observation or feedback tables inot netcdf using h5py.
+          f is a pandas dataframe with one column, one for each variable
+          k is either 'era5fb' or 'observations_table'
+          fbencodings is the encodings of variable types, e.g. {'observations_id': { 'compression': 'gzip' } }
+    """
+
+    #attrs=  {'date_time':('units','seconds since 1900-01-01 00:00:00')}
+    #attrs = {'observation_id': ('description', 'unique ID for observation'), 'report_id': ('description', 'Link to header information') , 'date_time':('units','seconds since 1900-01-01 00:00:00') }
+
+    with h5py.File(dfile,mode) as fd:
+        try:
+            fd.create_group(k)
+            index=numpy.zeros (f[list(f.keys())[0]].shape[0], dtype='S1')
+            fd[k].create_dataset('index', data=index)
+        except:
+            pass
+        if not var_selection:
+            var_selection=list(f.keys())
+
+        string10=numpy.zeros(fixed_string_len,dtype='S1')
+        sdict={}
+        slist=[]
+
+        for v in var_selection:
+            #if v == 'source_file':
+            #    a = 0
+            #if v in [ 'report_event1@hdr' , 'report_rdbflag@hdr' , 'datum_anflag@body', 'datum_event1@body', 'datum_rdbflag@body', 'index' , 'varbc_ix@body']:
+            #    a=0
+                #continue 
+            if v in [ 'index']:
+                    continue
+                    
+            if type(f[v]) == pd.core.series.Series:
+                fvv=f[v].values
+            else:
+                fvv=f[v]
+
+            try:
+                if fvv.dtype ==pd.Int64Dtype(): ### TO DO 
+                    continue
+            except:
+                pass
+
+            # this is needed to remove the <NA> types from pandas in the array or it crashes, due to type Int64 NAN in pandas 
+            if v in [ 'report_event1@hdr' , 'report_rdbflag@hdr' , 'datum_anflag@body', 'datum_event1@body', 'datum_rdbflag@body', 'index' , 'varbc_ix@body']:
+                fvv = np.array( [int_void if pd.isna(i) else i for i in fvv   ] )
+            
             if type(fvv[0]) not in [str,bytes,numpy.bytes_]:  ### HORRIBLE HANDLING of types, dtypes, strings, bytes... 
                 #print(v, '  ', type(fvv[0]) , '  ' , fvv.dtype )
 
@@ -3387,11 +3528,11 @@ def write_odb_to_cdm(fbds, cdm, cdmd, output_dir,  dataset, dic_obstab_attribute
     # TO DO verify it still works with igra, ncar etc. 
     #station_configuration_retrieved = stations_id='', station_configuration='', lat='', lon='', fn = '', db='', change_lat=False          
     station_configuration_retrieved = get_station_configuration_cuon(stations_id=station_id, 
-                                                                     station_configuration = cdm['station_configuration'],
-                                                                     lat=fbds['lat@hdr'].values[0],  lon=fbds['lon@hdr'].values[0], 
-                                                                      fn=fn, 
-                                                                      db=dataset,
-                                                                      change_lat=change_lat  )       
+                                                                    station_configuration = cdm['station_configuration'],
+                                                                    lat=fbds['lat@hdr'].values[0],  lon=fbds['lon@hdr'].values[0], 
+                                                                    fn=fn, 
+                                                                    db=dataset,
+                                                                    change_lat=change_lat  )       
 
     primary_id = station_configuration_retrieved.primary_id.values[0].decode('utf-8')
 
@@ -3594,8 +3735,6 @@ def write_odb_to_cdm(fbds, cdm, cdmd, output_dir,  dataset, dic_obstab_attribute
 
                 except KeyError:   
                     pass
-                    #if d.element_name=='duplicates':
-                        #print('duplicates')
                     #print ('FFF ', d.element_name , ' ' , numpy.dtype(ttrans(d.kind,kinds=gkinds)), time.time()-tt )
                     #print ('FFF ', d.element_name , ' ' , numpy.dtype(ttrans(d.kind,kinds=gkinds)) )
 
@@ -3633,7 +3772,10 @@ def write_odb_to_cdm(fbds, cdm, cdmd, output_dir,  dataset, dic_obstab_attribute
             else : # this is the case where the cdm tables DO exist
                 try:   
                     groups[k][d.element_name]=({k+'_len':len(cdm[k])}, cdm[k][d.element_name].values) # element_name is the netcdf variable name, which is the column name of the cdm table k 
+                    print('OK group' , k )
+                    
                 except KeyError:
+                    print("FAILING " , k )
                     pass
 
             """ Tryin to add attributes, e.g. description and external tables """ 
@@ -3651,7 +3793,6 @@ def write_odb_to_cdm(fbds, cdm, cdmd, output_dir,  dataset, dic_obstab_attribute
                     pass
 
             try:
-
                 if type(groups[k]) is dict:
                     gkev=groups[k][d.element_name]
                 else:
@@ -3675,12 +3816,11 @@ def write_odb_to_cdm(fbds, cdm, cdmd, output_dir,  dataset, dic_obstab_attribute
                     groupencodings[k][d.element_name]={'compression': 'gzip'}
 
                 if k in ('observations_table'):
-                    if d.element_name == 'z_coordinate_type':
-                        a=0
-                    #print(k,d.element_name,time.time()-tt,' mem:',process.memory_info().rss//1024//1024)
+                    #if d.element_name == 'z_coordinate_type':
+                    #    a=0
                     write_dict_h5_old(fno, groups[k], k, groupencodings[k], var_selection=[],mode='a', attrs= dic_obstab_attributes  )
             except:
-                print('bad:',k,d.element_name)
+                #print('bad:',k, d.element_name)
                 pass
                 #if k=='observations_table':
                 #    print(k,d.element_name,time.time()-tt,' mem:',process.memory_info().rss//1024//1024)
@@ -3756,8 +3896,10 @@ def read_odb_to_cdm(output_dir, dataset, dic_obstab_attributes, fn, fns):
     t=time.time()
 
     ### only era5_1 and era5_2 (mobile) have year splitting 
+    
+    
     p=Pool(3)
-    func=partial(read_all_odbsql_stn_withfeedback,dataset)
+    #func=partial(read_all_odbsql_stn_withfeedback,dataset)
     ### uncomment to debug one single file 
     #for f in fns:
     #    d = read_all_odbsql_stn_withfeedback(dataset, f )
@@ -3775,7 +3917,6 @@ def read_odb_to_cdm(output_dir, dataset, dic_obstab_attributes, fn, fns):
 
     print('Reading ' + str(len(fns)) + ' ODB files ')
 
-
     if len(fns)==1:       
         fbds=list(map(func,fns))
     else:
@@ -3791,7 +3932,6 @@ def read_odb_to_cdm(output_dir, dataset, dic_obstab_attributes, fn, fns):
     fbds['vertco_reference_1@body'] = fbds['vertco_reference_1@body'].astype(float)
     fbds = fbds.sort_values(by = ['date@hdr', 'time@hdr', 'vertco_reference_1@body' ] )    
 
-    #fbds = fbds[:1000]
     years = [str(s)[:4] for s in fbds['date@hdr'] ]
     fbds['year'] = years
     #fbds = fbds.replace( -2147483648 , np.nan ) 
@@ -3806,6 +3946,18 @@ def read_odb_to_cdm(output_dir, dataset, dic_obstab_attributes, fn, fns):
     fbds = fbds.sort_values(by = ['date@hdr', 'time@hdr', 'vertco_reference_1@body' ] )   
 
     print('+++ Created pandas dataframe ')
+    
+    """
+    #fbds = fbds[:10]  # TO DO HERE TO DO CHANGE WRONG  !!!!!!!!!
+    fbds = fbds[:20000]    
+    fbds['date_time'] = fbds['date@hdr'].astype(str) + fbds['time@hdr'].astype(str) 
+    print(np.unique(fbds['date_time']))
+    
+    ## I obtain:
+    ### '20160120163500' '20160120170000' '20160120203400' 
+    """
+
+ 
     return fbds, min(years)
 
 
@@ -5053,7 +5205,7 @@ if __name__ == '__main__':
 
                         force_this_run = False
                         if len(ff) > 0:
-                                fbds, min_year_data  = read_odb_to_cdm(output_dir, dataset,  dic_obstab_attributes, File, ff)
+                                fbds, min_year_data  = read_odb_to_cdm(output_dir, dataset, dic_obstab_attributes, File, ff)
                                 if fbds.empty:
                                     print("No valid data in source file ::: " , File)
                                     a = open('logs/' + dataset + '_empty_files.txt' , 'a+')
@@ -5074,6 +5226,7 @@ if __name__ == '__main__':
                                         #sys.exit() ## TO DO HERE TODO CHANGE                                         
                                 else:
                                     dummy_writing = write_odb_to_cdm( fbds, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File, ff, change_lat, year)
+                                    print('DONE --- ' , year )
 
                         else:
                             #print("No ERA5 1 files for year " , year )   
@@ -5084,7 +5237,7 @@ if __name__ == '__main__':
                 a.close()
 
             else:
-                fbds, min_year_data  = read_odb_to_cdm(output_dir, dataset,  dic_obstab_attributes, File, fns)
+                fbds, min_year_data  = read_odb_to_cdm(output_dir, dataset, dic_obstab_attributes, File, fns)
                 for year in range(min_year_to_process, max_year_to_process):                
                     if year < min_year_to_process:
                         print('Year ' + year + ' but no data before ' + str(min_year_data) )
@@ -5144,6 +5297,8 @@ if __name__ == '__main__':
                 if run_only_missing_stations and year <= int(min_year_to_process):
                     print('Skipping already processed year: ' , year )       
                 dummy_writing = write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm_tab, cdm_tabdef, output_dir, dataset,  dic_obstab_attributes, File, year) 
+                print(' ***** Convertion of  ' , File ,  '    ' , dummy_writing , '    year     ' ,    year ,  '         completed after {:5.2f} seconds! ***** '.format(time.time()-tt))   
+                
             #except:
             a=open(dummy_writing, 'a+')
             a.write('completed\n')
@@ -5181,11 +5336,17 @@ ERA5 1
 -f  0-20000-0-38475/era5.conv._38475 -d era5_1  -o COP3 
 -f  0-20000-0-82930/era5.conv._82930 -d era5_1  -o COP3
 
+-f  0-20000-0-82930/era5.conv._74005 -d era5_1  -o COP3
+
+
 IGRA2
 -f  0-20000-0-82930/BRM00082930  -d igra2 -o COP3
 -f 0-20000-0-72230/USM00072230 -d igra2 -o COP3
 ERA5 1 MOBILE
 -f  0-20999-0-DBDK/era5.conv._DBDK  -d era5_1_mobile  
+
+ERA5 2 MOBILE  *** this 
+-d era5_2_mobile   -f  0-20999-0-00630/era5.conv._00630  -r False   -o COP3
 
 ERA5 2
 -f 0-20000-0-72575/era5.conv._2:24126 -o COP2 -d era5_2

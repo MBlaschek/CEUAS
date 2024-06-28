@@ -16,10 +16,10 @@ import glob
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
-pd.set_option('display.max_columns', None)
-pd.set_option('display.max_rows', None)
-pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', -1)
+# pd.set_option('display.max_columns', None)
+# pd.set_option('display.max_rows', None)
+# pd.set_option('display.width', None)
+# pd.set_option('display.max_colwidth', -1)
 
 from multiprocessing import Pool
 from functools  import partial
@@ -132,9 +132,10 @@ class Analyze():
         self.dist_limit = dist_limit
         self.inv = inv
         self.data = data
-        self.found_inv= { self.inv.name:{} }
+        self.found_inv= { self.inv.name: {} }
         self.utils = utils 
-        self.mobile_datasets = ['npsound' , 'era5_1_mobile' , 'era5_2_mobile']
+        
+        self.mobile_datasets = ['npsound' , 'era5_1_mobile' , 'era5_2_mobile' , 'shipsound']
         
         
         self.wigos = { 'IGRA2'    :'0-20300-0-',
@@ -202,7 +203,8 @@ class Analyze():
     def FindCity(self):
         """ Find the closest city within a 100 km radius """
         
-        if not self.data.lats:
+        print('*** Find CIty *** ')
+        if len(self.data.lats) < 1: # edit form "if not self.data.lats:""
             self.best_match['city'] = 'None'
             self.best_match['city_dist_km'] = 'None'
             self.best_match['city_lat'] = 'None'
@@ -242,7 +244,7 @@ class Analyze():
         df['latitude'] = df['latitude'].astype(float)
         df['longitude'] = df['longitude'].astype(float)
         
-        if not self.data.lats and 'mobile' in self.data.dataset: # empty dummy inventory for mobile stations 
+        if len(self.data.lats) ==0 or 'mobile' in self.data.dataset: # empty dummy inventory for mobile stations 
             red_inv = pd.DataFrame(columns = df.columns )
             red_inv['distance_km'] = 'NAN'
             self.red_inv = red_inv 
@@ -342,13 +344,13 @@ class Analyze():
         lats = self.data.lats
         lons = self.data.lons
         
-        if lats:
+        if len(lats) > 0: # edit from "if lats:"
             distances = [ round( self.utils.distance( lats[-1], lons[-1] , inv_matchingId['latitude'][i] , inv_matchingId['longitude'][i] ), 1 ) for i in range(len(inv_matchingId['latitude']) ) ]
     
             inv_matchingId['distance_km'] = distances
             inv_matchingId['distance_km_minusLat'] = ['' for i in range(len(inv_matchingId))]  # must add to keep dataframes compatible in all cases
         
-        else:
+        else: # edit from "else:"
             
             inv_matchingId['distance_km'] = ['' for i in range(len(inv_matchingId))]
             
@@ -385,6 +387,11 @@ class Analyze():
                 'db': self.dataset,
                 'variables': str(variables) }
 
+        a=0
+        
+        
+        
+        
     def Combine(self):
         """ Concatenating the df for each inventory and removing duplicated entries """
         try:
@@ -412,7 +419,8 @@ class Analyze():
             res = id_match # empty case
             for c in res.columns:
                 res[c] = [np.nan]            
-            if 'mobile' not in self.data.dataset and 'npsound' not in self.data.dataset:
+            #if 'mobile' not in self.data.dataset and 'npsound' not in self.data.dataset and 'shipsound' not in self.data.dataset: # TODO simplify ?
+            if self.data.dataset not in self.mobile_datasets:
                 res['WIGOS_calc'] = ['None'] 
             else:
                 res['WIGOS_calc'] = ['None'] 
@@ -518,21 +526,6 @@ class Data():
         else:
             self.file = file  
 
-        """
-        # setting output directory holding csv files 
-        if not os.path.isdir('temp_data'):
-            os.mkdir('temp_data')
-            
-        out_dir = 'temp_data/' + self.dataset
-        self.out_dir = out_dir 
-        
-        if not os.path.isdir(self.out_dir):
-            os.mkdir(self.out_dir)
-
-        if not os.path.isdir(out_dir + '/logs'):
-                os.mkdir(out_dir + '/logs')
-        """    
-
         f = 'temp_data/' + self.dataset + '/' + self.file.split('/')[-1] + '.csv'
         
         # NB DOES NOT WORK WELL WITH HARA, REDO TEMP FILES !!! 
@@ -582,12 +575,17 @@ class Data():
                 self.lats_all=[]
                 self.lons_all = []
             else:
-                if type(eval(df['lats'].values[0])) == list:
-                    self.lats = eval(df['lats'].values[0]) 
-                    self.lons = eval(df['lons'].values[0]) 
-                else:
-                    self.lats = [eval(df['lats'].values[0]) ]   
-                    self.lons = [eval(df['lons'].values[0]) ]
+                try:
+                    
+                    if type(eval(df['lats'].values[0])) == list:
+                        self.lats = eval(df['lats'].values[0]) 
+                        self.lons = eval(df['lons'].values[0]) 
+                    else:
+                        self.lats = [eval(df['lats'].values[0]) ]   
+                        self.lons = [eval(df['lons'].values[0]) ]
+                except:
+                    self.lats = []
+                    self.lons = []
                     
                 if 'lats_all' in df.columns:
                     if type(eval(df['lats_all'].values[0])) == list:
@@ -601,10 +599,14 @@ class Data():
             if self.file.split("/")[-1] in self.test_era5_1759_lat_mismatch_all:
                 self.lats = [-l for l in self.lats if l >0 ]
                 
-                
             self.min_date = df['min_date'].values[0]
             self.max_date = df['max_date'].values[0]
-            self.consistent_coord = eval( df['consistent_coord'].values[0] )
+            try:
+                self.consistent_coord = eval( df['consistent_coord'].values[0] )
+            except:
+                if self.dataset == 'igra2':
+                    a = 0
+                    
             self.variables = df['variables'].values[0]
             
             if 'frequency' in df.columns:
@@ -621,6 +623,8 @@ class Data():
                 self.read_era5_1_mobile()                
             elif 'ncar' in self.dataset:
                 self.read_ncar()
+            elif 'bufr_cnr' in self.dataset :
+                self.read_bufr_cnr()
             elif 'bufr' in self.dataset :
                 self.read_bufr()
             elif 'amma' in self.dataset:
@@ -631,8 +635,9 @@ class Data():
                 self.read_igra2()
             elif 'hara' in self.dataset:
                 self.read_hara()
-            elif 'npsound' in self.dataset:
-                self.read_npsound()
+            elif self.dataset in ['npsound' , 'shipsound']:
+                self.read_shipsound_npsound()
+   
                 
     def read_era5_1_mobile(self):
         """ Works also for ERA5 2, might change th ename of the function """
@@ -1056,8 +1061,62 @@ class Data():
         return 0    
 
 
-    def read_npsound(self):
-        """ Reading HARA station files written into csv station files """
+    def read_bufr_cnr(self):
+        """ Reading BURF CNR station files written into csv station files """
+        
+        bufr_cnr_file = self.file 
+        
+        # reading data via csv 
+        data =pd.read_csv(self.file, sep='\t')
+        dates = pd.to_datetime(data['date'].astype('string') + data['time'].astype('string').str.zfill(6), format='%Y%m%d%H%M%S')
+        dates = np.unique(dates)     
+        lats = data.latitude.values
+        lons = data.longitude.values
+        
+        del data
+                
+        lats_all = np.unique(lats)
+        lons_all = np.unique(lons)
+        
+        df = pd.DataFrame( {'lat': lats , 'lon' : lons } )
+        df = df.drop_duplicates().reset_index(drop=True) 
+         
+        statIds = [ bufr_cnr_file.split('/')[-1].split('_')[0] ]
+          
+        #lats, lons = list(df.lat.values), list(df.lon.values)
+        
+        a = self.check_consistent_coords(lats, lons)
+    
+        dic = { 'max_date': max(dates), 
+                 'min_date': min(dates), 
+                 'statid': str(statIds), # needed in case multiple ids 
+                 'lats': [list(df.lat.values)], 
+                 'lons': [list(df.lon.values)], 
+
+                 'lats_all': [list(lats_all)], 
+                 'lons_all': [list(lons_all)],   # actually the same thing...
+                 
+                 'file': self.file.split('/')[-1] , 
+                 'file_path': self.file , 
+                 'db': self.dataset,
+                 'variables': str( ['126','137','106','107','117'] ),
+                 'frequency': self.frequency,
+                 'consistent_coord': str(self.consistent_coord) }
+
+        
+        pd.DataFrame(dic).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        self.statid = statIds
+        self.lats = lats
+        self.lons = lons 
+        self.min_date = min(dates)
+        self.max_date = max(dates)
+        self.variables = dic['variables']
+        return 0    
+
+
+
+    def read_shipsound_npsound(self):
+        """ Reading SHIPSOUND files written into csv station files """
                
         # reading data via csv 
         data =pd.read_csv(self.file, sep='\t')
@@ -1109,6 +1168,64 @@ class Data():
         self.variables = dic['variables']
         return 0  
     
+    
+
+
+
+    '''
+    def read_npsound(self):
+        """ Reading NPSOUND files written into csv station files """
+               
+        # reading data via csv 
+        data =pd.read_csv(self.file, sep='\t')
+        dates = np.unique(data.date_time)     
+        dates = [ ''.join(f.split('_')) for f in dates ]
+        lats = data.latitude.values
+        lons = data.longitude.values
+        
+        del data
+        
+        lats = [float(str(l).replace('\t','')) for l in lats ]
+        lons = [float(str(l).replace('\t','')) for l in lons ]
+        
+        lats_all = np.unique(lats)
+        lons_all = np.unique(lons)
+        
+        df = pd.DataFrame( {'lat': lats , 'lon' : lons } )
+        df = df.drop_duplicates().reset_index(drop=True) 
+         
+        statIds = [ self.file.split('/')[-1].split('.dat')[0] ]
+          
+        #lats, lons = list(df.lat.values), list(df.lon.values)
+        
+        a = self.check_consistent_coords(lats, lons)
+    
+        dic = { 'max_date': max(dates), 
+                 'min_date': min(dates), 
+                 'statid': str(statIds), # needed in case multiple ids 
+                 'lats': [list(df.lat.values)], 
+                 'lons': [list(df.lon.values)], 
+
+                 'lats_all': [list(lats_all)], 
+                 'lons_all': [list(lons_all)],   # actually the same thing...
+                 
+                 'file': self.file.split('/')[-1] , 
+                 'file_path': self.file , 
+                 'db': self.dataset,
+                 'variables': str( ['126','137','106','107','117'] ),
+                 'frequency': self.frequency,
+                 'consistent_coord': str(self.consistent_coord) }
+
+        
+        pd.DataFrame(dic).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        self.statid = statIds
+        self.lats = lats
+        self.lons = lons 
+        self.min_date = min(dates)
+        self.max_date = max(dates)
+        self.variables = dic['variables']
+        return 0  
+    '''
     
         
     def read_bufr(self):
@@ -1208,12 +1325,6 @@ class Data():
          
         statIds = [np.unique( ['{:0>2}{:0>3}'.format(data['blockNumber'][i], data['stationNumber'][i] ) for i in range(len(data['blockNumber'] ) )  ]  )[0]  ]
          
-        """
-        #self.consistent_coord = True
-        # define a max distance
-        distances = [ round(self.utils.distance( df.lat[i], df.lon[i] , 
-                                        df.lat[0], df.lon[0] , ), 1 ) for i in range(len(df.lat) ) ]         
-        """
         
         # maximum 30 km distance 
         a = self.check_consistent_coords(lats, lons)
@@ -1334,20 +1445,37 @@ class Data():
         series = self.series
         variables = ['85','38','106','107']
         
+        ### must remove dummy lat and lon for mobing ships in igra2
+        lat, lon = series.latitude, series.longitude
+        if lat < -180 or lon < -180 :
+            lat, lon = '', '' 
+        
+        if not  (lat and lon):
+            coord = False
+        else:
+            coord = True 
+            
         dic = { 'max_date': series.end_date , 
                 'min_date':series.start_date, 
                 'statid':str(series.station_id), # needed in case multiple ids 
-                'lats': [series.latitude] , 
-                'lons': [series.longitude], 
+                'lats': [ lat ] , 
+                'lons': [ lon ], 
                 'file': self.file , 
                 'file_path':  self.file , 
                 'db': self.dataset,
                 'variables': str(variables),
-                'consistent_coord': str('N/A') }  # NB coordinates should be checked against complete files, not stations lists !!! 
+                'consistent_coord': coord }  # NB coordinates should be checked against complete files, not stations lists !!! 
         
         # storing the 
-        pd.DataFrame(dic).to_csv( self.out_dir  + '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )     
+        pd.DataFrame(dic).to_csv( 'temp_data/' + self.dataset + '/'  + self.file.split('/')[-1] + '.csv', sep = '\t' )     
         
+        self.statid = [series.station_id]
+        self.lats = [lat]
+        self.lons = [lon]
+        self.min_date = series.start_date
+        self.max_date = series.end_date
+        self.variables = str(variables)
+        self.consistent_coord = coord 
         return 0        
     
     
@@ -1356,7 +1484,7 @@ class Inventory():
     the OSCAR, IGRA2, WBAN and CHUAN inventories.
     For OSCAR and WBAN will convert lat and lon to decimal format. """
     
-    def __init__(self, datadir ='', tablesdir = '../data/tables/',
+    def __init__(self, datadir ='', tablesdir = '/users/staff/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/data/tables/',
                  oscar ="",
                  igra2= "",
                  wban = '',
@@ -1400,14 +1528,31 @@ class Inventory():
         # extracting standard 5 digits station id 
         stat_id = [ str(s[6:]) for s in igra2['station_id_igra'] ]
         igra2['station_id'] = stat_id
+        
+        
         igra2 = igra2[['station_id_igra', 'station_name','latitude','longitude', 'elevation', 'station_id', 'start_date', 'end_date']]
         
         # clean for missing values in lat and lon (i.e. values < 0)
-        igra2 = igra2.loc[ (igra2['latitude'] >= -180) & (igra2['longitude'] >= -180) ]
+        #igra2 = igra2.loc[ (igra2['latitude'] >= -180) & (igra2['longitude'] >= -180) ] ## TO DO HERE TO DO 
         igra2 = igra2.reset_index(drop=True)
         igra2['isRadio'] = 'True'
         igra2.name = 'IGRA2'
 
+        out = open('/users/staff/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/code/file_list/igra2_files_list.txt' , 'w')
+        
+        for i in range(len(igra2)):
+            stat = igra2.loc[i, 'station_id_igra' ] 
+            lat = igra2.loc[i, 'latitude' ] 
+            lon = igra2.loc[i, 'longitude' ] 
+            
+            if lat < -90 or lon < -180:
+                k = 'mobile'
+            else:
+                k = 'regular'
+                
+            #print(stat + '\t' + k + '\n')
+            out.write(stat + '\t' + k + '\n')
+            
         #############################################
         ### Reading SCHROEDER data
         #############################################
@@ -1445,9 +1590,15 @@ class Inventory():
         amma['WMO_id'] = amma.station_id
         amma['isRadio'] = True
         amma = amma.reset_index(drop=True)
-        amma.name='AMMA'
         amma['latitude'] = amma['conv_lat']
         amma['longitude'] = amma['conv_lon']
+        cols = [f for f in amma.columns if f not in ['Unnamed: 0', 'GCOS',
+       'ASECNA', 'Frequency per day', 'SOP frequency', 'IOP frequency',
+       'Upgraded ground station', '2006 Success Rate (%)',
+       'Best 2006 Monthly success (%)' ] ] 
+        amma = amma[ cols ]
+        amma.name='AMMA'
+        
         #wmo.sch['elevation'] = '' ### TO DO implement !!! it is available
   
   
@@ -1465,6 +1616,8 @@ class Inventory():
         hara['station_id'] = ids       
         hara['isRadio'] = True
         hara = hara.reset_index(drop=True)
+        cols = [c for c in hara.columns if c not in ['#_OF _SOUNDINGS', 'YEARS',] ]
+        hara = hara [cols]
         hara.name='HARA'
         #wmo.sch['elevation'] = '' ### TO DO implement !!! it is available
 
@@ -1587,7 +1740,7 @@ class Inventory():
 utils = Utils()
 
 # Initialize inventory
-inventory = Inventory( datadir ='../data/tables',  
+inventory = Inventory( datadir ='/users/staff/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/data/tables',  
                  oscar = "vola_legacy_report.txt" , 
                  igra2 = "igra2-station-list.txt"  , 
                  wban = "WBAN.TXT-2006jan"  , 
@@ -1648,25 +1801,17 @@ def wrapper(data, file):
         print("Reading file::: " , file )
         d = data.read_file(file=file)
         print("Done Reading file::: " , file )
-      
+        
         if data.dataset == 'igra2':
             file_name = file.station_id_igra
         else:
             file_name = file.split("/")[-1]
         
-        # checking and creating output directory 
-        #out_dir = 'inventories/' + data.dataset
-        #if not os.path.isdir(out_dir):
-        #    os.mkdir(out_dir)
-            
-        #if not os.path.isdir(out_dir + '/logs'):
-        #    os.mkdir(out_dir + '/logs')
-            
         matching_inv = {}        
         for i in ["oscar","igra2","wban","chuan", 'schroeder', 'wmo', 'amma', 'hara'] :        
-            print(' *** Analizing the inventory: ', i )
+            print(' *** Analyzing the inventory: ', i )
             analyze = Analyze( data = data, inv = inventory.inv[i], 
-                               cities= inventory.cities, utils = utils)
+                                cities= inventory.cities, utils = utils)
             
             analyze.AddDistance()
             
@@ -1677,7 +1822,7 @@ def wrapper(data, file):
             analyze.Combine()
             analyze.FindCity()
             matching_inv[i] = analyze.best_match    
-        
+            
         l = [matching_inv[f] for f in  matching_inv.keys() ]
         
         all_inventories = pd.concat(l)
@@ -1693,9 +1838,12 @@ def wrapper(data, file):
         except:
             st = str(data.statid[0])
             
-        if df_red.empty or data.dataset in ['npsound', 'era5_1_mobile', 'era5_2_mobile']:
+        if data.dataset in ['igra2'] and not data.consistent_coord: # special case where igra2 has mobile stations
+            df_red = pd.DataFrame (columns = df_red.columns )           
             
-            if data.dataset in ['npsound', 'era5_1_mobile' , 'era5_2_mobile']:
+        if df_red.empty or data.dataset in ['npsound', 'era5_1_mobile' , 'era5_2_mobile' , 'shipsound' ] :
+            
+            if data.dataset in ['npsound', 'era5_1_mobile' , 'era5_2_mobile' , 'shipsound', 'igra2']:
                 flag = 'mobile'
                 wigos_pre = '0-20999-0-'
                 print("+++ No matching inventory for the file (MOBILE station)")
@@ -1707,13 +1855,16 @@ def wrapper(data, file):
             
             all_inventories = {}
             
-            df = pd.DataFrame.from_dict( {'lats':data.lats , 'lons':data.lons} )
-            df =df.drop_duplicates()
-            df = df.reset_index()
+            try:
+                df = pd.DataFrame.from_dict( {'lats':data.lats , 'lons':data.lons} )
+                df =df.drop_duplicates()
+                df = df.reset_index()
+                all_inventories['lat_file'] = ','.join( [str(l) for l in df.lats.values ] )
+                all_inventories['lon_file'] = ','.join( [str(l) for l in df.lons.values ] )
             
-            
-            all_inventories['lat_file'] = ','.join( [str(l) for l in df.lats.values ] )
-            all_inventories['lon_file'] = ','.join( [str(l) for l in df.lons.values ] )
+            except:
+                all_inventories['lat_file']  = [-999]
+                all_inventories['lon_file'] = [-999]
 
             all_inventories['file'] = data.file.split('/')[-1]
             all_inventories['file_dataset'] = data.dataset
@@ -1736,16 +1887,26 @@ def wrapper(data, file):
         
         else:
             df_red = df_red.sort_values(by=['inventory','distance_km'])
+            df_red['file_dataset'] = data.dataset
+            df_red['file_min_date'] = str(data.min_date)
+            df_red['file_max_date'] = str(data.max_date)
+            df_red['variables'] = str(data.variables)  
+            df_red['file'] = data.file.split('/')[-1]
             
             if not data.consistent_coord:  # coordinates are inconsistent, skipping 
 
-                flag = 'inconsistentCoordinates' # to upadte the global file later 
-                best_wigos  = '0-20666-0-' + st
+                flag = 'inconsistentCoordinates' # to update the global file later 
+                wigos_pre = '0-20666-0-'
+                
+                df_red['WIGOS_best'] = wigos_pre + st
+                
                 a = open( 'inventories/' + dataset + '/logs/' + dataset + '_' + flag + '.txt', 'a+')
                 a.write(file_name + '\t' + str(data.lats_all) + '\t' + str(data.lons_all) + '\t' +  str(data.frequency)  + '\t' + flag +  '\n')
                 
                 name = 'inventories/' + dataset + '/' + data.file.split('/')[-1] + '_' + flag + '.csv'
                 df_red['kind'] = flag
+                df_red['file_statid'] = data.statid[0]
+                
                 df_red.to_csv(name, sep = '\t' , index = False )
                 print("+++ No matching inventory for the file (INCONSISTENT COORDS station)")
                 
@@ -1774,7 +1935,7 @@ def wrapper(data, file):
                                 
                                 st = "\t". join( [ str(eval(data.statid[0])[0]) , str( int(df.station_id.values[0])) , str(data.lats[0]) ,  str(df['latitude'].values[0])  ,  str(data.lons[0]) , str(df['longitude'].values[0]) ,  file_name ,  flag , '\n'] ) 
                                 a.write(st)
-   
+
                         
                 except:
                     print("PROBLEM==========" , file_name )
@@ -1871,7 +2032,7 @@ def wrapper(data, file):
         a.write(name_s + '\t' + str(data.lats[0]) + '\t' + str(data.lons[0]) + '\t' + flag + '\n' )       
         
         print("Done :::" , file_name )
-    
+
 
     except:
         print("*** Cannot read file! ***" , name_s )
@@ -1911,6 +2072,7 @@ test_era5_1759_lat_mismatch_all = ['era5.1759.conv.2:82606', 'era5.1759.conv.2:8
 
 ### Directory containing the databases 
 basedir = '/mnt/users/scratch/leo/scratch/era5/odbs/'
+uvdir = '/mnt/users/staff/uvoggenberger/scratch/'
 datasets = {  'era5_1': basedir + '/1' ,
              'era5_1_mobile' : basedir + '1_mobile' ,
             'era5_2': basedir + '/2',
@@ -1919,14 +2081,18 @@ datasets = {  'era5_1': basedir + '/1' ,
             'era5_3188': basedir +'/3188',
             'era5_1759': basedir +'/1759',
             'era5_1761': basedir + '/1761',
-            'bufr': basedir + '/ai_bfr/',                                   
-            'ncar': '/scratch/das/federico/databases_service2/UADB_25012022/',
+            'bufr': basedir + '/ai_bfr/',  
+            'bufr_cnr': uvdir + 'bufr_cnr/concated',                                  
+            'ncar': '/scratch/das/federico/databases_service2/UADB_22012024/',
             'amma': '/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/' ,
             'igra2': '', # dummy, use the igra2 station list file 
+            'igra2_mobile': '', # dummy, use the igra2 station list file 
+
             'hara': '/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/',
             
-            'giub': '/scratch/das/federico/COP2_HARVEST_JAN2023/TRY_GIUB_22062023_PROVA_FULL_reduced/',
+            'giub': '/scratch/das/federico/databases_service2/GIUB_07072023/',
             'npsound' : '/scratch/das/federico/databases_service2/NPSOUND-NSIDC0060/NPSOUND_csv_converted' ,
+            'shipsound' : '/scratch/das/federico/databases_service2/SHIPSOUND-NSIDC-0054/'
                                } 
 
 
@@ -2011,8 +2177,7 @@ def get_flist(db):
             df = pd.DataFrame(dic)
             df.to_csv( 'file_list/era5_2_files_list.csv' , sep = '\t')
 
-                
-            
+ 
         else:
             df = pd.read_csv( 'file_list/era5_2_files_list.csv', sep='\t' )
             flist = list(df.file) 
@@ -2021,26 +2186,10 @@ def get_flist(db):
             flist = list( df.loc[df.kind == 'MOBILE'].file )
         else:
             flist = list( df.loc[df.kind == 'FIXED'].file )
-            
-        
+
         flist=[f.replace('.gz', '')  for f in flist]            
             
-        '''
-        elif db == 'era5_2':
-            if not os.path.isfile('file_list/era5_2_files_list.txt'):  
-                flist=glob.glob(datasets[db] + "/era5.conv._*") 
-                flist = [f for f in flist if '.gz' not in f ]
-                a = open( 'file_list/era5_2_files_list.txt','w')
-                for l in flist:
-                    a.write(l + '\n')
-                a.close()
-                
-            else:
-                flist = [ f.replace('\n','') for f in open(db + '_files_list.txt').readlines() ]
-                
-            flist=[f for f in flist if '.gz' not in f and '.nc' not in f ]
-        '''
-    
+            
     elif db == 'era5_1759':
         flist=glob.glob("/mnt/users/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.*")
         
@@ -2057,6 +2206,9 @@ def get_flist(db):
         f = inventory.inv['igra2']
         flist = [ f.iloc[n] for n in range(len(f)) ]
         
+    elif 'bufr_cnr' in db:
+        flist=glob.glob(datasets[db] + '/*') 
+
     elif 'bufr' in db:
         flist=glob.glob(datasets[db] + '/'+'era5.*.bfr')
         flist=[f for f in flist if 'undef' not in f ]
@@ -2065,14 +2217,18 @@ def get_flist(db):
         flist=glob.glob(datasets[db] + '/'+'*')
         
     elif 'hara' in db:
-        flist=glob.glob(datasets[db] + '/'+'*')         
-        
+        flist=glob.glob(datasets[db] + '/'+'*')      
+
     elif 'giub' in db:
         flist=glob.glob(datasets[db] + '/'+'*')         
         
     elif 'npsound' in db:
         flist=glob.glob(datasets[db] + '/'+'*')         
-        flist = [f for f in flist if '28' not in f and '31' not in f ]
+        #flist = [f for f in flist if '28' not in f and '31' not in f ]  # dont remember why? 
+        
+    elif 'shipsound' in db:
+        flist=glob.glob(datasets[db] + '/'+'*.csv')         
+        #flist = [f for f in flist if '.out' not in f and '31' not in f ]
         
     if db not in ['era5_1_mobile']:
         flist = [f for f in flist if '.gz' not in f and '.nc' not in f ]
@@ -2088,20 +2244,30 @@ if __name__ == '__main__':
           - POOL: runs multiprocesses (default=30)
           - CHECK_MISSING: only runs missing files, otherwise will rerun and replace existing files """
 
-    alldb = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1', 'amma', 'hara', 'npsound', 'giub', 'era5_1_mobile' , 'era5_2_mobile']  # era5_1_mobile, era5_2_mobile 
+    all_db = [ 'era5_1', 'era5_2', 
+               'era5_1759', 'era5_1761', 'era5_3188', 
+               'bufr', 'ncar', 
+               'igra2', 'igra2_mobile', 
+               'amma', 
+               'hara', 'npsound', 'shipsound',
+               'giub', 
+               'era5_1_mobile' , 'era5_2_mobile']  # era5_1_mobile, era5_2_mobile 
     
-    era5_block = [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188']
 
-    databases = alldb #     databases = ['igra2']
-    
-    databases = ['npsound']
 
-    databases = ['era5_2_mobile']
+    databases = all_db
     
-    databases = ['era5_2']
+    databases = ['era5_1759', 'era5_1761', 'era5_3188', 
+               'bufr', 'bufr_cnr', 'ncar', 
+               'igra2', 'igra2_mobile', 
+               'amma', 
+               'hara', 'npsound', 'shipsound',
+               'giub', ]
+    
+    databases = ['bufr_cnr']  
     
     # enable multiprocesing
-    POOL = True 
+    POOL = False 
     n_pool = 40
     CHECK_MISSING = False  
     CHECK_FAILED = False
@@ -2121,11 +2287,17 @@ if __name__ == '__main__':
         flist = get_flist(db)
         
 
-
         '''
         flist_n = [f.split('_inventories')[0] for f in os.listdir('inventories/' + db ) if 'noMatchingCoordNoIds'  in f]
         flist = [f for f in flist if f.split('/')[-1] in flist_n  ]
         '''
+        
+        # ### filtering mobile igra
+        if db == 'igra2_mobile':
+            mobile_igra_list = pd.read_csv('/users/staff/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/code/file_list/igra2_files_list.txt' , sep = '\t', names = ['station', 'kind'] )
+            mobile_igra_list = mobile_igra_list.loc[mobile_igra_list.kind == 'mobile']
+            flist = [f for f in flist if f.station_id_igra in list(mobile_igra_list.station) ]
+        
         
         if CHECK_FAILED:
             failed = open(db.replace('era5_','') + '_failed_files.txt','r').readlines()
@@ -2156,14 +2328,17 @@ if __name__ == '__main__':
         
 
         ######  TODO edit here to possibly filter file list
-        #flist = [f for f in flist if '06610' in f ]
+        # flist = [f for f in flist if '94146' in f ]  # inconsitentCoord era5_1
         
         if db != 'igra2':
             skipped = [ 'era5.1759.conv.xxx'.replace('xxx', str(i))  for i in range(1900,2020,1) ]
             skipped = skipped + [ 'era5.1761.conv.xxx'.replace('xxx', str(i))  for i in range(1900,2020,1) ]
             flist = [f for f in flist if f.split('/')[-1] not in skipped ]
         
-        #flist = flist[:1]
+        # remove 0 size files:
+        flist = [f for f in flist if os.path.getsize(f) != 0]
+    
+        # flist = flist[:100] ## edit! 
         if len(flist) ==1:
             POOL = False
             
@@ -2225,114 +2400,9 @@ Problematic files:
 
 
 
-- IGRA2 MOBILE stations
-- they change location in time, hence they do not have defined lat and lo in the igra-station-list file 
-
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASDE01-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASDE02-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASDE03-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASDE04-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASDE09-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASDK01-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASDK02-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASDK03-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASES01-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASEU01-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASEU02-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASEU03-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASEU04-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASEU05-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASEU06-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV00ASGB01-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000ASDK3-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000ASFR1-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000ASFR2-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000ASFR3-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000ASFR4-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000ELML7-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000LADB2-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000LAJV4-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000OVYA2-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000OXTS2-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000OXVH2-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000OXYH2-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000P3OO4-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000VSBV3-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV000ZCBP6-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000DBBH-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000DBFM-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000DBLK-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000DCMS-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000DESI-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000DFCG-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000DKIW-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000DZHA-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000EBUQ-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000EREB-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000EREI-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000ERES-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000FNOR-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000FNOU-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000FNPH-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000FNRS-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000FQFL-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000FQFM-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000JBOA-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000JCCX-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000JDWX-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000JGQH-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000JIVB-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000JNSR-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000KAOU-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000KHRH-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000KNIJ-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000LDWR-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000LGKI-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000SWJS-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000UBLF-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000UBNZ-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000UFTA-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000UHQS-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000UVMJ-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000UZGH-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000V2LV-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000V2XM-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000V2XO-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000VPHA-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000WAAH-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000WPKD-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000WTEC-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000ZDLG-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZV0000ZSAF-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE002-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE003-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE004-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE005-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE006-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE007-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE008-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE009-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE010-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE011-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE012-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE013-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE014-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE015-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE016-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE017-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE019-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE021-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE022-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE026-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE028-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE030-data.txt
-/scratch/das/federico/databases_service2/IGRA2_20211231//ZZXUAICE031-data.txt
-"""
-
-
-# lat mismatch era5_1759
+# lat mismatch era5_1759 example
 # '/mnt/users/scratch/leo/scratch/era5/odbs/1759/era5.1759.conv.2:21502'
-
+"""
 
 """
 Distances between the station coordinates and the inventories are calculated only if the lat and lon difference are below 2 degrees.
@@ -2345,3 +2415,106 @@ The file: logs/
 # era5.55299.bfr 
 
 
+""" IGRA2 MOBILE stations
+- they change location in time, hence they do not have defined lat and lo in the igra-station-list file 
+/scratch/das/federico/databases_service2/IGRA2_20211231/
+ZZV0000DBBH -98.8888 -998.8888 -998.8    METEOR                         1979 2005   3788
+ZZV0000DBFM -98.8888 -998.8888 -998.8    MEERKATZE                      1985 1988    236
+ZZV0000DBLK -98.8888 -998.8888 -998.8    POLARSTERN                     1985 2023  10383
+ZZV0000DCMS -98.8888 -998.8888 -998.8    DOLORES                        1991 1993    530
+ZZV0000DESI -98.8888 -998.8888 -998.8    VALDIVIA                       1993 1993    124
+ZZV0000DFCG -98.8888 -998.8888 -998.8    SONNE                          2009 2015    254
+ZZV0000DKIW -98.8888 -998.8888 -998.8    MERKUR PORTUGAL                1989 1993    735
+ZZV0000DZHA -98.8888 -998.8888 -998.8    MANILA BAY                     1990 1991    672
+ZZV0000EBUQ -98.8888 -998.8888 -998.8    ESPERANZA DEL MAR              2003 2007    719
+ZZV0000EREB -98.8888 -998.8888 -998.8    BRIZ                           1973 1990   2917
+ZZV0000EREI -98.8888 -998.8888 -998.8    OKEAN                          1973 1990   3291
+ZZV0000ERES -98.8888 -998.8888 -998.8    VIKTOR BUGAYEV                 1974 1991   2110
+ZZV0000FNOR -98.8888 -998.8888 -998.8    FORT ROYAL                     1986 2002   2494
+ZZV0000FNOU -98.8888 -998.8888 -998.8    FORT FLEUR D'EPEE              1986 2002   2530
+ZZV0000FNPH -98.8888 -998.8888 -998.8    FORT DESAIX                    1987 2003   2579
+ZZV0000FNRS -98.8888 -998.8888 -998.8    DOUCE FRANCE                   1986 2003   2616
+ZZV0000FQFL -98.8888 -998.8888 -998.8    CMA-CGM FORT SAINT LOUIS       2003 2006    522
+ZZV0000FQFM -98.8888 -998.8888 -998.8    CMA-CGM FORT SAINT PIERRE      2003 2006    501
+ZZV0000JBOA -98.8888 -998.8888 -998.8    KEIFU MARU                     1973 2000   4131
+ZZV0000JCCX -98.8888 -998.8888 -998.8    CHOFU MARU                     1988 2009   1634
+ZZV0000JDWX -98.8888 -998.8888 -998.8    KOFU MARU                      1989 2009   1243
+ZZV0000JGQH -98.8888 -998.8888 -998.8    RYOFU MARU                     2000 2023   3133
+ZZV0000JIVB -98.8888 -998.8888 -998.8    SEIFU MARU                     2000 2008    844
+ZZV0000JNSR -98.8888 -998.8888 -998.8    MIRAI                          2000 2023   5430
+ZZV0000KAOU -98.8888 -998.8888 -998.8    ROGER REVELLE (AWS)            2011 2012    581
+ZZV0000KHRH -98.8888 -998.8888 -998.8    SEALAND DEVELOPER              2003 2004    398
+ZZV0000KNIJ -98.8888 -998.8888 -998.8    MANULANI                       1985 1987    725
+ZZV0000LDWR -98.8888 -998.8888 -998.8    POLARFRONT                     1990 2009  15239
+ZZV0000LGKI -98.8888 -998.8888 -998.8    LANCE                          2015 2015    255
+ZZV0000SWJS -98.8888 -998.8888 -998.8    PELJASPER                      2000 2003    439
+ZZV0000UBLF -98.8888 -998.8888 -998.8    AKADEMIK KURCHATOV             1974 1979    142
+ZZV0000UBNZ -98.8888 -998.8888 -998.8    AKADEMIK SHULEYKIN             1983 1991   1389
+ZZV0000UFTA -98.8888 -998.8888 -998.8    VOLGONEFT-131                  2008 2012   1068
+ZZV0000UHQS -98.8888 -998.8888 -998.8    AKADEMIK KOROLYOV              1974 1990   2966
+ZZV0000UVMJ -98.8888 -998.8888 -998.8    VSEVOLOD BERYOZKIN             1977 1983    665
+ZZV0000UZGH -98.8888 -998.8888 -998.8    PASSAT                         1974 1991   2079
+ZZV0000V2LV -98.8888 -998.8888 -998.8    UAL TEXAS                      1993 1993    144
+ZZV0000V2XM -98.8888 -998.8888 -998.8    SKOGAFOSS                      2003 2007    431
+ZZV0000V2XO -98.8888 -998.8888 -998.8    LAGARFOSS                      2001 2002    192
+ZZV0000VPHA -98.8888 -998.8888 -998.8    OOCL CHALLENGE                 1988 1992   1158
+ZZV0000WAAH -98.8888 -998.8888 -998.8    SEALAND MOTIVATOR              2004 2005    361
+ZZV0000WPKD -98.8888 -998.8888 -998.8    GALVESTON BAY                  2001 2005   1233
+ZZV0000WTEC -98.8888 -998.8888 -998.8    RONALD H. BROWN (AWS)          2000 2020    876
+ZZV0000ZDLG -98.8888 -998.8888 -998.8    BRANSFIELD                     1986 1993    288
+ZZV0000ZSAF -98.8888 -998.8888 -998.8    S. A. AGULHAS                  1989 2008    325
+ZZV000ASDK3 -98.8888 -998.8888 -998.8    ASDK3                          2009 2015   1929
+ZZV000ASFR1 -98.8888 -998.8888 -998.8    ASFR1                          2007 2018   3128
+ZZV000ASFR2 -98.8888 -998.8888 -998.8    ASFR2                          2007 2018   2610
+ZZV000ASFR3 -98.8888 -998.8888 -998.8    ASFR3                          2010 2018   2280
+ZZV000ASFR4 -98.8888 -998.8888 -998.8    ASFR4                          2010 2018   2258
+ZZV000ELML7 -98.8888 -998.8888 -998.8    HORNBAY                        2000 2005   2309
+ZZV000LADB2 -98.8888 -998.8888 -998.8    SKAUGRAN                       1992 1993    394
+ZZV000LAJV4 -98.8888 -998.8888 -998.8    SKAUBRYN                       1991 1992    163
+ZZV000OVYA2 -98.8888 -998.8888 -998.8    ARINA ARCTICA                  2000 2003    863
+ZZV000OXTS2 -98.8888 -998.8888 -998.8    IRENA ARCTICA                  2000 2007    616
+ZZV000OXVH2 -98.8888 -998.8888 -998.8    NAJA ARCTICA                   2003 2006    631
+ZZV000OXYH2 -98.8888 -998.8888 -998.8    NUKA ARCTICA                   2000 2005   1339
+ZZV000P3OO4 -98.8888 -998.8888 -998.8    DRAGON BAY                     1992 1993    148
+ZZV000VSBV3 -98.8888 -998.8888 -998.8    CANMAR AMBASSADOR              1992 1992    250
+ZZV000ZCBP6 -98.8888 -998.8888 -998.8    MISSISSAUGA EXPRESS            2000 2005   1069
+ZZV00ASDE01 -98.8888 -998.8888 -998.8    ASDE01                         2006 2017   3234
+ZZV00ASDE02 -98.8888 -998.8888 -998.8    ASDE02                         2006 2017   2737
+ZZV00ASDE03 -98.8888 -998.8888 -998.8    ASDE03                         2006 2017   2831
+ZZV00ASDE04 -98.8888 -998.8888 -998.8    ASDE04                         2006 2016   3046
+ZZV00ASDE09 -98.8888 -998.8888 -998.8    ASDE09                         2007 2023    598
+ZZV00ASDK01 -98.8888 -998.8888 -998.8    ASDK01                         2007 2021   2963
+ZZV00ASDK02 -98.8888 -998.8888 -998.8    ASDK02                         2007 2017   2993
+ZZV00ASDK03 -98.8888 -998.8888 -998.8    ASDK03                         2015 2017    745
+ZZV00ASES01 -98.8888 -998.8888 -998.8    ASES01                         2008 2017   1839
+ZZV00ASEU01 -98.8888 -998.8888 -998.8    ASEU01                         2006 2017   2124
+ZZV00ASEU02 -98.8888 -998.8888 -998.8    ASEU02                         2007 2017   2288
+ZZV00ASEU03 -98.8888 -998.8888 -998.8    ASEU03                         2007 2017   2118
+ZZV00ASEU04 -98.8888 -998.8888 -998.8    ASEU04                         2006 2017   2028
+ZZV00ASEU05 -98.8888 -998.8888 -998.8    ASEU05                         2006 2017   2300
+ZZV00ASEU06 -98.8888 -998.8888 -998.8    ASEU06                         2011 2017   1404
+ZZV00ASGB01 -98.8888 -998.8888 -998.8    ASGB01                         2007 2011    956
+ZZXUAICE002 -98.8888 -998.8888 -998.8    NP02                           1950 1950    178
+ZZXUAICE003 -98.8888 -998.8888 -998.8    NP03                           1954 1955    354
+ZZXUAICE004 -98.8888 -998.8888 -998.8    NP04                           1954 1957   1089
+ZZXUAICE005 -98.8888 -998.8888 -998.8    NP05                           1955 1956    345
+ZZXUAICE006 -98.8888 -998.8888 -998.8    NP06                           1956 1959    853
+ZZXUAICE007 -98.8888 -998.8888 -998.8    NP07                           1957 1959    680
+ZZXUAICE008 -98.8888 -998.8888 -998.8    NP08                           1959 1961    890
+ZZXUAICE009 -98.8888 -998.8888 -998.8    NP09                           1960 1961    269
+ZZXUAICE010 -98.8888 -998.8888 -998.8    NP10                           1961 1964    873
+ZZXUAICE011 -98.8888 -998.8888 -998.8    NP11                           1962 1963    327
+ZZXUAICE012 -98.8888 -998.8888 -998.8    NP12                           1963 1965    674
+ZZXUAICE013 -98.8888 -998.8888 -998.8    NP13                           1964 1967   1006
+ZZXUAICE014 -98.8888 -998.8888 -998.8    NP14                           1965 1965    170
+ZZXUAICE015 -98.8888 -998.8888 -998.8    NP15                           1966 1968    676
+ZZXUAICE016 -98.8888 -998.8888 -998.8    NP16                           1968 1972   1356
+ZZXUAICE017 -98.8888 -998.8888 -998.8    NP17                           1968 1969    482
+ZZXUAICE019 -98.8888 -998.8888 -998.8    NP19                           1969 1973   1146
+ZZXUAICE021 -98.8888 -998.8888 -998.8    NP21                           1972 1974    454
+ZZXUAICE022 -98.8888 -998.8888 -998.8    NP22                           1974 1982   2862
+ZZXUAICE026 -98.8888 -998.8888 -998.8    NP26                           1983 1986    824
+ZZXUAICE028 -98.8888 -998.8888 -998.8    NP28                           1986 1988    915
+ZZXUAICE030 -98.8888 -998.8888 -998.8    NP30                           1988 1990    576
+ZZXUAICE031 -98.8888 -998.8888 -998.8    NP31                           1989 1991    717
+"""

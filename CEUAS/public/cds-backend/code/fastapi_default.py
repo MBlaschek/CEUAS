@@ -66,6 +66,8 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi import Response
 from fastapi import Request
+from fastapi import HTTPException
+from fastapi.encoders import jsonable_encoder
 app = FastAPI()
 import subprocess
 
@@ -400,10 +402,10 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
     # os.chdir(os.path.expandvars('$RSCRATCH/era5/odbs/merged'))
     # wroot = os.path.expandvars('$RSCRATCH/era5/odbs/merged/tmp')
     # os.makedirs(wroot, exist_ok=True)
-    z = numpy.zeros(1, dtype=numpy.int32)
-    zidx = numpy.zeros(1, dtype=numpy.int)
-    idx = numpy.zeros(1, dtype=numpy.int)
-    trajectory_index = numpy.zeros(1, dtype=numpy.int)
+    z = numpy.zeros(1, dtype='int32')
+    zidx = numpy.zeros(1, dtype='int32')
+    idx = numpy.zeros(1, dtype='int32')
+    trajectory_index = numpy.zeros(1, dtype='int32')
     # What get's updated here?
     zz = eua.calc_trajindexfast(z, zidx, idx, trajectory_index)
     os.makedirs(config['config_dir'], exist_ok=True)
@@ -470,7 +472,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
 #             with Pool(10) as p:
 #                 sklist=list(p.map(func,zip(slist,slnum)))
 #             with multiprocessing.get_context('spawn').Pool(9) as p:
-            with Pool(9) as p:
+            with Pool(28) as p:
                 sklist=list(p.map(func,zip(slist,slnum)))
         else:
             sklist = list(map(func, zip(slist, slnum)))
@@ -592,7 +594,7 @@ active, wmo_regions, cf = init_server()
 # Active Station Numbers
 slnum = list(active.keys())
 
-with Pool(9) as P:
+with Pool(28) as P:
     x=P.map(np.sin,np.arange(16))
 print(x)
 
@@ -640,10 +642,18 @@ def to_valid_datetime(idate: str, as_string: bool = False) -> Union[str, datetim
         return idate.strftime('%Y%m%d')
     return idate
 
+@app.get('/')
+def first_response(command=None) -> dict:
+    """ Return the first response of the fastapi server
+
+    Returns:
+
+    """
+    return jsonable_encoder({'FastAPI': 'Comprehensive Upper-air Observation Network','Status':'http://136.156.140.94/status', 'Documentation:':'https://github.com/MBlaschek/CEUAS' })
 
 @app.get('/status')
 def status_test(command=None) -> dict:
-    """ Return the status of the hug server
+    """ Return the status of the fastapi server
 
     Returns:
 
@@ -651,7 +661,7 @@ def status_test(command=None) -> dict:
     import psutil
     hproc = None
     for proc in psutil.process_iter():
-        if 'bin/hug' in " ".join(proc.cmdline()):
+        if 'fastapi' in " ".join(proc.cmdline()):
             hproc = proc
             break
 
@@ -659,50 +669,52 @@ def status_test(command=None) -> dict:
         elapsed = datetime.now() - datetime.fromtimestamp(hproc.create_time())
         status_msg = {"version": __version__, "status": hproc.status(), "running": hproc.is_running(),
                       "available": str(elapsed), "memory": hproc.memory_percent(), "cpu": hproc.cpu_percent(),
-                      "num_stations": len(slnum), "active": active}
+                      "num_stations": len(slnum)}
+        return jsonable_encoder(status_msg)
+
         # psutil.disk_usage('/tmp/')  # '/data/private/',
-        if command == config['reload_pwd']:
-            if elapsed.total_seconds() > 120:
-                # todo run this in background and wait until a request is finished before restarting
-                init_server(force_reload=True, force_download=False)
-                hproc.kill()  # this should end the hug server and cron should restart it
-            else:
-                status_msg['command'] = 'Sorry restarted only %d seconds ago [120 s]' % elapsed.total_seconds()
-            return status_msg
-        if command == 'restart':
-            # raise RuntimeError("Restart requested ... killing myself softly.")
-            hproc.kill()
+        # if command == config['reload_pwd']:
+        #     if elapsed.total_seconds() > 120:
+        #         # todo run this in background and wait until a request is finished before restarting
+        #         init_server(force_reload=True, force_download=False)
+        #         hproc.kill()  # this should end the hug server and cron should restart it
+        #     else:
+        #         status_msg['command'] = 'Sorry restarted only %d seconds ago [120 s]' % elapsed.total_seconds()
+        #     return status_msg
+        # if command == 'restart':
+        #     # raise RuntimeError("Restart requested ... killing myself softly.")
+        #     hproc.kill()
             
-        if command == 'cleanup':
-            # search for request directories and results / remove them and report back
-            pass
+        # if command == 'cleanup':
+        #     # search for request directories and results / remove them and report back
+        #     pass
 
-        if command == 'failed_requests':
-            messages = {}
-            with open(config['logger_dir'] + '/failed_requests.log', 'r') as f:
-                tmp = f.read().splitlines()
-                for iline in tmp:
-                    idate = iline.split(' [')[0]
-                    iline = iline.replace(idate, '').split('Message:')
-                    messages[idate] = {'request': eval(iline[0].strip()[1:-1]), 'message': iline[1].strip()}
-            status_msg["failed_requests"] = messages
+        # if command == 'failed_requests':
+        #     messages = {}
+        #     with open(config['logger_dir'] + '/failed_requests.log', 'r') as f:
+        #         tmp = f.read().splitlines()
+        #         for iline in tmp:
+        #             idate = iline.split(' [')[0]
+        #             iline = iline.replace(idate, '').split('Message:')
+        #             messages[idate] = {'request': eval(iline[0].strip()[1:-1]), 'message': iline[1].strip()}
+        #     status_msg["failed_requests"] = messages
 
-        if command == 'finished_requests':
-            messages = {}
-            with open(config['logger_dir'] + '/finished_requests.log', 'r') as f:
-                tmp = f.read().splitlines()
-                for iline in tmp:
-                    idate = iline.split(' [')[0]
-                    iline = iline.replace(idate, '')
-                    messages[idate] = {'request': eval(iline.strip()[1:-1])}
-            status_msg["finsihed_requests"] = messages
+        # if command == 'finished_requests':
+        #     messages = {}
+        #     with open(config['logger_dir'] + '/finished_requests.log', 'r') as f:
+        #         tmp = f.read().splitlines()
+        #         for iline in tmp:
+        #             idate = iline.split(' [')[0]
+        #             iline = iline.replace(idate, '')
+        #             messages[idate] = {'request': eval(iline.strip()[1:-1])}
+        #     status_msg["finsihed_requests"] = messages
 
-        if command == 'running':
-            return {'running': hproc.is_running()}
+        # if command == 'running':
+        #     return {'running': hproc.is_running()}
 
-        return status_msg
+        # return status_msg
 
-    return {'error': "Can't find me....? :("}
+    return {'error': "Not running right now."}
 
 
 def to_csv(flist: list, ofile: str = 'out.csv', name: str = 'variable'):
@@ -1623,8 +1635,11 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     print('gdict2: ', gdict2)
     for k in range(len(bodies)):
         key=bodies[k]['statid']
-        bodies[k]['filename']=active[key][5]
-        bodies[k]['rtsidx']=gdict2[key]    #
+        try:
+            bodies[k]['filename']=active[key][5]
+            bodies[k]['rtsidx']=gdict2[key]    #
+        except:
+            raise HTTPException(status_code=512, detail="No selected station has data in specified date range.")
     # Check all requests if dates are within active station limits
     #
     #activekeys=list(active.keys())
@@ -1730,7 +1745,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         #b2=[]
         #for b in reversed(bidx):
             #b2.append(bodies[b])
-        with Pool(9) as Pl:
+        with Pool(28) as Pl:
             results = list(Pl.map(func, bodies,chunksize=3))
         #results = list(map(func, bodies))
             # results = list(p.starmap(func, zip(input_dirs, [debug]*len(bodies), bodies), chunksize=1))
@@ -1776,7 +1791,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
     else:
 #     if not body['hdf']: 
         if wpath == '':
-            raise RuntimeError('Error: %s (%s)' % (results[0][1], str(body)))
+            raise HTTPException(status_code=513, detail="Record found, but no valid data. Try different pressure levels or parameters.")
         else:
             rfile = os.path.dirname(wpath) + '/download.zip'
             print(rfile)
@@ -2110,7 +2125,7 @@ def station_configuration(response=None):
 
 def datetime_to_seconds(dates, ref='1900-01-01T00:00:00'):
     """ from datetime64 to seconds since 1900-01-01 00:00:00"""
-    return ((numpy.datetime64(dates) - numpy.datetime64(ref)) / numpy.timedelta64(1, 's')).astype(numpy.int64)
+    return ((numpy.datetime64(dates) - numpy.datetime64(ref)) / numpy.timedelta64(1, 's')).astype('int64')
 
 @app.get('/maplist/', response_class=FileResponse)
 def mapdata(date=None, enddate=None, var=85, response=None,):

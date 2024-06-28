@@ -1,0 +1,260 @@
+
+Header 1. Begin offset: 0, end offset: 706979, number of rows in block: 10000, byteOrder: same
+0. name: type, type: INTEGER, codec: constant, value=263.000000
+1. name: expver, type: STRING, codec: constant_string, value='    0001'
+2. name: class, type: INTEGER, codec: constant, value=23.000000
+3. name: stream, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate, type: INTEGER, codec: int8, range=<20110103.000000,20110112.000000>
+5. name: antime, type: INTEGER, codec: int32, range=<0.000000,120000.000000>
+6. name: reportype, type: INTEGER, codec: constant, value=16022.000000
+7. name: numtsl@desc, type: INTEGER, codec: constant, value=25.000000
+8. name: timeslot@timeslot_index, type: INTEGER, codec: int8, range=<5.000000,17.000000>
+9. name: seqno@hdr, type: INTEGER, codec: int32, range=<936265.000000,4643454.000000>
+10. name: source@hdr, type: STRING, codec: constant_string, value='BUFRDATA'
+11. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+12. name: subtype@hdr, type: INTEGER, codec: constant, value=101.000000
+13. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+14. name: obstype@hdr, type: INTEGER, codec: constant, value=5.000000
+15. name: codetype@hdr, type: INTEGER, codec: constant, value=35.000000
+16. name: sensor@hdr, type: INTEGER, codec: constant, value=0.000000
+17. name: statid@hdr, type: STRING, codec: constant_string, value='   10954'
+18. name: date@hdr, type: INTEGER, codec: int8, range=<20110103.000000,20110112.000000>
+19. name: time@hdr, type: INTEGER, codec: int32, range=<50000.000000,170000.000000>
+20. name: report_status@hdr, type: BITFIELD [active:1;passive:1;rejected:1;blacklisted:1;use_emiskf_only:1] , codec: constant, value=1.000000
+21. name: report_event1@hdr, type: BITFIELD [no_data:1;all_rejected:1;bad_practice:1;rdb_rejected:1;redundant:1;stalt_missing:1;qc_failed:1;overcast_ir:1;thinned:1;latlon_corrected:1;stalt_corrected:1] , codec: constant, value=0.000000
+22. name: report_rdbflag@hdr, type: BITFIELD [lat_humon:1;lat_qcsub:1;lat_override:1;lat_flag:2;lat_hqc_flag:1;lon_humon:1;lon_qcsub:1;lon_override:1;lon_flag:2;lon_hqc_flag:1;date_humon:1;date_qcsub:1;date_override:1;date_flag:2;date_hqc_flag:1;time_humon:1;time_qcsub:1;time_override:1;time_flag:2;time_hqc_flag:1;stalt_humon:1;stalt_qcsub:1;stalt_override:1;stalt_flag:2;stalt_hqc_flag:1] , codec: constant, value=0.000000
+23. name: lat@hdr, type: REAL, codec: constant, value=47.830002
+24. name: lon@hdr, type: REAL, codec: constant, value=10.870000
+25. name: lsm@modsurf, type: REAL, codec: constant, value=0.966077
+26. name: orography@modsurf, type: REAL, codec: constant, value=740.918884
+27. name: windspeed10m@modsurf, type: REAL, codec: short_real2, range=<0.229429,3.225742>
+28. name: tsfc@modsurf, type: REAL, codec: short_real2, range=<254.842102,277.660889>
+29. name: albedo@modsurf, type: REAL, codec: short_real2, range=<0.119386,0.120207>
+30. name: seaice@modsurf, type: REAL, codec: constant, value=0.000000
+31. name: snow_depth@modsurf, type: REAL, codec: short_real2, range=<7.423512,10.000000>
+32. name: sonde_type@conv, type: INTEGER, codec: constant, value=80.000000
+33. name: entryno@body, type: INTEGER, codec: int16, range=<1.000000,801.000000>
+34. name: obsvalue@body, type: REAL, codec: short_real2, range=<-44.316349,254680.000000>, missingValue=-2147483647.000000
+35. name: varno@body, type: INTEGER, codec: int8, range=<1.000000,112.000000>
+36. name: vertco_type@body, type: INTEGER, codec: constant, value=1.000000
+37. name: vertco_reference_1@body, type: REAL, codec: short_real2, range=<2000.000000,100000.000000>
+38. name: vertco_reference_2@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+39. name: ppcode@conv_body, type: INTEGER, codec: constant, value=0.000000
+40. name: datum_anflag@body, type: BITFIELD [final:4;fg:4;depar:4;varqc:4;blacklist:4;ups:1;uvt:1;uhu:1;ut2:1;uh2:1;uv1:1;urr:1;usn:1;usst:1] , codec: int32, range=<0.000000,196640.000000>
+41. name: datum_status@body, type: BITFIELD [active:1;passive:1;rejected:1;blacklisted:1;use_emiskf_only:1] , codec: int8, range=<1.000000,12.000000>
+42. name: datum_event1@body, type: BITFIELD [vertco_missing:1;obsvalue_missing:1;fg_missing:1;rdb_rejected:1;assim_cld_flag:1;bad_practice:1;vertpos_outrange:1;fg2big:1;depar2big:1;obs_error2big:1;datum_redundant:1;level_redundant:1;not_analysis_varno:1;duplicate:1;levels2many:1;level_selection:1;vertco_consistency:1;vertco_type_changed:1;combined_flagging:1;report_rejected:1;varqc_performed:1;obserror_increased:1;contam_cld_flag:1;contam_rain_flag:1;contam_aerosol_flag:1;bad_emissivity:1;model_cld_flag:1] , codec: int32, range=<0.000000,1310720.000000>
+43. name: datum_rdbflag@body, type: BITFIELD [press_humon:1;press_qcsub:1;press_override:1;press_flag:2;press_hqc_flag:1;press_judged_prev_an:2;press_used_prev_an:1;_press_unused_6:6;varno_humon:1;varno_qcsub:1;varno_override:1;varno_flag:2;varno_hqc_flag:1;varno_judged_prev_an:2;varno_used_prev_an:1] , codec: constant, value=0.000000
+44. name: biascorr@body, type: REAL, codec: short_real2, range=<-0.118805,0.175923>
+45. name: biascorr_fg@body, type: REAL, codec: short_real2, range=<-0.118805,0.175923>
+46. name: varbc_ix@body, type: INTEGER, codec: int16, range=<0.000000,18855.000000>
+47. name: qc_pge@body, type: REAL, codec: short_real2, range=<0.000000,0.842584>, missingValue=-2147483647.000000
+48. name: an_depar@body, type: REAL, codec: short_real2, range=<-165.444199,506.284973>, missingValue=-2147483647.000000
+49. name: an_sens_obs@body, type: REAL, codec: constant, value=0.000000
+50. name: fg_depar@body, type: REAL, codec: short_real2, range=<-155.345245,628.689697>, missingValue=-2147483647.000000
+51. name: an_depar@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+52. name: fg_depar@surfbody_feedback, type: REAL, codec: short_real2, range=<-6.603319,8.708692>, missingValue=-2147483647.000000
+53. name: snow_depth@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+54. name: snow_density@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+55. name: datum_status@surfbody_feedback, type: BITFIELD [active:1;passive:1;rejected:1;blacklisted:1;use_emiskf_only:1] , codec: constant, value=4.000000
+56. name: datum_sfc_event@surfbody_feedback, type: BITFIELD [statid:1;lsmask:1;stalt_missing:1;obsvalue_missing:1;fg_missing:1;fg2big:1;not_analysis_varno:1;redundant:1;report_rejected:1] , codec: int8, range=<32.000000,128.000000>
+57. name: lsm@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+58. name: stalt@hdr, type: REAL, codec: constant, value=757.000000
+59. name: obs_error@errstat, type: REAL, codec: short_real2, range=<0.000004,313.812805>, missingValue=-2147483647.000000
+60. name: final_obs_error@errstat, type: REAL, codec: short_real2, range=<0.000004,313.812805>, missingValue=-2147483647.000000
+61. name: fg_error@errstat, type: REAL, codec: short_real2, range=<0.000000,60.798122>, missingValue=-2147483647.000000
+62. name: eda_spread@errstat, type: REAL, codec: short_real2, range=<0.000000,3.057957>, missingValue=-2147483647.000000
+
+Header 2. Begin offset: 706979, end offset: 1414148, number of rows in block: 10000, byteOrder: same
+0. name: type, type: INTEGER, codec: constant, value=263.000000
+1. name: expver, type: STRING, codec: constant_string, value='    0001'
+2. name: class, type: INTEGER, codec: constant, value=23.000000
+3. name: stream, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate, type: INTEGER, codec: int8, range=<20110112.000000,20110119.000000>
+5. name: antime, type: INTEGER, codec: int32, range=<0.000000,120000.000000>
+6. name: reportype, type: INTEGER, codec: int8, range=<16013.000000,16022.000000>
+7. name: numtsl@desc, type: INTEGER, codec: constant, value=25.000000
+8. name: timeslot@timeslot_index, type: INTEGER, codec: int8, range=<5.000000,23.000000>
+9. name: seqno@hdr, type: INTEGER, codec: int32, range=<1003331.000000,6410144.000000>
+10. name: source@hdr, type: STRING, codec: constant_string, value='BUFRDATA'
+11. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+12. name: subtype@hdr, type: INTEGER, codec: int8, range=<91.000000,101.000000>
+13. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+14. name: obstype@hdr, type: INTEGER, codec: int8, range=<5.000000,6.000000>
+15. name: codetype@hdr, type: INTEGER, codec: int8, range=<32.000000,35.000000>
+16. name: sensor@hdr, type: INTEGER, codec: constant, value=0.000000
+17. name: statid@hdr, type: STRING, codec: constant_string, value='   10954'
+18. name: date@hdr, type: INTEGER, codec: int8, range=<20110112.000000,20110119.000000>
+19. name: time@hdr, type: INTEGER, codec: int32, range=<50000.000000,170000.000000>
+20. name: report_status@hdr, type: BITFIELD [active:1;passive:1;rejected:1;blacklisted:1;use_emiskf_only:1] , codec: constant, value=1.000000
+21. name: report_event1@hdr, type: BITFIELD [no_data:1;all_rejected:1;bad_practice:1;rdb_rejected:1;redundant:1;stalt_missing:1;qc_failed:1;overcast_ir:1;thinned:1;latlon_corrected:1;stalt_corrected:1] , codec: constant, value=0.000000
+22. name: report_rdbflag@hdr, type: BITFIELD [lat_humon:1;lat_qcsub:1;lat_override:1;lat_flag:2;lat_hqc_flag:1;lon_humon:1;lon_qcsub:1;lon_override:1;lon_flag:2;lon_hqc_flag:1;date_humon:1;date_qcsub:1;date_override:1;date_flag:2;date_hqc_flag:1;time_humon:1;time_qcsub:1;time_override:1;time_flag:2;time_hqc_flag:1;stalt_humon:1;stalt_qcsub:1;stalt_override:1;stalt_flag:2;stalt_hqc_flag:1] , codec: constant, value=0.000000
+23. name: lat@hdr, type: REAL, codec: constant, value=47.830002
+24. name: lon@hdr, type: REAL, codec: constant, value=10.870000
+25. name: lsm@modsurf, type: REAL, codec: constant, value=0.966077
+26. name: orography@modsurf, type: REAL, codec: constant, value=740.918884
+27. name: windspeed10m@modsurf, type: REAL, codec: short_real2, range=<0.292200,5.727251>
+28. name: tsfc@modsurf, type: REAL, codec: short_real2, range=<269.142517,281.531006>
+29. name: albedo@modsurf, type: REAL, codec: short_real2, range=<0.120207,0.121770>
+30. name: seaice@modsurf, type: REAL, codec: constant, value=0.000000
+31. name: snow_depth@modsurf, type: REAL, codec: short_real2, range=<2.303322,10.000000>
+32. name: sonde_type@conv, type: INTEGER, codec: constant_or_missing, value=80.000000, missingValue=2147483647.000000
+33. name: entryno@body, type: INTEGER, codec: int16, range=<1.000000,936.000000>
+34. name: obsvalue@body, type: REAL, codec: short_real2, range=<-43.331543,259580.000000>, missingValue=-2147483647.000000
+35. name: varno@body, type: INTEGER, codec: int8, range=<1.000000,112.000000>
+36. name: vertco_type@body, type: INTEGER, codec: constant, value=1.000000
+37. name: vertco_reference_1@body, type: REAL, codec: short_real2, range=<2000.000000,100000.000000>
+38. name: vertco_reference_2@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+39. name: ppcode@conv_body, type: INTEGER, codec: constant, value=0.000000
+40. name: datum_anflag@body, type: BITFIELD [final:4;fg:4;depar:4;varqc:4;blacklist:4;ups:1;uvt:1;uhu:1;ut2:1;uh2:1;uv1:1;urr:1;usn:1;usst:1] , codec: int32, range=<0.000000,196656.000000>
+41. name: datum_status@body, type: BITFIELD [active:1;passive:1;rejected:1;blacklisted:1;use_emiskf_only:1] , codec: int8, range=<1.000000,12.000000>
+42. name: datum_event1@body, type: BITFIELD [vertco_missing:1;obsvalue_missing:1;fg_missing:1;rdb_rejected:1;assim_cld_flag:1;bad_practice:1;vertpos_outrange:1;fg2big:1;depar2big:1;obs_error2big:1;datum_redundant:1;level_redundant:1;not_analysis_varno:1;duplicate:1;levels2many:1;level_selection:1;vertco_consistency:1;vertco_type_changed:1;combined_flagging:1;report_rejected:1;varqc_performed:1;obserror_increased:1;contam_cld_flag:1;contam_rain_flag:1;contam_aerosol_flag:1;bad_emissivity:1;model_cld_flag:1] , codec: int32, range=<0.000000,1310720.000000>
+43. name: datum_rdbflag@body, type: BITFIELD [press_humon:1;press_qcsub:1;press_override:1;press_flag:2;press_hqc_flag:1;press_judged_prev_an:2;press_used_prev_an:1;_press_unused_6:6;varno_humon:1;varno_qcsub:1;varno_override:1;varno_flag:2;varno_hqc_flag:1;varno_judged_prev_an:2;varno_used_prev_an:1] , codec: constant, value=0.000000
+44. name: biascorr@body, type: REAL, codec: short_real2, range=<-0.118805,0.175923>
+45. name: biascorr_fg@body, type: REAL, codec: short_real2, range=<-0.118805,0.175923>
+46. name: varbc_ix@body, type: INTEGER, codec: int16, range=<0.000000,18815.000000>
+47. name: qc_pge@body, type: REAL, codec: short_real2, range=<0.000000,0.857656>, missingValue=-2147483647.000000
+48. name: an_depar@body, type: REAL, codec: short_real2, range=<-1192.927124,403.206116>, missingValue=-2147483647.000000
+49. name: an_sens_obs@body, type: REAL, codec: constant, value=0.000000
+50. name: fg_depar@body, type: REAL, codec: short_real2, range=<-1181.104370,428.254608>, missingValue=-2147483647.000000
+51. name: an_depar@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+52. name: fg_depar@surfbody_feedback, type: REAL, codec: short_real2, range=<-3.623524,4.465883>, missingValue=-2147483647.000000
+53. name: snow_depth@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+54. name: snow_density@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+55. name: datum_status@surfbody_feedback, type: BITFIELD [active:1;passive:1;rejected:1;blacklisted:1;use_emiskf_only:1] , codec: constant, value=4.000000
+56. name: datum_sfc_event@surfbody_feedback, type: BITFIELD [statid:1;lsmask:1;stalt_missing:1;obsvalue_missing:1;fg_missing:1;fg2big:1;not_analysis_varno:1;redundant:1;report_rejected:1] , codec: int8, range=<64.000000,128.000000>
+57. name: lsm@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+58. name: stalt@hdr, type: REAL, codec: constant, value=757.000000
+59. name: obs_error@errstat, type: REAL, codec: short_real2, range=<0.000003,313.812805>, missingValue=-2147483647.000000
+60. name: final_obs_error@errstat, type: REAL, codec: short_real2, range=<0.000003,313.812805>, missingValue=-2147483647.000000
+61. name: fg_error@errstat, type: REAL, codec: short_real2, range=<0.000000,62.708199>, missingValue=-2147483647.000000
+62. name: eda_spread@errstat, type: REAL, codec: short_real2, range=<0.000000,3.654098>, missingValue=-2147483647.000000
+
+Header 3. Begin offset: 1414148, end offset: 2121158, number of rows in block: 10000, byteOrder: same
+0. name: type, type: INTEGER, codec: constant, value=263.000000
+1. name: expver, type: STRING, codec: constant_string, value='    0001'
+2. name: class, type: INTEGER, codec: constant, value=23.000000
+3. name: stream, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate, type: INTEGER, codec: int8, range=<20110119.000000,20110125.000000>
+5. name: antime, type: INTEGER, codec: int32, range=<0.000000,120000.000000>
+6. name: reportype, type: INTEGER, codec: int8, range=<16013.000000,16022.000000>
+7. name: numtsl@desc, type: INTEGER, codec: constant, value=25.000000
+8. name: timeslot@timeslot_index, type: INTEGER, codec: int8, range=<5.000000,23.000000>
+9. name: seqno@hdr, type: INTEGER, codec: int32, range=<990006.000000,6232242.000000>
+10. name: source@hdr, type: STRING, codec: constant_string, value='BUFRDATA'
+11. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+12. name: subtype@hdr, type: INTEGER, codec: int8, range=<91.000000,101.000000>
+13. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+14. name: obstype@hdr, type: INTEGER, codec: int8, range=<5.000000,6.000000>
+15. name: codetype@hdr, type: INTEGER, codec: int8, range=<32.000000,35.000000>
+16. name: sensor@hdr, type: INTEGER, codec: constant, value=0.000000
+17. name: statid@hdr, type: STRING, codec: constant_string, value='   10954'
+18. name: date@hdr, type: INTEGER, codec: int8, range=<20110119.000000,20110125.000000>
+19. name: time@hdr, type: INTEGER, codec: int32, range=<50000.000000,170000.000000>
+20. name: report_status@hdr, type: BITFIELD [active:1;passive:1;rejected:1;blacklisted:1;use_emiskf_only:1] , codec: constant, value=1.000000
+21. name: report_event1@hdr, type: BITFIELD [no_data:1;all_rejected:1;bad_practice:1;rdb_rejected:1;redundant:1;stalt_missing:1;qc_failed:1;overcast_ir:1;thinned:1;latlon_corrected:1;stalt_corrected:1] , codec: constant, value=0.000000
+22. name: report_rdbflag@hdr, type: BITFIELD [lat_humon:1;lat_qcsub:1;lat_override:1;lat_flag:2;lat_hqc_flag:1;lon_humon:1;lon_qcsub:1;lon_override:1;lon_flag:2;lon_hqc_flag:1;date_humon:1;date_qcsub:1;date_override:1;date_flag:2;date_hqc_flag:1;time_humon:1;time_qcsub:1;time_override:1;time_flag:2;time_hqc_flag:1;stalt_humon:1;stalt_qcsub:1;stalt_override:1;stalt_flag:2;stalt_hqc_flag:1] , codec: constant, value=0.000000
+23. name: lat@hdr, type: REAL, codec: constant, value=47.830002
+24. name: lon@hdr, type: REAL, codec: constant, value=10.870000
+25. name: lsm@modsurf, type: REAL, codec: constant, value=0.966077
+26. name: orography@modsurf, type: REAL, codec: constant, value=740.918884
+27. name: windspeed10m@modsurf, type: REAL, codec: short_real2, range=<1.645275,4.394577>
+28. name: tsfc@modsurf, type: REAL, codec: short_real2, range=<265.624420,274.565399>
+29. name: albedo@modsurf, type: REAL, codec: short_real2, range=<0.121770,0.123965>
+30. name: seaice@modsurf, type: REAL, codec: constant, value=0.000000
+31. name: snow_depth@modsurf, type: REAL, codec: short_real2, range=<5.502999,10.000000>
+32. name: sonde_type@conv, type: INTEGER, codec: constant_or_missing, value=80.000000, missingValue=2147483647.000000
+33. name: entryno@body, type: INTEGER, codec: int16, range=<1.000000,909.000000>
+34. name: obsvalue@body, type: REAL, codec: short_real2, range=<-39.602959,259680.000000>, missingValue=-2147483647.000000
+35. name: varno@body, type: INTEGER, codec: int8, range=<1.000000,112.000000>
+36. name: vertco_type@body, type: INTEGER, codec: constant, value=1.000000
+37. name: vertco_reference_1@body, type: REAL, codec: short_real2, range=<2000.000000,100000.000000>
+38. name: vertco_reference_2@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+39. name: ppcode@conv_body, type: INTEGER, codec: constant, value=0.000000
+40. name: datum_anflag@body, type: BITFIELD [final:4;fg:4;depar:4;varqc:4;blacklist:4;ups:1;uvt:1;uhu:1;ut2:1;uh2:1;uv1:1;urr:1;usn:1;usst:1] , codec: int32, range=<0.000000,196656.000000>
+41. name: datum_status@body, type: BITFIELD [active:1;passive:1;rejected:1;blacklisted:1;use_emiskf_only:1] , codec: int8, range=<1.000000,12.000000>
+42. name: datum_event1@body, type: BITFIELD [vertco_missing:1;obsvalue_missing:1;fg_missing:1;rdb_rejected:1;assim_cld_flag:1;bad_practice:1;vertpos_outrange:1;fg2big:1;depar2big:1;obs_error2big:1;datum_redundant:1;level_redundant:1;not_analysis_varno:1;duplicate:1;levels2many:1;level_selection:1;vertco_consistency:1;vertco_type_changed:1;combined_flagging:1;report_rejected:1;varqc_performed:1;obserror_increased:1;contam_cld_flag:1;contam_rain_flag:1;contam_aerosol_flag:1;bad_emissivity:1;model_cld_flag:1] , codec: int32, range=<0.000000,1310720.000000>
+43. name: datum_rdbflag@body, type: BITFIELD [press_humon:1;press_qcsub:1;press_override:1;press_flag:2;press_hqc_flag:1;press_judged_prev_an:2;press_used_prev_an:1;_press_unused_6:6;varno_humon:1;varno_qcsub:1;varno_override:1;varno_flag:2;varno_hqc_flag:1;varno_judged_prev_an:2;varno_used_prev_an:1] , codec: constant, value=0.000000
+44. name: biascorr@body, type: REAL, codec: short_real2, range=<-0.118805,0.175923>
+45. name: biascorr_fg@body, type: REAL, codec: short_real2, range=<-0.118805,0.175923>
+46. name: varbc_ix@body, type: INTEGER, codec: int16, range=<0.000000,18798.000000>
+47. name: qc_pge@body, type: REAL, codec: short_real2, range=<0.000000,0.711174>, missingValue=-2147483647.000000
+48. name: an_depar@body, type: REAL, codec: short_real2, range=<-654.279114,436.732880>, missingValue=-2147483647.000000
+49. name: an_sens_obs@body, type: REAL, codec: constant, value=0.000000
+50. name: fg_depar@body, type: REAL, codec: short_real2, range=<-755.346008,436.420990>, missingValue=-2147483647.000000
+51. name: an_depar@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+52. name: fg_depar@surfbody_feedback, type: REAL, codec: short_real2, range=<-1.542732,2.660772>, missingValue=-2147483647.000000
+53. name: snow_depth@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+54. name: snow_density@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+55. name: datum_status@surfbody_feedback, type: BITFIELD [active:1;passive:1;rejected:1;blacklisted:1;use_emiskf_only:1] , codec: constant, value=4.000000
+56. name: datum_sfc_event@surfbody_feedback, type: BITFIELD [statid:1;lsmask:1;stalt_missing:1;obsvalue_missing:1;fg_missing:1;fg2big:1;not_analysis_varno:1;redundant:1;report_rejected:1] , codec: int8, range=<64.000000,128.000000>
+57. name: lsm@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+58. name: stalt@hdr, type: REAL, codec: constant, value=757.000000
+59. name: obs_error@errstat, type: REAL, codec: short_real2, range=<0.000006,313.812805>, missingValue=-2147483647.000000
+60. name: final_obs_error@errstat, type: REAL, codec: short_real2, range=<0.000006,313.812805>, missingValue=-2147483647.000000
+61. name: fg_error@errstat, type: REAL, codec: short_real2, range=<0.000000,60.729965>, missingValue=-2147483647.000000
+62. name: eda_spread@errstat, type: REAL, codec: short_real2, range=<0.000000,3.453130>, missingValue=-2147483647.000000
+
+Header 4. Begin offset: 2121158, end offset: 2643006, number of rows in block: 6960, byteOrder: same
+0. name: type, type: INTEGER, codec: constant, value=263.000000
+1. name: expver, type: STRING, codec: constant_string, value='    0001'
+2. name: class, type: INTEGER, codec: constant, value=23.000000
+3. name: stream, type: INTEGER, codec: constant, value=1025.000000
+4. name: andate, type: INTEGER, codec: int8, range=<20110125.000000,20110131.000000>
+5. name: antime, type: INTEGER, codec: int32, range=<0.000000,120000.000000>
+6. name: reportype, type: INTEGER, codec: constant, value=16022.000000
+7. name: numtsl@desc, type: INTEGER, codec: constant, value=25.000000
+8. name: timeslot@timeslot_index, type: INTEGER, codec: int8, range=<5.000000,17.000000>
+9. name: seqno@hdr, type: INTEGER, codec: int32, range=<978662.000000,4619400.000000>
+10. name: source@hdr, type: STRING, codec: constant_string, value='BUFRDATA'
+11. name: bufrtype@hdr, type: INTEGER, codec: constant, value=2.000000
+12. name: subtype@hdr, type: INTEGER, codec: constant, value=101.000000
+13. name: groupid@hdr, type: INTEGER, codec: constant, value=17.000000
+14. name: obstype@hdr, type: INTEGER, codec: constant, value=5.000000
+15. name: codetype@hdr, type: INTEGER, codec: constant, value=35.000000
+16. name: sensor@hdr, type: INTEGER, codec: constant, value=0.000000
+17. name: statid@hdr, type: STRING, codec: constant_string, value='   10954'
+18. name: date@hdr, type: INTEGER, codec: int8, range=<20110125.000000,20110131.000000>
+19. name: time@hdr, type: INTEGER, codec: int32, range=<50000.000000,170000.000000>
+20. name: report_status@hdr, type: BITFIELD [active:1;passive:1;rejected:1;blacklisted:1;use_emiskf_only:1] , codec: constant, value=1.000000
+21. name: report_event1@hdr, type: BITFIELD [no_data:1;all_rejected:1;bad_practice:1;rdb_rejected:1;redundant:1;stalt_missing:1;qc_failed:1;overcast_ir:1;thinned:1;latlon_corrected:1;stalt_corrected:1] , codec: constant, value=0.000000
+22. name: report_rdbflag@hdr, type: BITFIELD [lat_humon:1;lat_qcsub:1;lat_override:1;lat_flag:2;lat_hqc_flag:1;lon_humon:1;lon_qcsub:1;lon_override:1;lon_flag:2;lon_hqc_flag:1;date_humon:1;date_qcsub:1;date_override:1;date_flag:2;date_hqc_flag:1;time_humon:1;time_qcsub:1;time_override:1;time_flag:2;time_hqc_flag:1;stalt_humon:1;stalt_qcsub:1;stalt_override:1;stalt_flag:2;stalt_hqc_flag:1] , codec: constant, value=0.000000
+23. name: lat@hdr, type: REAL, codec: constant, value=47.830002
+24. name: lon@hdr, type: REAL, codec: constant, value=10.870000
+25. name: lsm@modsurf, type: REAL, codec: constant, value=0.966077
+26. name: orography@modsurf, type: REAL, codec: constant, value=740.918884
+27. name: windspeed10m@modsurf, type: REAL, codec: short_real2, range=<0.674173,3.695987>
+28. name: tsfc@modsurf, type: REAL, codec: short_real2, range=<259.432037,274.591339>
+29. name: albedo@modsurf, type: REAL, codec: short_real2, range=<0.123965,0.125991>
+30. name: seaice@modsurf, type: REAL, codec: constant, value=0.000000
+31. name: snow_depth@modsurf, type: REAL, codec: constant, value=10.000000
+32. name: sonde_type@conv, type: INTEGER, codec: constant_or_missing, value=80.000000, missingValue=2147483647.000000
+33. name: entryno@body, type: INTEGER, codec: int16, range=<1.000000,882.000000>
+34. name: obsvalue@body, type: REAL, codec: short_real2, range=<-27.251085,231040.000000>, missingValue=-2147483647.000000
+35. name: varno@body, type: INTEGER, codec: int8, range=<1.000000,112.000000>
+36. name: vertco_type@body, type: INTEGER, codec: constant, value=1.000000
+37. name: vertco_reference_1@body, type: REAL, codec: short_real2, range=<3000.000000,100000.000000>
+38. name: vertco_reference_2@body, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+39. name: ppcode@conv_body, type: INTEGER, codec: constant, value=0.000000
+40. name: datum_anflag@body, type: BITFIELD [final:4;fg:4;depar:4;varqc:4;blacklist:4;ups:1;uvt:1;uhu:1;ut2:1;uh2:1;uv1:1;urr:1;usn:1;usst:1] , codec: int32, range=<0.000000,196640.000000>
+41. name: datum_status@body, type: BITFIELD [active:1;passive:1;rejected:1;blacklisted:1;use_emiskf_only:1] , codec: int8, range=<1.000000,12.000000>
+42. name: datum_event1@body, type: BITFIELD [vertco_missing:1;obsvalue_missing:1;fg_missing:1;rdb_rejected:1;assim_cld_flag:1;bad_practice:1;vertpos_outrange:1;fg2big:1;depar2big:1;obs_error2big:1;datum_redundant:1;level_redundant:1;not_analysis_varno:1;duplicate:1;levels2many:1;level_selection:1;vertco_consistency:1;vertco_type_changed:1;combined_flagging:1;report_rejected:1;varqc_performed:1;obserror_increased:1;contam_cld_flag:1;contam_rain_flag:1;contam_aerosol_flag:1;bad_emissivity:1;model_cld_flag:1] , codec: int32, range=<0.000000,1310720.000000>
+43. name: datum_rdbflag@body, type: BITFIELD [press_humon:1;press_qcsub:1;press_override:1;press_flag:2;press_hqc_flag:1;press_judged_prev_an:2;press_used_prev_an:1;_press_unused_6:6;varno_humon:1;varno_qcsub:1;varno_override:1;varno_flag:2;varno_hqc_flag:1;varno_judged_prev_an:2;varno_used_prev_an:1] , codec: int32, range=<0.000000,262144.000000>
+44. name: biascorr@body, type: REAL, codec: short_real2, range=<-0.118805,0.116587>
+45. name: biascorr_fg@body, type: REAL, codec: short_real2, range=<-0.118805,0.116587>
+46. name: varbc_ix@body, type: INTEGER, codec: int16, range=<0.000000,18779.000000>
+47. name: qc_pge@body, type: REAL, codec: short_real2, range=<0.000000,0.913139>, missingValue=-2147483647.000000
+48. name: an_depar@body, type: REAL, codec: short_real2, range=<-196.218094,495.515350>, missingValue=-2147483647.000000
+49. name: an_sens_obs@body, type: REAL, codec: constant, value=0.000000
+50. name: fg_depar@body, type: REAL, codec: short_real2, range=<-149.308563,505.197815>, missingValue=-2147483647.000000
+51. name: an_depar@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+52. name: fg_depar@surfbody_feedback, type: REAL, codec: short_real2, range=<-5.588155,4.769739>, missingValue=-2147483647.000000
+53. name: snow_depth@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+54. name: snow_density@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+55. name: datum_status@surfbody_feedback, type: BITFIELD [active:1;passive:1;rejected:1;blacklisted:1;use_emiskf_only:1] , codec: constant, value=4.000000
+56. name: datum_sfc_event@surfbody_feedback, type: BITFIELD [statid:1;lsmask:1;stalt_missing:1;obsvalue_missing:1;fg_missing:1;fg2big:1;not_analysis_varno:1;redundant:1;report_rejected:1] , codec: int8, range=<64.000000,128.000000>
+57. name: lsm@surfbody_feedback, type: REAL, codec: real_constant_or_missing, value=NULL, missingValue=-2147483647.000000
+58. name: stalt@hdr, type: REAL, codec: constant, value=757.000000
+59. name: obs_error@errstat, type: REAL, codec: short_real2, range=<0.000005,245.166245>, missingValue=-2147483647.000000
+60. name: final_obs_error@errstat, type: REAL, codec: short_real2, range=<0.000005,245.166245>, missingValue=-2147483647.000000
+61. name: fg_error@errstat, type: REAL, codec: short_real2, range=<0.000000,48.835155>, missingValue=-2147483647.000000
+62. name: eda_spread@errstat, type: REAL, codec: short_real2, range=<0.000000,2.768096>, missingValue=-2147483647.000000

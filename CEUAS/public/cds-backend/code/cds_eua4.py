@@ -49,6 +49,8 @@ from functools import partial
 from itertools import islice
 from multiprocessing import set_start_method, Pool
 
+from fastapi import HTTPException
+
 
 # check codes from there
 # https://github.com/glamod/common_data_model/blob/master/tables/observed_variable.dat
@@ -133,7 +135,7 @@ logger = logging.getLogger('upperair.cdm')
 def searchdate(rtsidx,rtsarr,istart,istop=0):
     if istop==0:
         istop=istart
-    gdict=np.zeros((rtsidx.shape[0],np.int(2)),dtype='int')
+    gdict=np.zeros((rtsidx.shape[0], int(2)), dtype='int')
     lidx=np.zeros_like(rtsidx)
     l=0
     for i in range(len(rtsidx)-1):
@@ -411,7 +413,7 @@ def daysx2(time,pindex,nplev,obs):
     dsecs=86400
     tofday=time%dsecs
     dindex=time//dsecs
-    hindex=dindex-dindex #np.zeros(time.shape[0],dtype=np.int32)-1
+    hindex=dindex-dindex #np.zeros(time.shape[0],dtype='int32')-1
     tevening=np.where(tofday>=6*dsecs//8)
     tmorning=np.where(tofday<2*dsecs//8)
     tmidday=np.where(np.logical_and(tofday>=2*dsecs/8,tofday<6*dsecs/8))
@@ -421,9 +423,9 @@ def daysx2(time,pindex,nplev,obs):
     hindex[tmidday]=1
     hgood=np.where(hindex>-1)
     gdays=np.unique(dindex)
-    ghours=np.zeros((2,gdays.shape[0]),dtype=np.int32)
+    ghours=np.zeros((2,gdays.shape[0]),dtype='int32')
     
-    rdays=np.zeros(np.max(gdays)+1,dtype=np.int32)-1
+    rdays=np.zeros(np.max(gdays)+1,dtype='int32')-1
     for i in range(gdays.shape[0]): # reverse index
         rdays[gdays[i]]=i
         
@@ -526,7 +528,7 @@ def read_standardnames(url: str = None) -> dict:
     cdmnames += 10 * ['observations_table/observation_value']
     # todo at the moment this is hard coded here, what if JRA55 is requested?
     
-    if config['cuon_version'] <= 16:
+    if float(config['cuon_version']) <= 16:
         cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body',
                     'observations_table/sensor_id',
                     'observations_table/secondary_value', 'observations_table/original_precision',
@@ -1290,16 +1292,16 @@ def totimes(t: any) -> any:
     """
     if type(t[0]) is str:
         if '-' in t[0]:
-            ilist = np.array(t[0].split('-'), dtype=np.int32)
+            ilist = np.array(t[0].split('-'), dtype='int32')
             if ilist[0] <= ilist[1]:
                 ilist = np.arange(ilist[0], ilist[1] + 1)
             else:
-                ilist = np.array(list(range(ilist[0], 24)) + list(range(ilist[1] + 1)), dtype=np.int32)
+                ilist = np.array(list(range(ilist[0], 24)) + list(range(ilist[1] + 1)), dtype='int32')
             out = ilist
         else:
-            out = np.array(t, dtype=np.int32)
+            out = np.array(t, dtype='int32')
     else:
-        out = np.array(t, dtype=np.int32)
+        out = np.array(t, dtype='int32')
 
     if np.min(out) < 0 or np.max(out) > 23:
         raise ValueError
@@ -1349,7 +1351,7 @@ def seconds_to_str(seconds, ref='1900-01-01'):
 
 def datetime_to_seconds(dates, ref='1900-01-01T00:00:00'):
     """ from datetime64 to seconds since 1900-01-01 00:00:00"""
-    return ((dates - np.datetime64(ref)) / np.timedelta64(1, 's')).astype(np.int64)
+    return ((dates - np.datetime64(ref)) / np.timedelta64(1, 's')).astype('int64')
 
 
 # too slow
@@ -1429,8 +1431,8 @@ def table_to_cube(time: np.ndarray, plev: np.ndarray, obs: np.ndarray, nplev: in
     data = np.full((xtime.size, nplev), np.nan, dtype=obs.dtype)
     data[itime, plev] = obs  # sortby date and plev after
     if return_index_array:
-        indexes = np.full(data.shape, -1, dtype=np.int32)
-        indexes[itime, plev] = np.arange(0, obs.size, dtype=np.int32)
+        indexes = np.full(data.shape, -1, dtype='int32')
+        indexes[itime, plev] = np.arange(0, obs.size, dtype='int32')
         return jtime, indexes, data
     return jtime, data
 
@@ -1906,7 +1908,7 @@ def to_standard_launch_time(dates: np.datetime64, std_times: list, span: int =3,
     """
     dateshour = dates.astype(np.datetime64(1, 'h'))  # truncate to hour
     hour = pd.DatetimeIndex(dateshour).hour.astype(int) # only the hour
-    tcorr = np.zeros(hour.size, dtype=np.int)
+    tcorr = np.zeros(hour.size, dtype='int32')
     for itime in std_times:
         # +- (span) - > itime
         diff = (hour - itime)
@@ -2965,15 +2967,16 @@ class CDMDataset:
             idx = np.where(mask)[0]+ trange.start
         if len(idx) == 0:
             logger.warning('No matching data found %s', self.name)
-            raise ValueError('No matching data found')  # add CDMname for logging
+            raise HTTPException(status_code=513, detail="Station found - Request returned no valid data.")
+            # raise ValueError('No matching data found')  # add CDMname for logging
             #return
 
         logger.debug('Data found: %d %s', len(idx), self.name)
         #
         # Make Trajectory Information (lon, lat, profile id, ...)
         #
-        trajectory_index = np.zeros_like(idx, dtype=np.int32)
-        trajectory_index2 = np.zeros_like(idx, dtype=np.int32)
+        trajectory_index = np.zeros_like(idx, dtype='int32')
+        trajectory_index2 = np.zeros_like(idx, dtype='int32')
         if 'recordinindex' in self.groups:
             # unsorted indices in root
             recordindex = self.file['recordindex'][()]
@@ -2991,8 +2994,8 @@ class CDMDataset:
         # tt=time.time() - time0
         # print(tt)
 
-        dims = {'obs': np.zeros(idx.shape[0], dtype=np.int32)}# ,
-#                 'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
+        dims = {'obs': np.zeros(idx.shape[0], dtype='int32')}# ,
+#                 'trajectory': np.zeros(zidx.shape[0], dtype='int32')}
         globatts = get_global_attributes()  # could put more infors there ?
         #
         # Definition of Variables to write
@@ -3021,7 +3024,7 @@ class CDMDataset:
                          'dew_point_depression', 'dewpoint_departure','dewpoint_depression', 'dew_point_departure']
         
         for alv in allowed_variables:
-            if config['cuon_version'] <= 16:
+            if float(config['cuon_version']) <= 1.16:
                 varseldict[alv]=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate', 'latitude_displacement', 'longitude_displacement', 'time_since_launch', 'true_time', 'wind_bias_estimate', 'humidity_bias_estimate', 'station_elevation']
             else:
                 varseldict[alv]=['RAOBCORE_bias_estimate', 'RASE_bias_estimate', 'RICH_bias_estimate', 'RISE_bias_estimate', 'latd', 'lond', 'timed', 'true_time', 'wind_bias_estimate', 'humidity_bias_estimate', 'station_elevation']
@@ -3777,8 +3780,8 @@ class CDMDataset:
 #         #
 #         # Make Trajectory Information (lon, lat, profile id, ...)
 #         #
-#         trajectory_index = np.zeros_like(idx, dtype=np.int32)
-#         trajectory_index2 = np.zeros_like(idx, dtype=np.int32)
+#         trajectory_index = np.zeros_like(idx, dtype='int32')
+#         trajectory_index2 = np.zeros_like(idx, dtype='int32')
 #         if 'recordinindex' in self.groups:
 #             # unsorted indices in root
 #             recordindex = self.file['recordindex'][()]
@@ -3794,8 +3797,8 @@ class CDMDataset:
 #         #
 #         tt=time.time() - time0
 #         print(tt)
-#         dims = {'obs': np.zeros(dim_idx.shape[0], dtype=np.int32)} #,
-# #                 'trajectory': np.zeros(zidx.shape[0], dtype=np.int32)}
+#         dims = {'obs': np.zeros(dim_idx.shape[0], dtype='int32')} #,
+# #                 'trajectory': np.zeros(zidx.shape[0], dtype='int32')}
 #         globatts = get_global_attributes()  # could put more infors there ?
 #         #
 #         # Definition of Variables to write
@@ -4164,12 +4167,12 @@ class CDMDataset:
 
         if False:
             # not really faster ?
-            logic = np.ones(trange.stop - trange.start, dtype=np.bool)
-            andisin(logic, self[dimgroup][observed_variable_name][trange], np.asarray([varnum], dtype=np.int32))
+            logic = np.ones(trange.stop - trange.start, dtype='bool')
+            andisin(logic, self[dimgroup][observed_variable_name][trange], np.asarray([varnum], dtype='int32'))
         elif 'recordindex' in self.groups:
             logic = (self[dimgroup][observed_variable_name][trange] == varnum)
         else:
-            logic = np.ones(trange.stop-trange.start, dtype=np.bool)
+            logic = np.ones(trange.stop-trange.start, dtype='bool')
             # todo apply trange before, to make a subset 
         if return_base_index:
             base_index = copy.copy(logic)
@@ -4209,7 +4212,7 @@ class CDMDataset:
             times = totimes(times)  # not sure why this does notsort ?
             #times = np.sort(totimes(times))  # not sure why this does notsort ?
             hours = np.empty_like(xdates)
-            date_shift = np.zeros_like(xdates, dtype=np.int32)  # earlier date, but would be
+            date_shift = np.zeros_like(xdates, dtype='int32')  # earlier date, but would be
             days = np.empty_like(xdates)
             tohourday(hours, days, xdates, date_shift)
             # all previous day profiles should be included due to day before flag
@@ -4339,7 +4342,7 @@ class CDMDataset:
             xdates = self.load_variable_from_file(date_time_name, return_data=True)[0]
         # trange = slice(None)
         # xdates = None
-        # logic = np.ones(self[name].shape, dtype=np.bool)  # all True
+        # logic = np.ones(self[name].shape, dtype='bool')  # all True
         # if dates is not None:
         #     timestamp = self[date_time_name][()]
         #     d_attrs = self.read_attributes(date_time_name)
@@ -4372,7 +4375,7 @@ class CDMDataset:
                 logic = np.in1d(xplevs, plevs)
             logger.info('[READ] %s : %s [%s]', z_coordinate_name, str(plevs), p_units)
         else:
-            logic = np.ones(xdates.size, dtype=np.bool)
+            logic = np.ones(xdates.size, dtype='bool')
 
         if times is not None:
             # todo add time selection
@@ -4555,7 +4558,7 @@ class CDMDataset:
         else:
             plevs = std_plevs * 100  # in Pa
 
-        std_plevs_indices = np.zeros(1001, dtype=np.int32)  # hPa
+        std_plevs_indices = np.zeros(1001, dtype='int32')  # hPa
         # in hPa
         for i, j in enumerate(plevs // 100):
             std_plevs_indices[j] = i
@@ -4602,7 +4605,7 @@ class CDMDataset:
                 #
                 # requires hPa for indices
                 itime, iobs = table_to_cube(secarray,
-                                            std_plevs_indices[pressure.astype(np.int32) // 100],
+                                            std_plevs_indices[pressure.astype('int32') // 100],
                                             obs,
                                             nplev=plevs.size)
                 logger.info('[CUBE] %s %s', ivarnum['variable'], iobs.shape)
@@ -4629,7 +4632,7 @@ class CDMDataset:
                                                               return_coordinates=True)
 
                 itime, iobs = table_to_cube(secarray,
-                                            std_plevs_indices[pressure.astype(np.int32) // 100],
+                                            std_plevs_indices[pressure.astype('int32') // 100],
                                             iobs)
                 logger.info('[CUBE] %s %s', ivar, iobs.shape)
                 # Convert to Xarray [time x plev]
@@ -4855,7 +4858,7 @@ class CDMDataset:
         else:
             plevs = std_plevs * 100  # in Pa
 
-        std_plevs_indices = np.zeros(1001, dtype=np.int32)  # hPa
+        std_plevs_indices = np.zeros(1001, dtype='int32')  # hPa
         # in hPa
         for i, j in enumerate(plevs // 100):
             std_plevs_indices[j] = i
@@ -4896,7 +4899,7 @@ class CDMDataset:
                 #
                 # requires hPa for indices
                 itime, iobs = table_to_cube(secarray,
-                                            std_plevs_indices[pressure.astype(np.int32) // 100],
+                                            std_plevs_indices[pressure.astype('int32') // 100],
                                             obs,
                                             nplev=plevs.size)
                 logger.info('[CUBE] %s %s', ivarnum['bkp_var'], iobs.shape)
@@ -4931,14 +4934,14 @@ class CDMDataset:
                     cobs[hindex,pindex,dindex]=iobs[hgood]
                 else:
                     #daysx2(secarray,
-                                                             #std_plevs_indices[pressure.astype(np.int32) // 100],
+                                                             #std_plevs_indices[pressure.astype('int32') // 100],
                                                              #plevs.shape[0],iobs)
                     cobs,hindex,pindex,dindex,hgood,gdays,ghours=daysx2(secarray,
-                                                             std_plevs_indices[pressure.astype(np.int32) // 100],
+                                                             std_plevs_indices[pressure.astype('int32') // 100],
                                                              plevs.shape[0],iobs)
 
                 #itime, iobs = table_to_3dcube(secarray,
-                                            #std_plevs_indices[pressure.astype(np.int32) // 100],
+                                            #std_plevs_indices[pressure.astype('int32') // 100],
                                             #iobs)
                 logger.info('[CUBE] %s %s %s', ivar, iobs.shape,cobs.shape)
                 # Convert to Xarray [time x plev]
@@ -5065,7 +5068,7 @@ class CDMDataset:
             raise ValueError('Datetime dimension not found', data_time)
 
         try:
-            in_plevs = data[data_plevs].values.astype(np.int32)
+            in_plevs = data[data_plevs].values.astype('int32')
         except:
             raise ValueError('Z coordinate not found', data_plevs)
         #
@@ -5074,7 +5077,7 @@ class CDMDataset:
         slice_dates = [in_dates[0], in_dates[-1]]  # for trange (slice)
         if isinstance(in_dates[0], np.datetime64):
             # to seconds since
-            in_dates = ((in_dates - np.datetime64('1900-01-01T00:00:00')) / np.timedelta64(1, 's')).astype(np.int64)
+            in_dates = ((in_dates - np.datetime64('1900-01-01T00:00:00')) / np.timedelta64(1, 's')).astype('int64')
         #
         # Reopen file for writing
         #
@@ -5109,7 +5112,7 @@ class CDMDataset:
         #
         # Find reverse index for writing
         #
-        match_index = np.full(f_dates.shape, -1, dtype=np.int32)  # Matching indices
+        match_index = np.full(f_dates.shape, -1, dtype='int32')  # Matching indices
         # Loop input and file dates/pressures -> Matches
         reverse_index(match_index, f_dates, f_plevs, in_dates, in_plevs)
         logic = (match_index > -1)
@@ -5150,8 +5153,8 @@ class CDMDataset:
             #
             # logic / match_index are useless now (replace with dummys)
             #
-            logic = np.ones(values.shape[0], dtype=np.bool)
-            match_index = np.arange(values.shape[0], dtype=np.int)
+            logic = np.ones(values.shape[0], dtype='bool')
+            match_index = np.arange(values.shape[0], dtype='int32')
 
         else:
             mask = np.where(mask)[0][logic]
@@ -5262,7 +5265,7 @@ class CDMDataset:
                 # Different fillvalues for float, integer
                 #
                 if np.issubdtype(values.dtype, int):
-                    fillvalue = np.int32(-2147483648)
+                    fillvalue = 'int32'(-2147483648)
                 else:
                     fillvalue = np.float32(np.nan)
                 #
@@ -5380,7 +5383,7 @@ class CDMDataset:
             raise ValueError('Datetime dimension not found', data_time)
 
         try:
-            in_plevs = data[data_plevs].values.astype(np.int32)
+            in_plevs = data[data_plevs].values.astype('int32')
         except:
             raise ValueError('Z coordinate not found', data_plevs)
         #
@@ -5389,7 +5392,7 @@ class CDMDataset:
         slice_dates = [in_dates[0], in_dates[-1]]  # for trange (slice)
         if isinstance(in_dates[0], np.datetime64):
             # to seconds since
-            in_dates = ((in_dates - np.datetime64('1900-01-01T00:00:00')) / np.timedelta64(1, 's')).astype(np.int64)
+            in_dates = ((in_dates - np.datetime64('1900-01-01T00:00:00')) / np.timedelta64(1, 's')).astype('int64')
         #
         # Reopen file for writing
         #
@@ -5421,7 +5424,7 @@ class CDMDataset:
         # Find reverse index for writing
         #
         # Match Input datetime and p-levs with the ones in the file
-        match_index = np.full(f_dates.shape, -1, dtype=np.int32)  # Matching indices
+        match_index = np.full(f_dates.shape, -1, dtype='int32')  # Matching indices
         # Loop input and file dates/pressures -> Matches
         reverse_index(match_index, f_dates, f_plevs, in_dates, in_plevs)
         logic = (match_index > -1)
@@ -5435,7 +5438,7 @@ class CDMDataset:
 
         values = data.values
         if interpolate and not np.issubdtype(values.dtype, str):
-            mask = np.arange(trange.start, trange.stop, dtype=np.int)
+            mask = np.arange(trange.start, trange.stop, dtype='int32')
             # create array of file dimensions
             fvalues = np.full(f_dates.shape, np.nan, dtype=values.dtype)  # not compatible with interpolation
             # fill in data
@@ -5465,8 +5468,8 @@ class CDMDataset:
             #
             # logic / match_index are useless now (replace with dummys)
             #
-            logic = np.ones(values.shape[0], dtype=np.bool)
-            match_index = np.arange(values.shape[0], dtype=np.int)
+            logic = np.ones(values.shape[0], dtype='bool')
+            match_index = np.arange(values.shape[0], dtype='int32')
         else:
             mask = np.where(logic)[0]
         #
@@ -5569,7 +5572,7 @@ class CDMDataset:
             # Different fillvalues for float, integer
             #
             if np.issubdtype(values.dtype, int):
-                fillvalue = np.int32(-2147483648)
+                fillvalue = 'int32'(-2147483648)
             else:
                 fillvalue = np.float32(np.nan)
 

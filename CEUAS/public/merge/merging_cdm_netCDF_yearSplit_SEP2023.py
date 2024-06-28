@@ -238,7 +238,16 @@ class Merger():
         # STATION CONFIGURATION
         #######   
         # Read the station primary_id, and find the entry in the CUON dataset (or global dataset)
-        stat_conf = pd.read_csv("CUON_station_configuration_extended.csv", sep = '\t')
+        
+        if '0-20999' not in self.station and '0-20666' not in self.station and '0-20777' not in self.station and '0-20888' not in self.station:
+            sc =  "data/CUON_station_configuration_extended.csv"
+            stat_conf = pd.read_csv(sc, sep = '\t' )
+            
+        else:
+            sc =  "data/CUON_orphans_station_configuration_extended.csv"
+            stat_conf = pd.read_csv(sc, sep = '\t' ,  dtype=str )
+        
+            
         self.stat_conf_CUON = stat_conf 
         s = stat_conf.loc[ stat_conf.primary_id == self.station ]   
         self.stat_conf = s
@@ -255,16 +264,16 @@ class Merger():
                         v = b'NA'           
                     s[k] = v 
                     
-        if '20999' in self.station:
-            sc = pd.DataFrame( 0, index=[0], columns = stat_conf.columns)  # empty dataframe 
-        else:
-            #sc = clean_station_configuration(s)  ### FIX THIS, dont knwo why it happens 
-            sc = s 
+        #if '20999' in self.station:
+        #    sc = pd.DataFrame( 0, index=[0], columns = stat_conf.columns)  # empty dataframe 
+        #else:
+        #    #sc = clean_station_configuration(s)  ### FIX THIS, dont knwo why it happens 
+        #    sc = s 
         
         # dropping false columns
-        for c in sc.columns:
+        for c in s.columns:
             if 'Unnamed' in c:
-                sc = sc.drop(columns=c)
+                sc = s.drop(columns=c)
             
         self.data['station_configuration'] = sc
         self.statconf_columns = sc.keys()
@@ -422,7 +431,7 @@ class Merger():
                 current = unique_timestamps[i] 
                 previous = unique_timestamps[i-1]
                 
-                a= current - previous < time_delta 
+                #a= current - previous < time_delta 
                 #print('index: ' , i, 'previous: ' , previous, 'current: ' , current  ,  '  ' , str(a) + ' is duplicate')
                 
                 if (current - previous) < time_delta :  #here: found duplicated 
@@ -987,8 +996,11 @@ class Merger():
             else:
                 possible_duplicates = [ p for p in duplicated_ts if dt in p ]
                 
-                if len(possible_duplicates) >0:
+                if len(possible_duplicates) >0 and len(possible_duplicates) < 10:
                     possible_duplicates= possible_duplicates[0]
+                elif len(possible_duplicates) >5:
+                    a=0
+                    x = 0
                 else:
                     print('Check inconsistency with dt , might be due to merging of different years ')
                     continue
@@ -1207,7 +1219,14 @@ class Merger():
         
         if len(all_years) ==0:
             print('+++ WARNING: no file checked the selection criteria, check if correct! ')
+            
+            a = open(self.out_dir+'/'+ self.station  + '/completed.txt' , 'a+')
+            lines = a.readlines()
+            if 'completed\n' not in lines:        
+                a.write('completed\n')
+                
             return
+        
         else:
             
             for this_year in all_years:   # loop over all available years in the date_times 
@@ -1520,14 +1539,26 @@ class Merger():
         
         for v in sc_all_df.columns:
             if "Unnamed" in v: continue 
+            if "file" in v: continue 
             
             data = np.array(sc_all_df[v].values )
             
             if v in variables_str:
-                data = [ str(val) for val in sc_all_df[v].values ]
-                data = np.array(data).astype('|S30')
+                try:
+                    
+                    data = [ str(val) for val in sc_all_df[v].values ]
+                    data = np.array(data).astype('|S30')
+                except UnicodeEncodeError:
+                    data = [ str(val).encode('utf-8') for val in sc_all_df[v].values ]
+                    data = np.array(data).astype('|S30')                    
+                    
             elif v in variables_int:
-                data = [int(val) for val in sc_all_df[v].values ]
+                try:
+                    data = [int(val) for val in sc_all_df[v].values ]
+                except:
+                    data = [ self.get_null(tipo = 'int') for val in sc_all_df[v].values ]
+                    
+                    
                 data = np.array(data)
                 a=0
                 
@@ -2178,8 +2209,7 @@ if __name__ == '__main__':
     if not stations:
         stations = all_stat
         
-    pool_number = 15
-    stations = stations[0:500]
+    pool_number = 20
  
     skip_completed = True ### set to FALSE to rerun the station, will check each year afterwards
     
@@ -2199,11 +2229,11 @@ if __name__ == '__main__':
                      processed_stats=processed_stats)
 
     run_exception = False
-    print('run exception is ', run_exception )
+    #print('run exception is ', run_exception )
         
     ### Here: must create a list of stations 
     # stations = ['0-20001-0-11035', '0-20001-0-10393' , '0-20000-0-70219' , '0-20000-0-06610']  # 0-20000-0-71879 , 0-20000-0-82900                                                                                                                 
-    # stations = ['0-20001-0-10393']
+    # stations = ['0-20000-0-06610']
     #stations = [s for s in stations if s in os.listdir('/scratch/das/federico/HARVEST_YEARLY_22FEB2024_amma/amma')]
     # stations = [s for s in stations if '0-20001-0-11035' in s ]
     
