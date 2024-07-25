@@ -2,7 +2,7 @@
 # module load rttov/v13.2-gcc-8.5.0
 # /jetfs/home/uvoggenberger/rttov-launcher /jetfs/home/uvoggenberger/CEUAS/CEUAS/public/RTTOV/run_RTTOV_hum_low_pressure_resolution.py
 # System information
-import pyrttov
+# import pyrttov
 import numpy as np
 import os, sys, glob
 import xarray
@@ -1057,7 +1057,7 @@ tt=time.time()
 ##
 # Create a prepared File with all the meta data from ERA5 for all months and coordinate pairs.
 ##
-statlist = glob.glob('/mnt/users/scratch/leo/scratch/converted_v13/long/*.nc')
+statlist = glob.glob('/mnt/users/scratch/leo/scratch/converted_v19/long/*.nc')
 try:
     with open('/jetfs/scratch/uvoggenberger/era_input.pkl','rb') as f:
         era_input=pickle.load(f)
@@ -1086,12 +1086,19 @@ print(time.time()-tt)
 
 # -> general output directory -> set with odir
 
-station = glob.glob('/mnt/users/scratch/leo/scratch/converted_v13/long/*.nc')
+station = glob.glob('/mnt/users/scratch/leo/scratch/converted_v19/long/*.nc')
+
+# odir = '/jetfs/scratch/uvoggenberger/rttov_out/humidity_adj/' 
+# calc_coord_pair(station[0], era_input = era_input, adj = "hbe", odir = odir)
 
 # for unadj:
 
 odir = '/jetfs/scratch/uvoggenberger/rttov_out/humidity/' # '/jetfs/scratch/uvoggenberger/rttov_out/humidity_adj/'
 func=partial(calc_coord_pair, era_input = era_input, adj = None, odir = odir) # "hbe"
+
+# odir = '/jetfs/scratch/uvoggenberger/rttov_out/humidity_adj/' 
+# func=partial(calc_coord_pair, era_input = era_input, adj = "hbe", odir = odir) 
+
 result_list = list(pool.map(func, station[:]))
 
 # check: 080259, 043285
