@@ -22,9 +22,9 @@ import time
 from multiprocessing import Pool
 from functools  import partial
 
-from numba import njit
-from numba.typed import Dict
-from numba.core import types
+#from numba import njit
+#from numba.typed import Dict
+#from numba.core import types
 # http://numba.pydata.org/numba-doc/latest/reference/pysupported.html#typed-list    --> to use dictionaries 
 
 from collections import Counter
@@ -41,7 +41,7 @@ sys.path.append('../harvest/code')
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', -1)
+#pd.set_option('display.max_colwidth', -1)
 
 # nan int = -2147483648 
 
@@ -532,12 +532,22 @@ class Desroziers():
  
 """ File source directory """
 #merged_directory = '/raid60/scratch/uli/converted_v5/'
-merged_directory = '/raid60/scratch/federico/COPY_scratch_leo_converted_v5'
-merged_directory = '/raid60/scratch/leo/scratch/converted_v5'
-merged_directory = '/raid60/scratch/leo/scratch/converted_v7'
+#merged_directory = '/raid60/scratch/federico/COPY_scratch_leo_converted_v5'
+#merged_directory = '/raid60/scratch/leo/scratch/converted_v5'
+#merged_directory = '/raid60/scratch/leo/scratch/converted_v7'
     
+merged_directory = '/mnt/users/scratch/leo/scratch/converted_v19/long/'
+
+
 """ Moving postprocessed files to new directory """
-out_dir = '/raid60/scratch/leo/CHECK/'
+
+#out_dir = '/scratch/das/federico/desrozier_19MARCH2023/'
+#out_dir = '/scratch/das/federico/desrozier_28APR2023/'
+
+
+out_dir = '/srvfs/scratch/federico/DESROZIERS_converted19_long_31JULY2024/'
+
+
 
 if not os.path.isdir(out_dir):
     os.mkdir( out_dir)
@@ -560,38 +570,38 @@ if __name__ == '__main__':
             args = parser.parse_args()
             
             force_run                = args.force_run
+
+            if force_run in ['T', 'True', True]:
+               force_run = True
+            else:
+               force_run = False
             multiproc                = args.multi_processing
             
-            """ Wrapper for running """
             def run(directory, out_dir, force_run, station):
-                
+                """ Wrapper for running """                
                 file = directory + '/' + station
-              
                 station_id = file.split("_CEUAS")[0].split(merged_directory)[1].replace('/','')
                 
-                """ Initialize classes """
-                DS = Desroziers(out_dir = out_dir , station_id = station_id , file = file  )
-                """ Read data """
-                DS.load_data()
-
-                if force_run in ['yes', 'y', 'YES', 'Y', 'True', 'true']:   # still to implement 
-                    print("    === Running in force mode ===     ")
-                    
-                    try:                        
+                if force_run:   
+                    try:
+                        print("    === Running in force mode ===     ")                        
+                        """ Initialize classes """
+                        DS = Desroziers(out_dir = out_dir , station_id = station_id , file = file  )
+                        """ Read data """
+                        DS.load_data()
                         DS.calculate_Desroziers_errors()
                         DS.write_output()      
-                        
                     except:
                         print(" The file " + file + ' hase failed! MUST REDO! ')
                         a = open('Failed_Desrozier.txt', 'a')
                         a.write(file + '\n')
-                    
                 else:
+                    """ Initialize classes """
+                    DS = Desroziers(out_dir = out_dir , station_id = station_id , file = file  )
+                    """ Read data """
+                    DS.load_data()                    
                     DS.calculate_Desroziers_errors()
                     DS.write_output()
-            
-
-
             """
             stations_list = [ s for s in os.listdir(merged_directory) if 'TEST0'  in s ]   
             for s in stations_list:
@@ -601,10 +611,11 @@ if __name__ == '__main__':
             for s in stations_list:
                     os.system('cp ' + merged_directory + '/'+s   + '  '  +  merged_directory + '/'+s.replace('_TEST.nc','.nc')   )
             """        
+            
             stations_list = [ s for s in os.listdir(merged_directory) ]   
-            
-            
-
+            stations_list = [ s for s in stations_list if '.nc' in s and 'merged' in s  and 'txt' not in s and '.nc.x' not in s and 'before' not in s]
+            stations_list = stations_list[:50]
+            #stations_list = stations_list[:5]
             cleaned_list = []
             if os.path.isdir(out_dir):
                 try:
@@ -615,21 +626,25 @@ if __name__ == '__main__':
                 for file in stations_list:
                         station_id = file.split("_CEUAS")[0]
                         
-                        if station_id in processed and '11035' not in station_id:
-                            print('Already processed:::' , file )
+                        if station_id in processed:
+                            #print('Already processed:::' , file )
+                            pass
                         else:
                             cleaned_list.append(file)
 
                             
             #cleaned_list = ['0-20000-0-02173_CEUAS_merged_v1.nc']
-            cleaned_list = [f for f in cleaned_list if '.nc' in f ]
-            #cleaned_list = [f for f in cleaned_list if f not in os.listdir('/raid60/scratch/federico/DESROZIERS_26MARCH2021_ALL') ]
 
             #cleaned_list = cleaned_list[:20]
             print("*** Processing: " , len(cleaned_list) , "   files ")
+        
+            #multiproc = 'True'
+            #force_run = 'False'
 
-            if multiproc in ['yes', 'y', 'YES', 'Y', 'True', 'true']:
-                p = Pool(60)
+            import random 
+            random.shuffle(cleaned_list)
+            if multiproc in ['yes', 'y', 'YES', 'Y', 'True', 'true', True]:
+                p = Pool(10)
                 func = partial(run, merged_directory, out_dir, force_run)
                 out = p.map(func, cleaned_list)  
                         
