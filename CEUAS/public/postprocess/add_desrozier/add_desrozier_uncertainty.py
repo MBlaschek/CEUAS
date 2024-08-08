@@ -187,7 +187,7 @@ class Desroziers():
         self.file_name = file.split('/')[-1]
         #self.summary_file =  station_id + '_' + datetime.now().strftime("%Y-%m-%d_%H-%M-%S") + '_summary_desrozier.txt'
         self.std_plevs = [1000, 2000, 3000, 5000, 7000, 10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 85000, 92500, 100000]
-        self.variables = [38,34,36,85,104,105,107] # 104,105 u and v wind, 106 wind from direction, 107 wind speed
+        self.variables = [106, 107, 117, 126, 137, 138, 139, 140, 34, 39] # 104,105 u and v wind, 106 wind from direction, 107 wind speed
         #self.dic_type_attribute] s = np.load('../merge/dic_type_attributes.npy', allow_pickle= True).item()
         #self.encodings = np.load('../merge/groups_encodings.npy' , allow_pickle = True ).item()
         
@@ -229,8 +229,8 @@ class Desroziers():
         #errors_out = xr.Dataset()
         errors_out = {}
         
-        error_day_window= ['30','60','90','180']
-        #error_day_window= ['30']
+        # error_day_window= ['30','60','90','180']
+        error_day_window= ['30']
                 
         """ Assuming a day window around each observation to calculate the time-average
              e.g. 30 days around 30 january = from 15 Jan to 14 Feb. """
@@ -545,8 +545,7 @@ merged_directory = '/mnt/users/scratch/leo/scratch/converted_v19/long/'
 #out_dir = '/scratch/das/federico/desrozier_28APR2023/'
 
 
-out_dir = '/srvfs/scratch/federico/DESROZIERS_converted19_long_31JULY2024/'
-
+out_dir = '/srvfs/scratch/uvoggenberger/DESROZIERS_converted19_long_06AUG2024/'
 
 
 if not os.path.isdir(out_dir):
@@ -578,7 +577,8 @@ if __name__ == '__main__':
             multiproc                = args.multi_processing
             
             def run(directory, out_dir, force_run, station):
-                """ Wrapper for running """                
+                """ Wrapper for running """     
+                import hdf5plugin            
                 file = directory + '/' + station
                 station_id = file.split("_CEUAS")[0].split(merged_directory)[1].replace('/','')
                 
@@ -614,7 +614,7 @@ if __name__ == '__main__':
             
             stations_list = [ s for s in os.listdir(merged_directory) ]   
             stations_list = [ s for s in stations_list if '.nc' in s and 'merged' in s  and 'txt' not in s and '.nc.x' not in s and 'before' not in s]
-            stations_list = stations_list[:50]
+            # stations_list = stations_list[:50]
             #stations_list = stations_list[:5]
             cleaned_list = []
             if os.path.isdir(out_dir):
