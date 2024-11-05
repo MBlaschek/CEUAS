@@ -51,23 +51,31 @@ app.layout = html.Div(children=[
                             style={'color': 'blue',
                                    'fontSize': 40,
                                    }),
-                        html.H2 ("Ciaone"),
+                        html.H3 ("University of Vienna, Department of Meteorology and Geophysics "),
                     ], className = 'title',
                        style = {'textAlign':'center',
                                 'marginTop': '10px',
-                                'marginBottom': '50px'}
+                                'marginBottom': '50px',
+                                'fontSize': 15,
+                                }
                 ),
 
-                #html.Br(),
+                html.Br(),
+                html.Br(),
+
                 ### -------------------------- Selection Box
                 html.Div(children=[
                         html.Div(children=[
-                            html.H3('Select the Data to Visualize',
-                                    # style={'paddingTop': '2rem'}
+                            html.H2('Select the Data to Visualize',
+                                    style={'paddingTop': '2rem',
+                                           'fontSize': 30,
+                                           }
                                     ),
                             html.Div( children=[
                                 html.Label('Date',
-                                           #style={'paddingTop': '2rem'}
+                                           style={'paddingTop': '2rem',
+                                                  'fontSize': 25,
+                                                  }
                                            ),
                                 dcc.DatePickerSingle(
                                         id='date-picker',
@@ -77,7 +85,7 @@ app.layout = html.Div(children=[
                                         disabled_days = [date(2005, 2, 13)],
                                         date= first_date,
                                 style={
-                                        #'font-size': '6px',
+                                        'font-size': '25',
                                         'width':'100%',
                                         'display': 'inline-block',
                                         'border-radius': '2px',
@@ -88,26 +96,45 @@ app.layout = html.Div(children=[
                                         #'text-align':'center',
                                         'padding-left': '3px',
                                         'padding-right': '3px',
+                                        'paddingLeft': '2rem'
                                 },
 
                                 )
                                 ]),
 
                             html.Div(children=[
-                                html.Label("Variable",
-                                           #style={'paddingTop': '2rem'}
-                                            ),
-                                dcc.RadioItems(['Temperature', 'Humidity'], 'Temperature',
-                                           id='variable',),
+                                html.Br(),
+                                html.Label("Launching Time ",
+                                            style={'paddingTop': '2rem',
+                                            'fontSize': 25,
+                                                            }
+                                            )
+                            ,
+                                # gets updated after selecting the date
+                                dcc.Dropdown(id='time-dropdown',
+                                             style={'paddingLeft': '2rem',
+                                                    'fontSize': 25,
+                                                    }
+                                             ),
                             ]),
 
+
+
                             html.Div(children=[
-                                html.Label("Launching Time ",
-                                           #style={'paddingTop': '2rem'}
-                                            ),
-                                # gets updated after selecting the date
-                                dcc.Dropdown(id='time-dropdown'),
-                            ])
+                                html.Br(),
+                                html.Label("Variable",
+                                           style={'paddingTop': '2rem',
+                                                  'fontSize': 25,
+                                                  }                                            ),
+                                dcc.RadioItems(['Temperature', 'Humidity'], 'Temperature',
+                                           id='variable',
+                                               style={'paddingLeft': '2rem',
+                                                      'fontSize': 25,
+                                                      }
+                                               ),
+                            ]),
+
+
 
                         ], className = "four columns",
                            style = {
@@ -302,6 +329,8 @@ def plot_line_charts(start_date, value, data, variable):
 """ Launch the app """
 if __name__ == '__main__':
     app.run_server(debug=True,
-                   dev_tools_hot_reload=True ) # avoid auto reloadind = False
+                   dev_tools_hot_reload=True,
+   		   port='8050',
+    ) # avoid auto reloadind = False
 
 
