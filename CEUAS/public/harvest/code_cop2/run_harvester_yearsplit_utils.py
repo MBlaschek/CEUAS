@@ -62,8 +62,10 @@ def get_all_stations_files(db, station_kind):
     if db in ['npsound' , 'shipsound']:
         station_kind = ''
         
-    if station_kind in ['orphan' , 'mobile']:
+    if station_kind in ['orphan']:
         sc = pd.read_csv( '../data/station_configurations/' + db + '_orphans_station_configuration_extended.csv', sep = '\t' )
+    elif station_kind in ['mobile']:
+        sc = pd.read_csv( '../data/station_configurations/' + db + '_mobile_station_configuration_extended.csv', sep = '\t' )
     else:
         sc = pd.read_csv( '../data/station_configurations/' + db + '_station_configuration_extended.csv', sep = '\t' )
         
@@ -85,7 +87,7 @@ def get_all_stations_files(db, station_kind):
     return sc
 
 
-a = get_all_stations_files('era5_1', 'regular')
+# a = get_all_stations_files('era5_1', 'regular')
 
 def check_processed_stations(db, out_dir):
     """ Extract the list of stations that have already been processed with the list of years """

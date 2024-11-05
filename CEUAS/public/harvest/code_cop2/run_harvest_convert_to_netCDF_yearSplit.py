@@ -4,7 +4,7 @@ from harvester_yearsplit_parameters import *  # datasets
 from run_harvester_yearsplit_utils import *
 from tqdm import tqdm
 import random
-
+from random import shuffle
 #from check_correct import *
 
 '''
@@ -40,7 +40,6 @@ for db in datasets:
               print("+++ Only running selected stations::: " , stations )
               file_df =file_df.loc[file_df.primary_id.isin(stations) ]                 
 
-              
        ## extracting fully harvested files i.e. all available years were harvested  
        ### these files will not be checked anymore against the year during the harvesting 
        if skip_fully_harvested:
@@ -70,7 +69,7 @@ for db in datasets:
                                           completed_files.append(fname)
                                                  
                 
-                     file_df =file_df.loc[~file_df.file.isin(completed_files) ]                 
+                     file_df =file_df.loc[~file_df.file.isin(completed_files) ]  
        
        '''
        df_red =file_df.loc[ ~file_df['primary_id'].isin(primary_proc)]
@@ -81,12 +80,17 @@ for db in datasets:
        all_f = list(file_df['file'].values)
 
 
-       station_file = [  file_df['primary_id'].values[i] + '/' +  file_df['file'].values[i]  for i in range(len(file_df)) ] 
+       if db == 'era5_1_mobile': # fix for new files
+              station_file = [  file_df['primary_id'].values[i] + '/' +  file_df['file'].values[i].replace('_', '')  for i in range(len(file_df)) ] 
+       else:
+              station_file = [  file_df['primary_id'].values[i] + '/' +  file_df['file'].values[i]  for i in range(len(file_df)) ] 
        files = station_file
+       print(files)
        
        #primary_file_dic =dict(zip(  list(all_files['file'].values) ,  list(all_files['primary_id'].values) ))
        
-       #files = [f for f in files if '11035' in f or '10393' in f or '9393' in f or '10395' in f or '06610' in f or '82930' in f ]
+       # files = [f for f in files if '11035' in f or '10393' in f or '9393' in f or '10395' in f or '06610' in f or '82930' in f ]
+       # files = [f for f in files if '11035' in f]
 
        #files = [f for f in all_f if '06610' in f  ]
        #random.shuffle(station_file)       
@@ -96,15 +100,17 @@ for db in datasets:
        #station_file = station_file[:5]
        
        print(' ===== Running dataset ' + db + ' with ' + str(len(station_file) ) ) 
-       #station_file = station_file[:20]
-       chunks = chunk_it(station_file, processes)
+       # station_file = station_file[:20]  ## to test with a subset
+       # chunks = chunk_it(station_file, processes)
+       shuffle(files)
+       chunks = chunk_it(files, processes)
        
        for c in chunks:
               #print ('*** I am running CHUNK: ', chunks.index(c) , ' *** with: ' ,  len(c), ' files'  )
               c = str(','.join(c)).replace('#','')
-              command = 'python3.8  harvest_convert_to_netCDF_yearSplit.py' 
+              command = 'python harvest_convert_to_netCDF_yearSplit.py' # changed from python3.8
               com =  command + ' -d ' + db + ' -o ' + out_dir + ' -f  ' + c + '  -r ' + str(run_only_missing_stations) +   '  -k ' + station_kind + '  & '
-              #print(com)
+              print(com)
               os.system( com )
               
               
