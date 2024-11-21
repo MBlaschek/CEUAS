@@ -6,7 +6,7 @@ Will be copied inside the output directory so that the parameters will be stored
 
 
 ### Datasets sources
-database_service2_path = '/scratch/das/federico/databases_service2/'
+database_service2_path = '/srvfs/scratch/federico/databases_service2/'
 
 datasets_path = { 
       'era5_1': '/mnt/users/scratch/leo/scratch/era5/odbs/1/new' , #resolved conflict: odbs/1/new (before it was odbs/1/)
@@ -21,6 +21,7 @@ datasets_path = {
 
       #'igra2': database_service2_path + 'IGRA2_20230106',
       'igra2': database_service2_path + 'IGRA2_03012024',
+      'igra2_mobile': database_service2_path + 'IGRA2_03012024',
                   
       'era5_1_mobile': '/mnt/users/scratch/leo/scratch/era5/odbs/1_mobile/new' ,
       'era5_2_mobile': '/mnt/users/scratch/leo/scratch/era5/odbs/2',
@@ -48,6 +49,7 @@ datasets_big = ['era5_1', 'era5_2',
                 'era5_1759', 'era5_1761',
                 'ncar',
                 'igra2',
+                'igra2_mobile'
                 'bufr' ,
                 'bufr_cnr' ,
                 'woudc',
@@ -77,9 +79,9 @@ datasets_big = ['era5_1', 'era5_2',
 datasets = ['era5_1_mobile' , 'era5_2_mobile'] # only those contain mobile data - while orphan and regular can be in all except those two
 datasets = ['era5_2_mobile' ]
 
-datasets = ['era5_2'] #' hara' 
+datasets = ['ncar'] #' hara' 
 
-out_dir = '/mnt/users/scratch/uvoggenberger/CUON_HARVEST/era5_2_test_regular/' ## harvest_test_rerun ## '/scratch/das/federico/HARVEST_YEARLY_22FEB2024_amma/'  _orphans   6_orphan  harvest_20240403   harvest_20240516_orphan
+out_dir = '/mnt/users/scratch/uvoggenberger/CUON_HARVEST/missing/' ## harvest_test_rerun ## '/scratch/das/federico/HARVEST_YEARLY_22FEB2024_amma/'  _orphans   6_orphan  harvest_20240403   harvest_20240516_orphan
 station_kind = 'regular'
 
 ### Select station kind [regular, orphan, mobile]
@@ -104,12 +106,12 @@ processes = 40 # 40
 skip_fully_harvested = False
 
 ### Only process missing stations (all years)
-run_only_missing_stations = False
+run_only_missing_stations = True
 
 ### Only process missing years per station 
 check_missing_year = True
 
 ### Time range for harvesting  -- 1880 -> 2024
-min_year_to_process = 1880
-max_year_to_process = 2024
+min_year_to_process = 2021
+max_year_to_process = 2022
 

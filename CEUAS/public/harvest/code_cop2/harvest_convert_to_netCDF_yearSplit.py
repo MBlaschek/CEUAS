@@ -288,7 +288,8 @@ cdmfb_noodb={'observation_value':'obsvalue@body',
                           'source_id': 'source_id',
                           'primary_id' : 'statid@hdr' ,                  # station_configuration
                           'primary_station_id':'statid@hdr',
-                          'sensor_id':'sensor_id'}  # header_table 
+                          'sensor_id':'sensor_id',
+                          'observation_height_above_station_surface':'observation_height_above_station_surface'}  # header_table 
 
 
 ## NB CONVENTIONS FOR TIMESTAMPS
@@ -641,7 +642,7 @@ def uadb_ascii_to_dataframe(file=''):
         else:
             ltyp      = int(line[0:4])
             
-            if ltyp not in [2,3,4,5]:
+            if ltyp not in [1,2,3,4,5]: # now includes "1" for the surface observation
                 continue 
             
             ltyp_flag_all.append(ltyp)
@@ -691,13 +692,13 @@ def uadb_ascii_to_dataframe(file=''):
                     obs_id = obs_id +1
                     if not np.isnan(press):     # when pressure is available, z_coord== pressure and z_type==1
                         z_type = 1                    
-                        temp_read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type) )
+                        temp_read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type, ltyp) )
                     elif  (np.isnan(press) and  not np.isnan(gph) ) :  # when pressure is not available, z_coord== gph and z_type==2 
                         z_type = 2    # geopotential = 2          
-                        temp_read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, gph, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type) )
+                        temp_read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, gph, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type, ltyp) )
                     else:
                         z_type = -2147483648             
-                        temp_read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type) )
+                        temp_read_data.append( ( 'NCAR'.rjust(10), int(usi), int(obs_id), idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'] , int(cdmvar_dic[var]['cdm_unit']), numlev , z_type, ltyp) )
 
                 '''
                 ltyp_flags = np.unique(ltyp_flag_all)
@@ -716,9 +717,15 @@ def uadb_ascii_to_dataframe(file=''):
                 print('WRONG NCAR DATA LINE **** ')
                 0
 
+    column_names = [ 'source_id', 'report_id',  'observation_id', 'record_timestamp' , 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body',
+                 'obsvalue@body', 'varno@body' , 'units',  'number_of_pressure_levels', 'vertco_type@body', 'observation_height_above_station_surface']
+
     #column_names = ['source_file', 'product_code', 'report_id', 'observation_id', 'report_timestamp' , 'iday', 'station_id', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body', 'obsvalue@body', 'varno@body' ,  'units',  'number_of_pressure_levels' ]
 
-    df = pd.DataFrame(data= read_data, columns= column_names)       
+    df = pd.DataFrame(data= read_data, columns= column_names)   
+
+    # save ohass only as 1 for surface, or nan
+    df.observation_height_above_station_surface = np.where(df.observation_height_above_station_surface != 1, np.nan, df.observation_height_above_station_surface)
 
     df['observation_id']  = np.chararray.zfill( (df['observation_id'].astype(int)) .astype('S'+str(id_string_length ) ), id_string_length  )  #converting to fixed length bite objects 
     df['report_id']           = np.chararray.zfill( (df['report_id'].astype(int)).astype ('S'+str(id_string_length ) ), id_string_length  )
@@ -754,9 +761,9 @@ def read_giub(file=''):
     #       'heightOfStation']    
 
     df = pd.read_csv( file, sep = '\t').astype(str)
+    df['rh'] = df['rh'].astype(float).apply(lambda x: x / 100 if x != -999 else x).astype(str)
 
     names = ["index"  , "date"   , "time"   , "temp"  ,  "gph"   , 'wspeed'  ,"wdir" ,   'uwind'   ,"vwind"  , "rh"    ,  "sh"    ,  'z_coordinate'  ,  'z_coordinate_type'       ,'days'  ,  'months'  ,"geopotential" ]
-    df = pd.read_csv( file, sep = '\t', names = names).astype(str)
 
     statid = file.split('/')[-1].split('_')[0].replace('.txt','')
 
@@ -2236,13 +2243,17 @@ def igra2_ascii_to_dataframe(file=''):
                     z_value = press
                     #read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, press, value, cdmvar_dic[var]['cdm_var'], int(cdmvar_dic[var]['cdm_unit']), numlev, z_type, release_time ) )
                 read_data.append ( ( 'IGRA2'.rjust(10), head_count,  int(obs_id),  idate, iday, ident, lat, lon, z_value, value, cdmvar_dic[var]['cdm_var'], int(cdmvar_dic[var]['cdm_unit']), 
-                                     numlev, z_type, release_time, report_timeflag  ) )
+                                     numlev, z_type, release_time, report_timeflag, lvltyp2 ) )
 
 
     column_names_igra2 = [ 'source_id', 'report_id',  'observation_id', 'record_timestamp' , 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 'vertco_reference_1@body',
-                           'obsvalue@body', 'varno@body' , 'units',  'number_of_pressure_levels', 'vertco_type@body', 'report_timestamp', 'report_meaning_of_timestamp']
+                           'obsvalue@body', 'varno@body' , 'units',  'number_of_pressure_levels', 'vertco_type@body', 'report_timestamp', 'report_meaning_of_timestamp',
+                           'observation_height_above_station_surface']
 
     df = pd.DataFrame(data= read_data, columns= column_names_igra2)
+
+    # set obs height a.s.s. to nan, where it's unknown. 
+    df.observation_height_above_station_surface.replace(0, np.nan, inplace=True)
 
 
     df['observation_id']  = np.chararray.zfill( (df['observation_id'].astype(int)) .astype('S'+str(id_string_length ) ), id_string_length  )  #converting to fixed length bite objects 
@@ -3298,7 +3309,8 @@ def read_df_to_cdm(cdm, dataset, fn, metadata='' ):
     for d in df.columns:
         if d not in ['date@hdr','time@hdr','statid@hdr','vertco_reference_1@body','varno@body', 'lon@hdr','lat@hdr','seqno@hdr',
                          'obsvalue@body','fg_depar@body','an_depar@body','biascorr@body','sonde_type@conv',  'record_timestamp' , 'report_timestamp',
-                               'observation_id', 'report_id' , 'units' , 'vertco_type@body' , 'year' , 'iday',  'sensor_id', 'report_meaning_of_timestamp'] :
+                               'observation_id', 'report_id' , 'units' , 'vertco_type@body' , 'year' , 'iday',  'sensor_id', 'report_meaning_of_timestamp', 
+                               'observation_height_above_station_surface'] :
 
             dcols.append(d)
 
@@ -3434,7 +3446,7 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
             """ Filling the observations_table """
             if k in ('observations_table'):
                 groups[k]=pd.DataFrame()  # creating dataframes that will be written to netcdf via h5py methods by the write_dict_h5() method 
-                if d.element_name == 'sensor_id':
+                if d.element_name == 'observation_height_above_station_surface':
                     print()
                 try:         
                     groups[k][d.element_name]= fromfb_l(df, di._variables, cdmfb_noodb[d.element_name], ttrans(d.kind,kinds=okinds))                                                       
@@ -3458,11 +3470,11 @@ def write_df_to_cdm(df, stat_conf_check, station_configuration_retrieved, cdm, c
                 if 'latitude' in d.element_name: #'report_synoptic_time' in d.element_name:
                     a = 0
                 if d.element_name in  ['record_timestamp', 'report_timestamp']:
-                    groups[k][d.element_name]= ( {'hdrlen':di['recordindex'].shape[0]} , np.take(df[d.element_name].values, di['recordindex'].values ) )
+                    groups[k][d.element_name]= ( {'hdrlen':di['recordindex'].shape[0]} , df[d.element_name].values[di['recordindex'].values]) 
                     groups[k][d.element_name].attrs['units'] = 'seconds since 1900-01-01 00:00:00'    
 
                 elif d.element_name  == 'report_meaning_of_timestamp' and d.element_name in df.columns:
-                    groups[k][d.element_name]= ( {'hdrlen':di['recordindex'].shape[0]} , np.take(df[d.element_name], di['recordindex'] ) )                     
+                    groups[k][d.element_name]= ( {'hdrlen':di['recordindex'].shape[0]} , list(df[d.element_name].iloc[di['recordindex']]))                     
                 else:
                     try:  # WHY IS THIS (SO MESSY)
                         # basically no variable in the header table is truly set with the exception og the ones above OR with the ones already present in the station_configuration
@@ -3632,6 +3644,8 @@ def get_station_configuration_cuon(stations_id='', station_configuration='', lat
         elif db == "ncar":
             fname = str.encode(fn.split("/")[-1] )
         elif db == "igra2":
+            fname = str.encode(stations_id[0])
+        elif db == "igra2_mobile":
             fname = str.encode(stations_id[0])
         elif db in ["bufr", 'amma', 'giub', 'hara']:
             fname = str.encode(fn.split('/')[-1] )
@@ -5319,7 +5333,7 @@ if __name__ == '__main__':
         if dataset not in ['igra2_mobile']:
             stat_conf_file = stat_conf_path +   '/' + dataset+ '_station_configuration_extended.csv'  
         else:
-            stat_conf_file = stat_conf_path +   '/igra2_orphans_station_configuration_extended.csv'  
+            stat_conf_file = stat_conf_path +   '/igra2_mobile_station_configuration_extended.csv'  
             
     #if 'era5_1_mobile' in dataset:
     #    stat_conf_file = stat_conf_path +   '/era5_1_mobile_station_configuration_extended.csv'    
@@ -5383,7 +5397,7 @@ if __name__ == '__main__':
         elif dataset in ['igra2']:
             File = File + '-data.txt'
 
-        elif dataset in ['igra2']:
+        elif dataset in ['igra2', 'igra2_mobile']:
             File = File + '-data.txt'
 
         elif dataset in ['era5_2', 'era5_2_mobile']:
@@ -5393,7 +5407,7 @@ if __name__ == '__main__':
         File = datasets_path[dataset] + '/' + File 
         tt=time.time()              
 
-        from harvester_yearsplit_parameters import run_only_missing_stations  # will run only missing station and year; if False, will rerun the whole station 
+        from harvester_yearsplit_parameters import run_only_missing_stations   # will run only missing station and year; if False, will rerun the whole station 
         from harvester_yearsplit_parameters import max_year_to_process, min_year_to_process # min and max year to harvest (independent of the station data)
 
         ### here: check if a file exists for a specific year and skip rerunning

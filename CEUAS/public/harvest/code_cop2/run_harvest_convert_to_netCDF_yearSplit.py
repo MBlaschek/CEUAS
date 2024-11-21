@@ -38,7 +38,10 @@ for db in datasets:
        # select stations from a list 
        if stations:
               print("+++ Only running selected stations::: " , stations )
-              file_df =file_df.loc[file_df.primary_id.isin(stations) ]                 
+              file_df =file_df.loc[file_df.primary_id.isin(stations) ]       
+
+       # DEBUGGING: to run only a single station:
+       file_df = file_df[file_df['primary_id'].str.contains('16546')]
 
        ## extracting fully harvested files i.e. all available years were harvested  
        ### these files will not be checked anymore against the year during the harvesting 
