@@ -1,0 +1,3 @@
+#code|abbreviation|type|name|unit|scale|reference|width|crex_unit|crex_scale|crex_width
+001231|datasetSource|string|DATASET SOURCE|CCITT IA5|0|0|64|Character|0|8
+002231|sondeTypeDetail|long|DETAILED SONDE TYPE|-|0|0|32|-|0|4

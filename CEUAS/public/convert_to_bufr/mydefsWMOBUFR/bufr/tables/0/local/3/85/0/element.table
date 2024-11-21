@@ -1,0 +1,6 @@
+#code|abbreviation|type|name|unit|scale|reference|width|crex_unit|crex_scale|crex_width
+033192|flagDeQualiteSurParametre|table|FLAG DE QUALITE SUR PARAMETRE|CODE TABLE|0|0|3|NA|0|0
+004193|heureEffectiveDuLancementDeLaRadiosonde|long|HEURE EFFECTIVE DU LANCEMENT DE LA RADIOSONDE|h|0|0|5|NA|0|0
+004194|minutesEffectivesDuLancementDeLaRadiosonde|long|MINUTES EFFECTIVES DU LANCEMENT DE LA RADIOSONDE|min|0|0|6|NA|0|0
+012192|temperatureDryBulbTemperature|double|Temperature/dry-bulb temperature|K|2|0|16|NA|0|0
+012194|dewPointTemperature|double|Dew-point temperature|K|2|0|16|NA|0|0
