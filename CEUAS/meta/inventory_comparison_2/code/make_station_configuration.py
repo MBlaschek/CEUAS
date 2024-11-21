@@ -10,10 +10,10 @@ from multiprocessing import Pool
 from functools  import partial
 import reverse_geocoder as reverse_geocoder 
 
-pd.set_option('display.max_columns', None)
-pd.set_option('display.max_rows', None)
-pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', -1)
+# pd.set_option('display.max_columns', None)
+# pd.set_option('display.max_rows', None)
+# pd.set_option('display.width', None)
+# pd.set_option('display.max_colwidth', -1)
 
 import argparse
 
@@ -355,7 +355,10 @@ def make_inventory(v):
     #files = [f for f in files if '10393' in f or '10395' in f or '09393' in f ]
     #files = files[4000:]
     for file in tqdm(files):    
-        
+        if '26063' in file:
+            print(file)
+        if '26072' in file:
+            print(file)
             
         df = pd.read_csv(file, sep = '\t', header = 0)
         df = df.dropna( subset = ['latitude','longitude'])
