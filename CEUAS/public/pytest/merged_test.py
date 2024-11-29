@@ -378,24 +378,26 @@ def test_source(hdf5_file_path):
             # Identify matching harvested files
             matching_files = glob.glob(md + '/*.nc')
             for mf in matching_files:
-                print(mf)
-                with h5py.File(mf, "r") as f_source:
-                    f_source_rts = f_source['recordtimestamp'][:]
-                    for fsrts in f_source_rts:
-                        idx = np.searchsorted(f_timestamps, fsrts)
-                        # Compute timestamp differences
-                        if (idx > 0) and (idx < (len(f_timestamps) - 1)):
-                            result = np.min(f_timestamps[idx - 1:idx + 1] - fsrts)
-                        elif idx == 0:
-                            result = np.min(f_timestamps[idx:idx + 1] - fsrts)
-                        else:
-                            result = np.min(f_timestamps[idx - 1:idx] - fsrts)
-                        
-                        # Ensure no additional data exists in harvested files
-                        try:
-                            assert np.abs(result) <= 7200, f"The file {mf} contains data, which is not in final file {stat_id}."
-                        except AssertionError as e:
-                            logger.append(f"File {mf} failed source file test: {e}")
+                # Skip already-checked files
+                if mf not in already_checked_files:
+                    print(mf)
+                    with h5py.File(mf, "r") as f_source:
+                        f_source_rts = f_source['recordtimestamp'][:]
+                        for fsrts in f_source_rts:
+                            idx = np.searchsorted(f_timestamps, fsrts)
+                            # Compute timestamp differences
+                            if (idx > 0) and (idx < (len(f_timestamps) - 1)):
+                                result = np.min(f_timestamps[idx - 1:idx + 1] - fsrts)
+                            elif idx == 0:
+                                result = np.min(f_timestamps[idx:idx + 1] - fsrts)
+                            else:
+                                result = np.min(f_timestamps[idx - 1:idx] - fsrts)
+                            
+                            # Ensure no additional data exists in harvested files
+                            try:
+                                assert np.abs(result) <= 7200, f"The file {mf} contains data, which is not in final file {stat_id}."
+                            except AssertionError as e:
+                                logger.append(f"File {mf} failed source file test: {e}")
 
     # Write all logged errors to a log file for further debugging
     with open(log_name, "a") as file:
