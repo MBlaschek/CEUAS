@@ -357,15 +357,15 @@ def test_source(hdf5_file_path):
                     idx = np.searchsorted(f_timestamps, fsrts)
                     # Compute the minimum difference between timestamps
                     if (idx > 0) and (idx < (len(f_timestamps) - 1)):
-                        result = np.min(f_timestamps[idx - 1:idx + 1] - fsrts)
+                        result = np.min(np.abs(f_timestamps[idx - 1:idx + 1] - fsrts))
                     elif idx == 0:
-                        result = np.min(f_timestamps[idx:idx + 1] - fsrts)
+                        result = np.min(np.abs(f_timestamps[idx:idx + 1] - fsrts))
                     else:
-                        result = np.min(f_timestamps[idx - 1:idx] - fsrts)
+                        result = np.min(np.abs(f_timestamps[idx - 1:idx] - fsrts))
                     
                     # Ensure all timestamps are within an acceptable range (e.g., 7200 seconds)
                     try:
-                        assert np.abs(result) <= 7200, f"Expected all record timestamps from source file to exist. Index {idx} is a missing timestamps from {i}."
+                        assert result <= 7200, f"Expected all record timestamps from source file to exist. Index {idx} is a missing timestamps from {i}."
                     except AssertionError as e:
                         logger.append(f"File {hdf5_file_path} failed source file test: {e}")
 
@@ -387,15 +387,15 @@ def test_source(hdf5_file_path):
                             idx = np.searchsorted(f_timestamps, fsrts)
                             # Compute timestamp differences
                             if (idx > 0) and (idx < (len(f_timestamps) - 1)):
-                                result = np.min(f_timestamps[idx - 1:idx + 1] - fsrts)
+                                result = np.min(np.abs(f_timestamps[idx - 1:idx + 1] - fsrts))
                             elif idx == 0:
-                                result = np.min(f_timestamps[idx:idx + 1] - fsrts)
+                                result = np.min(np.abs(f_timestamps[idx:idx + 1] - fsrts))
                             else:
-                                result = np.min(f_timestamps[idx - 1:idx] - fsrts)
+                                result = np.min(np.abs(f_timestamps[idx - 1:idx] - fsrts))
                             
                             # Ensure no additional data exists in harvested files
                             try:
-                                assert np.abs(result) <= 7200, f"The file {mf} contains data, which is not in final file {stat_id}."
+                                assert result <= 7200, f"The file {mf} contains data, which is not in final file {stat_id}."
                             except AssertionError as e:
                                 logger.append(f"File {mf} failed source file test: {e}")
 
