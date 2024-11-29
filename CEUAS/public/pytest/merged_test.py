@@ -32,8 +32,9 @@ import glob
 import hdf5plugin
 
 
-DATA_DIRECTORY = "/mnt/users/scratch/leo/scratch/converted_v23/long/"
-HARVEST_DIRECTORY = "/mnt/users/scratch/uvoggenberger/CUON_HARVEST/"
+DATA_DIRECTORY = "/mnt/users/scratch/leo/scratch/converted_v24/long/"
+HARVEST_DIRECTORY = "/mnt/users/scratch/leo/scratch/UH/CUON_HARVEST4/"  
+# HARVEST_DIRECTORY = "/mnt/users/scratch/uvoggenberger/CUON_HARVEST/"
 
 
 # Threshold constants for data validation
@@ -121,6 +122,12 @@ EXPECTED_VARIABLES = {
     "z_coordinate_type": ['description', 'type', 'z_coordinate_type_len'],
 }
 
+try:
+    os.makedirs('./logs')
+except:
+    pass
+
+
 # Load the data type table
 data_types = pd.read_csv('encodings.txt', delimiter='\t', names=['variable', 'group', 'dtype'])
 
@@ -202,10 +209,10 @@ def test_temperature_thresholds_hdf5(hdf5_file_path):
                 temperature_data = f["observations_table"]["observation_value"][t_idx[0]:t_idx[-1]]
                 
                 # Validate that all temperature values are above the minimum threshold (T_MIN)
-                assert np.nanmin(temperature_data) >= T_MIN, "Temperature below minimum threshold."
+                assert np.nanmin(temperature_data) >= T_MIN, "Temperature below minimum threshold: " + str(np.nanmin(temperature_data))
                 
                 # Validate that all temperature values are below the maximum threshold (T_MAX)
-                assert np.nanmax(temperature_data) <= T_MAX, "Temperature above maximum threshold."
+                assert np.nanmax(temperature_data) <= T_MAX, "Temperature above maximum threshold: " + str(np.nanmax(temperature_data))
             
             # Handle and log any assertion errors
             except AssertionError as e:
@@ -217,8 +224,8 @@ def test_temperature_thresholds_hdf5(hdf5_file_path):
             try:
                 t_idx = f["recordindices"]["138"]
                 humidity_data = f["observations_table"]["observation_value"][t_idx[0]:t_idx[-1]]
-                assert np.nanmin(humidity_data) >= RH_MIN, "Relative humidity below minimum threshold."
-                assert np.nanmax(humidity_data) <= RH_MAX, "Relative humidity above maximum threshold."
+                assert np.nanmin(humidity_data) >= RH_MIN, "Relative humidity below minimum threshold: " + str(np.nanmin(humidity_data))
+                assert np.nanmax(humidity_data) <= RH_MAX, "Relative humidity above maximum threshold: " + str(np.nanmax(humidity_data))
             except AssertionError as e:
                 logger.append(f"File {hdf5_file_path} failed structure test: {e}")
 
@@ -227,8 +234,8 @@ def test_temperature_thresholds_hdf5(hdf5_file_path):
             try:
                 t_idx = f["recordindices"]["39"]
                 humidity_data = f["observations_table"]["observation_value"][t_idx[0]:t_idx[-1]]
-                assert np.nanmin(humidity_data) >= SH_MIN, "Specific humidity below minimum threshold."
-                assert np.nanmax(humidity_data) <= SH_MAX, "Specific humidity above maximum threshold."
+                assert np.nanmin(humidity_data) >= SH_MIN, "Specific humidity below minimum threshold: " + str(np.nanmin(humidity_data))
+                assert np.nanmax(humidity_data) <= SH_MAX, "Specific humidity above maximum threshold: " + str(np.nanmax(humidity_data))
             except AssertionError as e:
                 logger.append(f"File {hdf5_file_path} failed structure test: {e}")
 
@@ -237,8 +244,8 @@ def test_temperature_thresholds_hdf5(hdf5_file_path):
             try:
                 t_idx = f["recordindices"]["137"]
                 humidity_data = f["observations_table"]["observation_value"][t_idx[0]:t_idx[-1]]
-                assert np.nanmin(humidity_data) >= DP_MIN, "Dewpoint temperature below minimum threshold."
-                assert np.nanmax(humidity_data) <= DP_MAX, "Dewpoint temperature above maximum threshold."
+                assert np.nanmin(humidity_data) >= DP_MIN, "Dewpoint temperature below minimum threshold: " + str(np.nanmin(humidity_data))
+                assert np.nanmax(humidity_data) <= DP_MAX, "Dewpoint temperature above maximum threshold: " + str(np.nanmax(humidity_data))
             except AssertionError as e:
                 logger.append(f"File {hdf5_file_path} failed structure test: {e}")
 
@@ -257,8 +264,8 @@ def test_temperature_thresholds_hdf5(hdf5_file_path):
             try:
                 t_idx = f["recordindices"]["106"]
                 wind_data = f["observations_table"]["observation_value"][t_idx[0]:t_idx[-1]]
-                assert np.nanmin(wind_data) >= WD_MIN, "Wind direction below minimum threshold."
-                assert np.nanmax(wind_data) <= WD_MAX, "Wind direction above maximum threshold."
+                assert np.nanmin(wind_data) >= WD_MIN, "Wind direction below minimum threshold: " + str(np.nanmin(wind_data))
+                assert np.nanmax(wind_data) <= WD_MAX, "Wind direction above maximum threshold: " + str(np.nanmax(wind_data))
             except AssertionError as e:
                 logger.append(f"File {hdf5_file_path} failed structure test: {e}")
 
@@ -267,8 +274,8 @@ def test_temperature_thresholds_hdf5(hdf5_file_path):
             try:
                 t_idx = f["recordindices"]["107"]
                 wind_data = f["observations_table"]["observation_value"][t_idx[0]:t_idx[-1]]
-                assert np.nanmin(wind_data) >= WS_MIN, "Wind speed below minimum threshold."
-                assert np.nanmax(wind_data) <= WS_MAX, "Wind speed above maximum threshold."
+                assert np.nanmin(wind_data) >= WS_MIN, "Wind speed below minimum threshold: " + str(np.nanmin(wind_data))
+                assert np.nanmax(wind_data) <= WS_MAX, "Wind speed above maximum threshold: " + str(np.nanmax(wind_data))
             except AssertionError as e:
                 logger.append(f"File {hdf5_file_path} failed structure test: {e}")
 
@@ -277,8 +284,8 @@ def test_temperature_thresholds_hdf5(hdf5_file_path):
             try:
                 t_idx = f["recordindices"]["139"]
                 wind_data = f["observations_table"]["observation_value"][t_idx[0]:t_idx[-1]]
-                assert np.nanmin(wind_data) >= U_MIN, "Eastward wind speed below minimum threshold."
-                assert np.nanmax(wind_data) <= U_MAX, "Eastward wind speed above maximum threshold."
+                assert np.nanmin(wind_data) >= U_MIN, "Eastward wind speed below minimum threshold: " + str(np.nanmin(wind_data))
+                assert np.nanmax(wind_data) <= U_MAX, "Eastward wind speed above maximum threshold: " + str(np.nanmax(wind_data))
             except AssertionError as e:
                 logger.append(f"File {hdf5_file_path} failed structure test: {e}")
 
@@ -287,8 +294,8 @@ def test_temperature_thresholds_hdf5(hdf5_file_path):
             try:
                 t_idx = f["recordindices"]["138"]
                 wind_data = f["observations_table"]["observation_value"][t_idx[0]:t_idx[-1]]
-                assert np.nanmin(wind_data) >= V_MIN, "Northward wind speed below minimum threshold."
-                assert np.nanmax(wind_data) <= V_MAX, "Northward wind speed above maximum threshold."
+                assert np.nanmin(wind_data) >= V_MIN, "Northward wind speed below minimum threshold: " + str(np.nanmin(wind_data))
+                assert np.nanmax(wind_data) <= V_MAX, "Northward wind speed above maximum threshold: " + str(np.nanmax(wind_data))
             except AssertionError as e:
                 logger.append(f"File {hdf5_file_path} failed structure test: {e}")
 
@@ -297,16 +304,16 @@ def test_temperature_thresholds_hdf5(hdf5_file_path):
             try:
                 t_idx = f["recordindices"]["117"]
                 geopotential_data = f["observations_table"]["observation_value"][t_idx[0]:t_idx[-1]]
-                assert np.nanmin(geopotential_data) >= GP_MIN, "Geopotential below minimum threshold."
-                assert np.nanmax(geopotential_data) <= GP_MAX, "Geopotential above maximum threshold."
+                assert np.nanmin(geopotential_data) >= GP_MIN, "Geopotential below minimum threshold: " + str(np.nanmin(geopotential_data))
+                assert np.nanmax(geopotential_data) <= GP_MAX, "Geopotential above maximum threshold: " + str(np.nanmax(geopotential_data))
             except AssertionError as e:
                 logger.append(f"File {hdf5_file_path} failed structure test: {e}")
 
         # p
         try:
             pressure_data = f["observations_table"]["z_coordinate"][:]
-            assert np.nanmin(pressure_data) >= P_MIN, "Pressure below minimum threshold."
-            assert np.nanmax(pressure_data) <= P_MAX, "Pressure above maximum threshold."
+            assert np.nanmin(pressure_data) >= P_MIN, "Pressure below minimum threshold: " + str(np.nanmin(pressure_data))
+            assert np.nanmax(pressure_data) <= P_MAX, "Pressure above maximum threshold: " + str(np.nanmax(pressure_data))
         except AssertionError as e:
             logger.append(f"File {hdf5_file_path} failed structure test: {e}")
 
@@ -316,7 +323,7 @@ def test_temperature_thresholds_hdf5(hdf5_file_path):
 
 
 # 5. Source Tests
-@pytest.mark.parametrize("hdf5_file_path, dataset_name, expected_dtype", hdf5_files)
+@pytest.mark.parametrize("hdf5_file_path", hdf5_files)
 def test_source(hdf5_file_path):
     """Check that each dataset has a working link to its source file."""
     
@@ -358,7 +365,7 @@ def test_source(hdf5_file_path):
                     
                     # Ensure all timestamps are within an acceptable range (e.g., 7200 seconds)
                     try:
-                        assert np.abs(result) <= 7200, f"Expected all record timestamps from source file to exist. {idx} are missing timestamps from {i}."
+                        assert np.abs(result) <= 7200, f"Expected all record timestamps from source file to exist. Index {idx} is a missing timestamps from {i}."
                     except AssertionError as e:
                         logger.append(f"File {hdf5_file_path} failed source file test: {e}")
 
@@ -371,30 +378,37 @@ def test_source(hdf5_file_path):
             # Identify matching harvested files
             matching_files = glob.glob(md + '/*.nc')
             for mf in matching_files:
-                # Skip already-checked files
-                if mf not in already_checked_files:
-                    print(mf)
-                    with h5py.File(mf, "r") as f_source:
-                        f_source_rts = f_source['recordtimestamp'][:]
-                        for fsrts in f_source_rts:
-                            idx = np.searchsorted(f_timestamps, fsrts)
-                            # Compute timestamp differences
-                            if (idx > 0) and (idx < (len(f_timestamps) - 1)):
-                                result = np.min(f_timestamps[idx - 1:idx + 1] - fsrts)
-                            elif idx == 0:
-                                result = np.min(f_timestamps[idx:idx + 1] - fsrts)
-                            else:
-                                result = np.min(f_timestamps[idx - 1:idx] - fsrts)
-                            
-                            # Ensure no additional data exists in harvested files
-                            try:
-                                assert np.abs(result) <= 7200, f"The file {mf} contains data, which is not in final file {stat_id}."
-                            except AssertionError as e:
-                                logger.append(f"File {mf} failed source file test: {e}")
+                print(mf)
+                with h5py.File(mf, "r") as f_source:
+                    f_source_rts = f_source['recordtimestamp'][:]
+                    for fsrts in f_source_rts:
+                        idx = np.searchsorted(f_timestamps, fsrts)
+                        # Compute timestamp differences
+                        if (idx > 0) and (idx < (len(f_timestamps) - 1)):
+                            result = np.min(f_timestamps[idx - 1:idx + 1] - fsrts)
+                        elif idx == 0:
+                            result = np.min(f_timestamps[idx:idx + 1] - fsrts)
+                        else:
+                            result = np.min(f_timestamps[idx - 1:idx] - fsrts)
+                        
+                        # Ensure no additional data exists in harvested files
+                        try:
+                            assert np.abs(result) <= 7200, f"The file {mf} contains data, which is not in final file {stat_id}."
+                        except AssertionError as e:
+                            logger.append(f"File {mf} failed source file test: {e}")
 
     # Write all logged errors to a log file for further debugging
     with open(log_name, "a") as file:
         file.writelines(line + "\n" for line in logger)
+
+
+
+# test_file = "/mnt/users/scratch/leo/scratch/converted_v24/long/0-20001-0-11035_CEUAS_merged_v3.nc"
+test_file = "/mnt/users/scratch/leo/scratch/converted_v24/long/0-20001-0-71081_CEUAS_merged_v3.nc"
+test_dataset_structure_hdf5(test_file)
+test_temperature_thresholds_hdf5(test_file)
+test_source(test_file)
+
 
 
 # # 6. Data Type Tests
