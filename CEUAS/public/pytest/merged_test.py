@@ -356,7 +356,7 @@ def test_source(hdf5_file_path):
                 for fsrts in f_source_rts:
                     idx = np.searchsorted(f_timestamps, fsrts)
                     # Compute the minimum difference between timestamps
-                    if (idx > 0) and (idx < (len(f_timestamps) - 1)):
+                    if (idx > 0) and (idx < len(f_timestamps)):
                         result = np.min(np.abs(f_timestamps[idx - 1:idx + 1] - fsrts))
                     elif idx == 0:
                         result = np.min(np.abs(f_timestamps[idx:idx + 1] - fsrts))
