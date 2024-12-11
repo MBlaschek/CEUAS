@@ -33,7 +33,10 @@ def bufr_encode(profile1, bufr_file1):
     codes_set(ibufr, 'bufrHeaderSubCentre', 0)
     codes_set(ibufr, 'updateSequenceNumber', 0)
     codes_set(ibufr, 'dataCategory', 2) # see page https://www.nco.ncep.noaa.gov/sib/jeff/TableA_0_STDv22_LOC7.html
-    subtype = {0:109,2:111,8:109}[profile1['header']['platform_type']]
+    if profile1['header']['platform_type'] > 8 or profile1['header']['platform_type'] < 0:
+      subtype = {0:109,2:111,8:109}[0]
+    else:
+      subtype = {0:109,2:111,8:109}[profile1['header']['platform_type']] ## EDIT -> why can it now be nan, and didn't create an error before?
     #  subtype=111 # TEMP SHIP
     #  subtype=109 # TEMP LAND
     codes_set(ibufr, 'dataSubCategory', subtype)
@@ -68,13 +71,17 @@ def bufr_encode(profile1, bufr_file1):
     codes_set_array (ibufr, 'inputDataPresentIndicator',bitmapMask)
 
     # Create the structure of the data section
-    codes_set_array(ibufr, 'unexpandedDescriptors', [ 206064, 1231] +
-           [301150,2231,301111,301128,301113,301114,302049,22043] +
-           [101000,31002,303056] + 
-           #[4086,8042,207001,7004,10009,207000,5015,6015,12101,12103,11001,11002] + 
-           #THIS WORKS: [222000,236000,101000,31002,31031,101000,31002,33007] +
-           [225000,236000,101000,31002,31031,8024,101000,31002,225255] + # see /home/erc/ifs-source/erc_CY49R1_ISPD.IFS-3390.ED-85/odb/old_tools/bufr_add_bias.F
-           [101000,31001,303051] )
+    codes_set_array(ibufr, 'unexpandedDescriptors', [206064, 1099, 301150, 301111, 301128, 301113, 301114, 302049, 22043, 101000, 31002, 303056, 225000, 236000, 101000, 31002, 31031, 8024, 101000, 31002, 225255, 101000, 31001, 303051])                    
+    # codes_set_array(ibufr, 'unexpandedDescriptors', [206064, 1231, 301150, 301111, 301128]) # , 301113, 301114, 302049, 22043, 101000, 31002, 303056, 225000, 236000, 101000, 31002, 31031, 8024, 101000, 31002, 225255, 101000, 31001, 303051])                    
+    # [206064, 1231, 301150, 2231, 301111, 301128, 301113, 301114, 302049, 22043, 101000, 31002, 303056, 225000, 236000, 101000, 31002, 31031, 8024, 101000, 31002, 225255, 101000, 31001, 303051]
+    # , 2231
+          #           [ 206064, 1231] +
+          #  [301150,2231,301111,301128,301113,301114,302049,22043] +
+          #  [101000,31002,303056] + 
+          #  #[4086,8042,207001,7004,10009,207000,5015,6015,12101,12103,11001,11002] + 
+          #  #THIS WORKS: [222000,236000,101000,31002,31031,101000,31002,33007] +
+          #  [225000,236000,101000,31002,31031,8024,101000,31002,225255] + # see /home/erc/ifs-source/erc_CY49R1_ISPD.IFS-3390.ED-85/odb/old_tools/bufr_add_bias.F
+          #  [101000,31001,303051] )
 
     for k in ['wigosIdentifierSeries','wigosIssuerOfIdentifier','wigosIssueNumber','wigosLocalIdentifierCharacter','blockNumber','stationNumber','shipOrMobileLandStationIdentifier','height','year','month','day','hour','minute','latitude','longitude']:
       if k in profile1['header'].keys():
@@ -89,7 +96,8 @@ def bufr_encode(profile1, bufr_file1):
     codes_set(ibufr, 'trackingTechniqueOrStatusOfSystem', CODES_MISSING_LONG)
     codes_set(ibufr, 'measuringEquipmentType', CODES_MISSING_LONG)
 
-    codes_set(ibufr, 'datasetSource', profile1['header']['datasetSource'])
+    codes_set(ibufr, 'uniqueProductDefinition', profile1['header']['datasetSource'])
+    # codes_set(ibufr, 'datasetSource', profile1['header']['datasetSource'])
 
 #WMOBUFR    if 'sondeTypeDetail' in profile1['header'].keys():
 #WMOBUFR      codes_set(ibufr, 'sondeTypeDetail', profile1['header']['sondeTypeDetail'])

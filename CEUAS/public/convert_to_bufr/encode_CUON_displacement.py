@@ -49,9 +49,9 @@ if 1==1:
     if len(sys.argv)==2:
       yyyymmdd=int(sys.argv[1])
     else:
-      #yyyymmdd=19800601
-      yyyymmdd=20061001
-    CUONPATH = '/ec/res4/scratch/erc/{0}/'.format(data_acquisition_dir)
+      #yyyymmdd=19790105
+      yyyymmdd=19800101
+    CUONPATH = '/mnt/users/scratch/uvoggenberger/to_bufr_1/1980/'.format(data_acquisition_dir) ## change to test file 
     yyyymmdd_dt = dt.datetime.strptime(str(yyyymmdd),'%Y%m%d')
     print("==========================================================")
     print("CUON ENCODING FOR",yyyymmdd_dt)
@@ -66,13 +66,13 @@ if 1==1:
     min_datetime_margin = np.datetime64((yyyymmdd_dt - dt.timedelta(hours= 1)).strftime('%Y-%m-%d %H:%M:%S'))
     max_datetime_margin = np.datetime64((yyyymmdd_dt + dt.timedelta(hours=25)).strftime('%Y-%m-%d %H:%M:%S'))
 
-    pkl_dup = "/ec/res4/scratch/erc/Leo/BUFRENCODE/perm/erc/ERA6BUFR/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
+    pkl_dup = "/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d')) # "/ec/res4/scratch/erc/Leo/BUFRENCODE/perm/erc/ERA6BUFR/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
     pkl_dup_path = os.path.dirname(pkl_dup)
     if not os.path.exists(pkl_dup_path):
       os.makedirs(pkl_dup_path)
 
     for yyyymmdd_dt1 in [yyyymmdd_dt-dt.timedelta(days=1), yyyymmdd_dt, yyyymmdd_dt+dt.timedelta(days=1)]:
-      pkl_file1 = "/ec/res4/scratch/erc/Leo/BUFRENCODE/perm/erc/ERA6BUFR/{0}/pickle/{1}/pickle_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt1.strftime('%Y'),yyyymmdd_dt1.strftime('%Y%m%d'))
+      pkl_file1 = "/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}/pickle/{1}/pickle_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt1.strftime('%Y'),yyyymmdd_dt1.strftime('%Y%m%d'))
       pkl_path1 = os.path.dirname(pkl_file1)
       if not os.path.exists(pkl_path1):
         os.makedirs(pkl_path1)
@@ -81,7 +81,6 @@ if 1==1:
       if lread and not os.path.exists(pkl_file1):
 
         print(pkl_file1)
-        stop
 
         # GET CUON
         cuon_vars = ['air_temperature','dew_point_temperature','wind_speed','wind_from_direction','geopotential']
@@ -103,7 +102,7 @@ if 1==1:
         cuonfiles    = []
         for var1 in cuon_vars:
           df_cuon_var1 = None
-          vars_to_save = {'air_temperature':['ta','RISE_bias_estimate','sonde_type','latitude_displacement','longitude_displacement','time_since_launch'],'dew_point_temperature':['dew_point_temperature','humidity_bias_estimate'],'wind_speed':['wind_speed','wind_bias_estimate'],'wind_from_direction':['wind_from_direction','wind_bias_estimate'],'geopotential':['geopotential']}[var1]
+          vars_to_save = {'air_temperature':['ta','RISE_bias_estimate','sonde_type','latitude_displacement','longitude_displacement','time_since_launch', 'observation_height_above_station_surface'],'dew_point_temperature':['dew_point_temperature','humidity_bias_estimate'],'wind_speed':['wind_speed','wind_bias_estimate'],'wind_from_direction':['wind_from_direction','wind_bias_estimate'],'geopotential':['geopotential']}[var1]
           cuonfile = cuonfile_msk.format(var1)
           if not os.path.exists(cuonfile):
             obsdataset = 'insitu-comprehensive-upper-air-observation-network'
@@ -112,7 +111,7 @@ if 1==1:
             'variable': [var1],
             'format': req_fmt,
             'dummy': 'avoid_cach_'+str(dt.datetime.now()),
-            "cdm":["observations_table/source_id","station_configuration/platform_type"],
+            "cdm":["observations_table/source_id","station_configuration/platform_type", "observations_table/observation_height_above_station_surface"],
             }
             if var1 in optn_vars.keys():
               obsret_args['optional'] = optn_vars[var1]
@@ -140,7 +139,7 @@ if 1==1:
           if not os.path.exists(cuonfile):
             print("ERROR... file not retrieved...")
             print(cdsapi_stderr)
-            stop
+             
    
           if os.path.getsize(cuonfile)>0:
             with zipfile.ZipFile( cuonfile, "r") as zip_ref:
@@ -188,7 +187,7 @@ if 1==1:
               platform_types = [0] # Fall-back: assume LAND
             if len(platform_types) != 1 :
               print("ERROR... non-unique platform type...")
-              stop
+               
             #DEBUG replace missing platform_type for SHIP
             #if platform_types[0]==-2147483648:
             #  platform_types[0]=2
@@ -250,7 +249,7 @@ if 1==1:
             wbad_source_ID = np.where((df_cuon['source_idNEW'].values[:].astype(str)!='nan') & (df_cuon['source_id'].values[:].astype(str)!='nan') & (df_cuon['source_idNEW'].values[:].astype(str)!=df_cuon['source_id'].values[:].astype(str)))[0]
             if len(wbad_source_ID)>0:
               print("Here we go... source_ids do not match...",df_cuon.iloc[wbad_source_ID][['source_id','source_idNEW']].values[:])
-              stop
+               
             df_cuon.drop(columns=['source_idNEW'], inplace=True)
             for recon_var1 in recon_vars:
               if recon_var1!='source_id':
@@ -261,7 +260,7 @@ if 1==1:
                 wbad_recon_var = np.where((~np.isnan(df_cuon[recon_var1+'NEW'].values[:])) & (~np.isnan(df_cuon[recon_var1].values[:])) & (df_cuon[recon_var1+'NEW'].values[:]!=df_cuon[recon_var1].values[:]))[0]
                 if len(wbad_recon_var)>0:
                   print("Here we go... ",recon_var," values do not match...",df_cuon.iloc[wbad_recon_var][[recon_var1,recon_var1+'NEW']].values[:])
-                  stop
+                   
                 df_cuon.drop(columns=[recon_var1+'NEW'], inplace=True)
  
         # RENAME COLUMNS AND QC
@@ -362,11 +361,11 @@ if 1==1:
         print("saved pickle in",pkl_file1)
 
         # Done reading all the data: Clean-up zip files and directory
-        for cuonfile1 in cuonfiles:
-          if os.path.exists(cuonfile1):
-            os.remove(cuonfile1)
-        if os.path.exists(CUONEXTR):
-          os.rmdir(CUONEXTR)
+        # for cuonfile1 in cuonfiles:
+        #   if os.path.exists(cuonfile1):
+        #     os.remove(cuonfile1)
+        # if os.path.exists(CUONEXTR):
+        #   os.rmdir(CUONEXTR)
 
       elif lread and os.path.exists(pkl_file1):
   
@@ -457,7 +456,7 @@ if 1==1:
       print('AFTER time offset',len(df_BIGcuon))
 
     # MAKE A SUMMARY
-    pkl_sum = "/ec/res4/scratch/erc/Leo/BUFRENCODE/perm/erc/ERA6BUFR/{0}/picklesum/{1}/picklesum_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
+    pkl_sum = "/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}/picklesum/{1}/picklesum_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
     pkl_sum_path = os.path.dirname(pkl_sum)
     if not os.path.exists(pkl_sum_path):
       os.makedirs(pkl_sum_path)
@@ -476,7 +475,7 @@ if 1==1:
           wutc1 = np.where(df_write['time'].values> np.datetime64(yyyymmdd_dt.strftime('%Y-%m-%d 15:00:00')))[0]
         else:
           print("ERROR... utc1 unexpected",utc1)
-          stop
+           
         if len(wutc1)>0:
           ndata = df_write.iloc[wutc1].groupby(df_write.index.names).count()
           reordered_columns = ['pressure', 'time', 'lat', 'lat05', 'lon', 'lon05', 'station_id', 'source_id', 'height', 'platform_type', 'sonde_type', 'extendedVerticalSoundingSignificance', 'latitudeDisplacement', 'longitudeDisplacement', 'timePeriod', 'airTemperature', 'airTempBiasCorr', 'dewpointTemperature', 'dewpointTempBiasCorr', 'windSpeed', 'windSpeedBiasCorr', 'windDirection', 'windDirectionBiasCorr', 'geopotential', 'nonCoordinateGeopotentialHeight']
@@ -484,7 +483,7 @@ if 1==1:
             print("PROBLEM... reordered columns not the same length as columns...")
             print("reordered_columns",reordered_columns)
             print("ndata columns    ",ndata.columns)
-            stop
+             
           ndata = ndata[reordered_columns]
       
           df_ndata = pd.DataFrame({('Nobs','Total'):ndata.sum().astype(int)})
@@ -529,7 +528,7 @@ if 1==1:
     pnams = list(df_write.index.names)
     posis  = {x:pnams.index(x) for x in pnams}
     profs = df_write.index.unique()
-    bufr_file_output_fmt = '/ec/res4/scratch/erc/Leo/BUFRENCODE/perm/erc/ERA6BUFR/{0}{1}'.format(bufr_output_dir,timeoffset_name)+'/{0}/{1}/{2}/{3}/{4}_prof{5}.bufr'
+    bufr_file_output_fmt = '/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}{1}'.format(bufr_output_dir,timeoffset_name)+'/{0}/{1}/{2}/{3}/{4}_prof{5}.bufr'
 
     # create directories, clean-up possibly pre-existing files, open new files for writing
     filearray = open_clean_bufr_files(bufr_file_output_fmt, yyyymmdd_dt, nprocesses)
@@ -587,7 +586,7 @@ if 1==1:
       except:
         # we cannot encode this ill-formed WIGOS identifier, this shouldn't happen!
         print("ERROR... ILL-FORMED WIGOS IDENTIFIER...",'-'.join(wigos_statid1_elms))
-        stop
+         
       if len(ident_full)>8:
         print("WARNING ",oneprofile['header'],prof1,df_loc['station_id'].unique())
         ident_full = 'BAD'+ident_full[-5:]
@@ -603,7 +602,7 @@ if 1==1:
       if len(sonde_type_uqok)>1:
         print("ERROR ... non-unique sonde_type...")
         print("wigos_statid",wigos_statid1,"sonde_type",sonde_type_uqok)
-        stop
+         
       if len(sonde_type_uqok)==1 and type(sonde_type_uqok[0]) is bytes:
         sonde_type_utf = sonde_type_uqok[0].decode('utf-8').strip()
         try:
@@ -627,7 +626,7 @@ if 1==1:
             del oneprofile['header']['sondeTypeDetail'] # remove sondeTypeDetail if we have a match for the WMO type
       elif len(sonde_type_uqok)==1 and type(sonde_type_uqok[0]) is not bytes:
         print("UNEXPECTED SONDE_TYPE",sonde_type_uqok[0])
-        stop
+         
       for k in ['sondeTypeDetail','radiosondeType']:
         if k in oneprofile['header'].keys():
           if type(oneprofile['header'][k] is not int):
@@ -708,7 +707,7 @@ if 1==1:
           oneprofile['data'][newk0] = df_loc[k[0]].values[:]
         #if k=='windSpeedBiasCorr':
         #  print("FOUND WIND SPEED BIAS ...")
-        #  stop
+        #   
 
       #try:
       #print(oneprofile)
@@ -721,13 +720,13 @@ if 1==1:
     # parallel processing
     ncalls=len(profs)
     print(ncalls,"to do")
-    ##for iprof1 in range(len(profs)): # DEBUG
-    ##  single_call(iprof1) # DEBUG
-    with multiPPool(nprocesses) as p:
-      p.map(single_call, list(range(ncalls)))
-      p.close(); p.join()
-      print("All tasks completed", flush=True)
-    # close all files
+    for iprof1 in range(len(profs)): # DEBUG
+      single_call(iprof1) # DEBUG
+    # with multiPPool(nprocesses) as p:
+    #   p.map(single_call, list(range(ncalls)))
+    #   p.close(); p.join()
+    #   print("All tasks completed", flush=True)
+    # # close all files
     close_clean_bufr_files(filearray)
 
 #if __name__ == "__main__":
