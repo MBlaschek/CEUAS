@@ -528,34 +528,36 @@ def read_standardnames(url: str = None) -> dict:
     cdmnames += 10 * ['observations_table/observation_value']
     # todo at the moment this is hard coded here, what if JRA55 is requested?
     
-    if float(config['cuon_version']) <= 16:
-        cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body',
-                    'observations_table/sensor_id',
-                    'observations_table/secondary_value', 'observations_table/original_precision',
-                    'observations_table/report_id', 'observations_table/reference_sensor_id', 'observations_table/station_elevation',
-                    'station_configuration/station_name', 
-                    'advanced_homogenisation/RISE_bias_estimate', 'advanced_homogenisation/RICH_bias_estimate',
-                    'advanced_homogenisation/RASE_bias_estimate', 'advanced_homogenisation/RAOBCORE_bias_estimate',
-                    'advanced_homogenisation/latitude_displacement', 'advanced_homogenisation/longitude_displacement',
-                    'advanced_homogenisation/time_since_launch', 'advanced_homogenisation/true_time',
-                    'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
-                    'advanced_homogenisation/wind_bias_estimate', 
-                    'advanced_homogenisation/humidity_bias_estimate',
-                    ]
-    else:
-        cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body',
-                    'observations_table/sensor_id',
-                    'observations_table/secondary_value', 'observations_table/original_precision',
-                    'observations_table/report_id', 'observations_table/reference_sensor_id', 'observations_table/station_elevation',
-                    'station_configuration/station_name', 
-                    'observations_table/RISE_bias_estimate', 'observations_table/RICH_bias_estimate',
-                    'observations_table/RASE_bias_estimate', 'observations_table/RAOBCORE_bias_estimate',
-                    'observations_table/latd', 'observations_table/lond',
-                    'observations_table/timed', 'observations_table/true_time',
-                    'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180', # advanced_uncertainty ? 
-                    'observations_table/wind_bias_estimate', 
-                    'observations_table/humidity_bias_estimate',
-                    ]
+    # if float(config['cuon_version']) <= 16:
+    cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body',
+                'observations_table/sensor_id',
+                'observations_table/secondary_value', 'observations_table/original_precision',
+                'observations_table/report_id', 'observations_table/reference_sensor_id', 'observations_table/station_elevation',
+                'station_configuration/station_name', 
+                'advanced_homogenisation/RISE_bias_estimate', 'advanced_homogenisation/RICH_bias_estimate',
+                'advanced_homogenisation/RASE_bias_estimate', 'advanced_homogenisation/RAOBCORE_bias_estimate',
+                # 'advanced_homogenisation/latitude_displacement', 'advanced_homogenisation/longitude_displacement',
+                # 'advanced_homogenisation/time_since_launch', 'advanced_homogenisation/true_time',
+                'observations_table/latd', 'observations_table/lond',
+                'observations_table/timed', 'observations_table/true_time',
+                'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180',
+                'advanced_homogenisation/wind_bias_estimate', 
+                'advanced_homogenisation/humidity_bias_estimate',
+                ]
+    # else:
+    #     cdmnames += ['header_table/report_id', 'era5fb/fg_depar@body', 'era5fb/an_depar@body', 'era5fb/biascorr@body',
+    #                 'observations_table/sensor_id',
+    #                 'observations_table/secondary_value', 'observations_table/original_precision',
+    #                 'observations_table/report_id', 'observations_table/reference_sensor_id', 'observations_table/station_elevation',
+    #                 'station_configuration/station_name', 
+    #                 'observations_table/RISE_bias_estimate', 'observations_table/RICH_bias_estimate',
+    #                 'observations_table/RASE_bias_estimate', 'observations_table/RAOBCORE_bias_estimate',
+    #                 'observations_table/latd', 'observations_table/lond',
+    #                 'observations_table/timed', 'observations_table/true_time',
+    #                 'advanced_uncertainty/desroziers_30', 'advanced_uncertainty/desroziers_60', 'advanced_uncertainty/desroziers_90', 'advanced_uncertainty/desroziers_180', # advanced_uncertainty ? 
+    #                 'observations_table/wind_bias_estimate', 
+    #                 'observations_table/humidity_bias_estimate',
+    #                 ]
     cf = {}
     for c, cdm in zip(snames, cdmnames):
         cf[c] = {'cdmname': cdm, 'units': 'NA', 'shortname': c}
@@ -2071,7 +2073,7 @@ def cds_request_wrapper(request: dict, request_filename: str = None, cds_dataset
         raise e
 
 
-def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str = None, overwrite: bool = False):
+def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str = None, overwrite: bool = False, download_only=False):
     """ Run a VM Request and return a CDMDataset or a CDMDatasetList if more variables are requested
 
     Args:
@@ -2119,32 +2121,35 @@ def vm_request_wrapper(request: dict, request_filename: str = None, vm_url: str 
 
         idir = os.path.dirname(request_filename) if '/' in request_filename else '.'
         os.makedirs(idir, exist_ok=True)
-        if not 'hdf' in request:
-            with zipfile.ZipFile(request_filename, 'r') as f:
-                files = f.namelist()
-                f.extractall(idir + '/')
-                for ifile in files:
-                    logger.debug('Extracting %s/%s', idir, ifile)
-
-#             if 'format' in request:
-#                 if request['format'] == 'csv':
-#                     # todo read multiple csv files and return a DataFrame
-#                     raise NotImplementedError()
-
-            files = ["{}/{}".format(idir, ifile) for ifile in files]
-            if 'speed_test' in request:
-                    return files[0]
-            else:
-                if (len(files) > 1) and (files[0][-3:] == '.nc'):
-                    return CDMDatasetList(*files)
-                if files[0][-4:] == '.csv':
-                    return pd.read_csv(files[0], header=14)
-                elif files[0][-7:] == '.csv.gz':
-                    return pd.read_csv(files[0], compression='gzip', header=14)
-                else:
-                    return CDMDataset(filename=files[0])
+        if download_only:
+            return
         else:
-            return request_filename
+            if not 'hdf' in request:
+                with zipfile.ZipFile(request_filename, 'r') as f:
+                    files = f.namelist()
+                    f.extractall(idir + '/')
+                    for ifile in files:
+                        logger.debug('Extracting %s/%s', idir, ifile)
+
+    #             if 'format' in request:
+    #                 if request['format'] == 'csv':
+    #                     # todo read multiple csv files and return a DataFrame
+    #                     raise NotImplementedError()
+
+                files = ["{}/{}".format(idir, ifile) for ifile in files]
+                if 'speed_test' in request:
+                        return files[0]
+                else:
+                    if (len(files) > 1) and (files[0][-3:] == '.nc'):
+                        return CDMDatasetList(*files)
+                    if files[0][-4:] == '.csv':
+                        return pd.read_csv(files[0], header=14)
+                    elif files[0][-7:] == '.csv.gz':
+                        return pd.read_csv(files[0], compression='gzip', header=14)
+                    else:
+                        return CDMDataset(filename=files[0])
+            else:
+                return request_filename
 
     except MemoryError as e:
         logger.error('VM Request failed %s', str(request))
@@ -3038,6 +3043,7 @@ class CDMDataset:
         #
         if 'optional' in request.keys():
             snames.extend(request['optional'])
+            print("OPTIONALS: ", request['optional'])
                         
         if 'bias_estimate_method' in request.keys():
             # use era5adj group
@@ -3050,7 +3056,8 @@ class CDMDataset:
                 cfcopy[ss] = cf_dict[ss]
             except:
                 pass
-#         print(cfcopy)
+        # print("CFCOPY: ",cfcopy)
+        # print()
         #
         # End Definition of Variables to write
         #
@@ -3263,6 +3270,7 @@ class CDMDataset:
     
             else:
                 print('all data pulled from file, start creating csv')
+                print("request['single_csv']: ", request['single_csv'])
                 if request['single_csv']:
                     fout['variable']=np.array([glamod_cdm_codes[cdm_codes[request['variable']]]]*len(fout['z_coordinate']))
                     groups.append('observations_table')
@@ -3312,7 +3320,6 @@ class CDMDataset:
                 #
                 # prepare to write csv
                 #
-                
                 dtype = dict(names = list(fout.keys()), formats=[])
                 lfout=[]
                 for k in dtype['names']:
@@ -3345,7 +3352,7 @@ class CDMDataset:
                         
 #                 print(headstr)
 #                 print(group_headstr)
-                        
+
                 print(time.time()-time0)
                 formatstrn=formatstr[:-1]+'\n'
                 formatall=formatstrn*fout[dtype['names'][0]].shape[0]
@@ -3381,7 +3388,7 @@ class CDMDataset:
                         f.write('#     - igra-data-policy \n')
                         f.write('# This is a CSV file following the CDS convention cdm-obs \n')
                         f.write('# Data source: CUON \n')
-                        f.write('# Version: '+config['cuon_version']+' - ' + datetime.now().strftime("%d-%b-%Y %H:%M:%S") + ' \n')
+                        f.write('# Version: '+str(config['cuon_version'])+' - ' + str(datetime.now().strftime("%d-%b-%Y %H:%M:%S")) + ' \n')
                         
                         if len(request['date']) == 1:
                             f.write('# Time extent: ' + str(request['date'][0][:4])+'.'+str(request['date'][0][4:6])+'.'+str(request['date'][0][6:8]) +' \n')
@@ -3588,6 +3595,10 @@ class CDMDataset:
                         raise KeyError(str(e))
 
                 if 'advanced_homogenisation' in self.groups :
+                    # print()
+                    # print('ENTERING ADV HOM: ', request['optional'])
+                    # print('VARSEL: ', varseldict[request['variable']])
+                    # print()
                     igroup = 'advanced_homogenisation'
                     varsel=[]
                     try:
@@ -3606,6 +3617,7 @@ class CDMDataset:
                             print('advanced_homogenisation: ', e)
                             raise KeyError(str(e))
                             # raise KeyError('{} not found in {} {}'.format(str(e), str(request['optional']), self.name))
+                    print(fout.keys())
 
 
                 #
@@ -3705,6 +3717,13 @@ class CDMDataset:
                 except: pass
                 try: fout['era5fb'].__delitem__('obsvalue@body')
                 except: pass
+
+                for io in request['optional']:
+                    try:
+                        print(io, fout[io][:])
+                        print()
+                    except:
+                        pass
                     
         logger.debug('Finished %s [%5.2f s]', self.name, time.time() - time0)
         tt=time.time() - time0
@@ -6004,6 +6023,26 @@ class CDMDataset:
         for i,j in zip(dims, found):
             print("{:<70} : {}".format(i,j))
     # FIN class CDMDataset
+
+
+
+
+
+
+
+
+
+
+# process_flat( "/srvfs/home/uvoggenberger/scratch/hug/tmp/074092152158", 
+#              {'platform_id': {'cdmname': 'header_table/primary_station_id', 'units': 'NA', 'shortname': 'platform_id', 'coordinates': 'lat lon time plev', 'standard_name': 'platform_id'}, 'platform_name': {'cdmname': 'header_table/station_name', 'units': 'NA', 'shortname': 'platform_name', 'coordinates': 'lat lon time plev', 'standard_name': 'platform_name'}, 'latitude': {'cdmname': 'observations_table/latitude', 'units': 'degree_north', 'shortname': 'lat', 'standard_name': 'latitude', 'description': 'Latitude of the observed value, -90 to 90. This may or may not be the same as the report location.'}, 'longitude': {'cdmname': 'observations_table/longitude', 'units': 'degree_east', 'shortname': 'lon', 'standard_name': 'longitude', 'description': 'Longitude of the observed value, -180 to 180. This may or may not be the same as the report location.'}, 'time': {'cdmname': 'observations_table/date_time', 'units': 's', 'shortname': 'time', 'standard_name': 'time', 'description': 'timestamp for observation'}, 'air_pressure': {'cdmname': 'observations_table/z_coordinate', 'units': 'Pa', 'shortname': 'plev', 'standard_name': 'air_pressure'}, 'air_temperature': {'cdmname': 'observations_table/observation_value', 'units': 'K', 'shortname': 'ta', 'coordinates': 'lat lon time plev', 'standard_name': 'air_temperature', 'cdsname': 'temperature', 'cdmcode': 126, 'odbcode': 2, 'description': 'Air temperature (from profile measurement)'}, 'dew_point_temperature': {'cdmname': 'observations_table/observation_value', 'units': 'K', 'shortname': 'dew_point_temperature', 'coordinates': 'lat lon time plev', 'standard_name': 'dew_point_temperature', 'cdsname': 'dew_point_temperature', 'cdmcode': 137, 'odbcode': 59, 'description': 'Dewpoint measurement (from profile measurement)'}, 'dew_point_depression': {'cdmname': 'observations_table/observation_value', 'units': 'K', 'shortname': 'dew_point_depression', 'coordinates': 'lat lon time plev', 'standard_name': 'dew_point_depression', 'cdsname': 'dew_point_depression', 'cdmcode': 34, 'odbcode': 299, 'description': 'Dew point depression is also called dew point deficit. It is the amount by which the air temperature exceeds its dew point temperature. Dew point temperature is the temperature at which a parcel of air reaches saturation upon being cooled at constant pressure and specific humidity.'}, 'relative_humidity': {'cdmname': 'observations_table/observation_value', 'units': '1', 'shortname': 'hur', 'coordinates': 'lat lon time plev', 'standard_name': 'relative_humidity', 'cdsname': 'relative_humidity', 'cdmcode': 138, 'odbcode': 29, 'description': 'Relative humidity (from profile measurement)'}, 'specific_humidity': {'cdmname': 'observations_table/observation_value', 'units': '1', 'shortname': 'hus', 'coordinates': 'lat lon time plev', 'standard_name': 'specific_humidity', 'cdsname': 'specific_humidity', 'cdmcode': 39, 'odbcode': 7, 'description': 'specific means per unit mass. Specific humidity is the mass fraction of water vapor in (moist) air.'}, 'eastward_wind': {'cdmname': 'observations_table/observation_value', 'units': 'm s-1', 'shortname': 'ua', 'coordinates': 'lat lon time plev', 'standard_name': 'eastward_wind', 'cdsname': 'u_component_of_wind', 'cdmcode': 139, 'odbcode': 3, 'description': 'Eastward wind speed (from profile measurement)'}, 'northward_wind': {'cdmname': 'observations_table/observation_value', 'units': 'm s-1', 'shortname': 'va', 'coordinates': 'lat lon time plev', 'standard_name': 'northward_wind', 'cdsname': 'v_component_of_wind', 'cdmcode': 140, 'odbcode': 4, 'description': 'Northward wind speed (from profile measurement)'}, 'wind_speed': {'cdmname': 'observations_table/observation_value', 'units': 'm s-1', 'shortname': 'wind_speed', 'coordinates': 'lat lon time plev', 'standard_name': 'wind_speed', 'cdsname': 'wind_speed', 'cdmcode': 107, 'odbcode': 112, 'description': 'Speed is the magnitude of velocity. Wind is defined as a two-dimensional (horizontal) air velocity vector,  with no vertical component. (Vertical motion in the atmosphere has the standard name upward air velocity.) The wind speed is the magnitude of the wind velocity.'}, 'wind_from_direction': {'cdmname': 'observations_table/observation_value', 'units': 'degree', 'shortname': 'wind_from_direction', 'coordinates': 'lat lon time plev', 'standard_name': 'wind_from_direction', 'cdsname': 'wind_direction', 'cdmcode': 106, 'odbcode': 111, 'description': 'direction from which the wind is blowing'}, 'geopotential': {'cdmname': 'observations_table/observation_value', 'units': 'm2 s-2', 'shortname': 'geopotential', 'coordinates': 'lat lon time plev', 'standard_name': 'geopotential', 'cdsname': 'geopotential', 'cdmcode': 117, 'odbcode': 1, 'description': 'height of a standard or significant pressure level in meters'}, 'trajectory_label': {'cdmname': 'header_table/report_id', 'units': 'NA', 'shortname': 'trajectory_label', 'coordinates': 'lat lon time plev', 'description': 'Unique ID for report (unique ID given by combination of report_id and observation_id)'}, 'obs_minus_bg': {'cdmname': 'era5fb/fg_depar@body', 'units': 'NA', 'shortname': 'obs_minus_bg', 'coordinates': 'lat lon time plev', 'cdsname': 'obs_minus_bg', 'cdmcode': 0, 'odbcode': 0, 'description': 'observed minus first guess value'}, 'obs_minus_an': {'cdmname': 'era5fb/an_depar@body', 'units': 'NA', 'shortname': 'obs_minus_an', 'coordinates': 'lat lon time plev', 'cdsname': 'obs_minus_an', 'cdmcode': 0, 'odbcode': 0, 'description': 'observed minus analysed value'}, 'bias_estimate': {'cdmname': 'era5fb/biascorr@body', 'units': 'NA', 'shortname': 'bias_estimate', 'coordinates': 'lat lon time plev', 'cdsname': 'bias_estimate', 'cdmcode': 0, 'odbcode': 0, 'description': 'radiance bias correction'}, 'sonde_type': {'cdmname': 'observations_table/sensor_id', 'units': 'NA', 'shortname': 'sonde_type', 'coordinates': 'lat lon time plev', 'description': 'Link to sensor_configuration table.'}, 'sample_size': {'cdmname': 'observations_table/secondary_value', 'units': 'NA', 'shortname': 'sample_size', 'coordinates': 'lat lon time plev', 'description': 'Secondary variable required to understand observation, e.g. chemical constituent. Set to NA / missing if not applicable.'}, 'sample_error': {'cdmname': 'observations_table/original_precision', 'units': 'NA', 'shortname': 'sample_error', 'coordinates': 'lat lon time plev', 'description': "Original reporting precision in units given by 'original_units'"}, 'report_id': {'cdmname': 'observations_table/report_id', 'units': 'NA', 'shortname': 'report_id', 'coordinates': 'lat lon time plev', 'description': 'Link to header information'}, 'reference_sonde_type': {'cdmname': 'observations_table/reference_sensor_id', 'units': 'NA', 'shortname': 'reference_sonde_type', 'coordinates': 'lat lon time plev', 'description': 'Link to sensor_configuration table for reference sensor.'}, 'station_elevation': {'cdmname': 'observations_table/station_elevation', 'units': 'NA', 'shortname': 'station_elevation', 'coordinates': 'lat lon time plev', 'description': 'Elevation of station location above mean sea level'}, 'station_name': {'cdmname': 'station_configuration/station_name', 'units': 'NA', 'shortname': 'station_name', 'coordinates': 'lat lon time plev', 'description': 'Name of station (e.g. Tateno)'}, 'RISE_bias_estimate': {'cdmname': 'advanced_homogenisation/RISE_bias_estimate', 'units': 'NA', 'shortname': 'RISE_bias_estimate', 'coordinates': 'lat lon time plev', 'description': 'Temperature bias adjustments depending on solar elevation, calculated from neighbour composite (Haimberger et al. 2012)'}, 'RICH_bias_estimate': {'cdmname': 'observations_table/RICH_bias_estimate', 'units': 'NA', 'shortname': 'RICH_bias_estimate', 'coordinates': 'lat lon time plev', 'description': 'Temperature bias adjustments (constant between breakpoints), calculated from neighbour composite (Haimberger et al. 2012)'}, 'RASE_bias_estimate': {'cdmname': 'observations_table/RASE_bias_estimate', 'units': 'NA', 'shortname': 'RASE_bias_estimate', 'coordinates': 'lat lon time plev', 'description': 'Temperature bias adjustments depending on solar elevation, calculated from ERA5 background departures (Haimberger et al. 2012)'}, 'RAOBCORE_bias_estimate': {'cdmname': 'observations_table/RAOBCORE_bias_estimate', 'units': 'NA', 'shortname': 'RAOBCORE_bias_estimate', 'coordinates': 'lat lon time plev', 'description': 'Temperature bias adjustments (constant between breakpoints), calculated from ERA5 background departures (Haimberger et al. 2012)'}, 'latitude_displacement': {'cdmname': 'observations_table/latd', 'units': 'NA', 'shortname': 'latitude_displacement', 'coordinates': 'lat lon time plev', 'description': 'trajectory meta data'}, 'longitude_displacement': {'cdmname': 'observations_table/lond', 'units': 'NA', 'shortname': 'longitude_displacement', 'coordinates': 'lat lon time plev', 'description': 'trajectory meta data'}, 'time_since_launch': {'cdmname': 'observations_table/timed', 'units': 'NA', 'shortname': 'time_since_launch', 'coordinates': 'lat lon time plev', 'description': 'trajectory meta data'}, 'true_time': {'cdmname': 'observations_table/true_time', 'units': 'NA', 'shortname': 'true_time', 'coordinates': 'lat lon time plev', 'description': 'trajectory meta data'}, 'desroziers_30': {'cdmname': 'advanced_uncertainty/desroziers_30', 'units': 'NA', 'shortname': 'desroziers_30', 'coordinates': 'lat lon time plev', 'description': 'Observation error estimated from ERA5 background and analysis departure statistics (Desroziers, 2005), using a 30 day window'}, 'desroziers_60': {'cdmname': 'advanced_uncertainty/desroziers_60', 'units': 'NA', 'shortname': 'desroziers_60', 'coordinates': 'lat lon time plev', 'description': 'Observation error estimated from ERA5 background and analysis departure statistics (Desroziers, 2005), using a 60 day window'}, 'desroziers_90': {'cdmname': 'advanced_uncertainty/desroziers_90', 'units': 'NA', 'shortname': 'desroziers_90', 'coordinates': 'lat lon time plev', 'description': 'Observation error estimated from ERA5 background and analysis departure statistics (Desroziers, 2005), using a 90 day window'}, 'desroziers_180': {'cdmname': 'advanced_uncertainty/desroziers_180', 'units': 'NA', 'shortname': 'desroziers_180', 'coordinates': 'lat lon time plev', 'description': 'Observation error estimated from ERA5 background and analysis departure statistics (Desroziers, 2005), using a 180 day window'}, 'wind_bias_estimate': {'cdmname': 'observations_table/wind_bias_estimate', 'units': 'NA', 'shortname': 'wind_bias_estimate', 'coordinates': 'lat lon time plev', 'description': 'Vertically constant wind direction adjustments, calculated as in Gruber and Haimberger (2008)'}, 'humidity_bias_estimate': {'cdmname': 'observations_table/humidity_bias_estimate', 'units': 'NA', 'shortname': 'humidity_bias_estimate', 'coordinates': 'lat lon time plev', 'description': 'Humidity bias estimate, using ERA5 background departure statistics and quantile matching'}} ,
+#              False,
+#              {'single_csv_target': 'CDS_CUON_output_file', 'da': False, 'compression': 'gzip', 'optional': ['RISE_bias_estimate'], 'cdm': ['observations_table/source_id', 'station_configuration/platform_type'], 'format': 'nc', 'hdf': False, 'bbox': False, 'single_parallel': False, 'single_csv': False, 'date': ['20000101'], 'statid': '0-20001-0-11035', 'variable': 'temperature', 'filename': '/mnt/users/scratch/leo/scratch/converted_v19/long/0-20001-0-11035_CEUAS_merged_v3.nc', 'rtsidx': [74145, 74149]}
+# )
+
+
+
+
+
 
 """
 Speed test of h5py fancy indexing:
