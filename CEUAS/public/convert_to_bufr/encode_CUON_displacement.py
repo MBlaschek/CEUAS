@@ -19,6 +19,7 @@ import os, copy
 import cdsapi
 from multiprocessing import Pool as multiPPool, RawArray as multiPArray, current_process as multiPCurrentProcess; nprocesses=8
 from entropy import crawl_slice, function_sameprofileas
+# import ray
 
 df_WMO_SCH = pd.read_csv('CUON_wmo_sch_mapping.tsv',sep='\t').set_index(['sch_id']).sort_index()
 SCH_idx = df_WMO_SCH.index.get_level_values('sch_id').unique()
@@ -45,14 +46,19 @@ class Capturing(list):
         sys.stdout = self._stdout
 
 #def main():
-if 1==1:
-    if len(sys.argv)==2:
-      yyyymmdd=int(sys.argv[1])
-    else:
-      #yyyymmdd=19790105
-      yyyymmdd=19800101
-    CUONPATH = '/mnt/users/scratch/uvoggenberger/to_bufr_1/1980/'.format(data_acquisition_dir) ## change to test file 
-    yyyymmdd_dt = dt.datetime.strptime(str(yyyymmdd),'%Y%m%d')
+# if 1==1:
+    
+def make_pickle(yyyymmdd): 
+    # if len(sys.argv)==2:
+    #   yyyymmdd=int(sys.argv[1])
+    # else:
+    #   #yyyymmdd=19790105
+    #   yyyymmdd=19800101
+    CUONPATH = '/mnt/users/scratch/uvoggenberger/to_bufr_1/'+yyyymmdd[:4]+'/'.format(data_acquisition_dir) ## change to test file 
+    try:
+      yyyymmdd_dt = dt.datetime.strptime(str(yyyymmdd),'%Y%m%d')
+    except:
+      return
     print("==========================================================")
     print("CUON ENCODING FOR",yyyymmdd_dt)
 
@@ -72,7 +78,8 @@ if 1==1:
     if not os.path.exists(pkl_dup_path):
       os.makedirs(pkl_dup_path)
 
-    for yyyymmdd_dt1 in [yyyymmdd_dt-dt.timedelta(days=1), yyyymmdd_dt, yyyymmdd_dt+dt.timedelta(days=1)]:
+    # for yyyymmdd_dt1 in [yyyymmdd_dt-dt.timedelta(days=1), yyyymmdd_dt, yyyymmdd_dt+dt.timedelta(days=1)]:
+    for yyyymmdd_dt1 in [yyyymmdd_dt]:
       pkl_file1 = "/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}/pickle/{1}/pickle_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt1.strftime('%Y'),yyyymmdd_dt1.strftime('%Y%m%d'))
       pkl_file1 = "/mnt/users/scratch/uvoggenberger/to_bufr_1/pickles/{0}/pickle/{1}/pickle_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt1.strftime('%Y'),yyyymmdd_dt1.strftime('%Y%m%d'))      
       pkl_path1 = os.path.dirname(pkl_file1)
@@ -369,152 +376,151 @@ if 1==1:
         # if os.path.exists(CUONEXTR):
         #   os.rmdir(CUONEXTR)
 
-      elif lread and os.path.exists(pkl_file1):
+    #   elif lread and os.path.exists(pkl_file1):
   
-        df_cuon = pd.read_pickle(pkl_file1,compression="gzip")
-        print("read from",pkl_file1,len(df_cuon))
+    #     df_cuon = pd.read_pickle(pkl_file1,compression="gzip")
+    #     print("read from",pkl_file1,len(df_cuon))
 
-      if len(df_cuon)>0:
+    #   if len(df_cuon)>0:
 
-        # Retain only data that will be encoded for that day plus the margin needed for duplicate checks
-        wtime = np.where((df_cuon['time'].values[:]>=min_datetime_margin) & \
-                         (df_cuon['time'].values[:]<=max_datetime_margin))[0]
-        print("keeping",len(wtime))
-        if df_BIGcuon is None:
-          df_BIGcuon = df_cuon.iloc[wtime].copy()
-        else:
-          df_BIGcuon = pd.concat([df_BIGcuon, df_cuon.iloc[wtime].copy()], axis=0)
+    #     # Retain only data that will be encoded for that day plus the margin needed for duplicate checks
+    #     wtime = np.where((df_cuon['time'].values[:]>=min_datetime_margin) & \
+    #                      (df_cuon['time'].values[:]<=max_datetime_margin))[0]
+    #     print("keeping",len(wtime))
+    #     if df_BIGcuon is None:
+    #       df_BIGcuon = df_cuon.iloc[wtime].copy()
+    #     else:
+    #       df_BIGcuon = pd.concat([df_BIGcuon, df_cuon.iloc[wtime].copy()], axis=0)
 
-    if not os.path.exists(pkl_dup):
-      # LOOK FOR DUPLICATES
-      myindex_make = ['hour','lat01i','lon01i']
-      time_axis='time'
-      df_BIGcuon['hour'] = ((df_BIGcuon[time_axis].values[:]-min_datetime_margin).astype(int)//1e9//3600).astype(int) # TODO USE ONLY LAUNCH TIME
-      df_BIGcuon['lat01i'] = np.around(df_BIGcuon['lat'],0).astype(int)
-      df_BIGcuon['lon01i'] = np.around(df_BIGcuon['lon'],0).astype(int)
-      # Roll back longitudes>=180
-      wlon180 = np.where(df_BIGcuon['lon01i']>=180.)[0]
-      if len(wlon180)>0:
-        ilon = list(df_BIGcuon.columns).index('lon01i')
-        df_BIGcuon.iloc[wlon180,ilon] -= 360
-      df_BIGcuon = df_BIGcuon.set_index(myindex_make).sort_index()
-      pairs_done = []; discarded_list = []; df_dup = {'wigos_statid':[], 'report_id':[]}
-      function_call = {'nbcolumns':len(df_BIGcuon.columns)+3, 'args':(pairs_done,discarded_list,df_dup,), 'function':function_sameprofileas}
-      crawl_slice(df_BIGcuon.reset_index(),df_BIGcuon.index.names,function_call)
-      print("Number of profiles to remove",len(discarded_list))
-      df_BIGcuon.reset_index(inplace=True)
-      df_BIGcuon.drop(columns=['hour','lat01i','lon01i'], inplace=True)
-      if len(df_dup['wigos_statid'])>0:
-        df_dup = pd.DataFrame(df_dup)
-        df_dup.to_pickle(pkl_dup, protocol=3, compression="gzip")
-        print("saved duplicated checks in",pkl_dup)
-      else:
-        if os.path.exists(pkl_dup):
-          os.system("rm -f {0}".format(pkl_dup))
-        os.system("touch {0}".format(pkl_dup))
-        print("empty duplicated checks",pkl_dup)
-        df_dup = None
-    else:
-      if os.path.getsize(pkl_dup)>0:
-        df_dup = pd.read_pickle(pkl_dup, compression="gzip")
-      else:
-        df_dup = None
+    # if not os.path.exists(pkl_dup):
+    #   # LOOK FOR DUPLICATES
+    #   myindex_make = ['hour','lat01i','lon01i']
+    #   time_axis='time'
+    #   df_BIGcuon['hour'] = ((df_BIGcuon[time_axis].values[:]-min_datetime_margin).astype(int)//1e9//3600).astype(int) # TODO USE ONLY LAUNCH TIME
+    #   df_BIGcuon['lat01i'] = np.around(df_BIGcuon['lat'],0).astype(int)
+    #   df_BIGcuon['lon01i'] = np.around(df_BIGcuon['lon'],0).astype(int)
+    #   # Roll back longitudes>=180
+    #   wlon180 = np.where(df_BIGcuon['lon01i']>=180.)[0]
+    #   if len(wlon180)>0:
+    #     ilon = list(df_BIGcuon.columns).index('lon01i')
+    #     df_BIGcuon.iloc[wlon180,ilon] -= 360
+    #   df_BIGcuon = df_BIGcuon.set_index(myindex_make).sort_index()
+    #   pairs_done = []; discarded_list = []; df_dup = {'wigos_statid':[], 'report_id':[]}
+    #   function_call = {'nbcolumns':len(df_BIGcuon.columns)+3, 'args':(pairs_done,discarded_list,df_dup,), 'function':function_sameprofileas}
+    #   crawl_slice(df_BIGcuon.reset_index(),df_BIGcuon.index.names,function_call)
+    #   print("Number of profiles to remove",len(discarded_list))
+    #   df_BIGcuon.reset_index(inplace=True)
+    #   df_BIGcuon.drop(columns=['hour','lat01i','lon01i'], inplace=True)
+    #   if len(df_dup['wigos_statid'])>0:
+    #     df_dup = pd.DataFrame(df_dup)
+    #     df_dup.to_pickle(pkl_dup, protocol=3, compression="gzip")
+    #     print("saved duplicated checks in",pkl_dup)
+    #   else:
+    #     if os.path.exists(pkl_dup):
+    #       os.system("rm -f {0}".format(pkl_dup))
+    #     os.system("touch {0}".format(pkl_dup))
+    #     print("empty duplicated checks",pkl_dup)
+    #     df_dup = None
+    # else:
+    #   if os.path.getsize(pkl_dup)>0:
+    #     df_dup = pd.read_pickle(pkl_dup, compression="gzip")
+    #   else:
+    #     df_dup = None
 
-    # SELECT ONLY DATA FOR THE DAY
-    w_day = np.where((df_BIGcuon['time'].values[:]>=min_datetime_exact) & \
-                     (df_BIGcuon['time'].values[:]< max_datetime_exact))[0]
-    if len(w_day)>0:
-      df_BIGcuon = df_BIGcuon.iloc[w_day]
-    else:
-      print("NO DATA FOUND FOR THE DAY... finishing here...")
-      sys.exit(0)
+    # # SELECT ONLY DATA FOR THE DAY
+    # w_day = np.where((df_BIGcuon['time'].values[:]>=min_datetime_exact) & \
+    #                  (df_BIGcuon['time'].values[:]< max_datetime_exact))[0]
+    # if len(w_day)>0:
+    #   df_BIGcuon = df_BIGcuon.iloc[w_day]
+    # else:
+    #   print("NO DATA FOUND FOR THE DAY... finishing here...")
+    #   sys.exit(0)
 
-    # SELECT ONLY DATA WHICH ARE NOT DUPLICATES
-    if df_dup is not None:
-      wwrite = np.where(np.count_nonzero( \
-                  np.isin(df_BIGcuon[['wigos_statid','report_id']].values[:].astype(str), \
-                          df_dup    [['wigos_statid','report_id']].values[:].astype(str)), axis=1) != 2 )[0]
-      if len(wwrite)>0:
-        df_BIGcuon = df_BIGcuon.iloc[wwrite]
-      else:
-        print("NO DATA LEFT AFTER APPLICATION OF DUPLICATE CHECK... THIS IS HIGHLY SUSPICIOUS... CHECK...!!!!")
-        sys.exit(-1)
-    else:
-      print("No duplicates to worry about...")
+    # # SELECT ONLY DATA WHICH ARE NOT DUPLICATES
+    # if df_dup is not None:
+    #   wwrite = np.where(np.count_nonzero( \
+    #               np.isin(df_BIGcuon[['wigos_statid','report_id']].values[:].astype(str), \
+    #                       df_dup    [['wigos_statid','report_id']].values[:].astype(str)), axis=1) != 2 )[0]
+    #   if len(wwrite)>0:
+    #     df_BIGcuon = df_BIGcuon.iloc[wwrite]
+    #   else:
+    #     print("NO DATA LEFT AFTER APPLICATION OF DUPLICATE CHECK... THIS IS HIGHLY SUSPICIOUS... CHECK...!!!!")
+    #     sys.exit(-1)
+    # else:
+    #   print("No duplicates to worry about...")
 
-    # NOW PROCEED TO WRITE
-    df_write = df_BIGcuon.set_index(['wigos_statid','report_id'])
+    # # NOW PROCEED TO WRITE
+    # df_write = df_BIGcuon.set_index(['wigos_statid','report_id'])
 
-    # OFFSET DATA BACK IN TIME
-    if timeoffset_value is not None:
-      oldtime = df_BIGcuon['time'].values[:]
-      newtime = oldtime + timeoffset_value
-      df_BIGcuon['time'] = newtime
-      print('BEFORE time offset',len(df_BIGcuon))
-      # NEED TO REDO THE TIME SELECTION
-      w_day = np.where((df_BIGcuon['time'].values[:]>=min_datetime_exact) & \
-                       (df_BIGcuon['time'].values[:]< max_datetime_exact))[0]
-      df_BIGcuon = df_BIGcuon.iloc[w_day]
-      print('AFTER time offset',len(df_BIGcuon))
+    # # OFFSET DATA BACK IN TIME
+    # if timeoffset_value is not None:
+    #   oldtime = df_BIGcuon['time'].values[:]
+    #   newtime = oldtime + timeoffset_value
+    #   df_BIGcuon['time'] = newtime
+    #   print('BEFORE time offset',len(df_BIGcuon))
+    #   # NEED TO REDO THE TIME SELECTION
+    #   w_day = np.where((df_BIGcuon['time'].values[:]>=min_datetime_exact) & \
+    #                    (df_BIGcuon['time'].values[:]< max_datetime_exact))[0]
+    #   df_BIGcuon = df_BIGcuon.iloc[w_day]
+    #   print('AFTER time offset',len(df_BIGcuon))
 
-    # MAKE A SUMMARY
-    /mnt/users/scratch/uvoggenberger/to_bufr_1/pickles
-    pkl_sum = "/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}/picklesum/{1}/picklesum_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
-    pkl_sum = "/mnt/users/scratch/uvoggenberger/to_bufr_1/pickles/{0}/picklesum/{1}/picklesum_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
-    pkl_sum_path = os.path.dirname(pkl_sum)
+    # # MAKE A SUMMARY
+    # pkl_sum = "/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}/picklesum/{1}/picklesum_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
+    # pkl_sum = "/mnt/users/scratch/uvoggenberger/to_bufr_1/pickles/{0}/picklesum/{1}/picklesum_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
+    # pkl_sum_path = os.path.dirname(pkl_sum)
 
-    if not os.path.exists(pkl_sum_path):
-      os.makedirs(pkl_sum_path)
-    if not os.path.exists(pkl_sum):
-      df_summary = None
-      for utc1 in [0,6,12,18]:
-        if utc1==0:
-          wutc1 = np.where(df_write['time'].values<=np.datetime64(yyyymmdd_dt.strftime('%Y-%m-%d 03:00:00')))[0]
-        elif utc1==6:
-          wutc1 = np.where((df_write['time'].values> np.datetime64(yyyymmdd_dt.strftime('%Y-%m-%d 03:00:00'))) & \
-                           (df_write['time'].values<=np.datetime64(yyyymmdd_dt.strftime('%Y-%m-%d 09:00:00'))))[0]
-        elif utc1==12:
-          wutc1 = np.where((df_write['time'].values> np.datetime64(yyyymmdd_dt.strftime('%Y-%m-%d 09:00:00'))) & \
-                           (df_write['time'].values<=np.datetime64(yyyymmdd_dt.strftime('%Y-%m-%d 15:00:00'))))[0]
-        elif utc1==18:
-          wutc1 = np.where(df_write['time'].values> np.datetime64(yyyymmdd_dt.strftime('%Y-%m-%d 15:00:00')))[0]
-        else:
-          print("ERROR... utc1 unexpected",utc1)
+    # if not os.path.exists(pkl_sum_path):
+    #   os.makedirs(pkl_sum_path)
+    # if not os.path.exists(pkl_sum):
+    #   df_summary = None
+    #   for utc1 in [0,6,12,18]:
+    #     if utc1==0:
+    #       wutc1 = np.where(df_write['time'].values<=np.datetime64(yyyymmdd_dt.strftime('%Y-%m-%d 03:00:00')))[0]
+    #     elif utc1==6:
+    #       wutc1 = np.where((df_write['time'].values> np.datetime64(yyyymmdd_dt.strftime('%Y-%m-%d 03:00:00'))) & \
+    #                        (df_write['time'].values<=np.datetime64(yyyymmdd_dt.strftime('%Y-%m-%d 09:00:00'))))[0]
+    #     elif utc1==12:
+    #       wutc1 = np.where((df_write['time'].values> np.datetime64(yyyymmdd_dt.strftime('%Y-%m-%d 09:00:00'))) & \
+    #                        (df_write['time'].values<=np.datetime64(yyyymmdd_dt.strftime('%Y-%m-%d 15:00:00'))))[0]
+    #     elif utc1==18:
+    #       wutc1 = np.where(df_write['time'].values> np.datetime64(yyyymmdd_dt.strftime('%Y-%m-%d 15:00:00')))[0]
+    #     else:
+    #       print("ERROR... utc1 unexpected",utc1)
            
-        if len(wutc1)>0:
-          ndata = df_write.iloc[wutc1].groupby(df_write.index.names).count()
-          reordered_columns = ['pressure', 'time', 'lat', 'lat05', 'lon', 'lon05', 'station_id', 'source_id', 'height', 'platform_type', 'sonde_type', 'extendedVerticalSoundingSignificance', 'latitudeDisplacement', 'longitudeDisplacement', 'timePeriod', 'airTemperature', 'airTempBiasCorr', 'dewpointTemperature', 'dewpointTempBiasCorr', 'windSpeed', 'windSpeedBiasCorr', 'windDirection', 'windDirectionBiasCorr', 'geopotential', 'nonCoordinateGeopotentialHeight']
-          if len(reordered_columns)!=len(ndata.columns):
-            print("PROBLEM... reordered columns not the same length as columns...")
-            print("reordered_columns",reordered_columns)
-            print("ndata columns    ",ndata.columns)
+    #     if len(wutc1)>0:
+    #       ndata = df_write.iloc[wutc1].groupby(df_write.index.names).count()
+    #       reordered_columns = ['pressure', 'time', 'lat', 'lat05', 'lon', 'lon05', 'station_id', 'source_id', 'height', 'platform_type', 'sonde_type', 'extendedVerticalSoundingSignificance', 'latitudeDisplacement', 'longitudeDisplacement', 'timePeriod', 'airTemperature', 'airTempBiasCorr', 'dewpointTemperature', 'dewpointTempBiasCorr', 'windSpeed', 'windSpeedBiasCorr', 'windDirection', 'windDirectionBiasCorr', 'geopotential', 'nonCoordinateGeopotentialHeight']
+    #       if len(reordered_columns)!=len(ndata.columns):
+    #         print("PROBLEM... reordered columns not the same length as columns...")
+    #         print("reordered_columns",reordered_columns)
+    #         print("ndata columns    ",ndata.columns)
              
-          ndata = ndata[reordered_columns]
+    #       ndata = ndata[reordered_columns]
       
-          df_ndata = pd.DataFrame({('Nobs','Total'):ndata.sum().astype(int)})
-          df_ndata.index.name = 'variable'
-          df_nprof = None
-          for nquant1 in [0,1,5,50,95,99,100]:
-            df1 = pd.DataFrame({('Nlev','P{0:03d}'.format(nquant1)):ndata.quantile(float(nquant1)/100.).astype(int)})
-            df1.index.name = 'variable'
-            df_ndata = pd.concat([ df_ndata, df1 ], axis=1)
-            df_nprof = pd.DataFrame({('Nprof','Total'):np.count_nonzero(ndata.transpose(),axis=1)})
-            df_nprof.index = ndata.columns; df_nprof.index.name = 'variable'
-            for nlev_range1 in [[0,0],[1,3],[3,10],[10,50],[50,100],[100,200],[200,999]]:
-              mycount = np.count_nonzero((ndata.transpose()>=nlev_range1[0]) & (ndata.transpose()<=nlev_range1[1]),axis=1)
-              df1_nprof = pd.DataFrame({('by nlev','{0:03d}-{1:03d}'.format(*nlev_range1)):mycount})
-              df1_nprof.index = ndata.columns; df1_nprof.index.name = 'variable'
-              df_nprof = pd.concat([ df_nprof, df1_nprof], axis=1)
-          df_ndata = pd.concat([ df_ndata, df_nprof], axis=1)
-          df_ndata['UTC']=utc1
-          df_ndata['date']=int(yyyymmdd_dt.strftime('%Y%m%d'))
-          df_ndata = df_ndata.reset_index().set_index(['date','UTC','variable'])
-          if df_summary is None:
-            df_summary = df_ndata.copy()
-          else:
-            df_summary = pd.concat( [df_summary, df_ndata], axis=0)
-      df_summary.to_pickle(pkl_sum, protocol=3, compression="gzip")
-      print("saved summary in",pkl_sum)
+    #       df_ndata = pd.DataFrame({('Nobs','Total'):ndata.sum().astype(int)})
+    #       df_ndata.index.name = 'variable'
+    #       df_nprof = None
+    #       for nquant1 in [0,1,5,50,95,99,100]:
+    #         df1 = pd.DataFrame({('Nlev','P{0:03d}'.format(nquant1)):ndata.quantile(float(nquant1)/100.).astype(int)})
+    #         df1.index.name = 'variable'
+    #         df_ndata = pd.concat([ df_ndata, df1 ], axis=1)
+    #         df_nprof = pd.DataFrame({('Nprof','Total'):np.count_nonzero(ndata.transpose(),axis=1)})
+    #         df_nprof.index = ndata.columns; df_nprof.index.name = 'variable'
+    #         for nlev_range1 in [[0,0],[1,3],[3,10],[10,50],[50,100],[100,200],[200,999]]:
+    #           mycount = np.count_nonzero((ndata.transpose()>=nlev_range1[0]) & (ndata.transpose()<=nlev_range1[1]),axis=1)
+    #           df1_nprof = pd.DataFrame({('by nlev','{0:03d}-{1:03d}'.format(*nlev_range1)):mycount})
+    #           df1_nprof.index = ndata.columns; df1_nprof.index.name = 'variable'
+    #           df_nprof = pd.concat([ df_nprof, df1_nprof], axis=1)
+    #       df_ndata = pd.concat([ df_ndata, df_nprof], axis=1)
+    #       df_ndata['UTC']=utc1
+    #       df_ndata['date']=int(yyyymmdd_dt.strftime('%Y%m%d'))
+    #       df_ndata = df_ndata.reset_index().set_index(['date','UTC','variable'])
+    #       if df_summary is None:
+    #         df_summary = df_ndata.copy()
+    #       else:
+    #         df_summary = pd.concat( [df_summary, df_ndata], axis=0)
+    #   df_summary.to_pickle(pkl_sum, protocol=3, compression="gzip")
+    #   print("saved summary in",pkl_sum)
 
 #     # POST-PROC QC
 #     n_levels = df_write.groupby(df_write.index)[df_write.columns[:1]].count()
@@ -732,7 +738,33 @@ if 1==1:
 #     #   p.close(); p.join()
 #     #   print("All tasks completed", flush=True)
 #     # # close all files
-#     close_clean_bufr_files(filearray)
+#     # close_clean_bufr_files(filearray)
 
 # #if __name__ == "__main__":
 # #    sys.exit(main())
+
+
+days = []
+for yyyy in [2021]:
+  for mm in [1]:
+    for dd in range(1,32):
+      days.append(str(yyyy)+str(mm).zfill(2)+str(dd).zfill(2))
+print(days)
+with multiPPool(40) as p:
+  p.map(make_pickle, days)
+  p.close(); p.join()
+  print("All tasks completed", flush=True)
+
+# make_pickle('20070111')
+
+
+# result_ids = []
+# for yyyy in [2006]:
+#   for mm in [12]:
+#     for dd in range(1,32):
+#       result_ids.append(make_pickle.remote(str(yyyy)+str(mm)+str(dd)))
+
+# ray.init(num_cpus=40)
+# results = ray.get(result_ids)
+# ray.shutdown()
+
