@@ -40,13 +40,13 @@ biasadj = {'dew_point_temperature':['station_elevation', 'humidity_bias_estimate
                   }
 
 
-for year in [1979]: # , 1980, 2020, 2021, 2022, 2023]:
+for year in [1980]: # , 1980, 2020, 2021, 2022, 2023]:
     try:
         os.mkdir('/mnt/users/scratch/uvoggenberger/to_bufr_1/'+str(year))
     except:
         pass
-    for month in range(12,13):
-        for day in range(31,32):
+    for month in range(1,2):#range(12,13):
+        for day in range(1,3): # range(31,32):
             for var in ['air_temperature','dew_point_temperature',  'wind_speed', 'wind_direction', 'geopotential']:
                 dt = [str(year) + str(month).zfill(2) + str(day).zfill(2)]
                 rq = {

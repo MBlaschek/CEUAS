@@ -67,12 +67,14 @@ if 1==1:
     max_datetime_margin = np.datetime64((yyyymmdd_dt + dt.timedelta(hours=25)).strftime('%Y-%m-%d %H:%M:%S'))
 
     pkl_dup = "/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d')) # "/ec/res4/scratch/erc/Leo/BUFRENCODE/perm/erc/ERA6BUFR/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
+    pkl_dup = "/mnt/users/scratch/uvoggenberger/to_bufr_1/pickles/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d')) # "/ec/res4/scratch/erc/Leo/BUFRENCODE/perm/erc/ERA6BUFR/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
     pkl_dup_path = os.path.dirname(pkl_dup)
     if not os.path.exists(pkl_dup_path):
       os.makedirs(pkl_dup_path)
 
     for yyyymmdd_dt1 in [yyyymmdd_dt-dt.timedelta(days=1), yyyymmdd_dt, yyyymmdd_dt+dt.timedelta(days=1)]:
       pkl_file1 = "/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}/pickle/{1}/pickle_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt1.strftime('%Y'),yyyymmdd_dt1.strftime('%Y%m%d'))
+      pkl_file1 = "/mnt/users/scratch/uvoggenberger/to_bufr_1/pickles/{0}/pickle/{1}/pickle_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt1.strftime('%Y'),yyyymmdd_dt1.strftime('%Y%m%d'))      
       pkl_path1 = os.path.dirname(pkl_file1)
       if not os.path.exists(pkl_path1):
         os.makedirs(pkl_path1)
@@ -456,8 +458,11 @@ if 1==1:
       print('AFTER time offset',len(df_BIGcuon))
 
     # MAKE A SUMMARY
+    /mnt/users/scratch/uvoggenberger/to_bufr_1/pickles
     pkl_sum = "/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}/picklesum/{1}/picklesum_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
+    pkl_sum = "/mnt/users/scratch/uvoggenberger/to_bufr_1/pickles/{0}/picklesum/{1}/picklesum_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
     pkl_sum_path = os.path.dirname(pkl_sum)
+
     if not os.path.exists(pkl_sum_path):
       os.makedirs(pkl_sum_path)
     if not os.path.exists(pkl_sum):
@@ -511,223 +516,223 @@ if 1==1:
       df_summary.to_pickle(pkl_sum, protocol=3, compression="gzip")
       print("saved summary in",pkl_sum)
 
-    # POST-PROC QC
-    n_levels = df_write.groupby(df_write.index)[df_write.columns[:1]].count()
-    wsingle_level = np.where(n_levels==1)[0]
-    if len(wsingle_level):
-      print("WARNING... single level profiles...")
-      print(df_write.loc[n_levels.iloc[wsingle_level].index]['timePeriod'])
-    wbad_timePeriod = np.where(df_write['timePeriod'].values[:]>24575)[0]
-    if len(wbad_timePeriod)>0:
-      print("WARNING... bad timePeriod...")
-      print(df_write.iloc[wbad_timePeriod][['station_id','time']])
-      wgood_timePeriod = np.where(df_write['timePeriod'].values[:]<=24575)[0]
-      df_write = df_write.iloc[wgood_timePeriod]
+#     # POST-PROC QC
+#     n_levels = df_write.groupby(df_write.index)[df_write.columns[:1]].count()
+#     wsingle_level = np.where(n_levels==1)[0]
+#     if len(wsingle_level):
+#       print("WARNING... single level profiles...")
+#       print(df_write.loc[n_levels.iloc[wsingle_level].index]['timePeriod'])
+#     wbad_timePeriod = np.where(df_write['timePeriod'].values[:]>24575)[0]
+#     if len(wbad_timePeriod)>0:
+#       print("WARNING... bad timePeriod...")
+#       print(df_write.iloc[wbad_timePeriod][['station_id','time']])
+#       wgood_timePeriod = np.where(df_write['timePeriod'].values[:]<=24575)[0]
+#       df_write = df_write.iloc[wgood_timePeriod]
 
-    # PREPARE BUFR ENCODING
-    pnams = list(df_write.index.names)
-    posis  = {x:pnams.index(x) for x in pnams}
-    profs = df_write.index.unique()
-    bufr_file_output_fmt = '/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}{1}'.format(bufr_output_dir,timeoffset_name)+'/{0}/{1}/{2}/{3}/{4}_prof{5}.bufr'
+#     # PREPARE BUFR ENCODING
+#     pnams = list(df_write.index.names)
+#     posis  = {x:pnams.index(x) for x in pnams}
+#     profs = df_write.index.unique()
+#     bufr_file_output_fmt = '/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}{1}'.format(bufr_output_dir,timeoffset_name)+'/{0}/{1}/{2}/{3}/{4}_prof{5}.bufr'
 
-    # create directories, clean-up possibly pre-existing files, open new files for writing
-    filearray = open_clean_bufr_files(bufr_file_output_fmt, yyyymmdd_dt, nprocesses)
+#     # create directories, clean-up possibly pre-existing files, open new files for writing
+#     filearray = open_clean_bufr_files(bufr_file_output_fmt, yyyymmdd_dt, nprocesses)
 
-    ### DEBUG ### ONLY FOR TESTING !!!!
-    #w4036dd=np.where((df_cuon.index==profs[4036])& (~np.isnan(df_cuon['windDirection'].values[:])))[0]
-    #df_cuon.iloc[w4036dd,list(df_cuon.columns).index('windDirectionBiasCorr')] = 90 # perform a 90-degree rotation clockwise (what came from the North now comes from the West) to see clear impact on u and v
-    #w4036T=np.where((df_cuon.index==profs[4036])& (~np.isnan(df_cuon['airTemperature'].values[:])))[0]
-    #df_cuon.iloc[w4036T ,list(df_cuon.columns).index('airTempBiasCorr')] = -1.55 # warm T by 1.55 Kelvin
-    #w4036Td=np.where((df_cuon.index==profs[4036])& (~np.isnan(df_cuon['dewpointTemperature'].values[:])))[0]
-        #df_cuon.iloc[w4036Td,list(df_cuon.columns).index('dewpointTempBiasCorr')] = 1.45 # cool Td by 1.45 Kelvin
-        #w4036=np.where((df_cuon.index==profs[4036]))[0]
-    #df_cuon.iloc[w4036,list(df_cuon.columns).index('height')]=1193 # assign station elevation for WMO ID 72364
-    ### DEBUG ### ONLY FOR TESTING !!!!
+#     ### DEBUG ### ONLY FOR TESTING !!!!
+#     #w4036dd=np.where((df_cuon.index==profs[4036])& (~np.isnan(df_cuon['windDirection'].values[:])))[0]
+#     #df_cuon.iloc[w4036dd,list(df_cuon.columns).index('windDirectionBiasCorr')] = 90 # perform a 90-degree rotation clockwise (what came from the North now comes from the West) to see clear impact on u and v
+#     #w4036T=np.where((df_cuon.index==profs[4036])& (~np.isnan(df_cuon['airTemperature'].values[:])))[0]
+#     #df_cuon.iloc[w4036T ,list(df_cuon.columns).index('airTempBiasCorr')] = -1.55 # warm T by 1.55 Kelvin
+#     #w4036Td=np.where((df_cuon.index==profs[4036])& (~np.isnan(df_cuon['dewpointTemperature'].values[:])))[0]
+#         #df_cuon.iloc[w4036Td,list(df_cuon.columns).index('dewpointTempBiasCorr')] = 1.45 # cool Td by 1.45 Kelvin
+#         #w4036=np.where((df_cuon.index==profs[4036]))[0]
+#     #df_cuon.iloc[w4036,list(df_cuon.columns).index('height')]=1193 # assign station elevation for WMO ID 72364
+#     ### DEBUG ### ONLY FOR TESTING !!!!
 
-    #for iprof1 in range(len(profs)):
-    def single_call(iprof1):
-      #print("run number",iprof1)
-      try:
-        iproc=multiPCurrentProcess()._identity[0]
-      except:
-        iproc=1
-      prof1 = profs[iprof1]
-      df_loc = df_write.loc[prof1].copy()
-      obs_dt1 = df_loc['time'].iloc[0] # We pick the first time (lowest level)
-      #obs_dt1 = prof1[posis['time']]
-      synobs_dt = get_synoptic_date_and_time(obs_dt1)
-      #report_id1 = prof1[posis['report_id']].decode('utf-8').strip() 
-      source_id1 = df_loc['source_id'].values[:1].astype(bytes)[0].decode('utf-8').strip() # We pick the first source_id
-      onebufr_filewb = filearray[iproc][synobs_dt.strftime('%Y%m%d%H')]
-      oneprofile = {'header':{}, 'data':{}}
-      oneprofile['header']['latitude'] = df_loc['lat'].values[0] # We pick the first lat/lon/elevation (lowest level)
-      oneprofile['header']['longitude'] = df_loc['lon'].values[0]
-      oneprofile['header']['height'] = df_loc['height'].values[0]
-      oneprofile['header']['platform_type'] = df_loc['platform_type'].values[0]
-      oneprofile['header']['year'] = obs_dt1.year
-      oneprofile['header']['month'] = obs_dt1.month
-      oneprofile['header']['day'] = obs_dt1.day
-      oneprofile['header']['hour'] = obs_dt1.hour
-      oneprofile['header']['minute'] = obs_dt1.minute
-      oneprofile['header']['second'] = 0
-      wigos_statid1_elms = prof1[posis['wigos_statid']].split('-')
-      oneprofile['header']['wigosIdentifierSeries'], oneprofile['header']['wigosIssuerOfIdentifier'], oneprofile['header']['wigosIssueNumber'] = [int(x) for x in wigos_statid1_elms[:3]]
-      oneprofile['header']['wigosLocalIdentifierCharacter'] = wigos_statid1_elms[3]
-      # SPECIAL HANDLING OF RS IDENTIER TO ENSURE COMPATIBILITY WITH WMO IDENTIFIER
-      try:
-        ident_full = copy.copy(oneprofile['header']['wigosLocalIdentifierCharacter'])
-        if ':' in ident_full:
-          ident_full = ident_full.split(':')[-1]
-        if ident_full.isdigit() and int(ident_full)<=99999:
-          oneprofile['header']['stationNumber'] = int(ident_full) % 1000
-          oneprofile['header']['blockNumber'] = int(ident_full) // 1000
-          if int(ident_full)<10000: # format to 5-digit string
-            ident_full = '{0:05d}'.format(int(ident_full))
-      except:
-        # we cannot encode this ill-formed WIGOS identifier, this shouldn't happen!
-        print("ERROR... ILL-FORMED WIGOS IDENTIFIER...",'-'.join(wigos_statid1_elms))
+#     #for iprof1 in range(len(profs)):
+#     def single_call(iprof1):
+#       #print("run number",iprof1)
+#       try:
+#         iproc=multiPCurrentProcess()._identity[0]
+#       except:
+#         iproc=1
+#       prof1 = profs[iprof1]
+#       df_loc = df_write.loc[prof1].copy()
+#       obs_dt1 = df_loc['time'].iloc[0] # We pick the first time (lowest level)
+#       #obs_dt1 = prof1[posis['time']]
+#       synobs_dt = get_synoptic_date_and_time(obs_dt1)
+#       #report_id1 = prof1[posis['report_id']].decode('utf-8').strip() 
+#       source_id1 = df_loc['source_id'].values[:1].astype(bytes)[0].decode('utf-8').strip() # We pick the first source_id
+#       onebufr_filewb = filearray[iproc][synobs_dt.strftime('%Y%m%d%H')]
+#       oneprofile = {'header':{}, 'data':{}}
+#       oneprofile['header']['latitude'] = df_loc['lat'].values[0] # We pick the first lat/lon/elevation (lowest level)
+#       oneprofile['header']['longitude'] = df_loc['lon'].values[0]
+#       oneprofile['header']['height'] = df_loc['height'].values[0]
+#       oneprofile['header']['platform_type'] = df_loc['platform_type'].values[0]
+#       oneprofile['header']['year'] = obs_dt1.year
+#       oneprofile['header']['month'] = obs_dt1.month
+#       oneprofile['header']['day'] = obs_dt1.day
+#       oneprofile['header']['hour'] = obs_dt1.hour
+#       oneprofile['header']['minute'] = obs_dt1.minute
+#       oneprofile['header']['second'] = 0
+#       wigos_statid1_elms = prof1[posis['wigos_statid']].split('-')
+#       oneprofile['header']['wigosIdentifierSeries'], oneprofile['header']['wigosIssuerOfIdentifier'], oneprofile['header']['wigosIssueNumber'] = [int(x) for x in wigos_statid1_elms[:3]]
+#       oneprofile['header']['wigosLocalIdentifierCharacter'] = wigos_statid1_elms[3]
+#       # SPECIAL HANDLING OF RS IDENTIER TO ENSURE COMPATIBILITY WITH WMO IDENTIFIER
+#       try:
+#         ident_full = copy.copy(oneprofile['header']['wigosLocalIdentifierCharacter'])
+#         if ':' in ident_full:
+#           ident_full = ident_full.split(':')[-1]
+#         if ident_full.isdigit() and int(ident_full)<=99999:
+#           oneprofile['header']['stationNumber'] = int(ident_full) % 1000
+#           oneprofile['header']['blockNumber'] = int(ident_full) // 1000
+#           if int(ident_full)<10000: # format to 5-digit string
+#             ident_full = '{0:05d}'.format(int(ident_full))
+#       except:
+#         # we cannot encode this ill-formed WIGOS identifier, this shouldn't happen!
+#         print("ERROR... ILL-FORMED WIGOS IDENTIFIER...",'-'.join(wigos_statid1_elms))
          
-      if len(ident_full)>8:
-        print("WARNING ",oneprofile['header'],prof1,df_loc['station_id'].unique())
-        ident_full = 'BAD'+ident_full[-5:]
-      oneprofile['header']['shipOrMobileLandStationIdentifier'] = ident_full
+#       if len(ident_full)>8:
+#         print("WARNING ",oneprofile['header'],prof1,df_loc['station_id'].unique())
+#         ident_full = 'BAD'+ident_full[-5:]
+#       oneprofile['header']['shipOrMobileLandStationIdentifier'] = ident_full
           
-      #print("encoding",'-'.join(wigos_statid1_elms),' '.join(['{0}:{1}'.format(k,oneprofile['header'][k]) for k in oneprofile['header'].keys() if k in ['wigosLocalIdentifierCharacter','stationNumber','blockNumber']]))
-      sonde_type_uq = df_loc['sonde_type'].unique()
-      sonde_type_uqok = []
-      for sonde_type_uq1 in sonde_type_uq:
-        if (type(sonde_type_uq1) is float) and (np.isnan(sonde_type_uq1)):
-          continue
-        sonde_type_uqok.append(sonde_type_uq1)
-      if len(sonde_type_uqok)>1:
-        print("ERROR ... non-unique sonde_type...")
-        print("wigos_statid",wigos_statid1,"sonde_type",sonde_type_uqok)
+#       #print("encoding",'-'.join(wigos_statid1_elms),' '.join(['{0}:{1}'.format(k,oneprofile['header'][k]) for k in oneprofile['header'].keys() if k in ['wigosLocalIdentifierCharacter','stationNumber','blockNumber']]))
+#       sonde_type_uq = df_loc['sonde_type'].unique()
+#       sonde_type_uqok = []
+#       for sonde_type_uq1 in sonde_type_uq:
+#         if (type(sonde_type_uq1) is float) and (np.isnan(sonde_type_uq1)):
+#           continue
+#         sonde_type_uqok.append(sonde_type_uq1)
+#       if len(sonde_type_uqok)>1:
+#         print("ERROR ... non-unique sonde_type...")
+#         print("wigos_statid",wigos_statid1,"sonde_type",sonde_type_uqok)
          
-      if len(sonde_type_uqok)==1 and type(sonde_type_uqok[0]) is bytes:
-        sonde_type_utf = sonde_type_uqok[0].decode('utf-8').strip()
-        try:
-          if sonde_type_utf not in ['n','nan','NA']:
-            sonde_type_flt = float(sonde_type_utf)
-            sonde_type_int = int(sonde_type_flt)
-            if (float(sonde_type_int)==sonde_type_flt) and \
-               (sonde_type_int>=0) and (sonde_type_int<=255):
-              oneprofile['header']['radiosondeType'] = sonde_type_int
-            else:
-              oneprofile['header']['sondeTypeDetail'] = int.from_bytes(sonde_type_uqok[0], 'little')
-        except:
-          oneprofile['header']['sondeTypeDetail'] = int.from_bytes(sonde_type_uqok[0], 'little')
-        # REMINDER: TO DECODE sondeTypeDetail from a value x : int.to_bytes(int(x), length=4, byteorder='little').decode('utf-8')
-        # try and map SCHROEDER description to WMO sonde type
-        if ('radiosondeType' not in oneprofile['header'].keys()) and (sonde_type_utf in SCH_idx):
-          oneprofile['header']['radiosondeType'] = df_WMO_SCH.loc[sonde_type_utf]['wmo_id']
-          if type(oneprofile['header']['radiosondeType']) is pd.Series:
-            oneprofile['header']['radiosondeType'] = oneprofile['header']['radiosondeType'].values[0]
-          if 'sondeTypeDetail' in oneprofile['header'].keys():
-            del oneprofile['header']['sondeTypeDetail'] # remove sondeTypeDetail if we have a match for the WMO type
-      elif len(sonde_type_uqok)==1 and type(sonde_type_uqok[0]) is not bytes:
-        print("UNEXPECTED SONDE_TYPE",sonde_type_uqok[0])
+#       if len(sonde_type_uqok)==1 and type(sonde_type_uqok[0]) is bytes:
+#         sonde_type_utf = sonde_type_uqok[0].decode('utf-8').strip()
+#         try:
+#           if sonde_type_utf not in ['n','nan','NA']:
+#             sonde_type_flt = float(sonde_type_utf)
+#             sonde_type_int = int(sonde_type_flt)
+#             if (float(sonde_type_int)==sonde_type_flt) and \
+#                (sonde_type_int>=0) and (sonde_type_int<=255):
+#               oneprofile['header']['radiosondeType'] = sonde_type_int
+#             else:
+#               oneprofile['header']['sondeTypeDetail'] = int.from_bytes(sonde_type_uqok[0], 'little')
+#         except:
+#           oneprofile['header']['sondeTypeDetail'] = int.from_bytes(sonde_type_uqok[0], 'little')
+#         # REMINDER: TO DECODE sondeTypeDetail from a value x : int.to_bytes(int(x), length=4, byteorder='little').decode('utf-8')
+#         # try and map SCHROEDER description to WMO sonde type
+#         if ('radiosondeType' not in oneprofile['header'].keys()) and (sonde_type_utf in SCH_idx):
+#           oneprofile['header']['radiosondeType'] = df_WMO_SCH.loc[sonde_type_utf]['wmo_id']
+#           if type(oneprofile['header']['radiosondeType']) is pd.Series:
+#             oneprofile['header']['radiosondeType'] = oneprofile['header']['radiosondeType'].values[0]
+#           if 'sondeTypeDetail' in oneprofile['header'].keys():
+#             del oneprofile['header']['sondeTypeDetail'] # remove sondeTypeDetail if we have a match for the WMO type
+#       elif len(sonde_type_uqok)==1 and type(sonde_type_uqok[0]) is not bytes:
+#         print("UNEXPECTED SONDE_TYPE",sonde_type_uqok[0])
          
-      for k in ['sondeTypeDetail','radiosondeType']:
-        if k in oneprofile['header'].keys():
-          if type(oneprofile['header'][k] is not int):
-            oneprofile['header'][k] = int(oneprofile['header'][k])
-      #for k in ['sondeTypeDetail','radiosondeType']:
-      #  if k in oneprofile['header'].keys():
-      #    print(sonde_type_uqok[0], k, oneprofile['header'][k])
-      #oneprofile['header']['datasetSource'] = 'CUON   {0}'.format(int(report_id1[0]))
-      oneprofile['header']['datasetSource'] = 'CUON{0:>4}'.format(source_id1[-4:])
+#       for k in ['sondeTypeDetail','radiosondeType']:
+#         if k in oneprofile['header'].keys():
+#           if type(oneprofile['header'][k] is not int):
+#             oneprofile['header'][k] = int(oneprofile['header'][k])
+#       #for k in ['sondeTypeDetail','radiosondeType']:
+#       #  if k in oneprofile['header'].keys():
+#       #    print(sonde_type_uqok[0], k, oneprofile['header'][k])
+#       #oneprofile['header']['datasetSource'] = 'CUON   {0}'.format(int(report_id1[0]))
+#       oneprofile['header']['datasetSource'] = 'CUON{0:>4}'.format(source_id1[-4:])
 
-      # HANDLING HIGH-RES SONDES - REMOVING SIGNIFICANT LEVEL MARKING
-      if synobs_dt>=dt.datetime(2000,1,1): # we worry about high-resolution BUFR after this date only
-        if ('timePeriod' in df_loc.columns) and ('extendedVerticalSoundingSignificance' in df_loc.columns):
-          wts = np.where((~np.isnan(df_loc['timePeriod'].values[:])) & (~np.isnan(df_loc['extendedVerticalSoundingSignificance'].values[:])))[0]
-          if len(wts)>50: # for fewer than 50 levels we do not bother
-            times = np.unique(np.sort(df_loc['timePeriod'].values[wts]))
-            deltat = (times[1:] -times[:-1])
-            try:
-              dt95 = np.percentile(deltat,95)
-            except:
-              dt95 = np.nan
-              print("error when trying to get 95th percentile from",deltat)
-            if (~np.isnan(dt95)) and (dt95 <= 30): # we set our threshold at 30 seconds -- this is approx 150 meters, at 5 m/s ascent speed
-              print("high-res RS",oneprofile['header'])
-              icol_extendedVerticalSoundingSignificance = list(df_loc.columns).index('extendedVerticalSoundingSignificance')
-              for signifbit in [18-5,18-7]:
-                wsignif = np.where((~np.isnan(df_loc['extendedVerticalSoundingSignificance'].values[:])) & (np.bitwise_and(df_loc['extendedVerticalSoundingSignificance'].values[:].astype(int),2**signifbit)>0))[0]
-                if len(wsignif)>0:
-                  df_loc.iloc[wsignif, icol_extendedVerticalSoundingSignificance] -= 2**signifbit
-                  print("removed",len(wsignif),"bits for",signifbit)
+#       # HANDLING HIGH-RES SONDES - REMOVING SIGNIFICANT LEVEL MARKING
+#       if synobs_dt>=dt.datetime(2000,1,1): # we worry about high-resolution BUFR after this date only
+#         if ('timePeriod' in df_loc.columns) and ('extendedVerticalSoundingSignificance' in df_loc.columns):
+#           wts = np.where((~np.isnan(df_loc['timePeriod'].values[:])) & (~np.isnan(df_loc['extendedVerticalSoundingSignificance'].values[:])))[0]
+#           if len(wts)>50: # for fewer than 50 levels we do not bother
+#             times = np.unique(np.sort(df_loc['timePeriod'].values[wts]))
+#             deltat = (times[1:] -times[:-1])
+#             try:
+#               dt95 = np.percentile(deltat,95)
+#             except:
+#               dt95 = np.nan
+#               print("error when trying to get 95th percentile from",deltat)
+#             if (~np.isnan(dt95)) and (dt95 <= 30): # we set our threshold at 30 seconds -- this is approx 150 meters, at 5 m/s ascent speed
+#               print("high-res RS",oneprofile['header'])
+#               icol_extendedVerticalSoundingSignificance = list(df_loc.columns).index('extendedVerticalSoundingSignificance')
+#               for signifbit in [18-5,18-7]:
+#                 wsignif = np.where((~np.isnan(df_loc['extendedVerticalSoundingSignificance'].values[:])) & (np.bitwise_and(df_loc['extendedVerticalSoundingSignificance'].values[:].astype(int),2**signifbit)>0))[0]
+#                 if len(wsignif)>0:
+#                   df_loc.iloc[wsignif, icol_extendedVerticalSoundingSignificance] -= 2**signifbit
+#                   print("removed",len(wsignif),"bits for",signifbit)
 
-      # MARKING SURFACE LEVELS
-      if ('nonCoordinateGeopotentialHeight' in df_loc.columns) and (~np.isnan(oneprofile['header']['height'])) and ('extendedVerticalSoundingSignificance' in df_loc.columns):
-        wZsfc = np.where((~np.isnan(df_loc['nonCoordinateGeopotentialHeight'].values[:])) & (~np.isnan(df_loc['pressure'].values[:])) & (np.abs(df_loc['nonCoordinateGeopotentialHeight'].values[:]/9.80665-oneprofile['header']['height'])<=10.))[0]
-        if len(wZsfc)>0:
-          icol_extendedVerticalSoundingSignificance = list(df_loc.columns).index('extendedVerticalSoundingSignificance')
-          # pick the lowest level (highest pressure)
-          isfc = np.argmax(df_loc['pressure'].values[wZsfc])
-          df_loc.iloc[wZsfc[isfc], icol_extendedVerticalSoundingSignificance] += 2**(18-1)
+#       # MARKING SURFACE LEVELS
+#       if ('nonCoordinateGeopotentialHeight' in df_loc.columns) and (~np.isnan(oneprofile['header']['height'])) and ('extendedVerticalSoundingSignificance' in df_loc.columns):
+#         wZsfc = np.where((~np.isnan(df_loc['nonCoordinateGeopotentialHeight'].values[:])) & (~np.isnan(df_loc['pressure'].values[:])) & (np.abs(df_loc['nonCoordinateGeopotentialHeight'].values[:]/9.80665-oneprofile['header']['height'])<=10.))[0]
+#         if len(wZsfc)>0:
+#           icol_extendedVerticalSoundingSignificance = list(df_loc.columns).index('extendedVerticalSoundingSignificance')
+#           # pick the lowest level (highest pressure)
+#           isfc = np.argmax(df_loc['pressure'].values[wZsfc])
+#           df_loc.iloc[wZsfc[isfc], icol_extendedVerticalSoundingSignificance] += 2**(18-1)
 
-      # STATIONS WITHIN 1 deg of NORTH OR SOUTH POLE AND REPORTING WIND
-      if (abs(oneprofile['header']['latitude'])>=89.) and ('windDirection' in df_loc.columns) and ('windSpeed' in df_loc.columns) and ('latitudeDisplacement' in df_loc.columns) and ('longitudeDisplacement' in df_loc.columns):
-        if np.count_nonzero((~np.isnan(df_loc['windDirection'].values[:])) | (~np.isnan(df_loc['windSpeed'].values[:])))>0:
-          df_loc['latitudeDisplacement'] = np.nan # we cannot keep displacements for these locations because the wind should have been remapped
-          df_loc['longitudeDisplacement'] = np.nan
-          print("removed lat/lon displacement for station",oneprofile['header'])
+#       # STATIONS WITHIN 1 deg of NORTH OR SOUTH POLE AND REPORTING WIND
+#       if (abs(oneprofile['header']['latitude'])>=89.) and ('windDirection' in df_loc.columns) and ('windSpeed' in df_loc.columns) and ('latitudeDisplacement' in df_loc.columns) and ('longitudeDisplacement' in df_loc.columns):
+#         if np.count_nonzero((~np.isnan(df_loc['windDirection'].values[:])) | (~np.isnan(df_loc['windSpeed'].values[:])))>0:
+#           df_loc['latitudeDisplacement'] = np.nan # we cannot keep displacements for these locations because the wind should have been remapped
+#           df_loc['longitudeDisplacement'] = np.nan
+#           print("removed lat/lon displacement for station",oneprofile['header'])
 
-      #oneprofile={'header':{'longitude':337.4-360., 'latitude':63.97, 'height':425.0, \
-      #              'year':1997, 'month':7, 'day':1, 'hour':0, 'minute':0, 'second':0, \
-      #              'wigosIdentifierSeries':0, 'wigosIssuerOfIdentifier':20000, 'wigosIssueNumber':0, 'wigosLocalIdentifierCharacter':'4018', 'blockNumber':4, 'stationNumber':18, 'shipOrMobileLandStationIdentifier':''}, \
-      # 'data':{'pressure':[x[1] for x in T_P],'airTemperature':[x[0] for x in T_P],'airTemperatureCorrection':[0.01 for x in T_P]}}
-      for k in [('pressure',float), \
-                ('airTemperature',float), \
-                ('airTempBiasCorr',float), \
-                ('dewpointTemperature',float), \
-                ('dewpointTempBiasCorr',float), \
-                ('windDirection',int), \
-                ('windDirectionBiasCorr',int), \
-                ('windSpeed',float), \
-                ('windSpeedBiasCorr',float), \
-#('windSpeedCorrApplied',float), \
-                ('nonCoordinateGeopotentialHeight',float), \
-                ('extendedVerticalSoundingSignificance',int), \
-                ('timePeriod',int), \
-                ('latitudeDisplacement',float), \
-                ('longitudeDisplacement',float), \
-               ]:
-        #newk0 = copy.copy(k[0]) # pre-WMOBUFR
-        # WMOBUFR:
-        if k[0] in ['airTempBiasCorr','dewpointTempBiasCorr','windDirectionBiasCorr','windSpeedBiasCorr']:
-          newk0 = {'airTempBiasCorr':'airTemperature->differenceStatisticalValue', \
-                   'dewpointTempBiasCorr':'dewpointTemperature->differenceStatisticalValue', \
-                   'windDirectionBiasCorr':'windDirection->differenceStatisticalValue', \
-                   'windSpeedBiasCorr':'windSpeed->differenceStatisticalValue'}[k[0]]
-        else:
-          newk0 = copy.copy(k[0])
-        if k[0] in df_loc.columns:
-          oneprofile['data'][newk0] = df_loc[k[0]].values[:]
-        #if k=='windSpeedBiasCorr':
-        #  print("FOUND WIND SPEED BIAS ...")
-        #   
+#       #oneprofile={'header':{'longitude':337.4-360., 'latitude':63.97, 'height':425.0, \
+#       #              'year':1997, 'month':7, 'day':1, 'hour':0, 'minute':0, 'second':0, \
+#       #              'wigosIdentifierSeries':0, 'wigosIssuerOfIdentifier':20000, 'wigosIssueNumber':0, 'wigosLocalIdentifierCharacter':'4018', 'blockNumber':4, 'stationNumber':18, 'shipOrMobileLandStationIdentifier':''}, \
+#       # 'data':{'pressure':[x[1] for x in T_P],'airTemperature':[x[0] for x in T_P],'airTemperatureCorrection':[0.01 for x in T_P]}}
+#       for k in [('pressure',float), \
+#                 ('airTemperature',float), \
+#                 ('airTempBiasCorr',float), \
+#                 ('dewpointTemperature',float), \
+#                 ('dewpointTempBiasCorr',float), \
+#                 ('windDirection',int), \
+#                 ('windDirectionBiasCorr',int), \
+#                 ('windSpeed',float), \
+#                 ('windSpeedBiasCorr',float), \
+# #('windSpeedCorrApplied',float), \
+#                 ('nonCoordinateGeopotentialHeight',float), \
+#                 ('extendedVerticalSoundingSignificance',int), \
+#                 ('timePeriod',int), \
+#                 ('latitudeDisplacement',float), \
+#                 ('longitudeDisplacement',float), \
+#                ]:
+#         #newk0 = copy.copy(k[0]) # pre-WMOBUFR
+#         # WMOBUFR:
+#         if k[0] in ['airTempBiasCorr','dewpointTempBiasCorr','windDirectionBiasCorr','windSpeedBiasCorr']:
+#           newk0 = {'airTempBiasCorr':'airTemperature->differenceStatisticalValue', \
+#                    'dewpointTempBiasCorr':'dewpointTemperature->differenceStatisticalValue', \
+#                    'windDirectionBiasCorr':'windDirection->differenceStatisticalValue', \
+#                    'windSpeedBiasCorr':'windSpeed->differenceStatisticalValue'}[k[0]]
+#         else:
+#           newk0 = copy.copy(k[0])
+#         if k[0] in df_loc.columns:
+#           oneprofile['data'][newk0] = df_loc[k[0]].values[:]
+#         #if k=='windSpeedBiasCorr':
+#         #  print("FOUND WIND SPEED BIAS ...")
+#         #   
 
-      #try:
-      #print(oneprofile)
-      bufr_encode(oneprofile, onebufr_filewb)
-      #except CodesInternalError as err:
-      #  traceback.print_exc(file=sys.stderr)
-      #  #return 1
+#       #try:
+#       #print(oneprofile)
+#       bufr_encode(oneprofile, onebufr_filewb)
+#       #except CodesInternalError as err:
+#       #  traceback.print_exc(file=sys.stderr)
+#       #  #return 1
 
 
-    # parallel processing
-    ncalls=len(profs)
-    print(ncalls,"to do")
-    for iprof1 in range(len(profs)): # DEBUG
-      single_call(iprof1) # DEBUG
-    # with multiPPool(nprocesses) as p:
-    #   p.map(single_call, list(range(ncalls)))
-    #   p.close(); p.join()
-    #   print("All tasks completed", flush=True)
-    # # close all files
-    close_clean_bufr_files(filearray)
+#     # parallel processing
+#     ncalls=len(profs)
+#     print(ncalls,"to do")
+#     for iprof1 in range(len(profs)): # DEBUG
+#       single_call(iprof1) # DEBUG
+#     # with multiPPool(nprocesses) as p:
+#     #   p.map(single_call, list(range(ncalls)))
+#     #   p.close(); p.join()
+#     #   print("All tasks completed", flush=True)
+#     # # close all files
+#     close_clean_bufr_files(filearray)
 
-#if __name__ == "__main__":
-#    sys.exit(main())
+# #if __name__ == "__main__":
+# #    sys.exit(main())
