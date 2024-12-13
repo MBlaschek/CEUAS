@@ -745,8 +745,8 @@ def make_pickle(yyyymmdd):
 
 
 days = []
-for yyyy in [2021]:
-  for mm in [1]:
+for yyyy in [2007]:
+  for mm in range(1,13):
     for dd in range(1,32):
       days.append(str(yyyy)+str(mm).zfill(2)+str(dd).zfill(2))
 print(days)
