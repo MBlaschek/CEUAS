@@ -40,13 +40,21 @@ import ray
 import copy
 import time
 import h5py
-import hdf5plugin
+os.chdir(os.path.expandvars('$HOME/CEUAS/CEUAS/public/adjust'))
+sys.path.insert(0,os.getcwd()+'/../resort/')
+from convert_numbamod import Sonntag, vap2sh, frostpoint_Sonntag, dewpoint_Sonntag
+sys.path.insert(0,os.getcwd()+'/../merge/')
+from harvest_convert_to_netCDF_yearSplit import write_dict_h5
+import pyRAOBCORE_numbamod as pnm
+from datetime import datetime, timedelta
+
 
 sys.path.insert(0,os.getcwd()+'/../resort/rasotools-master/')
 import rasotools
 
 try:
-    import cds_eua4_nolicense as eua
+    sys.path.append('../cds-backend/code/')
+    import cds_eua4 as eua
 except Exception as e:
     print('CDS_EUA4 Module is required. Add to path')
     raise e
@@ -67,7 +75,50 @@ std_plevs = np.asarray([10, 20, 30, 50, 70, 100, 150, 200, 250, 300, 400, 500, 7
 # Helper functions
 #
 # -----------------------------------------------------------------------------
-@njit(cache=True)
+@njit
+def rms(x):
+    #x = np.array(x)
+    mask = ~np.isnan(x)
+    if np.any(mask):
+        return np.sqrt(np.mean(x[mask]*x[mask]))
+    else:
+        return np.nan
+    
+@njit
+def rrms(x):
+    #x = np.array(x)
+    mask = ~np.isnan(x)
+    if np.any(mask):
+        q75 = np.quantile(x[mask], 0.75)
+        return q75
+    else:
+        return np.nan
+
+def printstats(data, variable,bc, func, tstart=None, tstop=None, extended=False):
+    
+    sl = slice(0, data.time.shape[0])
+    if type(tstart) ==str and type(tstop) == str:
+        try:
+            dstart = np.datetime64(tstart)
+            dstop = np.datetime64(tstop)
+            sl = slice(*np.searchsorted(data.time.values, (dstart, dstop)))
+        except:
+            pass
+    
+    print(f'{variable}, {bc}, {tstart}-{tstop}')
+    
+    for ip in range(16):
+        if extended or ip == 9:  # 300 hPa
+            odat = func(data[variable][sl, ip].values)
+            bcdat = func(data[variable][sl, ip].values-data[bc][sl, ip].values)
+            if odat > 0:           
+                print(f'{int(data.plev[ip]): >6d}: {odat:.4f}, {bcdat:.4f}, {bcdat / odat:.4f}')
+            else:
+                print(f'{int(data.plev[ip]): >6d}: {odat:.4f}, {bcdat:.4f}')
+            
+    return
+
+@njit
 def rmean(t,tmean,index,runmean):
 
     tret=np.zeros(t.shape[0])
@@ -323,6 +374,104 @@ def fix_datetime(itime, span=6, debug=False):
                 return rx.to_datetime64()
 
 
+def add_adj(fi,adjustments, variable, varnum, mode='r'):
+    
+    #adjustments={'humidity_bias':fi,}
+    adjname={'humidity_bias':'humidity_bias',}
+    #outfile = fi
+    if False: #xyz is None:
+        statid=fi['sid'][-6:] #adjfile[-8:-3]
+        adjfile = RC['outdir'] + statid + '/feedbackglobbincorrsave' + statid + '.nc'
+    
+        outfile = RC['outdir']+ statid+'/' + fi['ifileorig'].split('/')[-1]
+        if mode == 'r+':
+            try:
+                with eua.CDMDataset(fi['ifileorig'], mode=mode) as data:
+                    outfile = fi['ifileorig']
+            except:
+                mode = 'r'
+                print('could not open read-write, opening readonly', fi['ifileorig'])
+                
+        print('writing to:', outfile)
+    
+        try:
+            with eua.CDMDataset(fi['ifileorig'], mode=mode) as data:
+                
+            
+                xyz = data.read_observed_variable(eua.cdm_codes['temperature'],return_xarray=True,date_time_in_seconds=True)
+            
+                ref=np.datetime64(datetime.datetime(1900,1,1),'ns')
+                xyzt=(xyz.date_time.values-ref).astype('long')//1000000000
+        except:
+    
+            pass
+        
+    try:
+            
+#            for k,v in adjustments.items():
+                try:
+                    xyz = fi.read_observed_variable(varnum,return_xarray=True,date_time_in_seconds=True)
+                    ref=np.datetime64(datetime(1900,1,1),'ns')
+                    xyzt=(xyz.date_time.values-ref).astype('long')//1000000000
+                    
+                    #atime0 = xyzt.copy()
+                    #adjustments=xr.open_dataset(v,decode_times=False)
+                    if adjustments.time.ndim==2:
+                        atime0=(adjustments.datum[0].values.astype(int)-1)*86400.
+                    else:
+                        #atime0=(adjustments.datum.values.astype(int)-1)*86400.
+                        #ref=np.datetime64(datetime(1900,1,1),'ns')
+                        atime0=(adjustments.time.values-ref).astype('long')//1000000000
+                   
+                    
+                    #mask=xyz[adjname[k]].values==-999.
+                    #adjustments[adjname[k]].values[mask]=np.nan
+                    tt=time.time()
+                    sh = adjustments.values.shape
+                    av = np.reshape(adjustments.values.T, (1,sh[1],sh[0] )) 
+                    adj=pnm.add_biasestimate(xyz.values,xyzt,xyz.z_coordinate.values,atime0,
+                                         av,adjustments.plev.values)
+                    print('add:',time.time()-tt)
+                    xyz.values=adj
+                    
+                    #idx=np.where(xyz.z_coordinate.values==50000)
+                    #plt.plot(xyzt[idx]/86400/365.25,adj[idx])
+                    #plt.plot(atime0/86400/365.25,adjustments.rasocorr.values[0,11,:])
+                    #plt.plot(atime0/86400/365.25,adjustments.rasocorr.values[1,11,:])
+                    #plt.show()
+                    # Daten schreiben neue Variable monkey in neuer gruppe adjust
+                    if mode == 'r':
+                        if not os.path.isfile(outfile):
+                            #shutil.copyfile(fi['ifileorig'], outfile)
+                            do_copy(fi['ifileorig'], outfile)
+                        with eua.CDMDataset(outfile, mode='r+') as odata:
+                            odata.write_observed_data(k.upper()+'_bias_estimate',
+                                                     ragged=xyz,  # input data
+                                                     varnum=eua.cdm_codes['temperature'],  # observed_variable to be aligned with
+                                                     group='advanced_homogenisation',   # name of the new group
+                                                     data_time='date_time',  # named datetime coordinate
+                                                     data_plevs='z_coordinate',  # named pressure coordinate
+                                                     attributes={'version':RC['version']}
+                                                    )
+                            print(k, time.time() - tt)
+                    else:
+                        #key = variable
+                        #alldict = pd.DataFrame({key:xyz})
+                        #del fi.file['advanced_homogenisation']['humidity_bias_estimate2']
+                        fi.write_observed_data(variable,
+                                                 ragged=xyz,  # input data
+                                                 varnum=varnum,  # observed_variable to be aligned with
+                                                 group='advanced_homogenisation',   # name of the new group
+                                                 data_time='date_time',  # named datetime coordinate
+                                                 data_plevs='z_coordinate',  # named pressure coordinate
+                                                 attributes={'version':'1.0'}
+                                                )
+                    print('write:',time.time()-tt)
+                except FileNotFoundError as e:
+                    print('no adjustments found', k,e)
+    except MemoryError as e:
+        print('could not write '+outfile, e)
+
 # -----------------------------------------------------------------------------
 #
 # Detection of Breakpoints
@@ -452,7 +601,7 @@ def test(x, window, missing):
     return tsa
 
 
-@njit
+@njit(cache='False')
 def numba_snhtmov(t, tsa, snhtparas, count, tmean, tsquare):
     """Standard Normal Homogeneity Test Moving Window
 
@@ -581,7 +730,7 @@ def get_breakpoints(data, value=2, dim='time', return_startstop=False, startstop
 # -----------------------------------------------------------------------------
 
 def adjustments(data, breaks, use_mean=False, axis=0, sample_size=130, borders=30, max_sample=1460, recent=False,
-                ratio=False, **kwargs):
+                ratio=False,meta=None, **kwargs):
     """ Adjustment of breakpoints
 
     Args:
@@ -639,6 +788,20 @@ def adjustments(data, breaks, use_mean=False, axis=0, sample_size=130, borders=3
         iref = idx2shp(iref, axis, dshape)
         # Before Adjustments
         before = np.nanmean(data[isample], axis=axis)
+        vais={'ref': {'tup':np.unique(meta[0,slice(ib,ip)],return_counts=True,return_inverse=True),'vcount':0,'nvcount':0,'vi':[],'nvi':[]},
+            'sample': {'tup':np.unique(meta[0,slice(im,ib)],return_counts=True,return_inverse=True),'vcount':0,'nvcount':0,'vi':[],'nvi':[]},}
+        sdict=dict(
+            rs90 = np.array(['71', '72', '73', '74','78', ],dtype='S4'),
+            rs92 = np.array(['70', '79', '80', '81'  ],dtype='S4'),
+            rs80 = np.array(['37', '52', '60', '61', '62', '63' , '66', '67','VC_'  ],dtype='S4'),
+            rs41 = np.array(['123', '124', '125', '141', '142'],dtype='S4'),
+            graw = np.array(['17'],dtype='S4'),
+            viz  = np.array(['49','ZKB'],dtype='S4'),
+            vschroeder = np.array(['VN', 'VP'],dtype='S4'),  
+            )
+        debug=False
+        if debug:
+            import matplotlib.pyplot as plt
         # Apply Adjustments
         if use_mean:
             data[isample] = mean(data[iref], data[isample],
@@ -648,12 +811,56 @@ def adjustments(data, breaks, use_mean=False, axis=0, sample_size=130, borders=3
                                  borders=borders,
                                  ratio=ratio, **kwargs)
         else:
-            data[isample] = percentile(data[iref], data[isample], percentilen,
+            for k in vais.keys():
+                for it in range(vais[k]['tup'][0].shape[0]):
+                    t=vais[k]['tup'][0][it]
+                    if t in sdict['rs92'] or t in sdict['rs90'] or t in sdict['rs41'] or b'VN' in t or b'VP' in t:
+                        vais[k]['vcount']+=vais[k]['tup'][2][it]
+                    elif t!=b'nan': # and t not in sdict['rs80']:
+                        vais[k]['nvcount']+=vais[k]['tup'][2][it]
+                        vais[k]['nvi'].append(np.where(vais[k]['tup'][1]==it)[0])
+                    elif t==b'nan':
+                        vais[k]['nvi'].append(np.where(vais[k]['tup'][1]==it)[0])
+                        
+            if debug:
+                plt.subplot(1,2,1)
+                plt.hist(data[isample][:,7],label='sample')
+                plt.hist(data[iref][:,7],label='ref')
+                plt.legend()        
+            print('min0:',np.nanmin(data[iref]),np.nanmin(data[isample]))
+            if vais['ref']['vcount']>=vais['ref']['nvcount'] or vais['sample']['vcount']<vais['sample']['nvcount']:
+                    
+                vais['sample']['nvi']=np.concatenate(vais['sample']['nvi'])
+                #if vais['sample']['nvi'].shape[0]>data[isample].shape[0]:
+                #   vais['sample']['nvi']=np.arange(data[isample].shape[0],dtype=int) 
+                d=data[isample]
+                d[vais['sample']['nvi']] = percentile(data[iref], data[isample][vais['sample']['nvi']], percentilen,
                                        axis=axis,
                                        sample_size=sample_size,
                                        max_sample=max_sample,
                                        borders=borders,
                                        ratio=ratio, **kwargs)
+                d[d<np.nanmin(data[iref])]=np.nanmin(data[iref])
+                data[isample]=d[:]
+            else:
+                vais['ref']['nvi']=np.concatenate(vais['ref']['nvi'])
+                d=data[iref]
+                d[vais['ref']['nvi']] = percentile(data[isample], data[iref][vais['ref']['nvi']], percentilen,
+                                       axis=axis,
+                                       sample_size=sample_size,
+                                       max_sample=max_sample,
+                                       borders=borders,
+                                       ratio=ratio, **kwargs)
+                d[d<np.nanmin(data[isample])]=np.nanmin(data[isample])
+                data[iref]=d[:]
+            if debug:
+                plt.subplot(1,2,2)
+                plt.hist(data[isample][:,7],label='sample after')
+                plt.hist(data[iref][:,7],label='ref after')
+                plt.legend()
+        print('min:',np.nanmin(data[iref]),np.nanmin(data[isample]))
+        if debug:
+            plt.show()
 
         #
         # Border zone (Break, Break + borders)
@@ -936,6 +1143,9 @@ def adjustment_procedure(data: xr.Dataset, dim: str = 'time', plev: str = 'plev'
     #
     # adds a stacking coordinate to unstack later
     data = eua.stack_cube_by_hour(data.isel(**{dim: standard_index}), dim=dim, times=times)
+    
+    # nur für test: tdata = eua.unstack_cube_by_hour(data, dim=dim)
+
     #
     # Some Variables for Breakpoint detection
     #
@@ -978,10 +1188,13 @@ def adjustment_procedure(data: xr.Dataset, dim: str = 'time', plev: str = 'plev'
     # Check for Metadata in CDM
     #
     if metadata:
+        print('using metadata',np.unique(data.meta.values[0].astype('S4')))
         #
         # In a future version Metadata can be read and used here.
         #
         pass
+    else:
+        data['meta']=None
 
     #
     # 4. Detect Breakpoints
@@ -1024,6 +1237,7 @@ def adjustment_procedure(data: xr.Dataset, dim: str = 'time', plev: str = 'plev'
         data['adjustments'].attrs.update(attrs)
         data['adjustments'].attrs['standard_name'] += '_adjustments'
         data['adjustments'].attrs['biascor'] = 'mean'
+        
 
     elif quantile_adjustments:
         #
@@ -1038,16 +1252,53 @@ def adjustment_procedure(data: xr.Dataset, dim: str = 'time', plev: str = 'plev'
             adjv = adjustments(data[dep_name][i, ::].values, ibreaks,
                                 use_mean=False,
                                 axis=axis - 1,
+                                meta=data.meta.values.astype('S4'),
                                 **kwargs)
             # check limits [0 - 1] of relative humidity
             # obs + obs-an-adj - obs-an
             vadj = (data[obs_name][i, ::].values + adjv - data[dep_name][i, ::].values)
-            adjv = np.where((vadj < 0) | (vadj > 1), data[dep_name][i, ::].values, adjv)
+            for j in range(len(data.plev)):
+                nm = np.nanmin(data[obs_name][i, ::].values[:,j])
+                idx = np.where((vadj[:,j] < nm))
+                print(nm)               
+                adjv[:,j] = np.where(vadj[:,j] < nm, data[dep_name][i, ::].values[:,j]+nm, adjv[:,j])
+                adjv[:,j] = np.where(vadj[:,j] > 1, data[dep_name][i, ::].values[:,j], adjv[:,j])
             # new = obs-an-adj - (obs-an)
             data['adjustments'][i, ::] = (adjv - data[dep_name][i, ::].values)
         data['adjustments'].attrs.update(attrs)
         data['adjustments'].attrs['standard_name'] += '_adjustments'
         data['adjustments'].attrs['biascor'] = 'quantile'
+
+        data['qadjustments'] = copy.deepcopy(data['adjustments'])
+        data['qadjustments'].attrs['standard_name'] += 'specific_humidity_adjustments'
+        data['dewpadjustments'] = copy.deepcopy(data['adjustments'])
+        data['dewpadjustments'].attrs['standard_name'] += 'dewpoint_adjustments'
+        
+            
+        obshom = data['relative_humidity'].values - data['adjustments'].values
+        vpdata = data['relative_humidity'].values * Sonntag(data['temperature'].values )
+        vpdatahom = obshom * Sonntag(data['temperature'].values )
+        
+        dp = dewpoint_Sonntag(vpdata)
+        dphom = dewpoint_Sonntag(vpdatahom)
+        #mask = vpdatahom < 10.
+        #dp[mask] = frostpoint_Sonntag(vpdata[mask])
+        #dphom[mask] = frostpoint_Sonntag(vpdatahom[mask])
+        #if vpdatahom < 10.:
+            #dp = frostpoint_Sonntag(vpdata)
+            #dphom = frostpoint_Sonntag(vpdatahom)
+        #else:
+            #dp = dewpoint_Sonntag(vpdata)
+            #dphom = dewpoint_Sonntag(vpdatahom)
+        pl = data['plev'].values
+        for i in range(data['plev'].shape[0]):
+            adj = data['specific_humidity'].values[:, :, i] - vap2sh(vpdatahom[:, :, i], pl[i])
+            data['qadjustments'].values[:, :, i] = -adj  # here the adjustment is needed, not the bias estimate
+            dpadj = dp[:, :, i] - dphom[:, :, i]
+            data['dewpadjustments'].values[:, :, i] = -dpadj  # here the adjustment is needed, not the bias estimate
+        
+        
+        x = 0
     else:
         raise RuntimeError('Either mean_adjustment or quantile_adjustment needs to be set')
     # 
@@ -1073,6 +1324,7 @@ def adjustment_procedure(data: xr.Dataset, dim: str = 'time', plev: str = 'plev'
     data = data.reindex({dim: bkptime})
     # Make sure we fill it up
     data['adjustments'] = data['adjustments'].fillna(0)
+    data['qadjustments'] = data['qadjustments'].fillna(0)
     data['test'] = data['test'].fillna(0)
     data['breakpoints'] = data['breakpoints'].fillna(0).astype(int)
     return data
@@ -1164,15 +1416,27 @@ def run_backend_file(args, **kwargs):
     if os.path.isfile(args.backend+'.xxx'):
         print(args.backend+' already processed')
         return
-    with h5py.File(args.backend) as f:
-        try:
-            
-            if f['recordindices']['138'].shape[0] < 20:
-                print(args.backend+' humidity record too short')
+
+    try:
+        
+        with h5py.File(args.backend) as f:
+            try:
+                if f['recordindices']['138'].shape[0] < 20:
+                    print(args.backend+' humidity record too short')
+                    return
+            except:
+                print(args.backend+' humidity record does not exist')
                 return
-        except:
-            print(args.backend+' humidity record does not exist')
-            return
+            try:
+                if f['advanced_homogenisation']['humidity_bias_estimate'].shape[0] > 0:
+                    print(args.backend+' humidity bias exists')
+                    return
+            except:
+                pass
+    except:
+        raise ValueError(args.backend)
+                
+        
             
             
     iofile = eua.CDMDataset(args.backend)
@@ -1181,7 +1445,7 @@ def run_backend_file(args, **kwargs):
         raise IOError("not a CDM backend file")
     
     if not args.feedback:
-        args.feedback = 'fg_depar@body'
+        args.feedback = 'fg_depar@offline'
         args.feedback_group = 'era5fb'
     
     if args.feedback_group not in iofile.groups:
@@ -1243,27 +1507,46 @@ def run_backend_file(args, **kwargs):
         
             iofile.reopen(write_to_filename=args.outdir, mode='r+', strict=True)
             try:
-                data = iofile.read_data_to_cube(variable,
+                data = iofile.read_data_to_cube([variable,'specific_humidity', 'temperature'], #
                                                 dates=args.dates,
                                                 plevs=args.plevs,
                                                 feedback=args.feedback,
                                                 feedback_group=args.feedback_group,
                                                 **kwargs)
-                # should contain variables
-                # e.g. temperature, temperature_an_depar
-                variable, depar = list(data.keys())
-            
-                
+                if args.dates is None:
+                    trange = iofile.recordindices[f'{eua.cdm_codes[variable]}'][[0, -1]]
+                    ri=iofile.recordindices[f'{eua.cdm_codes[variable]}'][:]
+                    ref=np.datetime64(datetime(1900,1,1),'ns')
+                    secs=(data['relative_humidity'].time.values-ref).astype('long')//1000000000
+                    idx=np.searchsorted(iofile.file['observations_table']['date_time'][ri[0]:ri[-1]],secs)
+
+
+                else:
+                    trange = np.searchsorted(iofile.recordindices[f'{eua.cdm_codes[variable]}'][:], args.dates)[[0, -1]]
+               
+
                 if data['relative_humidity'].shape[0] <200:
                     print(iofile.filename, ' too short humidity record')
                     return
+
+                try:
+                    
+                    data['meta'] = xr.DataArray(iofile.file['observations_table']['sensor_id'][ri[0]:ri[-1]][idx].view('S4').flatten(),
+                                            coords={'time':data[variable].time}).astype('S4')
+                except Exception as e:
+                    raise IndexError(str(iofile.filename)+' '+str(e))
+                # should contain variables
+                # e.g. temperature, temperature_an_depar
+                variables = list(data.keys())
+            
+                
                     
                 data = xr.Dataset(data)
                 # run adjustment procedure
                 data = adjustment_procedure(data,
-                                            obs_name=variable,
-                                            dep_name=depar,
-                                            metadata=False,
+                                            obs_name=variables[0],
+                                            dep_name=variables[1],
+                                            metadata=True,
                                             times=[0, 12],
                                             dim='time',
                                             plev='plev',
@@ -1282,78 +1565,149 @@ def run_backend_file(args, **kwargs):
                 print(e)
                 return
             
-            print('write', iofile.filename, args.interpolate_missing)
+            
             tt = time.time()
             try:
-                iofile.write_observed_data('humidity_bias_estimate',
-                                           varnum=eua.cdm_codes[variable],
-                                           cube=data['adjustments'],
-                                           group=args.homogenisation,
-                                           feedback='humidity_bias_estimate',
-                                           interpolate=args.interpolate_missing,
-                                           interpolate_datetime=args.interpolate_missing,
-                                           extrapolate_plevs=args.interpolate_missing)
-            except MemoryError as e:
-                print(iofile.filename, e, 'could not write humidity')
+                xyz = add_adj(iofile, data['adjustments'],'humidity_bias_estimate', eua.cdm_codes[variable], 'r+')
+                print(f'add_adj: {time.time() - tt:.3f}s')
+                #iofile.write_observed_data('humidity_bias_estimate2',
+                                           #varnum=eua.cdm_codes[variable],
+                                           #ragged=xyz,
+                                           #group=args.homogenisation,
+                                           #interpolate=args.interpolate_missing,
+                                           #interpolate_datetime=args.interpolate_missing,
+                                           #extrapolate_plevs=args.interpolate_missing)
                 
-            print(time.time() - tt)
+                #print(f'wrote xyz: {time.time() - tt:.3f}s')
+                #iofile.write_observed_data('humidity_bias_estimate',
+                                           #varnum=eua.cdm_codes[variable],
+                                           #cube=data['adjustments'],
+                                           #group=args.homogenisation,
+                                           #interpolate=args.interpolate_missing,
+                                           #interpolate_datetime=args.interpolate_missing,
+                                           #extrapolate_plevs=args.interpolate_missing)
+                
+                print('wrote', variable, iofile.filename, args.interpolate_missing, time.time() - tt)
+                printstats(data, 'relative_humidity_fg_depar', 'adjustments', np.nanstd, tstart=args.tstart, tstop=args.tstop)
+                #for ip in range(16):
+                    #print(f'{int(data.plev[ip]): >6d}: {np.nanstd(data.relative_humidity_fg_depar[:, ip]):.4f}, {np.nanstd(data.relative_humidity_fg_depar[:, ip]-data.adjustments[:, ip]):.4f}, {(np.nanstd(data.relative_humidity_fg_depar[:, ip]-data.adjustments[:, ip])) / np.nanstd(data.relative_humidity_fg_depar[:, ip]):.4f}')
+
+            except MemoryError as e:
+                print(iofile.filename, e, 'could not write humidity',time.time() - tt)
             
             # add also dewpoint homogenisation:
             # read data:
-            # try:
+            try:
                 
-            rh = iofile.read_data_to_cube('relative_humidity',
-                                            dates=args.dates,
-                                            plevs=args.plevs,
-                                            feedback='humidity_bias_estimate',
-                                            feedback_group=args.homogenisation,
-                                            )
-
-            dp = iofile.read_data_to_cube('dew_point_temperature',
-                                            dates=args.dates,
-                                            plevs=args.plevs,
-                                            feedback=None,
-                                            feedback_group=None,
-                                            )
-            ta = iofile.read_data_to_cube('temperature',
-                                            dates=args.dates,
-                                            plevs=args.plevs,
-                                            feedback=None,
-                                            feedback_group=None,
-                                            )
-            # combine cube
-            comb = xr.combine_by_coords([ta['temperature'], dp['dew_point_temperature']])
-            comb = xr.combine_by_coords([comb, rh['relative_humidity']])
-            comb = xr.combine_by_coords([comb, rh['relative_humidity_humidity_bias_estimate'].rename('relative_humidity_humidity_bias_estimate')])
+                rh = iofile.read_data_to_cube('relative_humidity',
+                                                dates=args.dates,
+                                                plevs=args.plevs,
+                                                feedback='humidity_bias_estimate',
+                                                feedback_group=args.homogenisation,
+                                               )
+    
+                dp = iofile.read_data_to_cube('dew_point_temperature',
+                                                dates=args.dates,
+                                                plevs=args.plevs,
+                                                feedback=None,
+                                                feedback_group=None,
+                                               )
+                dp['dew_point_temperature'].values[dp['dew_point_temperature'].values<160] = np.nan
+                ta = iofile.read_data_to_cube('temperature',
+                                                dates=args.dates,
+                                                plevs=args.plevs,
+                                                feedback=None,
+                                                feedback_group=None,
+                                             )
+                sh = iofile.read_data_to_cube('specific_humidity',
+                                                dates=args.dates,
+                                                plevs=args.plevs,
+                                                feedback=None,
+                                                feedback_group=None,
+                                             )
+                # combine cube
+                comb = xr.combine_by_coords([ta['temperature'], dp['dew_point_temperature'], sh['specific_humidity']])
+                comb = xr.combine_by_coords([comb, rh['relative_humidity']])
+                comb = xr.combine_by_coords([comb, rh['relative_humidity_humidity_bias_estimate'].rename('relative_humidity_humidity_bias_estimate')])
+                
+                # convert adjusted relative humidity to adjusted dewpoint temperature
+                comb['dew_point_depression_adjusted'] = rasotools.met.convert.to_dpd(temp=comb['temperature'], 
+                                                                                      press=comb['plev'],
+                                                                                      rel_humi=comb['relative_humidity']-comb['relative_humidity_humidity_bias_estimate'],
+                                                                                      svp_method='Sonntag',
+                                                                                     )
+                comb['dew_point_depression'] = rasotools.met.convert.to_dpd(temp=comb['temperature'], 
+                                                                                      press=comb['plev'],
+                                                                                      rel_humi=comb['relative_humidity'],
+                                                                                      svp_method='Sonntag',
+                                                                                     )
+                # create bias estimates
+                comb['dew_point_temperature_humidity_bias_estimate'] = comb['dew_point_temperature'] - (ta['temperature']- comb['dew_point_depression_adjusted'])
+                comb['dew_point_depression_humidity_bias_estimate'] = - comb['dew_point_temperature_humidity_bias_estimate']
+                
+                # write to file, into the same variable, at different lines
+                xyz = add_adj(iofile, comb['dew_point_temperature_humidity_bias_estimate'],'humidity_bias_estimate', eua.cdm_codes['dew_point_temperature'], 'r+')
+                #iofile.write_observed_data('humidity_bias_estimate',
+                                           #varnum=eua.cdm_codes['dew_point_temperature'],
+                                           #cube=comb['dew_point_temperature_humidity_bias_estimate'],
+                                           #group=args.homogenisation,
+                                           #interpolate=args.interpolate_missing,
+                                           #interpolate_datetime=args.interpolate_missing,
+                                           #extrapolate_plevs=args.interpolate_missing)
+                print('wrote dp', iofile.filename, args.interpolate_missing, time.time()-tt)
+                printstats(comb, 'dew_point_temperature', 'dew_point_temperature_humidity_bias_estimate', rms, tstart=args.tstart, tstop=args.tstop)
+                # write to file, into the same variable, at different lines
+                xyz = add_adj(iofile, comb['dew_point_depression_humidity_bias_estimate'],'humidity_bias_estimate', eua.cdm_codes['dew_point_depression'], 'r+')
+                #iofile.write_observed_data('humidity_bias_estimate',
+                                           #varnum=eua.cdm_codes['dew_point_depression'],
+                                           #cube=comb['dew_point_depression_humidity_bias_estimate'],
+                                           #group=args.homogenisation,
+                                           #interpolate=args.interpolate_missing,
+                                           #interpolate_datetime=args.interpolate_missing,
+                                           #extrapolate_plevs=args.interpolate_missing)
+                print('wrote dpd', iofile.filename, args.interpolate_missing, time.time()-tt)
+                printstats(comb, 'dew_point_depression', 'dew_point_depression_humidity_bias_estimate', rms, tstart=args.tstart, tstop=args.tstop)
+            except MemoryError as e:
+                logger.warning('could not adjust dewpoint '+ os.path.basename(iofile.filename) )
             
-            # convert adjusted relative humidity to adjusted dewpoint temperature
-            comb['dew_point_depression_adjusted'] = rasotools.met.convert.to_dpd(temp=comb['temperature'], 
-                                                                                    press=comb['plev'],
-                                                                                    rel_humi=comb['relative_humidity']-comb['relative_humidity_humidity_bias_estimate'],
-                                                                                    svp_method='Sonntag',
-                                                                                    )
-            comb['dew_point_depression'] = rasotools.met.convert.to_dpd(temp=comb['temperature'], 
-                                                                                    press=comb['plev'],
-                                                                                    rel_humi=comb['relative_humidity'],
-                                                                                    svp_method='Sonntag',
-                                                                                    )
-            # create bias estimates
-            comb['dew_point_temperature_humidity_bias_estimate'] = comb['dew_point_temperature'] - (ta['temperature']- comb['dew_point_depression_adjusted'])
-            
-            # write to file, into the same variable, at different lines
-            print('write', iofile.filename, args.interpolate_missing)
-            iofile.write_observed_data('humidity_bias_estimate',
-                                        varnum=eua.cdm_codes['dew_point_temperature'],
-                                        cube=comb['dew_point_temperature_humidity_bias_estimate'],
-                                        group=args.homogenisation,
-                                        interpolate=args.interpolate_missing,
-                                        interpolate_datetime=args.interpolate_missing,
-                                        extrapolate_plevs=args.interpolate_missing)
-            # except:
-            #     logger.warning('could not adjust dewpoint '+ os.path.basename(iofile.filename) )
+            try:
+                
+                ## convert adjusted relative humidity to adjusted dewpoint temperature
+                #comb['specific_humidity_adjusted'] = rasotools.met.convert.to_sh(temp=comb['temperature'], 
+                                                                                      #press=comb['plev'],
+                                                                                      #rel_humi=comb['relative_humidity']-comb['relative_humidity_humidity_bias_estimate'],
+                                                                                      #svp_method='Sonntag',
+                                                                                     #)
+                #comb['specific_humidity2'] = rasotools.met.convert.to_sh(temp=comb['temperature'], 
+                                                                                      #press=comb['plev'],
+                                                                                      #rel_humi=comb['relative_humidity'],
+                                                                                      #svp_method='Sonntag',
+                                                                                     #)
+                ## create bias estimates
+                #comb['specific_humidity_bias_estimate'] = comb['specific_humidity'] - comb['specific_humidity_adjusted']
+                #comb['specific_humidity_bias_estimate'].values[ ~np.isnan(comb['specific_humidity_bias_estimate'].values)] = 0.
+                
+                # write to file, into the same variable, at different lines
+                xyz = add_adj(iofile, data.qadjustments,'humidity_bias_estimate', eua.cdm_codes['specific_humidity'], 'r+')
+                #iofile.write_observed_data('humidity_bias_estimate',
+                                           #varnum=eua.cdm_codes['specific_humidity'],
+                                           #cube=data.qadjustments, #comb['specific_humidity_bias_estimate'],
+                                           #group=args.homogenisation,
+                                           #interpolate=args.interpolate_missing,
+                                           #interpolate_datetime=args.interpolate_missing,
+                                           #extrapolate_plevs=args.interpolate_missing)
+                print('wrote sh', iofile.filename, args.interpolate_missing, time.time()-tt)
+                printstats(data, 'specific_humidity_fg_depar', 'qadjustments', rms, tstart=args.tstart, tstop=args.tstop)
+        
+                #for ip in range(16):
+                    #print(f'{int(data.plev[ip]): >6d}: {np.nanstd(data.specific_humidity_fg_depar[:, ip]):.4f}, {np.nanstd(data.specific_humidity_fg_depar[:, ip]-comb['specific_humidity_bias_estimate'][:, ip]):.4f},'+
+                          #f'{(np.nanstd(data.specific_humidity_fg_depar[:, ip]-comb['specific_humidity_bias_estimate'][:, ip])) / np.nanstd(data.specific_humidity_fg_depar[:, ip]):.4f}')
+            except MemoryError:
+                logger.warning('could not adjust specific humidity '+ os.path.basename(iofile.filename) )
                 
             with open(iofile.filename+'.x', 'w') as f:
                 f.write('')
+            print(iofile.filename, 'finished', time.time()-tt)
         else:
             print(iofile.filename, 'already processed')
             pass
@@ -1421,11 +1775,13 @@ date: {}
     parser.add_argument("--feedback", help="feedback variables")
     parser.add_argument("--feedback_group", help="feedback group name (only backend files)", default='era5fb')
     parser.add_argument("--homogenisation", help="homogenisation group name (only backend files)", default='advanced_homogenisation')
-    parser.add_argument("--interpolate_missing", help="interpolate missing values", action="store_true")
+    parser.add_argument("--interpolate_missing", help="interpolate missing values", action="store_true", default=True)
     parser.add_argument("--copypart", help="copy only partial backendfile", action="store_true")
     parser.add_argument("--debug", help="debug information", action="store_true")
     parser.add_argument("--verbose", help="show more information", action="store_true")
     parser.add_argument("--logfile", help="Logfile", default='adjustments.log')
+    parser.add_argument("--tstart", help="start time for calculating statistics", default='1900-01-01')
+    parser.add_argument("--tstop", help="stop time for calculating statistics", default='2100-01-01')
     
     kwargs = {}
     # Parse Arguments from definition
@@ -1501,25 +1857,29 @@ date: {}
         #
         run_frontend_file(args, **kwargs)
     else:
-        run_backend_file(args, **kwargs)
-        # #
-        # # BACKEND File
-        # #
-        # #run_backend_file(args, **kwargs)
-        # fns = glob.glob(os.path.expandvars('$RSCRATCH/converted_v17/long/*v3.nc'))
-        # #fns = glob.glob(os.path.expandvars('$RSCRATCH/converted_v11/long/*v1.nc'))
-        # tt = time.time()
-        # #run_backend_file(copy.copy(args), **kwargs)
-        # #print(time.time() - tt)
-        # #exit()
+        #
+        # BACKEND File
+        #
+        #run_backend_file(args, **kwargs)
+        fns = glob.glob(os.path.expandvars('$RSCRATCH/converted_v25/long/*v3.nc'))
+        #fns = glob.glob(os.path.expandvars('$RSCRATCH/converted_v11/long/*v1.nc'))
+        tt = time.time()
+        #run_backend_file(copy.copy(args), **kwargs)
+        #print(time.time() - tt)
+        #exit()
 
-        # #ray.init(num_cpus=60)
-        # futures = []
-        # for fn in fns[:]:
-        #     fargs = copy.copy(args)
-        #     fargs.backend = fn
-        #     run_backend_file(fargs, **kwargs)
-        #     #futures.append(ray_run_backend_file.remote(fargs, **kwargs))
-        # ray.get(futures)
-        # print('finished', time.time() - tt)
+        #ray.init(num_cpus=60)
+        futures = []
+        #fns = [fns[fns.index('/mnt/users/scratch/leo/scratch/converted_v21/long/0-20000-0-72357_CEUAS_merged_v3.nc')]]
+        #fns = [fns[fns.index('/mnt/users/scratch/leo/scratch/converted_v19/long/0-20666-0-1:25428_CEUAS_merged_v3.nc')],
+               #fns[fns.index('/mnt/users/scratch/leo/scratch/converted_v19/long/0-20666-0-20353_CEUAS_merged_v3.nc')]]
+               
+        for fn in fns:
+            fargs = copy.copy(args)
+            fargs.backend = fn
+            #if '0-20000-0-17607' in fn:
+                #run_backend_file(fargs, **kwargs)
+            futures.append(ray_run_backend_file.remote(fargs, **kwargs))
+        ray.get(futures)
+        print('finished', time.time() - tt)
 # FIN
