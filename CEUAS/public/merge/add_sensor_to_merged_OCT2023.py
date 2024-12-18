@@ -103,7 +103,11 @@ class MergedFile(object):
         data = {}
         data['cdm_tables'] = {}
         
-        h5py_file = h5py.File(self.file, 'r+')
+        try:
+            
+            h5py_file = h5py.File(self.file, 'r+')
+        except:
+            raise ValueError(self.file)
 
         data['h5py_file'] = h5py_file 
         data['station_id'] = self.station_id 
@@ -311,10 +315,10 @@ class Sensor(MergedFile):
                 try:
                     groups[k][d.element_name].attrs['external_table']  = d .external_table # defining variable attributes that point to other tables (3rd and 4th columns)
                     groups[k][d.element_name].attrs['description']       = d.description  # it fails when trying with the observations_table 
-                    print('*** Setting the attributes to the sensor_configuration table ' , d.element_name )
+                    #print('*** Setting the attributes to the sensor_configuration table ' , d.element_name )
                     
                 except KeyError:
-                    print('Failed --- ' , k , ' ', i )
+                    print('Failed --- ' , k , ' ', i , self.MergedFile.file)
                     pass
                 groupencodings[k][d.element_name]={'compression': 'gzip'}
         # self.data['crs'].to_netcdf(self.file, format='netCDF4', engine='h5netcdf',group='ciao', mode='a') #
@@ -323,10 +327,11 @@ class Sensor(MergedFile):
             try:           
 #                groups[k].to_netcdf(self.MergedFile.file, format='netCDF4', engine='h5netcdf', encoding=groupencodings[k], group=k, mode='a') #
                 dic = {}
+                attrs = {'sensor_id': {'description':'Schroeder and WMO Sensor codes'} , 'comments': {'description':"Taken from Schroeder's original table"} }
                 for v in groups[k].keys():
                     dic[v] = groups[k][v].values
-                write_dict_h5_old(self.MergedFile.file, dic , k, self.encodings[k], var_selection=[], mode='a',
-                                  attrs = {'description':'Schroeder and WMO Sensor codes'}  )  
+                write_dict_h5_old(self.MergedFile.file, dic , k, groupencodings[k], var_selection=[], mode='a',
+                                  attrs = attrs  )  
                 
                 #print('+++ Written  group: ' , k  )
             except  KeyError:
@@ -441,13 +446,13 @@ class Sensor(MergedFile):
             indices = self.data['recordindex']
 
             for dt, length, ind in zip(datetimes, record_lenghts, indices ) :
-                find_sch = located_df.loc[ (located_df.start_date >= dt  ) &  ( located_df.end_date < dt ) ]
+                find_sch = located_df.loc[ (located_df.start_date <= dt  ) &  ( located_df.end_date > dt ) ]
                 
                 if not find_sch.empty: # found Schroeder compatible data
                     try:
                         
-                        sensor = find_sch.sensor_id.values[0]
-                    except:
+                        sensor = find_sch.rstype.values[0]
+                    except Exception as e:
                         sensor = 'NA  '
                         print('Schroeder Sensor not found')
                     lista = [sensor] * length
@@ -531,10 +536,10 @@ class Sensor(MergedFile):
         if 'string{}'.format(slen) not in self.data['h5py_file']['observations_table'].keys():          
             self.data['h5py_file']['observations_table'].create_dataset( 'string{}'.format(slen) ,  data=stringa[:slen]  )                
             self.data['h5py_file']['observations_table'][ 'string{}'.format(slen) ].attrs['NAME']=np.bytes_('This is a netCDF dimension but not a netCDF variable.')         
-        #self.data['h5py_file']['observations_table']['sensor_id'].dims[0].attach_scale( self.data['h5py_file']['observations_table']['index'] )
-        #self.data['h5py_file']['observations_table']['sensor_id'].dims[1].attach_scale( self.data['h5py_file']['observations_table'][ 'string{}'.format(slen)  ] )
+        self.data['h5py_file']['observations_table']['sensor_id'].dims[0].attach_scale( self.data['h5py_file']['observations_table']['index'] )
+        self.data['h5py_file']['observations_table']['sensor_id'].dims[1].attach_scale( self.data['h5py_file']['observations_table'][ 'string{}'.format(slen)  ] )
         
-        
+        return
 
         
         
@@ -668,7 +673,12 @@ class Sensor(MergedFile):
     def run(self):
         
         if self.copy: # if Ttue, then I create a copy of the file before adding the sensor id to avoid possible corruptions of the merged file
-            os.system('cp  ' + self.MergedFile.file + '   ' +  self.MergedFile.file.replace('.nc', '_beforeSensor.nc') )
+            try:
+                
+                os.system('cp  ' + self.MergedFile.file + '   ' +  self.MergedFile.file.replace('.nc', '_beforeSensor.nc') )
+                #os.system('cp  ' + self.MergedFile.file.replace('.nc', '_beforeSensor.nc') + '   ' +  self.MergedFile.file )
+            except:
+                pass
             
         load_Schroeder_table = self.load_Schroeder_tables()
         dummy = self.extract_Schroeder_id()
@@ -685,8 +695,8 @@ class Sensor(MergedFile):
         
         a = 0
         
-        if not self.copy:
-            os.system('mv  ' + self.MergedFile.file + '   ' +  self.MergedFile.out_dir.replace('_beforeSensor','') )
+#        if not self.copy:
+#            os.system('mv  ' + self.MergedFile.file + '   ' +  self.MergedFile.out_dir.replace('_beforeSensor','') )
         
         print(' --- Done writing the output file ' + self.MergedFile.file + '  ! ---  ' )            
             
