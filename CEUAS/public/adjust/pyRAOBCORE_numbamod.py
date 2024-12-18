@@ -253,10 +253,14 @@ def add_biasestimate(xyzv,xyzt,press,atime0,adj,adjpress):
             idt=np.searchsorted(xyzt,atime0[it+1])
         for idx in range(idtold,idt):
             ih=xyzt[idx]%86400
-            if ih>=isec18 or ih<isec06:
-                ihi = 0
+            if adj.shape[0] == 2:
+                
+                if ih>=isec18 or ih<isec06:
+                    ihi = 0
+                else:
+                    ihi = 1
             else:
-                ihi = 1
+                ihi = 0
             ip = 0
             while ip<adjpress.shape[0]:
                 if press[idx] < adjpress[ip]: 
