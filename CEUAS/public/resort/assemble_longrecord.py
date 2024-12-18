@@ -1,5 +1,5 @@
 
-import hdf5plugin
+#import hdf5plugin
 import h5py
 import os,glob
 import numpy as np
@@ -44,6 +44,7 @@ def write_var(k,fnsgood,fno,vi):
                                     
                                     g[k][v][nptlens[ll-1]:nptlens[ll]]=f[k][v][:ub]
                                 except:
+                                    raise ValueError(fn) 
                                     continue
                             ll+=1
                             print(ll,fnl,k, v, fn.split('/')[-1]+' copied',time.time()-tt)
@@ -59,7 +60,7 @@ def write_var(k,fnsgood,fno,vi):
         
 # resorting the data
 #
-@njit
+@njit(boundscheck=True)
 def make_vrindex(vridx,ridx): # this function is similar to np.unique with return_index=True, but it expands the index to the  
     # original array dimensions
     l=0
@@ -74,14 +75,15 @@ def make_vrindex(vridx,ridx): # this function is similar to np.unique with retur
                 l += 1
     vridx[ridx[i] + 1 :]=l #len(idx) # next record for the last element is the len of the data
 
-def pwrite_variable(fno, fps, rdict, ridict, tup):       
+def pwrite_variable(fno, fps, rdict, ridict, vbufr, tup, compfilter={'compression': 32015, 'compression_opts': (3, )}, direct=True):       
 
     tt = time.time()
     gname, vname = tup
     if vname == 'index' or 'string' in vname:
         return
-    if vname == 'fg_depar@body':
-        print(vname)
+    
+    #if vname == 'codetype@hdr':
+        #print(vname, 'not written')
     rstarts = {s: 0 for s in sorted(list(ridict.keys())[:-2])}
     csum = 0
     for s in rstarts.keys():
@@ -91,52 +93,95 @@ def pwrite_variable(fno, fps, rdict, ridict, tup):
 
     var = None #np.zeros(csum, dtype=int)
     l = 0
+    csmax =0    
     for k, rs in sorted(rstarts.items()):
         irel = 0
         #for ifn in range(len(fns[:])):
             #with h5py.File(fns[ifn],'r') as f:
+            
+        if csmax==0:
+            for ifn in range(len(fps)):
+                ff = fps[ifn]
+                
+                #if vname not in ff[gname].keys():
+                    #print(ff.filename, vname, 'not in ', gname)
+                    #continue
+                #if ff[gname][vname].ndim == 2:
+                    #csmax = np.max((ff[gname][vname].shape[1], csmax))
+                #else:
+                    #csmax = -1
+                    
+                try:
+                    csmax = np.max((ff[gname][vname].shape[1], csmax))
+                    dt = ff[gname][vname].dtype
+                except Exception as e:
+                    if type(e) is IndexError:
+                        csmax = -1
+                        dt = ff[gname][vname].dtype
+                        break
+                    else:
+                        continue
+                        
+        #if vname == 'latd': print('vor ifn', gname, vname, f'{time.time() - tt:.3f}')
         for ifn in range(len(fps)):
-                f = fps[ifn]
+                try:
+                    f = fps[ifn][gname][vname]
+                except:
+                    print(fps[ifn].filename, vname, 'not in ', gname)
+                    continue
             
                 if var is None:
-                    if f[gname][vname].ndim == 1:
+                    #if vname not in f[gname].keys():
+                        #print(f.filename, vname, 'not in ', gname)
+                        #continue
+                    if csmax == -1:
                         
-                        var = np.empty_like(f[gname][vname][:], shape=(csum, ))
-                        if var.dtype == np.dtype('int32') or var.dtype == np.dtype('int64'):
-                            var[:] = -2147483648
-                        else:
-                            var[:] = np.nan
+                        #var = np.empty_like(f[gname][vname][:], shape=(csum, ))
+                        var = np.frombuffer(vbufr, dt, csum)
+                        #if var.dtype == np.dtype('int32') or var.dtype == np.dtype('int64'):
+                            #var[:] = -2147483648
+                        #else:
+                            #var[:] = np.nan
                     else:
                         if vname == 'sensor_id':                    
-                            var = np.empty_like(f[gname][vname][:], shape=(csum, 4))
+                            #var = np.empty_like(f[gname][vname][:], shape=(csum, 4))
+                            var = np.frombuffer(vbufr, dt, csum*4).reshape((csum, 4))
                         else:
-                            var = np.empty_like(f[gname][vname][:], shape=(csum, f[gname][vname].shape[1]))
-                        var[:] = b''
+                            #var = np.empty_like(f[gname][vname][:], shape=(csum, csmax))
+                            var = np.frombuffer(vbufr, dt, csum*csmax).reshape((csum, csmax))
+                        #var[:] = b''
                         
                 if rdict[k][ifn]:   #not none
                     try:
                         
-                        chunk = f[gname][vname][rdict[k][ifn]]
+                        chunk = f[rdict[k][ifn]]
                     except:
-                        print('ERROR ', fno)
+                        print(fps[ifn].filename, vname, 'not in ', gname)
+                        continue
                     #print(f['observations_table']['observed_variable'][rdict[k][ifn].stop])
                     if vname == 'sensor_id':
-                        
-                        var[rs+irel:rs+irel+chunk.shape[0], :chunk.shape[1]] = chunk
+                        var[rs+irel:rs+irel+chunk.shape[0], :chunk.shape[1]] = chunk[:, :4]
+                            
                     else:
                         try:
                             
                             var[rs+irel:rs+irel+chunk.shape[0]] = chunk
                         except:
-                            if chunk.shape[1] < var.shape[1]:
-                                print( 'warning, var wider than chunk ...', fps[ifn], vname, k, var[0], chunk[0])
-                                var[rs+irel:rs+irel+chunk.shape[0], :chunk.shape[1]] = chunk
-                            else:                                
-                                print( 'warning, cut chunk in width ...', fps[ifn], vname, k, var[0], chunk[0])
-                                var[rs+irel:rs+irel+chunk.shape[0]] = chunk[:, :var.shape[1]]
-                                print('cut chunk succeeded')
+                            if var.ndim == chunk.ndim:
+                                
+                                if chunk.shape[1] < var.shape[1]:
+                                    #print( 'warning, var wider than chunk ...', fps[ifn], vname, k, var[0], chunk[0])
+                                    var[rs+irel:rs+irel+chunk.shape[0], :chunk.shape[1]] = chunk
+                                else:                                
+                                    print( 'warning, cut chunk in width ...', fps[ifn], vname, k, var[0], chunk[0])
+                                    var[rs+irel:rs+irel+chunk.shape[0]] = chunk[:, :var.shape[1]]
+                                    print('cut chunk succeeded')
+                            else:
+                                print(vname+' and chunk entirely different',var.shape, chunk.shape )
 
-                    irel += chunk.shape[0] 
+                    irel += chunk.shape[0]
+        #if vname == 'latd': print(fps[ifn].filename.split('/')[-2], gname, vname, f'{time.time() - tt:.3f}')
+
                     #if np.any(f['observations_table']['observed_variable'][rdict[k][ifn]]!=k):
                         #print(fns[ifn], k, ifn, f['observations_table']['observed_variable'][rdict[k][ifn]])
                     #if np.any(var[rs+irel-chunk.shape[0]:rs+irel]!=\
@@ -166,21 +211,30 @@ def pwrite_variable(fno, fps, rdict, ridict, tup):
             #pass
         #elif i in ['expver', 'source@hdr', 'source_id', 'statid@hdr']:
             #alldict = {i:np.asarray(ov_vars, dtype='S1')}
-            #write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i])
+            #write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 32015 } }, [i])
         #else:
             #alldict = pandas.DataFrame({i:ov_vars})
-            #write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 'gzip' } }, [i]) 
-    fnov = fno[:-3]+'.'+vname+'@'+gname+'.nc'
-    print(fnov.split('/')[-1], time.time() - tt)
+            #write_dict_h5(targetfile, alldict, 'era5fb', {i: { 'compression': 32015 } }, [i]) 
+    if direct:
+        fnov = fno
+        mode = 'a'
+    else:
+        
+        fnov = fno[:-3]+'.'+vname+'@'+gname+'.nc'
+        mode = 'w'
+    #print(fnov.split('/')[-1], time.time() - tt)
     if var.ndim == 2:
         alldict = {vname:np.asarray(var, dtype='S1')}
-#        write_dict_h5(fnov, alldict, gname, {vname: { 'compression': 'gzip' , 'chunksizes': ( min( [10000,var.shape[0] ] ), var.shape[1] ) } } , [vname], mode='w')
-        write_dict_h5(fnov, alldict, gname, {vname: { 'compression': 'gzip' } } , [vname], mode='w')
+        if vname == 'observation_id':
+            print(fnov.split('/')[-1].split('_C')[0], gname, vname, f'{time.time() - tt:.3f}')
+            x =0
+#        write_dict_h5(fnov, alldict, gname, {vname: { 'compression': 32015 , 'chunksizes': ( min( [10000,var.shape[0] ] ), var.shape[1] ) } } , [vname], mode='w')
+        write_dict_h5(fnov, alldict, gname, {vname: compfilter } , [vname], mode=mode)
     else:
         #alldict = pandas.DataFrame({i:ov_vars})
         alldict = {vname:var}
-        write_dict_h5(fnov, alldict, gname, {vname: { 'compression': 'gzip' } }, [vname], mode='w')
-    print(gname, vname, time.time() - tt)
+        write_dict_h5(fnov, alldict, gname, {vname: compfilter }, [vname], mode=mode)
+    print(fnov.split('/')[-1].split('_C')[0], gname, vname, f'{time.time() - tt:.3f}')
     
 ray_pwrite_variable = ray.remote(pwrite_variable)
 
@@ -192,7 +246,7 @@ def dim_attach(g, k):
             if 'string' not in v and v!='index':                    
                 g[k][v].dims[l].attach_scale(g[k]['index'])
                 #print(v,fvv.ndim,type(fvv[0]))
-                if fvv.ndim==2 or type(fvv[0]) in [str,bytes,np.bytes_]:
+                if fvv.ndim==2: #or type(fvv[0]) in [str,bytes,np.bytes_]:
                     slen=fvv.shape[1] #sdict[v]
                     #slen=10
                     g[k][v].dims[1].attach_scale(g[k]['string{}'.format(slen)])
@@ -200,9 +254,19 @@ def dim_attach(g, k):
             print(g.filename.split('/')[-1],k, e)
             pass
 
-def h5concatenate(fkey, h=None) :
+def  copy_attrs(file, new_file, i):
+    for v in file[i].keys():
+        for a in  file[i][v].attrs.keys():
+            if a not in ('_Netcdf4Dimid', 'CLASS', 'NAME', 'REFERENCE_LIST', 'DIMENSION_LIST'):
+                
+                new_file[i][v].attrs[a] = file[i][v].attrs[a]
+    
+    return
+
+def h5concatenate(fkey, h=None, compfilter={'compression': 32015, 'compression_opts': (3, )}) :
     
     tt = time.time()
+    print('h5concatenate:', fkey, compfilter)
     fns=glob.glob(os.path.expandvars(fkey))
     fns.sort()
     fnl=len(fns)
@@ -210,7 +274,7 @@ def h5concatenate(fkey, h=None) :
     dirs = fns[0].split('/')
     dirs[-2] = 'long'
     fno=os.path.expandvars('/'.join(dirs))
-    if os.path.exists(fno+'.txt'):
+    if os.path.exists(fno+'.txtx'):
         print(fno, 'already exists')
         wtime = os.path.getmtime(fno+'.txt')
         rtimes = np.array([os.path.getmtime(fn) for fn in fns])
@@ -223,16 +287,19 @@ def h5concatenate(fkey, h=None) :
             'recordindices': ['126', 'index', 'recordtimestamp']}
     vset = set()
     fps = []
-    try:
         
-        for fn in fns[:]:
-            fps.append(h5py.File(fn,'r'))
-            f = fps[-1]
-    #        with h5py.File(fn,'r') as f:
-            vset = vset.union(set(list(f['recordindices'].keys())[:-2]))
-        sh = f['recordindices']['recordtimestamp'].shape[0] # just to check if recordtimestamp exists
-    except Exception as e:
-        print(fn, e)
+    for fn in fns[:]:
+        try:
+            f = h5py.File(fn,'r')
+            fset = set(list(f['recordindices'].keys())[:-2])
+            sh = f['recordindices']['recordtimestamp'].shape[0] # just to check if recordtimestamp exists
+            vset = vset.union(fset)
+            #print(f.filename, f['era5fb']['collection_identifier@conv'].shape)
+            fps.append(f)
+        except KeyError as e:
+            print(fn, e)
+            
+    if not fps:
         return
     ivset = np.array(list(vset), dtype=int)
     ivset.sort()
@@ -347,69 +414,90 @@ def h5concatenate(fkey, h=None) :
             
     #rstarts = {s: 0 for s in sorted(rsave.keys())} #rvars[i]: np.sum(rdict[rvars[i]]) for i in range(len(rvars))}
     #s = list(rsave.keys())
-    with h5py.File(fn, 'r') as g:
+    #with h5py.File(fn, 'r') as g:
+    
         
-        vars = {'observations_table':list(g['observations_table'].keys()) ,
-                'era5fb': list(g['era5fb'].keys()),}
+    vars = {'observations_table':list(fps[-1]['observations_table'].keys()) ,
+            'era5fb': list(fps[-1]['era5fb'].keys()),}
     #vlist = [(k, i) for i in vars[k] for k in vars.keys()]
     gvlist = []
     for k,v in vars.items():
         for i in v:
             gvlist.append((k, i))
     
+    try:
+        os.remove(fno)
+        os.remove(fno+'.txt')
+    except:
+        pass
     print(fno, 'before write', time.time()-tt)
+    direct = True
     #func = partial(pwrite_variable,fno, fns, rdict, ridict )
-    func = partial(pwrite_variable,fno, fps, rdict, ridict )
+    rstarts = {s: 0 for s in sorted(list(ridict.keys())[:-2])}
+    csum = 0
+    for s in rstarts.keys():
+        csum += np.sum([rdict[s][i].stop-rdict[s][i].start for i in range(len(rdict[s])) if rdict[s][i] is not None ])
+        
+    vbufr = np.empty((csum, 20), dtype='S1') #reuse this bufr to save repeated mem allocation    
+    vbufr[:] = b' '
+    print(fno, f'after allocate {time.time() - tt:.3f}')
+    
+    func = partial(pwrite_variable,fno, fps, rdict, ridict,vbufr, compfilter=compfilter , direct=direct)
     list(map(func, gvlist))
-    for f in fps:
-        f.close()
+    
+    #for f in fps:
+        #f.close()
+        
     #futures = [ray_pwrite_variable.remote( fno, fns, rdict, ridict, gv) for gv in gvlist]
     #obj_ref = ray.get(futures)
     
-    print(fno, 'before copy', time.time() - tt)
-    try:       
+    print(fno, f'before copy {time.time() - tt:.3f}')
+    try: 
         os.remove(fno+'.txt') # this ensures that the file fno is regenerated in case something went wrong during write.
     except:
         pass
     # copy variable files to final file
-    with h5py.File(fno, 'w') as g:
-        for gv in gvlist:
-            k, v = gv
-            if(k not in g.keys()):                    
-                g.create_group(k)
-            rfile = fno[:-2] + '@'.join((v, k)) + '.nc'
-            if v != 'index' and 'string' not in v:
-                with h5py.File(rfile, 'r') as f:
-                    for i in f[k].keys():
-                        if i not in g[k]:
-                            f.copy(k+'/'+i, g[k], i, without_attrs=True)
-    
-                            for a,av in f[k][i].attrs.items():
-                                if a not in ('CLASS','NAME','REFERENCE_LIST','DIMENSION_LIST'):
-                                    print(a,av)       
-                                    g[k][i].attrs[a]=av
-        for k in g.keys():
-            dim_attach(g, k)
+    with h5py.File(fno, 'a') as g:
+        if not direct:
+            for gv in gvlist:
+                k, v = gv
+                if(k not in g.keys()):                    
+                    g.create_group(k)
+                rfile = fno[:-2] + '@'.join((v, k)) + '.nc'
+                if v != 'index' and 'string' not in v:
+                    with h5py.File(rfile, 'r') as f:
+                        for i in f[k].keys():
+                            if i not in g[k]:
+                                f.copy(k+'/'+i, g[k], i, without_attrs=True)
         
-        for gr in ('header_table', 'source_configuration'):
+                                for a,av in f[k][i].attrs.items():
+                                    if a not in ('CLASS','NAME','REFERENCE_LIST','DIMENSION_LIST'):
+                                        print(a,av)       
+                                        g[k][i].attrs[a]=av
+            for k in g.keys():
+                dim_attach(g, k)
+        
+        for gr in ('header_table', 'source_configuration', 'station_configuration'): # do not change order of tables!!
             
             g.create_group(gr)
             start = 0
             noindex = True
-            for fn in fns:
-                with h5py.File(fn, 'r') as f:
+            #for fn in fns:
+                #with h5py.File(fn, 'r') as f:
+            for f in fps:
                     for k in f[gr].keys():
                         fhk = f[gr][k]
                         if k not in g[gr].keys():
                             
                             if fhk.ndim == 1:
                                 if 'string' not in k:
-                                    g[gr].create_dataset_like(k, fhk, shape=ridict['recordtimestamp'].shape)
+                                    g[gr].create_dataset_like(k, fhk, shape=ridict['recordtimestamp'].shape, chunks=(np.min((fhk.chunks[0],ridict['recordtimestamp'].shape[0] )), ))
                                 else:
                                     g[gr].create_dataset_like(k, fhk)
                                     
                             else:
-                                g[gr].create_dataset_like(k, fhk, shape=(ridict['recordtimestamp'].shape[0], fhk.shape[1]))
+                                g[gr].create_dataset_like(k, fhk, shape=(ridict['recordtimestamp'].shape[0], fhk.shape[1]),
+                                                          chunks=(np.min((fhk.chunks[0],ridict['recordtimestamp'].shape[0] )), fhk.shape[1] ))
                                 
                         
                         if 'string' not in k:
@@ -422,17 +510,33 @@ def h5concatenate(fkey, h=None) :
                         if k == 'index':
                             noindex = False
                         
-                start = stop
+                    start = stop
                 
-            if gr == 'header_table':
+            if gr in ('header_table',):
                 # to satisfy need for second primary key relation to station_configuration table
-                g[gr]['station_record_number'][:] = np.arange(ridict['recordtimestamp'].shape[0]) 
+                if 'station_record_number' not in g[gr].keys():
+                #g[gr]['station_record_number'][:] = np.arange(ridict['recordtimestamp'].shape[0]) 
+                    g[gr].create_dataset('station_record_number',data = np.arange(ridict['recordtimestamp'].shape[0])) 
                 # to fix missing or zero report_timestamp
-                repts = g[gr]['report_timestamp'][:]
-                invalid = np.where(repts<=0)
-                if len(invalid[0]) > 0:
-                    repts[invalid] = g[gr]['record_timestamp'][:][invalid]
-                    print(fno, 'fixed', len(invalid[0]), 'timestamps')
+                if gr == 'header_table':
+                    
+                    repts = g[gr]['report_timestamp'][:]
+                    invalid = np.where(repts<=0)
+                    if len(invalid[0]) > 0:
+                        repts[invalid] = g[gr]['record_timestamp'][:][invalid]
+                        print(fno, 'fixed', len(invalid[0]), 'timestamps')
+                
+            if gr in ('station_configuration', ):
+                    g[gr]['record_number'][:] = g['header_table']['station_record_number'][:]
+                    g[gr]['elevation'][:]= g['header_table']['height_of_station_above_sea_level'][:]
+                    sh1 = g['header_table']['primary_station_id'].shape[1]
+                    if g[gr]['primary_id'].shape[1] != sh1:
+                        if f'string{sh1}' not in g[gr].keys():
+                            g[gr].create_dataset_like(f'string{sh1}',g['header_table'][f'string{sh1}'], data=g['header_table'][f'string{sh1}'])
+                        del g[gr]['primary_id']
+                        g[gr].create_dataset_like('primary_id', g['header_table']['primary_station_id'], data=g['header_table']['primary_station_id'][:])
+                    else:
+                        g[gr]['primary_id'][:]= g['header_table']['primary_station_id'][:]
                 
                 
             if noindex:
@@ -446,15 +550,17 @@ def h5concatenate(fkey, h=None) :
         csum = 0
         for s in rstarts.keys():
             rstarts[s] = csum
-    #        csum += rsave[s]
+            #csum += rsave[s]
             csum += np.sum([rdict[s][i].stop-rdict[s][i].start for i in range(len(rdict[s])) if rdict[s][i] is not None ])
         
-        with h5py.File(fn, 'r') as f:
+        #with h5py.File(fn, 'r') as f:
+        if True:
+            f = fps[-1]
             
             g.create_group('recordindices')
             var = None #np.zeros(csum, dtype=int)
             l = 0
-#            rs = 0
+            #rs = 0
             for k, rs in sorted(rstarts.items()):
                 irel = 0
                 var = np.full(ridict['index'].shape,-2147483648, dtype=np.int64)
@@ -483,13 +589,25 @@ def h5concatenate(fkey, h=None) :
                     continue                    
                 if gr not in g.keys():
                     f.copy(gr, g, gr, without_attrs=True)
-                    if gr == 'station_configuration' and 'record_number' not in g[gr].keys():
-                        g[gr].create_dataset('record_number', data=np.arange(ridict['recordtimestamp'].shape[0]), dtype=ridict['recordtimestamp'].dtype)
+                    #if gr == 'station_configuration' and 'record_number' not in g[gr].keys():
+                        #g[gr].create_dataset('record_number', data=np.arange(ridict['recordtimestamp'].shape[0]), dtype=ridict['recordtimestamp'].dtype)
+                    if type(f[gr])!=h5py._hl.group.Group:
+                        continue
                     grlist = list(f[gr].keys())
                     if 'index' not in grlist:
                         g[gr].create_dataset('index', data=np.array([b'']*f[gr][grlist[0]].shape[0], dtype='S1'))
                     
                 dim_attach(g, gr)
+            
+            for fk in f.keys():
+                if fk not in ('recordindex', 'recordtimestamp'):
+                            
+                    copy_attrs(f, g, fk)        
+
+        
+        for f in fps:
+            f.close()
+        
         print('')
                     
            
@@ -582,7 +700,7 @@ if __name__ == "__main__":
     
     print('total', time.time() - tt)
     exit()
-    func = partial(pwrite_variable, fno, fns, ridict)
+    func = partial(pwrite_variable, fno, fns, ridict, compfilter=compfilter)
     list(map(func, gvlist)) #'observations_table', 'observed_variable')      
     
     
