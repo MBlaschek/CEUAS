@@ -25,7 +25,7 @@ from functools import partial
 #from multiprocessing import Pool
 import ray
 
-@njit(boundscheck=True)
+#@njit(boundscheck=True)
 def add_winddirbias(xyzu,xyzv,xyzd,xyzt,press,atime0,adj,adjpress):
     adjd=np.full_like(xyzv,np.nan)
     adju=np.full_like(xyzv,np.nan)
@@ -140,23 +140,35 @@ def calc_dirshifts(ddeps,cdict,breakidx,tsaint,delta):
     cdict['d']['xrdq']['directionbias'].values[:]=0.
     #cdict['u']['xrdq']['uwindbias'].values[:]=0.
     #cdict['v']['xrdq']['vwindbias'].values[:]=0.
-    for bi in range(breakidx.shape[0]-1,0,-1):
-        istart=np.max((breakidx[bi-1],breakidx[bi]-tsaint))
+    for bi in range(breakidx.shape[0]-1, -1,-1):
+        if breakidx[bi] <0:
+            continue
+        if bi > 0:
+            
+            istart=np.max((breakidx[bi-1],breakidx[bi]-tsaint))
+        else:
+            istart=np.max((0,breakidx[bi]-tsaint))
+        
         istop=np.min((breakidx[bi]+tsaint,ddeps.shape[2]))
         count=np.sum(~np.isnan(ddeps[:,:,istart:istop]))
         if(count > 50):
     
-            dirshifts[bi]=np.nanmean(ddeps[:,:,istart:breakidx[bi]-delta])-np.nanmean(ddeps[:,:,breakidx[bi]+delta:istop]) #:istop
-            unc=np.sqrt(0.5*(np.nanstd(ddeps[:,:,istart:breakidx[bi]-delta])**2+np.nanstd(ddeps[:,:,breakidx[bi]+delta:istop])**2))
+#            dirshifts[bi]=np.nanmean(ddeps[:,:,istart:breakidx[bi]-delta], axis=(0, 2))-np.nanmean(ddeps[:,:,breakidx[bi]+delta:istop], axis=(0, 2)) #:istop
+#            unc=np.sqrt(0.5*(np.nanstd(ddeps[:,:,istart:breakidx[bi]-delta], axis=(0, 2))**2+np.nanstd(ddeps[:,:,breakidx[bi]+delta:istop], axis=(0, 2))**2))
+            dirshifts[bi]= np.nanmean(ddeps[:,7:13,istart:breakidx[bi]-delta], axis=None)-np.nanmean(ddeps[:,7:13,breakidx[bi]+delta:istop], axis=None) #:istop
+            unc=np.sqrt(0.5*(np.nanstd(ddeps[:,7:13,istart:breakidx[bi]-delta], axis=None)**2+np.nanstd(ddeps[:,7:13,breakidx[bi]+delta:istop], axis=None)**2))
         else:
             dirshifts[bi] = np.nan
             unc = np.nan
         if dirshifts[bi]!=dirshifts[bi]:
             dirshifts[bi]=0.
         adir=abs(dirshifts[bi])
+        print(bi, istart, istop, adir)
+        #if bi == 0:
+            #x = 0
         if adir>3.0 and adir>1.96*unc/np.sqrt(count):
-            ddeps[:,:,:breakidx[bi]]-=dirshifts[bi]
-            ds[:,:,:breakidx[bi]]+=dirshifts[bi]
+            ddeps[:,:,:breakidx[bi]] -=dirshifts[bi]
+            ds[:,:,:breakidx[bi]] +=dirshifts[bi]
             ds[ds>360.]-=360.
             ds[ds<0.]+=360.
             print('adjusting direction by{:5.2f}'.format(dirshifts[bi]),
@@ -265,6 +277,7 @@ def homogenize_station(opath,via_backend,fnf):
 
         except Exception as e:
             print(e)
+            raise ValueError(data.filename)
             return
         
         try:
@@ -284,6 +297,7 @@ def homogenize_station(opath,via_backend,fnf):
 
         except Exception as e:
             print(e)
+            raise ValueError(data.filename)
             return
     
     else:
@@ -294,12 +308,17 @@ def homogenize_station(opath,via_backend,fnf):
             ifile = fnf
         
             data=eua.CDMDataset(ifile)
+            recs = data.recordindices.recordtimestamp.shape[0]
+            if recs < 100:
+                print(ifile, 'too short record')
+                return
         except:
             return
     
         try:
             hlen = data.advanced_homogenisation.wind_bias_estimate.shape[0]
-            return
+            #print(ifile, 'already processed')
+            #return #if estimate already exists
         except:
             pass
 
@@ -331,12 +350,13 @@ def homogenize_station(opath,via_backend,fnf):
             try:
                 
                 ndata[para]['observation_value']=data['observations_table']['observation_value'][istart:istop][oindex]
-                ndata[para]['obs_minus_bg']=data['era5fb']['fg_depar@body'][istart:istop][oindex]
+                ndata[para]['obs_minus_bg']=data['era5fb']['fg_depar@offline'][istart:istop][oindex]
                 ndata[para]['date_time']=data['observations_table']['date_time'][istart:istop][oindex]
                 
                 out=eua.daysx2(ndata[para]['date_time'],pindex,len(plist),ndata[para]['observation_value'])
             except Exception as e:
-                print(fnf, e)
+                print(e)
+                raise ValueError(fnf)
                 return
     
             ndata[para]['xrdq']=xr.Dataset()
@@ -371,6 +391,8 @@ def homogenize_station(opath,via_backend,fnf):
         tsquare=np.zeros(tsa.shape[-1],dtype=np.float32)
         for i in range(1):
             
+            ufg=cdict['u']['xrdq']['uwind'].values-cdict['u']['xrdq']['era5_fgdep'].values
+            vfg=cdict['v']['xrdq']['vwind'].values-cdict['v']['xrdq']['era5_fgdep'].values
     
             for ih in range(cdict['d']['xrdq']['era5_fgdep'].shape[0]):
                 for ip in range(cdict['d']['xrdq']['era5_fgdep'].shape[1]-2):
@@ -382,10 +404,12 @@ def homogenize_station(opath,via_backend,fnf):
                     ov=cdict['v']['xrdq']['vwind'].values[ih,ip,:]
                     ff=np.sqrt(ou**2+ov**2)
                     o2=270-np.arctan2(ov,ou)*180/np.pi
-                    fu=ou-vu
-                    fv=ov-vv
+                    fu=ufg[ih, ip, :] #ou-vu
+                    fv=vfg[ih, ip, :] #ov-vv
                     fd=270-np.arctan2(fv,fu)*180/np.pi
                     v=o2-fd
+                    if ip == 11:
+                        x = 0
                     idx = np.where(~np.isnan(v))[0]
                     if len(idx) > 0:
                         idy = np.where(v[idx]>180)[0]
@@ -411,14 +435,14 @@ def homogenize_station(opath,via_backend,fnf):
                     
                     idx = np.where(~np.isnan(ff))[0]
                     if len(idx) > 0:
-                        idy = np.where(ff[idx]<2.0)[0]
+                        idy = np.where(ff[idx]<5.0)[0]
                         if len(idy) > 0:        
                             v[idx[idy]]=np.nan # wind directions for small wind speeds too uncertain
                             fd[idx[idy]]=np.nan # wind directions for small wind speeds too uncertain
                             o2[idx[idy]]=np.nan # wind directions for small wind speeds too uncertain
                           
                     try:
-                        ddeps[ih,ip,:v.shape[0]]=v[:] # needs to be fixed
+                        ddeps[ih,ip,:] = v[:] #v.shape[0]]=v[:] # needs to be fixed
                     except:
                         pass
                     tsa[ih,ip,:]=np.nan
@@ -447,7 +471,7 @@ def homogenize_station(opath,via_backend,fnf):
         
             breakpoints=select_breaks(tsa,1460,100.)
             breakpoints.sort()
-            dirshifts=calc_dirshifts(ddeps,cdict,breakpoints,2*1460,160)
+            dirshifts=calc_dirshifts(ddeps,cdict,breakpoints,2*1460,60)
             if lplot:
                 
                 plt.subplot(3,1,3)
@@ -465,13 +489,19 @@ def homogenize_station(opath,via_backend,fnf):
         failedfiles.append(fnf+' early')
         
     try:
-        
-        cdict['d']['xrdq']['uwindbias']=cdict['u']['xrdq']['uwindbias']
-        cdict['d']['xrdq']['vwindbias']=cdict['v']['xrdq']['vwindbias']
+        if cdict['d']['xrdq'].time.shape[0] != cdict['v']['xrdq'].time.shape[0]:
+            idx = np.searchsorted(cdict['v']['xrdq'].time, cdict['d']['xrdq'].time)
+            idx[idx==cdict['v']['xrdq'].time.shape[0]] -= 1
+            cdict['d']['xrdq']['uwindbias']=cdict['u']['xrdq']['uwindbias'][:, :, idx]
+            cdict['d']['xrdq']['vwindbias']=cdict['v']['xrdq']['vwindbias'][:, :, idx]
+        else:       
+            cdict['d']['xrdq']['uwindbias']=cdict['u']['xrdq']['uwindbias']
+            cdict['d']['xrdq']['vwindbias']=cdict['v']['xrdq']['vwindbias']
         cdict['d']['xrdq'].drop_vars('bias_estimate')
-        cdict['d']['xrdq'].to_netcdf(path=fo, format='NETCDF4_CLASSIC')
+        #cdict['d']['xrdq'].to_netcdf(path=fo, format='NETCDF4_CLASSIC')  # leads to permnission denied error
     except Exception as e:
         print(e)
+        raise ValueError(fnf)
         dimsize_errors+=1
         failedfiles.append(fnf)
         return
@@ -492,6 +522,8 @@ def homogenize_station(opath,via_backend,fnf):
             datau=data['observations_table']['observation_value'][ranges['u'][0]:ranges['u'][-1]]
             datav=data['observations_table']['observation_value'][ranges['v'][0]:ranges['v'][-1]]
             datad=data['observations_table']['observation_value'][ranges['d'][0]:ranges['d'][-1]]
+            if datad.shape != datau.shape:
+                datad = 270-np.arctan2(datav,datau)*180/np.pi
             
             adjd,adju,adjv=add_winddirbias(datau,
                                 datav,datad,
@@ -520,13 +552,13 @@ def homogenize_station(opath,via_backend,fnf):
                 else:
                     with h5py.File(ifile,'r+') as data:
                         
-                        data.file['advanced_homogenisation']['wind_bias_estimate'][cdict[k]['istart']:cdict[k]['istop']]=-raggedd[k]
+                        data.file['advanced_homogenisation']['wind_bias_estimate'][cdict[k]['istart']:cdict[k]['istop']]= -raggedd[k]
                     
             print('write:',time.time()-tt)
             
             print('wrote '+ifile)
         except Exception as e:
-            print('writing back to merged file failed', e)
+            raise ValueError('writing back to merged file failed', ifile, e)
             failedfiles.append(fnf+'-merged')
     
     return fnf
@@ -590,10 +622,17 @@ def homogenize_winddir(via_backend=False, fns=[]):
         
         futures = []
         adjusted = []
-        for fn in fns:
+        failedlist = []
+        for fn in fns[:]:
             futures.append(ray_homogenize_station.remote(opath, via_backend, fn))
-            #adjusted.append(homogenize_station(opath, via_backend, fn))
+            #try:
+                ##if '0-20000-0-72493' in fn:
+                #adjusted.append(homogenize_station(opath, via_backend, fn))
+            #except MemoryError as e:
+                #failedlist.append(fn)
         adjusted = ray.get(futures)
+        for fa in failedlist:
+            print('failed:', fa)
         
         
     print(time.time()-tt,len(adjusted))
@@ -608,13 +647,14 @@ if __name__ == "__main__":
     version='1.0'
     os.chdir(os.path.expandvars('$RSCRATCH/tmp'))
     via_backend=False
-    fns=glob.glob(os.path.expandvars('$RSCRATCH/converted_v13/long/*v1.nc'))
+    fns=glob.glob(os.path.expandvars('$RSCRATCH/converted_v25/long/*v3.nc'))
+    #fns += glob.glob(os.path.expandvars('$RSCRATCH/converted_v19/long/*0-20666-*20353_CEUAS_merged_v3.nc'))
     fns.sort(key=os.path.getmtime)
     #fstart=fns.index('/raid60/scratch/leo/scratch//converted_v7/0-20000-0-41517_CEUAS_merged_v1.nc')
     #for i in range(len(fns[:fstart])):
         #fns[i]=fns[i].split('/')[-1].split('_CEUAS_merged_v1.nc')[0]
     #fns=['0-20000-0-35229']
-    ray.init(num_cpus=40)
+    ray.init()
     homogenize_winddir(via_backend,fns=fns)
     
 
