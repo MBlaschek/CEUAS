@@ -16,6 +16,7 @@ import netCDF4
 import matplotlib.pylab as plt
 import os,sys,glob,psutil,shutil
 import xarray as xr
+from scipy.signal import medfilt
 #sys.path.append(os.getcwd()+'/../common/rasotools/')
 #sys.path.append(os.path.expanduser('../common/Rasotools/rasotools/'))
 #sys.path.append(os.path.expanduser('../common/Rasotools/'))
@@ -37,7 +38,7 @@ import json
 import copy
 import pickle
 #import xarray as xr
-import ruptures as rpt
+#import ruptures as rpt
 from pympler.asizeof import asizeof
 
 import ray
@@ -87,14 +88,14 @@ def RC_ini(RCfile):
         RC['weight_distance']=[3000,5000]
     #    RC['ri_min_sampsize']=[330,30]
         RC['ri_min_sampsize']=[330,80]
-        RC['initial_adjustments']='era5neighbours' #'rharm' #'era5neighbours' #'era5' #'era5bc' #'era5neighbours'
+        RC['initial_adjustments'] = {'all': 'era5neighbours', 'lastsondes': '',} #'rharm' #'era5neighbours' #'era5' #'era5bc' #'era5neighbours'
         #RC['transdict']={'montemp':'mtemperatures','rasocorrmon':'madjustments','goodmon':'goodmon'}
-        RC['transdict']={'montemp':'mini_adjusted_temperatures','rasocorrmon':'madjustments','goodmon':'goodmon'}
+        RC['transdict']={'montemp':'mini_adjusted_temperatures','rasocorrmon':'madjustments','goodmon':'goodmon', 'rharm_h_mon_': 'temperatures_h',}
         RC['rharm'] = 'rcuon'
         RC['rich'] = True
         RC['richfuture']=True 
         RC['findfuture']=True
-        RC['goodsondes']=[141,142,123,124,125,113,114,79,80,81,70,152,177,183] # from WMO manual on codes, 2019 edition
+        RC['goodsondes']=[141,142,123,124,125,113,114,79,80,81,70,152,122, 135, 177,183] # from WMO manual on codes, 2019 edition, used in GRUAN
         RC['apriori_prob_default']=0.01
         RC['exp']='exp00'
         RC['CUON'] = 'converted_v11/'
@@ -102,8 +103,9 @@ def RC_ini(RCfile):
         RC['version'] = '1.8' #1.9.0'
         RC['add_solelev'] = False
         RC['write_to_backend'] = False
+        RC['feedback'] = ['fg_depar@offline', '']
         
-        with open(os.path.expandvars(RCfile),'w') as f:
+        with open(os.path.expandvars(RCfile)+'exc','w') as f:
             json.dump(RC,f, indent=4, sort_keys=True)
             
     refdate=datetime.datetime(*RC['refdate'])
@@ -196,7 +198,7 @@ def test(x, window, missing):
 def read_hadCRUT5(path,prefix,refdate):
 
     t1=time.time()
-    fn=path+prefix+".analysis.anomalies.ensemble_mean.nc.1"
+    fn=path+prefix+".analysis.anomalies.ensemble_mean.nc"
     fvar='tas_mean'
     fevar='tas'
     try:
@@ -284,6 +286,8 @@ def break_analyze(finfo):
         plt.title(finfo['sid'])
         plt.tight_layout()
     
+    total[finfo['apriori_probs']==0] = 0
+
     totalo=np.zeros_like(total)
     totalo[:]=total[:]
     l=0
@@ -320,14 +324,22 @@ def break_analyze(finfo):
 
 #@njit
 def metadata_analysis(sonde_type):
-    schroedlist=np.array(['VN','Vn'],dtype='S4')
-    apriori_probs=(np.empty_like(sonde_type,dtype=np.float32)).fill(RC['apriori_prob_default'])
-    rcg=np.concatenate((np.array(RC['goodsondes'],dtype='S4'),schroedlist))
+    
+    schroedlist=np.array(['VN','Vn', 'VP'],dtype='S4') #RS92
+    #schroedlist = []
+    #for i in '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'U', 'a', 'b', 'c', 'h':
+        
+        #schroedlist.append('V'+i)
+    #schroedlist = np.array(schroedlist,dtype='S4') #RS80
+    
+    apriori_probs=np.empty(sonde_type.shape[0],dtype=np.float32)
+    apriori_probs.fill(RC['apriori_prob_default'])
+    rcg=np.array(RC['goodsondes'],dtype='S4')
     
     bmatch=0
     gmatch=0
     count=0
-    lbound=np.max([sonde_type.shape[0]-RC['mean_maxlen'],-1])
+    lbound=np.max([sonde_type.shape[0]-RC['snht_maxlen'],-1])
     i=sonde_type.shape[0]-1
     while i>lbound:
         found=False
@@ -342,11 +354,23 @@ def metadata_analysis(sonde_type):
                 bmatch+=1
         count +=1   
         i-=1
+    tt = time.time()
+    stold = b'x'
+    for i in range(sonde_type.shape[0]):
+        if sonde_type[i] != stold:   
+            if np.any(sonde_type[i][0][:2]==schroedlist) or np.any(sonde_type[i][0]==rcg):
+                apriori_probs[i] = 0.
+            stold = sonde_type[i]
+        else:
+            apriori_probs[i] = apriori_probs[i-1]
+            
+    print(time.time()-tt, np.sum(apriori_probs==0))
     if gmatch>bmatch and gmatch >= RC['snht_min_sampsize']:
         lastsonde=1
     else:
         lastsonde=0
-    
+        
+    apriori_probs = medfilt(apriori_probs, kernel_size=101)
     return apriori_probs,lastsonde
 #@njit
 def bilin(hadmeddict,temperatures,rcy,rcm,days,lat,lon):
@@ -400,6 +424,15 @@ def bilin(hadmeddict,temperatures,rcy,rcm,days,lat,lon):
         
     return t850
     
+def dim_attach(g, k, v):
+#    for v in g[k].keys(): #var_selection:
+        l=0            
+        try:
+            g[k][v].dims[0].attach_scale(g[k]['hour'])
+            g[k][v].dims[1].attach_scale(g[k]['pressure'])
+            g[k][v].dims[2].attach_scale(g[k]['time'])
+        except:
+            print('dim_attach failed')
     
 #@ifray(ray.remote,RC['findfuture'])
 def RAOB_findbreaks(hadmeddict, method,fnorig):
@@ -420,33 +453,47 @@ def RAOB_findbreaks(hadmeddict, method,fnorig):
     if not cache:
     
         with h5py.File(fnorig) as iofile:
-            if '126' not in iofile['recordindices'].keys():
-                    return None
-            if np.unique(iofile['recordindices']['126'][:]).shape[0] < 365:
+            try:
+                
+                if '126' not in iofile['recordindices'].keys():
+                        return None
+            except:
+                raise ValueError(fnorig)
+            ri = iofile['recordindices']['126'][:]
+            if np.unique(ri).shape[0] < 365:
                     return None
             
             try:
                 
                 x = iofile['station_configuration/station_name'][:]
                 sn = x.view('S'+str(x.shape[1]))[0][0].decode()
+                sl = slice(ri[0],ri[-1])
+                sonde_type = iofile['observations_table/sensor_id'][ri[0]:ri[-1]][ri[ri<ri[-1]] - ri[0]]
+                
             except:
                 sn = 'missing'
+                sonde_type = np.zeros((ri[-1]-1 - ri[0], 4), dtype='S1')
 
         with eua.CDMDataset(fnorig) as iofile:
             dq=iofile.read_data_to_3dcube(['temperature'], 
                     dates=None,
                     plevs=(RC['stdplevs']*100.).astype(int),
-                    feedback=['fg_depar@body', 'biascorr@body'],
+                    feedback=RC['feedback'],  # default ['fg_depar@body', 'biascorr@body'],
                     feedback_group='era5fb')
         #data = iofile.read_data_to_cube(variable,
                 #dates=None,
                 #plevs=(RC['stdplevs'][RC['pidx']]*100.).astype(int),
                 #feedback=['fg_depar', 'bias'],
                 #feedback_group='era5fb')#,**kwargs)
-
             if not dq:
                 print(fnorig.split('/')[-1], 'failed', iofile['recordindices']['126'].shape[0])
                 return None
+            
+            ts = iofile['recordindices']['recordtimestamp'][:]
+            idy = np.searchsorted(ts, dq['temperature']['datum'].values*86400)
+            idy[idy>sonde_type.shape[0]-1] = sonde_type.shape[0]-1
+            sonde_type = sonde_type[idy, :]
+            
         dql={}
         for k in dq.keys():
         ###dq[k].rename_dims({'plev':'pressure'})
@@ -463,7 +510,12 @@ def RAOB_findbreaks(hadmeddict, method,fnorig):
                 #print(qs,idx)
                 v[idx]=numpy.nan
                 o[idx]=numpy.nan
-                hilf=xrdq['bias_estimate'].values[ih,ip,:]
+                try:
+                    
+                    hilf=xrdq['bias_estimate'].values[ih,ip,:]
+                except:
+                    hilf = np.zeros_like(xrdq['temperatures'].values[ih,ip, :])
+                    
                 hilf[numpy.isnan(hilf)]=0.
                 xrdq['era5_fgdep'].values[ih,ip,:]=-v-hilf
                 # ignore missing fgdep, bias_estimate
@@ -477,6 +529,8 @@ def RAOB_findbreaks(hadmeddict, method,fnorig):
         except:
             pass
     
+        xrdq = xrdq.assign(sonde_type=(['time','string4'],sonde_type))
+        
         fo = RC['outdir']+RC['statids'][fidx] + '/feedbackmerged' + RC['statids'][fidx] + '.nc'
         xrdq.to_netcdf(path=fo, format='NETCDF4_CLASSIC')
         print('wrote '+fo)
@@ -496,7 +550,11 @@ def RAOB_findbreaks(hadmeddict, method,fnorig):
             finfo['days'] = finfo['days'][:ndays]
             #print(fn.split('/')[-1],finfo['days'].shape)
             finfo['fg_dep']=-f['era5_fgdep'][:,np.array(RC['pidx']),:ndays]
-            finfo['era5bc']=-f['bias_estimate'][:,np.array(RC['pidx']),:ndays] # ERA5 bias correction - to be used for adjusting most recent part of some series
+            try:
+                
+                finfo['era5bc']=-f['bias_estimate'][:,np.array(RC['pidx']),:ndays] # ERA5 bias correction - to be used for adjusting most recent part of some series
+            except:
+                finfo['era5bc']=np.zeros_like(f['era5_fgdep'])
             finfo['temperatures']=f['temperatures'][:,np.array(RC['pidx']),:ndays]
             #finfo['fg']=finfo['temperatures']-finfo['fg_dep']
             finfo['lon']=f['lon'][0]
@@ -506,29 +564,60 @@ def RAOB_findbreaks(hadmeddict, method,fnorig):
             finfo['wigos']=f.attrs['unique_source_identifier'].decode("utf-8")
             if 'sonde_type' in f.keys():       
                 #print(f['sonde_type'].shape)
-                finfo['apriori_probs'],finfo['lastsonde']=metadata_analysis(f['sonde_type'][0,0,:ndays].view('S{}'.format(f['sonde_type'].shape[3])))
+#                finfo['apriori_probs'],finfo['lastsonde']=metadata_analysis(f['sonde_type'][0,0,:ndays].view('S{}'.format(f['sonde_type'].shape[3])))
+                finfo['apriori_probs'],finfo['lastsonde']=metadata_analysis(f['sonde_type'][:ndays, :, 0].view('S{}'.format(f['sonde_type'].shape[1])))
+                finfo['sonde_type'] = f['sonde_type'][:ndays, :, 0].view('S{}'.format(f['sonde_type'].shape[1]))
                 #print(time.time()-tt)
             else:
                 finfo['apriori_probs']=np.zeros_like(finfo['days'],dtype=np.float32)
                 finfo['lastsonde']=0
+            #finfo['temperatures'][:, :, finfo['apriori_probs'] != 0] = np.nan # to select certain radiosonde types
+            #if finfo['lastsonde'] == 0:
+                #finfo['temperatures'][:, :, :] = np.nan # to select certain radiosonde types
         
         finfo['rharm'] =False
         if RC['rharm'] in ('rharmc', 'rcuon'):
             
             try:
-                fnrharm_h = glob.glob('/users/staff/uvoggenberger/scratch/RHARM_2/*' + finfo['sid'][-6:] +'.nc')
+                fnrharm_h = glob.glob(RC['rharm_path']+'/*' + finfo['sid'][-6:] +'.nc')
                 if len(fnrharm_h) > 0:
                     fnrharm_h = fnrharm_h[0]
                 else:
                     fnrharm_h = 'xxxx'
+                    
+                    ilat = []
+                    ilon = []
+                    iid = []
+                    with open(os.path.expanduser('~/tables/igra2-station-list.txt')) as f:
+                        data = f.read().split('\n')
+                        for d in data:
+                            l = d.split()
+                            #print(l)
+                            if l:
+                                ilat.append(np.float32(l[1]))
+                                ilon.append(np.float32(l[2]))
+                                iid.append(l[0])
+                    ilon =np.array(ilon)
+                    ilat = np.array(ilat)
+                    
+                    idx = np.where((np.abs(ilon-finfo['lon'])<0.5) & (np.abs(ilat-finfo['lat'])<0.5))[0]
+                    if len(idx) > 0:
+                        fnrharm_h = RC['rharm_path']+'/' + iid[idx[0]] +'.nc'
+                        print(fnrharm_h, finfo['sid'], os.path.exists(fnrharm_h))
+                        print('')
+                            
+                    
+                            
                 #fnrharm_h = '/'.join(fn.split('/')[:-3]) + '/exp01/' + finfo['sid'][-6:] + '/rharm_h_' + finfo['sid'][-6:] +'.nc'
                 #fnrharm = '/'.join(fn.split('/')[:-3]) + '/exp01/' + finfo['sid'][-6:] + '/rharm_' + finfo['sid'][-6:] +'.nc'
                 with h5py.File(fnrharm_h,'r') as f:
                 
-                    radjust = f['ta'][:]
-                    rdays = np.int64(f['datum'][0, :]) // 86400
+                    radjust = f['ta_h'][:]
+                    runadj = f['ta'][:]
+                    rdays = f['datum'][0, :]// 86400
                     finfo['rharmbc'] = np.empty_like(finfo['era5bc'])
                     finfo['rharmbc'].fill(np.nan)
+                    rharmsonde_type = np.zeros_like(finfo['sonde_type'], shape=(rdays.shape[0], 1))
                     l = 0
                     for i in range(finfo['days'].shape[0]):
                         while rdays[l] < finfo['days'][i]:
@@ -537,12 +626,63 @@ def RAOB_findbreaks(hadmeddict, method,fnorig):
                                 l -= 1
                                 break
                         if rdays[l] == finfo['days'][i]:
-                            finfo['rharmbc'][:, :, i] =radjust[:, RC['pidx'], l] - finfo['temperatures'][:, :, i]
-                            if RC['rharm'] == 'rharmc':
+                            #finfo['rharmbc'][:, :, i] =radjust[:, RC['pidx'], l] - finfo['temperatures'][:, :, i]
+                            finfo['rharmbc'][:, :, i] = -(runadj[:, RC['pidx'], l] - radjust[:, RC['pidx'], l]) 
+                            rharmsonde_type[ l] = finfo['sonde_type'][i] 
+                            #if RC['rharm'] == 'rharmc':
                                 
-                                finfo['temperatures'][:, :, i] += finfo['rharmbc'][:, :, i]
-                                finfo['rharmbc'][:, :, i] = 0.
+                                #finfo['temperatures'][:, :, i] += finfo['rharmbc'][:, :, i]
+                                #finfo['rharmbc'][:, :, i] = 0.
+                        #else:
+##                            finfo['temperatures'][:, :, i] = np.nan
+##                            finfo['fg_dep'][:, :, i] = np.nan
+                            #pass
+                
+                print('before rharmwrite: {:6.4f}'.format(time.time()-tt)) 
                 finfo['rharm'] = True
+                fnrharm_h_local = os.path.dirname(fn)+'/rharm_h_'+finfo['sid'][-6:] + '.nc'
+                dtv = {'temperatures': np.dtype('float32'),'temperatures_h': np.dtype('float32'),'rharmbc': np.dtype('float32'),
+                       'goodmon': np.dtype('float32')}
+                ddv = {'temperatures': ('hour', 'pressure', 'time'), 'goodmon': ('hour', 'pressure', 'time'),
+                       'temperatures_h': ('hour', 'pressure', 'time'), 'rharmbc': ('hour', 'pressure', 'time')}
+                dv = {
+                 'temperatures': {'long_name': 'IGRA temperature', 'units': 'K', 'missing_value': -999.0, 'valid_range': np.array([  0., 400.], dtype=np.float32), 'cell_methods': 'time: mean over months'},
+                 'goodmon': {'long_name': 'number_of_values_in_month', 'missing_value': -999.0, 'valid_range': np.array([ 0., 31.], dtype=np.float32)},
+                 'temperatures_h': {'long_name': 'RHARM harmonised temperature', 'units': 'K', 'missing_value': -999.0, 'valid_range': np.array([0.,  400.], dtype=np.float32), 'cell_methods': 'time: mean over months'}, 
+                 'rharmbc': {'long_name': 'RHARM adjustments', 'units': 'K', 'missing_value': -999.0, 'valid_range': np.array([-20., 20.], dtype=np.float32), 'cell_methods': 'time: mean over months'}, 
+                 }
+                plist = ['temperatures', 'temperatures_h', 'rharmbc']
+                #do_monmean(plist,RC['tidx'],finfo)
+                if os.path.isfile(fnrharm_h_local):
+                    if os.path.getmtime(fnrharm_h) > os.path.getmtime(fnrharm_h_local):
+                        shutil.copyfile(fnrharm_h, fnrharm_h_local)
+                        rhdict = dict(temperatures=runadj, temperatures_h=radjust, rharmbc=-(radjust-runadj), days=rdays)
+                        for k in 'sid', 'station_name', 'lat','lon':
+                            rhdict[k] = finfo[k]
+                        with h5py.File(fnrharm_h_local, 'r+') as f:
+                            f.create_dataset_like('rharmbc', f['ta'], data=rhdict['rharmbc'])
+                            dim_attach(f, '/', 'rharmbc')
+                        do_monmean(plist,RC['tidx'],rhdict)
+                        rhdict['months'] += 1
+                        prefix='rharm_h_mon_'
+                        write_monmean(RC['outdir'],prefix,rhdict, dtv=dtv, ddv=ddv, dv=dv, sonde_type=rhdict['sonde_type'])
+                else:
+                    shutil.copyfile(fnrharm_h, fnrharm_h_local)
+                    rhdict = dict(temperatures=runadj, temperatures_h=radjust, rharmbc=-(radjust-runadj), days=rdays, sonde_type=rharmsonde_type)
+                    for k in 'sid', 'station_name', 'lat','lon':
+                        rhdict[k] = finfo[k]
+                    with h5py.File(fnrharm_h_local, 'r+') as f:
+                        f.create_dataset_like('rharmbc', f['ta'], data=rhdict['rharmbc'])
+                        #f.create_dataset( 'string4',  shape=(4, ) ,dtype='S1' )
+                        f.create_dataset('sonde_type', data=rhdict['sonde_type'][:, 0])#.view('S1'))
+                        #f['sonde_type'].dims[0].attach_scale(f['string4'])
+                        f['sonde_type'].dims[0].attach_scale(f['time'])
+                        dim_attach(f, '/', 'rharmbc')
+                    do_monmean(plist,RC['tidx'],rhdict)
+                    rhdict['months'] += 1
+                    prefix='rharm_h_mon_'
+                    write_monmean(RC['outdir'],prefix,rhdict, dtv=dtv, ddv=ddv, dv=dv, sonde_type=rhdict['sonde_type'])
+                    
             except FileNotFoundError:
                 finfo['rharm'] = False
             
@@ -557,7 +697,7 @@ def RAOB_findbreaks(hadmeddict, method,fnorig):
         # finfo['hadcrut'] is difference between station anomalies at 850 hPa and (smoothed) hadcrut anomalies
         finfo['hadcrut_dep']=bilin(hadmeddict,finfo['anomalies'],RC['years'],RC['months'],finfo['days'],finfo['lat'],finfo['lon'])
         
-        #print('before snht: {:6.4f}'.format(time.time()-tt)) 
+        print('before snht: {:6.4f}'.format(time.time()-tt)) 
         #print(typeof(finfo['fg_dep']),typeof(RC['months'][finfo['days']]),
               #typeof(RC['snht_maxlen']),typeof(RC['snht_maxmiss']),typeof(RC['miss_val']))
         if method=='SNHT':
@@ -822,7 +962,7 @@ def RAOB_adjust(finfo):
         for ih in range(sh[0]):
             for ip in range(sh[1]):
                     
-                if ~np.isnan(break_profiles[ib,ih,ip]) and (finfo['rharm'] == False or RC['rharm'] != 'rharmc'):
+                if ~np.isnan(break_profiles[ib,ih,ip]): #and (finfo['rharm'] == False ):  #or RC['rharm'] != 'rharmc'
                     finfo['adjustments'][ih,ip,:ib]-=break_profiles[ib,ih,ip]
                     finfo['adjusted_fg_dep'][ih,ip,:fb[ib]]+=break_profiles[ib,ih,ip]
                     finfo['adjusted_temperatures'][ih,ip,:fb[ib]]+=break_profiles[ib,ih,ip]
@@ -881,6 +1021,7 @@ ray_RAOB_adjustbreaks=ray.remote(RAOB_adjustbreaks)
 def do_monmean(vars,tidx,fi):
     
     idx=np.searchsorted(fi['days'],tidx)
+    #idx[idx==fi['days'].shape[0]] -= 1
     mdays=idx[1:]-idx[:-1]
     midx=np.where(mdays>0)[0]
     
@@ -892,31 +1033,24 @@ def do_monmean(vars,tidx,fi):
         
     out=np.empty((fi[v].shape[0],fi[v].shape[1],fi['months'].shape[0]),dtype=np.int32)
     fi['goodmon']=pnm.goodmon(fi['temperatures'],idx,out)
+    fi['msonde_type'] = fi['sonde_type'][idx[midx]]
             
                 
     return
 
-def write_monmean(opath,prefix,fi):
+def write_monmean(opath,prefix,fi, dtv=None, ddv=None, dv=None, sonde_type=None):
         
     if not os.path.isdir(os.path.dirname(opath+'/'+fi['sid'][-6:])):
         os.mkdir(os.path.dirname(opath+'/'+fi['sid'][-6:]))
     
-    mtnames = {'feedbackglobbincorrmon': 'monthly adjusted temperature','feedbackglobbgmon': 'monthly background temperature',}
+    mtnames = {'feedbackglobbincorrmon': 'monthly adjusted temperature','feedbackglobbgmon': 'monthly background temperature','rharm_h_mon_': 'RHARM harmonised temperature',}
     
     fno=opath+'/'+fi['sid'][-6:]+'/'+prefix+fi['sid'][-6:]+'.nc'
     try:
         with netCDF4.Dataset(fno, "w") as dst:
             # copy global attributes all at once via dictionary
-            new_globals={'Conventions': 'CF-1.1',
-                         'title': 'Monthly radiosonde temperatures and -adjustments',
-                         'institution': 'Institute for Meteorology and Geophysics, University of Vienna',
-                         'Stationname': fi['station_name'], 
-                         'history': datetime.datetime.today().strftime("%m/%d/%Y"), 
-                         'source':'ERA5, IGRA2, NCAR UADB', 
-                         'references':'Copernicus Early Upper Air Dataset', 
-                         'url': 'early-upper-air.copernicus-climate.eu'
-                         }
-            dst.setncatts(new_globals)
+
+            dst.setncatts(new_globals(RC, fi))
             # copy dimensions
             dims = {'station': 1,'numdat': 4,'time': 1,'pressure': RC['stdplevs'].shape[0],'hour': fi['temperatures'].shape[0]}
             for name, dimension in dims.items(): #src.dimensions.items():
@@ -927,20 +1061,41 @@ def write_monmean(opath,prefix,fi):
                     dst.createDimension(
                         name, (dimension))
             # copy all file data except for the excluded
-            dt = {'lat': np.dtype('float32'), 'lon': np.dtype('float32'), 'press': np.dtype('float32'), 'datum': np.dtype('int32'),
-                  'montemp': np.dtype('float32'), 'goodmon': np.dtype('float32'), 'rasocorrmon': np.dtype('float32')}
-            dd = {'lat': ('station',), 'lon': ('station',), 'press': ('pressure',), 'datum': ('numdat', 'time'),
-                  'montemp': ('hour', 'pressure', 'time'), 'goodmon': ('hour', 'pressure', 'time'), 'rasocorrmon': ('hour', 'pressure', 'time')}
+            dt = {'lat': np.dtype('float32'), 'lon': np.dtype('float32'), 'press': np.dtype('float32'), 'datum': np.dtype('int32'),}
+            if dtv is None:
+                dtv = {'montemp': np.dtype('float32'), 'goodmon': np.dtype('float32'), 'rasocorrmon': np.dtype('float32'),
+                  }
+
+            dd = {'lat': ('station',), 'lon': ('station',), 'press': ('pressure',), 'datum': ('numdat', 'time'),}
+            if ddv is None:
+                ddv = {'montemp': ('hour', 'pressure', 'time'), 'goodmon': ('hour', 'pressure', 'time'), 'rasocorrmon': ('hour', 'pressure', 'time')}
 
             d = {'lat': {'long_name': 'station latitude', 'units': 'degrees_north', 'axis': 'Y', 'valid_range': np.array([-90.,  90.]), 'missing_value': -999.0},
                  'lon': {'long_name': 'station longitude', 'units': 'degrees_east', 'axis': 'X', 'valid_range': np.array([-180.,  180.]), 'missing_value': -999.0},
                  'press': {'long_name': 'pressure levels', 'units': 'hPa', 'axis': 'Z', 'valid_range': np.array([   0., 1100.]), 'missing_value': -999.0},
-                 'datum': {'long_name': 'datum', 'units': 'days since 1900-01-01 0:0:0', 'axis': 'T', 'calendar': 'gregorian', 'missing_value': -999.0},
+                 'datum': {'long_name': 'datum', 'units': 'days since 1900-01-01 0:0:0', 'axis': 'T', 'calendar': 'gregorian', 'missing_value': -999.0},}
+            if dv is None:
+                dv = {
                  'montemp': {'long_name': mtnames[prefix], 'units': 'K', 'missing_value': -999.0, 'valid_range': np.array([  0., 400.], dtype=np.float32), 'cell_methods': 'time: mean over months'},
                  'goodmon': {'long_name': 'number_of_values_in_month', 'missing_value': -999.0, 'valid_range': np.array([ 0., 31.], dtype=np.float32)},
                  'rasocorrmon': {'long_name': 'monthly_raso_correction', 'units': 'K', 'missing_value': -999.0, 'valid_range': np.array([-20.,  20.], dtype=np.float32), 'cell_methods': 'time: mean over months'}
                  }
+            dt = dt | dtv
+            dd = dd | ddv
+            d = d | dv
             fi['press'] = RC['stdplevs']
+            
+            if sonde_type is not None:
+                #d['sonde_type'] = {'long_name': 'CUON radiosonde type'}
+                #dt['sonde_type'] = {np.dtype('S4')}
+                
+                #dd['sonde_type'] = {'sonde_type': ('string4', 'time')}
+                #dst.create_dataset( 'string4',  shape=(4, ) ,dtype='S1' )
+                dst.createVariable('sonde_type',np.dtype('S4'), ('time', ))
+                dst['sonde_type'][:] = fi['msonde_type'][:, 0]
+                #dst['sonde_type'].dims[0].attach_scale(dst['string4'])
+                #dst['sonde_type'].dims[1].attach_scale(dst['time'])
+
 
             for name, atts in d.items():
                 if name == 'datum':
@@ -948,7 +1103,7 @@ def write_monmean(opath,prefix,fi):
                     dst[name][:] = fi['months'][:]
                     # copy variable attributes all at once via dictionary
                     dst[name].setncatts(atts)
-                elif name in ['montemp','goodmon','rasocorrmon']: #,'goodmon','rasocorrmon','eracorrmon']:
+                elif name in dtv.keys(): #,'goodmon','rasocorrmon','eracorrmon']:
                     x = dst.createVariable(name, dt[name], dd[name])
                     if dt[name] in [np.dtype('float32'),np.dtype('float64')]:
                         
@@ -959,7 +1114,7 @@ def write_monmean(opath,prefix,fi):
                     if name == 'goodmon':
                         dst[name][:,:RC['pidx'].shape[0],:] = fi[RC['transdict'][name]][:]
                         
-                    if name in ['montemp']:
+                    elif name in ['montemp']:
                         if prefix == 'feedbackglobbincorrmon':
                             
                             dst[name][:,:RC['pidx'].shape[0],:] = fi[RC['transdict'][name]][:]
@@ -968,6 +1123,9 @@ def write_monmean(opath,prefix,fi):
 
                     elif name=='rasocorrmon':
                         dst[name][:,:RC['pidx'].shape[0],:] = fi['mtemperatures']-fi['mini_adjusted_temperatures']
+                    else:
+                        dst[name][:,:RC['pidx'].shape[0],:] = fi['m'+name][:]
+                        
 
                        
                     # copy variable attributes all at once via dictionary
@@ -983,10 +1141,26 @@ def write_monmean(opath,prefix,fi):
                         
                     # copy variable attributes all at once via dictionary
                     dst[name].setncatts(atts)
-    except Exception as e:
+    except MemoryError as e:
         print('could not write',fno, e)
     
     return
+
+def new_globals(RC, fi):
+    
+    new_globals={'Conventions': 'CF-1.1',
+                 'title': 'Monthly radiosonde temperatures and -adjustments',
+                 'institution': 'Institute for Meteorology and Geophysics, University of Vienna',
+                 'Stationname': fi['station_name'], 
+                 'history': datetime.datetime.today().strftime("%m/%d/%Y"), 
+                 'source':'ERA5, IGRA2, NCAR UADB', 
+                 'references':'Copernicus Early Upper Air Dataset', 
+                 'url': 'early-upper-air.copernicus-climate.eu', 
+                 'lastsondes': RC['initial_adjustments']['lastsondes'],
+                 'initial_adjust': RC['initial_adjustments']['all']
+                 }
+    
+    return new_globals
 
 def write_adjustment(opath,prefix,fi,rich_ref0=None,rich_ref1=None,initial_adjust_RAOB=None,initial_adjust_RICH=None):
     
@@ -1004,16 +1178,8 @@ def write_adjustment(opath,prefix,fi,rich_ref0=None,rich_ref1=None,initial_adjus
     try:
         with netCDF4.Dataset(fno, "w") as dst:
             # copy global attributes all at once via dictionary
-            new_globals={'Conventions': 'CF-1.1',
-                         'title': 'Monthly radiosonde temperatures and -adjustments',
-                         'institution': 'Institute for Meteorology and Geophysics, University of Vienna',
-                         'Stationname': fi['station_name'], 
-                         'history': datetime.datetime.today().strftime("%m/%d/%Y"), 
-                         'source':'ERA5, IGRA2, NCAR UADB', 
-                         'references':'Copernicus Early Upper Air Dataset', 
-                         'url': 'early-upper-air.copernicus-climate.eu'
-                         }
-            dst.setncatts(new_globals)
+            
+            dst.setncatts(new_globals(RC, fi))
             # copy dimensions
             dims = {'station': 1,'numdat': 4,'time': 1,'pressure': RC['stdplevs'].shape[0],'hour': fi['temperatures'].shape[0]}
             for name, dimension in dims.items(): #src.dimensions.items():
@@ -1186,9 +1352,9 @@ def save_monmean(l,exper='exp02',fi={},rich_ref0=None,rich_ref1=None,initial_adj
             #plist=plist+['rich_adjusted_temperatures_1']
     do_monmean(plist,tidx,fi)
     prefix='feedbackglobbincorrmon'
-    write_monmean(RC['outdir'],prefix,fi)
+    write_monmean(RC['outdir'],prefix,fi, sonde_type=fi['msonde_type'])
     prefix='feedbackglobbgmon'
-    write_monmean(RC['outdir'],prefix,fi) 
+    write_monmean(RC['outdir'],prefix,fi, sonde_type=fi['msonde_type']) 
     prefix='feedbackglobbincorrsave'
     write_adjustment(RC['outdir'],prefix,fi,
                      initial_adjust_RAOB=initial_adjust_RAOB)#,initial_adjust_rich=initial_adjust_rich)
@@ -1211,7 +1377,8 @@ def save_monmean(l,exper='exp02',fi={},rich_ref0=None,rich_ref1=None,initial_adj
                             
                             if 'initial_adjustments' in initial_adjust_rich[1][iens][method].keys():
                                 iar=initial_adjust_rich[1][iens][method]
-
+                            else:
+                                iar = initial_adjust_RAOB # initial ensemble not created for "good" radiosonde types. In this case RICH initial adjustment should be consistent with RAOBCORE
                     write_adjustment(RC['outdir'],prefix,fi,
                                      rich_ref0=riref0,
                                      rich_ref1=riref1,
@@ -1394,6 +1561,8 @@ def rich_adjust(l,obj_ref,rich_iter,obj_rich_ref=None):
                         if rich_iter!=0:
                             rich_ref[si]=ray.get(o_rich_ref[si])
                             
+                    if  ref[si]['sid'][-6] in ['2']: # Don't use ship records as buddies
+                        continue
                     if  ref[si]['sid'][-5:-3] in ['42','43','48']: # Don't use Indian stations as buddies
                         continue
                     if ref[l]['sid'][-5]=='5' and (ref[si]['sid'][-5]=='5' or ref[si]['sid'][-5:-3] in ['42','43','48']):  # avoid Chinese sondes as buddies for Chinese sondes
@@ -1436,6 +1605,8 @@ def rich_adjust(l,obj_ref,rich_iter,obj_rich_ref=None):
                     else:
                         rmaxlen=np.min([breaklistref[-1]-tib,RC['mean_maxlen']])
                     if rmaxlen<3*ri_min_sampsize:
+                        continue
+                    if rmaxlen* min_neighbours[rich_iter] / 10 < ref[l]['sdists'][si]*6370. : # for larger distances the time series should be longer to reduce effect of short term anomalies
                         continue
                     if rbm<breaklistref.shape[0]:
                         
@@ -1729,7 +1900,7 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
 
 
     # add initial adjustments here
-    if RC['initial_adjustments']=='era5bc' and int(ref[l]['days'][-1]/365.25)>116:
+    if RC['initial_adjustments']['all']=='era5bc' and int(ref[l]['days'][-1]/365.25)>116:
         start=np.max((ref[l]['days'].shape[0]-RC['mean_maxlen'],np.searchsorted(ref[l]['days'],int(115.5*365.25))))
         if ref[l]['days'].shape[0]-start>RC['snht_min_sampsize']:
             
@@ -1737,7 +1908,18 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
             RAOBini['initial_adjustments']= -ndnanmean2(ref[l]['era5bc'][:,:,start:],ini,RC['snht_min_sampsize'])
             RAOBini['initial_adjustments'][np.isnan(RAOBini['initial_adjustments'])]=0.
 
-    elif RC['initial_adjustments']=='era5':
+    elif RC['initial_adjustments']['all']=='era5bc_nogood' and int(ref[l]['days'][-1]/365.25)>116:
+        start=np.max((ref[l]['days'].shape[0]-RC['mean_maxlen'],np.searchsorted(ref[l]['days'],int(115.5*365.25))))
+        if ref[l]['days'].shape[0]-start>RC['snht_min_sampsize']:
+            
+            ini=np.zeros(ref[l]['era5bc'].shape[:2])
+            if ref[l]['lastsonde'] == 0:
+                RAOBini['initial_adjustments']= -ndnanmean2(ref[l]['era5bc'][:,:,start:],ini,RC['snht_min_sampsize'])
+            else:  
+                RAOBini['initial_adjustments']= ini.copy()
+            RAOBini['initial_adjustments'][np.isnan(RAOBini['initial_adjustments'])]=0.
+
+    elif RC['initial_adjustments']['all']=='era5':
         start=np.max((0,ref[l]['days'].shape[0]-RC['mean_maxlen']))
         if ref[l]['days'].shape[0]-start>RC['snht_min_sampsize']:
             
@@ -1746,24 +1928,35 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
             RAOBini['initial_adjustments'][np.isnan(RAOBini['initial_adjustments'])]=0.
 
                         
-    elif RC['initial_adjustments']=='era5neighbours':
+    elif RC['initial_adjustments']['all']=='era5neighbours':
     #if True: 
-        if ref[l]['lastsonde'] or ref[l]['rharm']: # and RC['initial_adjustments'] not in ['era5','era5bc']:
+        if ref[l]['lastsonde']: # and RC['initial_adjustments'] not in ['era5','era5bc']:
             #start,igood=findstart(ref[l]['fg_dep'],RC['mean_maxlen'])
             #ini=np.zeros(ref[l]['adjusted_fg_dep'].shape[:2])
             #RAOBini['initial_adjustments']= ndnanmean2(ref[l]['adjusted_fg_dep'][:,:,start:],ini,RC['snht_min_sampsize'])
             #RAOBini['initial_adjustments'][np.isnan(RAOBini['initial_adjustments'])]=0.
             RAOBini['initial_adjustments']=np.zeros_like(ref[l]['fg_dep'],shape=ref[l]['fg_dep'].shape[:2])
-            if ref[l]['rharm']:
+            if RC['initial_adjustments']['lastsondes'] == 'rharm':
                 start=np.max((0,ref[l]['days'].shape[0]-RC['mean_maxlen']))
+                start=np.searchsorted(ref[l]['days'], int(116 * 365.25))
+                stop = np.searchsorted(ref[l]['days'], int((119+7/12) * 365.25))
                 if ref[l]['days'].shape[0]-start>RC['snht_min_sampsize']:
                     
                     ini=np.zeros(ref[l]['adjusted_fg_dep'].shape[:2])
                     rharmini = np.zeros_like(ini)
                     rawini = np.zeros_like(ini)
-                    rharmini = ndnanmean2(ref[l]['rharmbc'][:,:,start:],ini,RC['snht_min_sampsize'])[:]
-                    rawini = ndnanmean2(ref[l]['adjusted_fg_dep'][:,:,start:],ini.copy(),RC['snht_min_sampsize'])[:]
+                    if 'rharmbc' in ref[l].keys():
+                        
+                        rharmini = ndnanmean2(ref[l]['rharmbc'][:,:,start:stop],ini,RC['snht_min_sampsize'])[:]
+                    rawini = ndnanmean2(ref[l]['adjusted_fg_dep'][:,:,start:stop],ini.copy(),RC['snht_min_sampsize'])[:]
                     RAOBini['initial_adjustments']= rawini - rharmini
+                    RAOBini['initial_adjustments'][np.isnan(RAOBini['initial_adjustments'])]=0.
+            elif RC['initial_adjustments']['lastsondes'] == 'era5bc':
+                start=np.max((ref[l]['days'].shape[0]-RC['mean_maxlen'],np.searchsorted(ref[l]['days'],int(115.5*365.25))))
+                if ref[l]['days'].shape[0]-start>RC['snht_min_sampsize']:
+                    
+                    ini=np.zeros(ref[l]['era5bc'].shape[:2])
+                    RAOBini['initial_adjustments']= -ndnanmean2(ref[l]['era5bc'][:,:,start:],ini,RC['snht_min_sampsize'])
                     RAOBini['initial_adjustments'][np.isnan(RAOBini['initial_adjustments'])]=0.
                 
             if obj_rich_ref:
@@ -1923,7 +2116,7 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
                                 richensini[iens][method]['initial_adjustments']=ndnanmean2(ref[l]['adjusted_fg_dep'][:,:,start:],ini,RC['snht_min_sampsize'])
                                 richensini[iens][method]['initial_adjustments'][np.isnan(RAOBini['initial_adjustments'])]=0.
                         
-    elif RC['initial_adjustments']=='gpsro':
+    elif RC['initial_adjustments']['all']=='gpsro':
         start=np.max((0,ref[l]['days'].shape[0]-RC['mean_maxlen']))
         if ref[l]['days'].shape[0]-start>RC['snht_min_sampsize']:
             ini=np.zeros(ref[l]['adjusted_fg_dep'].shape[:2])
@@ -1931,7 +2124,7 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
             RAOBini['initial_adjustments'][np.isnan(RAOBini['initial_adjustments'])]=0.
 
 
-    elif RC['initial_adjustments']=='rharm':
+    elif RC['initial_adjustments']['all']=='rharm':
         start=np.max((0,ref[l]['days'].shape[0]-RC['mean_maxlen']))
         if ref[l]['days'].shape[0]-start>RC['snht_min_sampsize']:
             
@@ -1941,14 +2134,15 @@ def initial_adjust(l,obj_ref,obj_rich_ref=None,initial_composite_ref=None,rich_i
             rawini = np.zeros_like(ini)
             try:
                 
-                rharmini = ndnanmean2(ref[l]['rharmbc'][:,:,start:],ini,RC['snht_min_sampsize'])[:]
+                rharmini = -ndnanmean2(ref[l]['rharmbc'][:,:,start:],ini,RC['snht_min_sampsize'])[:]
                 print('rharmbc found')
             except:
                 rharmini = np.zeros_like(ini)
                 print('rharmbc not found')
                 
             rawini = ndnanmean2(ref[l]['adjusted_fg_dep'][:,:,start:],ini.copy(),RC['snht_min_sampsize'])[:]
-            RAOBini['initial_adjustments']= rawini - rharmini
+            #RAOBini['initial_adjustments']= rawini - rharmini
+            RAOBini['initial_adjustments']= - rharmini
             RAOBini['initial_adjustments'][np.isnan(RAOBini['initial_adjustments'])]=0.
 
     RAOBini['initial_adjustment_method']=RC['initial_adjustments']
@@ -1989,7 +2183,7 @@ def do_copy(fni, fno, grvdict={'recordindices': [], 'observations_table': ['inde
                                 #print(e)
                                 pass
                             
-                            g[k].create_dataset_like(v,f[k][v],compression='gzip')
+                            g[k].create_dataset_like(v,f[k][v],compression=32015, compression_opts=(3,))
                             g[k][v][:]=f[k][v][:]
                         except Exception as e:
                             print(e)
@@ -2096,7 +2290,7 @@ def add_adj(fi, mode='r'):
                     else:
                         key = k.upper()+'_bias_estimate'
                         alldict = pandas.DataFrame({key:xyz})
-                        write_dict_h5(outfile, alldict, 'advanced_homogenisation', {key: { 'compression': 'gzip' } }, [key])  
+                        write_dict_h5(outfile, alldict, 'advanced_homogenisation', {key: { 'compression': 32015, compression_opts: (3,) } }, [key])  
                         #data.write_observed_data(k.upper()+'_bias_estimate',
                                                  #ragged=xyz,  # input data
                                                  #varnum=eua.cdm_codes['temperature'],  # observed_variable to be aligned with
@@ -2147,13 +2341,13 @@ if __name__ == '__main__':
     tt=time.time()
     process = psutil.Process(os.getpid())
     #files = glob.glob('/users/staff/leo/fastscratch/rise/1.0/'+RC['exp']+'/[01]*/feedbackmerged'+pattern+'*.nc')[:]
-    RCfile = os.path.expandvars('/users/staff/leo/fastscratch/rise/1.0/')+RCdir+'/RC.json'
+    RCfile = os.path.expandvars('${HOME}/fastscratch/rise/1.0/')+RCdir+'/RC.json'
 
 #    ray.init(num_cpus=RC['CPUs'], object_store_memory=1024*1024*1024*50)
 
     RC = RC_ini(RCfile)
     
-    ray.init(num_cpus=RC['CPUs'], object_store_memory=1024*1024*1024*150)
+    ray.init() #num_cpus=RC['CPUs'], object_store_memory=1024*1024*1024*150)
                                 
     filesorig = glob.glob('/mnt/users/scratch/leo/scratch/'+RC['CUON']+'/*'+pattern+'*.nc')[:]
     filesorig.sort()
@@ -2161,50 +2355,85 @@ if __name__ == '__main__':
     goodfilesorig = []
     lold = 0
     llold = 0
+    k = 1
     for fn in filesorig:
-        if '00000' in fn:
-            continue
-
-        #lats.append(f['observations_table']['latitude'][-1])
-        #lons.append(f['observations_table']['longitude'][-1])
-        if 'orphan' not in fn:
-            wigos.append(fn.split('_CEUAS')[0].split('/')[-1]) 
-            wshort.append(fn.split('_CEUAS')[0].split('-')[-1][:5])
+        if 'orph' not in fn:
+            if 'era5' in fn:
+                wigos.append(fn.split('_era5_')[0].split('/')[-1]) 
+                wshort.append(fn.split('_era5_')[0].split('-')[-1][:5])
+            else:
+                wigos.append(fn.split('_CEUAS')[0].split('/')[-1]) 
+                wshort.append(fn.split('_CEUAS')[0].split('-')[-1][:5])
         else:
-            wigos.append(fn.split('_CEUAS')[0].split('/')[-1]) 
-            wshort.append('orpha')
-            print(wigos[-1], wshort[-1])
-                         
-        if wshort[-1] == 'orpha':
-            wshort[-1] = 'or'
-            l = lold
-            while '{:0>4}'.format(l) + wshort[-1] in statids:
-                l += 1
-            wshort[-1] = '{:0>4}'.format(l) + wshort[-1]
-            lold = l
-            statids.append(wshort[-1])
+            wigos.append(fn.split('_CEUAS')[0].split('/')[-1])
+        
+        if wigos[-1][:8] in ('0-20000-', '0-20001-'):
+            for i in range(2):
+                stest = str(i) + wigos[-1].split('-')[3]
+                if stest not in statids:
+                    statids.append(stest)
+                    break
+            if stest in statids[:-1]:
+                print(wigos[-1][:8], stest)
+                x = 0
         else:
-            if 'data' in wshort[-1]:
-                print(wshort[-1], wigos[-1])
-                
-            while len(wshort[-1]) < 5:
-                print(wshort[-1], wigos[-1])
-                wshort[-1] = '0' + wshort[-1]
-                print('')
-            ll = llold
-            while str(ll) + wshort[-1] in statids:
-                ll += 1
-            statids.append(str(ll)+wshort[-1])
-            llold = ll
+            statids.append(str(200000+k))
+            k += 1
+        
         goodfilesorig.append(fn)
-        print(statids[-1])
+        
+    #for fn in filesorig:
+        #if '00000' in fn:
+            #continue
+
+        ##lats.append(f['observations_table']['latitude'][-1])
+        ##lons.append(f['observations_table']['longitude'][-1])
+        #if 'orph' not in fn:
+            #if 'era5' in fn:
+                #wigos.append(fn.split('_era5_')[0].split('/')[-1]) 
+                #wshort.append(fn.split('_era5_')[0].split('-')[-1][:5])
+            #else:
+                #wigos.append(fn.split('_CEUAS')[0].split('/')[-1]) 
+                #wshort.append(fn.split('_CEUAS')[0].split('-')[-1][:5])
+        #else:
+            #wigos.append(fn.split('_CEUAS')[0].split('/')[-1]) 
+            #wshort.append('orpha')
+                         
+        #if wshort[-1] == 'orpha':
+            #wshort[-1] = 'or'
+            #l = lold
+            #while '{:0>4}'.format(l) + wshort[-1] in statids:
+                #l += 1
+            #wshort[-1] = '{:0>4}'.format(l) + wshort[-1]
+            #lold = l
+            #statids.append(wshort[-1])
+        #else:
+            #if 'data' in wshort[-1]:
+                #print(wshort[-1], wigos[-1])
+                
+            #while len(wshort[-1]) < 5:
+                #print(wshort[-1], wigos[-1])
+                #wshort[-1] = '0' + wshort[-1]
+                #print('')
+            #ll = llold
+            #while str(ll) + wshort[-1] in statids:
+                #ll += 1
+            #statids.append(str(ll)+wshort[-1])
+            #llold = ll
+        #if len(statids[-1]) > 6:
+            #print(statids[-1])
+            #x = 0
+            
+        #goodfilesorig.append(fn)
+        #print(wigos[-1], wshort[-1], statids[-1])
+        
     RC['filesorig'] = goodfilesorig
     RC['statids'] = statids
     RC['wigos'] = wigos
-    RC['outdir'] = '/users/staff/leo/fastscratch/rise/1.0/'+RC['exp']+'/'
-    RC['cdict'] ={'temperature':'temperatures','fg_depar@body':'era5_fgdep','biascorr@body':'bias_estimate','lat':'lat','lon':'lon','hours':'hours'}
+    RC['outdir'] = os.path.expandvars('${HOME}/fastscratch/rise/1.0/')+RC['exp']+'/'
+    RC['cdict'] ={'temperature':'temperatures','fg_depar@body':'era5_fgdep','fg_depar@offline':'era5_fgdep','biascorr@body':'bias_estimate','lat':'lat','lon':'lon','hours':'hours'}
     print(time.time() -tt)
-    hadmeddict= read_hadCRUT5('/users/staff/leo/fastscratch/rise/1.0/common/','HadCRUT.5.0.1.0',RC['refdate'])
+    hadmeddict= read_hadCRUT5(os.path.expandvars('${HOME}')+'/fastscratch/rise/1.0/common/','HadCRUT.5.0.2.0',RC['refdate'])
     hadmeddict_ref = ray.put(hadmeddict)
 
     
@@ -2241,6 +2470,8 @@ if __name__ == '__main__':
     
     if False and RC['write_to_backend']:
         
+        i = 0
+        add_adj(ray.get(obj_ref[i]))
         futures = []
         for o in obj_ref:
             futures.append(ray_add_adj.remote(o, mode='r'))
@@ -2315,7 +2546,7 @@ if __name__ == '__main__':
         initial_composite=[{} for i in range(len(obj_ref))]
         for l in range(len(obj_ref)):
             d=ray.get(obj_ref[l])
-            if d['lastsonde']==1 or (d['rharm'] == 1 and RC['rharm'] in ('rharmc', 'rcuon')):
+            if d['lastsonde']==1: # or (d['rharm'] == 1 and RC['rharm'] in ('rharmc', 'rcuon')):
                 lgood.append(l)
             elif d['days'][-1]>int(110*365.25):
                 lrecent.append(l)
@@ -2334,7 +2565,7 @@ if __name__ == '__main__':
                          #initial_adjust_RAOB=[initial_adjust_RAOB])
                          
 # for some values of RC['initial_adjust'] even the "good" sondes are initial-adjusted
-    if(not RC['findfuture']):
+    if(True or not RC['findfuture']):
         
         iadjustlist =[]    
         for l in lgood:
@@ -2392,13 +2623,14 @@ if __name__ == '__main__':
     x = ray.get(futures)
     print('after write',time.time()-tt)
     
-    if False and RC['add_solelev']:  # zum Testen
+
+    if RC['add_solelev']:  # zum Testen
         print('before addsolelev',time.time()-tt)
         add_solelev(ray.get(obj_ref[lx]), RC)
         futures=[]
         for l in range(len(obj_ref)):
-            #futures.append(ray_add_solelev.remote(obj_ref[l], RC))
-            add_solelev(ray.get(obj_ref[l]), RC)
+            futures.append(ray_add_solelev.remote(obj_ref[l], RC))
+            #add_solelev(ray.get(obj_ref[l]), RC)
         x = ray.get(futures)
         add_adj(ray.get(obj_ref[0]), mode='r')
         print('after addsolelev',time.time()-tt)
@@ -2449,6 +2681,7 @@ if __name__ == '__main__':
                 if np.any(np.abs(sob[ib][ih]) >1.e4):
                     print(l,ib,ih, ray.get(obj_ref[l])['ifile'],sob[ib][ih] )
                     
+    lx= sids.index('feedbackmerged091285')
     if True:
         rich_ref00=rich_adjust(lx,single_obj_ref,0)
         breakplot(lx,obj_ref,obj_rich_ref0=[rich_ref00])
@@ -2484,6 +2717,7 @@ if __name__ == '__main__':
     rich_initial_composite=[{} for i in range(len(obj_ref))]
     
     futures=[]
+    irichadjustlist = [initial_adjust(0,single_obj_ref,obj_rich_ref=single_rich_ref1)]
     for l in lgood: #range(len(obj_ref)):
         futures.append(ray_initial_adjust.remote(l,single_obj_ref,obj_rich_ref=single_rich_ref1))
     irichadjustlist = ray.get(futures)
