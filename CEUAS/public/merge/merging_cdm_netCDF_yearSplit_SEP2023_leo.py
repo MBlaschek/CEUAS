@@ -1,5 +1,5 @@
 import os
-import sys
+import sys, glob
 import netCDF4 as nc
 import pandas as pd
 pd.set_option('display.max_rows', 50)
@@ -20,6 +20,8 @@ import shutil
 
 from tqdm import tqdm
 
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 #from numba import njit
@@ -124,7 +126,8 @@ class Merger():
                  out_dir = 'output' , 
                  min_year='1880' , 
                  max_year='2023',
-                 processed_stats =''):
+                 processed_stats ='', 
+                 scpath='./'):
         
         """ Define the attributes (some will be defined in other parts of the code) . 
         Attr :: 
@@ -182,7 +185,9 @@ class Merger():
 
         self.add_sensor = add_sensor
             
-        self.copy = True # make a copy of the merged file before adding the sensor. Argument for the add_sensor wrapper function  
+        self.copy = False # make a copy of the merged file before adding the sensor. Argument for the add_sensor wrapper function
+        
+        self.scpath = scpath
 
 
     def initialize_data(self , datasets, station ):
@@ -190,7 +195,8 @@ class Merger():
                    Args ::     dic{}  datasets (dataframe with year, dataset and file path 
                                    e.g. tateno = { 'ncar'    : 'example_stations/ncar/chuadb_trhc_47646.txt.nc'   ,
                                                            'igra2'   : 'example_stations/igra2/chJAM00047646-data.txt.nc'  } 
-        """       
+        """
+        #tt = time.time()
         self.datasets          = datasets
         self.datasets_keys = datasets.keys()
         self.station             = station
@@ -205,19 +211,27 @@ class Merger():
                 
         """ Loading the econding of the tables created from the harvester script and to be applied again """
         
-        shutil.copy2('../harvest/code_cop2/encodings.txt', 'encodings.txt')
-        df = pd.read_csv('encodings.txt' , sep = '\t' , names = ['variable' , 'table'  , 'type'])
+        #print(time.time()-tt)
+        hpath = os.path.expandvars('$HOME/CEUAS/CEUAS/public/merge/')
+        os.chdir(os.path.expandvars('$HOME/CEUAS/CEUAS/public/merge'))
+        #shutil.copy2(os.path.expandvars('$HOME/CEUAS/CEUAS/public/harvest/code_cop2/encodings.txt'), 'encodings.txt')
+        df = pd.read_csv(hpath+'encodings.txt' , sep = '\t' , names = ['variable' , 'table'  , 'type'])
         self.df_variable_type = df 
         
-        #shutil.copy2('../harvest/code_cop2/groups_encodings.npy', 'groups_encodings.npy')
-        self.encodings = np.load('groups_encodings.npy' , allow_pickle = True ).item()
-        #shutil.copy2('../harvest/code_cop2/era5fb_encodings_all.npy', 'era5fb_encodings_all.npy')        
+        #shutil.copy2(os.path.expandvars('$HOME/CEUAS/CEUAS/public/harvest/code_cop2/groups_encodings.npy'), 'groups_encodings.npy')
+        self.encodings = np.load(hpath+'groups_encodings.npy' , allow_pickle = True ).item()
+        #shutil.copy2(os.path.expandvars('$HOME/CEUAS/CEUAS/public/harvest/code_cop2/era5fb_encodings.npy'), 'era5fb_encodings_all.npy')        
         self.encodings['era5fb'] = np.load('era5fb_encodings_all.npy' , allow_pickle = True ).item()
+        self.encodings['era5fb']['collection_identifier@conv'] = {'compression': 'gzip', 'dtype': np.int32}
+        self.encodings['era5fb']['eda_spread@errstat'] = {'compression': 'gzip', 'dtype': np.float32}
+        self.encodings['era5fb']['station_type@conv'] = {'compression': 'gzip', 'dtype': np.int32}
+        self.encodings['era5fb']['timeseries_index@conv'] = {'compression': 'gzip', 'dtype': np.int32}
+        self.encodings['era5fb']['unique_identifier@conv'] = {'compression': 'gzip', 'dtype': np.int32}
         for k in self.encodings.keys():
             for kk in self.encodings[k].keys():
                 
-                if 'dtype' in self.encodings[k][kk].keys():
-                    del self.encodings[k][kk]['dtype']
+                #if 'dtype' in self.encodings[k][kk].keys():
+                    #del self.encodings[k][kk]['dtype']
                 if 'chunksizes' in self.encodings[k][kk].keys():
                     del self.encodings[k][kk]['chunksizes']
                 if 'compression' in self.encodings[k][kk].keys():
@@ -225,7 +239,9 @@ class Merger():
                     self.encodings[k][kk]['compression_opts'] = (3, )
 
         
-        self.dic_type_attributes = np.load('dic_type_attributes.npy',allow_pickle= True).item()
+        #shutil.copy2(os.path.expandvars('$HOME/CEUAS/CEUAS/public/harvest/code_cop2/dic_type_attributes.npy'), 'dic_type_attributes.npy')
+        print(os.getcwd())
+        self.dic_type_attributes = np.load(hpath+'dic_type_attributes.npy',allow_pickle= True).item()
 
         self.era5fb_columns = self.dic_type_attributes['era5fb'].keys()
         self.header_columns = self.dic_type_attributes['header_table'].keys()
@@ -235,9 +251,11 @@ class Merger():
 
         self.obstab_nans_filled = False      
         self.obs_in_header = {} # dic placeholder for data from obs_tab to be kept for header_table
-        self.fill_cdm()
+        #print(time.time()-tt)
         
         self.last_timestamp = ''  # to be filled progressively
+        #print(time.time()-tt)
+        return
         
     def fill_cdm(self):
             
@@ -251,7 +269,9 @@ class Merger():
         # STATION CONFIGURATION
         #######   
         # Read the station primary_id, and find the entry in the CUON dataset (or global dataset)
-        stat_conf = pd.read_csv("CUON_station_configuration_extended.csv", sep = '\t')
+        scpath = self.scpath #'../../meta/inventory_comparison_2/code/station_configuration/'
+        #scpath = './'
+        stat_conf = pd.read_csv(scpath+"CUON_station_configuration_extended.csv", sep = '\t')
         self.stat_conf_CUON = stat_conf 
         s = stat_conf.loc[ stat_conf.primary_id == self.station ]   
         self.stat_conf = s
@@ -380,15 +400,21 @@ class Merger():
 
             for F in v:                 
                 #print('FILE ' , F )
-                data = dic[k][F]  # h5py open file 
-                self.unique_dates[k][F] = {}
-                self.unique_dates[k][F]['datetimes'] = {}
-                
-                timestamps = data['recordtimestamp'][:]
-                #indices = data['recordindex'][:]
-                indices_inf = data['recordindex'][:] # starting index of the record
-                indices_sup = np.concatenate((data['recordindex'][:][1:], [data['observations_table']['index'].shape[0]]))
-                
+                try:
+                    
+                    data = dic[k][F]  # h5py open file 
+                    self.unique_dates[k][F] = {}
+                    self.unique_dates[k][F]['datetimes'] = {}
+                    
+                    timestamps = data['recordtimestamp'][:]
+                    #indices = data['recordindex'][:]
+                    indices_inf = data['recordindex'][:] # starting index of the record
+                    indices_sup = np.concatenate((data['recordindex'][:][1:], [data['observations_table']['index'].shape[0]]))
+                except Exception as e:
+                    with open(os.path.expandvars('$HOME/corrupt.log'), 'a') as ff:
+                        ff.write(f'{str(datetime.now()).split('.')[0]}: {F}, {e}\n')
+                    continue
+                        
                 #data.[ indices_inf[1:][i] for i in  range(len(indices_inf[:-1])) ] # ending index of the record
                 #indices_sup.append(len(h5py.File(F, 'r')['observations_table']['date_time'] ) ) # dummy high value, to be used with last record of the list 
                 
@@ -396,6 +422,8 @@ class Merger():
                 # df_check = pd.DataFrame( {'ts':timestamps , 'inf': indices_inf, 'sup':indices_sup } ) 
                 
                 for ts,inf,sup, index in zip(timestamps, indices_inf, indices_sup, range(len(indices_inf)) ) :
+                    if ts == 1417424400:
+                        x = 0
                     if ts not in all_timestamps_dic.keys():
                         all_timestamps_dic[ts] = {}
                     if ds not in all_timestamps_dic[ts].keys():
@@ -1091,7 +1119,7 @@ class Merger():
 
         i = -1
         duplicates_dic={}
-        for dt,index in zip( tqdm(all_timestamps), range(len(all_timestamps)) ) :  #TODO TO DO WRONG CHANGE HERE !!!! 
+        for dt,index in zip( all_timestamps, range(len(all_timestamps)) ) :  #TODO TO DO WRONG CHANGE HERE !!!! 
             
             i += 1
             #if dt == 2492985600:
@@ -1110,6 +1138,8 @@ class Merger():
                 real_time = dt 
                 all_times = [dt] # used for plotting 
                 
+                if dt == 1417424400:
+                    x = 0
                 best_ds, best_file, policy = self.find_best_record(dt)
                 
                 processed_timestamps.append(dt)
@@ -1120,7 +1150,7 @@ class Merger():
                     #x = 0
                    
             else:
-                if dt == 3689434800:
+                if dt == 1417424400:
                     x = 0
                 possible_duplicates = duplicated_ts[i] #[ p for p in duplicated_ts if dt in p ]
                 
@@ -1366,8 +1396,9 @@ class Merger():
                     self.last_timestamp = k # last timestamp updated in the loop
             #self.merged_timestamp = [all_combined_timestamps[t] for t in  all_combined_timestamps.keys() if not duplicates_dic[t][4]] 
         else:
+            self.merged_timestamp = {}
             print('ERROR, no dt exists')
-            raise ValueError(self.dic_h5py)
+            #raise ValueError(self.dic_h5py)
         
         print("DONE Merging all timestamps ")
         
@@ -1657,22 +1688,35 @@ class Merger():
             all_years = [y for y in all_years if int(y) >= year_range[0] and int(y) <= year_range[1] ]  ### TO DO TODO HERE
         
         if self.station in self.processed_stats.keys():
-            print("Filtering out already processed year::: " )
-            all_years = [y for y in all_years if y not in self.processed_stats[self.station] ]
+            #print("Filtering out already processed year::: " )
             if 'completed' in self.processed_stats[self.station]:
                 all_years = []
+            else:
+                all_years = [y for y in all_years if y not in self.processed_stats[self.station] ]
+                
         
         if len(all_years) ==0:
-            print('+++ WARNING: no file checked the selection criteria, check if correct! ')
+            #print('+++ WARNING: no file checked the selection criteria, check if correct! ')
             return
         else:
             
+            self.fill_cdm()
             for this_year in all_years:   # loop over all available years in the date_times 
-                print('=== Running year ::: ' , this_year )
+                print('=== Running year ::: ' , self.station, this_year )
                 self.current_year = this_year 
                 
                 data_this_year = data_all_years[this_year]
                 
+                #out_dir = self.out_dir  + '/' + self.station 
+                #out_file = out_dir + '/'  + self.station + '_' + self.current_year + '_CEUAS_merged_v3.nc'
+                #try:
+                    #mt = os.path.getmtime(out_file)
+                    #dmt = datetime.fromtimestamp(mt)
+                    #if (datetime.now() - dmt).total_seconds() < 172800:
+                        #continue
+                #except:
+                    #pass
+
                 #following_year = str(int(this_year) + 1) 
                 #if following_year in all_years:
                 #    data_following_year = data_all_years[following_year]
@@ -1682,33 +1726,40 @@ class Merger():
                 dummy = self.open_data(data_this_year)
                 """ Making all date_time for the selected year  """
     
-                dummy = self.make_unique_datetime()            
+                try:
+                    
+                    dummy = self.make_unique_datetime()
+                except Exception as e:
+                    estring = f'{self.station} {this_year} {e}'
+                    raise ValueError(estring)
                 
                 # principal merging algoritm, applying selection rules
                     
                 merged = self.merge_timestamp_u() # selection of the best data
+                if len(self.merged_timestamp) == 0:
+                    continue
                 
-                dummy = self.initialize_out_file()
+                dummy = self.initialize_out_file(rm=True)
                 
                 if len(self.merged_timestamp) == 0:
                     continue
                     
-                print('=== Making and writing standard fixed CDM tables')                                    
+                #print('=== Making and writing standard fixed CDM tables')                                    
                 dummy = self.make_standard_cdm_table()
 
-                print('=== Making and writing observations_table')
+                #print('=== Making and writing observations_table')
                 dummy = self.make_merged_observation_table()
                 
-                print('=== Making and writing recordindex')
+                #print('=== Making and writing recordindex')
                 dummy = self.make_merged_recordindex()
                 
-                print('=== Making and writing feedback_table')                        
+                #print('=== Making and writing feedback_table')                        
                 dummy = self.make_merged_feedback_table()  ### TODO TO DO HERE 
                 
-                print('=== Making and writing source_conf table')                                    
+                #print('=== Making and writing source_conf table')                                    
                 dummy = self.make_sourceconf_table()
                 
-                print('=== Making and writing header_table')                                    
+                #print('=== Making and writing header_table')                                    
                 dummy = self.make_merged_header_table()
                 
                 
@@ -1734,8 +1785,9 @@ class Merger():
                 a.write('completed\n')
         except:
             pass
+        return
 
-    def initialize_out_file(self):
+    def initialize_out_file(self, rm=True):
         """ Create output directory, initialize out file """
         
         out_dir = self.out_dir  + '/' + self.station 
@@ -1747,7 +1799,7 @@ class Merger():
         self.out_file = out_file 
         
         ### TO DO REMOVE
-        if os.path.isfile(out_file):
+        if os.path.isfile(out_file) and rm:
             os.remove(out_file)        
             
     def make_standard_cdm_table(self, out_file='' ):
@@ -1824,7 +1876,7 @@ class Merger():
                 if v in file_era5fb_variables:
                     data_v = fpe[v][:]
                 else:
-                    n = self.get_null( self.encodings['era5fb'][v]['type']  )
+                    n = self.get_null( self.encodings['era5fb'][v]['dtype']  )
                     data_v = np.full( len( fp['observations_table']['date_time']), n)                          
 
                 load_full_data[fp.filename] = data_v     
@@ -1888,7 +1940,7 @@ class Merger():
             if v not in variables:
                 data_v = np.full( len( h5py.File(f, 'r')['observations_table']['date_time']), np.nan )  
                 dummy_write = self.write_merged_new( var=v, table = 'era5fb', data=data_v)
-        print(time.time()-tt)
+        #print(time.time()-tt)
 
 
     def make_merged_header_table(self, out_file='' ):
@@ -2000,10 +2052,10 @@ class Merger():
         sc_all_df['longitude'] = lons
         
         variables_str = ['primary_id' , 'secondary_id' , 'city' , 'operating_institute' , 'operating_territory',
-            'observed_variables', 'metadata_contact' , 'metadata_contact_role', 'station_name' , ]
+            'observed_variables', 'metadata_contact' , 'station_name' , ]
         
         variables_int = [ 'station_type' ,'primary_id_scheme' , 'secondary_id_scheme',
-            'station_crs' , 'station_type' , 'platform_type' , 'platform_sub_type'  ,  ]      
+            'station_crs' , 'station_type' , 'platform_type' , 'platform_sub_type', 'metadata_contact_role'  ,  ]      
         
         for v in sc_all_df.columns:
             if "Unnamed" in v: continue 
@@ -2072,7 +2124,7 @@ class Merger():
         all_variables = []
         
         ### list of variables in hte header/observations table that are taken from the harvested files (and not empty variables)
-        variables = ['date_time' , 'z_coordinate_type', 'z_coordinate' , 'observed_variable', 'observation_value' ,'longitude', 'latitude' , 'original_units'  ]
+        variables = ['date_time' , 'z_coordinate_type', 'z_coordinate' , 'observed_variable', 'observation_value' ,'longitude', 'latitude' , 'original_units' ,'observation_height_above_station_surface' ]
         all_variables.extend(variables)
         
         # here, only extract files that are actually selected as best_file (will not pre-load the others)
@@ -2125,7 +2177,7 @@ class Merger():
                     pass
                 else:
                     is_duplicate = True
-                    print(np.where(z_coord[obs_var_ind][1:]-z_coord[obs_var_ind][:-1]==0))
+                    #print(best_file, np.where(z_coord[obs_var_ind][1:]-z_coord[obs_var_ind][:-1]==0))
                     
             if is_duplicate:  # If I find at least one, then I check with pandas and remove the duplicates 
                 dic = {}
@@ -2136,6 +2188,9 @@ class Merger():
                     
                     for v in ['observed_variable' , 'date_time' , 'z_coordinate_type' , 'z_coordinate']:
                         dic[v] = fp['observations_table'][v][ind_min:ind_max]
+                        if v == 'date_time' and np.any(dic[v]<0):
+                            print('date_time:', np.any(dic[v]<0), fp.filename)
+                            raise ValueError(fp.filename)
                 df = pd.DataFrame.from_dict(dic)
                 no_dupl = df.drop_duplicates()
                 no_duplicated_indices[ts] = list(no_dupl.index)
@@ -2171,6 +2226,10 @@ class Merger():
                 if ts in no_duplicated_indices.keys():  # here: check if timestamp has internal pressure duplicate to remove 
                     #sliced_data = sliced_data[ no_duplicated_indices[ts] ] # removing duplicated entries 
                     sliced_data = np.array([sliced_data[i] for i in no_duplicated_indices[ts] ])
+                if v == 'date_time' and sliced_data[0] < 0:
+                    print('date_time:', sliced_data[0], best_file)
+                    raise ValueError(best_file)
+                    
                     
                 data.append(sliced_data)
                 
@@ -2208,8 +2267,12 @@ class Merger():
                     ##    a = 0
                         
             #d = np.array(data)
-            #print(time.time()-tt)            
+            #print(time.time()-tt)
+            #if v == 'date_time':
+                #print('date_time:', np.any(d<0))
+                
             dummy_write = self.write_merged_new( var=v, table = 'observations_table', data=d)
+            #print(v, d.shape, '+', time.time()-tt)            
             
             ### writing RECORD INDEX 
             if v == 'date_time':
@@ -2309,7 +2372,7 @@ class Merger():
             dummy_write = self.write_merged_new( var=v, table = 'observations_table', data=np.array(da))                    
         
         self.record_size = sizes
-        print(time.time()-tt)
+        #print(time.time()-tt)
         
     def write_merged_new(self, var='', table = '', data=''):
         """ Module to write the output file as netCDF.
@@ -2535,7 +2598,7 @@ def make_merge_list(data_directories, merged_out_dir, kind=''):
     if kind == 'mobile':
         datasets = [ f for f in data_directories.keys() if f in ['era5_1_mobile' , 'era5_2_mobile' , 'npsound', 'igra2', 'shipsound'] ]
     else:
-        datasets = [ f for f in data_directories.keys() if f not in ['era5_1_mobile' , 'era5_2_mobile' , 'npsound', 'igra2', 'shipsound'] ]
+        datasets = [ f for f in data_directories.keys() if f not in ['era5_1_mobile' , 'era5_2_mobile' , 'npsound', 'shipsound'] ]
         #datasets = [  f for f in data_directories.keys() if f in ['era5_1' , 'era5_2' ,
                                                                   #'era5_1759' , 'era5_1761',
                                                                   #'igra2',
@@ -2557,13 +2620,19 @@ def make_merge_list(data_directories, merged_out_dir, kind=''):
                     continue                
                 
             elif kind in ['orphan','orphans']:
+                #if len(station.split('0-20666')) < 2 and  len(station.split('0-20777')) < 2 and  len(station.split('0-20888')) < 2:
+                    
                 if not ( '0-20666-' in station or  '0-20777-'  in station or   '0-20888-'  in station):
                         continue        
             # extract the file with the correctly processed years per file 
             if '.dat' in station:
                 continue
-            
-            files = [f for f in os.listdir( data_directories[db] + '/' + station ) if 'harvested' in f and 'processed' not in f ]
+            if kind in ['orphan']:
+                
+                files = [f for f in os.listdir( data_directories[db] + '/' + station ) if 'harvested' in f and 'processed' not in f and ( '0-20666-' in f or  '0-20777-'  in f or   '0-20888-'  in f )]
+            else:
+                files = [f for f in os.listdir( data_directories[db] + '/' + station ) if 'harvested' in f and 'processed' not in f and ( '0-20666-' not in f and  '0-20777-'  not in f and   '0-20888-'  not in f )]
+                
             if len(files)==0:
                 continue
             
@@ -2573,7 +2642,7 @@ def make_merge_list(data_directories, merged_out_dir, kind=''):
             for f in files:
 
                 #station = f.split(db)[0][-4:]
-                if 'restored' in db:
+                if 'restored' in db or 'reduced' in db or 'unchanged' in db:
                     station = f.split('_')[0]
                 else:
                     station = f.split(db)[0][:-6]
@@ -2603,58 +2672,87 @@ def make_merge_list(data_directories, merged_out_dir, kind=''):
     
     return list( np.unique( df.station.values ) ) 
     
-def create_stat_summary(data_directories, stat_id):
+def create_stat_summary(data_directories, flist, stat_id):
     """ Looks in the database for files matching with the given station id.
     Returns a dictionary with the files per dataset
     """
     station_dic = { 'year':[], 'dataset':[] , 'files': [] }
     
     ### loop over possible years
-    for y in range(1880, 2030):
-        y = str(y)    
-        
-        for d,i in data_directories.items():
-            print(d, i)
-            if not os.path.isdir(i):
-                continue
-            stations = os.listdir(i) 
-            if stat_id not in stations:
-                continue
+    tt = time.time()
+    m = [ x for x in flist if stat_id in x]
+    for mm in m:
+        ml = mm.split('/')
+        station_dic['files'].append(mm)
+        station_dic['year'].append(ml[-1].split('_')[1])
+        station_dic['dataset'].append(ml[-3])
+        if station_dic['dataset'][-1] in ['restored', 'reduced', 'unchanged']:
+            if ml[-4] == 'fixedgiub':
+                
+                station_dic['dataset'][-1] = 'giub' + '_' + ml[-3]
             else:
-                try:
+                station_dic['dataset'][-1] = ml[-4] + '_' + ml[-3]
+    
+    for k in station_dic.keys():
+        
+        station_dic[k] = np.array(station_dic[k])
+    idx = np.argsort(station_dic['year'])
+    
+    stdic = {}
+    for k in station_dic.keys():
+        
+        stdic[k] = station_dic[k][idx]
+    
+    #print('create_stat', stat_id, time.time()-tt)
+
+    #station_dic = { 'year':[], 'dataset':[] , 'files': [] }
+    #print('create_stat', stat_id, time.time()-tt)
+    #for y in range(1880, 2030):
+        #y = str(y)    
+        
+        #for d,i in data_directories.items():
+            ##print(d, i)
+            #if not os.path.isdir(i):
+                #continue
+            #stations = os.listdir(i) 
+            #if stat_id not in stations:
+                #continue
+            #else:
+                #try:
                     
-                    harvested_files = [f for f in os.listdir(i+'/'+stat_id) if '.nc' in f and y in f.split(stat_id+'_')[1].split('_')[0]  ]
-                except:
-                    harvested_files = []
+                    #harvested_files = [f for f in os.listdir(i+'/'+stat_id) if '.nc' in f and y in f.split(stat_id+'_')[1].split('_')[0]  ]
+                #except:
+                    #harvested_files = []
                 
                 
-                ### filter giub wrong files
+                #### filter giub wrong files
 
                     
                 
-                if len(harvested_files) >0:
+                #if len(harvested_files) >0:
                     
                     
-                    if d == 'giub':
+                    #if d == 'giub':
                         
-                        black_list_giub = open( 'giub_problematic_file.txt' , 'r').readlines()
-                        black_list_giub = [ l.replace('\n','').split('/')[-1] for l in black_list_giub ] 
-                        harvested_files = [f for f in harvested_files if f not in black_list_giub ]
-                        a=0
-                    #if y not in station_dic.keys():
-                    #    station_dic = {'year':[], 'dataset':[] , 'files': [] }
+                        #black_list_giub = open( 'giub_problematic_file.txt' , 'r').readlines()
+                        #black_list_giub = [ l.replace('\n','').split('/')[-1] for l in black_list_giub ] 
+                        #harvested_files = [f for f in harvested_files if f not in black_list_giub ]
+                        #a=0
+                    ##if y not in station_dic.keys():
+                    ##    station_dic = {'year':[], 'dataset':[] , 'files': [] }
                     
-                    ''' # old 
-                    station_dic['files'].append(i+'/' +stat_id + '/' + ','.join(harvested_files)  ) 
-                    station_dic['year'].append(y) 
-                    station_dic['dataset'].append(d) 
-                    '''
-                    for f in harvested_files:
-                        station_dic['files'].append(i+'/' +stat_id + '/' + f  ) 
-                        station_dic['year'].append(y) 
-                        station_dic['dataset'].append(d)       
-                        
-    df = pd.DataFrame.from_dict(station_dic)
+                    #''' # old 
+                    #station_dic['files'].append(i+'/' +stat_id + '/' + ','.join(harvested_files)  ) 
+                    #station_dic['year'].append(y) 
+                    #station_dic['dataset'].append(d) 
+                    #'''
+                    #for f in harvested_files:
+                        #station_dic['files'].append(i+'/' +stat_id + '/' + f  ) 
+                        #station_dic['year'].append(y) 
+                        #station_dic['dataset'].append(d)       
+
+    df = pd.DataFrame.from_dict(stdic)
+    #print('create_stat', stat_id,time.time()-tt)                    
     
     return df
 
@@ -2669,13 +2767,13 @@ def create_stat_summary(data_directories, stat_id):
 
 #from merging_yearly_parameters import harvested_base_dir, merged_out_dir, data_directories, run_exception 
 from merging_yearly_parameters import  merged_out_dir,  data_directories, run_exception, POOL, pool_number, check_missing_stations
-from merging_yearly_parameters import   add_sensor, stations, station_kind, create_merging_list
+from merging_yearly_parameters import   add_sensor, stations, station_kind, create_merging_list, scpath
 
 run_mode = ''
 
-def run_wrapper(data_directories, run_exception, station):
+def run_wrapper(data_directories, flist, run_exception, station):
     
-    station_df = create_stat_summary(data_directories, station)
+    station_df = create_stat_summary(data_directories, flist, station)
 
     if run_exception:  # try to run whatever working stations 
         try:
@@ -2696,19 +2794,47 @@ def run_wrapper(data_directories, run_exception, station):
         
 ray_run_wrapper = ray.remote(run_wrapper)
 
+def checkfile(merged_dir, s):
+    
+    fnl = glob.glob(merged_dir+'/'+s+'/*v3.nc')
+    slist = []
+    for fn in fnl:
+        try:
+            
+            with h5py.File(fn) as f:
+                dum = f['station_configuration']['telecommunication_method'][-1]
+                dum = f['sensor_configuration']['sensor_id'][-1]
+            
+            slist.append(fn.split(s)[-1][1:5])
+        except Exception as e:
+            print(fn, e)
+        
+    return slist
+
+ray_checkfile = ray.remote(checkfile)
+
 def check_missing(merged_dir, skip_completed=False):
     """ Creates a table of the already merged files """
     
     dic = {}
     stations = [s for s in os.listdir(merged_dir) if 'logs' not in s ]
+    futures = []
     for s in stations:
-        completed = merged_dir + '/' +s + '/completed.txt' 
-        if os.path.isfile( completed ):
-            lines = open(completed).readlines()
-            
-            dic[s] = [ y.replace('\n', '') for y in lines ]
-        else:
-            pass
+        futures.append(ray_checkfile.remote(merged_dir, s))
+        
+    ls = ray.get(futures)
+    l = 0
+    for s in stations:
+        dic[s] = ls[l]
+        l += 1
+        
+        #completed = merged_dir + '/' +s + '/completed.txt' 
+        #if os.path.isfile( completed ):
+        #    mtime = os.path.getmtime(completed)
+                                
+            #dic[s] = [ y.replace('\n', '') for y in lines ]
+        #else:
+            #pass
         
     fully_completed=[]
     if skip_completed:
@@ -2777,30 +2903,33 @@ if __name__ == '__main__':
             print('Merging list file not found, will create it +++ ')
             all_stat = make_merge_list(data_directories, merged_out_dir, kind=station_kind )
     
-    #stations = ['0-20000-0-82930']
 
     # select from parameters file or extracted list
     if not stations:
         stations = all_stat
         
-    pool_number = 50
+    pool_number = 60
     #stations = stations[0:500]
  
     skip_completed = False ### set to FALSE to rerun the station, will check each year afterwards
     
+    #ray.init(num_cpus=pool_number) # runtime_env={"working_dir": "/users/staff/uvoggenberger/CEUAS/CEUAS/public/merge"}, 
+    ray.init(address="localhost:6379") # runtime_env={"working_dir": "/users/staff/uvoggenberger/CEUAS/CEUAS/public/merge"}, 
     if check_missing_stations:
         processed_stats, fully_completed = check_missing(merged_out_dir, skip_completed=skip_completed)
         stations = [p for p in all_stat if p not in fully_completed ]
     else:
         processed_stats = {}
             
+    #stations = ['0-20000-0-10113']
         
     #stations = stations[4501:]
     Merging = Merger(add_sensor=add_sensor, 
                      out_dir = merged_out_dir,
                      min_year= min_year,
                      max_year=max_year,
-                     processed_stats=processed_stats)
+                     processed_stats=processed_stats,
+                     scpath=scpath)
 
     run_exception = False
     print('run exception is ', run_exception )
@@ -2811,7 +2940,6 @@ if __name__ == '__main__':
     #stations = [s for s in stations if s in os.listdir('/scratch/das/federico/HARVEST_YEARLY_22FEB2024_amma/amma')]
     #stations = ['0-20000-0-45004']
     
-    ray.init(num_cpus=20) # runtime_env={"working_dir": "/users/staff/uvoggenberger/CEUAS/CEUAS/public/merge"}, 
 
     POOL = True
     #stations = stations[0:1]
@@ -2855,31 +2983,54 @@ if __name__ == '__main__':
                     #print('old giub', sid, 'not deleted')
     #i = stations.index('0-200data_directories['giub']00-0-80413')
     #del stations[i]
-    stations = ['0-20000-0-60769']
+    #stations = ['0-20000-0-60769']
+    #stations = []
+    #with open('/mnt/users/scratch/leo/scratch/FH/MERGED_YEARLY_SEP2024_REGULAR/x') as f:
+        #data = f.read().split('\n')
+        #for d in data:
+            #try:
+                
+                #ds = d.split('/')[1]
+                #if ds not in stations:
+                    #stations.append(ds)
+                    #os.remove(stations+'/completed.txt')
+            #except:
+                #pass
+        
+    #idx = stations.index('0-20000-0-70231')
+    #stations = stations[idx:idx+1]
+    idx = 0
     try :
         
         import glob
-        os.remove(glob.glob(merged_out_dir+'/'+stations[0]+'/*.txt')[0])
+#        os.remove(glob.glob(merged_out_dir+'/'+stations[0]+'/*.txt')[0])
     except:
         pass
     POOL = True
     if len(stations)== 1:
         POOL = False
-        
+    
+    flist =[]
+    for d, v in tqdm(data_directories.items()):
+        flist += (glob.glob(v+'/*/*.nc'))
+    print(len(flist))
+    for i in data_directories.items():
+        print(i)
     if POOL:
         #p=Pool(pool_number)
         #func=partial(run_wrapper, data_directories,  run_exception )
         #dummy=p.map(func,stations)
+        rp_flist = ray.put(flist)
         rp_data_directories = ray.put(data_directories)
         result_ids = []
-        for station_i in stations:
-            result_ids.append(ray_run_wrapper.remote(rp_data_directories,  run_exception, station_i))
+        for station_i in stations[idx:]:
+            result_ids.append(ray_run_wrapper.remote(rp_data_directories,  rp_flist, run_exception, station_i))
         results = ray.get(result_ids)
         ray.shutdown()
                 
     else:
-        for station in stations[:1]:
-            dummy=run_wrapper(data_directories, run_exception, station)
+        for station in stations[:]:
+            dummy=run_wrapper(data_directories, flist, run_exception, station)
     '''
     else:
         for station in stations:
