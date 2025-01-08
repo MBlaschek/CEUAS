@@ -396,6 +396,7 @@ def make_inventory(v):
 
 
         for c in stat_conf_columns:
+            # print(c, len(stat_conf_dic[c]))
             
             if c in special_columns.keys():  # specific values for columns 
                 stat_conf_dic[c].append(special_columns[c])            
@@ -986,7 +987,7 @@ v                = args.dataset
 
 
 
-if v in  [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'ncar', 'igra2', 'era5_1', 'amma', 'hara', 'giub']:
+if v in  [ 'era5_2', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'maestro', 'ncar', 'igra2', 'era5_1', 'amma', 'hara', 'giub']:
     WHAT = 'INVENTORY'
     
 elif v in ['CUON', 'MERGE', 'ORPHAN']:
