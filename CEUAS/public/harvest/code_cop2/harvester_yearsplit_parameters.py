@@ -19,9 +19,11 @@ datasets_path = {
       'bufr_cnr': '/mnt/users/scratch/uvoggenberger/bufr_cnr/concated/',                             
       'ncar': database_service2_path + 'UADB_22012024/',
 
+      'maestro': '/mnt/users/scratch/uvoggenberger/HARVEST_2025/MAESTRO_2024/IUSN74/',
+
       #'igra2': database_service2_path + 'IGRA2_20230106',
-      'igra2': database_service2_path + 'IGRA2_03012024',
-      'igra2_mobile': database_service2_path + 'IGRA2_03012024',
+      'igra2': "/mnt/users/scratch/uvoggenberger/HARVEST_2025/IGRA2_05012025/", # database_service2_path + 'IGRA2_03012024',
+      'igra2_mobile': "/mnt/users/scratch/uvoggenberger/HARVEST_2025/IGRA2_05012025/", # database_service2_path + 'IGRA2_03012024',
                   
       'era5_1_mobile': '/mnt/users/scratch/leo/scratch/era5/odbs/1_mobile/new' ,
       'era5_2_mobile': '/mnt/users/scratch/leo/scratch/era5/odbs/2',
@@ -52,6 +54,7 @@ datasets_big = ['era5_1', 'era5_2',
                 'igra2_mobile'
                 'bufr' ,
                 'bufr_cnr' ,
+                'maestro', 
                 'woudc',
                 'giub',
                 'amma',
@@ -79,9 +82,9 @@ datasets_big = ['era5_1', 'era5_2',
 datasets = ['era5_1_mobile' , 'era5_2_mobile'] # only those contain mobile data - while orphan and regular can be in all except those two
 datasets = ['era5_2_mobile' ]
 
-datasets = ['ncar'] #' hara' 
+datasets = ['igra2_mobile'] #' hara' 
 
-out_dir = '/mnt/users/scratch/uvoggenberger/CUON_HARVEST/missing/' ## harvest_test_rerun ## '/scratch/das/federico/HARVEST_YEARLY_22FEB2024_amma/'  _orphans   6_orphan  harvest_20240403   harvest_20240516_orphan
+out_dir = '/mnt/users/scratch/uvoggenberger/CUON_HARVEST_NEW/' ## harvest_test_rerun ## '/scratch/das/federico/HARVEST_YEARLY_22FEB2024_amma/'  _orphans   6_orphan  harvest_20240403   harvest_20240516_orphan
 station_kind = 'regular'
 
 ### Select station kind [regular, orphan, mobile]
@@ -112,6 +115,6 @@ run_only_missing_stations = True
 check_missing_year = True
 
 ### Time range for harvesting  -- 1880 -> 2024
-min_year_to_process = 2021
-max_year_to_process = 2022
+min_year_to_process = 1880
+max_year_to_process = 2026
 
