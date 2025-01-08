@@ -24,7 +24,7 @@ import numpy as np
 import warnings
 import numpy
 from numba import njit
-# from eccodes import *
+from eccodes import *
 from tqdm import tqdm 
 from harvester_yearsplit_parameters import *
 
@@ -2253,7 +2253,8 @@ def igra2_ascii_to_dataframe(file=''):
     df = pd.DataFrame(data= read_data, columns= column_names_igra2)
 
     # set obs height a.s.s. to nan, where it's unknown. 
-    df.observation_height_above_station_surface.replace(0, np.nan, inplace=True)
+    # df.observation_height_above_station_surface.replace(0, np.nan, inplace=True)
+    df.loc[df.observation_height_above_station_surface != 1, 'observation_height_above_station_surface'] = np.nan
 
 
     df['observation_id']  = np.chararray.zfill( (df['observation_id'].astype(int)) .astype('S'+str(id_string_length ) ), id_string_length  )  #converting to fixed length bite objects 
@@ -3203,6 +3204,8 @@ def read_df_to_cdm(cdm, dataset, fn, metadata='' ):
         df, stations_id= read_woudc_csv(fn)
     elif  'bufr' in dataset :
         df, stations_id= bufr_to_dataframe(fn) # fdbs: the xarray converted from the pandas dataframe 
+    elif  'maestro' in dataset :
+        df, stations_id= bufr_to_dataframe(fn) # fdbs: the xarray converted from the pandas dataframe
     elif 'amma' in dataset:
         df, stations_id= read_amma_csv(fn)
     elif  'ncar' in dataset:
@@ -3647,7 +3650,7 @@ def get_station_configuration_cuon(stations_id='', station_configuration='', lat
             fname = str.encode(stations_id[0])
         elif db == "igra2_mobile":
             fname = str.encode(stations_id[0])
-        elif db in ["bufr", 'amma', 'giub', 'hara']:
+        elif db in ["bufr", 'amma', 'giub', 'hara', 'maestro']:
             fname = str.encode(fn.split('/')[-1] )
         elif db in ['bufr_cnr']:
             fname = str.encode(fn.split('/')[-1])
@@ -5193,6 +5196,8 @@ def filelist_cleaner(lista, dataset=''):
         cleaned = [ l for l in lista if '.nc' not in l ]
     if dataset == 'bufr':
         cleaned = [ l for l in lista if '.bfr' in l ]
+    if dataset == 'maestro':
+        cleaned = [ l for l in lista if '.bufr' in l ]
     if dataset =='amma':
         cleaned = [ l for l in lista if '.' not in l ]
     if 'era5' in dataset:
@@ -5239,7 +5244,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Make CDM compliant netCDFs")
     parser.add_argument('--dataset' , '-d', 
-                        help="Select the dataset to convert. Available options: all, era5_1, era5_1759, era5_1761, bufr, igra2, ncar, test. If not selected or equal to 'test', the script will run the example files in the /examples directory."  ,
+                        help="Select the dataset to convert. Available options: all, era5_1, era5_1759, era5_1761, bufr, maestro, igra2, ncar, test. If not selected or equal to 'test', the script will run the example files in the /examples directory."  ,
                     type = str)
 
     parser.add_argument('--output' , '-o', 
@@ -5283,6 +5288,7 @@ if __name__ == '__main__':
         'era5_1', 'era5_2', 'era5_3188', 'era5_1759', 'era5_1761', 
             
             'bufr_cnr', 'bufr', 'igra2', 'ncar', 
+            'maestro',
             'woudc',
             'amma',
             
@@ -5311,7 +5317,7 @@ if __name__ == '__main__':
         
     if dataset not in vlist:
         print('wrong dataset', dataset)
-        raise ValueError(" The selected dataset is not valid. Please choose from ['era5_1', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'igra2', 'ncar', 'amma', 'giub', 'hara', 'npsound', 'shipsound' , 'era5_1_mobile', 'era5_2_mobile' , 'yangjiang']  ")    
+        raise ValueError(" The selected dataset is not valid. Please choose from ['era5_1', 'era5_1759', 'era5_1761', 'era5_3188', 'bufr', 'maestro' 'igra2', 'ncar', 'amma', 'giub', 'hara', 'npsound', 'shipsound' , 'era5_1_mobile', 'era5_2_mobile' , 'yangjiang']  ")    
 
     """ Loading the CDM tables into pandas dataframes """
     cdm_tabdef  , cdm_tab, tdict , dic_obstab_attributes= load_cdm_tables()
@@ -5395,10 +5401,10 @@ if __name__ == '__main__':
             original_file_name = original_file_name.replace('.conv._','.conv.??????.')
 
         elif dataset in ['igra2']:
-            File = File + '-data.txt'
+            File = File # + '-data.txt'
 
         elif dataset in ['igra2', 'igra2_mobile']:
-            File = File + '-data.txt'
+            File = File # + '-data.txt'
 
         elif dataset in ['era5_2', 'era5_2_mobile']:
             File = File + '.gz'
