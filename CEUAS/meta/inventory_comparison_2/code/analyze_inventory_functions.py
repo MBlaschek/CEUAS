@@ -12,6 +12,7 @@ import re
 import subprocess
 import geopy.distance
 import glob
+from datetime import date, datetime,timedelta
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -34,6 +35,131 @@ Definitions
 - df_red = df_red.loc[df_red["distance_km"] <= 30 ]
 
 """
+int_void = -2147483648
+
+
+def check_read_file(file='', read= False):
+    with open(file, 'rt') as infile:
+        tmp = infile.read()  # alternative readlines (slower)                                                                                                                                                                                                                   
+        data = tmp.splitlines()  # Memory (faster)  
+
+    return data
+
+def igra2_ascii_to_dataframe(file=''):
+    """ Read an igra2 stationfile in ASCII format and convert to a Pandas DataFrame. 
+        Adapted from https://github.com/MBlaschek/CEUAS/tree/master/CEUAS/data/igra/read.py 
+        Variables used inside the DataFrame are already CDM compliant
+        df.types
+
+        Args:
+             file (str): path to the igra2 station file
+
+        Returns:
+             Pandas DataFrame with cdm compliant column names
+    """
+
+    data = check_read_file(file=file, read=True)
+    #source_file = [l for l in file.split('/') if '.txt' in l][0]
+    read_data = [] #  Lists containing the raw data from the ascii file, and the observation dates
+    """ Data to be extracted and stored from the igra2 station files 
+        Some info is contained in the header of each ascent, some in the following data """
+
+    """ Initialize the variables that can be read from the igra2 files """
+    ident,year,month,day,hour,reltime,p_src,np_src,lat, lon = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan 
+    lvltyp1,lvltyp2,etime,press,pflag,gph,zflag,temp,tflag,rh,dpdep,wdir,wspd = np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan # initialize to zeros
+    stations_id = []
+    idate = np.nan
+    count = 0
+    head_count = 0
+
+    obs_id = 0
+
+    def make_release_time(date_time,  hour, release):
+        """ build a sonde release time 
+              ex 2019 02 20 00 2349 
+              ex 2019 01 10 00 0011 
+              They round the release time to the closest hour. 
+              It can be the same day or the following !!!
+              date_time = date_time python object, 
+              date, time, release = original strings 
+              """
+        release_h  = int(release[:2])
+        release_m = int(release[2:4])
+
+        if release_h == 99:
+            release_date_time = date_time 
+            timestamp_flag = int_void #largest integer number int 64   
+
+        else:
+            timestamp_flag = 1 
+
+            if release_m == 99:
+                release_m = 0
+            release_date_time = date_time.replace(hour= release_h, minute= release_m) 
+
+            """ Here, I have to subtract one day to the release time stamp if the hour of the time stamp is in the night,
+                  but the nominal time is reported at midnight hence in the following day. For example  2019 02 20 00 2349 from file VMM00048820 """
+            if hour == '00':
+                if release_h > 20:
+                    release_date_time = release_date_time - timedelta(days=1)
+                else:
+                    pass
+
+        return release_date_time, timestamp_flag 
+
+    #data = data[3706329:]  # TO DO HERE TO DO CHANGE!!!
+    #for i, line in enumerate(data):
+    #      print(i , '  ' ,  line[0] )
+
+    hash_lines = [line for i, line in enumerate(data) if line.strip().startswith("#")]
+    for line in [hash_lines[0], hash_lines[-1]] :
+        if line[0] == '#':
+            head_count = head_count +1 
+            # Info from the Header line of each ascent                                                                                                                                                                                                                   
+            ident     = line[1:12]               # station identifier
+            #ident     = ident[6:12]
+            if ident not in stations_id:
+                stations_id.append(ident)
+
+            year      = line[13:17]               # year, months, day, hour of the observation
+            month   = line[18:20]
+            day       = line[21:23]
+            hour      = line[24:26]               
+            reltime  = line[27:31]            # release time of the sounding.
+            numlev  = int(line[32:36])        # number of levels in the sounding == number of data recorded in the ascent
+            p_src     = line[37:45]              # data source code for the pressure levels 
+            np_src   = line[46:54]             # data source code for non-pressure levels
+            lat         = int(line[55:62]) / 10000.  # latitude and longitude
+            lon        = int(line[63:71]) / 10000.
+            #observation_id = i
+            if int(hour) == 99:
+                time = reltime + '00'
+            else:
+                time = hour + '0000'
+
+            if '99' in time:
+                time = time.replace('99', '00')
+
+            idate = datetime.strptime(year + month + day + time, '%Y%m%d%H%M%S') # constructed according to CDM
+
+            ### making release time and its flag
+            release_time , report_timeflag = make_release_time(idate, hour, reltime) # making the release time 
+
+            ### report_meaning_of_timestamp	int	meaning_of_time_stamp:meaning	Report time - beginning, middle or end of reporting period
+            ### 1	beginning	Date / time specified indicates the start of the period over which the observation was made.
+            ### end	Date / time specified indicates the end of the period over which the observation was made.
+            ### middle	Date / time specified indicates the middle of the period over which the observation was made.
+
+            iday =  int(year + month + day)
+            count = count + 1
+
+        read_data.append ( ( 'IGRA2'.rjust(10), head_count,  idate, iday, ident, lat, lon, release_time, report_timeflag) )
+
+    column_names_igra2 = [ 'source_id', 'report_id',  'record_timestamp' , 'iday', 'statid@hdr', 'lat@hdr', 'lon@hdr', 'report_timestamp', 'report_meaning_of_timestamp',]
+
+    df = pd.DataFrame(data= read_data, columns= column_names_igra2)
+    return df
+
 
 
 class Utils():
@@ -519,12 +645,13 @@ class Data():
              Otherwise it reads the original file with the appropriate functions. """
         
         # for igra2, file is indeed a pandas series 
-        if self.dataset == 'igra2':
-            self.file = file.station_id_igra
-            self.series = file 
+        # if self.dataset == 'igra2':
+        #     self.file = file.station_id_igra
+        #     self.series = file 
             
-        else:
-            self.file = file  
+        # else:
+        ## IGRA2CHANGE
+        self.file = file  
 
         f = 'temp_data/' + self.dataset + '/' + self.file.split('/')[-1] + '.csv'
         
@@ -627,6 +754,8 @@ class Data():
                 self.read_bufr_cnr()
             elif 'bufr' in self.dataset :
                 self.read_bufr()
+            elif 'maestro' in self.dataset :
+                self.read_bufr_maestro()
             elif 'amma' in self.dataset:
                 self.read_amma()
             elif 'giub' in self.dataset:
@@ -1360,6 +1489,144 @@ class Data():
         self.variables = dic['variables']
         
         return 0    
+
+    def read_bufr_maestro(self):
+        """ Extract data from a single BUFR file """
+        
+        bufrfile = self.file 
+        
+        vdict={'111':'windDirection','112':'windSpeed','1':'geopotentialHeight',
+               '2':'airTemperature','59':'dewpointTemperature','29':'relativeHumidity'}
+                
+        # check if valid bufr file, preliminary loop
+        with open(bufrfile) as f:
+            cnt = 0
+            # loop over the messages in the file
+            while 1:
+                # get handle for message
+                bufr = codes_bufr_new_from_file(f)
+                if bufr is None:
+                    break
+                codes_release(bufr)
+                cnt+=1
+    
+        if cnt==0:
+            return None
+        
+        else:
+            # storing here the complete data from file 
+            data = {}
+            var = ['latitude' , 'longitude', 'blockNumber', 'stationNumber', 'date', 'variables']
+            for v in var: 
+                data[v] = []
+
+            # looping through buffer 
+            with open(bufrfile) as f:
+                # loop over the messages in the file
+                for i in range(cnt):
+                    # get handle for message
+                    bufr = codes_bufr_new_from_file(f)
+                    if i not in [0,cnt-1]:
+                        codes_release(bufr)
+                        continue
+                    else:
+                        codes_set(bufr, 'unpack', 0)
+                        # get all the timePeriods
+                        iterid = codes_bufr_keys_iterator_new(bufr)
+        
+                        # loop over the keys
+                        #if codes_get_array(bufr,'dataSubCategory')[0] not in [91,101]:
+                        #    codes_release(bufr)
+                        #    continue
+                        
+                        # extracting date
+                        keynames = []
+                        while codes_bufr_keys_iterator_next(iterid):     
+                            keyname = codes_bufr_keys_iterator_get_name(iterid)
+                            keynames.append(keyname)
+                            
+                            if keyname == 'typicalYear':
+                                year = codes_get_array(bufr,keyname)[0]
+                            if keyname == 'typicalMonth':
+                                month = codes_get_array(bufr,keyname)[0]
+                            if keyname == 'typicalDay':
+                                day = codes_get_array(bufr,keyname)[0]
+                        #datum='{}-{:0>2}-{:0>2}'.format(year, month, day  ) this is the format of the stat conf 
+                        datum='{}{:0>2}{:0>2}'.format(year, month, day  )
+                        
+                        print(keynames)
+
+                        if i == 0:
+                            data['start_date'] = datum
+                        if i== (cnt-1):
+                            data['end_date'] = datum
+                            
+                        # delete the key iterator
+                        codes_bufr_keys_iterator_delete(iterid)
+        
+                        for v in ['#1#latitude' , '#1#longitude', '#1#stationNumber', '#1#blockNumber']:
+                            try:
+                                val = codes_get(bufr, v)
+                            except:
+                                val = 999
+                            data[v[3:]].append(val)
+                            
+                        #lat = codes_get(bufr, "latitude")
+                        # odetype@hdr == 35
+                        # expver@desc == ERA40
+                        # ECMWF ? 
+        
+                        for varno in ['111','112','1','2','59','29']:
+                            try:
+                                a = codes_get_array(bufr, vdict[varno] )
+                                data['variables'].append ( self.odb_to_cdm[int(varno)] ) 
+                            except:
+                                pass
+        
+                        codes_release(bufr)
+        
+        lats, lons = [round(l,3) for l in data['latitude']] , [round(c,4) for c in data['longitude']]
+        df = pd.DataFrame( {'lat': lats , 'lon' : lons } )
+        df = df.drop_duplicates().reset_index(drop=True) 
+         
+        statIds = [np.unique( ['{:0>2}{:0>3}'.format(data['blockNumber'][i], data['stationNumber'][i] ) for i in range(len(data['blockNumber'] ) )  ]  )[0]  ]
+         
+        
+        # maximum 30 km distance 
+        a = self.check_consistent_coords(lats, lons)
+            
+        lats, lons = list(df.lat.values), list(df.lon.values)
+
+        dic = { 'min_date': data['start_date'], 
+                 'max_date': data['end_date'] , 
+                 'statid': str(statIds), # needed in case multiple ids 
+                 #'lats': lats, 
+                 #'lons': lons, 
+                 'lats' : [self.lats],
+                 'lons': [self.lons],
+                 
+                 'lats_all': [self.lats_all] , 
+                 'lons_all': [self.lons_all], 
+                 
+                 'frequency': self.frequency,
+                 
+                 'lats_most_freq':   self.lats[0], 
+                 'lons_most_freq':  self.lons[0],                  
+                 
+                 'file': self.file.split('/')[-1] , 
+                 'file_path': self.file , 
+                 'db': self.dataset,
+                 'variables': str(list(np.unique(data['variables'])) ),
+                 'consistent_coord': str(self.consistent_coord) }
+
+        pd.DataFrame(dic).to_csv( 'temp_data/' +self.dataset  + '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        self.statid = statIds
+        self.min_date = data['start_date'] 
+        self.max_date = data['end_date']
+        self.variables = dic['variables']
+        
+        return 0    
+
     
     def read_ncar(self):
         """ Extract data from a single ODB file """
@@ -1442,22 +1709,23 @@ class Data():
     
     def read_igra2(self, file=''):
         """ Extract data from a pandas series extracted from igra2 stations_list """
-        series = self.series
+        file = self.file
+        df = igra2_ascii_to_dataframe(file)
         variables = ['85','38','106','107']
         
-        ### must remove dummy lat and lon for mobing ships in igra2
-        lat, lon = series.latitude, series.longitude
-        if lat < -180 or lon < -180 :
-            lat, lon = '', '' 
+        lat = df['lat@hdr'][0]
+        lon = df['lon@hdr'][0]
+        # if lat < -180 or lon < -180 :
+        #     lat, lon = '', '' 
         
         if not  (lat and lon):
             coord = False
         else:
             coord = True 
             
-        dic = { 'max_date': series.end_date , 
-                'min_date':series.start_date, 
-                'statid':str(series.station_id), # needed in case multiple ids 
+        dic = { 'max_date': df.iday[1], 
+                'min_date':df.iday[0], 
+                'statid':str(df['statid@hdr'][0]),
                 'lats': [ lat ] , 
                 'lons': [ lon ], 
                 'file': self.file , 
@@ -1469,14 +1737,52 @@ class Data():
         # storing the 
         pd.DataFrame(dic).to_csv( 'temp_data/' + self.dataset + '/'  + self.file.split('/')[-1] + '.csv', sep = '\t' )     
         
-        self.statid = [series.station_id]
+        self.statid = [df['statid@hdr'][0]]
         self.lats = [lat]
         self.lons = [lon]
-        self.min_date = series.start_date
-        self.max_date = series.end_date
+        self.min_date = df.iday[0]
+        self.max_date = df.iday[1]
         self.variables = str(variables)
         self.consistent_coord = coord 
-        return 0        
+        return 0       
+
+    # def read_igra2(self, file=''):
+    #     """ Extract data from a pandas series extracted from igra2 stations_list """
+    #     series = self.series
+    #     variables = ['85','38','106','107']
+        
+    #     ### must remove dummy lat and lon for mobing ships in igra2
+    #     lat, lon = series.latitude, series.longitude
+    #     if lat < -180 or lon < -180 :
+    #         lat, lon = '', '' 
+        
+    #     if not  (lat and lon):
+    #         coord = False
+    #     else:
+    #         coord = True 
+            
+    #     dic = { 'max_date': series.end_date , 
+    #             'min_date':series.start_date, 
+    #             'statid':str(series.station_id), # needed in case multiple ids 
+    #             'lats': [ lat ] , 
+    #             'lons': [ lon ], 
+    #             'file': self.file , 
+    #             'file_path':  self.file , 
+    #             'db': self.dataset,
+    #             'variables': str(variables),
+    #             'consistent_coord': coord }  # NB coordinates should be checked against complete files, not stations lists !!! 
+        
+    #     # storing the 
+    #     pd.DataFrame(dic).to_csv( 'temp_data/' + self.dataset + '/'  + self.file.split('/')[-1] + '.csv', sep = '\t' )     
+        
+    #     self.statid = [series.station_id]
+    #     self.lats = [lat]
+    #     self.lons = [lon]
+    #     self.min_date = series.start_date
+    #     self.max_date = series.end_date
+    #     self.variables = str(variables)
+    #     self.consistent_coord = coord 
+    #     return 0   
     
     
 class Inventory():
@@ -1484,7 +1790,7 @@ class Inventory():
     the OSCAR, IGRA2, WBAN and CHUAN inventories.
     For OSCAR and WBAN will convert lat and lon to decimal format. """
     
-    def __init__(self, datadir ='', tablesdir = '/users/staff/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/data/tables/',
+    def __init__(self, datadir ='', tablesdir = '/srvfs/home/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/data/tables/',
                  oscar ="",
                  igra2= "",
                  wban = '',
@@ -1538,7 +1844,7 @@ class Inventory():
         igra2['isRadio'] = 'True'
         igra2.name = 'IGRA2'
 
-        out = open('/users/staff/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/code/file_list/igra2_files_list.txt' , 'w')
+        out = open('/srvfs/home/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/code/file_list/igra2_files_list.txt' , 'w')
         
         for i in range(len(igra2)):
             stat = igra2.loc[i, 'station_id_igra' ] 
@@ -1740,7 +2046,7 @@ class Inventory():
 utils = Utils()
 
 # Initialize inventory
-inventory = Inventory( datadir ='/users/staff/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/data/tables',  
+inventory = Inventory( datadir ='/srvfs/home/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/data/tables',  
                  oscar = "vola_legacy_report.txt" , 
                  igra2 = "igra2-station-list.txt"  , 
                  wban = "WBAN.TXT-2006jan"  , 
@@ -1802,10 +2108,10 @@ def wrapper(data, file):
         d = data.read_file(file=file)
         print("Done Reading file::: " , file )
         
-        if data.dataset == 'igra2':
-            file_name = file.station_id_igra
-        else:
-            file_name = file.split("/")[-1]
+        # if data.dataset == 'igra2':
+        #     file_name = file.station_id_igra
+        # else:
+        file_name = file.split("/")[-1]
         
         matching_inv = {}        
         for i in ["oscar","igra2","wban","chuan", 'schroeder', 'wmo', 'amma', 'hara'] :        
@@ -2072,7 +2378,7 @@ test_era5_1759_lat_mismatch_all = ['era5.1759.conv.2:82606', 'era5.1759.conv.2:8
 
 ### Directory containing the databases 
 basedir = '/mnt/users/scratch/leo/scratch/era5/odbs/'
-uvdir = '/mnt/users/staff/uvoggenberger/scratch/'
+uvdir = '/mnt/users/scratch/uvoggenberger/'
 datasets = {  'era5_1': basedir + '/1' ,
              'era5_1_mobile' : basedir + '1_mobile' ,
             'era5_2': basedir + '/2',
@@ -2089,6 +2395,7 @@ datasets = {  'era5_1': basedir + '/1' ,
             'igra2_mobile': '', # dummy, use the igra2 station list file 
 
             'hara': '/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/',
+            'maestro': uvdir + 'HARVEST_2025/MAESTRO_2024/IUSN74/',
             
             'giub': '/scratch/das/federico/databases_service2/GIUB_07072023/',
             'npsound' : '/scratch/das/federico/databases_service2/NPSOUND-NSIDC0060/NPSOUND_csv_converted' ,
@@ -2203,8 +2510,9 @@ def get_flist(db):
         flist=glob.glob( datasets[db] + '/uadb*')
         
     elif db== 'igra2':
-        f = inventory.inv['igra2']
-        flist = [ f.iloc[n] for n in range(len(f)) ]
+        flist=glob.glob("/mnt/users/scratch/uvoggenberger/HARVEST_2025/IGRA2_05012025/*.txt")
+        # f = inventory.inv['igra2']
+        # flist = [ f.iloc[n] for n in range(len(f)) ]
         
     elif 'bufr_cnr' in db:
         flist=glob.glob(datasets[db] + '/*') 
@@ -2212,7 +2520,10 @@ def get_flist(db):
     elif 'bufr' in db:
         flist=glob.glob(datasets[db] + '/'+'era5.*.bfr')
         flist=[f for f in flist if 'undef' not in f ]
-        
+
+    elif 'maestro' in db:
+        flist=glob.glob(datasets[db] + '/'+'*.bufr')
+
     elif 'amma' in db:
         flist=glob.glob(datasets[db] + '/'+'*')
         
@@ -2251,6 +2562,7 @@ if __name__ == '__main__':
                'amma', 
                'hara', 'npsound', 'shipsound',
                'giub', 
+               'maestro',
                'era5_1_mobile' , 'era5_2_mobile']  # era5_1_mobile, era5_2_mobile 
     
 
@@ -2262,9 +2574,9 @@ if __name__ == '__main__':
                'igra2', 'igra2_mobile', 
                'amma', 
                'hara', 'npsound', 'shipsound',
-               'giub', ]
+               'giub', 'maestro',]
     
-    databases = ['bufr_cnr']  
+    databases = ['maestro']  
     
     # enable multiprocesing
     POOL = False 
@@ -2294,7 +2606,7 @@ if __name__ == '__main__':
         
         # ### filtering mobile igra
         if db == 'igra2_mobile':
-            mobile_igra_list = pd.read_csv('/users/staff/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/code/file_list/igra2_files_list.txt' , sep = '\t', names = ['station', 'kind'] )
+            mobile_igra_list = pd.read_csv('/srvfs/home/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/code/file_list/igra2_files_list.txt' , sep = '\t', names = ['station', 'kind'] )
             mobile_igra_list = mobile_igra_list.loc[mobile_igra_list.kind == 'mobile']
             flist = [f for f in flist if f.station_id_igra in list(mobile_igra_list.station) ]
         
