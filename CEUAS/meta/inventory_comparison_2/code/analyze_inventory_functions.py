@@ -834,7 +834,7 @@ class Data():
         If there are far away points, we check if the fractions of data far apart is small. We do so by grouping by distance. 
         """
         #1. Extract unique lat and lon        
-        comm = "odb sql 'select distinct lat,lon'  -i FILE --no_alignment ".replace('FILE', file)  # ODB command in sql syntax 
+        comm = "odc sql 'select distinct lat,lon'  -i FILE --no_alignment ".replace('FILE', file)  # ODB command in sql syntax 
         proc = subprocess.Popen(comm, stdout=subprocess.PIPE , shell=True)
         b = proc.stdout.read().decode('utf-8').split('\n')
         
@@ -858,7 +858,7 @@ class Data():
         if max(distances) > 30:
             #Extract all lat and lon if I have more than one value   
             # This is necessary to quantify inconsistent lat/lon 
-            comm = "odb sql 'select lat,lon'  -i FILE --no_alignment ".replace('FILE', file)  # ODB command in sql syntax 
+            comm = "odc sql 'select lat,lon'  -i FILE --no_alignment ".replace('FILE', file)  # ODB command in sql syntax 
             proc = subprocess.Popen(comm, stdout=subprocess.PIPE , shell=True)
             b = proc.stdout.read().decode('utf-8').split('\n')
     
@@ -921,14 +921,14 @@ class Data():
         self.lon_most_freq = lons_good[0]
         
         # extract statid 
-        comm = "odb sql 'select distinct statid'  -i FILE --no_alignment ".replace('FILE', file)   
+        comm = "odc sql 'select distinct statid'  -i FILE --no_alignment ".replace('FILE', file)   
         proc = subprocess.Popen(comm, stdout=subprocess.PIPE , shell=True)
         b = proc.stdout.read().decode('utf-8').split('\n')
         statids = [ eval(c) for c in np.unique( b[1:-1] ) ] 
         del b 
         
         # extract distinct variables
-        comm = "odb sql 'select distinct varno'  -i FILE --no_alignment ".replace('FILE', file)   
+        comm = "odc sql 'select distinct varno'  -i FILE --no_alignment ".replace('FILE', file)   
         proc = subprocess.Popen(comm, stdout=subprocess.PIPE , shell=True)
         b = proc.stdout.read().decode('utf-8').split('\n')
         variables = [ eval(c) for c in np.unique( b[1:-1] ) ] 
@@ -938,13 +938,13 @@ class Data():
         del b
         
         # extract min date, max date 
-        comm = "odb sql 'select distinct MIN(date) '  -i FILE --no_alignment ".replace('FILE', file)   
+        comm = "odc sql 'select distinct MIN(date) '  -i FILE --no_alignment ".replace('FILE', file)   
         proc = subprocess.Popen(comm, stdout=subprocess.PIPE , shell=True)
         b = proc.stdout.read().decode('utf-8').split('\n')
         min_date = b[1]
         del b
         
-        comm = "odb sql 'select distinct MAX(date) '  -i FILE --no_alignment ".replace('FILE', file)   
+        comm = "odc sql 'select distinct MAX(date) '  -i FILE --no_alignment ".replace('FILE', file)   
         proc = subprocess.Popen(comm, stdout=subprocess.PIPE , shell=True)
         b = proc.stdout.read().decode('utf-8').split('\n')
         
@@ -2379,8 +2379,8 @@ test_era5_1759_lat_mismatch_all = ['era5.1759.conv.2:82606', 'era5.1759.conv.2:8
 ### Directory containing the databases 
 basedir = '/mnt/users/scratch/leo/scratch/era5/odbs/'
 uvdir = '/mnt/users/scratch/uvoggenberger/'
-datasets = {  'era5_1': basedir + '/1' ,
-             'era5_1_mobile' : basedir + '1_mobile' ,
+datasets = {  'era5_1': basedir + '/1/new' ,
+             'era5_1_mobile' : basedir + '1_mobile/new' ,
             'era5_2': basedir + '/2',
             'era5_2_mobile': basedir + '/2',
 
@@ -2576,7 +2576,7 @@ if __name__ == '__main__':
                'hara', 'npsound', 'shipsound',
                'giub', 'maestro',]
     
-    databases = ['maestro']  
+    databases = ['era5_1']  
     
     # enable multiprocesing
     POOL = False 
