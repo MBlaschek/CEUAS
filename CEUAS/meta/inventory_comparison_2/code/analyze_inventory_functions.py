@@ -12,6 +12,7 @@ import re
 import subprocess
 import geopy.distance
 import glob
+import gzip
 from datetime import date, datetime,timedelta
 
 import warnings
@@ -773,49 +774,119 @@ class Data():
         # Must read header from non mobile directory...
                
         file = self.file 
-        statIds = file.split('.txt.gz')[0].split('._')[1]
+        # statIds = file.split('.txt.gz')[0].split('._')[1]
+        statIds = file.split('.gz')[0].split('.')[-1]
         
         # need full list to extract max date 
-        if self.dataset == 'era5_1_mobile':
-            flist_all= [ f for f in glob.glob(datasets[self.dataset] + "/era5.conv.*._*.txt.gz" ) if f.split('._')[1].split('.txt.')[0] == statIds]  
+        
+        if self.dataset == 'era5_1':
+            flist_all= [ f for f in glob.glob(datasets[self.dataset] + "/era5.conv.*.gz" ) if f.split('.')[-2] == statIds]  
+            # flist_all= [ f for f in glob.glob(datasets[self.dataset] + "/era5.conv.*._*.txt.gz" ) if f.split('._')[1].split('.txt.')[0] == statIds]
             flist_all.sort()
-            max_date = flist_all[-1].split('conv.')[1].split('._')[0]
-            min_date = self.file.split('conv.')[1].split('._')[0]
+            max_date = flist_all[-1].split('conv.')[1].split('.')[0]
+            min_date = self.file.split('conv.')[1].split('.')[0]
+
+            df = pd.read_csv(flist_all[-1], compression='gzip', sep='\t')
+
+            # file = 'era5.conv._' + statIds 
+            dic = { 'max_date': max_date, 
+                    'min_date': min_date, 
+                    'statid': str(statIds), # needed in case multiple ids 
+                    'lats': str(np.unique(df['lat@hdr'])[0]), 
+                    'lons': str(np.unique(df['lon@hdr'])[0]), 
+
+                    'lats_all': '', 
+                    'lons_all': '', 
+                    
+                    'file': file , 
+                    'file_path': self.file , 
+                    'db': self.dataset,
+                    'variables': '',
+                    'frequency': '',
+                    'consistent_coord': 'False' }
             
+            self.statid = [statIds]
+            
+            self.lats = [np.unique(df['lat@hdr'])[0]]
+            self.lons = [np.unique(df['lon@hdr'])[0]] 
+            self.min_date = min_date
+            self.max_date = max_date
+            self.variables = dic['variables']
+            self.consistent_coord = False
+            self.file = file # update reduced file name 
+            
+            pd.DataFrame(dic, index=[0]).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t')
+
+        elif self.dataset == 'era5_1_mobile':
+            flist_all= [ f for f in glob.glob(datasets[self.dataset] + "/era5.conv.*.gz" ) if f.split('.')[-2] == statIds]  
+            # flist_all= [ f for f in glob.glob(datasets[self.dataset] + "/era5.conv.*._*.txt.gz" ) if f.split('._')[1].split('.txt.')[0] == statIds]
+            flist_all.sort()
+            max_date = flist_all[-1].split('conv.')[1].split('.')[0]
+            min_date = self.file.split('conv.')[1].split('.')[0]
+
+            # file = 'era5.conv._' + statIds 
+            dic = { 'max_date': max_date, 
+                    'min_date': min_date, 
+                    'statid': str(statIds), # needed in case multiple ids 
+                    'lats': '', 
+                    'lons': '', 
+
+                    'lats_all': '', 
+                    'lons_all': '', 
+                    
+                    'file': file , 
+                    'file_path': self.file , 
+                    'db': self.dataset,
+                    'variables': '',
+                    'frequency': '',
+                    'consistent_coord': 'False' }
+            
+            self.statid = [statIds]
+            
+            self.lats = []
+            self.lons = [] 
+            self.min_date = min_date
+            self.max_date = max_date
+            self.variables = dic['variables']
+            self.consistent_coord = False
+            self.file = file # update reduced file name 
+            
+            pd.DataFrame(dic, index=[0]).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t')
+                    
         elif self.dataset == 'era5_2_mobile':
             flist_all= [ f for f in glob.glob(datasets[self.dataset] + "/era5.conv.*.*" ) if f.split('.gz')[0].split('.')[-1] == statIds]  
             flist_all.sort()
             max_date = flist_all[-1].split('conv.')[1].split('.')[0]
             min_date = flist_all[0].split('conv.')[1].split('.')[0]
 
-        file = 'era5.conv._' + statIds 
-        dic = { 'max_date': max_date, 
-                 'min_date': min_date, 
-                 'statid': str(statIds), # needed in case multiple ids 
-                 'lats': '', 
-                 'lons': '', 
+            file = 'era5.conv._' + statIds 
+            dic = { 'max_date': max_date, 
+                    'min_date': min_date, 
+                    'statid': str(statIds), # needed in case multiple ids 
+                    'lats': '', 
+                    'lons': '', 
 
-                 'lats_all': '', 
-                 'lons_all': '', 
-                 
-                 'file': file , 
-                 'file_path': self.file , 
-                 'db': self.dataset,
-                 'variables': '',
-                 'frequency': '',
-                 'consistent_coord': 'False' }
-        
-        self.statid = [statIds]
-        
-        self.lats = []
-        self.lons = [] 
-        self.min_date = min_date
-        self.max_date = max_date
-        self.variables = dic['variables']
-        self.consistent_coord = False
-        self.file = file # update reduced file name 
-        
-        pd.DataFrame(dic, index=[0]).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t')
+                    'lats_all': '', 
+                    'lons_all': '', 
+                    
+                    'file': file , 
+                    'file_path': self.file , 
+                    'db': self.dataset,
+                    'variables': '',
+                    'frequency': '',
+                    'consistent_coord': 'False' }
+            
+            self.statid = [statIds]
+            
+            self.lats = []
+            self.lons = [] 
+            self.min_date = min_date
+            self.max_date = max_date
+            self.variables = dic['variables']
+            self.consistent_coord = False
+            self.file = file # update reduced file name 
+            
+            pd.DataFrame(dic, index=[0]).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t')
 
         
         
@@ -824,6 +895,12 @@ class Data():
         # odb headre -i file """
         
         file = self.file 
+        statIds = file.split('.gz')[0].split('.')[-1]
+        flist_all= glob.glob(datasets[self.dataset] + "/era5.conv.*."+statIds)  
+        flist_all.sort()
+        # max_date = flist_all[-1].split('conv.')[1].split('.')[0]
+        min_date = flist_all[0].split('conv.')[1].split('.')[0]
+        file = flist_all[-1]
 
         #a = open('check_odb','a+')
         #a.write(file + '\n')
@@ -941,7 +1018,10 @@ class Data():
         comm = "odc sql 'select distinct MIN(date) '  -i FILE --no_alignment ".replace('FILE', file)   
         proc = subprocess.Popen(comm, stdout=subprocess.PIPE , shell=True)
         b = proc.stdout.read().decode('utf-8').split('\n')
-        min_date = b[1]
+        if len(min_date) == 6:
+            min_date = min_date + '01'
+        else:
+            min_date = min_date
         del b
         
         comm = "odc sql 'select distinct MAX(date) '  -i FILE --no_alignment ".replace('FILE', file)   
@@ -1248,7 +1328,7 @@ class Data():
         """ Reading SHIPSOUND files written into csv station files """
                
         # reading data via csv 
-        data =pd.read_csv(self.file, sep='\t')
+        data = pd.read_csv(self.file, sep='\t')
         dates = np.unique(data.date_time)     
         dates = [ ''.join(f.split('_')) for f in dates ]
         lats = data.latitude.values
@@ -1265,14 +1345,17 @@ class Data():
         df = pd.DataFrame( {'lat': lats , 'lon' : lons } )
         df = df.drop_duplicates().reset_index(drop=True) 
          
-        statIds = [ self.file.split('/')[-1].split('.dat')[0] ]
+        if 'shipsound' in self.file:
+            statIds = [ self.file.split('/')[-1].split('.dat')[0].replace('.csv', '').replace('sound', '') + 'sound' ]
+        else:
+            statIds = [ self.file.split('/')[-1].split('.dat')[0].replace('_', '') ]
           
         #lats, lons = list(df.lat.values), list(df.lon.values)
         
         a = self.check_consistent_coords(lats, lons)
     
-        dic = { 'max_date': max(dates), 
-                 'min_date': min(dates), 
+        dic = { 'max_date': max(dates)[:10], 
+                 'min_date': min(dates)[:10], 
                  'statid': str(statIds), # needed in case multiple ids 
                  'lats': [list(df.lat.values)], 
                  'lons': [list(df.lon.values)], 
@@ -1292,8 +1375,8 @@ class Data():
         self.statid = statIds
         self.lats = lats
         self.lons = lons 
-        self.min_date = min(dates)
-        self.max_date = max(dates)
+        self.min_date = min(dates)[:10]
+        self.max_date = max(dates)[:10]
         self.variables = dic['variables']
         return 0  
     
@@ -1961,6 +2044,7 @@ class Inventory():
         ### Reading OSCAR data
         #############################################
         oscar = pd.read_csv( self.oscar , sep='\t')
+        oscar = oscar[oscar['StationId'] != '41247'] 
         oscar = oscar.rename(columns = {'StationId':'WIGOS', 'Longitude':'longitude', 
                                         'Latitude':'latitude' , 'StationName':'station_name', "Hp": 'elevation'} )
         
@@ -2143,6 +2227,8 @@ def wrapper(data, file):
             st = str(eval(data.statid[0][0])[0])
         except:
             st = str(data.statid[0])
+
+        st = st.replace(' ', '') # remove spaces
             
         if data.dataset in ['igra2'] and not data.consistent_coord: # special case where igra2 has mobile stations
             df_red = pd.DataFrame (columns = df_red.columns )           
@@ -2186,7 +2272,8 @@ def wrapper(data, file):
             a.write(name_s + '\t' + flag + '\t' + '' +  '\n')       
 
             df = pd.DataFrame( all_inventories, index=[0] )  ### case: fully orphans, no whatsoever matching 
-            df['WIGOS_best'] = wigos_pre + st
+            df['WIGOS_best'] = wigos_pre + st 
+
             name = 'inventories/' + dataset + '/' + data.file.split('/')[-1] + '_' + flag + '.csv'            
             df.to_csv( name,  sep = '\t' , index = False )
             return 
@@ -2379,7 +2466,7 @@ test_era5_1759_lat_mismatch_all = ['era5.1759.conv.2:82606', 'era5.1759.conv.2:8
 ### Directory containing the databases 
 basedir = '/mnt/users/scratch/leo/scratch/era5/odbs/'
 uvdir = '/mnt/users/scratch/uvoggenberger/'
-datasets = {  'era5_1': basedir + '/1/new' ,
+datasets = {  'era5_1': basedir + '/1' ,
              'era5_1_mobile' : basedir + '1_mobile/new' ,
             'era5_2': basedir + '/2',
             'era5_2_mobile': basedir + '/2',
@@ -2389,17 +2476,17 @@ datasets = {  'era5_1': basedir + '/1/new' ,
             'era5_1761': basedir + '/1761',
             'bufr': basedir + '/ai_bfr/',  
             'bufr_cnr': uvdir + 'bufr_cnr/concated',                                  
-            'ncar': '/scratch/das/federico/databases_service2/UADB_22012024/',
-            'amma': '/scratch/das/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/' ,
+            'ncar': '/mnt/scratch/scratch/federico/databases_service2/UADB_22012024/',
+            'amma': '/mnt/scratch/scratch/federico/databases_service2/AMMA_BUFR/AMMA_split_csv/' ,
             'igra2': '', # dummy, use the igra2 station list file 
             'igra2_mobile': '', # dummy, use the igra2 station list file 
 
-            'hara': '/scratch/das/federico/databases_service2/HARA-NSIDC-0008_csv/',
+            'hara': '/mnt/scratch/scratch/federico/databases_service2/HARA-NSIDC-0008_csv/',
             'maestro': uvdir + 'HARVEST_2025/MAESTRO_2024/IUSN74/',
             
-            'giub': '/scratch/das/federico/databases_service2/GIUB_07072023/',
-            'npsound' : '/scratch/das/federico/databases_service2/NPSOUND-NSIDC0060/NPSOUND_csv_converted' ,
-            'shipsound' : '/scratch/das/federico/databases_service2/SHIPSOUND-NSIDC-0054/'
+            'giub': '/mnt/scratch/scratch/federico/databases_service2/GIUB_07072023/',
+            'npsound' : '/mnt/scratch/scratch/federico/databases_service2/NPSOUND-NSIDC0060/NPSOUND_csv_converted' ,
+            'shipsound' : '/mnt/scratch/scratch/federico/databases_service2/SHIPSOUND-NSIDC-0054/'
                                } 
 
 
@@ -2409,32 +2496,61 @@ def get_flist(db):
         os.mkdir('file_list')
     
     if db == 'era5_1':
+
+        # here we do not have the full odb file so we cannot use the already implemented function... ok...
+        
         if not os.path.isfile('file_list/era5_1_files_list.txt'):  ### TODO, this is to speed ud reading the file names which take a lot of time
-            flist=glob.glob(datasets[db] + "/era5.conv._*") # takes too long 
-            flist =[f for f in flist if '_40179' not in f  and '42147' not in f] # thse files cause problems ???
+            # flist_all=glob.glob(datasets[db] + "/era5.conv.*._*.txt.gz") # takes too long 
+            flist_all=glob.glob(datasets[db] + "/era5.conv.*.gz") # takes too long 
+            
+            stations = list( np.unique( [f.split('.gz')[0].split('.')[-1] for f in flist_all ] ) )
+                
+            stations.sort()
+            flist = []
             a = open( 'file_list/era5_1_files_list.txt','w')
-            for l in flist:
-                a.write(l + '\n')
-            a.close()
-            
+            for station in stations:
+                
+                files = [f for f in flist_all if station in f.split('.gz')[0].split('.')[-1] ]
+                # files = [f for f in flist_all if station in f.split('.txt.gz')[0].split('.')[-1] ]
+                files.sort()
+                file = files[0] 
+                
+                a.write(file + '\n')
+                
+                flist.append(file)
+            a.close()        
         else:
-            flist = [ f.replace('\n','') for f in open(db + '_files_list.txt').readlines() ]
+            flist = [ f.replace('\n','') for f in open('file_list/'+db + '_files_list.txt').readlines() ]
+
+        # if not os.path.isfile('file_list/era5_1_files_list.txt'):  ### TODO, this is to speed ud reading the file names which take a lot of time
+        #     # flist=glob.glob(datasets[db] + "/era5.conv.*") # takes too long 
+        #     flist=glob.glob(datasets[db] + "/era5.conv.*gz") # takes too long 
+        #     flist =[f for f in flist if '_40179' not in f  and '42147' not in f] # thse files cause problems ???
+        #     a = open( 'file_list/era5_1_files_list.txt','w')
+        #     for l in flist:
+        #         a.write(l + '\n')
+        #     a.close()
+            
+        # else:
+        #     flist = [ f.replace('\n','') for f in open('file_list/' + db + '_files_list.txt').readlines() ]
             
             
-    elif db == 'era5_1_mobile':
+    elif db == 'era5_1_mobile': # elif db == 'era5_1_mobile':
         # here we do not have the full odb file so we cannot use the already implemented function... ok...
         
         if not os.path.isfile('file_list/era5_1_mobile_files_list.txt'):  ### TODO, this is to speed ud reading the file names which take a lot of time
-            flist_all=glob.glob(datasets[db] + "/era5.conv.*._*.txt.gz") # takes too long 
+            # flist_all=glob.glob(datasets[db] + "/era5.conv.*._*.txt.gz") # takes too long 
+            flist_all=glob.glob(datasets[db] + "/era5.conv.*.gz") # takes too long 
             
-            stations = list( np.unique( [f.split('.txt')[0].split('_')[-1] for f in flist_all ] ) )
+            stations = list( np.unique( [f.split('.gz')[0].split('.')[-1] for f in flist_all ] ) )
                 
             stations.sort()
             flist = []
             a = open( 'file_list/era5_1_mobile_files_list.txt','w')
             for station in stations:
                 
-                files = [f for f in flist_all if station in f.split('.txt.gz')[0].split('.')[-1] ]
+                files = [f for f in flist_all if station in f.split('.gz')[0].split('.')[-1] ]
+                # files = [f for f in flist_all if station in f.split('.txt.gz')[0].split('.')[-1] ]
                 files.sort()
                 file = files[0] 
                 
@@ -2541,7 +2657,7 @@ def get_flist(db):
         flist=glob.glob(datasets[db] + '/'+'*.csv')         
         #flist = [f for f in flist if '.out' not in f and '31' not in f ]
         
-    if db not in ['era5_1_mobile']:
+    if db not in ['era5_1', 'era5_1_mobile']:
         flist = [f for f in flist if '.gz' not in f and '.nc' not in f ]
         
     flist = [f for f in flist if '00000' not in f and '99999' not in f and '-1e+100' not in f ]
@@ -2576,10 +2692,10 @@ if __name__ == '__main__':
                'hara', 'npsound', 'shipsound',
                'giub', 'maestro',]
     
-    databases = ['era5_1']  
+    databases = ['npsound']  
     
     # enable multiprocesing
-    POOL = False 
+    POOL = False  
     n_pool = 40
     CHECK_MISSING = False  
     CHECK_FAILED = False
@@ -2597,8 +2713,10 @@ if __name__ == '__main__':
                                          
         ### Extracting files list to process 
         flist = get_flist(db)
-        
 
+        # mask = list(pd.Series(flist).str.contains('94685'))
+        # flist = np.array(flist)[mask]
+        
         '''
         flist_n = [f.split('_inventories')[0] for f in os.listdir('inventories/' + db ) if 'noMatchingCoordNoIds'  in f]
         flist = [f for f in flist if f.split('/')[-1] in flist_n  ]

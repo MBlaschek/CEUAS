@@ -487,7 +487,7 @@ def make_CUON():
     
     inv = []
     for s in glob.glob('station_configuration/*_station_configuration_extended*'):
-        if 'CUON' in s or 'xl' in s or 'all'  in s:
+        if 'CUON' in s or 'xl' in s or 'all'  in s:           
             continue
         df = pd.read_csv(s, sep='\t')
         print(s , ' ' , len(df))
@@ -972,7 +972,7 @@ def merge_inventories():
 
 # define a list of operation to perform between  [ 'INVENTORY', CUON', 'MERGE']
 TODO = ['INVENTORY', 'CUON', "MERGE"]
-POOL = False  # NB when running the first time, it might be necessary tot urn off the POOL due to the function that extracts the territory which has another POOL inside
+POOL = True   # NB when running the first time, it might be necessary tot urn off the POOL due to the function that extracts the territory which has another POOL inside
 n_pool = 40
 
 parser = argparse.ArgumentParser(description="Crete station configuration table")
@@ -1006,14 +1006,14 @@ if WHAT == 'INVENTORY':
         
         if not POOL:
             for v in inventories:
-                dummy = make_inventory(v) # regular identified stations  ### TO DO the oprhans will replace the extended stat conf file! need to be fixed! 
+                # dummy = make_inventory(v) # regular identified stations  ### TO DO the oprhans will replace the extended stat conf file! need to be fixed! 
                 dummy = make_inventory_orphans_mobile(v) # orphans 
         else:
             p = Pool(n_pool)                
-            func = partial(make_inventory) # regular identified stations
-            out = p.map(func, inventories)  # orphans     
+            func = partial(make_inventory) # regular identified stations 
+            out = p.map(func, inventories)  # orphans 
             
-            func = partial(make_inventory_orphans)
+            func = partial(make_inventory_orphans_mobile)
             out = p.map(func, inventories)       
             
             
@@ -1027,7 +1027,7 @@ elif WHAT== 'MERGE':
         dummy = merge_inventories()
         
 elif WHAT == 'MOBILE':
-    dummy = make_inventory_orphans(v)
+    dummy = make_inventory_orphans_mobile(v)
 
     
 
