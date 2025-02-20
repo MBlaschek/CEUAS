@@ -7,7 +7,7 @@ import psutil
 import subprocess
 import urllib.request
 import xarray as xr
-import hdf5plugin
+#import hdf5plugin
 import h5py
 from datetime import date, datetime,timedelta
 import time
@@ -1237,9 +1237,9 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                     try:
                         
                         #fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
-                        if fvv.shape[0] > chunksize:                       
+                        if True or fvv.shape[0] > chunksize:                       
                             fd[k].create_dataset(v,data=fvv,compression=comp,compression_opts=compopt,
-                                                 chunks=(chunksize, ))
+                                                 chunks=(np.min([chunksize, fvv.shape[0]]), ))
                                                  #chunks=(np.int32(np.sqrt(fvv.shape[0]))*10, ))
                         else:    
                             fd[k].create_dataset(v,data=fvv)
@@ -1262,9 +1262,9 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                 else:
                     #fd[k].create_dataset(v,fvv.shape,fvv.dtype,compression=fbencodings[v]['compression'], chunks=True)
                     #fd[k][v][:]=fvv[:]
-                    if fvv.shape[0] > chunksize:                       
+                    if True or fvv.shape[0] > chunksize:                       
                         fd[k].create_dataset(v,data=fvv,compression=comp,compression_opts=compopt,
-                                             chunks=(chunksize, fvv.shape[1]))
+                                             chunks=(np.min([chunksize, fvv.shape[0]]), fvv.shape[1]))
                     else:
                         fd[k].create_dataset(v,data=fvv)
                         
@@ -1297,9 +1297,11 @@ def write_dict_h5(dfile, f, k, fbencodings, var_selection=[], mode='a', attrs={}
                     except:
                         pass               
                 try:
+                    if v == 'observation_id':
+                        x = 0
                     
                     fd[k].create_dataset(v,data=fvv.view('S1').reshape(fvv.shape[0],slen),compression=comp,
-                                         compression_opts=compopt, chunks=(chunksize, slen))
+                                         compression_opts=compopt, chunks=(np.min([chunksize, fvv.shape[0]]), slen))
                 except:
                     #fd[k].create_dataset(v,data=np.bytes_(fvv).view('S1').reshape(fvv.shape[0],slen),compression=fbencodings[v]['compression'],chunks=True)                    
                     pass
