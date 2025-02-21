@@ -1720,9 +1720,10 @@ def unstack_cube_by_hour(data: xr.DataArray, dim: str = 'time', hour: str = 'hou
     data = dict(data.groupby(hour))
     for ikey in data.keys():
         data[ikey] = data[ikey].assign_coords({dim: data[ikey][dim].values + np.timedelta64(ikey, 'h')})
+        data[ikey] = data[ikey].squeeze(hour).drop_vars(hour)
 
     data = xr.concat(data.values(), dim=dim).sortby(dim)
-    del data[hour]
+    #del data[hour]
     if 'stacking' in data.coords:
         index = (data['stacking']==0)
         data = data.isel({dim: index}).drop('stacking')
@@ -5076,7 +5077,7 @@ class CDMDataset:
         #
         # Convert to ragged array, index should be sorted?
         #
-        if not data.indexes['obs'].is_monotonic:
+        if not data.indexes['obs'].is_monotonic_increasing:
             logger.warning('Data not sorted !!!')
         #
         # Get data coordinate information
