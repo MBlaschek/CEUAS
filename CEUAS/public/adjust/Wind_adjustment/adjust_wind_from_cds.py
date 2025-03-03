@@ -312,6 +312,12 @@ def homogenize_station(opath,via_backend,fnf):
             if recs < 100:
                 print(ifile, 'too short record')
                 return
+            if 'advanced_homogenisation' in data.file.keys():
+                
+                if 'wind_bias_estimate' in data.file['advanced_homogenisation'].keys():
+                    prin(ifile, 'already processed')
+                    return
+            
         except:
             return
     
@@ -624,13 +630,15 @@ def homogenize_winddir(via_backend=False, fns=[]):
         adjusted = []
         failedlist = []
         for fn in fns[:]:
-            futures.append(ray_homogenize_station.remote(opath, via_backend, fn))
+            if '0-20999-0' in fn:
+                continue
+            #futures.append(ray_homogenize_station.remote(opath, via_backend, fn))
             #try:
                 ##if '0-20000-0-72493' in fn:
-                #adjusted.append(homogenize_station(opath, via_backend, fn))
+            adjusted.append(homogenize_station(opath, via_backend, fn))
             #except MemoryError as e:
                 #failedlist.append(fn)
-        adjusted = ray.get(futures)
+        #adjusted = ray.get(futures)
         for fa in failedlist:
             print('failed:', fa)
         
@@ -647,7 +655,7 @@ if __name__ == "__main__":
     version='1.0'
     os.chdir(os.path.expandvars('$RSCRATCH/tmp'))
     via_backend=False
-    fns=glob.glob(os.path.expandvars('$RSCRATCH/converted_v25/long/*v3.nc'))
+    fns=glob.glob(os.path.expandvars('$RSCRATCH/converted_v29/long/*v3.nc'))
     #fns += glob.glob(os.path.expandvars('$RSCRATCH/converted_v19/long/*0-20666-*20353_CEUAS_merged_v3.nc'))
     fns.sort(key=os.path.getmtime)
     #fstart=fns.index('/raid60/scratch/leo/scratch//converted_v7/0-20000-0-41517_CEUAS_merged_v1.nc')

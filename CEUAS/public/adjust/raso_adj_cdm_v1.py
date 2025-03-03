@@ -1418,7 +1418,7 @@ def run_backend_file(args, **kwargs):
         return
 
     try:
-        
+        hbi = False
         with h5py.File(args.backend) as f:
             try:
                 if f['recordindices']['138'].shape[0] < 20:
@@ -1430,9 +1430,15 @@ def run_backend_file(args, **kwargs):
             try:
                 if f['advanced_homogenisation']['humidity_bias_estimate'].shape[0] > 0:
                     print(args.backend+' humidity bias exists')
-                    return
+                    hbi = True
+                    #return
             except:
                 pass
+        
+        if hbi:
+            with h5py.File(args.backend, 'r+') as f:
+                del f['advanced_homogenisation']['humidity_bias_estimate']
+
     except:
         raise ValueError(args.backend)
                 
@@ -1861,7 +1867,7 @@ date: {}
         # BACKEND File
         #
         #run_backend_file(args, **kwargs)
-        fns = glob.glob(os.path.expandvars('$RSCRATCH/converted_v25/long/*v3.nc'))
+        fns = glob.glob(os.path.expandvars('$RSCRATCH/converted_v29/long/*v3.nc'))
         #fns = glob.glob(os.path.expandvars('$RSCRATCH/converted_v11/long/*v1.nc'))
         tt = time.time()
         #run_backend_file(copy.copy(args), **kwargs)
@@ -1874,11 +1880,11 @@ date: {}
         #fns = [fns[fns.index('/mnt/users/scratch/leo/scratch/converted_v19/long/0-20666-0-1:25428_CEUAS_merged_v3.nc')],
                #fns[fns.index('/mnt/users/scratch/leo/scratch/converted_v19/long/0-20666-0-20353_CEUAS_merged_v3.nc')]]
                
-        for fn in fns:
+        for fn in fns[:]:
             fargs = copy.copy(args)
             fargs.backend = fn
             #if '0-20000-0-17607' in fn:
-                #run_backend_file(fargs, **kwargs)
+            #run_backend_file(fargs, **kwargs)
             futures.append(ray_run_backend_file.remote(fargs, **kwargs))
         ray.get(futures)
         print('finished', time.time() - tt)
