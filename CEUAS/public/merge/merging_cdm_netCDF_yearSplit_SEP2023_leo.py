@@ -34,7 +34,9 @@ import warnings
 from multiprocessing import Pool
 from functools import partial
 
-import ray
+POOL = True
+if POOL:
+    import ray
 
 warnings.simplefilter('ignore', category=NumbaDeprecationWarning)
 warnings.simplefilter('ignore', category=NumbaPendingDeprecationWarning)
@@ -49,7 +51,8 @@ from plotly.subplots import make_subplots
 
 
 from add_sensor_to_merged_OCT2023 import Sensor, datetime_toseconds, wrapper, MergedFile
-from harvest_convert_to_netCDF_yearSplit import  clean_station_configuration , write_dict_h5_old
+#from harvest_convert_to_netCDF_yearSplit import  clean_station_configuration , write_dict_h5_old
+from harvest_convert_to_netCDF import  clean_station_configuration , write_dict_h5
 #from harvest_convert_to_netCDF_yearSplit import   write_dict_h5
 
 # nan int = -2147483648 
@@ -227,6 +230,13 @@ class Merger():
         self.encodings['era5fb']['station_type@conv'] = {'compression': 'gzip', 'dtype': np.int32}
         self.encodings['era5fb']['timeseries_index@conv'] = {'compression': 'gzip', 'dtype': np.int32}
         self.encodings['era5fb']['unique_identifier@conv'] = {'compression': 'gzip', 'dtype': np.int32}
+        self.encodings['era5fb']['varbc_ix@body'] = {'compression': 'gzip', 'dtype': np.int32}
+        self.encodings['era5fb']['datum_anflag@body'] = {'compression': 'gzip', 'dtype': np.int32}
+        self.encodings['era5fb']['datum_event1@body'] = {'compression': 'gzip', 'dtype': np.int32}
+        self.encodings['era5fb']['datum_rdbflag@body'] = {'compression': 'gzip', 'dtype': np.int32}
+        self.encodings['era5fb']['report_event1@hdr'] = {'compression': 'gzip', 'dtype': np.int32}
+        self.encodings['era5fb']['report_rdbflag@hdr'] = {'compression': 'gzip', 'dtype': np.int32}
+        self.encodings['era5fb']['datum_sfc_event@surfbody_feedback'] = {'compression': 'gzip', 'dtype': np.int32}
         for k in self.encodings.keys():
             for kk in self.encodings[k].keys():
                 
@@ -278,7 +288,7 @@ class Merger():
         
         if s.empty:
             a = open('logs/failed_stat_conf.txt' , 'a+')
-            a.write('Cannot_find_station_configuration_for_' + self.station + '\n')
+            a.write(str(datetime.now())+'Cannot_find_station_configuration_for_' + self.station + '\n')
         else:
             for k in s.columns:
                 if pd.isnull(s[k].values[0]):
@@ -356,8 +366,10 @@ class Merger():
         """
         
         dic = {}
+        dicd = {}
         for ds in data.keys():
             dic[ds]={}
+            dicd[ds]={}
             for file in data[ds]:
                 
                 files = file.split('/')[-1].split(',')  # there might be two different files for the same dataset and year, for example windc and trhc NCAR 
@@ -366,11 +378,17 @@ class Merger():
                         fpath = file.split(self.station)[0] + '/' + self.station + '/' + files[0]   # e.g. '/scratch/das/federico/HARVEST_YEARLY_18SEP2023//ncar//0-20001-0-11035/0-20001-0-11035_1951_ncar_harvested_uadb_trhc_11035.txt.nc'
  
                         dic[ds][fpath]  = h5py.File(fpath, 'r')
+                        
+                        dicd[ds][fpath]  = {k:dic[ds][fpath]['observations_table'][k][()] for k in ('observed_variable', 'observation_value', 'z_coordinate', 'z_coordinate_type')}
+                        
+                        
                 else:
                     
                     dic[ds][file]  = h5py.File(file, 'r')
+                    dicd[ds][file]  = {k:dic[ds][file]['observations_table'][k][()] for k in ('observed_variable', 'observation_value', 'z_coordinate', 'z_coordinate_type')}
                     
         self.dic_h5py = dic
+        self.dicd_h5py = dicd
         
         
         
@@ -407,6 +425,8 @@ class Merger():
                     self.unique_dates[k][F]['datetimes'] = {}
                     
                     timestamps = data['recordtimestamp'][:]
+                    if len(timestamps) != len(data['header_table']['latitude']):
+                        raise ValueError(f'{len(timestamps)} , {len(data['header_table']['latitude'])}')
                     #indices = data['recordindex'][:]
                     indices_inf = data['recordindex'][:] # starting index of the record
                     indices_sup = np.concatenate((data['recordindex'][:][1:], [data['observations_table']['index'].shape[0]]))
@@ -598,12 +618,17 @@ class Merger():
         #if dt == 2114769600: #2115331200
         #    a = 0 
             
-        h5_file = self.dic_h5py[ds][file]
         ind_min, ind_max = self.all_timestamps_dic[dt][ds][file][0] ,  self.all_timestamps_dic[dt][ds][file][1] 
         
-        ot = h5_file['observations_table']
+        if False: # do not use file pointer but dicd
+            h5_file = self.dic_h5py[ds][file]
+            ot = h5_file['observations_table']
         
+        else:       
+            ot = self.dicd_h5py[ds][file]
+            
         otzt = ot['z_coordinate_type'][ind_min:ind_max]
+            
         ### Data on Pressure 
         try:
             #pressure_ind = np.where(otzt == 1 )[0] #
@@ -627,6 +652,7 @@ class Merger():
 
         # subset of indices with pressure / height
         otov = ot['observed_variable'][ind_min:ind_max]
+            
         #temp_ind = np.where(otov == 126)[0] # temperature
         #temp_ind = [i for i in temp_ind if i in z_ind ]
         temp_ind = np.where((otov==126)&zim)[0]
@@ -642,6 +668,7 @@ class Merger():
         
         # length of valid data for temp and wind
         otoval = ot['observation_value'][ind_min:ind_max]
+            
         temp_values = otoval[temp_ind]
         num_valid_temp = len(np.unique(temp_values[~np.isnan(temp_values)]))
         
@@ -649,13 +676,15 @@ class Merger():
         num_valid_wind = len(np.unique(wind_values[~np.isnan(wind_values)]))
         
         otz = ot['z_coordinate'][ind_min:ind_max]
-        values_dict = {'temp' :  temp_values , 
-                                'temp_z' : otz[temp_ind] ,
-                                'z_type' : z ,
-                                'wspeed' : wind_values , 
-                                'wind_z':  otz[wind_ind] } 
-        
-        self.observed_ts_values[file] = values_dict
+            
+        if False: # only needed when plotting
+            values_dict = {'temp' :  temp_values , 
+                                    'temp_z' : otz[temp_ind] ,
+                                    'z_type' : z ,
+                                    'wspeed' : wind_values , 
+                                    'wind_z':  otz[wind_ind] } 
+            
+            self.observed_ts_values[file] = values_dict
         
         #checking pressure or height or gph 
         #press_temp_ind = ot['z_coordinate'][ind_min:ind_max][temp_ind]
@@ -663,14 +692,14 @@ class Merger():
         
             
         if len(temp_ind) >0:
-            min_temp = min( otz[temp_ind] )  
-            max_temp =  max( otz[temp_ind] ) 
+            min_temp = np.min( otz[temp_ind] )  
+            max_temp =  np.max( otz[temp_ind] ) 
         else:
             min_temp, max_temp = 999999, -999999 
             
         if len(wind_ind) >0:
-            min_wind =  min( otz[wind_ind] ) 
-            max_wind =  max( otz[wind_ind] )
+            min_wind =  np.min( otz[wind_ind] ) 
+            max_wind =  np.max( otz[wind_ind] )
             
         else:
             min_wind, max_wind = 999999, -999999        
@@ -682,21 +711,21 @@ class Merger():
             
             if len(temp_ind) > 0:
                 
-                max_pressure_t = max( otz[temp_ind] )
-                min_pressure_t = min( otz[temp_ind] )
+                max_pressure_t = np.max( otz[temp_ind] )
+                min_pressure_t = np.min( otz[temp_ind] )
             else:
                 max_pressure_t = 0
                 min_pressure_t = 999999
                 
             if len(wind_ind) > 0:
-                max_pressure_w = max( otz[wind_ind] )
-                min_pressure_w = min( otz[wind_ind] )
+                max_pressure_w = np.max( otz[wind_ind] )
+                min_pressure_w = np.min( otz[wind_ind] )
             else:
                 min_pressure_w = 999999
                 max_pressure_w = 0                
                 
-            max_pressure = max( max_pressure_t, max_pressure_w )
-            min_pressure = min( min_pressure_t, min_pressure_w )
+            max_pressure = np.max( (max_pressure_t, max_pressure_w ))
+            min_pressure = np.min( (min_pressure_t, min_pressure_w ))
             
             
         else:
@@ -706,16 +735,16 @@ class Merger():
         ### min, MAX height
         #if len(height_ind) >0:
         if np.any(him):
-            max_height = max( otz[him] )
-            min_height = min( otz[him] )
+            max_height = np.max( otz[him] )
+            min_height = np.min( otz[him] )
             
         else:
             max_height = -999999
             min_height = 999999
             
         if len(gph_ind) >0:
-            max_gph = max( otoval[gph_ind] )
-            min_gph = min( otoval[gph_ind] )
+            max_gph = np.max( otoval[gph_ind] )
+            min_gph = np.min( otoval[gph_ind] )
             
         else:
             max_gph = -999999                    
@@ -1327,20 +1356,21 @@ class Merger():
             processed_timestamps.extend(all_times)
 
             ### Producing check plots
-            try:
-                
-                if int(self.current_year) > 2004 and  int(self.current_year) < 2011 and  index % 50 == 0 :
-                    dummy = self.plot_profile_extended(all_times, real_time = real_time, best_file= best_file )
+            if False:
+                try:
                     
-                if int(self.current_year) < 1950 and  index % 50 == 0:
-                    dummy = self.plot_profile_extended(all_times, real_time = real_time, best_file= best_file )
-                else:
-                    if index % 500 == 0: #or x == 0:
-                        #dummy = self.plot_profile(all_times, real_time = real_time, best_file= best_file )
-                        dummy = 0 #self.plot_profile_extended(all_times, real_time = real_time, best_file= best_file )
-            except:
-                
-                print('could not plot')
+                    if int(self.current_year) > 2004 and  int(self.current_year) < 2011 and  index % 50 == 0 :
+                        dummy = self.plot_profile_extended(all_times, real_time = real_time, best_file= best_file )
+                        
+                    if int(self.current_year) < 1950 and  index % 50 == 0:
+                        dummy = self.plot_profile_extended(all_times, real_time = real_time, best_file= best_file )
+                    else:
+                        if index % 500 == 0: #or x == 0:
+                            #dummy = self.plot_profile(all_times, real_time = real_time, best_file= best_file )
+                            dummy = 0 #self.plot_profile_extended(all_times, real_time = real_time, best_file= best_file )
+                except:
+                    
+                    print('could not plot')
                 
             ### Saving the extracted data
             replace = True
@@ -1671,7 +1701,7 @@ class Merger():
     def merge_all_data(self):       
         """ Construct a dictionary with all the dataframes of each dataset, either reading it from saved pickles or reading it from memory """
 
-        logging.info('***** Starting the merging process merge_all_data')
+        logging.info('***** Starting the merging process merge_all_data '+self.station)
 
         # avoidable loops, should not matter much  # self.all_years:  
         #for this_year in [1981, 1982, 1983]:  # loop over all available years in the date_times 
@@ -1701,6 +1731,10 @@ class Merger():
         else:
             
             self.fill_cdm()
+            #if len(self.data['station_configuration']) == 0:
+            if len(self.stat_conf) == 0:
+                print('!!! ' +self.station +' NOT FOUND in station configuration !!!')
+                return
             for this_year in all_years:   # loop over all available years in the date_times 
                 print('=== Running year ::: ' , self.station, this_year )
                 self.current_year = this_year 
@@ -1744,24 +1778,46 @@ class Merger():
                 if len(self.merged_timestamp) == 0:
                     continue
                     
+                res = self.merged_timestamp
+                
+                # all date_time for this year 
+                all_ts = list(res.keys() )
+                
+                # here, only extract files that are actually selected as best_file (will not pre-load the others)
+                all_files = list( np.unique( [ res[dt]['best_file'] for dt in all_ts ] ) )
+        
+                
+                fps = []
+                for f in all_files:
+                    for d in self.dic_h5py.values():
+                        if f in d.keys():
+                            fps.append(d[f])
+                        
+                #fps.append(h5py.File(f, 'r'))
+
                 #print('=== Making and writing standard fixed CDM tables')                                    
                 dummy = self.make_standard_cdm_table()
 
                 #print('=== Making and writing observations_table')
-                dummy = self.make_merged_observation_table()
+                dummy = self.make_merged_observation_table(fps)
                 
                 #print('=== Making and writing recordindex')
                 dummy = self.make_merged_recordindex()
                 
                 #print('=== Making and writing feedback_table')                        
-                dummy = self.make_merged_feedback_table()  ### TODO TO DO HERE 
+                dummy = self.make_merged_feedback_table(fps)  ### TODO TO DO HERE 
                 
                 #print('=== Making and writing source_conf table')                                    
                 dummy = self.make_sourceconf_table()
                 
                 #print('=== Making and writing header_table')                                    
-                dummy = self.make_merged_header_table()
+                dummy = self.make_merged_header_table(fps)
                 
+                #for f in fps:
+                    #try:                       
+                        #f.close()
+                    #except:
+                        #pass
                 
                 a = 'HERE'  # TO DO HERE
             
@@ -1778,6 +1834,10 @@ class Merger():
                 if str(this_year)+'\n' not in a.readlines():
                     a.write(this_year + '\n')
                     
+                del fps
+        for d in self.dic_h5py.values():
+            for f,fp in d.items():
+                fp.close()
         try:
             a = open(self.out_dir+'/'+ self.station  + '/completed.txt' , 'a+')
             lines = a.readlines()
@@ -1825,7 +1885,7 @@ class Merger():
         self.write_merged_new(var='source_file', table = 'source_configuration', data=np.array(files))
         
         
-    def make_merged_feedback_table(self, out_file='' ):
+    def make_merged_feedback_table(self,fps, out_file='' ):
         """ Create merged era5fb table """
         ### FEEDBACK TABLE
         tt = time.time()
@@ -1847,9 +1907,9 @@ class Merger():
         if 'source_id' not in variables:
             variables.append('source_id')
         
-        fps =[]    
-        for f in all_files_to_preload:
-            fps.append(h5py.File(f, 'r'))
+        #fps =[]    
+        #for f in all_files_to_preload:
+            #fps.append(h5py.File(f, 'r'))
         for v in variables:
             
             #if v in ['datum_anflag@body','datum_event1@body','datum_rdbflag@body','report_event1@hdr','report_rdbflag@hdr', 'varbc_ix@body' ]:
@@ -1870,13 +1930,21 @@ class Merger():
             #print("        Variable " , v )
             load_full_data = {}
             for fp in fps:
+                
+                if fp.filename.split('/')[-3] not in ['era5_1',  'era5_1_mobile' , 'era5_2' , 'era5_2_mobile']:
+                    continue
+                
                 fpe = fp['era5fb']
                 file_era5fb_variables = list(fpe.keys() ) # this list changes with the year 
             
                 if v in file_era5fb_variables:
                     data_v = fpe[v][:]
                 else:
-                    n = self.get_null( self.encodings['era5fb'][v]['dtype']  )
+                    try:
+                        
+                        n = self.get_null( self.encodings['era5fb'][v]['dtype']  )
+                    except:
+                        raise ValueError('encoding missing', fp.filename)
                     data_v = np.full( len( fp['observations_table']['date_time']), n)                          
 
                 load_full_data[fp.filename] = data_v     
@@ -1938,12 +2006,20 @@ class Merger():
                                                  
         for v in ['datum_anflag@body','datum_event1@body','datum_rdbflag@body','report_event1@hdr','report_rdbflag@hdr', 'varbc_ix@body' ]:
             if v not in variables:
+                print(f)
+                raise ValueError(f.filename+' '+'v not found')
                 data_v = np.full( len( h5py.File(f, 'r')['observations_table']['date_time']), np.nan )  
                 dummy_write = self.write_merged_new( var=v, table = 'era5fb', data=data_v)
+                
+        #for fp in fps:
+            #try:                
+                #fp.close()
+            #except:
+                #raise ValueError(fp.filename+' could not be closed')
         #print(time.time()-tt)
 
 
-    def make_merged_header_table(self, out_file='' ):
+    def make_merged_header_table(self, fps, out_file='' ):
         """ Create merged header_table """ 
         #a = self.header_table_rep_id
       
@@ -1959,13 +2035,13 @@ class Merger():
         variables = [ v for v in self.dic_type_attributes['header_table'].keys() if v not in other_variables  and v != 'primary_station_id' ]
                 
         # here, only extract files that are actually selected as best_file (will not pre-load the others)
-        all_files = list( np.unique( [ res[dt]['best_file'] for dt in all_ts ] ) )
+        #all_files = list( np.unique( [ res[dt]['best_file'] for dt in all_ts ] ) )
 
         lats, lons = [],[]
         
-        fps = []
-        for f in all_files:
-            fps.append(h5py.File(f, 'r'))
+        #fps = []
+        #for f in all_files:
+            #fps.append(h5py.File(f, 'r'))
             
         for v in variables:
             #if v == 'report_meaning_of_timestamp':
@@ -2001,7 +2077,11 @@ class Merger():
                 #ind_min = self.all_timestamps_dic[ts][best_ds][best_file][0]
                 #ind_max = self.all_timestamps_dic[ts][best_ds][best_file][1] # not useful in this case 
                 index =  self.all_timestamps_dic[ts][best_ds][best_file][2]
-                value = load_full_data[best_file][v][index]
+                try:
+                    
+                    value = load_full_data[best_file][v][index]
+                except:
+                    raise ValueError(self.station)
                     
                 data.append(value)
                     
@@ -2024,7 +2104,7 @@ class Merger():
         
         dummy_write = self.write_merged_new( var='source_id', table = 'header_table',  data= np.array(source_ids).astype('|S10') ) 
         dummy_write = self.write_merged_new( var='duplicates', table = 'header_table', data= np.array(source_ids).astype('|S30') )
-        dummy_write = self.write_merged_new( var='duplicate_status', table = 'header_table', data= duplicate_status )
+        dummy_write = self.write_merged_new( var='duplicate_status', table = 'header_table', data= np.array(duplicate_status) )
         
         source_ids, duplicates, duplicate_status = [],[],[]
 
@@ -2045,58 +2125,113 @@ class Merger():
             if v in variables:
                 sc[v] = np.bytes_( np.array(self.stat_conf[v].values[0]).astype("|S20") )  # TO DO TODO HERE TO DO CHANGE
         '''
-        
-        sc_all = [ sc for i in range(len(lons)) ] 
-        sc_all_df = pd.concat(sc_all)
-        sc_all_df['latitude'] = lats
-        sc_all_df['longitude'] = lons
-        
         variables_str = ['primary_id' , 'secondary_id' , 'city' , 'operating_institute' , 'operating_territory',
             'observed_variables', 'metadata_contact' , 'station_name' , ]
         
         variables_int = [ 'station_type' ,'primary_id_scheme' , 'secondary_id_scheme',
             'station_crs' , 'station_type' , 'platform_type' , 'platform_sub_type', 'metadata_contact_role'  ,  ]      
         
-        for v in sc_all_df.columns:
-            if "Unnamed" in v: continue 
-            
-            data = np.array(sc_all_df[v].values )
-            
-            if v in variables_str:
-                if sc_all_df[v].values.dtype in [np.float64, np.float32, np.dtype('O')] and type(sc_all_df[v].values[0] is not str):
-                    data = [ str(val) for val in sc_all_df[v].values ]
-                else:    
-                    data = [ val.encode('utf8') for val in sc_all_df[v].values ]
-                try:
-                    data = np.array(data).astype('|S30')
-                except:
+        if False: # df is extremely inefficient here
+            sc_all = [ sc for i in range(len(lons)) ] 
+            sc_all_df = pd.concat(sc_all)
+            sc_all_df['latitude'] = lats
+            sc_all_df['longitude'] = lons
+        else:
+            sc_all_df = {}
+            for v in sc.columns:
+                if "Unnamed" in v: continue
+                if v in variables_str:
                     try:
                         
-                        data = [ val.encode('utf8') for val in sc_all_df[v].values ]
-                        data = np.array(data).astype('|S30')
-                    except Exception as e:
+                        if sc[v].values.dtype in [np.float64, np.float32, np.dtype('O')] and type(sc[v].values[0] is not str):
+                            data = str(sc[v].values[0])
+                        else:    
+                            data = sc[v].values[0].encode('utf8')
+                        try:
+                            data = np.array(data).astype('|S30')
+                        except:
+                            try:
+                                
+                                data = np.array([sc[v].values[0].encode('utf8')]).astype('|S30')[0]
+                            except Exception as e:
+                                raise ValueError(self.station)
+                    except:
                         raise ValueError(self.station)
-                    
-            elif v in variables_int:
-                try:
-                    data = []
-                    for val in sc_all_df[v].values:
+                            
+                        
+                        
+                elif v in variables_int:
+                    try:
+                        data = []
+                        val = sc[v].values[0]
                         if val == val:
                             
-                            data.append(int(val))
+                            data=int(val)
                         else:
-                            data.append(-2147483648)
-                except:
-                    data = [-2147483648 for val in sc_all_df[v].values ]
-                data = np.array(data)
-                a=0
+                            data = -2147483648
+                    except:
+                        data = -2147483648
+                    a=0
+                    
+                else:
+                    data = sc[v].values[0]
+
+                sc_all_df[v] = np.repeat(data, len(lons))
+            sc_all_df['latitude'] = lats
+            sc_all_df['longitude'] = lons
+        
+        
+        if False:
+            for v in sc_all_df.columns:
+                if "Unnamed" in v: continue 
                 
-            else:
                 data = np.array(sc_all_df[v].values )
                 
-            dummy_write = self.write_merged_new( var=v, table = 'station_configuration', data=data)
+                if v in variables_str:
+                    if sc_all_df[v].values.dtype in [np.float64, np.float32, np.dtype('O')] and type(sc_all_df[v].values[0] is not str):
+                        data = [ str(val) for val in sc_all_df[v].values ]
+                    else:    
+                        data = [ val.encode('utf8') for val in sc_all_df[v].values ]
+                    try:
+                        data = np.array(data).astype('|S30')
+                    except:
+                        try:
+                            
+                            data = [ val.encode('utf8') for val in sc_all_df[v].values ]
+                            data = np.array(data).astype('|S30')
+                        except Exception as e:
+                            raise ValueError(self.station)
+                        
+                elif v in variables_int:
+                    try:
+                        data = []
+                        for val in sc_all_df[v].values:
+                            if val == val:
+                                
+                                data.append(int(val))
+                            else:
+                                data.append(-2147483648)
+                    except:
+                        data = [-2147483648 for val in sc_all_df[v].values ]
+                    data = np.array(data)
+                    a=0
+                    
+                else:
+                    data = np.array(sc_all_df[v].values )
+                    
+                dummy_write = self.write_merged_new( var=v, table = 'station_configuration', data=data)
+        else:
+            for v, data in sc_all_df.items():
+                dummy_write = self.write_merged_new( var=v, table = 'station_configuration', data=data)
+                
         
         a = 0
+        #for fp in fps:
+            #try:                
+                #fp.close()
+            #except:
+                #raise ValueError(fp.filename+' could not be closed')
+        
         
               
     def make_merged_recordindex(self):
@@ -2111,7 +2246,7 @@ class Merger():
         self.write_merged_new(var='record_index', table='record_index', data=di)   
         return
         
-    def  make_merged_observation_table(self, out_file='' ):
+    def  make_merged_observation_table(self, fps, out_file='' ):
         """ Create merged observations,header tables """
         
         tt = time.time()
@@ -2128,15 +2263,15 @@ class Merger():
         all_variables.extend(variables)
         
         # here, only extract files that are actually selected as best_file (will not pre-load the others)
-        all_files = list( np.unique( [ res[dt]['best_file'] for dt in all_ts ] ) ) 
+        #all_files = list( np.unique( [ res[dt]['best_file'] for dt in all_ts ] ) ) 
         
         # pre-load once for all
         temp_data = { 'observed_variable':'', 
                     'z_coordinate_type':'' }
         
-        fps = []
-        for f in all_files:
-            fps.append(h5py.File(f, 'r'))
+        #fps = []
+        #for f in all_files:
+        #    fps.append(h5py.File(f, 'r'))
 
         for fp in fps:
             temp_data[fp.filename] = { 'observed_variable':'', 
@@ -2372,6 +2507,13 @@ class Merger():
             dummy_write = self.write_merged_new( var=v, table = 'observations_table', data=np.array(da))                    
         
         self.record_size = sizes
+        
+        #for fp in fps:
+            #try:                
+                #fp.close()
+            #except:
+                #raise ValueError(fp.filename+' could not be closed')
+        
         #print(time.time()-tt)
         
     def write_merged_new(self, var='', table = '', data=''):
@@ -2411,19 +2553,19 @@ class Merger():
         
                 if 'collection' in var:
                     a=0
-                dic = {var: np.array(data)}  # making a 1 colum dictionary to write 
+                dic = {var: data}  # making a 1 colum dictionary to write 
                 if type(data) == np.dtype('O'):
                     if type(data[0]) in [float, np.float64, np.float32]:
                         
                         dic = {var: np.array(data, dtype=np.float64)}  # making a 1 colum dictionary to write
-                    elif  type(data[0]) in [str]:
+                    elif  type(data[0]) in [str, np.str_]:
                         dic = {var: np.array(data, dtype=np.dtype('S1'))}  # making a 1 colum dictionary to write
                             
                     #print(var, type(data[0]))
                 #print('SHAPE IS FFF ', table[k].shape )
                 try:
                     #write_dict_h5(out_name, dic , table, self.encodings[table], var_selection=[], mode='a', attrs = {'description':descr, 'external_table':ext_tab}  )  # TO DO HERE TODO CHANGE write_dict_h5_old or write_dict_h5
-                    write_dict_h5_old(out_name, dic , table, self.encodings[table], var_selection=[], mode='a', attrs = {var: {'description':descr, 'external_table':ext_tab}}  )  
+                    write_dict_h5(out_name, dic , table, self.encodings[table], var_selection=[], mode='a', attrs = {var: {'description':descr, 'external_table':ext_tab}}  )  
                     
                 except:
                     print("+++ FAILED table " ,  table , '  ' , var )
@@ -2455,7 +2597,7 @@ class Merger():
         
         elif table == 'source_configuration':  
             dic = {var: data} 
-            write_dict_h5_old(out_name, dic , table, self.encodings[table], var_selection=[], mode='a', attrs = {'description':'Filename for data from source', 'external_table':''}  )  
+            write_dict_h5(out_name, dic , table, self.encodings[table], var_selection=[], mode='a', attrs = {'description':'Filename for data from source', 'external_table':''}  )  
 
         elif table == 'record_index':  
             data.to_netcdf(out_name, format='netCDF4', engine='h5netcdf', mode='a')
@@ -2607,7 +2749,9 @@ def make_merge_list(data_directories, merged_out_dir, kind=''):
         
     for db in tqdm( datasets ) :
         if not os.path.isdir( data_directories[db] ):
-            continue # not all datasets e.g. GIUB have orhpahs 
+            continue # not all datasets e.g. GIUB have orhpahs
+        if 'shipsound' in db:
+            x = 0
         stations = os.listdir( data_directories[db] )
         for station in stations:
             ### filter station type 
@@ -2766,7 +2910,7 @@ def create_stat_summary(data_directories, flist, stat_id):
 
 
 #from merging_yearly_parameters import harvested_base_dir, merged_out_dir, data_directories, run_exception 
-from merging_yearly_parameters import  merged_out_dir,  data_directories, run_exception, POOL, pool_number, check_missing_stations
+from merging_yearly_parameters import  merged_out_dir,  data_directories, run_exception, pool_number, check_missing_stations
 from merging_yearly_parameters import   add_sensor, stations, station_kind, create_merging_list, scpath
 
 run_mode = ''
@@ -2791,8 +2935,9 @@ def run_wrapper(data_directories, flist, run_exception, station):
         except MemoryError as e:
             print(e)
             raise ValueError(station)
-        
-ray_run_wrapper = ray.remote(run_wrapper)
+
+if POOL:        
+    ray_run_wrapper = ray.remote(run_wrapper)
 
 def checkfile(merged_dir, s):
     
@@ -2811,7 +2956,8 @@ def checkfile(merged_dir, s):
         
     return slist
 
-ray_checkfile = ray.remote(checkfile)
+if POOL:        
+    ray_checkfile = ray.remote(checkfile)
 
 def check_missing(merged_dir, skip_completed=False):
     """ Creates a table of the already merged files """
@@ -2819,10 +2965,15 @@ def check_missing(merged_dir, skip_completed=False):
     dic = {}
     stations = [s for s in os.listdir(merged_dir) if 'logs' not in s ]
     futures = []
+    ls = []
     for s in stations:
-        futures.append(ray_checkfile.remote(merged_dir, s))
+        if POOL:
+            futures.append(ray_checkfile.remote(merged_dir, s))
+        else:
+            ls.append(checkfile(merged_dir, s))
         
-    ls = ray.get(futures)
+    if POOL:
+        ls = ray.get(futures)
     l = 0
     for s in stations:
         dic[s] = ls[l]
@@ -2852,12 +3003,12 @@ if __name__ == '__main__':
     parser.add_argument('--min_year' , '-min_y', 
                     help="Earliest year to merge"  ,
                     type = str,
-                    default = '1880')
+                    default = '1904')
 
     parser.add_argument('--max_year' , '-max_y', 
                     help="Latest year to merge"  ,
                     type = str,
-                    default = '2023')
+                    default = '2024')
     
     args = parser.parse_args()
     min_year = args.min_year 
@@ -2913,8 +3064,8 @@ if __name__ == '__main__':
  
     skip_completed = False ### set to FALSE to rerun the station, will check each year afterwards
     
-    #ray.init(num_cpus=pool_number) # runtime_env={"working_dir": "/users/staff/uvoggenberger/CEUAS/CEUAS/public/merge"}, 
-    ray.init(address="localhost:6379") # runtime_env={"working_dir": "/users/staff/uvoggenberger/CEUAS/CEUAS/public/merge"}, 
+    #ray.init(num_cpus=pool_number) #, resources={temdir: '/srvfs/fastscratch/scratch/leo/ray', system_config: {"local_fs_capacity_threshold":0.99}}) # runtime_env={"working_dir": "/users/staff/uvoggenberger/CEUAS/CEUAS/public/merge"}, 
+    #ray.init(address="localhost:6379") # runtime_env={"working_dir": "/users/staff/uvoggenberger/CEUAS/CEUAS/public/merge"}, 
     if check_missing_stations:
         processed_stats, fully_completed = check_missing(merged_out_dir, skip_completed=skip_completed)
         stations = [p for p in all_stat if p not in fully_completed ]
@@ -2941,7 +3092,6 @@ if __name__ == '__main__':
     #stations = ['0-20000-0-45004']
     
 
-    POOL = True
     #stations = stations[0:1]
     #for bad in ['0-20000-0-78970', '0-20000-0-93891']:
        #del stations[stations.index(bad)]
@@ -2963,11 +3113,12 @@ if __name__ == '__main__':
         
     if False:
         import glob
-        if 'fixedgiub' in data_directories['giub']:
+#        if 'fixedgiub' in data_directories['giub']:
+        if 'giub' in data_directories['giub']:
             fixeddirs = glob.glob(data_directories['giub']+'/*/*.nc')
             if len(fixeddirs) != 0:
                 import reharvest_giub
-                #reharvest_giub.fix(data_directories['igra2'].split('igra2')[0]+'giub')
+                reharvest_giub.fix(data_directories['igra2'].split('igra2')[0]+'giub')
                 fixeddirs = glob.glob(data_directories['igra2'].split('igra2')[0]+'giub'+'/*/*.nc')
                 print('fixed', len(fixeddirs), 'giub files')
             for d in fixeddirs:
@@ -2997,8 +3148,9 @@ if __name__ == '__main__':
             #except:
                 #pass
         
-    #idx = stations.index('0-20000-0-70231')
+    #idx = stations.index('0-20666-0-98753')
     #stations = stations[idx:idx+1]
+    stations = [s for s in stations if '0-20000-0-70026' in s]
     idx = 0
     try :
         
@@ -3020,10 +3172,17 @@ if __name__ == '__main__':
         #p=Pool(pool_number)
         #func=partial(run_wrapper, data_directories,  run_exception )
         #dummy=p.map(func,stations)
+        try:
+            
+            ray.init(num_cpus=pool_number, ignore_reinit_error=True )
+        except:
+            pass
         rp_flist = ray.put(flist)
         rp_data_directories = ray.put(data_directories)
         result_ids = []
         for station_i in stations[idx:]:
+            #if '-0-41' not in station_i:
+                #continue
             result_ids.append(ray_run_wrapper.remote(rp_data_directories,  rp_flist, run_exception, station_i))
         results = ray.get(result_ids)
         ray.shutdown()

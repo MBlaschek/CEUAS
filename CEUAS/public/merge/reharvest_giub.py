@@ -8,8 +8,13 @@ def dim_attach(g, k):
         l=0            
         try:
             fvv=g[k][v]
-            if 'string' not in v and v!='index':                    
-                g[k][v].dims[l].attach_scale(g[k]['index'])
+            if 'string' not in v and v not in ('index', 'hdrlen'):
+                if 'index' in g[k].keys():
+                    
+                    fvv.dims[l].attach_scale(g[k]['index'])
+                else:
+                    fvv.dims[l].attach_scale(g[k]['hdrlen'])
+                    
                 #print(v,fvv.ndim,type(fvv[0]))
                 if fvv.ndim==2 : #or type(fvv[0]) in [str,bytes,np.bytes_]:
                     #print(type(fvv[0]), fvv[0])
@@ -20,7 +25,7 @@ def dim_attach(g, k):
             print(g.filename.split('/')[-1],k, e)
             pass
 
-def fix(indir, outdir = '/mnt/users/scratch/leo/scratch/fixedgiub'): 
+def fix(indir, outdir = '/mnt/users/scratch/leo/scratch/fixedgiub2'): 
     #outdir = '/mnt/users/scratch/leo/scratch/fixedgiub'
     iprob = 0
     #indir='/mnt/scratch/scratch/federico/HARVEST_YEARLY_16JAN2024_full_harvest/giub'
@@ -38,6 +43,7 @@ def fix(indir, outdir = '/mnt/users/scratch/leo/scratch/fixedgiub'):
         ri = [] # recordindex
         rts = [] #recordtimestamp
         tsl = [] # time since launch
+        iiprob = 0
         with h5py.File(fn, 'r') as f:
             ts = f['observations_table']['date_time'][:]
             z = f['observations_table']['z_coordinate'][:]
@@ -64,9 +70,14 @@ def fix(indir, outdir = '/mnt/users/scratch/leo/scratch/fixedgiub'):
                 #print(len(zu), len(zvar))
                 if len(zu) < len(zvar):
                     repeat = True
-                    print(os.path.basename(fn), 'problematic', np.max(ts[ri[i]:ri[i+1]]-ts[ri[i]]), len(ts))
-                    iprob += 1
-                    break
+                    #print(os.path.basename(fn), 'problematic', i, np.max(ts[ri[i]:ri[i+1]]-ts[ri[i]]), len(ts))
+                    iiprob += 1
+                    if iiprob > 1:
+                        iprob += 1
+                        break
+            if iiprob > 1:
+                
+                print(os.path.basename(fn), 'problematic', i, np.max(ts[ri[i]:ri[i+1]]-ts[ri[i]]), len(ts))
         #continue
         if not repeat:
             shutil.copyfile(fn, outdir+'/'+fo)
@@ -94,47 +105,34 @@ def fix(indir, outdir = '/mnt/users/scratch/leo/scratch/fixedgiub'):
                     
                     f.create_dataset('recordindex', data=ri)
                     f.create_dataset('recordtimestamp', data=rts)
+                    hi = np.searchsorted(f['header_table']['record_timestamp'][:], rts)
+                    if np.std(rts - f['header_table']['record_timestamp'][:][hi]) != 0.:
+                        raise ValueError(f.filename)
+                    for v in f['header_table'].keys():
+                        if v == 'hdrlen':
+                            del f['header_table'][v]
+                            f['header_table'].create_dataset('hdrlen', data=np.zeros(ri.shape[0], dtype='S1'))
+                        elif 'string' not in v:
+                            tmp = f['header_table'][v][:][hi]
+                            del f['header_table'][v]
+                            f['header_table'].create_dataset(v, data=tmp)
+                            
+                            
             
+                print(os.path.basename(fn), 'modified')
+                with h5py.File(outdir+'/'+fo, 'r+') as f:
+                    f.create_dataset('index', data=np.zeros(ri.shape[0], dtype='S1'))
+                    f['recordindex'].dims[0].attach_scale(f['index'])
+                    f['recordtimestamp'].dims[0].attach_scale(f['index'])
                     #dim_attach(f, '/')
-                    #dim_attach(f, '/')
-                    print(os.path.basename(fn), 'modified')
+                    dim_attach(f, 'observations_table')
+                    #dim_attach(f, 'header_table') # fails for some reason
+                    
+                print(os.path.basename(fn), 'modified')
             else:
-                    print(os.path.basename(fn), 'copied')
+                print(os.path.basename(fn), 'copied')
                
     print('problematic', iprob)        
-            #if np.any((tsl>0)&(tsl<300)):
-                #print(f.file,end='' )
-                #print('problematic, too finegrained', ts.shape[0])
-                #continue
-            
-            #if len(ri) == 1:
-                #print(f.file,end='' )
-                #print('problematic, continuous measurement', ts.shape[0])
-                #continue
-    
-            #tsl[ri[-1]:] = ts[ri[-1]:] - rts[-1]
-            #zvar = z[ri[-1]:]+ot[ri[-1]:] / 1000.
-            #zu, zi = np.unique(zvar, return_index=True)
-            ##zvar = list(zip(z[ri[i]:ri[i+1]], ot[ri[i]:ri[i+1]]))
-            ##zu,zi = np.unique(zvar, return_index=True)
-            #print(len(zu), len(zvar))
-            ##zvar = list(dict.fromkeys(zip(z[ri[-1]:], ot[ri[-1]:])))
-            #print(np.max(tsl))
-            
-            #if rio.shape[0] - ri.shape[0] > 2:
-                #print(f.file,end='' )
-                #print(' problematic', rio.shape[0] , ri.shape[0])
-                #plt.subplot(1, 2, 1)
-                #plt.plot(z)
-                #plt.subplot(1, 2, 2)
-                #plt.plot(ts[1:]-ts[:-1])
-                ##plt.plot(rio)
-                #plt.show()
-                #x = 0
-            #elif rio.shape[0] - ri.shape[0] == 0 and np.any((rio-ri)!=0):
-                #print(f.file,end='' )
-                #print('problematic')
-             
  
  
  

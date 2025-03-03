@@ -536,7 +536,7 @@ class Desroziers():
 #merged_directory = '/raid60/scratch/leo/scratch/converted_v5'
 #merged_directory = '/raid60/scratch/leo/scratch/converted_v7'
     
-merged_directory = '/mnt/users/scratch/leo/scratch/converted_v19/long/'
+merged_directory = '/mnt/users/scratch/leo/scratch/converted_v29/long/'
 
 
 """ Moving postprocessed files to new directory """
@@ -546,6 +546,7 @@ merged_directory = '/mnt/users/scratch/leo/scratch/converted_v19/long/'
 
 
 out_dir = '/srvfs/scratch/uvoggenberger/DESROZIERS_converted19_long_06AUG2024/'
+out_dir = '/mnt/users/scratch/leo/scratch/converted_v29/desroziers/'
 
 
 if not os.path.isdir(out_dir):
@@ -578,7 +579,7 @@ if __name__ == '__main__':
             
             def run(directory, out_dir, force_run, station):
                 """ Wrapper for running """     
-                import hdf5plugin            
+                #import hdf5plugin            
                 file = directory + '/' + station
                 station_id = file.split("_CEUAS")[0].split(merged_directory)[1].replace('/','')
                 
@@ -644,11 +645,13 @@ if __name__ == '__main__':
             import random 
             random.shuffle(cleaned_list)
             if multiproc in ['yes', 'y', 'YES', 'Y', 'True', 'true', True]:
-                p = Pool(10)
+                p = Pool(50)
+                print(p)
                 func = partial(run, merged_directory, out_dir, force_run)
                 out = p.map(func, cleaned_list)  
                         
             else:
+                exit()
                 for s in cleaned_list: #[cleaned_list[cleaned_list.index('0-20001-0-10393_CEUAS_merged_v1.nc')]]:
                     a = run(merged_directory, out_dir, force_run, s)
                 

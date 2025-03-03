@@ -2,6 +2,7 @@ import os
 import sys
 import netCDF4 as nc
 import pandas as pd
+import time
 pd.options.mode.chained_assignment = None
 
 
@@ -388,7 +389,7 @@ class Sensor(MergedFile):
                 
                 era5_sensors = list(era5_sensors[:index]) + to_update 
                         
-        return era5_sensors
+        return np.array(era5_sensors)
     
     
     def extract_sensor_id(self):
@@ -437,14 +438,16 @@ class Sensor(MergedFile):
                 located_df = sch_df.loc[ ( sch_df['station_id'] ==  'DUMMY' )] # dummy emtpy         
         
         
-        sensor_ids_all = []        
+        sensor_ids_all = np.zeros(wmo_sensor_id.shape[0], dtype='|S4')      
         
+        #tt = time.time()
         if not located_df.empty: ### Extract Schroeder's data for this station
             
             datetimes = self.data['recordtimestampdecoded']
             record_lenghts = self.data['record_length']
             indices = self.data['recordindex']
 
+            l = 0
             for dt, length, ind in zip(datetimes, record_lenghts, indices ) :
                 find_sch = located_df.loc[ (located_df.start_date <= dt  ) &  ( located_df.end_date > dt ) ]
                 
@@ -453,16 +456,29 @@ class Sensor(MergedFile):
                         
                         sensor = find_sch.rstype.values[0]
                     except Exception as e:
-                        sensor = 'NA  '
+                        sensor = b'NA  '
                         print('Schroeder Sensor not found')
-                    lista = [sensor] * length
-                else:
-                    lista = wmo_sensor_id[ind: (ind+length)]
+                    #lista = [sensor] * length
+                    sensor_ids_all[l:l+length] = sensor
                     
-                sensor_ids_all.extend( lista )
+                else:
+                    #lista = wmo_sensor_id[ind: (ind+length)]
+                    wsid = wmo_sensor_id[ind: (ind+length)]
+                    mask = np.isnan(wsid)
+                    sensor_ids_all[l:l+length][mask] = b'NA'
+                    sensor_ids_all[l:l+length][~mask] = np.int32(wsid[~mask])
+                    x = 0
+                l += length
+                    
+                #sensor_ids_all.extend( lista )
                 
         else:
-            sensor_ids_all.extend( wmo_sensor_id )
+            #sensor_ids_all.extend( wmo_sensor_id )
+            mask = np.isnan(wmo_sensor_id)
+            sensor_ids_all[mask] = b'NA'
+            sensor_ids_all[~mask] = np.int32(wmo_sensor_id[~mask])
+            #sensor_ids_all[:] = wmo_sensor_id
+        #print(time.time()-tt)
             
         
         self.sensor_ids_all = sensor_ids_all 
@@ -520,13 +536,20 @@ class Sensor(MergedFile):
             pass  
         
         
-        ### Formatting the sensor id 
-        sensors = np.array(self.sensor_ids_all).astype(str)
-        sensors = np.array( [ s.replace('-2147483600.0','NA ').replace('.0','') for s in sensors ] )
-        sensors = sensors.astype('|S4')
+        ### Formatting the sensor id
+        #tt = time.time()
+        #sensors = np.array(self.sensor_ids_all).astype(str)
+        #sensors = np.array( [ s.replace('-2147483600.0','NA ').replace('.0','') for s in sensors ] )
+        #sensors = sensors.astype('|S4')
+        #tt = time.time()
+        #sensors = np.array(self.sensor_ids_all).astype('|S4')
+        #sensors[sensors==b'nan'] = 'NA'
+        #sensors = np.array( [ s.replace(b'-2147483600.0',b'NA ').replace(b'.0',b'') for s in sensors ] )
+        #sensors = sensors.astype('|S4')
+        #print(time.time() - tt)
         
         slen= 4 
-        self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = sensors.view('S1').reshape(sensors.shape[0], slen ), 
+        self.data['h5py_file']['observations_table'].create_dataset('sensor_id', data = self.sensor_ids_all.view('S1').reshape(self.sensor_ids_all.shape[0], slen ), 
                                                                         compression = 'gzip' ,  chunks=True)          
         
         

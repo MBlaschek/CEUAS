@@ -40,6 +40,7 @@ warnings.filterwarnings('ignore')
 import pickle
 import ray
 import rs_drift as rsd
+from tqdm import tqdm
 
 
 #for fn in glob.glob('/mnt/scratch/scratch/federico/MERGED_YEARLY_22NOV_FULL_checkDimensions/*/*v3.nc'):
@@ -166,9 +167,10 @@ class h5p:
 #print(ray.get(x.slice4d.remote('u', (slice(0, 2), slice(0, 2), slice(0, 2), slice(0, 2)))))
 #print(type(x))
 
-@njit
-def memest3(z, ts):
+@njit #(boundscheck=True)
+def memest3(ts, z):
     
+    #if len(z) != len(ts):raise ValueError('z!=ts')
     l = 0
     for i in range(1, len(ts)):
         if ts[i] != ts[i-1] or z[i] != z[i-1]:
@@ -701,7 +703,8 @@ def lin3d_new(fps,fn, p, fdict,tss,z,lons, lats, yms, out=None, out_fb=None ):
                           ref+timedelta(seconds=int(fps[fis[i]]['time'][mti[i]]*3600-offset)),
                           ref+timedelta(seconds=int(fdict['secs'][its[i] + 1] )))
                     x = 0
-
+            if i == 4068:
+                x = 0
             if len(fpm) == 0:
                 
                 cubes[:, :, 2*i:2*i+2, 0:1] =  getchunk(fhash,fps, fis, p, slice(ysten[i, 0], ysten[i, 0] + 4),xsten[i, :],i, idps[i],mti[i], fdict['sf'], fdict['ao'], tss[i], zs[i])
@@ -2324,9 +2327,13 @@ def retrieve_anfg(f, out, out_fb, readict, ts, tsu, tslice, refs, gactor, out_na
 
         #idx = np.where(obstype==140)[0]
         if len(idx) > 0 and np.any(np.max(np.abs(out['latd'][sl][idx]))>10.):
-            print(fns, 'latd too big',np.max(np.abs(out['latd'][sl][idx]) ))
+            
+            idz = np.argmax(np.abs(out['latd'][sl][idx]) )
+            print(fn, 'latd too big',out['latd'][sl][idx][idz],out['lond'][sl][idx][idz], out['timed'][sl][idx][idz])
+            
+            #raise ValueError(fn, 'latd too big',np.max(np.abs(out['latd'][sl][idx]) ))
             out['latd'][sl][idx] = np.clip(out['latd'][sl][idx], -1.0, 1.0)
-            raise ValueError(fn)
+            #raise ValueError(fn)
         
         ptime('after drift', tt)        
         
@@ -2417,6 +2424,7 @@ def retrieve_anfg(f, out, out_fb, readict, ts, tsu, tslice, refs, gactor, out_na
                         lons = lons + out['lond'][idy]                
                         
                     lons[lons>=360.] -= 360
+                    lons[lons<0.] += 360
                 
                 #if '0.25t' not in fpattern:
                     #continue
@@ -2626,7 +2634,7 @@ def convert_missing(refs, pd_list, gactor, wpath,cyear, fn,
     #os.remove(logfile)
     tfile = wpath + '2022/0-20000-0-96207_CEUAS_merged_v1.nc'
     debug = False
-    if False and os.path.isfile(logfile):
+    if os.path.isfile(logfile):
         print('already processed')
         wtime = os.path.getmtime(logfile) 
         rtime = os.path.getmtime(fn) #fn
@@ -2911,7 +2919,11 @@ def convert_missing(refs, pd_list, gactor, wpath,cyear, fn,
             a_mem = 500000
             rmin = 20
 
-            a_mem = a_mem + memest3(ts, data.observations_table.z_coordinate[:])
+            try:
+                
+                a_mem = a_mem + memest3(ts, data.observations_table.z_coordinate[tslice])
+            except Exception as e:
+                raise ValueError(fn, e)
                 
             ptime('after memest', tt,debug=debug)    
             #addmem=10000000
@@ -3744,7 +3756,12 @@ def convert_missing(refs, pd_list, gactor, wpath,cyear, fn,
                                 except MemoryError as e:
                                     raise ValueError(fn, e)
                             else:
-                                rest_data = data.observations_table[i][tslice]
+                                try:
+                                    
+                                    rest_data = data.observations_table[i][tslice]
+                                except Exception as e:
+                                    raise ValueError(fn, e)
+                                    
                                 if rest_data.dtype in (np.float32, np.float64):
                                     dt = np.float32
                                 elif rest_data.dtype in (np.int32, np.int64):
@@ -4398,9 +4415,15 @@ if __name__ == '__main__':
     except:
         
         #files = glob.glob('/mnt/users/scratch/leo/scratch/FH/MERGED_YEARLY_0MAR2024_REGULAR/*58457/*v3.nc')[:]
-        files = glob.glob('/mnt/users/scratch/leo/scratch/UH/MERGED_YEARLY_20NOV2024_REGULAR/*/*v3.nc')[:]
-        files += glob.glob('/mnt/users/scratch/leo/scratch/UH/MERGED_YEARLY_20NOV2024_REGULAR_mobile/*/*v3.nc')[:]
-        files += glob.glob('/mnt/users/scratch/leo/scratch/UH/MERGED_YEARLY_20NOV2024_REGULAR_orphan/*/*v3.nc')[:]
+        #files = glob.glob('/mnt/users/scratch/leo/scratch/UH/MERGED_YEARLY_20NOV2024_REGULAR/*/*v3.nc')[:]
+        #files += glob.glob('/mnt/users/scratch/leo/scratch/UH/MERGED_YEARLY_20NOV2024_REGULAR_mobile/*/*v3.nc')[:]
+        #files += glob.glob('/mnt/users/scratch/leo/scratch/UH/MERGED_YEARLY_20NOV2024_REGULAR_orphan/*/*v3.nc')[:]
+        #files = glob.glob('/mnt/users/scratch/leo/scratch/UH/MERGED_YEARLY_25JAN2025_REGULAR/*/*v3.nc')[:]
+        #files += glob.glob('/mnt/users/scratch/leo/scratch/UH/MERGED_YEARLY_25JAN2025_REGULAR_mobile/*/*v3.nc')[:]
+        #files += glob.glob('/mnt/users/scratch/leo/scratch/UH/MERGED_YEARLY_25JAN2025_REGULAR_orphan/*/*v3.nc')[:]
+        files = glob.glob('/mnt/scratch/scratch/leo/scratch/UH/MERGED_YEARLY_19FEB25/*/*v3.nc')[:]
+        files += glob.glob('/mnt/scratch/scratch/leo/scratch/UH/MERGED_YEARLY_19FEB25_mobile/*/*v3.nc')[:]
+        files += glob.glob('/mnt/scratch/scratch/leo/scratch/UH/MERGED_YEARLY_19FEB25_orphan/*/*v3.nc')[:]
         #files = glob.glob('/mnt/users/scratch/leo/scratch/FH/MERGED_YEARLY_0MAR2024_REGULAR/*94975/*v3.nc')[:]
 
         #dirs = glob.glob('/mnt/users/scratch/leo/scratch/FH/MERGED_YEARLY_0MAY2024_REGULAR/*')[:]
@@ -4631,7 +4654,7 @@ if __name__ == '__main__':
     #files_to_convert.sort()
     tt=time.time()
 
-    #ray.init(num_cpus=40, _temp_dir=os.path.expandvars('/srvfs/fastscratch/scratch/leo/ray'))
+    #ray.init( num_cpus=64, _temp_dir=os.path.expandvars('/srvfs/fastscratch/scratch/leo/ray'))
 #    ray.init(address="localhost:6379")
     
     
@@ -4663,14 +4686,16 @@ if __name__ == '__main__':
                 fdict[year] = [fn]
         
     if finput == 'yearly':
-        wpath = '/mnt/users/scratch/leo/scratch/converted_v24/'
+        wpath = '/mnt/users/scratch/leo/scratch/converted_v29/'
         #wpath = '/run/user/73643/'
         #wpath = '/mnt/ssdraid/scratch/leo/converted_v18/'
         rts = True
         drift = True
         futures = []
-        for iyear in range(-1976, 1904, -1):
-            for file in fdict[iyear]: #glob.glob('/mnt/scratch/scratch/federico/MERGED_YEARLY_06DEC_FULLDATABASE/*/*_'+str(iyear)+'_*v3.nc'):
+        for iyear in range(1972, 1900, -1):
+            if iyear not in fdict:
+                continue
+            for file in tqdm(fdict[iyear]): #glob.glob('/mnt/scratch/scratch/federico/MERGED_YEARLY_06DEC_FULLDATABASE/*/*_'+str(iyear)+'_*v3.nc'):
                 #if (dat - ref).total_seconds() > os.path.getmtime(file) + 300:
                     
                 
@@ -4678,12 +4703,23 @@ if __name__ == '__main__':
                     #fn = '/mnt/users/scratch/leo/scratch/test/' + '/'.join(file.split('/')[-2:])
                     fn = file
                     wigosid = file.split('/')[-2]
-                    #if  True 0-20888-0-99901' or '0-20001-0-11035' in file: #True or '0-20000-0-89009' in file: #or '0-20000-0-07354' in file or '0-20001-0-11035' in file: #or '0-20000-0-70219' in file or '0-20001-0-10393' in file or  '0-20000-0-03882' in file or '0-20000-0-07510' in file or '0-20001-0-11035' in file:
-                    if True or '0-20000-0-35188' in wigosid: #'47600' in wigosid or '94975' in wigosid or '94120' in wigosid or '11035' in wigosid  #True or '0-20001-0-11035' in wigosid: #'0-20000-0-94461' in wigosid: #wigos in ['0-20000-0-72357']: #'0-20001-0-10393']: #'0-20000-0-72357','0-20001-0-10393']: #'0-20000-0-72357', '0-20001-0-11035']: #, '0-20001-0-11035', '0-20001-0-10393']: #, '0-20000-0-72357' , '0-20000-0-70219' ,'0-20000-0-91413' , '0-20001-0-10393'] :
-                        #if (iyear == 2023 and 'premerge' in file) or iyear < 2023:
-                        #convert_missing(refs_ref, pd_list_ref, None, wpath, iyear, file, record_timestamp=rts, drift=drift)
-                        #
-                        futures.append(ray_convert_missing.remote(refs_ref, pd_list_ref,None,wpath, iyear, fn,record_timestamp=rts,drift=drift ))
+                    try:
+                        
+                        #with h5py.File(f'{wpath}/{iyear}/{wigosid}_CEUAS_merged_v3.nc') as f:
+                            #lons = f['observations_table']['longitude'][:]
+                            #lond = f['observations_table']['lond'][:]
+                        #if np.any((lons>=0)&((lons+lond)<0)):
+                                
+    #                    blist = ['0-20999-0-ASUK02', '0-20999-0-A', '0-20999-0-DBLK', '0-20999-0-WDK38HS', '0-20999-0-SMLQ']
+                        if  True or '-0-11952' in file: #True or '0-20000-0-89009' in file: #or '0-20000-0-07354' in file or '0-20001-0-11035' in file: #or '0-20000-0-70219' in file or '0-20001-0-10393' in file or  '0-20000-0-03882' in file or '0-20000-0-07510' in file or '0-20001-0-11035' in file:
+    #                    if True or wigosid in blist: #'47600' in wigosid or '94975' in wigosid or '94120' in wigosid or '11035' in wigosid  #True or '0-20001-0-11035' in wigosid: #'0-20000-0-94461' in wigosid: #wigos in ['0-20000-0-72357']: #'0-20001-0-10393']: #'0-20000-0-72357','0-20001-0-10393']: #'0-20000-0-72357', '0-20001-0-11035']: #, '0-20001-0-11035', '0-20001-0-10393']: #, '0-20000-0-72357' , '0-20000-0-70219' ,'0-20000-0-91413' , '0-20001-0-10393'] :
+                            #if (iyear == 2023 and 'premerge' in file) or iyear < 2023:
+                            convert_missing(refs_ref, pd_list_ref, None, wpath, iyear, file, record_timestamp=rts, drift=drift)
+                            #
+                            #futures.append(ray_convert_missing.remote(refs_ref, pd_list_ref,None,wpath, iyear, fn,record_timestamp=rts,drift=drift ))
+                            #print('ZERO', iyear, fn)
+                    except MemoryError:
+                        pass
             
             #futures = futures + [ ray_convert_missing.remote(refs_ref, None, wpath, iyear, file )  for file in files_to_convert]
         obj_result_list = ray.get(futures)
@@ -4706,7 +4742,7 @@ if __name__ == '__main__':
             #mask = np.where((f['observations_table']['observed_variable'][:]==34)&(f['observations_table']['z_coordinate'][:]==10000))[0]
             #print(np.nanstd(f['era5fb']['fg_depar@offline'][:][mask]))
 
-    print('')
+    print('yearly files finished')
     #exit(0)
     if False:
         flist = glob.glob(wpath+'/long/*v3.nc')
