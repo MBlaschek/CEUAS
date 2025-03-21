@@ -53,7 +53,7 @@ def chunk_it(seq, num):
     return out
 
 
-def get_all_stations_files(db, station_kind):
+def get_all_stations_files(db, station_kind, station_config_dir = '../data/station_configuration/'):
     """ Read the extended station configuration, to obtain the primary_id and the file name lists """
     
     if 'mobile' in db:
@@ -63,11 +63,11 @@ def get_all_stations_files(db, station_kind):
         station_kind = ''
         
     if station_kind in ['orphan']:
-        sc = pd.read_csv( '../data/station_configurations/' + db + '_orphans_station_configuration_extended.csv', sep = '\t' )
+        sc = pd.read_csv( f'{station_config_dir}' + db + '_orphans_station_configuration_extended.csv', sep = '\t' )
     elif station_kind in ['mobile']:
-        sc = pd.read_csv( '../data/station_configurations/' + db + '_mobile_station_configuration_extended.csv', sep = '\t' )
+        sc = pd.read_csv( f'{station_config_dir}' + db + '_mobile_station_configuration_extended.csv', sep = '\t' )
     else:
-        sc = pd.read_csv( '../data/station_configurations/' + db + '_station_configuration_extended.csv', sep = '\t' )
+        sc = pd.read_csv( f'{station_config_dir}' + db + '_station_configuration_extended.csv', sep = '\t' )
         
     if not sc.empty:
         sc = sc[['primary_id' , 'file', 'latitude', 'longitude']]
