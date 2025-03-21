@@ -14,6 +14,7 @@ import geopy.distance
 import glob
 import gzip
 from datetime import date, datetime,timedelta
+import argparse
 
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -654,7 +655,7 @@ class Data():
         ## IGRA2CHANGE
         self.file = file  
 
-        f = 'temp_data/' + self.dataset + '/' + self.file.split('/')[-1] + '.csv'
+        f = f'{working_dir}/code/temp_data/' + self.dataset + '/' + self.file.split('/')[-1] + '.csv'
         
         # NB DOES NOT WORK WELL WITH HARA, REDO TEMP FILES !!! 
         
@@ -815,7 +816,7 @@ class Data():
             self.consistent_coord = False
             self.file = file # update reduced file name 
             
-            pd.DataFrame(dic, index=[0]).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t')
+            pd.DataFrame(dic, index=[0]).to_csv( f'{working_dir}/code/temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t')
 
         elif self.dataset == 'era5_1_mobile':
             flist_all= [ f for f in glob.glob(datasets[self.dataset] + "/era5.conv.*.gz" ) if f.split('.')[-2] == statIds]  
@@ -851,10 +852,10 @@ class Data():
             self.consistent_coord = False
             self.file = file # update reduced file name 
             
-            pd.DataFrame(dic, index=[0]).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t')
+            pd.DataFrame(dic, index=[0]).to_csv( f'{working_dir}/code/temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t')
                     
         elif self.dataset == 'era5_2_mobile':
-            flist_all= [ f for f in glob.glob(datasets[self.dataset] + "/era5.conv.*.*" ) if f.split('.gz')[0].split('.')[-1] == statIds]  
+            flist_all= [ f for f in glob.glob(datasets[self.dataset] + "/era5.conv.*."+statIds.replace('_',''))] # [ f for f in glob.glob(datasets[self.dataset] + "/era5.conv.*.*" ) if f.split('.gz')[0].split('.')[-1] == statIds]  
             flist_all.sort()
             max_date = flist_all[-1].split('conv.')[1].split('.')[0]
             min_date = flist_all[0].split('conv.')[1].split('.')[0]
@@ -886,7 +887,7 @@ class Data():
             self.consistent_coord = False
             self.file = file # update reduced file name 
             
-            pd.DataFrame(dic, index=[0]).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t')
+            pd.DataFrame(dic, index=[0]).to_csv( f'{working_dir}/code/temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t')
 
         
         
@@ -895,12 +896,19 @@ class Data():
         # odb headre -i file """
         
         file = self.file 
-        statIds = file.split('.gz')[0].split('.')[-1]
-        flist_all= glob.glob(datasets[self.dataset] + "/era5.conv.*."+statIds)  
-        flist_all.sort()
-        # max_date = flist_all[-1].split('conv.')[1].split('.')[0]
-        min_date = flist_all[0].split('conv.')[1].split('.')[0]
-        file = flist_all[-1]
+        if self.dataset in ['era5_1761', 'era5_1759']:
+            file = self.file
+            min_date = None
+        else:
+            if self.dataset == 'era5_2':
+                flist_all = glob.glob(datasets[self.dataset] + "/era5.conv.??????."+file.split('_')[-1])
+            else:
+                statIds = file.split('.gz')[0].split('.')[-1]
+                flist_all= glob.glob(datasets[self.dataset] + "/era5.conv.*."+statIds)  
+            flist_all.sort()
+            # max_date = flist_all[-1].split('conv.')[1].split('.')[0]
+            min_date = flist_all[0].split('conv.')[1].split('.')[0]
+            file = flist_all[-1]
 
         #a = open('check_odb','a+')
         #a.write(file + '\n')
@@ -979,7 +987,7 @@ class Data():
                 self.consistent_coord = False
                 
             
-            grouped.to_csv( 'temp_data/' + self.dataset  + '/' + self.file.split('/')[-1] + '_coordinates.csv', sep = '\t' )        
+            grouped.to_csv( f'{working_dir}/code/temp_data/' + self.dataset  + '/' + self.file.split('/')[-1] + '_coordinates.csv', sep = '\t' )        
                 
             lats_good, lons_good= list(compatible_coord.lat.values) , list(compatible_coord.lon.values)
             
@@ -1018,10 +1026,13 @@ class Data():
         comm = "odc sql 'select distinct MIN(date) '  -i FILE --no_alignment ".replace('FILE', file)   
         proc = subprocess.Popen(comm, stdout=subprocess.PIPE , shell=True)
         b = proc.stdout.read().decode('utf-8').split('\n')
-        if len(min_date) == 6:
-            min_date = min_date + '01'
+        if min_date == None:
+            min_date = b[1]
         else:
-            min_date = min_date
+            if len(min_date) == 6:
+                min_date = min_date + '01'
+            else:
+                min_date = min_date
         del b
         
         comm = "odc sql 'select distinct MAX(date) '  -i FILE --no_alignment ".replace('FILE', file)   
@@ -1053,7 +1064,7 @@ class Data():
         
         # storing the 
 
-        pd.DataFrame(dic).to_csv( 'temp_data/' + self.dataset + '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        pd.DataFrame(dic).to_csv( f'{working_dir}/code/temp_data/' + self.dataset + '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
         self.statid = statids
         
         #self.lats = lats
@@ -1062,6 +1073,7 @@ class Data():
         self.min_date = min_date 
         self.max_date = max_date
         self.variables = dic['variables']
+
 
         
     def check_consistent_coords(self, lats, lons):
@@ -1155,7 +1167,7 @@ class Data():
         # set consistent_coord 
         self.consistent_coord = True
         
-        pd.DataFrame(dic).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        pd.DataFrame(dic).to_csv( f'{working_dir}/code/temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
         self.statid = statIds
         self.lats = lats
         self.lons = lons 
@@ -1203,7 +1215,7 @@ class Data():
                  'consistent_coord': str(self.consistent_coord) }
 
         
-        pd.DataFrame(dic).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        pd.DataFrame(dic).to_csv( f'{working_dir}/code/temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
         self.statid = statIds
         self.lats = lats
         self.lons = lons 
@@ -1260,7 +1272,7 @@ class Data():
                  'consistent_coord': str(self.consistent_coord) }
 
         
-        pd.DataFrame(dic).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        pd.DataFrame(dic).to_csv( f'{working_dir}/code/temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
         self.statid = statIds
         self.lats = lats
         self.lons = lons 
@@ -1313,7 +1325,7 @@ class Data():
                  'consistent_coord': str(self.consistent_coord) }
 
         
-        pd.DataFrame(dic).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        pd.DataFrame(dic).to_csv( f'{working_dir}/code/temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
         self.statid = statIds
         self.lats = lats
         self.lons = lons 
@@ -1371,7 +1383,7 @@ class Data():
                  'consistent_coord': str(self.consistent_coord) }
 
         
-        pd.DataFrame(dic).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        pd.DataFrame(dic).to_csv( f'{working_dir}/code/temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
         self.statid = statIds
         self.lats = lats
         self.lons = lons 
@@ -1429,7 +1441,7 @@ class Data():
                  'consistent_coord': str(self.consistent_coord) }
 
         
-        pd.DataFrame(dic).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        pd.DataFrame(dic).to_csv( f'{working_dir}/code/temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
         self.statid = statIds
         self.lats = lats
         self.lons = lons 
@@ -1565,7 +1577,7 @@ class Data():
                  'variables': str(list(np.unique(data['variables'])) ),
                  'consistent_coord': str(self.consistent_coord) }
 
-        pd.DataFrame(dic).to_csv( 'temp_data/' +self.dataset  + '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        pd.DataFrame(dic).to_csv( f'{working_dir}/code/temp_data/' +self.dataset  + '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
         self.statid = statIds
         self.min_date = data['start_date'] 
         self.max_date = data['end_date']
@@ -1702,7 +1714,7 @@ class Data():
                  'variables': str(list(np.unique(data['variables'])) ),
                  'consistent_coord': str(self.consistent_coord) }
 
-        pd.DataFrame(dic).to_csv( 'temp_data/' +self.dataset  + '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        pd.DataFrame(dic).to_csv( f'{working_dir}/code/temp_data/' +self.dataset  + '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
         self.statid = statIds
         self.min_date = data['start_date'] 
         self.max_date = data['end_date']
@@ -1780,7 +1792,7 @@ class Data():
                  'consistent_coord': str(self.consistent_coord) }
 
         
-        pd.DataFrame(dic).to_csv( 'temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
+        pd.DataFrame(dic).to_csv( f'{working_dir}/code/temp_data/'  + self.dataset +  '/' + self.file.split('/')[-1] + '.csv', sep = '\t' )        
         self.statid = statIds
         self.lats = lats
         self.lons = lons 
@@ -1818,7 +1830,7 @@ class Data():
                 'consistent_coord': coord }  # NB coordinates should be checked against complete files, not stations lists !!! 
         
         # storing the 
-        pd.DataFrame(dic).to_csv( 'temp_data/' + self.dataset + '/'  + self.file.split('/')[-1] + '.csv', sep = '\t' )     
+        pd.DataFrame(dic).to_csv( f'{working_dir}/code/temp_data/' + self.dataset + '/'  + self.file.split('/')[-1] + '.csv', sep = '\t' )     
         
         self.statid = [df['statid@hdr'][0]]
         self.lats = [lat]
@@ -1873,7 +1885,7 @@ class Inventory():
     the OSCAR, IGRA2, WBAN and CHUAN inventories.
     For OSCAR and WBAN will convert lat and lon to decimal format. """
     
-    def __init__(self, datadir ='', tablesdir = '/srvfs/home/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/data/tables/',
+    def __init__(self, datadir ='', tablesdir ='',
                  oscar ="",
                  igra2= "",
                  wban = '',
@@ -1896,6 +1908,7 @@ class Inventory():
         self.utils = utils 
         self.tables_dir = tablesdir
         self.inv = {}
+
         
     def readCities(self):
         """ Read the cities from the file worldcitiespop.csv to 
@@ -1927,7 +1940,7 @@ class Inventory():
         igra2['isRadio'] = 'True'
         igra2.name = 'IGRA2'
 
-        out = open('/srvfs/home/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/code/file_list/igra2_files_list.txt' , 'w')
+        out = open(working_dir + '/code/file_list/igra2_files_list.txt' , 'w')
         
         for i in range(len(igra2)):
             stat = igra2.loc[i, 'station_id_igra' ] 
@@ -2125,25 +2138,6 @@ class Inventory():
         self.inv["amma"] = amma
         self.inv["hara"] = hara 
                 
-
-# initialize Utils
-utils = Utils()
-
-# Initialize inventory
-inventory = Inventory( datadir ='/srvfs/home/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/data/tables',  
-                 oscar = "vola_legacy_report.txt" , 
-                 igra2 = "igra2-station-list.txt"  , 
-                 wban = "WBAN.TXT-2006jan"  , 
-                 chuan = "Inventory_ERACLIM_upperair_2.1.txt",
-                 schroeder='schroeder_metadata.csv',
-                 wmo='wmo_metadata.csv',        
-                 amma = 'AMMA_campaign_digitized_metadata_extended.csv',
-                 hara = 'HARA_metadata.csv',
-                 utils = utils )
-
-inventory.readInventory()
-inventory.readCities()
-
 ################
 ### Analysis part 
 ################
@@ -2268,13 +2262,13 @@ def wrapper(data, file):
             
             all_inventories['kind'] = flag 
 
-            a = open('inventories/' + dataset +'/logs/' + dataset + '_processed_all.txt', 'a+')
+            a = open(f'{working_dir}/code/inventories/' + dataset +'/logs/' + dataset + '_processed_all.txt', 'a+')
             a.write(name_s + '\t' + flag + '\t' + '' +  '\n')       
 
             df = pd.DataFrame( all_inventories, index=[0] )  ### case: fully orphans, no whatsoever matching 
             df['WIGOS_best'] = wigos_pre + st 
 
-            name = 'inventories/' + dataset + '/' + data.file.split('/')[-1] + '_' + flag + '.csv'            
+            name = f'{working_dir}/code/inventories/' + dataset + '/' + data.file.split('/')[-1] + '_' + flag + '.csv'            
             df.to_csv( name,  sep = '\t' , index = False )
             return 
         
@@ -2293,10 +2287,10 @@ def wrapper(data, file):
                 
                 df_red['WIGOS_best'] = wigos_pre + st
                 
-                a = open( 'inventories/' + dataset + '/logs/' + dataset + '_' + flag + '.txt', 'a+')
+                a = open( f'{working_dir}/code/inventories/' + dataset + '/logs/' + dataset + '_' + flag + '.txt', 'a+')
                 a.write(file_name + '\t' + str(data.lats_all) + '\t' + str(data.lons_all) + '\t' +  str(data.frequency)  + '\t' + flag +  '\n')
                 
-                name = 'inventories/' + dataset + '/' + data.file.split('/')[-1] + '_' + flag + '.csv'
+                name = f'{working_dir}/code/inventories/' + dataset + '/' + data.file.split('/')[-1] + '_' + flag + '.csv'
                 df_red['kind'] = flag
                 df_red['file_statid'] = data.statid[0]
                 
@@ -2317,14 +2311,14 @@ def wrapper(data, file):
                             
                             if d <= 30:
                                 flag = 'era5-1769minusSignLatMismatch'
-                                if not os.path.isfile('inventories/' + dataset + '/logs/' + dataset + '_' + flag +'.txt'):
-                                    w = open('inventories/' + dataset + '/logs/' + dataset + '_' + flag + '.txt', 'w' )
+                                if not os.path.isfile(f'{working_dir}/code/inventories/' + dataset + '/logs/' + dataset + '_' + flag +'.txt'):
+                                    w = open(f'{working_dir}/code/inventories/' + dataset + '/logs/' + dataset + '_' + flag + '.txt', 'w' )
                                     
                                     header = "\t".join( ["#station_id","wban_id","file_lat" , "wban_lat" , "file_lon" , "wban_lon" , "file","wigos", '\n'] ) 
                                     w.write(header)                            
                                     w.close()
                                     
-                                a = open( 'inventories/' + dataset + '/logs/' + dataset + '_' + flag + '.txt', 'a+' )
+                                a = open( f'{working_dir}/code/inventories/' + dataset + '/logs/' + dataset + '_' + flag + '.txt', 'a+' )
                                 
                                 st = "\t". join( [ str(eval(data.statid[0])[0]) , str( int(df.station_id.values[0])) , str(data.lats[0]) ,  str(df['latitude'].values[0])  ,  str(data.lons[0]) , str(df['longitude'].values[0]) ,  file_name ,  flag , '\n'] ) 
                                 a.write(st)
@@ -2374,7 +2368,7 @@ def wrapper(data, file):
                 wban_dist = 999
             
             if not df_red.empty:
-                a = open( 'inventories/' + dataset + '/logs/' + dataset + '_CHECK_OSCAR_SignLatMismatch.txt', 'a+' )        
+                a = open( f'{working_dir}/code/inventories/' + dataset + '/logs/' + dataset + '_CHECK_OSCAR_SignLatMismatch.txt', 'a+' )        
                 #st = "\t". join( [ stat, str( df_red.station_id.values[0]) , str(data.lats[0]) ,  str(df_red['latitude'].values[0])  ,  str(data.lons[0]) , str(df_red['longitude'].values[0]) , str(oscar_dist), str(wban_dist),   file_name ,  '\n'] ) 
                 st = "\t". join( [ stat, str(data.lats[0]) ,  str(df_red['latitude'].values[0])  ,  str(data.lons[0]) , str(df_red['longitude'].values[0]) , str(oscar_dist), str(wban_dist),   file_name ,  '\n'] ) 
                 
@@ -2392,7 +2386,7 @@ def wrapper(data, file):
         all_inventories['WIGOS_best'] = best_wigos  
         all_inventories['variables'] = str(data.variables)  
         
-        name = 'inventories/' + dataset + '/' + data.file.split('/')[-1] + '_inventories.csv'
+        name = f'{working_dir}/code/inventories/' + dataset + '/' + data.file.split('/')[-1] + '_inventories.csv'
         
         all_inventories_red = all_inventories[ ['file_statid', 'station_id', 'station_name', 'latitude', 'longitude', 'elevation',
                                                 'original_lat', 'original_lon', 'distance_km', 'lat_file',
@@ -2411,7 +2405,7 @@ def wrapper(data, file):
             all_inventories['kind'] = 'noDistMatch'
             
             print("+++ No matching inventory wrt distance of 30 km  for the file but matching existing ID from inventory")
-            out = open( 'inventories/' + dataset + '/logs/' + dataset + '_unidentified.txt', 'a+')
+            out = open( f'{working_dir}/code/inventories/' + dataset + '/logs/' + dataset + '_unidentified.txt', 'a+')
             out.write( name_s +   '\n' )
             
             flag = 'unidentified_nomatch' + '\t' + ' '
@@ -2421,7 +2415,7 @@ def wrapper(data, file):
             all_inventories_red.to_csv( name.replace('.csv','_noDistMatch_reduced.csv'), sep = '\t' , index = False )
             
         # writing both identified and non-identified files to log
-        a = open(  'inventories/' + dataset + '/logs/' + dataset + '_processed_all.txt', 'a+')        
+        a = open(  f'{working_dir}/code/inventories/' + dataset + '/logs/' + dataset + '_processed_all.txt', 'a+')        
         a.write(name_s + '\t' + str(data.lats[0]) + '\t' + str(data.lons[0]) + '\t' + flag + '\n' )       
         
         print("Done :::" , file_name )
@@ -2429,10 +2423,10 @@ def wrapper(data, file):
 
     except:
         print("*** Cannot read file! ***" , name_s )
-        a = open('inventories/' + dataset + '/logs/' + dataset +"_failed_files.txt", "a+")
+        a = open(f'{working_dir}/code/inventories/' + dataset + '/logs/' + dataset +"_failed_files.txt", "a+")
         a.write(name_s + '\n')       
         
-        a = open('inventories/' + dataset + '/logs/' + dataset + '_processed_all.txt', 'a+')
+        a = open(f'{working_dir}/code/inventories/' + dataset + '/logs/' + dataset + '_processed_all.txt', 'a+')
         a.write(name_s + '\t' + 'failed' + '\n')               
     
     
@@ -2501,7 +2495,7 @@ def get_flist(db):
         
         if not os.path.isfile('file_list/era5_1_files_list.txt'):  ### TODO, this is to speed ud reading the file names which take a lot of time
             # flist_all=glob.glob(datasets[db] + "/era5.conv.*._*.txt.gz") # takes too long 
-            flist_all=glob.glob(datasets[db] + "/era5.conv.*.gz") # takes too long 
+            flist_all=glob.glob(datasets[db] + "/era5.conv.*") # takes too long ## .gz
             
             stations = list( np.unique( [f.split('.gz')[0].split('.')[-1] for f in flist_all ] ) )
                 
@@ -2548,8 +2542,9 @@ def get_flist(db):
             flist = []
             a = open( 'file_list/era5_1_mobile_files_list.txt','w')
             for station in stations:
-                
-                files = [f for f in flist_all if station in f.split('.gz')[0].split('.')[-1] ]
+                if station == '':
+                    continue
+                files = [f for f in flist_all if station == f.split('.gz')[0].split('.')[-1] ]
                 # files = [f for f in flist_all if station in f.split('.txt.gz')[0].split('.')[-1] ]
                 files.sort()
                 file = files[0] 
@@ -2567,9 +2562,10 @@ def get_flist(db):
         
         ### ANALSYIS of ERA5 2 stations type (fixed, mobile)
         if not os.path.isfile('file_list/era5_2_files_list.csv' ):  ### TODO, this is to speed ud reading the file names which take a lot of time
-            flist=glob.glob(datasets[db] + "/era5.conv._*") 
-            flist = [f for f in flist if '.gz' not in f ]
-            stations = list( np.unique( [f.split('.txt')[0].split('_')[-1] for f in flist ] ) )
+            flist=glob.glob(datasets[db] + "/era5.conv._*")
+            stations = [i for i in flist if not '.gz' in i] 
+            # flist = [f for f in flist if '.gz' not in f ]
+            # stations = list( np.unique( [f.split('.gz')[0].split('_')[-1] for f in flist ] ) )
             stations.sort()
                 
             ### saving extra file information
@@ -2580,8 +2576,9 @@ def get_flist(db):
             for s in tqdm(stations):
                 if s in ['','00000'] :
                     continue
-                station_file = glob.glob(datasets[db] + "/era5.conv._" + s + '.gz')[0]
-
+                station_file = s + '.gz'
+                if len(glob.glob(station_file)) < 1:
+                    continue
                 
                 df = pd.read_csv(station_file, sep = '\t' , usecols=['reportype'], nrows=50000 )    
                 report_type = np.unique(df.reportype).astype(str)
@@ -2610,7 +2607,7 @@ def get_flist(db):
         else:
             flist = list( df.loc[df.kind == 'FIXED'].file )
 
-        flist=[f.replace('.gz', '')  for f in flist]            
+        flist=[f.replace('.gz', '')  for f in flist if not 'era5.conv._6:10000' in f]     # skipping error stations       
             
             
     elif db == 'era5_1759':
@@ -2664,9 +2661,31 @@ def get_flist(db):
         
     return flist 
         
-        
+def setdir(wdir):
+    global working_dir
+    working_dir = wdir
+
     
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(description="Create inventory")
+
+    parser.add_argument('--dataset' , '-d', 
+                        help="Select the dataset"  ,
+                        type = str,
+                        default = 'era5_1' )#
+    
+    parser.add_argument('--working_dir' , '-w', 
+                        help="Chose working dir"  ,
+                        type = str,
+                        default = '/srvfs/home/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2' )
+
+
+    args = parser.parse_args()
+    v = args.dataset
+    wdir = args.working_dir
+    setdir(wdir)
+
     """ Parameters:
           - POOL: runs multiprocesses (default=30)
           - CHECK_MISSING: only runs missing files, otherwise will rerun and replace existing files """
@@ -2692,24 +2711,44 @@ if __name__ == '__main__':
                'hara', 'npsound', 'shipsound',
                'giub', 'maestro',]
     
-    databases = ['npsound']  
+    databases = [v]  
+
+
+    # initialize Utils
+    utils = Utils()
+
+    # Initialize inventory
+    inventory = Inventory( datadir = working_dir + '/data/tables',  
+                          tablesdir= working_dir + '/data/tables',
+                        oscar = "vola_legacy_report.txt" , 
+                        igra2 = "igra2-station-list.txt"  , 
+                        wban = "WBAN.TXT-2006jan"  , 
+                        chuan = "Inventory_ERACLIM_upperair_2.1.txt",
+                        schroeder='schroeder_metadata.csv',
+                        wmo='wmo_metadata.csv',        
+                        amma = 'AMMA_campaign_digitized_metadata_extended.csv',
+                        hara = 'HARA_metadata.csv',
+                        utils = utils )
+        
+    inventory.readInventory()
+    inventory.readCities()
+
     
     # enable multiprocesing
-    POOL = False  
+    POOL = True  
     n_pool = 40
     CHECK_MISSING = False  
     CHECK_FAILED = False
     # loop through each of the databases
     for db in databases:
-        
         if db == 'igra2':
             CHECK_MISSING = False
             
         ### Preparing directories 
-        if not os.path.isdir( 'inventories/' + db + '/logs'):
-            os.makedirs( 'inventories/' + db + '/logs' )
-        if not os.path.isdir( 'temp_data/' + db + '/logs'):
-                os.makedirs( 'temp_data/' + db + '/logs' )            
+        if not os.path.isdir( f'{working_dir}/code/inventories/' + db + '/logs'):
+            os.makedirs(f'{working_dir}/code/inventories/' + db + '/logs' )
+        if not os.path.isdir( f'{working_dir}/code/temp_data/' + db + '/logs'):
+                os.makedirs( f'{working_dir}/code/temp_data/' + db + '/logs' )            
                                          
         ### Extracting files list to process 
         flist = get_flist(db)
@@ -2724,7 +2763,7 @@ if __name__ == '__main__':
         
         # ### filtering mobile igra
         if db == 'igra2_mobile':
-            mobile_igra_list = pd.read_csv('/srvfs/home/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2/code/file_list/igra2_files_list.txt' , sep = '\t', names = ['station', 'kind'] )
+            mobile_igra_list = pd.read_csv(working_dir + '/file_list/igra2_files_list.txt' , sep = '\t', names = ['station', 'kind'] )
             mobile_igra_list = mobile_igra_list.loc[mobile_igra_list.kind == 'mobile']
             flist = [f for f in flist if f.station_id_igra in list(mobile_igra_list.station) ]
         
@@ -2737,7 +2776,7 @@ if __name__ == '__main__':
             if CHECK_MISSING:
                 flist_c = [f.split('/')[-1] for f in flist ]
                 try: 
-                    processed = [f.replace(".csv","") for f in os.listdir('temp_data/'+db)] 
+                    processed = [f.replace(".csv","") for f in os.listdir(f'{working_dir}/code/temp_data/'+db)] 
                 except:
                     processed = []
                 missing_stat = [f for f in flist_c if f.replace('.csv','') not in processed ]
