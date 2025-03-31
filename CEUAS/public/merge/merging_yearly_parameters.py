@@ -56,7 +56,7 @@ data_directories   = { 'era5_1'       : harvested_base_dir + '/era5_1' ,
                                    #'era5_1761_restored'       : harvested_base_dir + '_orphan/era5_1761/restored' ,
                                    #'era5_1759_restored'       : harvested_base_dir + '_orphan/era5_1759/restored' ,
                                    
-                                   }
+                       }
 
 restored_base = '/mnt/users/scratch/leo/scratch/UH/CUON_HARVEST6/harvest_orphan/'
 if station_kind in ['orphan']:
