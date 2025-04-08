@@ -2,7 +2,7 @@ import os,sys,glob
 import subprocess,psutil
 from multiprocessing import Pool
 fns=[]
-year='2025'
+year='????'
 month='??'
 def odbmobile(fn):
     print(fn)
@@ -12,7 +12,9 @@ def odb(fn):
     print(fn)
     os.system(f"odc sql --full-precision -q 'select *' -i "+f'"{fn}" | tr -d " "  | gzip   > "{fn}.gz"')
 
-for patt in f'/mnt/users/scratch/uvoggenberger/CUON_HARVEST_202503/data/era5_data/era5.conv.{year}{month}.[0-9]????',:
+era_5_1_dir = ''
+
+for patt in f'{era_5_1_dir}/era5.conv.{year}{month}.[0-9]????',:
 #for patt in f'era5.conv.{year}{month}.[A-Z]????',\
 #    f'era5.conv.{year}{month}.????', f'era5.conv.{year}{month}.??????',\
 #    f'era5.conv.{year}{month}.???????',  f'era5.conv.{year}{month}.????????':
