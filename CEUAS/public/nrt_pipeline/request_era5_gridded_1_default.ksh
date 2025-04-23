@@ -1,0 +1,44 @@
+#!/bin/ksh
+#SBATCH --qos=el
+#SBATCH --job-name=monmeanall
+#SBATCH --output=monmeanall.$(hostname).%j.out
+#SBATCH --error=monmeanall.$(hostname).%j.out
+#SBATCH --mail-type=FAIL
+#SBATCH --time=12:00:00
+
+# Constants
+export jobname='jobname'
+export host=$(hostname)
+export jobid=$SLURM_JOB_ID
+
+YYY=2025
+DEC=$((($YYY / 10) * 10))
+EXP=5
+PARAMS="T/q/u/v/z"
+LEVELS="10/20/30/50/70/100/150/200/250/300/400/500/700/850/925/1000"
+GRID="1.0/1.0"
+
+cd $SCRATCH
+
+MMM=01
+DDD=30
+
+cat marsecheader_SLURM > jobpl${EXP}${YYY}${MMM}
+cat >> jobpl${EXP}${YYY}${MMM} <<EOF
+
+cd $SCRATCH
+cat > marsserapl.${EXP}.${YYY}${MMM} << *eof
+retrieve, type=an, class=ea, expver=${EXP}, stream=oper, param=${PARAMS},
+date=${YYY}${MMM}01/to/${YYY}${MMM}${DDD}, time=00/to/23,
+decade=${DEC},
+level=${LEVELS},
+grid=${GRID},
+target='era5.${YYY}${MMM}.[param]'
+*eof
+
+mars marsserapl.${EXP}.${YYY}${MMM}
+EOF
+
+ksh jobpl${EXP}${YYY}${MMM}
+rm jobpl${EXP}${YYY}${MMM}
+done

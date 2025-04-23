@@ -72,3 +72,5 @@ for dir in era5_1_data ; do   # main expid for ERA5
     yy=$(($yy+1))
   done
 done
+
+touch "${0%/*}/script_done.txt"
