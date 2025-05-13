@@ -39,9 +39,7 @@ target='era5fc.0.25.${YYY}${MMM}.[param]'
 *eof
 
 mars marsserapl.${EXP}.${YYY}${MMM}
-(scp era5fc.0.25.${YYY}${MMM}.* leo@aurora.img.univie.ac.at:/mnt/users/scratch/leo/scratch/era5/gridded/ ; rm era5fc.0.25.${YYY}${MMM}.*) &
 EOF
 
 ksh jobpl${EXP}${YYY}${MMM}
-rm jobpl${EXP}${YYY}${MMM}
 done
