@@ -12,10 +12,41 @@ import h5py
 import h5netcdf
 
 '''
-change: set year in param file to the one from date check 
-add: era5_1 download and processing
-'''
+This script is used to download data from NOAA and ECMWF, create inventories, run the harvester, merge the data, and resort it.
+It is a part of the CEUAS project and is used to process data from the CUON network.
+The script is divided into several functions, each responsible for a specific task.
 
+The main functions are:
+- download_data_igra2: Downloads data from NOAA and unzips it.
+- download_data_era5: Downloads data from ECMWF and unzips it.
+- create_inventory: Creates an inventory of the data.
+- make_station_configuration: Creates a station configuration file.
+- run_harvester: Runs the harvester to process the data.
+- set_up_merge: Sets up the merging process.
+- run_merge: Merges the data.
+- run_resort: Resorts the data.
+- add_tables: Adds tables to the data.
+
+The script uses the following libraries:
+- os: For file and directory operations.
+- sys: For system-specific parameters and functions.
+- getpass: For getting the username of the current user.
+- time: For time-related functions.
+- psutil: For process and system utilities.
+- pandas: For data manipulation and analysis.
+- numpy: For numerical operations.
+- datetime: For date and time manipulation.
+- glob: For file name pattern matching.
+- calendar: For calendar-related functions.
+- h5py: For reading and writing HDF5 files.
+- h5netcdf: For reading and writing NetCDF files.
+
+The script is designed to be run on a server with the necessary libraries and permissions.
+
+'''
+####       ####
+# USER SETUP: #
+####       ####
 global user 
 user = getpass.getuser()
 
@@ -38,6 +69,10 @@ global ecmwf_output_dir
 
 ecmwf_user = 'lh4'
 ecmwf_output_dir = '/ec/res4/scratch/lh4/'
+
+##############  
+
+# GLOBAL VARIABLES ##############
 
 datetime_now = datetime.datetime.now()
 global date_year
