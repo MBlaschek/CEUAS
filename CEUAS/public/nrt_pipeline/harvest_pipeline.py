@@ -57,10 +57,11 @@ global base_dir
 global rscratch
 global refs
 
-reference_file = '/mnt/users/scratch/leo/scratch/converted_v29/long/0-20001-0-11035_CEUAS_merged_v3.nc'
-ceuas_dir = '/srvfs/home/uvoggenberger/CEUAS/CEUAS/'
-base_dir = '/mnt/users/scratch/uvoggenberger/CUON_HARVEST'
-python_interpreter = '/srvfs/home/uvoggenberger/micromamba/envs/uv12/bin/python'
+reference_file = '/mnt/users/scratch/leo/scratch/converted_v29/long/0-20001-0-11035_CEUAS_merged_v3.nc' # A file for data structure refference.
+ceuas_dir = '/srvfs/home/uvoggenberger/CEUAS/CEUAS/' # path to the CEUAS directory
+base_dir = '/mnt/users/scratch/uvoggenberger/CUON_HARVEST' # path to the base directory for the harvest -> make sure to have enough disk space
+python_interpreter = '/srvfs/home/uvoggenberger/micromamba/envs/uv12/bin/python' # path to the python interpreter
+
 rscratch = '/mnt/users/scratch/leo/scratch/' # what's inside there, we can not reproduce?
 refs = '/mnt/users/scratch/leo/scratch/converted_v13/rea/refs1940x.pkl' # can this be created?
 
