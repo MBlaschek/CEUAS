@@ -46,7 +46,8 @@ The script is designed to be run on a server with the necessary libraries and pe
 '''
 ####       ####
 # USER SETUP: #
-####       ####
+#             #
+
 global user 
 user = getpass.getuser()
 
@@ -54,16 +55,13 @@ global reference_file
 global ceuas_dir
 global python_interpreter
 global base_dir
-global rscratch
-global refs
+# global rscratch
+# global refs
 
-reference_file = '/mnt/users/scratch/leo/scratch/converted_v29/long/0-20001-0-11035_CEUAS_merged_v3.nc' # A file for data structure refference.
+reference_file = '/mnt/users/scratch/leo/scratch/converted_v29/long/0-20001-0-11035_CEUAS_merged_v3.nc' # A file for data structure reference.
 ceuas_dir = '/srvfs/home/uvoggenberger/CEUAS/CEUAS/' # path to the CEUAS directory
-base_dir = '/mnt/users/scratch/uvoggenberger/CUON_HARVEST' # path to the base directory for the harvest -> make sure to have enough disk space
+base_dir = '/mnt/users/scratch/uvoggenberger/CUON_HARVEST' # path to the base directory for the harvest -> make sure to have enough disk space (100 GB per month)
 python_interpreter = '/srvfs/home/uvoggenberger/micromamba/envs/uv12/bin/python' # path to the python interpreter
-
-rscratch = '/mnt/users/scratch/leo/scratch/' # what's inside there, we can not reproduce?
-refs = '/mnt/users/scratch/leo/scratch/converted_v13/rea/refs1940x.pkl' # can this be created?
 
 global ecmwf_user
 global ecmwf_output_dir
@@ -71,25 +69,46 @@ global ecmwf_output_dir
 ecmwf_user = 'lh4'
 ecmwf_output_dir = '/ec/res4/scratch/lh4/'
 
+#            #
 ##############  
+
+###
+# DATE SELECTION
+auto_date = False # Set to True to automatically set the date to the previous month
+selected_year = 2025
+selected_month = 1
+#
+###
 
 # GLOBAL VARIABLES ##############
 
-datetime_now = datetime.datetime.now()
 global date_year
-date_year = datetime_now.strftime('%Y')
 global date_month
-date_month = datetime_now.strftime('%m')
-
 global download_year
-if int(date_month) == 1:
-    download_year = int(date_year) - 1
-else:
-    download_year = int(date_year)
 global download_month
-download_month = int(date_month) - 1
 
-date_now = datetime_now.strftime('%Y%m')
+
+if auto_date:
+    datetime_now = datetime.datetime.now()
+    date_year = datetime_now.strftime('%Y')
+    date_month = datetime_now.strftime('%m')
+
+    if int(date_month) == 1:
+        download_year = int(date_year) - 1
+        download_month = 12
+        
+    else:
+        download_year = int(date_year)
+        download_month = int(date_month) - 1
+else:
+    download_year = selected_year
+    download_month = selected_month
+
+date_year = download_year
+date_month = download_month
+
+
+date_now = str(download_year) + str(download_month).zfill(2)
 
 global working_dir
 working_dir = base_dir + '_' + date_now + '/'
@@ -142,11 +161,8 @@ def days_in_month(year: int, month: int) -> int:
     else:
         raise ValueError("Month must be between 1 and 12")
 
-def download_data_era5(rm_zip=False):
+def download_data_era5(rm_zip=False):  
 
-    ## For now done manually, as there is a 2FA for the login to the server
-    ## Don't forget to also download the gridded data -> necessary for later steps
-    
     # module load teleport
     # ssh-agentreconnect -> or if that doesn't work tsh login
     # ssh lh4@hpc-login
@@ -361,9 +377,9 @@ def run_merge(station_kind = "regular"):
 def run_resort():
     os.system(f'mkdir -p {working_dir}/resort/')
     os.system(f'mkdir -p {working_dir}/resort/long')
-    os.system(f'cp {refs} {working_dir}/resort/')
+    # os.system(f'cp {refs} {working_dir}/resort/')
     # set correct path to CUON statconf
-    os.system(f"python {ceuas_dir}/public/resort/convert_and_resort_pipeline.py -i {working_dir}/merge/merged_out/ -w {working_dir} -c {ceuas_dir} -r {rscratch}")
+    os.system(f"python {ceuas_dir}/public/resort/convert_and_resort_pipeline.py -i {working_dir}/merge/merged_out/ -w {working_dir} -c {ceuas_dir}") # -r {rscratch}
 
 def add_tables():
     path = f'{working_dir}/resort/{date_year}/'
@@ -435,49 +451,44 @@ def check_and_fix_file(file, attr_dict):
 
 if __name__ == '__main__':
 
-    # Define the path to the marker file
-    marker_file = os.path.join(working_dir, "download_complete.txt")
+    # # Define the path to the marker file
+    # marker_file = os.path.join(working_dir, "download_complete.txt")
 
-    # Check if the marker file exists
-    if not os.path.exists(marker_file):
-        print("Marker file not found. Running download functions...")
-        download_data_igra2()
-        download_data_era5()
+    # # Check if the marker file exists
+    # if not os.path.exists(marker_file):
+    #     print("Marker file not found. Running download functions...")
+    #     download_data_igra2()
+    #     download_data_era5()
 
-        # Create the marker file to indicate completion
-        with open(marker_file, "w") as f:
-            f.write("Files prepared.\n")
-        print("Marker file created.")
+    #     # Create the marker file to indicate completion
+    #     with open(marker_file, "w") as f:
+    #         f.write("Files prepared.\n")
+    #     print("Marker file created.")
 
-    print("Marker file found. Skipping download functions.")
+    # print("Marker file found. Skipping download functions.")
 
-    ## Call the following functions:
+    # ## Call the following functions:
 
-    copy_tables_to_harvest()
-    create_inventory('igra2')
-    create_inventory('era5_1')
-    make_station_configuration('igra2')
-    make_station_configuration('era5_1')
-    run_harvester('igra2')
-    run_harvester('era5_1')
+    # copy_tables_to_harvest()
+    # create_inventory('igra2')
+    # create_inventory('era5_1')
+    # make_station_configuration('igra2')
+    # make_station_configuration('era5_1')
+    # run_harvester('igra2')
+    # run_harvester('era5_1')
 
-    run_harvester('era5_1_mobile', stat_kind='mobile')
-    run_harvester('igra2_mobile', stat_kind='mobile')
+    # run_harvester('era5_1_mobile', stat_kind='mobile')
+    # run_harvester('igra2_mobile', stat_kind='mobile')
 
-    set_up_merge()
-    run_merge('regular')
-    run_merge('mobile')
-    run_merge('orphan')
+    # set_up_merge()
+    # run_merge('regular')
+    # run_merge('mobile')
+    # run_merge('orphan')
 
-    make_station_configuration("CUON")
+    # make_station_configuration("CUON")
 
     run_resort()
 
     add_tables()
-
-
-
-
-
 
 
