@@ -51,14 +51,12 @@ The script is designed to be run on a server with the necessary libraries and pe
 global user 
 user = getpass.getuser()
 
-global reference_file
 global ceuas_dir
 global python_interpreter
 global base_dir
 # global rscratch
 # global refs
 
-reference_file = '/mnt/users/scratch/leo/scratch/converted_v29/long/0-20001-0-11035_CEUAS_merged_v3.nc' # A file for data structure reference.
 ceuas_dir = '/srvfs/home/uvoggenberger/CEUAS/CEUAS/' # path to the CEUAS directory
 base_dir = '/mnt/users/scratch/uvoggenberger/CUON_HARVEST' # path to the base directory for the harvest -> make sure to have enough disk space (100 GB per month)
 python_interpreter = '/srvfs/home/uvoggenberger/micromamba/envs/uv12/bin/python' # path to the python interpreter
@@ -71,6 +69,10 @@ ecmwf_output_dir = '/ec/res4/scratch/lh4/'
 
 #            #
 ##############  
+
+global reference_file
+reference_file = f'{ceuas_dir}/public/nrt_pipeline/0-20000-0-01107_CEUAS_merged_v3.nc' # A file for data structure reference.
+
 
 ###
 # DATE SELECTION
