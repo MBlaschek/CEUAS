@@ -4,6 +4,7 @@ module load teleport
 source /srvfs/home/uvoggenberger/CEUAS/CEUAS/public/nrt_pipeline/ssh-agent.sh
 ssh_agentreconnect
 python3 -m teleport.login
+ssh -vv ecmwf_user@hpc-login 'mkdir jobs'
 scp file_to_modify_1 ecmwf_user@hpc-login:/home/ecmwf_user/jobs/job_1.ksh
 scp file_to_modify_2 ecmwf_user@hpc-login:/home/ecmwf_user/jobs/job_2.ksh
 scp file_to_modify_3 ecmwf_user@hpc-login:/home/ecmwf_user/jobs/job_3.ksh
