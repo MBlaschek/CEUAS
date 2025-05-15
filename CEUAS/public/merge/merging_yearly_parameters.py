@@ -41,6 +41,7 @@ data_directories   = { 'era5_1'       : harvested_base_dir + '/era5_1' ,
                                    'era5_1761' : harvested_base_dir + '/era5_1761' ,
                                    'ncar'           : harvested_base_dir + '/ncar' ,
                                    'igra2'          : harvested_base_dir + '/igra2' ,
+                                   'igra2_mobile'       : harvested_base_dir + '/igra2_mobile' ,
                                    'bufr'            : harvested_base_dir + '/bufr' , 
                                    'bufr_cnr'            : harvested_base_dir + '/bufr_cnr' , 
                                    'amma'        : harvested_base_dir + '/amma' ,
@@ -91,5 +92,5 @@ check_missing_stations = False
 
 ### Multiprocesses run
 #POOL = True
-pool_number = 128
+pool_number = 40
 

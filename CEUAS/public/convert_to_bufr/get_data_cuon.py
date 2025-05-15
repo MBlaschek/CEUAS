@@ -40,12 +40,18 @@ biasadj = {'dew_point_temperature':['station_elevation', 'humidity_bias_estimate
                   }
 
 
-for year in [2008]: # range(2007, 2024): # , 1980, 2020, 2021, 2022, 2023]:
+# for iyear in range(1,9): # , 1980, 2020, 2021, 2022, 2023]:
+#     year = 1989 - iyear
+for year in [1980]:
     try:
-        os.mkdir('/mnt/users/scratch/uvoggenberger/to_bufr_1/'+str(year))
+        os.mkdir('/jetfs/scratch/uvoggenberger/to_bufr_3/'+str(year))
     except:
         pass
-    for month in range(12,13): # range(1,2): # !!! check if really range(1,13)
+    if year == 1988:
+        underlim = 6
+    else:
+        underlim = 1
+    for month in range(underlim,13): # range(1,2): # !!! check if really range(1,13)
         for day in range(1,32): # range(1,3): # !!! check if really range(1,32)
             for var in ['air_temperature','dew_point_temperature',  'wind_speed', 'wind_direction', 'geopotential']:
                 dt = [str(year) + str(month).zfill(2) + str(day).zfill(2)]
@@ -57,11 +63,14 @@ for year in [2008]: # range(2007, 2024): # , 1980, 2020, 2021, 2022, 2023]:
                     'cdm': ['observations_table/source_id', 'station_configuration/platform_type', "observations_table/observation_height_above_station_surface"],
                     "format": "nc",
                 }
-                if var == "wind_direction":
-                    df_v23 = eua.vm_request_wrapper(rq, overwrite=True, request_filename = "/mnt/users/scratch/uvoggenberger/to_bufr_1/"+str(year)+"/CUON_"+"wind_from_direction"+"_"+str(dt[0])+".zip" ,vm_url="http://127.0.0.1:8007", download_only=True)
-                else:
-                    df_v23 = eua.vm_request_wrapper(rq, overwrite=True, request_filename = "/mnt/users/scratch/uvoggenberger/to_bufr_1/"+str(year)+"/CUON_"+var+"_"+str(dt[0])+".zip" ,vm_url="http://127.0.0.1:8007", download_only=True)
-                    # df_v23 = eua.vm_request_wrapper(rq, overwrite=True, request_filename = "/mnt/users/scratch/uvoggenberger/to_bufr_1/CUON_"+var+"_"+str(dt[0])+".zip" ,vm_url="http://127.0.0.1:8007", download_only=True)
+                try:
+                    if var == "wind_direction":
+                        df_v23 = eua.vm_request_wrapper(rq, overwrite=True, request_filename = "/jetfs/scratch/uvoggenberger/to_bufr_3/"+str(year)+"/CUON_"+"wind_from_direction"+"_"+str(dt[0])+".zip" ,vm_url="http://127.0.0.1:8009", download_only=True)
+                    else:
+                        df_v23 = eua.vm_request_wrapper(rq, overwrite=True, request_filename = "/jetfs/scratch/uvoggenberger/to_bufr_3/"+str(year)+"/CUON_"+var+"_"+str(dt[0])+".zip" ,vm_url="http://127.0.0.1:8009", download_only=True)
+                except:
+                    pass
+                    # df_v23 = eua.vm_request_wrapper(rq, overwrite=True, request_filename = "/mnt/users/scratch/uvoggenberger/to_bufr_2/CUON_"+var+"_"+str(dt[0])+".zip" ,vm_url="http://127.0.0.1:8007", download_only=True)
         #         break
         #     break
         # break

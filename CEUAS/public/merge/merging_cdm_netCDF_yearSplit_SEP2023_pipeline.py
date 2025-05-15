@@ -43,7 +43,7 @@ warnings.simplefilter('ignore', category=NumbaPendingDeprecationWarning)
 
 import code
 
-sys.path.append('../harvest/code_cop2/')
+sys.path.append('../harvest/code/') # edit from code_cop2
 sys.path.append('../postprocess/add_sensor/')
 
 import plotly.graph_objects as go
@@ -2418,8 +2418,8 @@ class Merger():
         
         #obs_id = range(len(data))
         year = self.current_year
-        ref = int(year) * 10000000000000000
-        obs_id_resized = np.array(np.arange(len(d), dtype=np.int64) + ref, dtype='S')
+        ref = int(year) * 1000000000000000
+        obs_id_resized = np.array(np.arange(len(d), dtype=int) + ref, dtype='S')
         #obs_id_resized = []
         #tt = time.time()
         #for i in obs_id:
@@ -2578,7 +2578,7 @@ class Merger():
                 if len(table) > 0:
                     
                     for t in table.keys():
-                        table[t]['description'] = np.string_(table[t].description)
+                        table[t]['description'] = str(table[t].description)
                         try:
                             
                             if table[t].external_table == ' ':
@@ -2915,6 +2915,12 @@ def create_stat_summary(data_directories, flist, stat_id):
 run_mode = ''
 
 def run_wrapper(data_directories, flist, run_exception, station):
+
+
+    sys.path.append('../harvest/code/') # edit from code_cop2
+    from harvest_convert_to_netCDF import  clean_station_configuration , write_dict_h5
+
+
     
     station_df = create_stat_summary(data_directories, flist, station)
 
@@ -3163,7 +3169,7 @@ if __name__ == '__main__':
         
     #idx = stations.index('0-20666-0-98753')
     #stations = stations[idx:idx+1]
-    stations = [s for s in stations if '0-20000-0-70026' in s]
+    # stations = [s for s in stations if '0-20001-0-11035' in s]
     idx = 0
     try :
         
@@ -3171,7 +3177,7 @@ if __name__ == '__main__':
 #        os.remove(glob.glob(merged_out_dir+'/'+stations[0]+'/*.txt')[0])
     except:
         pass
-    POOL = True
+    POOL = True ## Switch multip
     if len(stations)== 1:
         POOL = False
     

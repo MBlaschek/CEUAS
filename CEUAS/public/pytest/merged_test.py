@@ -406,10 +406,10 @@ def test_source(hdf5_file_path):
 
 
 # test_file = "/mnt/users/scratch/leo/scratch/converted_v24/long/0-20001-0-11035_CEUAS_merged_v3.nc"
-test_file = "/mnt/users/scratch/leo/scratch/converted_v24/long/0-20001-0-71081_CEUAS_merged_v3.nc"
-test_dataset_structure_hdf5(test_file)
-test_temperature_thresholds_hdf5(test_file)
-test_source(test_file)
+# # test_file = "/mnt/users/scratch/leo/scratch/converted_v24/long/0-20001-0-71081_CEUAS_merged_v3.nc"
+# test_dataset_structure_hdf5(test_file)
+# test_temperature_thresholds_hdf5(test_file)
+# test_source(test_file)
 
 
 

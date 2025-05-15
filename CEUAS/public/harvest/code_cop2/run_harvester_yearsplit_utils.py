@@ -74,15 +74,16 @@ def get_all_stations_files(db, station_kind, station_config_dir = '../data/stati
         if db == 'giub':
             files = [f.replace('_reduced','') for f in sc.file ]
             sc['file'] = files
-
-    ### filtering
-    if station_kind == 'mobile':
-        ids = [p for p in sc.primary_id.values if '20999' in p ]
-        sc =sc.loc[sc.primary_id.isin(ids)]
-    elif station_kind == 'orphan':
-        ids = [p for p in sc.primary_id.values if '20999' in p ]
-        sc =sc.loc[~sc.primary_id.isin(ids)]
-        a =0        
+    
+    # needed for igra2? 
+    # ### filtering
+    # if station_kind == 'mobile':
+    #     ids = [p for p in sc.primary_id.values if '20999' in p ]
+    #     sc =sc.loc[sc.primary_id.isin(ids)]
+    # elif station_kind == 'orphan':
+    #     ids = [p for p in sc.primary_id.values if '20999' in p ]
+    #     sc =sc.loc[~sc.primary_id.isin(ids)]
+    #     a =0        
         
     return sc
 

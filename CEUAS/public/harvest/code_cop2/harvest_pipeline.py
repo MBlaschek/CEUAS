@@ -22,16 +22,24 @@ global user
 user = getpass.getuser()
 
 global reference_file
-reference_file = '/mnt/users/scratch/leo/scratch/converted_v29/long/0-20001-0-11035_CEUAS_merged_v3.nc'
-
 global ceuas_dir
-ceuas_dir = '/srvfs/home/uvoggenberger/CEUAS/CEUAS/'
-
-global base_dir
-base_dir = '/mnt/users/scratch/uvoggenberger/CUON_HARVEST'
-
 global python_interpreter
+global base_dir
+global rscratch
+global refs
+
+reference_file = '/mnt/users/scratch/leo/scratch/converted_v29/long/0-20001-0-11035_CEUAS_merged_v3.nc'
+ceuas_dir = '/srvfs/home/uvoggenberger/CEUAS/CEUAS/'
+base_dir = '/mnt/users/scratch/uvoggenberger/CUON_HARVEST'
 python_interpreter = '/srvfs/home/uvoggenberger/micromamba/envs/uv12/bin/python'
+rscratch = '/mnt/users/scratch/leo/scratch/'
+refs = '/mnt/users/scratch/leo/scratch/converted_v13/rea/refs1940x.pkl'
+
+global ecmwf_user
+global ecmwf_output_dir
+
+ecmwf_user = 'lh4'
+ecmwf_output_dir = '/ec/res4/scratch/lh4/'
 
 datetime_now = datetime.datetime.now()
 global date_year
@@ -56,8 +64,6 @@ os.system('mkdir -p ' + working_dir)
 global table_dir
 table_dir = f'{ceuas_dir}/meta/inventory_comparison_2/data/tables/'
 
-global rscratch
-rscratch = '/mnt/users/scratch/leo/scratch/'
 
 sys.path.append(f"{ceuas_dir}/public/cds-backend/code/")
 from harvest_convert_to_netCDF import write_dict_h5
@@ -111,6 +117,8 @@ def download_data_era5(rm_zip=False):
     # ssh-agentreconnect -> or if that doesn't work tsh login
     # ssh lh4@hpc-login
 
+    era5_dir = working_dir + '/data/era5_1_data'
+    os.system('mkdir -p ' + era5_dir)
 
     with open(f'{ceuas_dir}/public/nrt_pipeline/request_era5_default.ksh', 'r') as file:
         content = file.readlines()
@@ -174,250 +182,19 @@ def download_data_era5(rm_zip=False):
             line = line.replace("file_to_modify_2", f'{working_dir}/data/request_era5_gridded_1.ksh')
         if "file_to_modify_3 " in line:
             line = line.replace("file_to_modify_3", f'{working_dir}/data/request_era5_gridded_2.ksh')
+        if "harvest_dir " in line:
+            line = line.replace("harvest_dir", f'{era5_dir}/')
+        if "ecmwf_user " in line:
+            line = line.replace("ecmwf_user", f'{ecmwf_user}')
+        if "ecmwf_output_dir " in line:
+            line = line.replace("ecmwf_output_dir", f'{ecmwf_output_dir}')
         modified_content.append(line)
     # Write the modified content to a new file
     with open(f'{working_dir}/data/get_era5.sh', 'w') as file:
         file.writelines(modified_content)
 
     os.system(f'chmod +x {working_dir}/data/get_era5.sh')
-    # os.system(f'{working_dir}/data/get_era5.sh')
-
-
-    """
-        #!/bin/ksh
-        #SBATCH --qos=el
-        #SBATCH --job-name=monmeanall
-        #SBATCH --output=monmeanall.%j.out
-        #SBATCH --error=monmeanall.%j.out
-        #SBATCH --mail-type=FAIL
-        #SBATCH --time=7-00:00:00
-
-        # Set environment variables
-        export jobname='jobname'
-        export host=host
-        export jobid=jobid
-
-        # Define year, month, and experiment
-        YYY=2025
-        MMM=03
-        EXP=5
-
-        # Number of days in March
-        DDD=31
-
-        # Calculate decade
-        DEC=$(( ($YYY / 10) * 10 ))
-
-        # Create mars request script
-        cd $SCRATCH
-
-        cat marsecheader_SLURM > jobconv${EXP}${YYY}${MMM}
-        cat >> jobconv${EXP}${YYY}${MMM} <<EOF
-
-        cd $SCRATCH
-        cat > marsseraconv.${EXP}.${YYY}${MMM} << *eof
-        retrieve, type=an, class=ea, expver=${EXP}, stream=oper,
-        date=${YYY}${MMM}01/to/${YYY}${MMM}${DDD}, time=00/12,
-        decade=${DEC},
-        reportype=16013/16022/16045/16068/16014/16019/16046/16069/16021/16075,
-        type=ofb,
-        target="${SCRATCH}/era5.conv.${YYY}${MMM}".
-        *eof
-
-        mars marsseraconv.${EXP}.${YYY}${MMM}
-        EOF
-
-        # Run the job script
-        ksh jobconv${EXP}${YYY}${MMM}
-
-        # Transfer and clean up
-        scp era5.conv.${YYY}${MMM}* uvoggenberger@aurora.img.univie.ac.at:/mnt/users/scratch/uvoggenberger/CUON_HARVEST_202503/data/era5_1_data/
-        rm era5.conv.${YYY}${MMM}* marsseraconv.${EXP}.${YYY}${MMM}
-    """
-
-
-    """
-        #!/bin/ksh
-        #SBATCH --qos=el
-        #SBATCH --job-name=monmeanall
-        #SBATCH --output=monmeanall.$(hostname).%j.out
-        #SBATCH --error=monmeanall.$(hostname).%j.out
-        #SBATCH --mail-type=FAIL
-        #SBATCH --time=12:00:00
-
-        # Constants
-        export jobname='jobname'
-        export host=$(hostname)
-        export jobid=$SLURM_JOB_ID
-
-        YYY=2025
-        DEC=$((($YYY / 10) * 10))
-        EXP=5
-        PARAMS="T/q/u/v/z"
-        LEVELS="10/20/30/50/70/100/150/200/250/300/400/500/700/850/925/1000"
-        GRID="1.0/1.0"
-
-        cd $SCRATCH
-
-        for MMM in 01 02; do
-        case $MMM in
-            02)
-            DDD=28
-            [ $((YYY % 4)) -eq 0 ] && DDD=29
-            ;;
-            04|06|09|11)
-            DDD=30
-            ;;
-            *)
-            DDD=31
-            ;;
-        esac
-
-        cat marsecheader_SLURM > jobpl${EXP}${YYY}${MMM}
-        cat >> jobpl${EXP}${YYY}${MMM} <<EOF
-
-        cd $SCRATCH
-        cat > marsserapl.${EXP}.${YYY}${MMM} << *eof
-        retrieve, type=an, class=ea, expver=${EXP}, stream=oper, param=${PARAMS},
-        date=${YYY}${MMM}01/to/${YYY}${MMM}${DDD}, time=00/to/23,
-        decade=${DEC},
-        level=${LEVELS},
-        grid=${GRID},
-        target='era5.${YYY}${MMM}.[param]'
-        *eof
-
-        mars marsserapl.${EXP}.${YYY}${MMM}
-        EOF
-
-        ksh jobpl${EXP}${YYY}${MMM}
-        rm jobpl${EXP}${YYY}${MMM}
-        done
-    """
-
-
-    """
-#!/bin/ksh
-#SBATCH --qos=el
-#SBATCH --job-name=monmeanall
-#SBATCH --output=monmeanall.$(hostname).%j.out
-#SBATCH --error=monmeanall.$(hostname).%j.out
-#SBATCH --mail-type=FAIL
-#SBATCH --time=7-00:00:00
-
-# Constants
-export jobname='jobname'
-export host=$(hostname)
-export jobid=$SLURM_JOB_ID
-
-YYY=2025
-DEC=$((($YYY / 10) * 10))
-EXP=5
-PARAMS="T/Q/U/V/Z"
-LEVELS="10/20/30/50/70/100/150/200/250/300/400/500/700/850/925/1000"
-GRID="0.25/0.25"
-TIMES="06/18"
-STEPS="3/6/9/12"
-
-cd $SCRATCH
-
-for MMM in 01 02; do
-case $MMM in
-    02)
-    DDD=28
-    [ $((YYY % 4)) -eq 0 ] && DDD=29
-    ;;
-    04|06|09|11)
-    DDD=30
-    ;;
-    *)
-    DDD=31
-    ;;
-esac
-
-cat marsecheader_SLURM > jobpl${EXP}${YYY}${MMM}
-cat >> jobpl${EXP}${YYY}${MMM} <<EOF
-
-cd $SCRATCH
-cat > marsserapl.${EXP}.${YYY}${MMM} << *eof
-retrieve, type=fc, class=ea, expver=${EXP}, stream=oper, param=${PARAMS},
-date=${YYY}${MMM}01/to/${YYY}${MMM}${DDD}, time=${TIMES}, step=${STEPS},
-decade=${DEC},
-level=${LEVELS},
-grid=${GRID},
-target='era5fc.0.25.${YYY}${MMM}.[param]'
-*eof
-
-mars marsserapl.${EXP}.${YYY}${MMM}
-(scp era5fc.0.25.${YYY}${MMM}.* leo@aurora.img.univie.ac.at:/mnt/users/scratch/leo/scratch/era5/gridded/ ; rm era5fc.0.25.${YYY}${MMM}.*) &
-EOF
-
-ksh jobpl${EXP}${YYY}${MMM}
-rm jobpl${EXP}${YYY}${MMM}
-done
-    """
-    # copy and edit: "/mnt/users/scratch/uvoggenberger/CUON_HARVEST_202503/data/splite5_1.ksh" also chmod +x on it, to make it executeable
-    # run splite5_1 on the downloaded data and then run:
-    # copy and edit: "/mnt/users/scratch/uvoggenberger/CUON_HARVEST_202503/code/odbgz_new.py" set month/year/... -> change paths to variable input!
-    # copy and edit: "/mnt/users/scratch/uvoggenberger/CUON_HARVEST_202503/code/odbgz_new_mobile.py" set month/year/... -> change paths to variable input! 
-
-    # era5_dir = working_dir + '/data/era5_1_data'
-    # os.system('mkdir -p ' + era5_dir)
-    # os.system(f'mkdir -p {working_dir}/code/')
-    # os.system(f'cp {ceuas_dir}/public/nrt_pipeline/splite5_1.ksh {working_dir}/data/')
-
-    # with open(f'{ceuas_dir}/public/nrt_pipeline/splite5_1.ksh', 'r') as file:
-    #     content = file.readlines()
-
-    # # Modify the content as needed
-    # modified_content = []
-    # for line in content:
-    #     if "pdir=" in line:
-    #         line = f"pdir={working_dir}/data\n"
-    #     if "touch " in line:
-    #         line = f"touch {working_dir}/data/script_done.txt\n"
-    #     modified_content.append(line)
-
-    # # Write the modified content to a new file
-    # with open(f'{working_dir}/data/splite5_1.ksh', 'w') as file:
-    #     file.writelines(modified_content)
-
-    # os.system(f'chmod +x {working_dir}/data/splite5_1.ksh')
-
-    # ## make a check to see if files are already split:
-    # if len(glob.glob(f'{working_dir}/data/script_done.txt')) < 1:
-    #     os.system(f'module load odc; {working_dir}/data/splite5_1.ksh')
-    #     while True:
-    #         time.sleep(10)
-    #         if len(glob.glob(f'{working_dir}/data/script_done.txt')) > 0:
-    #             break
-
-
-    # for ffile in [f'{ceuas_dir}/public/nrt_pipeline/odbgz_new.py', f'{ceuas_dir}/public/nrt_pipeline/odbgz_new_mobile.py']:
-    #     with open(ffile, 'r') as file:
-    #         content = file.readlines()
-
-    #     # Modify the content as needed
-    #     modified_content = []   
-    #     for line in content:
-    #         if "era_5_1_dir = " in line:
-    #             line = f"era_5_1_dir = '{era5_dir}'\n"
-    #         modified_content.append(line)
-
-    #     # Write the modified content to a new file
-    #     with open(f'{working_dir}/code/{ffile.split('/')[-1]}', 'w') as file:
-    #         file.writelines(modified_content)
-    #     os.system(f"module load odc; python {working_dir}/code/{ffile.split('/')[-1]}")
-    #     # wait_for_python_processes(com_line_content = 'odbgz')
-
-    # print('done with odbgz conversion')
-
-    # ll = glob.glob(f'{era5_dir}/*')
-    # ls = [l for l in ll if not ".gz" in l]
-    # ls = [l for l in ls if len(l.split('.')) > 4]
-    # for i in ls:
-    #     if len(glob.glob(i + '.gz')) < 1:
-    #         os.system(f'cp {i} ../era5_1_mobile_data/')
-
+    os.system(f'{working_dir}/data/get_era5.sh')
 
 def copy_tables_to_harvest():
     # Copy the tables to the harvest directory
@@ -550,7 +327,7 @@ def run_merge(station_kind = "regular"):
 def run_resort():
     os.system(f'mkdir -p {working_dir}/resort/')
     os.system(f'mkdir -p {working_dir}/resort/long')
-    os.system(f'cp /mnt/users/scratch/leo/scratch/converted_v13/rea/refs1940x.pkl {working_dir}/resort/')
+    os.system(f'cp {refs} {working_dir}/resort/')
     # set correct path to CUON statconf
     os.system(f"python {ceuas_dir}/public/resort/convert_and_resort_pipeline.py -i {working_dir}/merge/merged_out/ -w {working_dir} -c {ceuas_dir} -r {rscratch}")
 
@@ -626,47 +403,45 @@ if __name__ == '__main__':
 
     # os.system(f'module load teleport; python3 -m teleport.login ') # export TSH_EXEC=/home/swd/manual/teleport/17.4.2/bin/tsh ; export TSH_PROXY=jump-17.ecmwf.int:443 ; export TSH_USERNAME=lh4 ; export TSH_PASSWORD=Ax9eZ3XHzW8T8Em ; 
 
-    download_data_era5()
+    # Define the path to the marker file
+    marker_file = os.path.join(working_dir, "download_complete.txt")
 
-    # # Define the path to the marker file
-    # marker_file = os.path.join(working_dir, "download_complete.txt")
+    # Check if the marker file exists
+    if not os.path.exists(marker_file):
+        print("Marker file not found. Running download functions...")
+        download_data_igra2()
+        download_data_era5()
 
-    # # Check if the marker file exists
-    # if not os.path.exists(marker_file):
-    #     print("Marker file not found. Running download functions...")
-    #     download_data_igra2()
-    #     download_data_era5()
+        # Create the marker file to indicate completion
+        with open(marker_file, "w") as f:
+            f.write("Files prepared.\n")
+        print("Marker file created.")
 
-    #     # Create the marker file to indicate completion
-    #     with open(marker_file, "w") as f:
-    #         f.write("Files prepared.\n")
-    #     print("Marker file created.")
+    print("Marker file found. Skipping download functions.")
 
-    # print("Marker file found. Skipping download functions.")
+    ## Call the following functions:
 
-    # ## Call the following functions:
+    copy_tables_to_harvest()
+    create_inventory('igra2')
+    create_inventory('era5_1')
+    make_station_configuration('igra2')
+    make_station_configuration('era5_1')
+    run_harvester('igra2')
+    run_harvester('era5_1')
 
-    # copy_tables_to_harvest()
-    # create_inventory('igra2')
-    # create_inventory('era5_1')
-    # make_station_configuration('igra2')
-    # make_station_configuration('era5_1')
-    # run_harvester('igra2')
-    # run_harvester('era5_1')
+    run_harvester('era5_1_mobile', stat_kind='mobile')
+    run_harvester('igra2_mobile', stat_kind='mobile')
 
-    # run_harvester('era5_1_mobile', stat_kind='mobile')
-    # run_harvester('igra2_mobile', stat_kind='mobile')
+    set_up_merge()
+    run_merge('regular')
+    run_merge('mobile')
+    run_merge('orphan')
 
-    # set_up_merge()
-    # run_merge('regular')
-    # run_merge('mobile')
-    # run_merge('orphan')
+    make_station_configuration("CUON")
 
-    # make_station_configuration("CUON")
+    run_resort()
 
-    # run_resort()
-
-    # add_tables()
+    add_tables()
 
 
 
