@@ -244,7 +244,6 @@ def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_re
                  "United States Virgin Islands":"Virgin Islands, U.S.",
                  "Brunei":"Brunei Darussalam",
                  "Taiwan":"Taiwan, Province of China"    ,
-                 "Turkey": "Türkiye",
                  "North Korea":"Korea, Democratic People's Republic of" ,
                  "French Southern and Antarctic Lands":"France"  ,
                  
@@ -273,7 +272,7 @@ def iso_from_country_from_coordinates( lat='', lon='', json_data='',  cdm_sub_re
             territory = ''
             
     #print(territory, file )
-    a = open(f'{working_dir}/code/inventories/territory_code.csv', 'a+')
+    a = open('inventories/territory_code.csv', 'a+')
     a.write(file.split('/')[-1].split('_inventories')[0] + '\t' + str(territory) + '\n')
     a.close()
     
@@ -317,10 +316,10 @@ def make_inventory(v):
     """ Creates the inventory for the given database """
     
     print(' *** Creating the inventory for ' , v )
-    if not os.path.isdir(working_dir+'/code/station_configuration/logs'):
-        os.system(f'mkdir {working_dir}/code/station_configuration/logs')
+    if not os.path.isdir('station_configuration/logs'):
+        os.system('mkdir station_configuration/logs')
         
-    inv_path = working_dir+'/code/inventories/' 
+    inv_path = 'inventories/' 
 
     files = glob.glob(inv_path + '/' + v + '/' + '*inventories_iden*')
     files = [f for f in files if 'all' not in f and 'Ids' not in f  ]
@@ -330,12 +329,12 @@ def make_inventory(v):
     for c in stat_conf_columns:
         stat_conf_dic[c] = []
 
-    cdm_sub_regions = pd.read_csv(f"{working_dir}/data/sub_region.dat", sep = '\t')
+    cdm_sub_regions = pd.read_csv("../data/sub_region.dat", sep = '\t')
     # Retrieve or read json files with country borders
-    if not os.path.isfile(f"{working_dir}/data/countries.geojson"):
+    if not os.path.isfile("../data/countries.geojson"):
         json_data = requests.get("https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson").json()
     else:
-        a = open(f'{working_dir}data/countries.geojson')
+        a = open('../data/countries.geojson')
         json_data = json.load(a)
     
     # holding extra variables that do not appear in the stat_conf but can be useful
@@ -347,8 +346,8 @@ def make_inventory(v):
                             'elevation':[],
                             'file': [] }
     
-    if os.path.isfile(f'{working_dir}/code/inventories/territory_code.npy'):
-        terr_dic = np.load(f'{working_dir}/code/inventories/territory_code.npy' , allow_pickle=True ).item()
+    if os.path.isfile('inventories/territory_code.npy'):
+        terr_dic = np.load('inventories/territory_code.npy' , allow_pickle=True ).item()
         
     else:
         terr_dic = {'file':[], 'terr':[]}
@@ -366,7 +365,7 @@ def make_inventory(v):
         df = df.loc[df['distance_km'] < 30 ]
         
         if df.empty:
-            a = open(f'{working_dir}/code/station_configuration/logs/unidentified_' + v + '.txt' , 'a+' )
+            a = open('station_configuration/logs/unidentified_' + v + '.txt' , 'a+' )
             a.write(file + '\n')
             continue
         
@@ -466,8 +465,8 @@ def make_inventory(v):
     ind = statconf_df.index
     # adding record number
     statconf_df['record_number'] = list(range(1,len(statconf_df)+1))
-    statconf_df.to_csv(f'{working_dir}/code/station_configuration/' + v + '_station_configuration.csv' , sep= '\t' )           
-    statconf_df.to_excel(f'{working_dir}/code/station_configuration/' + v + '_station_configuration.xlsx' )
+    statconf_df.to_csv('station_configuration/' + v + '_station_configuration.csv' , sep= '\t' )           
+    statconf_df.to_excel('station_configuration/' + v + '_station_configuration.xlsx' )
         
 
     for c in extra_vars.keys():
@@ -479,10 +478,10 @@ def make_inventory(v):
 
 
 
-    statconf_df.to_csv(f'{working_dir}/code/station_configuration/' + v + '_station_configuration_extended.csv' , sep= '\t' )           
-    statconf_df.to_excel(f'{working_dir}/code/station_configuration/' + v + '_station_configuration_extended.xlsx' )
+    statconf_df.to_csv('station_configuration/' + v + '_station_configuration_extended.csv' , sep= '\t' )           
+    statconf_df.to_excel('station_configuration/' + v + '_station_configuration_extended.xlsx' )
 
-    np.save( f'{working_dir}/code/inventories/territory_code', terr_dic, allow_pickle=True )
+    np.save( 'inventories/territory_code', terr_dic, allow_pickle=True )
     print('*** Done with the inventory ',  v )
 
 
@@ -496,8 +495,8 @@ def make_CUON():
     ''' Create one single inventory out of the CUON datasets '''
     
     inv = []
-    for s in glob.glob(f'{working_dir}/code/station_configuration/*_station_configuration_extended*'):
-        if 'CUON' in s.split('/')[-1] or 'xl' in s or 'all'  in s:           
+    for s in glob.glob('station_configuration/*_station_configuration_extended*'):
+        if 'CUON' in s or 'xl' in s or 'all'  in s:           
             continue
         df = pd.read_csv(s, sep='\t')
         print(s , ' ' , len(df))
@@ -514,7 +513,7 @@ def make_CUON():
     # storing combined CUON dictionary 
     combined_cuon= {}
     # reading all station configuration columns
-    station_conf_columns = pd.read_csv(f'{working_dir}/code/station_configuration/era5_1_station_configuration.csv', sep='\t').columns
+    station_conf_columns = pd.read_csv('station_configuration/era5_1_station_configuration.csv', sep='\t').columns
     
     for c in station_conf_columns:
         if c in  'index' or 'Unnamed' in c :
@@ -614,15 +613,15 @@ def make_CUON():
         
     d = pd.DataFrame(combined_cuon)
     combined_cuon['record_number'] = list(range(len(    combined_cuon['latitude'] ) ))
-    d.to_csv(f'{working_dir}/code/station_configuration/CUON_station_configuration_extended.csv', sep='\t')
-    d.to_excel(f'{working_dir}/code/station_configuration/CUON_station_configuration.xlsx' )
+    d.to_csv('station_configuration/CUON_station_configuration_extended.csv', sep='\t')
+    d.to_excel('station_configuration/CUON_station_configuration.xlsx' )
 
 
 def make_ORPHAN():
     ''' Create combined inventory for all orphans, mobile and problematic stations  '''
     
     inv = []
-    for s in glob.glob(f'{working_dir}/code/station_configuration/*orphans_station_configuration_extended*'):
+    for s in glob.glob('station_configuration/*orphans_station_configuration_extended*'):
         if 'CUON' in s or 'xl' in s or 'all'  in s:
             continue
         df = pd.read_csv(s, sep='\t')
@@ -640,7 +639,7 @@ def make_ORPHAN():
     # storing combined CUON dictionary 
     combined_cuon= {}
     # reading all station configuration columns
-    station_conf_columns = pd.read_csv(f'{working_dir}/code/station_configuration/era5_1_orphans_station_configuration_extended.csv', sep='\t').columns
+    station_conf_columns = pd.read_csv('station_configuration/era5_1_orphans_station_configuration_extended.csv', sep='\t').columns
     
     for c in station_conf_columns:
         if c in  'index' or 'Unnamed' in c :
@@ -738,8 +737,8 @@ def make_ORPHAN():
         
     d = pd.DataFrame(combined_cuon)
     combined_cuon['record_number'] = list(range(len(    combined_cuon['latitude'] ) ))
-    d.to_csv(f'{working_dir}/code/station_configuration/CUON_orphans_station_configuration_extended.csv', sep='\t')
-    d.to_excel(f'{working_dir}/code/station_configuration/CUON_orphans_station_configuration.xlsx' )
+    d.to_csv('station_configuration/CUON_orphans_station_configuration_extended.csv', sep='\t')
+    d.to_excel('station_configuration/CUON_orphans_station_configuration.xlsx' )
 
 
 
@@ -750,7 +749,7 @@ def make_inventory_orphans_mobile(v):
     print(' *** Creating the inventory for Dataset ' , v )
 
             
-    inv_path = f'{working_dir}/code/inventories/' 
+    inv_path = 'inventories/' 
     
     files = glob.glob(inv_path + '/' + v + '/' + '*')
     files = [f for f in files if 'inventories_iden' not in f and 'reduced' not in f and 'logs' not in f ]
@@ -816,8 +815,8 @@ def make_inventory_orphans_mobile(v):
     statconf_df = pd.DataFrame(stat_conf_dic)
     # adding record number
     statconf_df['record_number'] = list(range(1,len(statconf_df)+1))
-    statconf_df.to_csv(f'{working_dir}/code/station_configuration/' + v + '_orphans_station_configuration_extended.csv' , sep= '\t' )           
-    statconf_df.to_excel(f'{working_dir}/code/station_configuration/' + v + '_orphans_station_configuration_extended.xlsx' )
+    statconf_df.to_csv('station_configuration/' + v + '_orphans_station_configuration_extended.csv' , sep= '\t' )           
+    statconf_df.to_excel('station_configuration/' + v + '_orphans_station_configuration_extended.xlsx' )
         
         
     
@@ -825,7 +824,7 @@ def make_inventory_orphans_mobile(v):
 
 def merge_inventories():
     
-    inventory_cuon = pd.read_csv(f'{working_dir}/code/station_configuration/CUON_station_configuration.csv', sep='\t')
+    inventory_cuon = pd.read_csv('station_configuration/CUON_station_configuration.csv', sep='\t')
     ids_cuon = np.unique(inventory_cuon['primary_id'].astype(str))
         
     # read IGRA, GRUAN
@@ -978,17 +977,12 @@ def merge_inventories():
     
     
     df.insert(2, 'record_number', list(range(len(df))) )
-    df.to_csv(f'{working_dir}/code/station_configuration/all_combined_station_configuration.csv' , sep='\t')
-    df.to_excel(f'{working_dir}/code/station_configuration/all_combined_station_configuration.xlsx' )
+    df.to_csv('station_configuration/all_combined_station_configuration.csv' , sep='\t')
+    df.to_excel('station_configuration/all_combined_station_configuration.xlsx' )
     
     
     print('--- Finished with the global inventory --- ')
     
-
-def setdir(wdir):
-    global working_dir
-    working_dir = wdir
-
 
 # define a list of operation to perform between  [ 'INVENTORY', CUON', 'MERGE']
 TODO = ['INVENTORY', 'CUON', "MERGE"]
@@ -1002,16 +996,8 @@ parser.add_argument('--dataset' , '-d',
                       type = str,
                       default = 'era5_1' )
 
-parser.add_argument('--working_dir' , '-w', 
-                    help="Chose working dir"  ,
-                    type = str,
-                    default = '/srvfs/home/uvoggenberger/CEUAS/CEUAS/meta/inventory_comparison_2' )
-
-
 args = parser.parse_args()
-v = args.dataset
-wdir = args.working_dir
-setdir(wdir)
+v                = args.dataset
 
 
 
