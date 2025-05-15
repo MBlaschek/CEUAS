@@ -155,7 +155,8 @@ for db in datasets:
               command = f'python {ceuas_dir}/public/harvest/code_cop2/harvest_convert_to_netCDF_yearSplit.py' # changed from python3.8
               com =  command + ' -d ' + db + ' -o ' + out_dir + ' -f  ' + c + '  -r ' + str(run_only_missing_stations) +   '  -k ' + station_kind + ' -pf ' + parameter_file + ' & '
               print(com)
-              os.system( com )
+              if len(c) > 0:
+                     os.system( com )
               
               
        a=0

@@ -17,7 +17,7 @@ import xarray as xr
 import pandas as pd
 import os, copy
 import cdsapi
-from multiprocessing import Pool as multiPPool, RawArray as multiPArray, current_process as multiPCurrentProcess; nprocesses=8
+from multiprocessing import Pool as multiPPool, RawArray as multiPArray, current_process as multiPCurrentProcess; nprocesses=40
 from entropy import crawl_slice, function_sameprofileas
 # import ray
 
@@ -54,7 +54,7 @@ def make_pickle(yyyymmdd):
     # else:
     #   #yyyymmdd=19790105
     #   yyyymmdd=19800101
-    CUONPATH = '/mnt/users/scratch/uvoggenberger/to_bufr_1/'+yyyymmdd[:4]+'/'.format(data_acquisition_dir) ## change to test file 
+    CUONPATH = '/jetfs/scratch/uvoggenberger/to_bufr_3/'+yyyymmdd[:4]+'/'.format(data_acquisition_dir) ## change to test file 
     try:
       yyyymmdd_dt = dt.datetime.strptime(str(yyyymmdd),'%Y%m%d')
     except:
@@ -72,19 +72,25 @@ def make_pickle(yyyymmdd):
     min_datetime_margin = np.datetime64((yyyymmdd_dt - dt.timedelta(hours= 1)).strftime('%Y-%m-%d %H:%M:%S'))
     max_datetime_margin = np.datetime64((yyyymmdd_dt + dt.timedelta(hours=25)).strftime('%Y-%m-%d %H:%M:%S'))
 
-    pkl_dup = "/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d')) # "/ec/res4/scratch/erc/Leo/BUFRENCODE/perm/erc/ERA6BUFR/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
-    pkl_dup = "/mnt/users/scratch/uvoggenberger/to_bufr_1/pickles/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d')) # "/ec/res4/scratch/erc/Leo/BUFRENCODE/perm/erc/ERA6BUFR/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
+    # pkl_dup = "/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d')) # "/ec/res4/scratch/erc/Leo/BUFRENCODE/perm/erc/ERA6BUFR/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
+    pkl_dup = "/jetfs/scratch/uvoggenberger/to_bufr_3/pickles/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d')) # "/ec/res4/scratch/erc/Leo/BUFRENCODE/perm/erc/ERA6BUFR/{0}/pickledup/{1}/pickledup_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt.strftime('%Y'),yyyymmdd_dt.strftime('%Y%m%d'))
     pkl_dup_path = os.path.dirname(pkl_dup)
-    if not os.path.exists(pkl_dup_path):
+    
+    try: # if not os.path.exists(pkl_dup_path):
       os.makedirs(pkl_dup_path)
+    except:
+      pass
 
     # for yyyymmdd_dt1 in [yyyymmdd_dt-dt.timedelta(days=1), yyyymmdd_dt, yyyymmdd_dt+dt.timedelta(days=1)]:
     for yyyymmdd_dt1 in [yyyymmdd_dt]:
-      pkl_file1 = "/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}/pickle/{1}/pickle_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt1.strftime('%Y'),yyyymmdd_dt1.strftime('%Y%m%d'))
-      pkl_file1 = "/mnt/users/scratch/uvoggenberger/to_bufr_1/pickles/{0}/pickle/{1}/pickle_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt1.strftime('%Y'),yyyymmdd_dt1.strftime('%Y%m%d'))      
+      # pkl_file1 = "/srvfs/home/uvoggenberger/CEUAS/CEUAS/public/convert_to_bufr/perm/erc/ERA6BUFR/{0}/pickle/{1}/pickle_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt1.strftime('%Y'),yyyymmdd_dt1.strftime('%Y%m%d'))
+      pkl_file1 = "/jetfs/scratch/uvoggenberger/to_bufr_3/pickles/{0}/pickle/{1}/pickle_{2}.pkl.gz".format(data_acquisition_dir,yyyymmdd_dt1.strftime('%Y'),yyyymmdd_dt1.strftime('%Y%m%d'))      
       pkl_path1 = os.path.dirname(pkl_file1)
-      if not os.path.exists(pkl_path1):
+      # if not os.path.exists(pkl_path1):
+      try:
         os.makedirs(pkl_path1)
+      except:
+        pass
 
       lread=1 # DEBUG
       if lread and not os.path.exists(pkl_file1):
@@ -106,8 +112,11 @@ def make_pickle(yyyymmdd):
         orph_list=[]; orph_counter=10000; orph_map=[] # ill-formed WIGOS IDs require special handling
         cuonfile_msk = CUONPATH + 'CUON_{{0}}_{0}.zip'.format(yyyymmdd_dt1.strftime('%Y%m%d'))
         CUONEXTR     = CUONPATH + '{0}/'.format(              yyyymmdd_dt1.strftime('%Y%m%d'))
-        if not os.path.exists(CUONEXTR):
+        # if not os.path.exists(CUONEXTR):
+        try:
           os.makedirs(CUONEXTR)
+        except:
+          pass
         cuonfiles    = []
         for var1 in cuon_vars:
           df_cuon_var1 = None
@@ -150,7 +159,7 @@ def make_pickle(yyyymmdd):
             print(cdsapi_stderr)
              
    
-          if os.path.getsize(cuonfile)>0:
+          if os.path.isfile(cuonfile):
             with zipfile.ZipFile( cuonfile, "r") as zip_ref:
               listOfFileNames = zip_ref.namelist()
               listOfFileNames_var = [x for x in listOfFileNames if var1 in x]
@@ -745,12 +754,12 @@ def make_pickle(yyyymmdd):
 
 
 days = []
-for yyyy in [2007]:
+for yyyy in range(1979,1990): # [2009, 2010, 2011, 2020, 2021, 2022, 2023]:
   for mm in range(1,13):
     for dd in range(1,32):
       days.append(str(yyyy)+str(mm).zfill(2)+str(dd).zfill(2))
 print(days)
-with multiPPool(40) as p:
+with multiPPool(50) as p:
   p.map(make_pickle, days)
   p.close(); p.join()
   print("All tasks completed", flush=True)

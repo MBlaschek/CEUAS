@@ -472,7 +472,7 @@ def init_server(force_reload: bool = False, force_download: bool = False, debug:
 #             with Pool(10) as p:
 #                 sklist=list(p.map(func,zip(slist,slnum)))
 #             with multiprocessing.get_context('spawn').Pool(9) as p:
-            with Pool(28) as p:
+            with Pool(40) as p:
                 sklist=list(p.map(func,zip(slist,slnum)))
         else:
             sklist = list(map(func, zip(slist, slnum)))
@@ -594,7 +594,7 @@ active, wmo_regions, cf = init_server()
 # Active Station Numbers
 slnum = list(active.keys())
 
-with Pool(28) as P:
+with Pool(5) as P:
     x=P.map(np.sin,np.arange(16))
 print(x)
 
@@ -1713,6 +1713,11 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
 ## DONT FORGET TO CHANGE IN PROCESS_FLAT AND READ_WRITE too!
 
     func = partial(eua.process_flat, output_dir, cf, debug)
+    print('----------------')
+    print()
+    print(cf)
+    print()
+    print('---------------')
 
     print('body', time.time()-tt)
     if 'gridded' in body:
@@ -1745,7 +1750,7 @@ def process_request(body: dict, output_dir: str, wmotable: dict, P, debug: bool 
         #b2=[]
         #for b in reversed(bidx):
             #b2.append(bodies[b])
-        with Pool(28) as Pl:
+        with Pool(20) as Pl:
             results = list(Pl.map(func, bodies,chunksize=3))
         #results = list(map(func, bodies))
             # results = list(p.starmap(func, zip(input_dirs, [debug]*len(bodies), bodies), chunksize=1))

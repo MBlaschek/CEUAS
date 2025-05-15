@@ -46,7 +46,7 @@ from rasotools.additions.define_datasets import *
 import copy
 
 
-def compare_profiles(plist,varlist,namelist,clist,plotproperties,cvar,beltname='',had=numpy.NaN,hadens=numpy.zeros(100)):
+def compare_profiles(plist,varlist,namelist,clist,plotproperties,cvar,beltname='',had=numpy.nan,hadens=numpy.zeros(100)):
 
     linesplustext=[]
     legend_user_lines=[]
@@ -145,7 +145,7 @@ def compare_profiles(plist,varlist,namelist,clist,plotproperties,cvar,beltname='
        print(( out.args['output_name']+'.'+plotproperties["outputformat"][0]+ 'not created - no data found'))
     return
 
-def compare_tseries(tlist,varlist,namelist,clist,plotproperties,cvar,beltname='',had=numpy.NaN):
+def compare_tseries(tlist,varlist,namelist,clist,plotproperties,cvar,beltname='',had=numpy.nan):
 
     linesplustext=[]
     legend_user_lines=[]
@@ -270,7 +270,7 @@ def afill(	a,pindex):
             for k in range(a.shape[2]):
                 for l in range(pindex.shape[0]):
                     for m in range(a.shape[4]):
-                        a[i,j,k,pindex[l],m]=numpy.NaN
+                        a[i,j,k,pindex[l],m]=numpy.nan
 
 
 def break_analysis(exp,rfpar,plotproperties,stnames):

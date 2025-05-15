@@ -3057,7 +3057,10 @@ def write_dict_h5_new(dfile, f, k, fbencodings, var_selection=[], mode='a', attr
                             fd[k].create_dataset(v,data=fvv)
                     except:
                         print('except',dfile, k, v, fd[k].keys())
-                        fd[k].create_dataset(v,data=fvv, chunks=True)
+                        try:
+                            fd[k].create_dataset(v,data=fvv, chunks=True)
+                        except:
+                            pass
                         
                     #fd[k][v][:]=fvv[:]
                     if attrs:    #  attrs={'date_time':('units','seconds since 1900-01-01 00:00:00')}
@@ -3856,6 +3859,8 @@ def get_station_configuration_cuon(stations_id='', station_configuration='', lat
     if d.empty:
         # d = station_configuration.loc[[stations_id[0].encode() in s for s in station_configuration['file']]]
         d = station_configuration.loc[[stations_id[0] in s.decode().split('.')[-1] for s in station_configuration['file']]]
+    if d.empty:
+        d = station_configuration.loc[[stations_id[0] in s.decode().split('.')[-2] for s in station_configuration['file']]]
     #print(0) # there must always be a matching stat conf since we are checking the file name now
     if  d.empty:
         a = open( 'logs/' + db + "_wrong_stat_conf.dat" , "a+")
@@ -5598,14 +5603,14 @@ if __name__ == '__main__':
         if dataset in [ 'era5_1759' , 'era5_1761']:
             File = File.replace('.conv.', '.conv._')+'.gz'
 
-        elif dataset in ['era5_1']:
+        elif dataset in ['era5_1', 'era5_1_mobile']:
             print(File)
             File = File.replace(File.split('.')[-2],'??????')+'.gz' ## changed txt.gz to .gz
             original_file_name = original_file_name.replace(original_file_name.split('.')[-2],'??????') # original_file_name.replace('.conv._','.conv.??????.')
 
-        elif dataset in ['era5_1_mobile']:
-            File = File.replace(File.split('.')[-3],'??????') ## changed txt.gz to .gz # File.replace('.conv.','.conv.??????.')+'.gz'  # +'.txt.gz' -> '.gz'
-            original_file_name = original_file_name.replace(original_file_name.split('.')[-3],'??????') # original_file_name.replace('.conv._','.conv.??????.')
+        # elif dataset in ['era5_1_mobile']:
+        #     File = File.replace(File.split('.')[-3],'??????') ## changed txt.gz to .gz # File.replace('.conv.','.conv.??????.')+'.gz'  # +'.txt.gz' -> '.gz'
+        #     original_file_name = original_file_name.replace(original_file_name.split('.')[-3],'??????') # original_file_name.replace('.conv._','.conv.??????.')
 
         elif dataset in ['igra2']:
             File = File # + '-data.txt'
