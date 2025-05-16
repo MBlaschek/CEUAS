@@ -10,6 +10,12 @@ import glob
 import calendar
 import h5py
 import h5netcdf
+from datetime import datetime, timedelta
+
+####
+# ADD LOGGING
+# CHECK WAIT FOR PROCESSES
+####
 
 '''
 This script is used to download data from NOAA and ECMWF, create inventories, run the harvester, merge the data, and resort it.
@@ -78,7 +84,7 @@ reference_file = f'{ceuas_dir}/public/nrt_pipeline/0-20000-0-01107_CEUAS_merged_
 # DATE SELECTION
 auto_date = False # Set to True to automatically set the date to the previous month
 selected_year = 2025
-selected_month = 1
+selected_month = 2
 #
 ###
 
@@ -115,6 +121,8 @@ date_now = str(download_year) + str(download_month).zfill(2)
 global working_dir
 working_dir = base_dir + '_' + date_now + '/'
 os.system('mkdir -p ' + working_dir)
+os.system(f'mkdir -p {working_dir}/logs/')
+
 
 global table_dir
 table_dir = f'{ceuas_dir}/meta/inventory_comparison_2/data/tables/'
@@ -139,7 +147,7 @@ def wait_for_python_processes(com_line_content = ''):
 
 def download_data_igra2(rm_zip=False):
     # Download data from NOAA
-    igra_dir = working_dir + '/data/igra_data'
+    igra_dir = working_dir + '/data/igra2_data'
     if len(glob.glob(igra_dir + '/*.txt')) < 1:
         os.system('mkdir -p ' + igra_dir)
         os.system(f"wget -r -np -nH --cut-dirs=6 -A '*.zip' -P {igra_dir} https://www.ncei.noaa.gov/data/integrated-global-radiosonde-archive/access/data-y2d/")
@@ -162,6 +170,33 @@ def days_in_month(year: int, month: int) -> int:
         return calendar.monthrange(year, month)[1]
     else:
         raise ValueError("Month must be between 1 and 12")
+    
+def monitor_odc_split():
+    start_time = datetime.now()
+    print("Waiting for a process with 'odc split' in its command line...")
+    
+    process = None
+    while process is None:
+        for proc in psutil.process_iter(attrs=['pid', 'cmdline', 'create_time']):
+            try:
+                if "odc split" in ' '.join(proc.info['cmdline']):
+                    process = proc
+                    break
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                continue
+
+    print(f"Found process PID={process.pid}. Monitoring runtime...")
+
+    try:
+        while process.is_running():
+            runtime = datetime.now() - start_time
+            print(f"Runtime: {str(runtime).split('.')[0]}", end='\r')
+            time.sleep(2)
+    except psutil.NoSuchProcess:
+        pass
+
+    print(f"\nProcess PID={process.pid} has exited. Total runtime: {str(datetime.now() - start_time).split('.')[0]}")
+
 
 def download_data_era5(rm_zip=False):  
 
@@ -240,6 +275,8 @@ def download_data_era5(rm_zip=False):
             line = line.replace("ecmwf_user", f'{ecmwf_user}')
         if "ecmwf_out_dir" in line:
             line = line.replace("ecmwf_out_dir", f'{ecmwf_output_dir}')
+        if "output.txt" in line:
+            line = line.replace("output.txt", f'{working_dir}/logs/ecmwf_log.txt')
         modified_content.append(line)
     # Write the modified content to a new file
     with open(f'{working_dir}/data/get_era5.sh', 'w') as file:
@@ -247,6 +284,25 @@ def download_data_era5(rm_zip=False):
 
     os.system(f'chmod +x {working_dir}/data/get_era5.sh')
     os.system(f'{working_dir}/data/get_era5.sh')
+
+    with open(f'{ceuas_dir}/public/nrt_pipeline/split.ksh', 'r') as file:
+        content = file.readlines()
+    # Modify the content as needed
+    modified_content = []
+    for line in content:
+        if "YYYYMM" in line:
+            line = line.replace("YYYYMM", f'{date_now}')
+        if "PDIR" in line:
+            line = line.replace("PDIR", f'{era5_dir}')
+        modified_content.append(line)
+    # Write the modified content to a new file
+    with open(f'{working_dir}/data/split.ksh', 'w') as file:
+        file.writelines(modified_content)
+    
+    os.system(f'chmod +x {working_dir}/data/split.ksh')
+    os.system(f'module load odc; {working_dir}/data/split.ksh')
+    # monitor_odc_split() # NOT SURE IF THIS WORKS 100%! Make sure to stop until that's done!
+
 
 def copy_tables_to_harvest():
     # Copy the tables to the harvest directory
@@ -261,9 +317,9 @@ def copy_tables_to_harvest():
 def create_inventory(data_set):
     # Create the inventory
     input_dir = f'{working_dir}/data/{data_set}_data'
-    analyze_inventory_functions = f'{ceuas_dir}/meta/inventory_comparison_2/code/analyze_inventory_functions.py'
+    analyze_inventory_functions = f'{ceuas_dir}/meta/inventory_comparison_2/code/analyze_inventory_functions_pipeline.py'
     print(f"python {analyze_inventory_functions} -d {data_set} -w {working_dir} -i {input_dir}")
-    os.system(f"module load odc; python {analyze_inventory_functions} -d {data_set} -w {working_dir} -i {input_dir}") # somehow selects the old dir -> fix this
+    os.system(f"module load odc; python {analyze_inventory_functions} -d {data_set} -w {working_dir} -i {input_dir}") 
     wait_for_python_processes(com_line_content = 'analyze_inventory_functions')
 
 def make_station_configuration(data_set):
@@ -450,7 +506,6 @@ def check_and_fix_file(file, attr_dict):
     return 1
 
 
-
 if __name__ == '__main__':
 
     # Define the path to the marker file
@@ -459,9 +514,8 @@ if __name__ == '__main__':
     # Check if the marker file exists
     if not os.path.exists(marker_file):
         print("Marker file not found. Running download functions...")
-        download_data_igra2()
         download_data_era5()
-
+        download_data_igra2()
         # Create the marker file to indicate completion
         with open(marker_file, "w") as f:
             f.write("Files prepared.\n")
@@ -469,28 +523,28 @@ if __name__ == '__main__':
 
     print("Marker file found. Skipping download functions.")
 
-    ## Call the following functions:
+    # ## Call the following functions:
 
-    copy_tables_to_harvest()
-    create_inventory('igra2')
-    create_inventory('era5_1')
-    make_station_configuration('igra2')
-    make_station_configuration('era5_1')
-    run_harvester('igra2')
-    run_harvester('era5_1')
+    # copy_tables_to_harvest()
+    # create_inventory('igra2')
+    # create_inventory('era5_1')
+    # make_station_configuration('igra2')
+    # make_station_configuration('era5_1')
+    # run_harvester('igra2')
+    # run_harvester('era5_1')
 
-    run_harvester('era5_1_mobile', stat_kind='mobile')
-    run_harvester('igra2_mobile', stat_kind='mobile')
+    # run_harvester('era5_1_mobile', stat_kind='mobile')
+    # run_harvester('igra2_mobile', stat_kind='mobile')
 
-    set_up_merge()
-    run_merge('regular')
-    run_merge('mobile')
-    run_merge('orphan')
+    # set_up_merge()
+    # run_merge('regular')
+    # run_merge('mobile')
+    # run_merge('orphan')
 
-    make_station_configuration("CUON")
+    # make_station_configuration("CUON")
 
-    run_resort()
+    # run_resort()
 
-    add_tables()
+    # add_tables()
 
 
