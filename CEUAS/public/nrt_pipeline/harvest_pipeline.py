@@ -300,7 +300,7 @@ def download_data_era5(rm_zip=False):
         file.writelines(modified_content)
     
     os.system(f'chmod +x {working_dir}/data/split.ksh')
-    os.system(f'module load odc; {working_dir}/data/split.ksh')
+    os.system(f'module load odc; {working_dir}/data/split.ksh | tee {working_dir}/logs/splitting_era5_log.txt')
     # monitor_odc_split() # NOT SURE IF THIS WORKS 100%! Make sure to stop until that's done!
 
 
@@ -351,7 +351,7 @@ def run_harvester(data_set, stat_kind='regular'):
     modified_content = []
     for line in content:
         if "'igra2': " in line or "'igra2_mobile': " in line:
-            line = line.split(': ')[0] + f': "{working_dir}/data/igra_data",\n'
+            line = line.split(': ')[0] + f': "{working_dir}/data/igra2_data",\n'
         elif "'era5_1': " in line:
             line = line.split(': ')[0] + f': "{working_dir}/data/era5_1_data",\n'
         elif "'era5_1_mobile': " in line:
@@ -377,11 +377,10 @@ def run_harvester(data_set, stat_kind='regular'):
     print(f"Modified file has been saved to {new_file_path}")
 
     # Run the harvester
-    os.system(f'mkdir -p {working_dir}/harvest/')
     harvester_functions = f'{ceuas_dir}/public/harvest/code_cop2/run_harvest_convert_to_netCDF_yearSplit.py'
     print(f"python {harvester_functions} -p {working_dir}/code/modded_harvester_yearsplit_parameters.py -s {working_dir}/code/station_configuration/ -c {ceuas_dir}")
     print()
-    os.system(f"module load odc; python {harvester_functions} -p {working_dir}/code/modded_harvester_yearsplit_parameters.py -s {working_dir}/code/station_configuration/ -c {ceuas_dir}")
+    os.system(f"module load odc; python {harvester_functions} -p {working_dir}/code/modded_harvester_yearsplit_parameters.py -s {working_dir}/code/station_configuration/ -c {ceuas_dir} | tee {working_dir}/logs/harvester_log.txt")
     # module load anaconda3 \n source activate uvn10 \n
     wait_for_python_processes(com_line_content = 'harvest_convert_to_netCDF_yearSplit')
 
@@ -523,7 +522,7 @@ if __name__ == '__main__':
 
     print("Marker file found. Skipping download functions.")
 
-    ## Call the following functions:
+    # Call the following functions:
 
     copy_tables_to_harvest()
     create_inventory('igra2')
