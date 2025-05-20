@@ -84,7 +84,7 @@ reference_file = f'{ceuas_dir}/public/nrt_pipeline/0-20000-0-01107_CEUAS_merged_
 # DATE SELECTION
 auto_date = False # Set to True to automatically set the date to the previous month
 selected_year = 2025
-selected_month = 2
+selected_month = 3
 #
 ###
 
@@ -269,7 +269,7 @@ def download_data_era5(rm_zip=False):
             line = line.replace("file_to_modify_2", f'{working_dir}/data/request_era5_gridded_1.ksh')
         if "file_to_modify_3 " in line:
             line = line.replace("file_to_modify_3", f'{working_dir}/data/request_era5_gridded_2.ksh')
-        if "harvest_dir " in line:
+        if "harvest_dir" in line:
             line = line.replace("harvest_dir", f'{era5_dir}/')
         if "ecmwf_user" in line:
             line = line.replace("ecmwf_user", f'{ecmwf_user}')
@@ -523,28 +523,28 @@ if __name__ == '__main__':
 
     print("Marker file found. Skipping download functions.")
 
-    # ## Call the following functions:
+    ## Call the following functions:
 
-    # copy_tables_to_harvest()
-    # create_inventory('igra2')
-    # create_inventory('era5_1')
-    # make_station_configuration('igra2')
-    # make_station_configuration('era5_1')
-    # run_harvester('igra2')
-    # run_harvester('era5_1')
+    copy_tables_to_harvest()
+    create_inventory('igra2')
+    create_inventory('era5_1')
+    make_station_configuration('igra2')
+    make_station_configuration('era5_1')
+    run_harvester('igra2')
+    run_harvester('era5_1')
 
-    # run_harvester('era5_1_mobile', stat_kind='mobile')
-    # run_harvester('igra2_mobile', stat_kind='mobile')
+    run_harvester('era5_1_mobile', stat_kind='mobile')
+    run_harvester('igra2_mobile', stat_kind='mobile')
 
-    # set_up_merge()
-    # run_merge('regular')
-    # run_merge('mobile')
-    # run_merge('orphan')
+    set_up_merge()
+    run_merge('regular')
+    run_merge('mobile')
+    run_merge('orphan')
 
-    # make_station_configuration("CUON")
+    make_station_configuration("CUON")
 
-    # run_resort()
+    run_resort()
 
-    # add_tables()
+    add_tables()
 
 

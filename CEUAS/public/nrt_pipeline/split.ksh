@@ -33,7 +33,7 @@ for dir in 1 ; do   # main expid for ERA5
      if [ $n -lt 12 ] ; then
         odc split -no_verification -maxopenfiles 5000 $file "$file.{statid@hdr}"
      else
-	      odc split -no_verification -maxopenfiles 5000 $file "$file.{statid@hdr}" 
+        odc split -no_verification -maxopenfiles 5000 $file "$file.{statid@hdr}" 
         n=0
      fi
 
