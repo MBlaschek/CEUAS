@@ -11,6 +11,9 @@ import calendar
 import h5py
 import h5netcdf
 from datetime import datetime, timedelta
+import glob
+import ray
+
 
 ####
 # ADD LOGGING
@@ -84,7 +87,7 @@ reference_file = f'{ceuas_dir}/public/nrt_pipeline/0-20000-0-01107_CEUAS_merged_
 # DATE SELECTION
 auto_date = False # Set to True to automatically set the date to the previous month
 selected_year = 2025
-selected_month = 3
+selected_month = 2
 #
 ###
 
@@ -119,7 +122,8 @@ date_month = download_month
 date_now = str(download_year) + str(download_month).zfill(2)
 
 global working_dir
-working_dir = base_dir + '_' + date_now + '/'
+os.system('mkdir -p ' + base_dir)
+working_dir = base_dir + '/' + date_now + '/'
 os.system('mkdir -p ' + working_dir)
 os.system(f'mkdir -p {working_dir}/logs/')
 
@@ -301,7 +305,44 @@ def download_data_era5(rm_zip=False):
     
     os.system(f'chmod +x {working_dir}/data/split.ksh')
     os.system(f'module load odc; {working_dir}/data/split.ksh | tee {working_dir}/logs/splitting_era5_log.txt')
-    # monitor_odc_split() # NOT SURE IF THIS WORKS 100%! Make sure to stop until that's done!
+
+    ray.init(num_cpus=40)
+
+    @ray.remote
+    def odbmobile(fn):
+        print(fn)
+        return os.system(f"module load odc; odc sql --full-precision -q 'select *' -i "+f'"{fn}" | tr -d " "  | gzip   > "{fn}.gz"')
+    
+    @ray.remote
+    def odb(fn):
+        print(fn)
+        return os.system(f"module load odc; odc sql --full-precision -q 'select *' -i "+f'"{fn}" | tr -d " "  | gzip   > "{fn}.gz"')
+   
+    fns=[]
+    year='????'
+    month='??'
+    for patt in f'{era5_dir}/era5.conv.{year}{month}.[0-9]????',:
+        print(patt)
+        fns+=glob.glob(patt)
+    
+    futures = [odb.remote(fn) for fn in fns]
+    results = ray.get(futures)
+    
+    fns=[]
+    year='????'
+    month='??'
+    for patt in f'{era5_dir}/era5.conv.{year}{month}.[A-Z]????',\
+        f'{era5_dir}/era5.conv.{year}{month}.????', f'{era5_dir}/era5.conv.{year}{month}.??????',\
+        f'{era5_dir}/era5.conv.{year}{month}.???????',  f'{era5_dir}/era5.conv.{year}{month}.????????':
+        print(patt)
+        fns+=glob.glob(patt)
+        fns = [fn for fn in fns if not '.gz' in fn]
+    
+    futures = [odbmobile.remote(fn) for fn in fns]
+    results = ray.get(futures)
+
+    ray.shutdown()
+
 
 
 def copy_tables_to_harvest():
