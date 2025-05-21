@@ -87,7 +87,7 @@ reference_file = f'{ceuas_dir}/public/nrt_pipeline/0-20000-0-01107_CEUAS_merged_
 # DATE SELECTION
 auto_date = False # Set to True to automatically set the date to the previous month
 selected_year = 2025
-selected_month = 2
+selected_month = 3
 #
 ###
 
@@ -523,10 +523,10 @@ def check_and_fix_file(file, attr_dict):
 
     with h5py.File(file,  "r") as f:
         if not 'advanced_homogenisation' in list(f.keys()):
-            ov_vars = [0] * len(f['observations_table']['date_time'][:])
+            ov_vars = [float(0)] * len(f['observations_table']['date_time'][:])
             missing_vars = target_vars
         elif len(set(target_vars) - set(f['advanced_homogenisation'].keys())) > 0:
-            ov_vars = [0] * len(f['observations_table']['date_time'][:])
+            ov_vars = [float(0)] * len(f['observations_table']['date_time'][:])
             missing_vars = list(set(target_vars) - set(f['advanced_homogenisation'].keys()))
 
         if not 'advanced_uncertainty' in list(f.keys()):
@@ -569,25 +569,25 @@ if __name__ == '__main__':
 
     # Call the following functions:
 
-    copy_tables_to_harvest()
-    create_inventory('igra2')
-    create_inventory('era5_1')
-    make_station_configuration('igra2')
-    make_station_configuration('era5_1')
-    run_harvester('igra2')
-    run_harvester('era5_1')
+    # copy_tables_to_harvest()
+    # create_inventory('igra2')
+    # create_inventory('era5_1')
+    # make_station_configuration('igra2')
+    # make_station_configuration('era5_1')
+    # run_harvester('igra2')
+    # run_harvester('era5_1')
 
-    run_harvester('era5_1_mobile', stat_kind='mobile')
-    run_harvester('igra2_mobile', stat_kind='mobile')
+    # run_harvester('era5_1_mobile', stat_kind='mobile')
+    # run_harvester('igra2_mobile', stat_kind='mobile')
 
-    set_up_merge()
-    run_merge('regular')
-    run_merge('mobile')
-    run_merge('orphan')
+    # set_up_merge()
+    # run_merge('regular')
+    # run_merge('mobile')
+    # run_merge('orphan')
 
-    make_station_configuration("CUON")
+    # make_station_configuration("CUON")
 
-    run_resort()
+    # run_resort()
 
     add_tables()
 
