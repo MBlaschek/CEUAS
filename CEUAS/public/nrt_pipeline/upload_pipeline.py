@@ -5,7 +5,7 @@ SCP_SCRIPT_TEMPLATE = """#!/bin/bash
 ssh {ssh_connect} 'mkdir {remote_dir}'
 scp {local_dir}*.nc {ssh_connect}:{remote_dir}
 scp {config} {ssh_connect}:{remote_home}/cdsobs_config.yml
-scp {ingestion_script} {ssh_connect}:{remote_dir}
+scp {ingestion_script} {ssh_connect}:{remote_dir}ingestion_script.sh
 ssh {ssh_connect} 'chmod +x {remote_dir}ingestion_script.sh; {remote_dir}ingestion_script.sh'
 """
 
@@ -14,6 +14,8 @@ ssh {ssh_connect} 'chmod +x {remote_dir}ingestion_script.sh; {remote_dir}ingesti
 #             #
 ceuas_dir = '/srvfs/home/uvoggenberger/CEUAS/CEUAS/'
 local_dir = "/mnt/users/scratch/uvoggenberger/CUON_HARVEST/202502/resort/2025/"
+year = '2025'
+month = '02'
 ssh_connect = "-J proxy@136.156.142.19  obs@dbdataset-cci2-0000"
 remote_dir = "/mnt/public/" + local_dir.split("CUON_HARVEST")[-1].split("/resort")[0] + "/"
 remote_home = "/home/obs"
@@ -28,7 +30,20 @@ def create_script(script_content, script_path):
 
 def main():
     date = datetime.now().strftime("%Y%m%d")
-    ingestion_script = ceuas_dir + "public/nrt_pipeline/ingestion_script.sh"
+    ingestion_script = ceuas_dir + "public/nrt_pipeline/ingestion_script_upload.sh"
+    with open(f"{ceuas_dir}/public/nrt_pipeline/ingestion_script.yml", 'r') as file:
+        content = file.readlines()
+    # Modify the content as needed
+    modified_content = []
+    for line in content:
+        if "YYYY: " in line:
+            line = line.replace('YYYY', year)
+        if "MM: " in line:
+            line = line.replace('MM', month)
+        modified_content.append(line)
+    # Write the modified content to a new file
+    with open(ingestion_script, 'w') as file:
+        file.writelines(modified_content)
 
 
     config_file = f"{ceuas_dir}/public/nrt_pipeline/cdsobs_config_upload.yml"

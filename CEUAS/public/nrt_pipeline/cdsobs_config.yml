@@ -1,0 +1,70 @@
+ingestion_databases:
+  main:
+    db_user: cds
+    pwd: "asdasfags"
+    host: obs-base-ref
+    port: 5432
+    db_name: baron
+  woudc2:
+    db_user: postgres
+    pwd: "asdasfags"
+    host: obs-base-ref
+    port: 5432
+    db_name: woudc2
+  gnss:
+    db_user: postgres
+    pwd: "asdasfags"
+    host: 192.168.0.63
+    port: 5432
+    db_name: igs_repro3_db
+  uscrn:
+    db_user: postgres
+    pwd: "asdasfags"
+    host: obs-base-ref
+    port: 5432
+    db_name: uscrn
+  ndacc:
+    db_user: postgres
+    pwd: "asdasfags"
+    host: obs-base-ref
+    port: 5432
+    db_name: ndacc
+
+catalogue_db:
+  db_user: cds
+  host: 10.10.8.84
+  port: 6432
+  db_name: obsdev
+  pwd: quai6Chee0bai&r
+s3config:
+  access_key: 12ba4a519ddc43ad972fd6aad8dcc9b3
+  secret_key: 1862efffb4a24fcdbd23893e65d8da94
+  host: object-store.os-api.cci2.ecmwf.int
+  port: 443
+  secure: true
+  namespace: cds2-obs-dev
+datasets:
+- name: insitu-comprehensive-upper-air-observation-network
+  lon_tile_size:
+    1900-1920: 360
+    1921-1942: 180
+    1943-1969: 90
+    1970-1990: 45
+    1990-2000: 30
+    2000-2013: 15
+    2014-2016: 3
+    2017-2019: 2
+    2020-2030: 1
+  lat_tile_size: 180
+  read_with_spatial_batches: true
+  available_cdm_tables:
+  - observations_table
+  - header_table
+  - station_configuration
+  - era5fb_table
+  - advanced_homogenisation
+  - advanced_uncertainty
+  - uncertainty_table
+  reader: "cdsobs.ingestion.readers.cuon.read_cuon_netcdfs"
+  reader_extra_args:
+    input_dir: "/mnt/public/converted_v29"
