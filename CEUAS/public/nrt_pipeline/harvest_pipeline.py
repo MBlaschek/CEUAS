@@ -137,13 +137,17 @@ from harvest_convert_to_netCDF import write_dict_h5
 
 
 def wait_for_python_processes(com_line_content = ''):
-    while True:
+    zombie = 0
+    while zombie < 5:
         time.sleep(10)
         current_processes = []
         for p in psutil.process_iter():
             if p.username() == user:
-                if np.any([com_line_content in pi for pi in p.cmdline()]): 
-                    current_processes.append(p)
+                try:
+                    if np.any([com_line_content in pi for pi in p.cmdline()]): 
+                        current_processes.append(p)
+                except (psutil.ZombieProcess):
+                    zombie += 1 
         # Check for running Python processes
         if len(current_processes) == 0:  # No Python processes are running
             print("No Python processes running. Proceeding with the script.")
@@ -406,9 +410,9 @@ def run_harvester(data_set, stat_kind='regular'):
         elif "processes = " in line:
             line = line.split(' = ')[0] + f' = 30\n'
         elif "min_year_to_process = " in line:
-            line = line.split(' = ')[0] + f' = 2025\n'
+            line = line.split(' = ')[0] + f' = {date_year}\n'
         elif "max_year_to_process = " in line:
-            line = line.split(' = ')[0] + f' = 2026\n'
+            line = line.split(' = ')[0] + f' = {str(int(date_year)+1)}\n'
         modified_content.append(line)
 
     # Write the modified content to a new file
@@ -470,14 +474,14 @@ def run_merge(station_kind = "regular"):
     with open(merge_params, 'w') as file:
         file.writelines(modified_content)
 
-    os.system(f"python {ceuas_dir}/public/merge/merging_cdm_netCDF_yearSplit_SEP2023_pipeline.py -p {merge_params}  -max_y {date_year} -min_y {date_year}")
+    os.system(f"python {ceuas_dir}/public/merge/merging_cdm_netCDF_yearSplit_SEP2023_pipeline.py -p {merge_params}  -max_y {date_year} -min_y {date_year} | tee {working_dir}/logs/merging_log.txt")
     
 def run_resort():
     os.system(f'mkdir -p {working_dir}/resort/')
     os.system(f'mkdir -p {working_dir}/resort/long')
     # os.system(f'cp {refs} {working_dir}/resort/')
     # set correct path to CUON statconf
-    os.system(f"python {ceuas_dir}/public/resort/convert_and_resort_pipeline.py -i {working_dir}/merge/merged_out/ -w {working_dir} -c {ceuas_dir}") # -r {rscratch}
+    os.system(f"python {ceuas_dir}/public/resort/convert_and_resort_pipeline.py -i {working_dir}/merge/merged_out/ -w {working_dir} -c {ceuas_dir} | tee {working_dir}/logs/resort_log.txt") # -r {rscratch}
 
 def add_tables():
     path = f'{working_dir}/resort/{date_year}/'
