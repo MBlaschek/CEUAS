@@ -569,25 +569,25 @@ if __name__ == '__main__':
 
     # Call the following functions:
 
-    # copy_tables_to_harvest()
-    # create_inventory('igra2')
-    # create_inventory('era5_1')
-    # make_station_configuration('igra2')
-    # make_station_configuration('era5_1')
-    # run_harvester('igra2')
-    # run_harvester('era5_1')
+    copy_tables_to_harvest()
+    create_inventory('igra2')
+    create_inventory('era5_1')
+    make_station_configuration('igra2')
+    make_station_configuration('era5_1')
+    run_harvester('igra2')
+    run_harvester('era5_1')
 
-    # run_harvester('era5_1_mobile', stat_kind='mobile')
-    # run_harvester('igra2_mobile', stat_kind='mobile')
+    run_harvester('era5_1_mobile', stat_kind='mobile')
+    run_harvester('igra2_mobile', stat_kind='mobile')
 
-    # set_up_merge()
-    # run_merge('regular')
-    # run_merge('mobile')
-    # run_merge('orphan')
+    set_up_merge()
+    run_merge('regular')
+    run_merge('mobile')
+    run_merge('orphan')
 
-    # make_station_configuration("CUON")
+    make_station_configuration("CUON")
 
-    # run_resort()
+    run_resort()
 
     add_tables()
 
