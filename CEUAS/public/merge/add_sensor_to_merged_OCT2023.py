@@ -34,7 +34,7 @@ import cProfile
 import time as T 
 t=T.time()
 
-sys.path.append('../../harvest/code_cop2')
+sys.path.append('../harvest/code_cop2')
 
 # nan int = -2147483648 
 
