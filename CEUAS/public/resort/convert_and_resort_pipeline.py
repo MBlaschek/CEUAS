@@ -1273,12 +1273,12 @@ def lin4d(fpattern,fns, out, p,pn, fdict,ts, ori, obstype, latorig,lonorig,z, re
         #print(os.path.basename(fns).split('_')[0], os.path.basename(fn), tpi.shape, time.time()-tt)
         if ans[1] == 7:
             
-            ptime(f'before {os.path.basename(fns).split('_')[0]} {os.path.basename(fn)}', tt)
+            ptime(f"before {os.path.basename(fns).split('_')[0]} {os.path.basename(fn)}", tt)
         idx = triint(tpi, reatab, tlon, tlat, lons, lats, secs, tss,ori, obss,pri,zs, pn, dy, fns, 5)
         
         if ans[1] == 7:
             
-            ptime(f'after {os.path.basename(fns).split('_')[0]} {os.path.basename(fn)}', tt)
+            ptime(f"after {os.path.basename(fns).split('_')[0]} {os.path.basename(fn)}", tt)
             #ptime(f'after {os.path.basename(fns).split('_')[0]} {os.path.basename(fn)}, {np.abs(np.nanmax(reatab[:idx.shape[0]])):.4f} {np.nanmin(reatab[:idx.shape[0]]):.4f}', tt)
     except FileNotFoundError as e:
         print(fn, 'not available, continuing')
@@ -2457,8 +2457,8 @@ def retrieve_anfg(f, out, out_fb, readict, ts, tsu, tslice, refs, gactor, out_na
                         fak *= 1000
                     if r2 == 0.:
                         r2 = np.nan
-                    print(f'{os.path.basename(fn).split('_C')[0]} {fps[1].filename.split('/')[-1]} {plevs[i]} hPa, ratio {r1/r2:.4f} {n1},{n2}; offline '+\
-                          f'{r1 * fak:.4f} online {r2 * fak:.4f}')
+                    print(f"{os.path.basename(fn).split('_C')[0]} {fps[1].filename.split('/')[-1]} {plevs[i]} hPa, ratio {r1/r2:.4f} {n1},{n2}; offline "+\
+                          f"{r1 * fak:.4f} online {r2 * fak:.4f}")
                 
                 
                 readict[k][dtype][p] = {}
@@ -2585,7 +2585,7 @@ def read_station_height(fn, jj, inventory_list, pd_list=[]):
                     #heights[:] = pd_list[-1]['Hha'][l]
                     #print(heights[0])
                     #print(pd_list[-1]['start_date'][l], pd_list[-1]['elevation'][l])
-                    print(f'{wigos} height: {pd_list[-1]['elevation'][l]}')
+                    print(f"{wigos} height: {pd_list[-1]['elevation'][l]}")
                     heights[:] = pd_list[-1]['elevation'][l]
             except Exception as e:
                 print(fns, e)
@@ -2601,7 +2601,7 @@ def read_station_height(fn, jj, inventory_list, pd_list=[]):
                     #heights[:] = pd_list[-1]['Hha'][l]
                     #print(heights[0])
                     #print(pd_i['start_date'][l], pd_i['elevation'][l])
-                    print(f'{wigos} height: {pd_list[-1]['elevation'][l]}')
+                    print(f"{wigos} height: {pd_list[-1]['elevation'][l]}")
                     heights[:] = pd_i['elevation'][l]
             except Exception as e:
                 print(fns, e)

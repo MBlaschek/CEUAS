@@ -426,13 +426,13 @@ class Merger():
                     
                     timestamps = data['recordtimestamp'][:]
                     if len(timestamps) != len(data['header_table']['latitude']):
-                        raise ValueError(f'{len(timestamps)} , {len(data['header_table']['latitude'])}')
+                        raise ValueError(f"{len(timestamps)} , {len(data['header_table']['latitude'])}")
                     #indices = data['recordindex'][:]
                     indices_inf = data['recordindex'][:] # starting index of the record
                     indices_sup = np.concatenate((data['recordindex'][:][1:], [data['observations_table']['index'].shape[0]]))
                 except Exception as e:
                     with open(os.path.expandvars('$HOME/corrupt.log'), 'a') as ff:
-                        ff.write(f'{str(datetime.now()).split('.')[0]}: {F}, {e}\n')
+                        ff.write(f"{str(datetime.now()).split('.')[0]}: {F}, {e}\n")
                     continue
                         
                 #data.[ indices_inf[1:][i] for i in  range(len(indices_inf[:-1])) ] # ending index of the record
