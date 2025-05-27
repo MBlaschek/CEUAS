@@ -2915,7 +2915,7 @@ def create_stat_summary(data_directories, flist, stat_id):
 run_mode = ''
 
 def run_wrapper(data_directories, flist, run_exception, station):
-
+    import hdf5plugin
 
     sys.path.append('../harvest/code/') # edit from code_cop2
     from harvest_convert_to_netCDF import  clean_station_configuration , write_dict_h5
@@ -3200,6 +3200,7 @@ if __name__ == '__main__':
         rp_data_directories = ray.put(data_directories)
         result_ids = []
         for station_i in stations[idx:]:
+            # run_wrapper(data_directories, flist, run_exception, station_i)
             #if '-0-41' not in station_i:
                 #continue
             result_ids.append(ray_run_wrapper.remote(rp_data_directories,  rp_flist, run_exception, station_i))
