@@ -9,6 +9,7 @@ import datetime
 import glob
 import calendar
 import h5py
+import hdf5plugin
 import h5netcdf
 from datetime import datetime, timedelta
 import glob
@@ -87,7 +88,7 @@ reference_file = f'{ceuas_dir}/public/nrt_pipeline/0-20000-0-01107_CEUAS_merged_
 # DATE SELECTION
 auto_date = False # Set to True to automatically set the date to the previous month
 selected_year = 2025
-selected_month = 3
+selected_month = 1
 #
 ###
 
