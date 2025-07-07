@@ -42,8 +42,24 @@ def manomaly( series,anomaly,climatology):
 def anomalies_and_slopes(series,startyear,interval,tolerance,iens,itime,anomalies,climatologies,good,slopes):
     sshape=series.shape #
     for si in prange(sshape[0]):
-        panomalies_and_slopes(si,series,startyear,interval,tolerance,iens,itime,anomalies,climatologies,good,slopes) 
-    return
+        if sshape[2] > 5:
+            gg = False
+            for ipar in range(sshape[1]):
+                g = 0
+                for j in range((interval[0]-startyear)*12, (interval[1]-startyear+1)*12):
+                    if ~np.isnan(series[si,ipar,10,j]):
+                        g += 1
+                if g > (interval[1] - interval[0]) * 6:
+                    gg = True
+            if gg:
+                panomalies_and_slopes(si,series,startyear,interval,tolerance,iens,itime,anomalies,climatologies,good,slopes)
+            else:
+                anomalies[si, :, :, :] = np.nan
+                climatologies[si, :, :, :] = np.nan
+        else:
+            
+            panomalies_and_slopes(si,series,startyear,interval,tolerance,iens,itime,anomalies,climatologies,good,slopes) 
+    return sshape[0]
 @njit(cache=True,fastmath={'nsz','arcp','contract','afn','reassoc'})
 def panomalies_and_slopes(si,series,startyear,interval,tolerance,iens,itime,anomalies,climatologies,good,slopes):
 
@@ -56,10 +72,16 @@ def panomalies_and_slopes(si,series,startyear,interval,tolerance,iens,itime,anom
 #    for si in prange(sshape[0]):
     for ipar in range(sshape[1]):
         for ip in range(sshape[2]):
+            g = 0
             for j in range(sshape[3]):
                 orig[j]=series[si,ipar,ip,j]
-            good[si,ipar,ip]=janomaly(orig,startyear,interval,anomaly,climatology)
-
+                if orig[j] == orig[j]:
+                    g += 1
+            if g > (interval[1] - interval[0]) * 6:
+                
+                good[si,ipar,ip]=janomaly(orig,startyear,interval,anomaly,climatology)
+            else:
+                good[si,ipar,ip] = g
             slopes[si,iens,ipar,ip]  = miss_val
 #            print(good[si,ipar,ip],(stop-start+1-tolerance)*12)
             if good[si,ipar,ip]>(stop-start+1-tolerance)*12:
