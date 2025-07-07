@@ -11,6 +11,8 @@ from collections import OrderedDict
 #import matplotlib.pyplot as plt
 #from matplotlib.patches import Polygon
 from rasotools.define_datasets import *
+import h5py
+import pandas as pd
 
 def add_meanandspread(fn):
     try:
@@ -98,8 +100,10 @@ def readscalar(d,tasks,fn,dc,istat,statid,ens,pindex,minlen,lats=None,lons=None,
             #fnold=fn[ifile]
 
             try:
-                ps=f.variables['press'][:]
-                if f.variables['press'].getncattr('units')=='Pa':
+                fp = f.variables['press']
+                ps=fp[:]
+                fpu = fp.getncattr('units')
+                if fpu=='Pa' or fpu == '':
                     ps=numpy.array(ps)/100
             except:
                 return False,0,ps            
@@ -108,14 +112,13 @@ def readscalar(d,tasks,fn,dc,istat,statid,ens,pindex,minlen,lats=None,lons=None,
             except:
                 return False,0,ps
             try:
-                dat=f.variables['datum'][0,:]
+                dat=np.array(f.variables['datum'][0,:],dtype=numpy.int64)
             except ValueError:
-                dat=f.variables['datum'][:]
+                dat=np.array(f.variables['datum'][:],dtype=numpy.int64)
             
-            if dat.dtype==numpy.float32:
-                dat=numpy.array(dat,dtype=numpy.int)
-                if 'seconds' in f.variables['datum'].getncattr('units'):
-                    dat=dat//86400
+            if 'seconds' in f.variables['datum'].getncattr('units') or dat[-1] > 50000:
+                dat=dat//86400
+
             nc_miss_val=numpy.float32(-999.)
     
             if dc==0:
@@ -130,6 +133,8 @@ def readscalar(d,tasks,fn,dc,istat,statid,ens,pindex,minlen,lats=None,lons=None,
                         d['units']=f.variables[d['dvar']].getncattr('units')
                     if 'Stationn' in f.ncattrs()[-1]:
                         stlongnames.append(f.getncattr(f.ncattrs()[-1]))
+                    elif 'unique_source_identifier' in f.ncattrs():
+                        stlongnames.append(f.getncattr('unique_source_identifier'))
                     else:
                         stlongnames.append('')
                     dc=1
@@ -161,7 +166,7 @@ def readscalar(d,tasks,fn,dc,istat,statid,ens,pindex,minlen,lats=None,lons=None,
                 except:
                     pass
                 try:
-                    copystride(d["ddata"],numpy.ma.filled(f.variables[d['dvar']][:],numpy.nan),index,istat,ens,pindex,nc_miss_val)
+                    copystride(d["ddata"],numpy.ma.filled(f.variables[d['dvar']][:],numpy.nan),numpy.ma.filled(index),istat,ens,pindex,nc_miss_val)
                     if numpy.nanmax(d["ddata"][istat,:,:,:])>900 or numpy.nanmin(d["ddata"][istat,:,:,:])<-900:
                         print(('spurious values in ',fn))
         #                                os.remove(fn)
@@ -228,7 +233,69 @@ def readvector(d,tasks,fn,dc,istat,statid,ens,pindex,minlen,lats=None,lons=None,
         d['units']='deg'
     return found,dc,ps
 
+def mon_mean(data,days):
+    sdays=pd.date_range(start='1900-01-01',end='2023-02-01',freq='MS')
+    idays=np.array([(sdays[i]-sdays[0]).days for i in range(len(sdays))])
+    montemp=[]
+    good=[]
+    gdays=[]
+    for i in range(len(idays)-1):
+        start,stop=np.searchsorted(days,idays[i:i+2]+1)
+        if stop>start+1:
+            d=data[:,:,start:stop]
+            x=np.sum(~np.isnan(d),axis=2).reshape((data.shape[0],data.shape[1],1))
+            if np.sum(x)>0:
+                
+                good.append(x.reshape((data.shape[0],data.shape[1],1)))
+                montemp.append(np.nanmean(d,axis=2).reshape((data.shape[0],data.shape[1],1)))
+                gdays.append(idays[i])
+    
+    return np.concatenate(montemp,axis=2),np.concatenate(good,axis=2),np.array(gdays)+1
 
+def readsuny(d,tasks,fn,dc,istat,statid,ens,pindex,minlen,lats=None,lons=None,ps=None,stlongnames=None):
+    try:
+        spress=np.array((10.,20,30,50,70,100,150,200,250,300,400,500,700,850,925,1000))
+        with h5py.File(fn) as h:
+            station_name=''
+            df_press=h['pressure'][:]
+            idx=np.searchsorted(df_press,spress*100)
+            idx[idx==df_press.shape[0]]=df_press.shape[0]-1
+            
+            refdate=datetime.datetime(1900,1,1)
+            hty=h['time'][:]//10000
+            htm=(h['time'][:]%10000)//100
+            htd=h['time'][:]%100
+            df_time=[datetime.datetime(hty[i],htm[i],htd[i]) for i in range(hty.shape[0])]
+            df_days=np.array([(df_time[i]-refdate).days for i in range(hty.shape[0])])+1
+            #df_time=pd.to_datetime(df_days-1,unit='d',origin='19000101').values
+            
+            mask=h['rawT'][:]==-9999.
+            x=(h['rawT'][:]-h['homoT'][:])*0.1
+            x[mask]=np.nan
+            x=np.einsum('kli->ilk', x)
+            for i in range(len(idx)):
+                if not any(df_press==spress[i]*100):
+                    x[:,i,:]=np.nan
+            
+            df_press=spress
+            x[x>400]=np.nan
+            
+            for ih in 0,1:
+                
+                d['ddata'][0,0,ih,0,df_days]=x[ih,pindex,:]
+            
+            stlongnames.append(fn.split('/')[-1][:-3])
+            
+                
+    except:
+        return False,0,spress
+        #with h5py.File(tup[0]) as o:
+            
+            #df_lat=o['lat'][:]
+            #df_lon=o['lon'][:]
+        #mask=np.zeros((2,3,df_time.shape[0]),dtype=bool)
+    return True,1,spress
+    
 def read_dailyseries(path,tasks,nml,stnames,pindex,minlen=3600,ref=''):
 
 #    presats=open('presatstations.t','w')
@@ -281,7 +348,11 @@ def read_dailyseries(path,tasks,nml,stnames,pindex,minlen=3600,ref=''):
                                os.path.join(path,relpath,statid,prefix[ifile]+statid+suffix[2*ifile+1]+".nc")]
                         
                         found,dc,ps=readvector(d,tasks,fn,dc,istat,statid,ens,pindex,minlen,lats,lons,ps,stlongnames)
-                    else:    
+                    elif 'SUNY' in prefix[0]:
+                        fn=glob.glob(os.path.join(path,relpath,statid,prefix[ifile]+'homo-raw-subdaily-station/*'+statid+".nc"))
+                        found,dc,ps=readsuny(d,tasks,fn[ifile],dc,istat,statid,ens,pindex,minlen,lats,lons,ps,stlongnames)
+                        
+                    else:
                         if len(d["ens"])==1:
                             fn=fn+[os.path.join(path,relpath,statid,prefix[ifile]+statid+suffix[ifile]+".nc")]
                         else:
@@ -516,7 +587,7 @@ def statanalysis(path,tasks,plotproperties,nml,stnames,minlen=360,ref=''):
         ens=0
         # replace RAOBCORE adjustments with unadjusted series
         t=time.time()
-        if d["shortname"] in ("tm",'obs',"an20cr",'rad','rharm_h','radrharm_h'):
+        if d["shortname"] in ("tm",'obs',"an20cr",'rad','rharm_h','radrharm_h','rharm','radrharm'):
             if plotproperties['parameters'][0]=='temperatures':
                 #data['current']=dailyanomalydriver(d,ens,plotproperties['intervals'])
                 data['current']=d["ddata"][:,ens,:,:,:]
@@ -525,7 +596,7 @@ def statanalysis(path,tasks,plotproperties,nml,stnames,minlen=360,ref=''):
                     
             else:
                 data['current']=d["ddata"][:,ens,:,:,:]
-            if d["shortname"] in ('rad','radrharm_h'):
+            if d["shortname"] in ('rad','radrharm_h','radrharm'):
                 data['current'][:,0,:,:]=data['current'][:,1,:,:]-data['current'][:,0,:,:]
                 data['current'][0,1,:,:]=numpy.nan
             else:
@@ -542,6 +613,9 @@ def statanalysis(path,tasks,plotproperties,nml,stnames,minlen=360,ref=''):
             else:
                 data[d["shortname"]]=data['current'].copy()                
         elif d["shortname"] in ['bgpresat']:  
+            data["current"]=d["ddata"][:,ens,:,:,:]
+            data[d["shortname"]]=data['current'].copy()
+        elif d["shortname"] in ['sunycorr', 'rharmbc']:  
             data["current"]=d["ddata"][:,ens,:,:,:]
             data[d["shortname"]]=data['current'].copy()
         elif d["shortname"] in ['e20c_pandep']:  
@@ -601,6 +675,7 @@ def statanalysis(path,tasks,plotproperties,nml,stnames,minlen=360,ref=''):
                     data[d['shortname']][:]=data['current']
                
             print((d['shortname'],d["ddata"][0,0,0,d['ddata'].shape[3]-1,:]))
+               
 
         elif 'bgdepr' in d['shortname']:
             for bgc in ["bgdeprio","bgdeprit","bgdeprcorr"]: 
@@ -648,7 +723,8 @@ def statanalysis(path,tasks,plotproperties,nml,stnames,minlen=360,ref=''):
                                     plot(plotlist)
                                     print((poutput.args['output_name']+'.'+str(plotproperties["outputformat"][0]),time.time()-t))
                                     print(('size:',os.path.getsize(poutput.args['output_name']+'.'+str(plotproperties["outputformat"][0]))))
-                                except:
+                                except Exception as e:
+                                    print(e)
                                     print(('no time series available:', stnames))
                             else :
                                 print(('no dir',poutput.args['output_name']+'.'+str(plotproperties["outputformat"][0]),time.time()-t))

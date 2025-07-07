@@ -222,7 +222,7 @@ def set_trendmaps(lines,clev,plotproperties,stnames=None,slopes=None,costs=None,
     else:
         return projection,coastlines,title,legend,symb,cont
 
-def set_zonalsat(lines,legend_user_lines,plotproperties,beltinterval=[-2.0,0.5],pkey=''):
+def set_zonalsat(lines,legend_user_lines,plotproperties,beltinterval=[-2.0,0.5],pkey='', linesplustext=[]):
 
     
     apl=[-2.0,-1.0,0.0]
@@ -235,34 +235,58 @@ def set_zonalsat(lines,legend_user_lines,plotproperties,beltinterval=[-2.0,0.5],
         except:
             pass
     
+    #vaxpl = np.array(vaxpl) - np.array(vaxpl)
+    if linesplustext:
+            
+        for l in linesplustext[::2]:
+            try :
+                if np.max(l.args['Input_y_values'][l.args['Input_y_values'] != -1.e21]) > vaxpl[-1]:
+                    vaxpl[-1] = np.max(l.args['Input_y_values'][l.args['Input_y_values'] != -1.e21])
+                if np.min(l.args['Input_y_values'][l.args['Input_y_values'] != -1.e21]) < vaxpl[0]:
+                    vaxpl[0] = np.min(l.args['Input_y_values'][l.args['Input_y_values'] != -1.e21])
+            except:
+                pass
+    
     projection = mmap(
         subpage_map_projection='cartesian',
         subpage_x_min=-90.,
         subpage_x_max=90.,
-        subpage_y_min=-1.,
-        subpage_y_max=1.,
+        subpage_y_min=vaxpl[0],
+        subpage_y_max=vaxpl[-1],
         subpage_y_length=14.,
         subpage_y_position=1.5 ,
     )
+            
+
     # Vertical axis
     vxd=dict(
         axis_orientation='vertical',
         axis_type=vaxistype,
         axis_tick_label_height=0.4,
         axis_tick_label_colour='black',
-        axis_tick_position_list=numpy.asarray(vaxpl,dtype='float32'),
+        axis_tick_position_list=numpy.asarray(vaxpl,dtype='float64'),
         axis_grid='on',
         axis_grid_colour='black',
         axis_grid_thickness=1,
         axis_grid_line_style='dot')
-    
+        # Vertical axis
     if vaxistype=='position_list':
-        hxl=[];
-        for h in vaxpl:
-            hxl.append('{:4.1f}'.format(h))
-        vxd['axis_tick_label_list']=hxl
-        
-    vertical = maxis(vxd)
+        vxd=dict(
+            axis_orientation='vertical',
+            axis_type=vaxistype,
+            axis_tick_label_height=0.4,
+            axis_tick_label_colour='black',
+            axis_tick_position_list=numpy.asarray(vaxpl,dtype='float64'),
+            axis_grid='on',
+            axis_grid_colour='black',
+            axis_grid_thickness=1,
+            axis_grid_line_style='dot')
+
+    #hxl=[];
+    #for h in vaxpl:
+        #hxl.append('{:4.1f}'.format(h))
+    #vxd['axis_tick_label_list']=hxl
+
     # Horizontal axis
     horizontal = maxis(
         axis_orientation='horizontal',
@@ -275,6 +299,8 @@ def set_zonalsat(lines,legend_user_lines,plotproperties,beltinterval=[-2.0,0.5],
         axis_grid_line_style='dash',
     )
     
+    vertical = maxis(vxd)
+
     if len(legend_user_lines)==1:
         legend_userlines=legend_user_lines*2
     legend = mlegend( {"legend": "on", 
@@ -567,15 +593,15 @@ def monthlyseries(lines,legend_user_lines,plotproperties,dynrange=[-1.,1.]):
     if len(legend_user_lines)==1:
         legend_user_lines=legend_user_lines*2
     legend = mlegend( {"legend": "on", 
-                       "legend_text_font_size":0.6, 
+                       "legend_text_font_size":0.5, 
                        "legend_text_colour":"black",
                        "legend_box_mode":"positional",
                        "legend_box_x_position":0.0,
                        "legend_box_y_position":plotproperties['monthlyseriesheight']+0.4,
-                       "legend_box_x_length":26.7,
+                       "legend_box_x_length":25.0,
                        "legend_box_y_length":1.8,
                        "legend_text_composition":"user_text_only",
-                       "legend_column_count":6,
+                       "legend_column_count":8,
                        "legend_user_lines":legend_user_lines
                        })
 
@@ -586,7 +612,7 @@ def monthlyseries(lines,legend_user_lines,plotproperties,dynrange=[-1.,1.]):
         text_font_size= 0.6,
         text_mode = 'positional',
         text_box_x_position= 1.5,
-        text_box_y_position= plotproperties['monthlyseriesheight']+2.0,
+        text_box_y_position= plotproperties['monthlyseriesheight']+2.,
         text_box_x_length= 20.,
         text_box_y_length= 1.5,
         text_border= "off",
@@ -599,18 +625,29 @@ def monthlyseries(lines,legend_user_lines,plotproperties,dynrange=[-1.,1.]):
 
     return [projection, horizontal, vertical,title, legend,null_data,null_line]
 
-def sbtrends(lines,plotproperties,dynrange=[-1.,1.]):
+def sbtrends(lines,plotproperties,dynrange=[-1.,1.], second=False):
 
 #    global base,date_list,date_listm
     # Setting the cartesian view
 
-    ppage = page(
-        layout='positional',  
-        page_x_length=4.9, 
-        page_y_length=plotproperties['monthlyseriesheight']+3.0, 
-        page_id_line='off',
-        page_x_position=24.7, 
-        page_y_position=0.)
+    if second:
+        ppage = page(
+            layout='positional',  
+            page_x_length=4.9, 
+            page_y_length=plotproperties['monthlyseriesheight']+3.0, 
+            page_id_line='off',
+            page_x_position=30.4, 
+            page_y_position=0.)
+    else:
+    
+        ppage = page(
+            layout='positional',  
+            page_x_length=4.9, 
+            page_y_length=plotproperties['monthlyseriesheight']+3.0, 
+            page_id_line='off',
+            page_x_position=24.7, 
+            page_y_position=0.)
+    
 
     projection = mmap(
         subpage_map_projection='cartesian',
@@ -663,8 +700,8 @@ def sbtrends(lines,plotproperties,dynrange=[-1.,1.]):
         text_colour= 'black',
         text_font_size= 0.6,
         text_mode = 'positional',
-        text_box_x_position= 0.5,
-        text_box_y_position= plotproperties['monthlyseriesheight']+1.5,
+        text_box_x_position= 1.0,
+        text_box_y_position= plotproperties['monthlyseriesheight']+1.3,
         text_box_x_length= 4.2,
         text_box_y_length= 1.5,
         text_border= "off",

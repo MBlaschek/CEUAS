@@ -22,8 +22,107 @@ from netCDF4 import Dataset
 from numba import njit,prange
 from rasotools.allrasotrends import *
 
+#@njit(fastmath={'nsz','arcp','contract','afn','reassoc'},cache=True)
+def numba_snhtmov(t, tsa, snhtparas, count, tmean, tsquare):
+    """Standard Normal Homogeneity Test Moving Window
 
-def allrasodiffs(path,tasks,plotproperties,intervals,days,stnames,interv,gstations=None,sats=0,init=False,daynight=None,ref="tmcorr"):
+    t         = np.random.randn(1000)
+    snhtparas = np.asarray([100,50,10])
+    tsa       = np.zeros(1000)
+    tmean     = np.zeros(1000)
+    tsquare   = np.zeros(1000)
+    count     = np.zeros(1000,dtype=np.int32)
+
+    Output: tsa
+    """
+    n = snhtparas[0]
+    min_sampsize = snhtparas[1]
+    # ninc=snhtparas[2]
+
+    ni = t.shape[0]
+    good = 0
+    tmean[0] = 0.
+    tsquare[0] = 0.
+    nancut = []
+    for j in range(ni):
+        count[j] = 0
+        # compare_lists if nan ?
+        if t[j] == t[j]:
+            if good > 0:
+                tmean[good] = tmean[good - 1] + t[j]
+                tsquare[good] = tsquare[good - 1] + t[j] * t[j]
+            else:
+                tmean[good] = t[j]
+                tsquare[good] = t[j] * t[j]
+            good += 1
+            nancut.append(0)
+        else:
+            nancut.append(1)
+            if good > 0:
+                tmean[good] = tmean[good - 1] + tmean[good - 2]
+                tsquare[good] = tsquare[good - 1] + tsquare[good - 2]
+            
+        if good > 0:
+            count[j] = good - 1
+
+    if good > min_sampsize:
+        rm = int(n / 2)  # needs to be an integer
+        # k 1460/2=730 - 650=80, n-80
+        for k in range(min_sampsize, ni - min_sampsize):
+            xm = k - rm  # 80-730
+            if xm < 0:
+                xm = 0
+            xp = k + rm
+            if xp > ni - 1:
+                xp = ni - 1
+            if (count[k] - count[xm] > min_sampsize) and (count[xp] - count[k] > min_sampsize):
+                x = (tmean[count[k]] - tmean[count[xm]]) / (count[k] - count[xm])  # Mittelwert 1 Periode
+                y = (tmean[count[xp]] - tmean[count[k]]) / (count[xp] - count[k])  # Mittelwert 2 Periode
+                xy = (tmean[count[xp]] - tmean[count[xm]]) / (count[xp] - count[xm])  # Mittelwert ganze Periode
+
+                sig = (tsquare[count[xp]] - tsquare[count[xm]]) / (count[xp] - count[xm])  # t*t ganze Periode
+                if sig > xy * xy:
+                    sig = np.sqrt(sig - xy * xy)  # standard deviation of the whole window
+                    # n1 * (m1-m)**2 + n2 * (m2-m)**2 / stddev
+                    tsa[k] = ((count[k] - count[xm]) * (x - xy) * (x - xy) + (count[xp] - count[k]) * (y - xy) * (
+                            y - xy)) / (sig * sig)
+                else:
+                    tsa[k] = 0
+    else:
+        tsa[:]=np.nan
+    return tsa
+
+# this routine expects two series as input, the series and the reference series.
+# it calculates the mean difference, given the interval and the tolerance.
+# only the difference is returned.
+#@njit(cache=True)
+def calc_snht(series,refseries,startyear,interval,tolerance,iens,good,slopes):
+
+    sshape=series.shape
+    stop=interval[1]
+    start=interval[0]
+    while (stop-startyear+1)*12>series.shape[3]:
+        stop-=1
+    
+    tsh = np.zeros((stop-startyear+1)*12-(start-startyear)*12)
+    tmean = np.zeros_like(tsh)
+    tsquare = np.zeros_like(tsh)
+    count = np.zeros_like(tsh, dtype=np.int32)
+    snhtparas = np.asarray([tsh.shape[0],48 // 2,1])
+    for si in range(sshape[0]):
+        for ipar in range(sshape[1]):
+            for ip in range(sshape[2]):
+                b=0
+                g=0
+                s=0.
+#                ser = series[si,ipar,ip,(start-startyear)*12:(stop-startyear+1)*12]-refseries[si,ipar,ip,(start-startyear)*12:(stop-startyear+1)*12]
+#                if np.sum(~np.isnan(ser))
+                tsh = numba_snhtmov(series[si,ipar,ip,(start-startyear)*12:(stop-startyear+1)*12]-refseries[si,ipar,ip,(start-startyear)*12:(stop-startyear+1)*12], tsh, snhtparas, count, tmean, tsquare)
+                slopes[si, iens, ipar, ip] = np.nanmax(tsh)
+
+    return
+
+def allrasosnht(path,tasks,plotproperties,intervals,days,stnames,interv,gstations=None,sats=0,init=False,daynight=None,ref="tmcorr"):
 
     pindex=numpy.asarray(plotproperties['pindex'],dtype='int')
     msupindex=numpy.asarray(plotproperties['msupindex'],dtype='int')
@@ -153,7 +252,7 @@ def allrasodiffs(path,tasks,plotproperties,intervals,days,stnames,interv,gstatio
             dkey='data'
             if tasks[key]['shortname'] in ('rss','uah','star'):
                 dkey='msudata'
-            if nodatafound(tasks[key][dkey]):
+            if nodatafound(tasks[key][dkey], testindex=pindex[0]):
                 nodata[-1]=True
                 break
             currentdata[:]=numpy.nan
@@ -318,7 +417,7 @@ def allrasodiffs(path,tasks,plotproperties,intervals,days,stnames,interv,gstatio
                 print((time.time()-t))
                 if tasks[key]['shortname'] in andepstdlist or ref=='zero':
                     #jcurrentdata[jcurrentdata==0.0]=numpy.nan
-                    calc_diffs(jcurrentdata,numpy.zeros(jcurrentdata.shape),startyear,interval,tolerance,iens,good,s)
+                    calc_snht(jcurrentdata,numpy.zeros(jcurrentdata.shape),startyear,interval,tolerance,iens,good,s)
                 else:
 
                     if key<2 and (tasks[key]["shortname"]=='tm' and ref!='tm' or tasks[key]["shortname"]=='tmcorr' and ref!='tmcorr') and ref!='night':
@@ -331,9 +430,9 @@ def allrasodiffs(path,tasks,plotproperties,intervals,days,stnames,interv,gstatio
                         break
                     else:
                         if ref=='night':
-                            calc_diffs(jcurrentdata[:,::-1,:,:],jcurrentdata,startyear,interval,tolerance,iens,good,s)
+                            calc_snht(jcurrentdata[:,::-1,:,:],jcurrentdata,startyear,interval,tolerance,iens,good,s)
                         else:			    
-                            calc_diffs(jcurrentdata,jcurrentdatabg,startyear,interval,tolerance,iens,good,s)
+                            calc_snht(jcurrentdata,jcurrentdatabg,startyear,interval,tolerance,iens,good,s)
 
 #		anomaliesd_diffs(jcurrentdata,startyear,interval,int(tolerance),int(iens),itime,orig,anomaly,anomalies,
 #		                       climatology,good,s)
@@ -497,8 +596,8 @@ def allrasodiffs(path,tasks,plotproperties,intervals,days,stnames,interv,gstatio
                             clev=numpy.linspace(0.0,4.0,21)
                             clev=numpy.append(clev,10.)
                         else:
-                            clev=numpy.linspace(-1.2,1.2,25)
-                            clev=numpy.append(clev,5.)
+                            clev=numpy.linspace(0.,24,25)
+                            clev=numpy.append(clev,50.)
                             clev=numpy.append(-5.,clev)
 
                         if plotproperties['double']:

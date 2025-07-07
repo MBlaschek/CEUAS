@@ -8,16 +8,14 @@ import os
 import numpy
 import matplotlib.patches as mpatches
 import rasotools.anomaly as rst
-#from scipy.io import netcdf
-from scipy.stats import *
 from scipy import linalg
-#     #importing Magics module
 from Magics.macro import *
 
 #
 from netCDF4 import Dataset
 import rasotools.allrasotrends as rsta
 import rasotools.allrasodiffs as rstd
+import rasotools.allrasosnht as rsnht
 import rasotools.statanalysis as rsts
 import rasotools.stationts as rst
 import rasotools.utils as rstu
@@ -49,7 +47,7 @@ from rasotools.define_datasets import *
 import copy
 
 
-def compare_profiles(plist,varlist,namelist,clist,plotproperties,cvar,beltname='',had=numpy.NaN,hadens=numpy.zeros(100)):
+def compare_profiles(plist,varlist,namelist,clist,plotproperties,cvar,beltname='',had=numpy.nan,hadens=numpy.zeros(100)):
 
     linesplustext=[]
     legend_user_lines=[]
@@ -148,7 +146,7 @@ def compare_profiles(plist,varlist,namelist,clist,plotproperties,cvar,beltname='
        print(( out.args['output_name']+'.'+plotproperties["outputformat"][0]+ 'not created - no data found'))
     return
 
-def compare_tseries(tlist,varlist,namelist,clist,plotproperties,cvar,beltname='',had=numpy.NaN):
+def compare_tseries(tlist,varlist,namelist,clist,plotproperties,cvar,beltname='',had=numpy.nan):
 
     linesplustext=[]
     legend_user_lines=[]
@@ -333,11 +331,28 @@ def call_allrasotrends_presat(settingsf='settings',pardict={}):
     plottasks_file=open(home+'/python/allrasotrends/'+settingsf+'.json')
     settings=json.load(plottasks_file)#,encoding='latin-1')
     plottasks_file.close()
+    if type(pardict) is str:
+        try:
+            
+            with open(os.path.expandvars(os.path.expanduser(pardict))) as clf:
+                pardict = json.load(clf)
+        except:
+            pass
+        
     if pardict:
         for k,v in list(pardict.items()):
             print((k,v))
             settings['plotproperties'][k]=v
+            
+        with open(home+'/args.json', 'w') as clf:
+            json.dump(pardict, clf)
 
+    try:
+        
+        settings['plotproperties']['sonde_mask'] = np.bytes_(settings['plotproperties'][settings['plotproperties']['sonde_mask']])
+    except:
+        settings['plotproperties']['sonde_mask'] = []
+        
     if type(settings['plotproperties']['plotstatids']) is list:
         settings['plotproperties']['plotstatids']=settings['plotproperties']['plotstatids'][0]
 
@@ -405,7 +420,7 @@ def call_allrasotrends_presat(settingsf='settings',pardict={}):
         msups=numpy.asarray((550,220,90,880),dtype='float32')
         plotproperties['ps']=ps
         plotproperties['msups']=ps
-        plotproperties['initial_size']=3000
+        plotproperties['initial_size']=5000
         plotproperties['pindex']=numpy.asarray(plotproperties['pindex'],dtype='int')
         plotproperties['msupindex']=numpy.asarray(plotproperties['msupindex'],dtype='int')
         plotproperties['jpindex']=numpy.concatenate((plotproperties['pindex'],plotproperties['msupindex']))
@@ -569,6 +584,9 @@ def call_allrasotrends_presat(settingsf='settings',pardict={}):
                 rstd.allrasodiffs(path,tasks,plotproperties,diffintervals[interv],
                                   days,stnames,interv,gstations=gstations,daynight=daynight,
                                   ref=plotproperties['reference'][0],init=True)
+                #rsnht.allrasosnht(path,tasks,plotproperties,diffintervals[interv],
+                                  #days,stnames,interv,gstations=gstations,daynight=daynight,
+                                  #ref=plotproperties['reference'][0],init=True)
 
             elif 'monthly'==m:
                 t=time.time()
@@ -609,7 +627,8 @@ def call_allrasotrends_presat(settingsf='settings',pardict={}):
                 tasks=dtasks[exp]
 
                 for ta in tasks:
-                    ta['amps']=numpy.zeros((3,numpy.asarray(ta['ens']).shape[0],intervals.shape[0],6)) 
+                    ta['amps']=numpy.zeros((3,numpy.asarray(ta['ens']).shape[0],intervals.shape[0],6)) # trend amplification factors
+                    ta['btm']=numpy.zeros((3,numpy.asarray(ta['ens']).shape[0],intervals.shape[0],6)) # belt trend maxima in upper troposphere
                     ta['had']=numpy.zeros((3,intervals.shape[0],6)) 
 
 
@@ -710,7 +729,8 @@ def call_allrasotrends_presat(settingsf='settings',pardict={}):
                             plt.tight_layout()
                             plt.savefig(plotproperties['tmppath']+'/'+profsat+'amplifications'+beltnames[ibelt]+'{}-{}'.format(intervals[0,0],intervals[-1,1])+'.pdf')
                             plt.close()
-    
+                        # trends only - no amplification   
+                        # not yet implemented
                         pass
             elif 'daily' in m:
 # 81: "[\"094302\",\"094312\",\"094430\",\"094430\",\"094510\",\"094637\",\"094647\",\"094659\",\"094711\"]"
@@ -745,7 +765,7 @@ def call_allrasotrends_presat(settingsf='settings',pardict={}):
             #    for interv in range(intervals.shape[0]):
                 for interv in range(1):
                     if intervals.ndim>1:
-                        plotproperties["intervals"]=numpy.asarray(intervals[interv],dtype=numpy.float)
+                        plotproperties["intervals"]=numpy.asarray(intervals[interv],dtype=numpy.float32)
                     t=time.time()
             #        dumpdict=readraobcoredump(path,stnames)
                     if m=='dailyscatter':
@@ -882,10 +902,17 @@ if __name__ == '__main__':
     t=time.time()
     #try:
     if True:
-        print(('called with ',sys.argv[1],sys.argv[2]))
-        pardict=eval(sys.argv[2])
-        if '[0' in pardict['stnames']:
-             pardict['stnames']="['"+pardict['stnames'][1:7]+"']"
+        if len(sys.argv) == 2:
+            pardict = {}
+            sys.argv[2] = ''
+        elif len(sys.argv)==3:
+            if '.json' in sys.argv[2]:
+                pardict = sys.argv[2]
+            else:
+                pardict=eval(sys.argv[2])
+                if '[0' in pardict['stnames']:
+                    pardict['stnames']="['"+pardict['stnames'][1:7]+"']"
+        print('called with ',sys.argv)
         call_allrasotrends_presat(settingsf=sys.argv[1],pardict=pardict)
     #except KeyError:
         #setf='settings'

@@ -117,8 +117,8 @@ def dailyseries(task,currentdata,istname,lat,lon,istat,ens,ipar,ps,ip,plotproper
         subpage_y_length=plotproperties['dailyseriesheight']*17./25.,
         subpage_x_max=float(plotproperties["plotinterval"][1]),
         subpage_x_min=float(plotproperties["plotinterval"][0]),
-        subpage_y_max=dynrange[1],
-        subpage_y_min=dynrange[0],
+        subpage_y_max=float(dynrange[1]),
+        subpage_y_min=float(dynrange[0]),
     )
 
     # Vertical axis
