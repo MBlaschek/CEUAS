@@ -3,7 +3,7 @@ import copy
 import os
 
 def make_andeplist():
-    andeplist=['jra55_andep','jra55_fgdep','e20c_andep','n20c_andep','erapresat_andep','bgdep',
+    andeplist=['jra55_andep','jra55_fgdep','jra3q_andep','jra3q_fgdep','e20c_andep','n20c_andep','erapresat_andep','bgdep',
                'eijra_fgdep','eice20c_andep','jrace20c_andep','fg_dep','an_dep',
                'comp-bg','comp2-bg','comp4-bg', 'era5_andep','era5_fgdep','e5_fg_dep','e5_an_dep','e5_bias','e5_3116_bias','oper_bias',
                'oper_fg_dep','jracepre_fgdep','jrapresat_andep',
@@ -61,7 +61,9 @@ def define_ds(dslist,rfpar,plotproperties,stnames,path):
         shortname='tm',
         name='unadjusted',
         file="feedbackglobbincorrsave",
-        msufile="rttov_",
+        #msufile="rttov_",
+        #msufile="feedbackglobbincorrmon",
+        msufile="feedbackglobbinmon",
         var="rasocorr",
         suff="",    
         dvar="temperatures",
@@ -112,9 +114,9 @@ def define_ds(dslist,rfpar,plotproperties,stnames,path):
                 #'beltslopes':numpy.empty([1,6,len(msupindex)]),
                 #'beltanomalies':numpy.empty([1,6,len(msupindex),rfpar['mmax']]),
                 'msudata':[initial_size,1,rfpar['parmax'],4,rfpar['mmax']],
-                'zslopes':numpy.empty([1,18,4]),
-                'beltslopes':numpy.empty([1,6,4]),
-                'beltanomalies':numpy.empty([1,6,4,rfpar['mmax']]),
+                'zslopes':numpy.empty([1,18,len(jpindex)]),
+                'beltslopes':numpy.empty([1,6,len(jpindex)]),
+                'beltanomalies':numpy.empty([1,6,len(jpindex),rfpar['mmax']]),
                 'type':'SAT'
                 }))
 
@@ -138,6 +140,24 @@ def define_ds(dslist,rfpar,plotproperties,stnames,path):
 
         elif ds in ['merra2']:
             name={'merra2':['MERRA reanalysis','turquoise']}
+            
+            dsdict.append(make_ddict(**{"shortname":ds,
+                "name":name[ds][0],
+                "file":"",
+                "var":"",
+                "suff":"",    
+                "index":[0],
+                'data':[],
+                'msudata':[initial_size,1,rfpar['parmax'],4,rfpar['mmax']],
+                'color':name[ds][1],
+                'zslopes':numpy.empty([1,18,len(jpindex)]),
+                'beltslopes':numpy.empty([1,6,len(jpindex)]),
+                'beltanomalies':numpy.empty([1,6,len(jpindex),rfpar['mmax']]),
+                'type':'REA'
+                }))
+
+        elif ds in ['jra3q']:
+            name={'jra3q':['JRA3Q reanalysis','turquoise']}
             
             dsdict.append(make_ddict(**{"shortname":ds,
                 "name":name[ds][0],
@@ -214,8 +234,8 @@ def define_ds(dslist,rfpar,plotproperties,stnames,path):
                 dsdict.append(make_ddict(**{"shortname":ds,
                     "name":'RAOBCORE-adjusted',
                     "file":"feedbackglobbincorrmon",
-                    #"msufile":"feedbackglobbincorrmon",
-                    "msufile":"RAOBCORE_rttov_",
+                    "msufile":"feedbackglobbincorrmon",
+                    #"msufile":"RAOBCORE_rttov_",
                     "dfile":["feedbackglobbincorrsave"],
                     "var":"montemp",
                     "dvar":"rasocorr",
@@ -233,15 +253,59 @@ def define_ds(dslist,rfpar,plotproperties,stnames,path):
                     'type':'ROB'
                    }))
 
-        elif ds in ['rharm_h','rharm','radrharm','radrharm_h']:
+        elif ds in ['rharm_h','radrharm_h']:
                 dsdict.append(make_ddict(**{"shortname":ds,
                     "name":'RHARM-adjusted',
-                    "file":"rharm_h_",
+                    "file":"rharm_h_mon_",
+                    "msufile":"rharm_h",
+                    "dfile":["rharm_h_"],
+                    "var":"temperatures_h",
+                    "dvar":"ta_h",
+                    "msuvar":"montemp",
+                    "suff":"",    
+                    "dsuff":[''],
+                    "color":"burgundy",
+                    "index":[0],
+                    "dindex":[0],
+                    'data':[initial_size,1,rfpar['parmax'],rfpar['pmax'],rfpar['mmax']],
+                    'ddata':[len(stnames),1,rfpar['parmax'],len(pindex),rfpar['nmax']],
+                    'zslopes':numpy.empty([1,18,len(jpindex)]),
+                    'beltslopes':numpy.empty([1,6,len(jpindex)]),
+                    'beltanomalies':numpy.empty([1,6,len(jpindex),rfpar['mmax']]),
+                    'type':'ROB'
+                   }))
+
+        elif ds in ['rharmbc','radrharmbc']:
+                dsdict.append(make_ddict(**{"shortname":ds,
+                    "name":'RHARM-adjustment',
+                    "file":"rharm_h_mon_",
+                    "msufile":"rharm_h_mon_",
+                    "dfile":["rharm_h_"],
+                    "var":"rharmbc",
+                    "dvar":"rharmbc",
+                    "msuvar":"rharmbc",
+                    "suff":"",    
+                    "dsuff":[''],
+                    "color":"cyan",
+                    "index":[0],
+                    "dindex":[0],
+                    'data':[initial_size,1,rfpar['parmax'],rfpar['pmax'],rfpar['mmax']],
+                    'ddata':[len(stnames),1,rfpar['parmax'],len(pindex),rfpar['nmax']],
+                    'zslopes':numpy.empty([1,18,len(jpindex)]),
+                    'beltslopes':numpy.empty([1,6,len(jpindex)]),
+                    'beltanomalies':numpy.empty([1,6,len(jpindex),rfpar['mmax']]),
+                    'type':'ROB'
+                   }))
+
+        elif ds in ['igra','rharm','radrharm']:
+                dsdict.append(make_ddict(**{"shortname":ds,
+                    "name":'RHARM-IGRA',
+                    "file":"rharm_h_mon_",
                     "msufile":"IH_rttov_",
                     "dfile":["rharm_h_"],
-                    "var":"ta",
+                    "var":"temperatures",
                     "dvar":"ta",
-                    "msuvar":"montemp",
+                    "msuvar":"temperatures",
                     "suff":"",    
                     "dsuff":[''],
                     "color":"cyan",
@@ -323,10 +387,10 @@ def define_ds(dslist,rfpar,plotproperties,stnames,path):
                     'beltslopes':numpy.empty([1,6,len(jpindex)]),
                    }))
 
-        elif ds  in ['suny','sunyhom','rharm']:
-                nam={'suny':'SUNY raw','sunyhom':'SUNY hom','rharm':'RHARM'}
-                col={'suny':'burgundy','sunyhom':'avocado','rharm':'rose'}
-                dspath={'suny':'SUNY','sunyhom':'SUNY','rharm':'RHARM'}
+        elif ds  in ['suny','sunyhom','sunycorr','rharm']:
+                nam={'suny':'SUNY raw','sunyhom':'SUNY hom','rharm':'RHARM','sunycorr':'SUNY corr'}
+                col={'suny':'burgundy','sunyhom':'avocado','rharm':'rose','sunycorr':'rose'}
+                dspath={'suny':'SUNY','sunyhom':'SUNY','rharm':'RHARM','sunycorr':'SUNY'}
                 dsdict.append({"shortname":ds,
                     "name":nam[ds],
                     "file":pathtrunk+"SUNY/",
@@ -349,8 +413,8 @@ def define_ds(dslist,rfpar,plotproperties,stnames,path):
                     'beltanomalies':numpy.empty([1,6,len(jpindex),rfpar['mmax']]),
                     'beltslopes':numpy.empty([1,6,len(jpindex)]),
                     'msudata':[initial_size,1,rfpar['parmax'],4,rfpar['mmax']],
-                    'msufile':'',
-                    "msuvar":"rasocorrmon",'type':'ROB'
+                    'msufile':ds,
+                    "msuvar":"montemp",'type':'ROB'
                     })
         elif ds in ['rcorr','bgdeprcorr','obsrcorr']:
                 adpref=''
@@ -461,7 +525,7 @@ def define_ds(dslist,rfpar,plotproperties,stnames,path):
                         "dfile":["feedbackglobbincorrsave_"+dsfile+"_"],
                         "var":"rasocorr",
                         "dvar":"rasocorr",
-                        "msufile":"RICH_rttov_",
+                        "msufile":"feedbackglobbincorrmon_"+dsfile,
                         "msuvar":"montemp",
                         'msudata':[initial_size,1,rfpar['parmax'],4,rfpar['mmax']],
                         "ens":[0],
@@ -503,9 +567,31 @@ def define_ds(dslist,rfpar,plotproperties,stnames,path):
                    }))
 
 
-        elif ds=='bgdep':
+        elif ds in ['bgdep']:
                 dsdict.append({"shortname":ds,
                     "name":'Background departures',
+                    "file":"feedbackglobbgmon",
+                    "dfile":[dailyfile],
+                    "var":"montemp",
+                    "dvar":plotproperties['fgdepname'], #"fg_dep",
+                    "suff":"",   
+                    "dsuff":dailysuff,
+                    "color":"green",
+                    "startdate":rfpar["startdate"],
+                    "ens":[0],
+                    "index":[0],
+                    "dindex":[0],
+                    "maxindex":numpy.zeros(initial_size,numpy.int32),
+                    "minindex":numpy.zeros(initial_size,numpy.int32),
+                    'data':[initial_size,1,rfpar['parmax'],rfpar['pmax'],rfpar['mmax']],
+                    'ddata':[len(stnames),1,rfpar['parmax'],len(pindex),rfpar['nmax']],
+                    'zslopes':numpy.empty([1,18,len(jpindex)]),
+                    'beltslopes':numpy.empty([1,6,len(jpindex)]),
+                    'beltanomalies':numpy.empty([1,6,len(jpindex),rfpar['mmax']])
+                    })
+        elif ds in ['radbg']:
+                dsdict.append({"shortname":ds,
+                    "name":'Background',
                     "file":"feedbackglobbgmon",
                     "dfile":[dailyfile],
                     "var":"montemp",
@@ -576,12 +662,12 @@ def define_ds(dslist,rfpar,plotproperties,stnames,path):
                 dsdict.append({"shortname":ds,
                     "name":'Bias Estimate',
                     "file":"feedbackglobbgmon",
-                    "dfile":["ERA5_1_"],
-                    "relpath":["../../../ei6/"],
+                    "dfile":["feedbackmerged"],
+                    "relpath":["./"],
                     "var":"montemp",
-                    "dvar":"bias",
+                    "dvar":"bias_estimate",
                     "suff":"_t",    
-                    "dsuff":["_t"],    
+                    "dsuff":[""],    
                     "color":"green",
                     "startdate":rfpar["startdate"],
                     "ens":[0],
@@ -838,9 +924,9 @@ def define_ds(dslist,rfpar,plotproperties,stnames,path):
                 if 'rich' in ds:
                     suff='rich'
                 dsdict.append({"shortname":ds,
-                    "name":'ERA5 RICH adjustments',
-                    "file":pathtrunk+"rise/1.0/ERA5_v5/ERA5bc_RAOBCORE_v1.6_",
-                    "dfile":[pathtrunk+"rise/1.0/ERA5_v5/ERA5bc_RAOBCORE_v1.6_"],
+                    "name":'RICH adjustments for ERA6',
+                    "file":pathtrunk+"rise/1.0/ERA6_v0/ERA5bc_RAOBCORE_v1.95_",
+                    "dfile":[pathtrunk+"rise/1.0/ERA6_v0/ERA5bc_RAOBCORE_v1.95_"],
                     "relpath":["./"],
                     "var":suff+"bias",
                     "dvar":suff+"bias",
@@ -1056,7 +1142,7 @@ def define_ds(dslist,rfpar,plotproperties,stnames,path):
                 'beltslopes':numpy.empty([1,6,len(jpindex)]),
                 'beltanomalies':numpy.empty([1,6,len(jpindex),rfpar['mmax']]),'type':'REA'
                 })
-        elif ds in ['jra55_fgdep','eijra_fgdep']:
+        elif ds in ['jra55_fgdep', 'jra3q_fgdep','eijra_fgdep']:
             dsdict.append({"shortname":ds,
                 "name":ds[:-6]+' Background departures',
                 "file":ds+"mon",
@@ -1220,12 +1306,12 @@ def define_ds(dslist,rfpar,plotproperties,stnames,path):
             dsdict.append(make_ddict(**{"shortname":'bg',
                 "name":'Background',
                 "file":"feedbackglobbgmon",
-                "msufile":"feedbackglobbincorrmon",
+                "msufile":"feedbackglobbgmon",
                 "dfile":["",'feedbackmerged'],
                 "dsuff":["_t",''],
                 "var":"montemp",
                 "dvar":"fg_dep",
-                "msuvar":"eracorrmon",
+                "msuvar":"montemp",
                 "suff":"",    
                 "color":"reddish_purple",
                 "startdate":rfpar["startdate"],
