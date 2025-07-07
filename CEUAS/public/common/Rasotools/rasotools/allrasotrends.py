@@ -485,6 +485,61 @@ def read_merra2(path,version,ps,startyear=1979,endyear=2017,ens=0):
     #sys.exit()
     return merra272,merra218
 
+def read_jra3q(path,version,ps,startyear=1948,endyear=2024,ens=0):
+
+    t1=time.time()
+    try:
+        f=np.load('jra3q_'+str(startyear)+'_'+str(endyear)+'.npz')
+        jra3q72=f["jra3q72"]
+        jra3q18=f["jra3q18"]
+    except:
+        l=0
+#	x=np.empty([16,(endyear-startyear+1)*12,361,576])
+#	x[:]=np.nan
+        ini=True
+        for year in range(1948,endyear+1):
+            for month in range(1, 13):
+                if month < 12:                   
+                    lday = (datetime.datetime(year, month+1, 1) - datetime.timedelta(seconds=1)).day
+                else:
+                    lday = 31
+                fn=path+f'jra3q-ms-mn.anl_p125.0_0_0.tmp-pres-an-ll125-mn.{year}{month:0>2d}0100_{year}{month:0>2d}{lday}18.nc'
+                #mv='{:4}-{:0>2}-01'.format(year,month+1)
+                try:
+                    f=netCDF4.Dataset(fn)
+    #		    print f.variables.keys()
+                except IOError:
+                    print((fn+' not found'))
+                    continue
+    
+                l=(year-startyear) *12 + month - 1
+                y=np.array(f.variables['tmp-pres-an-ll125-mn'][:])
+                y[y>f.variables['tmp-pres-an-ll125-mn']._FillValue/10.]=np.nan
+                midx=np.searchsorted(f.variables['pressure_level'][:], ps)
+                #for it in range(12):
+                    #for ip in range(14):
+                        #x[ip,l+it,:,:]=y[it,midx[ip],:,:]
+    #		ganomalies=np.zeros([nj,ni,2,jpindex.shape[0],tmshape[4]],np.float32)
+    
+            ##    x[x==-9999.]=np.nan
+                #x=x/100.
+                if ini:
+                    s=y.shape
+                    jra3q18=np.full([1,16,(endyear-startyear+1)*12,18, 36], np.nan, dtype=np.float32)
+                    jra3q72=np.full([1,16,(endyear-startyear+1)*12,72, 144], np.nan, dtype=np.float32)
+                    ini=False
+                rebin_145288(y,jra3q18,0,l,midx,global_startyear=startyear,startyear=startyear,endyear=endyear)
+                rebin_145288(y,jra3q72,0,l,midx,global_startyear=startyear,startyear=startyear,endyear=endyear)
+
+        jra3q72=np.reshape(jra3q72[:,:, :, ::-1, :],jra3q72.shape[1:])		
+        jra3q18=jra3q18[:, :, :, ::-1, :]		
+        np.savez('jra3q_'+str(startyear)+'_'+str(endyear)+'.npz',jra3q18=jra3q18,jra3q72=jra3q72)
+    print(('read_jra3q: ',time.time()-t1))
+#    plt.contour(np.reshape(x[3,1300,:,:],[72,144]))
+#    plt.show()
+    #sys.exit()
+    return jra3q72,jra3q18
+
 def rebin_20CRmonth(ps,fn):
     
             #mv='{:4}-{:0>2}-01'.format(year,month+1)
@@ -1048,9 +1103,9 @@ def read_alltrends(path,tasks,days,satlist=[],lats=[],lons=[],ps=[],stnames=[],m
 #    str=[' ']
 
     tt=time.time()
-    alldays=pd.date_range(start='1900-01-01',end='2023-02-01',freq='d')
+    alldays=pd.date_range(start='1900-01-01',end='2024-02-01',freq='d')
     ymds=alldays.year.values*10000+alldays.month.values*100+alldays.day.values
-    sdays=pd.date_range(start='1900-01-01',end='2023-02-01',freq='MS')
+    sdays=pd.date_range(start='1900-01-01',end='2024-02-01',freq='MS')
     idays=np.array([(sdays[i]-sdays[0]).days for i in range(len(sdays))])
     istat=0
     goodsts=[]
@@ -1187,7 +1242,11 @@ def read_alltrends(path,tasks,days,satlist=[],lats=[],lons=[],ps=[],stnames=[],m
                             #days=f.variables['datum'][0,:]
 #		    print time.time()-t3
                     try:
-                        dat=f.variables['datum'][0,:]
+                        if f.variables['datum'].ndim == 2:
+                            
+                            dat=f.variables['datum'][0,:]
+                        else:
+                            dat=f.variables['datum'][:]
                         if dat.dtype==np.float32:
                             dat=np.array(dat,dtype=np.int64)
                             if 'seconds' in f.variables['datum'].getncattr('units'):
@@ -1258,7 +1317,7 @@ def read_alltrends(path,tasks,days,satlist=[],lats=[],lons=[],ps=[],stnames=[],m
                                 copystride4(d["data"][istat],f.variables[dv][:],index,0,ens,pindex,nc_miss_val)
                                 d["data"][istat][:]=np.sqrt(d["data"][istat][:]*d["data"][istat][:]+hilf[istat][:]*hilf[istat][:])
                             elif 'era5v' in d['shortname']:
-                                x=np.empty((2,45000),dtype=np.float32)
+                                x=np.empty((2,50000),dtype=np.float32)
                                 for i in range(pindex.shape[0]):
                                     x.fill(np.nan)
                                     x[:,dat]=f.variables[dv][:,pindex[i],:]
@@ -1394,21 +1453,36 @@ def read_alltrends(path,tasks,days,satlist=[],lats=[],lons=[],ps=[],stnames=[],m
             for k in range(len(tasks)):
                 if not flist[k] and tasks[k]['shortname'] not in satlist:
                     if istat==0:
-                        sh=tasks[k]['data']
+                        if tasks[k]['data']:
+                            
+                            sh=tasks[k]['data']
+                        else:
+                            sh=tasks[k]['msudata']
+                            
                         tasks[k]['data']=[]
                         tasks[k]['data'].append(np.empty(sh[1:],dtype=np.float32))
                         sh=tasks[k]['msudata']
                         tasks[k]['msudata']=[]
                         tasks[k]['msudata'].append(np.empty(sh[1:],dtype=np.float32))
                         tasks[k]['sonde_type'] = []
-                        tasks[k]['sonde_type'].append(tasks[0]['sonde_type'][istat])
+                        try:
+                            
+                            tasks[k]['sonde_type'].append(tasks[0]['sonde_type'][istat])
+                        except:
+                            tasks[k]['sonde_type'].append('')
+                            
                     else:	
                         tasks[k]['data'].append(np.empty_like(tasks[k]['data'][-1]))
                         tasks[k]['msudata'].append(np.empty_like(tasks[k]['msudata'][-1]))
-                        if istat < len(tasks[0]['sonde_type']):
-                            tasks[k]['sonde_type'].append(tasks[0]['sonde_type'][istat])
-                        else:
-                            tasks[k]['sonde_type'].append(np.zeros_like(tasks[0]['sonde_type'][0]))
+                        try:
+                            
+                            if istat < len(tasks[0]['sonde_type']):
+                                tasks[k]['sonde_type'].append(tasks[0]['sonde_type'][istat])
+                            else:
+                                tasks[k]['sonde_type'].append(np.zeros_like(tasks[0]['sonde_type'][0]))
+                        except:
+                            print('no sonde type in station file')
+                            tasks[k]['sonde_type'].append('')
                             
                     tasks[k]['data'][istat][:,:,:,:]=np.nan
                     tasks[k]['msudata'][istat][:,:,:,:]=np.nan
@@ -1756,7 +1830,7 @@ def fill_suny(tasks,shortnames,stnames,lats,lons,ps,pindex):
                         tasks[ish]['data'][idx[i],0,ih,pindex[ip],itx[0]:itx[0]+itxfinal]=T[i,:itxfinal,ipx[pindex[ip]],ih]
            
     np.savetxt('suny.idx',idx,fmt='%5d')    
-    sdays=pd.date_range(start='1900-01-01',end='2023-02-01',freq='MS')
+    sdays=pd.date_range(start='1900-01-01',end='2024-02-01',freq='MS')
     idays=np.array([(sdays[i]-sdays[0]).days for i in range(len(sdays))])+1
     for ish in ishs:
         btlist=glob.glob(os.getcwd()+'/*/'+tasks[ish]['msufile']+'_bt2_??????.nc')
@@ -1798,8 +1872,8 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
 #    msups=plotproperties['msups']
     msups=np.asarray([800.,550.,250.,90.])
     msunames=['TLT','TMT','TTS','TLS']
-    satlist=['rss','uah','star','wegc','merra2','20CRv3']
-    reanlist=['wegc','merra2','20CRv3']
+    satlist=['rss','uah','star','wegc','merra2','20CRv3', 'jra3q']
+    reanlist=['wegc','merra2','20CRv3', 'jra3q']
     if sats==0:
         sats={}
         for s in satlist:
@@ -1812,7 +1886,7 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
     startyear=tasks[0]["startdate"]//10000
     first=(intervals[0]-startyear)*12
     last=(intervals[1]-startyear+1)*12
-    endyear=2022
+    endyear=datetime.datetime.now().year - 1  # 2023
     if first<0:
         print((os.getcwd()+': Interval ',intervals,' not covered by available data starting at ',startyear))
         return hadmed,hadtem,hadens,sats
@@ -1831,7 +1905,7 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
             if 'hadcrut4' in snlist:
                 hadmed,hadtem,hadens=read_hadCRUT4(hadpath+'/../common/','HadCRUT.4.6.0.0',startyear=startyear,endyear=endyear,ens=1)
             else:
-                hadmed,hadtem,hadens=read_hadCRUT4(hadpath+'/../common/','HadCRUT.5.0.1.0',startyear=startyear,endyear=endyear,ens=1)
+                hadmed,hadtem,hadens=read_hadCRUT4(hadpath+'/../common/','HadCRUT.5.0.2.0',startyear=startyear,endyear=endyear,ens=1)
             #hadmean=np.mean(hadens,axis=0)
         else:
             hadmed=np.zeros([1,(endyear-startyear+1)*12,18,36])
@@ -1850,8 +1924,12 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
                 sats['merra2']['full'],sats['merra2']['18']=read_merra2(os.path.expandvars('$RSCRATCH/MERRA2/'),'',
                                                                         plotproperties['ps'],startyear=startyear,endyear=endyear,ens=0)
                 sats['merra2']['18slopes']=np.zeros([1,16,hadmed.shape[2],hadmed.shape[3]],dtype=np.float32)
+            if 'jra3q' in plotproperties['monthlytasks']:
+                sats['jra3q']['full'],sats['jra3q']['18']=read_jra3q(os.path.expandvars('/jetfs/scratch/leo/JRA3Q/'),'',
+                                                                        plotproperties['ps'],startyear=startyear,endyear=endyear,ens=0)
+                sats['jra3q']['18slopes']=np.zeros([1,16,hadmed.shape[2],hadmed.shape[3]],dtype=np.float32)
             if 'uah' in plotproperties['monthlytasks']:
-                sats['uah']['full'],sats['uah']['18']=read_uah('/'.join(path.split('/')[:-3])+'/MSUUAHDaten/','6.0',startyear=startyear,endyear=endyear,ens=0)
+                sats['uah']['full'],sats['uah']['18']=read_uah('/'.join(path.split('/')[:-3])+'/MSUUAHDaten/','6.1',startyear=startyear,endyear=endyear,ens=0)
                 sats['uah']['18slopes']=np.zeros([1,4,hadmed.shape[2],hadmed.shape[3]],dtype=np.float32)
             if 'rss' in plotproperties['monthlytasks']:
                 sats['rss']['full'],sats['rss']['18']=read_rss('/'.join(path.split('/')[:-3])+'/MSUDaten/','V4_0',startyear=startyear,endyear=endyear,ens=0)
@@ -1860,9 +1938,12 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
                 #starlist=['NESDIS-STAR_TCDR_MSU-AMSUA_V04R01_TMT_S197811_E202010_C20201125.nc',
                           #'NESDIS-STAR_TCDR_MSU-AMSUA_V04R01_TUT_S198101_E202010_C20201125.nc',
                           #'NESDIS-STAR_TCDR_MSU-AMSUA_V04R01_TLS_S197811_E202010_C20201125.nc']	    
-                starlist=['NESDIS-STAR_TCDR_TMT_V05R00_S197811_E202309_C20231005.nc',
-                          'NESDIS-STAR_TCDR_TUT_V05R00_S198101_E202309_C20231005.nc',
-                          'NESDIS-STAR_TCDR_TLS_V05R00_S197812_E202309_C20231005.nc']	    
+                #starlist=['NESDIS-STAR_TCDR_TMT_V05R00_S197811_E202309_C20231005.nc',
+                          #'NESDIS-STAR_TCDR_TUT_V05R00_S198101_E202309_C20231005.nc',
+                          #'NESDIS-STAR_TCDR_TLS_V05R00_S197812_E202309_C20231005.nc']
+                starlist=['Mean-Layer-Temperature-NOAA_v05r00_TMT_S197811_E202412_C20250105.nc',
+                          'Mean-Layer-Temperature-NOAA_v05r00_TUT_S198101_E202412_C20250105.nc',
+                          'Mean-Layer-Temperature-NOAA_v05r00_TLS_S197812_E202412_C20250105.nc']
                 sats['star']['full'],sats['star']['18']=read_star('/'.join(path.split('/')[:-3])+'/MSU_STAR/',starlist,startyear=startyear,endyear=endyear,ens=0)
                 sats['star']['18slopes']=np.zeros([1,4,hadmed.shape[2],hadmed.shape[3]],dtype=np.float32)
 
@@ -2161,10 +2242,10 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
                 else:
                     print("should not be there")
 #                    exit()
-                    jcurrentdata=currentdatamsu[:]
+                    jcurrentdata=np.concatenate((currentdata, currentdatamsu[:]), axis=2)
 #                    anomalies=jcurrentdatamsu #np.copy(currentdatamsu[:])
-                    anomalies=np.copy(currentdatamsu[:])
-                    jpindex=msupindex
+                    anomalies=np.copy(jcurrentdata)
+                    jpindex=np.concatenate((pindex,msupindex))
 #		    print 'else',time.time()-t
                     #anomalies_and_slopes(currentdatamsu,startyear,interval,tolerance,iens,itime,orig,anomaly,anomalies,climatology,
                                         #good,s)
@@ -2180,7 +2261,7 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
                         climatologies=np.zeros([tmshape[0],tmshape[2],jpindex.shape[0],12],np.float32)
                 if slowload or tasks[key]['shortname']==plotproperties['monthlytasks'][0] or tasks[key]['shortname'] in ['tm','tmcorr']:
 
-                    print(('slope',time.time()-t))				   
+                    print(('slopeslow',time.time()-t))				   
                     #good=np.zeros([tmshape[0],tmshape[2],jpindex.shape[0]],np.int)
                     #climatologies=np.zeros([tmshape[0],tmshape[2],jpindex.shape[0],12],np.float32)
 #		    for x in jcurrentdata,startyear,interval,int(tolerance),int(iens),itime,anomalies,climatologies,good,s:               
@@ -2192,25 +2273,27 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
                         else:
                             pidx=np.array([0])
                     else:
-                        pidx=msupindex
+                        pidx=np.array([0]+list(msupindex+pindex.shape[0]))
+                        
                     if slowload:
                         #if 'anomalies' not in locals():
                             #anomalies=jcurrentdata[:,:,pidx,:]
                         #else:
                             #anomalies[:]=jcurrentdata[:,:,pidx,:]
 
-                        anomalies_and_slopes(jcurrentdata[:,:,pidx,:],startyear,interval,int(tolerance),int(iens),itime,anomalies,
+                        sh = anomalies_and_slopes(jcurrentdata[:,:,pidx,:],startyear,interval,int(tolerance),int(iens),itime,anomalies,
                                              climatologies,good,s)
                     else:
                         #if 'anomalies' not in locals():
                             #anomalies=np.copy(jcurrentdata)	
                         #else:
                             #anomalies[:]=jcurrentdata[:]
-                        anomalies_and_slopes(jcurrentdata,startyear,interval,int(tolerance),int(iens),itime,anomalies,
+                        sh = anomalies_and_slopes(jcurrentdata,startyear,interval,int(tolerance),int(iens),itime,anomalies,
                                              climatologies,good,s)
 
     # remove India             		    
-#                    mnames=read_mesural(os.path.expanduser('~/tables/MESURAL'))   
+#                    mnames=read_mesural(os.path.expanduser('~/tables/MESURAL'))
+                    print('slowx', sh, time.time()-t)
                     mnames=read_viz(os.path.expanduser('~/tables/cards_meta.prn'))   
 
 #		    mnames=['']
@@ -2250,7 +2333,7 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
                     #anomalies[mask,:,:,:]=np.nan
 
                     s[:,:,2,:]=np.nanmean(s[:,:,:2,:],axis=2)
-                print(('slope',time.time()-t))
+                print(('slopeload',time.time()-t))
                 if slowload or 'hadcrut4' in snlist or 'hadcrutem4' in snlist:
                     t=time.time()
 
@@ -2306,6 +2389,35 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
 
                     else:
                         grid_anomalies(anomalies,good,int(tolerance),gstatindex,ganomalies,gslopes,start,stop,itime)
+                        isum = 0
+                        st5 = [ st[-5:] for st in stnames]
+                        if False:
+                            with open('stations_RAOBCORE_1990-2023.csv', 'w') as h:
+                                h.write('station identifier\t latitude\t longitude\t station name\n')
+                                for ii in range(anomalies.shape[0]):
+                                    good = np.sum(~np.isnan(anomalies[ii, :, 11, 1080:]))
+                                    if good > 0:
+                                        with h5py.File(stnames[ii]+f'/feedbackmerged{stnames[ii]}.nc') as f:
+                                            stn = f.attrs['station_name']
+                                            usi = f.attrs["unique_source_identifier"].decode()
+                                            if stn == b' ' or stn == b'nan':
+                                                if usi[-5:] not in st5 and '20999' not in usi:
+                                                #with h5py.File(f'/mnt/users/scratch/leo/scratch/converted_v19/long/{usi}_CEUAS_merged_v3.nc') as g:
+                                                    #stn = g['station_configuration']['station_name'][0].view('S30')
+                                                
+                                                    print(stnames[ii], stn.decode(), usi, lats[ii], lons[ii], good)
+                                                    h.write(h, f'{usi}\t{lats[ii]:.3f}\t{lons[ii]:.3f}\t{stn.decode()}\n')
+                                                    isum += 1
+                                                else:
+                                                    print(stnames[ii], usi, 'Duplicate')
+                                            else:
+                                                print(stnames[ii], stn.decode(), usi, lats[ii], lons[ii], good)
+                                                h.write(f'{usi}\t{lats[ii]:.3f}\t{lons[ii]:.3f}\t{stn.decode()}\n')
+                                                isum += 1
+                                            
+                            print('isum:', isum)
+                                
+                        
                         if snlist[key]=='tmcorr':
 #			    ganomalies[:,:,2,:,:]=np.nanmean(ganomalies,axis=2)
                             gamask=np.isnan(ganomalies)
@@ -2341,7 +2453,8 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
                             plt.plot(gdm, label=str(iii))
                         plt.legend()
                         plt.show()
-
+                    
+                    
                     zanomalies=ndnanmean(ganomalies,2)
                     weights=np.empty(zanomalies.shape)
                     zslopes=np.zeros([nj,ni,1])
@@ -2379,9 +2492,9 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
                         #tasks[key]['beltanomalies'][iens,:,:,:]=np.empty((1,beltanomalies.shape[0],beltanomalies.shape[1]+pindex.shape[0],beltanomalies.shape[2]))
                         tasks[key]['beltanomalies'][iens,:,:,:]=np.empty((1,beltanomalies.shape[0],beltanomalies.shape[1],beltanomalies.shape[2]))
                         tasks[key]['beltanomalies'][iens,:,:,:]=np.nan
-                        tasks[key]['beltanomalies'][iens,:,-4:,:]=beltanomalies[:]
+                        tasks[key]['beltanomalies'][iens,:,-4:,:]=beltanomalies[:, -4:, :]
                     else:
-                        tasks[key]['beltanomalies'][iens,:,:,:]=np.copy(beltanomalies[:])
+                        tasks[key]['beltanomalies'][iens,:,:,:]=np.copy(beltanomalies[:, :, :])
                     #plt.plot(1900.+itime/12.,beltanomalies[0,15,itime])
                     print((time.time()-t))
 
@@ -2500,30 +2613,33 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
 
                         if "stations" in plotproperties["plotlist"]:
                             cind=np.argsort(-scosts[mask])
-                            maxs=cind.shape[0]
+                            cis=cind.shape[0]
+                            maxs = 3
                             if str(plotproperties['plotstatids'])=='False':
-                                maxs=3
+                                cis = 0
                                 ilav=np.concatenate([[],np.asarray([-80.,-80.,-80.])+1.0])
                                 ilov=np.concatenate([[],np.asarray([-20.,0.,20.])+1.0])
                             else:
-                                ilav=np.concatenate([lats[mask][cind[0:maxs]].astype(np.float32),
+                                ilav=np.concatenate([lats[mask].astype(np.float32),
                                                         np.asarray([-80.,-80.,-80.])+1.0])
-                                ilov=np.concatenate([lons[mask][cind[0:maxs]].astype(np.float32),
+                                ilov=np.concatenate([lons[mask].astype(np.float32),
                                                         np.asarray([-20.,0.,20.])+1.0])
                             
-                            with open(plotproperties['tmppath']+'/'+'stnames_'+tasks[key]["shortname"]+estr+'_'+
-                                  "{:4}".format(interval[0])+"-{:4}".format(interval[1])+'_'+pstr+'_'+parstr ,'w') as f:
-                                f.write('statid,trend,cost\n')
-                                for a,b,c in zip(stnames[mask][cind[:maxs]],
-                                                 vec[mask][cind[:maxs]].astype(np.float32),
-                                                 scosts[mask][cind[:maxs]]):
-                                    f.write('{},{:5.2f},{:5.4f}\n'.format(a,b,c))
+                            #with open(plotproperties['tmppath']+'/'+'stnames_'+tasks[key]["shortname"]+estr+'_'+
+                                  #"{:4}".format(interval[0])+"-{:4}".format(interval[1])+'_'+pstr+'_'+parstr ,'w') as f:
+                                #f.write('statid,trend,cost\n')
+                                #for y, z, a,b,c in zip(lats[mask].astype(np.float32),
+                                                #lons[mask].astype(np.float32),
+                                                #stnames[mask],
+                                                #vec[mask].astype(np.float32),
+                                                #scosts[mask]):
+                                    #f.write('{:5.2f},{:5.2f},{},{:5.2f},{:5.4f}\n'.format(y, z, a,b,c))
                                 
                             projection,coastlines,title,legend,symb,symb2,symb3,symb4,cont=\
                                 set_trendmaps(lines,clev,plotproperties,
-                                              stnames=np.concatenate([stnames[mask][cind[:maxs]],stnames[mask][cind[:maxs]]]),
-                                              slopes=np.concatenate([vec[mask][cind[:maxs]].astype(np.float32),vec[mask][cind[:maxs]]]),
-                                              costs=np.concatenate([scosts[mask][cind[:maxs]],scosts[mask][cind[:maxs]]]),
+                                              stnames=np.concatenate([stnames[mask],stnames[mask][cind[:maxs]]]),
+                                              slopes=np.concatenate([vec[mask].astype(np.float32),vec[mask][cind[:maxs]]]),
+                                              costs=np.concatenate([scosts[mask],scosts[mask][cind[:maxs]]]),
                                               map=plotproperties['map'])
 
 
@@ -2684,7 +2800,11 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
                 if legname not in satlist:
                     soff=ip #pindex.shape[0]
                 else:
-                    soff=0
+                    if ip > tasks[key]['msudata'].shape[3] - 1:
+                        
+                        soff=0
+                    else:
+                        soff = ip
                 if 'andep' in legname:
                     legname=legname.split('_andep')[0]
                 if legname not in [ "rio","rit", 'ce20c' ] or shade==0:
@@ -2701,7 +2821,7 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
             else:
                 lines =["Zonal Mean Brightness Temperature Trends [K/10a], "+suff+", {:4}".format(interval[0])+"-{:4}".format(interval[1])]
 
-            projection,horizontal,vertical,title,legend=set_zonalsat(lines,legend_user_lines,plotproperties,beltinterval=[-2.0,0.5])
+            projection,horizontal,vertical,title,legend=set_zonalsat(lines,legend_user_lines,plotproperties,beltinterval=[-2.0,0.5], linesplustext=linesplustext)
             out.args['output_title']=os.getcwd()+'/'+out.args['output_name']	
             plot(out,ppage,projection,horizontal,vertical,linesplustext,title,legend)
             print((out.args['output_name']+'.'+plotproperties["outputformat"][0]))
@@ -2715,9 +2835,13 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
     for p in msunames:
         sps.append(p)
     if 'beltanomalies' in plotproperties['plotlist']:
+        if plotproperties['set_ref_interval']=='True':
+            sxl=35.7
+        else:
+            sxl = 29.7
         ppage = page(
             layout='positional',  
-            super_page_x_length=29.7, 
+            super_page_x_length=sxl, 
             super_page_y_length=plotproperties['monthlyseriesheight']+3.0, 
             page_x_length=24.7, 
             page_y_length=plotproperties['monthlyseriesheight']+3.0, 
@@ -2770,6 +2894,9 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
                             legname='unadj'
                         if legname=='tmcorr':
                             legname='adj'
+                        if legname=='sunyhom':
+                            legname='sunyh'
+
 
                         if legname not in [ "rio","rit"] or shade==0:
                             for iens in tasks[key]["ens"]: #range(len(tasks[key]["ens"])):
@@ -2791,44 +2918,51 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
                             legend_user_lines=legend_user_lines+[legname]
                             hhilf=np.asarray([0])
                     dynrange=np.asarray(plotproperties["range"][:])/6.*1.05
-                    tdynrange=np.asarray([-0.2,0.2])
-                    gsls=[]
+                    gtdynrange=[np.asarray([-0.2,0.2])]
+                    ggsls=[[]]
+                    gpint=[plotproperties['plotinterval']]
+                    if plotproperties['set_ref_interval'] == 'True':    
+                        ggsls.append([])
+                        gpint.append(plotproperties['trend_ref_interval'])
+                        gtdynrange.append(np.asarray([-0.2,0.2]))
                     for il in range(len(lraw)):
                         print('here')
-                        mask=np.abs(linesplustext[2*il].args['Input_y_values'])<(dynrange[1]-dynrange[0])*10.
-                        pint=plotproperties['plotinterval']
-                        tmask=(traw[il]>=pint[0])*(traw[il]<pint[1]+1)*(~np.isnan(np.abs(lraw[il])))
-                        if sum(tmask)>0:
-                            print((np.std(traw[il][tmask]-1900.),np.nanstd(lraw[il][tmask])))
-                            #st=linregress(traw[il][tmask]-1900.,lraw[il][tmask])
-                        #st=np.polyfit(traw[il][tmask]-1900.,lraw[il][tmask], 1, cov=True)
-                            st=fastlinregressnonanerr(traw[il][tmask]-1900.,lraw[il][tmask])
-                            print(('here',st))
-                            alpha=alphaest(lraw[il][tmask]-np.mean(lraw[il][tmask]))
-                            if (tasks[keys[il]]['shortname'] in ['tm','tmcorr'] or 'rio'  in tasks[keys[il]]['shortname']  or 'rit' in  tasks[keys[il]]['shortname'])  and ref!='zero':
-                                alpha=0.
-                            neffcorr=np.sqrt((1+alpha)/(1-alpha))
-                            gsls.append([])
-                            gsls[-1].append(st[0]*10)
-                            err=st[1]*1.96*neffcorr*10
-                            gsls[-1].append(gsls[-1][0]-err)
-                            gsls[-1].append(gsls[-1][0]+err)
-#gsls.append(fastlinregressnonan(l.args['Input_x_values'][tmask]-1900.,
-#					                l.args['Input_y_values'][tmask])*10)
-                            if gsls[-1][2]>tdynrange[1]:
-                                tdynrange[1]=gsls[-1][2]*1.05
-                            if gsls[-1][1]<tdynrange[0]:
-                                tdynrange[0]=gsls[-1][1]*1.05
-
-                        else:
-                            gsls.append([-1.e21]*3)
-                        if sum(mask)>0:
-                            m=np.amax(linesplustext[2*il].args['Input_y_values'][mask])
-                            if m>dynrange[1]:
-                                dynrange[1]=m*1.05
-                            m=np.amin(linesplustext[2*il].args['Input_y_values'][mask])
-                            if m<dynrange[0]:
-                                dynrange[0]=m*1.05
+                        mask=np.abs(linesplustext[2*il].args['Input_y_values'])<(dynrange[1]-dynrange[0])*20.
+                        for gsls,pint, tdynrange in zip(ggsls, gpint, gtdynrange):
+#                        pint=plotproperties['plotinterval']
+                            tmask=(traw[il]>=pint[0])*(traw[il]<pint[1]+1)*(~np.isnan(np.abs(lraw[il])))
+                            if np.sum(tmask)>np.sum((traw[il]>=pint[0])&(traw[il]<pint[1]+1)) - 36:
+                                print((np.std(traw[il][tmask]-1900.),np.nanstd(lraw[il][tmask])))
+                                #st=linregress(traw[il][tmask]-1900.,lraw[il][tmask])
+                            #st=np.polyfit(traw[il][tmask]-1900.,lraw[il][tmask], 1, cov=True)
+                                st=fastlinregressnonanerr(traw[il][tmask]-1900.,lraw[il][tmask])
+                                print((tasks[keys[il]]['shortname'] , np.sum(tmask), np.sum((traw[il]>=pint[0])&(traw[il]<pint[1]+1)), st))
+                                alpha=alphaest(lraw[il][tmask]-np.mean(lraw[il][tmask]))
+                                if (tasks[keys[il]]['shortname'] in ['tm','tmcorr'] or 'rio'  in tasks[keys[il]]['shortname']  or 'rit' in  tasks[keys[il]]['shortname'])  and ref!='zero':
+                                    alpha=0.
+                                neffcorr=np.sqrt((1+alpha)/(1-alpha))
+                                gsls.append([])
+                                gsls[-1].append(st[0]*10)
+                                err=st[1]*1.96*neffcorr*10
+                                gsls[-1].append(gsls[-1][0]-err)
+                                gsls[-1].append(gsls[-1][0]+err)
+    #gsls.append(fastlinregressnonan(l.args['Input_x_values'][tmask]-1900.,
+    #					                l.args['Input_y_values'][tmask])*10)
+                                if gsls[-1][2]>tdynrange[1]:
+                                    tdynrange[1]=gsls[-1][2]*1.05
+                                if gsls[-1][1]<tdynrange[0]:
+                                    tdynrange[0]=gsls[-1][1]*1.05
+    
+                            else:
+                                gsls.append([-1.e21]*3)
+                            if sum(mask)>0:
+                                m=np.amax(linesplustext[2*il].args['Input_y_values'][mask])
+                                if m>dynrange[1]:
+                                    dynrange[1]=m*1.05
+                                m=np.amin(linesplustext[2*il].args['Input_y_values'][mask])
+                                if m<dynrange[0]:
+                                    dynrange[0]=m*1.05
+                                print(tasks[keys[il]]['shortname'], dynrange)
 
 
                     print('here')
@@ -2836,12 +2970,18 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
                     print('there')
 #		    hadtrend=addhadtrend(hadmedbeltslopes[ibelt,0],hadbeltslopes[:,ibelt,0])
 #		    legend_user_lines=legend_user_lines+["HadCRUT4"]
-                    tline=['Trends {}-{}'.format(plotproperties['plotinterval'][0],plotproperties['plotinterval'][1])]
-                    ppage2,projection2,horizontal2,vertical2,title2,null_data2,null_line2=sbtrends(tline,plotproperties,dynrange=tdynrange)
+#                    tline=['Trends {}-{}'.format(plotproperties['plotinterval'][0],plotproperties['plotinterval'][1])]
+                    tline=['Trends [K/10a]', '{}-{}'.format(plotproperties['plotinterval'][0],plotproperties['plotinterval'][1])]
+                    ppage2,projection2,horizontal2,vertical2,title2,null_data2,null_line2=sbtrends(tline,plotproperties,dynrange=gtdynrange[0])
+                    markers=sbmarkers(tasks,keys,ggsls[0])
 
-                    #markers=[]
-                    #if len(gsls)>0:
-                    markers=sbmarkers(tasks,keys,gsls)
+                    if(plotproperties['set_ref_interval'] == 'True'):
+                        
+                        tline=['Trends [K/10a]', '{}-{}'.format(*plotproperties['trend_ref_interval'])]
+                        ppage3,projection3,horizontal3,vertical3,title3,null_data3,null_line3=sbtrends(tline,plotproperties,dynrange=gtdynrange[1], second=True)
+                        #markers=[]
+                        #if len(gsls)>0:
+                        markers3=sbmarkers(tasks,keys,ggsls[1])
                     out.args['output_title']=os.getcwd()+'/'+out.args['output_name']
                     try:
                         igood=0
@@ -2859,12 +2999,15 @@ def allrasotrends(path,tasks,plotproperties,intervals,days,stnames,interv,hadmed
                                 
                         if igood>0: #<len(linesplustext)//2:
                             #print(tasks[it//2]['shortname'],linesplustext[it].args['Input_y_values'],linesplustext[it].args['Input_y_values'])
-                            plot(out,ppage,projection,horizontal,vertical,linesplustext,title,null_data,null_line,legend,
-                                 ppage2,projection2,horizontal2,vertical2,title2,null_data2,null_line2,markers)
+                            cmd = [out,ppage,projection,horizontal,vertical,linesplustext,title,null_data,null_line,legend,
+                                 ppage2,projection2,horizontal2,vertical2,title2,null_data2,null_line2,markers]
+                            if plotproperties['set_ref_interval'] == 'True':
+                                cmd += [ppage3,projection3,horizontal3,vertical3,title3,null_data3,null_line3,markers3]
+                            plot(*cmd)
                         else:
                             print('NO PLOT PRODUCED', out.args['output_name']+'.'+plotproperties["outputformat"][0])
                             
-                    except:
+                    except Exception as e:
                         
                         print('NO PLOT PRODUCED', out.args['output_name']+'.'+plotproperties["outputformat"][0])
                     print((out.args['output_name']+'.'+plotproperties["outputformat"][0]))
@@ -3140,7 +3283,7 @@ def save_gridded(ganomalies,gclimatologies,tasks,key,days,ps,pindex,iens=0,start
         plt.close(f)
         print((time.time()-t))
 
-    ipath=os.path.expandvars('$FSCRATCH/classic/sabiner/exp07/')
+    ipath=os.path.expandvars('$FSCRATCH/rise/1.0/classic/sabiner/exp07/')
     #if tasks[key]["shortname"]=='tmcorr':
         #fn='raobcore15_gridded_20{}.nc'.format(ganomalies.shape[4]/12-101)
         #append_gridded(ipath+'raobcore15_gridded_2013.nc',fn,ganomalies,days,ps[pindex.astype(int)])
@@ -3205,6 +3348,8 @@ def save_gridded(ganomalies,gclimatologies,tasks,key,days,ps,pindex,iens=0,start
     except:
         pass
 
+    print("!! DON'T FORGET TO RUN check202? script !!")
+    print("!! DON'T FORGET TO RUN check202? script !!")
     return
     #		if tasks[key]["shortname"]=='tmcorr':
     #		    append_gridded('../exp07/rich15tau_mean_gridded_2013.nc','rich15tau_mean_gridded_2014.nc',
