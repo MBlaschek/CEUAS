@@ -3,9 +3,10 @@ import numpy as np
 import math
 #import matplotlib.pyplot as plt
 from datetime import date
-from rasotools.anomaly import *
+#from rasotools.anomaly import *
 import datetime
 import time
+import os
 
 miss_val=np.nan
 # henderson moving average weights.
@@ -383,6 +384,34 @@ def rebin_361576_to_1836(mem,hadens,ens,l,midx,global_startyear,startyear,endyea
                         hadens[ens,ip,l*12+itime,ilat,ilon]=np.nan
 
     return
+
+@njit
+def rebin_145288(mem,hadens,ens,l,midx,global_startyear,startyear,endyear):
+
+    for ip in range(hadens.shape[1]):
+#        index=hadens.shape[0]-hadens.shape[0]-1
+# for itime in range(12): #(startyear-global_startyear)*12,(endyear-global_startyear+1)*12):
+#            print ip,itime
+#            index+=1
+        for ilat in range(hadens.shape[3]):
+            for ilon in range(hadens.shape[4]):
+                sum=np.float32(0.)
+                n=np.float32(0.)
+                step = mem.shape[2] // hadens.shape[3]
+                jj=ilon*step
+                for i in range(0,step):
+                    ii=ilat*step+i
+                    for j in range(0,step):
+                        x=mem[0,midx[ip],ii,jj+j]
+                        if x==x :
+                            sum+=x
+                            n+=1.0
+                if n>0:
+                    hadens[ens,ip,l,ilat,ilon]=sum/n
+                else:
+                    hadens[ens,ip,l,ilat,ilon]=np.nan
+
+    return
 @njit(cache=True)
 def rebin_256512_to_1836(mem,hadens72,hadens,ens,l,midx):
 
@@ -463,15 +492,22 @@ def getindex (alldates,somedates,index):
 
     return
 
-#@njit(cache=True)
+@njit(cache=True)
 def find_gstatindex(glons,glats,lons,lats,gstatindex):
 
     for l in range(lats.shape[0]):
-        ilon=int(np.floor(lons[l]/(360./glons.shape[0])))
-        ilat=int(np.floor((lats[l]+90.)/(180./glats.shape[0])))
+        if np.isnan(lons[l]+lats[l]):
+            continue
+            ilon = glons.shape[0] // 2
+            ilat = glats.shape[0] // 2
+        else:
+            ilon=int(np.floor(lons[l]/(360./glons.shape[0])))
+            ilat=int(np.floor((lats[l]+90.)/(180./glats.shape[0])))
         gstatindex[ilat,ilon,0]+=1
-        gstatindex[ilat,ilon,gstatindex[ilat,ilon,0]]=l
-
+        if gstatindex[ilat,ilon,0] < gstatindex.shape[2]:           
+            gstatindex[ilat,ilon,gstatindex[ilat,ilon,0]]=l
+        else:
+            raise IndexError
     return
 
 #@njit(cache=True)
@@ -666,7 +702,7 @@ def pexpandandadd(b,ref,index,opindex,iens,a,sign,l):
 
     return
 
-@njit(cache=True)
+@njit(cache=False, boundscheck=True)
 def tdist(dists,lats,lons,weight):
 #   import np
 #   from scipy.stats.stats import nanmean
@@ -691,7 +727,7 @@ def sdistp(dists,x,y,z):
     idx=np.zeros(x.shape[0],dtype=np.int32)
     for l in range(x.shape[0]-1):
         idx[l+1]=idx[l]+x.shape[0]-l
-    for l in prange(x.shape[0]):
+    for l in range(x.shape[0]):
         for k in range(l,x.shape[0]):
             dists[idx[l]+k-l]=x[l]*x[k]+y[l]*y[k]+z[l]*z[k]
 
@@ -700,9 +736,13 @@ def sdistp(dists,x,y,z):
 #sid is index of station to which distances are extracted
 #dists are precalculated distances
 @njit(cache=True)
-def extract(dists,sid,lats=None,lons=None):
+def extract(dists,sid,lats=None,lons=None, dlen=None):
 
-    n=np.int(np.sqrt(dists.shape[0]*2))
+    if dlen is not None:
+        n = np.int32(np.sqrt(dlen) *2)
+    else:
+        
+        n=np.int32(np.sqrt(dists.shape[0]*2))
     idx=np.zeros(n,dtype=np.int32)
     stdists=np.zeros(n)
     for l in range(n-1):
@@ -812,7 +852,7 @@ def tcost(dists, slopes, cost):
             for k in range(l, slopes.shape[0]):
                 if slopes[l] == slopes[l] and slopes[k] == slopes[k]:
                     if dists[id]!=dists[id]:
-                        print('spurious',l,k,id)
+                        raise ValueError('spurious',l,k,id)
                     else:
                         s = (slopes[l]-slopes[k])*dists[id]
                         cost[l] += s*s
@@ -829,7 +869,7 @@ def tcost(dists, slopes, cost):
         for l in range(slopes.shape[0]):
             cost[l] /= goodstats
 
-    print('tcost:',tcost)
+    #print('tcost:',tcost)
     return tcost
 
 @njit(cache=True,parallel=True)
@@ -915,7 +955,7 @@ def rmeanw(t,runmean):
     tret[-runmean:]=np.nan
     return tret
 
-#@njit(cache=True)
+@njit(cache=True)
 def rmean(t,tmean,index,runmean):
 
     tret=np.zeros(t.shape[0])
@@ -1323,5 +1363,5 @@ def hmav13(x,y):
     return y
 
 def rgb(r,g,b):
-    return np.asarray([r,g,b],dtype=np.float)
+    return np.asarray([r,g,b],dtype=np.float32)
 
